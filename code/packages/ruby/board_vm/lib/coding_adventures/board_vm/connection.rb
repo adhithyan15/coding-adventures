@@ -126,6 +126,10 @@ module CodingAdventures
         Can.new(self)
       end
 
+      def rtc
+        Rtc.new(self)
+      end
+
       def eject
         Ejector.new(self)
       end
@@ -577,6 +581,44 @@ module CodingAdventures
           program_id: program_id,
           budget: budget,
           max_stack: max_stack
+        )
+      end
+
+      def rtc_now!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        ensure_uno_r4_wifi!
+
+        session.rtc_now(
+          program_id: program_id,
+          budget: budget,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def rtc_set!(
+        epoch_seconds:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        ensure_uno_r4_wifi!
+
+        session.rtc_set(
+          program_id: program_id,
+          budget: budget,
+          epoch_seconds: epoch_seconds,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
         )
       end
 
@@ -1611,6 +1653,42 @@ module CodingAdventures
         @connection.can_read!(
           program_id: program_id,
           budget: budget,
+          max_stack: max_stack
+        )
+      end
+    end
+
+    class Rtc
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def now(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        @connection.rtc_now!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          max_stack: max_stack
+        )
+      end
+
+      def set(
+        epoch_seconds:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        @connection.rtc_set!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          epoch_seconds: epoch_seconds,
           max_stack: max_stack
         )
       end

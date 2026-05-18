@@ -241,6 +241,14 @@ module CodingAdventures
         native_session.can_read_module(max_stack)
       end
 
+      def rtc_now_module(max_stack: 1)
+        native_session.rtc_now_module(max_stack)
+      end
+
+      def rtc_set_module(epoch_seconds:, max_stack: 1)
+        native_session.rtc_set_module(u32_value(epoch_seconds, "epoch_seconds"), max_stack)
+      end
+
       def spi_transfer_module(cs_pin:, write_bytes:, read_length:, max_stack: 5)
         native_session.spi_transfer_module(
           cs_pin,
@@ -435,6 +443,20 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: can_read_module(max_stack: max_stack)
+        )
+      end
+
+      def upload_rtc_now(program_id: @program_id, max_stack: 1)
+        upload(
+          program_id: program_id,
+          module_bytes: rtc_now_module(max_stack: max_stack)
+        )
+      end
+
+      def upload_rtc_set(program_id: @program_id, epoch_seconds:, max_stack: 1)
+        upload(
+          program_id: program_id,
+          module_bytes: rtc_set_module(epoch_seconds: epoch_seconds, max_stack: max_stack)
         )
       end
 
@@ -1046,6 +1068,55 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def rtc_now(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        max_stack: 1,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(upload_rtc_now(program_id: program_id, max_stack: max_stack).results)
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget
+        )
+        SessionResult.new(results: results)
+      end
+
+      def rtc_set(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        epoch_seconds:,
+        max_stack: 1,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(
+          upload_rtc_set(
+            program_id: program_id,
+            epoch_seconds: epoch_seconds,
+            max_stack: max_stack
+          ).results
+        )
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget
+        )
+        SessionResult.new(results: results)
+      end
+
       def spi_transfer(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -1455,6 +1526,11 @@ module CodingAdventures
           upload_can_write(**can_write_command_options(words, command, options, require_budget: false))
         when "upload-can-read", "upload-can.read"
           upload_can_read(**can_read_command_options(words, command, options, require_budget: false))
+        when "upload-rtc-now", "upload-rtc.now"
+          ensure_no_extra_arguments!(words, command)
+          upload_rtc_now(**options)
+        when "upload-rtc-set", "upload-rtc.set"
+          upload_rtc_set(**rtc_set_command_options(words, command, options, require_budget: false))
         when "upload-spi-transfer", "upload-spi.transfer"
           upload_spi_transfer(**spi_transfer_command_options(words, command, options, require_budget: false))
         when "upload-spi-write", "upload-spi.write"
@@ -1523,6 +1599,10 @@ module CodingAdventures
           can_write(**can_write_command_options(words, command, options))
         when "can-read", "can.read"
           can_read(**can_read_command_options(words, command, options))
+        when "rtc-now", "rtc.now"
+          rtc_now(**options.merge(optional_budget(words, command)))
+        when "rtc-set", "rtc.set"
+          rtc_set(**rtc_set_command_options(words, command, options))
         when "spi-transfer", "spi.transfer"
           spi_transfer(**spi_transfer_command_options(words, command, options))
         when "spi-write", "spi.write"
@@ -1816,6 +1896,21 @@ module CodingAdventures
 
       alias can_write_command_options uart_write_command_options
       alias can_read_command_options uart_read_command_options
+      alias rtc_now_command_options uart_read_command_options
+
+      def rtc_set_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:epoch_seconds] = u32_value(words.shift, "#{command} epoch_seconds") unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires epoch_seconds" unless merged.key?(:epoch_seconds)
+
+        merged
+      end
 
       def i2c_write_u8_command_options(words, command, options, require_budget: true)
         merged = options.dup
@@ -2100,6 +2195,21 @@ module CodingAdventures
         raise ArgumentError, "byte must fit in u8" if byte.negative? || byte > 0xFF
 
         byte
+      end
+
+      def u32_value(value, name)
+        integer = if value.is_a?(Integer)
+          value
+        else
+          begin
+            Integer(value, 0)
+          rescue ArgumentError
+            raise ArgumentError, "#{name} must be an integer: #{value.inspect}"
+          end
+        end
+        raise ArgumentError, "#{name} must fit in u32" if integer.negative? || integer > 0xFFFF_FFFF
+
+        integer
       end
 
       def boot_policy_value(value)

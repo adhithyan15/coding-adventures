@@ -220,6 +220,8 @@ metadata. The operation is intentionally direct and stateless, mirroring
 | `0x31` | `can.open` | `bus: u16/u8` | `handle` |
 | `0x32` | `can.write` | `handle`, `byte: u8` | `unit` |
 | `0x33` | `can.read` | `handle` | `u8` |
+| `0x34` | `rtc.now` | none | `u32` |
+| `0x35` | `rtc.set` | `epoch_seconds: u32` | `unit` |
 
 `i2c.open` opens a board-advertised I2C controller and returns a persistent bus
 handle. The handle is the lifetime anchor for transfer operations, keeping bus
@@ -259,6 +261,15 @@ for subsequent calls. `uart.read` blocks for one byte on the same handle,
 returns it as `u8`, and also preserves the handle. Host SDKs may layer stream or
 buffer conveniences over these byte operations, but board discovery, descriptor
 metadata, and handle-token validation remain Rust-owned.
+
+### RTC
+
+`rtc.now` returns the board real-time clock as Unix epoch seconds in UTC. `rtc.set`
+sets the board real-time clock from a `u32` Unix epoch seconds value. These
+operations are direct and stateless because the initial RTC tranche exposes the
+single board-owned clock instance rather than allocating a persistent handle.
+Boards without an RTC, or without firmware support for setting it, must not
+advertise the corresponding capability.
 
 ### LED Matrix
 
