@@ -1,5 +1,73 @@
 # Changelog
 
+## [0.7.0] — 2026-05-18
+
+### Added — Phase 34: Weierstrass substitution for ∫ 1/(a + b·sin/cos x) dx
+
+Ports the Python `symbolic-vm` 0.59.0 Phase 34 work to TypeScript.  The
+substitution `u = tan(x/2)` produces `sin(x) = 2u/(1+u²)`,
+`cos(x) = (1−u²)/(1+u²)`, `dx = 2/(1+u²) du` and reduces the two
+canonical denominator shapes to a rational function in `u` that
+integrates to an arctan whenever `a² > b²` (denominator never zero on
+ℝ).  Closed forms:
+
+    ∫ 1/(a + b·sin x) dx  =  (2/√(a²−b²)) · arctan((a·tan(x/2) + b)/√(a²−b²))
+    ∫ 1/(a + b·cos x) dx  =  (2/√(a²−b²)) · arctan(√((a−b)/(a+b)) · tan(x/2))
+
+For exact-rational `a, b` satisfying `a² > b²` (and `a > 0` for the cos
+branch) the integrator now closes the form directly.  A numerator
+constant `c` simply scales the result.
+
+#### Deferred to a later phase
+
+- `a² < b²` — log form on `(a·tan(x/2)+b ± √(b²−a²))` (sign analysis).
+- `a² = b²` — degenerate, reduces to a rational in `tan(x/2)`.
+- `a ≤ 0` for the cos case — `(a−b)/(a+b)` sign analysis.
+- Symbolic `a` or `b` — discriminant sign undecidable without an
+  assumption context (the TS port has no assumption system).
+- Non-bare trig arguments (e.g. `sin(2x)`) — composition with a future
+  linear-substitution phase will pick this up.
+
+#### Added
+
+- **`tryWeierstrassOneOverLinearTrig(integrand, x)`** — Phase 34 entry
+  point.  Matches `Div(c, Add(a, ...))` shapes where the `Add` resolves
+  to `a + b·sin(x)` or `a + b·cos(x)` and `c, a, b` are exact rationals.
+  Wired into the `DIV` branch of `integrateIndefinite` after the
+  existing constant-numerator and `1/x` cases.
+
+- **`weierstrassParseAPlusBSincos(node, x)`** — structural matcher
+  returning `{ a, b, trigHead }` for the four canonical operand
+  orderings (Add/Sub × constant-left/right).  Reuses the existing
+  `toNumeric` / `negNumeric` helpers.
+
+- **`weierstrassParseConstTimesTrigX(node, x)`** — matches `c·sin(x)`,
+  `c·cos(x)`, `sin(x)`, `cos(x)`, and their Neg-wrapped variants.
+
+- **`weierstrassSqrtFractionIR(f)`** — emits `Sqrt(p/q)` IR, folding to
+  a clean rational when both `p` and `q` are perfect integer squares
+  (uses the existing `bigIntIsqrt` helper).
+
+- **`isPositiveNumeric(v)`** — strict-positive predicate for Numeric.
+
+#### Tests
+
+`tests/phase34-weierstrass.test.ts` (14 cases mirroring Python's
+`test_phase34_weierstrass.py`):
+
+- Closed-form structure: ∫ 1/(2 + sin x) contains Atan in the body.
+- Numeric-derivative verification at 5–7 sample points across the
+  open interval where tan(x/2) is finite.
+- Perfect-square discriminant folds Sqrt away (a=5, b=3 → disc=16; cos
+  case has ratio 1/4 as well).
+- Numerator coefficient scales the closed form (∫ 3/(2 + sin x)).
+- Rational coefficients (a=3/2, b=1/2; disc=2).
+- Operand-order robustness (∫ 1/(sin x + 2) still closes).
+- Four fallthrough guarantees: a²<b², a²=b², non-bare argument,
+  symbolic `a`.
+- Regression: ∫ sin(x) dx = −cos(x) unchanged; ∫ 1/cos(x) dx is NOT
+  misinterpreted as a Weierstrass case.
+
 ## [0.6.0] — 2026-05-18
 
 ### Added — Phases 29–33: algebraic simplification rules

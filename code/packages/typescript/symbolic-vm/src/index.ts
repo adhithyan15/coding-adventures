@@ -1588,6 +1588,173 @@ function integrate(): Handler {
   };
 }
 
+// ---------------------------------------------------------------------------
+// Phase 34 — Weierstrass substitution for ∫ c/(a + b·sin(x)) dx and
+// ∫ c/(a + b·cos(x)) dx with numeric a, b satisfying a² > b² (and a > 0
+// for the cos branch).  Mirrors the Python port at symbolic-vm 0.59.0.
+//
+// Closed forms:
+//   ∫ 1/(a + b·sin x) dx = (2/√(a²−b²)) · arctan((a·tan(x/2) + b)/√(a²−b²))
+//   ∫ 1/(a + b·cos x) dx = (2/√(a²−b²)) · arctan(√((a−b)/(a+b)) · tan(x/2))
+//
+// Numerator constants c scale the result.  Discriminant cases a² ≤ b² and
+// the a ≤ 0 cos branch are deliberately deferred — they need sign analysis
+// that the assumption-free TS port cannot perform symbolically.
+// ---------------------------------------------------------------------------
+
+/**
+ * Rational `p/q` with `q > 0` and `gcd(|p|, q) = 1`, stored as Numeric so we
+ * can reuse the existing arithmetic helpers (addNumeric / mulNumeric / ...).
+ */
+
+function weierstrassSqrtFractionIR(f: Numeric): IRNode {
+  // Defensive: only called with f > 0.  We fold p/q when both p and q are
+  // perfect integer squares; otherwise emit Sqrt(rational).
+  const rat = asRat(f);
+  const p = rat.numer;
+  const q = rat.denom;
+  if (p <= 0n || q <= 0n) {
+    return app(SQRT, [fromNumeric(f)]);
+  }
+  const pRoot = bigIntIsqrt(p);
+  const qRoot = bigIntIsqrt(q);
+  if (pRoot !== undefined && qRoot !== undefined) {
+    return fromNumeric(makeRat(pRoot, qRoot));
+  }
+  return app(SQRT, [fromNumeric(f)]);
+}
+
+/** Match `c·sin(x)`, `c·cos(x)`, `sin(x)`, `cos(x)`, or their Neg-wrappings.
+ *  Returns ``{ c, head }`` (head is SIN or COS) or undefined. */
+function weierstrassParseConstTimesTrigX(
+  node: IRNode,
+  x: IRNode
+): { readonly c: Numeric; readonly head: IRNode } | undefined {
+  if (node.kind === "apply" && (equals(node.head, SIN) || equals(node.head, COS))) {
+    if (node.args.length === 1 && equals(node.args[0], x)) {
+      return { c: { kind: "int", value: 1n }, head: node.head };
+    }
+  }
+  if (node.kind === "apply" && equals(node.head, MUL) && node.args.length === 2) {
+    const [left, right] = node.args;
+    for (const [constSide, trigSide] of [
+      [left, right],
+      [right, left],
+    ] as const) {
+      const c = toNumeric(constSide);
+      if (c === undefined || c.kind === "float") continue;
+      if (
+        trigSide.kind === "apply" &&
+        (equals(trigSide.head, SIN) || equals(trigSide.head, COS)) &&
+        trigSide.args.length === 1 &&
+        equals(trigSide.args[0], x)
+      ) {
+        return { c, head: trigSide.head };
+      }
+    }
+  }
+  if (node.kind === "apply" && equals(node.head, NEG) && node.args.length === 1) {
+    const inner = weierstrassParseConstTimesTrigX(node.args[0], x);
+    if (inner !== undefined) {
+      return { c: negNumeric(inner.c), head: inner.head };
+    }
+  }
+  return undefined;
+}
+
+/** Parse ``a + b·sin(x)`` or ``a + b·cos(x)`` (any operand ordering, plus the
+ *  SUB head variant).  Returns ``{ a, b, trigHead }`` or undefined. */
+function weierstrassParseAPlusBSincos(
+  node: IRNode,
+  x: IRNode
+): { readonly a: Numeric; readonly b: Numeric; readonly trigHead: IRNode } | undefined {
+  if (node.kind !== "apply" || node.args.length !== 2) return undefined;
+  if (equals(node.head, ADD)) {
+    const [left, right] = node.args;
+    for (const [constSide, trigSide] of [
+      [left, right],
+      [right, left],
+    ] as const) {
+      const a = toNumeric(constSide);
+      if (a === undefined || a.kind === "float") continue;
+      const trigParse = weierstrassParseConstTimesTrigX(trigSide, x);
+      if (trigParse === undefined) continue;
+      return { a, b: trigParse.c, trigHead: trigParse.head };
+    }
+    return undefined;
+  }
+  if (equals(node.head, SUB)) {
+    // `a − b·trig(x)` = `a + (−b)·trig(x)` and the symmetric reversal.
+    const [left, right] = node.args;
+    const aLeft = toNumeric(left);
+    if (aLeft !== undefined && aLeft.kind !== "float") {
+      const trigParse = weierstrassParseConstTimesTrigX(right, x);
+      if (trigParse !== undefined) {
+        return { a: aLeft, b: negNumeric(trigParse.c), trigHead: trigParse.head };
+      }
+    }
+    const bTrigLeft = weierstrassParseConstTimesTrigX(left, x);
+    const aRight = toNumeric(right);
+    if (bTrigLeft !== undefined && aRight !== undefined && aRight.kind !== "float") {
+      return {
+        a: negNumeric(aRight),
+        b: bTrigLeft.c,
+        trigHead: bTrigLeft.head,
+      };
+    }
+    return undefined;
+  }
+  return undefined;
+}
+
+/** Phase 34 entry point. Returns the closed form, or undefined when the
+ *  shape doesn't match or the discriminant fails the a² > b² / a > 0 guards. */
+function tryWeierstrassOneOverLinearTrig(
+  integrand: IRNode,
+  x: IRNode
+): IRNode | undefined {
+  if (integrand.kind !== "apply" || !equals(integrand.head, DIV)) return undefined;
+  if (integrand.args.length !== 2) return undefined;
+  const [num, den] = integrand.args;
+  if (dependsOn(num, x)) return undefined;
+  const c = toNumeric(num);
+  if (c === undefined || c.kind === "float") return undefined;
+  const parsed = weierstrassParseAPlusBSincos(den, x);
+  if (parsed === undefined) return undefined;
+  const { a, b, trigHead } = parsed;
+  // disc = a² − b² (exact Numeric arithmetic — both a, b are Int/Rat).
+  const disc = subNumeric(mulNumeric(a, a), mulNumeric(b, b));
+  // disc must be strictly positive; reject zero (a² = b²) and negative.
+  if (!isPositiveNumeric(disc)) return undefined;
+  const sqrtDiscIR = weierstrassSqrtFractionIR(disc);
+  const tanHalf = app(TAN, [app(DIV, [x, int(2)])]);
+  let atanArg: IRNode;
+  if (equals(trigHead, SIN)) {
+    // (a·tan(x/2) + b) / √(a²−b²)
+    const top = app(ADD, [app(MUL, [fromNumeric(a), tanHalf]), fromNumeric(b)]);
+    atanArg = app(DIV, [top, sqrtDiscIR]);
+  } else {
+    // COS branch: requires a > 0 to avoid sign-flip; defers otherwise.
+    if (!isPositiveNumeric(a)) return undefined;
+    // ratio = (a − b) / (a + b)
+    const ratio = divNumeric(subNumeric(a, b), addNumeric(a, b));
+    if (!isPositiveNumeric(ratio)) return undefined;
+    const sqrtRatioIR = weierstrassSqrtFractionIR(ratio);
+    atanArg = app(MUL, [sqrtRatioIR, tanHalf]);
+  }
+  // Outer coefficient: 2c / √(a²−b²)
+  const coefFrac = mulNumeric(c, { kind: "int", value: 2n });
+  const coefIR = app(DIV, [fromNumeric(coefFrac), sqrtDiscIR]);
+  return app(MUL, [coefIR, app(ATAN, [atanArg])]);
+}
+
+/** True when ``v`` is an exact rational/integer strictly greater than zero. */
+function isPositiveNumeric(v: Numeric): boolean {
+  if (v.kind === "int") return v.value > 0n;
+  if (v.kind === "rat") return v.numer > 0n; // denominator is always positive
+  return v.value > 0;
+}
+
 function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
   if (!dependsOn(f, x)) {
     return app(MUL, [f, x]);
@@ -1653,6 +1820,10 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
     if (!dependsOn(numerator, x) && equals(denominator, x)) {
       return app(MUL, [numerator, app(LOG, [x])]);
     }
+    // Phase 34: Weierstrass substitution for c / (a + b·sin(x)) and
+    // c / (a + b·cos(x)) when a, b numeric and a² > b² (a > 0 for cos).
+    const weier = tryWeierstrassOneOverLinearTrig(f, x);
+    if (weier !== undefined) return weier;
     return undefined;
   }
   if (equals(f.head, POW)) {
