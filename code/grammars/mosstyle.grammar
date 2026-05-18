@@ -88,9 +88,19 @@ state_block = KEYWORD NAME LBRACE { property_decl } RBRACE ;
 # ============================================================================
 # Property declarations
 # ============================================================================
-# property-name : value ;
+# property-name : value+ ;
+#
+# A property can carry one OR MORE space-separated style_values, matching
+# CSS shorthand syntax. Examples:
+#   color : #ffffff ;                                — one value
+#   border : 1px solid #3f3f46 ;                     — three values
+#   margin : 4px 8px ;                               — two values (top/bottom, l/r)
+#   font  : 12px monospace ;                         — two values
+# The analyzer joins multi-value sequences with a single space to produce
+# the final value string. Backends (CSS / React inline style) accept the
+# space-separated form verbatim.
 
-property_decl = NAME COLON style_value SEMICOLON ;
+property_decl = NAME COLON style_value { style_value } SEMICOLON ;
 
 # ============================================================================
 # Style values
