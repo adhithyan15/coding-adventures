@@ -49,6 +49,9 @@ pub const CAP_NETWORK_UDP_OPEN: u16 = 0x3E;
 pub const CAP_NETWORK_UDP_WRITE: u16 = 0x3F;
 pub const CAP_NETWORK_UDP_READ: u16 = 0x40;
 pub const CAP_NETWORK_UDP_CLOSE: u16 = 0x41;
+pub const CAP_NETWORK_WIFI_ASSOCIATE: u16 = 0x42;
+pub const CAP_NETWORK_WIFI_DISCONNECT: u16 = 0x43;
+pub const CAP_NETWORK_WIFI_STATUS: u16 = 0x44;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
 const CAP_GPIO_WRITE_U8: u8 = CAP_GPIO_WRITE as u8;
@@ -88,6 +91,9 @@ const CAP_NETWORK_UDP_OPEN_U8: u8 = CAP_NETWORK_UDP_OPEN as u8;
 const CAP_NETWORK_UDP_WRITE_U8: u8 = CAP_NETWORK_UDP_WRITE as u8;
 const CAP_NETWORK_UDP_READ_U8: u8 = CAP_NETWORK_UDP_READ as u8;
 const CAP_NETWORK_UDP_CLOSE_U8: u8 = CAP_NETWORK_UDP_CLOSE as u8;
+const CAP_NETWORK_WIFI_ASSOCIATE_U8: u8 = CAP_NETWORK_WIFI_ASSOCIATE as u8;
+const CAP_NETWORK_WIFI_DISCONNECT_U8: u8 = CAP_NETWORK_WIFI_DISCONNECT as u8;
+const CAP_NETWORK_WIFI_STATUS_U8: u8 = CAP_NETWORK_WIFI_STATUS as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Op {
@@ -175,6 +181,7 @@ pub struct CapabilitySet {
     pub storage: bool,
     pub network_tcp: bool,
     pub network_udp: bool,
+    pub network_wifi: bool,
 }
 
 impl CapabilitySet {
@@ -195,6 +202,7 @@ impl CapabilitySet {
             storage: false,
             network_tcp: false,
             network_udp: false,
+            network_wifi: false,
         }
     }
 
@@ -215,6 +223,7 @@ impl CapabilitySet {
             storage: false,
             network_tcp: false,
             network_udp: false,
+            network_wifi: false,
         }
     }
 
@@ -285,6 +294,13 @@ impl CapabilitySet {
         }
     }
 
+    pub const fn with_network_wifi(self) -> Self {
+        Self {
+            network_wifi: true,
+            ..self
+        }
+    }
+
     pub const fn supports(self, capability_id: u16) -> bool {
         match capability_id {
             CAP_GPIO_OPEN | CAP_GPIO_WRITE | CAP_GPIO_READ | CAP_GPIO_CLOSE => self.gpio_digital,
@@ -309,6 +325,9 @@ impl CapabilitySet {
             | CAP_NETWORK_UDP_WRITE
             | CAP_NETWORK_UDP_READ
             | CAP_NETWORK_UDP_CLOSE => self.network_udp,
+            CAP_NETWORK_WIFI_ASSOCIATE | CAP_NETWORK_WIFI_DISCONNECT | CAP_NETWORK_WIFI_STATUS => {
+                self.network_wifi
+            }
             _ => false,
         }
     }
@@ -602,6 +621,13 @@ fn stack_effect(op: Op) -> (i16, i16) {
         Op::CallU8(CAP_NETWORK_UDP_WRITE_U8) | Op::CallU16(CAP_NETWORK_UDP_WRITE) => (2, 0),
         Op::CallU8(CAP_NETWORK_UDP_READ_U8) | Op::CallU16(CAP_NETWORK_UDP_READ) => (1, 1),
         Op::CallU8(CAP_NETWORK_UDP_CLOSE_U8) | Op::CallU16(CAP_NETWORK_UDP_CLOSE) => (1, 0),
+        Op::CallU8(CAP_NETWORK_WIFI_ASSOCIATE_U8) | Op::CallU16(CAP_NETWORK_WIFI_ASSOCIATE) => {
+            (3, 1)
+        }
+        Op::CallU8(CAP_NETWORK_WIFI_DISCONNECT_U8) | Op::CallU16(CAP_NETWORK_WIFI_DISCONNECT) => {
+            (1, 0)
+        }
+        Op::CallU8(CAP_NETWORK_WIFI_STATUS_U8) | Op::CallU16(CAP_NETWORK_WIFI_STATUS) => (1, 1),
         Op::CallU8(_) | Op::CallU16(_) => (0, 0),
         Op::ReturnTop => (1, 0),
     }
@@ -1168,6 +1194,64 @@ mod tests {
     }
 
     #[test]
+    fn validates_network_wifi_association_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 3,
+            code: &[
+                0x12,
+                0x00,
+                0x16,
+                0x00,
+                0x00,
+                0x04,
+                0x16,
+                0x04,
+                0x00,
+                0x04,
+                0x40,
+                CAP_NETWORK_WIFI_ASSOCIATE as u8,
+                0x50,
+            ],
+            const_pool: b"ssidpass",
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_network_wifi(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_WIFI_ASSOCIATE]);
+    }
+
+    #[test]
+    fn validates_network_wifi_status_and_disconnect_capabilities() {
+        let status = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x12, 0x00, 0x40, CAP_NETWORK_WIFI_STATUS as u8, 0x50],
+            const_pool: &[],
+        };
+        let disconnect = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x12, 0x00, 0x40, CAP_NETWORK_WIFI_DISCONNECT as u8],
+            const_pool: &[],
+        };
+
+        validate(&status, CapabilitySet::blink_mvp().with_network_wifi(), 1).unwrap();
+        validate(
+            &disconnect,
+            CapabilitySet::blink_mvp().with_network_wifi(),
+            1,
+        )
+        .unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&status, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_WIFI_STATUS]);
+        let count = collect_required_capabilities(&disconnect, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_WIFI_DISCONNECT]);
+    }
+
+    #[test]
     fn validates_spi_transfer_capability() {
         let module = Module {
             flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
@@ -1479,6 +1563,37 @@ mod tests {
         assert_eq!(
             validate(&module, CapabilitySet::blink_mvp(), 3),
             Err(ValidateError::UnsupportedCapability(CAP_STORAGE_READ))
+        );
+    }
+
+    #[test]
+    fn rejects_network_wifi_associate_without_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 3,
+            code: &[
+                0x12,
+                0x00,
+                0x16,
+                0x00,
+                0x00,
+                0x04,
+                0x16,
+                0x04,
+                0x00,
+                0x04,
+                0x40,
+                CAP_NETWORK_WIFI_ASSOCIATE as u8,
+                0x50,
+            ],
+            const_pool: b"ssidpass",
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 3),
+            Err(ValidateError::UnsupportedCapability(
+                CAP_NETWORK_WIFI_ASSOCIATE
+            ))
         );
     }
 

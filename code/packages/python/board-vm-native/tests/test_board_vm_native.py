@@ -143,6 +143,9 @@ def test_known_targets_are_exposed_from_rust_registry():
     assert "network.ipv4" in uno_r4_wifi.capabilities
     assert "network.tcp" in uno_r4_wifi.capabilities
     assert "network.udp" in uno_r4_wifi.capabilities
+    assert "network.wifi.associate" in uno_r4_wifi.capabilities
+    assert "network.wifi.disconnect" in uno_r4_wifi.capabilities
+    assert "network.wifi.status" in uno_r4_wifi.capabilities
     assert uno_r4_wifi.wireless_transports == ["wifi", "bluetooth_le"]
     assert uno_r4_wifi.network_interfaces == [
         {
