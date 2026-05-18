@@ -41,6 +41,10 @@ pub const CAP_WATCHDOG_CONFIGURE: u16 = 0x36;
 pub const CAP_WATCHDOG_KICK: u16 = 0x37;
 pub const CAP_STORAGE_WRITE: u16 = 0x38;
 pub const CAP_STORAGE_READ: u16 = 0x39;
+pub const CAP_NETWORK_TCP_OPEN: u16 = 0x3A;
+pub const CAP_NETWORK_TCP_WRITE: u16 = 0x3B;
+pub const CAP_NETWORK_TCP_READ: u16 = 0x3C;
+pub const CAP_NETWORK_TCP_CLOSE: u16 = 0x3D;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
 const CAP_GPIO_WRITE_U8: u8 = CAP_GPIO_WRITE as u8;
@@ -72,6 +76,10 @@ const CAP_WATCHDOG_CONFIGURE_U8: u8 = CAP_WATCHDOG_CONFIGURE as u8;
 const CAP_WATCHDOG_KICK_U8: u8 = CAP_WATCHDOG_KICK as u8;
 const CAP_STORAGE_WRITE_U8: u8 = CAP_STORAGE_WRITE as u8;
 const CAP_STORAGE_READ_U8: u8 = CAP_STORAGE_READ as u8;
+const CAP_NETWORK_TCP_OPEN_U8: u8 = CAP_NETWORK_TCP_OPEN as u8;
+const CAP_NETWORK_TCP_WRITE_U8: u8 = CAP_NETWORK_TCP_WRITE as u8;
+const CAP_NETWORK_TCP_READ_U8: u8 = CAP_NETWORK_TCP_READ as u8;
+const CAP_NETWORK_TCP_CLOSE_U8: u8 = CAP_NETWORK_TCP_CLOSE as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Op {
@@ -157,6 +165,7 @@ pub struct CapabilitySet {
     pub rtc: bool,
     pub watchdog: bool,
     pub storage: bool,
+    pub network_tcp: bool,
 }
 
 impl CapabilitySet {
@@ -175,6 +184,7 @@ impl CapabilitySet {
             rtc: false,
             watchdog: false,
             storage: false,
+            network_tcp: false,
         }
     }
 
@@ -193,6 +203,7 @@ impl CapabilitySet {
             rtc: false,
             watchdog: false,
             storage: false,
+            network_tcp: false,
         }
     }
 
@@ -249,6 +260,13 @@ impl CapabilitySet {
         }
     }
 
+    pub const fn with_network_tcp(self) -> Self {
+        Self {
+            network_tcp: true,
+            ..self
+        }
+    }
+
     pub const fn supports(self, capability_id: u16) -> bool {
         match capability_id {
             CAP_GPIO_OPEN | CAP_GPIO_WRITE | CAP_GPIO_READ | CAP_GPIO_CLOSE => self.gpio_digital,
@@ -265,6 +283,10 @@ impl CapabilitySet {
             CAP_RTC_NOW | CAP_RTC_SET => self.rtc,
             CAP_WATCHDOG_CONFIGURE | CAP_WATCHDOG_KICK => self.watchdog,
             CAP_STORAGE_WRITE | CAP_STORAGE_READ => self.storage,
+            CAP_NETWORK_TCP_OPEN
+            | CAP_NETWORK_TCP_WRITE
+            | CAP_NETWORK_TCP_READ
+            | CAP_NETWORK_TCP_CLOSE => self.network_tcp,
             _ => false,
         }
     }
@@ -550,6 +572,10 @@ fn stack_effect(op: Op) -> (i16, i16) {
         Op::CallU8(CAP_WATCHDOG_KICK_U8) | Op::CallU16(CAP_WATCHDOG_KICK) => (0, 0),
         Op::CallU8(CAP_STORAGE_WRITE_U8) | Op::CallU16(CAP_STORAGE_WRITE) => (3, 0),
         Op::CallU8(CAP_STORAGE_READ_U8) | Op::CallU16(CAP_STORAGE_READ) => (3, 1),
+        Op::CallU8(CAP_NETWORK_TCP_OPEN_U8) | Op::CallU16(CAP_NETWORK_TCP_OPEN) => (3, 1),
+        Op::CallU8(CAP_NETWORK_TCP_WRITE_U8) | Op::CallU16(CAP_NETWORK_TCP_WRITE) => (2, 0),
+        Op::CallU8(CAP_NETWORK_TCP_READ_U8) | Op::CallU16(CAP_NETWORK_TCP_READ) => (1, 1),
+        Op::CallU8(CAP_NETWORK_TCP_CLOSE_U8) | Op::CallU16(CAP_NETWORK_TCP_CLOSE) => (1, 0),
         Op::CallU8(_) | Op::CallU16(_) => (0, 0),
         Op::ReturnTop => (1, 0),
     }

@@ -4,7 +4,8 @@ use board_vm_ir::{
     parse_module, validate, CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ, CAP_CAN_WRITE,
     CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN,
     CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
-    CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER,
+    CAP_LED_MATRIX_FRAME, CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
+    CAP_NETWORK_TCP_WRITE, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER,
     CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN,
     CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
 };
@@ -210,6 +211,30 @@ const STORAGE_READ_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescrip
     version: 1,
     flags: CAP_FLAG_BYTECODE_CALLABLE,
     name: "storage.read",
+};
+const NETWORK_TCP_OPEN_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_NETWORK_TCP_OPEN,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "network.tcp.open",
+};
+const NETWORK_TCP_WRITE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_NETWORK_TCP_WRITE,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "network.tcp.write",
+};
+const NETWORK_TCP_READ_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_NETWORK_TCP_READ,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "network.tcp.read",
+};
+const NETWORK_TCP_CLOSE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_NETWORK_TCP_CLOSE,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "network.tcp.close",
 };
 const LED_MATRIX_FRAME_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
     id: CAP_LED_MATRIX_FRAME,
@@ -1208,6 +1233,46 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_AND_L
     WATCHDOG_KICK_DESCRIPTOR,
     STORAGE_WRITE_DESCRIPTOR,
     STORAGE_READ_DESCRIPTOR,
+    LED_MATRIX_FRAME_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+    PROGRAM_STORE_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_AND_LED_MATRIX_CAPABILITIES:
+    [CapabilityDescriptor<'static>; 36] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    I2C_OPEN_DESCRIPTOR,
+    I2C_WRITE_U8_DESCRIPTOR,
+    I2C_READ_U8_DESCRIPTOR,
+    I2C_WRITE_DESCRIPTOR,
+    I2C_READ_DESCRIPTOR,
+    I2C_TRANSFER_DESCRIPTOR,
+    SPI_OPEN_DESCRIPTOR,
+    SPI_TRANSFER_DESCRIPTOR,
+    UART_OPEN_DESCRIPTOR,
+    UART_WRITE_DESCRIPTOR,
+    UART_READ_DESCRIPTOR,
+    CAN_OPEN_DESCRIPTOR,
+    CAN_WRITE_DESCRIPTOR,
+    CAN_READ_DESCRIPTOR,
+    RTC_NOW_DESCRIPTOR,
+    RTC_SET_DESCRIPTOR,
+    WATCHDOG_CONFIGURE_DESCRIPTOR,
+    WATCHDOG_KICK_DESCRIPTOR,
+    STORAGE_WRITE_DESCRIPTOR,
+    STORAGE_READ_DESCRIPTOR,
+    NETWORK_TCP_OPEN_DESCRIPTOR,
+    NETWORK_TCP_WRITE_DESCRIPTOR,
+    NETWORK_TCP_READ_DESCRIPTOR,
+    NETWORK_TCP_CLOSE_DESCRIPTOR,
     LED_MATRIX_FRAME_DESCRIPTOR,
     PROGRAM_RAM_EXEC_DESCRIPTOR,
     PROGRAM_STORE_DESCRIPTOR,
@@ -2375,6 +2440,20 @@ mod tests {
         PROGRAM_STORE_DESCRIPTOR,
     ];
 
+    const NETWORK_TCP_CAPABILITIES: [CapabilityDescriptor<'static>; 11] = [
+        GPIO_OPEN_DESCRIPTOR,
+        GPIO_WRITE_DESCRIPTOR,
+        GPIO_READ_DESCRIPTOR,
+        GPIO_CLOSE_DESCRIPTOR,
+        TIME_SLEEP_MS_DESCRIPTOR,
+        TIME_NOW_MS_DESCRIPTOR,
+        NETWORK_TCP_OPEN_DESCRIPTOR,
+        NETWORK_TCP_WRITE_DESCRIPTOR,
+        NETWORK_TCP_READ_DESCRIPTOR,
+        NETWORK_TCP_CLOSE_DESCRIPTOR,
+        PROGRAM_RAM_EXEC_DESCRIPTOR,
+    ];
+
     fn new_device() -> Device {
         BoardVmDevice::new(
             DeviceDescriptor::blink_mvp("test-board", 0xB04D_1001),
@@ -2661,6 +2740,69 @@ mod tests {
         }
         decoder.finish().unwrap();
         assert!(found_store);
+    }
+
+    #[test]
+    fn descriptor_reports_network_tcp_bytecode_capabilities() {
+        let mut device = BoardVmDevice::new(
+            DeviceDescriptor {
+                board_id: "test-board",
+                runtime_id: DEFAULT_DEVICE_RUNTIME_ID,
+                board_nonce: 0xB04D_1001,
+                max_frame_payload: DEFAULT_MAX_FRAME_PAYLOAD,
+                supports_store_program: false,
+                capabilities: &NETWORK_TCP_CAPABILITIES,
+            },
+            FakeHal::new(CapabilitySet::blink_mvp().with_network_tcp()),
+        );
+        let mut session = HostSession::new();
+        let mut request = [0u8; 128];
+        let mut device_payload = [0u8; 256];
+        let mut response = [0u8; 320];
+
+        let caps = session.caps_query_frame(&mut request).unwrap();
+        let response_len = handle(
+            &mut device,
+            &request[..caps.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let frame = decode_frame(&response[..response_len]).unwrap();
+        let (header, mut decoder) = decode_caps_report_header(frame.payload).unwrap();
+
+        assert_eq!(
+            header.capability_count,
+            NETWORK_TCP_CAPABILITIES.len() as u32
+        );
+        let mut found = [false; 4];
+        for _ in 0..header.capability_count {
+            let capability = decoder.read_capability_descriptor().unwrap();
+            match capability.id {
+                CAP_NETWORK_TCP_OPEN => {
+                    found[0] = true;
+                    assert_eq!(capability.name, "network.tcp.open");
+                    assert_eq!(capability.flags, CAP_FLAG_BYTECODE_CALLABLE);
+                }
+                CAP_NETWORK_TCP_WRITE => {
+                    found[1] = true;
+                    assert_eq!(capability.name, "network.tcp.write");
+                    assert_eq!(capability.flags, CAP_FLAG_BYTECODE_CALLABLE);
+                }
+                CAP_NETWORK_TCP_READ => {
+                    found[2] = true;
+                    assert_eq!(capability.name, "network.tcp.read");
+                    assert_eq!(capability.flags, CAP_FLAG_BYTECODE_CALLABLE);
+                }
+                CAP_NETWORK_TCP_CLOSE => {
+                    found[3] = true;
+                    assert_eq!(capability.name, "network.tcp.close");
+                    assert_eq!(capability.flags, CAP_FLAG_BYTECODE_CALLABLE);
+                }
+                _ => {}
+            }
+        }
+        decoder.finish().unwrap();
+        assert_eq!(found, [true; 4]);
     }
 
     #[test]
