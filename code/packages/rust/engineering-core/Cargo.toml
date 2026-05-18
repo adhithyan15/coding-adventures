@@ -1,0 +1,9 @@
+[package]
+name = "engineering-core"
+version = "0.1.0"
+edition = "2021"
+description = "Canonical Rust engineering core — Excel/Lotus base/bitwise/complex/unit/erf functions for any spreadsheet or scientific frontend"
+
+[dependencies]
+numeric-tower = { path = "../numeric-tower" }
+r-vector = { path = "../r-vector" }

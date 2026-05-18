@@ -266,7 +266,7 @@ def apply_unary(op: UnaryOpCode, value: SqlValue) -> SqlValue:
 # --------------------------------------------------------------------------
 
 
-def like_match(value: str, pattern: str) -> bool:
+def like_match(value: str, pattern: str, escape: str | None = None) -> bool:
     """Case-insensitive LIKE matcher (SQLite / ANSI SQL default behaviour).
 
     LIKE is case-insensitive for ASCII letters by default in SQLite and in
@@ -279,37 +279,81 @@ def like_match(value: str, pattern: str) -> bool:
         %   — matches zero or more characters
         _   — matches exactly one character
 
+    If *escape* is provided (a single-character string), it disables the
+    wildcard meaning of the following character in the pattern.  For
+    example ``LIKE 'a\\_b' ESCAPE '\\'`` matches the literal string ``"a_b"``.
+    An escape character at the end of the pattern, or followed by some
+    character other than ``%``, ``_``, or the escape character itself, is
+    a syntax error in SQLite; here we tolerate it by treating both the
+    escape character and the next character as literal.
+
     Truth table::
 
-        like_match('Hello', 'hello')   → True   (ASCII case-fold)
-        like_match('Hello', 'HELLO%')  → True
-        like_match('abc',   'a%c')     → True
-        like_match('abc',   'a_c')     → True
-        like_match('ac',    'a_c')     → False  (underscore needs exactly 1)
-        like_match('',      '%')       → True   (% matches empty)
+        like_match('Hello', 'hello')                  → True
+        like_match('abc',   'a%c')                    → True
+        like_match('ac',    'a_c')                    → False
+        like_match('a_b',   'a\\\\_b', escape='\\\\')   → True
+        like_match('axb',   'a\\\\_b', escape='\\\\')   → False
 
-    Algorithm: iterative DP — O(m·n) time, O(m·n) space, no recursion.
-    ``m = len(value)``, ``n = len(pattern)``.
-    ``dp[i][j]`` is True if ``value[:i]`` matches ``pattern[:j]``.
+    Algorithm: the pattern is first tokenised into a list of three kinds of
+    tokens — ``('star',)``, ``('one',)``, and ``('lit', c)`` — that
+    collapse each escape+char pair into a single literal token.  Then a
+    standard wildcard-matching DP runs in O(m·k) time where m=len(value)
+    and k=number of tokens.
     """
     # Normalise to lowercase for case-insensitive ASCII comparison.
-    # The pattern wildcards % and _ are already ASCII so folding them is safe.
     value_lower = value.lower()
     pattern_lower = pattern.lower()
+    esc_lower = escape.lower() if (escape is not None and len(escape) == 1) else None
 
-    m, n = len(value_lower), len(pattern_lower)
-    # dp[i][j] = True if value[:i] matches pattern[:j]
-    dp = [[False] * (n + 1) for _ in range(m + 1)]
+    # Tokenise the pattern.  Each token is either:
+    #   ('star',)       — % wildcard, matches zero or more chars
+    #   ('one',)        — _ wildcard, matches exactly one char
+    #   ('lit',   c)    — match this exact character
+    tokens: list[tuple[str, str]] = []
+    j = 0
+    while j < len(pattern_lower):
+        c = pattern_lower[j]
+        # Escape character followed by another character: collapse the pair
+        # into a single literal token for the following character.
+        if esc_lower is not None and c == esc_lower and j + 1 < len(pattern_lower):
+            tokens.append(("lit", pattern_lower[j + 1]))
+            j += 2
+            continue
+        if c == "%":
+            # Collapse consecutive %s into a single star token to keep the DP
+            # state space small for adversarial patterns like '%%%%%a'.
+            if not tokens or tokens[-1] != ("star", ""):
+                tokens.append(("star", ""))
+            j += 1
+            continue
+        if c == "_":
+            tokens.append(("one", ""))
+            j += 1
+            continue
+        tokens.append(("lit", c))
+        j += 1
+
+    # Standard wildcard-matching DP over (value_position, token_position).
+    # dp[i][k] = True if value[:i] matches tokens[:k].
+    m, k_max = len(value_lower), len(tokens)
+    dp = [[False] * (k_max + 1) for _ in range(m + 1)]
     dp[0][0] = True
-    for j in range(1, n + 1):
-        if pattern_lower[j - 1] == "%":
-            dp[0][j] = dp[0][j - 1]
+    # Empty value matches a leading run of stars (and only stars).
+    for k in range(1, k_max + 1):
+        if tokens[k - 1][0] == "star":
+            dp[0][k] = dp[0][k - 1]
     for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            p = pattern_lower[j - 1]
-            if p == "%":
-                # Match zero chars (dp[i][j-1]) or one more char (dp[i-1][j]).
-                dp[i][j] = dp[i][j - 1] or dp[i - 1][j]
-            elif p == "_" or p == value_lower[i - 1]:
-                dp[i][j] = dp[i - 1][j - 1]
-    return dp[m][n]
+        vi = value_lower[i - 1]
+        for k in range(1, k_max + 1):
+            kind, lit = tokens[k - 1]
+            if kind == "star":
+                # Either consume zero value chars (dp[i][k-1]) or one more
+                # value char while staying on the star (dp[i-1][k]).
+                dp[i][k] = dp[i][k - 1] or dp[i - 1][k]
+            elif kind == "one":
+                dp[i][k] = dp[i - 1][k - 1]
+            else:  # kind == "lit"
+                if vi == lit:
+                    dp[i][k] = dp[i - 1][k - 1]
+    return dp[m][k_max]

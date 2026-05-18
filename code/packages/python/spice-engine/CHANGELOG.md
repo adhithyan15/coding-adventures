@@ -1,8 +1,24 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Sparse real solver path** — large DC / real small-signal matrices now route
+  through a sparse-row Gaussian elimination path while small systems keep the
+  dense solver.
+
+- **Programmatic subcircuits** — `SubcircuitDefinition` plus `XInstance`
+  let callers define reusable cells and expand each instance into namespaced
+  primitive elements before simulation.
+
 ## [0.13.0] — 2026-05-16
 
 ### Added
+
+- **Behavioral B sources** — `BSource` adds DC behavioral current and voltage
+  sources with arithmetic expressions over constants and node-voltage
+  references `V(node)` / `V(node1,node2)`.
 
 - **Inductor initial current** — `Inductor` now accepts an `initial_current`
   value that seeds transient analysis companion models.

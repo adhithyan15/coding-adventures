@@ -71,6 +71,7 @@ from fractions import Fraction
 
 from polynomial import (
     Polynomial,
+    deriv as poly_deriv,
     divmod_poly,
     multiply,
     normalize,
@@ -922,6 +923,16 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         result = _try_trig_log_product(a, b, x) or _try_trig_log_product(b, a, x)
         if result is not None:
             return result
+        # Phase 28: polynomial × log(Q(x)) for non-linear polynomial Q — IBP
+        # with u = log(Q), dv = P dx, residual is a rational function of x.
+        result = _try_log_poly_product(a, b, x) or _try_log_poly_product(b, a, x)
+        if result is not None:
+            return result
+        # Phase 28: polynomial × atan(Q(x)) for non-linear polynomial Q — IBP
+        # with u = atan(Q), dv = P dx, residual is rational.
+        result = _try_atan_poly_product(a, b, x) or _try_atan_poly_product(b, a, x)
+        if result is not None:
+            return result
         # Phase 14a: exp(linear) × sinh/cosh(linear) — double-IBP closed form.
         result = _try_exp_hyp(a, b, x) or _try_exp_hyp(b, a, x)
         if result is not None:
@@ -1086,6 +1097,26 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
             and _inner.args[0] == x
         ):
             return _trig_log_integral(head, 0, x)
+
+    # --- Phase 28: bare log(Q(x)) / atan(Q(x)) for non-linear polynomial Q ----
+    # When the entire integrand is a single logarithm or arctangent whose
+    # argument is a non-linear polynomial, IBP with P = 1 gives:
+    #
+    #   ∫ log(Q) dx  =  x·log(Q)  −  ∫ x·Q′/Q dx      (residual rational)
+    #   ∫ atan(Q) dx =  x·atan(Q) −  ∫ x·Q′/(1+Q²) dx (residual rational)
+    #
+    # This is equivalent to calling _try_log_poly_product / _try_atan_poly_product
+    # with poly_candidate = 1, so we delegate directly.  Linear arguments are
+    # already handled by the Phase 3 block below and are skipped inside these
+    # helpers.
+    if len(f.args) == 1 and head == LOG:
+        _p28_result = _try_log_poly_product(f, ONE, x)
+        if _p28_result is not None:
+            return _p28_result
+    if len(f.args) == 1 and head == ATAN:
+        _p28_result = _try_atan_poly_product(f, ONE, x)
+        if _p28_result is not None:
+            return _p28_result
 
     # --- Phase 3a/3b/3c + Phase 5a + Phase 9 bonus: elementary fn of linear arg ---
     # Generalises the Phase 1 rules above to any a·x + b argument.
@@ -3602,3 +3633,197 @@ def _try_general_rational_integral(
     for p in ir_parts[1:]:
         acc = IRApply(ADD, (acc, p))
     return acc
+
+
+# ---------------------------------------------------------------------------
+# Phase 28 — general IBP for polynomial × log(Q(x)) and polynomial × atan(Q(x))
+# ---------------------------------------------------------------------------
+#
+# The two existing handlers (_try_log_product, _try_atan_product) only fire
+# when Q(x) is **linear** (ax+b).  Phase 28 extends both to any polynomial Q:
+#
+#   ∫ P(x)·log(Q(x)) dx = R(x)·log(Q(x)) − ∫ R(x)·Q′(x)/Q(x) dx
+#   ∫ P(x)·atan(Q(x)) dx = R(x)·atan(Q(x)) − ∫ R(x)·Q′(x)/(1+Q(x)²) dx
+#
+# where R(x) = ∫P(x) dx is the polynomial antiderivative of the polynomial
+# factor.  The residual integral is a rational function of x and is delegated
+# to the existing rational-function route (_integrate_rational: Hermite
+# reduction + Rothstein–Trager + arctan formula).
+#
+# Examples that become closed-form with Phase 28:
+#   ∫ log(x²+1) dx          = x·log(x²+1) − 2x + 2·atan(x)
+#   ∫ x·log(x²+1) dx        = (x²+1)/2·log(x²+1) − x²/2
+#   ∫ x²·log(x²+1) dx       = x³/3·log(x²+1) − (2x³/9 − 2x/3 + 2atan(x)/3)
+#   ∫ x·atan(x²) dx          = x²/2·atan(x²) − ¼·log(1+x⁴)
+#
+# Linear Q is deliberately excluded because Phase 3 (_try_log_product) and
+# Phase 11 (_try_atan_product) already handle those cases with cleaner
+# dedicated code paths.
+
+
+def _try_log_poly_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Phase 28: ``∫ P(x)·log(Q(x)) dx`` for non-linear polynomial Q(x).
+
+    IBP with ``u = log(Q)``, ``dv = P dx``:
+
+        ∫ P·log(Q) dx  =  R(x)·log(Q(x))  −  ∫ R(x)·Q′(x)/Q(x) dx
+
+    where R = ∫P (polynomial antiderivative).  The residual is a rational
+    function delegated to ``_integrate_rational``.  Returns ``None`` when:
+    - ``transcendental`` is not ``Log`` of a non-linear polynomial in x.
+    - ``poly_candidate`` is not a polynomial in x.
+    - The rational route cannot close the residual integral.
+    """
+    # Verify the structure: Log(Q_ir) where Q depends on x.
+    if not (
+        isinstance(transcendental, IRApply)
+        and transcendental.head == LOG
+        and len(transcendental.args) == 1
+    ):
+        return None
+    Q_ir = transcendental.args[0]
+    if not _depends_on(Q_ir, x):
+        return None  # log(constant) — constant-factor rule
+    # Skip linear Q — Phase 3 (_try_log_product) already handles it.
+    if _try_linear(Q_ir, x) is not None:
+        return None
+
+    # Extract Q(x) as a polynomial (den must be 1).
+    r_Q = to_rational(Q_ir, x)
+    if r_Q is None:
+        return None
+    Q_poly_raw, Q_den = r_Q
+    if len(normalize(Q_den)) > 1:
+        return None  # Q is a rational function, not a polynomial
+    Q_poly: tuple = tuple(Fraction(c) for c in normalize(Q_poly_raw))
+    if not Q_poly:
+        return None
+
+    # Extract P(x) as a polynomial.
+    r_P = to_rational(poly_candidate, x)
+    if r_P is None:
+        return None
+    P_poly_raw, P_den = r_P
+    if len(normalize(P_den)) > 1:
+        return None  # poly_candidate is rational, not polynomial
+    P_poly: tuple = tuple(Fraction(c) for c in normalize(P_poly_raw))
+    if not P_poly:
+        return None
+
+    # R(x) = ∫ P(x) dx — polynomial antiderivative.
+    R_poly = _integrate_polynomial(P_poly)
+    R_norm = normalize(R_poly)
+    if not R_norm:
+        return None
+    R_ir = from_polynomial(R_norm, x)
+
+    # Q′(x) = d/dx Q(x) — polynomial derivative.
+    Q_prime_poly = normalize(poly_deriv(Q_poly))
+    if not Q_prime_poly:
+        return None  # Q is constant (shouldn't reach here given checks above)
+
+    # Residual numerator: R(x)·Q′(x) as a polynomial.
+    N_poly = normalize(multiply(R_norm, Q_prime_poly))
+    if not N_poly:
+        # Numerator vanishes — ∫ P·log(Q) dx = R·log(Q) (no residual).
+        return IRApply(MUL, (R_ir, transcendental))
+    N_ir = from_polynomial(N_poly, x)
+
+    # Build the rational integrand N(x)/Q(x) and delegate.
+    residual_ir = IRApply(DIV, (N_ir, Q_ir))
+    rational_result = _integrate_rational(residual_ir, x)
+    if rational_result is None:
+        return None  # Rational route couldn't close it — fall through.
+
+    # ∫ P·log(Q) dx = R·log(Q) − ∫ R·Q′/Q dx.
+    return IRApply(SUB, (IRApply(MUL, (R_ir, transcendental)), rational_result))
+
+
+def _try_atan_poly_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Phase 28: ``∫ P(x)·atan(Q(x)) dx`` for non-linear polynomial Q(x).
+
+    IBP with ``u = atan(Q)``, ``dv = P dx``:
+
+        ∫ P·atan(Q) dx  =  R(x)·atan(Q(x))  −  ∫ R(x)·Q′(x)/(1+Q(x)²) dx
+
+    where R = ∫P.  The residual is delegated to ``_integrate_rational``.
+    Returns ``None`` when Q is not a non-linear polynomial, P is not a
+    polynomial, or the rational route cannot close the residual.
+    """
+    if not (
+        isinstance(transcendental, IRApply)
+        and transcendental.head == ATAN
+        and len(transcendental.args) == 1
+    ):
+        return None
+    Q_ir = transcendental.args[0]
+    if not _depends_on(Q_ir, x):
+        return None
+    # Skip linear Q — Phase 11 already handles it.
+    if _try_linear(Q_ir, x) is not None:
+        return None
+
+    # Extract Q(x) as a polynomial.
+    r_Q = to_rational(Q_ir, x)
+    if r_Q is None:
+        return None
+    Q_poly_raw, Q_den = r_Q
+    if len(normalize(Q_den)) > 1:
+        return None
+    Q_poly: tuple = tuple(Fraction(c) for c in normalize(Q_poly_raw))
+    if not Q_poly:
+        return None
+
+    # Extract P(x) as a polynomial.
+    r_P = to_rational(poly_candidate, x)
+    if r_P is None:
+        return None
+    P_poly_raw, P_den = r_P
+    if len(normalize(P_den)) > 1:
+        return None
+    P_poly: tuple = tuple(Fraction(c) for c in normalize(P_poly_raw))
+    if not P_poly:
+        return None
+
+    # R(x) = ∫ P(x) dx.
+    R_poly = _integrate_polynomial(P_poly)
+    R_norm = normalize(R_poly)
+    if not R_norm:
+        return None
+    R_ir = from_polynomial(R_norm, x)
+
+    # Q′(x).
+    Q_prime_poly = normalize(poly_deriv(Q_poly))
+    if not Q_prime_poly:
+        return None
+
+    # Residual numerator: R(x)·Q′(x).
+    N_poly = normalize(multiply(R_norm, Q_prime_poly))
+    if not N_poly:
+        return IRApply(MUL, (R_ir, transcendental))
+
+    # Denominator for the atan residual: 1 + Q(x)².
+    # Compute Q² = Q·Q as a polynomial, then add the constant 1.
+    Q2_poly = normalize(multiply(Q_poly, Q_poly))
+    # Add 1 to the constant term of Q².
+    Q2_list = list(Q2_poly if Q2_poly else [])
+    if Q2_list:
+        Q2_list[0] = Fraction(Q2_list[0]) + Fraction(1)
+    else:
+        Q2_list = [Fraction(1)]
+    denom_poly = normalize(tuple(Q2_list))
+    denom_ir = from_polynomial(denom_poly, x)
+
+    # Build the rational integrand N(x)/(1+Q(x)²) and delegate.
+    N_ir = from_polynomial(N_poly, x)
+    residual_ir = IRApply(DIV, (N_ir, denom_ir))
+    rational_result = _integrate_rational(residual_ir, x)
+    if rational_result is None:
+        return None  # Rational route couldn't close it — fall through.
+
+    # ∫ P·atan(Q) dx = R·atan(Q) − ∫ R·Q′/(1+Q²) dx.
+    return IRApply(SUB, (IRApply(MUL, (R_ir, transcendental)), rational_result))

@@ -1,0 +1,27 @@
+{
+  "name": "@coding-adventures/forme-style-orchestrator",
+  "version": "0.1.0",
+  "description": "Forme Style IR orchestrator: one compile(doc, target, options) entry point that validates, optionally composes a theme, and dispatches to the right backend translator (CSS / LaTeX / terminal). Integration concern per FM03 / FM04 §13.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-style-ir": "file:../forme-style-ir",
+    "@coding-adventures/forme-style-theme": "file:../forme-style-theme",
+    "@coding-adventures/forme-style-to-css": "file:../forme-style-to-css",
+    "@coding-adventures/forme-style-to-latex": "file:../forme-style-to-latex",
+    "@coding-adventures/forme-style-to-terminal": "file:../forme-style-to-terminal",
+    "@coding-adventures/forme-types": "file:../forme-types"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

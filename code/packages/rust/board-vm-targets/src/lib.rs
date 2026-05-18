@@ -67,6 +67,41 @@ pub struct UartBusInfo {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CanBusInfo {
+    pub bus: u8,
+    pub name: &'static str,
+    pub tx_pin: u8,
+    pub rx_pin: u8,
+    pub controller: &'static str,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RtcInfo {
+    pub instance: u8,
+    pub name: &'static str,
+    pub peripheral: &'static str,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WatchdogInfo {
+    pub instance: u8,
+    pub name: &'static str,
+    pub peripheral: &'static str,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct StorageRegionInfo {
+    pub region: u8,
+    pub name: &'static str,
+    pub kind: &'static str,
+    pub bytes: u32,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DigitalPinInfo {
     pub pin: u8,
     pub label: &'static str,
@@ -121,6 +156,10 @@ pub struct BoardTargetInfo {
     pub i2c_buses: &'static [I2cBusInfo],
     pub spi_buses: &'static [SpiBusInfo],
     pub uart_buses: &'static [UartBusInfo],
+    pub can_buses: &'static [CanBusInfo],
+    pub rtc: Option<RtcInfo>,
+    pub watchdog: Option<WatchdogInfo>,
+    pub storage_regions: &'static [StorageRegionInfo],
     pub wireless: &'static [WirelessInterfaceInfo],
     pub capabilities: &'static [&'static str],
 }
@@ -136,7 +175,7 @@ pub const BLINK_MVP_CAPABILITIES: [&str; 8] = [
     "program.ram_exec",
 ];
 
-pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 22] = [
+pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 29] = [
     "transport.serial",
     "gpio.open",
     "gpio.write",
@@ -158,10 +197,17 @@ pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 22] = [
     "uart.open",
     "uart.write",
     "uart.read",
+    "can.open",
+    "can.write",
+    "can.read",
+    "rtc.now",
+    "rtc.set",
+    "watchdog.configure",
+    "watchdog.kick",
     "program.ram_exec",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 26] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 33] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -186,6 +232,13 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 26] = [
     "uart.open",
     "uart.write",
     "uart.read",
+    "can.open",
+    "can.write",
+    "can.read",
+    "rtc.now",
+    "rtc.set",
+    "watchdog.configure",
+    "watchdog.kick",
     "led_matrix.frame",
     "program.ram_exec",
 ];
@@ -294,6 +347,12 @@ pub const UNO_R4_MINIMA_UART_BUSES: [UartBusInfo; 1] =
     map_uno_r4_uart_buses(board_vm_uno_r4::UNO_R4_MINIMA_UART_BUSES);
 pub const UNO_R4_WIFI_UART_BUSES: [UartBusInfo; 3] =
     map_uno_r4_uart_buses(board_vm_uno_r4::UNO_R4_WIFI_UART_BUSES);
+pub const UNO_R4_CAN_BUSES: [CanBusInfo; 1] =
+    map_uno_r4_can_buses(board_vm_uno_r4::UNO_R4_CAN_BUSES);
+pub const UNO_R4_RTC: RtcInfo = uno_r4_rtc(board_vm_uno_r4::UNO_R4_RTC);
+pub const UNO_R4_WATCHDOG: WatchdogInfo = uno_r4_watchdog(board_vm_uno_r4::UNO_R4_WATCHDOG);
+pub const UNO_R4_STORAGE_REGIONS: [StorageRegionInfo; 1] =
+    map_uno_r4_storage_regions(board_vm_uno_r4::UNO_R4_STORAGE_REGIONS);
 
 pub const ESP32_DIGITAL_PINS: [DigitalPinInfo; 30] =
     map_esp32_digital_pins(board_vm_esp32::ESP32_DEVKIT_V1_DIGITAL_PINS);
@@ -416,6 +475,76 @@ const fn map_uno_r4_uart_buses<const N: usize>(
     buses
 }
 
+const fn map_uno_r4_can_buses<const N: usize>(
+    source: [board_vm_uno_r4::CanBusDescriptor; N],
+) -> [CanBusInfo; N] {
+    let mut buses = [CanBusInfo {
+        bus: 0,
+        name: "",
+        tx_pin: 0,
+        rx_pin: 0,
+        controller: "",
+        notes: "",
+    }; N];
+    let mut index = 0;
+    while index < N {
+        let bus = source[index];
+        buses[index] = CanBusInfo {
+            bus: bus.bus,
+            name: bus.name,
+            tx_pin: bus.tx_pin,
+            rx_pin: bus.rx_pin,
+            controller: bus.controller,
+            notes: bus.notes,
+        };
+        index += 1;
+    }
+    buses
+}
+
+const fn uno_r4_rtc(rtc: board_vm_uno_r4::RtcDescriptor) -> RtcInfo {
+    RtcInfo {
+        instance: rtc.instance,
+        name: rtc.name,
+        peripheral: rtc.peripheral,
+        notes: rtc.notes,
+    }
+}
+
+const fn uno_r4_watchdog(watchdog: board_vm_uno_r4::WatchdogDescriptor) -> WatchdogInfo {
+    WatchdogInfo {
+        instance: watchdog.instance,
+        name: watchdog.name,
+        peripheral: watchdog.peripheral,
+        notes: watchdog.notes,
+    }
+}
+
+const fn map_uno_r4_storage_regions<const N: usize>(
+    source: [board_vm_uno_r4::StorageRegionDescriptor; N],
+) -> [StorageRegionInfo; N] {
+    let mut regions = [StorageRegionInfo {
+        region: 0,
+        name: "",
+        kind: "",
+        bytes: 0,
+        notes: "",
+    }; N];
+    let mut index = 0;
+    while index < N {
+        let region = source[index];
+        regions[index] = StorageRegionInfo {
+            region: region.region,
+            name: region.name,
+            kind: region.kind,
+            bytes: region.bytes,
+            notes: region.notes,
+        };
+        index += 1;
+    }
+    regions
+}
+
 const fn map_esp32_digital_pins<const N: usize>(
     source: [board_vm_esp32::DigitalPinDescriptor; N],
 ) -> [DigitalPinInfo; N] {
@@ -496,6 +625,10 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         i2c_buses: &UNO_R4_MINIMA_I2C_BUSES,
         spi_buses: &UNO_R4_SPI_BUSES,
         uart_buses: &UNO_R4_MINIMA_UART_BUSES,
+        can_buses: &UNO_R4_CAN_BUSES,
+        rtc: Some(UNO_R4_RTC),
+        watchdog: Some(UNO_R4_WATCHDOG),
+        storage_regions: &UNO_R4_STORAGE_REGIONS,
         wireless: &[],
         capabilities: &UNO_R4_MINIMA_CAPABILITIES,
     },
@@ -522,6 +655,10 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
         spi_buses: &UNO_R4_SPI_BUSES,
         uart_buses: &UNO_R4_WIFI_UART_BUSES,
+        can_buses: &UNO_R4_CAN_BUSES,
+        rtc: Some(UNO_R4_RTC),
+        watchdog: Some(UNO_R4_WATCHDOG),
+        storage_regions: &UNO_R4_STORAGE_REGIONS,
         wireless: &UNO_R4_WIFI_WIRELESS,
         capabilities: &UNO_R4_WIFI_CAPABILITIES,
     },
@@ -545,6 +682,10 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         i2c_buses: &[],
         spi_buses: &[],
         uart_buses: &[],
+        can_buses: &[],
+        rtc: None,
+        watchdog: None,
+        storage_regions: &[],
         wireless: &ESP32_WIRELESS,
         capabilities: &ESP32_CAPABILITIES,
     },
@@ -571,6 +712,10 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         i2c_buses: &[],
         spi_buses: &[],
         uart_buses: &[],
+        can_buses: &[],
+        rtc: None,
+        watchdog: None,
+        storage_regions: &[],
         wireless: &[],
         capabilities: &BLINK_MVP_CAPABILITIES,
     },
@@ -597,6 +742,10 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         i2c_buses: &[],
         spi_buses: &[],
         uart_buses: &[],
+        can_buses: &[],
+        rtc: None,
+        watchdog: None,
+        storage_regions: &[],
         wireless: &PICO_W_WIRELESS,
         capabilities: &PICO_W_CAPABILITIES,
     },
@@ -718,6 +867,103 @@ mod tests {
     }
 
     #[test]
+    fn registry_exposes_can_bus_metadata() {
+        let minima = find_target("arduino-uno-r4-minima").unwrap();
+        assert_eq!(minima.can_buses.len(), 1);
+        assert_eq!(minima.can_buses[0].name, "CAN0");
+        assert_eq!(minima.can_buses[0].tx_pin, 10);
+        assert_eq!(minima.can_buses[0].rx_pin, 13);
+        assert_eq!(minima.can_buses[0].controller, "RA4M1 CAN0");
+
+        let wifi = find_target("arduino-uno-r4-wifi").unwrap();
+        assert_eq!(wifi.can_buses, minima.can_buses);
+        assert!(wifi.can_buses[0].notes.contains("SPI"));
+
+        assert!(find_target("esp32-devkit-v1").unwrap().can_buses.is_empty());
+        assert!(find_target("raspberry-pi-pico")
+            .unwrap()
+            .can_buses
+            .is_empty());
+        assert!(find_target("raspberry-pi-pico-w")
+            .unwrap()
+            .can_buses
+            .is_empty());
+    }
+
+    #[test]
+    fn registry_exposes_rtc_metadata() {
+        let minima = find_target("arduino-uno-r4-minima").unwrap();
+        assert_eq!(minima.rtc, Some(UNO_R4_RTC));
+        assert_eq!(minima.rtc.unwrap().instance, 0);
+        assert_eq!(minima.rtc.unwrap().name, "RTC");
+        assert_eq!(minima.rtc.unwrap().peripheral, "RA4M1 RTC");
+
+        let wifi = find_target("arduino-uno-r4-wifi").unwrap();
+        assert_eq!(wifi.rtc, minima.rtc);
+        assert!(wifi.rtc.unwrap().notes.contains("real-time clock"));
+        assert!(minima.capabilities.contains(&"rtc.now"));
+        assert!(minima.capabilities.contains(&"rtc.set"));
+        assert!(wifi.capabilities.contains(&"rtc.now"));
+        assert!(wifi.capabilities.contains(&"rtc.set"));
+
+        assert_eq!(find_target("esp32-devkit-v1").unwrap().rtc, None);
+        assert_eq!(find_target("raspberry-pi-pico").unwrap().rtc, None);
+        assert_eq!(find_target("raspberry-pi-pico-w").unwrap().rtc, None);
+    }
+
+    #[test]
+    fn registry_exposes_watchdog_metadata() {
+        let minima = find_target("arduino-uno-r4-minima").unwrap();
+        assert_eq!(minima.watchdog, Some(UNO_R4_WATCHDOG));
+        assert_eq!(minima.watchdog.unwrap().instance, 0);
+        assert_eq!(minima.watchdog.unwrap().name, "WDT");
+        assert_eq!(minima.watchdog.unwrap().peripheral, "RA4M1 WDT");
+
+        let wifi = find_target("arduino-uno-r4-wifi").unwrap();
+        assert_eq!(wifi.watchdog, minima.watchdog);
+        assert!(wifi.watchdog.unwrap().notes.contains("watchdog timer"));
+        assert!(minima.capabilities.contains(&"watchdog.configure"));
+        assert!(minima.capabilities.contains(&"watchdog.kick"));
+        assert!(wifi.capabilities.contains(&"watchdog.configure"));
+        assert!(wifi.capabilities.contains(&"watchdog.kick"));
+
+        assert_eq!(find_target("esp32-devkit-v1").unwrap().watchdog, None);
+        assert_eq!(find_target("raspberry-pi-pico").unwrap().watchdog, None);
+        assert_eq!(find_target("raspberry-pi-pico-w").unwrap().watchdog, None);
+    }
+
+    #[test]
+    fn registry_exposes_storage_region_metadata() {
+        let minima = find_target("arduino-uno-r4-minima").unwrap();
+        assert_eq!(minima.storage_regions, &UNO_R4_STORAGE_REGIONS);
+        assert_eq!(minima.storage_regions.len(), 1);
+        assert_eq!(minima.storage_regions[0].region, 0);
+        assert_eq!(minima.storage_regions[0].name, "EEPROM emulation");
+        assert_eq!(minima.storage_regions[0].kind, "data flash");
+        assert_eq!(
+            minima.storage_regions[0].bytes,
+            board_vm_uno_r4::UNO_R4_DATA_FLASH_BYTES
+        );
+
+        let wifi = find_target("arduino-uno-r4-wifi").unwrap();
+        assert_eq!(wifi.storage_regions, minima.storage_regions);
+        assert!(wifi.storage_regions[0].notes.contains("program.store"));
+
+        assert!(find_target("esp32-devkit-v1")
+            .unwrap()
+            .storage_regions
+            .is_empty());
+        assert!(find_target("raspberry-pi-pico")
+            .unwrap()
+            .storage_regions
+            .is_empty());
+        assert!(find_target("raspberry-pi-pico-w")
+            .unwrap()
+            .storage_regions
+            .is_empty());
+    }
+
+    #[test]
     fn registry_exposes_digital_pin_capability_metadata() {
         let uno = find_target("arduino-uno-r4-wifi").unwrap();
         assert_eq!(uno.digital_pin_count, uno.digital_pins.len());
@@ -777,6 +1023,9 @@ mod tests {
         assert!(uno.capabilities.contains(&"uart.open"));
         assert!(uno.capabilities.contains(&"uart.write"));
         assert!(uno.capabilities.contains(&"uart.read"));
+        assert!(uno.capabilities.contains(&"can.open"));
+        assert!(uno.capabilities.contains(&"can.write"));
+        assert!(uno.capabilities.contains(&"can.read"));
     }
 
     #[test]

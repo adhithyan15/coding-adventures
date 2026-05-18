@@ -11,6 +11,7 @@
   Monte Carlo DC analysis cards.
 - Parse SPICE `.noise V(output_node) input_source [freq ...] [temp=<kelvin>]`
   AC noise analysis cards.
+- Parse SPICE `.options key=value ...` simulator-options cards.
 
 ## 0.1.7
 

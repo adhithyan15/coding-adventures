@@ -45,7 +45,7 @@
 ;   (IirInstr "call_builtin" r2  (list "+" r0 r1) (TAny) sp)
 
 (module compiler/emit
-  (typed lenient)
+  (typed strict)
   (export emit-expr emit-program env-empty env-lookup env-extend)
   (import compiler/span
           compiler/ast

@@ -1030,11 +1030,23 @@ PARSER_GRAMMAR = ParserGrammar(
                         Sequence(elements=[
                             Literal(value='LIKE'),
                             RuleReference(name='additive', is_token=False),
+                            Optional(element=
+                                Sequence(elements=[
+                                    Literal(value='ESCAPE'),
+                                    RuleReference(name='additive', is_token=False),
+                                ]),
+                            ),
                         ]),
                         Sequence(elements=[
                             Literal(value='NOT'),
                             Literal(value='LIKE'),
                             RuleReference(name='additive', is_token=False),
+                            Optional(element=
+                                Sequence(elements=[
+                                    Literal(value='ESCAPE'),
+                                    RuleReference(name='additive', is_token=False),
+                                ]),
+                            ),
                         ]),
                         Sequence(elements=[
                             Literal(value='GLOB'),

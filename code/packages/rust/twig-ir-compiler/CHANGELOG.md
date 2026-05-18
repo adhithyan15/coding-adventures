@@ -1,5 +1,23 @@
 # Changelog — twig-ir-compiler
 
+## [0.14.0] — 2026-05-17
+
+### Added (LANG72 — TW05-Q cross-module strict type checking)
+
+- **`compile_program_with_externs_and_globals`** — new public function that
+  accepts a `&HashMap<String, TwigKind>` of cross-module globals in addition
+  to the existing extern-fn list.  When a `(typed strict)` module is compiled
+  this function forwards the globals map to `check_program_with_globals` so
+  that imported names from peer modules are visible during the type-check pass.
+
+  This fixes a pre-existing regression where `compile_program_with_externs`
+  called `check_program(program, None)` internally, which caused strict modules
+  that imported names from other modules to always fail type checking with
+  "unresolved variable" errors — even when the imports were correct.
+
+  Called by `twig-module-driver` Phase 4 instead of `compile_program_with_externs`;
+  the driver now passes each module's accumulated export globals from Phase 3.5.
+
 ## [0.13.0] — 2026-05-15
 
 ### Added (LANG58 — TW05-E string/char builtins)

@@ -1,5 +1,62 @@
 # Changelog
 
+## [1.39.0] - 2026-05-17
+
+### Added
+
+- **`LIKE … ESCAPE 'c'` clause** end-to-end (via `sql-lexer 0.16.0`,
+  `sql-parser 0.21.0`, `sql-planner 0.31.0`, `sql-optimizer 0.12.0`,
+  `sql-codegen 1.29.0`, `sql-vm 1.28.0`).  A new test file
+  `test_tier3_like_escape.py` adds 16 oracle-comparison tests covering
+  underscore/percent escapes, mixed escaped+unescaped wildcards, NOT LIKE
+  with escape, WHERE-clause usage, and edge cases (self-escape, escape
+  with no special chars).
+
+### Changed
+
+- **Adapter `_unquote_string`** (`adapter.py`) — removed backslash-escape
+  processing.  SQLite treats backslashes inside string literals as literal
+  characters; only `''` (doubled apostrophe) is an escape.  This restores
+  byte-for-byte parity with the real `sqlite3` module and is required for
+  `LIKE 'a\\_b' ESCAPE '\\'` to work (the backslash must survive parsing).
+
+- **Binding `_repr_sql`** (`binding.py`) — `repr` of a Python `str` now
+  uses doubled-quote escaping (`'O''Brien'`) instead of backslash
+  escaping (`'O\\'Brien'`).  Updated the `substitute()` string-literal
+  scanner accordingly.
+
+## [1.37.0] - 2026-05-17
+
+### Fixed
+
+- **SQLite-compatible NULL ordering** (`sql-codegen 1.28.0`, `sql-vm 1.26.0`) —
+  `ORDER BY x` previously placed NULL rows at the end of the result; SQLite
+  places them at the start (treating NULL as smaller than any non-NULL value).
+  `ORDER BY x DESC` now correctly puts NULLs at the *end* (previously, due to
+  a separate VM bug, they ended up at the start).
+
+  10 new oracle tests in `test_tier3_null_ordering.py` lock the byte-for-byte
+  match against the real `sqlite3` module across ASC, DESC, multi-key sorts,
+  TEXT columns, and LIMIT interactions.
+
+## [1.36.0] - 2026-05-16
+
+### Added
+
+- **`CREATE TEMP TABLE` / `CREATE TEMPORARY TABLE` support** — SQLite scripts
+  commonly create temporary tables with the `TEMP` or `TEMPORARY` modifier.
+  The engine now normalises `CREATE TEMP(ORARY)? TABLE` to `CREATE TABLE`
+  and `CREATE TEMP(ORARY)? VIEW` to `CREATE VIEW` with a single regex
+  substitution before the parser sees the SQL, so the grammar stays clean and
+  `temp` remains a valid table/column name everywhere else.  Tested with
+  17 new tests covering lower-case, mixed-case, `IF NOT EXISTS`, DROP, and
+  the no-conflict property (table named `temp`, `DELETE FROM temp`, etc.).
+
+- **Double-quoted identifier support** (`sql-lexer 0.15.0`) — `"colname"` and
+  `"my column"` are now lexed as `NAME` tokens with the quotes stripped,
+  matching SQLite's ANSI SQL identifier quoting.  Embedded `""` escape
+  sequences are un-escaped correctly: `"it""s"` → `NAME("it's")`.
+
 ## [1.35.0] - 2026-05-15
 
 ### Fixed

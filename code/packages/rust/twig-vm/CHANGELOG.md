@@ -1,5 +1,69 @@
 # Changelog — twig-vm
 
+## [0.18.0] — 2026-05-17
+
+### Changed (LANG66 — TW05-L: MAX_DISPATCH_DEPTH and MAX_INSTRUCTIONS_PER_RUN bumped)
+
+**`MAX_DISPATCH_DEPTH` bumped from 65536 to 131072** (`dispatch.rs`).
+
+The self-hosted `lex-loop` is NOT tail-call optimised: each source character
+adds ~2–3 dispatch frames (`lex-loop` + `cond-dispatch` + optional scanner
+helper).  `cst-parser.tw` at 29 122 chars requires ~65 524 frames — just
+above the 65 536 ceiling set in LANG64.
+
+| File | Size (chars) | Est. dispatch depth |
+|------|-------------|-------------------|
+| `emit.tw` (TW05-K) | 22 697 | ~51 K — within old limit |
+| `cst-parser.tw` (TW05-L) | 29 122 | ~66 K — **exceeds** old limit |
+
+Empirical ratio: 29 122 × ~2.25 frames/char ≈ 65 524.  131 072 gives ~2×
+headroom over the TW05-L peak.
+
+**`MAX_INSTRUCTIONS_PER_RUN` bumped from 2²³ (8 M) to 2²⁵ (32 M)** (`dispatch.rs`).
+
+The self-hosted `lex-loop` executes ~90 IIR instructions per source character
+(dispatch + comparison chain + scanner helpers).  `self-compile-all` now lexes
+seven files totalling 91 270 chars: 91 270 × 90 ≈ 8.2 M instructions, just
+over the 8 M ceiling.  32 M gives ~4× headroom.
+
+| Milestone | Total chars | Est. instrs | Limit |
+|-----------|------------|-------------|-------|
+| TW05-K (6 files) | 62 148 | ~5.6 M | 8 M ✓ |
+| TW05-L (7 files) | 91 270 | ~8.2 M | **8 M ✗** → 32 M ✓ |
+
+No API changes — these are purely constant bumps.
+
+**History**:
+- MAX_DISPATCH_DEPTH: 256 → 4096 (LANG62), 4096 → 65536 (LANG64), 65536 → 131072 (LANG66)
+- MAX_INSTRUCTIONS_PER_RUN: 2²⁰ (LANG62), 2²³ (LANG64), **2²⁵ (LANG66)**
+
+---
+
+## [0.17.0] — 2026-05-17
+
+### Changed (LANG64 — TW05-J multi-module self-compilation via host/read_file)
+
+**`MAX_DISPATCH_DEPTH` bumped from 4096 to 65536** (`dispatch.rs`).
+
+The self-hosted Twig compiler's `lex-loop` recurses once per character of
+input.  TW05-J compiles four real `.tw` files from disk via `host/read_file`:
+
+| File | Size | Required depth |
+|---|---|---|
+| `span.tw` | 2426 chars | ≈ 2426 frames |
+| `diagnostic.tw` | 2446 chars | ≈ 2446 frames |
+| `iir-builder.tw` | 6278 chars | ≈ 6278 frames |
+| `lexer.tw` | 8593 chars | ≈ 8593 frames |
+
+The old 4096-frame limit blocked `iir-builder.tw` (6278 chars) and
+`lexer.tw` (8593 chars) from lexing successfully.  65536 gives ample
+headroom for all current compiler modules while remaining well within the
+64 MiB stack allocated by the integration test thread.
+
+No API changes — this is purely a constants bump.
+
+---
+
 ## [0.16.0] — 2026-05-15
 
 ### Changed (LANG62 — TW05-I first self-compilation check)

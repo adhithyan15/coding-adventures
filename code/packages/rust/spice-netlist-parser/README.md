@@ -25,5 +25,6 @@ cards with common SPICE aliases (`VT0` / `VTO`, `KP`, `LAMBDA`, `GAMMA`, `PHI`,
 `W`, `L`, `IS`, `N_SUB` / `NSUB`, and `T_NOM` / `TNOM`), SPICE engineering
 suffixes, capacitor `IC=<voltage>` and inductor `IC=<current>` initial
 conditions, independent-source `AC <magnitude> [phase]` forms,
-PWL/PULSE/SIN/EXP source forms, comments, `.end`, `.subckt` / `X` instance expansion, and
-`.op`, `.tran`, `.dc`, `.ac`, `.tf`, `.sens`, `.mc`, and `.noise` analysis cards.
+PWL/PULSE/SIN/EXP source forms, comments, `.end`, `.subckt` / `X` instance
+expansion, and `.op`, `.tran`, `.dc`, `.ac`, `.tf`, `.sens`, `.mc`, `.noise`,
+and `.options` analysis cards.

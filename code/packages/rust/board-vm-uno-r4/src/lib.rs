@@ -13,7 +13,15 @@ use board_vm_device::{
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_AND_SPI_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_UART_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_CAN_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_RTC_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_RTC_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_WATCHDOG_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_RTC_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES, BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_CAPABILITIES,
     BLINK_MVP_WITH_PWM_DAC_AND_LED_MATRIX_CAPABILITIES, DEFAULT_MAX_FRAME_PAYLOAD,
@@ -67,6 +75,10 @@ pub struct TargetDescriptor {
     pub i2c_buses: &'static [I2cBusDescriptor],
     pub spi_buses: &'static [SpiBusDescriptor],
     pub uart_buses: &'static [UartBusDescriptor],
+    pub can_buses: &'static [CanBusDescriptor],
+    pub storage_regions: &'static [StorageRegionDescriptor],
+    pub rtc: Option<RtcDescriptor>,
+    pub watchdog: Option<WatchdogDescriptor>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -109,6 +121,41 @@ pub struct UartBusDescriptor {
     pub rx_pin: u8,
     pub arduino_uart: u8,
     pub internal: bool,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CanBusDescriptor {
+    pub bus: u8,
+    pub name: &'static str,
+    pub tx_pin: u8,
+    pub rx_pin: u8,
+    pub controller: &'static str,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RtcDescriptor {
+    pub instance: u8,
+    pub name: &'static str,
+    pub peripheral: &'static str,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WatchdogDescriptor {
+    pub instance: u8,
+    pub name: &'static str,
+    pub peripheral: &'static str,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct StorageRegionDescriptor {
+    pub region: u8,
+    pub name: &'static str,
+    pub kind: &'static str,
+    pub bytes: u32,
     pub notes: &'static str,
 }
 
@@ -377,6 +424,41 @@ pub const UNO_R4_WIFI_UART_BUSES: [UartBusDescriptor; 3] = [
     UNO_R4_WIFI_MODULE_UART_BUS,
 ];
 
+pub const UNO_R4_CAN_BUS: CanBusDescriptor = CanBusDescriptor {
+    bus: 0,
+    name: "CAN0",
+    tx_pin: 10,
+    rx_pin: 13,
+    controller: "RA4M1 CAN0",
+    notes: "CAN0 on D10/TX and D13/RX; conflicts with header SPI CS/SCK and onboard LED",
+};
+
+pub const UNO_R4_CAN_BUSES: [CanBusDescriptor; 1] = [UNO_R4_CAN_BUS];
+
+pub const UNO_R4_RTC: RtcDescriptor = RtcDescriptor {
+    instance: 0,
+    name: "RTC",
+    peripheral: "RA4M1 RTC",
+    notes: "Single real-time clock instance exposed by the UNO R4 core",
+};
+
+pub const UNO_R4_WATCHDOG: WatchdogDescriptor = WatchdogDescriptor {
+    instance: 0,
+    name: "WDT",
+    peripheral: "RA4M1 WDT",
+    notes: "Renesas watchdog timer exposed through the UNO R4 core WDT library",
+};
+
+pub const UNO_R4_EEPROM_STORAGE: StorageRegionDescriptor = StorageRegionDescriptor {
+    region: 0,
+    name: "EEPROM emulation",
+    kind: "data flash",
+    bytes: UNO_R4_DATA_FLASH_BYTES,
+    notes: "Flash-backed EEPROM storage area exposed by the UNO R4 core; program.store and kv.store are not enabled yet",
+};
+
+pub const UNO_R4_STORAGE_REGIONS: [StorageRegionDescriptor; 1] = [UNO_R4_EEPROM_STORAGE];
+
 pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
     board_id: "arduino-uno-r4-minima",
     display_name: "Arduino Uno R4 Minima",
@@ -399,11 +481,18 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
         .with_dac()
         .with_i2c()
         .with_uart()
-        .with_spi(),
+        .with_spi()
+        .with_can()
+        .with_rtc()
+        .with_watchdog(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_MINIMA_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
     uart_buses: &UNO_R4_MINIMA_UART_BUSES,
+    can_buses: &UNO_R4_CAN_BUSES,
+    storage_regions: &UNO_R4_STORAGE_REGIONS,
+    rtc: Some(UNO_R4_RTC),
+    watchdog: Some(UNO_R4_WATCHDOG),
 };
 
 pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
@@ -429,11 +518,18 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
         .with_i2c()
         .with_spi()
         .with_uart()
-        .with_led_matrix(),
+        .with_led_matrix()
+        .with_can()
+        .with_rtc()
+        .with_watchdog(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
     uart_buses: &UNO_R4_WIFI_UART_BUSES,
+    can_buses: &UNO_R4_CAN_BUSES,
+    storage_regions: &UNO_R4_STORAGE_REGIONS,
+    rtc: Some(UNO_R4_RTC),
+    watchdog: Some(UNO_R4_WATCHDOG),
 };
 
 pub trait UnoR4Backend {
@@ -464,6 +560,18 @@ pub trait UnoR4Backend {
     }
 
     fn supports_uart(&self) -> bool {
+        false
+    }
+
+    fn supports_can(&self) -> bool {
+        false
+    }
+
+    fn supports_rtc(&self) -> bool {
+        false
+    }
+
+    fn supports_watchdog(&self) -> bool {
         false
     }
 
@@ -500,6 +608,34 @@ pub trait UnoR4Backend {
     }
 
     fn read_uart(&mut self, _bus: u8) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn open_can(&mut self, _bus: u8) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn write_can(&mut self, _bus: u8, _byte: u8) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn read_can(&mut self, _bus: u8) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn rtc_now(&mut self) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn rtc_set(&mut self, _epoch_seconds: u32) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn watchdog_configure(&mut self, _timeout_ms: u32) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn watchdog_kick(&mut self) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -599,6 +735,9 @@ where
         capabilities.i2c = self.backend.supports_i2c();
         capabilities.spi = self.backend.supports_spi();
         capabilities.uart = self.backend.supports_uart();
+        capabilities.can = self.backend.supports_can();
+        capabilities.rtc = self.backend.supports_rtc();
+        capabilities.watchdog = self.backend.supports_watchdog();
         capabilities
     }
 }
@@ -680,6 +819,49 @@ where
     fn uart_read(&mut self, token: u32) -> Result<u8, HalError> {
         let bus = normalize_uart_token(self.target, token)?;
         self.backend.read_uart(bus)
+    }
+
+    fn can_open(&mut self, bus: u16) -> Result<u32, HalError> {
+        let bus = normalize_can_bus(self.target, bus)?;
+        self.backend.open_can(bus)
+    }
+
+    fn can_write(&mut self, token: u32, byte: u8) -> Result<(), HalError> {
+        let bus = normalize_can_token(self.target, token)?;
+        self.backend.write_can(bus, byte)
+    }
+
+    fn can_read(&mut self, token: u32) -> Result<u8, HalError> {
+        let bus = normalize_can_token(self.target, token)?;
+        self.backend.read_can(bus)
+    }
+
+    fn rtc_now(&mut self) -> Result<u32, HalError> {
+        if self.target.rtc.is_none() {
+            return Err(HalError::UnsupportedMode);
+        }
+        self.backend.rtc_now()
+    }
+
+    fn rtc_set(&mut self, epoch_seconds: u32) -> Result<(), HalError> {
+        if self.target.rtc.is_none() {
+            return Err(HalError::UnsupportedMode);
+        }
+        self.backend.rtc_set(epoch_seconds)
+    }
+
+    fn watchdog_configure(&mut self, timeout_ms: u32) -> Result<(), HalError> {
+        if self.target.watchdog.is_none() {
+            return Err(HalError::UnsupportedMode);
+        }
+        self.backend.watchdog_configure(timeout_ms)
+    }
+
+    fn watchdog_kick(&mut self) -> Result<(), HalError> {
+        if self.target.watchdog.is_none() {
+            return Err(HalError::UnsupportedMode);
+        }
+        self.backend.watchdog_kick()
     }
 
     fn spi_transfer(
@@ -839,6 +1021,24 @@ fn normalize_uart_token(target: &TargetDescriptor, token: u32) -> Result<u8, Hal
     normalize_uart_bus(target, bus)
 }
 
+fn normalize_can_bus(target: &TargetDescriptor, bus: u16) -> Result<u8, HalError> {
+    let bus = u8::try_from(bus).map_err(|_| HalError::InvalidPin)?;
+    if target
+        .can_buses
+        .iter()
+        .any(|descriptor| descriptor.bus == bus)
+    {
+        Ok(bus)
+    } else {
+        Err(HalError::InvalidPin)
+    }
+}
+
+fn normalize_can_token(target: &TargetDescriptor, token: u32) -> Result<u8, HalError> {
+    let bus = u16::try_from(token & 0xff).map_err(|_| HalError::InvalidPin)?;
+    normalize_can_bus(target, bus)
+}
+
 fn normalize_i2c_address(address: u16) -> Result<(), HalError> {
     if address <= 0x7f {
         Ok(())
@@ -866,6 +1066,49 @@ fn uno_r4_device_descriptor_for_capabilities(
         max_frame_payload: DEFAULT_MAX_FRAME_PAYLOAD,
         supports_store_program: false,
         capabilities: if target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+            && capabilities.rtc
+            && capabilities.watchdog
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+            && capabilities.rtc
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.rtc
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_RTC_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix
             && capabilities.pwm
             && capabilities.adc
             && capabilities.dac
@@ -909,6 +1152,45 @@ fn uno_r4_device_descriptor_for_capabilities(
             &BLINK_MVP_WITH_ADC_AND_LED_MATRIX_CAPABILITIES
         } else if target.supports_led_matrix {
             &BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES
+        } else if capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+            && capabilities.rtc
+            && capabilities.watchdog
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_WATCHDOG_CAPABILITIES
+        } else if capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+            && capabilities.rtc
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_RTC_CAPABILITIES
+        } else if capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_CAN_CAPABILITIES
+        } else if capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.rtc
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_RTC_CAPABILITIES
         } else if capabilities.pwm
             && capabilities.adc
             && capabilities.dac
@@ -1008,6 +1290,13 @@ mod tests {
         UartOpen(u8),
         UartWrite(u8, u8),
         UartRead(u8),
+        CanOpen(u8),
+        CanWrite(u8, u8),
+        CanRead(u8),
+        RtcNow,
+        RtcSet(u32),
+        WatchdogConfigure(u32),
+        WatchdogKick,
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -1075,6 +1364,18 @@ mod tests {
             true
         }
 
+        fn supports_can(&self) -> bool {
+            true
+        }
+
+        fn supports_rtc(&self) -> bool {
+            true
+        }
+
+        fn supports_watchdog(&self) -> bool {
+            true
+        }
+
         fn supports_bootloader_reboot(&self) -> bool {
             true
         }
@@ -1117,6 +1418,41 @@ mod tests {
         fn read_uart(&mut self, bus: u8) -> Result<u8, HalError> {
             self.events.push(Event::UartRead(bus));
             Ok(0x5a)
+        }
+
+        fn open_can(&mut self, bus: u8) -> Result<u32, HalError> {
+            self.events.push(Event::CanOpen(bus));
+            Ok(0x4_2000 | bus as u32)
+        }
+
+        fn write_can(&mut self, bus: u8, byte: u8) -> Result<(), HalError> {
+            self.events.push(Event::CanWrite(bus, byte));
+            Ok(())
+        }
+
+        fn read_can(&mut self, bus: u8) -> Result<u8, HalError> {
+            self.events.push(Event::CanRead(bus));
+            Ok(0x5a)
+        }
+
+        fn rtc_now(&mut self) -> Result<u32, HalError> {
+            self.events.push(Event::RtcNow);
+            Ok(1_700_000_000)
+        }
+
+        fn rtc_set(&mut self, epoch_seconds: u32) -> Result<(), HalError> {
+            self.events.push(Event::RtcSet(epoch_seconds));
+            Ok(())
+        }
+
+        fn watchdog_configure(&mut self, timeout_ms: u32) -> Result<(), HalError> {
+            self.events.push(Event::WatchdogConfigure(timeout_ms));
+            Ok(())
+        }
+
+        fn watchdog_kick(&mut self) -> Result<(), HalError> {
+            self.events.push(Event::WatchdogKick);
+            Ok(())
         }
 
         fn transfer_spi(
@@ -1258,6 +1594,58 @@ mod tests {
     }
 
     #[test]
+    fn knows_uno_r4_can_buses() {
+        assert_eq!(UNO_R4_MINIMA.can_buses, &[UNO_R4_CAN_BUS]);
+        assert_eq!(UNO_R4_WIFI.can_buses, &[UNO_R4_CAN_BUS]);
+
+        let can = UNO_R4_WIFI.can_buses[0];
+        assert_eq!(can.name, "CAN0");
+        assert_eq!(can.tx_pin, 10);
+        assert_eq!(can.rx_pin, 13);
+        assert_eq!(can.controller, "RA4M1 CAN0");
+        assert!(can.notes.contains("SPI"));
+        assert!(can.notes.contains("onboard LED"));
+    }
+
+    #[test]
+    fn knows_uno_r4_rtc() {
+        assert_eq!(UNO_R4_MINIMA.rtc, Some(UNO_R4_RTC));
+        assert_eq!(UNO_R4_WIFI.rtc, Some(UNO_R4_RTC));
+
+        let rtc = UNO_R4_WIFI.rtc.unwrap();
+        assert_eq!(rtc.instance, 0);
+        assert_eq!(rtc.name, "RTC");
+        assert_eq!(rtc.peripheral, "RA4M1 RTC");
+        assert!(rtc.notes.contains("real-time clock"));
+    }
+
+    #[test]
+    fn knows_uno_r4_watchdog() {
+        assert_eq!(UNO_R4_MINIMA.watchdog, Some(UNO_R4_WATCHDOG));
+        assert_eq!(UNO_R4_WIFI.watchdog, Some(UNO_R4_WATCHDOG));
+
+        let watchdog = UNO_R4_WIFI.watchdog.unwrap();
+        assert_eq!(watchdog.instance, 0);
+        assert_eq!(watchdog.name, "WDT");
+        assert_eq!(watchdog.peripheral, "RA4M1 WDT");
+        assert!(watchdog.notes.contains("watchdog timer"));
+    }
+
+    #[test]
+    fn knows_uno_r4_storage_regions() {
+        assert_eq!(UNO_R4_MINIMA.storage_regions, &UNO_R4_STORAGE_REGIONS);
+        assert_eq!(UNO_R4_WIFI.storage_regions, &UNO_R4_STORAGE_REGIONS);
+
+        let storage = UNO_R4_WIFI.storage_regions[0];
+        assert_eq!(storage.region, 0);
+        assert_eq!(storage.name, "EEPROM emulation");
+        assert_eq!(storage.kind, "data flash");
+        assert_eq!(storage.bytes, UNO_R4_DATA_FLASH_BYTES);
+        assert!(storage.notes.contains("program.store"));
+        assert!(storage.notes.contains("not enabled"));
+    }
+
+    #[test]
     fn blink_runs_through_abstract_uno_r4_backend() {
         let board = UnoR4Board::minima(FakeBackend::new());
         let mut runtime: Runtime<_, 8, 4> = Runtime::new(board);
@@ -1295,7 +1683,8 @@ mod tests {
         assert_eq!(descriptor.max_frame_payload, DEFAULT_MAX_FRAME_PAYLOAD);
         assert_eq!(
             descriptor.capabilities.len(),
-            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_LED_MATRIX_CAPABILITIES.len()
+            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_LED_MATRIX_CAPABILITIES
+                .len()
         );
         assert!(UNO_R4_WIFI
             .capabilities
@@ -1331,6 +1720,19 @@ mod tests {
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_UART_READ));
+        assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_CAN_OPEN));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_CAN_WRITE));
+        assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_CAN_READ));
+        assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_RTC_NOW));
+        assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_RTC_SET));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_WATCHDOG_CONFIGURE));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_WATCHDOG_KICK));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -1373,6 +1775,27 @@ mod tests {
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_UART_READ));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_CAN_OPEN));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_CAN_WRITE));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_CAN_READ));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_RTC_NOW));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_RTC_SET));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_WATCHDOG_CONFIGURE));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_WATCHDOG_KICK));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
@@ -1532,6 +1955,93 @@ mod tests {
 
         assert_eq!(board.uart_read(0x3_2001), Err(HalError::InvalidPin));
         assert_eq!(board.uart_read(0x3_2099), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn can_open_runs_through_bus_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(board.can_open(0).unwrap(), 0x4_2000);
+        assert_eq!(board.backend().events, vec![Event::CanOpen(0)]);
+    }
+
+    #[test]
+    fn can_open_rejects_unknown_bus() {
+        let mut board = UnoR4Board::minima(FakeBackend::new());
+
+        assert_eq!(board.can_open(1), Err(HalError::InvalidPin));
+        assert_eq!(board.can_open(99), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn can_write_runs_through_bus_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        board.can_write(0x4_2000, 0xa5).unwrap();
+
+        assert_eq!(board.backend().events, vec![Event::CanWrite(0, 0xa5)]);
+    }
+
+    #[test]
+    fn can_write_rejects_unknown_bus() {
+        let mut board = UnoR4Board::minima(FakeBackend::new());
+
+        assert_eq!(board.can_write(0x4_2001, 0xa5), Err(HalError::InvalidPin));
+        assert_eq!(board.can_write(0x4_2099, 0xa5), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn can_read_runs_through_bus_metadata() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(board.can_read(0x4_2000).unwrap(), 0x5a);
+        assert_eq!(board.backend().events, vec![Event::CanRead(0)]);
+    }
+
+    #[test]
+    fn can_read_rejects_unknown_bus() {
+        let mut board = UnoR4Board::minima(FakeBackend::new());
+
+        assert_eq!(board.can_read(0x4_2001), Err(HalError::InvalidPin));
+        assert_eq!(board.can_read(0x4_2099), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn rtc_now_runs_through_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(board.rtc_now().unwrap(), 1_700_000_000);
+        assert_eq!(board.backend().events, vec![Event::RtcNow]);
+    }
+
+    #[test]
+    fn rtc_set_runs_through_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        board.rtc_set(1_700_000_001).unwrap();
+
+        assert_eq!(board.backend().events, vec![Event::RtcSet(1_700_000_001)]);
+    }
+
+    #[test]
+    fn watchdog_configure_runs_through_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        board.watchdog_configure(2_000).unwrap();
+
+        assert_eq!(
+            board.backend().events,
+            vec![Event::WatchdogConfigure(2_000)]
+        );
+    }
+
+    #[test]
+    fn watchdog_kick_runs_through_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        board.watchdog_kick().unwrap();
+
+        assert_eq!(board.backend().events, vec![Event::WatchdogKick]);
     }
 
     #[test]

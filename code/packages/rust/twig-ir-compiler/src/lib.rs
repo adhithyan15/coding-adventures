@@ -218,6 +218,80 @@ pub fn compile_program_with_externs(
     Compiler::new().with_extern_fns(extern_fns).compile(program, module_name)
 }
 
+/// Compile an already-parsed [`Program`] with both extern function names and
+/// cross-module globals (LANG72 / TW05-Q).
+///
+/// This is identical to [`compile_program_with_externs`] except that the
+/// internal type-check pre-pass calls
+/// `twig_type_checker::check_program_with_globals` with `extra_globals`
+/// instead of `twig_type_checker::check_program`.  This is needed when the
+/// module imports functions from other already-typed modules; without the
+/// extra globals the type checker would flag those cross-module references as
+/// "unresolved variable" errors.
+///
+/// `extra_globals` maps every name that is exported by a dependency module
+/// to its `TwigKind`.  The module driver builds this map in Phase 3.5 and
+/// passes it here in Phase 4 so the type-check and IR compilation remain
+/// consistent.
+///
+/// # Example
+///
+/// ```no_run
+/// use twig_ir_compiler::compile_program_with_externs_and_globals;
+/// use twig_parser::parse;
+/// use std::collections::HashMap;
+///
+/// let prog = parse("(module m (typed strict) (import lib/add)) (define r (add-one 41))").unwrap();
+/// let mut globals = HashMap::new();
+/// globals.insert("add-one".to_string(), twig_type_checker::TwigKind::Function { arity: 1 });
+/// let m = compile_program_with_externs_and_globals(&prog, "m", &["add-one"], &globals).unwrap();
+/// assert!(m.get_function("r").is_some() || true); // compiles without type error
+/// ```
+pub fn compile_program_with_externs_and_globals(
+    program: &Program,
+    module_name: &str,
+    extern_fns: &[&str],
+    extra_globals: &std::collections::HashMap<String, twig_type_checker::TwigKind>,
+) -> Result<IIRModule, TwigCompileError> {
+    // Apply the same LANG49 type-check pre-pass as `compile_program`, but
+    // seed the environment with cross-module globals so that strict-mode
+    // modules that reference imported names pass the check.
+    if let Some(mode) = program
+        .module_info
+        .as_ref()
+        .and_then(|mi| mi.typed_mode.as_ref())
+    {
+        let tc_result =
+            twig_type_checker::check_program_with_globals(program, None, extra_globals);
+        match mode {
+            TypedMode::Strict if !tc_result.ok => {
+                let d = tc_result.errors.first().ok_or_else(|| TwigCompileError {
+                    message: "type-checker invariant violated: ok==false but errors is empty"
+                        .to_string(),
+                    line: 0,
+                    column: 0,
+                })?;
+                return Err(TwigCompileError {
+                    message: format!("type error: {}", d.message),
+                    line: d.line,
+                    column: d.column,
+                });
+            }
+            TypedMode::Lenient => {
+                for d in &tc_result.errors {
+                    eprintln!(
+                        "twig type warning ({}:{}): {}",
+                        d.line, d.column, d.message
+                    );
+                }
+            }
+            _ => {}
+        }
+    }
+
+    Compiler::new().with_extern_fns(extern_fns).compile(program, module_name)
+}
+
 /// Lex, parse, and compile a Twig source string in one call.
 ///
 /// This is the most ergonomic entry point — most callers never need

@@ -173,5 +173,30 @@ def tokenize_sql(source: str) -> list[Token]:
         #  Token(NAME, 'users'), Token(KEYWORD, 'WHERE'), Token(NAME, 'age'),
         #  Token(GREATER_EQUALS, '>='), Token(NUMBER, '18'), Token(EOF, '')]
     """
-    lexer = create_sql_lexer(source)
-    return lexer.tokenize()
+    tokens = create_sql_lexer(source).tokenize()
+    # Post-process: strip surrounding double-quotes from quoted identifiers.
+    #
+    # The QUOTED_ID_DQ pattern (/"([^"]|"")*"/ -> NAME) matches SQLite-style
+    # double-quoted identifiers.  The base GrammarLexer only strips quotes
+    # for STRING tokens; NAME-aliased tokens keep their surrounding characters.
+    # We fix this here so callers receive clean identifier strings:
+    #   "my col"  ->  NAME("my col")   not  NAME('"my col"')
+    #   ""col""   ->  NAME('"col"')    (escaped double-quote inside stays)
+    #
+    # The check below is intentionally narrow: only tokens whose raw value
+    # is wrapped in a matching pair of double-quotes are touched — regular
+    # NAME tokens never start with '"'.
+    result: list[Token] = []
+    for tok in tokens:
+        if (
+            str(tok.type) in ("NAME", "TokenType.NAME")
+            and tok.value.startswith('"')
+            and tok.value.endswith('"')
+            and len(tok.value) >= 2
+        ):
+            # Strip outer quotes; un-escape any embedded "" sequences.
+            inner = tok.value[1:-1].replace('""', '"')
+            result.append(Token(type=tok.type, value=inner, line=tok.line, column=tok.column))
+        else:
+            result.append(tok)
+    return result

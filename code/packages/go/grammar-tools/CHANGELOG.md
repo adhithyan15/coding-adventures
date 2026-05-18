@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0] - 2026-05-16
+
+### Added (LANG63 — Twig codegen in grammar-tools library)
+- **`twig_codegen.go`** — Two new exported functions in the `grammar_tools` package:
+  - `GenerateTwigLexer(w io.Writer, tokens *TokenGrammar)` — generates `lexer.tw` from a
+    `.tokens` file, producing a recursive Twig lexer with predicate functions, scan helpers,
+    and a dispatch chain that matches grammar-file order.
+  - `GenerateTwigCSTParser(w io.Writer, grammar *ParserGrammar)` — generates `cst-parser.tw`
+    from a `.grammar` file, producing one `cst-parse-<rule>` function per grammar rule,
+    with optional/repetition helpers and keyword-match helpers.
+  The generated files are annotated with `; DO NOT EDIT` headers and regeneration instructions.
+
 ## [0.5.0] - 2026-04-04
 
 ### Added

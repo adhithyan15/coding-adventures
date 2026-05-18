@@ -1,13 +1,25 @@
 # dsp-stft
 
-Scalar reference Short-Time Fourier Transform (STFT) for the
-DSP layer.  As of **0.2.0 (DSP05 Phase 3+4)** the crate ships
-the full analysis/synthesis loop plus magnitude/log helpers:
+Short-Time Fourier Transform (STFT) for the DSP layer.  As of
+**0.4.0 (DSP05 Phase 6)** the crate ships the complete DSP05
+phase plan — the scalar reference *and* a matrix-IR-lowered
+execution path that lifts onto GPU once Metal / CUDA claim the
+relevant ops:
 
-- **`stft`** — forward (sliding-window FFT).
+- **`stft`** — forward (sliding-window FFT, scalar).
 - **`istft`** — inverse via overlap-add reconstruction (COLA).
 - **`spectrogram`** — `|STFT|²` (magnitude squared).
 - **`log_spectrogram`** — `log(|STFT|² + ε)`.
+- **`mel_filterbank`** — `[n_mels, n_fft/2 + 1]` triangular
+  filters on the mel scale (HTK convention), row-normalised.
+- **`mel_spectrogram`** — `mel_filterbank @ |STFT|²`.
+- **`mfcc`** — `DCT-II_ortho(log(mel_spectrogram + ε))[:, :n_mfcc]`.
+- **`build_stft_graph`** — emits a `matrix_ir::Graph` that
+  computes STFT through generic tensor ops (Slice, Mul,
+  Concat, Reshape, Const).
+- **`stft_via_runtime`** — end-to-end matrix-IR-lowered
+  execution; numerically identical to scalar `stft` within
+  `~1e-5`.
 
 The STFT is the workhorse primitive for time-frequency
 analysis of audio, speech, and music.  Plain DFT collapses a
@@ -68,10 +80,10 @@ pub enum StftError {
 | ------ | ---------------------------------------------------- | ------ |
 | 0      | Spec (`code/specs/DSP05-stft.md`)                    | landed |
 | **1+2** | **Crate skeleton + scalar `stft` (forward)**        | **this PR (0.1.0)** |
-| 3      | Scalar `istft` (overlap-add reconstruction)          | pending |
-| 4      | `spectrogram` / `log_spectrogram` helpers            | pending |
-| 5      | `mel_filterbank` + `mel_spectrogram` + `mfcc`        | pending |
-| 6      | Matrix-ir-lowered STFT via dsp-fft's matrix-ir path  | pending |
+| 3      | Scalar `istft` (overlap-add reconstruction)          | landed (0.2.0) |
+| 4      | `spectrogram` / `log_spectrogram` helpers            | landed (0.2.0) |
+| 5      | `mel_filterbank` + `mel_spectrogram` + `mfcc`        | landed (0.3.0) |
+| **6**  | **Matrix-ir-lowered STFT via dsp-fft's matrix-ir path** | **this PR (0.4.0)** |
 
 ## Tests
 

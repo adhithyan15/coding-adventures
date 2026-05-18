@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.29.0] - 2026-05-17
+
+### Added
+
+- **`Like.has_escape` field** (`ir.py`) — new `bool = False` field.  When
+  `True`, the VM pops an additional stack value (the escape character)
+  before pattern and value.  Three-value protocol: escape, pattern, value.
+
+- **LIKE ESCAPE codegen** (`compiler.py`) — when the planner `Like` /
+  `NotLike` node carries a non-None `escape`, the compiler emits an
+  additional `LoadConst(value=escape_char)` before the `Like` instruction
+  and sets `Like.has_escape = True`.
+
+## [1.28.0] - 2026-05-17
+
+### Fixed
+
+- **SQLite-compatible NULL ordering in ORDER BY** — the codegen's
+  `_compile_sort_key` previously defaulted every sort key to `NullsOrder.LAST`,
+  regardless of direction.  SQLite (and the SQL:2003 default) treats NULL as
+  smaller than every non-NULL value, so an ASC sort puts NULLs *first* and a
+  DESC sort puts them *last*.  The new logic:
+
+  | `nulls_first` | direction | resolved `NullsOrder` |
+  |---------------|-----------|------------------------|
+  | `True`        | any       | `FIRST`               |
+  | `False`       | any       | `LAST`                |
+  | `None`        | ASC       | `FIRST` ← new default |
+  | `None`        | DESC      | `LAST`  ← new default |
+
+  This matches the real `sqlite3` module byte-for-byte and removes a known
+  divergence that was previously documented as "this VM places NULLs last".
+
 ## [1.27.0] - 2026-05-15
 
 ### Added

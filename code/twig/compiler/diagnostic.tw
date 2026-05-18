@@ -15,7 +15,7 @@
 ;     (SevError? (diagnostic-severity d)))   ; → #t
 
 (module compiler/diagnostic
-  (typed lenient)
+  (typed strict)
   (export Severity SevError SevWarning SevInfo
           SevError? SevWarning? SevInfo?
           Diagnostic diagnostic? diagnostic-severity diagnostic-message

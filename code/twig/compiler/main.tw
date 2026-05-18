@@ -1,11 +1,33 @@
-; # main.tw — Root Module + Smoke-Test Entry Point (LANG62 / TW05-I)
+; # main.tw — Root Module + Smoke-Test Entry Point
+;             (LANG62/TW05-I + LANG64/TW05-J + LANG65/TW05-K + LANG66/TW05-L + LANG67/TW05-M
+;              + LANG68/TW05-N)
 ;
 ; This is the root module of the self-hosted compiler.  It imports all nine
 ; sub-modules (six data-model modules from TW05-D, lexer and parser from
-; TW05-E, and the IIR emitter from TW05-F/G/H) and exposes a `(main)` function
-; that exercises the full pipeline on real compiler source.
+; TW05-E, and the IIR emitter from TW05-F/G/H) and exposes:
 ;
-; ## TW05-I pipeline (updated from TW05-H)
+;   `(main)` — TW05-I: exercises the full pipeline on a stripped in-memory
+;              version of span.tw (returns 2, unchanged from TW05-H).
+;
+;   `(self-compile-all-summary dir)` — TW05-N: reads all eleven compiler
+;              source files, compiles each through lex → parse → emit-program,
+;              and returns a canonical opcode-structure string. Used for the
+;              fixed-point check and as a stable regression anchor.
+;
+;   `(fixed-point-check dir)` — TW05-N: compiles span.tw twice and returns
+;              `#t` if both runs produce identical opcode summaries. Always
+;              returns `#t` (Twig is purely functional); the purpose is to
+;              make the determinism invariant explicit and testable.
+;
+;   `(self-compile-all dir)` — TW05-M: reads ALL ELEVEN real `.tw` files
+;              from disk via `host/read_file`, compiles each through the full
+;              lex → parse → emit-program pipeline, and returns the sum
+;              of emitted function counts
+;              (2 + 0 + 3 + 0 + 0 + 8 + 25 + 69 + 29 + 35 + 2 = 173).
+;              Extended in TW05-M (LANG67) from the seven-file
+;              TW05-L (LANG66) set (which returned 171).
+;
+; ## TW05-I pipeline (LANG62)
 ;
 ; TW05-I is the first self-compilation check: the pipeline now runs on a
 ; comment-stripped version of `span.tw` — the first of the compiler's own
@@ -31,12 +53,52 @@
 ;
 ; The `(main)` return value of `2` is unchanged from TW05-H.
 ;
+; ## TW05-J multi-module self-compilation (LANG64) — original 4-file set
+;
+; TW05-J introduced `self-compile-all` reading four data-structure modules:
+;
+;   span.tw          → 2 functions  (make-span, dummy-span)
+;   diagnostic.tw    → 3 functions  (make-error, make-warning, make-info)
+;   iir-builder.tw   → 8 functions  (new-builder, alloc-slot, …)
+;   lexer.tw         → 25 functions (lex-digit?, …, lex-source)
+;                     ────────────
+;                     38 subtotal
+;
+; `MAX_DISPATCH_DEPTH` was bumped from 4096 to 65536 in twig-vm 0.17.0
+; (LANG64) to allow lexing files up to 65536 chars.
+;
+; ## TW05-K extended self-compilation (LANG65) — 6-file set
+;
+; TW05-K adds the two main compilation modules to `self-compile-all`:
+;
+;   parser.tw        → 29 functions (parse-expr, …, parse-program)
+;   emit.tw          → 35 functions (emit-const, …, emit-program)
+;                     ────────────
+;                     64 new + 38 original = 102 total
+;
+; `parser.tw` is 19 708 chars; `emit.tw` is 22 697 chars.  Both are well
+; within the 65 536 frame ceiling.  Integration tests use a 3 GiB stack
+; thread (`run_in_xlarge_stack`) to accommodate the ~1.3 GiB worst-case
+; debug-mode stack depth for emit.tw (22 697 × 60 KiB ≈ 1.33 GiB).
+;
+; ## TW05-L cst-parser self-compilation (LANG66) — 7-file set
+;
+; TW05-L adds the generated CST parser module to `self-compile-all`:
+;
+;   cst-parser.tw    → 69 functions (cst-match-TkLParen, …, cst-parse-program)
+;                     ────────────
+;                     69 new + 102 original = 171 total
+;
+; `cst-parser.tw` is 29 122 chars — the largest file in the compiler corpus.
+; Peak lex-loop depth: up to 29 122 frames.
+; Debug-mode worst case: 29 122 × 60 KiB ≈ 1.75 GiB.
+; `run_in_xlarge_stack` (3 GiB) provides ~1.7× headroom.
+;
 ; ## VM call-depth note
 ;
-; `twig-vm`'s `MAX_DISPATCH_DEPTH` was bumped from 256 to 4096 in LANG62.
-; The lex-loop recurses once per character; the stripped span.tw source is
-; ~365 chars, requiring ~365 recursive frames during lexing.  The old 256
-; limit would have caused `Run(DepthExceeded)` here.
+; `twig-vm`'s `MAX_DISPATCH_DEPTH` history:
+;   - bumped 256 → 4096 in LANG62 (TW05-I): stripped span.tw ≈ 365 chars
+;   - bumped 4096 → 65536 in LANG64 (TW05-J): lexer.tw ≈ 8593 chars
 ;
 ; ## Naming conventions for generated accessors
 ;
@@ -54,8 +116,10 @@
 ; Use the predicate functions instead: `(IntLit? node)`, `(TkInteger? kind)`.
 
 (module compiler/main
-  (typed lenient)
-  (export main)
+  (typed strict)
+  (export main self-compile-all
+          instr-op-tag instr-list-ops fn-pair-ops-str fn-list-ops-str
+          self-compile-all-summary fixed-point-check)
   (import compiler/span
           compiler/token
           compiler/diagnostic
@@ -113,3 +177,269 @@
 
     ; Count of emitted function definitions.
     (length funcs)))   ; → 2
+
+; ── self-compile-all ──────────────────────────────────────────────────────────
+;
+; TW05-M milestone (extended from TW05-L): read ALL ELEVEN compiler source
+; files from `dir` via `host/read_file`, compile each through the self-hosted
+; lex → parse → emit-program pipeline, and return the sum of emitted function
+; counts.
+;
+; `dir` must be the absolute path to the directory containing the compiler
+; `.tw` files (no trailing slash).
+;
+; ## Files compiled and expected counts (TW05-N / LANG68)
+;
+;   span.tw           2  defines  (make-span, dummy-span)
+;   token.tw          0  defines  union/record-only module ← TW05-M
+;   diagnostic.tw     3  defines  (make-error, make-warning, make-info)
+;   ast.tw            0  defines  union-only module ← TW05-M
+;   iir-types.tw      0  defines  union/record-only module ← TW05-M
+;   iir-builder.tw    8  defines  (new-builder, alloc-slot, …)
+;   lexer.tw         25  defines  (lex-digit?, …, lex-source)
+;   cst-parser.tw    69  defines  (cst-match-TkLParen, …, cst-parse-program) ← TW05-L
+;   parser.tw        29  defines  (parse-expr, …, parse-program)
+;   emit.tw          35  defines  (emit-const, …, emit-program)
+;   main.tw           8  defines  (main, self-compile-all, +6 TW05-N) ← TW05-N
+;                   ───
+;                   179  total  (was 173 before TW05-N; +6 from new main.tw functions)
+;
+; TW05-M (LANG67) compiled eleven modules (173 total).
+; TW05-L (LANG66) compiled seven modules (171 total).
+; TW05-K (LANG65) compiled six modules (102 total).
+;
+; ## Why union/record modules contribute 0 functions
+;
+; `emit-program` only emits `DefExpr(LambdaExpr)` top-level forms — i.e.,
+; `(define (fn params) body)` shorthand.  Union and record declarations
+; (`(union ...)`, `(record ...)`, `(module ...)`) are parsed as `CallExpr`
+; nodes; `emit-top-level-form` returns `nil` for those → skipped.
+;
+; ## Why main.tw contributes 2 functions
+;
+; main.tw has two `(define (fn params) body)` forms: `main` and
+; `self-compile-all`.  When compiling main.tw through the pipeline, the
+; body of `self-compile-all` is emitted as IIR call instructions; the
+; embedded `host/read_file` calls are NOT executed — they are just compiled.
+;
+; ## Stack and VM limits
+;
+; Largest file is still `cst-parser.tw` at 29 122 chars; all limits set in
+; LANG66 (MAX_DISPATCH_DEPTH 131 072, MAX_INSTRUCTIONS_PER_RUN 2²⁵) remain
+; adequate.  Additional instruction cost: 21 371 chars × 90 ≈ 1.92 M;
+; new grand total ≈ 10.1 M << 32 M.
+
+(define (self-compile-all dir)
+  ; Read each source file from disk and compile through the pipeline.
+  ; `host/read_file` returns the full file content including comments;
+  ; `lex-source` handles them transparently.
+  ;
+  ; Files are compiled sequentially; peak stack depth = max single file depth
+  ; (cst-parser.tw at 29 122 chars), not the sum of all files.
+  (let* ((span-src     (host/read_file (string-append dir "/span.tw")))
+         (token-src    (host/read_file (string-append dir "/token.tw")))
+         (diag-src     (host/read_file (string-append dir "/diagnostic.tw")))
+         (ast-src      (host/read_file (string-append dir "/ast.tw")))
+         (iirtypes-src (host/read_file (string-append dir "/iir-types.tw")))
+         (builder-src  (host/read_file (string-append dir "/iir-builder.tw")))
+         (lexer-src    (host/read_file (string-append dir "/lexer.tw")))
+         (cst-src      (host/read_file (string-append dir "/cst-parser.tw")))
+         (parser-src   (host/read_file (string-append dir "/parser.tw")))
+         (emit-src     (host/read_file (string-append dir "/emit.tw")))
+         (main-src     (host/read_file (string-append dir "/main.tw")))
+
+         ; Compile each module: lex → parse → emit-program.
+         ; emit-program returns a list of (fn-name . instrs) pairs —
+         ; only DefExpr(LambdaExpr) top-level forms are emitted.
+         ; Record/union/module declarations are parsed as CallExpr and skipped.
+         ; token.tw, ast.tw, iir-types.tw → 0 each (union/record only).
+         ; main.tw → 8 (main + self-compile-all + 6 TW05-N helpers).
+         (span-fns     (emit-program (parse-program (lex-source span-src))))
+         (token-fns    (emit-program (parse-program (lex-source token-src))))
+         (diag-fns     (emit-program (parse-program (lex-source diag-src))))
+         (ast-fns      (emit-program (parse-program (lex-source ast-src))))
+         (iirtypes-fns (emit-program (parse-program (lex-source iirtypes-src))))
+         (builder-fns  (emit-program (parse-program (lex-source builder-src))))
+         (lexer-fns    (emit-program (parse-program (lex-source lexer-src))))
+         (cst-fns      (emit-program (parse-program (lex-source cst-src))))
+         (parser-fns   (emit-program (parse-program (lex-source parser-src))))
+         (emit-fns     (emit-program (parse-program (lex-source emit-src))))
+         (main-fns     (emit-program (parse-program (lex-source main-src)))))
+
+    ; Sum the function counts:
+    ;   2 + 0 + 3 + 0 + 0 + 8 + 25 + 69 + 29 + 35 + 8 = 179.
+    ;   (main.tw now has 8 functions after the TW05-N additions)
+    (+ (length span-fns)
+       (+ (length token-fns)
+          (+ (length diag-fns)
+             (+ (length ast-fns)
+                (+ (length iirtypes-fns)
+                   (+ (length builder-fns)
+                      (+ (length lexer-fns)
+                         (+ (length cst-fns)
+                            (+ (length parser-fns)
+                               (+ (length emit-fns)
+                                  (length main-fns)))))))))))))
+
+; ── TW05-N: IIR opcode-summary serialisers + fixed-point check ───────────────
+;
+; These helpers convert `emit-program` output (a list of `(fn-name . instr-list)`
+; pairs, where each instr is an IirInstr record from compiler/iir-types) into a
+; canonical opcode-summary string.
+;
+; ## Why opcode-only serialisation?
+;
+; IirInstr.srcs can contain integers, booleans, and strings (register names,
+; builtin names, label names, constant values).  A generic any→string conversion
+; would require runtime type dispatch not yet available in typed lenient Twig.
+; Opcode sequences capture the essential control-flow structure of a compiled
+; function — enough to prove determinism (same input → same opcode sequence)
+; without needing to serialise register names or constant values.
+;
+; ## Format
+;
+; fn-pair-ops-str produces:
+;   "fn-name N op1|op2|...|opN"
+; where N is the instruction count (number->string).
+;
+; fn-list-ops-str joins fn-pair-ops-str results with "\n".
+;
+; self-compile-all-summary joins per-file fn-list-ops-str results with "\n---\n".
+;
+; ## Fixed-point semantics
+;
+; fixed-point-check compiles span.tw TWICE and checks string equality.  Since
+; Twig is purely functional, this always returns #t; the purpose is to make
+; the determinism invariant explicit and testable.
+;
+; span.tw is chosen for speed: it is the smallest compiler source file (~365
+; chars, 2 functions, 16 total instructions) so the double pipeline run adds
+; negligible overhead to the test suite.
+
+; instr-op-tag: extract the opcode string from one IirInstr.
+; IirInstr.op is always a string (e.g. "const", "call_builtin", "jmp_if_false").
+; Uses the generated accessor iirinstr-op (prefix = lowercase of "IirInstr").
+(define (instr-op-tag instr)
+  (iirinstr-op instr))
+
+; instr-list-ops: join opcodes of a list of IirInstr records with "|".
+; Returns "" for the empty list.
+; Recursive (not tail-recursive); depth = number of instructions in one
+; function (≤ ~200 for the largest functions in the compiler corpus).
+(define (instr-list-ops instrs)
+  (if (null? instrs) ""
+  (if (null? (cdr instrs))
+      (instr-op-tag (car instrs))
+      (string-append (instr-op-tag (car instrs))
+      (string-append "|" (instr-list-ops (cdr instrs)))))))
+
+; fn-pair-ops-str: serialise one (fn-name . instr-list) pair.
+; Format: "fn-name N op1|op2|...|opN"
+; Example: "make-span 12 const|const|call_builtin|jmp_if_false|..."
+(define (fn-pair-ops-str pair)
+  (let* ((name   (car pair))
+         (instrs (cdr pair))
+         (cnt    (length instrs))
+         (ops    (instr-list-ops instrs)))
+    (string-append name
+    (string-append " "
+    (string-append (number->string cnt)
+    (string-append " " ops))))))
+
+; fn-list-ops-str: newline-join fn-pair-ops-str results for all functions.
+; Returns "" for the empty list (union/record-only modules yield nil from
+; emit-program, so token.tw / ast.tw / iir-types.tw each give "").
+(define (fn-list-ops-str fns)
+  (if (null? fns) ""
+  (if (null? (cdr fns))
+      (fn-pair-ops-str (car fns))
+      (string-append (fn-pair-ops-str (car fns))
+      (string-append "\n" (fn-list-ops-str (cdr fns)))))))
+
+; self-compile-all-summary: compile all eleven compiler source files and return
+; the full opcode-structure string.  File summaries are separated by "\n---\n".
+;
+; ## Expected substrings (from span.tw):
+;   "make-span 12 "   — span.tw's make-span emits 12 instructions
+;   "dummy-span 4 "   — span.tw's dummy-span emits 4 instructions
+;
+; ## Stack note
+;
+; The pipeline cost is identical to self-compile-all; cst-parser.tw at 29 122
+; chars remains the deepest file.  run_in_xlarge_stack is required for tests.
+(define (self-compile-all-summary dir)
+  (let* ((span-src     (host/read_file (string-append dir "/span.tw")))
+         (token-src    (host/read_file (string-append dir "/token.tw")))
+         (diag-src     (host/read_file (string-append dir "/diagnostic.tw")))
+         (ast-src      (host/read_file (string-append dir "/ast.tw")))
+         (iirtypes-src (host/read_file (string-append dir "/iir-types.tw")))
+         (builder-src  (host/read_file (string-append dir "/iir-builder.tw")))
+         (lexer-src    (host/read_file (string-append dir "/lexer.tw")))
+         (cst-src      (host/read_file (string-append dir "/cst-parser.tw")))
+         (parser-src   (host/read_file (string-append dir "/parser.tw")))
+         (emit-src     (host/read_file (string-append dir "/emit.tw")))
+         (main-src     (host/read_file (string-append dir "/main.tw")))
+         ; Compile each file through the self-hosted pipeline.
+         (span-s   (fn-list-ops-str (emit-program (parse-program (lex-source span-src)))))
+         (token-s  (fn-list-ops-str (emit-program (parse-program (lex-source token-src)))))
+         (diag-s   (fn-list-ops-str (emit-program (parse-program (lex-source diag-src)))))
+         (ast-s    (fn-list-ops-str (emit-program (parse-program (lex-source ast-src)))))
+         (iirt-s   (fn-list-ops-str (emit-program (parse-program (lex-source iirtypes-src)))))
+         (bldr-s   (fn-list-ops-str (emit-program (parse-program (lex-source builder-src)))))
+         (lexr-s   (fn-list-ops-str (emit-program (parse-program (lex-source lexer-src)))))
+         (cst-s    (fn-list-ops-str (emit-program (parse-program (lex-source cst-src)))))
+         (prsr-s   (fn-list-ops-str (emit-program (parse-program (lex-source parser-src)))))
+         (emit-s   (fn-list-ops-str (emit-program (parse-program (lex-source emit-src)))))
+         (main-s   (fn-list-ops-str (emit-program (parse-program (lex-source main-src))))))
+    ; Concatenate all summaries separated by "\n---\n".
+    ; 11 files × 1 summary each, separated by 10 "\n---\n" delimiters.
+    (string-append span-s
+    (string-append "\n---\n"
+    (string-append token-s
+    (string-append "\n---\n"
+    (string-append diag-s
+    (string-append "\n---\n"
+    (string-append ast-s
+    (string-append "\n---\n"
+    (string-append iirt-s
+    (string-append "\n---\n"
+    (string-append bldr-s
+    (string-append "\n---\n"
+    (string-append lexr-s
+    (string-append "\n---\n"
+    (string-append cst-s
+    (string-append "\n---\n"
+    (string-append prsr-s
+    (string-append "\n---\n"
+    (string-append emit-s
+    (string-append "\n---\n"
+    main-s))))))))))))))))))))))
+
+; fixed-point-check: compile span.tw twice and verify the opcode summaries
+; are identical.
+;
+; Returns #t (always, since Twig is purely functional and span.tw is a fixed
+; file on disk).  The value of this function is making the determinism invariant
+; EXPLICIT and TESTABLE rather than an implicit assumption.
+;
+; ## Why span.tw?
+;
+; span.tw is the smallest compiler source file:
+;   ~365 chars, 2 functions, 16 total instructions (make-span=12, dummy-span=4).
+; Its pipeline completes in milliseconds even in debug mode, so calling it twice
+; adds negligible overhead to the test suite.
+;
+; ## Stage semantics
+;
+; stage1 = compile span.tw once  → opcode summary string
+; stage2 = compile span.tw again → opcode summary string (same source, same code)
+; result = (string=? stage1 stage2) → always #t
+;
+; This is the TW05-N incarnation of the broader TW05-G fixed-point check:
+;   "stage1 and stage2 IIR are byte-for-byte identical after deterministic
+;    serialisation."
+(define (fixed-point-check dir)
+  (let* ((src    (host/read_file (string-append dir "/span.tw")))
+         (stage1 (fn-list-ops-str (emit-program (parse-program (lex-source src)))))
+         (stage2 (fn-list-ops-str (emit-program (parse-program (lex-source src))))))
+    (string=? stage1 stage2)))

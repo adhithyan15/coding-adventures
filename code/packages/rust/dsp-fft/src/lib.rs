@@ -63,7 +63,10 @@ pub mod rfft;
 pub use bluestein::{
     bluestein_scalar, bluestein_via_runtime, build_bluestein_graph_with_input,
 };
-pub use radix2::{build_fft_graph, build_fft_graph_with_input, fft_via_runtime};
+pub use radix2::{
+    add_radix2_fft_to_builder, build_fft_graph, build_fft_graph_with_input,
+    fft_via_runtime, wrap_real_as_complex,
+};
 pub use rfft::{irfft, irfft_scalar, rfft, rfft_scalar};
 
 use dsp_complex::ComplexTensor;

@@ -4,7 +4,7 @@ use spice_engine::{
 };
 use spice_netlist_parser::{
     parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, McAnalysis, NetlistParseError,
-    NoiseAnalysis, OpAnalysis, SensAnalysis, TfAnalysis, TranAnalysis,
+    NoiseAnalysis, OpAnalysis, OptionValue, SensAnalysis, TfAnalysis, TranAnalysis,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -105,6 +105,46 @@ G1 out 0 in 0 2m
             }),
         ]
     );
+}
+
+#[test]
+fn parses_options_analysis_cards() {
+    let parsed = parse_netlist(
+        r#"
+.options reltol=1m abstol=1n gmin=1p method=trap noopiter
+"#,
+    )
+    .unwrap();
+
+    let cards = parsed.options_cards();
+    let [card] = cards.as_slice() else {
+        panic!("expected one options card");
+    };
+    assert_option_number(card.values.get("reltol"), 1.0e-3);
+    assert_option_number(card.values.get("abstol"), 1.0e-9);
+    assert_option_number(card.values.get("gmin"), 1.0e-12);
+    assert_eq!(
+        card.values.get("method"),
+        Some(&OptionValue::Text("trap".to_string()))
+    );
+    assert_eq!(card.values.get("noopiter"), Some(&OptionValue::Flag(true)));
+    assert!(matches!(parsed.analyses.as_slice(), [Analysis::Options(_)]));
+}
+
+fn assert_option_number(actual: Option<&OptionValue>, expected: f64) {
+    let Some(OptionValue::Number(actual)) = actual else {
+        panic!("expected numeric option, got {actual:?}");
+    };
+    assert_close(*actual, expected);
+}
+
+#[test]
+fn rejects_options_cards_with_empty_values() {
+    let error = parse_netlist(".options gmin=").unwrap_err();
+
+    assert!(error
+        .to_string()
+        .contains(".options \"gmin\" requires a value"));
 }
 
 #[test]

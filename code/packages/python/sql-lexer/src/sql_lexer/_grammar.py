@@ -38,7 +38,7 @@ TOKEN_GRAMMAR = TokenGrammar(
         ),
         TokenDefinition(
             name='STRING_SQ',
-            pattern="'([^'\\\\]|\\\\.)*'",
+            pattern="'(''|[^'])*'",
             is_regex=True,
             line_number=20,
             alias='STRING',
@@ -48,6 +48,13 @@ TOKEN_GRAMMAR = TokenGrammar(
             pattern='`[^`]+`',
             is_regex=True,
             line_number=21,
+            alias='NAME',
+        ),
+        TokenDefinition(
+            name='QUOTED_ID_DQ',
+            pattern='"([^"]|"")*"',
+            is_regex=True,
+            line_number=28,
             alias='NAME',
         ),
         TokenDefinition(
@@ -177,9 +184,9 @@ TOKEN_GRAMMAR = TokenGrammar(
             alias=None,
         ),
     ],
-    keywords=['WITH', 'RECURSIVE', 'SELECT', 'FROM', 'WHERE', 'GROUP', 'BY', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'ALTER', 'ADD', 'COLUMN', 'CREATE', 'DROP', 'TABLE', 'IF', 'EXISTS', 'NOT', 'AND', 'OR', 'NULL', 'IS', 'IN', 'BETWEEN', 'LIKE', 'AS', 'DISTINCT', 'ALL', 'UNION', 'INTERSECT', 'EXCEPT', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'OUTER', 'CROSS', 'FULL', 'ON', 'ASC', 'DESC', 'TRUE', 'FALSE', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'PRIMARY', 'KEY', 'UNIQUE', 'INDEX', 'CHECK', 'REFERENCES', 'DEFAULT', 'VIEW', 'BEGIN', 'COMMIT', 'ROLLBACK', 'TRANSACTION', 'SAVEPOINT', 'RELEASE', 'TO', 'OVER', 'PARTITION', 'TRIGGER', 'BEFORE', 'AFTER', 'FOR', 'EACH', 'ROW', 'RETURNING', 'CAST', 'GLOB', 'NATURAL', 'USING', 'REPLACE', 'IGNORE', 'ABORT', 'FAIL'],
+    keywords=['WITH', 'RECURSIVE', 'SELECT', 'FROM', 'WHERE', 'GROUP', 'BY', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'ALTER', 'ADD', 'COLUMN', 'CREATE', 'DROP', 'TABLE', 'IF', 'EXISTS', 'NOT', 'AND', 'OR', 'NULL', 'IS', 'IN', 'BETWEEN', 'LIKE', 'ESCAPE', 'AS', 'DISTINCT', 'ALL', 'UNION', 'INTERSECT', 'EXCEPT', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'OUTER', 'CROSS', 'FULL', 'ON', 'ASC', 'DESC', 'TRUE', 'FALSE', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'PRIMARY', 'KEY', 'UNIQUE', 'INDEX', 'CHECK', 'REFERENCES', 'DEFAULT', 'VIEW', 'BEGIN', 'COMMIT', 'ROLLBACK', 'TRANSACTION', 'SAVEPOINT', 'RELEASE', 'TO', 'OVER', 'PARTITION', 'TRIGGER', 'BEFORE', 'AFTER', 'FOR', 'EACH', 'ROW', 'RETURNING', 'CAST', 'GLOB', 'NATURAL', 'USING', 'REPLACE', 'IGNORE', 'ABORT', 'FAIL'],
     mode=None,
-    escape_mode=None,
+    escape_mode='none',
     skip_definitions=[
         TokenDefinition(
             name='WHITESPACE',

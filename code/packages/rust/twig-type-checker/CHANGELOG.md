@@ -1,5 +1,181 @@
 # Changelog — twig-type-checker
 
+## [0.9.0] — 2026-05-17
+
+### Added (LANG71 — TW05-P Part 2: Multi-Module Import Propagation)
+
+- **`extract_module_exports(program, env) -> HashMap<String, TwigKind>`** —
+  new public function that returns only the names listed in a module's
+  `(export …)` clause, looked up from its already-built `TypeEnv`.  Used to
+  build the seed map for `check_program_with_globals`.
+
+- **`check_program_with_globals(program, mode_override, extra_globals)`** —
+  new public function identical to `check_program` except that `extra_globals`
+  is merged into the `TypeEnv` *before* Pass 1 (`collect_forms`).  Names
+  defined inside the module shadow pre-seeded entries.  Enables callers to
+  propagate exported names from already-checked dependency modules into the
+  type environment of the importing module.
+
+- **`tw05p2_tests`** — 5 new integration tests that load the actual `.tw`
+  sources via `include_str!`, build the import graph bottom-up, and verify
+  strict-mode passes for all five remaining lenient modules:
+  - `lexer_tw_strict_with_imported_globals`
+  - `cst_parser_tw_strict_with_imported_globals`
+  - `parser_tw_strict_with_imported_globals`
+  - `emit_tw_strict_with_imported_globals`
+  - `main_tw_strict_with_imported_globals`
+
+### Changed (LANG71 — TW05-P Part 2: `.tw` module conversions)
+
+- `code/twig/compiler/lexer.tw` — `(typed lenient)` → `(typed strict)`
+- `code/twig/compiler/cst-parser.tw` — `(typed lenient)` → `(typed strict)`
+- `code/twig/compiler/parser.tw` — `(typed lenient)` → `(typed strict)`
+- `code/twig/compiler/emit.tw` — `(typed lenient)` → `(typed strict)`
+- `code/twig/compiler/main.tw` — `(typed lenient)` → `(typed strict)`
+
+All 11 compiler modules now run under `(typed strict)`.
+
+---
+
+## [0.8.0] — 2026-05-17
+
+### Added (LANG70 — TW05-P Part 1: Generated Symbol Registration)
+
+- **`TypeEnv::register_record` extended** — in addition to registering the
+  record constructor (`TwigKind::Record(name)`), now also registers:
+  - `{to_lowercase(name)}?` → `TwigKind::Any`  (record predicate)
+  - `{to_lowercase(name)}-{field}` → `TwigKind::Any`  (field accessors, one
+    per declared field)
+
+  Example for `(record IirBuilder (name : any) (instrs : any) (reg-count : int) …)`:
+  - `iirbuilder?`, `iirbuilder-name`, `iirbuilder-instrs`, `iirbuilder-reg-count`,
+    `iirbuilder-label-count`
+
+  These naming conventions match `twig-ir-compiler` exactly (lines 343-348 of
+  `compiler.rs`): `prefix = RecordName.to_lowercase()`.
+
+- **`TypeEnv::register_union` extended** — in addition to registering variant
+  constructors (`TwigKind::Function { arity }`), now also registers:
+  - `{VariantName}?` → `TwigKind::Any`  (variant predicate, **original case**,
+    NOT lowercased — mirrors IR compiler line 355)
+  - `{to_lowercase(VariantName)}-{field}` → `TwigKind::Any`  (variant field
+    accessors, lowercased prefix — mirrors IR compiler lines 357-359)
+
+  Example for `(union Expr (IntLit (value : int) (span : any)) …)`:
+  - `IntLit?`, `intlit-value`, `intlit-span`
+
+  The asymmetry between record predicates (lowercased) and union variant
+  predicates (original case) is intentional — it mirrors the IR compiler's
+  own asymmetry.
+
+### Why `TwigKind::Any` for all generated symbols
+
+- The type checker does not verify accessor return types or enforce field-count
+  arity on generated functions; that is done by the IR compiler.
+- `Any` suppresses "unresolved variable" errors without introducing false
+  arity mismatches for generated accessor calls.
+
+### Tests added (6 — `mod tw05p1_tests`)
+
+| Test | What it verifies |
+|------|-----------------|
+| `record_predicate_resolves_in_strict` | `(record Point …) (define (f r) (point? r))` → ok |
+| `record_accessor_resolves_in_strict` | `(record Point …) (define (f r) (point-x r))` → ok |
+| `union_variant_predicate_resolves_in_strict` | `(union Color …) (define (f v) (Red? v))` → ok |
+| `union_variant_field_accessor_resolves_in_strict` | `(union Shape (Circle (radius : int))) …` → ok |
+| `diagnostic_tw_strict_mode_compiles` | Full `diagnostic.tw` snippet in strict mode → ok |
+| `iir_builder_tw_strict_mode_compiles` | Key `iir-builder.tw` functions in strict mode → ok |
+
+All 92 prior tests continue to pass (98 total).
+
+### Compiler modules converted to `(typed strict)`
+
+With generated symbols now registered, 5 additional compiler modules can run
+in strict mode:
+
+| Module | Reason safe after LANG70 |
+|--------|--------------------------|
+| `token.tw` | 0 `define` forms — trivially safe |
+| `ast.tw` | 0 `define` forms — trivially safe |
+| `iir-types.tw` | 0 `define` forms — trivially safe |
+| `diagnostic.tw` | Only calls own constructors (`Diagnostic`, `SevError`, …) |
+| `iir-builder.tw` | Calls own accessors (`iirbuilder-name`, …) — safe after this change |
+
+Combined with `span.tw` (LANG69), **6 of 11** compiler modules now use
+`(typed strict)`.  The remaining 5 modules (`lexer.tw`, `cst-parser.tw`,
+`parser.tw`, `emit.tw`, `main.tw`) call names from imported modules; converting
+them requires TW05-P Part 2 (LANG71, multi-module import propagation).
+
+### Backward compatibility
+
+No public API changes.  All registered names are additive; no existing lookups
+change.  The `TypeEnv`, `ScopeStack`, `TwigKind`, `type_check`, `check_program`,
+and `type_check_source` interfaces are unchanged.
+
+---
+
+## [0.7.0] — 2026-05-17
+
+### Added (LANG69 — TW05-O: Builtin Prelude + span.tw Strict Mode)
+
+- **`TypeEnv::new()` now pre-registers all Twig runtime builtins** as
+  `TwigKind::Any` so that calls to builtins no longer produce "unresolved
+  variable" warnings in lenient mode or fatal errors in strict mode.
+
+  Registered names include all 43 names from `twig-ir-compiler`'s `BUILTINS`
+  const:
+  - Arithmetic / comparison: `+`, `-`, `*`, `/`, `=`, `<`, `>`, `<=`, `>=`,
+    `modulo`, `remainder`, `quotient`
+  - Cons cells: `cons`, `car`, `cdr`
+  - Predicates: `null?`, `pair?`, `number?`, `symbol?`, `not`, `boolean?`,
+    `equal?`, `list?`
+  - List stdlib: `list`, `length`, `append`, `reverse`, `list-ref`, `assoc`
+  - Symbol utilities: `symbol-append`
+  - Conversions: `number->string`, `string->symbol`, `symbol->string`
+  - String / char ops: `string-length`, `string-ref`, `substring`,
+    `string-append`, `string->number`, `string=?`, `string<?`, `string>?`,
+    `char->integer`, `integer->char`, `char-alphabetic?`, `char-numeric?`,
+    `char-whitespace?`
+  - I/O: `print`, `host/write_string`, `host/read_line`, `host/read_file`
+  - Higher-order: `map`, `filter`, `fold-left`, `fold-right`
+
+  Additionally, **`and` and `or`** are pre-registered.  These two forms are
+  special-cased in the IR compiler's `compile_apply` (not in `BUILTINS`),
+  but the type checker sees them as plain `Apply` nodes.  Without this
+  registration they produced "unresolved variable `and`" errors.
+
+  `TwigKind::Any` is used rather than `Function { arity }` because several
+  builtins are variadic (`list`, `string-append`); `Any` suppresses arity
+  checks without introducing false positives.  Explicit `(define ...)` stubs
+  in test prelude code shadow the pre-registered entries exactly as before.
+
+- **New private method `TypeEnv::register_builtins`** — called from
+  `TypeEnv::new()`; isolated so the list is easy to extend without changing
+  the constructor signature.
+
+### Tests added (8 — `mod tw05o_tests`)
+
+| Test | What it verifies |
+|------|-----------------|
+| `builtin_arithmetic_resolves` | `(+ 1 2)`, `(< 1 2)`, `(>= 3 3)` in strict mode → `ok: true` |
+| `builtin_list_ops_resolve` | `null?`, `cons`, `car`, `list`, `length` → ok |
+| `builtin_string_ops_resolve` | `string-length`, `string-append`, `string=?` → ok |
+| `builtin_and_or_resolve` | `(and #t #f)`, `(or #f #t)` → ok |
+| `builtin_host_io_resolves` | `(host/read_file "x")` → ok |
+| `builtin_hof_resolves` | `(map nil nil)`, `(filter nil nil)` → ok |
+| `builtin_does_not_block_stub_shadow` | `(define (+ a b) 0)` shadows pre-registered `+`; call ok |
+| `span_tw_strict_mode_compiles` | Full `span.tw` snippet in strict mode → `ok: true`, no errors |
+
+All 84 prior tests continue to pass (92 total).
+
+### No backward-compatibility impact
+
+`TypeEnv`, `ScopeStack`, `TwigKind`, `type_check`, `check_program`, and
+`type_check_source` are all unchanged.  Pre-registered builtins are shadowed
+by any explicit `define` in user code, just like before.
+
+---
+
 ## [0.6.0] — 2026-05-14
 
 ### Changed (LANG54 — Generic Refinement Protocol adoption)

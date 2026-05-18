@@ -48,12 +48,114 @@ binary while production code continues to link only static Rust source.
 
 - `html-skeleton.json`: narrow bootstrap regression cases
 - `html1.json`: Mosaic-era compatibility-floor cases for the current default wrapper
+- `whatwg-entities.json`: generated HTML Standard named character reference
+  table used by Rust tests to exercise every entry in data, attribute, and
+  RCDATA contexts
+- `whatwg-numeric-references.json`: generated HTML Standard numeric character
+  reference edge table used by Rust tests to exercise decimal, hexadecimal,
+  semicolon, and missing-semicolon forms across data, attribute, and RCDATA
+  contexts
+- `whatwg-input-stream.json`: generated HTML Standard input-stream
+  preprocessing cases used by Rust tests to exercise CRLF and bare-CR
+  normalization across tokenizer contexts and chunk boundaries
+- `whatwg-chunk-boundaries.json`: generated HTML tokenizer streaming cases
+  used by Rust tests to prove tokens, diagnostics, and positions stay stable
+  across every character chunk split point
+- `whatwg-eof-recovery.json`: generated HTML tokenizer EOF recovery cases used
+  by Rust tests to pin unfinished tags, comments, doctypes, character
+  references, text modes, and seeded continuation states
+- `whatwg-text-mode-delimiters.json`: generated HTML tokenizer text-mode
+  delimiter cases used by Rust tests to pin RCDATA, RAWTEXT, script-data,
+  escaped-script, and seeded end-tag continuation recovery
 - `html5lib-smoke.json`: generated normalized Venture fixture corpus derived from
   the raw html5lib-style smoke file
 - `upstream-html5lib-smoke.test`: raw html5lib-style tokenizer cases used to
   exercise the normalization path toward broader upstream corpora
 - `normalize_html5lib_fixtures.py`: importer that lowers supported raw
   html5lib-style tokenizer cases into Venture's portable fixture schema
+- `generate_whatwg_entities_fixture.py`: importer that lowers the HTML
+  Standard's `entities.json` table into the checked-in `whatwg-entities.json`
+  fixture
+- `generate_whatwg_numeric_references_fixture.py`: importer that generates the
+  finite numeric character reference edge table for the checked-in
+  `whatwg-numeric-references.json` fixture
+- `generate_whatwg_input_stream_fixture.py`: importer that generates finite
+  CRLF/bare-CR preprocessing cases for the checked-in
+  `whatwg-input-stream.json` fixture
+- `generate_whatwg_chunk_boundaries_fixture.py`: importer that generates
+  streaming chunk-boundary invariance cases for the checked-in
+  `whatwg-chunk-boundaries.json` fixture
+- `generate_whatwg_eof_recovery_fixture.py`: importer that generates EOF
+  recovery cases for the checked-in `whatwg-eof-recovery.json` fixture
+- `generate_whatwg_text_mode_delimiters_fixture.py`: importer that generates
+  text-mode end-tag delimiter cases for the checked-in
+  `whatwg-text-mode-delimiters.json` fixture
+
+Regenerate or verify the WHATWG entity fixture with:
+
+```bash
+curl -L https://html.spec.whatwg.org/entities.json -o /tmp/entities.json
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_entities_fixture.py \
+  /tmp/entities.json
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_entities_fixture.py \
+  /tmp/entities.json --check
+```
+
+Regenerate or verify the WHATWG numeric-reference fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG input-stream preprocessing fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_input_stream_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_input_stream_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG chunk-boundary fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_chunk_boundaries_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_chunk_boundaries_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG EOF recovery fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_eof_recovery_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_eof_recovery_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG text-mode delimiter fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_text_mode_delimiters_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_text_mode_delimiters_fixture.py \
+  --check
+```
+
+## Conformance Audit
+
+The parser package owns a shared html5lib source-coverage audit that checks the
+tree-construction fixture, this raw tokenizer mirror, and the generated
+normalized tokenizer corpus together:
+
+```bash
+HTML5LIB_TESTS_ROOT=/path/to/html5lib-tests \
+  python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py
+```
+
+The command exits nonzero if any upstream tokenizer case is missing from
+`upstream-html5lib-smoke.test`, if any upstream tree-construction case is
+missing from the parser fixture, or if `html5lib-smoke.json` still records
+skipped runtime gaps.
 
 ## WPT Path
 
@@ -170,6 +272,20 @@ currently supports:
 - form-feed handling as an HTML ASCII-whitespace delimiter for script double
   escape and semicolonless legacy named character references
 - CRLF and bare-CR input-stream newline preprocessing before tokenization
+- generated CRLF and bare-CR input-stream preprocessing coverage across data,
+  markup, attributes, comments, doctypes, character references, RCDATA,
+  RAWTEXT, script data, PLAINTEXT, CDATA, seeded comment continuations, seeded
+  DOCTYPE continuations, all chunk split points, and diagnostic line/column
+  positions
+- generated chunk-boundary invariance coverage across data, Unicode text, tags,
+  attributes, comments, doctypes, named/numeric character references, RCDATA,
+  RAWTEXT, script data, PLAINTEXT, CDATA, and seeded continuation states
+- generated EOF recovery coverage across partial tags, attributes, comments,
+  bogus comments, doctypes, named/numeric character references, RCDATA,
+  RAWTEXT, script data, PLAINTEXT, CDATA, and seeded continuation states
+- generated text-mode delimiter coverage across RCDATA, RAWTEXT, script data,
+  escaped script data, matching/mismatched apparent end tags, recoverable
+  whitespace/attribute/solidus delimiters, and seeded end-tag continuations
 - EOF recovery for unfinished ordinary start and end tags, ensuring partial
   tokens are dropped before the parser sees them
 - EOF recovery for unfinished attribute character references, including named

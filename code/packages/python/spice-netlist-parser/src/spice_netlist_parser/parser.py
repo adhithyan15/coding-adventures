@@ -103,6 +103,16 @@ class NoiseAnalysis:
     temperature: float = 300.0
 
 
+type OptionValue = float | str | bool
+
+
+@dataclass(frozen=True, slots=True)
+class OptionsAnalysis:
+    """A `.options key=value ...` simulator-options card."""
+
+    values: dict[str, OptionValue] = field(default_factory=dict)
+
+
 type Analysis = (
     OpAnalysis
     | TranAnalysis
@@ -112,6 +122,7 @@ type Analysis = (
     | SensAnalysis
     | McAnalysis
     | NoiseAnalysis
+    | OptionsAnalysis
 )
 
 
@@ -177,6 +188,9 @@ class ParsedNetlist:
 
     def noise_cards(self) -> list[NoiseAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, NoiseAnalysis)]
+
+    def options_cards(self) -> list[OptionsAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, OptionsAnalysis)]
 
 
 _VALUE_RE = re.compile(
@@ -673,7 +687,36 @@ def _parse_directive(fields: list[str]) -> Analysis:
             freqs=tuple(freqs),
             temperature=temperature,
         )
+    if directive == ".options":
+        _require_min_fields(fields, 2, ".options")
+        return OptionsAnalysis(values=_parse_options(fields[1:]))
     raise NetlistParseError(f"unsupported directive {fields[0]!r}")
+
+
+def _parse_options(tokens: list[str]) -> dict[str, OptionValue]:
+    values: dict[str, OptionValue] = {}
+    for token in tokens:
+        if "=" in token:
+            key, raw_value = token.split("=", 1)
+            key = key.strip().lower()
+            if not key:
+                raise NetlistParseError(f".options contains empty option name in {token!r}")
+            if raw_value == "":
+                raise NetlistParseError(f".options {key!r} requires a value")
+            values[key] = _parse_option_value(raw_value)
+        else:
+            key = token.strip().lower()
+            if not key:
+                raise NetlistParseError(".options contains an empty flag")
+            values[key] = True
+    return values
+
+
+def _parse_option_value(raw_value: str) -> OptionValue:
+    try:
+        return parse_value(raw_value)
+    except NetlistParseError:
+        return raw_value
 
 
 def _parse_voltage_probe(token: str, directive: str) -> str:

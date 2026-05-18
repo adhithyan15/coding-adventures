@@ -2,6 +2,7 @@
 
 from spice_engine.elements import (
     AcSource,
+    BSource,
     BJT,
     CCCS,
     CCVS,
@@ -18,8 +19,10 @@ from spice_engine.elements import (
     PwlWaveform,
     Resistor,
     SinWaveform,
+    SubcircuitDefinition,
     VoltageSource,
     Waveform,
+    XInstance,
 )
 from spice_engine.engine import (
     AcPoint,
@@ -54,6 +57,7 @@ __all__ = [
     "AcPoint",
     "AcResult",
     "AcSource",
+    "BSource",
     "BJT",
     "CCCS",
     "CCVS",
@@ -79,6 +83,7 @@ __all__ = [
     "SensEntry",
     "SensResult",
     "SinWaveform",
+    "SubcircuitDefinition",
     "TfResult",
     "TransientPoint",
     "TransientResult",
@@ -86,6 +91,7 @@ __all__ = [
     "VCVS",
     "VoltageSource",
     "Waveform",
+    "XInstance",
     "__version__",
     "ac_sweep",
     "dc_op",

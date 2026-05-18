@@ -122,6 +122,18 @@ module CodingAdventures
         Uart.new(self)
       end
 
+      def can
+        Can.new(self)
+      end
+
+      def rtc
+        Rtc.new(self)
+      end
+
+      def watchdog
+        Watchdog.new(self)
+      end
+
       def eject
         Ejector.new(self)
       end
@@ -523,6 +535,132 @@ module CodingAdventures
           program_id: program_id,
           budget: budget,
           max_stack: max_stack
+        )
+      end
+
+      def can_open!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        bus:,
+        max_stack: 2
+      )
+        ensure_uno_r4_wifi!
+
+        session.can_open(
+          program_id: program_id,
+          budget: budget,
+          bus: bus,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def can_write!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        byte:,
+        max_stack: 3
+      )
+        ensure_uno_r4_wifi!
+
+        session.can_write(
+          program_id: program_id,
+          budget: budget,
+          byte: byte,
+          max_stack: max_stack
+        )
+      end
+
+      def can_read!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 2
+      )
+        ensure_uno_r4_wifi!
+
+        session.can_read(
+          program_id: program_id,
+          budget: budget,
+          max_stack: max_stack
+        )
+      end
+
+      def rtc_now!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        ensure_uno_r4_wifi!
+
+        session.rtc_now(
+          program_id: program_id,
+          budget: budget,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def rtc_set!(
+        epoch_seconds:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        ensure_uno_r4_wifi!
+
+        session.rtc_set(
+          program_id: program_id,
+          budget: budget,
+          epoch_seconds: epoch_seconds,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def watchdog_configure!(
+        timeout_ms:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        ensure_uno_r4_wifi!
+
+        session.watchdog_configure(
+          program_id: program_id,
+          budget: budget,
+          timeout_ms: timeout_ms,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def watchdog_kick!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        ensure_uno_r4_wifi!
+
+        session.watchdog_kick(
+          program_id: program_id,
+          budget: budget,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
         )
       end
 
@@ -1509,6 +1647,126 @@ module CodingAdventures
         @connection.uart_read!(
           program_id: program_id,
           budget: budget,
+          max_stack: max_stack
+        )
+      end
+    end
+
+    class Can
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def open(
+        bus:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 2
+      )
+        @connection.can_open!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          bus: bus,
+          max_stack: max_stack
+        )
+      end
+
+      def write(
+        byte:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 3
+      )
+        @connection.can_write!(
+          program_id: program_id,
+          budget: budget,
+          byte: byte,
+          max_stack: max_stack
+        )
+      end
+
+      def read(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 2
+      )
+        @connection.can_read!(
+          program_id: program_id,
+          budget: budget,
+          max_stack: max_stack
+        )
+      end
+    end
+
+    class Rtc
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def now(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        @connection.rtc_now!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          max_stack: max_stack
+        )
+      end
+
+      def set(
+        epoch_seconds:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        @connection.rtc_set!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          epoch_seconds: epoch_seconds,
+          max_stack: max_stack
+        )
+      end
+    end
+
+    class Watchdog
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def configure(
+        timeout_ms:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        @connection.watchdog_configure!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          timeout_ms: timeout_ms,
+          max_stack: max_stack
+        )
+      end
+
+      def kick(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        @connection.watchdog_kick!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
           max_stack: max_stack
         )
       end
