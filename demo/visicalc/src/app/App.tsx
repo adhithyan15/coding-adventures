@@ -115,6 +115,7 @@ export function App() {
       <Grid
         columnHeaders={state.columnHeaders}
         viewportRows={viewportRows}
+        columnWidths={state.columnWidths}
         selectedRow={state.selectedRow - state.viewportOffset}
         selectedCol={state.selectedCol}
         editRow={state.editRow - state.viewportOffset}

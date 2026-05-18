@@ -4,6 +4,21 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — Grid `column-widths` slot ref
+
+- The Grid primitive now reads an optional `column-widths` slot-ref prop
+  (UI26 §2.1). When bound, the emitter writes a `<colgroup>` between the
+  opening `<table>` and the `<thead>`, mapping each width to a
+  `<col style={{ width: "${w}px" }} />`. Both `<th>` and `<td>` in the
+  same column inherit the width through the standard HTML table model.
+- When the prop is absent (existing demos), no `<colgroup>` is emitted,
+  preserving the previous flex-default behaviour.
+- Two new tests cover both branches.
+- The VisiCalc demo (`demo/visicalc/mosaic/Grid.mil` and
+  `Grid.desktop.mll`) was updated to declare and bind the slot, and
+  `App.tsx` now passes `state.columnWidths` through. Resolves known
+  limitation #5 in `demo/visicalc/README.md`.
+
 ### Changed — event-union types are now exported
 
 - `emit_event_union` now writes `export type {Component}Event = ...`

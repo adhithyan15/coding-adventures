@@ -16,6 +16,11 @@ component Grid {
   // `@ts-expect-error` to paper over the mismatch.
   slot viewport-rows  : list<list<text>> ;
 
+  // Per-column pixel widths. The Grid emitter writes a `<colgroup>`
+  // when this slot is bound, so each column has a stable width
+  // regardless of its content. UI26 §2.1.
+  slot column-widths  : list<number> ;
+
   // Selection (host owns, pushes in).
   slot selected-row : number ;
   slot selected-col : number ;
