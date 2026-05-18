@@ -21,3 +21,15 @@ HTML5LIB_TESTS_ROOT=/path/to/html5lib-tests \
 The command exits nonzero if any upstream tree-construction or tokenizer source
 case is missing, or if the normalized tokenizer fixture still has skipped
 runtime gaps.
+
+`whatwg-tree-insertion-audit.json` is a generated index over the high-signal
+tree-construction families inside `html5lib-tree-construction-smoke.dat`:
+adoption-agency formatting recovery, table insertion and foster parenting,
+template insertion, foreign-content fragments, and HTML fragment shells.
+Regenerate or check it with:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_tree_insertion_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_tree_insertion_audit_fixture.py \
+  --check
+```

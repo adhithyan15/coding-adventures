@@ -1,0 +1,1809 @@
+{
+  "case_count": 299,
+  "cases": [
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-1",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:1"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-2",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:2"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-3",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:3"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-4",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:4"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-5",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:5"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-6",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:6"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-7",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:7"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-8",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:8"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-9",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:9"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-10",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:10"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-11",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:11"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-12",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:12"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-13",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:13"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-14",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:14"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-15",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:15"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-16",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:16"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-17",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:17"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption02-dat-18",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption02.dat:18"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption02-dat-19",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption02.dat:19"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-436",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:436"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-437",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:437"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-438",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:438"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-439",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:439"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-440",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:440"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-441",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:441"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-442",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:442"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-443",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:443"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-444",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:444"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-445",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:445"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-446",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:446"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-447",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:447"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-448",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:448"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-449",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:449"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-450",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:450"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-451",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:451"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-452",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:452"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-453",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:453"
+    },
+    {
+      "axis": "table-insertion",
+      "id": "tables01-dat-454",
+      "reason": "table insertion modes, implied rows/cells, and foster parenting",
+      "source": "tables01.dat:454"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-455",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:455"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-456",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:456"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-457",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:457"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-458",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:458"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-459",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:459"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-460",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:460"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-461",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:461"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-462",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:462"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-463",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:463"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-464",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:464"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-465",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:465"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-466",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:466"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-467",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:467"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-468",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:468"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-469",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:469"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-470",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:470"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-471",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:471"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-472",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:472"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-473",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:473"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-474",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:474"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-475",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:475"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-476",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:476"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-477",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:477"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-478",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:478"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-479",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:479"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-480",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:480"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-481",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:481"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-482",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:482"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-483",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:483"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-484",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:484"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-485",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:485"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-486",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:486"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-487",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:487"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-488",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:488"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-489",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:489"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-490",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:490"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-491",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:491"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-492",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:492"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-493",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:493"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-494",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:494"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-495",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:495"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-496",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:496"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-497",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:497"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-498",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:498"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-499",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:499"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-500",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:500"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-501",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:501"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-502",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:502"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-503",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:503"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-504",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:504"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-505",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:505"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-506",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:506"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-507",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:507"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-508",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:508"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-509",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:509"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-510",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:510"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-511",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:511"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-512",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:512"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-513",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:513"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-514",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:514"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-515",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:515"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-516",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:516"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-517",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:517"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-518",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:518"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-519",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:519"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-520",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:520"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-521",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:521"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-522",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:522"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-523",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:523"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-524",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:524"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-525",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:525"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-526",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:526"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-527",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:527"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-528",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:528"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-529",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:529"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-530",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:530"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-531",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:531"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-532",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:532"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-533",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:533"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-534",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:534"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-535",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:535"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-536",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:536"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-537",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:537"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-538",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:538"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-539",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:539"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-540",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:540"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-541",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:541"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-542",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:542"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-543",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:543"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-544",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:544"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-545",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:545"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-546",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:546"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-547",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:547"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-548",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:548"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-549",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:549"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-550",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:550"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-551",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:551"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-552",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:552"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-553",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:553"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-554",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:554"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-555",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:555"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-556",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:556"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-557",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:557"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-558",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:558"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-559",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:559"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-560",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:560"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-561",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:561"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-562",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:562"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-563",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:563"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-564",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:564"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-565",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:565"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-1",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:1"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-2",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:2"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-3",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:3"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-4",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:4"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-5",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:5"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-6",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:6"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-7",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:7"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-8",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:8"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-9",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:9"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-10",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:10"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-11",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:11"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-12",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:12"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-13",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:13"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-14",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:14"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-15",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:15"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-16",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:16"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-17",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:17"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-18",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:18"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-19",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:19"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-20",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:20"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-21",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:21"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-22",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:22"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-23",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:23"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-24",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:24"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-25",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:25"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-26",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:26"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-27",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:27"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-28",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:28"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-29",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:29"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-30",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:30"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-31",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:31"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-32",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:32"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-33",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:33"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-34",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:34"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-35",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:35"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-36",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:36"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-37",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:37"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-38",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:38"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-39",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:39"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-40",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:40"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-41",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:41"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-42",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:42"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-43",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:43"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-44",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:44"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-45",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:45"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-46",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:46"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-48",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:48"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-50",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:50"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-51",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:51"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-52",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:52"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-53",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:53"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-54",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:54"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-55",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:55"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-56",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:56"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-57",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:57"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-58",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:58"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-59",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:59"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-60",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:60"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-61",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:61"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-62",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:62"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-63",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:63"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-64",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:64"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-65",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:65"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-66",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:66"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-67",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:67"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-68",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:68"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-69",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:69"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-70",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:70"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-71",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:71"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-72",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:72"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-73",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:73"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-75",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:75"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-77",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:77"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-78",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:78"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-79",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:79"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-80",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:80"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-81",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:81"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-47",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:47"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-49",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:49"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-74",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:74"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption01-dat-18",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption01.dat:18"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-1",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:1"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-2",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:2"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-3",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:3"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-4",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:4"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-5",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:5"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-6",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:6"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-7",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:7"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-8",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:8"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-9",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:9"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-10",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:10"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-11",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:11"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-12",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:12"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-13",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:13"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-14",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:14"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-15",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:15"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-16",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:16"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-17",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:17"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-18",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:18"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-19",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:19"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-20",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:20"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-21",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:21"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-22",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:22"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-23",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:23"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-24",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:24"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-25",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:25"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-26",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:26"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-27",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:27"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-28",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:28"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-29",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:29"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-30",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:30"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-31",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:31"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-32",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:32"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-33",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:33"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-34",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:34"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-35",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:35"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-36",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:36"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-37",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:37"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-38",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:38"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-39",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:39"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-40",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:40"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-41",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:41"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-42",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:42"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-43",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:43"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-44",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:44"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-45",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:45"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-46",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:46"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-47",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:47"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-48",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:48"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-49",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:49"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-50",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:50"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-51",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:51"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-52",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:52"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-53",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:53"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-54",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:54"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-55",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:55"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-56",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:56"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-57",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:57"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-58",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:58"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-59",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:59"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-60",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:60"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-61",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:61"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-62",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:62"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-63",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:63"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-64",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:64"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-65",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:65"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-66",
+      "reason": "foreign-content fragment contexts and HTML integration recovery",
+      "source": "foreign-fragment.dat:66"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-112",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:112"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-109",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:109"
+    },
+    {
+      "axis": "html-fragment",
+      "id": "tests-innerhtml-1-dat-76",
+      "reason": "innerHTML fragment shell recovery across HTML contexts",
+      "source": "tests_innerHTML_1.dat:76"
+    }
+  ],
+  "counts_by_axis": {
+    "adoption-agency": 20,
+    "foreign-fragment": 66,
+    "html-fragment": 81,
+    "table-insertion": 19,
+    "template-insertion": 113
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction families that stress insertion-mode recovery.",
+  "format": "whatwg-html-tree-insertion-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

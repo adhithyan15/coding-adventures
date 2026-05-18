@@ -80,6 +80,16 @@ The audit fails if an upstream tree-construction case is missing, if an
 upstream tokenizer case is missing from the raw mirrored tokenizer corpus, or
 if the normalized tokenizer corpus records skipped cases.
 
+For sharper parser regression reporting, the generated
+`tests/fixtures/whatwg-tree-insertion-audit.json` fixture indexes the
+adoption-agency, table/foster-parenting, template, foreign-content fragment,
+and HTML fragment-shell cases inside the tree-construction smoke corpus:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_tree_insertion_audit_fixture.py \
+  --check
+```
+
 ## Usage
 
 ```rust
