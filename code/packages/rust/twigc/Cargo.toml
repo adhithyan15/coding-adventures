@@ -1,8 +1,8 @@
 [package]
 name = "twigc"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "TW05-R — twigc: command-line compiler driver for Twig. Wraps twig-module-driver (multi-file module resolution + Phase 3.5 type-check) and twig-vm (interpreter execution)."
+description = "TW05-R/S — twigc: command-line compiler driver for Twig. Wraps twig-module-driver (multi-file module resolution + Phase 3.5 type-check) and twig-vm (interpreter execution). Includes --self-check for TW05 fixed-point verification."
 
 [[bin]]
 name = "twigc"

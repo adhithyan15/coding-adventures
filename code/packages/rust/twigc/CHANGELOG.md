@@ -1,5 +1,38 @@
 # Changelog — twigc
 
+## [0.2.0] — 2026-05-18
+
+### Added (LANG74 — TW05-S twigc --self-check)
+
+Adds the TW05 fixed-point self-check mode, completing the
+"Definition of done" requirement from the TW05 spec:
+
+> `twigc --self-check` reaches a stage1/stage2 fixed point
+
+#### CLI (`twigc` binary)
+
+- `twigc --self-check <DIR>` — run `(fixed-point-check "<DIR>")` via
+  the self-hosted compiler pipeline.  Exits 0 on pass, 5 on failure.
+  `<DIR>` must be the directory containing the eleven Twig compiler
+  source files (`span.tw`, `lexer.tw`, `main.tw`, etc.).
+- New exit code 5: self-check failed (fixed-point not reached).
+
+#### Library (`twigc` crate)
+
+- `twigc_self_check(compiler_dir, extra_search_paths) -> Result<bool, TwigcError>`
+  Writes an ephemeral wrapper `.tw` that imports `compiler/main` and
+  calls `(fixed-point-check dir)` with the compiler directory baked
+  in as a string constant.  Returns `Ok(true)` when the fixed-point
+  check passes.
+
+#### Tests (`twigc_tests`, +1 test = 7 total)
+
+| Test | Verifies |
+|------|---------|
+| `self_check_compiler_tree_fixed_point` | `twigc_self_check` on the real 11-module compiler → `Ok(true)` |
+
+---
+
 ## [0.1.0] — 2026-05-17
 
 ### Added (LANG73 — TW05-R twigc CLI driver)

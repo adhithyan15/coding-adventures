@@ -1,12 +1,15 @@
-//! # twigc — Twig compiler CLI (TW05-R / LANG73)
+//! # twigc — Twig compiler CLI (TW05-R / LANG73, TW05-S / LANG74)
 //!
 //! ```text
 //! USAGE:
 //!   twigc [OPTIONS] <file.tw>
+//!   twigc --self-check <compiler-dir>
 //!
 //! OPTIONS:
 //!   --check              Type-check only.  Exit 0 on success, 1 on type errors.
 //!   --emit=iir           Compile to IIR and print a human-readable summary.
+//!   --self-check=<DIR>   Run the TW05 fixed-point self-check on the compiler
+//!                        source tree at DIR.  Exit 0 on pass, 5 on failure.
 //!   --search-path=<DIR>  Add DIR to the module search path (repeatable).
 //!   -h, --help           Print this help.
 //!   -V, --version        Print version.
@@ -19,11 +22,12 @@
 //!
 //! | Code | Meaning |
 //! |------|---------|
-//! | 0    | Success (check passed / IIR printed / run returned) |
+//! | 0    | Success (check passed / IIR printed / run returned / self-check passed) |
 //! | 1    | Type error in a `(typed strict)` module |
 //! | 2    | Any other compilation error (parse error, missing import, …) |
 //! | 3    | Runtime trap from twig-vm |
 //! | 4    | Usage error (bad flags, missing file argument) |
+//! | 5    | Self-check failed — fixed-point not reached |
 //!
 //! ## Examples
 //!
@@ -37,6 +41,9 @@
 //! # Compile and run:
 //! twigc src/main.tw
 //!
+//! # Fixed-point self-check (TW05 definition of done):
+//! twigc --self-check code/twig/compiler
+//!
 //! # Multi-module with explicit search path:
 //! twigc --search-path=stdlib src/main.tw
 //! ```
@@ -44,7 +51,7 @@
 use std::path::PathBuf;
 use std::process;
 
-use twigc::{twigc_check, twigc_emit_iir, twigc_run, TwigcError};
+use twigc::{twigc_check, twigc_emit_iir, twigc_run, twigc_self_check, TwigcError};
 use twig_module_driver::ModuleDriverError;
 
 // ── Version constant ──────────────────────────────────────────────────────────
@@ -56,13 +63,16 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 const USAGE: &str = "\
 USAGE:
   twigc [OPTIONS] <file.tw>
+  twigc --self-check <compiler-dir>
 
 OPTIONS:
-  --check              Type-check only.  Exit 0 on success, 1 on type errors.
-  --emit=iir           Compile to IIR and print a human-readable listing.
-  --search-path=<DIR>  Add DIR to the module search path (repeatable).
-  -h, --help           Print this help.
-  -V, --version        Print version.
+  --check                Type-check only.  Exit 0 on success, 1 on type errors.
+  --emit=iir             Compile to IIR and print a human-readable listing.
+  --self-check=<DIR>     Run the TW05 fixed-point self-check on the compiler
+                         source tree at DIR.  Exit 0 on pass, 5 on failure.
+  --search-path=<DIR>    Add DIR to the module search path (repeatable).
+  -h, --help             Print this help.
+  -V, --version          Print version.
 
 DEFAULT (no flags):
   Compile and run via twig-vm; print the integer return value to stdout.
@@ -73,6 +83,7 @@ EXIT CODES:
   2  Compilation error (parse, import, …)
   3  Runtime trap
   4  Usage error
+  5  Self-check failed (fixed point not reached)
 ";
 
 // ── CLI parsing ───────────────────────────────────────────────────────────────
@@ -84,6 +95,10 @@ enum Mode {
     Check,
     /// `--emit=iir` — dump IIR listing to stdout.
     EmitIir,
+    /// `--self-check <dir>` — run the TW05 fixed-point self-check.
+    ///
+    /// `file` in `Args` holds the compiler source directory (not a `.tw` file).
+    SelfCheck,
     /// Default — compile and run, print integer result.
     Run,
 }
@@ -91,6 +106,8 @@ enum Mode {
 /// Parsed command-line arguments.
 struct Args {
     mode: Mode,
+    /// In `SelfCheck` mode: the compiler source directory.
+    /// In all other modes: the `.tw` source file.
     file: PathBuf,
     search_paths: Vec<PathBuf>,
 }
@@ -120,6 +137,27 @@ fn parse_args(raw: Vec<String>) -> Args {
             }
             "--emit=iir" => {
                 mode = Mode::EmitIir;
+            }
+            // --self-check=<DIR>  (value attached with '=')
+            s if s.starts_with("--self-check=") => {
+                let dir = s.trim_start_matches("--self-check=");
+                mode = Mode::SelfCheck;
+                if file.is_some() {
+                    eprintln!("twigc: conflicting arguments for --self-check");
+                    process::exit(4);
+                }
+                file = Some(PathBuf::from(dir));
+            }
+            // --self-check <DIR>  (value as next argument)
+            "--self-check" => {
+                mode = Mode::SelfCheck;
+                i += 1;
+                if i >= raw.len() {
+                    eprintln!("twigc: --self-check requires a directory argument");
+                    eprintln!("{USAGE}");
+                    process::exit(4);
+                }
+                file = Some(PathBuf::from(&raw[i]));
             }
             s if s.starts_with("--search-path=") => {
                 let dir = s.trim_start_matches("--search-path=");
@@ -201,6 +239,21 @@ fn main() {
             }
             Err(ref e) => handle_error(e),
         },
+
+        Mode::SelfCheck => {
+            // `args.file` is the compiler source directory, not a .tw file.
+            match twigc_self_check(&args.file, &args.search_paths) {
+                Ok(true) => {
+                    println!("twigc: self-check passed (fixed point reached)");
+                    0
+                }
+                Ok(false) => {
+                    eprintln!("twigc: self-check FAILED (fixed point not reached)");
+                    5
+                }
+                Err(ref e) => handle_error(e),
+            }
+        }
 
         Mode::Run => match twigc_run(&args.file, &args.search_paths) {
             Ok(value) => {
