@@ -228,7 +228,7 @@ comparison        = additive [ cmp_op additive
 in_expr           = query_stmt | value_list ;
 
 cmp_op            = "=" | NOT_EQUALS | "<" | ">" | "<=" | ">=" ;
-additive          = multiplicative { ( "+" | "-" | "||" ) multiplicative } ;
+additive          = multiplicative { ( "+" | "-" | "||" | JSON_ARROW | JSON_ARROW_TEXT ) multiplicative } ;
 multiplicative    = unary { ( STAR | "/" | "%" ) unary } ;
 unary             = "-" unary | primary ;
 

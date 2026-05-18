@@ -37,6 +37,14 @@ NOT_EQUALS     = "!="
 NEQ_ANSI       = "<>" -> NOT_EQUALS
 CONCAT_OP      = "||"
 
+# JSON path-shortcut operators (SQLite 3.38+).  ->> must be matched before
+# -> for longest-match.  Both are binary operators with their own precedence
+# (between PRIMARY and the unary minus, per SQLite).
+#   j -> p   → JSON form of json_extract(j, '$.p')
+#   j ->> p  → SQL  form (raw scalar) of json_extract(j, '$.p')
+JSON_ARROW_TEXT = "->>"
+JSON_ARROW      = "->"
+
 EQUALS        = "="
 LESS_THAN     = "<"
 GREATER_THAN  = ">"

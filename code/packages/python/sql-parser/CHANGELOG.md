@@ -2,6 +2,16 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.22.0] - 2026-05-17
+
+### Added
+
+- **JSON path-shortcut operators in `additive`** (`sql.grammar`,
+  `_grammar.py`) — the `additive` rule now accepts `JSON_ARROW` (`->`)
+  and `JSON_ARROW_TEXT` (`->>`) alongside `+`, `-`, and `||`.  Both are
+  left-associative and have the same precedence as the existing additive
+  operators.
+
 ## [0.21.0] - 2026-05-17
 
 ### Added

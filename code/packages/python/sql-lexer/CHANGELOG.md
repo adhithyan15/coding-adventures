@@ -2,6 +2,15 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.17.0] - 2026-05-17
+
+### Added
+
+- **`JSON_ARROW` (`->`) and `JSON_ARROW_TEXT` (`->>`) tokens** (`sql.tokens`,
+  `_grammar.py`) — SQLite 3.38+ JSON path-shortcut operators.  `->>` is
+  defined first so the longest-match lexing rule picks it up correctly when
+  followed by `>`.
+
 ## [0.16.0] - 2026-05-17
 
 ### Changed

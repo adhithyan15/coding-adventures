@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.41.0] - 2026-05-17
+
+### Added
+
+- **JSON path-shortcut operators `->` and `->>`** (SQLite 3.38+) end-to-end
+  (via `sql-lexer 0.17.0`, `sql-parser 0.22.0`, `sql-vm 1.29.0`).  The
+  adapter rewrites the operators in `_additive` into calls to two new
+  internal scalar helpers: `j -> p` → `__json_arrow(j, p)` (JSON-typed
+  result), `j ->> p` → `__json_arrow_text(j, p)` (SQL-typed result).
+  Chained access (`j -> 'a' -> 'b'`) and explicit JSON paths
+  (`j -> '$.a.b'`) both work.  Locked in by 23 new oracle tests in
+  `test_tier3_json_arrow_ops.py`.
+
 ## [1.40.0] - 2026-05-17
 
 ### Added

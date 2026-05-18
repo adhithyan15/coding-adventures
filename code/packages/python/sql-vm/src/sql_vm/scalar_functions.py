@@ -2238,6 +2238,89 @@ def _json_extract(*args: SqlValue) -> SqlValue:
     return _json.dumps(results, separators=(",", ":"))
 
 
+def _path_arg_to_jsonpath(arg: SqlValue) -> str | None:
+    """Convert a ``->`` / ``->>`` right-hand side to a SQLite JSON path.
+
+    SQLite accepts three forms for the RHS of the JSON path-shortcut operators:
+
+    * **Integer** ``N``  →  ``$[N]``  (array index access)
+    * **String** ``"a"``  →  ``$.a``  (object key access)
+    * **String already starting with ``$``** → used verbatim, allowing the
+      caller to write e.g. ``j -> '$.a.b'`` or ``j -> '$[0].name'``.
+
+    Returns ``None`` if *arg* is NULL or an unsupported type; the caller
+    propagates NULL on receipt of None.
+    """
+    if arg is None:
+        return None
+    if isinstance(arg, bool):
+        return None  # SQLite rejects booleans on the right of -> / ->>
+    if isinstance(arg, int):
+        return f"$[{arg}]"
+    if isinstance(arg, str):
+        if arg.startswith("$"):
+            return arg
+        return f"$.{arg}"
+    return None
+
+
+@register("__json_arrow")
+def _json_arrow(json_val: SqlValue, path_arg: SqlValue) -> SqlValue:
+    """Implement ``json -> path`` — JSON-typed path extraction.
+
+    The result is always re-encoded as JSON text so that downstream
+    chains (``j -> 'a' -> 'b'``) keep operating on JSON-shaped strings.
+    Matches SQLite 3.38+ semantics:
+
+    * Scalar results are JSON-quoted: ``'[1,2,3]' -> 0`` → ``'1'``
+      (note: the *string* "1", not the integer 1).
+    * Object / array results are returned as canonical JSON text.
+    * NULL inputs propagate to NULL.
+    """
+    if json_val is None or path_arg is None:
+        return None
+    path = _path_arg_to_jsonpath(path_arg)
+    if path is None:
+        return None
+    if not isinstance(json_val, str):
+        return None
+    doc, ok = _safe_json_loads(json_val)
+    if not ok:
+        return None
+    val, found = _json_navigate(doc, path)
+    if not found:
+        return None
+    # Always re-serialise as JSON.  This makes ``j -> 'a' -> 'b'`` work
+    # because the intermediate string is still parseable JSON.
+    return _json.dumps(val, separators=(",", ":"))
+
+
+@register("__json_arrow_text")
+def _json_arrow_text(json_val: SqlValue, path_arg: SqlValue) -> SqlValue:
+    """Implement ``json ->> path`` — SQL-typed path extraction.
+
+    Returns the SQL scalar at the path:
+
+    * Strings as TEXT, numbers as INTEGER/REAL, null as NULL.
+    * Arrays and objects are still returned as JSON text (matching
+      SQLite — ``->>`` does NOT unwrap composite values).
+    """
+    if json_val is None or path_arg is None:
+        return None
+    path = _path_arg_to_jsonpath(path_arg)
+    if path is None:
+        return None
+    if not isinstance(json_val, str):
+        return None
+    doc, ok = _safe_json_loads(json_val)
+    if not ok:
+        return None
+    val, found = _json_navigate(doc, path)
+    if not found:
+        return None
+    return _json_to_sql_val(val)
+
+
 @register("json_type")
 def _json_type(*args: SqlValue) -> SqlValue:
     """Return the type of a JSON value or a value within a JSON document.
