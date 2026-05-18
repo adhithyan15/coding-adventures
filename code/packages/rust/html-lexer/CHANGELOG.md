@@ -63,6 +63,9 @@ documented in this file.
 - A generated WHATWG tokenizer markup declaration fixture and Rust conformance
   test that pins comment, bogus-comment, CDATA-looking declaration, DOCTYPE,
   and seeded declaration continuation recovery.
+- A generated WHATWG tokenizer comment boundary fixture and Rust conformance
+  test that pins nested-comment recovery, pending dash and end-bang handling,
+  bogus comments, EOF, NULL replacement, and seeded comment continuations.
 - A generated WHATWG tokenizer attribute-edge fixture and Rust conformance test
   that pins quoted/unquoted values, duplicate attributes, missing-whitespace
   recovery, NULL replacement, self-closing delimiters, unexpected solidus
