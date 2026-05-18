@@ -185,6 +185,40 @@ where
             walk_intrinsics_in_expr(value, f, depth + 1);
         }
         Stmt::ExprStmt { expr, .. } => walk_intrinsics_in_expr(expr, f, depth + 1),
+        Stmt::Assign { value, .. } => walk_intrinsics_in_expr(value, f, depth + 1),
+        Stmt::While { cond, body, .. } => {
+            walk_intrinsics_in_expr(cond, f, depth + 1);
+            for s in &body.stmts {
+                walk_intrinsics_in_stmt(s, f, depth + 1);
+            }
+            walk_intrinsics_in_expr(&body.value, f, depth + 1);
+        }
+        Stmt::ForRange { start, stop, step, body, .. } => {
+            walk_intrinsics_in_expr(start, f, depth + 1);
+            walk_intrinsics_in_expr(stop, f, depth + 1);
+            walk_intrinsics_in_expr(step, f, depth + 1);
+            for s in &body.stmts {
+                walk_intrinsics_in_stmt(s, f, depth + 1);
+            }
+            walk_intrinsics_in_expr(&body.value, f, depth + 1);
+        }
+        Stmt::ForEach { iter, body, .. } => {
+            walk_intrinsics_in_expr(iter, f, depth + 1);
+            for s in &body.stmts {
+                walk_intrinsics_in_stmt(s, f, depth + 1);
+            }
+            walk_intrinsics_in_expr(&body.value, f, depth + 1);
+        }
+        Stmt::SeqSet { seq, index, value, .. } => {
+            walk_intrinsics_in_expr(seq, f, depth + 1);
+            walk_intrinsics_in_expr(index, f, depth + 1);
+            walk_intrinsics_in_expr(value, f, depth + 1);
+        }
+        Stmt::MapSet { map, key, value, .. } => {
+            walk_intrinsics_in_expr(map, f, depth + 1);
+            walk_intrinsics_in_expr(key, f, depth + 1);
+            walk_intrinsics_in_expr(value, f, depth + 1);
+        }
     }
 }
 
@@ -240,6 +274,35 @@ where
             for a in args {
                 walk_intrinsics_in_expr(a, f, depth + 1);
             }
+        }
+
+        // ── SIR16 additions ────────────────────────────────────────
+        Expr::FloatLit { .. } => {}
+        Expr::SeqLit { items, .. } => {
+            for i in items {
+                walk_intrinsics_in_expr(i, f, depth + 1);
+            }
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            walk_intrinsics_in_expr(seq, f, depth + 1);
+            walk_intrinsics_in_expr(index, f, depth + 1);
+        }
+        Expr::SeqLen { seq, .. } => {
+            walk_intrinsics_in_expr(seq, f, depth + 1);
+        }
+        Expr::MapLit { entries, .. } => {
+            for entry in entries {
+                walk_intrinsics_in_expr(&entry.key, f, depth + 1);
+                walk_intrinsics_in_expr(&entry.value, f, depth + 1);
+            }
+        }
+        Expr::MapGet { map, key, .. } => {
+            walk_intrinsics_in_expr(map, f, depth + 1);
+            walk_intrinsics_in_expr(key, f, depth + 1);
+        }
+        Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+            walk_intrinsics_in_expr(lhs, f, depth + 1);
+            walk_intrinsics_in_expr(rhs, f, depth + 1);
         }
     }
 }

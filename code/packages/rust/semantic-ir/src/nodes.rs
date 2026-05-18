@@ -47,7 +47,11 @@ use crate::types::SirType;
 ///   ├── metadata    : Metadata                — advisory info
 ///   └── span        : Span                    — source position
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+///
+/// Note: `Eq` is intentionally omitted because [`Expr::FloatLit`] holds
+/// a raw `f64`, which only implements `PartialEq` (NaN ≠ NaN).  All
+/// types that transitively contain `Expr` follow the same rule.
+#[derive(Debug, Clone, PartialEq)]
 pub struct Module {
     pub name: String,
     pub manifest: FeatureManifest,
@@ -108,7 +112,7 @@ pub struct Global {
 /// A function with non-empty `captures` is a closure body — it is
 /// referenced by `MakeClosure { fn_name, ... }` rather than called
 /// directly.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Function {
     pub name: String,
     pub params: Vec<Param>,
@@ -147,20 +151,20 @@ pub struct Capture {
 /// program is fully expression-oriented at the block boundary: the
 /// `body` of an `If`, a `Function`, or a let binding always yields
 /// a typed value.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Block {
     pub stmts: Vec<Stmt>,
     pub value: Expr,
     pub span: Span,
 }
 
-/// Three kinds of statement.
+/// Statement kinds.
 ///
-/// The IR distinguishes parallel `let` ([`Stmt::LetBinding`]) from
-/// sequential `let*` ([`Stmt::LetStarBinding`]) explicitly — the
-/// frontend commits at lowering time and the backend never has to
-/// ask which one is meant.
-#[derive(Debug, Clone, PartialEq, Eq)]
+/// SIR v0 had only `LetBinding`, `LetStarBinding`, and `ExprStmt`.
+/// SIR16 (Python/JS interop) extends this with mutation (`Assign`),
+/// loops (`While`, `ForRange`, `ForEach`), and indexed assignment on
+/// sequences and maps (`SeqSet`, `MapSet`).
+#[derive(Debug, Clone, PartialEq)]
 pub enum Stmt {
     /// Parallel-let semantics.  Multiple consecutive `LetBinding`
     /// statements have their RHS evaluated in the scope outside the
@@ -181,6 +185,54 @@ pub enum Stmt {
     },
     /// A bare expression evaluated for its side effects.
     ExprStmt { expr: Expr, span: Span },
+
+    // ── SIR16: mutation ────────────────────────────────────────────
+    /// Re-bind an already-declared name.  Frontends use `LetBinding`
+    /// for first-occurrence binding and `Assign` for subsequent
+    /// re-assignments.  `scope` is the same enum used by `VarRef`.
+    Assign {
+        name: String,
+        scope: Scope,
+        value: Expr,
+        span: Span,
+    },
+
+    // ── SIR16: loops ────────────────────────────────────────────────
+    /// `while <cond>: <body>` — body re-executes while `cond` is truthy.
+    While { cond: Expr, body: Block, span: Span },
+    /// `for var in range(start, stop, step): body`.  Half-open: `stop`
+    /// is exclusive.  `step` is typically `IntLit(1)`.
+    ForRange {
+        var: String,
+        start: Expr,
+        stop: Expr,
+        step: Expr,
+        body: Block,
+        span: Span,
+    },
+    /// `for var in iter: body` — iterates a Seq.
+    ForEach {
+        var: String,
+        iter: Expr,
+        body: Block,
+        span: Span,
+    },
+
+    // ── SIR16: indexed assignment ──────────────────────────────────
+    /// `seq[index] = value` — mutate a sequence element.
+    SeqSet {
+        seq: Expr,
+        index: Expr,
+        value: Expr,
+        span: Span,
+    },
+    /// `map[key] = value` — set a map entry.
+    MapSet {
+        map: Expr,
+        key: Expr,
+        value: Expr,
+        span: Span,
+    },
 }
 
 impl Stmt {
@@ -189,6 +241,12 @@ impl Stmt {
             Stmt::LetBinding { span, .. } => span,
             Stmt::LetStarBinding { span, .. } => span,
             Stmt::ExprStmt { span, .. } => span,
+            Stmt::Assign { span, .. } => span,
+            Stmt::While { span, .. } => span,
+            Stmt::ForRange { span, .. } => span,
+            Stmt::ForEach { span, .. } => span,
+            Stmt::SeqSet { span, .. } => span,
+            Stmt::MapSet { span, .. } => span,
         }
     }
 }
@@ -237,7 +295,7 @@ impl Scope {
 /// The expression grammar.  Every variant is a distinct semantic
 /// concept.  Backends `match` on the variant and emit code; the IR
 /// guarantees this match is exhaustive.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Expr {
     // ── atomic literals ────────────────────────────────────────────
     IntLit { value: i64, span: Span },
@@ -301,14 +359,67 @@ pub enum Expr {
         effects: EffectSet,
         span: Span,
     },
+
+    // ── SIR16: floats ──────────────────────────────────────────────
+    /// 64-bit floating-point literal.
+    FloatLit { value: f64, span: Span },
+
+    // ── SIR16: sequences ───────────────────────────────────────────
+    /// `[item0, item1, ...]` literal.
+    SeqLit { items: Vec<Expr>, span: Span },
+    /// `seq[index]` — 0-indexed.  Out-of-bounds behaviour is target-
+    /// language-defined.
+    SeqIndex {
+        seq: Box<Expr>,
+        index: Box<Expr>,
+        span: Span,
+    },
+    /// `len(seq)` — convenience operator distinct from `BuiltinCall("len", ...)`
+    /// so backends can emit native length access (`xs.length` /
+    /// `len(xs)` / `xs.len()`).  Frontends should prefer this node
+    /// over the builtin form.
+    SeqLen { seq: Box<Expr>, span: Span },
+
+    // ── SIR16: maps ────────────────────────────────────────────────
+    /// `{key: value, ...}` literal.
+    MapLit { entries: Vec<MapEntry>, span: Span },
+    /// `map[key]` — missing-key behaviour is target-language-defined.
+    MapGet {
+        map: Box<Expr>,
+        key: Box<Expr>,
+        span: Span,
+    },
+
+    // ── SIR16: short-circuit logical ───────────────────────────────
+    /// `lhs && rhs` / `lhs and rhs` — short-circuits.  Distinct from
+    /// `BuiltinCall("and", ...)` because the latter would eagerly
+    /// evaluate both arguments before invoking the helper.
+    LogicalAnd {
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        span: Span,
+    },
+    /// `lhs || rhs` / `lhs or rhs` — short-circuits.
+    LogicalOr {
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        span: Span,
+    },
 }
 
 /// A single capture provided to `MakeClosure`.  The `name` matches a
 /// `Capture` in the referenced Function; `value` is evaluated at the
 /// call site and stored in the closure handle.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct CaptureValue {
     pub name: String,
+    pub value: Expr,
+}
+
+/// A single key/value entry in a `MapLit`.
+#[derive(Debug, Clone, PartialEq)]
+pub struct MapEntry {
+    pub key: Expr,
     pub value: Expr,
 }
 
@@ -329,6 +440,14 @@ impl Expr {
             Expr::BuiltinCall { span, .. } => span,
             Expr::MakeClosure { span, .. } => span,
             Expr::Intrinsic { span, .. } => span,
+            Expr::FloatLit { span, .. } => span,
+            Expr::SeqLit { span, .. } => span,
+            Expr::SeqIndex { span, .. } => span,
+            Expr::SeqLen { span, .. } => span,
+            Expr::MapLit { span, .. } => span,
+            Expr::MapGet { span, .. } => span,
+            Expr::LogicalAnd { span, .. } => span,
+            Expr::LogicalOr { span, .. } => span,
         }
     }
 
@@ -349,6 +468,14 @@ impl Expr {
             Expr::BuiltinCall { .. } => "builtin-call",
             Expr::MakeClosure { .. } => "make-closure",
             Expr::Intrinsic { .. } => "intrinsic",
+            Expr::FloatLit { .. } => "float",
+            Expr::SeqLit { .. } => "seq",
+            Expr::SeqIndex { .. } => "seq-index",
+            Expr::SeqLen { .. } => "seq-len",
+            Expr::MapLit { .. } => "map",
+            Expr::MapGet { .. } => "map-get",
+            Expr::LogicalAnd { .. } => "and",
+            Expr::LogicalOr { .. } => "or",
         }
     }
 }
@@ -390,6 +517,132 @@ mod tests {
             span: s(),
         };
         assert_eq!(st.span(), &s());
+    }
+
+    #[test]
+    fn sir16_stmt_kinds_have_spans() {
+        // Exercise span() for every new statement variant so a future
+        // refactor that drops a span field gets caught here.
+        let cases: Vec<Stmt> = vec![
+            Stmt::Assign {
+                name: "x".into(),
+                scope: Scope::Local,
+                value: Expr::IntLit { value: 1, span: s() },
+                span: s(),
+            },
+            Stmt::While {
+                cond: Expr::BoolLit { value: true, span: s() },
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                span: s(),
+            },
+            Stmt::ForRange {
+                var: "i".into(),
+                start: Expr::IntLit { value: 0, span: s() },
+                stop: Expr::IntLit { value: 10, span: s() },
+                step: Expr::IntLit { value: 1, span: s() },
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                span: s(),
+            },
+            Stmt::ForEach {
+                var: "x".into(),
+                iter: Expr::SeqLit { items: vec![], span: s() },
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                span: s(),
+            },
+            Stmt::SeqSet {
+                seq: Expr::VarRef { name: "xs".into(), scope: Scope::Local, span: s() },
+                index: Expr::IntLit { value: 0, span: s() },
+                value: Expr::IntLit { value: 1, span: s() },
+                span: s(),
+            },
+            Stmt::MapSet {
+                map: Expr::VarRef { name: "d".into(), scope: Scope::Local, span: s() },
+                key: Expr::StrLit { value: "k".into(), span: s() },
+                value: Expr::IntLit { value: 1, span: s() },
+                span: s(),
+            },
+        ];
+        for st in &cases {
+            assert_eq!(st.span(), &s());
+        }
+    }
+
+    #[test]
+    fn sir16_expr_kind_names() {
+        let span = s();
+        let cases: Vec<(Expr, &'static str)> = vec![
+            (Expr::FloatLit { value: 3.14, span: span.clone() }, "float"),
+            (Expr::SeqLit { items: vec![], span: span.clone() }, "seq"),
+            (
+                Expr::SeqIndex {
+                    seq: Box::new(Expr::NilLit { span: span.clone() }),
+                    index: Box::new(Expr::IntLit { value: 0, span: span.clone() }),
+                    span: span.clone(),
+                },
+                "seq-index",
+            ),
+            (
+                Expr::SeqLen {
+                    seq: Box::new(Expr::NilLit { span: span.clone() }),
+                    span: span.clone(),
+                },
+                "seq-len",
+            ),
+            (Expr::MapLit { entries: vec![], span: span.clone() }, "map"),
+            (
+                Expr::MapGet {
+                    map: Box::new(Expr::NilLit { span: span.clone() }),
+                    key: Box::new(Expr::NilLit { span: span.clone() }),
+                    span: span.clone(),
+                },
+                "map-get",
+            ),
+            (
+                Expr::LogicalAnd {
+                    lhs: Box::new(Expr::BoolLit { value: true, span: span.clone() }),
+                    rhs: Box::new(Expr::BoolLit { value: false, span: span.clone() }),
+                    span: span.clone(),
+                },
+                "and",
+            ),
+            (
+                Expr::LogicalOr {
+                    lhs: Box::new(Expr::BoolLit { value: true, span: span.clone() }),
+                    rhs: Box::new(Expr::BoolLit { value: false, span: span.clone() }),
+                    span: span.clone(),
+                },
+                "or",
+            ),
+        ];
+        for (e, expected) in &cases {
+            assert_eq!(e.kind_name(), *expected);
+            assert_eq!(e.span(), &span);
+        }
+    }
+
+    #[test]
+    fn float_lit_partial_eq_handles_nan() {
+        // f64::NAN is never equal to itself — Expr only impls
+        // PartialEq, not Eq, and that's the reason.  This test pins
+        // the contract.
+        let a = Expr::FloatLit { value: f64::NAN, span: s() };
+        let b = Expr::FloatLit { value: f64::NAN, span: s() };
+        assert_ne!(a, b);
+        let c = Expr::FloatLit { value: 3.14, span: s() };
+        let d = Expr::FloatLit { value: 3.14, span: s() };
+        assert_eq!(c, d);
     }
 
     #[test]

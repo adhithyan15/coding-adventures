@@ -37,10 +37,17 @@ pub enum Feature {
     TailCalls,
     Globals,
     Intrinsics,
+    // ── SIR16 (Python / JavaScript interop) ──────────────────────────
+    Floats,
+    MutableBindings,
+    Loops,
+    Sequences,
+    Maps,
+    ShortCircuit,
 }
 
 impl Feature {
-    /// The full list of v0 features, in declaration order.
+    /// The full list of features, in declaration order.
     pub const ALL: &'static [Feature] = &[
         Feature::Closures,
         Feature::Pairs,
@@ -52,6 +59,12 @@ impl Feature {
         Feature::TailCalls,
         Feature::Globals,
         Feature::Intrinsics,
+        Feature::Floats,
+        Feature::MutableBindings,
+        Feature::Loops,
+        Feature::Sequences,
+        Feature::Maps,
+        Feature::ShortCircuit,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -67,6 +80,12 @@ impl Feature {
             Feature::TailCalls => "tail-calls",
             Feature::Globals => "globals",
             Feature::Intrinsics => "intrinsics",
+            Feature::Floats => "floats",
+            Feature::MutableBindings => "mutable-bindings",
+            Feature::Loops => "loops",
+            Feature::Sequences => "sequences",
+            Feature::Maps => "maps",
+            Feature::ShortCircuit => "short-circuit",
         }
     }
 
