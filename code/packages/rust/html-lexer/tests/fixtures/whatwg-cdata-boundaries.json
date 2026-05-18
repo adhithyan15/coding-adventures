@@ -1,0 +1,339 @@
+{
+  "cases": [
+    {
+      "description": "CDATA section state boundary case `cdata-basic-delimiter`",
+      "diagnostics": [],
+      "id": "cdata-basic-delimiter",
+      "initial_state": "CDATA section state",
+      "input": "a]]><p>x</p>",
+      "tokens": [
+        "Text(data=a)",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section state boundary case `cdata-markup-stays-text`",
+      "diagnostics": [],
+      "id": "cdata-markup-stays-text",
+      "initial_state": "CDATA section state",
+      "input": "<b>&amp;</b>]]><p>x</p>",
+      "tokens": [
+        "Text(data=<b>&amp;</b>)",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section state boundary case `cdata-delimiter-at-start`",
+      "diagnostics": [],
+      "id": "cdata-delimiter-at-start",
+      "initial_state": "CDATA section state",
+      "input": "]]><p>x</p>",
+      "tokens": [
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section state boundary case `cdata-extra-closing-bracket`",
+      "diagnostics": [],
+      "id": "cdata-extra-closing-bracket",
+      "initial_state": "CDATA section state",
+      "input": "a]]]><p>x</p>",
+      "tokens": [
+        "Text(data=a])",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section state boundary case `cdata-many-brackets-before-delimiter`",
+      "diagnostics": [],
+      "id": "cdata-many-brackets-before-delimiter",
+      "initial_state": "CDATA section state",
+      "input": "a]]]]><p>x</p>",
+      "tokens": [
+        "Text(data=a]])",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section state boundary case `cdata-single-bracket-not-delimiter`",
+      "diagnostics": [],
+      "id": "cdata-single-bracket-not-delimiter",
+      "initial_state": "CDATA section state",
+      "input": "a]b]]><p>x</p>",
+      "tokens": [
+        "Text(data=a]b)",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section state boundary case `cdata-double-bracket-not-delimiter`",
+      "diagnostics": [],
+      "id": "cdata-double-bracket-not-delimiter",
+      "initial_state": "CDATA section state",
+      "input": "a]]b]]><p>x</p>",
+      "tokens": [
+        "Text(data=a]]b)",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section state boundary case `cdata-greater-than-alone`",
+      "diagnostics": [],
+      "id": "cdata-greater-than-alone",
+      "initial_state": "CDATA section state",
+      "input": "a>b]]><p>x</p>",
+      "tokens": [
+        "Text(data=a>b)",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section state boundary case `cdata-null-replacement`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "cdata-null-replacement",
+      "initial_state": "CDATA section state",
+      "input": "a\u0000b]]><p>x</p>",
+      "tokens": [
+        "Text(data=a�b)",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section state boundary case `cdata-eof-body`",
+      "diagnostics": [],
+      "id": "cdata-eof-body",
+      "initial_state": "CDATA section state",
+      "input": "open",
+      "tokens": [
+        "Text(data=open)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section state boundary case `cdata-eof-after-single-bracket`",
+      "diagnostics": [],
+      "id": "cdata-eof-after-single-bracket",
+      "initial_state": "CDATA section state",
+      "input": "open]",
+      "tokens": [
+        "Text(data=open])",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section state boundary case `cdata-eof-after-double-bracket`",
+      "diagnostics": [],
+      "id": "cdata-eof-after-double-bracket",
+      "initial_state": "CDATA section state",
+      "input": "open]]",
+      "tokens": [
+        "Text(data=open]])",
+        "EOF"
+      ]
+    },
+    {
+      "description": "HTML data-state CDATA-looking recovery case `html-cdata-looking-declaration`",
+      "diagnostics": [
+        "cdata-in-html-content"
+      ],
+      "id": "html-cdata-looking-declaration",
+      "input": "a<![CDATA[x]]>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=[CDATA[x]])",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "HTML data-state CDATA-looking recovery case `html-cdata-looking-null`",
+      "diagnostics": [
+        "cdata-in-html-content",
+        "unexpected-null-character"
+      ],
+      "id": "html-cdata-looking-null",
+      "input": "a<![CDATA[x\u0000]]>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=[CDATA[x�]])",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "HTML data-state CDATA-looking recovery case `html-cdata-looking-eof`",
+      "diagnostics": [
+        "cdata-in-html-content"
+      ],
+      "id": "html-cdata-looking-eof",
+      "input": "a<![CDATA[x",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=[CDATA[x)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section bracket state boundary case `seeded-cdata-bracket-delimiter`",
+      "diagnostics": [],
+      "id": "seeded-cdata-bracket-delimiter",
+      "initial_state": "CDATA section bracket state",
+      "input": ">tail",
+      "tokens": [
+        "Text(data=]>tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section bracket state boundary case `seeded-cdata-bracket-extra-bracket`",
+      "diagnostics": [],
+      "id": "seeded-cdata-bracket-extra-bracket",
+      "initial_state": "CDATA section bracket state",
+      "input": "]><p>x</p>",
+      "tokens": [
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section bracket state boundary case `seeded-cdata-bracket-not-delimiter`",
+      "diagnostics": [],
+      "id": "seeded-cdata-bracket-not-delimiter",
+      "initial_state": "CDATA section bracket state",
+      "input": "x]]><p>x</p>",
+      "tokens": [
+        "Text(data=]x)",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section bracket state boundary case `seeded-cdata-bracket-null`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "seeded-cdata-bracket-null",
+      "initial_state": "CDATA section bracket state",
+      "input": "\u0000]]><p>x</p>",
+      "tokens": [
+        "Text(data=]�)",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section bracket state boundary case `seeded-cdata-bracket-eof`",
+      "diagnostics": [],
+      "id": "seeded-cdata-bracket-eof",
+      "initial_state": "CDATA section bracket state",
+      "input": "",
+      "tokens": [
+        "Text(data=])",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section end state boundary case `seeded-cdata-end-delimiter`",
+      "diagnostics": [],
+      "id": "seeded-cdata-end-delimiter",
+      "initial_state": "CDATA section end state",
+      "input": ">tail",
+      "tokens": [
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section end state boundary case `seeded-cdata-end-more-brackets`",
+      "diagnostics": [],
+      "id": "seeded-cdata-end-more-brackets",
+      "initial_state": "CDATA section end state",
+      "input": "]]><p>x</p>",
+      "tokens": [
+        "Text(data=]])",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section end state boundary case `seeded-cdata-end-not-delimiter`",
+      "diagnostics": [],
+      "id": "seeded-cdata-end-not-delimiter",
+      "initial_state": "CDATA section end state",
+      "input": "x]]><p>x</p>",
+      "tokens": [
+        "Text(data=]]x)",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section end state boundary case `seeded-cdata-end-null`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "seeded-cdata-end-null",
+      "initial_state": "CDATA section end state",
+      "input": "\u0000]]><p>x</p>",
+      "tokens": [
+        "Text(data=]]�)",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "CDATA section end state boundary case `seeded-cdata-end-eof`",
+      "diagnostics": [],
+      "id": "seeded-cdata-end-eof",
+      "initial_state": "CDATA section end state",
+      "input": "",
+      "tokens": [
+        "Text(data=]])",
+        "EOF"
+      ]
+    }
+  ],
+  "description": "Foreign-content CDATA section text, delimiter, NULL, EOF, HTML-content bogus-comment recovery, and seeded bracket/end states.",
+  "format": "whatwg-html-tokenizer-cdata-boundaries/v1"
+}
