@@ -49,12 +49,9 @@ echo "Compiling FormulaBar..."
   --style     "$DEMO_DIR/mosaic/FormulaBar.dark.msl" \
   -o "$OUT_DIR/FormulaBar.tsx"
 
-# NOTE: The pipeline emitter inlines the event union directly into the
-# .tsx file as a non-exported `type` declaration. The host app's
-# `state.ts` defines its own copies of the event shapes so they don't
-# need to be re-exported from the generated files. If/when the pipeline
-# emitter starts using `export type ...`, the host can switch to
-# importing directly.
+# The pipeline emitter writes `export type {Component}Event = ...` into
+# each generated .tsx file, so the host (src/app/state.ts) imports
+# `GridEvent` and `FormulaBarEvent` directly. No re-export shims needed.
 
 echo "Done. Generated:"
 ls -la "$OUT_DIR"
