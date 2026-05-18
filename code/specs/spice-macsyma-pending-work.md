@@ -16,7 +16,10 @@
 > Phase 28 general IBP Python `symbolic-vm` 0.58.0 (PR #3380 ✅ merged),
 > Phase 28 TypeScript + Rust ports `symbolic-vm` 0.5.0 (PR #3381 ✅ merged),
 > Phases 29–33 algebraic simplification (Abs/Sqrt/Log/Exp/Trig) — TypeScript +
-> Rust `symbolic-vm` 0.6.0 (PR #3468 in review).
+> Rust `symbolic-vm` 0.6.0 (PR #3468 in review),
+> Phase 34 Weierstrass substitution `∫ 1/(a + b·sin/cos x) dx` — Python
+> `symbolic-vm` 0.59.0 (PR #3472), TypeScript 0.7.0 (PR #3473), Rust 0.7.0
+> (PR #3475), all in review.
 
 This document is the canonical reference for resuming work on either project.
 It records exactly what is on `main`, what is in flight, and what has not been
@@ -237,6 +240,47 @@ into period-2 (sin/cos) and period-1 (tan) tables.
 new `exp(x·log(x)) → x^x` rule fires eagerly during the derivative reduction.
 The simplified form is mathematically equivalent.
 
+#### Phase 34: Weierstrass substitution for ∫ 1/(a + b·sin/cos x) dx — all three languages
+
+The substitution `u = tan(x/2)` produces `sin(x) = 2u/(1+u²)`,
+`cos(x) = (1−u²)/(1+u²)`, `dx = 2/(1+u²) du` and reduces both
+canonical denominator shapes to rational functions of `u` whose closed
+form is an arctan whenever `a² > b²` (the denominator never crosses
+zero on ℝ).
+
+Closed forms now produced by all three language ports:
+
+    ∫ 1/(a + b·sin x) dx  =  (2/√(a²−b²)) · arctan((a·tan(x/2) + b)/√(a²−b²))
+    ∫ 1/(a + b·cos x) dx  =  (2/√(a²−b²)) · arctan(√((a−b)/(a+b)) · tan(x/2))
+
+Numerator constants `c` scale the result.  Each port accepts integer
+and rational `a, b`; perfect-square discriminants (e.g. a=5, b=3 →
+disc=16) collapse to integer scalars without leaving a `Sqrt` node.
+
+| Package | Version | PR | Tests |
+|---|---|---|---|
+| `python/symbolic-vm` | 0.59.0 | #3472 | 14 new (mirrors below) |
+| `typescript/symbolic-vm` | 0.7.0 | #3473 | 14 new |
+| `rust/symbolic-vm` | 0.7.0 | #3475 | 14 new |
+
+**Deliberately deferred** to a later phase (each port returns the
+unevaluated integrand):
+
+- `a² < b²` — log form on `(a·tan(x/2) + b ± √(b²−a²))` (sign analysis
+  on the log argument).
+- `a² = b²` — degenerate, reduces to a rational in `tan(x/2)` and
+  needs special-cased outputs for the four sign combinations.
+- `a ≤ 0` for the cos case — `(a−b)/(a+b)` sign analysis.
+- Non-bare trig arguments (e.g. `sin(2x)`) — composition with a future
+  linear-substitution phase will lift this.
+- Symbolic `a` or `b` — discriminant sign undecidable without an
+  assumption context; only the Python port has assumptions today and
+  even there the Phase 34 helper requires `a, b ∈ Q`.
+
+**Version sequencing**: the TypeScript and Rust ports both jump
+`0.5.0 → 0.7.0` to leave `0.6.0` for the in-flight Phase 29-33
+algebraic-rules port (PR #3468).  Final order: 0.5.0 → 0.6.0 → 0.7.0.
+
 #### Phase 21 — named variable-coefficient ODE recognition (all three languages)
 
 Python `cas-ode` 0.6.0 (PR #3360 ✅ merged), TypeScript `cas-ode` 0.2.0 and
@@ -385,6 +429,7 @@ The Risch integration suite is ~90% complete. Known remaining gaps:
 | `∫ log(ax+b)^n dx`, `∫ Q(x)·log(x)^n dx` (Phase 26 log-power IBP) | IBP reduction `F_n = (ax+b)/a·log(ax+b)^n − n·F_{n-1}` and term-by-term poly×log^n | ✅ Python PR #3372 `symbolic-vm` 0.56.0; TS + Rust `symbolic-vm` 0.4.0 (same PR as Phase 27) |
 | `∫ sin(log(x)) dx`, `∫ cos(log(x)) dx`, `∫ xᵏ·sin/cos(log(x)) dx` (Phase 27 trig-of-log) | u=log(x) substitution converts to exp×trig form; closed form `x^(k+1)·((k+1)trig(log x)∓cotrig(log x))/((k+1)²+1)` | ✅ Python PR #3373 `symbolic-vm` 0.57.0; TS + Rust `symbolic-vm` 0.4.0 |
 | `∫ P(x)·log(Q(x)) dx`, `∫ P(x)·atan(Q(x)) dx` for non-linear Q (Phase 28 general IBP) | IBP with residual integrated via polynomial long division + Case A (prop to D′) / Case B (const/quadratic) | ✅ Python PR #3380 `symbolic-vm` 0.58.0; TS + Rust `symbolic-vm` 0.5.0 (PR #3381) |
+| `∫ 1/(a + b·sin x) dx`, `∫ 1/(a + b·cos x) dx` for rational `a, b` with `a² > b²` (Phase 34 Weierstrass) | Weierstrass substitution `u = tan(x/2)` reduces both shapes to a rational in `u`; closed form is `(2/√(a²−b²))·arctan(...)` | ✅ Python PR #3472 `symbolic-vm` 0.59.0; TS PR #3473 0.7.0; Rust PR #3475 0.7.0 (all in review). Discriminant cases `a² ≤ b²` (log form) and the `a ≤ 0` cos branch remain open. |
 | `∫ f(x)·g(x)` where neither integrates alone | General IBP fallback missing; only specific matched patterns work | Open |
 
 #### Completed REPL and session features
