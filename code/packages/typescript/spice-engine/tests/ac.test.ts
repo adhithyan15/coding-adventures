@@ -12,6 +12,7 @@ import {
   currentSourceWithAc,
   inductor,
   resistor,
+  sParameters,
   vcvs,
   voltageSource,
   voltageSourceWithAc,
@@ -193,5 +194,24 @@ describe("acSweep", () => {
     expect(() => acSweep(circuit, 10.0, 1.0, 10)).toThrowError(
       "stop frequency",
     );
+  });
+});
+
+describe("sParameters", () => {
+  it("extracts a series-resistor two-port from AC port solves", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("P1", "p1", "0", 0.0));
+    circuit.add(voltageSource("P2", "p2", "0", 0.0));
+    circuit.add(resistor("Rseries", "p1", "p2", 50.0));
+
+    const result = sParameters(circuit, "P1", "P2", [1.0e6], 50.0);
+    const point = result.points[0];
+
+    expect(point.s11.real).toBeCloseTo(1.0 / 3.0, 9);
+    expect(point.s22.real).toBeCloseTo(1.0 / 3.0, 9);
+    expect(point.s21.real).toBeCloseTo(2.0 / 3.0, 9);
+    expect(point.s12.real).toBeCloseTo(2.0 / 3.0, 9);
+    expect(point.s11.imag).toBeCloseTo(0.0, 12);
+    expect(point.s21.imag).toBeCloseTo(0.0, 12);
   });
 });

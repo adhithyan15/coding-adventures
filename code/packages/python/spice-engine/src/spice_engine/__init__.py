@@ -38,6 +38,8 @@ from spice_engine.engine import (
     NoiseResult,
     SensEntry,
     SensResult,
+    SParameterPoint,
+    SParameterResult,
     TfResult,
     TransientPoint,
     TransientResult,
@@ -47,6 +49,7 @@ from spice_engine.engine import (
     mc_dc,
     noise_ac,
     sens_dc,
+    s_parameters,
     tf,
     transient,
 )
@@ -82,6 +85,8 @@ __all__ = [
     "Resistor",
     "SensEntry",
     "SensResult",
+    "SParameterPoint",
+    "SParameterResult",
     "SinWaveform",
     "SubcircuitDefinition",
     "TfResult",
@@ -99,6 +104,7 @@ __all__ = [
     "mc_dc",
     "noise_ac",
     "sens_dc",
+    "s_parameters",
     "tf",
     "transient",
 ]

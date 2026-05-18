@@ -106,6 +106,8 @@ from spice_engine import (
     SensEntry,
     SensResult,
     SinWaveform,
+    SParameterPoint,
+    SParameterResult,
     SubcircuitDefinition,
     TfResult,
     VoltageSource,
@@ -116,6 +118,7 @@ from spice_engine import (
     mc_dc,
     noise_ac,
     sens_dc,
+    s_parameters,
     tf,
     transient,
 )
@@ -5253,3 +5256,30 @@ def test_x_from_result_round_trip() -> None:
     # Node voltage entries should match result
     for i, nd in enumerate(nodes):
         assert x[i] == pytest.approx(result.node_voltages[nd])
+
+
+def test_s_parameters_series_resistor_two_port() -> None:
+    """A 50 ohm series resistor between 50 ohm ports has S11=1/3, S21=2/3."""
+    c = Circuit([
+        VoltageSource("P1", "p1", "0", 0.0),
+        VoltageSource("P2", "p2", "0", 0.0),
+        Resistor("Rseries", "p1", "p2", 50.0),
+    ])
+
+    result = s_parameters(
+        c,
+        port1_source="P1",
+        port2_source="P2",
+        frequencies=[1.0e6],
+        reference_impedance=50.0,
+    )
+
+    assert isinstance(result, SParameterResult)
+    assert isinstance(result.points[0], SParameterPoint)
+    point = result.points[0]
+    assert point.s11.real == pytest.approx(1.0 / 3.0)
+    assert point.s22.real == pytest.approx(1.0 / 3.0)
+    assert point.s21.real == pytest.approx(2.0 / 3.0)
+    assert point.s12.real == pytest.approx(2.0 / 3.0)
+    assert abs(point.s11.imag) < 1.0e-12
+    assert abs(point.s21.imag) < 1.0e-12
