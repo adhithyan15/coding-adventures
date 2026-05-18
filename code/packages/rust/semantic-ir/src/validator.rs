@@ -287,6 +287,53 @@ impl<'m> ValidatorState<'m> {
                     self.check_expr(expr, env, depth + 1);
                     i += 1;
                 }
+                Stmt::Assign { name, scope, value, span } => {
+                    self.observed.add(Feature::MutableBindings);
+                    self.check_expr(value, env, depth + 1);
+                    self.check_varref(name, *scope, span, env);
+                    i += 1;
+                }
+                Stmt::While { cond, body, .. } => {
+                    self.observed.add(Feature::Loops);
+                    self.check_expr(cond, env, depth + 1);
+                    self.check_block(body, env, depth + 1);
+                    i += 1;
+                }
+                Stmt::ForRange { var, start, stop, step, body, .. } => {
+                    self.observed.add(Feature::Loops);
+                    self.check_expr(start, env, depth + 1);
+                    self.check_expr(stop, env, depth + 1);
+                    self.check_expr(step, env, depth + 1);
+                    // Loop variable is in scope inside the body only.
+                    let inner_mark = env.mark();
+                    env.add_local(var.clone());
+                    self.check_block(body, env, depth + 1);
+                    env.rewind(inner_mark);
+                    i += 1;
+                }
+                Stmt::ForEach { var, iter, body, .. } => {
+                    self.observed.add(Feature::Loops);
+                    self.check_expr(iter, env, depth + 1);
+                    let inner_mark = env.mark();
+                    env.add_local(var.clone());
+                    self.check_block(body, env, depth + 1);
+                    env.rewind(inner_mark);
+                    i += 1;
+                }
+                Stmt::SeqSet { seq, index, value, .. } => {
+                    self.observed.add(Feature::Sequences);
+                    self.check_expr(seq, env, depth + 1);
+                    self.check_expr(index, env, depth + 1);
+                    self.check_expr(value, env, depth + 1);
+                    i += 1;
+                }
+                Stmt::MapSet { map, key, value, .. } => {
+                    self.observed.add(Feature::Maps);
+                    self.check_expr(map, env, depth + 1);
+                    self.check_expr(key, env, depth + 1);
+                    self.check_expr(value, env, depth + 1);
+                    i += 1;
+                }
             }
         }
         self.check_expr(&b.value, env, depth + 1);
@@ -361,6 +408,43 @@ impl<'m> ValidatorState<'m> {
                 for a in args {
                     self.check_expr(a, env, depth + 1);
                 }
+            }
+
+            // ── SIR16 additions ────────────────────────────────────
+            Expr::FloatLit { .. } => {
+                self.observed.add(Feature::Floats);
+            }
+            Expr::SeqLit { items, .. } => {
+                self.observed.add(Feature::Sequences);
+                for i in items {
+                    self.check_expr(i, env, depth + 1);
+                }
+            }
+            Expr::SeqIndex { seq, index, .. } => {
+                self.observed.add(Feature::Sequences);
+                self.check_expr(seq, env, depth + 1);
+                self.check_expr(index, env, depth + 1);
+            }
+            Expr::SeqLen { seq, .. } => {
+                self.observed.add(Feature::Sequences);
+                self.check_expr(seq, env, depth + 1);
+            }
+            Expr::MapLit { entries, .. } => {
+                self.observed.add(Feature::Maps);
+                for entry in entries {
+                    self.check_expr(&entry.key, env, depth + 1);
+                    self.check_expr(&entry.value, env, depth + 1);
+                }
+            }
+            Expr::MapGet { map, key, .. } => {
+                self.observed.add(Feature::Maps);
+                self.check_expr(map, env, depth + 1);
+                self.check_expr(key, env, depth + 1);
+            }
+            Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                self.observed.add(Feature::ShortCircuit);
+                self.check_expr(lhs, env, depth + 1);
+                self.check_expr(rhs, env, depth + 1);
             }
         }
     }
@@ -809,6 +893,159 @@ mod tests {
             };
         }
         e
+    }
+
+    #[test]
+    fn float_lit_observes_floats_feature() {
+        // Module uses a float literal but doesn't declare Floats →
+        // error.
+        let mut m = empty_module(FeatureManifest::new());
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::FloatLit { value: 3.14, span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("floats")));
+    }
+
+    #[test]
+    fn while_loop_observes_loops_feature() {
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Loops]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::While {
+                    cond: Expr::BoolLit { value: false, span: s() },
+                    body: Block {
+                        stmts: vec![],
+                        value: Expr::NilLit { span: s() },
+                        span: s(),
+                    },
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn for_range_introduces_loop_var_in_body_scope() {
+        // `for i in range(0, 10, 1): print(i)` — `i` must be in scope
+        // inside the body.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Loops]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::ForRange {
+                    var: "i".into(),
+                    start: Expr::IntLit { value: 0, span: s() },
+                    stop: Expr::IntLit { value: 10, span: s() },
+                    step: Expr::IntLit { value: 1, span: s() },
+                    body: Block {
+                        stmts: vec![],
+                        value: Expr::VarRef {
+                            name: "i".into(),
+                            scope: Scope::Local,
+                            span: s(),
+                        },
+                        span: s(),
+                    },
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn for_range_loop_var_is_not_in_scope_after_loop() {
+        // After the for-range, `i` is gone.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Loops]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::ForRange {
+                    var: "i".into(),
+                    start: Expr::IntLit { value: 0, span: s() },
+                    stop: Expr::IntLit { value: 10, span: s() },
+                    step: Expr::IntLit { value: 1, span: s() },
+                    body: Block {
+                        stmts: vec![],
+                        value: Expr::NilLit { span: s() },
+                        span: s(),
+                    },
+                    span: s(),
+                }],
+                value: Expr::VarRef {
+                    name: "i".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected error for `i` out of scope, got ok");
+    }
+
+    #[test]
+    fn logical_and_observes_short_circuit_feature() {
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::ShortCircuit]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::LogicalAnd {
+                    lhs: Box::new(Expr::BoolLit { value: true, span: s() }),
+                    rhs: Box::new(Expr::BoolLit { value: false, span: s() }),
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
     }
 
     #[test]

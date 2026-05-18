@@ -146,6 +146,17 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 out.push_str(";\n");
             }
         }
+        // SIR16 statement kinds — TS backend hasn't been extended yet.
+        // The capability declaration rejects modules that use them,
+        // so reaching this arm is a backend bug.
+        Stmt::Assign { span, .. }
+        | Stmt::While { span, .. }
+        | Stmt::ForRange { span, .. }
+        | Stmt::ForEach { span, .. }
+        | Stmt::SeqSet { span, .. }
+        | Stmt::MapSet { span, .. } => {
+            panic!("ts backend reached SIR16 statement at {} — capability check should have rejected it", span);
+        }
     }
 }
 
@@ -223,6 +234,17 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 "emit reached an Intrinsic `{}` at {} — backend should have rejected it",
                 name, span
             );
+        }
+        // SIR16 expression kinds — TS backend hasn't been extended yet.
+        Expr::FloatLit { span, .. }
+        | Expr::SeqLit { span, .. }
+        | Expr::SeqIndex { span, .. }
+        | Expr::SeqLen { span, .. }
+        | Expr::MapLit { span, .. }
+        | Expr::MapGet { span, .. }
+        | Expr::LogicalAnd { span, .. }
+        | Expr::LogicalOr { span, .. } => {
+            panic!("ts backend reached SIR16 expression at {} — capability check should have rejected it", span);
         }
     }
 }

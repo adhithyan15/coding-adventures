@@ -176,10 +176,55 @@ fn print_stmt(out: &mut String, s: &Stmt, indent: usize, depth: usize) {
             print_expr_inline_depth(out, expr, depth + 1);
             out.push(')');
         }
+        Stmt::Assign { name, scope, value, .. } => {
+            let _ = write!(out, "(assign {} {} ", name, scope.name());
+            print_expr_inline_depth(out, value, depth + 1);
+            out.push(')');
+        }
+        Stmt::While { cond, body, .. } => {
+            let _ = write!(out, "(while ");
+            print_expr_inline_depth(out, cond, depth + 1);
+            let _ = write!(out, "\n{}  ", " ".repeat(indent));
+            print_block_depth(out, body, indent + 2, depth + 1);
+            out.push(')');
+        }
+        Stmt::ForRange { var, start, stop, step, body, .. } => {
+            let _ = write!(out, "(for-range {} ", var);
+            print_expr_inline_depth(out, start, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, stop, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, step, depth + 1);
+            let _ = write!(out, "\n{}  ", " ".repeat(indent));
+            print_block_depth(out, body, indent + 2, depth + 1);
+            out.push(')');
+        }
+        Stmt::ForEach { var, iter, body, .. } => {
+            let _ = write!(out, "(for-each {} ", var);
+            print_expr_inline_depth(out, iter, depth + 1);
+            let _ = write!(out, "\n{}  ", " ".repeat(indent));
+            print_block_depth(out, body, indent + 2, depth + 1);
+            out.push(')');
+        }
+        Stmt::SeqSet { seq, index, value, .. } => {
+            let _ = write!(out, "(seq-set ");
+            print_expr_inline_depth(out, seq, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, index, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, value, depth + 1);
+            out.push(')');
+        }
+        Stmt::MapSet { map, key, value, .. } => {
+            let _ = write!(out, "(map-set ");
+            print_expr_inline_depth(out, map, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, key, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, value, depth + 1);
+            out.push(')');
+        }
     }
-    // Suppress unused indent warning when stmts are short — keep for
-    // future multi-line variants.
-    let _ = indent;
 }
 
 /// Render an expression as a single-line s-expression.  Public for
@@ -261,6 +306,75 @@ fn print_expr_inline_depth(out: &mut String, e: &Expr, depth: usize) {
             print_args(out, args, depth);
             out.push(')');
         }
+
+        // ── SIR16 additions ────────────────────────────────────────
+        Expr::FloatLit { value, .. } => {
+            let _ = write!(out, "(float {})", format_float(*value));
+        }
+        Expr::SeqLit { items, .. } => {
+            let _ = write!(out, "(seq");
+            print_args(out, items, depth);
+            out.push(')');
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            let _ = write!(out, "(seq-index ");
+            print_expr_inline_depth(out, seq, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, index, depth + 1);
+            out.push(')');
+        }
+        Expr::SeqLen { seq, .. } => {
+            let _ = write!(out, "(seq-len ");
+            print_expr_inline_depth(out, seq, depth + 1);
+            out.push(')');
+        }
+        Expr::MapLit { entries, .. } => {
+            let _ = write!(out, "(map");
+            for entry in entries {
+                out.push_str(" (");
+                print_expr_inline_depth(out, &entry.key, depth + 1);
+                out.push(' ');
+                print_expr_inline_depth(out, &entry.value, depth + 1);
+                out.push(')');
+            }
+            out.push(')');
+        }
+        Expr::MapGet { map, key, .. } => {
+            let _ = write!(out, "(map-get ");
+            print_expr_inline_depth(out, map, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, key, depth + 1);
+            out.push(')');
+        }
+        Expr::LogicalAnd { lhs, rhs, .. } => {
+            let _ = write!(out, "(and ");
+            print_expr_inline_depth(out, lhs, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, rhs, depth + 1);
+            out.push(')');
+        }
+        Expr::LogicalOr { lhs, rhs, .. } => {
+            let _ = write!(out, "(or ");
+            print_expr_inline_depth(out, lhs, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, rhs, depth + 1);
+            out.push(')');
+        }
+    }
+}
+
+/// Render a float deterministically.  We emit a `.` to disambiguate
+/// from integer literals — `3` would parse as `(int)`, so we print
+/// `3.0` instead.  Non-finite values use a stable textual form.
+fn format_float(v: f64) -> String {
+    if v.is_nan() {
+        "nan".into()
+    } else if v.is_infinite() {
+        if v.is_sign_negative() { "-inf".into() } else { "inf".into() }
+    } else if v == v.trunc() && v.abs() < 1e16 {
+        format!("{:.1}", v)
+    } else {
+        format!("{}", v)
     }
 }
 
@@ -465,6 +579,56 @@ mod tests {
         let text = print_module(&m);
         assert!(text.contains("(function add ((x any) (y any)) any (effects pure)"));
         assert!(text.contains("(builtin-call + (effects pure) (var-ref x param) (var-ref y param))"));
+    }
+
+    #[test]
+    fn print_float_lit_emits_decimal_form() {
+        // Integer-valued floats render with explicit `.0` so the
+        // round-trip parser can distinguish them from int literals.
+        let e = Expr::FloatLit { value: 3.0, span: s() };
+        assert_eq!(print_expr(&e), "(float 3.0)");
+        let e = Expr::FloatLit { value: 3.14, span: s() };
+        assert_eq!(print_expr(&e), "(float 3.14)");
+    }
+
+    #[test]
+    fn print_float_lit_handles_non_finite() {
+        let nan = Expr::FloatLit { value: f64::NAN, span: s() };
+        assert_eq!(print_expr(&nan), "(float nan)");
+        let posinf = Expr::FloatLit { value: f64::INFINITY, span: s() };
+        assert_eq!(print_expr(&posinf), "(float inf)");
+        let neginf = Expr::FloatLit { value: f64::NEG_INFINITY, span: s() };
+        assert_eq!(print_expr(&neginf), "(float -inf)");
+    }
+
+    #[test]
+    fn print_seq_and_map_literals() {
+        let seq = Expr::SeqLit {
+            items: vec![
+                Expr::IntLit { value: 1, span: s() },
+                Expr::IntLit { value: 2, span: s() },
+            ],
+            span: s(),
+        };
+        assert_eq!(print_expr(&seq), "(seq (int 1) (int 2))");
+        let map = Expr::MapLit {
+            entries: vec![MapEntry {
+                key: Expr::StrLit { value: "a".into(), span: s() },
+                value: Expr::IntLit { value: 1, span: s() },
+            }],
+            span: s(),
+        };
+        assert_eq!(print_expr(&map), r#"(map ((str "a") (int 1)))"#);
+    }
+
+    #[test]
+    fn print_logical_short_circuit() {
+        let e = Expr::LogicalAnd {
+            lhs: Box::new(Expr::BoolLit { value: true, span: s() }),
+            rhs: Box::new(Expr::BoolLit { value: false, span: s() }),
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(and (bool true) (bool false))");
     }
 
     #[test]

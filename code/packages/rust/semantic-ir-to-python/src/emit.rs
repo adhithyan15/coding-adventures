@@ -160,6 +160,18 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 out.push('\n');
             }
         }
+        // SIR16 statement kinds — Python backend's SIR-v1 extension
+        // (per SIR20) lands separately; until then the v0 emit code
+        // must remain exhaustive.  The capability declaration rejects
+        // modules using these features, so reaching this arm is a bug.
+        Stmt::Assign { span, .. }
+        | Stmt::While { span, .. }
+        | Stmt::ForRange { span, .. }
+        | Stmt::ForEach { span, .. }
+        | Stmt::SeqSet { span, .. }
+        | Stmt::MapSet { span, .. } => {
+            panic!("python backend reached SIR16 statement at {} — capability check should have rejected it", span);
+        }
     }
 }
 
@@ -233,6 +245,18 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 "emit reached an Intrinsic `{}` at {} — backend should have rejected it",
                 name, span
             );
+        }
+        // SIR16 expression kinds — Python backend's SIR-v1 extension
+        // (per SIR20) lands separately.
+        Expr::FloatLit { span, .. }
+        | Expr::SeqLit { span, .. }
+        | Expr::SeqIndex { span, .. }
+        | Expr::SeqLen { span, .. }
+        | Expr::MapLit { span, .. }
+        | Expr::MapGet { span, .. }
+        | Expr::LogicalAnd { span, .. }
+        | Expr::LogicalOr { span, .. } => {
+            panic!("python backend reached SIR16 expression at {} — capability check should have rejected it", span);
         }
     }
 }
@@ -332,6 +356,15 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
                 out.push('(');
                 emit_expr(out, expr, indent);
                 out.push_str("), ");
+            }
+            // SIR16 statement kinds cannot be expressed in walrus form.
+            Stmt::Assign { span, .. }
+            | Stmt::While { span, .. }
+            | Stmt::ForRange { span, .. }
+            | Stmt::ForEach { span, .. }
+            | Stmt::SeqSet { span, .. }
+            | Stmt::MapSet { span, .. } => {
+                panic!("python backend (walrus path) reached SIR16 statement at {} — capability check should have rejected it", span);
             }
         }
     }

@@ -96,6 +96,31 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
         Stmt::LetBinding { value, .. } => v.visit_expr(value),
         Stmt::LetStarBinding { value, .. } => v.visit_expr(value),
         Stmt::ExprStmt { expr, .. } => v.visit_expr(expr),
+        Stmt::Assign { value, .. } => v.visit_expr(value),
+        Stmt::While { cond, body, .. } => {
+            v.visit_expr(cond);
+            v.visit_block(body);
+        }
+        Stmt::ForRange { start, stop, step, body, .. } => {
+            v.visit_expr(start);
+            v.visit_expr(stop);
+            v.visit_expr(step);
+            v.visit_block(body);
+        }
+        Stmt::ForEach { iter, body, .. } => {
+            v.visit_expr(iter);
+            v.visit_block(body);
+        }
+        Stmt::SeqSet { seq, index, value, .. } => {
+            v.visit_expr(seq);
+            v.visit_expr(index);
+            v.visit_expr(value);
+        }
+        Stmt::MapSet { map, key, value, .. } => {
+            v.visit_expr(map);
+            v.visit_expr(key);
+            v.visit_expr(value);
+        }
     }
 }
 
@@ -149,6 +174,35 @@ pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr) {
             for a in args {
                 v.visit_expr(a);
             }
+        }
+
+        // ── SIR16 additions ────────────────────────────────────────
+        Expr::FloatLit { .. } => {}
+        Expr::SeqLit { items, .. } => {
+            for i in items {
+                v.visit_expr(i);
+            }
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            v.visit_expr(seq);
+            v.visit_expr(index);
+        }
+        Expr::SeqLen { seq, .. } => {
+            v.visit_expr(seq);
+        }
+        Expr::MapLit { entries, .. } => {
+            for entry in entries {
+                v.visit_expr(&entry.key);
+                v.visit_expr(&entry.value);
+            }
+        }
+        Expr::MapGet { map, key, .. } => {
+            v.visit_expr(map);
+            v.visit_expr(key);
+        }
+        Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+            v.visit_expr(lhs);
+            v.visit_expr(rhs);
         }
     }
 }

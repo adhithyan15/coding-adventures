@@ -37,6 +37,13 @@ pub enum SirType {
     Pair,
     Closure,
     Fn { params: Vec<SirType>, ret: Box<SirType> },
+    // ── SIR16 (Python / JavaScript interop) ──────────────────────────
+    /// 64-bit IEEE-754 float carrier.
+    Float,
+    /// Homogeneous sequence (`list`/`Array`/`Vec`-style).
+    Seq(Box<SirType>),
+    /// String-keyed map carrier (`dict`/`Object`/`HashMap`-style).
+    Map(Box<SirType>),
 }
 
 impl SirType {
@@ -72,6 +79,9 @@ impl fmt::Display for SirType {
                 }
                 write!(f, ") {})", ret)
             }
+            SirType::Float => write!(f, "float"),
+            SirType::Seq(elem) => write!(f, "(seq {})", elem),
+            SirType::Map(val) => write!(f, "(map {})", val),
         }
     }
 }
