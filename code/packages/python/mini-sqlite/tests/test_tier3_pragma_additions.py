@@ -58,8 +58,17 @@ def test_case_sensitive_like_default_off():
     _check("PRAGMA case_sensitive_like")
 
 
-def test_secure_delete_default_off():
-    _check("PRAGMA secure_delete")
+def test_secure_delete_round_trip():
+    """secure_delete default varies by SQLite build (0 on some Linux distros,
+    1 on others, 2/'fast' on yet others).  Verify only that writes round-trip
+    through mini-sqlite; don't compare the default value against sqlite3."""
+    mini = mini_sqlite.connect(":memory:")
+    # The mini-sqlite default is the SQLite-on-amalgamation default (0).
+    assert mini.execute("PRAGMA secure_delete").fetchall() == [(0,)]
+    mini.execute("PRAGMA secure_delete = ON")
+    assert mini.execute("PRAGMA secure_delete").fetchall() == [(1,)]
+    mini.execute("PRAGMA secure_delete = OFF")
+    assert mini.execute("PRAGMA secure_delete").fetchall() == [(0,)]
 
 
 def test_defer_foreign_keys_default_off():
