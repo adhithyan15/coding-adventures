@@ -1,7 +1,7 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-16. Sprint complete: TypeScript 0.2.0 releases (PR #3170 ✅
+> Last updated: 2026-05-18. Sprint complete: TypeScript 0.2.0 releases (PR #3170 ✅
 > merged), Rust 0.2.0 releases (PR #3171 ✅ merged), Python EllipticE/Pi —
 > `symbolic-vm` 0.55.0 (PR #3173 ✅ merged), TypeScript EllipticE/Pi —
 > `symbolic-vm` 0.3.0 (PR #3179 ✅ merged), Rust EllipticE/Pi —
@@ -12,7 +12,9 @@
 > Phase 21 TypeScript + Rust ports (PR #3369 ✅ merged),
 > version housekeeping chore (PR #3354 ✅ merged),
 > Phase 26 log-power IBP Python (PR #3372 ✅ merged),
-> Phase 27 trig-of-log integration Python `symbolic-vm` 0.57.0 (PR #3373 ✅ merged).
+> Phase 27 trig-of-log integration Python `symbolic-vm` 0.57.0 (PR #3373 ✅ merged),
+> Phase 28 general IBP Python `symbolic-vm` 0.58.0 (PR #3380 ✅ merged),
+> Phase 28 TypeScript + Rust ports `symbolic-vm` 0.5.0 (PR #3381 in review).
 
 This document is the canonical reference for resuming work on either project.
 It records exactly what is on `main`, what is in flight, and what has not been
@@ -190,6 +192,13 @@ CHANGELOG section. PR #3171 cut proper 0.2.0 releases and created the missing
 | `typescript/symbolic-vm` | 0.4.0 | Phase 26 `∫ Q(x)·log(x)^n dx` + Phase 27 `∫ xᵏ·trig(log(x)) dx` via u=log(x) substitution |
 | `rust/symbolic-vm` | 0.4.0 | Same as TypeScript 0.4.0 |
 
+#### Phase 28: general IBP for poly×log(Q) and poly×atan(Q) — TypeScript + Rust ports
+
+| Package | Version | Notes |
+|---|---|---|
+| `typescript/symbolic-vm` | 0.5.0 | Phase 28 `∫ P(x)·log(Q(x)) dx` + `∫ P(x)·atan(Q(x)) dx` for non-linear Q; limited rational integrator (Cases A/B) |
+| `rust/symbolic-vm` | 0.5.0 | Same as TypeScript 0.5.0; uses i128 RatPoly arithmetic |
+
 #### Phase 21 — named variable-coefficient ODE recognition (all three languages)
 
 Python `cas-ode` 0.6.0 (PR #3360 ✅ merged), TypeScript `cas-ode` 0.2.0 and
@@ -337,6 +346,7 @@ The Risch integration suite is ~90% complete. Known remaining gaps:
 | Elliptic integrals — third kind | `∫₀^(π/2) 1/((1+n·sin²θ)·√(1-k²sin²θ)) dθ` | ✅ Python PR #3173, TypeScript PR #3179, Rust PR #3178 — all three languages at 0.3.0/0.54.0 |
 | `∫ log(ax+b)^n dx`, `∫ Q(x)·log(x)^n dx` (Phase 26 log-power IBP) | IBP reduction `F_n = (ax+b)/a·log(ax+b)^n − n·F_{n-1}` and term-by-term poly×log^n | ✅ Python PR #3372 `symbolic-vm` 0.56.0; TS + Rust `symbolic-vm` 0.4.0 (same PR as Phase 27) |
 | `∫ sin(log(x)) dx`, `∫ cos(log(x)) dx`, `∫ xᵏ·sin/cos(log(x)) dx` (Phase 27 trig-of-log) | u=log(x) substitution converts to exp×trig form; closed form `x^(k+1)·((k+1)trig(log x)∓cotrig(log x))/((k+1)²+1)` | ✅ Python PR #3373 `symbolic-vm` 0.57.0; TS + Rust `symbolic-vm` 0.4.0 |
+| `∫ P(x)·log(Q(x)) dx`, `∫ P(x)·atan(Q(x)) dx` for non-linear Q (Phase 28 general IBP) | IBP with residual integrated via polynomial long division + Case A (prop to D′) / Case B (const/quadratic) | ✅ Python PR #3380 `symbolic-vm` 0.58.0; TS + Rust `symbolic-vm` 0.5.0 (PR #3381) |
 | `∫ f(x)·g(x)` where neither integrates alone | General IBP fallback missing; only specific matched patterns work | Open |
 
 #### Completed REPL and session features

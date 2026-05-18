@@ -4,9 +4,9 @@
 //! directly and evaluating them under each backend.
 
 use symbolic_ir::{
-    apply, flt, int, rat, sym, ACOSH, ADD, AND, ASINH, ASSIGN, ATANH, COS, COSH, COTH, CSCH, D,
-    DEFINE, DIV, EXP, IF, INTEGRATE, LIST, LOG, MUL, NEG, NOT, OR, POW, SECH, SIN, SINH, SQRT, SUB,
-    TAN, TANH,
+    apply, flt, int, rat, sym, ACOSH, ADD, AND, ASINH, ASSIGN, ATAN, ATANH, COS, COSH, COTH, CSCH,
+    D, DEFINE, DIV, EXP, IF, INTEGRATE, LIST, LOG, MUL, NEG, NOT, OR, POW, SECH, SIN, SINH, SQRT,
+    SUB, TAN, TANH,
 };
 use symbolic_vm::{StrictBackend, SymbolicBackend, VM};
 
@@ -1399,6 +1399,7 @@ fn eval_at(node: &symbolic_ir::IRNode, xval: f64) -> f64 {
                 ("Log", [v]) => eval_at(v, xval).ln(),
                 ("Sin", [v]) => eval_at(v, xval).sin(),
                 ("Cos", [v]) => eval_at(v, xval).cos(),
+                ("Atan", [v]) => eval_at(v, xval).atan(),
                 _ => panic!("eval_at: unsupported head {h}"),
             }
         }
@@ -1524,6 +1525,134 @@ fn phase27_regression_cos_x_unchanged() {
         integrate(apply(sym(COS), vec![sym("x")])),
         apply(sym(SIN), vec![sym("x")])
     );
+}
+
+// ---------------------------------------------------------------------------
+// Phase 28 — General IBP: ∫ P(x)·log(Q(x)) dx and ∫ P(x)·atan(Q(x)) dx
+// ---------------------------------------------------------------------------
+//
+// Helper: build log(x^2 + 1) as an IR node.
+fn log_x2p1() -> symbolic_ir::IRNode {
+    apply(
+        sym(LOG),
+        vec![apply(
+            sym(ADD),
+            vec![apply(sym(POW), vec![sym("x"), int(2)]), int(1)],
+        )],
+    )
+}
+
+// Helper: build atan(x^2) as an IR node.
+fn atan_x2() -> symbolic_ir::IRNode {
+    apply(sym(ATAN), vec![apply(sym(POW), vec![sym("x"), int(2)])])
+}
+
+#[test]
+fn phase28_log_x2p1_is_closed() {
+    // ∫ log(x²+1) dx must produce a closed form containing Log and Atan.
+    let result = integrate(log_x2p1());
+    let original = apply(sym(INTEGRATE), vec![log_x2p1(), sym("x")]);
+    assert_ne!(result, original, "expected closed form, got unevaluated Integrate");
+    assert!(contains_head(&result, "Log"), "expected Log in result: {result:?}");
+    assert!(contains_head(&result, "Atan"), "expected Atan in result: {result:?}");
+}
+
+#[test]
+fn phase28_log_x2p1_numeric() {
+    // ∫₀¹ log(x²+1) dx  ≈ 0.26260649...  (trapezoidal ground truth)
+    let antideriv = integrate(log_x2p1());
+    let diff = eval_at(&antideriv, 1.0) - eval_at(&antideriv, 0.0);
+    let numerical = trapezoid(|t| (t * t + 1.0_f64).ln(), 0.0, 1.0, 10_000);
+    assert!((diff - numerical).abs() < 1e-5, "diff={diff:.8}, numerical={numerical:.8}");
+}
+
+#[test]
+fn phase28_x_log_x2p1_is_closed() {
+    // ∫ x · log(x²+1) dx must produce a closed form containing Log.
+    let integrand = apply(sym(MUL), vec![sym("x"), log_x2p1()]);
+    let result = integrate(integrand.clone());
+    let original = apply(sym(INTEGRATE), vec![integrand, sym("x")]);
+    assert_ne!(result, original, "expected closed form, got unevaluated Integrate");
+    assert!(contains_head(&result, "Log"), "expected Log in result: {result:?}");
+}
+
+#[test]
+fn phase28_x_log_x2p1_numeric() {
+    // ∫₀² x · log(x²+1) dx  vs trapezoidal.
+    let integrand = apply(sym(MUL), vec![sym("x"), log_x2p1()]);
+    let antideriv = integrate(integrand);
+    let diff = eval_at(&antideriv, 2.0) - eval_at(&antideriv, 0.0);
+    let numerical = trapezoid(|t| t * (t * t + 1.0_f64).ln(), 0.0, 2.0, 10_000);
+    assert!((diff - numerical).abs() < 1e-5, "diff={diff:.8}, numerical={numerical:.8}");
+}
+
+#[test]
+fn phase28_x2_log_x2p1_numeric() {
+    // ∫₀² x² · log(x²+1) dx  vs trapezoidal.
+    let x2 = apply(sym(POW), vec![sym("x"), int(2)]);
+    let integrand = apply(sym(MUL), vec![x2, log_x2p1()]);
+    let antideriv = integrate(integrand);
+    let diff = eval_at(&antideriv, 2.0) - eval_at(&antideriv, 0.0);
+    let numerical = trapezoid(|t| t * t * (t * t + 1.0_f64).ln(), 0.0, 2.0, 10_000);
+    assert!((diff - numerical).abs() < 1e-5, "diff={diff:.8}, numerical={numerical:.8}");
+}
+
+#[test]
+fn phase28_atan_x2_fallthrough() {
+    // ∫ atan(x²) dx — residual 2x²/(1+x⁴) requires irrational partial fractions;
+    // Phase 28 must leave it unevaluated.
+    let result = integrate(atan_x2());
+    let original = apply(sym(INTEGRATE), vec![atan_x2(), sym("x")]);
+    assert_eq!(result, original, "expected unevaluated Integrate, got: {result:?}");
+}
+
+#[test]
+fn phase28_x_atan_x2_is_closed() {
+    // ∫ x · atan(x²) dx must produce a closed form containing Atan and Log.
+    let integrand = apply(sym(MUL), vec![sym("x"), atan_x2()]);
+    let result = integrate(integrand.clone());
+    let original = apply(sym(INTEGRATE), vec![integrand, sym("x")]);
+    assert_ne!(result, original, "expected closed form, got unevaluated Integrate");
+    assert!(contains_head(&result, "Atan"), "expected Atan in result: {result:?}");
+    assert!(contains_head(&result, "Log"), "expected Log in result: {result:?}");
+}
+
+#[test]
+fn phase28_x_atan_x2_numeric() {
+    // ∫₀² x · atan(x²) dx  vs trapezoidal.
+    let integrand = apply(sym(MUL), vec![sym("x"), atan_x2()]);
+    let antideriv = integrate(integrand);
+    let diff = eval_at(&antideriv, 2.0) - eval_at(&antideriv, 0.0);
+    let numerical = trapezoid(|t| t * (t * t).atan(), 0.0, 2.0, 10_000);
+    assert!((diff - numerical).abs() < 1e-5, "diff={diff:.8}, numerical={numerical:.8}");
+}
+
+#[test]
+fn phase28_regression_log_x_still_phase3() {
+    // ∫ log(x) dx = x·log(x) − x — Phase 3 must still handle this.
+    let result = integrate(apply(sym(LOG), vec![sym("x")]));
+    assert_eq!(
+        result,
+        apply(
+            sym(SUB),
+            vec![
+                apply(sym(MUL), vec![sym("x"), apply(sym(LOG), vec![sym("x")])]),
+                sym("x"),
+            ]
+        )
+    );
+}
+
+#[test]
+fn phase28_regression_atan_x_stays_unevaluated() {
+    // ∫ atan(x) dx — linear Q, Phase 28 must NOT intercept this.
+    // TypeScript has no Phase 11 so the result stays unevaluated.
+    let result = integrate(apply(sym(ATAN), vec![sym("x")]));
+    let original = apply(
+        sym(INTEGRATE),
+        vec![apply(sym(ATAN), vec![sym("x")]), sym("x")],
+    );
+    assert_eq!(result, original, "Phase 28 must not intercept linear atan(x)");
 }
 
 // ---------------------------------------------------------------------------

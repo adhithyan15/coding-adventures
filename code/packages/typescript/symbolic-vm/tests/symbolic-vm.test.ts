@@ -4,6 +4,7 @@ import {
   ADD,
   ASINH,
   ASSIGN,
+  ATAN,
   ATANH,
   COS,
   COSH,
@@ -933,5 +934,170 @@ describe("symbolic-vm", () => {
     const result = vm.eval(app(INTEGRATE, [app(COS, [x]), x]));
     // Should be sin(x)
     expect(result).toEqual(app(SIN, [x]));
+  });
+
+  // Phase 28 — general IBP: poly × log(Q) and poly × atan(Q) for non-linear Q
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Helper: numerically evaluate a simple IR tree at x = xVal.
+  // Includes Atan for Phase 28 atan residuals.
+  function evalIR28(node: ReturnType<typeof sym>, xVal: number): number {
+    const n = node as unknown as {
+      kind: string; value?: number | bigint; numer?: bigint; denom?: bigint;
+      head?: unknown; args?: unknown[];
+    };
+    if (n.kind === "integer") return Number(n.value);
+    if (n.kind === "rational") return Number(n.numer!) / Number(n.denom!);
+    if (n.kind === "float") return n.value as number;
+    if (n.kind === "symbol") return xVal;
+    const h = (n.head as { name?: string })?.name ?? "";
+    const args = n.args as typeof node[];
+    if (h === "Add") return evalIR28(args[0], xVal) + evalIR28(args[1], xVal);
+    if (h === "Sub") return evalIR28(args[0], xVal) - evalIR28(args[1], xVal);
+    if (h === "Mul") return evalIR28(args[0], xVal) * evalIR28(args[1], xVal);
+    if (h === "Div") return evalIR28(args[0], xVal) / evalIR28(args[1], xVal);
+    if (h === "Neg") return -evalIR28(args[0], xVal);
+    if (h === "Pow") return Math.pow(evalIR28(args[0], xVal), evalIR28(args[1], xVal));
+    if (h === "Log") return Math.log(evalIR28(args[0], xVal));
+    if (h === "Sin") return Math.sin(evalIR28(args[0], xVal));
+    if (h === "Cos") return Math.cos(evalIR28(args[0], xVal));
+    if (h === "Atan") return Math.atan(evalIR28(args[0], xVal));
+    throw new Error(`evalIR28: unsupported head: ${h}`);
+  }
+
+  function trapezoid28(fn: (t: number) => number, a: number, b: number, n = 10_000): number {
+    const h = (b - a) / n;
+    let total = 0.5 * (fn(a) + fn(b));
+    for (let i = 1; i < n; i++) total += fn(a + i * h);
+    return total * h;
+  }
+
+  it("Phase 28: ∫ log(x²+1) dx returns a closed form with LOG and ATAN", () => {
+    // IBP: R=x, Q′=2x, residual 2x²/(x²+1) = 2 − 2/(x²+1)
+    // Result: x·log(x²+1) − 2x + 2·atan(x)
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const xsq = app(POW, [x, int(2)]);
+    const integrand = app(LOG, [app(ADD, [xsq, int(1)])]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
+    // Must be closed (no INTEGRATE head)
+    expect(result).not.toMatchObject({ head: INTEGRATE });
+    // Must contain both LOG and ATAN (from the partial-fraction residual)
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Atan")).toBe(true);
+  });
+
+  it("Phase 28: ∫ log(x²+1) dx numerical correctness", () => {
+    // ∫₀¹ log(x²+1) dx  ≈ 0.26338...
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const xsq = app(POW, [x, int(2)]);
+    const integrand = app(LOG, [app(ADD, [xsq, int(1)])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 1)
+               - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0);
+    const numerical = trapezoid28(t => Math.log(t ** 2 + 1), 0, 1);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 28: ∫ x·log(x²+1) dx returns a closed form with LOG", () => {
+    // IBP: R=x²/2, Q′=2x, residual x³/(x²+1) = x − x/(x²+1)
+    // Result: (x²/2)·log(x²+1) − x²/2 + ½·log(x²+1)
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const xsq = app(POW, [x, int(2)]);
+    const integrand = app(MUL, [x, app(LOG, [app(ADD, [xsq, int(1)])])]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(result).not.toMatchObject({ head: INTEGRATE });
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
+  });
+
+  it("Phase 28: ∫ x·log(x²+1) dx numerical correctness", () => {
+    // ∫₁² x·log(x²+1) dx
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const xsq = app(POW, [x, int(2)]);
+    const integrand = app(MUL, [x, app(LOG, [app(ADD, [xsq, int(1)])])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 2)
+               - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 1);
+    const numerical = trapezoid28(t => t * Math.log(t ** 2 + 1), 1, 2);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 28: ∫ x²·log(x²+1) dx numerical correctness", () => {
+    // ∫₁² x²·log(x²+1) dx
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const xsq = app(POW, [x, int(2)]);
+    const integrand = app(MUL, [xsq, app(LOG, [app(ADD, [xsq, int(1)])])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 2)
+               - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 1);
+    const numerical = trapezoid28(t => t ** 2 * Math.log(t ** 2 + 1), 1, 2);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 28: ∫ atan(x²) dx stays unevaluated (fallthrough)", () => {
+    // The residual 2x²/(1+x⁴) needs irrational partial fractions.
+    // The engine must return the unevaluated Integrate, not a wrong answer.
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const xsq = app(POW, [x, int(2)]);
+    const integrand = app(ATAN, [xsq]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
+    // Must still contain INTEGRATE (unevaluated fallthrough).
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
+  });
+
+  it("Phase 28: ∫ x·atan(x²) dx returns a closed form with ATAN and LOG", () => {
+    // IBP: R=x²/2, Q=x², Q′=2x, denom=1+x⁴
+    // residual x³/(1+x⁴) = (1/4)·log(1+x⁴) via Case A (x³ = (1/4)·(4x³))
+    // Result: (x²/2)·atan(x²) − (1/4)·log(1+x⁴)
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const xsq = app(POW, [x, int(2)]);
+    const integrand = app(MUL, [x, app(ATAN, [xsq])]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(result).not.toMatchObject({ head: INTEGRATE });
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Atan")).toBe(true);
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
+  });
+
+  it("Phase 28: ∫ x·atan(x²) dx numerical correctness", () => {
+    // ∫₀¹ x·atan(x²) dx
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const xsq = app(POW, [x, int(2)]);
+    const integrand = app(MUL, [x, app(ATAN, [xsq])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 1)
+               - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0);
+    const numerical = trapezoid28(t => t * Math.atan(t ** 2), 0, 1);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 28: regression — ∫ log(x) dx still handled by Phase 3", () => {
+    // Phase 3 gives x·log(x) − x; Phase 28 must not intercept linear Q.
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const result = vm.eval(app(INTEGRATE, [app(LOG, [x]), x]));
+    expect(result).not.toMatchObject({ head: INTEGRATE });
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
+  });
+
+  it("Phase 28: regression — ∫ atan(x) dx is not intercepted by Phase 28", () => {
+    // Phase 28 checks isLinearIn(Q, x); for atan(x), Q = x is linear (degree 1),
+    // so Phase 28 skips it.  TypeScript does not yet have Phase 11, so atan(x)
+    // remains unevaluated.  This test verifies that Phase 28 does NOT accidentally
+    // intercept or corrupt it.
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const result = vm.eval(app(INTEGRATE, [app(ATAN, [x]), x]));
+    // Should remain unevaluated (Phase 11 is not implemented in TypeScript yet).
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
   });
 });

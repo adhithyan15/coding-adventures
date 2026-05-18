@@ -1115,6 +1115,11 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
     const tl27 =
       tryTrigLogProduct(a, b, x) ?? tryTrigLogProduct(b, a, x);
     if (tl27 !== undefined) return tl27;
+    // Phase 28: ∫ P(x)·log(Q(x)) dx  and  ∫ P(x)·atan(Q(x)) dx  (non-linear Q)
+    const lp28 = tryLogPolyProduct(a, b, x) ?? tryLogPolyProduct(b, a, x);
+    if (lp28 !== undefined) return lp28;
+    const ap28 = tryAtanPolyProduct(a, b, x) ?? tryAtanPolyProduct(b, a, x);
+    if (ap28 !== undefined) return ap28;
     return undefined;
   }
   if (equals(f.head, DIV)) {
@@ -1173,6 +1178,17 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
   ) {
     if (equals(f.head, SIN)) return trigLogIntegral(SIN, 0, x);
     if (equals(f.head, COS)) return trigLogIntegral(COS, 0, x);
+  }
+
+  // Phase 28: bare ∫ log(Q(x)) dx and ∫ atan(Q(x)) dx for non-linear Q(x).
+  // These are handled as ∫ 1·log(Q) dx and ∫ 1·atan(Q) dx via IBP.
+  if (f.args.length === 1 && equals(f.head, LOG)) {
+    const lp28 = tryLogPolyProduct(f, int(1), x);
+    if (lp28 !== undefined) return lp28;
+  }
+  if (f.args.length === 1 && equals(f.head, ATAN)) {
+    const ap28 = tryAtanPolyProduct(f, int(1), x);
+    if (ap28 !== undefined) return ap28;
   }
 
   return undefined;
@@ -2053,6 +2069,532 @@ function truthy(node: IRNode): boolean | undefined {
   if (equals(node, TRUE)) return true;
   if (equals(node, FALSE)) return false;
   return undefined;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Phase 28 — General IBP: ∫ P(x)·log(Q(x)) dx and ∫ P(x)·atan(Q(x)) dx
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// Integration by parts with u = transcendental, dv = P(x) dx:
+//
+//   ∫ P·log(Q) dx  =  R(x)·log(Q(x))  −  ∫ R(x)·Q′(x)/Q(x) dx
+//   ∫ P·atan(Q) dx =  R(x)·atan(Q(x)) −  ∫ R(x)·Q′(x)/(1+Q(x)²) dx
+//
+// where R = ∫P (polynomial antiderivative, constant term = 0).  The residual
+// rational integral is handled by a targeted integrator covering:
+//
+//   Case A: numerator = c · (denominator′)  →  c · log(denominator)
+//   Case B: constant numerator / quadratic ax²+b with rational √(b/a)
+//           →  r₀/(a₂·√(a₀/a₂)) · atan(x/√(a₀/a₂))
+//
+// Examples that close under Phase 28:
+//   ∫ log(x²+1) dx    = x·log(x²+1) − 2x + 2·atan(x)
+//   ∫ x·log(x²+1) dx  = (x²/2)·log(x²+1) − x²/2 + ½·log(x²+1)
+//   ∫ x²·log(x²+1) dx = (x³/3)·log(x²+1) − 2x³/9 + 2x/3 − (2/3)·atan(x)
+//   ∫ x·atan(x²) dx   = (x²/2)·atan(x²) − ¼·log(1+x⁴)
+//
+// Fallthrough cases (returned unevaluated by integrateRationalSimple):
+//   ∫ atan(x²) dx      — residual 2x²/(1+x⁴) requires irrational PFDs
+//   ∫ x²·atan(x²) dx   — same reason
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** A rational coefficient p/q with q > 0 and gcd(|p|,q) = 1 (bigint). */
+type RatCoeff = { readonly numer: bigint; readonly denom: bigint };
+
+/** Dense rational-coefficient polynomial: element at index i = coefficient of xⁱ. */
+type RatPoly = readonly RatCoeff[];
+
+/** Normalised rational coefficient constructor. */
+function rc(numer: bigint, denom: bigint): RatCoeff {
+  if (denom === 0n) throw new RangeError("zero denominator in RatCoeff");
+  if (numer === 0n) return { numer: 0n, denom: 1n };
+  const sign = denom < 0n ? -1n : 1n;
+  const n = sign * numer;
+  const d = sign * denom;
+  const g = gcd(n < 0n ? -n : n, d);
+  return { numer: n / g, denom: d / g };
+}
+
+const RC_ZERO: RatCoeff = { numer: 0n, denom: 1n };
+const RC_ONE: RatCoeff = { numer: 1n, denom: 1n };
+
+function rcIsZero(c: RatCoeff): boolean { return c.numer === 0n; }
+function rcIsOne(c: RatCoeff): boolean { return c.numer === c.denom; }
+function rcAdd(a: RatCoeff, b: RatCoeff): RatCoeff {
+  return rc(a.numer * b.denom + b.numer * a.denom, a.denom * b.denom);
+}
+function rcSub(a: RatCoeff, b: RatCoeff): RatCoeff {
+  return rc(a.numer * b.denom - b.numer * a.denom, a.denom * b.denom);
+}
+function rcMul(a: RatCoeff, b: RatCoeff): RatCoeff {
+  return rc(a.numer * b.numer, a.denom * b.denom);
+}
+function rcDiv(a: RatCoeff, b: RatCoeff): RatCoeff {
+  return rc(a.numer * b.denom, a.denom * b.numer);
+}
+function rcFromBigInt(n: bigint): RatCoeff { return rc(n, 1n); }
+function rcToIR(c: RatCoeff): IRNode {
+  return c.denom === 1n ? int(c.numer) : rational(c.numer, c.denom);
+}
+
+/** Degree of a RatPoly (−1 for the zero polynomial). */
+function rpDeg(p: RatPoly): number {
+  for (let i = p.length - 1; i >= 0; i--) {
+    if (!rcIsZero(p[i]!)) return i;
+  }
+  return -1;
+}
+function rpIsZero(p: RatPoly): boolean { return rpDeg(p) < 0; }
+
+/** Coefficient at degree d (zero when out of bounds). */
+function rpCoeff(p: RatPoly, d: number): RatCoeff {
+  return d < p.length ? p[d]! : RC_ZERO;
+}
+
+function rpAdd(a: RatPoly, b: RatPoly): RatPoly {
+  const len = Math.max(a.length, b.length);
+  return Array.from({ length: len }, (_, i) => rcAdd(rpCoeff(a, i), rpCoeff(b, i)));
+}
+
+function rpMul(a: RatPoly, b: RatPoly): RatPoly {
+  const da = rpDeg(a);
+  const db = rpDeg(b);
+  if (da < 0 || db < 0) return [];
+  const result: RatCoeff[] = Array.from({ length: da + db + 1 }, () => RC_ZERO);
+  for (let i = 0; i <= da; i++) {
+    if (rcIsZero(rpCoeff(a, i))) continue;
+    for (let j = 0; j <= db; j++) {
+      result[i + j] = rcAdd(result[i + j]!, rcMul(rpCoeff(a, i), rpCoeff(b, j)));
+    }
+  }
+  return result;
+}
+
+/** Formal derivative: d/dx P(x). */
+function rpDeriv(p: RatPoly): RatPoly {
+  if (p.length <= 1) return [];
+  return p.slice(1).map((c, i) => rcMul(c, rcFromBigInt(BigInt(i + 1))));
+}
+
+/**
+ * Polynomial antiderivative (constant term = 0):
+ *   result[0] = 0,  result[k] = p[k−1] / k
+ *
+ * The integration constant is fixed to zero because IBP cancels it.
+ */
+function rpIntegrate(p: RatPoly): RatPoly {
+  const result: RatCoeff[] = [RC_ZERO];
+  for (let i = 0; i < p.length; i++) {
+    result.push(rcDiv(p[i] ?? RC_ZERO, rcFromBigInt(BigInt(i + 1))));
+  }
+  return result;
+}
+
+/**
+ * Polynomial long division: dividend = quotient × divisor + remainder
+ * with deg(remainder) < deg(divisor).
+ * Returns ``undefined`` when the divisor is the zero polynomial.
+ */
+function rpDiv(
+  dividend: RatPoly,
+  divisor: RatPoly,
+): { quotient: RatPoly; remainder: RatPoly } | undefined {
+  const dd = rpDeg(divisor);
+  if (dd < 0) return undefined;
+  const dn = rpDeg(dividend);
+  if (dn < dd) return { quotient: [], remainder: [...dividend] };
+
+  const rem: RatCoeff[] = [...dividend];
+  const quot: RatCoeff[] = Array.from({ length: dn - dd + 1 }, () => RC_ZERO);
+  const leading = rpCoeff(divisor, dd);
+
+  for (let shift = dn - dd; shift >= 0; shift--) {
+    const c = rcDiv(rpCoeff(rem as RatPoly, shift + dd), leading);
+    quot[shift] = c;
+    for (let i = 0; i <= dd; i++) {
+      rem[shift + i] = rcSub(rem[shift + i] ?? RC_ZERO, rcMul(c, rpCoeff(divisor, i)));
+    }
+  }
+  return { quotient: quot, remainder: rem as unknown as RatPoly };
+}
+
+/** Convert a RatPoly to an IRNode expression (sum of terms, zero coefficients omitted). */
+function rpToIR(p: RatPoly, x: IRNode): IRNode {
+  const terms: IRNode[] = [];
+  for (let i = 0; i < p.length; i++) {
+    const c = p[i]!;
+    if (rcIsZero(c)) continue;
+    if (i === 0) {
+      terms.push(rcToIR(c));
+    } else {
+      const xPow: IRNode = i === 1 ? x : app(POW, [x, int(BigInt(i))]);
+      terms.push(rcIsOne(c) ? xPow : app(MUL, [rcToIR(c), xPow]));
+    }
+  }
+  if (terms.length === 0) return int(0);
+  return terms.reduce((acc, t) => app(ADD, [acc, t]));
+}
+
+/**
+ * Recursively evaluate a closed (variable-free) IR expression as an exact rational.
+ *
+ * ``toPolynomialCoeffs`` may return compound coefficient nodes such as
+ * ``MUL(int(2), int(1))`` (from scalar × monomial decomposition).  This
+ * evaluator handles such cases so that ``rpFromCoeffsMap`` can extract
+ * bigint rational values from them.
+ *
+ * Only exact rational arithmetic is supported; returns ``undefined`` when any
+ * sub-expression involves a float or an unrecognised pattern.
+ */
+function evalNumericNode(node: IRNode): Numeric | undefined {
+  const direct = toNumeric(node);
+  if (direct !== undefined) return direct;
+  if (node.kind !== "apply") return undefined;
+  const { head, args } = node;
+  if (equals(head, MUL) && args.length === 2) {
+    const a = evalNumericNode(args[0]);
+    const b = evalNumericNode(args[1]);
+    if (a === undefined || b === undefined) return undefined;
+    if (a.kind === "float" || b.kind === "float") return undefined;
+    return mulNumeric(a, b);
+  }
+  if (equals(head, DIV) && args.length === 2) {
+    const a = evalNumericNode(args[0]);
+    const b = evalNumericNode(args[1]);
+    if (a === undefined || b === undefined) return undefined;
+    if (a.kind === "float" || b.kind === "float") return undefined;
+    return divNumeric(a, b);
+  }
+  if (equals(head, NEG) && args.length === 1) {
+    const a = evalNumericNode(args[0]);
+    if (a === undefined || a.kind === "float") return undefined;
+    return negNumeric(a);
+  }
+  if (equals(head, ADD) && args.length === 2) {
+    const a = evalNumericNode(args[0]);
+    const b = evalNumericNode(args[1]);
+    if (a === undefined || b === undefined) return undefined;
+    if (a.kind === "float" || b.kind === "float") return undefined;
+    return addNumeric(a, b);
+  }
+  if (equals(head, SUB) && args.length === 2) {
+    const a = evalNumericNode(args[0]);
+    const b = evalNumericNode(args[1]);
+    if (a === undefined || b === undefined) return undefined;
+    if (a.kind === "float" || b.kind === "float") return undefined;
+    return subNumeric(a, b);
+  }
+  return undefined;
+}
+
+/**
+ * Extract exact rational coefficients from a ``toPolynomialCoeffs`` map.
+ *
+ * Coefficient nodes from ``toPolynomialCoeffs`` may be compound expressions
+ * such as ``MUL(int(2), int(1))`` rather than bare numeric literals.
+ * ``evalNumericNode`` is used to reduce each coefficient to an exact rational.
+ * Returns ``undefined`` when any coefficient cannot be reduced to an exact
+ * (non-float) rational.
+ */
+function rpFromCoeffsMap(map: Map<number, IRNode>): RatPoly | undefined {
+  if (map.size === 0) return [];
+  const maxDeg = Math.max(...map.keys());
+  const result: RatCoeff[] = Array.from({ length: maxDeg + 1 }, () => RC_ZERO);
+  for (const [deg, node] of map) {
+    const n = evalNumericNode(node);
+    if (n === undefined || n.kind === "float") return undefined;
+    const r = asRat(n);
+    result[deg] = rc(r.numer, r.denom);
+  }
+  return result;
+}
+
+/**
+ * Test whether p = c · q for some rational scalar c.
+ * Returns c when proportional, ``undefined`` otherwise (including when degrees differ).
+ */
+function rpProportional(p: RatPoly, q: RatPoly): RatCoeff | undefined {
+  const dp = rpDeg(p);
+  const dq = rpDeg(q);
+  if (dp !== dq) return undefined;
+  if (dp < 0) return RC_ZERO; // both zero — degenerate
+  let c: RatCoeff | undefined;
+  for (let i = 0; i <= Math.max(dp, dq); i++) {
+    const pi = rpCoeff(p, i);
+    const qi = rpCoeff(q, i);
+    if (rcIsZero(pi) && rcIsZero(qi)) continue;
+    if (rcIsZero(pi) !== rcIsZero(qi)) return undefined; // mismatch
+    const ci = rcDiv(pi, qi);
+    if (c === undefined) {
+      c = ci;
+    } else if (c.numer * ci.denom !== ci.numer * c.denom) {
+      return undefined; // inconsistent ratio
+    }
+  }
+  return c;
+}
+
+/**
+ * Exact integer square root.  Returns ``√n`` if n is a perfect square,
+ * ``undefined`` otherwise.
+ */
+function bigIntSqrt(n: bigint): bigint | undefined {
+  if (n < 0n) return undefined;
+  if (n === 0n) return 0n;
+  // Newton's method converges in O(log log n) iterations.
+  let x = n;
+  let y = (x + 1n) / 2n;
+  while (y < x) {
+    x = y;
+    y = (x + n / x) / 2n;
+  }
+  return x * x === n ? x : undefined;
+}
+
+/**
+ * Exact rational square root of c = p/q.
+ * Returns ``√c`` only when both p and q are perfect integer squares.
+ */
+function rcSqrt(c: RatCoeff): RatCoeff | undefined {
+  if (c.numer <= 0n || c.denom <= 0n) return undefined;
+  const sqN = bigIntSqrt(c.numer);
+  const sqD = bigIntSqrt(c.denom);
+  if (sqN === undefined || sqD === undefined) return undefined;
+  return rc(sqN, sqD);
+}
+
+/**
+ * Returns ``true`` if ``expr`` is a polynomial of degree exactly 1 in ``x``.
+ *
+ * Phase 3 handles log(ax+b) and Phase 11 handles atan(ax+b); we skip linear
+ * Q here to avoid duplicating those specialised code paths.
+ */
+function isLinearIn(expr: IRNode, x: IRNode): boolean {
+  const coeffs = toPolynomialCoeffs(expr, x);
+  if (coeffs === undefined) return false;
+  let maxDeg = 0;
+  for (const [deg] of coeffs) {
+    if (deg > maxDeg) maxDeg = deg;
+  }
+  return maxDeg === 1;
+}
+
+/**
+ * Targeted rational function integrator for Phase 28 IBP residuals.
+ *
+ * Attempts to integrate N(x)/D(x) where N and D are polynomials with
+ * rational coefficients.  After polynomial long division N = Q·D + R:
+ *
+ *   1. The polynomial quotient Q is integrated term-by-term.
+ *   2. For the remainder R (deg R < deg D), two patterns are tried:
+ *      Case A: R = c · D′  →  c · log(D)
+ *      Case B: R is a constant and D = a₂x² + a₀ with rational √(a₀/a₂)
+ *              →  R/(a₂·√(a₀/a₂)) · atan(x / √(a₀/a₂))
+ *
+ * Returns ``undefined`` when no pattern matches (caller falls through).
+ */
+function integrateRationalSimple(
+  N_ir: IRNode,
+  D_ir: IRNode,
+  x: IRNode,
+): IRNode | undefined {
+  const Nm = toPolynomialCoeffs(N_ir, x);
+  const Dm = toPolynomialCoeffs(D_ir, x);
+  if (Nm === undefined || Dm === undefined) return undefined;
+  const N = rpFromCoeffsMap(Nm);
+  const D = rpFromCoeffsMap(Dm);
+  if (N === undefined || D === undefined) return undefined;
+  if (rpIsZero(D)) return undefined;
+
+  // Polynomial long division: N = Q·D + R
+  const divResult = rpDiv(N, D);
+  if (divResult === undefined) return undefined;
+  const { quotient: Q, remainder: R } = divResult;
+
+  const qAntideriv = rpIntegrate(Q);
+  const Dprime = rpDeriv(D);
+
+  // Try to express the remainder R/D in closed form.
+  const remResult = closeRemainderOverD(R, D, Dprime, D_ir, x);
+  if (remResult === null) {
+    // Remainder is zero — only the quotient polynomial contributes.
+    return rpIsZero(Q) ? int(0) : rpToIR(qAntideriv, x);
+  }
+  if (remResult === undefined) return undefined; // cannot close
+
+  if (rpIsZero(Q)) return remResult;
+  return app(ADD, [rpToIR(qAntideriv, x), remResult]);
+}
+
+/**
+ * Attempt to express ∫ R/D dx in closed form (deg R < deg D, rational coeffs).
+ *
+ * Returns:
+ *   - ``null``      — R is the zero polynomial (no contribution)
+ *   - ``IRNode``    — closed-form antiderivative
+ *   - ``undefined`` — cannot close with available patterns
+ */
+function closeRemainderOverD(
+  R: RatPoly,
+  D: RatPoly,
+  Dprime: RatPoly,
+  D_ir: IRNode,
+  x: IRNode,
+): IRNode | null | undefined {
+  if (rpIsZero(R)) return null;
+
+  // Case A: R = c · D′  →  c · log(D)
+  if (!rpIsZero(Dprime)) {
+    const c = rpProportional(R, Dprime);
+    if (c !== undefined) {
+      return rcIsZero(c) ? null : app(MUL, [rcToIR(c), app(LOG, [D_ir])]);
+    }
+  }
+
+  // Case B: R is a non-zero constant and D is a quadratic a₂x² + a₀ (no linear
+  // term) with a₂, a₀ > 0 and √(a₀/a₂) rational.
+  const dR = rpDeg(R);
+  const dD = rpDeg(D);
+  if (dR === 0 && dD === 2) {
+    const r0 = rpCoeff(R, 0);
+    const a2 = rpCoeff(D, 2);
+    const a1 = rpCoeff(D, 1);
+    const a0 = rpCoeff(D, 0);
+    if (
+      !rcIsZero(r0) &&
+      !rcIsZero(a2) && a2.numer > 0n &&
+      !rcIsZero(a0) && a0.numer > 0n &&
+      rcIsZero(a1)
+    ) {
+      // ∫ r₀/(a₂x² + a₀) dx = r₀/(a₂·√(a₀/a₂)) · atan(x / √(a₀/a₂))
+      const ba = rcDiv(a0, a2);
+      const sqBa = rcSqrt(ba);
+      if (sqBa !== undefined && !rcIsZero(sqBa)) {
+        const coeff = rcDiv(r0, rcMul(a2, sqBa));
+        const arg: IRNode = rcIsOne(sqBa) ? x : app(DIV, [x, rcToIR(sqBa)]);
+        return app(MUL, [rcToIR(coeff), app(ATAN, [arg])]);
+      }
+    }
+  }
+
+  return undefined;
+}
+
+/**
+ * Phase 28: attempt to integrate P(x) · log(Q(x)) for non-linear polynomial Q(x).
+ *
+ * IBP formula (u = log(Q), dv = P dx):
+ *   ∫ P·log(Q) dx  =  R·log(Q) − ∫ R·Q′/Q dx
+ *
+ * Linear Q is skipped so that Phase 3 handles it instead.
+ * Returns ``undefined`` when the pattern does not match or the residual
+ * rational integral cannot be closed.
+ */
+function tryLogPolyProduct(
+  transcendental: IRNode,
+  polyCandidate: IRNode,
+  x: IRNode,
+): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, LOG)) return undefined;
+  if (transcendental.args.length !== 1) return undefined;
+  const Q_ir = transcendental.args[0]!;
+
+  if (!dependsOn(Q_ir, x)) return undefined; // log(constant) — handled elsewhere
+  if (isLinearIn(Q_ir, x)) return undefined;  // Phase 3 handles log(ax+b)
+
+  // Q must be a polynomial with exact rational coefficients.
+  const Qmap = toPolynomialCoeffs(Q_ir, x);
+  if (Qmap === undefined) return undefined;
+  const Q = rpFromCoeffsMap(Qmap);
+  if (Q === undefined || rpIsZero(Q)) return undefined;
+
+  // P must be a polynomial with exact rational coefficients.
+  const Pmap = toPolynomialCoeffs(polyCandidate, x);
+  if (Pmap === undefined) return undefined;
+  const P = rpFromCoeffsMap(Pmap);
+  if (P === undefined || rpIsZero(P)) return undefined;
+
+  // R = ∫P (polynomial antiderivative, constant = 0).
+  const R = rpIntegrate(P);
+  if (rpIsZero(R)) return undefined;
+  const R_ir = rpToIR(R, x);
+
+  // Q′ = d/dx Q(x).
+  const Qprime = rpDeriv(Q);
+  if (rpIsZero(Qprime)) return undefined; // Q is constant — unexpected
+
+  // Residual numerator N = R · Q′.
+  const N = rpMul(R, Qprime);
+  if (rpIsZero(N)) {
+    // Zero residual: ∫ P·log(Q) dx = R·log(Q).
+    return app(MUL, [R_ir, transcendental]);
+  }
+  const N_ir = rpToIR(N, x);
+
+  // Delegate ∫ N/Q dx to the rational integrator.
+  const residual = integrateRationalSimple(N_ir, Q_ir, x);
+  if (residual === undefined) return undefined;
+
+  // ∫ P·log(Q) dx = R·log(Q) − ∫ R·Q′/Q dx.
+  return app(SUB, [app(MUL, [R_ir, transcendental]), residual]);
+}
+
+/**
+ * Phase 28: attempt to integrate P(x) · atan(Q(x)) for non-linear polynomial Q(x).
+ *
+ * IBP formula (u = atan(Q), dv = P dx):
+ *   ∫ P·atan(Q) dx  =  R·atan(Q) − ∫ R·Q′/(1+Q²) dx
+ *
+ * Linear Q is skipped so that Phase 11 handles it instead.
+ */
+function tryAtanPolyProduct(
+  transcendental: IRNode,
+  polyCandidate: IRNode,
+  x: IRNode,
+): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, ATAN)) return undefined;
+  if (transcendental.args.length !== 1) return undefined;
+  const Q_ir = transcendental.args[0]!;
+
+  if (!dependsOn(Q_ir, x)) return undefined;
+  if (isLinearIn(Q_ir, x)) return undefined; // Phase 11 handles atan(ax+b)
+
+  const Qmap = toPolynomialCoeffs(Q_ir, x);
+  if (Qmap === undefined) return undefined;
+  const Q = rpFromCoeffsMap(Qmap);
+  if (Q === undefined || rpIsZero(Q)) return undefined;
+
+  const Pmap = toPolynomialCoeffs(polyCandidate, x);
+  if (Pmap === undefined) return undefined;
+  const P = rpFromCoeffsMap(Pmap);
+  if (P === undefined || rpIsZero(P)) return undefined;
+
+  const R = rpIntegrate(P);
+  if (rpIsZero(R)) return undefined;
+  const R_ir = rpToIR(R, x);
+
+  const Qprime = rpDeriv(Q);
+  if (rpIsZero(Qprime)) return undefined;
+
+  const N = rpMul(R, Qprime);
+  if (rpIsZero(N)) {
+    return app(MUL, [R_ir, transcendental]);
+  }
+  const N_ir = rpToIR(N, x);
+
+  // Denominator for the atan residual: 1 + Q(x)².
+  // Compute Q² as a polynomial, then prepend the constant 1.
+  const Q2 = rpMul(Q, Q);
+  const denom: RatPoly = rpAdd(Q2, [RC_ONE]); // 1 + Q²
+  const denom_ir = rpToIR(denom, x);
+
+  const residual = integrateRationalSimple(N_ir, denom_ir, x);
+  if (residual === undefined) return undefined;
+
+  // ∫ P·atan(Q) dx = R·atan(Q) − ∫ R·Q′/(1+Q²) dx.
+  return app(SUB, [app(MUL, [R_ir, transcendental]), residual]);
 }
 
 function gcd(a: bigint, b: bigint): bigint {
