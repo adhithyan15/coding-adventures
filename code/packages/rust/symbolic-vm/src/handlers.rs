@@ -1127,11 +1127,27 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
         (SIN, [inner]) if is_log_of_x(inner, x) => trig_log_integral(SIN, 0, x),
         (COS, [inner]) if is_log_of_x(inner, x) => trig_log_integral(COS, 0, x),
         // Phase 26+27: Q(x) · log(x)^n or Q(x) · trig(log(x)) — both factors depend on x.
+        // Phase 28: Q(x) · log(Q(x)) or Q(x) · atan(Q(x)) for non-linear Q (general IBP).
         (MUL, [a, b]) => try_log_power_product(a, b, x)
             .or_else(|| try_log_power_product(b, a, x))
             .or_else(|| try_trig_log_product(a, b, x))
             .or_else(|| try_trig_log_product(b, a, x))
+            .or_else(|| try_log_poly_product(a, b, x))
+            .or_else(|| try_log_poly_product(b, a, x))
+            .or_else(|| try_atan_poly_product(a, b, x))
+            .or_else(|| try_atan_poly_product(b, a, x))
             .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
+        // Phase 28: bare ∫ log(Q(x)) dx and ∫ atan(Q(x)) dx for non-linear Q.
+        // The simple arms (LOG, [inner]) and (ATAN, [inner]) above already captured
+        // the x-equals-inner case; these arms fire when Q depends on x but is non-linear.
+        (LOG, [q_ir]) if depends_on(q_ir, x) && !is_linear_in(q_ir, x) => {
+            try_log_poly_product(f, &IRNode::Integer(1), x)
+                .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]))
+        }
+        (ATAN, [q_ir]) if depends_on(q_ir, x) && !is_linear_in(q_ir, x) => {
+            try_atan_poly_product(f, &IRNode::Integer(1), x)
+                .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]))
+        }
         _ => apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]),
     }
 }
@@ -1708,6 +1724,634 @@ fn try_trig_log_product(
             .reduce(|acc, p| apply_node(ADD, vec![acc, p]))
             .unwrap(),
     )
+}
+
+// ---------------------------------------------------------------------------
+// Phase 28 — General IBP: ∫ P(x)·log(Q(x)) dx  and  ∫ P(x)·atan(Q(x)) dx
+// ---------------------------------------------------------------------------
+//
+// IBP formulas (u = transcendental, dv = P dx, v = R = ∫P):
+//
+//   ∫ P·log(Q) dx  =  R·log(Q) − ∫ R·Q′/Q dx
+//   ∫ P·atan(Q) dx =  R·atan(Q) − ∫ R·Q′/(1+Q²) dx
+//
+// The residual integrals are rational functions.  We handle them with a
+// limited rational integrator (`integrate_rational_simple_rp`) that covers:
+//
+//   Case A: remainder = c·D′  →  c·log(D)
+//   Case B: remainder is constant, D = a₂x² + a₀ with rational √(a₀/a₂)
+//           →  r₀/(a₂√(a₀/a₂))·atan(x/√(a₀/a₂))
+//
+// All polynomial arithmetic is done over exact rationals using a dense
+// `RatPoly = Vec<RatC>` representation where index = monomial degree and
+// `RatC = (i128, i128)` is a reduced rational (numerator, denominator).
+// Using i128 gives enough headroom for the intermediate cross-multiplications
+// in rc_add / rc_mul without overflow for any typical CAS polynomial.
+
+/// GCD for u128 — Euclidean algorithm.
+fn gcd128(mut a: u128, mut b: u128) -> u128 {
+    while b != 0 {
+        let t = b;
+        b = a % b;
+        a = t;
+    }
+    a
+}
+
+/// Rational coefficient: (numerator, denominator), always in lowest terms with
+/// denom > 0.  Zero is represented as (0, 1).
+type RatC = (i128, i128);
+
+const RC_ZERO: RatC = (0, 1);
+const RC_ONE: RatC = (1, 1);
+
+fn rc_is_zero((n, _): RatC) -> bool {
+    n == 0
+}
+
+fn rc_is_one((n, d): RatC) -> bool {
+    n == d
+}
+
+/// Reduce a (numer, denom) pair to lowest terms with positive denominator.
+/// Returns `None` if `denom == 0`.
+fn rc(numer: i128, denom: i128) -> Option<RatC> {
+    if denom == 0 {
+        return None;
+    }
+    let (numer, denom) = if denom < 0 {
+        (-numer, -denom)
+    } else {
+        (numer, denom)
+    };
+    let g = gcd128(numer.unsigned_abs(), denom.unsigned_abs()) as i128;
+    Some((numer / g, denom / g))
+}
+
+fn rc_neg((n, d): RatC) -> RatC {
+    (-n, d)
+}
+
+fn rc_add((n1, d1): RatC, (n2, d2): RatC) -> Option<RatC> {
+    // n1/d1 + n2/d2 = (n1·d2 + n2·d1) / (d1·d2)
+    let numer = n1.checked_mul(d2)?.checked_add(n2.checked_mul(d1)?)?;
+    let denom = d1.checked_mul(d2)?;
+    rc(numer, denom)
+}
+
+fn rc_sub((n1, d1): RatC, (n2, d2): RatC) -> Option<RatC> {
+    let numer = n1.checked_mul(d2)?.checked_sub(n2.checked_mul(d1)?)?;
+    let denom = d1.checked_mul(d2)?;
+    rc(numer, denom)
+}
+
+fn rc_mul((n1, d1): RatC, (n2, d2): RatC) -> Option<RatC> {
+    rc(n1.checked_mul(n2)?, d1.checked_mul(d2)?)
+}
+
+fn rc_div((n1, d1): RatC, (n2, d2): RatC) -> Option<RatC> {
+    if n2 == 0 {
+        return None;
+    }
+    rc(n1.checked_mul(d2)?, d1.checked_mul(n2)?)
+}
+
+/// Convert a `RatC` to an `IRNode`.  Returns `None` if values overflow `i64`.
+fn rc_to_ir((n, d): RatC) -> Option<IRNode> {
+    if n == 0 {
+        return Some(IRNode::Integer(0));
+    }
+    let n64 = i64::try_from(n).ok()?;
+    if d == 1 {
+        Some(IRNode::Integer(n64))
+    } else {
+        let d64 = i64::try_from(d).ok()?;
+        Some(IRNode::Rational(n64, d64))
+    }
+}
+
+/// Recursively evaluate a closed IR expression that contains only rational
+/// constants and arithmetic (Add, Sub, Mul, Div, Neg) to a `RatC`.
+///
+/// The `to_polynomial_coeffs` helper sometimes returns coefficient nodes like
+/// `Mul(Integer(2), Integer(1))` rather than a bare literal — this function
+/// handles those compound forms.  Returns `None` for any non-rational node
+/// (e.g. one containing a symbol).
+fn eval_numeric_node(node: &IRNode) -> Option<RatC> {
+    match node {
+        IRNode::Integer(n) => rc(*n as i128, 1),
+        IRNode::Rational(n, d) => rc(*n as i128, *d as i128),
+        IRNode::Apply(apply) => {
+            let IRNode::Symbol(head) = &apply.head else {
+                return None;
+            };
+            match (head.as_str(), apply.args.as_slice()) {
+                (MUL, [a, b]) => rc_mul(eval_numeric_node(a)?, eval_numeric_node(b)?),
+                (DIV, [a, b]) => rc_div(eval_numeric_node(a)?, eval_numeric_node(b)?),
+                (NEG, [a]) => Some(rc_neg(eval_numeric_node(a)?)),
+                (ADD, [a, b]) => rc_add(eval_numeric_node(a)?, eval_numeric_node(b)?),
+                (SUB, [a, b]) => rc_sub(eval_numeric_node(a)?, eval_numeric_node(b)?),
+                _ => None,
+            }
+        }
+        _ => None,
+    }
+}
+
+/// Dense rational polynomial: `p[k]` is the coefficient of x^k.
+type RatPoly = Vec<RatC>;
+
+/// Convert the sparse `(degree, IRNode)` output of `to_polynomial_coeffs` to a
+/// dense `RatPoly`.  Returns `None` if any coefficient cannot be evaluated to
+/// an exact rational.
+fn rp_from_poly_vec(pairs: Vec<(usize, IRNode)>) -> Option<RatPoly> {
+    if pairs.is_empty() {
+        return Some(vec![]);
+    }
+    let max_deg = pairs.iter().map(|(k, _)| *k).max()?;
+    let mut result = vec![RC_ZERO; max_deg + 1];
+    for (deg, node) in pairs {
+        result[deg] = eval_numeric_node(&node)?;
+    }
+    Some(result)
+}
+
+/// Effective degree: index of last nonzero coefficient.  Returns `None` for the
+/// zero polynomial.
+fn rp_deg(p: &[RatC]) -> Option<usize> {
+    p.iter()
+        .enumerate()
+        .rev()
+        .find(|(_, c)| !rc_is_zero(**c))
+        .map(|(i, _)| i)
+}
+
+fn rp_is_zero(p: &[RatC]) -> bool {
+    rp_deg(p).is_none()
+}
+
+/// Coefficient of x^`deg` (zero if out of range).
+fn rp_coeff(p: &[RatC], deg: usize) -> RatC {
+    p.get(deg).copied().unwrap_or(RC_ZERO)
+}
+
+/// Pointwise addition of two polynomials.
+fn rp_add(a: &[RatC], b: &[RatC]) -> Option<RatPoly> {
+    let n = a.len().max(b.len());
+    let mut result = Vec::with_capacity(n);
+    for i in 0..n {
+        result.push(rc_add(rp_coeff(a, i), rp_coeff(b, i))?);
+    }
+    Some(result)
+}
+
+/// Subtract polynomial `b` from `a`.
+fn rp_sub_poly(a: &[RatC], b: &[RatC]) -> Option<RatPoly> {
+    let n = a.len().max(b.len());
+    let mut result = Vec::with_capacity(n);
+    for i in 0..n {
+        result.push(rc_sub(rp_coeff(a, i), rp_coeff(b, i))?);
+    }
+    Some(result)
+}
+
+/// Multiply a polynomial by a scalar coefficient.  Returns empty vec for zero scalar.
+fn rp_mul_scalar(p: &[RatC], c: RatC) -> Option<RatPoly> {
+    if rc_is_zero(c) {
+        return Some(vec![]);
+    }
+    p.iter().map(|&coef| rc_mul(coef, c)).collect()
+}
+
+/// Multiply a polynomial by x^`k` (degree shift / prepend k zeros).
+fn rp_shift(p: &[RatC], k: usize) -> RatPoly {
+    let mut result = vec![RC_ZERO; k];
+    result.extend_from_slice(p);
+    result
+}
+
+/// Multiply two polynomials.
+fn rp_mul(a: &[RatC], b: &[RatC]) -> Option<RatPoly> {
+    if a.is_empty() || b.is_empty() {
+        return Some(vec![]);
+    }
+    let deg_a = rp_deg(a).unwrap_or(0);
+    let deg_b = rp_deg(b).unwrap_or(0);
+    let mut result = vec![RC_ZERO; deg_a + deg_b + 1];
+    for (i, &ca) in a.iter().enumerate() {
+        if rc_is_zero(ca) {
+            continue;
+        }
+        for (j, &cb) in b.iter().enumerate() {
+            if rc_is_zero(cb) {
+                continue;
+            }
+            let prod = rc_mul(ca, cb)?;
+            result[i + j] = rc_add(result[i + j], prod)?;
+        }
+    }
+    Some(result)
+}
+
+/// Formal derivative of a polynomial (drops the constant term's contribution).
+fn rp_deriv(p: &[RatC]) -> Option<RatPoly> {
+    if p.len() <= 1 {
+        return Some(vec![]);
+    }
+    // d/dx (c_k · x^k) = k · c_k · x^(k-1); result has one fewer degree
+    p.iter()
+        .enumerate()
+        .skip(1)
+        .map(|(i, &c)| rc_mul(c, (i as i128, 1)))
+        .collect()
+}
+
+/// Antiderivative of a polynomial (integration constant = 0).
+fn rp_integrate(p: &[RatC]) -> Option<RatPoly> {
+    let mut result = vec![RC_ZERO]; // constant term = 0
+    for (i, &c) in p.iter().enumerate() {
+        result.push(rc_div(c, (i as i128 + 1, 1))?);
+    }
+    Some(result)
+}
+
+/// Polynomial long division: returns `(quotient, remainder)` such that
+/// `num = quotient · denom + remainder` with `deg(remainder) < deg(denom)`.
+///
+/// Returns `None` if `denom` is the zero polynomial or if any arithmetic
+/// overflows.
+fn rp_div(num: &[RatC], denom: &[RatC]) -> Option<(RatPoly, RatPoly)> {
+    let denom_deg = rp_deg(denom)?; // returns None for zero denom → propagates
+    let denom_lead = rp_coeff(denom, denom_deg);
+    let num_deg = match rp_deg(num) {
+        Some(d) if d >= denom_deg => d,
+        _ => {
+            // deg(num) < deg(denom): quotient is zero, remainder is num
+            return Some((vec![], num.to_vec()));
+        }
+    };
+
+    let quot_size = num_deg - denom_deg + 1;
+    let mut quotient = vec![RC_ZERO; quot_size];
+    let mut remainder = num.to_vec();
+
+    loop {
+        let rem_deg = match rp_deg(&remainder) {
+            Some(d) if d >= denom_deg => d,
+            _ => break,
+        };
+        let c = rc_div(rp_coeff(&remainder, rem_deg), denom_lead)?;
+        let shift = rem_deg - denom_deg;
+        quotient[shift] = rc_add(quotient[shift], c)?;
+        let term_scaled = rp_mul_scalar(&rp_shift(denom, shift), c)?;
+        remainder = rp_sub_poly(&remainder, &term_scaled)?;
+    }
+
+    Some((quotient, remainder))
+}
+
+/// Convert a dense `RatPoly` to an IR expression in variable `x`.
+/// Zero polynomial → `Integer(0)`.
+fn rp_to_ir(p: &[RatC], x: &str) -> Option<IRNode> {
+    let x_sym = IRNode::Symbol(x.to_string());
+    let mut terms: Vec<IRNode> = Vec::new();
+
+    for (deg, &coef) in p.iter().enumerate() {
+        if rc_is_zero(coef) {
+            continue;
+        }
+        let coef_ir = rc_to_ir(coef)?;
+
+        let monomial: IRNode = match deg {
+            0 => {
+                terms.push(coef_ir);
+                continue;
+            }
+            1 => x_sym.clone(),
+            _ => apply_node(POW, vec![x_sym.clone(), IRNode::Integer(deg as i64)]),
+        };
+
+        if rc_is_one(coef) {
+            terms.push(monomial);
+        } else {
+            terms.push(apply_node(MUL, vec![coef_ir, monomial]));
+        }
+    }
+
+    if terms.is_empty() {
+        return Some(IRNode::Integer(0));
+    }
+
+    Some(
+        terms
+            .into_iter()
+            .reduce(|acc, t| apply_node(ADD, vec![acc, t]))
+            .unwrap(),
+    )
+}
+
+/// Check whether `r = c · d` for some rational `c`; returns `Some(c)` or `None`.
+/// Both polynomials must be nonzero and of the same degree.
+fn rp_proportional(r: &[RatC], d: &[RatC]) -> Option<RatC> {
+    let r_deg = rp_deg(r)?;
+    let d_deg = rp_deg(d)?;
+    if r_deg != d_deg {
+        return None;
+    }
+    let c = rc_div(rp_coeff(r, r_deg), rp_coeff(d, d_deg))?;
+    // Verify every coefficient: c · d[i] == r[i]
+    let max = r_deg;
+    for i in 0..=max {
+        let expected = rc_mul(c, rp_coeff(d, i))?;
+        if expected != rp_coeff(r, i) {
+            return None;
+        }
+    }
+    Some(c)
+}
+
+/// Integer square root: returns `Some(k)` iff `n = k²`, else `None`.
+fn i128_sqrt(n: i128) -> Option<i128> {
+    if n < 0 {
+        return None;
+    }
+    let k = (n as f64).sqrt() as i128;
+    for candidate in [k.saturating_sub(1), k, k.saturating_add(1)] {
+        if candidate >= 0 && candidate.checked_mul(candidate)? == n {
+            return Some(candidate);
+        }
+    }
+    None
+}
+
+/// Rational square root: returns `Some(√(n/d))` iff both numerator and
+/// denominator are perfect squares, else `None`.
+fn rc_sqrt((n, d): RatC) -> Option<RatC> {
+    if n < 0 {
+        return None;
+    }
+    rc(i128_sqrt(n)?, i128_sqrt(d)?)
+}
+
+/// Returns true iff `expr` is a non-constant polynomial of degree exactly 1
+/// in `x` (i.e. of the form a·x + b with a ≠ 0).
+fn is_linear_in(expr: &IRNode, x: &str) -> bool {
+    let Some(pairs) = to_polynomial_coeffs(expr, x) else {
+        return false;
+    };
+    matches!(pairs.iter().map(|(k, _)| *k).max(), Some(1))
+}
+
+/// Attempt to integrate `R(x) / D(x)` for the two cases that arise in
+/// Phase 28 residuals:
+///
+/// - **Case A**: R = c·D′  →  c·log(D)
+/// - **Case B**: R is a constant, D = a₂x²+a₀ (no odd-degree terms),
+///              √(a₀/a₂) is rational  →  r₀/(a₂√(a₀/a₂))·atan(x/√(a₀/a₂))
+///
+/// Returns `None` if neither case applies (signals that Phase 28 falls through).
+fn close_remainder_over_d(
+    r: &[RatC],
+    d: &[RatC],
+    d_prime: &[RatC],
+    d_ir: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    // Case A: R = c · D′  →  c · log(D)
+    if !rp_is_zero(d_prime) {
+        if let Some(c) = rp_proportional(r, d_prime) {
+            let c_ir = rc_to_ir(c)?;
+            let log_d = apply_node(LOG, vec![d_ir.clone()]);
+            return Some(if rc_is_one(c) {
+                log_d
+            } else {
+                apply_node(MUL, vec![c_ir, log_d])
+            });
+        }
+    }
+
+    // Case B: constant remainder over quadratic denominator with rational √
+    if rp_deg(r) != Some(0) {
+        return None;
+    }
+    if rp_deg(d) != Some(2) {
+        return None;
+    }
+
+    let a2 = rp_coeff(d, 2);
+    let a1 = rp_coeff(d, 1);
+    let a0 = rp_coeff(d, 0);
+
+    // No linear term (otherwise denominator has a real root and we'd need
+    // partial fractions with irrational roots)
+    if !rc_is_zero(a1) {
+        return None;
+    }
+
+    // a₀/a₂ must be a positive rational perfect square
+    let ba = rc_div(a0, a2)?;
+    if ba.0 <= 0 {
+        return None;
+    }
+    let sqrt_ba = rc_sqrt(ba)?;
+    if rc_is_zero(sqrt_ba) {
+        return None;
+    }
+
+    // ∫ r₀/(a₂x²+a₀) dx = r₀/(a₂·√(a₀/a₂)) · atan(x/√(a₀/a₂))
+    let r0 = rp_coeff(r, 0);
+    let denom_coef = rc_mul(a2, sqrt_ba)?;
+    let coef = rc_div(r0, denom_coef)?;
+
+    let coef_ir = rc_to_ir(coef)?;
+    let sqrt_ba_ir = rc_to_ir(sqrt_ba)?;
+    let x_sym = IRNode::Symbol(x.to_string());
+
+    // Build atan(x / √(a₀/a₂)).  If √(a₀/a₂) = 1, simplify to atan(x).
+    let atan_arg = if rc_is_one(sqrt_ba) {
+        x_sym
+    } else {
+        apply_node(DIV, vec![x_sym, sqrt_ba_ir])
+    };
+    let atan_node = apply_node(ATAN, vec![atan_arg]);
+
+    Some(if rc_is_one(coef) {
+        atan_node
+    } else {
+        apply_node(MUL, vec![coef_ir, atan_node])
+    })
+}
+
+/// Core rational function integrator (Phase 28 residuals).
+///
+/// Given `N / D` as `RatPoly` representations plus the original IR form of `D`
+/// (for building log/atan nodes), integrates by:
+///
+/// 1. Polynomial long division: N = Q·D + R
+/// 2. Integrate Q → polynomial antiderivative
+/// 3. Close R/D using `close_remainder_over_d` (Cases A/B)
+///
+/// Returns `None` if the remainder cannot be closed in Cases A/B.
+fn integrate_rational_simple_rp(
+    num_rp: &[RatC],
+    denom_rp: &[RatC],
+    denom_ir: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    if rp_is_zero(denom_rp) {
+        return None;
+    }
+
+    let d_prime_rp = rp_deriv(denom_rp)?;
+    let (quotient, remainder) = rp_div(num_rp, denom_rp)?;
+
+    // ∫ Q dx (polynomial antiderivative)
+    let quot_integral_ir: Option<IRNode> = if rp_is_zero(&quotient) {
+        None
+    } else {
+        let qi = rp_integrate(&quotient)?;
+        Some(rp_to_ir(&qi, x)?)
+    };
+
+    // ∫ R/D dx (Cases A/B)
+    let rem_integral_ir: Option<IRNode> = if rp_is_zero(&remainder) {
+        None
+    } else {
+        Some(close_remainder_over_d(
+            &remainder,
+            denom_rp,
+            &d_prime_rp,
+            denom_ir,
+            x,
+        )?)
+    };
+
+    let terms: Vec<IRNode> = [quot_integral_ir, rem_integral_ir]
+        .into_iter()
+        .flatten()
+        .collect();
+
+    Some(match terms.len() {
+        0 => IRNode::Integer(0),
+        1 => terms.into_iter().next().unwrap(),
+        _ => terms
+            .into_iter()
+            .reduce(|a, b| apply_node(ADD, vec![a, b]))
+            .unwrap(),
+    })
+}
+
+/// Phase 28: ``∫ P(x) · log(Q(x)) dx`` for non-linear polynomial Q.
+///
+/// IBP (u = log Q, dv = P dx):
+///   ∫ P·log(Q) dx  =  R·log(Q) − ∫ R·Q′/Q dx
+/// where R = ∫P (antiderivative, constant = 0).
+///
+/// `transcendental` must be `Log(Q)` and `poly_candidate` must be a
+/// polynomial in x.  Linear Q is excluded (handled by earlier phases).
+fn try_log_poly_product(
+    transcendental: &IRNode,
+    poly_candidate: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if head.as_str() != LOG || apply.args.len() != 1 {
+        return None;
+    }
+    let q_ir = &apply.args[0];
+
+    // Q must depend on x and be non-linear (linear Q goes to Phase 3)
+    if !depends_on(q_ir, x) || is_linear_in(q_ir, x) {
+        return None;
+    }
+
+    // Extract Q and P as rational polynomials
+    let q_rp = rp_from_poly_vec(to_polynomial_coeffs(q_ir, x)?)?;
+    let p_rp = rp_from_poly_vec(to_polynomial_coeffs(poly_candidate, x)?)?;
+
+    // R = ∫P (constant = 0)
+    let r_rp = rp_integrate(&p_rp)?;
+    let r_ir = rp_to_ir(&r_rp, x)?;
+
+    // Q′ = derivative of Q (exact rational arithmetic)
+    let q_prime_rp = rp_deriv(&q_rp)?;
+
+    // Residual numerator: N = R · Q′
+    let n_rp = rp_mul(&r_rp, &q_prime_rp)?;
+
+    // Integrate N / Q
+    let residual = integrate_rational_simple_rp(&n_rp, &q_rp, q_ir, x)?;
+
+    // Result: R · log(Q) − residual
+    let main_term = apply_node(MUL, vec![r_ir, transcendental.clone()]);
+    Some(apply_node(SUB, vec![main_term, residual]))
+}
+
+/// Phase 28: ``∫ P(x) · atan(Q(x)) dx`` for non-linear polynomial Q.
+///
+/// IBP (u = atan Q, dv = P dx):
+///   ∫ P·atan(Q) dx  =  R·atan(Q) − ∫ R·Q′/(1+Q²) dx
+/// where R = ∫P (antiderivative, constant = 0).
+fn try_atan_poly_product(
+    transcendental: &IRNode,
+    poly_candidate: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if head.as_str() != ATAN || apply.args.len() != 1 {
+        return None;
+    }
+    let q_ir = &apply.args[0];
+
+    // Q must depend on x and be non-linear (linear Q left to future Phase 11)
+    if !depends_on(q_ir, x) || is_linear_in(q_ir, x) {
+        return None;
+    }
+
+    // Extract Q and P as rational polynomials
+    let q_rp = rp_from_poly_vec(to_polynomial_coeffs(q_ir, x)?)?;
+    let p_rp = rp_from_poly_vec(to_polynomial_coeffs(poly_candidate, x)?)?;
+
+    // R = ∫P (constant = 0)
+    let r_rp = rp_integrate(&p_rp)?;
+    let r_ir = rp_to_ir(&r_rp, x)?;
+
+    // Q′ = derivative of Q
+    let q_prime_rp = rp_deriv(&q_rp)?;
+
+    // Residual numerator: N = R · Q′
+    let n_rp = rp_mul(&r_rp, &q_prime_rp)?;
+
+    // Denominator: D = 1 + Q²
+    let q_sq_rp = rp_mul(&q_rp, &q_rp)?;
+    let one_rp: RatPoly = vec![RC_ONE];
+    let d_rp = rp_add(&one_rp, &q_sq_rp)?;
+
+    // D as IR: 1 + Q² (used inside log nodes constructed by close_remainder_over_d)
+    let d_ir = apply_node(
+        ADD,
+        vec![
+            IRNode::Integer(1),
+            apply_node(POW, vec![q_ir.clone(), IRNode::Integer(2)]),
+        ],
+    );
+
+    // Integrate N / D
+    let residual = integrate_rational_simple_rp(&n_rp, &d_rp, &d_ir, x)?;
+
+    // Result: R · atan(Q) − residual
+    let main_term = apply_node(MUL, vec![r_ir, transcendental.clone()]);
+    Some(apply_node(SUB, vec![main_term, residual]))
 }
 
 fn integrate_power_of_x(exponent: &IRNode, x: &str) -> IRNode {

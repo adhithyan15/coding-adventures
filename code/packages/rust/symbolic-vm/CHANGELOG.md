@@ -1,5 +1,78 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.5.0] — 2026-05-18
+
+### Added — Phase 28: general IBP for poly×log(Q) and poly×atan(Q)
+
+Extends symbolic integration to handle products of a polynomial `P(x)` with
+`log(Q(x))` or `atan(Q(x))` where `Q(x)` is a **non-linear** polynomial with
+rational coefficients.  Uses the IBP formula:
+
+  ∫ P·log(Q) dx  =  R·log(Q) − ∫ R·Q′/Q dx
+  ∫ P·atan(Q) dx =  R·atan(Q) − ∫ R·Q′/(1+Q²) dx
+
+where R = ∫P (polynomial antiderivative, constant = 0).
+
+**New functions:**
+
+- `try_log_poly_product(transcendental, poly, x)` — Phase 28 log IBP handler;
+  skips linear Q (deferred to Phase 3) and integrates the residual via
+  `integrate_rational_simple_rp`.
+- `try_atan_poly_product(transcendental, poly, x)` — Phase 28 atan IBP handler;
+  skips linear Q and integrates the residual via `integrate_rational_simple_rp`.
+- `integrate_rational_simple_rp(num_rp, denom_rp, denom_ir, x)` — targeted
+  rational function integrator for Phase 28 residuals.  After polynomial long
+  division:
+  - **Case A**: remainder = c·D′ → c·log(D)
+  - **Case B**: constant remainder / quadratic ax²+b with rational √(b/a)
+                → r₀/(a₂·√(a₀/a₂))·atan(x/√(a₀/a₂))
+- `close_remainder_over_d(r, d, d_prime, d_ir, x)` — attempts Cases A/B for
+  the post-division remainder polynomial.
+- `eval_numeric_node(node)` — evaluates a closed IR numeric expression
+  (handling Mul/Div/Neg/Add/Sub of exact rationals) to a `RatC` value;
+  used by `rp_from_poly_vec` to extract rational coefficients from compound
+  coefficient nodes produced by `to_polynomial_coeffs`.
+- `is_linear_in(expr, x)` — returns true iff the expression is a non-constant
+  linear polynomial in `x`; used to guard the Phase 28 arms.
+
+**Rational polynomial arithmetic helpers** (used internally by Phase 28):
+`gcd128`, `rc`, `rc_neg`, `rc_add`, `rc_sub`, `rc_mul`, `rc_div`, `rc_to_ir`,
+`eval_numeric_node`, `rp_from_poly_vec`, `rp_deg`, `rp_is_zero`, `rp_coeff`,
+`rp_add`, `rp_sub_poly`, `rp_mul_scalar`, `rp_shift`, `rp_mul`, `rp_deriv`,
+`rp_integrate`, `rp_div`, `rp_to_ir`, `rp_proportional`, `i128_sqrt`,
+`rc_sqrt`.
+
+The arithmetic layer uses `RatC = (i128, i128)` and `RatPoly = Vec<RatC>` with
+`i128` to give headroom for cross-multiplications without overflow.
+
+**Dispatch wiring:**
+- MUL branch: after Phase 27, tries `try_log_poly_product(a,b,x)` and
+  `try_atan_poly_product(a,b,x)` (and symmetric variants) for both-depend cases.
+- Bare function path: `∫ log(Q) dx` (P=1) and `∫ atan(Q) dx` (P=1) are
+  detected via new `(LOG, [q]) if …!is_linear_in` and `(ATAN, [q]) if …` arms.
+
+**Examples that now evaluate:**
+- `∫ log(x²+1) dx` = x·log(x²+1) − 2x + 2·atan(x)
+- `∫ x·log(x²+1) dx` = (x²/2)·log(x²+1) − x²/2 + ½·log(x²+1)
+- `∫ x²·log(x²+1) dx` = (x³/3)·log(x²+1) − 2x³/9 + 2x/3 − (2/3)·atan(x)
+- `∫ x·atan(x²) dx` = (x²/2)·atan(x²) − ¼·log(1+x⁴)
+
+**Fallthrough cases** (correctly left unevaluated):
+- `∫ atan(x²) dx` — residual 2x²/(1+x⁴) requires irrational partial fractions
+- `∫ atan(x) dx` — linear Q, not intercepted by Phase 28
+
+**Tests added** (9 new tests):
+- `phase28_log_x2p1_is_closed` — closed-form structure check
+- `phase28_log_x2p1_numeric` — numerical correctness ∫₀¹ log(x²+1) dx
+- `phase28_x_log_x2p1_is_closed` — closed-form structure check
+- `phase28_x_log_x2p1_numeric` — numerical correctness
+- `phase28_x2_log_x2p1_numeric` — numerical correctness
+- `phase28_atan_x2_fallthrough` — stays unevaluated
+- `phase28_x_atan_x2_is_closed` — closed-form structure check
+- `phase28_x_atan_x2_numeric` — numerical correctness
+- `phase28_regression_log_x_still_phase3` — Phase 3 regression
+- `phase28_regression_atan_x_stays_unevaluated` — linear atan regression
+
 ## [0.4.0] — 2026-05-16
 
 ### Added — Phase 26: log-power integration via IBP reduction

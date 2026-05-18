@@ -1,5 +1,68 @@
 # Changelog
 
+## [0.5.0] — 2026-05-18
+
+### Added — Phase 28: general IBP for poly×log(Q) and poly×atan(Q)
+
+Extends symbolic integration to handle products of a polynomial `P(x)` with
+`log(Q(x))` or `atan(Q(x))` where `Q(x)` is a **non-linear** polynomial with
+rational coefficients.  Uses the IBP formula:
+
+  ∫ P·log(Q) dx  =  R·log(Q) − ∫ R·Q′/Q dx
+  ∫ P·atan(Q) dx =  R·atan(Q) − ∫ R·Q′/(1+Q²) dx
+
+where R = ∫P (polynomial antiderivative, constant = 0).
+
+**New functions:**
+
+- `tryLogPolyProduct(transcendental, poly, x)` — Phase 28 log IBP handler;
+  skips linear Q (deferred to Phase 3) and delegates the residual to
+  `integrateRationalSimple`.
+- `tryAtanPolyProduct(transcendental, poly, x)` — Phase 28 atan IBP handler;
+  skips linear Q (deferred to Phase 11 if/when implemented) and delegates
+  the residual to `integrateRationalSimple`.
+- `integrateRationalSimple(N_ir, D_ir, x)` — targeted rational function
+  integrator for Phase 28 residuals.  After polynomial long division:
+  - **Case A**: remainder = c·D′ → c·log(D)
+  - **Case B**: constant remainder / quadratic ax²+b with rational √(b/a)
+                → r₀/(a₂·√(a₀/a₂))·atan(x/√(a₀/a₂))
+- `closeRemainderOverD(R, D, D′, D_ir, x)` — attempts Cases A/B for the
+  post-division remainder polynomial.
+- `evalNumericNode(node)` — evaluates a closed IR numeric expression
+  (handling MUL/DIV/NEG/ADD/SUB of exact rationals) to a `Numeric` value;
+  used by `rpFromCoeffsMap` to extract rational coefficients from compound
+  coefficient nodes produced by `toPolynomialCoeffs`.
+
+**Rational polynomial arithmetic helpers** (used internally by Phase 28):
+`rc`, `rcAdd`, `rcSub`, `rcMul`, `rcDiv`, `rcToIR`, `rpDeg`, `rpCoeff`,
+`rpAdd`, `rpMul`, `rpDeriv`, `rpIntegrate`, `rpDiv`, `rpToIR`,
+`rpFromCoeffsMap`, `rpProportional`, `bigIntSqrt`, `rcSqrt`, `isLinearIn`.
+
+**Dispatch wiring:**
+- MUL branch: after Phase 27, tries `tryLogPolyProduct(a,b,x)` and
+  `tryAtanPolyProduct(a,b,x)` (and symmetric variants) for both-depend cases.
+- Bare function path: `∫ log(Q) dx` (P=1) and `∫ atan(Q) dx` (P=1) are
+  detected via head checks before the final `return undefined`.
+
+**Examples that now evaluate:**
+- `∫ log(x²+1) dx` = x·log(x²+1) − 2x + 2·atan(x)
+- `∫ x·log(x²+1) dx` = (x²/2)·log(x²+1) − x²/2 + ½·log(x²+1)
+- `∫ x²·log(x²+1) dx` = (x³/3)·log(x²+1) − 2x³/9 + 2x/3 − (2/3)·atan(x)
+- `∫ x·atan(x²) dx` = (x²/2)·atan(x²) − ¼·log(1+x⁴)
+
+**Fallthrough cases** (correctly left unevaluated):
+- `∫ atan(x²) dx` — residual 2x²/(1+x⁴) requires irrational partial fractions
+- `∫ x²·atan(x²) dx` — same reason
+
+**Tests added:**
+- `Phase 28: ∫ log(x²+1) dx` — closed-form structure and numerical check
+- `Phase 28: ∫ x·log(x²+1) dx` — closed-form and numerical check
+- `Phase 28: ∫ x²·log(x²+1) dx` — numerical check
+- `Phase 28: ∫ atan(x²) dx fallthrough` — stays unevaluated
+- `Phase 28: ∫ x·atan(x²) dx` — closed-form structure and numerical check
+- `Phase 28: regression — ∫ log(x) dx still handled by Phase 3`
+- `Phase 28: regression — ∫ atan(x) dx not intercepted by Phase 28`
+
 ## [0.4.0] — 2026-05-16
 
 ### Added — Phase 26: log-power integration via IBP reduction
