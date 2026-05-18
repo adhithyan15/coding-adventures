@@ -1,10 +1,18 @@
 // Grid.dark.msl — dark theme for the spreadsheet grid (UI26 §4.2).
 //
-// Note: state blocks (hover/selected/editing) are tracked by the
-// pipeline emitter as a known limitation — the inline conditional
-// `style={{ ... }}` expression in the Grid emitter handles
-// selected/editing highlights directly from the slot refs, so we
-// don't repeat the colors here.
+// Sub-part vocabulary (UI27 §5):
+//   sheet              — the outer <table>
+//   sheet/cell         — every body <td> (gridlines live here)
+//   sheet/header-cell  — every column-header <th>
+//   sheet/header-row   — the <tr> inside <thead>
+//   sheet/data-row     — every <tr> inside <tbody>
+//
+// State blocks (hover/selected/editing) are still handled by the
+// emitter's inline conditional `style={{ ... }}` spread — the Grid
+// component reads selected-row / selected-col / edit-row / edit-col
+// slots and merges per-cell highlight styles on top of `sheet/cell`.
+// Today those highlight colours are hardcoded in the emitter; a
+// follow-up will route them through the design tokens here.
 
 style Grid {
   part sheet {
@@ -14,5 +22,39 @@ style Grid {
     background:      #1e1e1e ;
     border-collapse: collapse ;
     width:           100% ;
+  }
+
+  // Body cells. The `border-*` triplet draws the gridlines that
+  // were missing in the first demo cut.
+  part sheet/cell {
+    border-width: 1px ;
+    border-style: solid ;
+    border-color: #3f3f46 ;
+    padding:      2px ;
+    height:       22px ;
+  }
+
+  // Column-header cells (the labels A, B, C, ... at the top).
+  part sheet/header-cell {
+    background:  #2d2d30 ;
+    color:       #9d9d9d ;
+    font-weight: normal ;
+    text-align:  center ;
+    border-width: 1px ;
+    border-style: solid ;
+    border-color: #3f3f46 ;
+  }
+
+  // The header row itself sets the row height; useful when the
+  // first column eventually gains row numbers.
+  part sheet/header-row {
+    height: 24px ;
+  }
+
+  // Body data rows share the cell height. Once row-stripe styling
+  // arrives (UI27 §5 `data-row:even`), alternating backgrounds will
+  // also live here.
+  part sheet/data-row {
+    height: 22px ;
   }
 }

@@ -51,9 +51,19 @@ style_def = KEYWORD NAME LBRACE { part_def } RBRACE ;
 # ============================================================================
 # Part block
 # ============================================================================
-# part part-name { part_item* }
+# part <part-path> { part_item* }
+#
+# `part-path` is one or more kebab-case NAMEs joined by `/`. Single-segment
+# paths address top-level parts the .mll file declares (`part sheet { ... }`);
+# multi-segment paths address sub-parts the primitive emits internally
+# (`part sheet/cell { ... }`, `part sheet/header-cell { ... }`). The .msl
+# compiler stores the entire path string as the part name; the emitter
+# matches sub-parts at the synthesised-element level when rendering.
+# See UI27 §3 for the full motivation and §5 for the Grid sub-part
+# vocabulary (cell, header-cell, header-row, data-row, etc.).
 
-part_def = KEYWORD NAME LBRACE { part_item } RBRACE ;
+part_def = KEYWORD part_path LBRACE { part_item } RBRACE ;
+part_path = NAME { SLASH NAME } ;
 
 # ============================================================================
 # Part items

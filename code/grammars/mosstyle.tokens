@@ -65,3 +65,12 @@ RPAREN    = ")"
 SEMICOLON = ";"
 COLON     = ":"
 COMMA     = ","
+# SLASH separates a part name from a sub-part name, e.g. `part sheet/cell`.
+# Per UI27 §3.1: a part block may declare sub-parts using a slash-separated
+# path. The slash means "the sub-part named on the right, of the parent
+# part on the left." Lets authors style the internal structure of
+# primitives (Grid cells, header cells, rows) that the emitter synthesises
+# below the top-level part. Note: the SLASH token must NOT collide with
+# the line-comment / block-comment skip rules — those use `//` and `/*`
+# and are recognised by the longer-match lexer ordering (skip rules first).
+SLASH     = "/"
