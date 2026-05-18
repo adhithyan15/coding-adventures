@@ -29,6 +29,8 @@ describe("coding_adventures.board_vm_native", function()
         assert.is_true(capabilities["uart.open"])
         assert.is_true(capabilities["uart.write"])
         assert.is_true(capabilities["uart.read"])
+        assert.is_true(capabilities["storage.write"])
+        assert.is_true(capabilities["storage.read"])
         assert.are.equal(uno.digital_pin_count, #uno.digital_pins)
         local d3 = nil
         for _, pin in ipairs(uno.digital_pins) do

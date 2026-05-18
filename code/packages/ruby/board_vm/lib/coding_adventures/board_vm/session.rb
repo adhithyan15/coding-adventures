@@ -257,6 +257,24 @@ module CodingAdventures
         native_session.watchdog_kick_module(max_stack)
       end
 
+      def storage_write_module(region:, offset:, bytes:, max_stack: 3)
+        native_session.storage_write_module(
+          byte_value(region),
+          u16_value(offset, "offset"),
+          storage_bytes_value(bytes),
+          max_stack
+        )
+      end
+
+      def storage_read_module(region:, offset:, length:, max_stack: 3)
+        native_session.storage_read_module(
+          byte_value(region),
+          u16_value(offset, "offset"),
+          storage_read_length_value(length),
+          max_stack
+        )
+      end
+
       def spi_transfer_module(cs_pin:, write_bytes:, read_length:, max_stack: 5)
         native_session.spi_transfer_module(
           cs_pin,
@@ -479,6 +497,42 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: watchdog_kick_module(max_stack: max_stack)
+        )
+      end
+
+      def upload_storage_write(
+        program_id: @program_id,
+        region:,
+        offset:,
+        bytes:,
+        max_stack: 3
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: storage_write_module(
+            region: region,
+            offset: offset,
+            bytes: bytes,
+            max_stack: max_stack
+          )
+        )
+      end
+
+      def upload_storage_read(
+        program_id: @program_id,
+        region:,
+        offset:,
+        length:,
+        max_stack: 3
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: storage_read_module(
+            region: region,
+            offset: offset,
+            length: length,
+            max_stack: max_stack
+          )
         )
       end
 
@@ -1188,6 +1242,70 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def storage_write(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        region:,
+        offset:,
+        bytes:,
+        max_stack: 3,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(
+          upload_storage_write(
+            program_id: program_id,
+            region: region,
+            offset: offset,
+            bytes: bytes,
+            max_stack: max_stack
+          ).results
+        )
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget
+        )
+        SessionResult.new(results: results)
+      end
+
+      def storage_read(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        region:,
+        offset:,
+        length:,
+        max_stack: 3,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(
+          upload_storage_read(
+            program_id: program_id,
+            region: region,
+            offset: offset,
+            length: length,
+            max_stack: max_stack
+          ).results
+        )
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget
+        )
+        SessionResult.new(results: results)
+      end
+
       def spi_transfer(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -1609,6 +1727,10 @@ module CodingAdventures
         when "upload-watchdog-kick", "upload-watchdog.kick"
           ensure_no_extra_arguments!(words, command)
           upload_watchdog_kick(**options)
+        when "upload-storage-write", "upload-storage.write"
+          upload_storage_write(**storage_write_command_options(words, command, options, require_budget: false))
+        when "upload-storage-read", "upload-storage.read"
+          upload_storage_read(**storage_read_command_options(words, command, options, require_budget: false))
         when "upload-spi-transfer", "upload-spi.transfer"
           upload_spi_transfer(**spi_transfer_command_options(words, command, options, require_budget: false))
         when "upload-spi-write", "upload-spi.write"
@@ -1685,6 +1807,10 @@ module CodingAdventures
           watchdog_configure(**watchdog_configure_command_options(words, command, options))
         when "watchdog-kick", "watchdog.kick"
           watchdog_kick(**options.merge(optional_budget(words, command)))
+        when "storage-write", "storage.write"
+          storage_write(**storage_write_command_options(words, command, options))
+        when "storage-read", "storage.read"
+          storage_read(**storage_read_command_options(words, command, options))
         when "spi-transfer", "spi.transfer"
           spi_transfer(**spi_transfer_command_options(words, command, options))
         when "spi-write", "spi.write"
@@ -2008,6 +2134,42 @@ module CodingAdventures
         merged
       end
 
+      def storage_write_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:region] = byte_value(words.shift) unless words.empty?
+        merged[:offset] = u16_value(words.shift, "#{command} offset") unless words.empty?
+        merged[:bytes] = storage_bytes_argument(words.shift, "#{command} bytes") unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires region" unless merged.key?(:region)
+        raise ArgumentError, "#{command} requires offset" unless merged.key?(:offset)
+        raise ArgumentError, "#{command} requires bytes" unless merged.key?(:bytes)
+
+        merged
+      end
+
+      def storage_read_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:region] = byte_value(words.shift) unless words.empty?
+        merged[:offset] = u16_value(words.shift, "#{command} offset") unless words.empty?
+        merged[:length] = storage_read_length_value(words.shift) unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires region" unless merged.key?(:region)
+        raise ArgumentError, "#{command} requires offset" unless merged.key?(:offset)
+        raise ArgumentError, "#{command} requires length" unless merged.key?(:length)
+
+        merged
+      end
+
       def i2c_write_u8_command_options(words, command, options, require_budget: true)
         merged = options.dup
         merged[:address] = integer_argument(words.shift, "#{command} address") unless words.empty?
@@ -2262,6 +2424,8 @@ module CodingAdventures
 
       alias spi_bytes_value i2c_bytes_value
       alias spi_bytes_argument i2c_bytes_argument
+      alias storage_bytes_value i2c_bytes_value
+      alias storage_bytes_argument i2c_bytes_argument
 
       def i2c_read_length_value(value)
         byte_buffer_read_length_value(value, "I2C")
@@ -2269,6 +2433,10 @@ module CodingAdventures
 
       def spi_read_length_value(value)
         byte_buffer_read_length_value(value, "SPI")
+      end
+
+      def storage_read_length_value(value)
+        byte_buffer_read_length_value(value, "Storage")
       end
 
       def byte_buffer_read_length_value(value, label)
@@ -2291,6 +2459,21 @@ module CodingAdventures
         raise ArgumentError, "byte must fit in u8" if byte.negative? || byte > 0xFF
 
         byte
+      end
+
+      def u16_value(value, name)
+        integer = if value.is_a?(Integer)
+          value
+        else
+          begin
+            Integer(value, 0)
+          rescue ArgumentError
+            raise ArgumentError, "#{name} must be an integer: #{value.inspect}"
+          end
+        end
+        raise ArgumentError, "#{name} must fit in u16" if integer.negative? || integer > 0xFFFF
+
+        integer
       end
 
       def u32_value(value, name)
