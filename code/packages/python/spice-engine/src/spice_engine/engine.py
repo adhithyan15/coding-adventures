@@ -53,7 +53,7 @@ import math
 import random
 import re
 import statistics
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from spice_engine.elements import (
     AcSource,
@@ -273,6 +273,7 @@ class AcPoint:
 
     freq: float
     node_voltages: dict[str, complex]
+    branch_currents: dict[str, complex] = field(default_factory=dict)
 
 
 @dataclass
@@ -287,6 +288,27 @@ class AcResult:
     """
 
     points: list[AcPoint]
+
+
+@dataclass(frozen=True)
+class SParameterPoint:
+    """Two-port scattering parameters at one frequency point."""
+
+    freq: float
+    s11: complex
+    s21: complex
+    s12: complex
+    s22: complex
+
+
+@dataclass(frozen=True)
+class SParameterResult:
+    """Two-port S-parameter sweep result."""
+
+    port1_source: str
+    port2_source: str
+    reference_impedance: float
+    points: list[SParameterPoint]
 
 
 @dataclass(frozen=True)
@@ -2556,9 +2578,134 @@ def ac_sweep(
             x_c = [0j] * size  # singular — return zeros for this frequency
 
         node_v = {name: x_c[idx] for name, idx in node_to_idx.items()}
-        ac_points.append(AcPoint(freq=freq, node_voltages=node_v))
+        branch_i = {
+            f"I({src.name})": x_c[n_nodes + i] for i, src in enumerate(branch_srcs)
+        }
+        ac_points.append(AcPoint(freq=freq, node_voltages=node_v, branch_currents=branch_i))
 
     return AcResult(points=ac_points)
+
+
+def _circuit_with_sparameter_drive(
+    circuit: Circuit,
+    port_sources: tuple[str, str],
+    driven_source: str,
+) -> Circuit:
+    elements: list[Element] = []
+    seen_ports: set[str] = set()
+    port_set = set(port_sources)
+
+    for element in circuit.elements:
+        if isinstance(element, VoltageSource) and element.name in port_set:
+            seen_ports.add(element.name)
+            magnitude = 1.0 if element.name == driven_source else 0.0
+            elements.append(replace(element, ac=AcSource(magnitude=magnitude)))
+        else:
+            elements.append(element)
+
+    missing = [source for source in port_sources if source not in seen_ports]
+    if missing:
+        raise ValueError(f"s_parameters: missing voltage-source port(s): {missing}")
+
+    return Circuit(elements)
+
+
+def _branch_current_into_network(point: AcPoint, source_name: str) -> complex:
+    key = source_name if source_name.startswith("I(") else f"I({source_name})"
+    if key not in point.branch_currents:
+        raise ValueError(f"s_parameters: missing branch current for {source_name!r}")
+    return -point.branch_currents[key]
+
+
+def _y_to_s_2port(
+    y11: complex,
+    y21: complex,
+    y12: complex,
+    y22: complex,
+    z0: float,
+) -> tuple[complex, complex, complex, complex]:
+    a11 = 1.0 - z0 * y11
+    a12 = -z0 * y12
+    a21 = -z0 * y21
+    a22 = 1.0 - z0 * y22
+
+    b11 = 1.0 + z0 * y11
+    b12 = z0 * y12
+    b21 = z0 * y21
+    b22 = 1.0 + z0 * y22
+    det = b11 * b22 - b12 * b21
+    if abs(det) < 1.0e-18:
+        raise ZeroDivisionError("s_parameters: singular Y-to-S conversion")
+
+    inv_b11 = b22 / det
+    inv_b12 = -b12 / det
+    inv_b21 = -b21 / det
+    inv_b22 = b11 / det
+
+    return (
+        a11 * inv_b11 + a12 * inv_b21,
+        a21 * inv_b11 + a22 * inv_b21,
+        a11 * inv_b12 + a12 * inv_b22,
+        a21 * inv_b12 + a22 * inv_b22,
+    )
+
+
+def s_parameters(
+    circuit: Circuit,
+    *,
+    port1_source: str,
+    port2_source: str,
+    frequencies: list[float],
+    reference_impedance: float = 50.0,
+) -> SParameterResult:
+    """Extract two-port S-parameters from AC small-signal solves.
+
+    The two ports are represented by named independent voltage sources.  For
+    each frequency the engine drives one port source with a 1 V AC phasor,
+    shorts the other port source with a 0 V AC phasor, measures the port
+    currents, builds the 2x2 Y-parameter matrix, then converts Y to S for the
+    requested reference impedance.
+    """
+    if reference_impedance <= 0.0 or not math.isfinite(reference_impedance):
+        raise ValueError("s_parameters: reference_impedance must be finite and positive")
+    if any(freq <= 0.0 or not math.isfinite(freq) for freq in frequencies):
+        raise ValueError("s_parameters: frequencies must be finite and positive")
+
+    ports = (port1_source, port2_source)
+    points: list[SParameterPoint] = []
+    for freq in frequencies:
+        y_columns: list[tuple[complex, complex]] = []
+        for driven in ports:
+            driven_circuit = _circuit_with_sparameter_drive(circuit, ports, driven)
+            ac_point = ac_sweep(
+                driven_circuit,
+                f_start=freq,
+                f_stop=freq,
+                n_points=1,
+                sweep="lin",
+            ).points[0]
+            y_columns.append(
+                (
+                    _branch_current_into_network(ac_point, port1_source),
+                    _branch_current_into_network(ac_point, port2_source),
+                )
+            )
+
+        s11, s21, s12, s22 = _y_to_s_2port(
+            y_columns[0][0],
+            y_columns[0][1],
+            y_columns[1][0],
+            y_columns[1][1],
+            reference_impedance,
+        )
+        points.append(SParameterPoint(freq=freq, s11=s11, s21=s21, s12=s12, s22=s22))
+
+    return SParameterResult(
+        port1_source=port1_source,
+        port2_source=port2_source,
+        reference_impedance=reference_impedance,
+        points=points,
+    )
 
 
 # Keep the cmath import visible to callers that ``from spice_engine import cmath``

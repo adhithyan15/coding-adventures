@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Two-port S-parameter extraction** — `s_parameters` derives a two-port
+  Y-parameter matrix from named AC voltage-source ports and converts it to
+  S11/S21/S12/S22 for a configurable reference impedance.
+
 - **Sparse real solver path** — large DC / real small-signal matrices now route
   through a sparse-row Gaussian elimination path while small systems keep the
   dense solver.

@@ -106,9 +106,10 @@ IC parameters for C/L; AC phasor specs for V/I sources.
 
 ### What is in flight
 
-- Sparse real solver path across Python, TypeScript, and Rust SPICE engines:
-  large DC / real small-signal matrices route through sparse-row Gaussian
-  elimination while small systems keep the dense solver.
+- Two-port S-parameter extraction across Python, TypeScript, and Rust SPICE
+  engines: named AC voltage-source ports are used to build a 2x2 Y-parameter
+  matrix and convert it to S11/S21/S12/S22 for a configurable reference
+  impedance.
 
 ---
 
@@ -122,16 +123,14 @@ All Group 1 items have shipped. See "What is on main" above.
 
 #### Group 2 — Medium value
 
-| Feature | Why it matters | Design notes |
-|---|---|---|
-| **Sub-circuit support (`.subckt` / X-element)** | Essential for hierarchical design — reusing a cell (e.g. an inverter) multiple times with different parameter values. | Add an `XInstance` element class. At circuit build time, expand each X-element by cloning its `.subckt` definition with renamed nodes (prefix with instance name). Parameters propagate via a dict of `{param: value}` substitutions. |
-| **Sparse matrix solver** | Dense LU is O(n³). At ~100 nodes it becomes the bottleneck. SPICE netlists for a small IC cell can have 300+ nodes. | Replace `numpy.linalg.solve` with `scipy.sparse.linalg.splu` (already a dependency). MNA matrices are naturally sparse (each element touches only 2–4 nodes). Keep dense path as fallback for small circuits (< 30 nodes). |
+All Group 2 items have shipped: programmatic subcircuits landed in PR #3389
+and the sparse real solver path landed in PR #3391.
 
 #### Group 3 — Lower priority / longer horizon
 
 | Feature | Design notes |
 |---|---|
-| **S-parameter extraction** | Two-port network characterisation. Run AC sweep, compute Y-parameters from node voltages and port currents, convert to S-parameters. |
+| **S-parameter extraction** | Two-port network characterisation. Run AC sweep, compute Y-parameters from node voltages and port currents, convert to S-parameters. In flight across Python, TypeScript, and Rust. |
 | **Periodic steady-state (PSS)** | RF / oscillator analysis. Shooting-Newton method: find the initial condition `x(0)` such that `x(T) = x(0)`. Requires a good oscillation-period estimator. |
 | **Multi-corner parallel sweep** | Run the same analysis at N PVT corners in parallel goroutines / subprocesses. Mostly an orchestration problem once the core engine is solid. |
 | **Mixed-signal coupling with `hardware-vm`** | AMS simulation — digital events feed into analog SPICE nodes and vice versa. Long-range project; `hardware-vm.md` spec describes the interface. |

@@ -1460,6 +1460,23 @@ impl AcPoint {
     }
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct SParameterPoint {
+    pub frequency_hz: f64,
+    pub s11: Complex,
+    pub s21: Complex,
+    pub s12: Complex,
+    pub s22: Complex,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct SParameterResult {
+    pub port1_source: String,
+    pub port2_source: String,
+    pub reference_impedance_ohms: f64,
+    pub points: Vec<SParameterPoint>,
+}
+
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub enum NoiseType {
     Thermal,
@@ -1950,6 +1967,161 @@ pub fn ac_sweep(
         frequency *= ratio;
     }
     Ok(points)
+}
+
+pub fn s_parameters(
+    circuit: &Circuit,
+    port1_source: &str,
+    port2_source: &str,
+    frequencies_hz: &[f64],
+    reference_impedance_ohms: f64,
+) -> Result<SParameterResult, SpiceError> {
+    if !reference_impedance_ohms.is_finite() || reference_impedance_ohms <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "s_parameters".to_string(),
+            reason: "reference impedance must be finite and positive".to_string(),
+        });
+    }
+    for frequency in frequencies_hz {
+        if !frequency.is_finite() || *frequency <= 0.0 {
+            return Err(SpiceError::InvalidElement {
+                name: "s_parameters".to_string(),
+                reason: "frequencies must be finite and positive".to_string(),
+            });
+        }
+    }
+
+    let ports = [port1_source, port2_source];
+    validate_sparameter_ports(circuit, &ports)?;
+
+    let mut points = Vec::new();
+    for frequency_hz in frequencies_hz {
+        let mut columns = Vec::new();
+        for driven_source in ports {
+            let driven_circuit = circuit_with_sparameter_drive(circuit, &ports, driven_source);
+            let point = ac_sweep(&driven_circuit, *frequency_hz, *frequency_hz, 1)?
+                .into_iter()
+                .next()
+                .ok_or(SpiceError::SingularMatrix)?;
+            columns.push([
+                branch_current_into_network(&point, port1_source)?,
+                branch_current_into_network(&point, port2_source)?,
+            ]);
+        }
+
+        let (s11, s21, s12, s22) = y_to_s_2port(
+            columns[0][0],
+            columns[0][1],
+            columns[1][0],
+            columns[1][1],
+            reference_impedance_ohms,
+        )?;
+        points.push(SParameterPoint {
+            frequency_hz: *frequency_hz,
+            s11,
+            s21,
+            s12,
+            s22,
+        });
+    }
+
+    Ok(SParameterResult {
+        port1_source: port1_source.to_string(),
+        port2_source: port2_source.to_string(),
+        reference_impedance_ohms,
+        points,
+    })
+}
+
+fn validate_sparameter_ports(circuit: &Circuit, ports: &[&str; 2]) -> Result<(), SpiceError> {
+    for port in ports {
+        let found = circuit.elements().iter().any(
+            |element| matches!(element, Element::VoltageSource(source) if source.name == *port),
+        );
+        if !found {
+            return Err(SpiceError::InvalidElement {
+                name: "s_parameters".to_string(),
+                reason: format!("missing voltage-source port {port:?}"),
+            });
+        }
+    }
+    Ok(())
+}
+
+fn circuit_with_sparameter_drive(
+    circuit: &Circuit,
+    ports: &[&str; 2],
+    driven_source: &str,
+) -> Circuit {
+    let mut driven = Circuit::new();
+    for element in circuit.elements() {
+        if let Element::VoltageSource(source) = element {
+            if ports.iter().any(|port| *port == source.name) {
+                let mut source = source.clone();
+                source.ac = Some(AcSource::new(
+                    if source.name == driven_source {
+                        1.0
+                    } else {
+                        0.0
+                    },
+                    0.0,
+                ));
+                driven.add(Element::VoltageSource(source));
+                continue;
+            }
+        }
+        driven.add(element.clone());
+    }
+    driven
+}
+
+fn branch_current_into_network(point: &AcPoint, source_name: &str) -> Result<Complex, SpiceError> {
+    point
+        .branch_current(source_name)
+        .map(|current| current * Complex::new(-1.0, 0.0))
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "s_parameters".to_string(),
+            reason: format!("missing branch current for {source_name:?}"),
+        })
+}
+
+fn y_to_s_2port(
+    y11: Complex,
+    y21: Complex,
+    y12: Complex,
+    y22: Complex,
+    z0: f64,
+) -> Result<(Complex, Complex, Complex, Complex), SpiceError> {
+    let one = Complex::new(1.0, 0.0);
+    let z0_c = Complex::new(z0, 0.0);
+    let a11 = one - y11 * z0_c;
+    let a12 = y12 * Complex::new(-z0, 0.0);
+    let a21 = y21 * Complex::new(-z0, 0.0);
+    let a22 = one - y22 * z0_c;
+
+    let b11 = one + y11 * z0_c;
+    let b12 = y12 * z0_c;
+    let b21 = y21 * z0_c;
+    let b22 = one + y22 * z0_c;
+    let det = b11 * b22 - b12 * b21;
+    if det.abs() < 1.0e-18 {
+        return Err(SpiceError::InvalidElement {
+            name: "s_parameters".to_string(),
+            reason: "singular Y-to-S conversion".to_string(),
+        });
+    }
+
+    let inv_b11 = b22 / det;
+    let inv_b12 = b12 * Complex::new(-1.0, 0.0) / det;
+    let inv_b21 = b21 * Complex::new(-1.0, 0.0) / det;
+    let inv_b22 = b11 / det;
+
+    Ok((
+        a11 * inv_b11 + a12 * inv_b21,
+        a21 * inv_b11 + a22 * inv_b21,
+        a11 * inv_b12 + a12 * inv_b22,
+        a21 * inv_b12 + a22 * inv_b22,
+    ))
 }
 
 pub fn noise_ac(

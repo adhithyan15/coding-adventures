@@ -477,6 +477,21 @@ export interface AcPoint {
   branchCurrent(sourceName: string): Complex | undefined;
 }
 
+export interface SParameterPoint {
+  readonly frequencyHz: number;
+  readonly s11: Complex;
+  readonly s21: Complex;
+  readonly s12: Complex;
+  readonly s22: Complex;
+}
+
+export interface SParameterResult {
+  readonly port1Source: string;
+  readonly port2Source: string;
+  readonly referenceImpedanceOhms: number;
+  readonly points: readonly SParameterPoint[];
+}
+
 export type NoiseType = "thermal";
 
 export interface NoiseEntry {
@@ -1289,6 +1304,52 @@ export function acSweep(
     );
   }
   return points;
+}
+
+export function sParameters(
+  circuit: Circuit,
+  port1Source: string,
+  port2Source: string,
+  frequenciesHz: readonly number[],
+  referenceImpedanceOhms = 50.0,
+): SParameterResult {
+  if (!Number.isFinite(referenceImpedanceOhms) || referenceImpedanceOhms <= 0.0) {
+    throw invalidElement("sParameters", "reference impedance must be finite and positive");
+  }
+  for (const frequency of frequenciesHz) {
+    if (!Number.isFinite(frequency) || frequency <= 0.0) {
+      throw invalidElement("sParameters", "frequencies must be finite and positive");
+    }
+  }
+
+  const ports = [port1Source, port2Source] as const;
+  validateSParameterPorts(circuit, ports);
+
+  const points = frequenciesHz.map((frequencyHz) => {
+    const columns = ports.map((drivenSource) => {
+      const drivenCircuit = circuitWithSParameterDrive(circuit, ports, drivenSource);
+      const point = acSweep(drivenCircuit, frequencyHz, frequencyHz, 1)[0];
+      return [
+        branchCurrentIntoNetwork(point, port1Source),
+        branchCurrentIntoNetwork(point, port2Source),
+      ] as const;
+    });
+    const [s11, s21, s12, s22] = yToS2Port(
+      columns[0][0],
+      columns[0][1],
+      columns[1][0],
+      columns[1][1],
+      referenceImpedanceOhms,
+    );
+    return { frequencyHz, s11, s21, s12, s22 };
+  });
+
+  return {
+    port1Source,
+    port2Source,
+    referenceImpedanceOhms,
+    points,
+  };
 }
 
 export function noiseAc(
@@ -2118,6 +2179,81 @@ function circuitFromElements(elements: readonly Element[]): Circuit {
     circuit.add(element);
   }
   return circuit;
+}
+
+function validateSParameterPorts(
+  circuit: Circuit,
+  ports: readonly [string, string],
+): void {
+  for (const port of ports) {
+    const element = circuit.elements().find(
+      (candidate) => candidate.kind === "voltage-source" && candidate.name === port,
+    );
+    if (element === undefined) {
+      throw invalidElement("sParameters", `missing voltage-source port ${JSON.stringify(port)}`);
+    }
+  }
+}
+
+function circuitWithSParameterDrive(
+  circuit: Circuit,
+  ports: readonly [string, string],
+  drivenSource: string,
+): Circuit {
+  const portNames = new Set<string>(ports);
+  return circuitFromElements(
+    circuit.elements().map((element) => {
+      if (element.kind !== "voltage-source" || !portNames.has(element.name)) {
+        return element;
+      }
+      return {
+        ...element,
+        ac: acSource(element.name === drivenSource ? 1.0 : 0.0),
+      };
+    }),
+  );
+}
+
+function branchCurrentIntoNetwork(point: AcPoint, sourceName: string): Complex {
+  const current = point.branchCurrent(sourceName);
+  if (current === undefined) {
+    throw invalidElement("sParameters", `missing branch current for ${JSON.stringify(sourceName)}`);
+  }
+  return complexScale(current, -1.0);
+}
+
+function yToS2Port(
+  y11: Complex,
+  y21: Complex,
+  y12: Complex,
+  y22: Complex,
+  z0: number,
+): [Complex, Complex, Complex, Complex] {
+  const a11 = complexSub(complex(1.0, 0.0), complexScale(y11, z0));
+  const a12 = complexScale(y12, -z0);
+  const a21 = complexScale(y21, -z0);
+  const a22 = complexSub(complex(1.0, 0.0), complexScale(y22, z0));
+
+  const b11 = complexAdd(complex(1.0, 0.0), complexScale(y11, z0));
+  const b12 = complexScale(y12, z0);
+  const b21 = complexScale(y21, z0);
+  const b22 = complexAdd(complex(1.0, 0.0), complexScale(y22, z0));
+  const det = complexSub(complexMul(b11, b22), complexMul(b12, b21));
+  if (complexAbs(det) < 1.0e-18) {
+    throw invalidElement("sParameters", "singular Y-to-S conversion");
+  }
+
+  const invB11 = complexDiv(b22, det);
+  const invB12 = complexDiv(complexScale(b12, -1.0), det);
+  const invB21 = complexDiv(complexScale(b21, -1.0), det);
+  const invB22 = complexDiv(b11, det);
+
+  return [
+    complexAdd(complexMul(a11, invB11), complexMul(a12, invB21)),
+    complexAdd(complexMul(a21, invB11), complexMul(a22, invB21)),
+    complexAdd(complexMul(a11, invB12), complexMul(a12, invB22)),
+    complexAdd(complexMul(a21, invB12), complexMul(a22, invB22)),
+  ];
 }
 
 function solveLinearCircuitAtOperatingPoint(
@@ -4643,6 +4779,10 @@ function complexMul(left: Complex, right: Complex): Complex {
     left.real * right.real - left.imag * right.imag,
     left.real * right.imag + left.imag * right.real,
   );
+}
+
+function complexScale(value: Complex, scale: number): Complex {
+  return complex(value.real * scale, value.imag * scale);
 }
 
 function complexDiv(left: Complex, right: Complex): Complex {

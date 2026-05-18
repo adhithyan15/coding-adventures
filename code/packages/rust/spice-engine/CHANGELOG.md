@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add two-port S-parameter extraction from named AC voltage-source ports,
+  returning S11/S21/S12/S22 for a configurable reference impedance.
 - Add a sparse-row real linear solver path for large DC / real small-signal
   matrices while keeping the dense solver for small systems.
 - Add programmatic subcircuits with `SubcircuitDefinition` and `XInstance`
