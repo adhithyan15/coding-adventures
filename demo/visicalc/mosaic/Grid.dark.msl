@@ -11,8 +11,10 @@
 // emitter's inline conditional `style={{ ... }}` spread — the Grid
 // component reads selected-row / selected-col / edit-row / edit-col
 // slots and merges per-cell highlight styles on top of `sheet/cell`.
-// Today those highlight colours are hardcoded in the emitter; a
-// follow-up will route them through the design tokens here.
+// The colours below now live with the theme: the emitter looks up
+// `state selected` / `state editing` under `part sheet/cell` and
+// inlines those properties into the per-cell spread, falling back
+// to its built-in defaults only when the theme omits them.
 
 style Grid {
   part sheet {
@@ -32,6 +34,22 @@ style Grid {
     border-color: #3f3f46 ;
     padding:      2px ;
     height:       22px ;
+
+    // Active-cell highlight. Replaces the hardcoded emitter default
+    // (#264f78). Wired in by `mosaic-emit-react`'s Grid emitter via the
+    // `sheet/cell:selected` composite key in the part-style map.
+    state selected {
+      background: #264f78 ;
+      color:      #ffffff ;
+      outline:    1px solid #007acc ;
+    }
+
+    // In-progress edit highlight. Replaces the hardcoded emitter
+    // default (#1f4f3f). Resolved through `sheet/cell:editing`.
+    state editing {
+      background: #1f4f3f ;
+      outline:    1px solid #007acc ;
+    }
   }
 
   // Column-header cells (the labels A, B, C, ... at the top).
