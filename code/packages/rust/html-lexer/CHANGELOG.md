@@ -57,6 +57,9 @@ documented in this file.
 - A generated WHATWG tokenizer EOF recovery fixture and Rust conformance test
   that pins recovery for partial tags, attributes, comments, doctypes,
   character references, text modes, and seeded continuation states.
+- A generated WHATWG tokenizer text-mode delimiter fixture and Rust conformance
+  test that pins RCDATA, RAWTEXT, script-data, escaped-script, and seeded
+  end-tag continuation recovery.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the

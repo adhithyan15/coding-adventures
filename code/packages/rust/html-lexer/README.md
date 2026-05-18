@@ -78,6 +78,9 @@ where an embedding splits the input stream.
 The generated EOF recovery suite covers partial tags, attributes, comments,
 bogus comments, doctypes, character references, text modes, and seeded
 continuation states so parser-facing recovery stays pinned at stream end.
+The generated text-mode delimiter suite pins how RCDATA, RAWTEXT, script data,
+escaped script data, and seeded end-tag continuation states distinguish real
+matching end tags from literal apparent end tags.
 Numeric character references report invalid-code-point diagnostics and recover
 with the HTML replacement/remapping rules for null, surrogate, out-of-range,
 noncharacter, and Windows-1252 control references.
