@@ -4,9 +4,9 @@
 //! directly and evaluating them under each backend.
 
 use symbolic_ir::{
-    apply, flt, int, rat, sym, ACOSH, ADD, AND, ASINH, ASSIGN, ATAN, ATANH, COS, COSH, COTH, CSCH,
-    D, DEFINE, DIV, EXP, IF, INTEGRATE, LIST, LOG, MUL, NEG, NOT, OR, POW, SECH, SIN, SINH, SQRT,
-    SUB, TAN, TANH,
+    apply, flt, int, rat, sym, ACOS, ACOSH, ADD, AND, ASIN, ASINH, ASSIGN, ATAN, ATANH, COS, COSH,
+    COTH, CSCH, D, DEFINE, DIV, EXP, IF, INTEGRATE, LIST, LOG, MUL, NEG, NOT, OR, POW, SECH, SIN,
+    SINH, SQRT, SUB, TAN, TANH,
 };
 use symbolic_vm::{StrictBackend, SymbolicBackend, VM};
 
@@ -20,6 +20,11 @@ fn strict() -> VM {
 
 fn symbolic() -> VM {
     VM::new(Box::new(SymbolicBackend::new()))
+}
+
+/// Evaluate a single expression in a fresh symbolic VM.
+fn eval(expr: symbolic_ir::IRNode) -> symbolic_ir::IRNode {
+    symbolic().eval(expr)
 }
 
 fn d(f: symbolic_ir::IRNode) -> symbolic_ir::IRNode {
@@ -922,18 +927,13 @@ fn derivative_power_rules() {
         )
     );
 
+    // Phase 30: exp(x·log(x)) now simplifies to x^x, so D(x^x, x) = x^x·(log(x)+1).
     assert_eq!(
         d(apply(sym(POW), vec![sym("x"), sym("x")])),
         apply(
             sym(MUL),
             vec![
-                apply(
-                    sym(EXP),
-                    vec![apply(
-                        sym(MUL),
-                        vec![sym("x"), apply(sym(LOG), vec![sym("x")])],
-                    )],
-                ),
+                apply(sym(POW), vec![sym("x"), sym("x")]),
                 apply(
                     sym(ADD),
                     vec![
@@ -1653,6 +1653,459 @@ fn phase28_regression_atan_x_stays_unevaluated() {
         vec![apply(sym(ATAN), vec![sym("x")]), sym("x")],
     );
     assert_eq!(result, original, "Phase 28 must not intercept linear atan(x)");
+}
+
+// ---------------------------------------------------------------------------
+// Phase 29: Abs and Sqrt algebraic rules
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase29_abs_numeric_fold() {
+    // abs(-3) = 3, abs(3) = 3
+    assert_eq!(eval(apply(sym("Abs"), vec![int(-3)])), int(3));
+    assert_eq!(eval(apply(sym("Abs"), vec![int(5)])), int(5));
+}
+
+#[test]
+fn phase29_abs_idempotent() {
+    // abs(abs(x)) = abs(x)
+    let x = sym("x");
+    let abs_x = apply(sym("Abs"), vec![x.clone()]);
+    assert_eq!(eval(apply(sym("Abs"), vec![abs_x.clone()])), abs_x);
+}
+
+#[test]
+fn phase29_abs_strips_neg() {
+    // abs(-x) = abs(x)
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym("Abs"), vec![apply(sym(NEG), vec![x.clone()])])),
+        apply(sym("Abs"), vec![x])
+    );
+}
+
+#[test]
+fn phase29_abs_even_power() {
+    // abs(x^2) = x^2,  abs(x^4) = x^4
+    let x = sym("x");
+    let x2 = apply(sym(POW), vec![x.clone(), int(2)]);
+    let x4 = apply(sym(POW), vec![x.clone(), int(4)]);
+    assert_eq!(eval(apply(sym("Abs"), vec![x2.clone()])), x2);
+    assert_eq!(eval(apply(sym("Abs"), vec![x4.clone()])), x4);
+}
+
+#[test]
+fn phase29_sqrt_perfect_squares() {
+    // sqrt(0)=0, sqrt(1)=1, sqrt(4)=2, sqrt(9)=3, sqrt(16)=4
+    let sqrt = |n: i64| eval(apply(sym(SQRT), vec![int(n)]));
+    assert_eq!(sqrt(0), int(0));
+    assert_eq!(sqrt(1), int(1));
+    assert_eq!(sqrt(4), int(2));
+    assert_eq!(sqrt(9), int(3));
+    assert_eq!(sqrt(16), int(4));
+    assert_eq!(sqrt(25), int(5));
+}
+
+#[test]
+fn phase29_sqrt_x2_is_abs_x() {
+    // sqrt(x^2) = |x|  — k=1, odd
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(SQRT), vec![apply(sym(POW), vec![x.clone(), int(2)])])),
+        apply(sym("Abs"), vec![x])
+    );
+}
+
+#[test]
+fn phase29_sqrt_x4_is_x2() {
+    // sqrt(x^4) = x^2  — k=2, even
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(SQRT), vec![apply(sym(POW), vec![x.clone(), int(4)])])),
+        apply(sym(POW), vec![x, int(2)])
+    );
+}
+
+#[test]
+fn phase29_sqrt_x6_is_abs_x3() {
+    // sqrt(x^6) = |x^3|  — k=3, odd
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(SQRT), vec![apply(sym(POW), vec![x.clone(), int(6)])])),
+        apply(sym("Abs"), vec![apply(sym(POW), vec![x, int(3)])])
+    );
+}
+
+#[test]
+fn phase29_sqrt_x8_is_x4() {
+    // sqrt(x^8) = x^4  — k=4, even
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(SQRT), vec![apply(sym(POW), vec![x.clone(), int(8)])])),
+        apply(sym(POW), vec![x, int(4)])
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Phase 30: Log and Exp cancellation rules
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase30_log_exp_cancels() {
+    // log(exp(x)) = x
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(LOG), vec![apply(sym(EXP), vec![x.clone()])])),
+        x
+    );
+}
+
+#[test]
+fn phase30_exp_log_cancels() {
+    // exp(log(x)) = x
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(EXP), vec![apply(sym(LOG), vec![x.clone()])])),
+        x
+    );
+}
+
+#[test]
+fn phase30_exp_n_log_x_is_pow() {
+    // exp(2*log(x)) = x^2
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(EXP), vec![apply(
+            sym(MUL),
+            vec![int(2), apply(sym(LOG), vec![x.clone()])],
+        )])),
+        apply(sym(POW), vec![x.clone(), int(2)])
+    );
+}
+
+#[test]
+fn phase30_exp_log_x_n_commuted_is_pow() {
+    // exp(log(x)*3) = x^3  (commuted Mul)
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(EXP), vec![apply(
+            sym(MUL),
+            vec![apply(sym(LOG), vec![x.clone()]), int(3)],
+        )])),
+        apply(sym(POW), vec![x.clone(), int(3)])
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Phase 31: Trig/hyperbolic symmetry and arc-cancellation
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase31_sin_odd_symmetry() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(SIN), vec![apply(sym(NEG), vec![x.clone()])])),
+        apply(sym(NEG), vec![apply(sym(SIN), vec![x])])
+    );
+}
+
+#[test]
+fn phase31_sin_arc_cancel() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(SIN), vec![apply(sym(ASIN), vec![x.clone()])])),
+        x
+    );
+}
+
+#[test]
+fn phase31_cos_even_symmetry() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(COS), vec![apply(sym(NEG), vec![x.clone()])])),
+        apply(sym(COS), vec![x])
+    );
+}
+
+#[test]
+fn phase31_cos_arc_cancel() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(COS), vec![apply(sym(ACOS), vec![x.clone()])])),
+        x
+    );
+}
+
+#[test]
+fn phase31_tan_odd_symmetry() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(TAN), vec![apply(sym(NEG), vec![x.clone()])])),
+        apply(sym(NEG), vec![apply(sym(TAN), vec![x])])
+    );
+}
+
+#[test]
+fn phase31_tan_arc_cancel() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(TAN), vec![apply(sym(ATAN), vec![x.clone()])])),
+        x
+    );
+}
+
+#[test]
+fn phase31_sinh_odd_symmetry() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(SINH), vec![apply(sym(NEG), vec![x.clone()])])),
+        apply(sym(NEG), vec![apply(sym(SINH), vec![x])])
+    );
+}
+
+#[test]
+fn phase31_sinh_arc_cancel() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(SINH), vec![apply(sym(ASINH), vec![x.clone()])])),
+        x
+    );
+}
+
+#[test]
+fn phase31_cosh_even_symmetry() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(COS), vec![apply(sym(NEG), vec![x.clone()])])),
+        apply(sym(COS), vec![x])
+    );
+}
+
+#[test]
+fn phase31_cosh_arc_cancel() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(COSH), vec![apply(sym(ACOSH), vec![x.clone()])])),
+        x
+    );
+}
+
+#[test]
+fn phase31_tanh_odd_symmetry() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(TANH), vec![apply(sym(NEG), vec![x.clone()])])),
+        apply(sym(NEG), vec![apply(sym(TANH), vec![x])])
+    );
+}
+
+#[test]
+fn phase31_tanh_arc_cancel() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(TANH), vec![apply(sym(ATANH), vec![x.clone()])])),
+        x
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Phase 32: Inverse trig/hyperbolic odd symmetry + acos reflection
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase32_asin_odd() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(ASIN), vec![apply(sym(NEG), vec![x.clone()])])),
+        apply(sym(NEG), vec![apply(sym(ASIN), vec![x])])
+    );
+}
+
+#[test]
+fn phase32_acos_reflection() {
+    // acos(-x) = %pi - acos(x)
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(ACOS), vec![apply(sym(NEG), vec![x.clone()])])),
+        apply(sym(SUB), vec![
+            sym("%pi"),
+            apply(sym(ACOS), vec![x]),
+        ])
+    );
+}
+
+#[test]
+fn phase32_atan_odd() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(ATAN), vec![apply(sym(NEG), vec![x.clone()])])),
+        apply(sym(NEG), vec![apply(sym(ATAN), vec![x])])
+    );
+}
+
+#[test]
+fn phase32_asinh_odd() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(ASINH), vec![apply(sym(NEG), vec![x.clone()])])),
+        apply(sym(NEG), vec![apply(sym(ASINH), vec![x])])
+    );
+}
+
+#[test]
+fn phase32_atanh_odd() {
+    let x = sym("x");
+    assert_eq!(
+        eval(apply(sym(ATANH), vec![apply(sym(NEG), vec![x.clone()])])),
+        apply(sym(NEG), vec![apply(sym(ATANH), vec![x])])
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Phase 33: Trig exact values at rational multiples of π
+// ---------------------------------------------------------------------------
+
+fn pi() -> symbolic_ir::IRNode { sym("%pi") }
+
+#[test]
+fn phase33_sin_pi_is_zero() {
+    assert_eq!(eval(apply(sym(SIN), vec![pi()])), int(0));
+}
+
+#[test]
+fn phase33_sin_pi_over_6_is_half() {
+    assert_eq!(
+        eval(apply(sym(SIN), vec![apply(sym(DIV), vec![pi(), int(6)])])),
+        symbolic_ir::IRNode::Rational(1, 2)
+    );
+}
+
+#[test]
+fn phase33_sin_pi_over_4_is_sqrt2_over_2() {
+    let result = eval(apply(sym(SIN), vec![apply(sym(DIV), vec![pi(), int(4)])]));
+    // Div(Sqrt(2), 2)
+    assert_eq!(result, apply(sym(DIV), vec![
+        apply(sym(SQRT), vec![int(2)]),
+        int(2),
+    ]));
+}
+
+#[test]
+fn phase33_sin_pi_over_2_is_one() {
+    assert_eq!(
+        eval(apply(sym(SIN), vec![apply(sym(DIV), vec![pi(), int(2)])])),
+        int(1)
+    );
+}
+
+#[test]
+fn phase33_sin_2pi_is_zero() {
+    assert_eq!(
+        eval(apply(sym(SIN), vec![apply(sym(MUL), vec![int(2), pi()])])),
+        int(0)
+    );
+}
+
+#[test]
+fn phase33_sin_3pi_over_2_is_neg_one() {
+    // 3π/2: sin = -1
+    let arg = apply(sym(DIV), vec![apply(sym(MUL), vec![int(3), pi()]), int(2)]);
+    assert_eq!(eval(apply(sym(SIN), vec![arg])), int(-1));
+}
+
+#[test]
+fn phase33_cos_pi_is_neg_one() {
+    assert_eq!(eval(apply(sym(COS), vec![pi()])), int(-1));
+}
+
+#[test]
+fn phase33_cos_pi_over_2_is_zero() {
+    assert_eq!(
+        eval(apply(sym(COS), vec![apply(sym(DIV), vec![pi(), int(2)])])),
+        int(0)
+    );
+}
+
+#[test]
+fn phase33_cos_pi_over_3_is_half() {
+    assert_eq!(
+        eval(apply(sym(COS), vec![apply(sym(DIV), vec![pi(), int(3)])])),
+        symbolic_ir::IRNode::Rational(1, 2)
+    );
+}
+
+#[test]
+fn phase33_cos_2pi_is_one() {
+    assert_eq!(
+        eval(apply(sym(COS), vec![apply(sym(MUL), vec![int(2), pi()])])),
+        int(1)
+    );
+}
+
+#[test]
+fn phase33_tan_pi_is_zero() {
+    assert_eq!(eval(apply(sym(TAN), vec![pi()])), int(0));
+}
+
+#[test]
+fn phase33_tan_pi_over_4_is_one() {
+    assert_eq!(
+        eval(apply(sym(TAN), vec![apply(sym(DIV), vec![pi(), int(4)])])),
+        int(1)
+    );
+}
+
+#[test]
+fn phase33_tan_pi_over_3_is_sqrt3() {
+    assert_eq!(
+        eval(apply(sym(TAN), vec![apply(sym(DIV), vec![pi(), int(3)])])),
+        apply(sym(SQRT), vec![int(3)])
+    );
+}
+
+#[test]
+fn phase33_tan_3pi_over_4_is_neg_one() {
+    let arg = apply(sym(DIV), vec![apply(sym(MUL), vec![int(3), pi()]), int(4)]);
+    assert_eq!(eval(apply(sym(TAN), vec![arg])), int(-1));
+}
+
+#[test]
+fn phase33_tan_pi_over_2_stays_unevaluated() {
+    // tan(π/2) is undefined — must remain unevaluated.
+    let arg = apply(sym(DIV), vec![pi(), int(2)]);
+    let result = eval(apply(sym(TAN), vec![arg.clone()]));
+    // Result should still be Tan(π/2), not a numeric value.
+    match &result {
+        symbolic_ir::IRNode::Apply(ap) => {
+            assert_eq!(ap.head, sym(TAN), "head should be Tan");
+        }
+        _ => panic!("expected unevaluated Tan, got: {result:?}"),
+    }
+}
+
+#[test]
+fn phase33_sin_neg_pi_over_6_is_neg_half() {
+    // sin(-π/6) = -1/2 via odd symmetry through table lookup
+    let arg = apply(sym(NEG), vec![apply(sym(DIV), vec![pi(), int(6)])]);
+    assert_eq!(eval(apply(sym(SIN), vec![arg])), symbolic_ir::IRNode::Rational(-1, 2));
+}
+
+#[test]
+fn phase33_cos_neg_pi_over_3_is_half() {
+    // cos(-π/3) = 1/2 via even-symmetry modular reduction
+    let arg = apply(sym(NEG), vec![apply(sym(DIV), vec![pi(), int(3)])]);
+    assert_eq!(
+        eval(apply(sym(COS), vec![arg])),
+        symbolic_ir::IRNode::Rational(1, 2)
+    );
+}
+
+#[test]
+fn phase33_regression_numeric_sin_cos_tan() {
+    // Existing numeric fold must still work after Phase 33.
+    assert_eq!(eval(apply(sym(SIN), vec![int(0)])), int(0));
+    assert_eq!(eval(apply(sym(COS), vec![int(0)])), int(1));
+    assert_eq!(eval(apply(sym(TAN), vec![int(0)])), int(0));
 }
 
 // ---------------------------------------------------------------------------

@@ -237,6 +237,207 @@ export function substitute(node: IRNode, mapping: ReadonlyMap<string, IRNode>): 
   return node;
 }
 
+// ---------------------------------------------------------------------------
+// Phase 29–33: algebraic helpers and lookup tables
+// ---------------------------------------------------------------------------
+
+// Reduced fraction [numerator, denominator] with denominator > 0.
+type Frac = readonly [bigint, bigint];
+
+/** GCD of two non-negative bigints. */
+function fracGcd(a: bigint, b: bigint): bigint {
+  while (b !== 0n) [a, b] = [b, a % b];
+  return a;
+}
+
+/** Reduce a rational number p/q to lowest terms with q > 0. */
+function fracMake(p: bigint, q: bigint): Frac {
+  if (q === 0n) throw new RangeError("zero denominator in fracMake");
+  if (q < 0n) { p = -p; q = -q; }
+  const g = fracGcd(p < 0n ? -p : p, q === 0n ? 1n : q);
+  return [p / g, q / g];
+}
+
+/** String key for a reduced fraction, used as Map key in PI tables. */
+function fracKey(f: Frac): string { return `${f[0]}/${f[1]}`; }
+
+/** Modular reduction: (p/q) mod m, result in [0, m). */
+function fracMod(f: Frac, m: bigint): Frac {
+  const [p, q] = f;
+  let r = p % (m * q);
+  if (r < 0n) r += m * q;
+  return fracMake(r, q);
+}
+
+/** Extract the fraction represented by a plain numeric IR node (integer or rational). */
+function fracFromIR(node: IRNode): Frac | undefined {
+  if (node.kind === "integer") return [node.value, 1n];
+  if (node.kind === "rational") return fracMake(node.numer, node.denom);
+  return undefined;
+}
+
+/**
+ * Phase 33: If `arg` equals `q · %pi` for a rational `q` with small
+ * denominator, return `q` as a reduced {@link Frac}.  Otherwise `undefined`.
+ *
+ * Two strategies:
+ * 1. **Float** — arg ≈ q·π; check denominators {1,2,3,4,6}.
+ * 2. **Structural** — matches `%pi`, `Neg(%pi)`, `Mul(n, %pi)`,
+ *    `Div(%pi, n)`, `Div(Mul(n, %pi), d)` (both orderings of n and %pi).
+ */
+function tryPiMultiple(arg: IRNode): Frac | undefined {
+  // Strategy 1: float value ≈ q·π
+  if (arg.kind === "float") {
+    const qf = arg.value / Math.PI;
+    for (const d of [1, 2, 3, 4, 6]) {
+      const pCand = Math.round(qf * d);
+      if (Math.abs(qf * d - pCand) < 1e-9)
+        return fracMake(BigInt(pCand), BigInt(d));
+    }
+    return undefined;
+  }
+  // Strategy 2: structural match
+  if (arg.kind === "symbol" && arg.name === "%pi") return [1n, 1n];
+  if (arg.kind !== "apply") return undefined;
+
+  // Neg(anything) — recurse and negate
+  if (equals(arg.head, NEG) && arg.args.length === 1) {
+    const inner = tryPiMultiple(arg.args[0]);
+    return inner === undefined ? undefined : fracMake(-inner[0], inner[1]);
+  }
+
+  // Mul(n, %pi) or Mul(%pi, n)
+  if (equals(arg.head, MUL) && arg.args.length === 2) {
+    const [a, b] = arg.args;
+    const piB = b.kind === "symbol" && b.name === "%pi";
+    const piA = a.kind === "symbol" && a.name === "%pi";
+    if (piB) return fracFromIR(a);
+    if (piA) return fracFromIR(b);
+  }
+
+  // Div(%pi, n) or Div(Mul(n,%pi), d)
+  if (equals(arg.head, DIV) && arg.args.length === 2) {
+    const [num, den] = arg.args;
+    const dFrac = fracFromIR(den);
+    if (dFrac === undefined || dFrac[0] === 0n) return undefined;
+
+    // Div(%pi, n) → 1 / dFrac = [dFrac[1], dFrac[0]]
+    if (num.kind === "symbol" && num.name === "%pi")
+      return fracMake(dFrac[1], dFrac[0]);
+
+    // Div(Mul(n,%pi), d) or Div(Mul(%pi,n), d)
+    if (num.kind === "apply" && equals(num.head, MUL) && num.args.length === 2) {
+      const [ma, mb] = num.args;
+      const piMb = mb.kind === "symbol" && mb.name === "%pi";
+      const piMa = ma.kind === "symbol" && ma.name === "%pi";
+      if (piMb) {
+        const nFrac = fracFromIR(ma);
+        return nFrac === undefined ? undefined
+          : fracMake(nFrac[0] * dFrac[1], nFrac[1] * dFrac[0]);
+      }
+      if (piMa) {
+        const nFrac = fracFromIR(mb);
+        return nFrac === undefined ? undefined
+          : fracMake(nFrac[0] * dFrac[1], nFrac[1] * dFrac[0]);
+      }
+    }
+  }
+  return undefined;
+}
+
+// ---------------------------------------------------------------------------
+// Phase 33: exact algebraic IR constants shared by sin/cos/tan tables
+// ---------------------------------------------------------------------------
+const _P33_SQRT2 = app(sym("Sqrt"), [int(2)]);
+const _P33_SQRT3 = app(sym("Sqrt"), [int(3)]);
+const _P33_SQRT2_OVER_2 = app(sym("Div"), [_P33_SQRT2, int(2)]);
+const _P33_SQRT3_OVER_2 = app(sym("Div"), [_P33_SQRT3, int(2)]);
+const _P33_SQRT3_OVER_3 = app(sym("Div"), [_P33_SQRT3, int(3)]);
+const _P33_NEG_SQRT2_OVER_2 = app(sym("Neg"), [_P33_SQRT2_OVER_2]);
+const _P33_NEG_SQRT3_OVER_2 = app(sym("Neg"), [_P33_SQRT3_OVER_2]);
+const _P33_NEG_SQRT3 = app(sym("Neg"), [_P33_SQRT3]);
+const _P33_NEG_SQRT3_OVER_3 = app(sym("Neg"), [_P33_SQRT3_OVER_3]);
+
+/**
+ * sin(q·π) for q ∈ [0, 2)  — period 2π → reduce mod 2.
+ *
+ * Values:
+ *   0      → 0,   1/6 → 1/2,  1/4 → √2/2, 1/3 → √3/2,
+ *   1/2    → 1,   2/3 → √3/2, 3/4 → √2/2, 5/6 → 1/2,
+ *   1      → 0,   7/6 → −1/2, 5/4 → −√2/2, 4/3 → −√3/2,
+ *   3/2    → −1,  5/3 → −√3/2, 7/4 → −√2/2, 11/6 → −1/2.
+ */
+const SIN_PI_TABLE = new Map<string, IRNode>([
+  ["0/1",   int(0)],
+  ["1/6",   rational(1n, 2n)],
+  ["1/4",   _P33_SQRT2_OVER_2],
+  ["1/3",   _P33_SQRT3_OVER_2],
+  ["1/2",   int(1)],
+  ["2/3",   _P33_SQRT3_OVER_2],
+  ["3/4",   _P33_SQRT2_OVER_2],
+  ["5/6",   rational(1n, 2n)],
+  ["1/1",   int(0)],
+  ["7/6",   rational(-1n, 2n)],
+  ["5/4",   _P33_NEG_SQRT2_OVER_2],
+  ["4/3",   _P33_NEG_SQRT3_OVER_2],
+  ["3/2",   int(-1)],
+  ["5/3",   _P33_NEG_SQRT3_OVER_2],
+  ["7/4",   _P33_NEG_SQRT2_OVER_2],
+  ["11/6",  rational(-1n, 2n)],
+]);
+
+/**
+ * cos(q·π) for q ∈ [0, 2)  — period 2π → reduce mod 2.
+ *
+ * Values:
+ *   0      → 1,   1/6 → √3/2, 1/4 → √2/2, 1/3 → 1/2,
+ *   1/2    → 0,   2/3 → −1/2, 3/4 → −√2/2, 5/6 → −√3/2,
+ *   1      → −1,  7/6 → −√3/2, 5/4 → −√2/2, 4/3 → −1/2,
+ *   3/2    → 0,   5/3 → 1/2, 7/4 → √2/2, 11/6 → √3/2.
+ */
+const COS_PI_TABLE = new Map<string, IRNode>([
+  ["0/1",   int(1)],
+  ["1/6",   _P33_SQRT3_OVER_2],
+  ["1/4",   _P33_SQRT2_OVER_2],
+  ["1/3",   rational(1n, 2n)],
+  ["1/2",   int(0)],
+  ["2/3",   rational(-1n, 2n)],
+  ["3/4",   _P33_NEG_SQRT2_OVER_2],
+  ["5/6",   _P33_NEG_SQRT3_OVER_2],
+  ["1/1",   int(-1)],
+  ["7/6",   _P33_NEG_SQRT3_OVER_2],
+  ["5/4",   _P33_NEG_SQRT2_OVER_2],
+  ["4/3",   rational(-1n, 2n)],
+  ["3/2",   int(0)],
+  ["5/3",   rational(1n, 2n)],
+  ["7/4",   _P33_SQRT2_OVER_2],
+  ["11/6",  _P33_SQRT3_OVER_2],
+]);
+
+/**
+ * tan(q·π) for q ∈ [0, 1) — period π → reduce mod 1.
+ * q = 1/2 is omitted — tan(π/2) is undefined; the handler leaves it unevaluated.
+ *
+ * Values:
+ *   0   → 0, 1/6 → √3/3, 1/4 → 1, 1/3 → √3,
+ *   2/3 → −√3, 3/4 → −1, 5/6 → −√3/3.
+ */
+const TAN_PI_TABLE = new Map<string, IRNode>([
+  ["0/1",  int(0)],
+  ["1/6",  _P33_SQRT3_OVER_3],
+  ["1/4",  int(1)],
+  ["1/3",  _P33_SQRT3],
+  ["2/3",  _P33_NEG_SQRT3],
+  ["3/4",  int(-1)],
+  ["5/6",  _P33_NEG_SQRT3_OVER_3],
+]);
+
+// The %pi symbol used in acos reflection identity: acos(-x) = %pi − acos(x).
+const _INV_TRIG_PI = sym("%pi");
+
+// The Abs head symbol for sqrt/abs rules.
+const _ABS_HEAD = sym("Abs");
+
 function buildHandlerTable(simplify: boolean): ReadonlyMap<string, Handler> {
   const table = new Map<string, Handler>();
   table.set(ADD.name, binaryNumeric("Add", simplify, (a, b) => addNumeric(a, b), (expr, a, b) => {
@@ -274,21 +475,346 @@ function buildHandlerTable(simplify: boolean): ReadonlyMap<string, Handler> {
   }));
   table.set(INV.name, unaryNumeric("Inv", simplify, invNumeric, (expr) => expr));
 
-  table.set(SIN.name, elementary("Sin", Math.sin, new Map([["0", int(0)]]), simplify));
-  table.set(COS.name, elementary("Cos", Math.cos, new Map([["0", int(1)]]), simplify));
-  table.set(TAN.name, elementary("Tan", Math.tan, new Map([["0", int(0)]]), simplify));
-  table.set(EXP.name, elementary("Exp", Math.exp, new Map([["0", int(1)]]), simplify));
-  table.set(LOG.name, elementary("Log", Math.log, new Map([["1", int(0)]]), simplify));
-  table.set(SQRT.name, elementary("Sqrt", Math.sqrt, new Map([["0", int(0)], ["1", int(1)]]), simplify));
-  table.set(ATAN.name, elementary("Atan", Math.atan, new Map([["0", int(0)]]), simplify));
-  table.set(ASIN.name, elementary("Asin", Math.asin, new Map([["0", int(0)]]), simplify));
-  table.set(ACOS.name, elementary("Acos", Math.acos, new Map(), simplify));
-  table.set(SINH.name, elementary("Sinh", Math.sinh, new Map([["0", int(0)]]), simplify));
-  table.set(COSH.name, elementary("Cosh", Math.cosh, new Map([["0", int(1)]]), simplify));
-  table.set(TANH.name, elementary("Tanh", Math.tanh, new Map([["0", int(0)]]), simplify));
-  table.set(ASINH.name, elementary("Asinh", Math.asinh, new Map([["0", int(0)]]), simplify));
-  table.set(ACOSH.name, elementary("Acosh", Math.acosh, new Map(), simplify));
-  table.set(ATANH.name, elementary("Atanh", Math.atanh, new Map([["0", int(0)]]), simplify));
+  // ----- Phase 29: Abs — idempotency, negation-strip, even-power -----
+  // The Abs head is not in symbolic-ir's export list, so we register it
+  // by string name here.  Any expression of the form Abs(x) produced by
+  // the sqrt handler will be caught by this handler on re-evaluation.
+  table.set("Abs", (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const inner = expr.args[0];
+    const na = toNumeric(inner);
+    if (na !== undefined) {
+      // Numeric fold: abs(n) = |n|.
+      if (na.kind === "int") return int(na.value < 0n ? -na.value : na.value);
+      if (na.kind === "rat") {
+        const n = na.numer < 0n ? -na.numer : na.numer;
+        return rational(n, na.denom);
+      }
+      return numberNode(Math.abs(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Abs requires a numeric argument: ${headName(expr.head)}`);
+    // Rule 4a: abs(abs(x)) = abs(x)
+    if (inner.kind === "apply" && equals(inner.head, _ABS_HEAD))
+      return inner;
+    // Rule 4b: abs(-x) = abs(x)  (strip NEG)
+    if (inner.kind === "apply" && equals(inner.head, NEG) && inner.args.length === 1)
+      return vm.eval(app(_ABS_HEAD, [inner.args[0]]));
+    // Rule 4c: abs(Mul(-1, x)) = abs(x)  (-x encoded as Mul after numeric fold)
+    if (inner.kind === "apply" && equals(inner.head, MUL) && inner.args.length === 2) {
+      const [mA] = inner.args;
+      if (mA.kind === "integer" && mA.value === -1n)
+        return vm.eval(app(_ABS_HEAD, [inner.args[1]]));
+    }
+    // Rule 4d: abs(x^{2k}) = x^{2k}  (even power ≥ 0 always)
+    if (inner.kind === "apply" && equals(inner.head, POW) && inner.args.length === 2) {
+      const [, expNode] = inner.args;
+      if (expNode.kind === "integer" && expNode.value >= 2n && expNode.value % 2n === 0n)
+        return inner;
+    }
+    return expr;
+  });
+
+  // ----- Phase 29: Sqrt — perfect-square fold, even-power rewrite -----
+  // Overrides the numeric-only elementary() factory.
+  table.set(SQRT.name, (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "0") return int(0);
+      if (numericKey(na) === "1") return int(1);
+      const result = Math.sqrt(toNumber(na));
+      // Perfect-square detection: if round(√n)² == n, return integer.
+      const intResult = Math.round(result);
+      if (intResult * intResult === toNumber(na)) return int(intResult);
+      return numberNode(result);
+    }
+    if (!simplify) throw new TypeError(`Sqrt requires a numeric argument: ${headName(expr.head)}`);
+    // sqrt(x^{2k}): split into even-k (x^k is non-negative) and odd-k (need Abs).
+    if (arg.kind === "apply" && equals(arg.head, POW) && arg.args.length === 2) {
+      const [base, expNode] = arg.args;
+      if (expNode.kind === "integer" && expNode.value > 0n && expNode.value % 2n === 0n) {
+        const k = expNode.value / 2n;
+        if (k % 2n === 0n) {
+          // k even → x^k ≥ 0 always, e.g. sqrt(x^4) = x^2.
+          return app(POW, [base, int(k)]);
+        }
+        // k odd → |x^k|, e.g. sqrt(x^2) = |x|, sqrt(x^6) = |x^3|.
+        if (k === 1n) return vm.eval(app(_ABS_HEAD, [base]));
+        return vm.eval(app(_ABS_HEAD, [app(POW, [base, int(k)])]));
+      }
+    }
+    return expr;
+  });
+
+  // ----- Phase 30: Log — log(exp(x))→x cancellation -----
+  table.set(LOG.name, (_vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "1") return int(0);
+      if (toNumber(na) <= 0) return expr; // log undefined for non-positive reals
+      return numberNode(Math.log(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Log requires a numeric argument: ${headName(expr.head)}`);
+    // Rule 3: log(exp(x)) = x  (structural cancellation, always valid for real domain).
+    if (arg.kind === "apply" && equals(arg.head, EXP) && arg.args.length === 1)
+      return arg.args[0];
+    // Note: log(x^n) = n·log(x) requires an assumption context; skipped here.
+    return expr;
+  });
+
+  // ----- Phase 30: Exp — exp(log(x))→x and exp(n·log(x))→x^n -----
+  table.set(EXP.name, (_vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "0") return int(1);
+      return numberNode(Math.exp(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Exp requires a numeric argument: ${headName(expr.head)}`);
+    // Rule 3: exp(log(x)) = x.
+    if (arg.kind === "apply" && equals(arg.head, LOG) && arg.args.length === 1)
+      return arg.args[0];
+    // Rule 4: exp(n·log(x)) = x^n  — handles both Mul(n, log(x)) and Mul(log(x), n).
+    if (arg.kind === "apply" && equals(arg.head, MUL) && arg.args.length === 2) {
+      const [a, b] = arg.args;
+      if (a.kind === "apply" && equals(a.head, LOG) && a.args.length === 1)
+        return app(POW, [a.args[0], b]);
+      if (b.kind === "apply" && equals(b.head, LOG) && b.args.length === 1)
+        return app(POW, [b.args[0], a]);
+    }
+    return expr;
+  });
+
+  // ----- Phase 31+33: Sin — odd symmetry, arc-cancel, π-multiples -----
+  table.set(SIN.name, (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    // Rule 4 (Phase 33): π-multiple exact values (checked before numeric fold so
+    // that %pi symbols are detected before any backend evaluates them to floats).
+    const q = tryPiMultiple(arg);
+    if (q !== undefined) {
+      const val = SIN_PI_TABLE.get(fracKey(fracMod(q, 2n)));
+      if (val !== undefined) return val;
+    }
+    // Rule 1: numeric fold.
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "0") return int(0);
+      return numberNode(Math.sin(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Sin requires a numeric argument: ${headName(expr.head)}`);
+    // Rule 2 (Phase 31): odd symmetry — sin(-x) = -sin(x).
+    if (arg.kind === "apply" && equals(arg.head, NEG) && arg.args.length === 1)
+      return vm.eval(app(NEG, [app(SIN, [arg.args[0]])]));
+    // Rule 3 (Phase 31): arc-cancellation — sin(asin(x)) = x.
+    if (arg.kind === "apply" && equals(arg.head, ASIN) && arg.args.length === 1)
+      return arg.args[0];
+    return expr;
+  });
+
+  // ----- Phase 31+33: Cos — even symmetry, arc-cancel, π-multiples -----
+  table.set(COS.name, (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    // Rule 4 (Phase 33): π-multiple exact values.
+    // cos(-q·π) = cos(q·π) by even symmetry; this is handled automatically by the
+    // modular reduction since Fraction(-1/3) % 2 = Fraction(5/3) → same table entry.
+    const q = tryPiMultiple(arg);
+    if (q !== undefined) {
+      const val = COS_PI_TABLE.get(fracKey(fracMod(q, 2n)));
+      if (val !== undefined) return val;
+    }
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "0") return int(1);
+      return numberNode(Math.cos(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Cos requires a numeric argument: ${headName(expr.head)}`);
+    // Rule 2 (Phase 31): even symmetry — cos(-x) = cos(x).
+    if (arg.kind === "apply" && equals(arg.head, NEG) && arg.args.length === 1)
+      return vm.eval(app(COS, [arg.args[0]]));
+    // Rule 3 (Phase 31): arc-cancellation — cos(acos(x)) = x.
+    if (arg.kind === "apply" && equals(arg.head, ACOS) && arg.args.length === 1)
+      return arg.args[0];
+    return expr;
+  });
+
+  // ----- Phase 31+33: Tan — odd symmetry, arc-cancel, π-multiples -----
+  table.set(TAN.name, (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    // Rule 4 (Phase 33): π-multiple exact values.
+    // tan(-q·π) = -tan(q·π) by odd symmetry — handled via sign and abs.
+    const q = tryPiMultiple(arg);
+    if (q !== undefined) {
+      const sign = q[0] < 0n ? -1 : 1;
+      const qAbs: Frac = q[0] < 0n ? [-q[0], q[1]] : q;
+      const qMod = fracKey(fracMod(qAbs, 1n)); // period π
+      const val = TAN_PI_TABLE.get(qMod);
+      if (val !== undefined)
+        return sign < 0 ? app(NEG, [val]) : val;
+      // q = 1/2 (mod 1) → undefined, fall through
+    }
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "0") return int(0);
+      return numberNode(Math.tan(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Tan requires a numeric argument: ${headName(expr.head)}`);
+    // Rule 2 (Phase 31): odd symmetry — tan(-x) = -tan(x).
+    if (arg.kind === "apply" && equals(arg.head, NEG) && arg.args.length === 1)
+      return vm.eval(app(NEG, [app(TAN, [arg.args[0]])]));
+    // Rule 3 (Phase 31): arc-cancellation — tan(atan(x)) = x.
+    if (arg.kind === "apply" && equals(arg.head, ATAN) && arg.args.length === 1)
+      return arg.args[0];
+    return expr;
+  });
+
+  // ----- Phase 32: Atan — odd symmetry -----
+  table.set(ATAN.name, (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "0") return int(0);
+      return numberNode(Math.atan(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Atan requires a numeric argument: ${headName(expr.head)}`);
+    // Odd symmetry — atan(-x) = -atan(x).
+    if (arg.kind === "apply" && equals(arg.head, NEG) && arg.args.length === 1)
+      return vm.eval(app(NEG, [app(ATAN, [arg.args[0]])]));
+    return expr;
+  });
+
+  // ----- Phase 32: Asin — odd symmetry -----
+  table.set(ASIN.name, (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "0") return int(0);
+      return numberNode(Math.asin(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Asin requires a numeric argument: ${headName(expr.head)}`);
+    // Odd symmetry — asin(-x) = -asin(x).
+    if (arg.kind === "apply" && equals(arg.head, NEG) && arg.args.length === 1)
+      return vm.eval(app(NEG, [app(ASIN, [arg.args[0]])]));
+    return expr;
+  });
+
+  // ----- Phase 32: Acos — reflection identity acos(-x) = π - acos(x) -----
+  table.set(ACOS.name, (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "1") return int(0);
+      return numberNode(Math.acos(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Acos requires a numeric argument: ${headName(expr.head)}`);
+    // Reflection: acos(-x) = π − acos(x).
+    if (arg.kind === "apply" && equals(arg.head, NEG) && arg.args.length === 1) {
+      const innerAcos = vm.eval(app(ACOS, [arg.args[0]]));
+      return app(SUB, [_INV_TRIG_PI, innerAcos]);
+    }
+    return expr;
+  });
+
+  // ----- Phase 31: Sinh — odd symmetry, arc-cancellation -----
+  table.set(SINH.name, (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "0") return int(0);
+      return numberNode(Math.sinh(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Sinh requires a numeric argument: ${headName(expr.head)}`);
+    // Odd symmetry — sinh(-x) = -sinh(x).
+    if (arg.kind === "apply" && equals(arg.head, NEG) && arg.args.length === 1)
+      return vm.eval(app(NEG, [app(SINH, [arg.args[0]])]));
+    // Arc-cancellation — sinh(asinh(x)) = x.
+    if (arg.kind === "apply" && equals(arg.head, ASINH) && arg.args.length === 1)
+      return arg.args[0];
+    return expr;
+  });
+
+  // ----- Phase 31: Cosh — even symmetry, arc-cancellation -----
+  table.set(COSH.name, (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "0") return int(1);
+      return numberNode(Math.cosh(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Cosh requires a numeric argument: ${headName(expr.head)}`);
+    // Even symmetry — cosh(-x) = cosh(x).
+    if (arg.kind === "apply" && equals(arg.head, NEG) && arg.args.length === 1)
+      return vm.eval(app(COSH, [arg.args[0]]));
+    // Arc-cancellation — cosh(acosh(x)) = x.
+    if (arg.kind === "apply" && equals(arg.head, ACOSH) && arg.args.length === 1)
+      return arg.args[0];
+    return expr;
+  });
+
+  // ----- Phase 31: Tanh — odd symmetry, arc-cancellation -----
+  table.set(TANH.name, (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "0") return int(0);
+      return numberNode(Math.tanh(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Tanh requires a numeric argument: ${headName(expr.head)}`);
+    // Odd symmetry — tanh(-x) = -tanh(x).
+    if (arg.kind === "apply" && equals(arg.head, NEG) && arg.args.length === 1)
+      return vm.eval(app(NEG, [app(TANH, [arg.args[0]])]));
+    // Arc-cancellation — tanh(atanh(x)) = x.
+    if (arg.kind === "apply" && equals(arg.head, ATANH) && arg.args.length === 1)
+      return arg.args[0];
+    return expr;
+  });
+
+  // ----- Phase 32: Asinh — odd symmetry -----
+  table.set(ASINH.name, (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "0") return int(0);
+      return numberNode(Math.asinh(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Asinh requires a numeric argument: ${headName(expr.head)}`);
+    // Odd symmetry — asinh(-x) = -asinh(x).
+    if (arg.kind === "apply" && equals(arg.head, NEG) && arg.args.length === 1)
+      return vm.eval(app(NEG, [app(ASINH, [arg.args[0]])]));
+    return expr;
+  });
+
+  // ----- Acosh — numeric fold only (domain [1,∞), no symmetry rule) -----
+  table.set(ACOSH.name, elementary("Acosh", Math.acosh, new Map([["1", int(0)]]), simplify));
+
+  // ----- Phase 32: Atanh — odd symmetry -----
+  table.set(ATANH.name, (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = expr.args[0];
+    const na = toNumeric(arg);
+    if (na !== undefined) {
+      if (numericKey(na) === "0") return int(0);
+      return numberNode(Math.atanh(toNumber(na)));
+    }
+    if (!simplify) throw new TypeError(`Atanh requires a numeric argument: ${headName(expr.head)}`);
+    // Odd symmetry — atanh(-x) = -atanh(x).
+    if (arg.kind === "apply" && equals(arg.head, NEG) && arg.args.length === 1)
+      return vm.eval(app(NEG, [app(ATANH, [arg.args[0]])]));
+    return expr;
+  });
   table.set(COTH.name, elementary("Coth", (x) => Math.cosh(x) / Math.sinh(x), new Map(), simplify));
   table.set(SECH.name, elementary("Sech", (x) => 1 / Math.cosh(x), new Map([["0", int(1)]]), simplify));
   table.set(CSCH.name, elementary("Csch", (x) => 1 / Math.sinh(x), new Map(), simplify));

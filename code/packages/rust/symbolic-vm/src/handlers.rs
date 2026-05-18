@@ -534,148 +534,499 @@ fn elementary_handler(
     })
 }
 
-// We can't store `IRNode` in a `&'static` slice, so we pre-compute them
-// via lazy_static.  Instead, we hard-code the numeric values and
-// reconstruct IRNode::Integer/Float as needed.
+// ---------------------------------------------------------------------------
+// Phase 29–33: algebraic helpers
+// ---------------------------------------------------------------------------
 
-fn sin_handler(simplify: bool) -> Handler {
-    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Sin",
-            f64::sin,
-            &[(Numeric::Int(0), IRNode::Integer(0))],
-            simplify,
-        )
+/// Reduced fraction `(p, q)` with `q > 0` and `gcd(|p|, q) = 1`.
+type Frac = (i64, i64);
+
+fn frac_gcd(mut a: i64, mut b: i64) -> i64 {
+    a = a.abs();
+    b = b.abs();
+    while b != 0 { let t = b; b = a % b; a = t; }
+    if a == 0 { 1 } else { a }
+}
+
+/// Normalise `p/q` to lowest terms with `q > 0`.
+/// Returns `None` if `q == 0`.
+fn frac_make(p: i64, q: i64) -> Option<Frac> {
+    if q == 0 { return None; }
+    let (p, q) = if q < 0 { (-p, -q) } else { (p, q) };
+    let g = frac_gcd(p.abs(), q);
+    Some((p / g, q / g))
+}
+
+/// `(p/q) mod m`, result in `[0, m)`.
+fn frac_mod(p: i64, q: i64, m: i64) -> Option<Frac> {
+    // (p/q) mod m = (p mod (m·q)) / q
+    let mq = m.checked_mul(q)?;
+    let mut r = p % mq;
+    if r < 0 { r = r.checked_add(mq)?; }
+    frac_make(r, q)
+}
+
+/// Try to extract a plain `i64/i64` rational from an IR numeric node.
+fn frac_from_ir(node: &IRNode) -> Option<Frac> {
+    match node {
+        IRNode::Integer(n) => Some((*n, 1)),
+        IRNode::Rational(p, q) => frac_make(*p, *q),
+        _ => None,
+    }
+}
+
+/// Phase 33: if `arg = q·%pi` for a rational `q` with denominator in
+/// `{1,2,3,4,6}`, return `q` as `(numer, denom)`.  Otherwise `None`.
+///
+/// Strategy 1: float ≈ q·π (for backends that evaluate %pi → float).
+/// Strategy 2: structural match on `%pi`, `Neg(%pi)`, `Mul(n,%pi)`,
+///   `Div(%pi,n)`, `Div(Mul(n,%pi),d)`.
+fn try_pi_multiple(arg: &IRNode) -> Option<Frac> {
+    // Strategy 1: float value ≈ q·π
+    if let IRNode::Float(v) = arg {
+        let qf = v / std::f64::consts::PI;
+        for d in [1i64, 2, 3, 4, 6] {
+            let p_cand = (qf * d as f64).round() as i64;
+            if (qf * d as f64 - p_cand as f64).abs() < 1e-9 {
+                return frac_make(p_cand, d);
+            }
+        }
+        return None;
+    }
+    // Strategy 2: structural match
+    let pi_sym = IRNode::Symbol("%pi".to_string());
+    if *arg == pi_sym { return frac_make(1, 1); }
+    let IRNode::Apply(apply) = arg else { return None; };
+
+    // Neg(anything) — recurse and negate
+    if apply.head == IRNode::Symbol(NEG.to_string()) && apply.args.len() == 1 {
+        let inner = try_pi_multiple(&apply.args[0])?;
+        return frac_make(-inner.0, inner.1);
+    }
+
+    // Mul(n, %pi) or Mul(%pi, n)
+    if apply.head == IRNode::Symbol(MUL.to_string()) && apply.args.len() == 2 {
+        let (a, b) = (&apply.args[0], &apply.args[1]);
+        if *b == pi_sym { return frac_from_ir(a); }
+        if *a == pi_sym { return frac_from_ir(b); }
+    }
+
+    // Div(%pi, n) or Div(Mul(n,%pi), d)
+    if apply.head == IRNode::Symbol(DIV.to_string()) && apply.args.len() == 2 {
+        let (num, den) = (&apply.args[0], &apply.args[1]);
+        let df = frac_from_ir(den)?;
+        if df.0 == 0 { return None; }
+        // Div(%pi, n) → 1/df = (df.1, df.0)
+        if *num == pi_sym {
+            return frac_make(df.1, df.0);
+        }
+        // Div(Mul(n,%pi), d) or Div(Mul(%pi,n), d)
+        if let IRNode::Apply(mul_apply) = num {
+            if mul_apply.head == IRNode::Symbol(MUL.to_string()) && mul_apply.args.len() == 2 {
+                let (ma, mb) = (&mul_apply.args[0], &mul_apply.args[1]);
+                let coeff_node = if *mb == pi_sym { Some(ma) }
+                                 else if *ma == pi_sym { Some(mb) }
+                                 else { None }?;
+                let nf = frac_from_ir(coeff_node)?;
+                // nf / df = (nf.0 * df.1) / (nf.1 * df.0)
+                return frac_make(nf.0.checked_mul(df.1)?, nf.1.checked_mul(df.0)?);
+            }
+        }
+    }
+    None
+}
+
+// ---------------------------------------------------------------------------
+// Phase 33: exact algebraic IR values for sin/cos/tan tables
+// ---------------------------------------------------------------------------
+
+/// `Div(Sqrt(n), d)` helper — produces the IR node `√n / d`.
+fn p33_sqrt_over(n: i64, d: i64) -> IRNode {
+    apply_node(DIV, vec![
+        apply_node(SQRT, vec![IRNode::Integer(n)]),
+        IRNode::Integer(d),
+    ])
+}
+
+/// `Neg(expr)` helper.
+fn p33_neg(v: IRNode) -> IRNode { apply_node(NEG, vec![v]) }
+
+/// sin(q·π) for `(q.0, q.1)` in canonical form with denominator dividing 12.
+/// Returns `None` if the key is not in the table (including q=1/2 period).
+fn sin_pi_table(p: i64, q: i64) -> Option<IRNode> {
+    // Entries for q ∈ [0/1, 11/6]  (16 entries, period 2).
+    // Key: (p, q) in reduced form after (p mod 2q)/q reduction.
+    match (p, q) {
+        (0, 1)  => Some(IRNode::Integer(0)),
+        (1, 6)  => Some(IRNode::Rational(1, 2)),
+        (1, 4)  => Some(p33_sqrt_over(2, 2)),
+        (1, 3)  => Some(p33_sqrt_over(3, 2)),
+        (1, 2)  => Some(IRNode::Integer(1)),
+        (2, 3)  => Some(p33_sqrt_over(3, 2)),
+        (3, 4)  => Some(p33_sqrt_over(2, 2)),
+        (5, 6)  => Some(IRNode::Rational(1, 2)),
+        (1, 1)  => Some(IRNode::Integer(0)),
+        (7, 6)  => Some(IRNode::Rational(-1, 2)),
+        (5, 4)  => Some(p33_neg(p33_sqrt_over(2, 2))),
+        (4, 3)  => Some(p33_neg(p33_sqrt_over(3, 2))),
+        (3, 2)  => Some(IRNode::Integer(-1)),
+        (5, 3)  => Some(p33_neg(p33_sqrt_over(3, 2))),
+        (7, 4)  => Some(p33_neg(p33_sqrt_over(2, 2))),
+        (11, 6) => Some(IRNode::Rational(-1, 2)),
+        _       => None,
+    }
+}
+
+/// cos(q·π) — same key convention as `sin_pi_table`.
+fn cos_pi_table(p: i64, q: i64) -> Option<IRNode> {
+    match (p, q) {
+        (0, 1)  => Some(IRNode::Integer(1)),
+        (1, 6)  => Some(p33_sqrt_over(3, 2)),
+        (1, 4)  => Some(p33_sqrt_over(2, 2)),
+        (1, 3)  => Some(IRNode::Rational(1, 2)),
+        (1, 2)  => Some(IRNode::Integer(0)),
+        (2, 3)  => Some(IRNode::Rational(-1, 2)),
+        (3, 4)  => Some(p33_neg(p33_sqrt_over(2, 2))),
+        (5, 6)  => Some(p33_neg(p33_sqrt_over(3, 2))),
+        (1, 1)  => Some(IRNode::Integer(-1)),
+        (7, 6)  => Some(p33_neg(p33_sqrt_over(3, 2))),
+        (5, 4)  => Some(p33_neg(p33_sqrt_over(2, 2))),
+        (4, 3)  => Some(IRNode::Rational(-1, 2)),
+        (3, 2)  => Some(IRNode::Integer(0)),
+        (5, 3)  => Some(IRNode::Rational(1, 2)),
+        (7, 4)  => Some(p33_sqrt_over(2, 2)),
+        (11, 6) => Some(p33_sqrt_over(3, 2)),
+        _       => None,
+    }
+}
+
+/// tan(q·π) — period π, key is `q mod 1` (denominator divides 6).
+/// q = 1/2 is omitted (undefined); returns `None` for that case too.
+fn tan_pi_table(p: i64, q: i64) -> Option<IRNode> {
+    match (p, q) {
+        (0, 1)  => Some(IRNode::Integer(0)),
+        (1, 6)  => Some(apply_node(DIV, vec![
+                       apply_node(SQRT, vec![IRNode::Integer(3)]),
+                       IRNode::Integer(3),
+                   ])),
+        (1, 4)  => Some(IRNode::Integer(1)),
+        (1, 3)  => Some(apply_node(SQRT, vec![IRNode::Integer(3)])),
+        (2, 3)  => Some(p33_neg(apply_node(SQRT, vec![IRNode::Integer(3)]))),
+        (3, 4)  => Some(IRNode::Integer(-1)),
+        (5, 6)  => Some(p33_neg(apply_node(DIV, vec![
+                       apply_node(SQRT, vec![IRNode::Integer(3)]),
+                       IRNode::Integer(3),
+                   ]))),
+        _       => None,
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Phase 29–33: Enhanced elementary handlers
+// ---------------------------------------------------------------------------
+
+/// Phase 29: Abs — idempotency, negation-strip, Mul(-1,x)-strip, even-power.
+fn abs_handler(simplify: bool) -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let inner = &expr.args[0];
+        // Numeric fold: abs(n) = |n|.
+        if let Some(v) = to_numeric(inner) {
+            let f = v.to_f64().abs();
+            // Try to preserve exact integer/rational form.
+            match inner {
+                IRNode::Integer(n) => return IRNode::Integer(n.abs()),
+                IRNode::Rational(p, q) => return IRNode::Rational(p.abs(), *q),
+                _ => return IRNode::Float(f),
+            }
+        }
+        if !simplify { panic!("Abs requires a numeric argument: {expr}"); }
+        // Rule 4a: abs(abs(x)) = abs(x)
+        if let IRNode::Apply(inner_apply) = inner {
+            if inner_apply.head == IRNode::Symbol("Abs".to_string()) {
+                return inner.clone();
+            }
+            // Rule 4b: abs(-x) = abs(x)
+            if inner_apply.head == IRNode::Symbol(NEG.to_string()) && inner_apply.args.len() == 1 {
+                return vm.eval(apply_node("Abs", vec![inner_apply.args[0].clone()]));
+            }
+            // Rule 4c: abs(Mul(-1, x)) = abs(x)
+            if inner_apply.head == IRNode::Symbol(MUL.to_string()) && inner_apply.args.len() == 2 {
+                if inner_apply.args[0] == IRNode::Integer(-1) {
+                    return vm.eval(apply_node("Abs", vec![inner_apply.args[1].clone()]));
+                }
+            }
+            // Rule 4d: abs(x^{2k}) = x^{2k}  (even power ≥ 0 always)
+            if inner_apply.head == IRNode::Symbol(POW.to_string()) && inner_apply.args.len() == 2 {
+                if let IRNode::Integer(n) = &inner_apply.args[1] {
+                    if *n >= 2 && n % 2 == 0 { return inner.clone(); }
+                }
+            }
+        }
+        IRNode::Apply(Box::new(expr))
     })
 }
 
-fn cos_handler(simplify: bool) -> Handler {
-    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Cos",
-            f64::cos,
-            &[(Numeric::Int(0), IRNode::Integer(1))],
-            simplify,
-        )
+/// Phase 29: Sqrt — perfect-square fold, even-power algebraic rewrite.
+fn sqrt_handler(simplify: bool) -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(0) { return IRNode::Integer(0); }
+            if va == Numeric::Int(1) { return IRNode::Integer(1); }
+            let result = va.to_f64().sqrt();
+            // Perfect-square detection: round(√n)² == n → return integer.
+            let int_result = result.round() as i64;
+            if (int_result as f64 * int_result as f64 - va.to_f64()).abs() < 1e-9 {
+                return IRNode::Integer(int_result);
+            }
+            return IRNode::Float(result);
+        }
+        if !simplify { panic!("Sqrt requires a numeric argument: {expr}"); }
+        // sqrt(x^{2k}) — split on parity of k.
+        if let IRNode::Apply(inner) = arg {
+            if inner.head == IRNode::Symbol(POW.to_string()) && inner.args.len() == 2 {
+                let base = &inner.args[0];
+                if let IRNode::Integer(n) = &inner.args[1] {
+                    if *n > 0 && n % 2 == 0 {
+                        let k = n / 2;
+                        if k % 2 == 0 {
+                            // k even → x^k ≥ 0 always, e.g. sqrt(x^4) = x^2.
+                            return apply_node(POW, vec![base.clone(), IRNode::Integer(k)]);
+                        }
+                        // k odd → |x^k|
+                        let inner_expr = if k == 1 {
+                            base.clone()
+                        } else {
+                            apply_node(POW, vec![base.clone(), IRNode::Integer(k)])
+                        };
+                        return vm.eval(apply_node("Abs", vec![inner_expr]));
+                    }
+                }
+            }
+        }
+        IRNode::Apply(Box::new(expr))
     })
 }
 
-fn tan_handler(simplify: bool) -> Handler {
-    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Tan",
-            f64::tan,
-            &[(Numeric::Int(0), IRNode::Integer(0))],
-            simplify,
-        )
-    })
-}
-
-fn exp_handler(simplify: bool) -> Handler {
-    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Exp",
-            f64::exp,
-            &[(Numeric::Int(0), IRNode::Integer(1))],
-            simplify,
-        )
-    })
-}
-
+/// Phase 30: Log — special value log(1)=0, log(exp(x))=x cancellation.
 fn log_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Log",
-            f64::ln,
-            &[(Numeric::Int(1), IRNode::Integer(0))],
-            simplify,
-        )
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(1) { return IRNode::Integer(0); }
+            let f = va.to_f64();
+            if f <= 0.0 { return IRNode::Apply(Box::new(expr)); } // undefined for non-positive
+            return IRNode::Float(f.ln());
+        }
+        if !simplify { panic!("Log requires a numeric argument: {expr}"); }
+        // log(exp(x)) = x  (structural cancellation).
+        if let IRNode::Apply(inner) = arg {
+            if inner.head == IRNode::Symbol(EXP.to_string()) && inner.args.len() == 1 {
+                return inner.args[0].clone();
+            }
+        }
+        // Note: log(x^n) = n·log(x) requires assumption context; skipped here.
+        IRNode::Apply(Box::new(expr))
     })
 }
 
-fn sqrt_handler(simplify: bool) -> Handler {
+/// Phase 30: Exp — special value exp(0)=1, exp(log(x))=x, exp(n·log(x))=x^n.
+fn exp_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Sqrt",
-            f64::sqrt,
-            &[
-                (Numeric::Int(0), IRNode::Integer(0)),
-                (Numeric::Int(1), IRNode::Integer(1)),
-            ],
-            simplify,
-        )
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(0) { return IRNode::Integer(1); }
+            return IRNode::Float(va.to_f64().exp());
+        }
+        if !simplify { panic!("Exp requires a numeric argument: {expr}"); }
+        if let IRNode::Apply(inner) = arg {
+            // exp(log(x)) = x
+            if inner.head == IRNode::Symbol(LOG.to_string()) && inner.args.len() == 1 {
+                return inner.args[0].clone();
+            }
+            // exp(n·log(x)) = x^n  — handles both Mul(n, log(x)) and Mul(log(x), n).
+            if inner.head == IRNode::Symbol(MUL.to_string()) && inner.args.len() == 2 {
+                let (a, b) = (&inner.args[0], &inner.args[1]);
+                let is_log_a = matches!(a, IRNode::Apply(ap) if ap.head == IRNode::Symbol(LOG.to_string()) && ap.args.len() == 1);
+                let is_log_b = matches!(b, IRNode::Apply(ap) if ap.head == IRNode::Symbol(LOG.to_string()) && ap.args.len() == 1);
+                if is_log_a {
+                    if let IRNode::Apply(log_ap) = a { return apply_node(POW, vec![log_ap.args[0].clone(), b.clone()]); }
+                }
+                if is_log_b {
+                    if let IRNode::Apply(log_ap) = b { return apply_node(POW, vec![log_ap.args[0].clone(), a.clone()]); }
+                }
+            }
+        }
+        IRNode::Apply(Box::new(expr))
     })
 }
 
-fn atan_handler(simplify: bool) -> Handler {
-    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Atan",
-            f64::atan,
-            &[(Numeric::Int(0), IRNode::Integer(0))],
-            simplify,
-        )
+/// Phase 31+33: Sin — odd symmetry, arc-cancellation, π-multiple exact values.
+fn sin_handler(simplify: bool) -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        // Rule 4 (Phase 33): π-multiple exact values — checked first.
+        if let Some((p, q)) = try_pi_multiple(arg) {
+            if let Some((rp, rq)) = frac_mod(p, q, 2) {
+                if let Some(val) = sin_pi_table(rp, rq) { return val; }
+            }
+        }
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(0) { return IRNode::Integer(0); }
+            return IRNode::Float(va.to_f64().sin());
+        }
+        if !simplify { panic!("Sin requires a numeric argument: {expr}"); }
+        if let IRNode::Apply(inner) = arg {
+            // Rule 2 (Phase 31): odd symmetry — sin(-x) = -sin(x).
+            if inner.head == IRNode::Symbol(NEG.to_string()) && inner.args.len() == 1 {
+                let inner_sin = vm.eval(apply_node(SIN, vec![inner.args[0].clone()]));
+                return apply_node(NEG, vec![inner_sin]);
+            }
+            // Rule 3 (Phase 31): arc-cancellation — sin(asin(x)) = x.
+            if inner.head == IRNode::Symbol(ASIN.to_string()) && inner.args.len() == 1 {
+                return inner.args[0].clone();
+            }
+        }
+        IRNode::Apply(Box::new(expr))
     })
 }
 
-fn asin_handler(simplify: bool) -> Handler {
-    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Asin",
-            f64::asin,
-            &[(Numeric::Int(0), IRNode::Integer(0))],
-            simplify,
-        )
+/// Phase 31+33: Cos — even symmetry, arc-cancellation, π-multiple exact values.
+fn cos_handler(simplify: bool) -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        // Rule 4 (Phase 33): π-multiple.
+        if let Some((p, q)) = try_pi_multiple(arg) {
+            if let Some((rp, rq)) = frac_mod(p, q, 2) {
+                if let Some(val) = cos_pi_table(rp, rq) { return val; }
+            }
+        }
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(0) { return IRNode::Integer(1); }
+            return IRNode::Float(va.to_f64().cos());
+        }
+        if !simplify { panic!("Cos requires a numeric argument: {expr}"); }
+        if let IRNode::Apply(inner) = arg {
+            // Rule 2 (Phase 31): even symmetry — cos(-x) = cos(x).
+            if inner.head == IRNode::Symbol(NEG.to_string()) && inner.args.len() == 1 {
+                return vm.eval(apply_node(COS, vec![inner.args[0].clone()]));
+            }
+            // Rule 3 (Phase 31): arc-cancellation — cos(acos(x)) = x.
+            if inner.head == IRNode::Symbol(ACOS.to_string()) && inner.args.len() == 1 {
+                return inner.args[0].clone();
+            }
+        }
+        IRNode::Apply(Box::new(expr))
     })
 }
 
-fn acos_handler(simplify: bool) -> Handler {
-    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Acos", f64::acos, &[], simplify)
+/// Phase 31+33: Tan — odd symmetry, arc-cancellation, π-multiple exact values.
+fn tan_handler(simplify: bool) -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        // Rule 4 (Phase 33): π-multiple.
+        if let Some((p, q)) = try_pi_multiple(arg) {
+            // tan(-q·π) = -tan(q·π): handle via sign.
+            let (sign, p_abs) = if p < 0 { (-1i64, -p) } else { (1, p) };
+            if let Some((rp, rq)) = frac_mod(p_abs, q, 1) {
+                if let Some(val) = tan_pi_table(rp, rq) {
+                    return if sign < 0 { apply_node(NEG, vec![val]) } else { val };
+                }
+                // rp/rq = 1/2 → undefined, fall through
+            }
+        }
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(0) { return IRNode::Integer(0); }
+            return IRNode::Float(va.to_f64().tan());
+        }
+        if !simplify { panic!("Tan requires a numeric argument: {expr}"); }
+        if let IRNode::Apply(inner) = arg {
+            // Rule 2 (Phase 31): odd symmetry — tan(-x) = -tan(x).
+            if inner.head == IRNode::Symbol(NEG.to_string()) && inner.args.len() == 1 {
+                let inner_tan = vm.eval(apply_node(TAN, vec![inner.args[0].clone()]));
+                return apply_node(NEG, vec![inner_tan]);
+            }
+            // Rule 3 (Phase 31): arc-cancellation — tan(atan(x)) = x.
+            if inner.head == IRNode::Symbol(ATAN.to_string()) && inner.args.len() == 1 {
+                return inner.args[0].clone();
+            }
+        }
+        IRNode::Apply(Box::new(expr))
     })
 }
 
+/// Phase 31: Sinh — odd symmetry, arc-cancellation sinh(asinh(x)) = x.
 fn sinh_handler(simplify: bool) -> Handler {
-    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Sinh",
-            f64::sinh,
-            &[(Numeric::Int(0), IRNode::Integer(0))],
-            simplify,
-        )
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(0) { return IRNode::Integer(0); }
+            return IRNode::Float(va.to_f64().sinh());
+        }
+        if !simplify { panic!("Sinh requires a numeric argument: {expr}"); }
+        if let IRNode::Apply(inner) = arg {
+            if inner.head == IRNode::Symbol(NEG.to_string()) && inner.args.len() == 1 {
+                let inner_sinh = vm.eval(apply_node(SINH, vec![inner.args[0].clone()]));
+                return apply_node(NEG, vec![inner_sinh]);
+            }
+            if inner.head == IRNode::Symbol(ASINH.to_string()) && inner.args.len() == 1 {
+                return inner.args[0].clone();
+            }
+        }
+        IRNode::Apply(Box::new(expr))
     })
 }
 
+/// Phase 31: Cosh — even symmetry, arc-cancellation cosh(acosh(x)) = x.
 fn cosh_handler(simplify: bool) -> Handler {
-    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Cosh",
-            f64::cosh,
-            &[(Numeric::Int(0), IRNode::Integer(1))],
-            simplify,
-        )
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(0) { return IRNode::Integer(1); }
+            return IRNode::Float(va.to_f64().cosh());
+        }
+        if !simplify { panic!("Cosh requires a numeric argument: {expr}"); }
+        if let IRNode::Apply(inner) = arg {
+            if inner.head == IRNode::Symbol(NEG.to_string()) && inner.args.len() == 1 {
+                return vm.eval(apply_node(COSH, vec![inner.args[0].clone()]));
+            }
+            if inner.head == IRNode::Symbol(ACOSH.to_string()) && inner.args.len() == 1 {
+                return inner.args[0].clone();
+            }
+        }
+        IRNode::Apply(Box::new(expr))
     })
 }
 
+/// Phase 31: Tanh — odd symmetry, arc-cancellation tanh(atanh(x)) = x.
 fn tanh_handler(simplify: bool) -> Handler {
-    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Tanh",
-            f64::tanh,
-            &[(Numeric::Int(0), IRNode::Integer(0))],
-            simplify,
-        )
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(0) { return IRNode::Integer(0); }
+            return IRNode::Float(va.to_f64().tanh());
+        }
+        if !simplify { panic!("Tanh requires a numeric argument: {expr}"); }
+        if let IRNode::Apply(inner) = arg {
+            if inner.head == IRNode::Symbol(NEG.to_string()) && inner.args.len() == 1 {
+                let inner_tanh = vm.eval(apply_node(TANH, vec![inner.args[0].clone()]));
+                return apply_node(NEG, vec![inner_tanh]);
+            }
+            if inner.head == IRNode::Symbol(ATANH.to_string()) && inner.args.len() == 1 {
+                return inner.args[0].clone();
+            }
+        }
+        IRNode::Apply(Box::new(expr))
     })
 }
 
@@ -704,39 +1055,114 @@ fn csch_handler(simplify: bool) -> Handler {
     })
 }
 
-fn asinh_handler(simplify: bool) -> Handler {
-    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Asinh",
-            f64::asinh,
-            &[(Numeric::Int(0), IRNode::Integer(0))],
-            simplify,
-        )
+/// Phase 32: Atan — odd symmetry.
+fn atan_handler(simplify: bool) -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(0) { return IRNode::Integer(0); }
+            return IRNode::Float(va.to_f64().atan());
+        }
+        if !simplify { panic!("Atan requires a numeric argument: {expr}"); }
+        if let IRNode::Apply(inner) = arg {
+            if inner.head == IRNode::Symbol(NEG.to_string()) && inner.args.len() == 1 {
+                let inner_atan = vm.eval(apply_node(ATAN, vec![inner.args[0].clone()]));
+                return apply_node(NEG, vec![inner_atan]);
+            }
+        }
+        IRNode::Apply(Box::new(expr))
     })
 }
 
+/// Phase 32: Asin — odd symmetry.
+fn asin_handler(simplify: bool) -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(0) { return IRNode::Integer(0); }
+            return IRNode::Float(va.to_f64().asin());
+        }
+        if !simplify { panic!("Asin requires a numeric argument: {expr}"); }
+        if let IRNode::Apply(inner) = arg {
+            if inner.head == IRNode::Symbol(NEG.to_string()) && inner.args.len() == 1 {
+                let inner_asin = vm.eval(apply_node(ASIN, vec![inner.args[0].clone()]));
+                return apply_node(NEG, vec![inner_asin]);
+            }
+        }
+        IRNode::Apply(Box::new(expr))
+    })
+}
+
+/// Phase 32: Acos — reflection identity acos(-x) = %pi − acos(x).
+fn acos_handler(simplify: bool) -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(1) { return IRNode::Integer(0); }
+            return IRNode::Float(va.to_f64().acos());
+        }
+        if !simplify { panic!("Acos requires a numeric argument: {expr}"); }
+        if let IRNode::Apply(inner) = arg {
+            if inner.head == IRNode::Symbol(NEG.to_string()) && inner.args.len() == 1 {
+                let inner_acos = vm.eval(apply_node(ACOS, vec![inner.args[0].clone()]));
+                // acos(-x) = %pi - acos(x)
+                return apply_node(SUB, vec![
+                    IRNode::Symbol("%pi".to_string()),
+                    inner_acos,
+                ]);
+            }
+        }
+        IRNode::Apply(Box::new(expr))
+    })
+}
+
+/// Phase 32: Asinh — odd symmetry.
+fn asinh_handler(simplify: bool) -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(0) { return IRNode::Integer(0); }
+            return IRNode::Float(va.to_f64().asinh());
+        }
+        if !simplify { panic!("Asinh requires a numeric argument: {expr}"); }
+        if let IRNode::Apply(inner) = arg {
+            if inner.head == IRNode::Symbol(NEG.to_string()) && inner.args.len() == 1 {
+                let inner_asinh = vm.eval(apply_node(ASINH, vec![inner.args[0].clone()]));
+                return apply_node(NEG, vec![inner_asinh]);
+            }
+        }
+        IRNode::Apply(Box::new(expr))
+    })
+}
+
+/// Acosh — numeric fold only (domain [1, ∞), no real symmetry rule).
 fn acosh_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Acosh",
-            f64::acosh,
-            &[(Numeric::Int(1), IRNode::Integer(0))],
-            simplify,
-        )
+        single_trig(&expr, "Acosh", f64::acosh, &[(Numeric::Int(1), IRNode::Integer(0))], simplify)
     })
 }
 
+/// Phase 32: Atanh — odd symmetry.
 fn atanh_handler(simplify: bool) -> Handler {
-    std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(
-            &expr,
-            "Atanh",
-            f64::atanh,
-            &[(Numeric::Int(0), IRNode::Integer(0))],
-            simplify,
-        )
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 1 { return IRNode::Apply(Box::new(expr)); }
+        let arg = &expr.args[0];
+        if let Some(va) = to_numeric(arg) {
+            if va == Numeric::Int(0) { return IRNode::Integer(0); }
+            return IRNode::Float(va.to_f64().atanh());
+        }
+        if !simplify { panic!("Atanh requires a numeric argument: {expr}"); }
+        if let IRNode::Apply(inner) = arg {
+            if inner.head == IRNode::Symbol(NEG.to_string()) && inner.args.len() == 1 {
+                let inner_atanh = vm.eval(apply_node(ATANH, vec![inner.args[0].clone()]));
+                return apply_node(NEG, vec![inner_atanh]);
+            }
+        }
+        IRNode::Apply(Box::new(expr))
     })
 }
 
@@ -3539,6 +3965,7 @@ pub fn build_handler_table(simplify: bool) -> HashMap<String, Handler> {
     m.insert(POW.to_string(), pow_handler(simplify));
     m.insert(NEG.to_string(), neg_handler(simplify));
     m.insert(INV.to_string(), inv_handler(simplify));
+    m.insert("Abs".to_string(), abs_handler(simplify));
     m.insert(SIN.to_string(), sin_handler(simplify));
     m.insert(COS.to_string(), cos_handler(simplify));
     m.insert(TAN.to_string(), tan_handler(simplify));
