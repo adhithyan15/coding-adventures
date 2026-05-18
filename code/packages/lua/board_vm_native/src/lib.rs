@@ -15,12 +15,13 @@ use board_vm_language_core::{
     build_run_wire_frame, connection_options_for_target, connection_transport_name, detect_target,
     discover_bluetooth_devices as core_discover_bluetooth_devices, discover_devices,
     discover_devices_from_paths, esp_upload_options_for_target, host_endpoint_transport_name,
-    known_targets, onboard_led_kind, parse_bluetooth_endpoint as core_parse_bluetooth_endpoint,
-    pico_uf2_upload_options_for_target, wireless_transport_name, BoardVmLanguageSession,
-    BuiltWireFrame, LanguageBluetoothBackendOpenPlan, LanguageBluetoothDiscoveredDevice,
-    LanguageBluetoothEndpoint, LanguageBluetoothEndpointCandidate, LanguageConnectionOption,
-    LanguageCoreError, LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice,
-    LanguageI2cBus, LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageSpiBus,
+    known_targets, network_protocol_name, onboard_led_kind,
+    parse_bluetooth_endpoint as core_parse_bluetooth_endpoint, pico_uf2_upload_options_for_target,
+    wireless_transport_name, BoardVmLanguageSession, BuiltWireFrame,
+    LanguageBluetoothBackendOpenPlan, LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
+    LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
+    LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice, LanguageI2cBus,
+    LanguageNetworkInterface, LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageSpiBus,
     LanguageTargetInfo, LanguageWirelessInterface,
 };
 use lua_bridge::{
@@ -288,6 +289,33 @@ unsafe fn push_wireless_interfaces(L: *mut lua_State, interfaces: &[LanguageWire
     }
 }
 
+unsafe fn push_network_interface(L: *mut lua_State, interface: &LanguageNetworkInterface) {
+    lua_bridge::lua_newtable(L);
+    set_int(L, "interface", interface.interface as u64);
+    set_str(L, "name", &interface.name);
+    set_str(L, "transport", wireless_transport_name(interface.transport));
+    set_str(L, "chip", &interface.chip);
+
+    let key = CString::new("protocols").unwrap();
+    lua_createtable(L, interface.protocols.len() as c_int, 0);
+    for (index, protocol) in interface.protocols.iter().enumerate() {
+        push_str(L, network_protocol_name(*protocol));
+        lua_rawseti(L, -2, (index + 1) as lua_Integer);
+    }
+    lua_setfield(L, -2, key.as_ptr());
+
+    set_int(L, "max_sockets", interface.max_sockets as u64);
+    set_str(L, "notes", &interface.notes);
+}
+
+unsafe fn push_network_interfaces(L: *mut lua_State, interfaces: &[LanguageNetworkInterface]) {
+    lua_createtable(L, interfaces.len() as c_int, 0);
+    for (index, interface) in interfaces.iter().enumerate() {
+        push_network_interface(L, interface);
+        lua_rawseti(L, -2, (index + 1) as lua_Integer);
+    }
+}
+
 unsafe fn push_connection_option(L: *mut lua_State, option: &LanguageConnectionOption) {
     lua_bridge::lua_newtable(L);
     set_str(L, "transport", connection_transport_name(option.transport));
@@ -472,6 +500,10 @@ unsafe fn push_target(L: *mut lua_State, target: &LanguageTargetInfo) {
 
     let key = CString::new("wireless").unwrap();
     push_wireless_interfaces(L, &target.wireless);
+    lua_setfield(L, -2, key.as_ptr());
+
+    let key = CString::new("network_interfaces").unwrap();
+    push_network_interfaces(L, &target.network_interfaces);
     lua_setfield(L, -2, key.as_ptr());
 
     let key = CString::new("connection_options").unwrap();

@@ -74,9 +74,10 @@ use board_vm_protocol::{
 };
 use board_vm_targets::{
     all_targets, BoardFamily, BoardTargetInfo, DigitalPinInfo as TargetDigitalPin,
-    I2cBusInfo as TargetI2cBus, OnboardLed as TargetOnboardLed, SpiBusInfo as TargetSpiBus,
-    UartBusInfo as TargetUartBus, WirelessInterfaceInfo as TargetWirelessInterface,
-    WirelessTransport as TargetWirelessTransport,
+    I2cBusInfo as TargetI2cBus, NetworkInterfaceInfo as TargetNetworkInterface,
+    NetworkProtocol as TargetNetworkProtocol, OnboardLed as TargetOnboardLed,
+    SpiBusInfo as TargetSpiBus, UartBusInfo as TargetUartBus,
+    WirelessInterfaceInfo as TargetWirelessInterface, WirelessTransport as TargetWirelessTransport,
 };
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
@@ -332,6 +333,24 @@ pub struct LanguageWirelessInterface {
     pub ota_update: bool,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageNetworkProtocol {
+    Ipv4,
+    Tcp,
+    Udp,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageNetworkInterface {
+    pub interface: u8,
+    pub name: String,
+    pub transport: LanguageWirelessTransport,
+    pub chip: String,
+    pub protocols: Vec<LanguageNetworkProtocol>,
+    pub max_sockets: u8,
+    pub notes: String,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageConnectionOption {
     pub transport: LanguageConnectionTransport,
@@ -406,6 +425,7 @@ pub struct LanguageTargetInfo {
     pub spi_buses: Vec<LanguageSpiBus>,
     pub uart_buses: Vec<LanguageUartBus>,
     pub wireless: Vec<LanguageWirelessInterface>,
+    pub network_interfaces: Vec<LanguageNetworkInterface>,
     pub connection_options: Vec<LanguageConnectionOption>,
     pub capabilities: Vec<String>,
 }
@@ -617,6 +637,14 @@ pub const fn wireless_transport_name(transport: LanguageWirelessTransport) -> &'
         LanguageWirelessTransport::Wifi => "wifi",
         LanguageWirelessTransport::BluetoothLe => "bluetooth_le",
         LanguageWirelessTransport::BluetoothClassic => "bluetooth_classic",
+    }
+}
+
+pub const fn network_protocol_name(protocol: LanguageNetworkProtocol) -> &'static str {
+    match protocol {
+        LanguageNetworkProtocol::Ipv4 => "ipv4",
+        LanguageNetworkProtocol::Tcp => "tcp",
+        LanguageNetworkProtocol::Udp => "udp",
     }
 }
 
@@ -1123,6 +1151,11 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
             .iter()
             .map(language_wireless_interface)
             .collect(),
+        network_interfaces: target
+            .network_interfaces
+            .iter()
+            .map(language_network_interface)
+            .collect(),
         connection_options: language_connection_options(target),
         capabilities: target
             .capabilities
@@ -1191,6 +1224,30 @@ fn language_wireless_interface(interface: &TargetWirelessInterface) -> LanguageW
         chip: interface.chip.to_owned(),
         command_transport: interface.command_transport,
         ota_update: interface.ota_update,
+    }
+}
+
+fn language_network_interface(interface: &TargetNetworkInterface) -> LanguageNetworkInterface {
+    LanguageNetworkInterface {
+        interface: interface.interface,
+        name: interface.name.to_owned(),
+        transport: language_wireless_transport(interface.transport),
+        chip: interface.chip.to_owned(),
+        protocols: interface
+            .protocols
+            .iter()
+            .map(|protocol| language_network_protocol(*protocol))
+            .collect(),
+        max_sockets: interface.max_sockets,
+        notes: interface.notes.to_owned(),
+    }
+}
+
+fn language_network_protocol(protocol: TargetNetworkProtocol) -> LanguageNetworkProtocol {
+    match protocol {
+        TargetNetworkProtocol::Ipv4 => LanguageNetworkProtocol::Ipv4,
+        TargetNetworkProtocol::Tcp => LanguageNetworkProtocol::Tcp,
+        TargetNetworkProtocol::Udp => LanguageNetworkProtocol::Udp,
     }
 }
 
@@ -3745,10 +3802,33 @@ mod tests {
         assert!(uno.capabilities.contains(&"watchdog.kick".to_owned()));
         assert!(uno.capabilities.contains(&"storage.write".to_owned()));
         assert!(uno.capabilities.contains(&"storage.read".to_owned()));
+        assert!(uno.capabilities.contains(&"network.ipv4".to_owned()));
+        assert!(uno.capabilities.contains(&"network.tcp".to_owned()));
+        assert!(uno.capabilities.contains(&"network.udp".to_owned()));
+        assert_eq!(uno.network_interfaces.len(), 1);
+        let uno_network = &uno.network_interfaces[0];
+        assert_eq!(uno_network.interface, 0);
+        assert_eq!(uno_network.name, "WiFiS3");
+        assert_eq!(uno_network.transport, LanguageWirelessTransport::Wifi);
+        assert_eq!(uno_network.chip, "ESP32-S3 coprocessor");
+        assert_eq!(
+            uno_network.protocols,
+            [
+                LanguageNetworkProtocol::Ipv4,
+                LanguageNetworkProtocol::Tcp,
+                LanguageNetworkProtocol::Udp,
+            ]
+        );
+        assert_eq!(uno_network.max_sockets, 4);
+        assert!(uno_network.notes.contains("TCP endpoints"));
         assert_eq!(
             known_target("arduino-uno-r4-minima").unwrap().led_matrix,
             None
         );
+        assert!(known_target("arduino-uno-r4-minima")
+            .unwrap()
+            .network_interfaces
+            .is_empty());
         assert!(esp32.capabilities.contains(&"gpio.open".to_owned()));
         assert!(esp32
             .capabilities

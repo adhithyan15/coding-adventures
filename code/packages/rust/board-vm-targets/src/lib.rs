@@ -29,6 +29,24 @@ pub struct WirelessInterfaceInfo {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NetworkProtocol {
+    Ipv4,
+    Tcp,
+    Udp,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkInterfaceInfo {
+    pub interface: u8,
+    pub name: &'static str,
+    pub transport: WirelessTransport,
+    pub chip: &'static str,
+    pub protocols: &'static [NetworkProtocol],
+    pub max_sockets: u8,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct LedMatrixInfo {
     pub rows: u8,
     pub columns: u8,
@@ -161,6 +179,7 @@ pub struct BoardTargetInfo {
     pub watchdog: Option<WatchdogInfo>,
     pub storage_regions: &'static [StorageRegionInfo],
     pub wireless: &'static [WirelessInterfaceInfo],
+    pub network_interfaces: &'static [NetworkInterfaceInfo],
     pub capabilities: &'static [&'static str],
 }
 
@@ -209,11 +228,14 @@ pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 31] = [
     "program.ram_exec",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 35] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 38] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
     "ota.wifi",
+    "network.ipv4",
+    "network.tcp",
+    "network.udp",
     "gpio.open",
     "gpio.write",
     "gpio.read",
@@ -296,6 +318,22 @@ pub const UNO_R4_WIFI_LED_MATRIX: LedMatrixInfo = LedMatrixInfo {
     rows: 8,
     columns: 12,
 };
+
+pub const UNO_R4_WIFI_NETWORK_PROTOCOLS: [NetworkProtocol; 3] = [
+    NetworkProtocol::Ipv4,
+    NetworkProtocol::Tcp,
+    NetworkProtocol::Udp,
+];
+
+pub const UNO_R4_WIFI_NETWORK_INTERFACES: [NetworkInterfaceInfo; 1] = [NetworkInterfaceInfo {
+    interface: 0,
+    name: "WiFiS3",
+    transport: WirelessTransport::Wifi,
+    chip: "ESP32-S3 coprocessor",
+    protocols: &UNO_R4_WIFI_NETWORK_PROTOCOLS,
+    max_sockets: 4,
+    notes: "Onboard WiFiS3 network interface; Board VM commands use the shared COBS/CRC wire protocol over TCP endpoints.",
+}];
 
 pub const ESP32_WIRELESS: [WirelessInterfaceInfo; 3] = [
     WirelessInterfaceInfo {
@@ -634,6 +672,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         watchdog: Some(UNO_R4_WATCHDOG),
         storage_regions: &UNO_R4_STORAGE_REGIONS,
         wireless: &[],
+        network_interfaces: &[],
         capabilities: &UNO_R4_MINIMA_CAPABILITIES,
     },
     BoardTargetInfo {
@@ -664,6 +703,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         watchdog: Some(UNO_R4_WATCHDOG),
         storage_regions: &UNO_R4_STORAGE_REGIONS,
         wireless: &UNO_R4_WIFI_WIRELESS,
+        network_interfaces: &UNO_R4_WIFI_NETWORK_INTERFACES,
         capabilities: &UNO_R4_WIFI_CAPABILITIES,
     },
     BoardTargetInfo {
@@ -691,6 +731,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         watchdog: None,
         storage_regions: &[],
         wireless: &ESP32_WIRELESS,
+        network_interfaces: &[],
         capabilities: &ESP32_CAPABILITIES,
     },
     BoardTargetInfo {
@@ -721,6 +762,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         watchdog: None,
         storage_regions: &[],
         wireless: &[],
+        network_interfaces: &[],
         capabilities: &BLINK_MVP_CAPABILITIES,
     },
     BoardTargetInfo {
@@ -751,6 +793,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         watchdog: None,
         storage_regions: &[],
         wireless: &PICO_W_WIRELESS,
+        network_interfaces: &[],
         capabilities: &PICO_W_CAPABILITIES,
     },
 ];
@@ -1048,6 +1091,7 @@ mod tests {
         let pico_w = find_target("raspberry-pi-pico-w").unwrap();
 
         assert!(uno_r4_minima.wireless.is_empty());
+        assert!(uno_r4_minima.network_interfaces.is_empty());
         assert!(pico.wireless.is_empty());
         assert!(uno_r4_wifi.capabilities.contains(&"transport.wifi"));
         assert!(uno_r4_wifi.capabilities.contains(&"transport.bluetooth_le"));
@@ -1064,5 +1108,34 @@ mod tests {
             .any(|interface| interface.transport == WirelessTransport::Wifi
                 && interface.command_transport
                 && interface.ota_update));
+    }
+
+    #[test]
+    fn registry_exposes_uno_r4_wifi_network_metadata() {
+        let uno_r4_wifi = find_target("arduino-uno-r4-wifi").unwrap();
+
+        assert!(uno_r4_wifi.capabilities.contains(&"network.ipv4"));
+        assert!(uno_r4_wifi.capabilities.contains(&"network.tcp"));
+        assert!(uno_r4_wifi.capabilities.contains(&"network.udp"));
+        assert_eq!(
+            uno_r4_wifi.network_interfaces,
+            &UNO_R4_WIFI_NETWORK_INTERFACES
+        );
+
+        let interface = uno_r4_wifi.network_interfaces[0];
+        assert_eq!(interface.interface, 0);
+        assert_eq!(interface.name, "WiFiS3");
+        assert_eq!(interface.transport, WirelessTransport::Wifi);
+        assert_eq!(interface.chip, "ESP32-S3 coprocessor");
+        assert_eq!(
+            interface.protocols,
+            &[
+                NetworkProtocol::Ipv4,
+                NetworkProtocol::Tcp,
+                NetworkProtocol::Udp,
+            ]
+        );
+        assert_eq!(interface.max_sockets, 4);
+        assert!(interface.notes.contains("COBS/CRC"));
     }
 }
