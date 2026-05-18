@@ -131,13 +131,14 @@ The current no-heap Rust HAL exposes this first tranche as
 may lower that protocol-level request into their existing bounded storage writes,
 while leaving language frontends as thin builders for the `STORE_PROGRAM` frame.
 
-The first network tranche keeps the same no-heap shape: `network.tcp.open`
-accepts an interface id, an IPv4 address encoded as a `u32`, and a remote port,
-then returns a portable socket handle. `network.tcp.write`, `network.tcp.read`,
-and `network.tcp.close` operate on that handle and delegate to narrow
-`BoardHal::network_tcp_*` hooks. Host SDKs build bytecode for these calls; board
-ports decide when a concrete backend can actually drive a WiFi or Ethernet
-module.
+The first network tranches keep the same no-heap shape: `network.tcp.open` and
+`network.udp.open` accept an interface id, an IPv4 address encoded as a `u32`,
+and a remote port, then return a portable socket handle. `network.tcp.write`,
+`network.tcp.read`, `network.tcp.close`, `network.udp.write`,
+`network.udp.read`, and `network.udp.close` operate on those handles and
+delegate to narrow `BoardHal::network_tcp_*` and `BoardHal::network_udp_*`
+hooks. Host SDKs build bytecode for these calls; board ports decide when a
+concrete backend can actually drive a WiFi or Ethernet module.
 
 `HandleToken` is private to the board adapter. The portable VM only sees compact
 `Handle` ids.
@@ -151,6 +152,7 @@ CALL_U8 0x01 -> gpio.open
 CALL_U8 0x02 -> gpio.write
 CALL_U8 0x10 -> time.sleep_ms
 CALL_U8 0x3a -> network.tcp.open
+CALL_U8 0x3e -> network.udp.open
 ```
 
 Each handler:

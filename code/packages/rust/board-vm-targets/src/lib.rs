@@ -229,7 +229,7 @@ pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 32] = [
     "program.store",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 43] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 47] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -241,6 +241,10 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 43] = [
     "network.tcp.write",
     "network.tcp.read",
     "network.tcp.close",
+    "network.udp.open",
+    "network.udp.write",
+    "network.udp.read",
+    "network.udp.close",
     "gpio.open",
     "gpio.write",
     "gpio.read",
@@ -1130,6 +1134,10 @@ mod tests {
         assert!(uno_r4_wifi.capabilities.contains(&"network.tcp.write"));
         assert!(uno_r4_wifi.capabilities.contains(&"network.tcp.read"));
         assert!(uno_r4_wifi.capabilities.contains(&"network.tcp.close"));
+        assert!(uno_r4_wifi.capabilities.contains(&"network.udp.open"));
+        assert!(uno_r4_wifi.capabilities.contains(&"network.udp.write"));
+        assert!(uno_r4_wifi.capabilities.contains(&"network.udp.read"));
+        assert!(uno_r4_wifi.capabilities.contains(&"network.udp.close"));
         assert_eq!(
             uno_r4_wifi.network_interfaces,
             &UNO_R4_WIFI_NETWORK_INTERFACES

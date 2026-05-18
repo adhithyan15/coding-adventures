@@ -3810,6 +3810,10 @@ mod tests {
         assert!(uno.capabilities.contains(&"network.tcp.write".to_owned()));
         assert!(uno.capabilities.contains(&"network.tcp.read".to_owned()));
         assert!(uno.capabilities.contains(&"network.tcp.close".to_owned()));
+        assert!(uno.capabilities.contains(&"network.udp.open".to_owned()));
+        assert!(uno.capabilities.contains(&"network.udp.write".to_owned()));
+        assert!(uno.capabilities.contains(&"network.udp.read".to_owned()));
+        assert!(uno.capabilities.contains(&"network.udp.close".to_owned()));
         assert_eq!(uno.network_interfaces.len(), 1);
         let uno_network = &uno.network_interfaces[0];
         assert_eq!(uno_network.interface, 0);

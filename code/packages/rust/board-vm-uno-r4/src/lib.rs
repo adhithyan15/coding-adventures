@@ -24,6 +24,7 @@ use board_vm_device::{
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_STORAGE_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_UDP_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_RTC_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES, BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_CAPABILITIES,
@@ -533,7 +534,8 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
         .with_rtc()
         .with_watchdog()
         .with_storage()
-        .with_network_tcp(),
+        .with_network_tcp()
+        .with_network_udp(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
@@ -592,6 +594,10 @@ pub trait UnoR4Backend {
     }
 
     fn supports_network_tcp(&self) -> bool {
+        false
+    }
+
+    fn supports_network_udp(&self) -> bool {
         false
     }
 
@@ -690,6 +696,27 @@ pub trait UnoR4Backend {
     }
 
     fn close_network_tcp(&mut self, _socket: u8) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn open_network_udp(
+        &mut self,
+        _interface: u8,
+        _remote_ipv4: u32,
+        _remote_port: u16,
+    ) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn write_network_udp(&mut self, _socket: u8, _byte: u8) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn read_network_udp(&mut self, _socket: u8) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn close_network_udp(&mut self, _socket: u8) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -795,6 +822,8 @@ where
         capabilities.storage = self.backend.supports_storage();
         capabilities.network_tcp =
             self.target.supports_wifi_module && self.backend.supports_network_tcp();
+        capabilities.network_udp =
+            self.target.supports_wifi_module && self.backend.supports_network_udp();
         capabilities
     }
 }
@@ -961,6 +990,35 @@ where
     fn network_tcp_close(&mut self, token: u32) -> Result<(), HalError> {
         let socket = normalize_network_socket(token)?;
         self.backend.close_network_tcp(socket)
+    }
+
+    fn network_udp_open(
+        &mut self,
+        interface: u16,
+        remote_ipv4: u32,
+        remote_port: u16,
+    ) -> Result<u32, HalError> {
+        if !self.target.supports_wifi_module {
+            return Err(HalError::UnsupportedMode);
+        }
+        let interface = normalize_network_interface(interface)?;
+        self.backend
+            .open_network_udp(interface, remote_ipv4, remote_port)
+    }
+
+    fn network_udp_write(&mut self, token: u32, byte: u8) -> Result<(), HalError> {
+        let socket = normalize_network_socket(token)?;
+        self.backend.write_network_udp(socket, byte)
+    }
+
+    fn network_udp_read(&mut self, token: u32) -> Result<u8, HalError> {
+        let socket = normalize_network_socket(token)?;
+        self.backend.read_network_udp(socket)
+    }
+
+    fn network_udp_close(&mut self, token: u32) -> Result<(), HalError> {
+        let socket = normalize_network_socket(token)?;
+        self.backend.close_network_udp(socket)
     }
 
     fn store_program(
@@ -1278,6 +1336,22 @@ fn uno_r4_device_descriptor_for_capabilities(
             && capabilities.watchdog
             && capabilities.storage
             && capabilities.network_tcp
+            && capabilities.network_udp
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_UDP_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_wifi_module
+            && target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+            && capabilities.rtc
+            && capabilities.watchdog
+            && capabilities.storage
+            && capabilities.network_tcp
         {
             &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_AND_LED_MATRIX_CAPABILITIES
         } else if target.supports_led_matrix
@@ -1543,6 +1617,10 @@ mod tests {
         NetworkTcpWrite(u8, u8),
         NetworkTcpRead(u8),
         NetworkTcpClose(u8),
+        NetworkUdpOpen(u8, u32, u16),
+        NetworkUdpWrite(u8, u8),
+        NetworkUdpRead(u8),
+        NetworkUdpClose(u8),
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -1627,6 +1705,10 @@ mod tests {
         }
 
         fn supports_network_tcp(&self) -> bool {
+            true
+        }
+
+        fn supports_network_udp(&self) -> bool {
             true
         }
 
@@ -1753,6 +1835,32 @@ mod tests {
 
         fn close_network_tcp(&mut self, socket: u8) -> Result<(), HalError> {
             self.events.push(Event::NetworkTcpClose(socket));
+            Ok(())
+        }
+
+        fn open_network_udp(
+            &mut self,
+            interface: u8,
+            remote_ipv4: u32,
+            remote_port: u16,
+        ) -> Result<u32, HalError> {
+            self.events
+                .push(Event::NetworkUdpOpen(interface, remote_ipv4, remote_port));
+            Ok(0x6_2003)
+        }
+
+        fn write_network_udp(&mut self, socket: u8, byte: u8) -> Result<(), HalError> {
+            self.events.push(Event::NetworkUdpWrite(socket, byte));
+            Ok(())
+        }
+
+        fn read_network_udp(&mut self, socket: u8) -> Result<u8, HalError> {
+            self.events.push(Event::NetworkUdpRead(socket));
+            Ok(0x43)
+        }
+
+        fn close_network_udp(&mut self, socket: u8) -> Result<(), HalError> {
+            self.events.push(Event::NetworkUdpClose(socket));
             Ok(())
         }
 
@@ -1985,7 +2093,7 @@ mod tests {
         assert!(descriptor.supports_store_program);
         assert_eq!(
             descriptor.capabilities.len(),
-            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_AND_LED_MATRIX_CAPABILITIES
+            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_UDP_AND_LED_MATRIX_CAPABILITIES
                 .len()
         );
         assert!(descriptor
@@ -1998,6 +2106,10 @@ mod tests {
         assert!(descriptor.capabilities.iter().any(|capability| {
             capability.id == board_vm_ir::CAP_NETWORK_TCP_OPEN
                 && capability.name == "network.tcp.open"
+        }));
+        assert!(descriptor.capabilities.iter().any(|capability| {
+            capability.id == board_vm_ir::CAP_NETWORK_UDP_OPEN
+                && capability.name == "network.udp.open"
         }));
         assert!(UNO_R4_WIFI
             .capabilities
@@ -2064,9 +2176,24 @@ mod tests {
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_TCP_CLOSE));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_UDP_OPEN));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_UDP_WRITE));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_UDP_READ));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_UDP_CLOSE));
         assert!(!UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_TCP_OPEN));
+        assert!(!UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_UDP_OPEN));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -2431,16 +2558,45 @@ mod tests {
     }
 
     #[test]
-    fn network_tcp_rejects_non_wifi_target_or_unknown_interface() {
+    fn network_udp_runs_through_wifi_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        let token = board.network_udp_open(0, 0xc0a8_012a, 0x1235).unwrap();
+        board.network_udp_write(token, 0x41).unwrap();
+        let byte = board.network_udp_read(token).unwrap();
+        board.network_udp_close(token).unwrap();
+
+        assert_eq!(byte, 0x43);
+        assert_eq!(
+            board.backend().events,
+            vec![
+                Event::NetworkUdpOpen(0, 0xc0a8_012a, 0x1235),
+                Event::NetworkUdpWrite(3, 0x41),
+                Event::NetworkUdpRead(3),
+                Event::NetworkUdpClose(3),
+            ]
+        );
+    }
+
+    #[test]
+    fn network_sockets_reject_non_wifi_target_or_unknown_interface() {
         let mut minima = UnoR4Board::minima(FakeBackend::new());
         assert_eq!(
             minima.network_tcp_open(0, 0xc0a8_012a, 8080),
+            Err(HalError::UnsupportedMode)
+        );
+        assert_eq!(
+            minima.network_udp_open(0, 0xc0a8_012a, 0x1235),
             Err(HalError::UnsupportedMode)
         );
 
         let mut wifi = UnoR4Board::wifi(FakeBackend::new());
         assert_eq!(
             wifi.network_tcp_open(1, 0xc0a8_012a, 8080),
+            Err(HalError::InvalidPin)
+        );
+        assert_eq!(
+            wifi.network_udp_open(1, 0xc0a8_012a, 0x1235),
             Err(HalError::InvalidPin)
         );
     }

@@ -5,7 +5,8 @@ use board_vm_ir::{
     CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN,
     CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
     CAP_LED_MATRIX_FRAME, CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
-    CAP_NETWORK_TCP_WRITE, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER,
+    CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
+    CAP_NETWORK_UDP_WRITE, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER,
     CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN,
     CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
 };
@@ -235,6 +236,30 @@ const NETWORK_TCP_CLOSE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDe
     version: 1,
     flags: CAP_FLAG_BYTECODE_CALLABLE,
     name: "network.tcp.close",
+};
+const NETWORK_UDP_OPEN_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_NETWORK_UDP_OPEN,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "network.udp.open",
+};
+const NETWORK_UDP_WRITE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_NETWORK_UDP_WRITE,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "network.udp.write",
+};
+const NETWORK_UDP_READ_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_NETWORK_UDP_READ,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "network.udp.read",
+};
+const NETWORK_UDP_CLOSE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_NETWORK_UDP_CLOSE,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "network.udp.close",
 };
 const LED_MATRIX_FRAME_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
     id: CAP_LED_MATRIX_FRAME,
@@ -1273,6 +1298,50 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWO
     NETWORK_TCP_WRITE_DESCRIPTOR,
     NETWORK_TCP_READ_DESCRIPTOR,
     NETWORK_TCP_CLOSE_DESCRIPTOR,
+    LED_MATRIX_FRAME_DESCRIPTOR,
+    PROGRAM_RAM_EXEC_DESCRIPTOR,
+    PROGRAM_STORE_DESCRIPTOR,
+];
+
+pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_UDP_AND_LED_MATRIX_CAPABILITIES:
+    [CapabilityDescriptor<'static>; 40] = [
+    GPIO_OPEN_DESCRIPTOR,
+    GPIO_WRITE_DESCRIPTOR,
+    GPIO_READ_DESCRIPTOR,
+    GPIO_CLOSE_DESCRIPTOR,
+    TIME_SLEEP_MS_DESCRIPTOR,
+    TIME_NOW_MS_DESCRIPTOR,
+    PWM_WRITE_DESCRIPTOR,
+    ADC_READ_DESCRIPTOR,
+    DAC_WRITE_U12_DESCRIPTOR,
+    I2C_OPEN_DESCRIPTOR,
+    I2C_WRITE_U8_DESCRIPTOR,
+    I2C_READ_U8_DESCRIPTOR,
+    I2C_WRITE_DESCRIPTOR,
+    I2C_READ_DESCRIPTOR,
+    I2C_TRANSFER_DESCRIPTOR,
+    SPI_OPEN_DESCRIPTOR,
+    SPI_TRANSFER_DESCRIPTOR,
+    UART_OPEN_DESCRIPTOR,
+    UART_WRITE_DESCRIPTOR,
+    UART_READ_DESCRIPTOR,
+    CAN_OPEN_DESCRIPTOR,
+    CAN_WRITE_DESCRIPTOR,
+    CAN_READ_DESCRIPTOR,
+    RTC_NOW_DESCRIPTOR,
+    RTC_SET_DESCRIPTOR,
+    WATCHDOG_CONFIGURE_DESCRIPTOR,
+    WATCHDOG_KICK_DESCRIPTOR,
+    STORAGE_WRITE_DESCRIPTOR,
+    STORAGE_READ_DESCRIPTOR,
+    NETWORK_TCP_OPEN_DESCRIPTOR,
+    NETWORK_TCP_WRITE_DESCRIPTOR,
+    NETWORK_TCP_READ_DESCRIPTOR,
+    NETWORK_TCP_CLOSE_DESCRIPTOR,
+    NETWORK_UDP_OPEN_DESCRIPTOR,
+    NETWORK_UDP_WRITE_DESCRIPTOR,
+    NETWORK_UDP_READ_DESCRIPTOR,
+    NETWORK_UDP_CLOSE_DESCRIPTOR,
     LED_MATRIX_FRAME_DESCRIPTOR,
     PROGRAM_RAM_EXEC_DESCRIPTOR,
     PROGRAM_STORE_DESCRIPTOR,
@@ -2440,7 +2509,7 @@ mod tests {
         PROGRAM_STORE_DESCRIPTOR,
     ];
 
-    const NETWORK_TCP_CAPABILITIES: [CapabilityDescriptor<'static>; 11] = [
+    const NETWORK_SOCKET_CAPABILITIES: [CapabilityDescriptor<'static>; 15] = [
         GPIO_OPEN_DESCRIPTOR,
         GPIO_WRITE_DESCRIPTOR,
         GPIO_READ_DESCRIPTOR,
@@ -2451,6 +2520,10 @@ mod tests {
         NETWORK_TCP_WRITE_DESCRIPTOR,
         NETWORK_TCP_READ_DESCRIPTOR,
         NETWORK_TCP_CLOSE_DESCRIPTOR,
+        NETWORK_UDP_OPEN_DESCRIPTOR,
+        NETWORK_UDP_WRITE_DESCRIPTOR,
+        NETWORK_UDP_READ_DESCRIPTOR,
+        NETWORK_UDP_CLOSE_DESCRIPTOR,
         PROGRAM_RAM_EXEC_DESCRIPTOR,
     ];
 
@@ -2743,7 +2816,7 @@ mod tests {
     }
 
     #[test]
-    fn descriptor_reports_network_tcp_bytecode_capabilities() {
+    fn descriptor_reports_network_socket_bytecode_capabilities() {
         let mut device = BoardVmDevice::new(
             DeviceDescriptor {
                 board_id: "test-board",
@@ -2751,14 +2824,18 @@ mod tests {
                 board_nonce: 0xB04D_1001,
                 max_frame_payload: DEFAULT_MAX_FRAME_PAYLOAD,
                 supports_store_program: false,
-                capabilities: &NETWORK_TCP_CAPABILITIES,
+                capabilities: &NETWORK_SOCKET_CAPABILITIES,
             },
-            FakeHal::new(CapabilitySet::blink_mvp().with_network_tcp()),
+            FakeHal::new(
+                CapabilitySet::blink_mvp()
+                    .with_network_tcp()
+                    .with_network_udp(),
+            ),
         );
         let mut session = HostSession::new();
         let mut request = [0u8; 128];
-        let mut device_payload = [0u8; 256];
-        let mut response = [0u8; 320];
+        let mut device_payload = [0u8; 384];
+        let mut response = [0u8; 448];
 
         let caps = session.caps_query_frame(&mut request).unwrap();
         let response_len = handle(
@@ -2772,9 +2849,9 @@ mod tests {
 
         assert_eq!(
             header.capability_count,
-            NETWORK_TCP_CAPABILITIES.len() as u32
+            NETWORK_SOCKET_CAPABILITIES.len() as u32
         );
-        let mut found = [false; 4];
+        let mut found = [false; 8];
         for _ in 0..header.capability_count {
             let capability = decoder.read_capability_descriptor().unwrap();
             match capability.id {
@@ -2798,11 +2875,31 @@ mod tests {
                     assert_eq!(capability.name, "network.tcp.close");
                     assert_eq!(capability.flags, CAP_FLAG_BYTECODE_CALLABLE);
                 }
+                CAP_NETWORK_UDP_OPEN => {
+                    found[4] = true;
+                    assert_eq!(capability.name, "network.udp.open");
+                    assert_eq!(capability.flags, CAP_FLAG_BYTECODE_CALLABLE);
+                }
+                CAP_NETWORK_UDP_WRITE => {
+                    found[5] = true;
+                    assert_eq!(capability.name, "network.udp.write");
+                    assert_eq!(capability.flags, CAP_FLAG_BYTECODE_CALLABLE);
+                }
+                CAP_NETWORK_UDP_READ => {
+                    found[6] = true;
+                    assert_eq!(capability.name, "network.udp.read");
+                    assert_eq!(capability.flags, CAP_FLAG_BYTECODE_CALLABLE);
+                }
+                CAP_NETWORK_UDP_CLOSE => {
+                    found[7] = true;
+                    assert_eq!(capability.name, "network.udp.close");
+                    assert_eq!(capability.flags, CAP_FLAG_BYTECODE_CALLABLE);
+                }
                 _ => {}
             }
         }
         decoder.finish().unwrap();
-        assert_eq!(found, [true; 4]);
+        assert_eq!(found, [true; 8]);
     }
 
     #[test]
