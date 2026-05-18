@@ -77,6 +77,10 @@ binary while production code continues to link only static Rust source.
 - `whatwg-tag-open-recovery.json`: generated HTML tokenizer tag-open recovery
   cases used by Rust tests to pin ordinary tags, ASCII casing, tag whitespace,
   invalid openers, NULL replacement in tag names, and EOF partial-token drops
+- `whatwg-doctype-boundaries.json`: generated HTML tokenizer DOCTYPE boundary
+  cases used by Rust tests to pin keyword/name whitespace, PUBLIC/SYSTEM
+  identifier recovery, force-quirks transitions, EOF, NULL replacement, and
+  seeded continuation contexts
 - `html5lib-smoke.json`: generated normalized Venture fixture corpus derived from
   the raw html5lib-style smoke file
 - `upstream-html5lib-smoke.test`: raw html5lib-style tokenizer cases used to
@@ -109,6 +113,9 @@ binary while production code continues to link only static Rust source.
 - `generate_whatwg_tag_open_recovery_fixture.py`: importer that generates
   tag-open recovery cases for the checked-in
   `whatwg-tag-open-recovery.json` fixture
+- `generate_whatwg_doctype_boundaries_fixture.py`: importer that generates
+  focused DOCTYPE boundary cases for the checked-in
+  `whatwg-doctype-boundaries.json` fixture
 
 Regenerate or verify the WHATWG entity fixture with:
 
@@ -181,6 +188,14 @@ Regenerate or verify the WHATWG tag-open recovery fixture with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_tag_open_recovery_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_tag_open_recovery_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG DOCTYPE boundary fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_doctype_boundaries_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_doctype_boundaries_fixture.py \
   --check
 ```
 

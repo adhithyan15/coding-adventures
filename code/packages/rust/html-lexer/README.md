@@ -90,6 +90,10 @@ delimiters, unexpected solidus recovery, and end-tag attribute diagnostics.
 The generated tag-open recovery suite pins ordinary tags, ASCII casing, tag
 whitespace, invalid openers, NULL replacement in tag names, and EOF
 partial-token drops.
+The generated DOCTYPE boundary suite pins the focused states after
+`<!DOCTYPE` dispatch: name whitespace, PUBLIC/SYSTEM identifier recovery,
+force-quirks transitions, EOF, NULL replacement, and seeded continuation
+contexts.
 Numeric character references report invalid-code-point diagnostics and recover
 with the HTML replacement/remapping rules for null, surrogate, out-of-range,
 noncharacter, and Windows-1252 control references.

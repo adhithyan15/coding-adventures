@@ -1,0 +1,632 @@
+{
+  "cases": [
+    {
+      "description": "tab after DOCTYPE keyword begins the name",
+      "diagnostics": [],
+      "id": "doctype-name-tab",
+      "input": "<!DOCTYPE\thtml>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "line feed after DOCTYPE keyword begins the name",
+      "diagnostics": [],
+      "id": "doctype-name-line-feed",
+      "input": "<!DOCTYPE\nhtml>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "form feed after DOCTYPE keyword begins the name",
+      "diagnostics": [],
+      "id": "doctype-name-form-feed",
+      "input": "<!DOCTYPE\fhtml>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "multiple HTML whitespace characters before the name are skipped",
+      "diagnostics": [],
+      "id": "doctype-name-leading-whitespace-run",
+      "input": "<!DOCTYPE \t\n\fHTML>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "DOCTYPE names are ASCII-lowercased while reading the name",
+      "diagnostics": [],
+      "id": "doctype-name-uppercase-mixed",
+      "input": "<!DOCTYPE HtMl>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL inside a DOCTYPE name becomes U+FFFD",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "doctype-name-null-replacement",
+      "input": "<!DOCTYPE h\u0000tml>",
+      "tokens": [
+        "Doctype(name=h�tml, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "hyphen text after DOCTYPE keyword is accepted as the name",
+      "diagnostics": [],
+      "id": "doctype-missing-name-before-comment",
+      "input": "<!DOCTYPE --html>",
+      "tokens": [
+        "Doctype(name=--html, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PUBLIC text without whitespace remains part of the name",
+      "diagnostics": [],
+      "id": "doctype-name-missing-whitespace-before-public",
+      "input": "<!DOCTYPE htmlPUBLIC>",
+      "tokens": [
+        "Doctype(name=htmlpublic, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "SYSTEM text without whitespace remains part of the name",
+      "diagnostics": [],
+      "id": "doctype-name-missing-whitespace-before-system",
+      "input": "<!DOCTYPE htmlSYSTEM>",
+      "tokens": [
+        "Doctype(name=htmlsystem, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "non-keyword text after a name emits the current name",
+      "diagnostics": [
+        "invalid-character-sequence-after-doctype-name"
+      ],
+      "id": "doctype-name-public-prefix-not-keyword",
+      "input": "<!DOCTYPE html PUBLIK>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "tab separates the name from a PUBLIC keyword",
+      "diagnostics": [],
+      "id": "doctype-public-tab-before-keyword",
+      "input": "<!DOCTYPE html\tPUBLIC \"pub\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "line feed separates the name from a PUBLIC keyword",
+      "diagnostics": [],
+      "id": "doctype-public-line-feed-before-keyword",
+      "input": "<!DOCTYPE html\nPUBLIC \"pub\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "form feed separates the name from a PUBLIC keyword",
+      "diagnostics": [],
+      "id": "doctype-public-form-feed-before-keyword",
+      "input": "<!DOCTYPE html\fPUBLIC \"pub\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PUBLIC keyword matching is ASCII-case-insensitive",
+      "diagnostics": [],
+      "id": "doctype-public-lowercase-keyword",
+      "input": "<!DOCTYPE html public \"pub\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "tab after PUBLIC keyword can precede the identifier quote",
+      "diagnostics": [],
+      "id": "doctype-public-tab-before-identifier",
+      "input": "<!DOCTYPE html PUBLIC\t\"pub\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "line feed after PUBLIC keyword can precede the identifier quote",
+      "diagnostics": [],
+      "id": "doctype-public-line-feed-before-identifier",
+      "input": "<!DOCTYPE html PUBLIC\n\"pub\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "single-quoted PUBLIC identifiers are preserved",
+      "diagnostics": [],
+      "id": "doctype-public-single-quoted-identifier",
+      "input": "<!DOCTYPE html PUBLIC 'pub'>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "empty PUBLIC identifiers stay empty and do not force quirks",
+      "diagnostics": [],
+      "id": "doctype-public-empty-identifier",
+      "input": "<!DOCTYPE html PUBLIC \"\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL inside a PUBLIC identifier becomes U+FFFD",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "doctype-public-null-in-identifier",
+      "input": "<!DOCTYPE html PUBLIC \"a\u0000b\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=a�b, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "a quote immediately after PUBLIC is recovered as the identifier",
+      "diagnostics": [
+        "missing-whitespace-after-doctype-public-keyword"
+      ],
+      "id": "doctype-public-missing-whitespace-before-identifier",
+      "input": "<!DOCTYPE html PUBLIC\"pub\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PUBLIC without an identifier quote forces quirks mode",
+      "diagnostics": [
+        "missing-quote-before-doctype-public-identifier"
+      ],
+      "id": "doctype-public-missing-quote",
+      "input": "<!DOCTYPE html PUBLIC pub>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PUBLIC keyword closed before an identifier forces quirks mode",
+      "diagnostics": [
+        "missing-doctype-public-identifier"
+      ],
+      "id": "doctype-public-abrupt-close",
+      "input": "<!DOCTYPE html PUBLIC>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "a system identifier after PUBLIC is read after whitespace",
+      "diagnostics": [],
+      "id": "doctype-public-system-with-space",
+      "input": "<!DOCTYPE html PUBLIC \"pub\" \"sys\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "tab separates PUBLIC and system identifiers",
+      "diagnostics": [],
+      "id": "doctype-public-system-with-tab",
+      "input": "<!DOCTYPE html PUBLIC \"pub\"\t\"sys\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "a system quote immediately after PUBLIC identifier is recovered",
+      "diagnostics": [
+        "missing-whitespace-between-doctype-public-and-system-identifiers"
+      ],
+      "id": "doctype-public-system-missing-whitespace",
+      "input": "<!DOCTYPE html PUBLIC \"pub\"\"sys\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "text after a PUBLIC identifier is recovered as a missing system quote",
+      "diagnostics": [
+        "missing-quote-before-doctype-system-identifier"
+      ],
+      "id": "doctype-public-trailing-junk",
+      "input": "<!DOCTYPE html PUBLIC \"pub\" junk>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "tab separates the name from a SYSTEM keyword",
+      "diagnostics": [],
+      "id": "doctype-system-tab-before-keyword",
+      "input": "<!DOCTYPE html\tSYSTEM \"sys\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "SYSTEM keyword matching is ASCII-case-insensitive",
+      "diagnostics": [],
+      "id": "doctype-system-lowercase-keyword",
+      "input": "<!DOCTYPE html system \"sys\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "form feed after SYSTEM keyword can precede the identifier quote",
+      "diagnostics": [],
+      "id": "doctype-system-form-feed-before-identifier",
+      "input": "<!DOCTYPE html SYSTEM\f\"sys\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "single-quoted SYSTEM identifiers are preserved",
+      "diagnostics": [],
+      "id": "doctype-system-single-quoted-identifier",
+      "input": "<!DOCTYPE html SYSTEM 'sys'>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "empty SYSTEM identifiers stay empty and do not force quirks",
+      "diagnostics": [],
+      "id": "doctype-system-empty-identifier",
+      "input": "<!DOCTYPE html SYSTEM \"\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL inside a SYSTEM identifier becomes U+FFFD",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "doctype-system-null-in-identifier",
+      "input": "<!DOCTYPE html SYSTEM \"s\u0000s\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=s�s, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "a quote immediately after SYSTEM is recovered as the identifier",
+      "diagnostics": [
+        "missing-whitespace-after-doctype-system-keyword"
+      ],
+      "id": "doctype-system-missing-whitespace-before-identifier",
+      "input": "<!DOCTYPE html SYSTEM\"sys\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "SYSTEM without an identifier quote forces quirks mode",
+      "diagnostics": [
+        "missing-quote-before-doctype-system-identifier"
+      ],
+      "id": "doctype-system-missing-quote",
+      "input": "<!DOCTYPE html SYSTEM sys>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "SYSTEM keyword closed before an identifier forces quirks mode",
+      "diagnostics": [
+        "missing-doctype-system-identifier"
+      ],
+      "id": "doctype-system-abrupt-close",
+      "input": "<!DOCTYPE html SYSTEM>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "unexpected text after a SYSTEM identifier is diagnosed",
+      "diagnostics": [
+        "unexpected-character-after-doctype-system-identifier"
+      ],
+      "id": "doctype-system-trailing-junk",
+      "input": "<!DOCTYPE html SYSTEM \"sys\" junk>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF immediately after DOCTYPE keyword emits force-quirks",
+      "diagnostics": [
+        "eof-in-doctype"
+      ],
+      "id": "doctype-eof-after-keyword",
+      "input": "<!DOCTYPE",
+      "tokens": [
+        "Doctype(name=null, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF inside a DOCTYPE name emits force-quirks",
+      "diagnostics": [
+        "eof-in-doctype"
+      ],
+      "id": "doctype-eof-after-name",
+      "input": "<!DOCTYPE html",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF after PUBLIC keyword emits force-quirks",
+      "diagnostics": [
+        "eof-in-doctype"
+      ],
+      "id": "doctype-eof-after-public-keyword",
+      "input": "<!DOCTYPE html PUBLIC",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF inside a PUBLIC identifier emits force-quirks",
+      "diagnostics": [
+        "eof-in-doctype"
+      ],
+      "id": "doctype-eof-in-public-identifier",
+      "input": "<!DOCTYPE html PUBLIC \"pub",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF after SYSTEM keyword emits force-quirks",
+      "diagnostics": [
+        "eof-in-doctype"
+      ],
+      "id": "doctype-eof-after-system-keyword",
+      "input": "<!DOCTYPE html SYSTEM",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF inside a SYSTEM identifier emits force-quirks",
+      "diagnostics": [
+        "eof-in-doctype"
+      ],
+      "id": "doctype-eof-in-system-identifier",
+      "input": "<!DOCTYPE html SYSTEM \"sys",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "bogus DOCTYPE recovery discards NULL after reporting it",
+      "diagnostics": [
+        "missing-quote-before-doctype-public-identifier",
+        "unexpected-null-character"
+      ],
+      "id": "doctype-bogus-null-discard",
+      "input": "<!DOCTYPE html PUBLIC pub\u0000rest>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {},
+      "description": "seeded after-keyword state skips whitespace before the name",
+      "diagnostics": [],
+      "id": "seeded-after-keyword-whitespace-to-name",
+      "initial_state": "Before DOCTYPE name state",
+      "input": "\thtml>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "html"
+      },
+      "description": "seeded after-name state recognizes a following PUBLIC keyword",
+      "diagnostics": [],
+      "id": "seeded-name-to-public-keyword",
+      "initial_state": "After DOCTYPE name state",
+      "input": " PUBLIC \"pub\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "html"
+      },
+      "description": "seeded after-name state recognizes a following SYSTEM keyword",
+      "diagnostics": [],
+      "id": "seeded-name-to-system-keyword",
+      "initial_state": "After DOCTYPE name state",
+      "input": " SYSTEM \"sys\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "html"
+      },
+      "description": "seeded after-PUBLIC state recovers a quote without whitespace",
+      "diagnostics": [
+        "missing-whitespace-after-doctype-public-keyword"
+      ],
+      "id": "seeded-after-public-keyword-missing-whitespace",
+      "initial_state": "After DOCTYPE public keyword state",
+      "input": "\"pub\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "html",
+        "public_identifier": "pub-"
+      },
+      "description": "seeded single-quoted PUBLIC identifiers replace NULL",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "seeded-public-identifier-single-quoted-null",
+      "initial_state": "DOCTYPE public identifier single quoted state",
+      "input": "\u0000id'>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub-�id, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "html",
+        "public_identifier": "pub"
+      },
+      "description": "seeded between-identifiers state skips whitespace before system quote",
+      "diagnostics": [],
+      "id": "seeded-between-identifiers-space-to-system",
+      "initial_state": "Between DOCTYPE public and system identifiers state",
+      "input": " \t\"sys\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "html"
+      },
+      "description": "seeded after-SYSTEM state recovers a quote without whitespace",
+      "diagnostics": [
+        "missing-whitespace-after-doctype-system-keyword"
+      ],
+      "id": "seeded-after-system-keyword-missing-whitespace",
+      "initial_state": "After DOCTYPE system keyword state",
+      "input": "\"sys\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "html",
+        "system_identifier": "sys-"
+      },
+      "description": "seeded single-quoted SYSTEM identifiers replace NULL",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "seeded-system-identifier-single-quoted-null",
+      "initial_state": "DOCTYPE system identifier single quoted state",
+      "input": "\u0000id'>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys-�id, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "html",
+        "public_identifier": "pub"
+      },
+      "description": "seeded after-PUBLIC-identifier state recovers text as a missing system quote",
+      "diagnostics": [
+        "missing-quote-before-doctype-system-identifier"
+      ],
+      "id": "seeded-after-public-identifier-trailing-junk",
+      "initial_state": "After DOCTYPE public identifier state",
+      "input": " junk>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "force_quirks": true,
+        "name": "html"
+      },
+      "description": "seeded bogus DOCTYPE recovery discards NULL after reporting it",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "seeded-bogus-doctype-null-discard",
+      "initial_state": "Bogus DOCTYPE state",
+      "input": "\u0000ignored>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ]
+    }
+  ],
+  "description": "DOCTYPE keyword, name, PUBLIC/SYSTEM identifier, force-quirks, NULL replacement, EOF, and seeded continuation boundary recovery.",
+  "format": "whatwg-html-tokenizer-doctype-boundaries/v1"
+}
