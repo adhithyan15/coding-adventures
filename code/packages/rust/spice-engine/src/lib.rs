@@ -1302,6 +1302,18 @@ pub struct DcSweepPoint {
     pub result: DcResult,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerDcSweepPoint {
+    pub corner_name: String,
+    pub points: Vec<DcSweepPoint>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerDcSweepResult {
+    pub source_name: String,
+    pub points: Vec<CornerDcSweepPoint>,
+}
+
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub enum McDistribution {
     Gaussian,
@@ -1886,6 +1898,30 @@ pub fn dc_sweep(
         value += step;
     }
     Ok(points)
+}
+
+pub fn dc_sweep_corners(
+    circuit: &Circuit,
+    source_name: &str,
+    start: f64,
+    stop: f64,
+    step: f64,
+    corners: &[CornerSpec],
+) -> Result<CornerDcSweepResult, SpiceError> {
+    validate_sweep(source_name, start, stop, step)?;
+
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerDcSweepPoint {
+            corner_name: corner.name.clone(),
+            points: dc_sweep(&corner_circuit, source_name, start, stop, step)?,
+        });
+    }
+    Ok(CornerDcSweepResult {
+        source_name: source_name.to_string(),
+        points,
+    })
 }
 
 pub fn mc_dc(

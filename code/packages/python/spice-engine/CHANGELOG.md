@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Multi-corner DC source sweeps** — `dc_sweep_corners` runs the same
+  independent-source sweep at each named corner and returns per-corner
+  `.DC` traces.
+
 - **Multi-corner DC operating point sweeps** — `dc_corners` runs named corner
   specs with element-parameter overrides for core linear parameters.
 

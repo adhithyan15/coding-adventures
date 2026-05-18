@@ -465,6 +465,22 @@ class DcSweepResult:
     source_name: str
 
 
+@dataclass(frozen=True)
+class CornerDcSweepPoint:
+    """DC source sweep result for one named analysis corner."""
+
+    corner_name: str
+    result: DcSweepResult
+
+
+@dataclass(frozen=True)
+class CornerDcSweepResult:
+    """Multi-corner DC source sweep result."""
+
+    points: list[CornerDcSweepPoint]
+    source_name: str
+
+
 # ---------------------------------------------------------------------------
 # MNA infrastructure
 # ---------------------------------------------------------------------------
@@ -3440,6 +3456,43 @@ def dc_sweep(
         )
 
     return DcSweepResult(points=points, source_name=source_name)
+
+
+def dc_sweep_corners(
+    circuit: Circuit,
+    source_name: str,
+    start: float,
+    stop: float,
+    step: float,
+    corners: list[CornerSpec],
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerDcSweepResult:
+    """Run a DC source sweep at each named corner.
+
+    Each corner clones the circuit with explicit element-parameter overrides,
+    then reuses :func:`dc_sweep` so every corner returns the same source-value
+    sequence with its own operating-point snapshots.
+    """
+    return CornerDcSweepResult(
+        points=[
+            CornerDcSweepPoint(
+                corner_name=corner.name,
+                result=dc_sweep(
+                    _circuit_with_corner(circuit, corner),
+                    source_name,
+                    start,
+                    stop,
+                    step,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                ),
+            )
+            for corner in corners
+        ],
+        source_name=source_name,
+    )
 
 
 # ---------------------------------------------------------------------------

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add multi-corner DC source sweeps with `dc_sweep_corners`, returning the same
+  source-value trace evaluated under each named corner.
 - Add multi-corner DC operating point sweeps with named corner specs and
   element-parameter overrides for core linear parameters.
 - Add two-port S-parameter extraction from named AC voltage-source ports,

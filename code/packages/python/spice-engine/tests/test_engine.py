@@ -89,6 +89,7 @@ from spice_engine import (
     AcSource,
     Capacitor,
     Circuit,
+    CornerDcSweepResult,
     CornerOverride,
     CornerSpec,
     CornerSweepResult,
@@ -116,9 +117,10 @@ from spice_engine import (
     VoltageSource,
     XInstance,
     ac_sweep,
-    dc_op,
     dc_corners,
+    dc_op,
     dc_sweep,
+    dc_sweep_corners,
     mc_dc,
     noise_ac,
     sens_dc,
@@ -5309,3 +5311,30 @@ def test_dc_corners_runs_named_parameter_overrides() -> None:
     assert isinstance(result, CornerSweepResult)
     voltages = [point.result.node_voltages["out"] for point in result.points]
     assert voltages == pytest.approx([5.0, 10.0 / 3.0, 6.0, -5.0])
+
+
+def test_dc_sweep_corners_runs_source_sweeps_per_corner() -> None:
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 0.0),
+        Resistor("Rtop", "in", "out", 1000.0),
+        Resistor("Rbot", "out", "0", 1000.0),
+    ])
+
+    result = dc_sweep_corners(
+        c,
+        "Vin",
+        0.0,
+        10.0,
+        5.0,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rbot-fast", (CornerOverride("Rbot", "resistance", 500.0),)),
+        ],
+    )
+
+    assert isinstance(result, CornerDcSweepResult)
+    assert result.source_name == "Vin"
+    assert [point.corner_name for point in result.points] == ["nominal", "rbot-fast"]
+    assert [point.source_value for point in result.points[0].result.points] == pytest.approx([0.0, 5.0, 10.0])
+    assert [point.node_voltages["out"] for point in result.points[0].result.points] == pytest.approx([0.0, 2.5, 5.0])
+    assert [point.node_voltages["out"] for point in result.points[1].result.points] == pytest.approx([0.0, 5.0 / 3.0, 10.0 / 3.0])
