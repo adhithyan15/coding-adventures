@@ -412,6 +412,26 @@ export interface DcOpOptions {
   readonly convergenceAids?: boolean;
 }
 
+export interface CornerOverride {
+  readonly elementName: string;
+  readonly parameter: "resistance" | "capacitance" | "inductance" | "voltage" | "current";
+  readonly value: number;
+}
+
+export interface CornerSpec {
+  readonly name: string;
+  readonly overrides: readonly CornerOverride[];
+}
+
+export interface CornerPoint {
+  readonly cornerName: string;
+  readonly result: DcResult;
+}
+
+export interface CornerSweepResult {
+  readonly points: readonly CornerPoint[];
+}
+
 export interface DcSweepPoint {
   readonly value: number;
   readonly result: DcResult;
@@ -1077,6 +1097,19 @@ export function dcOp(
     finalSolution.iterations,
     finalSolution.converged,
   );
+}
+
+export function dcCorners(
+  circuit: Circuit,
+  corners: readonly CornerSpec[],
+  options: DcOpOptions = {},
+): CornerSweepResult {
+  return {
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: dcOp(circuitWithCorner(circuit, corner), options),
+    })),
+  };
 }
 
 export function dcSweep(
@@ -2179,6 +2212,79 @@ function circuitFromElements(elements: readonly Element[]): Circuit {
     circuit.add(element);
   }
   return circuit;
+}
+
+function circuitWithCorner(circuit: Circuit, corner: CornerSpec): Circuit {
+  const overridesByName = new Map<string, CornerOverride[]>();
+  for (const override of corner.overrides) {
+    const existing = overridesByName.get(override.elementName) ?? [];
+    existing.push(override);
+    overridesByName.set(override.elementName, existing);
+  }
+
+  const seen = new Set<string>();
+  const elements = circuit.elements().map((element) => {
+    const overrides = overridesByName.get(element.name);
+    if (overrides === undefined) {
+      return element;
+    }
+    seen.add(element.name);
+    return overrides.reduce((current, override) => applyCornerOverride(current, override), element);
+  });
+
+  for (const elementName of overridesByName.keys()) {
+    if (!seen.has(elementName)) {
+      throw invalidElement("dcCorners", `missing element for corner override ${elementName}`);
+    }
+  }
+
+  return circuitFromElements(elements);
+}
+
+function applyCornerOverride(element: Element, override: CornerOverride): Element {
+  if (!Number.isFinite(override.value)) {
+    throw invalidElement("dcCorners", "override values must be finite");
+  }
+  switch (element.kind) {
+    case "resistor":
+      if (override.parameter === "resistance") {
+        if (override.value <= 0.0) {
+          throw invalidElement("dcCorners", "resistance overrides must be positive");
+        }
+        return { ...element, resistanceOhms: override.value };
+      }
+      break;
+    case "capacitor":
+      if (override.parameter === "capacitance") {
+        if (override.value <= 0.0) {
+          throw invalidElement("dcCorners", "capacitance overrides must be positive");
+        }
+        return { ...element, capacitanceFarads: override.value };
+      }
+      break;
+    case "inductor":
+      if (override.parameter === "inductance") {
+        if (override.value <= 0.0) {
+          throw invalidElement("dcCorners", "inductance overrides must be positive");
+        }
+        return { ...element, inductanceHenrys: override.value };
+      }
+      break;
+    case "voltage-source":
+      if (override.parameter === "voltage") {
+        return { ...element, voltage: override.value };
+      }
+      break;
+    case "current-source":
+      if (override.parameter === "current") {
+        return { ...element, current: override.value };
+      }
+      break;
+  }
+  throw invalidElement(
+    "dcCorners",
+    `unsupported override ${override.elementName}.${override.parameter}`,
+  );
 }
 
 function validateSParameterPorts(

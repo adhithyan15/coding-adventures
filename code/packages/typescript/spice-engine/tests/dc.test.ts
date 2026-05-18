@@ -9,6 +9,7 @@ import {
   cccs,
   ccvs,
   currentSource,
+  dcCorners,
   dcOp,
   dcSweep,
   diode,
@@ -442,5 +443,41 @@ describe("dcOp", () => {
     circuit.add(voltageSource("V1", "n2", "0", 2.0));
 
     expect(() => dcOp(circuit)).toThrowError("duplicate voltage source name");
+  });
+});
+
+describe("dcCorners", () => {
+  it("runs named corners with element parameter overrides", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 10.0));
+    circuit.add(resistor("Rtop", "in", "out", 1_000.0));
+    circuit.add(resistor("Rbot", "out", "0", 1_000.0));
+
+    const result = dcCorners(circuit, [
+      { name: "nominal", overrides: [] },
+      {
+        name: "rbot-fast",
+        overrides: [{ elementName: "Rbot", parameter: "resistance", value: 500.0 }],
+      },
+      {
+        name: "vin-high",
+        overrides: [{ elementName: "Vin", parameter: "voltage", value: 12.0 }],
+      },
+      {
+        name: "vin-inverted",
+        overrides: [{ elementName: "Vin", parameter: "voltage", value: -10.0 }],
+      },
+    ]);
+
+    expect(result.points.map((point) => point.cornerName)).toEqual([
+      "nominal",
+      "rbot-fast",
+      "vin-high",
+      "vin-inverted",
+    ]);
+    expect(result.points[0].result.voltage("out")).toBeCloseTo(5.0, 9);
+    expect(result.points[1].result.voltage("out")).toBeCloseTo(10.0 / 3.0, 9);
+    expect(result.points[2].result.voltage("out")).toBeCloseTo(6.0, 9);
+    expect(result.points[3].result.voltage("out")).toBeCloseTo(-5.0, 9);
   });
 });

@@ -4,6 +4,9 @@
 
 ### Added
 
+- **Multi-corner DC operating point sweeps** — `dc_corners` runs named corner
+  specs with element-parameter overrides for core linear parameters.
+
 - **Two-port S-parameter extraction** — `s_parameters` derives a two-port
   Y-parameter matrix from named AC voltage-source ports and converts it to
   S11/S21/S12/S22 for a configurable reference impedance.

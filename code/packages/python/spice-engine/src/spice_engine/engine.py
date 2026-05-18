@@ -221,6 +221,38 @@ class DcResult:
     converged: bool
 
 
+@dataclass(frozen=True)
+class CornerOverride:
+    """One element-parameter override for a named analysis corner."""
+
+    element_name: str
+    parameter: str
+    value: float
+
+
+@dataclass(frozen=True)
+class CornerSpec:
+    """Named DC analysis corner."""
+
+    name: str
+    overrides: tuple[CornerOverride, ...] = ()
+
+
+@dataclass(frozen=True)
+class CornerPoint:
+    """DC operating-point result for one named corner."""
+
+    corner_name: str
+    result: DcResult
+
+
+@dataclass(frozen=True)
+class CornerSweepResult:
+    """Multi-corner DC operating-point sweep result."""
+
+    points: list[CornerPoint]
+
+
 @dataclass
 class TransientPoint:
     time: float
@@ -853,6 +885,82 @@ def dc_op(
 
     # All methods exhausted — return the plain-Newton result (converged=False).
     return result
+
+
+def _apply_corner_override(element: Element, override: CornerOverride) -> Element:
+    if not math.isfinite(override.value):
+        raise ValueError("dc_corners: override values must be finite")
+
+    if isinstance(element, Resistor) and override.parameter == "resistance":
+        if override.value <= 0.0:
+            raise ValueError("dc_corners: resistance overrides must be positive")
+        return replace(element, resistance=override.value)
+    if isinstance(element, Capacitor) and override.parameter == "capacitance":
+        if override.value <= 0.0:
+            raise ValueError("dc_corners: capacitance overrides must be positive")
+        return replace(element, capacitance=override.value)
+    if isinstance(element, Inductor) and override.parameter == "inductance":
+        if override.value <= 0.0:
+            raise ValueError("dc_corners: inductance overrides must be positive")
+        return replace(element, inductance=override.value)
+    if isinstance(element, VoltageSource) and override.parameter == "voltage":
+        return replace(element, voltage=override.value)
+    if isinstance(element, CurrentSource) and override.parameter == "current":
+        return replace(element, current=override.value)
+    raise ValueError(
+        f"dc_corners: unsupported override {override.element_name!r}.{override.parameter!r}"
+    )
+
+
+def _circuit_with_corner(circuit: Circuit, corner: CornerSpec) -> Circuit:
+    overrides_by_name: dict[str, list[CornerOverride]] = {}
+    for override in corner.overrides:
+        overrides_by_name.setdefault(override.element_name, []).append(override)
+
+    elements: list[Element] = []
+    seen: set[str] = set()
+    for element in circuit.elements:
+        name = getattr(element, "name", None)
+        if name in overrides_by_name:
+            seen.add(name)
+            for override in overrides_by_name[name]:
+                element = _apply_corner_override(element, override)
+        elements.append(element)
+
+    missing = sorted(set(overrides_by_name) - seen)
+    if missing:
+        raise ValueError(f"dc_corners: missing element(s) for corner overrides: {missing}")
+    return Circuit(elements)
+
+
+def dc_corners(
+    circuit: Circuit,
+    corners: list[CornerSpec],
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    convergence_aids: bool = True,
+) -> CornerSweepResult:
+    """Run DC operating point at each named corner.
+
+    Each corner clones the circuit with explicit element-parameter overrides,
+    then reuses :func:`dc_op`.  Supported override parameters are
+    ``resistance``, ``capacitance``, ``inductance``, ``voltage`` and
+    ``current``.
+    """
+    points = [
+        CornerPoint(
+            corner_name=corner.name,
+            result=dc_op(
+                _circuit_with_corner(circuit, corner),
+                max_iterations=max_iterations,
+                tol=tol,
+                convergence_aids=convergence_aids,
+            ),
+        )
+        for corner in corners
+    ]
+    return CornerSweepResult(points=points)
 
 
 def _stamp_dc(
