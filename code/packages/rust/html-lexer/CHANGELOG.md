@@ -70,6 +70,10 @@ documented in this file.
 - A generated WHATWG tokenizer tag-open recovery fixture and Rust conformance
   test that pins ordinary tags, ASCII casing, tag whitespace, invalid openers,
   NULL replacement in tag names, and EOF partial-token drops.
+- A generated WHATWG tokenizer DOCTYPE boundary fixture and Rust conformance
+  test that pins name whitespace, PUBLIC/SYSTEM identifier recovery,
+  force-quirks transitions, EOF, NULL replacement, and seeded continuation
+  contexts.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the
