@@ -10,11 +10,12 @@ layout FormulaBar {
   Row [bar] {
     Text [address-label] (content: slot: cell-address)
     Input [formula-field] (
-      value:      slot: formula,
-      read-only:  slot: read-only,
-      onChange:   emit: onFormulaChange,
-      onCommit:   emit: onCommit,
-      onCancel:   emit: onCancel
+      value:       slot: formula,
+      read-only:   slot: read-only,
+      placeholder: "Enter formula",
+      onChange:    emit: onFormulaChange,
+      onCommit:    emit: onCommit,
+      onCancel:    emit: onCancel
     )
   }
 }

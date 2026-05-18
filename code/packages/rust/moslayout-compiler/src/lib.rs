@@ -180,6 +180,13 @@ pub enum LayoutPropValue {
     Keyword(String),
     /// A numeric value: `1.5`, `0`, `2`.
     Number(f64),
+    /// A double-quoted string literal: `"Enter formula"`, `"system-ui"`.
+    ///
+    /// Stored *unquoted and unescaped*: the lexer emits the source text
+    /// including the surrounding `"` characters, and `extract_prop_value`
+    /// strips them and resolves `\n`, `\t`, `\\`, `\"`, etc. so downstream
+    /// emitters can treat the value as the literal text the author meant.
+    String(String),
 }
 
 /// A named part exported by this layout (consumed by the mosstyle compiler).
@@ -786,12 +793,14 @@ fn extract_prop(prop_ast: &GrammarASTNode) -> Result<LayoutProp, CompileError> {
 
 /// Extract a `prop_value` from its AST node.
 ///
-/// Grammar: `prop_value = KEYWORD COLON NAME | NAME | NUMBER`
+/// Grammar: `prop_value = KEYWORD COLON NAME | NAME | NUMBER | STRING`
 ///
-/// The three alternatives are distinguished by the first child token's type:
+/// The four alternatives are distinguished by the first child token's type:
 /// - Keyword → slot/emit binding
 /// - Name    → keyword value
 /// - Number  → numeric value
+/// - String  → string literal (surrounding quotes are stripped and
+///             standard `\`-escapes are resolved by `unescape_string_literal`)
 fn extract_prop_value(pv_ast: &GrammarASTNode) -> Result<LayoutPropValue, CompileError> {
     let children = &pv_ast.children;
 
@@ -829,11 +838,61 @@ fn extract_prop_value(pv_ast: &GrammarASTNode) -> Result<LayoutPropValue, Compil
             })?;
             Ok(LayoutPropValue::Number(n))
         }
+        // STRING — quoted literal: "Enter formula", "system-ui", …
+        // The lexer emits the value with surrounding `"`s; strip and unescape.
+        [ASTNodeOrToken::Token(t)] if t.type_ == TokenType::String => {
+            Ok(LayoutPropValue::String(unescape_string_literal(&t.value)?))
+        }
         other => Err(CompileError {
             kind: ErrorKind::InternalError,
             message: format!("Unexpected prop_value shape: {:?}", other.len()),
         }),
     }
+}
+
+/// Resolve the standard `\`-escapes (`\n`, `\t`, `\\`, `\"`, `\r`, `\0`)
+/// in a STRING token's value. The lexer has already stripped the
+/// surrounding double quotes for us, so this function operates on the
+/// inner text only. Any other `\x` sequence is preserved literally — the
+/// grammar's STRING regex already rejects unescaped newlines and
+/// unmatched quotes, so this function only needs to handle the
+/// well-formed cases.
+fn unescape_string_literal(raw: &str) -> Result<String, CompileError> {
+    // Defensive: if a future lexer change starts shipping quotes, strip them.
+    let inner: &str = raw
+        .strip_prefix('"')
+        .and_then(|s| s.strip_suffix('"'))
+        .unwrap_or(raw);
+
+    let mut out = String::with_capacity(inner.len());
+    let mut chars = inner.chars();
+    while let Some(c) = chars.next() {
+        if c == '\\' {
+            match chars.next() {
+                Some('n')  => out.push('\n'),
+                Some('t')  => out.push('\t'),
+                Some('r')  => out.push('\r'),
+                Some('0')  => out.push('\0'),
+                Some('\\') => out.push('\\'),
+                Some('"')  => out.push('"'),
+                Some(other) => {
+                    // Preserve unknown escapes verbatim (e.g. `\u` follow-up
+                    // could land later as a separate feature).
+                    out.push('\\');
+                    out.push(other);
+                }
+                None => {
+                    return Err(CompileError {
+                        kind: ErrorKind::InternalError,
+                        message: format!("Trailing backslash in string literal {:?}", raw),
+                    });
+                }
+            }
+        } else {
+            out.push(c);
+        }
+    }
+    Ok(out)
 }
 
 // ===========================================================================
@@ -1036,6 +1095,60 @@ mod tests {
         assert_eq!(root.props.len(), 1);
         assert_eq!(root.props[0].name, "grow");
         assert_eq!(root.props[0].value, LayoutPropValue::Number(2.0));
+    }
+
+    /// String-literal prop value: `placeholder: "Enter formula"`. The
+    /// surrounding double quotes are stripped at compile time so downstream
+    /// emitters see the literal text the author meant.
+    #[test]
+    fn test_string_literal_prop() {
+        let src = r#"
+          layout Bar {
+            Input [ field ] ( placeholder: "Enter formula" ) { }
+          }
+        "#;
+        let def = parse_and_analyze(src);
+        let root = &def.root;
+        assert_eq!(root.tag, "Input");
+        assert_eq!(root.props.len(), 1);
+        assert_eq!(root.props[0].name, "placeholder");
+        assert_eq!(
+            root.props[0].value,
+            LayoutPropValue::String("Enter formula".to_string())
+        );
+    }
+
+    /// Standard `\`-escapes inside a string literal are resolved at compile
+    /// time: `\n`, `\t`, `\"`, `\\`. Unknown escapes are preserved verbatim.
+    #[test]
+    fn test_string_literal_escapes() {
+        let src = r#"
+          layout Bar {
+            Input [ field ] ( placeholder: "line\none\ttwo\"three" ) { }
+          }
+        "#;
+        let def = parse_and_analyze(src);
+        let root = &def.root;
+        assert_eq!(
+            root.props[0].value,
+            LayoutPropValue::String("line\none\ttwo\"three".to_string())
+        );
+    }
+
+    /// Empty string is a valid literal — useful for clearing a previous
+    /// placeholder when composing styles, or for sentinel values.
+    #[test]
+    fn test_empty_string_literal_prop() {
+        let src = r#"
+          layout Bar {
+            Input [ field ] ( placeholder: "" ) { }
+          }
+        "#;
+        let def = parse_and_analyze(src);
+        assert_eq!(
+            def.root.props[0].value,
+            LayoutPropValue::String(String::new())
+        );
     }
 
     #[test]

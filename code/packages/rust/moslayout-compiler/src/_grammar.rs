@@ -24,10 +24,18 @@ pub fn token_grammar() -> TokenGrammar {
     TokenGrammar {
         definitions: vec![
             TokenDefinition {
+                name: r#"STRING"#.to_string(),
+                pattern: r#""([^"\\
+]|\\.)*""#.to_string(),
+                is_regex: true,
+                line_number: 36,
+                alias: None,
+            },
+            TokenDefinition {
                 name: r#"NUMBER"#.to_string(),
                 pattern: r#"[0-9]+(\.[0-9]+)?"#.to_string(),
                 is_regex: true,
-                line_number: 28,
+                line_number: 38,
                 alias: None,
             },
             TokenDefinition {
@@ -221,8 +229,9 @@ pub fn parser_grammar() -> ParserGrammar {
                 ] },
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                 GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
+                GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
             ] },
-            line_number: 123,
+            line_number: 127,
         },
     ],
         version: 1,

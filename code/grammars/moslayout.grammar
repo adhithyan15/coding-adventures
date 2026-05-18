@@ -87,7 +87,7 @@ part_name = LBRACKET NAME RBRACKET ;
 #
 # Every property is: name : value
 #
-# Values come in three forms:
+# Values come in four forms:
 #   1.  KEYWORD COLON NAME   — a slot or emit binding
 #          slot: column-headers
 #          emit: onNavigate
@@ -97,11 +97,15 @@ part_name = LBRACKET NAME RBRACKET ;
 #          center (align: center)
 #   3.  NUMBER               — a numeric value
 #          1.5  (grow: 1.5)
+#   4.  STRING               — a double-quoted string literal
+#          "Enter formula"   (placeholder: "Enter formula")
+#          "system-ui"       (font: "system-ui")
 #
 # LL(1) disambiguation:
 #   - If prop_value starts with KEYWORD → slot/emit binding
 #   - If prop_value starts with NAME    → keyword value
 #   - If prop_value starts with NUMBER  → numeric value
+#   - If prop_value starts with STRING  → string literal
 
 prop_list = prop { COMMA prop } ;
 
@@ -122,4 +126,5 @@ prop = NAME    COLON prop_value
 
 prop_value = KEYWORD COLON NAME
            | NAME
-           | NUMBER ;
+           | NUMBER
+           | STRING ;
