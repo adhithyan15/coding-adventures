@@ -2844,6 +2844,66 @@ where
     results
 }
 
+fn audit_record_matches(record: &ToolAuditRecord, query: &ToolAuditRecordQuery) -> bool {
+    query
+        .tool_id
+        .as_ref()
+        .is_none_or(|tool_id| record.tool_id == *tool_id)
+        && query
+            .requested_by
+            .is_none_or(|requested_by| record.requested_by == requested_by)
+        && query.status.is_none_or(|status| record.status == status)
+        && query
+            .approval_state
+            .is_none_or(|approval_state| record.approval_state == approval_state)
+        && query
+            .result_ok
+            .is_none_or(|ok| record.result_summary.ok == ok)
+        && query
+            .has_error
+            .is_none_or(|has_error| record.result_summary.has_error == has_error)
+        && query.has_references.is_none_or(|has_references| {
+            record.result_summary.emitted_references() == has_references
+        })
+}
+
+fn sort_audit_records(records: &mut Vec<&ToolAuditRecord>, sort: ToolAuditRecordSort) {
+    match sort {
+        ToolAuditRecordSort::OriginalOrder => {}
+        ToolAuditRecordSort::ToolId => records.sort_by(|left, right| {
+            left.tool_id
+                .cmp(&right.tool_id)
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+        ToolAuditRecordSort::StartedAtAsc => records.sort_by(|left, right| {
+            left.started_at
+                .unwrap_or(0)
+                .cmp(&right.started_at.unwrap_or(0))
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+        ToolAuditRecordSort::StartedAtDesc => records.sort_by(|left, right| {
+            right
+                .started_at
+                .unwrap_or(0)
+                .cmp(&left.started_at.unwrap_or(0))
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+        ToolAuditRecordSort::CompletedAtAsc => records.sort_by(|left, right| {
+            left.completed_at
+                .unwrap_or(0)
+                .cmp(&right.completed_at.unwrap_or(0))
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+        ToolAuditRecordSort::CompletedAtDesc => records.sort_by(|left, right| {
+            right
+                .completed_at
+                .unwrap_or(0)
+                .cmp(&left.completed_at.unwrap_or(0))
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+    }
+}
+
 fn tool_invocation_matches_query(
     request: &ToolInvocationRequest,
     query: &ToolInvocationQuery,
@@ -3316,6 +3376,264 @@ impl ToolCallRecord {
     }
 }
 
+/// Payload-free result shape embedded in audit records.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolResultAuditSummary {
+    pub ok: bool,
+    pub has_output: bool,
+    pub has_error: bool,
+    pub error_kind: Option<ToolErrorKind>,
+    pub artifact_ref_count: usize,
+    pub memory_ref_count: usize,
+    pub bytes_in: Option<u64>,
+    pub bytes_out: Option<u64>,
+}
+
+impl ToolResultAuditSummary {
+    /// Summarize one terminal result without exposing output, error messages,
+    /// referenced identifiers, or metric payloads.
+    pub fn from_result(result: &ToolResult) -> Self {
+        Self {
+            ok: result.ok,
+            has_output: result.output.is_some(),
+            has_error: result.error.is_some(),
+            error_kind: result.error.as_ref().map(|error| error.kind),
+            artifact_ref_count: result.artifact_refs.len(),
+            memory_ref_count: result.memory_refs.len(),
+            bytes_in: result.metrics.bytes_in,
+            bytes_out: result.metrics.bytes_out,
+        }
+    }
+
+    /// Return whether the result emitted durable references.
+    pub fn emitted_references(&self) -> bool {
+        self.artifact_ref_count > 0 || self.memory_ref_count > 0
+    }
+}
+
+/// Minimum D18D audit record for reconstructing one tool call lifecycle.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolAuditRecord {
+    pub call_id: String,
+    pub tool_id: ToolId,
+    pub requested_by: RequestedBy,
+    pub started_at: Option<TimestampMs>,
+    pub completed_at: Option<TimestampMs>,
+    pub status: ToolCallStatus,
+    pub approval_state: ApprovalState,
+    pub lock_scope: Option<String>,
+    pub result_summary: ToolResultAuditSummary,
+}
+
+impl ToolAuditRecord {
+    /// Build an audit record from the canonical request, call record, and
+    /// terminal result.
+    pub fn from_parts(
+        request: &ToolInvocationRequest,
+        record: &ToolCallRecord,
+        result: &ToolResult,
+    ) -> Self {
+        Self {
+            call_id: record.call_id.clone(),
+            tool_id: record.tool_id.clone(),
+            requested_by: request.requested_by,
+            started_at: record.started_at,
+            completed_at: record.completed_at,
+            status: record.status,
+            approval_state: record.approval_state,
+            lock_scope: record.lock_scope.clone(),
+            result_summary: ToolResultAuditSummary::from_result(result),
+        }
+    }
+
+    /// Build an audit record from one runtime execution trace.
+    pub fn from_trace(request: &ToolInvocationRequest, trace: &ToolExecutionTrace) -> Self {
+        Self::from_parts(request, &trace.record, &trace.result)
+    }
+
+    /// Return whether this record represents a terminal call.
+    pub fn is_terminal(&self) -> bool {
+        !self.status.is_active()
+    }
+
+    /// Return whether a human or supervisor should inspect this record.
+    pub fn requires_follow_up(&self) -> bool {
+        self.status.is_active()
+            || self.result_summary.has_error
+            || matches!(
+                self.approval_state,
+                ApprovalState::Pending | ApprovalState::Denied | ApprovalState::Expired
+            )
+    }
+}
+
+/// Where a runtime publishes payload-free audit records.
+pub trait ToolAuditSink {
+    fn record_tool_audit(&mut self, record: ToolAuditRecord);
+}
+
+/// Deterministic audit sink for tests, small hosts, and adapters that batch
+/// before persisting to a store-backed journal.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct InMemoryToolAuditSink {
+    records: Vec<ToolAuditRecord>,
+}
+
+impl InMemoryToolAuditSink {
+    /// Create an empty sink.
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Return immutable audit records in insertion order.
+    pub fn records(&self) -> &[ToolAuditRecord] {
+        &self.records
+    }
+
+    /// Query records without exposing payloads.
+    pub fn query(&self, query: &ToolAuditRecordQuery) -> Vec<&ToolAuditRecord> {
+        query_tool_audit_records(self.records.iter(), query)
+    }
+
+    /// Remove all records and return them to the caller.
+    pub fn drain(&mut self) -> Vec<ToolAuditRecord> {
+        std::mem::take(&mut self.records)
+    }
+}
+
+impl ToolAuditSink for InMemoryToolAuditSink {
+    fn record_tool_audit(&mut self, record: ToolAuditRecord) {
+        self.records.push(record);
+    }
+}
+
+/// Sort order for audit read-side queries.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditRecordSort {
+    OriginalOrder,
+    ToolId,
+    StartedAtAsc,
+    StartedAtDesc,
+    CompletedAtAsc,
+    CompletedAtDesc,
+}
+
+impl Default for ToolAuditRecordSort {
+    fn default() -> Self {
+        Self::OriginalOrder
+    }
+}
+
+/// Storage-neutral query for payload-free audit records.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolAuditRecordQuery {
+    pub tool_id: Option<ToolId>,
+    pub requested_by: Option<RequestedBy>,
+    pub status: Option<ToolCallStatus>,
+    pub approval_state: Option<ApprovalState>,
+    pub result_ok: Option<bool>,
+    pub has_error: Option<bool>,
+    pub has_references: Option<bool>,
+    pub sort: ToolAuditRecordSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for ToolAuditRecordQuery {
+    fn default() -> Self {
+        Self {
+            tool_id: None,
+            requested_by: None,
+            status: None,
+            approval_state: None,
+            result_ok: None,
+            has_error: None,
+            has_references: None,
+            sort: ToolAuditRecordSort::OriginalOrder,
+            limit: None,
+        }
+    }
+}
+
+impl ToolAuditRecordQuery {
+    /// Create an unconstrained audit query.
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Restrict records to one tool id.
+    pub fn for_tool(mut self, tool_id: impl Into<String>) -> Self {
+        self.tool_id = Some(tool_id.into());
+        self
+    }
+
+    /// Restrict records by request origin.
+    pub fn requested_by(mut self, requested_by: RequestedBy) -> Self {
+        self.requested_by = Some(requested_by);
+        self
+    }
+
+    /// Restrict records to one lifecycle status.
+    pub fn with_status(mut self, status: ToolCallStatus) -> Self {
+        self.status = Some(status);
+        self
+    }
+
+    /// Restrict records to one approval state.
+    pub fn with_approval_state(mut self, approval_state: ApprovalState) -> Self {
+        self.approval_state = Some(approval_state);
+        self
+    }
+
+    /// Restrict records by terminal success.
+    pub fn with_result_ok(mut self, ok: bool) -> Self {
+        self.result_ok = Some(ok);
+        self
+    }
+
+    /// Restrict records by whether a terminal error exists.
+    pub fn with_error(mut self, has_error: bool) -> Self {
+        self.has_error = Some(has_error);
+        self
+    }
+
+    /// Restrict records by whether artifact or memory references were emitted.
+    pub fn with_references(mut self, has_references: bool) -> Self {
+        self.has_references = Some(has_references);
+        self
+    }
+
+    /// Select audit sort order.
+    pub fn sorted_by(mut self, sort: ToolAuditRecordSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    /// Limit returned rows.
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+/// Query audit records using the storage-neutral D18D audit shape.
+pub fn query_tool_audit_records<'a, I>(
+    records: I,
+    query: &ToolAuditRecordQuery,
+) -> Vec<&'a ToolAuditRecord>
+where
+    I: IntoIterator<Item = &'a ToolAuditRecord>,
+{
+    let mut records: Vec<&ToolAuditRecord> = records
+        .into_iter()
+        .filter(|record| audit_record_matches(record, query))
+        .collect();
+    sort_audit_records(&mut records, query.sort);
+    if let Some(limit) = query.limit {
+        records.truncate(limit);
+    }
+    records
+}
+
 /// Cooperative cancellation handle passed into handlers.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct CancellationToken {
@@ -3748,6 +4066,7 @@ pub struct ToolExecutionJournal {
     records: Vec<ToolCallRecord>,
     events: Vec<ToolEvent>,
     results: Vec<ToolResult>,
+    audit_records: Vec<ToolAuditRecord>,
 }
 
 impl ToolExecutionJournal {
@@ -3762,6 +4081,7 @@ impl ToolExecutionJournal {
             && self.records.is_empty()
             && self.events.is_empty()
             && self.results.is_empty()
+            && self.audit_records.is_empty()
     }
 
     /// Return the number of recorded invocation requests.
@@ -3789,12 +4109,19 @@ impl ToolExecutionJournal {
         &self.results
     }
 
+    /// Return immutable payload-free audit records.
+    pub fn audit_records(&self) -> &[ToolAuditRecord] {
+        &self.audit_records
+    }
+
     /// Append one invocation request and its canonical execution trace.
     pub fn record_trace(&mut self, request: ToolInvocationRequest, trace: ToolExecutionTrace) {
+        let audit_record = ToolAuditRecord::from_trace(&request, &trace);
         self.requests.push(request);
         self.records.push(trace.record);
         self.events.extend(trace.events);
         self.results.push(trace.result);
+        self.audit_records.push(audit_record);
     }
 
     /// Query recorded invocation requests using the storage-neutral D18D query.
@@ -3818,6 +4145,11 @@ impl ToolExecutionJournal {
     /// Query recorded terminal results using the storage-neutral D18D query.
     pub fn query_results(&self, query: &ToolResultQuery) -> Vec<&ToolResult> {
         query_tool_results(self.results.iter(), query)
+    }
+
+    /// Query payload-free audit records using the storage-neutral D18D query.
+    pub fn query_audit_records(&self, query: &ToolAuditRecordQuery) -> Vec<&ToolAuditRecord> {
+        query_tool_audit_records(self.audit_records.iter(), query)
     }
 
     /// Produce payload-free runtime health coverage for the journal.
@@ -5709,6 +6041,26 @@ mod tests {
 
         assert!(journal.is_empty());
         journal.record_trace(request.clone(), trace);
+        assert_eq!(journal.audit_records().len(), 1);
+
+        let audit = &journal.audit_records()[0];
+        assert_eq!(audit.call_id, "call_1");
+        assert_eq!(audit.tool_id, "artifact.create");
+        assert_eq!(audit.requested_by, RequestedBy::Agent);
+        assert_eq!(audit.started_at, Some(100));
+        assert_eq!(audit.completed_at, Some(100));
+        assert_eq!(audit.status, ToolCallStatus::Completed);
+        assert_eq!(audit.approval_state, ApprovalState::NotRequired);
+        assert_eq!(audit.lock_scope.as_deref(), Some("artifact"));
+        assert!(audit.result_summary.ok);
+        assert!(audit.result_summary.has_output);
+        assert!(!audit.result_summary.has_error);
+        assert_eq!(audit.result_summary.error_kind, None);
+        assert_eq!(audit.result_summary.artifact_ref_count, 1);
+        assert_eq!(audit.result_summary.memory_ref_count, 0);
+        assert!(audit.result_summary.emitted_references());
+        assert!(audit.is_terminal());
+        assert!(!audit.requires_follow_up());
 
         assert_eq!(
             trace_summary,
@@ -5808,6 +6160,32 @@ mod tests {
         let artifact_results =
             journal.query_results(&ToolResultQuery::new().with_artifact_refs(true));
         assert_eq!(artifact_results[0].artifact_refs, vec!["artifact_1/rev_1"]);
+
+        let audit_records = journal.query_audit_records(
+            &ToolAuditRecordQuery::new()
+                .for_tool("artifact.create")
+                .requested_by(RequestedBy::Agent)
+                .with_status(ToolCallStatus::Completed)
+                .with_approval_state(ApprovalState::NotRequired)
+                .with_result_ok(true)
+                .with_error(false)
+                .with_references(true),
+        );
+        assert_eq!(audit_records, vec![audit]);
+
+        let mut sink = InMemoryToolAuditSink::new();
+        sink.record_tool_audit(audit.clone());
+        assert_eq!(
+            sink.query(
+                &ToolAuditRecordQuery::new()
+                    .with_references(true)
+                    .sorted_by(ToolAuditRecordSort::CompletedAtDesc)
+                    .with_limit(1),
+            ),
+            vec![audit]
+        );
+        assert_eq!(sink.drain(), vec![audit.clone()]);
+        assert!(sink.records().is_empty());
     }
 
     #[test]

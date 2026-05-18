@@ -46,3 +46,6 @@ All notable changes to this package will be documented in this file.
   for recorded invocation requests, call records, events, and terminal results.
 - Payload-free `ToolExecutionJournalHealthSummary` rows for active-call,
   approval, terminal-event, reference, and follow-up coverage across a journal.
+- Payload-free `ToolAuditRecord`, audit query helpers, and an in-memory audit
+  sink so runtimes can persist the D18D minimum audit shape without exposing
+  arguments, outputs, or event payloads.
