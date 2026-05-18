@@ -4,7 +4,8 @@ use board_vm_ir::{
     decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ,
     CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE,
     CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
-    CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER,
+    CAP_LED_MATRIX_FRAME, CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
+    CAP_NETWORK_TCP_WRITE, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER,
     CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN,
     CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
 };
@@ -223,6 +224,27 @@ pub trait BoardHal {
         Err(HalError::UnsupportedMode)
     }
 
+    fn network_tcp_open(
+        &mut self,
+        _interface: u16,
+        _remote_ipv4: u32,
+        _remote_port: u16,
+    ) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn network_tcp_write(&mut self, _token: u32, _byte: u8) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn network_tcp_read(&mut self, _token: u32) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn network_tcp_close(&mut self, _token: u32) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
     fn store_program(
         &mut self,
         _program_id: u16,
@@ -315,6 +337,7 @@ enum HandleKind {
     Spi,
     Uart,
     Can,
+    NetworkTcp,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -871,6 +894,54 @@ where
                         })?;
                 self.push(Value::Bytes(bytes), ip)
             }
+            CAP_NETWORK_TCP_OPEN => {
+                let remote_port = self.pop_u16(ip)?;
+                let remote_ipv4 = self.pop_u32(ip)?;
+                let interface = self.pop_u16(ip)?;
+                let token = self
+                    .hal
+                    .network_tcp_open(interface, remote_ipv4, remote_port)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })?;
+                let handle = self.alloc_handle(HandleKind::NetworkTcp, token, ip)?;
+                self.push(Value::Handle(handle), ip)
+            }
+            CAP_NETWORK_TCP_WRITE => {
+                let byte = self.pop_u8(ip)?;
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::NetworkTcp, ip)?;
+                self.hal
+                    .network_tcp_write(token, byte)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })
+            }
+            CAP_NETWORK_TCP_READ => {
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::NetworkTcp, ip)?;
+                let byte = self
+                    .hal
+                    .network_tcp_read(token)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })?;
+                self.push(Value::U8(byte), ip)
+            }
+            CAP_NETWORK_TCP_CLOSE => {
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::NetworkTcp, ip)?;
+                self.hal
+                    .network_tcp_close(token)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })?;
+                self.close_handle(handle, ip)
+            }
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -1144,6 +1215,10 @@ mod tests {
         WatchdogKick,
         StorageWrite(u16, u16, ByteBuffer),
         StorageRead(u16, u16, u8),
+        NetworkTcpOpen(u16, u32, u16),
+        NetworkTcpWrite(u32, u8),
+        NetworkTcpRead(u32),
+        NetworkTcpClose(u32),
         LedMatrixFrame([u32; 3]),
     }
 
@@ -1176,6 +1251,7 @@ mod tests {
                 .with_rtc()
                 .with_watchdog()
                 .with_storage()
+                .with_network_tcp()
                 .with_led_matrix()
         }
 
@@ -1373,6 +1449,32 @@ mod tests {
                 *byte = pattern[index % pattern.len()];
             }
             ByteBuffer::from_slice(&bytes).map_err(|_| HalError::UnsupportedMode)
+        }
+
+        fn network_tcp_open(
+            &mut self,
+            interface: u16,
+            remote_ipv4: u32,
+            remote_port: u16,
+        ) -> Result<u32, HalError> {
+            self.events
+                .push(Event::NetworkTcpOpen(interface, remote_ipv4, remote_port));
+            Ok(0x5_2002)
+        }
+
+        fn network_tcp_write(&mut self, token: u32, byte: u8) -> Result<(), HalError> {
+            self.events.push(Event::NetworkTcpWrite(token, byte));
+            Ok(())
+        }
+
+        fn network_tcp_read(&mut self, token: u32) -> Result<u8, HalError> {
+            self.events.push(Event::NetworkTcpRead(token));
+            Ok(0x42)
+        }
+
+        fn network_tcp_close(&mut self, token: u32) -> Result<(), HalError> {
+            self.events.push(Event::NetworkTcpClose(token));
+            Ok(())
         }
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -1803,6 +1905,50 @@ mod tests {
             Value::Bytes(ByteBuffer::from_slice(&[0xde, 0xad]).unwrap())
         );
         assert_eq!(runtime.hal().events, vec![Event::StorageRead(0, 0x0010, 2)]);
+    }
+
+    #[test]
+    fn network_tcp_dispatches_socket_open_byte_io_and_close() {
+        let mut runtime: Runtime<FakeHal, 4, 1> = Runtime::new(FakeHal::new());
+        let code = [
+            0x12,
+            0x00,
+            0x14,
+            0x2a,
+            0x01,
+            0xa8,
+            0xc0,
+            0x13,
+            0x90,
+            0x1f,
+            0x40,
+            CAP_NETWORK_TCP_OPEN as u8,
+            0x20,
+            0x12,
+            0x41,
+            0x40,
+            CAP_NETWORK_TCP_WRITE as u8,
+            0x20,
+            0x40,
+            CAP_NETWORK_TCP_READ as u8,
+            0x21,
+            0x40,
+            CAP_NETWORK_TCP_CLOSE as u8,
+        ];
+
+        let report = runtime.run_code(&code, 20).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.open_handles, 0);
+        assert_eq!(
+            runtime.hal().events,
+            vec![
+                Event::NetworkTcpOpen(0, 0xc0a8_012a, 8080),
+                Event::NetworkTcpWrite(0x5_2002, 0x41),
+                Event::NetworkTcpRead(0x5_2002),
+                Event::NetworkTcpClose(0x5_2002),
+            ]
+        );
     }
 
     #[test]

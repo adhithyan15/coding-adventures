@@ -131,6 +131,14 @@ The current no-heap Rust HAL exposes this first tranche as
 may lower that protocol-level request into their existing bounded storage writes,
 while leaving language frontends as thin builders for the `STORE_PROGRAM` frame.
 
+The first network tranche keeps the same no-heap shape: `network.tcp.open`
+accepts an interface id, an IPv4 address encoded as a `u32`, and a remote port,
+then returns a portable socket handle. `network.tcp.write`, `network.tcp.read`,
+and `network.tcp.close` operate on that handle and delegate to narrow
+`BoardHal::network_tcp_*` hooks. Host SDKs build bytecode for these calls; board
+ports decide when a concrete backend can actually drive a WiFi or Ethernet
+module.
+
 `HandleToken` is private to the board adapter. The portable VM only sees compact
 `Handle` ids.
 
@@ -142,6 +150,7 @@ The interpreter dispatches `CALL_U8` and `CALL_U16` through a capability table.
 CALL_U8 0x01 -> gpio.open
 CALL_U8 0x02 -> gpio.write
 CALL_U8 0x10 -> time.sleep_ms
+CALL_U8 0x3a -> network.tcp.open
 ```
 
 Each handler:

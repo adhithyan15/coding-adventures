@@ -23,6 +23,7 @@ use board_vm_device::{
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_STORAGE_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_RTC_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES, BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_CAPABILITIES,
@@ -531,7 +532,8 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
         .with_can()
         .with_rtc()
         .with_watchdog()
-        .with_storage(),
+        .with_storage()
+        .with_network_tcp(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
@@ -586,6 +588,10 @@ pub trait UnoR4Backend {
     }
 
     fn supports_storage(&self) -> bool {
+        false
+    }
+
+    fn supports_network_tcp(&self) -> bool {
         false
     }
 
@@ -663,6 +669,27 @@ pub trait UnoR4Backend {
         _offset: u16,
         _len: u8,
     ) -> Result<ByteBuffer, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn open_network_tcp(
+        &mut self,
+        _interface: u8,
+        _remote_ipv4: u32,
+        _remote_port: u16,
+    ) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn write_network_tcp(&mut self, _socket: u8, _byte: u8) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn read_network_tcp(&mut self, _socket: u8) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn close_network_tcp(&mut self, _socket: u8) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -766,6 +793,8 @@ where
         capabilities.rtc = self.backend.supports_rtc();
         capabilities.watchdog = self.backend.supports_watchdog();
         capabilities.storage = self.backend.supports_storage();
+        capabilities.network_tcp =
+            self.target.supports_wifi_module && self.backend.supports_network_tcp();
         capabilities
     }
 }
@@ -903,6 +932,35 @@ where
     fn storage_read(&mut self, region: u16, offset: u16, len: u8) -> Result<ByteBuffer, HalError> {
         let region = normalize_storage_region(self.target, region, offset, len)?;
         self.backend.storage_read(region, offset, len)
+    }
+
+    fn network_tcp_open(
+        &mut self,
+        interface: u16,
+        remote_ipv4: u32,
+        remote_port: u16,
+    ) -> Result<u32, HalError> {
+        if !self.target.supports_wifi_module {
+            return Err(HalError::UnsupportedMode);
+        }
+        let interface = normalize_network_interface(interface)?;
+        self.backend
+            .open_network_tcp(interface, remote_ipv4, remote_port)
+    }
+
+    fn network_tcp_write(&mut self, token: u32, byte: u8) -> Result<(), HalError> {
+        let socket = normalize_network_socket(token)?;
+        self.backend.write_network_tcp(socket, byte)
+    }
+
+    fn network_tcp_read(&mut self, token: u32) -> Result<u8, HalError> {
+        let socket = normalize_network_socket(token)?;
+        self.backend.read_network_tcp(socket)
+    }
+
+    fn network_tcp_close(&mut self, token: u32) -> Result<(), HalError> {
+        let socket = normalize_network_socket(token)?;
+        self.backend.close_network_tcp(socket)
     }
 
     fn store_program(
@@ -1165,6 +1223,18 @@ fn normalize_storage_region(
     }
 }
 
+fn normalize_network_interface(interface: u16) -> Result<u8, HalError> {
+    if interface == 0 {
+        Ok(0)
+    } else {
+        Err(HalError::InvalidPin)
+    }
+}
+
+fn normalize_network_socket(token: u32) -> Result<u8, HalError> {
+    u8::try_from(token & 0xff).map_err(|_| HalError::InvalidPin)
+}
+
 fn crc32_ieee(bytes: &[u8]) -> u32 {
     let mut crc = 0xFFFF_FFFFu32;
     for byte in bytes {
@@ -1195,7 +1265,22 @@ fn uno_r4_device_descriptor_for_capabilities(
         board_nonce,
         max_frame_payload: DEFAULT_MAX_FRAME_PAYLOAD,
         supports_store_program: capabilities.storage,
-        capabilities: if target.supports_led_matrix
+        capabilities: if target.supports_wifi_module
+            && target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+            && capabilities.rtc
+            && capabilities.watchdog
+            && capabilities.storage
+            && capabilities.network_tcp
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix
             && capabilities.pwm
             && capabilities.adc
             && capabilities.dac
@@ -1454,6 +1539,10 @@ mod tests {
         WatchdogKick,
         StorageWrite(u8, u16, Vec<u8>),
         StorageRead(u8, u16, u8),
+        NetworkTcpOpen(u8, u32, u16),
+        NetworkTcpWrite(u8, u8),
+        NetworkTcpRead(u8),
+        NetworkTcpClose(u8),
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -1534,6 +1623,10 @@ mod tests {
         }
 
         fn supports_storage(&self) -> bool {
+            true
+        }
+
+        fn supports_network_tcp(&self) -> bool {
             true
         }
 
@@ -1635,6 +1728,32 @@ mod tests {
                 *byte = pattern[index % pattern.len()];
             }
             ByteBuffer::from_slice(&bytes).map_err(|_| HalError::UnsupportedMode)
+        }
+
+        fn open_network_tcp(
+            &mut self,
+            interface: u8,
+            remote_ipv4: u32,
+            remote_port: u16,
+        ) -> Result<u32, HalError> {
+            self.events
+                .push(Event::NetworkTcpOpen(interface, remote_ipv4, remote_port));
+            Ok(0x5_2002)
+        }
+
+        fn write_network_tcp(&mut self, socket: u8, byte: u8) -> Result<(), HalError> {
+            self.events.push(Event::NetworkTcpWrite(socket, byte));
+            Ok(())
+        }
+
+        fn read_network_tcp(&mut self, socket: u8) -> Result<u8, HalError> {
+            self.events.push(Event::NetworkTcpRead(socket));
+            Ok(0x42)
+        }
+
+        fn close_network_tcp(&mut self, socket: u8) -> Result<(), HalError> {
+            self.events.push(Event::NetworkTcpClose(socket));
+            Ok(())
         }
 
         fn transfer_spi(
@@ -1866,7 +1985,7 @@ mod tests {
         assert!(descriptor.supports_store_program);
         assert_eq!(
             descriptor.capabilities.len(),
-            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_AND_LED_MATRIX_CAPABILITIES
+            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_AND_LED_MATRIX_CAPABILITIES
                 .len()
         );
         assert!(descriptor
@@ -1876,6 +1995,10 @@ mod tests {
                 |capability| capability.id == board_vm_protocol::CAP_PROGRAM_STORE
                     && capability.name == "program.store"
             ));
+        assert!(descriptor.capabilities.iter().any(|capability| {
+            capability.id == board_vm_ir::CAP_NETWORK_TCP_OPEN
+                && capability.name == "network.tcp.open"
+        }));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -1929,6 +2052,21 @@ mod tests {
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_STORAGE_READ));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_TCP_OPEN));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_TCP_WRITE));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_TCP_READ));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_TCP_CLOSE));
+        assert!(!UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_TCP_OPEN));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -2268,6 +2406,42 @@ mod tests {
         assert_eq!(
             board.backend().events,
             vec![Event::StorageRead(0, 0x0010, 2)]
+        );
+    }
+
+    #[test]
+    fn network_tcp_runs_through_wifi_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        let token = board.network_tcp_open(0, 0xc0a8_012a, 8080).unwrap();
+        board.network_tcp_write(token, 0x41).unwrap();
+        let byte = board.network_tcp_read(token).unwrap();
+        board.network_tcp_close(token).unwrap();
+
+        assert_eq!(byte, 0x42);
+        assert_eq!(
+            board.backend().events,
+            vec![
+                Event::NetworkTcpOpen(0, 0xc0a8_012a, 8080),
+                Event::NetworkTcpWrite(2, 0x41),
+                Event::NetworkTcpRead(2),
+                Event::NetworkTcpClose(2),
+            ]
+        );
+    }
+
+    #[test]
+    fn network_tcp_rejects_non_wifi_target_or_unknown_interface() {
+        let mut minima = UnoR4Board::minima(FakeBackend::new());
+        assert_eq!(
+            minima.network_tcp_open(0, 0xc0a8_012a, 8080),
+            Err(HalError::UnsupportedMode)
+        );
+
+        let mut wifi = UnoR4Board::wifi(FakeBackend::new());
+        assert_eq!(
+            wifi.network_tcp_open(1, 0xc0a8_012a, 8080),
+            Err(HalError::InvalidPin)
         );
     }
 

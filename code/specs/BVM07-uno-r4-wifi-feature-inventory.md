@@ -37,7 +37,7 @@ Source snapshot:
 | EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | descriptor metadata and bounded bytecode read/write implemented | `storage.write`, `storage.read`; stored program / KV layers later |
 | Watchdog | Renesas WDT library | descriptor metadata and direct bytecode operations implemented | `watchdog.configure`, `watchdog.kick` |
 | OPAMP | UNO R4 OPAMP library | pending | analog board-specific capability after ADC/DAC |
-| WiFi | WiFiS3 library through onboard network module | descriptor metadata and network capability strings implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`; socket/control bytecode later |
+| WiFi | WiFiS3 library through onboard network module | descriptor metadata, network capability strings, and first TCP socket bytecode tranche implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`, `network.tcp.open`, `network.tcp.write`, `network.tcp.read`, `network.tcp.close`; UDP and WiFi association control later |
 | USB/HID | TinyUSB device support | pending | transport/device descriptors first; HID later |
 | OTA/SDU | OTAUpdate and SDU libraries | pending | firmware-management capability, separate from bytecode VM |
 
@@ -93,12 +93,15 @@ reject conflicting handles.
    bounded byte-buffer bytecode tranche for that region. WiFi/network now has
    Rust-owned descriptor metadata for the onboard WiFiS3 interface plus
    `network.ipv4`, `network.tcp`, and `network.udp` capability strings surfaced
-   through the language target APIs. `program.store` now has a protocol
-   capability descriptor, `STORE_PROGRAM` device dispatch, runtime HAL hook, and
-   an initial UNO R4 storage-backed slot-0 layout that writes a compact header
-   plus module chunks through the same bounded storage substrate. Higher-level
-   KV storage and socket/control bytecode operations remain later capability
-   tranches.
+   through the language target APIs. `network.tcp.open`, `network.tcp.write`,
+   `network.tcp.read`, and `network.tcp.close` now establish the first socket
+   bytecode tranche with runtime handle-table ownership, host builders, device
+   capability descriptors, and UNO R4 WiFi backend hooks. `program.store` now
+   has a protocol capability descriptor, `STORE_PROGRAM` device dispatch,
+   runtime HAL hook, and an initial UNO R4 storage-backed slot-0 layout that
+   writes a compact header plus module chunks through the same bounded storage
+   substrate. Higher-level KV storage, WiFi association control, DNS, and UDP
+   bytecode operations remain later capability tranches.
 
 Every tranche should include the same layers: spec entry, IR/protocol capability id,
 runtime HAL method, UNO R4 target descriptor, firmware backend, host builder,
