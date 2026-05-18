@@ -192,6 +192,229 @@ pub fn twigc_run(path: &Path, search_paths: &[PathBuf]) -> Result<i64, TwigcErro
     Ok(value.as_int().unwrap_or(0))
 }
 
+/// Run the TW05 fixed-point self-check against the Twig compiler source tree.
+///
+/// `compiler_dir` must be the directory that contains the eleven compiler
+/// `.tw` files (`span.tw`, `lexer.tw`, `main.tw`, …).  This function:
+///
+/// 1. Derives the module search root as `parent(compiler_dir)`, so that
+///    `(import compiler/main)` can resolve at link time.
+/// 2. Writes an ephemeral wrapper `.tw` source to a temporary directory:
+///    ```scheme
+///    (module twigc/self-check-runner
+///      (typed lenient)
+///      (export main)
+///      (import compiler/main))
+///    (define (main) (if (fixed-point-check "<dir>") 1 0))
+///    ```
+///    where `<dir>` is the canonicalized absolute path of `compiler_dir`.
+///    `(export main)` is required so the IIR linker uses the wrapper's
+///    `main` as the entry point rather than `compiler/main`'s `main`.
+/// 3. Compiles and runs the wrapper via `twigc_run`.
+/// 4. Returns `Ok(true)` if `fixed-point-check` returns `#t` (result == 1),
+///    `Ok(false)` otherwise.
+///
+/// ## Why an ephemeral wrapper?
+///
+/// `twig_vm::run_module_tree` always calls the `main` function with no
+/// arguments.  `fixed-point-check` requires a `dir` argument.  The wrapper
+/// creates a synthetic `main` that embeds the directory path as a string
+/// constant and delegates to `fixed-point-check`.
+///
+/// ## Stack note
+///
+/// `fixed-point-check` only processes `span.tw` (~365 chars, 2 functions).
+/// The IIR compilation of the full 11-module tree happens at load time via
+/// the Rust-based driver (not recursively in the VM), so the runtime call
+/// depth is modest — no large-stack thread is required.
+///
+/// # Example
+///
+/// ```no_run
+/// use twigc::twigc_self_check;
+/// use std::path::Path;
+///
+/// let passed = twigc_self_check(Path::new("code/twig/compiler"), &[]).unwrap();
+/// assert!(passed, "fixed-point check should always pass on pure Twig");
+/// ```
+pub fn twigc_self_check(
+    compiler_dir: &Path,
+    extra_search_paths: &[PathBuf],
+) -> Result<bool, TwigcError> {
+    // ── 1. Canonicalize the compiler directory ────────────────────────────
+    let compiler_dir = compiler_dir
+        .canonicalize()
+        .map_err(|e| TwigcError::Vm {
+            message: format!("cannot resolve compiler dir '{}': {e}", compiler_dir.display()),
+        })?;
+
+    // ── 2. Derive the module search root ─────────────────────────────────
+    //
+    // The search root must be the PARENT of `compiler_dir` so that:
+    //   (import compiler/main) → <search_root>/compiler/main.tw ✓
+    let search_root = compiler_dir
+        .parent()
+        .ok_or_else(|| TwigcError::Vm {
+            message: format!(
+                "compiler_dir '{}' has no parent — cannot derive search root",
+                compiler_dir.display()
+            ),
+        })?
+        .to_path_buf();
+
+    // Build the effective search-path list: search_root first, then extras.
+    let mut all_paths: Vec<PathBuf> = vec![search_root];
+    all_paths.extend_from_slice(extra_search_paths);
+
+    // ── 3. Write an ephemeral wrapper to a temp directory ─────────────────
+    //
+    // The wrapper calls (fixed-point-check "<dir>") with the absolute path
+    // baked in as a string constant.  It returns 1 on pass, 0 on failure
+    // so that twigc_run can map the result to bool via `result == 1`.
+    //
+    // `tmp_guard` is an RAII handle: the temp dir is removed on drop, so
+    // the generated `.tw` file (which embeds the compiler path) is cleaned
+    // up even if an early `?`-return or panic occurs after this point.
+    let tmp_guard = make_tmp_dir("self_check")?;
+
+    // The dir path is a Twig string literal — validate and escape it.
+    //
+    // We use `?` rather than `unwrap_or("")` because silently embedding an
+    // empty string would make fixed-point-check try to read "/span.tw" (the
+    // root directory) instead of the intended compiler dir, producing a
+    // misleading VM error.  Failing early with a clear message is safer.
+    let raw_dir_str = compiler_dir
+        .to_str()
+        .ok_or_else(|| TwigcError::Vm {
+            message: format!(
+                "compiler_dir '{}' contains non-UTF-8 characters — \
+                 cannot embed path in Twig string literal",
+                compiler_dir.display()
+            ),
+        })?;
+
+    // Reject control characters (ASCII < 0x20 or 0x7F) in the path.
+    //
+    // On Linux/macOS, directory names may legally contain newlines or other
+    // control bytes.  If such a character reached the generated Twig source
+    // it could confuse parsers downstream of the Twig compiler itself, or
+    // indicate a path-injection attempt.  Failing early with a clear message
+    // is safer than attempting to escape every possible byte value.
+    if let Some(bad) = raw_dir_str.chars().find(|c| c.is_ascii_control()) {
+        return Err(TwigcError::Vm {
+            message: format!(
+                "compiler_dir '{}' contains a control character (U+{:04X}) — \
+                 unsafe to embed in Twig source",
+                compiler_dir.display(),
+                bad as u32
+            ),
+        });
+    }
+
+    // Escape `\` and `"` for the Twig string literal.  These are the only
+    // two characters that have special meaning inside `"…"` per the Twig
+    // lexer regex `/"([^"\\]|\\.)*"/`.
+    let dir_str = raw_dir_str
+        .replace('\\', "\\\\")
+        .replace('"', "\\\"");
+
+    // The wrapper exports `main` explicitly so the IIR linker's Pass 1a
+    // claims the public name `main` for this module.  Without `(export main)`
+    // the linker sees that `compiler/main` already exports `main` and renames
+    // this module's `main` to its fully-qualified private form; the VM's entry
+    // point would then resolve to `compiler/main`'s `main` (which returns 2),
+    // and `twigc_run` would return 2 instead of 1.
+    //
+    // With `(export main)`, both modules export `main`.  During IIR merging
+    // (`add_or_replace` in the linker), the wrapper is processed last in
+    // topological order (it imports compiler/main, so it comes after it),
+    // meaning the wrapper's `main` overwrites `compiler/main`'s `main` in
+    // the merged output.  The VM therefore calls the wrapper's `main`, which
+    // calls `(fixed-point-check "<dir>")` and returns 1 on success.
+    let wrapper_src = format!(
+        "; twigc self-check wrapper — generated, do not edit\n\
+         (module twigc/self-check-runner\n\
+           (typed lenient)\n\
+           (export main)\n\
+           (import compiler/main))\n\
+         \n\
+         ; main: call fixed-point-check with the baked-in compiler dir.\n\
+         ; Returns 1 (integer) on pass, 0 on failure, so that twigc_run's\n\
+         ; as_int() extraction works correctly.\n\
+         (define (main)\n\
+           (if (fixed-point-check \"{dir}\")\n\
+               1\n\
+               0))\n",
+        dir = dir_str,
+    );
+
+    let wrapper_path = tmp_guard.path().join("self-check-runner.tw");
+    std::fs::write(&wrapper_path, &wrapper_src).map_err(|e| TwigcError::Vm {
+        message: format!("failed to write self-check wrapper: {e}"),
+    })?;
+
+    // ── 4. Compile and run the wrapper ────────────────────────────────────
+    //
+    // Store the result before `tmp_guard` drops (which deletes the temp dir).
+    // The `?` propagation happens after drop to ensure cleanup is not skipped.
+    let run_result = twigc_run(&wrapper_path, &all_paths);
+
+    // `tmp_guard` drops here, deleting the temp directory and the generated
+    // `.tw` source.  Cleanup is guaranteed even on early return — the RAII
+    // guard handles the case where write or run_result returned an error.
+    drop(tmp_guard);
+
+    // ── 5. Interpret the integer return ──────────────────────────────────
+    //   1 → fixed-point-check returned #t → Ok(true)
+    //   0 → fixed-point-check returned #f → Ok(false)
+    let result = run_result?;
+    Ok(result == 1)
+}
+
+// ── Internal helpers ─────────────────────────────────────────────────────────
+
+/// RAII guard for a temporary directory.
+///
+/// Deletes the directory and all its contents when dropped.  This ensures
+/// the generated wrapper `.tw` file (which embeds the compiler path) is
+/// removed even if an early return or panic occurs.
+///
+/// Access the path via [`TmpDirGuard::path`].
+struct TmpDirGuard(PathBuf);
+
+impl TmpDirGuard {
+    fn path(&self) -> &Path {
+        &self.0
+    }
+}
+
+impl Drop for TmpDirGuard {
+    fn drop(&mut self) {
+        // Best-effort: ignore errors (e.g. already removed by the caller).
+        let _ = std::fs::remove_dir_all(&self.0);
+    }
+}
+
+/// Create a unique temporary directory under `std::env::temp_dir()`,
+/// returning an RAII [`TmpDirGuard`] that deletes it on drop.
+///
+/// The directory is named `twigc_<tag>_<pid>_<nanos>`.
+fn make_tmp_dir(tag: &str) -> Result<TmpDirGuard, TwigcError> {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    let nonce = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .subsec_nanos();
+    let dir = std::env::temp_dir().join(format!(
+        "twigc_{tag}_{}_{nonce}",
+        std::process::id(),
+    ));
+    std::fs::create_dir(&dir).map_err(|e| TwigcError::Vm {
+        message: format!("failed to create temp dir '{}': {e}", dir.display()),
+    })?;
+    Ok(TmpDirGuard(dir))
+}
+
 // ── Tests ─────────────────────────────────────────────────────────────────────
 //
 // All tests write temporary `.tw` files to a unique temp directory so they
@@ -395,5 +618,66 @@ mod twigc_tests {
             result, 2,
             "twigc_run on compiler tree: (main) should return 2 (span.tw fn count); got {result}"
         );
+    }
+
+    // ── Test 7 ───────────────────────────────────────────────────────────────
+    //
+    // `twigc_self_check` on the real 11-module compiler source tree should
+    // return `Ok(true)`.
+    //
+    // This is the TW05-S end-to-end test: the ephemeral wrapper is compiled,
+    // the VM calls `(fixed-point-check "<dir>")`, which compiles `span.tw`
+    // twice via the self-hosted pipeline and verifies the opcode summaries
+    // are byte-for-byte identical.  Because Twig is purely functional this
+    // always holds — the test asserts the invariant is explicit and
+    // mechanically verified.
+    //
+    // `fixed-point-check` only processes span.tw (~365 chars, 2 functions),
+    // so the runtime stack depth is modest; no large-stack thread is needed.
+    // However, the full 11-module compilation at load time (Phase 1-5 via the
+    // Rust driver) may still push the debug-mode stack; we use a 32 MiB
+    // thread to match the other compiler-tree tests.
+
+    #[test]
+    fn self_check_compiler_tree_fixed_point() {
+        let twig_src = compiler_src_dir();
+        let dir = make_tempdir("self_check");
+        copy_all_tw_modules(&twig_src, &dir);
+
+        // The compiler dir in the temp copy is dir/compiler/.
+        // We pass dir/ as extra_search_paths so imports resolve;
+        // twigc_self_check also derives the search root from the parent
+        // of compiler_dir automatically, so we pass an empty slice here
+        // and let the function compute it.
+        let compiler_dir = dir.join("compiler");
+
+        let result = std::thread::Builder::new()
+            .stack_size(32 * 1024 * 1024)
+            .spawn(move || {
+                // extra_search_paths is empty: twigc_self_check derives
+                // the search root as parent(compiler_dir) automatically.
+                twigc_self_check(&compiler_dir, &[])
+            })
+            .expect("failed to spawn thread")
+            .join()
+            .expect("thread panicked");
+
+        match result {
+            Ok(true) => { /* pass */ }
+            Ok(false) => {
+                panic!(
+                    "twigc_self_check returned Ok(false) — fixed-point check returned #f.\n\
+                     This means stage1 and stage2 opcode summaries differed, which\n\
+                     should never happen for a purely functional compiler."
+                );
+            }
+            Err(ref e) => {
+                panic!(
+                    "twigc_self_check returned Err: {e}\n\
+                     Check that the compiler source directory was copied correctly\n\
+                     and that the wrapper was generated without path issues."
+                );
+            }
+        }
     }
 }
