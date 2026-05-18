@@ -37,7 +37,7 @@ Source snapshot:
 | EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | descriptor metadata and bounded bytecode read/write implemented | `storage.write`, `storage.read`; stored program / KV layers later |
 | Watchdog | Renesas WDT library | descriptor metadata and direct bytecode operations implemented | `watchdog.configure`, `watchdog.kick` |
 | OPAMP | UNO R4 OPAMP library | pending | analog board-specific capability after ADC/DAC |
-| WiFi | WiFiS3 library through onboard network module | pending | network/transport capabilities, not direct Ruby bypass |
+| WiFi | WiFiS3 library through onboard network module | descriptor metadata and network capability strings implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`; socket/control bytecode later |
 | USB/HID | TinyUSB device support | pending | transport/device descriptors first; HID later |
 | OTA/SDU | OTAUpdate and SDU libraries | pending | firmware-management capability, separate from bytecode VM |
 
@@ -90,11 +90,11 @@ reject conflicting handles.
    watchdog bytecode tranche.
    EEPROM/store now has descriptor metadata for the 8 KiB flash-backed
    EEPROM/data-flash area, and `storage.write` plus `storage.read` establish the
-   bounded byte-buffer bytecode tranche for that region. `program.store` and
-   higher-level KV storage remain later capability tranches. The next
-   independent tranche can move on to WiFi/network metadata and capability
-   slices, or deepen persistent program storage over the existing storage
-   substrate.
+   bounded byte-buffer bytecode tranche for that region. WiFi/network now has
+   Rust-owned descriptor metadata for the onboard WiFiS3 interface plus
+   `network.ipv4`, `network.tcp`, and `network.udp` capability strings surfaced
+   through the language target APIs. `program.store`, higher-level KV storage,
+   and socket/control bytecode operations remain later capability tranches.
 
 Every tranche should include the same layers: spec entry, IR capability id,
 runtime HAL method, UNO R4 target descriptor, firmware backend, host builder,

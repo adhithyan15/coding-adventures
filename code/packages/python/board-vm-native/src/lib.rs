@@ -24,15 +24,15 @@ use board_vm_language_core::{
     discover_devices as core_discover_devices, discover_devices_from_paths,
     discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
     discover_pico_bootsel_mounts_in_roots, esp_upload_options_for_target,
-    host_endpoint_transport_name, known_targets, onboard_led_kind,
+    host_endpoint_transport_name, known_targets, network_protocol_name, onboard_led_kind,
     parse_bluetooth_endpoint as core_parse_bluetooth_endpoint, pico_uf2_upload_options_for_target,
     program_format_name, raw_module_len, run_status_name, wireless_transport_name,
     BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
     LanguageBluetoothBackendOpenPlan, LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
     LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
     LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice, LanguageI2cBus,
-    LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageSpiBus, LanguageTargetInfo,
-    LanguageUartBus, LanguageValue, LanguageWirelessInterface,
+    LanguageNetworkInterface, LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageSpiBus,
+    LanguageTargetInfo, LanguageUartBus, LanguageValue, LanguageWirelessInterface,
 };
 use python_bridge::*;
 
@@ -892,14 +892,27 @@ unsafe fn language_target_to_py(target: &LanguageTargetInfo) -> PyObjectPtr {
         "digital_pins",
         language_digital_pins_to_py(&target.digital_pins),
     );
-    dict_set(dict, "i2c_buses", language_i2c_buses_to_py(&target.i2c_buses));
-    dict_set(dict, "spi_buses", language_spi_buses_to_py(&target.spi_buses));
+    dict_set(
+        dict,
+        "i2c_buses",
+        language_i2c_buses_to_py(&target.i2c_buses),
+    );
+    dict_set(
+        dict,
+        "spi_buses",
+        language_spi_buses_to_py(&target.spi_buses),
+    );
     dict_set(
         dict,
         "uart_buses",
         language_uart_buses_to_py(&target.uart_buses),
     );
     dict_set(dict, "wireless", language_wireless_to_py(&target.wireless));
+    dict_set(
+        dict,
+        "network_interfaces",
+        language_network_interfaces_to_py(&target.network_interfaces),
+    );
     dict_set(
         dict,
         "connection_options",
@@ -994,11 +1007,7 @@ unsafe fn language_uart_buses_to_py(buses: &[LanguageUartBus]) -> PyObjectPtr {
         dict_set(dict, "name", str_to_py(&bus.name));
         dict_set(dict, "tx_pin", usize_to_py(bus.tx_pin as usize));
         dict_set(dict, "rx_pin", usize_to_py(bus.rx_pin as usize));
-        dict_set(
-            dict,
-            "arduino_uart",
-            usize_to_py(bus.arduino_uart as usize),
-        );
+        dict_set(dict, "arduino_uart", usize_to_py(bus.arduino_uart as usize));
         dict_set(dict, "internal", bool_to_py(bus.internal));
         dict_set(dict, "notes", str_to_py(&bus.notes));
         PyList_SetItem(list, index as isize, dict);
@@ -1022,6 +1031,40 @@ unsafe fn language_wireless_to_py(interfaces: &[LanguageWirelessInterface]) -> P
             bool_to_py(interface.command_transport),
         );
         dict_set(dict, "ota_update", bool_to_py(interface.ota_update));
+        PyList_SetItem(list, index as isize, dict);
+    }
+    list
+}
+
+unsafe fn language_network_interfaces_to_py(
+    interfaces: &[LanguageNetworkInterface],
+) -> PyObjectPtr {
+    let list = PyList_New(interfaces.len() as isize);
+    for (index, interface) in interfaces.iter().enumerate() {
+        let dict = PyDict_New();
+        dict_set(dict, "interface", usize_to_py(interface.interface as usize));
+        dict_set(dict, "name", str_to_py(&interface.name));
+        dict_set(
+            dict,
+            "transport",
+            str_to_py(wireless_transport_name(interface.transport)),
+        );
+        dict_set(dict, "chip", str_to_py(&interface.chip));
+        let protocols = PyList_New(interface.protocols.len() as isize);
+        for (protocol_index, protocol) in interface.protocols.iter().enumerate() {
+            PyList_SetItem(
+                protocols,
+                protocol_index as isize,
+                str_to_py(network_protocol_name(*protocol)),
+            );
+        }
+        dict_set(dict, "protocols", protocols);
+        dict_set(
+            dict,
+            "max_sockets",
+            usize_to_py(interface.max_sockets as usize),
+        );
+        dict_set(dict, "notes", str_to_py(&interface.notes));
         PyList_SetItem(list, index as isize, dict);
     }
     list

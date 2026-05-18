@@ -242,6 +242,20 @@ class BoardTarget:
         return [str(item["transport"]) for item in self.wireless]
 
     @property
+    def network_interfaces(self) -> list[dict[str, Any]]:
+        return [dict(item) for item in self.raw.get("network_interfaces", [])]
+
+    @property
+    def network_protocols(self) -> list[str]:
+        protocols: list[str] = []
+        for interface in self.network_interfaces:
+            for protocol in interface.get("protocols", []):
+                name = str(protocol)
+                if name not in protocols:
+                    protocols.append(name)
+        return protocols
+
+    @property
     def connection_options(self) -> list[dict[str, Any]]:
         return [dict(item) for item in self.raw.get("connection_options", [])]
 
@@ -277,6 +291,14 @@ class BoardTarget:
             transport.startswith("bluetooth")
             for transport in self.wireless_transports
         )
+
+    @property
+    def supports_tcp_network(self) -> bool:
+        return "tcp" in self.network_protocols
+
+    @property
+    def supports_udp_network(self) -> bool:
+        return "udp" in self.network_protocols
 
     @property
     def supports_ota_update(self) -> bool:

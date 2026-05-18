@@ -140,7 +140,24 @@ def test_known_targets_are_exposed_from_rust_registry():
     assert "uart.read" in uno_r4_wifi.capabilities
     assert "storage.write" in uno_r4_wifi.capabilities
     assert "storage.read" in uno_r4_wifi.capabilities
+    assert "network.ipv4" in uno_r4_wifi.capabilities
+    assert "network.tcp" in uno_r4_wifi.capabilities
+    assert "network.udp" in uno_r4_wifi.capabilities
     assert uno_r4_wifi.wireless_transports == ["wifi", "bluetooth_le"]
+    assert uno_r4_wifi.network_interfaces == [
+        {
+            "interface": 0,
+            "name": "WiFiS3",
+            "transport": "wifi",
+            "chip": "ESP32-S3 coprocessor",
+            "protocols": ["ipv4", "tcp", "udp"],
+            "max_sockets": 4,
+            "notes": "Onboard WiFiS3 network interface; Board VM commands use the shared COBS/CRC wire protocol over TCP endpoints.",
+        }
+    ]
+    assert uno_r4_wifi.network_protocols == ["ipv4", "tcp", "udp"]
+    assert uno_r4_wifi.supports_tcp_network is True
+    assert uno_r4_wifi.supports_udp_network is True
     assert uno_r4_wifi.supports_wifi is True
     assert uno_r4_wifi.supports_bluetooth is True
     assert uno_r4_wifi.supports_ota_update is True
@@ -215,6 +232,7 @@ def test_known_targets_are_exposed_from_rust_registry():
     )
     assert pico is not None
     assert pico.wireless == []
+    assert pico.network_interfaces == []
     assert [item["transport"] for item in pico.connection_options] == ["serial"]
     assert "transport.wifi" not in pico.capabilities
     assert pico_w is not None

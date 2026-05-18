@@ -11,17 +11,16 @@ use board_vm_host::{
     SpiReadProgram, SpiTransferProgram, SpiWriteProgram, StorageReadProgram, StorageWriteProgram,
     TimeNowProgram, TimeSleepMsProgram, UartOpenProgram, UartReadProgram, UartWriteProgram,
     WatchdogConfigureProgram, WatchdogKickProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
-    CAN_OPEN_MODULE_LEN,
-    CAN_READ_MODULE_LEN, CAN_WRITE_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN,
+    CAN_OPEN_MODULE_LEN, CAN_READ_MODULE_LEN, CAN_WRITE_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN,
     GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
     GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN,
     I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN, I2C_TRANSFER_MAX_MODULE_LEN,
     I2C_WRITE_MAX_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
     PWM_WRITE_MODULE_LEN, RTC_NOW_MODULE_LEN, RTC_SET_MODULE_LEN, SPI_OPEN_MODULE_LEN,
     SPI_READ_MODULE_LEN, SPI_TRANSFER_MAX_MODULE_LEN, SPI_WRITE_MAX_MODULE_LEN,
-    STORAGE_READ_MODULE_LEN, STORAGE_WRITE_MAX_MODULE_LEN,
-    TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN, UART_OPEN_MODULE_LEN, UART_READ_MODULE_LEN,
-    UART_WRITE_MODULE_LEN, WATCHDOG_CONFIGURE_MODULE_LEN, WATCHDOG_KICK_MODULE_LEN,
+    STORAGE_READ_MODULE_LEN, STORAGE_WRITE_MAX_MODULE_LEN, TIME_NOW_MODULE_LEN,
+    TIME_SLEEP_MS_MODULE_LEN, UART_OPEN_MODULE_LEN, UART_READ_MODULE_LEN, UART_WRITE_MODULE_LEN,
+    WATCHDOG_CONFIGURE_MODULE_LEN, WATCHDOG_KICK_MODULE_LEN,
 };
 use board_vm_language_core::{
     bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
@@ -35,27 +34,27 @@ use board_vm_language_core::{
     build_led_matrix_frame_module, build_program_begin_wire_frame, build_program_chunk_wire_frame,
     build_program_end_wire_frame, build_pwm_write_module, build_raw_module, build_rtc_now_module,
     build_rtc_set_module, build_run_background_wire_frame, build_run_wire_frame,
-    build_spi_open_module, build_spi_read_module, build_spi_transfer_module, build_spi_write_module,
-    build_stop_wire_frame, build_storage_read_module, build_storage_write_module,
-    build_store_program_wire_frame, build_time_now_module,
+    build_spi_open_module, build_spi_read_module, build_spi_transfer_module,
+    build_spi_write_module, build_stop_wire_frame, build_storage_read_module,
+    build_storage_write_module, build_store_program_wire_frame, build_time_now_module,
     build_time_sleep_ms_module, build_uart_open_module, build_uart_read_module,
     build_uart_write_module, build_watchdog_configure_module, build_watchdog_kick_module,
     capability_board_metadata, capability_bytecode_callable, capability_flag_names,
-    capability_protocol_feature, connection_transport_name,
-    decode_wire_response, detect_target as core_detect_target,
+    capability_protocol_feature, connection_transport_name, decode_wire_response,
+    detect_target as core_detect_target,
     discover_bluetooth_devices as core_discover_bluetooth_devices,
     discover_devices as core_discover_devices, discover_devices_from_paths,
     discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
     discover_pico_bootsel_mounts_in_roots, esp_upload_options_for_target,
-    host_endpoint_transport_name, known_targets, onboard_led_kind,
+    host_endpoint_transport_name, known_targets, network_protocol_name, onboard_led_kind,
     parse_bluetooth_endpoint as core_parse_bluetooth_endpoint, pico_uf2_upload_options_for_target,
     program_format_name, raw_module_len, run_status_name, wireless_transport_name,
     BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
     LanguageBluetoothBackendOpenPlan, LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
     LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
     LanguageDigitalPin, LanguageEspUploadOptions, LanguageHostDevice, LanguageI2cBus,
-    LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageSpiBus, LanguageTargetInfo,
-    LanguageUartBus, LanguageValue, LanguageWirelessInterface,
+    LanguageNetworkInterface, LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageSpiBus,
+    LanguageTargetInfo, LanguageUartBus, LanguageValue, LanguageWirelessInterface,
 };
 use ruby_bridge::VALUE;
 
@@ -457,8 +456,9 @@ extern "C" fn session_spi_transfer_module(
     max_stack_val: VALUE,
 ) -> VALUE {
     let cs_pin = rb_u16(cs_pin_val, "cs_pin");
-    let write_bytes = ruby_bridge::bytes_from_rb(write_bytes_val)
-        .unwrap_or_else(|| ruby_bridge::raise_arg_error("write_bytes must be a Ruby binary String"));
+    let write_bytes = ruby_bridge::bytes_from_rb(write_bytes_val).unwrap_or_else(|| {
+        ruby_bridge::raise_arg_error("write_bytes must be a Ruby binary String")
+    });
     let read_len = rb_u8(read_len_val, "read_len");
     let max_stack = rb_u8(max_stack_val, "max_stack");
 
@@ -565,8 +565,9 @@ extern "C" fn session_i2c_transfer_module(
     max_stack_val: VALUE,
 ) -> VALUE {
     let address = rb_u16(address_val, "address");
-    let write_bytes = ruby_bridge::bytes_from_rb(write_bytes_val)
-        .unwrap_or_else(|| ruby_bridge::raise_arg_error("write_bytes must be a Ruby binary String"));
+    let write_bytes = ruby_bridge::bytes_from_rb(write_bytes_val).unwrap_or_else(|| {
+        ruby_bridge::raise_arg_error("write_bytes must be a Ruby binary String")
+    });
     let read_len = rb_u8(read_len_val, "read_len");
     let max_stack = rb_u8(max_stack_val, "max_stack");
 
@@ -1112,14 +1113,27 @@ fn language_target_to_rb(target: &LanguageTargetInfo) -> VALUE {
         "digital_pins",
         language_digital_pins_to_rb(&target.digital_pins),
     );
-    hash_set(hash, "i2c_buses", language_i2c_buses_to_rb(&target.i2c_buses));
-    hash_set(hash, "spi_buses", language_spi_buses_to_rb(&target.spi_buses));
+    hash_set(
+        hash,
+        "i2c_buses",
+        language_i2c_buses_to_rb(&target.i2c_buses),
+    );
+    hash_set(
+        hash,
+        "spi_buses",
+        language_spi_buses_to_rb(&target.spi_buses),
+    );
     hash_set(
         hash,
         "uart_buses",
         language_uart_buses_to_rb(&target.uart_buses),
     );
     hash_set(hash, "wireless", language_wireless_to_rb(&target.wireless));
+    hash_set(
+        hash,
+        "network_interfaces",
+        language_network_interfaces_to_rb(&target.network_interfaces),
+    );
     hash_set(
         hash,
         "connection_options",
@@ -1269,6 +1283,33 @@ fn language_wireless_to_rb(interfaces: &[LanguageWirelessInterface]) -> VALUE {
             "ota_update",
             ruby_bridge::bool_to_rb(interface.ota_update),
         );
+        ruby_bridge::array_push(array, hash);
+    }
+    array
+}
+
+fn language_network_interfaces_to_rb(interfaces: &[LanguageNetworkInterface]) -> VALUE {
+    let array = ruby_bridge::array_new();
+    for interface in interfaces {
+        let hash = ruby_bridge::hash_new();
+        hash_set(hash, "interface", rb_usize(interface.interface));
+        hash_set(hash, "name", ruby_bridge::str_to_rb(&interface.name));
+        hash_set(
+            hash,
+            "transport",
+            ruby_bridge::str_to_rb(wireless_transport_name(interface.transport)),
+        );
+        hash_set(hash, "chip", ruby_bridge::str_to_rb(&interface.chip));
+        let protocols = ruby_bridge::array_new();
+        for protocol in &interface.protocols {
+            ruby_bridge::array_push(
+                protocols,
+                ruby_bridge::str_to_rb(network_protocol_name(*protocol)),
+            );
+        }
+        hash_set(hash, "protocols", protocols);
+        hash_set(hash, "max_sockets", rb_usize(interface.max_sockets));
+        hash_set(hash, "notes", ruby_bridge::str_to_rb(&interface.notes));
         ruby_bridge::array_push(array, hash);
     }
     array
@@ -2069,7 +2110,14 @@ fn build_i2c_read_module_value(
     max_stack: u8,
 ) -> Result<Vec<u8>, LanguageCoreError> {
     let mut module = vec![0; I2C_READ_MODULE_LEN];
-    let len = build_i2c_read_module(I2cReadProgram { address, len, max_stack }, &mut module)?;
+    let len = build_i2c_read_module(
+        I2cReadProgram {
+            address,
+            len,
+            max_stack,
+        },
+        &mut module,
+    )?;
     module.truncate(len);
     Ok(module)
 }

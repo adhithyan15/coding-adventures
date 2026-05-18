@@ -58,8 +58,22 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "watchdog.kick"
         assert_includes uno_r4_wifi["capabilities"], "storage.write"
         assert_includes uno_r4_wifi["capabilities"], "storage.read"
+        assert_includes uno_r4_wifi["capabilities"], "network.ipv4"
+        assert_includes uno_r4_wifi["capabilities"], "network.tcp"
+        assert_includes uno_r4_wifi["capabilities"], "network.udp"
         assert_equal ["wifi", "bluetooth_le"], uno_r4_wifi["wireless"].map { |item| item["transport"] }
         assert uno_r4_wifi["wireless"].find { |item| item["transport"] == "wifi" }["ota_update"]
+        assert_equal [
+          {
+            "interface" => 0,
+            "name" => "WiFiS3",
+            "transport" => "wifi",
+            "chip" => "ESP32-S3 coprocessor",
+            "protocols" => ["ipv4", "tcp", "udp"],
+            "max_sockets" => 4,
+            "notes" => "Onboard WiFiS3 network interface; Board VM commands use the shared COBS/CRC wire protocol over TCP endpoints."
+          }
+        ], uno_r4_wifi["network_interfaces"]
         assert_equal ["serial", "wifi", "bluetooth_le"], uno_r4_wifi["connection_options"].map { |item| item["transport"] }
         assert_equal ["wifi"], uno_r4_wifi["connection_options"].select { |item| item["ota_update"] }.map { |item| item["transport"] }
         assert_equal({ "rows" => 8, "columns" => 12 }, uno_r4_wifi["led_matrix"])
@@ -99,6 +113,7 @@ module CodingAdventures
         assert esp32["wireless"].all? { |item| item["command_transport"] }
         assert esp32["connection_options"].any? { |item| item["transport"] == "bluetooth_classic" && item["requires"] == "paired_device" }
         assert_equal [], pico["wireless"]
+        assert_equal [], pico["network_interfaces"]
         assert_equal ["serial"], pico["connection_options"].map { |item| item["transport"] }
         refute_includes pico["capabilities"], "transport.wifi"
         assert_equal({ "kind" => "wireless_chip_gpio", "pin" => 0 }, pico_w["onboard_led"])
