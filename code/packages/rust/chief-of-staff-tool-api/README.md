@@ -38,6 +38,8 @@ The crate intentionally stops at the contract layer:
   terminal-event gaps, emitted references, and follow-up checks
 - handler output validation against advertised tool output schemas before a
   completed result is emitted
+- payload-free audit records and in-memory audit sinks derived from canonical
+  runtime traces, with query helpers for follow-up and compliance views
 
 Runtime adapters, sandboxing, approval gates, and built-in tool handlers can all
 depend on this package without inventing their own wire vocabulary.
