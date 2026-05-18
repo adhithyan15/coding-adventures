@@ -1,5 +1,79 @@
 # Changelog
 
+## 0.59.0 — 2026-05-18
+
+**Phase 34 integration — Weierstrass substitution for `∫ c/(a + b·sin(x)) dx`
+and `∫ c/(a + b·cos(x)) dx`.**
+
+The substitution `u = tan(x/2)` gives `sin(x) = 2u/(1+u²)`,
+`cos(x) = (1−u²)/(1+u²)`, `dx = 2/(1+u²) du` and reduces the two
+canonical denominator shapes to a rational function in `u`.  When
+the discriminant `a² − b² > 0` (denominator never zero on ℝ) the
+result is a clean arctan.
+
+Closed forms now produced:
+
+    ∫ 1/(a + b·sin x) dx  =  (2/√(a²−b²)) · arctan((a·tan(x/2) + b)/√(a²−b²))
+    ∫ 1/(a + b·cos x) dx  =  (2/√(a²−b²)) · arctan(√((a−b)/(a+b)) · tan(x/2))
+
+For numeric `a, b` with `a² > b²` and `a > 0` the integrator now closes
+the form directly; a numerator constant `c` simply scales the result.
+
+Deliberately deferred (return `None` and the caller emits an
+unevaluated `Integrate`):
+
+- `a² < b²` — log form on `(a·tan(x/2)+b ± √(b²−a²))`.
+- `a² = b²` — degenerate, reduces to `1/(a + b·tan(x/2))`.
+- `a ≤ 0` for the cos case — sign analysis of `(a−b)/(a+b)` needs more
+  care; the formula above assumes both `a+b > 0` and `a−b > 0`.
+- Symbolic `a` or `b` — discriminant sign undecidable without an
+  assumption context.
+- Non-bare trig arguments (e.g. `sin(2x)`) — composition with a future
+  linear-substitution phase will lift this.
+
+### Added
+
+- **`_try_weierstrass_one_over_linear_trig(integrand, x)`** — the entry
+  point.  Matches `Div(c, Add(a, ...))` where the `Add` resolves to
+  `a + b·sin(x)` or `a + b·cos(x)` and `a, b ∈ Q`.  Returns the closed
+  form in IR (an `arctan` wrapped around a `tan(x/2)` expression) or
+  `None`.  Wired into the `DIV` branch of `_integrate` after the
+  existing constant-denominator and `1/x` cases.
+
+- **`_parse_a_plus_b_sincos(node, x)`** — structural matcher returning
+  `(a, b, trig_head)` for the four canonical operand orderings of the
+  denominator.  Handles `Add` and `Sub` heads; unwraps a leading `Neg`
+  on the trig factor; falls back to `None` when the shape is not the
+  expected linear combination.
+
+- **`_parse_const_times_trig_x(node, x)`** — matches `c·sin(x)`,
+  `c·cos(x)`, `sin(x)`, `cos(x)`, and their `Neg`-wrapped variants.
+
+- **`_sqrt_fraction_ir(f)`** — emits `√(p/q)` IR, folding to a clean
+  rational when both `p` and `q` are perfect integer squares; otherwise
+  wraps the rational in `Sqrt(...)`.
+
+### Tests
+
+`tests/test_phase34_weierstrass.py` (14 cases):
+
+- ∫ 1/(2 + sin x) dx: closed form contains Atan, derivative matches
+  numerically across `x ∈ {−2.5, −1, −0.3, 0, 0.3, 1, 2.5}`.
+- ∫ 1/(5 + 3·sin x) dx: perfect-square discriminant (16) → no `Sqrt`
+  in the output; numeric derivative matches.
+- ∫ 3/(2 + sin x) dx: numerator coefficient scales the closed form.
+- ∫ 1/(3/2 + (1/2)·sin x) dx: rational `a, b` with `a² > b²`.
+- ∫ 1/(2 + cos x) dx and ∫ 1/(5 + 3·cos x) dx: both close; the
+  five-plus-three case has perfect-square ratio (1/4) and avoids `Sqrt`.
+- Operand-order robustness: ∫ 1/(sin x + 2) dx still closes.
+- Fallthrough: ∫ 1/(1 + 2·sin x) dx (a² < b²) stays unevaluated.
+- Fallthrough: ∫ 1/(1 + sin x) dx (a² = b²) stays unevaluated.
+- Fallthrough: ∫ 1/(2 + sin(2x)) dx (non-bare argument) stays unevaluated.
+- Fallthrough: ∫ 1/(a + sin x) dx with symbolic `a` stays unevaluated.
+- Regression: ∫ sin(x) dx = −cos(x) unchanged.
+- Regression: ∫ 1/cos(x) dx is **not** misinterpreted as a Weierstrass
+  case (denominator has no additive constant; Phase 34 must not fire).
+
 ## 0.58.0 — 2026-05-16
 
 **Phase 28 integration — general IBP for `∫ P(x)·log(Q(x)) dx` and
