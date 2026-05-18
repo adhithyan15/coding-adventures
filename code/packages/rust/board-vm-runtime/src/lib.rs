@@ -6,9 +6,11 @@ use board_vm_ir::{
     CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
     CAP_LED_MATRIX_FRAME, CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
     CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
-    CAP_NETWORK_UDP_WRITE, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER,
-    CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN,
-    CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
+    CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT,
+    CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
+    CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
+    MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -264,6 +266,23 @@ pub trait BoardHal {
     }
 
     fn network_udp_close(&mut self, _token: u32) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn network_wifi_associate(
+        &mut self,
+        _interface: u16,
+        _ssid: &[u8],
+        _passphrase: &[u8],
+    ) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn network_wifi_disconnect(&mut self, _interface: u16) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn network_wifi_status(&mut self, _interface: u16) -> Result<u8, HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -1013,6 +1032,39 @@ where
                     })?;
                 self.close_handle(handle, ip)
             }
+            CAP_NETWORK_WIFI_ASSOCIATE => {
+                let passphrase = self.pop_bytes(ip)?;
+                let ssid = self.pop_bytes(ip)?;
+                let interface = self.pop_u16(ip)?;
+                let status = self
+                    .hal
+                    .network_wifi_associate(interface, ssid.as_slice(), passphrase.as_slice())
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })?;
+                self.push(Value::U8(status), ip)
+            }
+            CAP_NETWORK_WIFI_DISCONNECT => {
+                let interface = self.pop_u16(ip)?;
+                self.hal
+                    .network_wifi_disconnect(interface)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })
+            }
+            CAP_NETWORK_WIFI_STATUS => {
+                let interface = self.pop_u16(ip)?;
+                let status =
+                    self.hal
+                        .network_wifi_status(interface)
+                        .map_err(|err| RuntimeError {
+                            ip,
+                            kind: hal_error_kind(err),
+                        })?;
+                self.push(Value::U8(status), ip)
+            }
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -1294,6 +1346,9 @@ mod tests {
         NetworkUdpWrite(u32, u8),
         NetworkUdpRead(u32),
         NetworkUdpClose(u32),
+        NetworkWifiAssociate(u16, ByteBuffer, ByteBuffer),
+        NetworkWifiDisconnect(u16),
+        NetworkWifiStatus(u16),
         LedMatrixFrame([u32; 3]),
     }
 
@@ -1328,6 +1383,7 @@ mod tests {
                 .with_storage()
                 .with_network_tcp()
                 .with_network_udp()
+                .with_network_wifi()
                 .with_led_matrix()
         }
 
@@ -1577,6 +1633,30 @@ mod tests {
         fn network_udp_close(&mut self, token: u32) -> Result<(), HalError> {
             self.events.push(Event::NetworkUdpClose(token));
             Ok(())
+        }
+
+        fn network_wifi_associate(
+            &mut self,
+            interface: u16,
+            ssid: &[u8],
+            passphrase: &[u8],
+        ) -> Result<u8, HalError> {
+            self.events.push(Event::NetworkWifiAssociate(
+                interface,
+                ByteBuffer::from_slice(ssid).unwrap(),
+                ByteBuffer::from_slice(passphrase).unwrap(),
+            ));
+            Ok(3)
+        }
+
+        fn network_wifi_disconnect(&mut self, interface: u16) -> Result<(), HalError> {
+            self.events.push(Event::NetworkWifiDisconnect(interface));
+            Ok(())
+        }
+
+        fn network_wifi_status(&mut self, interface: u16) -> Result<u8, HalError> {
+            self.events.push(Event::NetworkWifiStatus(interface));
+            Ok(6)
         }
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -2093,6 +2173,56 @@ mod tests {
                 Event::NetworkUdpWrite(0x6_2003, 0x41),
                 Event::NetworkUdpRead(0x6_2003),
                 Event::NetworkUdpClose(0x6_2003),
+            ]
+        );
+    }
+
+    #[test]
+    fn network_wifi_dispatches_association_status_and_disconnect() {
+        let mut runtime: Runtime<FakeHal, 3, 1> = Runtime::new(FakeHal::new());
+        let module = Module {
+            flags: 0,
+            max_stack: 3,
+            code: &[
+                0x12,
+                0x00,
+                0x16,
+                0x00,
+                0x00,
+                0x04,
+                0x16,
+                0x04,
+                0x00,
+                0x04,
+                0x40,
+                CAP_NETWORK_WIFI_ASSOCIATE as u8,
+                0x21,
+                0x12,
+                0x00,
+                0x40,
+                CAP_NETWORK_WIFI_STATUS as u8,
+                0x21,
+                0x12,
+                0x00,
+                0x40,
+                CAP_NETWORK_WIFI_DISCONNECT as u8,
+            ],
+            const_pool: b"ssidpass",
+        };
+
+        let report = runtime.run_module(&module, 20).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(
+            runtime.hal().events,
+            vec![
+                Event::NetworkWifiAssociate(
+                    0,
+                    ByteBuffer::from_slice(b"ssid").unwrap(),
+                    ByteBuffer::from_slice(b"pass").unwrap()
+                ),
+                Event::NetworkWifiStatus(0),
+                Event::NetworkWifiDisconnect(0),
             ]
         );
     }

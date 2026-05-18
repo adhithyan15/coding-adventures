@@ -140,6 +140,15 @@ delegate to narrow `BoardHal::network_tcp_*` and `BoardHal::network_udp_*`
 hooks. Host SDKs build bytecode for these calls; board ports decide when a
 concrete backend can actually drive a WiFi or Ethernet module.
 
+WiFi association control uses the same bounded data path as storage and bus
+transfers. `network.wifi.associate` accepts an interface id, SSID bytes, and
+passphrase bytes, then returns a backend-defined status byte. `network.wifi.status`
+returns that status byte without changing the association, while
+`network.wifi.disconnect` drops the association for the selected interface.
+The first tranche intentionally keeps credentials in `ByteBuffer` operands so
+language frontends stay thin over Rust-owned bytecode assembly and board ports
+can later decide whether to swap in a credential-store handle.
+
 `HandleToken` is private to the board adapter. The portable VM only sees compact
 `Handle` ids.
 
@@ -153,6 +162,7 @@ CALL_U8 0x02 -> gpio.write
 CALL_U8 0x10 -> time.sleep_ms
 CALL_U8 0x3a -> network.tcp.open
 CALL_U8 0x3e -> network.udp.open
+CALL_U8 0x42 -> network.wifi.associate
 ```
 
 Each handler:

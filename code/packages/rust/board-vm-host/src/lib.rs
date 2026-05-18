@@ -4,7 +4,8 @@ use board_vm_ir::{
     CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE,
     CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_OPEN,
     CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN,
-    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET,
+    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE,
+    CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET,
     CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS,
     CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE,
     CAP_WATCHDOG_KICK, FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
@@ -107,6 +108,13 @@ pub const NETWORK_UDP_READ_CODE_LEN: usize = 4;
 pub const NETWORK_UDP_READ_MODULE_LEN: usize = 14;
 pub const NETWORK_UDP_CLOSE_CODE_LEN: usize = 2;
 pub const NETWORK_UDP_CLOSE_MODULE_LEN: usize = 12;
+pub const NETWORK_WIFI_ASSOCIATE_CODE_LEN: usize = 13;
+pub const NETWORK_WIFI_ASSOCIATE_MAX_MODULE_LEN: usize =
+    8 + 1 + NETWORK_WIFI_ASSOCIATE_CODE_LEN + 1 + (MAX_BYTE_BUFFER_LEN * 2);
+pub const NETWORK_WIFI_DISCONNECT_CODE_LEN: usize = 4;
+pub const NETWORK_WIFI_DISCONNECT_MODULE_LEN: usize = 14;
+pub const NETWORK_WIFI_STATUS_CODE_LEN: usize = 5;
+pub const NETWORK_WIFI_STATUS_MODULE_LEN: usize = 15;
 pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
@@ -376,6 +384,26 @@ pub struct NetworkUdpCloseProgram {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkWifiAssociateProgram<'a> {
+    pub interface: u8,
+    pub ssid: &'a [u8],
+    pub passphrase: &'a [u8],
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkWifiDisconnectProgram {
+    pub interface: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkWifiStatusProgram {
+    pub interface: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct I2cWriteU8Program {
     pub address: u16,
     pub byte: u8,
@@ -635,6 +663,35 @@ impl NetworkUdpCloseProgram {
 impl Default for NetworkUdpCloseProgram {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl<'a> NetworkWifiAssociateProgram<'a> {
+    pub const fn new(interface: u8, ssid: &'a [u8], passphrase: &'a [u8]) -> Self {
+        Self {
+            interface,
+            ssid,
+            passphrase,
+            max_stack: 3,
+        }
+    }
+}
+
+impl NetworkWifiDisconnectProgram {
+    pub const fn new(interface: u8) -> Self {
+        Self {
+            interface,
+            max_stack: 1,
+        }
+    }
+}
+
+impl NetworkWifiStatusProgram {
+    pub const fn new(interface: u8) -> Self {
+        Self {
+            interface,
+            max_stack: 1,
+        }
     }
 }
 
@@ -2537,6 +2594,152 @@ pub fn write_network_udp_close_module(
     Ok(offset)
 }
 
+pub fn network_wifi_associate_module_len(
+    ssid_len: usize,
+    passphrase_len: usize,
+) -> Result<usize, HostError> {
+    if ssid_len > MAX_BYTE_BUFFER_LEN || passphrase_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + NETWORK_WIFI_ASSOCIATE_CODE_LEN + 1 + ssid_len + passphrase_len)
+}
+
+pub fn write_network_wifi_associate_code(
+    program: NetworkWifiAssociateProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.ssid.len() > MAX_BYTE_BUFFER_LEN || program.passphrase.len() > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_WIFI_ASSOCIATE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_push_bytes(out, &mut offset, 0, program.ssid.len() as u8)?;
+    write_push_bytes(
+        out,
+        &mut offset,
+        program.ssid.len() as u16,
+        program.passphrase.len() as u8,
+    )?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_WIFI_ASSOCIATE)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_wifi_associate_module(
+    program: NetworkWifiAssociateProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len =
+        network_wifi_associate_module_len(program.ssid.len(), program.passphrase.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut const_pool = [0u8; MAX_BYTE_BUFFER_LEN * 2];
+    const_pool[..program.ssid.len()].copy_from_slice(program.ssid);
+    let passphrase_start = program.ssid.len();
+    const_pool[passphrase_start..passphrase_start + program.passphrase.len()]
+        .copy_from_slice(program.passphrase);
+    let const_pool_len = program.ssid.len() + program.passphrase.len();
+
+    let mut code = [0u8; NETWORK_WIFI_ASSOCIATE_CODE_LEN];
+    let code_len = write_network_wifi_associate_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len])
+            .const_pool(&const_pool[..const_pool_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_wifi(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_wifi_disconnect_code(
+    program: NetworkWifiDisconnectProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_WIFI_DISCONNECT_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_WIFI_DISCONNECT)?;
+    Ok(offset)
+}
+
+pub fn write_network_wifi_disconnect_module(
+    program: NetworkWifiDisconnectProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_WIFI_DISCONNECT_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_WIFI_DISCONNECT_CODE_LEN];
+    let code_len = write_network_wifi_disconnect_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_wifi(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_wifi_status_code(
+    program: NetworkWifiStatusProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_WIFI_STATUS_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_WIFI_STATUS)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_wifi_status_module(
+    program: NetworkWifiStatusProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_WIFI_STATUS_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_WIFI_STATUS_CODE_LEN];
+    let code_len = write_network_wifi_status_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_wifi(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn spi_transfer_module_len(write_len: usize) -> Result<usize, HostError> {
     if write_len > MAX_BYTE_BUFFER_LEN {
         return Err(HostError::ProgramTooLarge);
@@ -3178,6 +3381,17 @@ mod tests {
     const NETWORK_UDP_CLOSE_MODULE_HEX: [u8; NETWORK_UDP_CLOSE_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x01, 0x00, 0x02, 0x40, 0x41, 0x00,
     ];
+    const NETWORK_WIFI_ASSOCIATE_SSID_PASS_MODULE_HEX: [u8; 31] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x0D, 0x12, 0x00, 0x16, 0x00, 0x00, 0x04,
+        0x16, 0x04, 0x00, 0x04, 0x40, 0x42, 0x50, 0x08, 0x73, 0x73, 0x69, 0x64, 0x70, 0x61, 0x73,
+        0x73,
+    ];
+    const NETWORK_WIFI_DISCONNECT_MODULE_HEX: [u8; NETWORK_WIFI_DISCONNECT_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x04, 0x12, 0x00, 0x40, 0x43, 0x00,
+    ];
+    const NETWORK_WIFI_STATUS_MODULE_HEX: [u8; NETWORK_WIFI_STATUS_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x12, 0x00, 0x40, 0x44, 0x50, 0x00,
+    ];
     const RTC_NOW_MODULE_HEX: [u8; RTC_NOW_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x03, 0x40, 0x34, 0x50, 0x00,
     ];
@@ -3621,6 +3835,57 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_NETWORK_UDP_CLOSE]);
+    }
+
+    #[test]
+    fn builds_network_wifi_associate_module() {
+        let module_len = network_wifi_associate_module_len(4, 4).unwrap();
+        let mut module = [0u8; 31];
+        let len = write_network_wifi_associate_module(
+            NetworkWifiAssociateProgram::new(0, b"ssid", b"pass"),
+            &mut module,
+        )
+        .unwrap();
+        assert_eq!(
+            module_len,
+            NETWORK_WIFI_ASSOCIATE_SSID_PASS_MODULE_HEX.len()
+        );
+        assert_eq!(len, module_len);
+        assert_eq!(module, NETWORK_WIFI_ASSOCIATE_SSID_PASS_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_wifi(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_WIFI_ASSOCIATE]);
+    }
+
+    #[test]
+    fn builds_network_wifi_status_and_disconnect_modules() {
+        let mut status = [0u8; NETWORK_WIFI_STATUS_MODULE_LEN];
+        let status_len =
+            write_network_wifi_status_module(NetworkWifiStatusProgram::new(0), &mut status)
+                .unwrap();
+        assert_eq!(status_len, NETWORK_WIFI_STATUS_MODULE_LEN);
+        assert_eq!(status, NETWORK_WIFI_STATUS_MODULE_HEX);
+        let parsed = parse_module(&status).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_wifi(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_WIFI_STATUS]);
+
+        let mut disconnect = [0u8; NETWORK_WIFI_DISCONNECT_MODULE_LEN];
+        let disconnect_len = write_network_wifi_disconnect_module(
+            NetworkWifiDisconnectProgram::new(0),
+            &mut disconnect,
+        )
+        .unwrap();
+        assert_eq!(disconnect_len, NETWORK_WIFI_DISCONNECT_MODULE_LEN);
+        assert_eq!(disconnect, NETWORK_WIFI_DISCONNECT_MODULE_HEX);
+        let parsed = parse_module(&disconnect).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_wifi(), 1).unwrap();
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_WIFI_DISCONNECT]);
     }
 
     #[test]
