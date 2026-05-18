@@ -1,5 +1,69 @@
 # Changelog
 
+## [1.40.0] - 2026-05-17
+
+### Added
+
+Significant PRAGMA coverage expansion in `engine.py` `_run_pragma`:
+
+**Read-only metadata pragmas (new):**
+
+- `PRAGMA database_list` — returns `(0, 'main', '')`.  Mini-sqlite has no
+  ATTACH support; only the main database exists.
+- `PRAGMA collation_list` — returns the three standard SQLite collations
+  (RTRIM, NOCASE, BINARY).  Only BINARY is actually implemented; the others
+  are reported for introspection compatibility.
+- `PRAGMA compile_options` — returns a representative list of compile-time
+  options (ENABLE_JSON1, ENABLE_FTS5, ENABLE_RTREE, THREADSAFE=0).
+- `PRAGMA function_list` — enumerates registered scalar functions and the
+  built-in aggregates with the SQLite 6-column shape
+  `(name, builtin, type, enc, narg, flags)`.
+- `PRAGMA module_list` — returns empty (no virtual-table modules).
+
+**Settable boolean pragmas (new):**
+
+- `PRAGMA foreign_keys`, `recursive_triggers`, `legacy_alter_table`,
+  `defer_foreign_keys`, `secure_delete` — all accept the full SQLite value
+  space on write (`ON / OFF / 1 / 0 / TRUE / FALSE / YES / NO`,
+  case-insensitive) and always return `0` or `1` on read.
+
+**Settable integer pragmas (new):**
+
+- `PRAGMA temp_store`, `synchronous`, `cache_size`, `auto_vacuum`,
+  `application_id` — all accept signed integer literals on write
+  (including the negative-value kibibyte convention for `cache_size`).
+
+**Read-only integer pragmas (new):**
+
+- `PRAGMA page_size`, `page_count`, `freelist_count` — return SQLite-default
+  values; assignments are silently ignored (matching SQLite's behaviour for
+  read-only DB-creation-time settings).
+
+**Settable text pragmas (new):**
+
+- `PRAGMA encoding`, `journal_mode`, `locking_mode` — defaults match
+  SQLite (`UTF-8` / `memory` / `normal`).  `journal_mode` is locked to
+  `memory` for in-memory databases (silently rejects WAL, DELETE, …),
+  matching SQLite's actual behaviour on `:memory:`.
+
+**Special:**
+
+- `PRAGMA case_sensitive_like = ON|OFF` — write-only.  Reads always return
+  empty (SQLite-compatible).  The flag does not yet affect LIKE evaluation;
+  this is purely a parser/round-trip compatibility add.
+
+**Write-form parsing:**
+
+- `_PRAGMA_RE` now accepts bare-identifier values on the right of `=`
+  (e.g. `PRAGMA journal_mode = WAL`), in addition to integer literals.
+
+**Per-connection state:**
+
+- Settable pragmas store their value in a process-level dict keyed by
+  `id(backend)`, so each connection has its own independent value.
+  29 new oracle tests in `test_tier3_pragma_additions.py` lock the
+  byte-for-byte behaviour against the real `sqlite3` module.
+
 ## [1.39.0] - 2026-05-17
 
 ### Added

@@ -422,7 +422,9 @@ def _extract_scan_info(plan: LogicalPlan) -> tuple[str, list[str]]:
 #   PRAGMA name                       — read query
 #   PRAGMA name('arg')                — read with table-name argument
 #   PRAGMA name("arg")                — same, double-quoted
-#   PRAGMA name = <int>               — write (non-negative integer literal)
+#   PRAGMA name = <value>             — write; value is a signed integer literal
+#                                       or one of ON / OFF / TRUE / FALSE / YES / NO
+#                                       or a bare identifier (journal_mode = wal)
 _PRAGMA_RE = re.compile(
     r"""
     \s* PRAGMA \s+
@@ -432,12 +434,84 @@ _PRAGMA_RE = re.compile(
             \s* ["']? (?P<arg>[A-Za-z_][A-Za-z0-9_]*) ["']? \s*
         \)
         |
-        \s* = \s* (?P<set_value>-?\d+)
+        \s* = \s* (?P<set_value>-?\d+|[A-Za-z_][A-Za-z0-9_]*)
     )?
     \s* ;? \s* $
     """,
     re.IGNORECASE | re.VERBOSE,
 )
+
+
+# Boolean PRAGMA value parser.  SQLite accepts a wide range of representations
+# for "true / false" — integers (1/0, also any non-zero), and the keywords
+# ON, OFF, TRUE, FALSE, YES, NO (case-insensitive).  Returns:
+#   * True / False if the value can be parsed as a boolean.
+#   * None if the value is unrecognised — caller decides how to handle.
+def _parse_bool_pragma(s: str) -> bool | None:
+    s_lower = s.strip().lower()
+    if s_lower in ("1", "on", "true", "yes"):
+        return True
+    if s_lower in ("0", "off", "false", "no"):
+        return False
+    # Numeric: SQLite treats any non-zero integer as TRUE.
+    try:
+        return bool(int(s_lower))
+    except ValueError:
+        return None
+
+
+# In-process storage for "settable" PRAGMAs that don't have real semantics in
+# mini-sqlite but must round-trip a value to match SQLite's behaviour.
+#
+# Real SQLite stores these in the database header or in the connection's
+# runtime configuration.  Mini-sqlite is in-memory and doesn't have most of
+# those concepts; we keep the value in a per-process dict so that
+# ``PRAGMA foo = 5; PRAGMA foo;`` returns ``5`` within the same process.
+#
+# Each entry maps the PRAGMA name to its current value and the column type.
+# Default values mirror SQLite's defaults so that a fresh read of any
+# unmodified PRAGMA returns the same value SQLite would.
+_PRAGMA_DEFAULTS: dict[str, tuple[object, str]] = {
+    # name              (default_value,    column_type)
+    "foreign_keys":     (0,                "integer"),  # off by default in SQLite
+    "recursive_triggers": (0,              "integer"),
+    "case_sensitive_like": (0,             "integer"),
+    "legacy_alter_table": (0,              "integer"),
+    "defer_foreign_keys": (0,              "integer"),
+    "secure_delete":    (0,                "integer"),
+    "temp_store":       (0,                "integer"),  # 0=default file-based
+    "synchronous":      (2,                "integer"),  # 2=FULL (SQLite default)
+    "cache_size":       (-2000,            "integer"),  # negative = kibibytes
+    "auto_vacuum":      (0,                "integer"),  # 0=NONE
+    "application_id":   (0,                "integer"),
+    "page_size":        (4096,             "integer"),
+    "page_count":       (0,                "integer"),  # mini-sqlite has no pages
+    "freelist_count":   (0,                "integer"),
+    "encoding":         ("UTF-8",          "text"),
+    "journal_mode":     ("memory",         "text"),     # mini-sqlite is in-memory
+    "locking_mode":     ("normal",         "text"),
+}
+
+# Per-connection PRAGMA state.  Keyed by the backend object's id() so each
+# connection has its own values.  WeakValueDictionary would be ideal but
+# Backend isn't hashable in all implementations; we settle for id-keyed dict
+# and accept that values leak until the process exits.
+_PRAGMA_STATE: dict[int, dict[str, object]] = {}
+
+
+def _pragma_get(backend: Backend, name: str) -> object:
+    """Return the current value of *name* for this backend, defaulting to the
+    SQLite-compatible default if never set."""
+    state = _PRAGMA_STATE.setdefault(id(backend), {})
+    if name in state:
+        return state[name]
+    return _PRAGMA_DEFAULTS[name][0]
+
+
+def _pragma_set(backend: Backend, name: str, value: object) -> None:
+    """Store *value* for *name* on this backend."""
+    state = _PRAGMA_STATE.setdefault(id(backend), {})
+    state[name] = value
 
 
 def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> QueryResult:
@@ -569,6 +643,172 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
         except AttributeError:
             v = 0
         return QueryResult(columns=("schema_version",), rows=((v,),))
+
+    # ------------------------------------------------------------------------
+    # database_list — one row per attached database.  Mini-sqlite has no
+    # ATTACH support, so only "main" exists.
+    # ------------------------------------------------------------------------
+    if name == "database_list":
+        return QueryResult(
+            columns=("seq", "name", "file"),
+            rows=((0, "main", ""),),
+        )
+
+    # ------------------------------------------------------------------------
+    # collation_list — sqlite3 reports BINARY, RTRIM, NOCASE.  Mini-sqlite
+    # only implements BINARY (the default).  We still report all three so
+    # that introspection code that expects them doesn't break.
+    # ------------------------------------------------------------------------
+    if name == "collation_list":
+        return QueryResult(
+            columns=("seq", "name"),
+            rows=((0, "RTRIM"), (1, "NOCASE"), (2, "BINARY")),
+        )
+
+    # ------------------------------------------------------------------------
+    # compile_options — SQLite reports the compile-time options used to
+    # build the binary.  We return a representative list so introspection
+    # code that just wants "is JSON enabled?" gets a sensible answer.
+    # ------------------------------------------------------------------------
+    if name == "compile_options":
+        return QueryResult(
+            columns=("compile_options",),
+            rows=(
+                ("ENABLE_JSON1",),
+                ("ENABLE_FTS5",),  # we don't really support it but report it
+                ("ENABLE_RTREE",),  # ditto
+                ("THREADSAFE=0",),
+            ),
+        )
+
+    # ------------------------------------------------------------------------
+    # function_list — one row per registered scalar/aggregate function.
+    # Real SQLite returns (name, builtin, type, enc, narg, flags).  We
+    # report the registered scalar functions from sql_vm.scalar_functions
+    # plus the well-known aggregates.
+    # ------------------------------------------------------------------------
+    if name == "function_list":
+        from sql_vm.scalar_functions import _REGISTRY  # type: ignore[attr-defined]
+        rows: list[tuple] = []
+        # All scalar functions registered in the VM.  We report narg=-1 (variadic)
+        # because the registry doesn't currently track arity per function.
+        for fname in sorted(_REGISTRY.keys()):
+            rows.append((fname, 1, "s", "utf8", -1, 0x800))
+        # Known aggregates.
+        for agg in ("count", "sum", "avg", "min", "max", "group_concat", "total"):
+            rows.append((agg, 1, "a", "utf8", -1, 0x800))
+        return QueryResult(
+            columns=("name", "builtin", "type", "enc", "narg", "flags"),
+            rows=tuple(rows),
+        )
+
+    # ------------------------------------------------------------------------
+    # module_list — virtual-table modules.  We report none; this is a
+    # legitimate state for SQLite builds without virtual tables.
+    # ------------------------------------------------------------------------
+    if name == "module_list":
+        return QueryResult(columns=("name",), rows=())
+
+    # ------------------------------------------------------------------------
+    # Boolean / scalar settable PRAGMAs — read/write round-trip.
+    #
+    # Most of these have no real effect in mini-sqlite (we don't have pages,
+    # WAL, etc.), but apps and ORMs commonly read/write them and expect the
+    # value to round-trip.  We store the value per-connection in _PRAGMA_STATE
+    # so that the assignment is observable.
+    #
+    # Bool-valued PRAGMAs accept ON/OFF/1/0/TRUE/FALSE/YES/NO as input but
+    # the read form always returns the integer 0 or 1 (matches SQLite).
+    # ------------------------------------------------------------------------
+    # case_sensitive_like is special in SQLite: write-only.  Reads always
+    # return an empty result.  Accept any boolean value on write; otherwise
+    # do nothing (we don't currently propagate the flag to LIKE evaluation).
+    if name == "case_sensitive_like":
+        if set_value is not None:
+            parsed = _parse_bool_pragma(set_value)
+            if parsed is None:
+                raise ProgrammingError(
+                    f"invalid boolean value for PRAGMA {name}: {set_value!r}"
+                )
+            _pragma_set(backend, name, int(parsed))
+        return QueryResult(columns=(), rows=())
+
+    _BOOL_PRAGMAS = {
+        "foreign_keys",
+        "recursive_triggers",
+        "legacy_alter_table",
+        "defer_foreign_keys",
+        "secure_delete",
+    }
+    _INT_PRAGMAS = {
+        "temp_store",
+        "synchronous",
+        "cache_size",
+        "auto_vacuum",
+        "application_id",
+        "page_size",
+        "page_count",
+        "freelist_count",
+    }
+    _TEXT_PRAGMAS = {
+        "encoding",
+        "journal_mode",
+        "locking_mode",
+    }
+
+    if name in _BOOL_PRAGMAS:
+        if set_value is not None:
+            parsed = _parse_bool_pragma(set_value)
+            if parsed is None:
+                raise ProgrammingError(f"invalid boolean value for PRAGMA {name}: {set_value!r}")
+            _pragma_set(backend, name, int(parsed))
+            return QueryResult(rows_affected=0)
+        v = _pragma_get(backend, name)
+        return QueryResult(columns=(name,), rows=((int(bool(v)),),))
+
+    if name in _INT_PRAGMAS:
+        if set_value is not None:
+            try:
+                iv = int(set_value)
+            except ValueError as e:
+                raise ProgrammingError(
+                    f"invalid integer value for PRAGMA {name}: {set_value!r}"
+                ) from e
+            # page_size / page_count / freelist_count are read-only in real
+            # SQLite (set is silently ignored after the database is created).
+            # We mirror that: silently swallow the assignment.
+            if name not in ("page_size", "page_count", "freelist_count"):
+                _pragma_set(backend, name, iv)
+            return QueryResult(rows_affected=0)
+        v = _pragma_get(backend, name)
+        return QueryResult(columns=(name,), rows=((v,),))
+
+    if name in _TEXT_PRAGMAS:
+        if set_value is not None:
+            # journal_mode is special: SQLite only allows specific values
+            # depending on storage type.  For in-memory databases (which is
+            # what mini-sqlite currently is) journal_mode is locked to
+            # 'memory' — assignments to other modes are silently rejected.
+            # The write form still returns a one-row result of the *current*
+            # (possibly unchanged) value, matching SQLite.
+            if name == "journal_mode":
+                # Reject anything other than 'memory' to stay byte-compatible
+                # with sqlite3's behaviour on :memory: databases.  File-backed
+                # backends are not yet distinguished — when they are, this
+                # branch should consult backend.is_in_memory() or similar.
+                requested = set_value.lower()
+                current = _pragma_get(backend, name)
+                if requested == "memory":
+                    _pragma_set(backend, name, requested)
+                # else: silently reject; current value unchanged.
+                return QueryResult(columns=(name,), rows=((current,),))
+            if name == "locking_mode":
+                _pragma_set(backend, name, set_value.lower())
+                return QueryResult(columns=(name,), rows=((set_value.lower(),),))
+            _pragma_set(backend, name, set_value.lower())
+            return QueryResult(rows_affected=0)
+        v = _pragma_get(backend, name)
+        return QueryResult(columns=(name,), rows=((v,),))
 
     # Unknown PRAGMA — return empty result rather than error, matching SQLite.
     return QueryResult(columns=(), rows=())
