@@ -25,6 +25,16 @@ skip:
 # Literals
 # ============================================================================
 
+# Double-quoted string with `\`-escaped characters. Used for prop values
+# that need an exact string literal — most commonly `placeholder: "..."` on
+# Input and `aria-label: "..."` on accessible primitives. The escape rules
+# follow the `escapes: standard` directive at the top of this file.
+#
+# Listed BEFORE NAME so the lexer prefers STRING when the input starts with
+# a double quote (NAME would never match `"` anyway, but the explicit order
+# documents the intent).
+STRING = /"([^"\\\n]|\\.)*"/
+
 NUMBER = /[0-9]+(\.[0-9]+)?/
 
 # ============================================================================

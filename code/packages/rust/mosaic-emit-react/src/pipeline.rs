@@ -493,11 +493,6 @@ fn emit_jsx_tree(
 ///
 /// ## Known limitations (tracked separately)
 ///
-/// - **placeholder** — moslayout's grammar does not yet support string
-///   literals as prop values, so `placeholder: "Enter formula"` cannot be
-///   expressed at the source level. The lowering omits the `placeholder`
-///   attr entirely. A follow-up grammar PR will add literal-string props,
-///   at which point we can wire `placeholder` through.
 /// - **payload-mapped emits** — only `onChange` gets a `value` payload here
 ///   (it's the canonical Input case). A general `connects: onX(p: text) -> emit onY(p: p)`
 ///   syntax in moslayout would let other emits carry payloads; that is
@@ -545,6 +540,16 @@ fn emit_input_jsx(
         if kw == "true" || kw == "false" {
             attrs.push_str(&format!(" readOnly={{{kw}}}"));
         }
+    }
+
+    // placeholder="text"  — string-literal moslayout prop (post-PR-H).
+    // Escaping: JSX double-quoted attributes require `\` and `"` escaped;
+    // newlines/tabs pass through as their literal characters.
+    if let Some(s) = find_string_prop(node, "placeholder") {
+        attrs.push_str(&format!(
+            " placeholder=\"{}\"",
+            escape_for_jsx_double_quoted(s)
+        ));
     }
 
     // maxLength={N}
@@ -971,6 +976,36 @@ fn find_number_prop(node: &LayoutNode, prop_name: &str) -> Option<f64> {
         }
         None
     })
+}
+
+/// Find a prop on `node` whose value is a `String` literal. Returns the
+/// unescaped inner text (no surrounding quotes), or `None`.
+fn find_string_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::String(s) = &p.value {
+                return Some(s.as_str());
+            }
+        }
+        None
+    })
+}
+
+/// Escape a Rust `&str` for embedding inside a JSX double-quoted string
+/// attribute value. The only characters JSX requires escaped inside a
+/// `"..."` attribute are `"` (close the literal) and `\` (the escape
+/// character itself). Newlines / tabs are preserved as their literal
+/// characters because JSX double-quoted attributes accept them.
+fn escape_for_jsx_double_quoted(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for c in s.chars() {
+        match c {
+            '\\' => out.push_str("\\\\"),
+            '"'  => out.push_str("\\\""),
+            other => out.push(other),
+        }
+    }
+    out
 }
 
 /// Build the JSX event-handler attributes for a node.
@@ -2318,6 +2353,41 @@ mod tests {
         assert!(
             result.output.contains("maxLength={100}"),
             "expected maxLength={{100}}, got:\n{}",
+            result.output
+        );
+    }
+
+    /// String-literal prop values (moslayout STRING token) flow through to
+    /// the Input emitter as `placeholder="..."` — JSX double-quoted
+    /// attribute form so the value appears verbatim in the DOM.
+    #[test]
+    fn input_placeholder_string_literal_binds_to_placeholder_attr() {
+        let m = component("X", vec![], vec![]);
+        let l = input_layout(vec![LayoutProp {
+            name: "placeholder".to_string(),
+            value: LayoutPropValue::String("Enter formula".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("placeholder=\"Enter formula\""),
+            "expected placeholder attr, got:\n{}",
+            result.output
+        );
+    }
+
+    /// Double quotes and backslashes inside the placeholder string get
+    /// escaped so the generated JSX attribute stays well-formed.
+    #[test]
+    fn input_placeholder_escapes_quotes_and_backslashes() {
+        let m = component("X", vec![], vec![]);
+        let l = input_layout(vec![LayoutProp {
+            name: "placeholder".to_string(),
+            value: LayoutPropValue::String(r#"say "hi" \ then more"#.to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains(r#"placeholder="say \"hi\" \\ then more""#),
+            "expected escaped placeholder attr, got:\n{}",
             result.output
         );
     }

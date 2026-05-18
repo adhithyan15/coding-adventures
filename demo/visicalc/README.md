@@ -111,11 +111,11 @@ contributor can pick them up:
    shapes directly from the generated component files instead of
    redeclaring them in `state.ts`.
 
-3. **No `placeholder: "..."` on the FormulaBar Input.** Per UI25, the
-   moslayout grammar does not yet accept string-literal prop values, so
-   `placeholder: "Enter formula"` cannot be expressed at the source
-   level. The Input renders without a placeholder. Follow-up: add
-   string-literal prop support to the moslayout grammar.
+3. ~~**No `placeholder: "..."` on the FormulaBar Input.**~~ *Resolved.*
+   moslayout's grammar now accepts double-quoted string literals as prop
+   values, and the React Input emitter wires `placeholder` straight
+   through to the generated `<input placeholder="...">`. The FormulaBar
+   `.mll` carries `placeholder: "Enter formula"` directly.
 
 4. **No formula evaluation.** Cells store and display raw strings.
    `editCommit` is where a real formula engine would plug in; see

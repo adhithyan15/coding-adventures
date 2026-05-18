@@ -1,5 +1,22 @@
 # Changelog — moslayout-compiler
 
+## [Unreleased]
+
+### Added — STRING token + string-literal prop values
+
+- New `STRING` token in `moslayout.tokens`: a double-quoted string
+  literal with standard `\`-escapes (`\n`, `\t`, `\r`, `\"`, `\\`, `\0`).
+- `prop_value` grammar rule grows a fourth alternative for `STRING`,
+  alongside the existing slot/emit binding, keyword, and number forms.
+- New `LayoutPropValue::String(String)` enum variant on `LayoutProp`.
+  The lexer strips surrounding double quotes; the compiler resolves
+  standard escapes so downstream emitters receive the literal text
+  the author meant.
+- Three new unit tests cover the basic literal, escape resolution,
+  and the empty-string case.
+- Resolves limitation #3 in `demo/visicalc/README.md` —
+  `placeholder: "Enter formula"` is now expressible at the source level.
+
 ## [0.1.0] — 2026-05-11
 
 ### Added

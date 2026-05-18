@@ -4,6 +4,17 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — Input `placeholder` from string-literal prop values
+
+- The Input emitter consumes the new `LayoutPropValue::String` variant
+  (moslayout STRING token) and writes it through as a JSX
+  `placeholder="..."` attribute. The placeholder text is escaped for
+  JSX double-quoted attribute syntax (`\` and `"` get backslash-escaped).
+- The previous known-limitation note in the emitter doc-comment ("string
+  literals as prop values aren't yet supported by the grammar") is
+  removed; the limitation is resolved upstream in `moslayout-compiler`.
+- Two new tests cover the literal binding and the escape rules.
+
 ### Changed — Grid selection / editing colours come from `.msl`
 
 - The Grid primitive's per-cell selection (`r === selRow && c === selCol`)
