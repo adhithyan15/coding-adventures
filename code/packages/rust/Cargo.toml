@@ -502,6 +502,7 @@ members = [
     "ieee802154-security",
     "http1",
     "storage-core",
+    "storage-local-folder",
     "vault-sealed-store",
     "shamir",
     "canonical-cbor",
