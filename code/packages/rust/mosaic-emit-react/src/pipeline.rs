@@ -685,22 +685,57 @@ fn emit_grid_jsx(
         None => None,
     };
 
-    // Table-level part style.
-    let part_style_str = node
+    // Table-level part style and sub-part styles. The author's .msl
+    // can target `part sheet` (the `<table>` itself) as well as
+    // sub-parts emitted internally — `sheet/cell`, `sheet/header-cell`,
+    // `sheet/header-row`, `sheet/data-row` — using UI27 §3.1 sub-part
+    // syntax. We look each up against `part_styles` (keyed by the
+    // slash-joined path) and inline-style the corresponding synthesised
+    // element. Authors get gridlines, header backgrounds, row stripes,
+    // etc., without the emitter hardcoding any of them.
+    let lookup_subpart = |suffix: &str| -> String {
+        node.part_name
+            .as_deref()
+            .map(|n| format!("{n}/{suffix}"))
+            .and_then(|key| part_styles.get(&key).map(String::clone))
+            .unwrap_or_default()
+    };
+    let table_style_str = node
         .part_name
         .as_deref()
         .and_then(|n| part_styles.get(n).map(String::as_str))
         .unwrap_or("");
-    let table_style_attr = if part_style_str.is_empty() {
+    let cell_subpart_style = lookup_subpart("cell");
+    let header_cell_subpart_style = lookup_subpart("header-cell");
+    let header_row_subpart_style = lookup_subpart("header-row");
+    let data_row_subpart_style = lookup_subpart("data-row");
+
+    let table_style_attr = if table_style_str.is_empty() {
         String::new()
     } else {
-        format!(" style={{{{ {part_style_str} }}}}")
+        format!(" style={{{{ {table_style_str} }}}}")
+    };
+    let header_row_style_attr = if header_row_subpart_style.is_empty() {
+        String::new()
+    } else {
+        format!(" style={{{{ {header_row_subpart_style} }}}}")
+    };
+    let data_row_style_attr = if data_row_subpart_style.is_empty() {
+        String::new()
+    } else {
+        format!(" style={{{{ {data_row_subpart_style} }}}}")
+    };
+    let header_cell_style_attr = if header_cell_subpart_style.is_empty() {
+        String::new()
+    } else {
+        format!(" style={{{{ {header_cell_subpart_style} }}}}")
     };
 
-    // Build the per-cell `style={{...}}` expression. If any of the
-    // selected/edit slot refs are present, emit a small CSS-in-JS spread
-    // that picks the highlight color at render time.
+    // Build the per-cell `style={{...}}` expression. Merges the
+    // `sheet/cell` sub-part (defaults — borders, padding) with the
+    // selected/editing highlight spreads (runtime — per cell).
     let cell_style_expr = build_grid_cell_style_expr(
+        &cell_subpart_style,
         selected_row_var.as_deref(),
         selected_col_var.as_deref(),
         edit_row_var.as_deref(),
@@ -720,13 +755,13 @@ fn emit_grid_jsx(
     writeln!(out, "{pad2}<thead>").unwrap();
     writeln!(
         out,
-        "{pad4}<tr>{{{headers_var}.map((h, c) => <th key={{c}}>{{h}}</th>)}}</tr>"
+        "{pad4}<tr{header_row_style_attr}>{{{headers_var}.map((h, c) => <th key={{c}}{header_cell_style_attr}>{{h}}</th>)}}</tr>"
     )
     .unwrap();
     writeln!(out, "{pad2}</thead>").unwrap();
     writeln!(out, "{pad2}<tbody>").unwrap();
     writeln!(out, "{pad4}{{{rows_var}.map((row, r) => (").unwrap();
-    writeln!(out, "{pad6}<tr key={{r}}>").unwrap();
+    writeln!(out, "{pad6}<tr key={{r}}{data_row_style_attr}>").unwrap();
     writeln!(out, "{pad8}{{row.map((cell, c) => (").unwrap();
     writeln!(
         out,
@@ -753,6 +788,7 @@ fn emit_grid_jsx(
 /// defaults: a real production component would inline the design-token
 /// values from mosstyle. That's a follow-up.
 fn build_grid_cell_style_expr(
+    cell_subpart_style: &str,
     selected_row: Option<&str>,
     selected_col: Option<&str>,
     edit_row: Option<&str>,
@@ -760,15 +796,20 @@ fn build_grid_cell_style_expr(
 ) -> String {
     let has_selected = selected_row.is_some() && selected_col.is_some();
     let has_editing = edit_row.is_some() && edit_col.is_some();
+    let has_subpart = !cell_subpart_style.is_empty();
 
-    if !has_selected && !has_editing {
+    if !has_selected && !has_editing && !has_subpart {
         return String::new();
     }
 
+    // Build the spread chain. The author's `part sheet/cell` style
+    // goes FIRST so subsequent state-dependent spreads can override
+    // any property (last-property-wins per React's style merging).
     let mut parts: Vec<String> = Vec::new();
-
+    if has_subpart {
+        parts.push(cell_subpart_style.to_string());
+    }
     if let (Some(sr), Some(sc)) = (selected_row, selected_col) {
-        // Selection highlight: `(r === sr && c === sc) ? selectedStyles : {}`.
         parts.push(format!(
             "...(r === {sr} && c === {sc} ? {{ background: \"#264f78\", color: \"#ffffff\", outline: \"1px solid #007acc\" }} : {{}})"
         ));
@@ -2375,6 +2416,171 @@ mod tests {
                 "<table style={{ fontFamily: \"monospace\", borderCollapse: \"collapse\" }}>"
             ),
             "expected styled <table>, got:\n{}",
+            result.output
+        );
+    }
+
+    /// Sub-part styles authored as `part sheet/cell { ... }` end up
+    /// inlined on every `<td>`, giving the Grid its gridlines without
+    /// the emitter hardcoding any border colours (UI27 §3 / §5).
+    /// Likewise `sheet/header-cell`, `sheet/header-row`, and
+    /// `sheet/data-row` light up `<th>`, `<thead><tr>`, and
+    /// `<tbody><tr>` respectively.
+    #[test]
+    fn grid_subpart_styles_appear_on_synthesised_cells_and_rows() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![],
+        );
+        // Build a StyleDef with multiple sub-parts under "sheet".
+        let s = StyleDef {
+            component_name: "G".to_string(),
+            parts: vec![
+                PartStyle {
+                    name: "sheet".to_string(),
+                    base: vec![StyleProp {
+                        name: "border-collapse".to_string(),
+                        value: "collapse".to_string(),
+                    }],
+                    states: Vec::new(),
+                },
+                PartStyle {
+                    name: "sheet/cell".to_string(),
+                    base: vec![
+                        StyleProp {
+                            name: "border-width".to_string(),
+                            value: "1px".to_string(),
+                        },
+                        StyleProp {
+                            name: "border-style".to_string(),
+                            value: "solid".to_string(),
+                        },
+                        StyleProp {
+                            name: "border-color".to_string(),
+                            value: "#3f3f46".to_string(),
+                        },
+                    ],
+                    states: Vec::new(),
+                },
+                PartStyle {
+                    name: "sheet/header-cell".to_string(),
+                    base: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#2d2d30".to_string(),
+                    }],
+                    states: Vec::new(),
+                },
+                PartStyle {
+                    name: "sheet/header-row".to_string(),
+                    base: vec![StyleProp {
+                        name: "height".to_string(),
+                        value: "24px".to_string(),
+                    }],
+                    states: Vec::new(),
+                },
+                PartStyle {
+                    name: "sheet/data-row".to_string(),
+                    base: vec![StyleProp {
+                        name: "height".to_string(),
+                        value: "22px".to_string(),
+                    }],
+                    states: Vec::new(),
+                },
+            ],
+        };
+        let l = LayoutDef {
+            component_name: "G".to_string(),
+            root: LayoutNode {
+                tag: "Grid".to_string(),
+                part_name: Some("sheet".to_string()),
+                props: vec![
+                    slot_ref_prop("headers", "col-labels"),
+                    slot_ref_prop("rows", "data-rows"),
+                ],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        // <table> still carries the top-level sheet style.
+        assert!(
+            result.output.contains("<table style={{ borderCollapse: \"collapse\" }}>"),
+            "expected sheet style on <table>; got:\n{}",
+            result.output
+        );
+        // <td> carries the sheet/cell sub-part style.
+        assert!(
+            result.output.contains(
+                "<td key={c} style={{ borderWidth: \"1px\", borderStyle: \"solid\", borderColor: \"#3f3f46\" }}>"
+            ),
+            "expected sheet/cell inlined on <td>; got:\n{}",
+            result.output
+        );
+        // <th> carries the sheet/header-cell sub-part style.
+        assert!(
+            result.output.contains(
+                "<th key={c} style={{ background: \"#2d2d30\" }}>"
+            ),
+            "expected sheet/header-cell on <th>; got:\n{}",
+            result.output
+        );
+        // <thead><tr> carries the sheet/header-row sub-part style.
+        assert!(
+            result.output.contains("<tr style={{ height: \"24px\" }}>"),
+            "expected sheet/header-row on <tr>; got:\n{}",
+            result.output
+        );
+        // <tbody><tr> carries the sheet/data-row sub-part style.
+        assert!(
+            result.output.contains("<tr key={r} style={{ height: \"22px\" }}>"),
+            "expected sheet/data-row on <tr>; got:\n{}",
+            result.output
+        );
+    }
+
+    /// When only the sheet/cell sub-part is set (no selection / edit
+    /// slots), the per-cell style attribute carries just the sub-part
+    /// fragment — no leading comma or empty spread.
+    #[test]
+    fn grid_subpart_only_no_state_slots_still_inlines_cell_style() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![],
+        );
+        let s = StyleDef {
+            component_name: "G".to_string(),
+            parts: vec![PartStyle {
+                name: "sheet/cell".to_string(),
+                base: vec![StyleProp {
+                    name: "padding".to_string(),
+                    value: "4px".to_string(),
+                }],
+                states: Vec::new(),
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "G".to_string(),
+            root: LayoutNode {
+                tag: "Grid".to_string(),
+                part_name: Some("sheet".to_string()),
+                props: vec![
+                    slot_ref_prop("headers", "col-labels"),
+                    slot_ref_prop("rows", "data-rows"),
+                ],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        assert!(
+            result.output.contains("<td key={c} style={{ padding: \"4px\" }}>"),
+            "expected just the sub-part fragment on <td>; got:\n{}",
             result.output
         );
     }

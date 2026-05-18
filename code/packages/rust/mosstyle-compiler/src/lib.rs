@@ -299,42 +299,46 @@ fn extract_parts(style_def: &GrammarASTNode) -> Result<Vec<PartStyle>, CompileEr
 }
 
 fn analyze_part(part_def: &GrammarASTNode) -> Result<PartStyle, CompileError> {
-    // part_def = KEYWORD("part") NAME LBRACE { part_item } RBRACE
-    let mut saw_keyword = false;
+    // part_def = KEYWORD("part") part_path LBRACE { part_item } RBRACE
+    //
+    // part_path = NAME { SLASH NAME }
+    //   Single-segment paths (sheet) address top-level parts; multi-
+    //   segment paths (sheet/cell) address sub-parts the primitive
+    //   emits internally. Per UI27 §3.1. The full slash-joined path
+    //   becomes the PartStyle.name and gets matched at emit time.
     let mut name: Option<String> = None;
     let mut base: Vec<StyleProp> = Vec::new();
     let mut states: Vec<StateStyle> = Vec::new();
 
     for child in &part_def.children {
         match child {
-            ASTNodeOrToken::Token(t) => {
-                if t.type_ == TokenType::Keyword && t.value == "part" {
-                    saw_keyword = true;
-                } else if saw_keyword && t.type_ == TokenType::Name && name.is_none() {
-                    name = Some(t.value.clone());
-                }
+            ASTNodeOrToken::Token(_) => {
+                // KEYWORD("part") and the structural punctuation tokens
+                // are consumed by the grammar without contributing to
+                // the analyzed result.
             }
-            ASTNodeOrToken::Node(n) => {
-                match n.rule_name.as_str() {
-                    "part_item" => {
-                        // part_item contains either state_block or property_decl.
-                        for item_child in &n.children {
-                            if let ASTNodeOrToken::Node(inner) = item_child {
-                                match inner.rule_name.as_str() {
-                                    "property_decl" => {
-                                        base.push(analyze_property(inner)?);
-                                    }
-                                    "state_block" => {
-                                        states.push(analyze_state(inner)?);
-                                    }
-                                    _ => {}
+            ASTNodeOrToken::Node(n) => match n.rule_name.as_str() {
+                "part_path" => {
+                    name = Some(analyze_part_path(n));
+                }
+                "part_item" => {
+                    // part_item contains either state_block or property_decl.
+                    for item_child in &n.children {
+                        if let ASTNodeOrToken::Node(inner) = item_child {
+                            match inner.rule_name.as_str() {
+                                "property_decl" => {
+                                    base.push(analyze_property(inner)?);
                                 }
+                                "state_block" => {
+                                    states.push(analyze_state(inner)?);
+                                }
+                                _ => {}
                             }
                         }
                     }
-                    _ => {}
                 }
-            }
+                _ => {}
+            },
         }
     }
 
@@ -346,6 +350,21 @@ fn analyze_part(part_def: &GrammarASTNode) -> Result<PartStyle, CompileError> {
         base,
         states,
     })
+}
+
+/// Join the NAME tokens of a `part_path` AST node with `/`. The
+/// SLASH tokens between them are dropped — they were structural
+/// separators, not semantic content.
+fn analyze_part_path(part_path: &GrammarASTNode) -> String {
+    let mut segments: Vec<String> = Vec::new();
+    for child in &part_path.children {
+        if let ASTNodeOrToken::Token(t) = child {
+            if t.type_ == TokenType::Name {
+                segments.push(t.value.clone());
+            }
+        }
+    }
+    segments.join("/")
 }
 
 fn analyze_state(state_block: &GrammarASTNode) -> Result<StateStyle, CompileError> {
@@ -473,7 +492,18 @@ pub fn validate(
 
     for part in &def.parts {
         // Validate part existence.
-        if has_part_map && !known_parts.contains(&part.name) {
+        //
+        // Sub-part paths (UI27 §3.1) contain a `/` separator —
+        // `sheet/cell` addresses the `cell` sub-part of the top-level
+        // `sheet` part. For validation we only require the top-level
+        // segment (before the first `/`) to exist in the .mll's
+        // part map. The sub-part name itself is validated by the
+        // primitive's known sub-part vocabulary at emit time (Grid
+        // exposes cell/header-cell/header-row/data-row/etc. per
+        // UI27 §5; the mosstyle compiler is intentionally agnostic
+        // here so it stays primitive-agnostic).
+        let lookup_name = part.name.split('/').next().unwrap_or(&part.name);
+        if has_part_map && !known_parts.contains(lookup_name) {
             errors.push(CompileError {
                 kind: ErrorKind::UnknownPart,
                 message: format!(
@@ -867,6 +897,88 @@ mod tests {
         assert!(result.is_err());
         let errs = result.unwrap_err();
         assert!(errs.iter().any(|e| e.kind == ErrorKind::UnknownPart));
+    }
+
+    // ── Sub-parts (UI27 §3) ──────────────────────────────────────────────────
+
+    /// Slash-separated `part sheet/cell` paths parse cleanly. The
+    /// PartStyle.name carries the entire `sheet/cell` string so the
+    /// emitter can match it at the synthesised-element level.
+    #[test]
+    fn test_parse_subpart_path() {
+        // NB: we deliberately use longhand `border-width / border-style /
+        // border-color` triplets instead of the CSS-shorthand
+        // `border: 1px solid #color` form. The current mosstyle grammar
+        // accepts only one style_value per property_decl; multi-value
+        // shorthand is a separate future grammar extension.
+        let src = r#"
+          style Grid {
+            part sheet {
+              background: #1e1e1e ;
+            }
+            part sheet/cell {
+              border-width: 1px ;
+              border-style: solid ;
+              border-color: #3f3f46 ;
+            }
+            part sheet/header-cell {
+              background: #2d2d30 ;
+              font-weight: bold ;
+            }
+          }
+        "#;
+        let result = compile(src, None).expect("sub-parts should compile");
+        let names: Vec<&str> = result.def.parts.iter().map(|p| p.name.as_str()).collect();
+        assert!(names.contains(&"sheet"));
+        assert!(names.contains(&"sheet/cell"));
+        assert!(names.contains(&"sheet/header-cell"));
+    }
+
+    /// Validator only checks the TOP-LEVEL segment of a sub-part path
+    /// against the .mll's part map. `sheet/cell` is OK if `sheet`
+    /// exists; the sub-part name `cell` is the primitive's concern.
+    #[test]
+    fn test_subpart_passes_when_top_level_part_exists() {
+        let part_map =
+            r#"{"component":"Grid","parts":[{"name":"sheet","primitive":"Grid"}]}"#;
+        let src = r#"
+          style Grid {
+            part sheet { background: #1e1e1e ; }
+            part sheet/cell { border-color: #3f3f46 ; }
+          }
+        "#;
+        let result = compile(src, Some(part_map));
+        assert!(result.is_ok(), "sub-part of an exported top-level part should validate");
+    }
+
+    /// Conversely, a sub-part whose top-level segment is NOT in the
+    /// part map still triggers UnknownPart.
+    #[test]
+    fn test_subpart_unknown_top_level_errors() {
+        let part_map =
+            r#"{"component":"Grid","parts":[{"name":"sheet","primitive":"Grid"}]}"#;
+        let src = r#"
+          style Grid {
+            part nonexistent/cell { border-color: #3f3f46 ; }
+          }
+        "#;
+        let result = compile(src, Some(part_map));
+        assert!(result.is_err());
+        let errs = result.unwrap_err();
+        assert!(errs.iter().any(|e| e.kind == ErrorKind::UnknownPart));
+    }
+
+    /// Triple-nested paths parse — `part sheet/header/cell` is a
+    /// hypothetical future case; the grammar permits arbitrary depth.
+    #[test]
+    fn test_deep_subpart_path() {
+        let src = r#"
+          style Grid {
+            part sheet/header/cell { background: #2d2d30 ; }
+          }
+        "#;
+        let result = compile(src, None).expect("deep sub-paths should compile");
+        assert_eq!(result.def.parts[0].name, "sheet/header/cell");
     }
 
     #[test]

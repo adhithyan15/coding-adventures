@@ -115,6 +115,17 @@ pub fn token_grammar() -> TokenGrammar {
                 line_number: 67,
                 alias: None,
             },
+            // SLASH is the sub-part separator: `part sheet/cell`. Must
+            // come AFTER the LINE_COMMENT / BLOCK_COMMENT skip rules so
+            // `//` and `/*` are still recognised as comments — those
+            // are longer-pattern skips that the lexer tries first.
+            TokenDefinition {
+                name: r#"SLASH"#.to_string(),
+                pattern: r#"/"#.to_string(),
+                is_regex: false,
+                line_number: 76,
+                alias: None,
+            },
         ],
         keywords: vec![r#"style"#.to_string(), r#"part"#.to_string(), r#"state"#.to_string()],
         mode: None,
@@ -179,16 +190,31 @@ pub fn parser_grammar() -> ParserGrammar {
             ] },
             line_number: 49,
         },
+        // part_def = KEYWORD part_path LBRACE { part_item } RBRACE ;
+        // part_path replaces a bare NAME so the grammar can address
+        // sub-parts like `part sheet/cell` (UI27 §3.1).
         GrammarRule {
             name: r#"part_def"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::TokenReference { name: r#"KEYWORD"#.to_string() },
-                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                GrammarElement::RuleReference { name: r#"part_path"#.to_string() },
                 GrammarElement::TokenReference { name: r#"LBRACE"#.to_string() },
                 GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"part_item"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
             ] },
             line_number: 56,
+        },
+        // part_path = NAME { SLASH NAME } ;
+        GrammarRule {
+            name: r#"part_path"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                    GrammarElement::TokenReference { name: r#"SLASH"#.to_string() },
+                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                ] }) },
+            ] },
+            line_number: 57,
         },
         GrammarRule {
             name: r#"part_item"#.to_string(),
