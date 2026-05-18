@@ -1290,3 +1290,44 @@ class TestDateTimeFunctions:
         # %f = SS.SSS; no sub-second input → 00.000
         result = fn("strftime", "%f", "2024-03-15 14:30:45")
         assert result == "45.000"
+
+    # ------------------------------------------------------------------
+    # Time-only string inputs (HH:MM, HH:MM:SS)
+    # ------------------------------------------------------------------
+
+    def test_time_from_bare_hhmmss(self) -> None:
+        # SQLite accepts bare 'HH:MM:SS' as a time value anchored to 2000-01-01.
+        assert fn("time", "12:34:56") == "12:34:56"
+
+    def test_time_from_bare_hhmm(self) -> None:
+        # 'HH:MM' with no seconds — seconds default to 00.
+        assert fn("time", "00:00") == "00:00:00"
+
+    def test_date_from_bare_time_string(self) -> None:
+        # date() of a bare time string anchors to 2000-01-01.
+        assert fn("date", "12:34:56") == "2000-01-01"
+
+    # ------------------------------------------------------------------
+    # weekday N modifier
+    # ------------------------------------------------------------------
+
+    def test_date_weekday_same_day(self) -> None:
+        # 2024-01-15 is a Monday (SQLite weekday 1). Advancing to weekday 1
+        # when already on Monday → same date.
+        assert fn("date", "2024-01-15", "weekday 1") == "2024-01-15"
+
+    def test_date_weekday_advance_to_tuesday(self) -> None:
+        # 2024-01-15 is Monday; next Tuesday (weekday 2) is 2024-01-16.
+        assert fn("date", "2024-01-15", "weekday 2") == "2024-01-16"
+
+    def test_date_weekday_advance_to_sunday(self) -> None:
+        # 2024-01-15 is Monday; next Sunday (weekday 0) is 2024-01-21.
+        assert fn("date", "2024-01-15", "weekday 0") == "2024-01-21"
+
+    # ------------------------------------------------------------------
+    # unixepoch modifier (no-op — we already store as datetime)
+    # ------------------------------------------------------------------
+
+    def test_date_unixepoch_modifier(self) -> None:
+        # 'unixepoch' as a modifier is a no-op in our model.
+        assert fn("date", "2024-01-15", "unixepoch") == "2024-01-15"
