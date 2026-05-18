@@ -261,7 +261,8 @@ Today the package carries these fixture suites:
 - `html1.json` for the current Mosaic-era compatibility floor
 - generated WHATWG conformance slices for named references, numeric
   references, input-stream preprocessing, chunk-boundary invariance, EOF
-  recovery, text-mode delimiters, and markup declarations
+  recovery, text-mode delimiters, markup declarations, and focused tokenizer
+  boundary states
 
 The checked-in `whatwg-entities.json` fixture is generated from the HTML
 Standard's `entities.json` table and is exercised directly by Rust tests across
@@ -283,6 +284,16 @@ outside-range values. Regenerate or check it with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py \
+  --check
+```
+
+The checked-in `whatwg-character-reference-boundaries.json` fixture exercises
+text, attribute, RCDATA, and seeded continuation boundary recovery around named
+and numeric character references. Regenerate or check it with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_character_reference_boundaries_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_character_reference_boundaries_fixture.py \
   --check
 ```
 
