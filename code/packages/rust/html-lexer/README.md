@@ -328,6 +328,17 @@ python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_script_esca
   --check
 ```
 
+The checked-in `whatwg-cdata-boundaries.json` fixture exercises parser-controlled
+foreign-content CDATA section boundaries, including `]]>` delimiter recovery,
+NULL replacement, EOF recovery, HTML-content bogus-comment recovery, and seeded
+bracket/end states. Regenerate or check it with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_cdata_boundaries_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_cdata_boundaries_fixture.py \
+  --check
+```
+
 There is also an `upstream-html5lib-smoke.test` file that mirrors the raw
 html5lib tokenizer JSON shape in a small supported subset. The Rust test
 harness now targets a checked-in generated `html5lib-smoke.json` corpus, which

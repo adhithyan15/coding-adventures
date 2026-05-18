@@ -73,6 +73,9 @@ binary while production code continues to link only static Rust source.
 - `whatwg-script-escape-boundaries.json`: generated HTML tokenizer script
   escape boundary cases used by Rust tests to pin escaped/double-escaped
   script data, NULL, EOF, and seeded continuation recovery
+- `whatwg-cdata-boundaries.json`: generated HTML tokenizer CDATA boundary
+  cases used by Rust tests to pin foreign-content delimiter recovery, NULL,
+  EOF, HTML-content fallback, and seeded bracket/end states
 - `whatwg-markup-declarations.json`: generated HTML tokenizer markup
   declaration cases used by Rust tests to pin comment, bogus-comment, CDATA,
   DOCTYPE, and seeded declaration continuation recovery
@@ -120,6 +123,9 @@ binary while production code continues to link only static Rust source.
 - `generate_whatwg_script_escape_boundaries_fixture.py`: importer that
   generates focused script escape boundary cases for the checked-in
   `whatwg-script-escape-boundaries.json` fixture
+- `generate_whatwg_cdata_boundaries_fixture.py`: importer that generates
+  focused CDATA boundary cases for the checked-in
+  `whatwg-cdata-boundaries.json` fixture
 - `generate_whatwg_markup_declarations_fixture.py`: importer that generates
   markup declaration recovery cases for the checked-in
   `whatwg-markup-declarations.json` fixture
@@ -199,6 +205,14 @@ Regenerate or verify the WHATWG script escape boundary fixture with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_script_escape_boundaries_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_script_escape_boundaries_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG CDATA boundary fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_cdata_boundaries_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_cdata_boundaries_fixture.py \
   --check
 ```
 
