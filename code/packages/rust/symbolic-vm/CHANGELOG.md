@@ -1,5 +1,51 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.8.0] — 2026-05-18
+
+### Added — Phase 35: degenerate `a² = b²` Weierstrass cases
+
+Closes the four degenerate branches that Phase 34 (0.7.0) deliberately
+deferred:
+
+    ∫ 1/(a + a·sin x) dx = -2 / (a · (tan(x/2) + 1))
+    ∫ 1/(a − a·sin x) dx =  2 / (a · (1 − tan(x/2)))
+    ∫ 1/(a + a·cos x) dx =  tan(x/2) / a
+    ∫ 1/(a − a·cos x) dx = -1 / (a · tan(x/2))     (= -cot(x/2)/a)
+
+Each formula is exact — no `Sqrt`, no `Atan` — because the
+post-substitution quadratic in `u = tan(x/2)` factors as `a(u ± 1)²`
+for sin and reduces to `2a` (constant) or `2a·u²` for cos.
+
+#### Added (`src/handlers.rs`)
+
+- **`try_weierstrass_degenerate(c, a, b, trig_head, x)`** — Phase 35
+  helper.  Pattern-matches the four `(b == a, b == -a) × (SIN, COS)`
+  combinations and emits the corresponding closed form.  Returns
+  `None` for the pathological `a == 0` sub-case (zero denominator).
+
+- Updated `try_weierstrass_one_over_linear_trig` (Phase 34) to call
+  `try_weierstrass_degenerate` when `disc == 0` and to return `None`
+  (defer) when `disc < 0` (log form, still open).
+
+#### Tests (`tests/test_vm.rs`)
+
+6 new `#[test]` functions — same scenarios as the Python and TS Phase
+35 suites:
+
+- `phase35_a_equals_b_now_closes` (replaces the prior
+  `phase34_fallthrough_a_equals_b` deferment test).
+- `phase35_one_minus_sin_closes` — sin, b = −a.
+- `phase35_one_plus_cos_closes` — cos, b = a → tan(x/2).
+- `phase35_one_minus_cos_closes` — cos, b = −a → −cot(x/2).
+- `phase35_with_numerator_coefficient` — c=5 scaling.
+- `phase35_rational_coefficients` — a=b=3/2.
+
+Each verifies the closed form via the existing
+`phase34_numerical_derivative` helper at sample points avoiding the
+`tan(x/2)` pole at `x = π` and the `1/(1−cos x)` pole at `x = 0`.
+
+Full suite: 124 passed (118 prior + 6 net new).
+
 ## [0.7.0] — 2026-05-18
 
 ### Added — Phase 34: Weierstrass substitution for ∫ 1/(a + b·sin/cos x) dx

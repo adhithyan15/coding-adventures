@@ -1549,6 +1549,74 @@ fn weierstrass_parse_a_plus_b_sincos(
     None
 }
 
+/// Phase 35: degenerate `a² = b²` Weierstrass cases.  Four sign
+/// combinations × {SIN, COS} yield clean closed forms in `tan(x/2)`
+/// without any `Sqrt` or `Atan` wrapper:
+///
+/// - sin, b ==  a : ``∫ c/(a + a·sin x) dx = -2c / (a · (tan(x/2) + 1))``
+/// - sin, b == -a : ``∫ c/(a − a·sin x) dx =  2c / (a · (1 − tan(x/2)))``
+/// - cos, b ==  a : ``∫ c/(a + a·cos x) dx =  c · tan(x/2) / a``
+/// - cos, b == -a : ``∫ c/(a − a·cos x) dx = -c / (a · tan(x/2))``  (= -c·cot(x/2)/a)
+///
+/// Returns `None` when neither `b == a` nor `b == -a` (i.e. when the
+/// caller has reached `disc == 0` via a path that the matcher can't
+/// close), or when `a == 0` (the integrand `c/0` is not integrable).
+fn try_weierstrass_degenerate(
+    c: RatC,
+    a: RatC,
+    b: RatC,
+    trig_head: &'static str,
+    x: &str,
+) -> Option<IRNode> {
+    // `RatC` is in lowest terms; (n, d) with d > 0 and gcd(|n|, d) = 1.
+    // a == 0 iff a.0 == 0.  Same shape check works for b.
+    if a.0 == 0 {
+        return None;
+    }
+    let tan_half = apply_node(
+        TAN,
+        vec![apply_node(
+            DIV,
+            vec![IRNode::Symbol(x.to_string()), IRNode::Integer(2)],
+        )],
+    );
+    // Helper closures.
+    let two_c = rc_mul(c, (2, 1))?;
+    let neg_two_c = rc_neg(two_c);
+    let neg_c = rc_neg(c);
+    if trig_head == SIN {
+        if b == a {
+            // -2c / (a · (tan(x/2) + 1))
+            let denom = apply_node(
+                MUL,
+                vec![rc_to_ir(a)?, apply_node(ADD, vec![tan_half, IRNode::Integer(1)])],
+            );
+            return Some(apply_node(DIV, vec![rc_to_ir(neg_two_c)?, denom]));
+        }
+        if b == rc_neg(a) {
+            // 2c / (a · (1 − tan(x/2)))
+            let denom = apply_node(
+                MUL,
+                vec![rc_to_ir(a)?, apply_node(SUB, vec![IRNode::Integer(1), tan_half])],
+            );
+            return Some(apply_node(DIV, vec![rc_to_ir(two_c)?, denom]));
+        }
+        return None;
+    }
+    // trig_head == COS
+    if b == a {
+        // c · tan(x/2) / a
+        let numer = apply_node(MUL, vec![rc_to_ir(c)?, tan_half]);
+        return Some(apply_node(DIV, vec![numer, rc_to_ir(a)?]));
+    }
+    if b == rc_neg(a) {
+        // -c / (a · tan(x/2))
+        let denom = apply_node(MUL, vec![rc_to_ir(a)?, tan_half]);
+        return Some(apply_node(DIV, vec![rc_to_ir(neg_c)?, denom]));
+    }
+    None
+}
+
 /// Phase 34 entry point.  Returns the closed form when the integrand is
 /// `c / (a + b·sin/cos(x))` with rational c, a, b and a² > b² (a > 0 for cos),
 /// or `None` otherwise.
@@ -1559,11 +1627,17 @@ fn try_weierstrass_one_over_linear_trig(
 ) -> Option<IRNode> {
     let c_rc = node_to_rc(num)?;
     let (a_rc, b_rc, trig_head) = weierstrass_parse_a_plus_b_sincos(den, x)?;
-    // disc = a² − b²; must be strictly positive.
+    // disc = a² − b².  Three sub-cases:
+    //   disc > 0  → Phase 34 arctan form (below)
+    //   disc == 0 → Phase 35 degenerate form (four sign combinations)
+    //   disc < 0  → log form (still deferred)
     let a_sq = rc_mul(a_rc, a_rc)?;
     let b_sq = rc_mul(b_rc, b_rc)?;
     let disc = rc_sub(a_sq, b_sq)?;
-    if disc.0 <= 0 {
+    if disc.0 == 0 {
+        return try_weierstrass_degenerate(c_rc, a_rc, b_rc, trig_head, x);
+    }
+    if disc.0 < 0 {
         return None;
     }
     let sqrt_disc_ir = weierstrass_sqrt_fraction_ir(disc);
