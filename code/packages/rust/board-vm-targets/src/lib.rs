@@ -194,7 +194,7 @@ pub const BLINK_MVP_CAPABILITIES: [&str; 8] = [
     "program.ram_exec",
 ];
 
-pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 31] = [
+pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 32] = [
     "transport.serial",
     "gpio.open",
     "gpio.write",
@@ -226,9 +226,10 @@ pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 31] = [
     "storage.write",
     "storage.read",
     "program.ram_exec",
+    "program.store",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 38] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 39] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -267,6 +268,7 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 38] = [
     "storage.read",
     "led_matrix.frame",
     "program.ram_exec",
+    "program.store",
 ];
 
 pub const ESP32_CAPABILITIES: [&str; 12] = [
@@ -998,8 +1000,10 @@ mod tests {
         assert!(wifi.storage_regions[0].notes.contains("storage.read"));
         assert!(minima.capabilities.contains(&"storage.write"));
         assert!(minima.capabilities.contains(&"storage.read"));
+        assert!(minima.capabilities.contains(&"program.store"));
         assert!(wifi.capabilities.contains(&"storage.write"));
         assert!(wifi.capabilities.contains(&"storage.read"));
+        assert!(wifi.capabilities.contains(&"program.store"));
 
         assert!(find_target("esp32-devkit-v1")
             .unwrap()
@@ -1080,6 +1084,7 @@ mod tests {
         assert!(uno.capabilities.contains(&"can.read"));
         assert!(uno.capabilities.contains(&"storage.write"));
         assert!(uno.capabilities.contains(&"storage.read"));
+        assert!(uno.capabilities.contains(&"program.store"));
     }
 
     #[test]

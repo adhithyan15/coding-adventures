@@ -223,6 +223,16 @@ pub trait BoardHal {
         Err(HalError::UnsupportedMode)
     }
 
+    fn store_program(
+        &mut self,
+        _program_id: u16,
+        _slot: u8,
+        _boot_policy: u8,
+        _module: &[u8],
+    ) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
     fn led_matrix_frame(&mut self, _frame: [u32; 3]) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }

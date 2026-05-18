@@ -40,6 +40,12 @@ pub const UNO_R4_VM_RUNTIME_ID: &str = "board-vm-uno-r4";
 pub const UNO_R4_VM_MAX_PROGRAM_BYTES: usize = 4096;
 pub const UNO_R4_VM_MAX_STACK_VALUES: usize = 16;
 pub const UNO_R4_VM_MAX_HANDLES: usize = 8;
+pub const UNO_R4_PROGRAM_STORE_REGION: u16 = 0;
+pub const UNO_R4_PROGRAM_STORE_SLOT: u8 = 0;
+pub const UNO_R4_PROGRAM_STORE_MAGIC: [u8; 4] = *b"BVMS";
+pub const UNO_R4_PROGRAM_STORE_LAYOUT_VERSION: u8 = 1;
+pub const UNO_R4_PROGRAM_STORE_FORMAT_BVM_MODULE: u8 = 1;
+pub const UNO_R4_PROGRAM_STORE_HEADER_BYTES: usize = 20;
 
 pub type UnoR4Device<B> = BoardVmDevice<
     'static,
@@ -899,6 +905,57 @@ where
         self.backend.storage_read(region, offset, len)
     }
 
+    fn store_program(
+        &mut self,
+        program_id: u16,
+        slot: u8,
+        boot_policy: u8,
+        module: &[u8],
+    ) -> Result<(), HalError> {
+        if slot != UNO_R4_PROGRAM_STORE_SLOT {
+            return Err(HalError::InvalidPin);
+        }
+        let total_len = UNO_R4_PROGRAM_STORE_HEADER_BYTES
+            .checked_add(module.len())
+            .ok_or(HalError::InvalidPin)?;
+        if total_len > u16::MAX as usize {
+            return Err(HalError::InvalidPin);
+        }
+        let Some(descriptor) = self
+            .target
+            .storage_regions
+            .iter()
+            .find(|storage| storage.region == UNO_R4_PROGRAM_STORE_REGION as u8)
+        else {
+            return Err(HalError::InvalidPin);
+        };
+        if total_len > descriptor.bytes as usize {
+            return Err(HalError::InvalidPin);
+        }
+
+        let module_len = module.len() as u32;
+        let module_crc32 = crc32_ieee(module);
+        let mut header = [0u8; UNO_R4_PROGRAM_STORE_HEADER_BYTES];
+        header[0..4].copy_from_slice(&UNO_R4_PROGRAM_STORE_MAGIC);
+        header[4] = UNO_R4_PROGRAM_STORE_LAYOUT_VERSION;
+        header[5] = slot;
+        header[6] = boot_policy;
+        header[7] = UNO_R4_PROGRAM_STORE_FORMAT_BVM_MODULE;
+        header[8..10].copy_from_slice(&program_id.to_le_bytes());
+        header[12..16].copy_from_slice(&module_len.to_le_bytes());
+        header[16..20].copy_from_slice(&module_crc32.to_le_bytes());
+
+        self.storage_write(UNO_R4_PROGRAM_STORE_REGION, 0, &header)?;
+        let mut offset = UNO_R4_PROGRAM_STORE_HEADER_BYTES as u16;
+        for chunk in module.chunks(u8::MAX as usize) {
+            self.storage_write(UNO_R4_PROGRAM_STORE_REGION, offset, chunk)?;
+            offset = offset
+                .checked_add(chunk.len() as u16)
+                .ok_or(HalError::InvalidPin)?;
+        }
+        Ok(())
+    }
+
     fn spi_transfer(
         &mut self,
         token: u32,
@@ -1108,6 +1165,18 @@ fn normalize_storage_region(
     }
 }
 
+fn crc32_ieee(bytes: &[u8]) -> u32 {
+    let mut crc = 0xFFFF_FFFFu32;
+    for byte in bytes {
+        crc ^= *byte as u32;
+        for _ in 0..8 {
+            let mask = 0u32.wrapping_sub(crc & 1);
+            crc = (crc >> 1) ^ (0xEDB8_8320 & mask);
+        }
+    }
+    !crc
+}
+
 pub fn uno_r4_device_descriptor(
     target: &'static TargetDescriptor,
     board_nonce: u32,
@@ -1125,7 +1194,7 @@ fn uno_r4_device_descriptor_for_capabilities(
         runtime_id: UNO_R4_VM_RUNTIME_ID,
         board_nonce,
         max_frame_payload: DEFAULT_MAX_FRAME_PAYLOAD,
-        supports_store_program: false,
+        supports_store_program: capabilities.storage,
         capabilities: if target.supports_led_matrix
             && capabilities.pwm
             && capabilities.adc
@@ -1794,11 +1863,19 @@ mod tests {
         assert_eq!(descriptor.runtime_id, UNO_R4_VM_RUNTIME_ID);
         assert_eq!(descriptor.board_nonce, 0xA11C_E001);
         assert_eq!(descriptor.max_frame_payload, DEFAULT_MAX_FRAME_PAYLOAD);
+        assert!(descriptor.supports_store_program);
         assert_eq!(
             descriptor.capabilities.len(),
             BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_AND_LED_MATRIX_CAPABILITIES
                 .len()
         );
+        assert!(descriptor
+            .capabilities
+            .iter()
+            .any(
+                |capability| capability.id == board_vm_protocol::CAP_PROGRAM_STORE
+                    && capability.name == "program.store"
+            ));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -2208,6 +2285,65 @@ mod tests {
         );
         assert_eq!(
             board.storage_write(0, 0, &[0xaa; u8::MAX as usize + 1]),
+            Err(HalError::InvalidPin)
+        );
+    }
+
+    #[test]
+    fn store_program_writes_header_and_module_chunks_to_storage_region() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+        let mut module = vec![0xab; 300];
+        module[0] = b'B';
+        module[1] = b'V';
+        module[2] = b'M';
+        module[3] = b'1';
+
+        board.store_program(7, 0, 2, &module).unwrap();
+
+        let events = &board.backend().events;
+        assert_eq!(events.len(), 3);
+        let Event::StorageWrite(region, offset, header) = &events[0] else {
+            panic!("expected program-store header write");
+        };
+        assert_eq!((*region, *offset), (0, 0));
+        assert_eq!(&header[0..4], &UNO_R4_PROGRAM_STORE_MAGIC);
+        assert_eq!(header[4], UNO_R4_PROGRAM_STORE_LAYOUT_VERSION);
+        assert_eq!(header[5], 0);
+        assert_eq!(header[6], 2);
+        assert_eq!(header[7], UNO_R4_PROGRAM_STORE_FORMAT_BVM_MODULE);
+        assert_eq!(u16::from_le_bytes([header[8], header[9]]), 7);
+        assert_eq!(
+            u32::from_le_bytes([header[12], header[13], header[14], header[15]]),
+            module.len() as u32
+        );
+        assert_eq!(
+            u32::from_le_bytes([header[16], header[17], header[18], header[19]]),
+            crc32_ieee(&module)
+        );
+        assert_eq!(
+            events[1],
+            Event::StorageWrite(
+                0,
+                UNO_R4_PROGRAM_STORE_HEADER_BYTES as u16,
+                module[..255].to_vec()
+            )
+        );
+        assert_eq!(
+            events[2],
+            Event::StorageWrite(
+                0,
+                UNO_R4_PROGRAM_STORE_HEADER_BYTES as u16 + 255,
+                module[255..].to_vec()
+            )
+        );
+    }
+
+    #[test]
+    fn store_program_rejects_nonzero_slot_for_initial_uno_r4_layout() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(
+            board.store_program(7, 1, 2, &[0x42]),
             Err(HalError::InvalidPin)
         );
     }

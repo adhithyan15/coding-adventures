@@ -10,18 +10,19 @@ use board_vm_ir::{
 };
 use board_vm_protocol::{
     decode_frame, decode_hello, decode_program_begin, decode_program_chunk, decode_program_end,
-    decode_run_request, decode_wire_frame, encode_caps_report, encode_error_payload, encode_frame,
-    encode_hello_ack, encode_program_begin, encode_program_chunk, encode_program_end,
-    encode_run_report_header, encode_value, encode_wire_frame, CapabilityDescriptor,
-    CapsReportHeader, ErrorPayload, Frame, HelloAck, MessageType, ProgramBegin, ProgramChunk,
-    ProgramEnd, ProtocolError, RunReportHeader, RunStatus as ProtocolRunStatus,
-    Value as ProtocolValue, CAP_FLAG_BYTECODE_CALLABLE, CAP_FLAG_PROTOCOL_FEATURE,
-    CAP_PROGRAM_RAM_EXEC, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE, NO_BYTECODE_OFFSET,
-    NO_PROGRAM_ID, RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
+    decode_run_request, decode_store_program, decode_wire_frame, encode_caps_report,
+    encode_error_payload, encode_frame, encode_hello_ack, encode_program_begin,
+    encode_program_chunk, encode_program_end, encode_run_report_header, encode_value,
+    encode_wire_frame, CapabilityDescriptor, CapsReportHeader, ErrorPayload, Frame, HelloAck,
+    MessageType, ProgramBegin, ProgramChunk, ProgramEnd, ProtocolError, RunReportHeader,
+    RunStatus as ProtocolRunStatus, Value as ProtocolValue, CAP_FLAG_BYTECODE_CALLABLE,
+    CAP_FLAG_PROTOCOL_FEATURE, CAP_PROGRAM_RAM_EXEC, CAP_PROGRAM_STORE, FLAG_IS_ERROR_RESPONSE,
+    FLAG_IS_RESPONSE, NO_BYTECODE_OFFSET, NO_PROGRAM_ID, RUN_FLAG_BACKGROUND_RUN,
+    RUN_FLAG_RESET_VM_BEFORE_RUN,
 };
 use board_vm_runtime::{
-    BoardHal, RunCursor, RunReport as RuntimeRunReport, RunStatus as RuntimeRunStatus, Runtime,
-    RuntimeError, Value as RuntimeValue,
+    BoardHal, HalError, RunCursor, RunReport as RuntimeRunReport, RunStatus as RuntimeRunStatus,
+    Runtime, RuntimeError, Value as RuntimeValue,
 };
 
 pub const DEFAULT_DEVICE_RUNTIME_ID: &str = "board-vm-device";
@@ -221,6 +222,12 @@ const PROGRAM_RAM_EXEC_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDes
     version: 1,
     flags: CAP_FLAG_PROTOCOL_FEATURE,
     name: "program.ram_exec",
+};
+const PROGRAM_STORE_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_PROGRAM_STORE,
+    version: 1,
+    flags: CAP_FLAG_PROTOCOL_FEATURE,
+    name: "program.store",
 };
 
 pub const BLINK_MVP_CAPABILITIES: [CapabilityDescriptor<'static>; 7] = [
@@ -890,7 +897,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_WATCHDOG_CAPABILIT
 ];
 
 pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_STORAGE_CAPABILITIES:
-    [CapabilityDescriptor<'static>; 30] = [
+    [CapabilityDescriptor<'static>; 31] = [
     GPIO_OPEN_DESCRIPTOR,
     GPIO_WRITE_DESCRIPTOR,
     GPIO_READ_DESCRIPTOR,
@@ -921,6 +928,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_STORAGE_C
     STORAGE_WRITE_DESCRIPTOR,
     STORAGE_READ_DESCRIPTOR,
     PROGRAM_RAM_EXEC_DESCRIPTOR,
+    PROGRAM_STORE_DESCRIPTOR,
 ];
 
 pub const BLINK_MVP_WITH_DAC_AND_LED_MATRIX_CAPABILITIES: [CapabilityDescriptor<'static>; 9] = [
@@ -1170,7 +1178,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_LED_MATRI
 ];
 
 pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_AND_LED_MATRIX_CAPABILITIES:
-    [CapabilityDescriptor<'static>; 31] = [
+    [CapabilityDescriptor<'static>; 32] = [
     GPIO_OPEN_DESCRIPTOR,
     GPIO_WRITE_DESCRIPTOR,
     GPIO_READ_DESCRIPTOR,
@@ -1202,6 +1210,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_AND_L
     STORAGE_READ_DESCRIPTOR,
     LED_MATRIX_FRAME_DESCRIPTOR,
     PROGRAM_RAM_EXEC_DESCRIPTOR,
+    PROGRAM_STORE_DESCRIPTOR,
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1455,6 +1464,9 @@ where
                 self.handle_program_chunk(request, payload_out, frame_out)
             }
             MessageType::PROGRAM_END => self.handle_program_end(request, payload_out, frame_out),
+            MessageType::STORE_PROGRAM => {
+                self.handle_store_program(request, payload_out, frame_out)
+            }
             MessageType::RUN => self.handle_run(request, payload_out, frame_out),
             MessageType::STOP => self.handle_stop(request, payload_out, frame_out),
             MessageType::BOOTLOADER_REBOOT => {
@@ -1592,6 +1604,37 @@ where
         self.program_id = end.program_id;
         self.upload.active = false;
         write_program_end_response(end, request.request_id, payload_out, frame_out)
+    }
+
+    fn handle_store_program(
+        &mut self,
+        request: Frame<'_>,
+        _payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<usize, BoardFault> {
+        if !self.descriptor.supports_store_program {
+            return Err(BoardFault::UnsupportedMessage);
+        }
+        let store = decode_store_program(request.payload)?;
+        if store.program_id != self.program_id || self.program_len == 0 {
+            return Err(BoardFault::InvalidProgram);
+        }
+
+        let program = &self.program[..self.program_len];
+        let module = parse_module(program).map_err(|_| BoardFault::InvalidBytecode)?;
+        validate(&module, self.runtime.hal().capabilities(), MAX_STACK as u8)
+            .map_err(|_| BoardFault::InvalidBytecode)?;
+        self.background = None;
+        self.runtime
+            .hal_mut()
+            .store_program(store.program_id, store.slot, store.boot_policy, program)
+            .map_err(BoardFault::Hal)?;
+        write_response(
+            MessageType::STORE_PROGRAM,
+            request.request_id,
+            &[],
+            frame_out,
+        )
     }
 
     fn handle_run(
@@ -1986,6 +2029,7 @@ enum BoardFault {
     PayloadTooLarge,
     InvalidProgram,
     InvalidBytecode,
+    Hal(HalError),
     Runtime(RuntimeError),
 }
 
@@ -2004,6 +2048,10 @@ impl BoardFault {
             Self::PayloadTooLarge => ERROR_PAYLOAD_TOO_LARGE,
             Self::InvalidProgram => ERROR_INVALID_PROGRAM,
             Self::InvalidBytecode => ERROR_INVALID_BYTECODE,
+            Self::Hal(
+                HalError::InvalidPin | HalError::UnsupportedMode | HalError::ResourceBusy,
+            ) => ERROR_INVALID_PROGRAM,
+            Self::Hal(HalError::BoardFault) => ERROR_BOARD_FAULT,
             Self::Runtime(error) => match error.kind {
                 board_vm_runtime::RuntimeErrorKind::InvalidBytecode
                 | board_vm_runtime::RuntimeErrorKind::ValidationFailed => ERROR_INVALID_BYTECODE,
@@ -2027,6 +2075,10 @@ impl BoardFault {
             Self::PayloadTooLarge => "payload too large",
             Self::InvalidProgram => "invalid program",
             Self::InvalidBytecode => "invalid bytecode",
+            Self::Hal(HalError::InvalidPin) => "invalid program",
+            Self::Hal(HalError::UnsupportedMode) => "unsupported mode",
+            Self::Hal(HalError::ResourceBusy) => "resource busy",
+            Self::Hal(HalError::BoardFault) => "board fault",
             Self::Runtime(error) => match error.kind {
                 board_vm_runtime::RuntimeErrorKind::InvalidBytecode
                 | board_vm_runtime::RuntimeErrorKind::ValidationFailed => "invalid bytecode",
@@ -2179,15 +2231,30 @@ mod tests {
     use board_vm_protocol::{
         decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
         decode_run_report_header, decode_wire_frame, encode_wire_frame, RunStatus, Value,
+        BOOT_RUN_AT_BOOT,
     };
     use board_vm_runtime::{GpioMode, HalError, Level};
 
     #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     enum Event {
-        GpioOpen { pin: u16, mode: GpioMode },
-        GpioWrite { token: u32, level: Level },
+        GpioOpen {
+            pin: u16,
+            mode: GpioMode,
+        },
+        GpioWrite {
+            token: u32,
+            level: Level,
+        },
         SleepMs(u16),
         BootloaderReboot,
+        StoreProgram {
+            program_id: u16,
+            slot: u8,
+            boot_policy: u8,
+            module_len: usize,
+            first_byte: u8,
+            last_byte: u8,
+        },
     }
 
     struct FakeHal {
@@ -2275,13 +2342,56 @@ mod tests {
                 Err(HalError::UnsupportedMode)
             }
         }
+
+        fn store_program(
+            &mut self,
+            program_id: u16,
+            slot: u8,
+            boot_policy: u8,
+            module: &[u8],
+        ) -> Result<(), HalError> {
+            self.push_event(Event::StoreProgram {
+                program_id,
+                slot,
+                boot_policy,
+                module_len: module.len(),
+                first_byte: module.first().copied().unwrap_or(0),
+                last_byte: module.last().copied().unwrap_or(0),
+            });
+            Ok(())
+        }
     }
 
     type Device = BoardVmDevice<'static, FakeHal, 256, 8, 8>;
 
+    const STORE_CAPABILITIES: [CapabilityDescriptor<'static>; 8] = [
+        GPIO_OPEN_DESCRIPTOR,
+        GPIO_WRITE_DESCRIPTOR,
+        GPIO_READ_DESCRIPTOR,
+        GPIO_CLOSE_DESCRIPTOR,
+        TIME_SLEEP_MS_DESCRIPTOR,
+        TIME_NOW_MS_DESCRIPTOR,
+        PROGRAM_RAM_EXEC_DESCRIPTOR,
+        PROGRAM_STORE_DESCRIPTOR,
+    ];
+
     fn new_device() -> Device {
         BoardVmDevice::new(
             DeviceDescriptor::blink_mvp("test-board", 0xB04D_1001),
+            FakeHal::new(CapabilitySet::blink_mvp()),
+        )
+    }
+
+    fn new_store_device() -> Device {
+        BoardVmDevice::new(
+            DeviceDescriptor {
+                board_id: "test-board",
+                runtime_id: DEFAULT_DEVICE_RUNTIME_ID,
+                board_nonce: 0xB04D_1001,
+                max_frame_payload: DEFAULT_MAX_FRAME_PAYLOAD,
+                supports_store_program: true,
+                capabilities: &STORE_CAPABILITIES,
+            },
             FakeHal::new(CapabilitySet::blink_mvp()),
         )
     }
@@ -2521,6 +2631,39 @@ mod tests {
     }
 
     #[test]
+    fn descriptor_reports_store_program_when_supported() {
+        let mut device = new_store_device();
+        let mut session = HostSession::new();
+        let mut request = [0u8; 128];
+        let mut device_payload = [0u8; 256];
+        let mut response = [0u8; 320];
+
+        let caps = session.caps_query_frame(&mut request).unwrap();
+        let response_len = handle(
+            &mut device,
+            &request[..caps.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let frame = decode_frame(&response[..response_len]).unwrap();
+        let (header, mut decoder) = decode_caps_report_header(frame.payload).unwrap();
+
+        assert!(header.supports_store_program);
+        assert_eq!(header.capability_count, STORE_CAPABILITIES.len() as u32);
+        let mut found_store = false;
+        for _ in 0..header.capability_count {
+            let capability = decoder.read_capability_descriptor().unwrap();
+            if capability.id == CAP_PROGRAM_STORE {
+                found_store = true;
+                assert_eq!(capability.name, "program.store");
+                assert_eq!(capability.flags, CAP_FLAG_PROTOCOL_FEATURE);
+            }
+        }
+        decoder.finish().unwrap();
+        assert!(found_store);
+    }
+
+    #[test]
     fn bootloader_reboot_request_is_acked_before_runtime_reset() {
         let mut device = BoardVmDevice::new(
             DeviceDescriptor::blink_mvp("test-board", 0xB04D_1001),
@@ -2705,6 +2848,111 @@ mod tests {
         assert_eq!(report.open_handles, 0);
         assert!(!device.is_background_running());
         assert_eq!(device.poll_background(100).unwrap(), None);
+    }
+
+    #[test]
+    fn store_program_persists_loaded_module_through_hal() {
+        let mut device = new_store_device();
+        let mut session = HostSession::new();
+        let mut module = [0u8; board_vm_host::BLINK_MODULE_LEN];
+        let module_len = write_blink_module(BlinkProgram::onboard_led(), &mut module).unwrap();
+        let module = &module[..module_len];
+        let mut host_payload = [0u8; 128];
+        let mut request = [0u8; 192];
+        let mut device_payload = [0u8; 256];
+        let mut response = [0u8; 320];
+
+        let begin = session
+            .program_begin_frame(DEFAULT_PROGRAM_ID, module, &mut host_payload, &mut request)
+            .unwrap();
+        handle(
+            &mut device,
+            &request[..begin.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let chunk = session
+            .program_chunk_frame(
+                DEFAULT_PROGRAM_ID,
+                0,
+                module,
+                &mut host_payload,
+                &mut request,
+            )
+            .unwrap();
+        handle(
+            &mut device,
+            &request[..chunk.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let end = session
+            .program_end_frame(DEFAULT_PROGRAM_ID, &mut host_payload, &mut request)
+            .unwrap();
+        handle(
+            &mut device,
+            &request[..end.len],
+            &mut device_payload,
+            &mut response,
+        );
+
+        let store = session
+            .store_program_with_boot_policy_frame(
+                DEFAULT_PROGRAM_ID,
+                2,
+                BOOT_RUN_AT_BOOT,
+                &mut host_payload,
+                &mut request,
+            )
+            .unwrap();
+        let response_len = handle(
+            &mut device,
+            &request[..store.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let frame = decode_frame(&response[..response_len]).unwrap();
+
+        assert_eq!(frame.flags, FLAG_IS_RESPONSE);
+        assert_eq!(frame.message_type, MessageType::STORE_PROGRAM);
+        assert_eq!(frame.request_id, store.request_id);
+        assert!(frame.payload.is_empty());
+        assert_eq!(
+            device.hal().events().last(),
+            Some(&Some(Event::StoreProgram {
+                program_id: DEFAULT_PROGRAM_ID,
+                slot: 2,
+                boot_policy: BOOT_RUN_AT_BOOT,
+                module_len,
+                first_byte: module[0],
+                last_byte: module[module.len() - 1],
+            }))
+        );
+    }
+
+    #[test]
+    fn store_program_reports_unsupported_when_descriptor_disables_it() {
+        let mut device = new_device();
+        let mut session = HostSession::new();
+        let mut request = [0u8; 64];
+        let mut device_payload = [0u8; 64];
+        let mut response = [0u8; 96];
+
+        let store = session
+            .store_program_frame(DEFAULT_PROGRAM_ID, 0, &mut device_payload, &mut request)
+            .unwrap();
+        let response_len = handle(
+            &mut device,
+            &request[..store.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let frame = decode_frame(&response[..response_len]).unwrap();
+        let error = decode_error_payload(frame.payload).unwrap();
+
+        assert_eq!(frame.message_type, MessageType::ERROR);
+        assert_eq!(error.code, ERROR_UNSUPPORTED_MESSAGE);
+        assert_eq!(error.message, "unsupported message");
     }
 
     #[test]

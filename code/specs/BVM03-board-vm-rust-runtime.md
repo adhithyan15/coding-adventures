@@ -126,6 +126,11 @@ pub trait ProgramStore {
 }
 ```
 
+The current no-heap Rust HAL exposes this first tranche as
+`BoardHal::store_program(program_id, slot, boot_policy, module)`. Board adapters
+may lower that protocol-level request into their existing bounded storage writes,
+while leaving language frontends as thin builders for the `STORE_PROGRAM` frame.
+
 `HandleToken` is private to the board adapter. The portable VM only sees compact
 `Handle` ids.
 
@@ -237,7 +242,7 @@ If `ProgramStore` is available:
 
 1. Host uploads a validated module.
 2. Host sends `STORE_PROGRAM(slot, boot_policy)`.
-3. Runtime writes bytes to nonvolatile storage.
+3. Runtime writes bytes and boot metadata to nonvolatile storage.
 4. On reset, runtime loads the slot and runs the module.
 
 ### Embedded Firmware

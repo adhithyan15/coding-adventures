@@ -93,9 +93,13 @@ reject conflicting handles.
    bounded byte-buffer bytecode tranche for that region. WiFi/network now has
    Rust-owned descriptor metadata for the onboard WiFiS3 interface plus
    `network.ipv4`, `network.tcp`, and `network.udp` capability strings surfaced
-   through the language target APIs. `program.store`, higher-level KV storage,
-   and socket/control bytecode operations remain later capability tranches.
+   through the language target APIs. `program.store` now has a protocol
+   capability descriptor, `STORE_PROGRAM` device dispatch, runtime HAL hook, and
+   an initial UNO R4 storage-backed slot-0 layout that writes a compact header
+   plus module chunks through the same bounded storage substrate. Higher-level
+   KV storage and socket/control bytecode operations remain later capability
+   tranches.
 
-Every tranche should include the same layers: spec entry, IR capability id,
+Every tranche should include the same layers: spec entry, IR/protocol capability id,
 runtime HAL method, UNO R4 target descriptor, firmware backend, host builder,
 language SDK wrapper, and fake-backend tests.
