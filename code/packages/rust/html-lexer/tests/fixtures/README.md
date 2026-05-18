@@ -401,6 +401,9 @@ currently supports:
 - generated text-mode delimiter coverage across RCDATA, RAWTEXT, script data,
   escaped script data, matching/mismatched apparent end tags, recoverable
   whitespace/attribute/solidus delimiters, and seeded end-tag continuations
+- generated text-mode boundary coverage across parser-seeded RCDATA, RAWTEXT,
+  and PLAINTEXT less-than recovery, end-tag-open/name continuations, NULL/EOF
+  recovery, character-reference differences, and literal markup preservation
 - generated attribute-edge coverage across quoted/unquoted values, duplicate
   attributes, missing whitespace recovery, unexpected attribute characters,
   NULL replacement, self-closing delimiters, unexpected solidus recovery, and
