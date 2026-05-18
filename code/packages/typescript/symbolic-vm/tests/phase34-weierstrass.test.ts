@@ -19,6 +19,7 @@ import {
   NEG,
   SIN,
   SQRT,
+  SUB,
   app,
   equals,
   int,
@@ -192,11 +193,16 @@ describe("Phase 34: deferred discriminant cases", () => {
     expect(isUnevaluatedIntegrate(result)).toBe(true);
   });
 
-  it("a² = b² (∫ 1/(1 + sin x) dx) — degenerate form deferred", () => {
+  it("Phase 35: a² = b² (∫ 1/(1 + sin x) dx) now closes via the degenerate form", () => {
     const vm = makeVM();
     const integrand = app(DIV, [int(1), app(ADD, [int(1), app(SIN, [X])])]);
-    const result = vm.eval(integrate(integrand));
-    expect(isUnevaluatedIntegrate(result)).toBe(true);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    for (const xVal of [-2.0, -1.0, -0.3, 0.3, 1.0, 2.0]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1 / (1 + Math.sin(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-4);
+    }
   });
 
   it("non-bare argument (∫ 1/(2 + sin 2x) dx) — Phase 34 doesn't compose with subs", () => {
@@ -238,6 +244,75 @@ describe("Phase 34: regression — must not interfere with existing rules", () =
     // a top-level Atan (which would only come from Phase 34).
     if (result.kind === "apply" && equals(result.head, ATAN)) {
       throw new Error(`Phase 34 incorrectly fired on ∫ 1/cos(x) dx: got ${JSON.stringify(result)}`);
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 35: degenerate a² = b² cases — all four sign combinations
+// ---------------------------------------------------------------------------
+
+describe("Phase 35: degenerate a² = b² cases", () => {
+  it("∫ 1/(2 − 2·sin x) dx — sin, b = −a", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [int(1), app(SUB, [int(2), app(MUL, [int(2), app(SIN, [X])])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    for (const xVal of [-2.0, -1.0, -0.3, 0.3, 1.0, 2.0]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1 / (2 - 2 * Math.sin(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
+  });
+
+  it("∫ 1/(1 + cos x) dx — cos, b = a → tan(x/2)", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [int(1), app(ADD, [int(1), app(COS, [X])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    for (const xVal of [-2.0, -1.0, -0.3, 0.3, 1.0, 2.0]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1 / (1 + Math.cos(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-4);
+    }
+  });
+
+  it("∫ 1/(1 − cos x) dx — cos, b = −a → −cot(x/2)", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [int(1), app(SUB, [int(1), app(COS, [X])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    // Sample on (0, π) — avoid x = 0, 2π where 1 − cos x = 0.
+    for (const xVal of [0.5, 1.0, 1.5, 2.0, 2.5]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1 / (1 - Math.cos(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
+  });
+
+  it("numerator coefficient (∫ 5/(2 + 2·sin x) dx) scales the closed form", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [int(5), app(ADD, [int(2), app(MUL, [int(2), app(SIN, [X])])])]);
+    const phi = vm.eval(integrate(integrand));
+    for (const xVal of [-2.0, -1.0, -0.3, 0.3, 1.0, 2.0]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 5 / (2 + 2 * Math.sin(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
+  });
+
+  it("rational coefficients (a = b = 3/2) close cleanly", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [
+      int(1),
+      app(ADD, [rational(3, 2), app(MUL, [rational(3, 2), app(COS, [X])])]),
+    ]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    for (const xVal of [-2.0, -1.0, -0.3, 0.3, 1.0, 2.0]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1 / (1.5 + 1.5 * Math.cos(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
     }
   });
 });

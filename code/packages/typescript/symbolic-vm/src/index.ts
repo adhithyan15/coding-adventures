@@ -1724,7 +1724,13 @@ function tryWeierstrassOneOverLinearTrig(
   const { a, b, trigHead } = parsed;
   // disc = a² − b² (exact Numeric arithmetic — both a, b are Int/Rat).
   const disc = subNumeric(mulNumeric(a, a), mulNumeric(b, b));
-  // disc must be strictly positive; reject zero (a² = b²) and negative.
+  // Three-way dispatch on the discriminant:
+  //   disc > 0  → Phase 34 arctan form (below)
+  //   disc == 0 → Phase 35 degenerate form (four sign combinations)
+  //   disc < 0  → log form (still deferred)
+  if (isZeroNumeric(disc)) {
+    return tryWeierstrassDegenerate(c, a, b, trigHead, x);
+  }
   if (!isPositiveNumeric(disc)) return undefined;
   const sqrtDiscIR = weierstrassSqrtFractionIR(disc);
   const tanHalf = app(TAN, [app(DIV, [x, int(2)])]);
@@ -1753,6 +1759,79 @@ function isPositiveNumeric(v: Numeric): boolean {
   if (v.kind === "int") return v.value > 0n;
   if (v.kind === "rat") return v.numer > 0n; // denominator is always positive
   return v.value > 0;
+}
+
+/** True when ``v`` is exactly zero (integer 0, rational 0/q, or float 0.0). */
+function isZeroNumeric(v: Numeric): boolean {
+  if (v.kind === "int") return v.value === 0n;
+  if (v.kind === "rat") return v.numer === 0n;
+  return v.value === 0;
+}
+
+/** True when two Numeric values are exactly equal (Int/Rat only — float
+ *  comparisons elsewhere use tolerance; Phase 35 needs exact equality). */
+function eqNumeric(a: Numeric, b: Numeric): boolean {
+  if (a.kind === "int" && b.kind === "int") return a.value === b.value;
+  if (a.kind === "rat" && b.kind === "rat")
+    return a.numer === b.numer && a.denom === b.denom;
+  if (a.kind === "int" && b.kind === "rat")
+    return b.denom === 1n && b.numer === a.value;
+  if (a.kind === "rat" && b.kind === "int")
+    return a.denom === 1n && a.numer === b.value;
+  return false;
+}
+
+/**
+ * Phase 35: degenerate ``a² = b²`` Weierstrass cases. Four sign
+ * combinations × {SIN, COS} yield clean closed forms in ``tan(x/2)``
+ * without any ``Sqrt`` or ``Atan`` wrapper:
+ *
+ *  - sin, b ==  a : ``-2c / (a · (tan(x/2) + 1))``
+ *  - sin, b == -a : `` 2c / (a · (1 − tan(x/2)))``
+ *  - cos, b ==  a : ``c · tan(x/2) / a``
+ *  - cos, b == -a : ``-c / (a · tan(x/2))``  (= -c·cot(x/2)/a)
+ *
+ * Returns ``undefined`` when neither ``b == a`` nor ``b == -a``, or when
+ * ``a == 0`` (zero denominator, not integrable).
+ */
+function tryWeierstrassDegenerate(
+  c: Numeric,
+  a: Numeric,
+  b: Numeric,
+  trigHead: IRNode,
+  x: IRNode
+): IRNode | undefined {
+  if (isZeroNumeric(a)) return undefined;
+  const tanHalf = app(TAN, [app(DIV, [x, int(2)])]);
+  const negA = negNumeric(a);
+  if (equals(trigHead, SIN)) {
+    if (eqNumeric(b, a)) {
+      // -2c / (a · (tan(x/2) + 1))
+      const neg2c = negNumeric(mulNumeric(c, { kind: "int", value: 2n }));
+      const denom = app(MUL, [fromNumeric(a), app(ADD, [tanHalf, int(1)])]);
+      return app(DIV, [fromNumeric(neg2c), denom]);
+    }
+    if (eqNumeric(b, negA)) {
+      // 2c / (a · (1 − tan(x/2)))
+      const two_c = mulNumeric(c, { kind: "int", value: 2n });
+      const denom = app(MUL, [fromNumeric(a), app(SUB, [int(1), tanHalf])]);
+      return app(DIV, [fromNumeric(two_c), denom]);
+    }
+    return undefined;
+  }
+  // COS branch
+  if (eqNumeric(b, a)) {
+    // c · tan(x/2) / a
+    const numer = app(MUL, [fromNumeric(c), tanHalf]);
+    return app(DIV, [numer, fromNumeric(a)]);
+  }
+  if (eqNumeric(b, negA)) {
+    // -c / (a · tan(x/2))
+    const negC = negNumeric(c);
+    const denom = app(MUL, [fromNumeric(a), tanHalf]);
+    return app(DIV, [fromNumeric(negC), denom]);
+  }
+  return undefined;
 }
 
 function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
