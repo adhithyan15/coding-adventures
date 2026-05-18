@@ -2,9 +2,9 @@ use board_vm_ir::{
     parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_ADC_READ, CAP_CAN_OPEN,
     CAP_CAN_READ, CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ,
     CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE,
-    CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_OPEN,
-    CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN,
-    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE,
+    CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_RESOLVE, CAP_NETWORK_TCP_CLOSE,
+    CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_CLOSE,
+    CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE,
     CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET,
     CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS,
     CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE,
@@ -115,6 +115,9 @@ pub const NETWORK_WIFI_DISCONNECT_CODE_LEN: usize = 4;
 pub const NETWORK_WIFI_DISCONNECT_MODULE_LEN: usize = 14;
 pub const NETWORK_WIFI_STATUS_CODE_LEN: usize = 5;
 pub const NETWORK_WIFI_STATUS_MODULE_LEN: usize = 15;
+pub const NETWORK_DNS_RESOLVE_CODE_LEN: usize = 9;
+pub const NETWORK_DNS_RESOLVE_MAX_MODULE_LEN: usize =
+    8 + 1 + NETWORK_DNS_RESOLVE_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
 pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
@@ -400,6 +403,13 @@ pub struct NetworkWifiDisconnectProgram {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct NetworkWifiStatusProgram {
     pub interface: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkDnsResolveProgram<'a> {
+    pub interface: u8,
+    pub hostname: &'a [u8],
     pub max_stack: u8,
 }
 
@@ -691,6 +701,16 @@ impl NetworkWifiStatusProgram {
         Self {
             interface,
             max_stack: 1,
+        }
+    }
+}
+
+impl<'a> NetworkDnsResolveProgram<'a> {
+    pub const fn new(interface: u8, hostname: &'a [u8]) -> Self {
+        Self {
+            interface,
+            hostname,
+            max_stack: 2,
         }
     }
 }
@@ -2740,6 +2760,57 @@ pub fn write_network_wifi_status_module(
     Ok(offset)
 }
 
+pub fn network_dns_resolve_module_len(hostname_len: usize) -> Result<usize, HostError> {
+    if hostname_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + NETWORK_DNS_RESOLVE_CODE_LEN + 1 + hostname_len)
+}
+
+pub fn write_network_dns_resolve_code(
+    program: NetworkDnsResolveProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.hostname.len() > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_DNS_RESOLVE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_push_bytes(out, &mut offset, 0, program.hostname.len() as u8)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_DNS_RESOLVE)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_dns_resolve_module(
+    program: NetworkDnsResolveProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len = network_dns_resolve_module_len(program.hostname.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_DNS_RESOLVE_CODE_LEN];
+    let code_len = write_network_dns_resolve_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]).const_pool(program.hostname),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_dns(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn spi_transfer_module_len(write_len: usize) -> Result<usize, HostError> {
     if write_len > MAX_BYTE_BUFFER_LEN {
         return Err(HostError::ProgramTooLarge);
@@ -3273,10 +3344,10 @@ mod tests {
         collect_required_capabilities, parse_module, validate, CapabilitySet, ModuleError,
         CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ, CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_I2C_OPEN,
         CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
-        CAP_LED_MATRIX_FRAME, CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
-        CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
-        CAP_NETWORK_UDP_WRITE, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
-        CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
+        CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_RESOLVE, CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_OPEN,
+        CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN,
+        CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET,
+        CAP_SPI_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
     };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -3391,6 +3462,10 @@ mod tests {
     ];
     const NETWORK_WIFI_STATUS_MODULE_HEX: [u8; NETWORK_WIFI_STATUS_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x12, 0x00, 0x40, 0x44, 0x50, 0x00,
+    ];
+    const NETWORK_DNS_RESOLVE_EXAMPLE_MODULE_HEX: [u8; 26] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x09, 0x12, 0x00, 0x16, 0x00, 0x00, 0x07,
+        0x40, 0x45, 0x50, 0x07, 0x65, 0x78, 0x61, 0x6D, 0x70, 0x6C, 0x65,
     ];
     const RTC_NOW_MODULE_HEX: [u8; RTC_NOW_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x03, 0x40, 0x34, 0x50, 0x00,
@@ -3886,6 +3961,26 @@ mod tests {
         validate(&parsed, CapabilitySet::blink_mvp().with_network_wifi(), 1).unwrap();
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_NETWORK_WIFI_DISCONNECT]);
+    }
+
+    #[test]
+    fn builds_network_dns_resolve_module() {
+        let module_len = network_dns_resolve_module_len(7).unwrap();
+        let mut module = [0u8; 26];
+        let len = write_network_dns_resolve_module(
+            NetworkDnsResolveProgram::new(0, b"example"),
+            &mut module,
+        )
+        .unwrap();
+        assert_eq!(module_len, NETWORK_DNS_RESOLVE_EXAMPLE_MODULE_HEX.len());
+        assert_eq!(len, module_len);
+        assert_eq!(module, NETWORK_DNS_RESOLVE_EXAMPLE_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_dns(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_DNS_RESOLVE]);
     }
 
     #[test]

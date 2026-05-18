@@ -25,7 +25,7 @@ use board_vm_device::{
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_UDP_AND_LED_MATRIX_CAPABILITIES,
-    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_UDP_WIFI_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_UDP_WIFI_DNS_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_RTC_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES, BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_CAPABILITIES,
@@ -537,7 +537,8 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
         .with_storage()
         .with_network_tcp()
         .with_network_udp()
-        .with_network_wifi(),
+        .with_network_wifi()
+        .with_network_dns(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
@@ -604,6 +605,10 @@ pub trait UnoR4Backend {
     }
 
     fn supports_network_wifi(&self) -> bool {
+        false
+    }
+
+    fn supports_network_dns(&self) -> bool {
         false
     }
 
@@ -743,6 +748,10 @@ pub trait UnoR4Backend {
         Err(HalError::UnsupportedMode)
     }
 
+    fn resolve_network_dns(&mut self, _interface: u8, _hostname: &[u8]) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
     fn transfer_spi(
         &mut self,
         _bus: u8,
@@ -849,6 +858,8 @@ where
             self.target.supports_wifi_module && self.backend.supports_network_udp();
         capabilities.network_wifi =
             self.target.supports_wifi_module && self.backend.supports_network_wifi();
+        capabilities.network_dns =
+            self.target.supports_wifi_module && self.backend.supports_network_dns();
         capabilities
     }
 }
@@ -1077,6 +1088,17 @@ where
         }
         let interface = normalize_network_interface(interface)?;
         self.backend.status_network_wifi(interface)
+    }
+
+    fn network_dns_resolve(&mut self, interface: u16, hostname: &[u8]) -> Result<u32, HalError> {
+        if !self.target.supports_wifi_module {
+            return Err(HalError::UnsupportedMode);
+        }
+        let interface = normalize_network_interface(interface)?;
+        if hostname.is_empty() {
+            return Err(HalError::InvalidPin);
+        }
+        self.backend.resolve_network_dns(interface, hostname)
     }
 
     fn store_program(
@@ -1396,8 +1418,9 @@ fn uno_r4_device_descriptor_for_capabilities(
             && capabilities.network_tcp
             && capabilities.network_udp
             && capabilities.network_wifi
+            && capabilities.network_dns
         {
-            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_UDP_WIFI_AND_LED_MATRIX_CAPABILITIES
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_UDP_WIFI_DNS_AND_LED_MATRIX_CAPABILITIES
         } else if target.supports_wifi_module
             && target.supports_led_matrix
             && capabilities.pwm
@@ -1699,6 +1722,7 @@ mod tests {
         NetworkWifiAssociate(u8, Vec<u8>, Vec<u8>),
         NetworkWifiDisconnect(u8),
         NetworkWifiStatus(u8),
+        NetworkDnsResolve(u8, Vec<u8>),
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -1791,6 +1815,10 @@ mod tests {
         }
 
         fn supports_network_wifi(&self) -> bool {
+            true
+        }
+
+        fn supports_network_dns(&self) -> bool {
             true
         }
 
@@ -1968,6 +1996,12 @@ mod tests {
         fn status_network_wifi(&mut self, interface: u8) -> Result<u8, HalError> {
             self.events.push(Event::NetworkWifiStatus(interface));
             Ok(6)
+        }
+
+        fn resolve_network_dns(&mut self, interface: u8, hostname: &[u8]) -> Result<u32, HalError> {
+            self.events
+                .push(Event::NetworkDnsResolve(interface, hostname.to_vec()));
+            Ok(0xc0a8_012a)
         }
 
         fn transfer_spi(
@@ -2199,7 +2233,7 @@ mod tests {
         assert!(descriptor.supports_store_program);
         assert_eq!(
             descriptor.capabilities.len(),
-            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_UDP_WIFI_AND_LED_MATRIX_CAPABILITIES
+            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_UDP_WIFI_DNS_AND_LED_MATRIX_CAPABILITIES
                 .len()
         );
         assert!(descriptor
@@ -2220,6 +2254,10 @@ mod tests {
         assert!(descriptor.capabilities.iter().any(|capability| {
             capability.id == board_vm_ir::CAP_NETWORK_WIFI_ASSOCIATE
                 && capability.name == "network.wifi.associate"
+        }));
+        assert!(descriptor.capabilities.iter().any(|capability| {
+            capability.id == board_vm_ir::CAP_NETWORK_DNS_RESOLVE
+                && capability.name == "network.dns.resolve"
         }));
         assert!(UNO_R4_WIFI
             .capabilities
@@ -2307,6 +2345,9 @@ mod tests {
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_WIFI_STATUS));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_DNS_RESOLVE));
         assert!(!UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_TCP_OPEN));
@@ -2316,6 +2357,9 @@ mod tests {
         assert!(!UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_WIFI_ASSOCIATE));
+        assert!(!UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_DNS_RESOLVE));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -2721,6 +2765,19 @@ mod tests {
     }
 
     #[test]
+    fn network_dns_resolve_runs_through_wifi_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        let ipv4 = board.network_dns_resolve(0, b"example").unwrap();
+
+        assert_eq!(ipv4, 0xc0a8_012a);
+        assert_eq!(
+            board.backend().events,
+            vec![Event::NetworkDnsResolve(0, b"example".to_vec())]
+        );
+    }
+
+    #[test]
     fn network_sockets_reject_non_wifi_target_or_unknown_interface() {
         let mut minima = UnoR4Board::minima(FakeBackend::new());
         assert_eq!(
@@ -2750,6 +2807,10 @@ mod tests {
             minima.network_wifi_associate(0, b"ssid", b"pass"),
             Err(HalError::UnsupportedMode)
         );
+        assert_eq!(
+            minima.network_dns_resolve(0, b"example"),
+            Err(HalError::UnsupportedMode)
+        );
 
         let mut wifi = UnoR4Board::wifi(FakeBackend::new());
         assert_eq!(
@@ -2758,9 +2819,14 @@ mod tests {
         );
         assert_eq!(wifi.network_wifi_status(1), Err(HalError::InvalidPin));
         assert_eq!(
+            wifi.network_dns_resolve(1, b"example"),
+            Err(HalError::InvalidPin)
+        );
+        assert_eq!(
             wifi.network_wifi_associate(0, b"", b"pass"),
             Err(HalError::InvalidPin)
         );
+        assert_eq!(wifi.network_dns_resolve(0, b""), Err(HalError::InvalidPin));
     }
 
     #[test]

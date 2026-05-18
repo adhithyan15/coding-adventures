@@ -143,6 +143,8 @@ def test_known_targets_are_exposed_from_rust_registry():
     assert "network.ipv4" in uno_r4_wifi.capabilities
     assert "network.tcp" in uno_r4_wifi.capabilities
     assert "network.udp" in uno_r4_wifi.capabilities
+    assert "network.dns" in uno_r4_wifi.capabilities
+    assert "network.dns.resolve" in uno_r4_wifi.capabilities
     assert "network.wifi.associate" in uno_r4_wifi.capabilities
     assert "network.wifi.disconnect" in uno_r4_wifi.capabilities
     assert "network.wifi.status" in uno_r4_wifi.capabilities
@@ -153,12 +155,12 @@ def test_known_targets_are_exposed_from_rust_registry():
             "name": "WiFiS3",
             "transport": "wifi",
             "chip": "ESP32-S3 coprocessor",
-            "protocols": ["ipv4", "tcp", "udp"],
+            "protocols": ["ipv4", "tcp", "udp", "dns"],
             "max_sockets": 4,
             "notes": "Onboard WiFiS3 network interface; Board VM commands use the shared COBS/CRC wire protocol over TCP endpoints.",
         }
     ]
-    assert uno_r4_wifi.network_protocols == ["ipv4", "tcp", "udp"]
+    assert uno_r4_wifi.network_protocols == ["ipv4", "tcp", "udp", "dns"]
     assert uno_r4_wifi.supports_tcp_network is True
     assert uno_r4_wifi.supports_udp_network is True
     assert uno_r4_wifi.supports_wifi is True

@@ -61,6 +61,8 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "network.ipv4"
         assert_includes uno_r4_wifi["capabilities"], "network.tcp"
         assert_includes uno_r4_wifi["capabilities"], "network.udp"
+        assert_includes uno_r4_wifi["capabilities"], "network.dns"
+        assert_includes uno_r4_wifi["capabilities"], "network.dns.resolve"
         assert_equal ["wifi", "bluetooth_le"], uno_r4_wifi["wireless"].map { |item| item["transport"] }
         assert uno_r4_wifi["wireless"].find { |item| item["transport"] == "wifi" }["ota_update"]
         assert_equal [
@@ -69,7 +71,7 @@ module CodingAdventures
             "name" => "WiFiS3",
             "transport" => "wifi",
             "chip" => "ESP32-S3 coprocessor",
-            "protocols" => ["ipv4", "tcp", "udp"],
+            "protocols" => ["ipv4", "tcp", "udp", "dns"],
             "max_sockets" => 4,
             "notes" => "Onboard WiFiS3 network interface; Board VM commands use the shared COBS/CRC wire protocol over TCP endpoints."
           }

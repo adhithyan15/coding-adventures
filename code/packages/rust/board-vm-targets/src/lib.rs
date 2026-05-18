@@ -33,6 +33,7 @@ pub enum NetworkProtocol {
     Ipv4,
     Tcp,
     Udp,
+    Dns,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -229,7 +230,7 @@ pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 32] = [
     "program.store",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 50] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 52] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -237,6 +238,7 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 50] = [
     "network.ipv4",
     "network.tcp",
     "network.udp",
+    "network.dns",
     "network.tcp.open",
     "network.tcp.write",
     "network.tcp.read",
@@ -248,6 +250,7 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 50] = [
     "network.wifi.associate",
     "network.wifi.disconnect",
     "network.wifi.status",
+    "network.dns.resolve",
     "gpio.open",
     "gpio.write",
     "gpio.read",
@@ -332,10 +335,11 @@ pub const UNO_R4_WIFI_LED_MATRIX: LedMatrixInfo = LedMatrixInfo {
     columns: 12,
 };
 
-pub const UNO_R4_WIFI_NETWORK_PROTOCOLS: [NetworkProtocol; 3] = [
+pub const UNO_R4_WIFI_NETWORK_PROTOCOLS: [NetworkProtocol; 4] = [
     NetworkProtocol::Ipv4,
     NetworkProtocol::Tcp,
     NetworkProtocol::Udp,
+    NetworkProtocol::Dns,
 ];
 
 pub const UNO_R4_WIFI_NETWORK_INTERFACES: [NetworkInterfaceInfo; 1] = [NetworkInterfaceInfo {
@@ -1133,6 +1137,7 @@ mod tests {
         assert!(uno_r4_wifi.capabilities.contains(&"network.ipv4"));
         assert!(uno_r4_wifi.capabilities.contains(&"network.tcp"));
         assert!(uno_r4_wifi.capabilities.contains(&"network.udp"));
+        assert!(uno_r4_wifi.capabilities.contains(&"network.dns"));
         assert!(uno_r4_wifi.capabilities.contains(&"network.tcp.open"));
         assert!(uno_r4_wifi.capabilities.contains(&"network.tcp.write"));
         assert!(uno_r4_wifi.capabilities.contains(&"network.tcp.read"));
@@ -1146,6 +1151,7 @@ mod tests {
             .capabilities
             .contains(&"network.wifi.disconnect"));
         assert!(uno_r4_wifi.capabilities.contains(&"network.wifi.status"));
+        assert!(uno_r4_wifi.capabilities.contains(&"network.dns.resolve"));
         assert_eq!(
             uno_r4_wifi.network_interfaces,
             &UNO_R4_WIFI_NETWORK_INTERFACES
@@ -1162,6 +1168,7 @@ mod tests {
                 NetworkProtocol::Ipv4,
                 NetworkProtocol::Tcp,
                 NetworkProtocol::Udp,
+                NetworkProtocol::Dns,
             ]
         );
         assert_eq!(interface.max_sockets, 4);
