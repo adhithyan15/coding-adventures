@@ -37,7 +37,7 @@ Source snapshot:
 | EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | descriptor metadata and bounded bytecode read/write implemented | `storage.write`, `storage.read`; stored program / KV layers later |
 | Watchdog | Renesas WDT library | descriptor metadata and direct bytecode operations implemented | `watchdog.configure`, `watchdog.kick` |
 | OPAMP | UNO R4 OPAMP library | pending | analog board-specific capability after ADC/DAC |
-| WiFi | WiFiS3 library through onboard network module | descriptor metadata, network capability strings, first TCP/UDP socket bytecode tranches, and bounded WiFi association control implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`, `network.tcp.open`, `network.tcp.write`, `network.tcp.read`, `network.tcp.close`, `network.udp.open`, `network.udp.write`, `network.udp.read`, `network.udp.close`, `network.wifi.associate`, `network.wifi.disconnect`, `network.wifi.status`; DNS later |
+| WiFi | WiFiS3 library through onboard network module | descriptor metadata, network capability strings, first TCP/UDP socket bytecode tranches, bounded WiFi association control, and bounded DNS resolution implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`, `network.dns`, `network.tcp.open`, `network.tcp.write`, `network.tcp.read`, `network.tcp.close`, `network.udp.open`, `network.udp.write`, `network.udp.read`, `network.udp.close`, `network.wifi.associate`, `network.wifi.disconnect`, `network.wifi.status`, `network.dns.resolve` |
 | USB/HID | TinyUSB device support | pending | transport/device descriptors first; HID later |
 | OTA/SDU | OTAUpdate and SDU libraries | pending | firmware-management capability, separate from bytecode VM |
 
@@ -92,20 +92,22 @@ reject conflicting handles.
    EEPROM/data-flash area, and `storage.write` plus `storage.read` establish the
    bounded byte-buffer bytecode tranche for that region. WiFi/network now has
    Rust-owned descriptor metadata for the onboard WiFiS3 interface plus
-   `network.ipv4`, `network.tcp`, and `network.udp` capability strings surfaced
-   through the language target APIs. `network.tcp.open`, `network.tcp.write`,
-   `network.tcp.read`, `network.tcp.close`, `network.udp.open`,
+   `network.ipv4`, `network.tcp`, `network.udp`, and `network.dns` capability
+   strings surfaced through the language target APIs. `network.tcp.open`,
+   `network.tcp.write`, `network.tcp.read`, `network.tcp.close`, `network.udp.open`,
    `network.udp.write`, `network.udp.read`, and `network.udp.close` now
    establish the first socket bytecode tranches with runtime handle-table
    ownership, host builders, device capability descriptors, and UNO R4 WiFi
    backend hooks. `network.wifi.associate`, `network.wifi.disconnect`, and
    `network.wifi.status` now establish bounded association control over the
-   same byte-buffer operand path used by storage and bus transfers. `program.store` now
-   has a protocol capability descriptor, `STORE_PROGRAM` device dispatch,
-   runtime HAL hook, and an initial UNO R4 storage-backed slot-0 layout that
-   writes a compact header plus module chunks through the same bounded storage
-   substrate. Higher-level KV storage, DNS, and deeper socket controls remain
-   later capability tranches.
+   same byte-buffer operand path used by storage and bus transfers, while
+   `network.dns.resolve` establishes the first hostname-to-IPv4 bytecode
+   tranche over that bounded byte-buffer operand path. `program.store` now has
+   a protocol capability descriptor, `STORE_PROGRAM` device dispatch, runtime
+   HAL hook, and an initial UNO R4 storage-backed slot-0 layout that writes a
+   compact header plus module chunks through the same bounded storage substrate.
+   Higher-level KV storage, DNS message/client policy, and deeper socket
+   controls remain later capability tranches.
 
 Every tranche should include the same layers: spec entry, IR/protocol capability id,
 runtime HAL method, UNO R4 target descriptor, firmware backend, host builder,

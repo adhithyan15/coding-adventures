@@ -338,6 +338,7 @@ pub enum LanguageNetworkProtocol {
     Ipv4,
     Tcp,
     Udp,
+    Dns,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -645,6 +646,7 @@ pub const fn network_protocol_name(protocol: LanguageNetworkProtocol) -> &'stati
         LanguageNetworkProtocol::Ipv4 => "ipv4",
         LanguageNetworkProtocol::Tcp => "tcp",
         LanguageNetworkProtocol::Udp => "udp",
+        LanguageNetworkProtocol::Dns => "dns",
     }
 }
 
@@ -1248,6 +1250,7 @@ fn language_network_protocol(protocol: TargetNetworkProtocol) -> LanguageNetwork
         TargetNetworkProtocol::Ipv4 => LanguageNetworkProtocol::Ipv4,
         TargetNetworkProtocol::Tcp => LanguageNetworkProtocol::Tcp,
         TargetNetworkProtocol::Udp => LanguageNetworkProtocol::Udp,
+        TargetNetworkProtocol::Dns => LanguageNetworkProtocol::Dns,
     }
 }
 
@@ -3806,6 +3809,7 @@ mod tests {
         assert!(uno.capabilities.contains(&"network.ipv4".to_owned()));
         assert!(uno.capabilities.contains(&"network.tcp".to_owned()));
         assert!(uno.capabilities.contains(&"network.udp".to_owned()));
+        assert!(uno.capabilities.contains(&"network.dns".to_owned()));
         assert!(uno.capabilities.contains(&"network.tcp.open".to_owned()));
         assert!(uno.capabilities.contains(&"network.tcp.write".to_owned()));
         assert!(uno.capabilities.contains(&"network.tcp.read".to_owned()));
@@ -3821,6 +3825,7 @@ mod tests {
             .capabilities
             .contains(&"network.wifi.disconnect".to_owned()));
         assert!(uno.capabilities.contains(&"network.wifi.status".to_owned()));
+        assert!(uno.capabilities.contains(&"network.dns.resolve".to_owned()));
         assert_eq!(uno.network_interfaces.len(), 1);
         let uno_network = &uno.network_interfaces[0];
         assert_eq!(uno_network.interface, 0);
@@ -3833,6 +3838,7 @@ mod tests {
                 LanguageNetworkProtocol::Ipv4,
                 LanguageNetworkProtocol::Tcp,
                 LanguageNetworkProtocol::Udp,
+                LanguageNetworkProtocol::Dns,
             ]
         );
         assert_eq!(uno_network.max_sockets, 4);

@@ -149,6 +149,13 @@ The first tranche intentionally keeps credentials in `ByteBuffer` operands so
 language frontends stay thin over Rust-owned bytecode assembly and board ports
 can later decide whether to swap in a credential-store handle.
 
+DNS resolution is the first hostname-oriented network tranche. `network.dns.resolve`
+accepts an interface id plus hostname bytes and returns an IPv4 address encoded
+as a `u32`. The VM keeps the operation transport-neutral and delegates the
+actual resolver policy to the board adapter through `BoardHal::network_dns_resolve`,
+so frontends can keep emitting bounded bytecode while board ports decide whether
+to use WiFi firmware DNS helpers, a later DNS message stack, or cached entries.
+
 `HandleToken` is private to the board adapter. The portable VM only sees compact
 `Handle` ids.
 
@@ -163,6 +170,7 @@ CALL_U8 0x10 -> time.sleep_ms
 CALL_U8 0x3a -> network.tcp.open
 CALL_U8 0x3e -> network.udp.open
 CALL_U8 0x42 -> network.wifi.associate
+CALL_U8 0x45 -> network.dns.resolve
 ```
 
 Each handler:

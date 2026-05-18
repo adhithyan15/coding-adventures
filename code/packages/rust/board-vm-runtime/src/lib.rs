@@ -4,13 +4,13 @@ use board_vm_ir::{
     decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ,
     CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE,
     CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
-    CAP_LED_MATRIX_FRAME, CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
-    CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
-    CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT,
-    CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
-    CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
-    CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
-    MAX_BYTE_BUFFER_LEN,
+    CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_RESOLVE, CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_OPEN,
+    CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN,
+    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE,
+    CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET,
+    CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS,
+    CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE,
+    CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -283,6 +283,10 @@ pub trait BoardHal {
     }
 
     fn network_wifi_status(&mut self, _interface: u16) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn network_dns_resolve(&mut self, _interface: u16, _hostname: &[u8]) -> Result<u32, HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -1065,6 +1069,18 @@ where
                         })?;
                 self.push(Value::U8(status), ip)
             }
+            CAP_NETWORK_DNS_RESOLVE => {
+                let hostname = self.pop_bytes(ip)?;
+                let interface = self.pop_u16(ip)?;
+                let ipv4 = self
+                    .hal
+                    .network_dns_resolve(interface, hostname.as_slice())
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })?;
+                self.push(Value::U32(ipv4), ip)
+            }
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -1349,6 +1365,7 @@ mod tests {
         NetworkWifiAssociate(u16, ByteBuffer, ByteBuffer),
         NetworkWifiDisconnect(u16),
         NetworkWifiStatus(u16),
+        NetworkDnsResolve(u16, ByteBuffer),
         LedMatrixFrame([u32; 3]),
     }
 
@@ -1384,6 +1401,7 @@ mod tests {
                 .with_network_tcp()
                 .with_network_udp()
                 .with_network_wifi()
+                .with_network_dns()
                 .with_led_matrix()
         }
 
@@ -1657,6 +1675,18 @@ mod tests {
         fn network_wifi_status(&mut self, interface: u16) -> Result<u8, HalError> {
             self.events.push(Event::NetworkWifiStatus(interface));
             Ok(6)
+        }
+
+        fn network_dns_resolve(
+            &mut self,
+            interface: u16,
+            hostname: &[u8],
+        ) -> Result<u32, HalError> {
+            self.events.push(Event::NetworkDnsResolve(
+                interface,
+                ByteBuffer::from_slice(hostname).unwrap(),
+            ));
+            Ok(0xc0a8_012a)
         }
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -2224,6 +2254,39 @@ mod tests {
                 Event::NetworkWifiStatus(0),
                 Event::NetworkWifiDisconnect(0),
             ]
+        );
+    }
+
+    #[test]
+    fn network_dns_resolve_dispatches_hostname_and_returns_ipv4() {
+        let mut runtime: Runtime<FakeHal, 2, 1> = Runtime::new(FakeHal::new());
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[
+                0x12,
+                0x00,
+                0x16,
+                0x00,
+                0x00,
+                0x07,
+                0x40,
+                CAP_NETWORK_DNS_RESOLVE as u8,
+                0x50,
+            ],
+            const_pool: b"example",
+        };
+
+        let report = runtime.run_module(&module, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_value, Value::U32(0xc0a8_012a));
+        assert_eq!(
+            runtime.hal().events,
+            vec![Event::NetworkDnsResolve(
+                0,
+                ByteBuffer::from_slice(b"example").unwrap()
+            )]
         );
     }
 
