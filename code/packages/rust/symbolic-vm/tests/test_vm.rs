@@ -2533,14 +2533,119 @@ fn phase34_fallthrough_a_less_than_b() {
 }
 
 #[test]
-fn phase34_fallthrough_a_equals_b() {
-    // ∫ 1/(1 + sin x) dx — a² = b² = 1.  Degenerate form deferred.
+fn phase35_a_equals_b_now_closes() {
+    // ∫ 1/(1 + sin x) dx — Phase 35 closes the degenerate `a² = b²` case
+    // that Phase 34 previously left unevaluated. Closed form: -2/(tan(x/2)+1).
     let integrand = apply(
         sym(DIV),
         vec![int(1), apply(sym(ADD), vec![int(1), apply(sym(SIN), vec![sym("x")])])],
     );
-    let result = integrate(integrand);
-    assert!(is_unevaluated_integrate(&result));
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-2.0_f64, -1.0, -0.3, 0.3, 1.0, 2.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (1.0 + x_val.sin());
+        assert!((got - expected).abs() < 1e-4);
+    }
+}
+
+#[test]
+fn phase35_one_minus_sin_closes() {
+    // ∫ 1/(2 − 2·sin x) dx — sin, b = −a.  Closed form: 2/(2·(1−tan(x/2))).
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(1),
+            apply(
+                sym(SUB),
+                vec![int(2), apply(sym(MUL), vec![int(2), apply(sym(SIN), vec![sym("x")])])],
+            ),
+        ],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-2.0_f64, -1.0, -0.3, 0.3, 1.0, 2.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (2.0 - 2.0 * x_val.sin());
+        assert!((got - expected).abs() < 1e-3);
+    }
+}
+
+#[test]
+fn phase35_one_plus_cos_closes() {
+    // ∫ 1/(1 + cos x) dx — cos, b = a.  Closed form: tan(x/2).
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(1), apply(sym(COS), vec![sym("x")])])],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-2.0_f64, -1.0, -0.3, 0.3, 1.0, 2.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (1.0 + x_val.cos());
+        assert!((got - expected).abs() < 1e-4);
+    }
+}
+
+#[test]
+fn phase35_one_minus_cos_closes() {
+    // ∫ 1/(1 − cos x) dx — cos, b = −a.  Closed form: −cot(x/2).
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(SUB), vec![int(1), apply(sym(COS), vec![sym("x")])])],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    // Sample on (0, π) — avoid x = 0, 2π where 1 − cos x = 0.
+    for &x_val in &[0.5_f64, 1.0, 1.5, 2.0, 2.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (1.0 - x_val.cos());
+        assert!((got - expected).abs() < 1e-3);
+    }
+}
+
+#[test]
+fn phase35_with_numerator_coefficient() {
+    // ∫ 5/(2 + 2·sin x) dx — coefficient c=5 scales the closed form.
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(5),
+            apply(
+                sym(ADD),
+                vec![int(2), apply(sym(MUL), vec![int(2), apply(sym(SIN), vec![sym("x")])])],
+            ),
+        ],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-2.0_f64, -1.0, -0.3, 0.3, 1.0, 2.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 5.0 / (2.0 + 2.0 * x_val.sin());
+        assert!((got - expected).abs() < 1e-3);
+    }
+}
+
+#[test]
+fn phase35_rational_coefficients() {
+    // ∫ 1/((3/2) + (3/2)·cos x) dx — rational a = b.
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(1),
+            apply(
+                sym(ADD),
+                vec![rat(3, 2), apply(sym(MUL), vec![rat(3, 2), apply(sym(COS), vec![sym("x")])])],
+            ),
+        ],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-2.0_f64, -1.0, -0.3, 0.3, 1.0, 2.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (1.5 + 1.5 * x_val.cos());
+        assert!((got - expected).abs() < 1e-3);
+    }
 }
 
 #[test]
