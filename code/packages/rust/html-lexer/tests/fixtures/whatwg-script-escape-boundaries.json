@@ -1,0 +1,566 @@
+{
+  "cases": [
+    {
+      "description": "Script data state boundary case `script-data-comment-open-then-end-tag`",
+      "diagnostics": [],
+      "id": "script-data-comment-open-then-end-tag",
+      "initial_state": "Script data state",
+      "input": "a<!--b</script>c",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=a<!--b)",
+        "EndTag(name=script)",
+        "Text(data=c)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data state boundary case `script-data-comment-close-returns-to-script`",
+      "diagnostics": [],
+      "id": "script-data-comment-close-returns-to-script",
+      "initial_state": "Script data state",
+      "input": "a<!--b-->c</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=a<!--b-->c)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data state boundary case `script-data-comment-eof`",
+      "diagnostics": [
+        "eof-in-script-html-comment-like-text"
+      ],
+      "id": "script-data-comment-eof",
+      "initial_state": "Script data state",
+      "input": "a<!--open",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=a<!--open)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data state boundary case `script-data-comment-null`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "script-data-comment-null",
+      "initial_state": "Script data state",
+      "input": "a<!--x\u0000y</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=a<!--x�y)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data state boundary case `script-data-double-escaped-inner-script`",
+      "diagnostics": [],
+      "id": "script-data-double-escaped-inner-script",
+      "initial_state": "Script data state",
+      "input": "a<!--<script>x</script>y</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=a<!--<script>x</script>y)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data less-than sign state boundary case `script-less-than-non-end`",
+      "diagnostics": [],
+      "id": "script-less-than-non-end",
+      "initial_state": "Script data less-than sign state",
+      "input": "x</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=<x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data less-than sign state boundary case `script-less-than-eof`",
+      "diagnostics": [],
+      "id": "script-less-than-eof",
+      "initial_state": "Script data less-than sign state",
+      "input": "",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=<)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data less-than sign state boundary case `script-less-than-end-tag-open`",
+      "diagnostics": [],
+      "id": "script-less-than-end-tag-open",
+      "initial_state": "Script data less-than sign state",
+      "input": "/script>tail",
+      "last_start_tag": "script",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escape start state boundary case `script-escape-start-nondash`",
+      "diagnostics": [],
+      "id": "script-escape-start-nondash",
+      "initial_state": "Script data escape start state",
+      "input": "x</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escape start state boundary case `script-escape-start-eof`",
+      "diagnostics": [],
+      "id": "script-escape-start-eof",
+      "initial_state": "Script data escape start state",
+      "input": "",
+      "last_start_tag": "script",
+      "tokens": [
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escape start state boundary case `script-escape-start-dash-dash`",
+      "diagnostics": [],
+      "id": "script-escape-start-dash-dash",
+      "initial_state": "Script data escape start state",
+      "input": "--x</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=--x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escape start dash state boundary case `script-escape-start-dash-nondash`",
+      "diagnostics": [],
+      "id": "script-escape-start-dash-nondash",
+      "initial_state": "Script data escape start dash state",
+      "input": "x</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escape start dash state boundary case `script-escape-start-dash-eof`",
+      "diagnostics": [],
+      "id": "script-escape-start-dash-eof",
+      "initial_state": "Script data escape start dash state",
+      "input": "",
+      "last_start_tag": "script",
+      "tokens": [
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state boundary case `script-escaped-end-tag`",
+      "diagnostics": [],
+      "id": "script-escaped-end-tag",
+      "initial_state": "Script data escaped state",
+      "input": "x</script>tail",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=x)",
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state boundary case `script-escaped-mismatched-end-tag`",
+      "diagnostics": [],
+      "id": "script-escaped-mismatched-end-tag",
+      "initial_state": "Script data escaped state",
+      "input": "x</style>y</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=x</style>y)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state boundary case `script-escaped-comment-close`",
+      "diagnostics": [],
+      "id": "script-escaped-comment-close",
+      "initial_state": "Script data escaped state",
+      "input": "x-->y</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=x-->y)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state boundary case `script-escaped-null`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "script-escaped-null",
+      "initial_state": "Script data escaped state",
+      "input": "x\u0000y</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=x�y)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state boundary case `script-escaped-eof`",
+      "diagnostics": [
+        "eof-in-script-html-comment-like-text"
+      ],
+      "id": "script-escaped-eof",
+      "initial_state": "Script data escaped state",
+      "input": "x",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=x)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped dash state boundary case `script-escaped-dash-second-dash`",
+      "diagnostics": [],
+      "id": "script-escaped-dash-second-dash",
+      "initial_state": "Script data escaped dash state",
+      "input": "-x</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=-x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped dash state boundary case `script-escaped-dash-less-than`",
+      "diagnostics": [],
+      "id": "script-escaped-dash-less-than",
+      "initial_state": "Script data escaped dash state",
+      "input": "<x</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=<x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped dash state boundary case `script-escaped-dash-null`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "script-escaped-dash-null",
+      "initial_state": "Script data escaped dash state",
+      "input": "\u0000x</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=�x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped dash state boundary case `script-escaped-dash-eof`",
+      "diagnostics": [
+        "eof-in-script-html-comment-like-text"
+      ],
+      "id": "script-escaped-dash-eof",
+      "initial_state": "Script data escaped dash state",
+      "input": "",
+      "last_start_tag": "script",
+      "tokens": [
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped dash dash state boundary case `script-escaped-dash-dash-close`",
+      "diagnostics": [],
+      "id": "script-escaped-dash-dash-close",
+      "initial_state": "Script data escaped dash dash state",
+      "input": ">x</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=>x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped dash dash state boundary case `script-escaped-dash-dash-more-dashes`",
+      "diagnostics": [],
+      "id": "script-escaped-dash-dash-more-dashes",
+      "initial_state": "Script data escaped dash dash state",
+      "input": "-->x</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=-->x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped dash dash state boundary case `script-escaped-dash-dash-null`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "script-escaped-dash-dash-null",
+      "initial_state": "Script data escaped dash dash state",
+      "input": "\u0000x</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=�x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped less-than sign state boundary case `script-escaped-less-than-non-special`",
+      "diagnostics": [],
+      "id": "script-escaped-less-than-non-special",
+      "initial_state": "Script data escaped less-than sign state",
+      "input": "x</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=<x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped less-than sign state boundary case `script-escaped-less-than-slash-end`",
+      "diagnostics": [],
+      "id": "script-escaped-less-than-slash-end",
+      "initial_state": "Script data escaped less-than sign state",
+      "input": "/script>tail",
+      "last_start_tag": "script",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped less-than sign state boundary case `script-escaped-less-than-uppercase-script`",
+      "diagnostics": [],
+      "id": "script-escaped-less-than-uppercase-script",
+      "initial_state": "Script data escaped less-than sign state",
+      "input": "SCRIPT>x</script>tail</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=<SCRIPT>x</script>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped less-than sign state boundary case `script-escaped-less-than-nonscript`",
+      "diagnostics": [],
+      "id": "script-escaped-less-than-nonscript",
+      "initial_state": "Script data escaped less-than sign state",
+      "input": "style>x</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=<style>x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data double escape start state boundary case `script-double-escape-start-script`",
+      "diagnostics": [],
+      "id": "script-double-escape-start-script",
+      "initial_state": "Script data double escape start state",
+      "input": ">x</script>tail</script>",
+      "last_start_tag": "script",
+      "temporary_buffer": "script",
+      "tokens": [
+        "Text(data=>x</script>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data double escape start state boundary case `script-double-escape-start-nonscript`",
+      "diagnostics": [],
+      "id": "script-double-escape-start-nonscript",
+      "initial_state": "Script data double escape start state",
+      "input": ">x</script>",
+      "last_start_tag": "script",
+      "temporary_buffer": "style",
+      "tokens": [
+        "Text(data=>x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data double escape start state boundary case `script-double-escape-start-eof`",
+      "diagnostics": [],
+      "id": "script-double-escape-start-eof",
+      "initial_state": "Script data double escape start state",
+      "input": "",
+      "last_start_tag": "script",
+      "temporary_buffer": "script",
+      "tokens": [
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data double escaped state boundary case `script-double-escaped-end-script`",
+      "diagnostics": [],
+      "id": "script-double-escaped-end-script",
+      "initial_state": "Script data double escaped state",
+      "input": "x</script>tail</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=x</script>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data double escaped state boundary case `script-double-escaped-null`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "script-double-escaped-null",
+      "initial_state": "Script data double escaped state",
+      "input": "x\u0000y</script>tail</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=x�y</script>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data double escaped state boundary case `script-double-escaped-eof`",
+      "diagnostics": [
+        "eof-in-script-html-comment-like-text"
+      ],
+      "id": "script-double-escaped-eof",
+      "initial_state": "Script data double escaped state",
+      "input": "x",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=x)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data double escaped dash dash state boundary case `script-double-escaped-dash-dash-close`",
+      "diagnostics": [],
+      "id": "script-double-escaped-dash-dash-close",
+      "initial_state": "Script data double escaped dash dash state",
+      "input": ">x</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=>x)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data double escaped dash state boundary case `script-double-escaped-dash-null`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "script-double-escaped-dash-null",
+      "initial_state": "Script data double escaped dash state",
+      "input": "\u0000x</script>tail</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=�x</script>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data double escaped less-than sign state boundary case `script-double-escaped-less-than-slash-script`",
+      "diagnostics": [],
+      "id": "script-double-escaped-less-than-slash-script",
+      "initial_state": "Script data double escaped less-than sign state",
+      "input": "/script>tail</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=/script>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data double escaped less-than sign state boundary case `script-double-escaped-less-than-nonslash`",
+      "diagnostics": [],
+      "id": "script-double-escaped-less-than-nonslash",
+      "initial_state": "Script data double escaped less-than sign state",
+      "input": "x</script>tail</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=x</script>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data double escape end state boundary case `script-double-escape-end-script`",
+      "diagnostics": [],
+      "id": "script-double-escape-end-script",
+      "initial_state": "Script data double escape end state",
+      "input": ">tail</script>",
+      "last_start_tag": "script",
+      "temporary_buffer": "script",
+      "tokens": [
+        "Text(data=>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data double escape end state boundary case `script-double-escape-end-nonscript`",
+      "diagnostics": [],
+      "id": "script-double-escape-end-nonscript",
+      "initial_state": "Script data double escape end state",
+      "input": ">tail</script>outer</script>",
+      "last_start_tag": "script",
+      "temporary_buffer": "style",
+      "tokens": [
+        "Text(data=>tail</script>outer)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data double escape end state boundary case `script-double-escape-end-eof`",
+      "diagnostics": [],
+      "id": "script-double-escape-end-eof",
+      "initial_state": "Script data double escape end state",
+      "input": "",
+      "last_start_tag": "script",
+      "temporary_buffer": "script",
+      "tokens": [
+        "EOF"
+      ]
+    }
+  ],
+  "description": "Script data escaped, double-escaped, escape-start, escape-end, NULL, EOF, and seeded continuation boundary recovery.",
+  "format": "whatwg-html-tokenizer-script-escape-boundaries/v1"
+}
