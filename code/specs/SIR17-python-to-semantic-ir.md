@@ -1,0 +1,230 @@
+# SIR17 — Python → Semantic IR
+
+## Status
+
+Second frontend for the narrow-waist Semantic IR (after
+[SIR11](SIR11-twig-to-semantic-ir.md) for Twig).  Consumes the
+existing [`python-parser`](../packages/rust/python-parser/) crate and
+produces a `semantic_ir::Module`.  Implemented as the Rust crate
+`python-to-semantic-ir`.
+
+## Pipeline
+
+```text
+Python source
+   │
+   ▼  python_parser::parse_python(source, "3.10")
+parser::grammar_parser::GrammarASTNode (generic CST)
+   │
+   ▼  python_to_semantic_ir::compile_source
+semantic_ir::Module                          (per SIR10 + SIR16)
+```
+
+`python-parser`'s output is a *generic* `GrammarASTNode` tree (every
+node is a `rule_name: String` + `children: Vec<ASTNodeOrToken>`), not
+a strongly-typed AST.  The frontend walks the tree by rule name and
+extracts SIR nodes directly.  No intermediate typed-AST layer in v0 —
+the per-rule extractors call into each other recursively.
+
+## Public API
+
+```rust
+pub fn compile(
+    tree:        &GrammarASTNode,
+    module_name: &str,
+) -> Result<semantic_ir::Module, PythonLowerError>;
+
+pub fn compile_source(
+    source:      &str,
+    module_name: &str,
+) -> Result<semantic_ir::Module, PythonLowerError>;  // parse + lower
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PythonLowerError {
+    pub message: String,
+    pub line:    usize,
+    pub column:  usize,
+}
+```
+
+The Python parser is called with version `"3.10"` by default; future
+versions of this frontend may accept a version parameter.
+
+## Subset coverage (v0 MVP)
+
+| Python source                          | SIR lowering                                                |
+|----------------------------------------|-------------------------------------------------------------|
+| `42`, `-7`                             | `IntLit { value }`                                          |
+| `3.14`                                 | `FloatLit { value }`                                        |
+| `True`, `False`                        | `BoolLit { value }`                                         |
+| `None`                                 | `NilLit`                                                    |
+| `"hello"`, `'world'`                   | `StrLit { value }`                                          |
+| `name` (reference)                     | `VarRef { name, scope }` with resolved scope                |
+| `x = 1`                                | `LetBinding` (first time) or `Assign` (subsequent)          |
+| `x + y`, `x - y`, `x * y`, `x / y`     | `BuiltinCall("+" / "-" / "*" / "/", [...])`                 |
+| `x % y`                                | `BuiltinCall("%", [x, y])`                                  |
+| `-x`                                   | `BuiltinCall("neg", [x])`                                   |
+| `not x`                                | `BuiltinCall("not", [x])`                                   |
+| `x == y`, `x != y`                     | `BuiltinCall("=" or "!=", [...])`                           |
+| `x < y`, `x > y`, `x <= y`, `x >= y`   | `BuiltinCall("<" / ">" / "<=" / ">=", [...])`               |
+| `x and y`, `x or y`                    | `LogicalAnd` / `LogicalOr`                                  |
+| `if c: ... elif c2: ... else: ...`     | `If` (nested for `elif` chains)                             |
+| `while c: body`                        | `While { cond: c, body }`                                   |
+| `for x in range(n): body`              | `ForRange { var: x, start: 0, stop: n, step: 1, body }`     |
+| `for x in range(a, b): body`           | `ForRange { var: x, start: a, stop: b, step: 1, body }`     |
+| `for x in range(a, b, c): body`        | `ForRange { var: x, start: a, stop: b, step: c, body }`     |
+| `for x in xs: body`                    | `ForEach { var: x, iter: xs, body }`                        |
+| `def f(a, b): body`                    | `Function { name: f, params: [a, b], body }`                |
+| `lambda a: expr`                       | `MakeClosure { fn_name: __lambda_N, captures, ... }`        |
+| `return expr`, `return`                | `Return { value: expr | NilLit }` (see "Return" below)      |
+| `f(arg1, arg2)`                        | `DirectCall` (known function) / `IndirectCall` (otherwise)  |
+| `print(x)`, `len(x)`, `range(n)`       | `BuiltinCall("print" / "len" / "range", ...)`               |
+| `[1, 2, 3]`                            | `SeqLit { items }`                                          |
+| `xs[i]`                                | `SeqIndex { seq: xs, index: i }`                            |
+| `xs[i] = v`                            | `SeqSet { seq: xs, index: i, value: v }`                    |
+| `{"a": 1, "b": 2}`                     | `MapLit { entries }`                                        |
+| `d[k]`                                 | `MapGet { map: d, key: k }`                                 |
+| `d[k] = v`                             | `MapSet { map: d, key: k, value: v }`                       |
+
+## Return statement
+
+Python's `return` is a statement in the AST.  The SIR doesn't have a
+`Return` node — every function body is a `Block` whose `value`
+expression IS the return value.  Lowering:
+
+- A function with a single `return expr` at the end: `body.value = expr`.
+- A function ending with statements that don't return: synthesize
+  `body.value = NilLit` (matches Python's implicit `None` return).
+- A function with early returns: this requires lifting to a control-
+  flow shape the IR can express.  For the v0 MVP, **early returns
+  are not supported** — frontends reject programs with non-tail
+  `return`s with a clear error pointing at the offending statement.
+
+Future extension: add a `Return` statement and lower control flow,
+or use a "linearise function via a state machine" pass.
+
+## Scope resolution
+
+Same model as Twig (SIR11):
+
+- `Local` — bound by `LetBinding` / `ForRange` / `ForEach` /
+  function parameters earlier in the same scope chain.
+- `Param` — function parameter.
+- `Capture` — captured from an enclosing function (closure body).
+- `Global` — top-level value defines.
+- `Builtin` — one of the predefined builtin names.
+
+Python lacks an explicit declaration syntax for locals — `x = 1`
+creates a local if `x` isn't already defined elsewhere in scope.
+The frontend implements first-occurrence detection: the first
+`assign(x, value)` in a function emits `LetBinding`, subsequent ones
+emit `Assign`.  The same rule applies inside loops.
+
+`global x` and `nonlocal x` declarations are **out of scope** in v0
+— the frontend rejects them.
+
+## Closures
+
+`lambda` and nested `def` become fresh top-level synthesised
+`Function`s with computed captures, matching SIR11's approach.  Free
+variables not in scope at the call site become `Capture`s.
+
+## Top-level
+
+Top-level Python is a sequence of statements at module scope.  The
+frontend synthesises:
+
+- A `_init` function for top-level value assignments (`x = 1`,
+  `def f(): ...` — function defs at module scope also become entries
+  here).
+- A `main` function for the synthetic entry point.  In v0, Python
+  doesn't have a `main()` convention, so the SIR's `main` is just
+  "run all top-level expressions sequentially after `_init`".
+
+Actually for cleanliness, we use a different approach: all top-level
+statements run inline as part of `main`.  This matches Python's
+actual execution model.
+
+```text
+SIR Module {
+    functions: [
+        f, g, h,          // user-defined defs
+        __lambda_0, ...,  // synthesised closure bodies
+        main,             // contains all top-level statements
+    ]
+    globals: [],          // empty in v0 (top-level vars become locals of main)
+}
+```
+
+## Error model
+
+Same shape as `TwigLowerError`:
+
+```rust
+PythonLowerError {
+    message: String,
+    line:    usize,
+    column:  usize,
+}
+```
+
+Errors:
+
+- Unresolved name reference
+- Empty function body
+- Early `return` (not at function tail)
+- `global` / `nonlocal` declaration encountered
+- Unsupported syntax (classes, exceptions, generators, comprehensions,
+  decorators, multi-assign, slicing, `with`, async)
+- Mismatched arity on builtins (`range` with > 3 args, `len` with > 1 arg)
+
+## Manifest computation
+
+The frontend declares features based on what it actually emits:
+
+| Trigger                             | Feature added                |
+|-------------------------------------|-------------------------------|
+| any `FloatLit`                      | `Float` (and `OptionalTypeAnnotations` is N/A)  |
+| any `Assign`                        | `MutableBindings`            |
+| any `While` / `ForRange` / `ForEach`| `Loops`                       |
+| any `SeqLit` / `SeqIndex` / `SeqSet`/ `SeqLen` | `Sequences`        |
+| any `MapLit` / `MapGet` / `MapSet`  | `Maps`                        |
+| any `LogicalAnd` / `LogicalOr`      | `ShortCircuit`               |
+| any `MakeClosure` / `IndirectCall`  | `Closures`                    |
+| any param with no annotation        | `DynamicTyping`              |
+
+## Tests
+
+`cargo test -p python-to-semantic-ir`:
+
+- Each lowering rule has a positive unit test.
+- Each error case (unsupported syntax, early return, etc.) has a
+  negative test.
+- Golden tests for canonical programs:
+  - Factorial (function, recursion, if/else).
+  - Fibonacci (function, while loop, mutation).
+  - List sum (for-each over sequence).
+  - Dict access.
+  - Closure adder (`adder(n) → lambda x: x + n`).
+- End-to-end integration through `semantic_ir::validate` (every
+  lowered module passes the validator).
+
+Coverage target ≥ 90%.
+
+## Out of scope (deferred)
+
+- Classes / methods / inheritance
+- Exception handling
+- Generators / `yield`
+- `async def` / `await`
+- Comprehensions
+- Decorators
+- Multi-target assignment / unpacking
+- Slicing
+- Default + keyword arguments
+- String methods
+- `with` / context managers
+- Module-level `import`
+- Sophisticated scope (PEP 3104 `nonlocal`)
+- f-string formatting beyond simple `{var}` interpolation (which
+  lowers to `+`-concatenation)
