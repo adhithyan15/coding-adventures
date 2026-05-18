@@ -533,6 +533,7 @@ members = [
     "window-core",
     "window-appkit",
     "window-win32",
+    "win32-event-loop",
     "window-c",
     "tcp-runtime",
     "text-core",

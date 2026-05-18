@@ -1,0 +1,28 @@
+[package]
+name = "win32-event-loop"
+version = "0.1.0"
+edition = "2021"
+description = "Decoupled Win32 message pump — typed Event enum + HWND-scoped handler routing"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/adhithyan15/coding-adventures"
+readme = "README.md"
+
+# This crate compiles on every platform (the public API is platform-agnostic
+# and the pure-translation table is testable on Linux/macOS too) but the
+# real GetMessage / DispatchMessage loop only runs on Windows. Non-Windows
+# builds produce a stub EventLoop whose `run` / `pump_once` methods return
+# a `LoopError::Unsupported` so dependents stay cross-buildable.
+
+[dependencies]
+thiserror = "1.0"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { version = "0.58", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Gdi",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Threading",
+] }
