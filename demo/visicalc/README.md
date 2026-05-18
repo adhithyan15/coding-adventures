@@ -121,9 +121,11 @@ contributor can pick them up:
    `editCommit` is where a real formula engine would plug in; see
    UI26 §11 and the separate formula-engine track for details.
 
-5. **No column-widths binding.** UI26 §2.1 also lists a `column-widths`
-   slot; the Grid emitter doesn't yet read it. Columns are flex-default.
-   Follow-up: pass `column-widths` through the Grid emitter.
+5. ~~**No column-widths binding.**~~ *Resolved.* The Grid emitter now
+   reads the optional `column-widths` slot ref (UI26 §2.1) and emits a
+   `<colgroup>` mapping each width to a `<col style={{ width: "${w}px" }} />`.
+   The VisiCalc host passes `state.columnWidths` through, so both
+   header and body cells share a stable per-column width.
 
 6. **No viewport virtualisation.** The host passes the full viewport
    slice; the Grid renders every row it sees. Row-windowing is the

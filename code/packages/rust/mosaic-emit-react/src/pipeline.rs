@@ -677,6 +677,17 @@ fn emit_grid_jsx(
     validate_slot_or_field_name(&headers_var).map_err(PipelineEmitError::UnsafeSlotName)?;
     validate_slot_or_field_name(&rows_var).map_err(PipelineEmitError::UnsafeSlotName)?;
 
+    // Optional column-widths slot ref — when bound, emit a `<colgroup>` so
+    // each column carries an explicit pixel width. The slot is expected to
+    // be `Array<number>` (in mosmodel: `slot column-widths : list<number>`)
+    // and is iterated alongside `headers` / cells.
+    let column_widths_var = find_slot_ref_prop(node, "column-widths")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    if let Some(v) = column_widths_var.as_deref() {
+        validate_slot_or_field_name(v).map_err(PipelineEmitError::UnsafeSlotName)?;
+    }
+
     // Optional state slot refs — render selection / editing highlights when present.
     let selected_row_var = find_slot_ref_prop(node, "selected-row")
         .map(to_camel_case_first_lower)
@@ -775,6 +786,19 @@ fn emit_grid_jsx(
 
     let mut out = String::new();
     writeln!(out, "{pad}<table{table_style_attr}>").unwrap();
+    // Emit a `<colgroup>` when column-widths is bound. Each `<col>` carries an
+    // inline `style={{ width: "${w}px" }}` so both `<thead>` `<th>` and
+    // `<tbody>` `<td>` pick up the column width without needing per-cell
+    // styling.
+    if let Some(widths_var) = column_widths_var.as_deref() {
+        writeln!(out, "{pad2}<colgroup>").unwrap();
+        writeln!(
+            out,
+            "{pad4}{{{widths_var}.map((w, c) => <col key={{c}} style={{{{ width: `${{w}}px` }}}} />)}}"
+        )
+        .unwrap();
+        writeln!(out, "{pad2}</colgroup>").unwrap();
+    }
     writeln!(out, "{pad2}<thead>").unwrap();
     writeln!(
         out,
@@ -2565,6 +2589,77 @@ mod tests {
                 "<table style={{ fontFamily: \"monospace\", borderCollapse: \"collapse\" }}>"
             ),
             "expected styled <table>, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI26 §2.1 — `column-widths : list<number>`.
+    ///
+    /// When the Grid layout binds `column-widths: slot: column-widths`, the
+    /// emitter writes a `<colgroup>` between the opening `<table>` and the
+    /// `<thead>`, mapping each width to a `<col style={{ width: "${w}px" }} />`.
+    /// This makes both `<th>` and `<td>` in the same column inherit the
+    /// width without per-cell styling.
+    #[test]
+    fn grid_column_widths_emits_colgroup_with_pixel_widths() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("col-widths", SlotType::List(Box::new(ListInnerType::Number)), true),
+            ],
+            vec![],
+        );
+        let l = grid_layout(
+            "G",
+            vec![
+                slot_ref_prop("headers", "col-labels"),
+                slot_ref_prop("rows", "data-rows"),
+                slot_ref_prop("column-widths", "col-widths"),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<colgroup>"),
+            "expected <colgroup>, got:\n{out}"
+        );
+        assert!(
+            out.contains("colWidths.map((w, c) => <col key={c} style={{ width: `${w}px` }} />)"),
+            "expected col mapper, got:\n{out}"
+        );
+        assert!(out.contains("</colgroup>"), "expected </colgroup>");
+        // colgroup must precede thead.
+        let cg = out.find("<colgroup>").unwrap();
+        let th = out.find("<thead>").unwrap();
+        assert!(cg < th, "expected <colgroup> before <thead>, got:\n{out}");
+    }
+
+    /// When `column-widths` is *not* bound the emitter must remain
+    /// backwards-compatible: no `<colgroup>` element appears and columns
+    /// are flex-default. This guards against accidental always-on emission.
+    #[test]
+    fn grid_without_column_widths_emits_no_colgroup() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![],
+        );
+        let l = grid_layout(
+            "G",
+            vec![
+                slot_ref_prop("headers", "col-labels"),
+                slot_ref_prop("rows", "data-rows"),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        assert!(
+            !result.output.contains("<colgroup>"),
+            "expected no <colgroup>, got:\n{}",
             result.output
         );
     }

@@ -6,12 +6,13 @@
 
 layout Grid {
   Grid [sheet] (
-    headers:      slot: column-headers,
-    rows:         slot: viewport-rows,
-    selected-row: slot: selected-row,
-    selected-col: slot: selected-col,
-    edit-row:     slot: edit-row,
-    edit-col:     slot: edit-col,
-    onNavigate:   emit: onNavigate
+    headers:       slot: column-headers,
+    rows:          slot: viewport-rows,
+    column-widths: slot: column-widths,
+    selected-row:  slot: selected-row,
+    selected-col:  slot: selected-col,
+    edit-row:      slot: edit-row,
+    edit-col:      slot: edit-col,
+    onNavigate:    emit: onNavigate
   )
 }
