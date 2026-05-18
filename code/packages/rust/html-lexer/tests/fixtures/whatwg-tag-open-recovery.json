@@ -1,0 +1,283 @@
+{
+  "cases": [
+    {
+      "description": "ordinary start and end tags bracket text",
+      "diagnostics": [],
+      "id": "basic-start-text-end",
+      "input": "<p>Hello</p>",
+      "tokens": [
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=Hello)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "tag names are ASCII-lowercased in start and end tags",
+      "diagnostics": [],
+      "id": "uppercase-start-and-end-tags",
+      "input": "<DIV>Hi</DIV>",
+      "tokens": [
+        "StartTag(name=div, attributes=[], self_closing=false)",
+        "Text(data=Hi)",
+        "EndTag(name=div)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "mixed-case tag names preserve non-ASCII text while lowering ASCII",
+      "diagnostics": [],
+      "id": "mixed-case-tag-name",
+      "input": "<My-Tag>ok</My-Tag>",
+      "tokens": [
+        "StartTag(name=my-tag, attributes=[], self_closing=false)",
+        "Text(data=ok)",
+        "EndTag(name=my-tag)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "tab after a tag name enters attribute parsing",
+      "diagnostics": [],
+      "id": "start-tag-tab-whitespace",
+      "input": "<p\tclass=x>",
+      "tokens": [
+        "StartTag(name=p, attributes=[class=x], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "line feed after a tag name enters attribute parsing",
+      "diagnostics": [],
+      "id": "start-tag-newline-whitespace",
+      "input": "<p\nclass=x>",
+      "tokens": [
+        "StartTag(name=p, attributes=[class=x], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "form feed is HTML whitespace after a tag name",
+      "diagnostics": [],
+      "id": "start-tag-form-feed-whitespace",
+      "input": "<p\fclass=x\f/>",
+      "tokens": [
+        "StartTag(name=p, attributes=[class=x], self_closing=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "form feed is HTML whitespace after an end-tag name",
+      "diagnostics": [],
+      "id": "end-tag-form-feed-before-close",
+      "input": "</p\f>",
+      "tokens": [
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "solidus after tag name marks a self-closing start tag",
+      "diagnostics": [],
+      "id": "self-closing-start-tag",
+      "input": "<br/>",
+      "tokens": [
+        "StartTag(name=br, attributes=[], self_closing=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL inside a start-tag name becomes U+FFFD",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "null-in-start-tag-name",
+      "input": "<x\u0000>",
+      "tokens": [
+        "StartTag(name=x�, attributes=[], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL inside an end-tag name becomes U+FFFD",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "null-in-end-tag-name",
+      "input": "</x\u0000>",
+      "tokens": [
+        "EndTag(name=x�)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "matching start and end tag names both replace NULLs",
+      "diagnostics": [
+        "unexpected-null-character",
+        "unexpected-null-character"
+      ],
+      "id": "nulls-in-matching-tag-pair",
+      "input": "<x\u0000>body</x\u0000>",
+      "tokens": [
+        "StartTag(name=x�, attributes=[], self_closing=false)",
+        "Text(data=body)",
+        "EndTag(name=x�)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "less-than followed by space is text plus a diagnostic",
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ],
+      "id": "less-than-space-stays-text",
+      "input": "Before < after",
+      "tokens": [
+        "Text(data=Before )",
+        "Text(data=< after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "less-than followed by equals is not a tag opener",
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ],
+      "id": "less-than-equals-stays-text",
+      "input": "a<=b",
+      "tokens": [
+        "Text(data=a)",
+        "Text(data=<=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "less-than followed by a digit is text recovery",
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ],
+      "id": "less-than-digit-stays-text",
+      "input": "a<3b",
+      "tokens": [
+        "Text(data=a)",
+        "Text(data=<3b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL after less-than reports invalid tag open then data NULL recovery",
+      "diagnostics": [
+        "invalid-first-character-of-tag-name",
+        "unexpected-null-character"
+      ],
+      "id": "less-than-null-reconsumes-as-text",
+      "input": "Before <\u0000 after",
+      "tokens": [
+        "Text(data=Before )",
+        "Text(data=<� after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "end-tag open followed by a digit recovers as a bogus comment",
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ],
+      "id": "invalid-end-tag-digit-bogus-comment",
+      "input": "Before</3>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=3)",
+        "Text(data=After)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "end-tag open followed by whitespace recovers as a bogus comment",
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ],
+      "id": "invalid-end-tag-space-bogus-comment",
+      "input": "Before</ nope>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data= nope)",
+        "Text(data=After)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF after a lone less-than preserves text recovery",
+      "diagnostics": [
+        "eof-in-tag-open-state"
+      ],
+      "id": "eof-after-less-than",
+      "input": "Before<",
+      "tokens": [
+        "Text(data=Before)",
+        "Text(data=<)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF after an end-tag opener preserves literal text recovery",
+      "diagnostics": [
+        "eof-in-end-tag-open-state"
+      ],
+      "id": "eof-after-end-tag-open",
+      "input": "Before</",
+      "tokens": [
+        "Text(data=Before)",
+        "Text(data=</)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF in a start-tag name drops the partial start tag",
+      "diagnostics": [
+        "eof-in-tag-name-state"
+      ],
+      "id": "eof-in-start-tag-name",
+      "input": "<div",
+      "tokens": [
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF in start-tag attributes drops the partial start tag",
+      "diagnostics": [
+        "eof-in-tag"
+      ],
+      "id": "eof-in-start-tag-attribute",
+      "input": "<div class=\"open",
+      "tokens": [
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF in an end-tag name drops the partial end tag",
+      "diagnostics": [
+        "eof-in-end-tag-name-state"
+      ],
+      "id": "eof-in-end-tag-name",
+      "input": "</section",
+      "tokens": [
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF in end-tag attributes drops the partial end tag",
+      "diagnostics": [
+        "end-tag-with-attributes",
+        "eof-in-end-tag-name-state"
+      ],
+      "id": "eof-in-end-tag-attributes",
+      "input": "</section class=x",
+      "tokens": [
+        "EOF"
+      ]
+    }
+  ],
+  "description": "Tag-open and tag-name recovery for ordinary tags, ASCII casing, HTML whitespace delimiters, invalid openers, NULL replacement, and EOF partial-token drops.",
+  "format": "whatwg-html-tokenizer-tag-open-recovery/v1"
+}
