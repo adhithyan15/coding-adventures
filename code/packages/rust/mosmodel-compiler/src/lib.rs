@@ -158,6 +158,12 @@ pub enum SlotType {
 }
 
 /// The inner type of a `list<T>` slot.
+///
+/// Nested lists are supported via the `List` variant — `list<list<text>>`
+/// parses as `List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text))))`.
+/// The Grid primitive's `viewport-rows` slot (UI26 §2.1) is the
+/// motivating use case: each row is itself a list of cell strings, so
+/// the natural type is `list<list<text>>`.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub enum ListInnerType {
@@ -168,6 +174,9 @@ pub enum ListInnerType {
     Color,
     Node,
     Component(String),
+    /// Nested list — `list<list<T>>` and deeper. The boxed inner is
+    /// itself a `ListInnerType`, so arbitrary nesting depths parse.
+    List(Box<ListInnerType>),
 }
 
 /// Valid types for an emit payload parameter.
@@ -542,11 +551,30 @@ fn parse_scalar_slot_type(node: &GrammarASTNode) -> Result<SlotType, CompileErro
 }
 
 fn parse_list_inner_type(node: &GrammarASTNode) -> Result<ListInnerType, CompileError> {
-    // inner_type = scalar_type | NAME
+    // inner_type = scalar_type | list_type | NAME
+    //
+    // The `list_type` arm enables nested lists: `list<list<text>>`
+    // recurses through here once with `node.rule_name == "list_type"`,
+    // yielding `ListInnerType::List(Box::new(<inner>))`.
     for child in &node.children {
         match child {
             ASTNodeOrToken::Node(n) if n.rule_name == "scalar_type" => {
                 return parse_scalar_list_inner(n);
+            }
+            ASTNodeOrToken::Node(n) if n.rule_name == "list_type" => {
+                // list_type = KEYWORD("list") LANGLE inner_type RANGLE
+                // Find the nested inner_type child and recurse.
+                for inner_child in &n.children {
+                    if let ASTNodeOrToken::Node(ic) = inner_child {
+                        if ic.rule_name == "inner_type" {
+                            return Ok(ListInnerType::List(Box::new(parse_list_inner_type(ic)?)));
+                        }
+                    }
+                }
+                return Err(CompileError {
+                    kind: ErrorKind::UnknownType,
+                    message: "nested list_type missing inner_type".to_string(),
+                });
             }
             ASTNodeOrToken::Token(t) if is_name_token(t) => {
                 return Ok(ListInnerType::Component(t.value.clone()));
@@ -951,15 +979,17 @@ fn slot_type_to_rust(ty: &SlotType) -> String {
     }
 }
 
-fn list_inner_to_rust(inner: &ListInnerType) -> &'static str {
+fn list_inner_to_rust(inner: &ListInnerType) -> String {
     match inner {
-        ListInnerType::Text => "String",
-        ListInnerType::Number => "f64",
-        ListInnerType::Bool => "bool",
-        ListInnerType::Image => "ImageHandle",
-        ListInnerType::Color => "[f32; 4]",
-        ListInnerType::Node => "Box<dyn AnyNode>",
-        ListInnerType::Component(_) => "Box<dyn AnyNode>",
+        ListInnerType::Text => "String".to_string(),
+        ListInnerType::Number => "f64".to_string(),
+        ListInnerType::Bool => "bool".to_string(),
+        ListInnerType::Image => "ImageHandle".to_string(),
+        ListInnerType::Color => "[f32; 4]".to_string(),
+        ListInnerType::Node => "Box<dyn AnyNode>".to_string(),
+        ListInnerType::Component(_) => "Box<dyn AnyNode>".to_string(),
+        // Nested list — `list<list<text>>` becomes `Vec<Vec<String>>`.
+        ListInnerType::List(deeper) => format!("Vec<{}>", list_inner_to_rust(deeper)),
     }
 }
 
@@ -1265,6 +1295,51 @@ mod tests {
             .unwrap();
         assert_eq!(headers.r#type, SlotType::List(Box::new(ListInnerType::Text)));
         assert!(headers.required);
+    }
+
+    /// Nested list types (`list<list<text>>`) parse as
+    /// `List(List(Text))`. Motivating use case: the Grid primitive's
+    /// `viewport-rows` slot in UI26 §2.1.
+    #[test]
+    fn slot_nested_list_type() {
+        let src = r#"
+component Grid {
+  slot viewport-rows : list<list<text>> ;
+}
+"#;
+        let out = compile(src).expect("nested list should compile");
+        let rows = out
+            .component
+            .slots
+            .iter()
+            .find(|s| s.name == "viewport-rows")
+            .unwrap();
+        assert_eq!(
+            rows.r#type,
+            SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text))))
+        );
+    }
+
+    /// Triply-nested `list<list<list<number>>>` also parses (rare in
+    /// practice, but the grammar permits arbitrary nesting).
+    #[test]
+    fn slot_triply_nested_list_type() {
+        let src = r#"
+component Cube {
+  slot cube : list<list<list<number>>> ;
+}
+"#;
+        let out = compile(src).expect("triply-nested list should compile");
+        let cube = out
+            .component
+            .slots
+            .iter()
+            .find(|s| s.name == "cube")
+            .unwrap();
+        let expected = SlotType::List(Box::new(ListInnerType::List(Box::new(
+            ListInnerType::List(Box::new(ListInnerType::Number)),
+        ))));
+        assert_eq!(cube.r#type, expected);
     }
 
     /// `viewport-offset` slot defaults to 0.
