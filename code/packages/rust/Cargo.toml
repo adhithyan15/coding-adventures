@@ -615,6 +615,7 @@ members = [
     "twig-to-jvm",
     "twig-to-cil",
     "twig-demo",
+    "twigc",
     "twig-lsp-bridge",
     "twig-dap",
     "conduit",
