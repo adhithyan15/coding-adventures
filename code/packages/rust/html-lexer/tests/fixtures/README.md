@@ -67,6 +67,9 @@ binary while production code continues to link only static Rust source.
 - `whatwg-text-mode-delimiters.json`: generated HTML tokenizer text-mode
   delimiter cases used by Rust tests to pin RCDATA, RAWTEXT, script-data,
   escaped-script, and seeded end-tag continuation recovery
+- `whatwg-markup-declarations.json`: generated HTML tokenizer markup
+  declaration cases used by Rust tests to pin comment, bogus-comment, CDATA,
+  DOCTYPE, and seeded declaration continuation recovery
 - `html5lib-smoke.json`: generated normalized Venture fixture corpus derived from
   the raw html5lib-style smoke file
 - `upstream-html5lib-smoke.test`: raw html5lib-style tokenizer cases used to
@@ -90,6 +93,9 @@ binary while production code continues to link only static Rust source.
 - `generate_whatwg_text_mode_delimiters_fixture.py`: importer that generates
   text-mode end-tag delimiter cases for the checked-in
   `whatwg-text-mode-delimiters.json` fixture
+- `generate_whatwg_markup_declarations_fixture.py`: importer that generates
+  markup declaration recovery cases for the checked-in
+  `whatwg-markup-declarations.json` fixture
 
 Regenerate or verify the WHATWG entity fixture with:
 
@@ -138,6 +144,14 @@ Regenerate or verify the WHATWG text-mode delimiter fixture with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_text_mode_delimiters_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_text_mode_delimiters_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG markup declaration fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_markup_declarations_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_markup_declarations_fixture.py \
   --check
 ```
 
