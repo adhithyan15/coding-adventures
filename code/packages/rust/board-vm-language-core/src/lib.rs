@@ -3802,6 +3802,7 @@ mod tests {
         assert!(uno.capabilities.contains(&"watchdog.kick".to_owned()));
         assert!(uno.capabilities.contains(&"storage.write".to_owned()));
         assert!(uno.capabilities.contains(&"storage.read".to_owned()));
+        assert!(uno.capabilities.contains(&"program.store".to_owned()));
         assert!(uno.capabilities.contains(&"network.ipv4".to_owned()));
         assert!(uno.capabilities.contains(&"network.tcp".to_owned()));
         assert!(uno.capabilities.contains(&"network.udp".to_owned()));
