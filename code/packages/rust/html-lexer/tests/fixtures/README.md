@@ -74,6 +74,9 @@ binary while production code continues to link only static Rust source.
   used by Rust tests to pin quoted/unquoted values, duplicate attributes,
   missing whitespace recovery, NULL replacement, self-closing delimiters, and
   end-tag attribute diagnostics
+- `whatwg-tag-open-recovery.json`: generated HTML tokenizer tag-open recovery
+  cases used by Rust tests to pin ordinary tags, ASCII casing, tag whitespace,
+  invalid openers, NULL replacement in tag names, and EOF partial-token drops
 - `html5lib-smoke.json`: generated normalized Venture fixture corpus derived from
   the raw html5lib-style smoke file
 - `upstream-html5lib-smoke.test`: raw html5lib-style tokenizer cases used to
@@ -103,6 +106,9 @@ binary while production code continues to link only static Rust source.
 - `generate_whatwg_attribute_edges_fixture.py`: importer that generates
   attribute-edge recovery cases for the checked-in
   `whatwg-attribute-edges.json` fixture
+- `generate_whatwg_tag_open_recovery_fixture.py`: importer that generates
+  tag-open recovery cases for the checked-in
+  `whatwg-tag-open-recovery.json` fixture
 
 Regenerate or verify the WHATWG entity fixture with:
 
@@ -167,6 +173,14 @@ Regenerate or verify the WHATWG attribute-edge fixture with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_attribute_edges_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_attribute_edges_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG tag-open recovery fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_tag_open_recovery_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_tag_open_recovery_fixture.py \
   --check
 ```
 
@@ -319,6 +333,9 @@ currently supports:
   attributes, missing whitespace recovery, unexpected attribute characters,
   NULL replacement, self-closing delimiters, unexpected solidus recovery, and
   end-tag attributes
+- generated tag-open recovery coverage across ordinary tags, ASCII casing,
+  HTML whitespace delimiters, invalid tag openers, NULL replacement in tag
+  names, and EOF partial-token drops
 - EOF recovery for unfinished ordinary start and end tags, ensuring partial
   tokens are dropped before the parser sees them
 - EOF recovery for unfinished attribute character references, including named

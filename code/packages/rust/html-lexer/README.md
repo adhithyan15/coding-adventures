@@ -87,6 +87,9 @@ continuation, and seeded declaration continuation behavior.
 The generated attribute-edge suite pins quoted/unquoted values, duplicate
 attributes, missing-whitespace recovery, NULL replacement, self-closing
 delimiters, unexpected solidus recovery, and end-tag attribute diagnostics.
+The generated tag-open recovery suite pins ordinary tags, ASCII casing, tag
+whitespace, invalid openers, NULL replacement in tag names, and EOF
+partial-token drops.
 Numeric character references report invalid-code-point diagnostics and recover
 with the HTML replacement/remapping rules for null, surrogate, out-of-range,
 noncharacter, and Windows-1252 control references.
