@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.60.0 — 2026-05-18
+
+**Phase 35 integration — degenerate `a² = b²` Weierstrass cases.**
+
+Closes the four degenerate-discriminant branches that Phase 34 left as
+unevaluated:
+
+    ∫ 1/(a + a·sin x) dx  =  -2 / (a · (tan(x/2) + 1))
+    ∫ 1/(a − a·sin x) dx  =   2 / (a · (1 − tan(x/2)))
+    ∫ 1/(a + a·cos x) dx  =   tan(x/2) / a
+    ∫ 1/(a − a·cos x) dx  =  -1 / (a · tan(x/2))     (= -cot(x/2)/a)
+
+Each formula is exact (no `Sqrt` factor, no `Atan` wrapper) because the
+post-substitution quadratic in `u = tan(x/2)` factors as `a(u ± 1)²` for
+sin and reduces to `2a` (constant) or `2a·u²` for cos.  A numerator
+constant `c` scales every output.
+
+### Added
+
+- **`_try_weierstrass_degenerate(c, a, b, trig_head, x)`** — Phase 35
+  helper.  Called from `_try_weierstrass_one_over_linear_trig` when
+  `disc == 0` (the existing function previously returned `None` in this
+  case).  Matches the four sign combinations on `(b == a, b == -a) ×
+  (SIN, COS)` and emits the corresponding closed form.  Returns `None`
+  for the pathological `a = 0` sub-case (which only fires when
+  `b = 0` too — a zero denominator, not integrable).
+
+- Updated the existing `_try_weierstrass_one_over_linear_trig`
+  dispatcher to call `_try_weierstrass_degenerate` for `disc == 0` and
+  to return `None` (defer) for `disc < 0` (log form, still open).
+
+### Tests
+
+`tests/test_phase34_weierstrass.py` (5 new tests + 1 promoted from
+fallthrough to closed form):
+
+- `test_phase35_a_equals_b_now_closes` — ∫ 1/(1 + sin x) dx now closes;
+  numerical derivative matches.  (Previously a fallthrough test.)
+- `test_phase35_one_minus_sin_closes` — ∫ 1/(2 − 2·sin x) dx.
+- `test_phase35_one_plus_cos_closes` — ∫ 1/(1 + cos x) dx → tan(x/2).
+- `test_phase35_one_minus_cos_closes` — ∫ 1/(1 − cos x) dx → −cot(x/2).
+- `test_phase35_with_numerator_coefficient` — ∫ 5/(2 + 2·sin x) dx.
+- `test_phase35_rational_coefficients` — ∫ 1/(3/2 + 3/2·cos x) dx.
+
+### Deferred to a future phase
+
+- `a² < b²` — log form on `(a·tan(x/2) + b ± √(b²−a²))` requires sign
+  analysis on the log argument; not implemented in this release.
+- Non-bare trig arguments (e.g. `sin(2x)`) and symbolic coefficients
+  remain unchanged from Phase 34.
+
 ## 0.59.0 — 2026-05-18
 
 **Phase 34 integration — Weierstrass substitution for `∫ c/(a + b·sin(x)) dx`
