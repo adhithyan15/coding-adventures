@@ -805,6 +805,188 @@ def _rational_to_ir(
     return IRApply(DIV, (num_ir, den_ir))
 
 
+# ----------------------------------------------------------------------
+# Phase 34 — Weierstrass substitution for ∫ c/(a + b·sin(x)) dx and
+# ∫ c/(a + b·cos(x)) dx with numeric a, b satisfying a² > b².
+#
+# The substitution u = tan(x/2) gives sin(x) = 2u/(1+u²),
+# cos(x) = (1-u²)/(1+u²), dx = 2/(1+u²) du.  Applying it to the two
+# canonical integrands reduces both to a single rational function of u
+# that integrates to an arctan (when the resulting quadratic in u has
+# negative discriminant, i.e. a² > b²).  Direct closed forms:
+#
+#     ∫ 1/(a + b·sin x) dx  =  (2/√(a²−b²)) · arctan((a·tan(x/2) + b)/√(a²−b²))
+#     ∫ 1/(a + b·cos x) dx  =  (2/√(a²−b²)) · arctan(√((a−b)/(a+b)) · tan(x/2))
+#
+# Cases a² < b² (log form) and a² = b² (rational-in-tan form) are
+# intentionally deferred — they need a sign-determination on the
+# argument inside log, and are less common in practice.
+# ----------------------------------------------------------------------
+
+
+def _sqrt_fraction_ir(f: Fraction) -> IRNode:
+    """Express ``√f`` as IR, folding perfect rational squares.
+
+    For ``f = p/q`` with ``p, q > 0`` we return ``√p/√q`` simplified
+    when both numerator and denominator are perfect integer squares;
+    otherwise we emit ``Sqrt(Fraction)`` and let downstream simplification
+    handle it.  ``f`` must be strictly positive — callers guard the
+    discriminant first.
+    """
+    if f <= 0:
+        # Defensive — callers must guard.  Return raw Sqrt for safety.
+        return IRApply(SQRT, (_frac_ir(f),))
+    p = f.numerator
+    q = f.denominator
+    p_root = math.isqrt(p)
+    q_root = math.isqrt(q)
+    if p_root * p_root == p and q_root * q_root == q:
+        return _frac_ir(Fraction(p_root, q_root))
+    return IRApply(SQRT, (_frac_ir(f),))
+
+
+def _parse_const_times_trig_x(
+    node: IRNode, x: IRSymbol
+) -> tuple[Fraction, IRSymbol] | None:
+    """Match ``c·sin(x)`` / ``c·cos(x)`` / ``sin(x)`` / ``cos(x)`` and return
+    ``(c, head)``.
+
+    Accepts both argument orders within ``Mul`` and unwraps a leading
+    ``Neg``.  Argument inside trig must be the bare variable ``x``.
+    Returns ``None`` if the shape doesn't match.
+    """
+    if isinstance(node, IRApply) and node.head in (SIN, COS):
+        if len(node.args) == 1 and node.args[0] == x:
+            return Fraction(1), node.head
+    if isinstance(node, IRApply) and node.head == MUL and len(node.args) == 2:
+        left, right = node.args
+        for const_side, trig_side in ((left, right), (right, left)):
+            c = _node_to_frac(const_side)
+            if c is None:
+                continue
+            if (
+                isinstance(trig_side, IRApply)
+                and trig_side.head in (SIN, COS)
+                and len(trig_side.args) == 1
+                and trig_side.args[0] == x
+            ):
+                return c, trig_side.head
+    if isinstance(node, IRApply) and node.head == NEG and len(node.args) == 1:
+        inner = _parse_const_times_trig_x(node.args[0], x)
+        if inner is not None:
+            c, head = inner
+            return -c, head
+    return None
+
+
+def _parse_a_plus_b_sincos(
+    node: IRNode, x: IRSymbol
+) -> tuple[Fraction, Fraction, IRSymbol] | None:
+    """Parse ``a + b·sin(x)`` / ``a + b·cos(x)`` (any operand order) into
+    ``(a, b, head)`` with ``a, b ∈ Q``.
+
+    Accepts the SUB shape too (``a − b·sin(x)`` becomes ``(a, −b, sin)``).
+    Returns ``None`` if the shape isn't a binary linear combination of a
+    constant and a constant-multiple-of-trig-x.
+    """
+    if not isinstance(node, IRApply) or len(node.args) != 2:
+        return None
+    if node.head == ADD:
+        left, right = node.args
+    elif node.head == SUB:
+        # Treat ``a − b·trig(x)`` as ``a + (−b)·trig(x)``: parse the
+        # right side and negate.  Symmetric ``b·trig(x) − a`` is rarely
+        # the canonical form but we cover it via the swap branch below.
+        left, right_raw = node.args
+        # Wrap right_raw in Neg synthetically — but we can't mutate; we'll
+        # just try both arrangements directly.
+        a_left = _node_to_frac(left)
+        if a_left is not None:
+            trig_parse = _parse_const_times_trig_x(right_raw, x)
+            if trig_parse is not None:
+                b, head = trig_parse
+                return a_left, -b, head
+        # Try ``b·trig(x) − a`` = (−a) + b·trig(x)
+        b_trig_left = _parse_const_times_trig_x(left, x)
+        a_right = _node_to_frac(right_raw)
+        if b_trig_left is not None and a_right is not None:
+            b, head = b_trig_left
+            return -a_right, b, head
+        return None
+    else:
+        return None
+    # ADD path: try both orderings.
+    for const_side, trig_side in ((left, right), (right, left)):
+        a = _node_to_frac(const_side)
+        if a is None:
+            continue
+        trig_parse = _parse_const_times_trig_x(trig_side, x)
+        if trig_parse is None:
+            continue
+        b, head = trig_parse
+        return a, b, head
+    return None
+
+
+def _try_weierstrass_one_over_linear_trig(
+    integrand: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Phase 34: ``∫ c / (a + b·sin(x)) dx`` and ``∫ c / (a + b·cos(x)) dx``
+    via the Weierstrass substitution ``u = tan(x/2)``.
+
+    Both ``c`` (numerator) and the coefficients ``a, b`` must be numeric
+    (Integer or Rational); a closed form is only emitted when
+    ``a² > b²`` (denominator never zero on ℝ).  Returns ``None``
+    otherwise — log-form and linear-in-tan cases remain unevaluated.
+    """
+    if not isinstance(integrand, IRApply) or integrand.head != DIV:
+        return None
+    if len(integrand.args) != 2:
+        return None
+    num, den = integrand.args
+    if _depends_on(num, x):
+        return None
+    c = _node_to_frac(num)
+    if c is None:
+        return None
+    parsed = _parse_a_plus_b_sincos(den, x)
+    if parsed is None:
+        return None
+    a, b, trig_head = parsed
+    disc = a * a - b * b
+    if disc <= 0:
+        # a² ≤ b² → log form (a² < b²) or degenerate (a² = b²).
+        # Not implemented in this phase; leave unevaluated.
+        return None
+    sqrt_disc_ir = _sqrt_fraction_ir(disc)
+    tan_half = IRApply(TAN, (IRApply(DIV, (x, TWO)),))
+    if trig_head == SIN:
+        # arctan argument: (a·tan(x/2) + b) / √(a²−b²)
+        atan_arg_top = IRApply(
+            ADD,
+            (IRApply(MUL, (_frac_ir(a), tan_half)), _frac_ir(b)),
+        )
+        atan_arg = IRApply(DIV, (atan_arg_top, sqrt_disc_ir))
+    else:  # COS
+        # arctan argument: √((a−b)/(a+b)) · tan(x/2)
+        # Since a² > b², we have a+b ≠ 0; sign of (a−b)/(a+b) is positive
+        # iff a > 0 (and both numerator and denominator share the sign).
+        # When a < 0 the standard form needs adjustment; rather than chase
+        # branch issues, require a > 0 here and defer the a < 0 case.
+        if a <= 0:
+            return None
+        ratio = (a - b) / (a + b)
+        if ratio <= 0:
+            # Cannot happen when a² > b² and a > 0, but defensive.
+            return None
+        sqrt_ratio_ir = _sqrt_fraction_ir(ratio)
+        atan_arg = IRApply(MUL, (sqrt_ratio_ir, tan_half))
+    # Final result: (2c/√(a²−b²)) · arctan(...)
+    coef_frac = c * 2
+    coef_ir = IRApply(DIV, (_frac_ir(coef_frac), sqrt_disc_ir))
+    return IRApply(MUL, (coef_ir, IRApply(ATAN, (atan_arg,))))
+
+
 def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
     """Return an antiderivative of ``f`` w.r.t. ``x``, or ``None``.
 
@@ -976,6 +1158,11 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         # x-in-denominator shape Phase 1 handles directly.
         if b == x and not _depends_on(a, x):
             return IRApply(MUL, (a, IRApply(LOG, (x,))))
+        # Phase 34: Weierstrass substitution for c / (a + b·sin(x)) and
+        # c / (a + b·cos(x)) when a, b numeric and a² > b².
+        result = _try_weierstrass_one_over_linear_trig(f, x)
+        if result is not None:
+            return result
         return None
 
     # --- Power rule ---------------------------------------------------
