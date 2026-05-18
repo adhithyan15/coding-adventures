@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  ACOS,
   ACOSH,
   ADD,
+  ASIN,
   ASINH,
   ASSIGN,
   ATAN,
@@ -34,6 +36,7 @@ import {
   TRUE,
   app,
   equals,
+  headName,
   int,
   numberNode,
   rational,
@@ -401,9 +404,10 @@ describe("symbolic-vm", () => {
     expect(vm.eval(app(D, [app(POW, [int(2), sym("x")]), sym("x")]))).toEqual(
       app(MUL, [app(POW, [int(2), sym("x")]), numberNode(Math.log(2))]),
     );
+    // Phase 30: exp(x·log(x)) now simplifies to x^x, so D(x^x, x) = x^x·(log(x)+1).
     expect(vm.eval(app(D, [app(POW, [sym("x"), sym("x")]), sym("x")]))).toEqual(
       app(MUL, [
-        app(EXP, [app(MUL, [sym("x"), app(LOG, [sym("x")])])]),
+        app(POW, [sym("x"), sym("x")]),
         app(ADD, [app(LOG, [sym("x")]), app(MUL, [sym("x"), app(DIV, [int(1), sym("x")])])]),
       ]),
     );
@@ -1099,5 +1103,337 @@ describe("symbolic-vm", () => {
     const result = vm.eval(app(INTEGRATE, [app(ATAN, [x]), x]));
     // Should remain unevaluated (Phase 11 is not implemented in TypeScript yet).
     expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 29: Abs and Sqrt algebraic rules
+// ---------------------------------------------------------------------------
+describe("Phase 29: Abs and Sqrt algebraic rules", () => {
+  it("Abs: numeric fold and exact values", () => {
+    const vm = new VM(new SymbolicBackend());
+    expect(vm.eval(app(sym("Abs"), [int(-3)]))).toEqual(int(3));
+    expect(vm.eval(app(sym("Abs"), [int(5)]))).toEqual(int(5));
+    expect(vm.eval(app(sym("Abs"), [rational(-3n, 4n)]))).toEqual(rational(3n, 4n));
+  });
+
+  it("Abs: idempotency — Abs(Abs(x)) = Abs(x)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const absX = app(sym("Abs"), [x]);
+    expect(vm.eval(app(sym("Abs"), [absX]))).toEqual(absX);
+  });
+
+  it("Abs: strips Neg — Abs(-x) = Abs(x)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(sym("Abs"), [app(NEG, [x])]))).toEqual(app(sym("Abs"), [x]));
+  });
+
+  it("Abs: even power — Abs(x^2) = x^2, Abs(x^4) = x^4", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const x2 = app(POW, [x, int(2)]);
+    const x4 = app(POW, [x, int(4)]);
+    expect(vm.eval(app(sym("Abs"), [x2]))).toEqual(x2);
+    expect(vm.eval(app(sym("Abs"), [x4]))).toEqual(x4);
+  });
+
+  it("Sqrt: numeric fold with perfect-square detection", () => {
+    const vm = new VM(new SymbolicBackend());
+    expect(vm.eval(app(SQRT, [int(0)]))).toEqual(int(0));
+    expect(vm.eval(app(SQRT, [int(1)]))).toEqual(int(1));
+    expect(vm.eval(app(SQRT, [int(4)]))).toEqual(int(2));
+    expect(vm.eval(app(SQRT, [int(9)]))).toEqual(int(3));
+    expect(vm.eval(app(SQRT, [int(16)]))).toEqual(int(4));
+    expect(vm.eval(app(SQRT, [int(25)]))).toEqual(int(5));
+  });
+
+  it("Sqrt: sqrt(x^2) = Abs(x)  — k=1 odd", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(SQRT, [app(POW, [x, int(2)])]))).toEqual(app(sym("Abs"), [x]));
+  });
+
+  it("Sqrt: sqrt(x^4) = x^2  — k=2 even", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(SQRT, [app(POW, [x, int(4)])]))).toEqual(app(POW, [x, int(2)]));
+  });
+
+  it("Sqrt: sqrt(x^6) = Abs(x^3)  — k=3 odd", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(SQRT, [app(POW, [x, int(6)])]))).toEqual(
+      app(sym("Abs"), [app(POW, [x, int(3)])]),
+    );
+  });
+
+  it("Sqrt: sqrt(x^8) = x^4  — k=4 even", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(SQRT, [app(POW, [x, int(8)])]))).toEqual(app(POW, [x, int(4)]));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 30: Log and Exp cancellation rules
+// ---------------------------------------------------------------------------
+describe("Phase 30: Log and Exp cancellation rules", () => {
+  it("Log: special value log(1) = 0", () => {
+    const vm = new VM(new SymbolicBackend());
+    expect(vm.eval(app(LOG, [int(1)]))).toEqual(int(0));
+  });
+
+  it("Log: log(exp(x)) = x  (cancellation)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(LOG, [app(EXP, [x])]))).toEqual(x);
+  });
+
+  it("Log: log(exp(2·x)) = 2·x  (cancellation through product)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const twoX = app(MUL, [int(2), x]);
+    expect(vm.eval(app(LOG, [app(EXP, [twoX])]))).toEqual(twoX);
+  });
+
+  it("Exp: special value exp(0) = 1", () => {
+    const vm = new VM(new SymbolicBackend());
+    expect(vm.eval(app(EXP, [int(0)]))).toEqual(int(1));
+  });
+
+  it("Exp: exp(log(x)) = x  (cancellation)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(EXP, [app(LOG, [x])]))).toEqual(x);
+  });
+
+  it("Exp: exp(2·log(x)) = x^2  (power form, Mul(n, log(x)))", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(EXP, [app(MUL, [int(2), app(LOG, [x])])]))).toEqual(
+      app(POW, [x, int(2)]),
+    );
+  });
+
+  it("Exp: exp(log(x)·3) = x^3  (power form, Mul(log(x), n))", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(EXP, [app(MUL, [app(LOG, [x]), int(3)])]))).toEqual(
+      app(POW, [x, int(3)]),
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 31: Trig and hyperbolic symmetry + arc-cancellation
+// ---------------------------------------------------------------------------
+describe("Phase 31: Trig symmetry and arc-cancellation", () => {
+  it("Sin: odd symmetry — sin(-x) = -sin(x)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(SIN, [app(NEG, [x])]))).toEqual(app(NEG, [app(SIN, [x])]));
+  });
+
+  it("Sin: arc-cancellation — sin(asin(x)) = x", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(SIN, [app(ASIN, [x])]))).toEqual(x);
+  });
+
+  it("Cos: even symmetry — cos(-x) = cos(x)  (NEG stripped)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(COS, [app(NEG, [x])]))).toEqual(app(COS, [x]));
+  });
+
+  it("Cos: arc-cancellation — cos(acos(x)) = x", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(COS, [app(ACOS, [x])]))).toEqual(x);
+  });
+
+  it("Tan: odd symmetry — tan(-x) = -tan(x)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(TAN, [app(NEG, [x])]))).toEqual(app(NEG, [app(TAN, [x])]));
+  });
+
+  it("Tan: arc-cancellation — tan(atan(x)) = x", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(TAN, [app(ATAN, [x])]))).toEqual(x);
+  });
+
+  it("Sinh: odd symmetry — sinh(-x) = -sinh(x)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(SINH, [app(NEG, [x])]))).toEqual(app(NEG, [app(SINH, [x])]));
+  });
+
+  it("Sinh: arc-cancellation — sinh(asinh(x)) = x", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(SINH, [app(ASINH, [x])]))).toEqual(x);
+  });
+
+  it("Cosh: even symmetry — cosh(-x) = cosh(x)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(COSH, [app(NEG, [x])]))).toEqual(app(COSH, [x]));
+  });
+
+  it("Cosh: arc-cancellation — cosh(acosh(x)) = x", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(COSH, [app(ACOSH, [x])]))).toEqual(x);
+  });
+
+  it("Tanh: odd symmetry — tanh(-x) = -tanh(x)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(TANH, [app(NEG, [x])]))).toEqual(app(NEG, [app(TANH, [x])]));
+  });
+
+  it("Tanh: arc-cancellation — tanh(atanh(x)) = x", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(TANH, [app(ATANH, [x])]))).toEqual(x);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 32: Inverse trig/hyperbolic odd symmetry and acos reflection
+// ---------------------------------------------------------------------------
+describe("Phase 32: Inverse trig symmetry", () => {
+  it("Asin: odd symmetry — asin(-x) = -asin(x)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(ASIN, [app(NEG, [x])]))).toEqual(app(NEG, [app(ASIN, [x])]));
+  });
+
+  it("Acos: reflection — acos(-x) = %pi - acos(x)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(ACOS, [app(NEG, [x])]))).toEqual(
+      app(SUB, [sym("%pi"), app(ACOS, [x])]),
+    );
+  });
+
+  it("Atan: odd symmetry — atan(-x) = -atan(x)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(ATAN, [app(NEG, [x])]))).toEqual(app(NEG, [app(ATAN, [x])]));
+  });
+
+  it("Asinh: odd symmetry — asinh(-x) = -asinh(x)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(ASINH, [app(NEG, [x])]))).toEqual(app(NEG, [app(ASINH, [x])]));
+  });
+
+  it("Atanh: odd symmetry — atanh(-x) = -atanh(x)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    expect(vm.eval(app(ATANH, [app(NEG, [x])]))).toEqual(app(NEG, [app(ATANH, [x])]));
+  });
+
+  it("Double-neg collapses: asin(-(-x)) = asin(x)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    // asin(NEG(NEG(x))): NEG(x) evaluated → since NEG(NEG(x)) collapses to x,
+    // asin arg becomes x.
+    expect(vm.eval(app(ASIN, [app(NEG, [app(NEG, [x])])]))).toEqual(app(ASIN, [x]));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 33: Trig exact values at rational multiples of π
+// ---------------------------------------------------------------------------
+describe("Phase 33: Trig π-multiple exact values", () => {
+  const vm = new VM(new SymbolicBackend());
+  const pi = sym("%pi");
+
+  it("sin(%pi) = 0", () => {
+    expect(vm.eval(app(SIN, [pi]))).toEqual(int(0));
+  });
+  it("sin(%pi/6) = 1/2", () => {
+    expect(vm.eval(app(SIN, [app(DIV, [pi, int(6)])]))).toEqual(rational(1n, 2n));
+  });
+  it("sin(%pi/4) = √2/2", () => {
+    expect(vm.eval(app(SIN, [app(DIV, [pi, int(4)])]))).toEqual(
+      app(DIV, [app(SQRT, [int(2)]), int(2)]),
+    );
+  });
+  it("sin(%pi/3) = √3/2", () => {
+    expect(vm.eval(app(SIN, [app(DIV, [pi, int(3)])]))).toEqual(
+      app(DIV, [app(SQRT, [int(3)]), int(2)]),
+    );
+  });
+  it("sin(%pi/2) = 1", () => {
+    expect(vm.eval(app(SIN, [app(DIV, [pi, int(2)])]))).toEqual(int(1));
+  });
+  it("sin(2·%pi) = 0", () => {
+    expect(vm.eval(app(SIN, [app(MUL, [int(2), pi])]))).toEqual(int(0));
+  });
+  it("sin(3·%pi/2) = -1", () => {
+    expect(vm.eval(app(SIN, [app(DIV, [app(MUL, [int(3), pi]), int(2)])]))).toEqual(int(-1));
+  });
+
+  it("cos(%pi) = -1", () => {
+    expect(vm.eval(app(COS, [pi]))).toEqual(int(-1));
+  });
+  it("cos(%pi/2) = 0", () => {
+    expect(vm.eval(app(COS, [app(DIV, [pi, int(2)])]))).toEqual(int(0));
+  });
+  it("cos(%pi/3) = 1/2", () => {
+    expect(vm.eval(app(COS, [app(DIV, [pi, int(3)])]))).toEqual(rational(1n, 2n));
+  });
+  it("cos(%pi/4) = √2/2", () => {
+    expect(vm.eval(app(COS, [app(DIV, [pi, int(4)])]))).toEqual(
+      app(DIV, [app(SQRT, [int(2)]), int(2)]),
+    );
+  });
+  it("cos(2·%pi) = 1", () => {
+    expect(vm.eval(app(COS, [app(MUL, [int(2), pi])]))).toEqual(int(1));
+  });
+
+  it("tan(%pi) = 0", () => {
+    expect(vm.eval(app(TAN, [pi]))).toEqual(int(0));
+  });
+  it("tan(%pi/4) = 1", () => {
+    expect(vm.eval(app(TAN, [app(DIV, [pi, int(4)])]))).toEqual(int(1));
+  });
+  it("tan(%pi/3) = √3", () => {
+    expect(vm.eval(app(TAN, [app(DIV, [pi, int(3)])]))).toEqual(app(SQRT, [int(3)]));
+  });
+  it("tan(3·%pi/4) = -1", () => {
+    expect(vm.eval(app(TAN, [app(DIV, [app(MUL, [int(3), pi]), int(4)])]))).toEqual(int(-1));
+  });
+  it("tan(%pi/2) stays unevaluated (undefined)", () => {
+    // tan(π/2) is undefined; the handler should leave it unevaluated.
+    const result = vm.eval(app(TAN, [app(DIV, [pi, int(2)])]));
+    expect(result.kind).toBe("apply");
+    if (result.kind === "apply") {
+      expect(headName(result.head)).toBe("Tan");
+    }
+  });
+
+  it("sin(-(%pi/6)) = -1/2  (odd symmetry via negative q)", () => {
+    // sin(-(π/6)) — tryPiMultiple detects NEG(Div(%pi, 6)) → q = -1/6
+    // (-1/6) mod 2 = 11/6 → sin(11π/6) = -1/2
+    expect(vm.eval(app(SIN, [app(NEG, [app(DIV, [pi, int(6)])])]))).toEqual(rational(-1n, 2n));
+  });
+
+  it("cos(-(%pi/3)) = 1/2  (even symmetry via negative q mod 2)", () => {
+    // cos(-(π/3)) — q = -1/3, (-1/3) mod 2 = 5/3 → cos(5π/3) = 1/2
+    expect(vm.eval(app(COS, [app(NEG, [app(DIV, [pi, int(3)])])]))).toEqual(rational(1n, 2n));
+  });
+
+  it("regression: numeric sin/cos/tan still work", () => {
+    expect(vm.eval(app(SIN, [int(0)]))).toEqual(int(0));
+    expect(vm.eval(app(COS, [int(0)]))).toEqual(int(1));
+    expect(vm.eval(app(TAN, [int(0)]))).toEqual(int(0));
   });
 });

@@ -1,5 +1,97 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.6.0] — 2026-05-18
+
+### Added — Phases 29–33: algebraic simplification rules
+
+Extends the symbolic backend with five new rule families that fire on every
+re-evaluation of the affected expressions.  All rules are guarded by the
+`simplify` flag so the `StrictBackend` (numeric-only) is unaffected.
+
+#### Phase 29 — Abs and Sqrt algebraic rules
+
+New free functions:
+- `frac_gcd`, `frac_make`, `frac_mod`, `frac_from_ir` — fraction arithmetic
+  helpers used internally by the Phase 33 π-multiple detection and by the
+  Phase 29–32 handlers.
+
+**`abs_handler`** (new — `Abs` head previously fell through unhandled):
+- Numeric fold: `Abs(-3) → 3`, `Abs(-p/q) → p/q`.
+- Idempotency: `Abs(Abs(x)) → Abs(x)`.
+- Negation strip: `Abs(Neg(x)) → Abs(x)`.
+- Mul-neg strip: `Abs(Mul(-1, x)) → Abs(x)`.
+- Even-power identity: `Abs(Pow(x, 2k)) → Pow(x, 2k)` for even integer 2k ≥ 2.
+- Registered as `"Abs"` in `build_handler_table`.
+
+**`sqrt_handler`** (replaces `single_trig` factory):
+- Perfect-square detection: `sqrt(4) → 2`, `sqrt(9) → 3`, etc.
+- Even-exponent rewrite `sqrt(x^{2k})`:
+  - k even → `Pow(x, k)` (e.g. `sqrt(x^4) = x^2`)
+  - k odd → `Abs(x^k)` (e.g. `sqrt(x^2) = |x|`, `sqrt(x^6) = |x^3|`)
+
+#### Phase 30 — Log / Exp cancellation rules
+
+**`log_handler`** (replaces `single_trig`):
+- `log(exp(x)) → x`  (structural cancellation).
+- Special value `log(1) → 0`; non-positive inputs left unevaluated.
+
+**`exp_handler`** (replaces `single_trig`):
+- `exp(log(x)) → x`.
+- `exp(n·log(x)) → x^n`  (both `Mul(n, log(x))` and `Mul(log(x), n)`).
+- Special value `exp(0) → 1`.
+
+**Regression note**: `D(x^x, x)` now returns `Mul(Pow(x,x), Add(log(x), x/x))`
+because `exp(x·log(x))` eagerly reduces to `x^x`.  Test updated.
+
+#### Phase 31 — Trig / hyperbolic negation symmetry and arc-cancellation
+
+**Odd** (`sin_handler`, `tan_handler`, `sinh_handler`, `tanh_handler`):
+- `f(Neg(x)) → Neg(f(x))` with `vm.eval` recursive descent.
+
+**Even** (`cos_handler`, `cosh_handler`):
+- `f(Neg(x)) → f(x)` (Neg stripped, recurse).
+
+**Arc-cancellation** in `sin`/`cos`/`tan`/`sinh`/`cosh`/`tanh`:
+- `sin(Asin(x)) → x`, `cos(Acos(x)) → x`, `tan(Atan(x)) → x`
+- `sinh(Asinh(x)) → x`, `cosh(Acosh(x)) → x`, `tanh(Atanh(x)) → x`
+
+#### Phase 32 — Inverse trig / hyperbolic odd symmetry
+
+**Odd** (`atan_handler`, `asin_handler`, `asinh_handler`, `atanh_handler`):
+- `f(Neg(x)) → Neg(f(x))`.
+
+**`acos_handler`** — reflection:
+- `acos(Neg(x)) → Sub(Symbol("%pi"), acos(x))`.
+
+**`acosh_handler`** — keeps `single_trig` factory (domain `[1, ∞)`, no symmetry).
+
+#### Phase 33 — Trig exact values at rational multiples of π
+
+New free functions:
+- `try_pi_multiple(arg: &IRNode) -> Option<Frac>` — detects float ≈ q·π and
+  structural patterns `%pi`, `Neg(%pi)`, `Mul(n, %pi)`, `Div(%pi, n)`,
+  `Div(Mul(n, %pi), d)`.
+- `p33_sqrt_over(n, d) -> IRNode` — helper building `Div(Sqrt(n), d)`.
+- `p33_neg(v: IRNode) -> IRNode` — wraps `Neg`.
+- `sin_pi_table(p, q) -> Option<IRNode>` — 16-entry exact sin table (period 2).
+- `cos_pi_table(p, q) -> Option<IRNode>` — 16-entry exact cos table (period 2).
+- `tan_pi_table(p, q) -> Option<IRNode>` — 7-entry exact tan table (period 1).
+
+`sin_handler`, `cos_handler`, `tan_handler` each call `try_pi_multiple` on the
+argument and look up the table before the numeric fold.
+
+`tan(π/2)` (undefined) is left unevaluated.
+
+**Tests added** (48 new tests across all 5 phases):
+- Phase 29: 8 tests (abs/sqrt rules)
+- Phase 30: 4 tests (log/exp cancellation + power form)
+- Phase 31: 12 tests (trig+hyperbolic symmetry and arc-cancellation)
+- Phase 32: 5 tests (inverse trig odd symmetry + acos reflection)
+- Phase 33: 19 tests (sin/cos/tan π-multiples including negative q and regression)
+
+Helper added to test file: `fn eval(expr: IRNode) -> IRNode` — thin wrapper
+around `symbolic().eval(expr)` used by the new Phase 29–33 tests.
+
 ## [0.5.0] — 2026-05-18
 
 ### Added — Phase 28: general IBP for poly×log(Q) and poly×atan(Q)

@@ -1,5 +1,97 @@
 # Changelog
 
+## [0.6.0] — 2026-05-18
+
+### Added — Phases 29–33: algebraic simplification rules
+
+Extends the symbolic backend with five new rule families that fire on
+every re-evaluation of the affected expressions.
+
+#### Phase 29 — Abs and Sqrt algebraic rules
+
+**`Abs(x)`** (new handler — `Abs` head previously fell through unhandled):
+- Numeric fold: `Abs(-3) → 3`, `Abs(3/4) → 3/4`.
+- Idempotency: `Abs(Abs(x)) → Abs(x)`.
+- Negation strip: `Abs(-x) → Abs(x)` (detects `Neg` head).
+- Mul-neg strip: `Abs(Mul(-1, x)) → Abs(x)`.
+- Even-power identity: `Abs(x^{2k}) → x^{2k}` for integer 2k ≥ 2.
+
+**`Sqrt(x)`** (replaces numeric-only `elementary()` factory):
+- Perfect-square detection: `sqrt(4) → 2`, `sqrt(9) → 3`, etc.
+- Even-exponent rewrite `sqrt(x^{2k})`:
+  - k even → `x^k`  (e.g. `sqrt(x^4) = x^2`)
+  - k odd → `Abs(x^k)` (e.g. `sqrt(x^2) = |x|`, `sqrt(x^6) = |x^3|`)
+
+#### Phase 30 — Log / Exp cancellation rules
+
+**`Log(x)`**:
+- `log(exp(x)) → x`  (structural cancellation, unconditional for real domain).
+- Special value `log(1) → 0` preserved.
+
+**`Exp(x)`**:
+- `exp(log(x)) → x`.
+- `exp(n·log(x)) → x^n`  (handles both `Mul(n, log(x))` and `Mul(log(x), n)`).
+- Special value `exp(0) → 1` preserved.
+
+**Regression note**: the derivative of `x^x` now simplifies to `x^x·(log(x)+1)`
+instead of `exp(x·log(x))·(log(x)+1)` because `exp(x·log(x))` is eagerly reduced
+to `x^x`.  The test expectation was updated accordingly.
+
+#### Phase 31 — Trig / hyperbolic negation symmetry and arc-cancellation
+
+**Odd functions** (`sin`, `tan`, `sinh`, `tanh`):
+- `f(-x) → -f(x)` with recursive descent so double negations collapse.
+
+**Even functions** (`cos`, `cosh`):
+- `f(-x) → f(x)` (Neg stripped).
+
+**Arc-cancellation** (all six primary trig/hyperbolic functions):
+- `sin(asin(x)) → x`,  `cos(acos(x)) → x`,  `tan(atan(x)) → x`
+- `sinh(asinh(x)) → x`,  `cosh(acosh(x)) → x`,  `tanh(atanh(x)) → x`
+
+#### Phase 32 — Inverse trig / hyperbolic odd symmetry
+
+**Odd** (`asin`, `atan`, `asinh`, `atanh`):
+- `f(-x) → -f(x)`.
+
+**Acos reflection** (`acos`):
+- `acos(-x) → %pi − acos(x)` (`%pi` is `IRSymbol("%pi")`).
+
+**Acosh** has no symmetry rule (domain `[1, ∞)`) and keeps numeric-fold only.
+
+#### Phase 33 — Trig exact values at rational multiples of π
+
+`sin(q·%pi)`, `cos(q·%pi)`, and `tan(q·%pi)` return exact algebraic values
+when `q` is a rational number with denominator in `{1, 2, 3, 4, 6}`.
+
+**`tryPiMultiple(arg)`** detects:
+- Float ≈ q·π (denominators 1, 2, 3, 4, 6).
+- Structural: `%pi`, `Neg(%pi)`, `Mul(n, %pi)`, `Div(%pi, n)`,
+  `Div(Mul(n, %pi), d)` (both Mul orderings).
+
+**Lookup tables** (period 2π for sin/cos, period π for tan):
+
+| q | sin(q·π) | cos(q·π) | tan(q·π) |
+|---|----------|----------|----------|
+| 0 | 0 | 1 | 0 |
+| 1/6 | 1/2 | √3/2 | √3/3 |
+| 1/4 | √2/2 | √2/2 | 1 |
+| 1/3 | √3/2 | 1/2 | √3 |
+| 1/2 | 1 | 0 | undefined |
+| 2/3 | √3/2 | −1/2 | −√3 |
+| 3/4 | √2/2 | −√2/2 | −1 |
+| 5/6 | 1/2 | −√3/2 | −√3/3 |
+| 1 | 0 | −1 | 0 |
+
+`tan(π/2)` is left unevaluated (undefined).
+
+**Tests added** (54 new tests across all 5 phases):
+- Phase 29: 9 tests (abs fold/idempotency/strip/even-power; sqrt perfect-square/even-power)
+- Phase 30: 7 tests (log/exp cancellation and power form)
+- Phase 31: 12 tests (trig+hyperbolic symmetry and arc-cancellation)
+- Phase 32: 6 tests (inverse trig odd symmetry + acos reflection)
+- Phase 33: 20 tests (sin/cos/tan π-multiples including negative q and regression)
+
 ## [0.5.0] — 2026-05-18
 
 ### Added — Phase 28: general IBP for poly×log(Q) and poly×atan(Q)
