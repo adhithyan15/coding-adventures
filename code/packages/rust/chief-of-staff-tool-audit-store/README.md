@@ -13,6 +13,8 @@ The crate keeps the boundary narrow:
   `ToolAuditSink` boundary and inspect storage failures after a call or batch
 - hosts can replay queried audit rows into any existing audit sink for
   payload-free read-model rebuilds
+- hosts can flush batches of audit rows and get a payload-free write summary
+  with call-id-level storage failures
 
 ## Development
 

@@ -69,6 +69,33 @@ where
         Ok(record)
     }
 
+    /// Record a batch of payload-free audit rows and summarize successes and
+    /// storage failures.
+    pub fn record_audit_batch<I>(&self, records: I) -> ToolAuditBatchWriteSummary
+    where
+        I: IntoIterator<Item = ToolAuditRecord>,
+    {
+        let mut summary = ToolAuditBatchWriteSummary::empty();
+        let mut stored = Vec::new();
+        for record in records {
+            summary.attempted_records += 1;
+            match self.record_audit(record.clone()) {
+                Ok(record) => {
+                    summary.stored_records += 1;
+                    stored.push(record);
+                }
+                Err(error) => {
+                    summary.failed_records += 1;
+                    summary
+                        .failures
+                        .push(ToolAuditSinkFailure::new(record.call_id, error));
+                }
+            }
+        }
+        summary.inventory = ToolAuditStoreInventorySummary::from_records(&stored);
+        summary
+    }
+
     /// Derive and record the audit row for one canonical execution trace.
     pub fn record_trace(
         &self,
@@ -156,6 +183,43 @@ where
     }
 }
 
+/// Payload-free summary for a batch audit write.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ToolAuditBatchWriteSummary {
+    /// Number of rows attempted.
+    pub attempted_records: usize,
+    /// Number of rows persisted.
+    pub stored_records: usize,
+    /// Number of rows that failed to persist.
+    pub failed_records: usize,
+    /// Payload-free summary of successfully persisted rows.
+    pub inventory: ToolAuditStoreInventorySummary,
+    /// Storage failures captured by call id.
+    pub failures: Vec<ToolAuditSinkFailure>,
+}
+
+impl ToolAuditBatchWriteSummary {
+    /// Construct an empty batch summary.
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    /// Return whether the batch had no rows.
+    pub fn is_empty(&self) -> bool {
+        self.attempted_records == 0
+    }
+
+    /// Return whether every attempted row was persisted.
+    pub fn completed_without_failures(&self) -> bool {
+        self.attempted_records == self.stored_records && self.failed_records == 0
+    }
+
+    /// Return whether any persisted row or storage failure needs follow-up.
+    pub fn requires_follow_up(&self) -> bool {
+        self.failed_records > 0 || self.inventory.requires_follow_up()
+    }
+}
+
 /// Summary for replaying stored audit rows into a sink.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub struct ToolAuditReplaySummary {
@@ -222,6 +286,17 @@ where
     /// Remove all captured storage failures and return them to the caller.
     pub fn drain_failures(&mut self) -> Vec<ToolAuditSinkFailure> {
         std::mem::take(&mut self.failures)
+    }
+
+    /// Persist a batch through the underlying store and keep any failures for
+    /// host inspection.
+    pub fn record_audit_batch<I>(&mut self, records: I) -> ToolAuditBatchWriteSummary
+    where
+        I: IntoIterator<Item = ToolAuditRecord>,
+    {
+        let summary = self.store.record_audit_batch(records);
+        self.failures.extend(summary.failures.iter().cloned());
+        summary
     }
 
     /// Consume the sink and return the underlying audit store.
@@ -720,6 +795,34 @@ mod tests {
     }
 
     #[test]
+    fn batch_records_successes_and_storage_failures() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let summary = store.record_audit_batch(vec![
+            sample_record("call_1"),
+            failed_record("call_2"),
+            sample_record("call_1"),
+        ]);
+
+        assert_eq!(summary.attempted_records, 3);
+        assert_eq!(summary.stored_records, 2);
+        assert_eq!(summary.failed_records, 1);
+        assert!(!summary.completed_without_failures());
+        assert!(summary.requires_follow_up());
+        assert_eq!(summary.inventory.total_records, 2);
+        assert_eq!(summary.inventory.failed_records, 1);
+        assert_eq!(summary.failures.len(), 1);
+        assert_eq!(summary.failures[0].call_id, "call_1");
+
+        assert_eq!(
+            store
+                .query_audits(&ToolAuditRecordQuery::new())
+                .unwrap()
+                .len(),
+            2
+        );
+    }
+
+    #[test]
     fn inventory_summaries_are_payload_free() {
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         store.record_audit(sample_record("call_1")).unwrap();
@@ -788,6 +891,20 @@ mod tests {
         assert_eq!(failures[0].call_id, "call_1");
         assert!(failures[0].message.contains("storage conflict"));
         assert!(sink.failures().is_empty());
+    }
+
+    #[test]
+    fn storage_sink_flushes_batches_and_tracks_failures() {
+        let mut sink = StorageToolAuditSink::new(InMemoryStorageBackend::new());
+        let first = sink.record_audit_batch(vec![sample_record("call_1"), failed_record("call_2")]);
+        assert!(first.completed_without_failures());
+        assert!(!sink.has_failures());
+
+        let second = sink.record_audit_batch(vec![sample_record("call_1")]);
+        assert_eq!(second.failed_records, 1);
+        assert!(sink.has_failures());
+        assert_eq!(sink.failures()[0].call_id, "call_1");
+        assert_eq!(sink.store().inventory_summary().unwrap().total_records, 2);
     }
 
     #[test]
