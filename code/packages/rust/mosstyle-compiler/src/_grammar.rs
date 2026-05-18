@@ -209,12 +209,20 @@ pub fn parser_grammar() -> ParserGrammar {
             ] },
             line_number: 76,
         },
+        // property_decl = NAME COLON style_value { style_value } SEMICOLON ;
+        //
+        // Multi-value shorthand: a property can carry one or more
+        // space-separated style_values, matching CSS shorthand syntax
+        // (`border: 1px solid #3f3f46 ;`, `margin: 4px 8px ;`). The
+        // analyzer joins them with single spaces to produce the final
+        // value string.
         GrammarRule {
             name: r#"property_decl"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                 GrammarElement::TokenReference { name: r#"COLON"#.to_string() },
                 GrammarElement::RuleReference { name: r#"style_value"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"style_value"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"SEMICOLON"#.to_string() },
             ] },
             line_number: 83,
