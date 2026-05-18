@@ -744,6 +744,22 @@ fn emit_grid_jsx(
     let header_row_subpart_style = lookup_subpart("header-row");
     let data_row_subpart_style = lookup_subpart("data-row");
 
+    // State-suffixed sub-part fragments for the runtime selection / editing
+    // highlights. `sheet/cell:selected` and `sheet/cell:editing` are
+    // produced by the part-style map for any `state selected { ... }` /
+    // `state editing { ... }` blocks declared under `part sheet/cell`.
+    // Empty when the author left those state blocks out — the emitter
+    // then falls back to its hardcoded defaults (see `build_grid_cell_style_expr`).
+    let lookup_state = |state_name: &str| -> String {
+        node.part_name
+            .as_deref()
+            .map(|n| format!("{n}/cell:{state_name}"))
+            .and_then(|key| part_styles.get(&key).map(String::clone))
+            .unwrap_or_default()
+    };
+    let selected_state_style = lookup_state("selected");
+    let editing_state_style = lookup_state("editing");
+
     let table_style_attr = if table_style_str.is_empty() {
         String::new()
     } else {
@@ -770,6 +786,8 @@ fn emit_grid_jsx(
     // selected/editing highlight spreads (runtime — per cell).
     let cell_style_expr = build_grid_cell_style_expr(
         &cell_subpart_style,
+        &selected_state_style,
+        &editing_state_style,
         selected_row_var.as_deref(),
         selected_col_var.as_deref(),
         edit_row_var.as_deref(),
@@ -825,17 +843,30 @@ fn emit_grid_jsx(
 
 /// Build the `style={{...}}` JSX attribute expression for a Grid cell.
 ///
-/// If neither selected-* nor edit-* slot refs are bound, returns an empty
+/// If no sub-part or selected/edit slot refs are bound, returns an empty
 /// string (no style attribute). Otherwise returns a `style={{ ...spread }}`
 /// expression that picks `background` and `outline` based on whether the
 /// cell coordinates `(r, c)` match either state.
 ///
-/// The exact colours (`#264f78` for selection, `#1f4f3f` for editing)
-/// mirror the visicalc-tokens.msl values from UI26 §4.1 and are intentional
-/// defaults: a real production component would inline the design-token
-/// values from mosstyle. That's a follow-up.
+/// ## State-style sources
+///
+/// `selected_state_style` and `editing_state_style` are the
+/// author-declared mosstyle `state selected { ... }` and `state editing
+/// { ... }` blocks under the `sheet/cell` sub-part, already lowered to
+/// JSX-fragment form (e.g. `background: "#264f78", color: "#ffffff"`).
+/// When either string is empty the emitter falls back to a built-in
+/// default — the same colours the React backend has shipped since the
+/// Grid primitive landed, so existing demos render identically even if
+/// the author hasn't declared the state blocks yet.
+///
+/// The fallback defaults are intentional last-resort values, NOT design
+/// recommendations: authors who care about the look should declare
+/// `state selected` / `state editing` under `part sheet/cell` so the
+/// colours travel with the theme.
 fn build_grid_cell_style_expr(
     cell_subpart_style: &str,
+    selected_state_style: &str,
+    editing_state_style: &str,
     selected_row: Option<&str>,
     selected_col: Option<&str>,
     edit_row: Option<&str>,
@@ -849,6 +880,26 @@ fn build_grid_cell_style_expr(
         return String::new();
     }
 
+    // Default highlight fragments — used only when the author has NOT
+    // declared a `state selected` / `state editing` block under the
+    // `sheet/cell` sub-part. Keeping these in sync with what shipped
+    // before this PR so demos render unchanged.
+    const DEFAULT_SELECTED: &str =
+        "background: \"#264f78\", color: \"#ffffff\", outline: \"1px solid #007acc\"";
+    const DEFAULT_EDITING: &str =
+        "background: \"#1f4f3f\", outline: \"1px solid #007acc\"";
+
+    let selected_fragment = if selected_state_style.is_empty() {
+        DEFAULT_SELECTED
+    } else {
+        selected_state_style
+    };
+    let editing_fragment = if editing_state_style.is_empty() {
+        DEFAULT_EDITING
+    } else {
+        editing_state_style
+    };
+
     // Build the spread chain. The author's `part sheet/cell` style
     // goes FIRST so subsequent state-dependent spreads can override
     // any property (last-property-wins per React's style merging).
@@ -858,12 +909,12 @@ fn build_grid_cell_style_expr(
     }
     if let (Some(sr), Some(sc)) = (selected_row, selected_col) {
         parts.push(format!(
-            "...(r === {sr} && c === {sc} ? {{ background: \"#264f78\", color: \"#ffffff\", outline: \"1px solid #007acc\" }} : {{}})"
+            "...(r === {sr} && c === {sc} ? {{ {selected_fragment} }} : {{}})"
         ));
     }
     if let (Some(er), Some(ec)) = (edit_row, edit_col) {
         parts.push(format!(
-            "...(r === {er} && c === {ec} ? {{ background: \"#1f4f3f\", outline: \"1px solid #007acc\" }} : {{}})"
+            "...(r === {er} && c === {ec} ? {{ {editing_fragment} }} : {{}})"
         ));
     }
 
@@ -1078,7 +1129,19 @@ fn build_part_style_map(style: &StyleDef) -> HashMap<String, String> {
         if !fragment.is_empty() {
             out.insert(part.name.clone(), fragment);
         }
-        // `part.states` ignored for now — see fn doc above.
+        // State blocks (`state selected { ... }`) are surfaced under a
+        // composite key `{part}:{state}` so consumers that need a
+        // state-specific fragment (e.g. the Grid emitter's per-cell
+        // selection / editing highlights) can `part_styles.get("sheet/cell:selected")`
+        // without each backend having to walk `style.parts` again. The
+        // base-only consumers continue to look up the bare part name.
+        for state in &part.states {
+            let state_fragment = build_inline_style_fragment(&state.props);
+            if !state_fragment.is_empty() {
+                let key = format!("{}:{}", part.name, state.state);
+                out.insert(key, state_fragment);
+            }
+        }
     }
     out
 }
@@ -2553,6 +2616,177 @@ mod tests {
         let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
         assert!(result.output.contains("r === edRow && c === edCol"),
             "expected editing conditional, got:\n{}", result.output);
+        assert!(result.output.contains("background: \"#1f4f3f\""));
+    }
+
+    /// When the author declares `state selected { ... }` under `part sheet/cell`,
+    /// the Grid emitter uses those colours instead of its built-in fallback.
+    /// This eliminates the previous "selection colours are hardcoded in the
+    /// emitter" limitation by letting the theme own them.
+    #[test]
+    fn grid_state_selected_overrides_default_selection_colour() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("sel-row", SlotType::Number, true),
+                slot("sel-col", SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let s = StyleDef {
+            component_name: "G".to_string(),
+            parts: vec![PartStyle {
+                name: "sheet/cell".to_string(),
+                base: Vec::new(),
+                states: vec![StateStyle {
+                    state: "selected".to_string(),
+                    props: vec![
+                        StyleProp { name: "background".to_string(), value: "#ff00aa".to_string() },
+                        StyleProp { name: "color".to_string(),      value: "#000000".to_string() },
+                    ],
+                }],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "G".to_string(),
+            root: LayoutNode {
+                tag: "Grid".to_string(),
+                part_name: Some("sheet".to_string()),
+                props: vec![
+                    slot_ref_prop("headers", "col-labels"),
+                    slot_ref_prop("rows", "data-rows"),
+                    slot_ref_prop("selected-row", "sel-row"),
+                    slot_ref_prop("selected-col", "sel-col"),
+                ],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        // Author's colours appear.
+        assert!(
+            result.output.contains("background: \"#ff00aa\""),
+            "expected author selection background, got:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("color: \"#000000\""),
+            "expected author selection color, got:\n{}",
+            result.output
+        );
+        // And the hardcoded default is absent (the emitter took the author's path).
+        assert!(
+            !result.output.contains("background: \"#264f78\""),
+            "expected default selection background to be replaced, got:\n{}",
+            result.output
+        );
+    }
+
+    /// Same as above for the `editing` state. The author can declare
+    /// `state editing { ... }` and the emitter wires it into the per-cell
+    /// style spread without touching its built-in editing default.
+    #[test]
+    fn grid_state_editing_overrides_default_editing_colour() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("ed-row", SlotType::Number, true),
+                slot("ed-col", SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let s = StyleDef {
+            component_name: "G".to_string(),
+            parts: vec![PartStyle {
+                name: "sheet/cell".to_string(),
+                base: Vec::new(),
+                states: vec![StateStyle {
+                    state: "editing".to_string(),
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#abcdef".to_string(),
+                    }],
+                }],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "G".to_string(),
+            root: LayoutNode {
+                tag: "Grid".to_string(),
+                part_name: Some("sheet".to_string()),
+                props: vec![
+                    slot_ref_prop("headers", "col-labels"),
+                    slot_ref_prop("rows", "data-rows"),
+                    slot_ref_prop("edit-row", "ed-row"),
+                    slot_ref_prop("edit-col", "ed-col"),
+                ],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        assert!(result.output.contains("background: \"#abcdef\""));
+        assert!(
+            !result.output.contains("background: \"#1f4f3f\""),
+            "expected default editing background to be replaced, got:\n{}",
+            result.output
+        );
+    }
+
+    /// Mixed case: author declares `state selected` but NOT `state editing`.
+    /// The selected fragment uses the author's value; the editing fragment
+    /// falls back to the built-in default so the cell still gets an
+    /// editing highlight without the author needing to know that detail.
+    #[test]
+    fn grid_state_selected_only_keeps_editing_default() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("sel-row", SlotType::Number, true),
+                slot("sel-col", SlotType::Number, true),
+                slot("ed-row",  SlotType::Number, true),
+                slot("ed-col",  SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let s = StyleDef {
+            component_name: "G".to_string(),
+            parts: vec![PartStyle {
+                name: "sheet/cell".to_string(),
+                base: Vec::new(),
+                states: vec![StateStyle {
+                    state: "selected".to_string(),
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#222222".to_string(),
+                    }],
+                }],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "G".to_string(),
+            root: LayoutNode {
+                tag: "Grid".to_string(),
+                part_name: Some("sheet".to_string()),
+                props: vec![
+                    slot_ref_prop("headers", "col-labels"),
+                    slot_ref_prop("rows", "data-rows"),
+                    slot_ref_prop("selected-row", "sel-row"),
+                    slot_ref_prop("selected-col", "sel-col"),
+                    slot_ref_prop("edit-row", "ed-row"),
+                    slot_ref_prop("edit-col", "ed-col"),
+                ],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        // Author selected.
+        assert!(result.output.contains("background: \"#222222\""));
+        // Editing default still present.
         assert!(result.output.contains("background: \"#1f4f3f\""));
     }
 

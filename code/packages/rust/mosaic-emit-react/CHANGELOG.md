@@ -4,6 +4,28 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Changed — Grid selection / editing colours come from `.msl`
+
+- The Grid primitive's per-cell selection (`r === selRow && c === selCol`)
+  and editing (`r === edRow && c === edCol`) highlight spreads now read
+  their colours from the author's mosstyle source: `state selected
+  { ... }` and `state editing { ... }` under `part sheet/cell` are
+  surfaced into the part-style map under composite keys
+  (`sheet/cell:selected`, `sheet/cell:editing`) and inlined into the
+  spread. When either state block is omitted the emitter falls back to
+  the same hardcoded defaults it shipped before (`#264f78` selected,
+  `#1f4f3f` editing), so existing demos render unchanged.
+- The part-style map now generally exposes one entry per declared state
+  block via the composite key `{part}:{state}`. Other emitters that
+  want per-state lookups (Input hover, Button pressed, etc.) can read
+  the same shape without re-walking the `StyleDef`.
+- Three new tests: author selected overrides default, author editing
+  overrides default, mixed case where only one state is declared still
+  uses the default for the other.
+- The VisiCalc demo's `Grid.dark.msl` now declares `state selected` and
+  `state editing` blocks under `part sheet/cell`, keeping the rendered
+  output identical while moving the colours to the theme.
+
 ### Added — Grid `column-widths` slot ref
 
 - The Grid primitive now reads an optional `column-widths` slot-ref prop
