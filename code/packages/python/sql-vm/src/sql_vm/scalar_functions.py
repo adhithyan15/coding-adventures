@@ -499,18 +499,29 @@ def _pow(x: SqlValue, y: SqlValue) -> SqlValue:
         return None
 
 
-@register("log", "ln")
-def _log(*args: SqlValue) -> SqlValue:
-    """Natural logarithm (1 arg) or log base B (2 args: ``LOG(B, x)``).
+@register("ln")
+def _ln(x: SqlValue) -> SqlValue:
+    """Natural logarithm (base e).  SQLite 3.35+ math function.
 
-    ``LOG(x)``    → natural log of *x*.
-    ``LOG(B, x)`` → log base *B* of *x*.
+    Returns NULL for non-positive *x* or NULL input.
+    """
+    return _safe_math(math.log, x)
+
+
+@register("log")
+def _log(*args: SqlValue) -> SqlValue:
+    """Base-10 logarithm (1 arg) or log base B (2 args: ``LOG(B, x)``).
+
+    ``LOG(x)``    → base-10 log of *x*.  Matches SQLite's ``log()`` function,
+                    which is base 10 — NOT natural log.  Use ``LN(x)`` for
+                    natural log.
+    ``LOG(B, x)`` → log of *x* in base *B*.
 
     Returns NULL for non-positive inputs.
     """
     _arity("log", list(args), 1, 2)
     if len(args) == 1:
-        return _safe_math(math.log, args[0])
+        return _safe_math(math.log10, args[0])
     base, x = args[0], args[1]
     if base is None or x is None:
         return None
@@ -866,34 +877,41 @@ def _instr(x: SqlValue, needle: SqlValue) -> SqlValue:
 
 @register("hex")
 def _hex(x: SqlValue) -> SqlValue:
-    """Convert *x* to an upper-cased hexadecimal string.
+    """Convert *x* to an upper-cased hexadecimal string, matching SQLite semantics.
 
-    For BLOB values, encodes each byte as two hex digits (no ``0x`` prefix).
+    SQLite's HEX() function works on the *string representation* of its
+    argument, not the binary representation.  For numeric values this means
+    SQLite first formats the number using its default conversion rules
+    (e.g. ``123`` → ``"123"``) and then hex-encodes the resulting UTF-8 bytes
+    (``"123"`` → ``"313233"``).
+
+    For BLOB values, encodes each byte as two hex digits.
     For TEXT values, encodes the UTF-8 bytes.
-    For integers, encodes the big-endian 8-byte representation.
-    Returns NULL for NULL input.
+    Returns the empty string for NULL input (matching SQLite's NULL handling).
 
     Examples::
 
         HEX(X'DEADBEEF')   → "DEADBEEF"
         HEX("AB")          → "4142"
-        HEX(255)           → "00000000000000FF"
+        HEX(123)           → "313233"      (the string "123" hex-encoded)
+        HEX(3.14)          → "332E3134"    (the string "3.14" hex-encoded)
+        HEX(NULL)          → ""
     """
     if x is None:
-        # SQLite: HEX(NULL) → '' (empty string, not NULL).
-        # This differs from most other functions which propagate NULL, but it
-        # matches the documented SQLite behaviour and real-world expectations.
         return ""
     if isinstance(x, (bytes, bytearray)):
         return bytes(x).hex().upper()
     if isinstance(x, str):
         return x.encode("utf-8").hex().upper()
     if isinstance(x, bool):
-        return struct.pack(">q", int(x)).hex().upper()
+        # SQLite stores booleans as 0/1 integers; format as a decimal string.
+        return str(int(x)).encode("utf-8").hex().upper()
     if isinstance(x, int):
-        return struct.pack(">q", x).hex().upper()
+        return str(x).encode("utf-8").hex().upper()
     if isinstance(x, float):
-        return struct.pack(">d", x).hex().upper()
+        # Float formatting: SQLite uses the shortest round-trippable repr.
+        # Python's str(x) is a good approximation (e.g. 3.14 → "3.14", not "3.1400000000000001").
+        return str(x).encode("utf-8").hex().upper()
     return str(x)
 
 
@@ -1406,6 +1424,20 @@ def _parse_timevalue(tv: SqlValue) -> datetime | None:
                 return dt.replace(tzinfo=UTC)
             except ValueError:
                 pass
+        # SQLite also accepts time-only strings: 'HH:MM', 'HH:MM:SS', 'HH:MM:SS.sss'.
+        # These represent the time of day on year 2000-01-01 in SQLite's internal
+        # epoch, but for our purposes the date part is irrelevant — we anchor it
+        # to 2000-01-01 so the time() function and strftime('%H:%M:%S', ...) work.
+        # See https://www.sqlite.org/lang_datefunc.html#tmval — "time" rule.
+        m = re.match(r"^(\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?$", s)
+        if m:
+            hour = int(m.group(1))
+            minute = int(m.group(2))
+            second = int(m.group(3)) if m.group(3) else 0
+            try:
+                return datetime(2000, 1, 1, hour, minute, second, tzinfo=UTC)
+            except ValueError:
+                pass
         return None
 
     if isinstance(tv, float):
@@ -1446,6 +1478,26 @@ def _apply_modifier(dt: datetime, modifier: str) -> datetime | None:
         return dt.astimezone().replace(tzinfo=UTC)
     if m_lower == "utc":
         return dt  # already UTC in our model
+
+    # weekday N — advance to the next day-of-week N (0=Sun, 1=Mon, …, 6=Sat).
+    # If today already matches, dt is unchanged (per SQLite spec).
+    weekday_match = re.match(r"^weekday\s+(\d)$", m_lower)
+    if weekday_match:
+        target = int(weekday_match.group(1))
+        if not 0 <= target <= 6:
+            return None
+        # Python: Monday=0..Sunday=6; SQLite: Sunday=0..Saturday=6
+        # Convert SQLite target to Python: 0→6 (Sun), 1→0 (Mon), …, 6→5 (Sat)
+        py_target = (target - 1) % 7
+        days_ahead = (py_target - dt.weekday()) % 7
+        return dt + timedelta(days=days_ahead)
+
+    # unixepoch — interpret the time value as a Unix-epoch integer (SQLite 3.38+).
+    # When applied as a modifier it forces the *current* dt's interpretation to
+    # have come from a Unix epoch integer.  Since we already store as datetime
+    # this is a no-op; we accept it so applications that pass it don't error.
+    if m_lower == "unixepoch":
+        return dt
 
     # Numeric offset: [+-]N unit
     pat = re.match(

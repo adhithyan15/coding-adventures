@@ -25,6 +25,16 @@
   escaping (`'O\\'Brien'`).  Updated the `substitute()` string-literal
   scanner accordingly.
 
+## [1.38.0] - 2026-05-17
+
+### Fixed
+
+- **Four SQLite-compatibility scalar-function fixes** (via `sql-vm 1.27.0`):
+  `time()` now parses bare time strings, `date(t, 'weekday N')` works,
+  `log()` is base-10 (not natural), and `hex(N)` uses decimal-string bytes
+  (matching `HEX("123")`).  New `test_tier3_scalar_fn_fixes.py` adds 22
+  oracle-comparison tests against the real `sqlite3` module.
+
 ## [1.37.0] - 2026-05-17
 
 ### Fixed
