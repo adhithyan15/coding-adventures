@@ -105,12 +105,11 @@ contributor can pick them up:
    support lands. Follow-up: add `List(Box<ListInnerType>)` to
    `mosmodel-compiler`, regenerate the components.
 
-2. **Event-union types are not `export`ed by the pipeline emitter.**
-   The pipeline emitter produces `type GridEvent = ...` (non-exported)
-   inside `Grid.tsx`. The host's `state.ts` therefore re-declares the
-   matching shapes inline. Follow-up: change the pipeline emitter to
-   `export type ...` so the host can `import type { GridEvent } from
-   "../components/Grid"` directly.
+2. ~~**Event-union types are not `export`ed by the pipeline emitter.**~~
+   *Resolved.* The pipeline emitter now writes `export type GridEvent =
+   ...` and `export type FormulaBarEvent = ...` so the host imports the
+   shapes directly from the generated component files instead of
+   redeclaring them in `state.ts`.
 
 3. **No `placeholder: "..."` on the FormulaBar Input.** Per UI25, the
    moslayout grammar does not yet accept string-literal prop values, so

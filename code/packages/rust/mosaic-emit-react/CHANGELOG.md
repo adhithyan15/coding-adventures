@@ -4,6 +4,18 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Changed — event-union types are now exported
+
+- `emit_event_union` now writes `export type {Component}Event = ...`
+  (and `export type {Component}Event = never` in the empty-emit case)
+  so host applications can `import type { GridEvent } from "./Grid"`
+  directly instead of redeclaring the event-union shape inline. The
+  VisiCalc demo (`demo/visicalc/src/app/state.ts`) previously carried a
+  hand-maintained copy of `GridEvent` and `FormulaBarEvent` for exactly
+  this reason; it now imports them from the generated component files.
+- Two new tests assert the `export` keyword is emitted in both the
+  empty-emit and one-or-more-emit cases.
+
 ### Added — Grid primitive (pipeline path, UI26 §6.2)
 
 - The moslayout `Grid` primitive now lowers to a full `<table>` with

@@ -6,25 +6,17 @@
 // would replace the editCommit case to consult an engine). See
 // UI26 §11 for the deferred-track note.
 
+// Event-union types come straight from the generated components. The
+// pipeline emitter now writes `export type GridEvent = ...` and
+// `export type FormulaBarEvent = ...` so hosts no longer need a
+// hand-maintained copy of the shapes — they import them directly.
+import type { GridEvent } from "../components/Grid";
+import type { FormulaBarEvent } from "../components/FormulaBar";
 import { cellKey } from "./util";
 
-// ---------------------------------------------------------------------
-// Event-union types (kept in sync by structure with the generated
-// `GridEvent` and `FormulaBarEvent` types inside Grid.tsx / FormulaBar.tsx).
-//
-// The pipeline emitter currently produces these unions as non-exported
-// `type ... = ...` declarations inside the generated .tsx files, so we
-// define matching copies here. TypeScript's structural typing makes
-// `dispatch` work as long as the shapes line up.
-// ---------------------------------------------------------------------
-
-export type GridEvent =
-  | { type: "navigate"; row: number; col: number };
-
-export type FormulaBarEvent =
-  | { type: "formulaChange"; value: string }
-  | { type: "commit" }
-  | { type: "cancel" };
+// Re-export for downstream files (App.tsx, util.ts) that consume the
+// event types via this module's surface.
+export type { GridEvent, FormulaBarEvent };
 
 /** Host-internal events not produced by any Mosaic component. */
 export type HostEvent =
