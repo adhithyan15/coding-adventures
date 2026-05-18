@@ -4,13 +4,13 @@ use board_vm_ir::{
     decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ,
     CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE,
     CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
-    CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_RESOLVE, CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_OPEN,
-    CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN,
-    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE,
-    CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET,
-    CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS,
-    CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE,
-    CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
+    CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_RESOLVE, CAP_NETWORK_TCP_CLOSE,
+    CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE,
+    CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE,
+    CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS,
+    CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ,
+    CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ,
+    CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -241,6 +241,10 @@ pub trait BoardHal {
     }
 
     fn network_tcp_read(&mut self, _token: u32) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn network_tcp_connected(&mut self, _token: u32) -> Result<bool, HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -977,6 +981,18 @@ where
                     })?;
                 self.push(Value::U8(byte), ip)
             }
+            CAP_NETWORK_TCP_CONNECTED => {
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::NetworkTcp, ip)?;
+                let connected =
+                    self.hal
+                        .network_tcp_connected(token)
+                        .map_err(|err| RuntimeError {
+                            ip,
+                            kind: hal_error_kind(err),
+                        })?;
+                self.push(Value::Bool(connected), ip)
+            }
             CAP_NETWORK_TCP_CLOSE => {
                 let handle = self.pop_handle(ip)?;
                 let token = self.handle_token(handle, HandleKind::NetworkTcp, ip)?;
@@ -1357,6 +1373,7 @@ mod tests {
         NetworkTcpOpen(u16, u32, u16),
         NetworkTcpWrite(u32, u8),
         NetworkTcpRead(u32),
+        NetworkTcpConnected(u32),
         NetworkTcpClose(u32),
         NetworkUdpOpen(u16, u32, u16),
         NetworkUdpWrite(u32, u8),
@@ -1620,6 +1637,11 @@ mod tests {
         fn network_tcp_read(&mut self, token: u32) -> Result<u8, HalError> {
             self.events.push(Event::NetworkTcpRead(token));
             Ok(0x42)
+        }
+
+        fn network_tcp_connected(&mut self, token: u32) -> Result<bool, HalError> {
+            self.events.push(Event::NetworkTcpConnected(token));
+            Ok(true)
         }
 
         fn network_tcp_close(&mut self, token: u32) -> Result<(), HalError> {
@@ -2144,6 +2166,10 @@ mod tests {
             0x40,
             CAP_NETWORK_TCP_READ as u8,
             0x21,
+            0x20,
+            0x40,
+            CAP_NETWORK_TCP_CONNECTED as u8,
+            0x21,
             0x40,
             CAP_NETWORK_TCP_CLOSE as u8,
         ];
@@ -2158,6 +2184,7 @@ mod tests {
                 Event::NetworkTcpOpen(0, 0xc0a8_012a, 8080),
                 Event::NetworkTcpWrite(0x5_2002, 0x41),
                 Event::NetworkTcpRead(0x5_2002),
+                Event::NetworkTcpConnected(0x5_2002),
                 Event::NetworkTcpClose(0x5_2002),
             ]
         );
