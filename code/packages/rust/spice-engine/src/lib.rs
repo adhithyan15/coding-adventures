@@ -1236,6 +1236,49 @@ pub struct DcResult {
     pub converged: bool,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerOverride {
+    pub element_name: String,
+    pub parameter: String,
+    pub value: f64,
+}
+
+impl CornerOverride {
+    pub fn new(element_name: impl Into<String>, parameter: impl Into<String>, value: f64) -> Self {
+        Self {
+            element_name: element_name.into(),
+            parameter: parameter.into(),
+            value,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerSpec {
+    pub name: String,
+    pub overrides: Vec<CornerOverride>,
+}
+
+impl CornerSpec {
+    pub fn new(name: impl Into<String>, overrides: impl Into<Vec<CornerOverride>>) -> Self {
+        Self {
+            name: name.into(),
+            overrides: overrides.into(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerPoint {
+    pub corner_name: String,
+    pub result: DcResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerSweepResult {
+    pub points: Vec<CornerPoint>,
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct DcOpOptions {
     pub max_iterations: usize,
@@ -1588,6 +1631,128 @@ pub fn dc_op_with_options(circuit: &Circuit, options: DcOpOptions) -> Result<DcR
             solution
         };
     Ok(dc_result_from_linear_solution(final_solution))
+}
+
+pub fn dc_corners(
+    circuit: &Circuit,
+    corners: &[CornerSpec],
+    options: DcOpOptions,
+) -> Result<CornerSweepResult, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerPoint {
+            corner_name: corner.name.clone(),
+            result: dc_op_with_options(&corner_circuit, options)?,
+        });
+    }
+    Ok(CornerSweepResult { points })
+}
+
+fn circuit_with_corner(circuit: &Circuit, corner: &CornerSpec) -> Result<Circuit, SpiceError> {
+    let mut overrides_by_name: HashMap<&str, Vec<&CornerOverride>> = HashMap::new();
+    for override_ in &corner.overrides {
+        overrides_by_name
+            .entry(&override_.element_name)
+            .or_default()
+            .push(override_);
+    }
+
+    let mut seen = Vec::new();
+    let mut corner_circuit = Circuit::new();
+    for element in circuit.elements() {
+        let mut element = element.clone();
+        if let Some(name) = element_name(&element) {
+            if let Some(overrides) = overrides_by_name.get(name) {
+                seen.push(name.to_string());
+                for override_ in overrides {
+                    element = apply_corner_override(element, override_)?;
+                }
+            }
+        }
+        corner_circuit.add(element);
+    }
+
+    for element_name in overrides_by_name.keys() {
+        if !seen.iter().any(|seen_name| seen_name == element_name) {
+            return Err(SpiceError::InvalidElement {
+                name: "dc_corners".to_string(),
+                reason: format!("missing element for corner override {element_name:?}"),
+            });
+        }
+    }
+    Ok(corner_circuit)
+}
+
+fn element_name(element: &Element) -> Option<&str> {
+    match element {
+        Element::Resistor(element) => Some(&element.name),
+        Element::Capacitor(element) => Some(&element.name),
+        Element::Inductor(element) => Some(&element.name),
+        Element::VoltageSource(element) => Some(&element.name),
+        Element::CurrentSource(element) => Some(&element.name),
+        _ => None,
+    }
+}
+
+fn apply_corner_override(
+    element: Element,
+    override_: &CornerOverride,
+) -> Result<Element, SpiceError> {
+    if !override_.value.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: "dc_corners".to_string(),
+            reason: "override values must be finite".to_string(),
+        });
+    }
+
+    match element {
+        Element::Resistor(mut element) if override_.parameter == "resistance" => {
+            if override_.value <= 0.0 {
+                return Err(SpiceError::InvalidElement {
+                    name: "dc_corners".to_string(),
+                    reason: "resistance overrides must be positive".to_string(),
+                });
+            }
+            element.resistance_ohms = override_.value;
+            Ok(Element::Resistor(element))
+        }
+        Element::Capacitor(mut element) if override_.parameter == "capacitance" => {
+            if override_.value <= 0.0 {
+                return Err(SpiceError::InvalidElement {
+                    name: "dc_corners".to_string(),
+                    reason: "capacitance overrides must be positive".to_string(),
+                });
+            }
+            element.capacitance_farads = override_.value;
+            Ok(Element::Capacitor(element))
+        }
+        Element::Inductor(mut element) if override_.parameter == "inductance" => {
+            if override_.value <= 0.0 {
+                return Err(SpiceError::InvalidElement {
+                    name: "dc_corners".to_string(),
+                    reason: "inductance overrides must be positive".to_string(),
+                });
+            }
+            element.inductance_henrys = override_.value;
+            Ok(Element::Inductor(element))
+        }
+        Element::VoltageSource(mut element) if override_.parameter == "voltage" => {
+            element.voltage = override_.value;
+            Ok(Element::VoltageSource(element))
+        }
+        Element::CurrentSource(mut element) if override_.parameter == "current" => {
+            element.current = override_.value;
+            Ok(Element::CurrentSource(element))
+        }
+        _ => Err(SpiceError::InvalidElement {
+            name: "dc_corners".to_string(),
+            reason: format!(
+                "unsupported override {:?}.{:?}",
+                override_.element_name, override_.parameter
+            ),
+        }),
+    }
 }
 
 fn dc_result_from_linear_solution(solution: LinearSolution) -> DcResult {

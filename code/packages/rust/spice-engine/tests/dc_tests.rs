@@ -1,8 +1,8 @@
 use spice_engine::{
-    dc_op, dc_op_with_options, dc_sweep, BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit,
-    CurrentSource, DcOpOptions, Diode, Element, Inductor, Mosfet, MosfetLevel1Params, MosfetType,
-    Resistor, SinWaveform, SpiceError, SubcircuitDefinition, SubcircuitElement, Vccs, Vcvs,
-    VoltageSource, Waveform, XInstance,
+    dc_corners, dc_op, dc_op_with_options, dc_sweep, BSource, Bjt, BjtPolarity, Cccs, Ccvs,
+    Circuit, CornerOverride, CornerSpec, CurrentSource, DcOpOptions, Diode, Element, Inductor,
+    Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError,
+    SubcircuitDefinition, SubcircuitElement, Vccs, Vcvs, VoltageSource, Waveform, XInstance,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -749,4 +749,48 @@ fn dc_op_uses_static_source_value_when_waveform_is_present() {
     let result = dc_op(&circuit).unwrap();
 
     assert_close(result.voltage("n1").unwrap(), 3.0);
+}
+
+#[test]
+fn dc_corners_runs_named_parameter_overrides() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_corners(
+        &circuit,
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "rbot-fast",
+                vec![CornerOverride::new("Rbot", "resistance", 500.0)],
+            ),
+            CornerSpec::new(
+                "vin-high",
+                vec![CornerOverride::new("Vin", "voltage", 12.0)],
+            ),
+            CornerSpec::new(
+                "vin-inverted",
+                vec![CornerOverride::new("Vin", "voltage", -10.0)],
+            ),
+        ],
+        DcOpOptions::default(),
+    )
+    .unwrap();
+
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "rbot-fast");
+    assert_eq!(result.points[2].corner_name, "vin-high");
+    assert_eq!(result.points[3].corner_name, "vin-inverted");
+    assert_close(result.points[0].result.voltage("out").unwrap(), 5.0);
+    assert_close(result.points[1].result.voltage("out").unwrap(), 10.0 / 3.0);
+    assert_close(result.points[2].result.voltage("out").unwrap(), 6.0);
+    assert_close(result.points[3].result.voltage("out").unwrap(), -5.0);
 }

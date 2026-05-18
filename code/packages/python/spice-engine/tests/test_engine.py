@@ -89,6 +89,9 @@ from spice_engine import (
     AcSource,
     Capacitor,
     Circuit,
+    CornerOverride,
+    CornerSpec,
+    CornerSweepResult,
     CurrentSource,
     DcSweepPoint,
     DcSweepResult,
@@ -114,6 +117,7 @@ from spice_engine import (
     XInstance,
     ac_sweep,
     dc_op,
+    dc_corners,
     dc_sweep,
     mc_dc,
     noise_ac,
@@ -5283,3 +5287,25 @@ def test_s_parameters_series_resistor_two_port() -> None:
     assert point.s12.real == pytest.approx(2.0 / 3.0)
     assert abs(point.s11.imag) < 1.0e-12
     assert abs(point.s21.imag) < 1.0e-12
+
+
+def test_dc_corners_runs_named_parameter_overrides() -> None:
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 10.0),
+        Resistor("Rtop", "in", "out", 1000.0),
+        Resistor("Rbot", "out", "0", 1000.0),
+    ])
+
+    result = dc_corners(
+        c,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rbot-fast", (CornerOverride("Rbot", "resistance", 500.0),)),
+            CornerSpec("vin-high", (CornerOverride("Vin", "voltage", 12.0),)),
+            CornerSpec("vin-inverted", (CornerOverride("Vin", "voltage", -10.0),)),
+        ],
+    )
+
+    assert isinstance(result, CornerSweepResult)
+    voltages = [point.result.node_voltages["out"] for point in result.points]
+    assert voltages == pytest.approx([5.0, 10.0 / 3.0, 6.0, -5.0])
