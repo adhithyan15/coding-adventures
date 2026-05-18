@@ -2303,3 +2303,288 @@ fn strict_panics_on_symbolic_add() {
     // before Add even sees the arguments.
     strict().eval(apply(sym(ADD), vec![sym("x"), int(1)]));
 }
+
+// ---------------------------------------------------------------------------
+// Phase 34: Weierstrass substitution for ∫ 1/(a + b·sin/cos x) dx
+// Mirrors the Python `test_phase34_weierstrass.py` and the TS
+// `phase34-weierstrass.test.ts` suites — numerical-derivative verification
+// and discriminant fallthrough checks.
+// ---------------------------------------------------------------------------
+
+/// Structural substitution: replace every occurrence of `var_name` in `node`
+/// with `value`.  Returns a fresh tree.
+fn phase34_subst(node: &symbolic_ir::IRNode, var_name: &str, value: &symbolic_ir::IRNode) -> symbolic_ir::IRNode {
+    if let symbolic_ir::IRNode::Symbol(name) = node {
+        if name == var_name {
+            return value.clone();
+        }
+    }
+    if let symbolic_ir::IRNode::Apply(apply) = node {
+        let new_args: Vec<symbolic_ir::IRNode> = apply
+            .args
+            .iter()
+            .map(|a| phase34_subst(a, var_name, value))
+            .collect();
+        return symbolic_ir::IRNode::Apply(Box::new(symbolic_ir::IRApply {
+            head: apply.head.clone(),
+            args: new_args,
+        }));
+    }
+    node.clone()
+}
+
+/// Evaluate `expr` after substituting x ← `x_val` through a fresh symbolic VM
+/// — so the full handler suite (including Tan, Sqrt, Atan) folds the tree.
+/// Returns NaN when the result is not numeric.
+fn phase34_eval_at(expr: &symbolic_ir::IRNode, x_val: f64) -> f64 {
+    let substituted = phase34_subst(expr, "x", &flt(x_val));
+    let folded = symbolic().eval(substituted);
+    match folded {
+        symbolic_ir::IRNode::Float(v) => v,
+        symbolic_ir::IRNode::Integer(n) => n as f64,
+        symbolic_ir::IRNode::Rational(n, d) => n as f64 / d as f64,
+        _ => f64::NAN,
+    }
+}
+
+/// Central-difference derivative of `expr` w.r.t. x at `x_val`.
+fn phase34_numerical_derivative(expr: &symbolic_ir::IRNode, x_val: f64) -> f64 {
+    let h = 1e-5;
+    (phase34_eval_at(expr, x_val + h) - phase34_eval_at(expr, x_val - h)) / (2.0 * h)
+}
+
+fn is_unevaluated_integrate(node: &symbolic_ir::IRNode) -> bool {
+    matches!(
+        node,
+        symbolic_ir::IRNode::Apply(apply)
+            if apply.head == symbolic_ir::IRNode::Symbol(INTEGRATE.to_string())
+    )
+}
+
+#[test]
+fn phase34_sin_two_plus_sin_closes_with_atan() {
+    // ∫ 1/(2 + sin x) dx — must close with an Atan in the body.
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(2), apply(sym(SIN), vec![sym("x")])])],
+    );
+    let result = integrate(integrand);
+    assert!(
+        !is_unevaluated_integrate(&result),
+        "Phase 34 should close ∫ 1/(2+sin x) dx; got {result:?}"
+    );
+    assert!(
+        contains_head(&result, ATAN),
+        "Expected Atan in closed form; got {result:?}"
+    );
+}
+
+#[test]
+fn phase34_sin_two_plus_sin_derivative_matches() {
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(2), apply(sym(SIN), vec![sym("x")])])],
+    );
+    let phi = integrate(integrand);
+    for &x_val in &[-2.5_f64, -1.0, -0.3, 0.0, 0.3, 1.0, 2.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (2.0 + x_val.sin());
+        assert!(
+            (got - expected).abs() < 1e-4,
+            "At x={x_val}: derivative={got}, expected={expected}"
+        );
+    }
+}
+
+#[test]
+fn phase34_sin_perfect_square_discriminant() {
+    // ∫ 1/(5 + 3·sin x) dx — disc=16 (perfect square) → Sqrt-free result.
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(1),
+            apply(
+                sym(ADD),
+                vec![int(5), apply(sym(MUL), vec![int(3), apply(sym(SIN), vec![sym("x")])])],
+            ),
+        ],
+    );
+    let phi = integrate(integrand);
+    assert!(
+        !contains_head(&phi, SQRT),
+        "Perfect-square disc should fold; got {phi:?}"
+    );
+    for &x_val in &[-1.0_f64, -0.2, 0.0, 0.7, 1.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (5.0 + 3.0 * x_val.sin());
+        assert!((got - expected).abs() < 1e-4);
+    }
+}
+
+#[test]
+fn phase34_sin_with_numerator_coefficient() {
+    // ∫ 3/(2 + sin x) dx — coefficient 3 must scale the closed form.
+    let integrand = apply(
+        sym(DIV),
+        vec![int(3), apply(sym(ADD), vec![int(2), apply(sym(SIN), vec![sym("x")])])],
+    );
+    let phi = integrate(integrand);
+    for &x_val in &[-1.0_f64, -0.2, 0.0, 0.7, 1.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 3.0 / (2.0 + x_val.sin());
+        assert!((got - expected).abs() < 1e-4);
+    }
+}
+
+#[test]
+fn phase34_sin_with_rational_coefficients() {
+    // ∫ 1/((3/2) + (1/2)·sin x) dx — rational a, b with disc = 2.
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(1),
+            apply(
+                sym(ADD),
+                vec![
+                    rat(3, 2),
+                    apply(sym(MUL), vec![rat(1, 2), apply(sym(SIN), vec![sym("x")])]),
+                ],
+            ),
+        ],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-1.5_f64, -0.4, 0.0, 0.4, 1.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (1.5 + 0.5 * x_val.sin());
+        assert!((got - expected).abs() < 1e-4);
+    }
+}
+
+#[test]
+fn phase34_cos_two_plus_cos_closes_and_matches() {
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(2), apply(sym(COS), vec![sym("x")])])],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-1.5_f64, -0.4, 0.0, 0.4, 1.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (2.0 + x_val.cos());
+        assert!((got - expected).abs() < 1e-4);
+    }
+}
+
+#[test]
+fn phase34_cos_five_plus_three_cos_sqrt_free() {
+    // disc=16, ratio=(5-3)/(5+3)=1/4 — both perfect squares → no Sqrt.
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(1),
+            apply(
+                sym(ADD),
+                vec![int(5), apply(sym(MUL), vec![int(3), apply(sym(COS), vec![sym("x")])])],
+            ),
+        ],
+    );
+    let phi = integrate(integrand);
+    assert!(
+        !contains_head(&phi, SQRT),
+        "Expected Sqrt-free form; got {phi:?}"
+    );
+    for &x_val in &[-1.5_f64, -0.4, 0.0, 0.4, 1.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (5.0 + 3.0 * x_val.cos());
+        assert!((got - expected).abs() < 1e-4);
+    }
+}
+
+#[test]
+fn phase34_sin_operand_order_swapped() {
+    // ∫ 1/(sin x + 2) dx — constant on the right.  Must still close.
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![apply(sym(SIN), vec![sym("x")]), int(2)])],
+    );
+    let result = integrate(integrand);
+    assert!(
+        !is_unevaluated_integrate(&result),
+        "Swapped form should still close; got {result:?}"
+    );
+}
+
+#[test]
+fn phase34_fallthrough_a_less_than_b() {
+    // ∫ 1/(1 + 2·sin x) dx — a²−b² = −3 < 0.  Log form deferred.
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(1),
+            apply(
+                sym(ADD),
+                vec![int(1), apply(sym(MUL), vec![int(2), apply(sym(SIN), vec![sym("x")])])],
+            ),
+        ],
+    );
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result));
+}
+
+#[test]
+fn phase34_fallthrough_a_equals_b() {
+    // ∫ 1/(1 + sin x) dx — a² = b² = 1.  Degenerate form deferred.
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(1), apply(sym(SIN), vec![sym("x")])])],
+    );
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result));
+}
+
+#[test]
+fn phase34_fallthrough_non_bare_argument() {
+    // ∫ 1/(2 + sin(2x)) dx — argument isn't bare x.  Deferred.
+    let two_x = apply(sym(MUL), vec![int(2), sym("x")]);
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(2), apply(sym(SIN), vec![two_x])])],
+    );
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result));
+}
+
+#[test]
+fn phase34_fallthrough_symbolic_coefficient() {
+    // ∫ 1/(a + sin x) dx — can't decide disc sign without assumptions.
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![sym("a"), apply(sym(SIN), vec![sym("x")])])],
+    );
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result));
+}
+
+#[test]
+fn phase34_regression_pure_sin_unchanged() {
+    // ∫ sin(x) dx = −cos(x) must continue to work.
+    let result = integrate(apply(sym(SIN), vec![sym("x")]));
+    let cos_x = apply(sym(COS), vec![sym("x")]);
+    let neg_cos = apply(sym(NEG), vec![cos_x.clone()]);
+    let mul_neg = apply(sym(MUL), vec![int(-1), cos_x]);
+    assert!(result == neg_cos || result == mul_neg, "got {result:?}");
+}
+
+#[test]
+fn phase34_regression_one_over_cos_not_misinterpreted() {
+    // ∫ 1/cos(x) dx — denominator has no additive constant; Phase 34 must NOT
+    // fire and produce a spurious arctan of tan(x/2).
+    let integrand = apply(sym(DIV), vec![int(1), apply(sym(COS), vec![sym("x")])]);
+    let result = integrate(integrand);
+    if let symbolic_ir::IRNode::Apply(apply) = &result {
+        if apply.head == symbolic_ir::IRNode::Symbol(ATAN.to_string()) {
+            panic!("Phase 34 incorrectly fired on ∫ 1/cos(x) dx: {result:?}");
+        }
+    }
+}

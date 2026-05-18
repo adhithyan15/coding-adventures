@@ -1,5 +1,72 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.7.0] — 2026-05-18
+
+### Added — Phase 34: Weierstrass substitution for ∫ 1/(a + b·sin/cos x) dx
+
+Ports Python `symbolic-vm` 0.59.0 Phase 34 to Rust.  The substitution
+`u = tan(x/2)` reduces `∫ 1/(a + b·sin x) dx` and `∫ 1/(a + b·cos x) dx`
+to rational functions of `u` whose closed form is an arctan whenever
+`a² > b²`.  Closed forms:
+
+    ∫ 1/(a + b·sin x) dx  =  (2/√(a²−b²)) · arctan((a·tan(x/2) + b)/√(a²−b²))
+    ∫ 1/(a + b·cos x) dx  =  (2/√(a²−b²)) · arctan(√((a−b)/(a+b)) · tan(x/2))
+
+For exact-rational `a, b` with `a² > b²` (and `a > 0` for the cos
+branch) the integrator now closes the form directly.  A numerator
+constant `c` simply scales the result.
+
+#### Deferred to a later phase
+
+- `a² < b²` — log form on `(a·tan(x/2)+b ± √(b²−a²))` (sign analysis).
+- `a² = b²` — degenerate, reduces to a rational in `tan(x/2)`.
+- `a ≤ 0` for the cos branch — `(a−b)/(a+b)` sign analysis.
+- Symbolic `a` or `b` — discriminant sign undecidable without an
+  assumption context (the Rust port has no assumption system).
+- Non-bare trig arguments (e.g. `sin(2x)`).
+
+#### Added (`src/handlers.rs`)
+
+- **`try_weierstrass_one_over_linear_trig(num, den, x)`** — Phase 34
+  entry point.  Matches `c / (a + b·sin/cos(x))` shapes with rational
+  c, a, b.  Returns the closed-form `IRNode` or `None`.
+- **`weierstrass_parse_a_plus_b_sincos(node, x)`** — structural matcher
+  returning `(a, b, trig_head_str)` for ADD/SUB with both operand
+  orderings.
+- **`weierstrass_parse_const_times_trig_x(node, x)`** — matches
+  `c·sin(x)`, `c·cos(x)`, `sin(x)`, `cos(x)`, and `Neg`-wrappings.
+- **`weierstrass_sqrt_fraction_ir(rc)`** — emits `Sqrt(p/q)` IR, folding
+  to a clean rational when both numerator and denominator are perfect
+  integer squares (reuses the existing `i128_sqrt` helper).
+- **`node_to_rc(node)`** — `IRNode` → `RatC` converter for Integer and
+  Rational literals.
+
+Wired into the `(DIV, [c, denom])` arm of `integrate` after the existing
+`1/x` case.  The Weierstrass path requires `!depends_on(c, x)` so it
+never fires for `x/(2+sin x)` style integrands.
+
+#### Tests (`tests/test_vm.rs`)
+
+14 new `#[test]` functions mirroring the Python and TS Phase 34 suites:
+
+- Closed-form structure: `∫ 1/(2 + sin x) dx` contains an `Atan` node.
+- Numeric-derivative verification at multiple sample points for both
+  sin and cos.
+- Perfect-square discriminant folds `Sqrt` away (a=5, b=3 → disc=16).
+- Numerator coefficient scales the closed form (`∫ 3/(2 + sin x) dx`).
+- Rational coefficients (a=3/2, b=1/2; disc=2).
+- Operand-order robustness (`∫ 1/(sin x + 2) dx` still closes).
+- Four fallthrough guarantees: a²<b², a²=b², non-bare arg, symbolic `a`.
+- Regression: `∫ sin(x) dx = −cos(x)` unchanged; `∫ 1/cos(x) dx` is
+  NOT misinterpreted as a Weierstrass case.
+
+New helpers in the test file: `phase34_subst`, `phase34_eval_at`,
+`phase34_numerical_derivative`, `is_unevaluated_integrate`.  The
+existing `eval_at` / `contains_head` helpers are kept intact (the
+Phase 34 numerical evaluator routes through the full `SymbolicBackend`
+to evaluate `Tan` / `Sqrt` / `Atan` correctly, while the existing
+`eval_at` is a manually-coded subset for Phases 26-28).
+
 ## [0.6.0] — 2026-05-18
 
 ### Added — Phases 29–33: algebraic simplification rules
