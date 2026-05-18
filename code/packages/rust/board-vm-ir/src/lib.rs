@@ -45,6 +45,10 @@ pub const CAP_NETWORK_TCP_OPEN: u16 = 0x3A;
 pub const CAP_NETWORK_TCP_WRITE: u16 = 0x3B;
 pub const CAP_NETWORK_TCP_READ: u16 = 0x3C;
 pub const CAP_NETWORK_TCP_CLOSE: u16 = 0x3D;
+pub const CAP_NETWORK_UDP_OPEN: u16 = 0x3E;
+pub const CAP_NETWORK_UDP_WRITE: u16 = 0x3F;
+pub const CAP_NETWORK_UDP_READ: u16 = 0x40;
+pub const CAP_NETWORK_UDP_CLOSE: u16 = 0x41;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
 const CAP_GPIO_WRITE_U8: u8 = CAP_GPIO_WRITE as u8;
@@ -80,6 +84,10 @@ const CAP_NETWORK_TCP_OPEN_U8: u8 = CAP_NETWORK_TCP_OPEN as u8;
 const CAP_NETWORK_TCP_WRITE_U8: u8 = CAP_NETWORK_TCP_WRITE as u8;
 const CAP_NETWORK_TCP_READ_U8: u8 = CAP_NETWORK_TCP_READ as u8;
 const CAP_NETWORK_TCP_CLOSE_U8: u8 = CAP_NETWORK_TCP_CLOSE as u8;
+const CAP_NETWORK_UDP_OPEN_U8: u8 = CAP_NETWORK_UDP_OPEN as u8;
+const CAP_NETWORK_UDP_WRITE_U8: u8 = CAP_NETWORK_UDP_WRITE as u8;
+const CAP_NETWORK_UDP_READ_U8: u8 = CAP_NETWORK_UDP_READ as u8;
+const CAP_NETWORK_UDP_CLOSE_U8: u8 = CAP_NETWORK_UDP_CLOSE as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Op {
@@ -166,6 +174,7 @@ pub struct CapabilitySet {
     pub watchdog: bool,
     pub storage: bool,
     pub network_tcp: bool,
+    pub network_udp: bool,
 }
 
 impl CapabilitySet {
@@ -185,6 +194,7 @@ impl CapabilitySet {
             watchdog: false,
             storage: false,
             network_tcp: false,
+            network_udp: false,
         }
     }
 
@@ -204,6 +214,7 @@ impl CapabilitySet {
             watchdog: false,
             storage: false,
             network_tcp: false,
+            network_udp: false,
         }
     }
 
@@ -267,6 +278,13 @@ impl CapabilitySet {
         }
     }
 
+    pub const fn with_network_udp(self) -> Self {
+        Self {
+            network_udp: true,
+            ..self
+        }
+    }
+
     pub const fn supports(self, capability_id: u16) -> bool {
         match capability_id {
             CAP_GPIO_OPEN | CAP_GPIO_WRITE | CAP_GPIO_READ | CAP_GPIO_CLOSE => self.gpio_digital,
@@ -287,6 +305,10 @@ impl CapabilitySet {
             | CAP_NETWORK_TCP_WRITE
             | CAP_NETWORK_TCP_READ
             | CAP_NETWORK_TCP_CLOSE => self.network_tcp,
+            CAP_NETWORK_UDP_OPEN
+            | CAP_NETWORK_UDP_WRITE
+            | CAP_NETWORK_UDP_READ
+            | CAP_NETWORK_UDP_CLOSE => self.network_udp,
             _ => false,
         }
     }
@@ -576,6 +598,10 @@ fn stack_effect(op: Op) -> (i16, i16) {
         Op::CallU8(CAP_NETWORK_TCP_WRITE_U8) | Op::CallU16(CAP_NETWORK_TCP_WRITE) => (2, 0),
         Op::CallU8(CAP_NETWORK_TCP_READ_U8) | Op::CallU16(CAP_NETWORK_TCP_READ) => (1, 1),
         Op::CallU8(CAP_NETWORK_TCP_CLOSE_U8) | Op::CallU16(CAP_NETWORK_TCP_CLOSE) => (1, 0),
+        Op::CallU8(CAP_NETWORK_UDP_OPEN_U8) | Op::CallU16(CAP_NETWORK_UDP_OPEN) => (3, 1),
+        Op::CallU8(CAP_NETWORK_UDP_WRITE_U8) | Op::CallU16(CAP_NETWORK_UDP_WRITE) => (2, 0),
+        Op::CallU8(CAP_NETWORK_UDP_READ_U8) | Op::CallU16(CAP_NETWORK_UDP_READ) => (1, 1),
+        Op::CallU8(CAP_NETWORK_UDP_CLOSE_U8) | Op::CallU16(CAP_NETWORK_UDP_CLOSE) => (1, 0),
         Op::CallU8(_) | Op::CallU16(_) => (0, 0),
         Op::ReturnTop => (1, 0),
     }
