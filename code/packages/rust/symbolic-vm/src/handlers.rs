@@ -1422,6 +1422,185 @@ fn derivative_handler() -> Handler {
     })
 }
 
+// ---------------------------------------------------------------------------
+// Phase 34 — Weierstrass substitution for ∫ c/(a + b·sin(x)) dx and
+// ∫ c/(a + b·cos(x)) dx with rational a, b satisfying a² > b² (a > 0 for cos).
+// Mirrors Python symbolic-vm 0.59.0 and TypeScript symbolic-vm 0.7.0.
+//
+// Closed forms:
+//   ∫ 1/(a + b·sin x) dx = (2/√(a²−b²)) · arctan((a·tan(x/2) + b)/√(a²−b²))
+//   ∫ 1/(a + b·cos x) dx = (2/√(a²−b²)) · arctan(√((a−b)/(a+b)) · tan(x/2))
+//
+// Discriminant cases a² ≤ b² and a ≤ 0 for cos are deferred — they need
+// sign analysis the assumption-free port cannot perform symbolically.
+// ---------------------------------------------------------------------------
+
+/// Convert an IRNode to a `RatC` rational if it's an Integer or Rational
+/// literal.  Returns None for Float, Symbol, Apply.
+fn node_to_rc(node: &IRNode) -> Option<RatC> {
+    match node {
+        IRNode::Integer(n) => Some((*n as i128, 1)),
+        IRNode::Rational(n, d) => rc(*n as i128, *d as i128),
+        _ => None,
+    }
+}
+
+/// Build the IR for `√(rc)`, folding to a plain rational when both numerator
+/// and denominator are perfect integer squares.  Wraps in `Sqrt` otherwise.
+/// `rc` must be strictly positive — callers guard the discriminant first.
+fn weierstrass_sqrt_fraction_ir(rc_val: RatC) -> IRNode {
+    let (p, q) = rc_val;
+    if p <= 0 || q <= 0 {
+        // Defensive — produce a Sqrt of whatever rational we got.
+        return apply_node(
+            SQRT,
+            vec![rc_to_ir(rc_val).unwrap_or(IRNode::Float(rc_val.0 as f64 / rc_val.1 as f64))],
+        );
+    }
+    if let (Some(p_root), Some(q_root)) = (i128_sqrt(p), i128_sqrt(q)) {
+        if let Some(ir) = rc_to_ir((p_root, q_root)) {
+            return ir;
+        }
+    }
+    // Not a perfect-square pair — emit Sqrt(rational).
+    let inside = rc_to_ir(rc_val).unwrap_or(IRNode::Float(p as f64 / q as f64));
+    apply_node(SQRT, vec![inside])
+}
+
+/// Match `c·sin(x)`, `c·cos(x)`, `sin(x)`, `cos(x)`, or any `Neg`-wrapping.
+/// Returns `(c, trig_head_str)` where `trig_head_str` is `SIN` or `COS`.
+fn weierstrass_parse_const_times_trig_x(node: &IRNode, x: &str) -> Option<(RatC, &'static str)> {
+    let target = IRNode::Symbol(x.to_string());
+    if let IRNode::Apply(apply) = node {
+        // Bare sin(x) / cos(x) — coefficient is 1.
+        if apply.args.len() == 1 && apply.args[0] == target {
+            if apply.head == IRNode::Symbol(SIN.to_string()) {
+                return Some(((1, 1), SIN));
+            }
+            if apply.head == IRNode::Symbol(COS.to_string()) {
+                return Some(((1, 1), COS));
+            }
+        }
+        // Mul(c, sin/cos(x)) or Mul(sin/cos(x), c)
+        if apply.head == IRNode::Symbol(MUL.to_string()) && apply.args.len() == 2 {
+            let (a, b) = (&apply.args[0], &apply.args[1]);
+            for (const_side, trig_side) in [(a, b), (b, a)] {
+                if let Some(c) = node_to_rc(const_side) {
+                    if let IRNode::Apply(trig) = trig_side {
+                        if trig.args.len() == 1 && trig.args[0] == target {
+                            if trig.head == IRNode::Symbol(SIN.to_string()) {
+                                return Some((c, SIN));
+                            }
+                            if trig.head == IRNode::Symbol(COS.to_string()) {
+                                return Some((c, COS));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // Neg(inner) — recurse one level and negate the coefficient.
+        if apply.head == IRNode::Symbol(NEG.to_string()) && apply.args.len() == 1 {
+            if let Some((c, head)) = weierstrass_parse_const_times_trig_x(&apply.args[0], x) {
+                return Some((rc_neg(c), head));
+            }
+        }
+    }
+    None
+}
+
+/// Parse `a + b·sin(x)` / `a + b·cos(x)` (any operand order, plus the
+/// SUB-headed variant) into `(a, b, trig_head_str)`.
+fn weierstrass_parse_a_plus_b_sincos(
+    node: &IRNode,
+    x: &str,
+) -> Option<(RatC, RatC, &'static str)> {
+    let IRNode::Apply(apply) = node else {
+        return None;
+    };
+    if apply.args.len() != 2 {
+        return None;
+    }
+    let (left, right) = (&apply.args[0], &apply.args[1]);
+    if apply.head == IRNode::Symbol(ADD.to_string()) {
+        for (const_side, trig_side) in [(left, right), (right, left)] {
+            if let Some(a_rc) = node_to_rc(const_side) {
+                if let Some((b_rc, head)) = weierstrass_parse_const_times_trig_x(trig_side, x) {
+                    return Some((a_rc, b_rc, head));
+                }
+            }
+        }
+        return None;
+    }
+    if apply.head == IRNode::Symbol(SUB.to_string()) {
+        // a − b·trig(x) = a + (−b)·trig(x)
+        if let Some(a_left) = node_to_rc(left) {
+            if let Some((b_rc, head)) = weierstrass_parse_const_times_trig_x(right, x) {
+                return Some((a_left, rc_neg(b_rc), head));
+            }
+        }
+        // b·trig(x) − a = −a + b·trig(x)
+        if let Some((b_left, head)) = weierstrass_parse_const_times_trig_x(left, x) {
+            if let Some(a_right) = node_to_rc(right) {
+                return Some((rc_neg(a_right), b_left, head));
+            }
+        }
+    }
+    None
+}
+
+/// Phase 34 entry point.  Returns the closed form when the integrand is
+/// `c / (a + b·sin/cos(x))` with rational c, a, b and a² > b² (a > 0 for cos),
+/// or `None` otherwise.
+fn try_weierstrass_one_over_linear_trig(
+    num: &IRNode,
+    den: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    let c_rc = node_to_rc(num)?;
+    let (a_rc, b_rc, trig_head) = weierstrass_parse_a_plus_b_sincos(den, x)?;
+    // disc = a² − b²; must be strictly positive.
+    let a_sq = rc_mul(a_rc, a_rc)?;
+    let b_sq = rc_mul(b_rc, b_rc)?;
+    let disc = rc_sub(a_sq, b_sq)?;
+    if disc.0 <= 0 {
+        return None;
+    }
+    let sqrt_disc_ir = weierstrass_sqrt_fraction_ir(disc);
+    let tan_half = apply_node(
+        TAN,
+        vec![apply_node(
+            DIV,
+            vec![IRNode::Symbol(x.to_string()), IRNode::Integer(2)],
+        )],
+    );
+    let atan_arg = if trig_head == SIN {
+        // (a·tan(x/2) + b) / √disc
+        let a_ir = rc_to_ir(a_rc)?;
+        let b_ir = rc_to_ir(b_rc)?;
+        let top = apply_node(
+            ADD,
+            vec![apply_node(MUL, vec![a_ir, tan_half]), b_ir],
+        );
+        apply_node(DIV, vec![top, sqrt_disc_ir.clone()])
+    } else {
+        // cos branch — require a > 0 to avoid sign-flip.
+        if a_rc.0 <= 0 {
+            return None;
+        }
+        let ratio = rc_div(rc_sub(a_rc, b_rc)?, rc_add(a_rc, b_rc)?)?;
+        if ratio.0 <= 0 {
+            return None;
+        }
+        let sqrt_ratio_ir = weierstrass_sqrt_fraction_ir(ratio);
+        apply_node(MUL, vec![sqrt_ratio_ir, tan_half])
+    };
+    // Outer coefficient: 2c / √disc
+    let two_c = rc_mul(c_rc, (2, 1))?;
+    let coef_ir = apply_node(DIV, vec![rc_to_ir(two_c)?, sqrt_disc_ir]);
+    Some(apply_node(MUL, vec![coef_ir, apply_node(ATAN, vec![atan_arg])]))
+}
+
 fn integrate_handler() -> Handler {
     std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
         if expr.args.len() != 2 && expr.args.len() != 4 {
@@ -1499,6 +1678,12 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
         (MUL, [a, b]) if !depends_on(b, x) => apply_node(MUL, vec![b.clone(), integrate(a, x)]),
         (DIV, [c, denom]) if denom == &IRNode::Symbol(x.to_string()) && !depends_on(c, x) => {
             apply_node(MUL, vec![c.clone(), apply_node(LOG, vec![denom.clone()])])
+        }
+        // Phase 34: Weierstrass substitution for c / (a + b·sin/cos(x))
+        // when c, a, b are rational and a² > b² (and a > 0 for the cos case).
+        (DIV, [c, denom]) if !depends_on(c, x) => {
+            try_weierstrass_one_over_linear_trig(c, denom, x)
+                .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]))
         }
         (POW, [base, exponent]) if base == &IRNode::Symbol(x.to_string()) => {
             integrate_power_of_x(exponent, x)
