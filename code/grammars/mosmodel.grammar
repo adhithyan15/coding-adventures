@@ -61,10 +61,13 @@ slot_type = scalar_type
 # The six scalar type keywords
 scalar_type = KEYWORD ;
 
-# list<T> where T is a scalar or named component type
+# list<T> where T is a scalar, a nested list (list<list<text>>), or a
+# named component type. Nested lists are needed by table-like layouts:
+# the Grid primitive in UI26 uses `list<list<text>>` for its viewport
+# rows (each row is itself a list of cell strings).
 list_type = KEYWORD LANGLE inner_type RANGLE ;
 
-inner_type = scalar_type | NAME ;
+inner_type = list_type | scalar_type | NAME ;
 
 # Allowed inline defaults: string, number, or bool literal
 slot_default = STRING | NUMBER | KEYWORD ;

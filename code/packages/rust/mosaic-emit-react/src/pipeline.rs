@@ -1084,13 +1084,9 @@ fn list_inner_to_ts(t: &ListInnerType) -> String {
         ListInnerType::Color => "string".to_string(),
         ListInnerType::Node => "React.ReactNode".to_string(),
         ListInnerType::Component(name) => format!("React.ReactNode /* {name} */"),
+        // Nested list — `list<list<text>>` lowers to `Array<Array<string>>`.
+        ListInnerType::List(inner) => format!("Array<{}>", list_inner_to_ts(inner)),
     }
-    // NB: `mosmodel-compiler::ListInnerType` does not currently model nested
-    // lists (`list<list<text>>`), even though UI13 §1 allows them in the
-    // mosmodel grammar. That discrepancy is tracked separately as a
-    // mosmodel-compiler bug; lowering `list<list<text>>` (needed for the
-    // Grid component's `viewport-rows` slot) will work once the inner enum
-    // gains a `List(Box<ListInnerType>)` variant.
 }
 
 /// Map a mosmodel emit-payload type to a TypeScript type string.

@@ -5,16 +5,13 @@
 // components themselves know nothing about spreadsheets — they just
 // render the props they receive and fire events.
 //
-// ## Known limitation: viewport-rows nested-list typing
-//
-// The UI26 spec calls for `slot viewport-rows : list<list<text>>` so the
-// Grid receives an `Array<Array<string>>`. The current mosmodel-compiler
-// `ListInnerType` enum only models flat lists (no recursive `List`
-// variant), so the generated Grid.tsx prop type is `Array<string>`
-// instead of the spec's `Array<Array<string>>`. We use `// @ts-expect-error`
-// below to acknowledge the mismatch — the architecture is correct, but
-// the demo will not render row cells correctly until mosmodel grows
-// nested-list support. See README for the follow-up note.
+// `viewport-rows` is typed `list<list<text>>` in Grid.mil, which the
+// mosmodel-compiler now lowers to `Array<Array<string>>` in the
+// generated TS prop. Each row is a list of cell strings — the natural
+// shape of a spreadsheet viewport slice. Before mosmodel-compiler's
+// `ListInnerType::List` variant existed, the .mil had to spell
+// `list<text>` and this file carried a `@ts-expect-error` to mask the
+// resulting `Array<string>` vs `Array<Array<string>>` mismatch.
 
 import { useReducer, useMemo, useEffect, useCallback } from "react";
 import { Grid } from "../components/Grid";
@@ -117,10 +114,6 @@ export function App() {
       />
       <Grid
         columnHeaders={state.columnHeaders}
-        // @ts-expect-error UI26 §11: Grid component expects Array<Array<string>>
-        // per spec, but mosmodel-compiler can only represent `list<text>` (flat)
-        // until ListInnerType gains a recursive `List` variant. Documented in
-        // README. The demo still compiles and renders the FormulaBar correctly.
         viewportRows={viewportRows}
         selectedRow={state.selectedRow - state.viewportOffset}
         selectedCol={state.selectedCol}

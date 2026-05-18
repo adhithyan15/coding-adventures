@@ -264,10 +264,17 @@ pub fn parser_grammar() -> ParserGrammar {
             ]},
             line_number: 60,
         },
-        // inner_type = scalar_type | NAME ;
+        // inner_type = list_type | scalar_type | NAME ;
+        // list_type comes first because both `list_type` and
+        // `scalar_type` start with a KEYWORD; in a first-match
+        // alternation a bare `scalar_type` would greedily accept the
+        // `list` keyword and then fail at the inner `<`. Putting
+        // `list_type` first lets nested lists like `list<list<text>>`
+        // (Grid primitive's viewport-rows slot, UI26 §2.1) parse.
         GrammarRule {
             name: r#"inner_type"#.to_string(),
             body: GrammarElement::Alternation { choices: vec![
+                GrammarElement::RuleReference { name: r#"list_type"#.to_string() },
                 GrammarElement::RuleReference { name: r#"scalar_type"#.to_string() },
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
             ]},
