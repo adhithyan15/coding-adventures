@@ -54,6 +54,9 @@ documented in this file.
   that proves tokens, diagnostics, and diagnostic positions are stable across
   every character split point for representative tokenizer contexts and seeded
   continuation states.
+- A generated WHATWG tokenizer EOF recovery fixture and Rust conformance test
+  that pins recovery for partial tags, attributes, comments, doctypes,
+  character references, text modes, and seeded continuation states.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the

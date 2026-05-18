@@ -75,6 +75,9 @@ including chunk splits inside CRLF pairs.
 It also generates streaming chunk-boundary cases for the same tokenizer surface
 area, proving tokens, diagnostics, and diagnostic positions are independent of
 where an embedding splits the input stream.
+The generated EOF recovery suite covers partial tags, attributes, comments,
+bogus comments, doctypes, character references, text modes, and seeded
+continuation states so parser-facing recovery stays pinned at stream end.
 Numeric character references report invalid-code-point diagnostics and recover
 with the HTML replacement/remapping rules for null, surrogate, out-of-range,
 noncharacter, and Windows-1252 control references.
