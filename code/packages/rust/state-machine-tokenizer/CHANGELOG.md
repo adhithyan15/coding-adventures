@@ -50,3 +50,6 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
   identifier, and force-quirks data.
 - Added public return-state seeding helpers so wrapper packages can resume
   continuation states such as HTML character-reference recovery.
+- Added `StartTagSeed` and current-start-tag seeding helpers so wrapper
+  packages can resume HTML attribute continuation states with partial
+  attributes.

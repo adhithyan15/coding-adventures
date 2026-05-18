@@ -75,6 +75,59 @@ impl DoctypeSeed {
     }
 }
 
+/// Seed data for resuming tokenizer states with an in-progress start tag.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StartTagSeed {
+    /// Start-tag name accumulated so far.
+    pub name: String,
+    /// Attributes that have already been committed to the start tag.
+    pub attributes: Vec<Attribute>,
+    /// Whether the partial start tag has already seen a self-closing marker.
+    pub self_closing: bool,
+    /// Optional in-progress attribute for attribute continuation states.
+    pub current_attribute: Option<Attribute>,
+}
+
+impl StartTagSeed {
+    /// Build a start-tag seed with no committed attributes.
+    pub fn new(name: impl Into<String>) -> Self {
+        Self {
+            name: name.into(),
+            attributes: Vec::new(),
+            self_closing: false,
+            current_attribute: None,
+        }
+    }
+
+    /// Add an already-committed attribute to the seed.
+    pub fn with_attribute(mut self, name: impl Into<String>, value: impl Into<String>) -> Self {
+        self.attributes.push(Attribute {
+            name: name.into(),
+            value: value.into(),
+        });
+        self
+    }
+
+    /// Add the current in-progress attribute to the seed.
+    pub fn with_current_attribute(
+        mut self,
+        name: impl Into<String>,
+        value: impl Into<String>,
+    ) -> Self {
+        self.current_attribute = Some(Attribute {
+            name: name.into(),
+            value: value.into(),
+        });
+        self
+    }
+
+    /// Mark the in-progress start tag as self-closing.
+    pub fn self_closing(mut self) -> Self {
+        self.self_closing = true;
+        self
+    }
+}
+
 /// Attribute attached to a start tag.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Attribute {
@@ -301,6 +354,22 @@ impl Tokenizer {
     /// Clear the last emitted start-tag name used by tokenizer submodes.
     pub fn clear_last_start_tag(&mut self) {
         self.last_start_tag = None;
+    }
+
+    /// Seed the in-progress start-tag token used by tokenizer continuation states.
+    pub fn with_current_start_tag(mut self, seed: StartTagSeed) -> Self {
+        self.set_current_start_tag(seed);
+        self
+    }
+
+    /// Store the in-progress start-tag token used by tokenizer continuation states.
+    pub fn set_current_start_tag(&mut self, seed: StartTagSeed) {
+        self.current_token = Some(CurrentToken::StartTag {
+            name: seed.name,
+            attributes: seed.attributes,
+            self_closing: seed.self_closing,
+        });
+        self.current_attribute = seed.current_attribute;
     }
 
     /// Seed the in-progress end-tag token used by tokenizer continuation states.

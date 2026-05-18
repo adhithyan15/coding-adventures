@@ -1,0 +1,394 @@
+{
+  "cases": [
+    {
+      "description": "before_attribute_name seeded attribute boundary case `before-attribute-name-commits-new-attribute`",
+      "diagnostics": [],
+      "id": "before-attribute-name-commits-new-attribute",
+      "initial_state": "before_attribute_name",
+      "input": " foo=bar>",
+      "start_tag": {
+        "attributes": [
+          {
+            "name": "id",
+            "value": "root"
+          }
+        ],
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[id=root, foo=bar], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "before_attribute_name seeded attribute boundary case `before-attribute-name-self-closing`",
+      "diagnostics": [],
+      "id": "before-attribute-name-self-closing",
+      "initial_state": "before_attribute_name",
+      "input": "/>",
+      "start_tag": {
+        "attributes": [
+          {
+            "name": "alt",
+            "value": "x"
+          }
+        ],
+        "name": "img",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=img, attributes=[alt=x], self_closing=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "before_attribute_name seeded attribute boundary case `before-attribute-name-eof-drops-partial-tag`",
+      "diagnostics": [
+        "eof-in-tag"
+      ],
+      "id": "before-attribute-name-eof-drops-partial-tag",
+      "initial_state": "before_attribute_name",
+      "input": "",
+      "start_tag": {
+        "attributes": [
+          {
+            "name": "href",
+            "value": "x"
+          }
+        ],
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "EOF"
+      ]
+    },
+    {
+      "description": "attribute_name seeded attribute boundary case `attribute-name-finishes-on-equals`",
+      "diagnostics": [],
+      "id": "attribute-name-finishes-on-equals",
+      "initial_state": "attribute_name",
+      "input": "=bar>",
+      "start_tag": {
+        "attributes": [],
+        "current_attribute": {
+          "name": "data",
+          "value": ""
+        },
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[data=bar], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "attribute_name seeded attribute boundary case `attribute-name-whitespace-commits-boolean`",
+      "diagnostics": [],
+      "id": "attribute-name-whitespace-commits-boolean",
+      "initial_state": "attribute_name",
+      "input": " next=2>",
+      "start_tag": {
+        "attributes": [],
+        "current_attribute": {
+          "name": "checked",
+          "value": ""
+        },
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[checked=, next=2], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "attribute_name seeded attribute boundary case `attribute-name-null-replacement`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "attribute-name-null-replacement",
+      "initial_state": "attribute_name",
+      "input": "\u0000=value>",
+      "start_tag": {
+        "attributes": [],
+        "current_attribute": {
+          "name": "data",
+          "value": ""
+        },
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[data�=value], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "after_attribute_name seeded attribute boundary case `after-attribute-name-equals-value`",
+      "diagnostics": [],
+      "id": "after-attribute-name-equals-value",
+      "initial_state": "after_attribute_name",
+      "input": "=bar>",
+      "start_tag": {
+        "attributes": [],
+        "current_attribute": {
+          "name": "foo",
+          "value": ""
+        },
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[foo=bar], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "after_attribute_name seeded attribute boundary case `after-attribute-name-next-attribute`",
+      "diagnostics": [],
+      "id": "after-attribute-name-next-attribute",
+      "initial_state": "after_attribute_name",
+      "input": " bar=2>",
+      "start_tag": {
+        "attributes": [],
+        "current_attribute": {
+          "name": "foo",
+          "value": ""
+        },
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[foo=, bar=2], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "before_attribute_value seeded attribute boundary case `before-attribute-value-double-quoted`",
+      "diagnostics": [],
+      "id": "before-attribute-value-double-quoted",
+      "initial_state": "before_attribute_value",
+      "input": "\"hello\">",
+      "start_tag": {
+        "attributes": [],
+        "current_attribute": {
+          "name": "title",
+          "value": ""
+        },
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[title=hello], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "before_attribute_value seeded attribute boundary case `before-attribute-value-single-quoted`",
+      "diagnostics": [],
+      "id": "before-attribute-value-single-quoted",
+      "initial_state": "before_attribute_value",
+      "input": "'hello'>",
+      "start_tag": {
+        "attributes": [],
+        "current_attribute": {
+          "name": "title",
+          "value": ""
+        },
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[title=hello], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "before_attribute_value seeded attribute boundary case `before-attribute-value-unquoted`",
+      "diagnostics": [],
+      "id": "before-attribute-value-unquoted",
+      "initial_state": "before_attribute_value",
+      "input": "hello>",
+      "start_tag": {
+        "attributes": [],
+        "current_attribute": {
+          "name": "title",
+          "value": ""
+        },
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[title=hello], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "attribute_value_double_quoted seeded attribute boundary case `attribute-value-double-quoted-charref`",
+      "diagnostics": [],
+      "id": "attribute-value-double-quoted-charref",
+      "initial_state": "attribute_value_double_quoted",
+      "input": "&amp;B\">",
+      "start_tag": {
+        "attributes": [],
+        "current_attribute": {
+          "name": "title",
+          "value": "A"
+        },
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A&B], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "attribute_value_single_quoted seeded attribute boundary case `attribute-value-single-quoted-null`",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "attribute-value-single-quoted-null",
+      "initial_state": "attribute_value_single_quoted",
+      "input": "\u0000B'>",
+      "start_tag": {
+        "attributes": [],
+        "current_attribute": {
+          "name": "title",
+          "value": "A"
+        },
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A�B], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "attribute_value_unquoted seeded attribute boundary case `attribute-value-unquoted-space-delimiter`",
+      "diagnostics": [],
+      "id": "attribute-value-unquoted-space-delimiter",
+      "initial_state": "attribute_value_unquoted",
+      "input": "B next=2>",
+      "start_tag": {
+        "attributes": [],
+        "current_attribute": {
+          "name": "title",
+          "value": "A"
+        },
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[title=AB, next=2], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "attribute_value_unquoted seeded attribute boundary case `attribute-value-unquoted-unexpected-equals`",
+      "diagnostics": [
+        "unexpected-character-in-unquoted-attribute-value"
+      ],
+      "id": "attribute-value-unquoted-unexpected-equals",
+      "initial_state": "attribute_value_unquoted",
+      "input": "=B>",
+      "start_tag": {
+        "attributes": [],
+        "current_attribute": {
+          "name": "title",
+          "value": "A"
+        },
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A=B], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "after_attribute_value_quoted seeded attribute boundary case `after-attribute-value-quoted-next-attribute`",
+      "diagnostics": [],
+      "id": "after-attribute-value-quoted-next-attribute",
+      "initial_state": "after_attribute_value_quoted",
+      "input": " next=2>",
+      "start_tag": {
+        "attributes": [
+          {
+            "name": "title",
+            "value": "A"
+          }
+        ],
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A, next=2], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "after_attribute_value_quoted seeded attribute boundary case `after-attribute-value-quoted-missing-whitespace`",
+      "diagnostics": [
+        "missing-whitespace-between-attributes"
+      ],
+      "id": "after-attribute-value-quoted-missing-whitespace",
+      "initial_state": "after_attribute_value_quoted",
+      "input": "next=2>",
+      "start_tag": {
+        "attributes": [
+          {
+            "name": "title",
+            "value": "A"
+          }
+        ],
+        "name": "a",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A, next=2], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "self_closing_start_tag seeded attribute boundary case `self-closing-start-tag-emits`",
+      "diagnostics": [],
+      "id": "self-closing-start-tag-emits",
+      "initial_state": "self_closing_start_tag",
+      "input": ">",
+      "start_tag": {
+        "attributes": [],
+        "name": "br",
+        "self_closing": true
+      },
+      "tokens": [
+        "StartTag(name=br, attributes=[], self_closing=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "self_closing_start_tag seeded attribute boundary case `self-closing-start-tag-reconsumes-attribute`",
+      "diagnostics": [
+        "unexpected-solidus-in-tag"
+      ],
+      "id": "self-closing-start-tag-reconsumes-attribute",
+      "initial_state": "self_closing_start_tag",
+      "input": "x=1>",
+      "start_tag": {
+        "attributes": [],
+        "name": "br",
+        "self_closing": false
+      },
+      "tokens": [
+        "StartTag(name=br, attributes=[x=1], self_closing=false)",
+        "EOF"
+      ]
+    }
+  ],
+  "description": "Seeded start-tag attribute continuation states for before/name/value/quoted/unquoted/self-closing boundaries.",
+  "format": "whatwg-html-tokenizer-attribute-boundaries/v1"
+}

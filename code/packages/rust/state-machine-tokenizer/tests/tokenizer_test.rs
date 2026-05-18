@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use state_machine::{EffectfulMatcher, EffectfulStateMachine, EffectfulTransition};
-use state_machine_tokenizer::{Attribute, Token, Tokenizer, TokenizerError};
+use state_machine_tokenizer::{Attribute, StartTagSeed, Token, Tokenizer, TokenizerError};
 
 #[test]
 fn tokenizer_rejects_unknown_actions() {
@@ -171,6 +171,58 @@ fn tokenizer_builds_start_tag_attributes_and_self_closing_markers() {
                 value: "Xy".to_string(),
             }],
             self_closing: true,
+        }]
+    );
+}
+
+#[test]
+fn tokenizer_can_seed_current_start_tag_and_attribute() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["attr_value", "done"]),
+            set(&["X", ">"]),
+            vec![
+                EffectfulTransition::new(
+                    "attr_value",
+                    EffectfulMatcher::Event("X".to_string()),
+                    "attr_value",
+                )
+                .with_effects(&["append_attribute_value(current)"]),
+                EffectfulTransition::new(
+                    "attr_value",
+                    EffectfulMatcher::Event(">".to_string()),
+                    "done",
+                )
+                .with_effects(&["commit_attribute", "emit_current_token"]),
+            ],
+            "attr_value".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    )
+    .with_current_start_tag(
+        StartTagSeed::new("a")
+            .with_attribute("id", "root")
+            .with_current_attribute("data", "seed-"),
+    );
+
+    tokenizer.push("X>").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::StartTag {
+            name: "a".to_string(),
+            attributes: vec![
+                Attribute {
+                    name: "id".to_string(),
+                    value: "root".to_string(),
+                },
+                Attribute {
+                    name: "data".to_string(),
+                    value: "seed-X".to_string(),
+                },
+            ],
+            self_closing: false,
         }]
     );
 }
