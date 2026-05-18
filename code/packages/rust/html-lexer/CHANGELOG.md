@@ -47,6 +47,9 @@ documented in this file.
 - A generated WHATWG numeric character reference edge fixture and Rust
   conformance test that exercises decimal, hexadecimal, semicolon, and
   missing-semicolon forms across data, attribute, and RCDATA contexts.
+- A generated WHATWG tokenizer character-reference boundary fixture and Rust
+  conformance test that pins text, attribute, RCDATA, and seeded named/numeric
+  continuation recovery around ambiguous ampersands and numeric boundaries.
 - A generated WHATWG input-stream preprocessing fixture and Rust conformance
   test that exercises CRLF and bare-CR normalization across tokenizer contexts,
   every chunk split point, and diagnostic line/column positions.

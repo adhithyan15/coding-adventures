@@ -55,6 +55,9 @@ binary while production code continues to link only static Rust source.
   reference edge table used by Rust tests to exercise decimal, hexadecimal,
   semicolon, and missing-semicolon forms across data, attribute, and RCDATA
   contexts
+- `whatwg-character-reference-boundaries.json`: generated HTML tokenizer
+  character-reference boundary cases used by Rust tests to pin text,
+  attribute, RCDATA, and seeded named/numeric continuation recovery
 - `whatwg-input-stream.json`: generated HTML Standard input-stream
   preprocessing cases used by Rust tests to exercise CRLF and bare-CR
   normalization across tokenizer contexts and chunk boundaries
@@ -97,6 +100,9 @@ binary while production code continues to link only static Rust source.
 - `generate_whatwg_numeric_references_fixture.py`: importer that generates the
   finite numeric character reference edge table for the checked-in
   `whatwg-numeric-references.json` fixture
+- `generate_whatwg_character_reference_boundaries_fixture.py`: importer that
+  generates focused character-reference boundary cases for the checked-in
+  `whatwg-character-reference-boundaries.json` fixture
 - `generate_whatwg_input_stream_fixture.py`: importer that generates finite
   CRLF/bare-CR preprocessing cases for the checked-in
   `whatwg-input-stream.json` fixture
@@ -139,6 +145,14 @@ Regenerate or verify the WHATWG numeric-reference fixture with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG character-reference boundary fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_character_reference_boundaries_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_character_reference_boundaries_fixture.py \
   --check
 ```
 
