@@ -15,7 +15,11 @@ use board_vm_device::{
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_AND_UART_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_CAN_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_RTC_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_RTC_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_RTC_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES, BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_CAPABILITIES,
     BLINK_MVP_WITH_PWM_DAC_AND_LED_MATRIX_CAPABILITIES, DEFAULT_MAX_FRAME_PAYLOAD,
@@ -476,7 +480,8 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
         .with_i2c()
         .with_uart()
         .with_spi()
-        .with_can(),
+        .with_can()
+        .with_rtc(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_MINIMA_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
@@ -511,7 +516,8 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
         .with_spi()
         .with_uart()
         .with_led_matrix()
-        .with_can(),
+        .with_can()
+        .with_rtc(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
@@ -554,6 +560,10 @@ pub trait UnoR4Backend {
     }
 
     fn supports_can(&self) -> bool {
+        false
+    }
+
+    fn supports_rtc(&self) -> bool {
         false
     }
 
@@ -602,6 +612,14 @@ pub trait UnoR4Backend {
     }
 
     fn read_can(&mut self, _bus: u8) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn rtc_now(&mut self) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn rtc_set(&mut self, _epoch_seconds: u32) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -702,6 +720,7 @@ where
         capabilities.spi = self.backend.supports_spi();
         capabilities.uart = self.backend.supports_uart();
         capabilities.can = self.backend.supports_can();
+        capabilities.rtc = self.backend.supports_rtc();
         capabilities
     }
 }
@@ -798,6 +817,20 @@ where
     fn can_read(&mut self, token: u32) -> Result<u8, HalError> {
         let bus = normalize_can_token(self.target, token)?;
         self.backend.read_can(bus)
+    }
+
+    fn rtc_now(&mut self) -> Result<u32, HalError> {
+        if self.target.rtc.is_none() {
+            return Err(HalError::UnsupportedMode);
+        }
+        self.backend.rtc_now()
+    }
+
+    fn rtc_set(&mut self, epoch_seconds: u32) -> Result<(), HalError> {
+        if self.target.rtc.is_none() {
+            return Err(HalError::UnsupportedMode);
+        }
+        self.backend.rtc_set(epoch_seconds)
     }
 
     fn spi_transfer(
@@ -1009,8 +1042,29 @@ fn uno_r4_device_descriptor_for_capabilities(
             && capabilities.spi
             && capabilities.uart
             && capabilities.can
+            && capabilities.rtc
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
         {
             &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.rtc
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_RTC_AND_LED_MATRIX_CAPABILITIES
         } else if target.supports_led_matrix
             && capabilities.pwm
             && capabilities.adc
@@ -1062,8 +1116,27 @@ fn uno_r4_device_descriptor_for_capabilities(
             && capabilities.spi
             && capabilities.uart
             && capabilities.can
+            && capabilities.rtc
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_RTC_CAPABILITIES
+        } else if capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
         {
             &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_CAN_CAPABILITIES
+        } else if capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.rtc
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_AND_RTC_CAPABILITIES
         } else if capabilities.pwm
             && capabilities.adc
             && capabilities.dac
@@ -1166,6 +1239,8 @@ mod tests {
         CanOpen(u8),
         CanWrite(u8, u8),
         CanRead(u8),
+        RtcNow,
+        RtcSet(u32),
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -1237,6 +1312,10 @@ mod tests {
             true
         }
 
+        fn supports_rtc(&self) -> bool {
+            true
+        }
+
         fn supports_bootloader_reboot(&self) -> bool {
             true
         }
@@ -1294,6 +1373,16 @@ mod tests {
         fn read_can(&mut self, bus: u8) -> Result<u8, HalError> {
             self.events.push(Event::CanRead(bus));
             Ok(0x5a)
+        }
+
+        fn rtc_now(&mut self) -> Result<u32, HalError> {
+            self.events.push(Event::RtcNow);
+            Ok(1_700_000_000)
+        }
+
+        fn rtc_set(&mut self, epoch_seconds: u32) -> Result<(), HalError> {
+            self.events.push(Event::RtcSet(epoch_seconds));
+            Ok(())
         }
 
         fn transfer_spi(
@@ -1524,7 +1613,7 @@ mod tests {
         assert_eq!(descriptor.max_frame_payload, DEFAULT_MAX_FRAME_PAYLOAD);
         assert_eq!(
             descriptor.capabilities.len(),
-            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_LED_MATRIX_CAPABILITIES.len()
+            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_LED_MATRIX_CAPABILITIES.len()
         );
         assert!(UNO_R4_WIFI
             .capabilities
@@ -1565,6 +1654,8 @@ mod tests {
             .capabilities
             .supports(board_vm_ir::CAP_CAN_WRITE));
         assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_CAN_READ));
+        assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_RTC_NOW));
+        assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_RTC_SET));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -1616,6 +1707,12 @@ mod tests {
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_CAN_READ));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_RTC_NOW));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_RTC_SET));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
@@ -1824,6 +1921,23 @@ mod tests {
 
         assert_eq!(board.can_read(0x4_2001), Err(HalError::InvalidPin));
         assert_eq!(board.can_read(0x4_2099), Err(HalError::InvalidPin));
+    }
+
+    #[test]
+    fn rtc_now_runs_through_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        assert_eq!(board.rtc_now().unwrap(), 1_700_000_000);
+        assert_eq!(board.backend().events, vec![Event::RtcNow]);
+    }
+
+    #[test]
+    fn rtc_set_runs_through_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        board.rtc_set(1_700_000_001).unwrap();
+
+        assert_eq!(board.backend().events, vec![Event::RtcSet(1_700_000_001)]);
     }
 
     #[test]

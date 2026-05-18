@@ -2,10 +2,10 @@ use board_vm_ir::{
     parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_ADC_READ, CAP_CAN_OPEN,
     CAP_CAN_READ, CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ,
     CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE,
-    CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_SPI_OPEN, CAP_SPI_TRANSFER,
-    CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE,
-    FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MAX_BYTE_BUFFER_LEN,
-    MODULE_MAGIC, MODULE_VERSION,
+    CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
+    CAP_SPI_TRANSFER, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ,
+    CAP_UART_WRITE, FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+    MAX_BYTE_BUFFER_LEN, MODULE_MAGIC, MODULE_VERSION,
 };
 use board_vm_protocol::{
     encode_frame, encode_hello, encode_program_begin, encode_program_chunk, encode_program_end,
@@ -75,6 +75,10 @@ pub const CAN_WRITE_CODE_LEN: usize = 5;
 pub const CAN_WRITE_MODULE_LEN: usize = 15;
 pub const CAN_READ_CODE_LEN: usize = 4;
 pub const CAN_READ_MODULE_LEN: usize = 14;
+pub const RTC_NOW_CODE_LEN: usize = 3;
+pub const RTC_NOW_MODULE_LEN: usize = 13;
+pub const RTC_SET_CODE_LEN: usize = 7;
+pub const RTC_SET_MODULE_LEN: usize = 17;
 pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
@@ -258,6 +262,17 @@ pub struct CanReadProgram {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RtcNowProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RtcSetProgram {
+    pub epoch_seconds: u32,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct I2cWriteU8Program {
     pub address: u16,
     pub byte: u8,
@@ -371,6 +386,27 @@ impl CanReadProgram {
 impl Default for CanReadProgram {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl RtcNowProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 1 }
+    }
+}
+
+impl Default for RtcNowProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl RtcSetProgram {
+    pub const fn new(epoch_seconds: u32) -> Self {
+        Self {
+            epoch_seconds,
+            max_stack: 1,
+        }
     }
 }
 
@@ -1708,6 +1744,68 @@ pub fn write_can_read_module(program: CanReadProgram, out: &mut [u8]) -> Result<
     Ok(offset)
 }
 
+pub fn write_rtc_now_code(_program: RtcNowProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < RTC_NOW_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_call_u8(out, &mut offset, CAP_RTC_NOW)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_rtc_now_module(program: RtcNowProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < RTC_NOW_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; RTC_NOW_CODE_LEN];
+    let code_len = write_rtc_now_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_rtc(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_rtc_set_code(program: RtcSetProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < RTC_SET_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_push_u32(out, &mut offset, program.epoch_seconds)?;
+    write_call_u8(out, &mut offset, CAP_RTC_SET)?;
+    Ok(offset)
+}
+
+pub fn write_rtc_set_module(program: RtcSetProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < RTC_SET_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; RTC_SET_CODE_LEN];
+    let code_len = write_rtc_set_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_rtc(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn spi_transfer_module_len(write_len: usize) -> Result<usize, HostError> {
     if write_len > MAX_BYTE_BUFFER_LEN {
         return Err(HostError::ProgramTooLarge);
@@ -2241,7 +2339,8 @@ mod tests {
         collect_required_capabilities, parse_module, validate, CapabilitySet, ModuleError,
         CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ, CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_I2C_OPEN,
         CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
-        CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_SPI_OPEN, CAP_UART_READ, CAP_UART_WRITE,
+        CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_UART_READ,
+        CAP_UART_WRITE,
     };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -2319,6 +2418,13 @@ mod tests {
     ];
     const CAN_READ_MODULE_HEX: [u8; CAN_READ_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x02, 0x00, 0x04, 0x20, 0x40, 0x33, 0x50, 0x00,
+    ];
+    const RTC_NOW_MODULE_HEX: [u8; RTC_NOW_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x03, 0x40, 0x34, 0x50, 0x00,
+    ];
+    const RTC_SET_1700000000_MODULE_HEX: [u8; RTC_SET_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x07, 0x14, 0x00, 0xF1, 0x53, 0x65, 0x40,
+        0x35, 0x00,
     ];
     const SPI_TRANSFER_CS10_9F_READ_03_MODULE_HEX: [u8; 24] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x05, 0x00, 0x0D, 0x20, 0x13, 0x0A, 0x00, 0x16, 0x00,
@@ -2633,6 +2739,34 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_CAN_READ]);
+    }
+
+    #[test]
+    fn builds_rtc_now_module() {
+        let mut module = [0u8; RTC_NOW_MODULE_LEN];
+        let len = write_rtc_now_module(RtcNowProgram::new(), &mut module).unwrap();
+        assert_eq!(len, RTC_NOW_MODULE_LEN);
+        assert_eq!(module, RTC_NOW_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_rtc(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_RTC_NOW]);
+    }
+
+    #[test]
+    fn builds_rtc_set_module() {
+        let mut module = [0u8; RTC_SET_MODULE_LEN];
+        let len = write_rtc_set_module(RtcSetProgram::new(1_700_000_000), &mut module).unwrap();
+        assert_eq!(len, RTC_SET_MODULE_LEN);
+        assert_eq!(module, RTC_SET_1700000000_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_rtc(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_RTC_SET]);
     }
 
     #[test]

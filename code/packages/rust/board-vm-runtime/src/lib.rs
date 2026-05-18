@@ -4,8 +4,9 @@ use board_vm_ir::{
     decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ,
     CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE,
     CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
-    CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_TIME_NOW_MS,
-    CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, MAX_BYTE_BUFFER_LEN,
+    CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER,
+    CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE,
+    MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -190,6 +191,14 @@ pub trait BoardHal {
     }
 
     fn can_read(&mut self, _token: u32) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn rtc_now(&mut self) -> Result<u32, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn rtc_set(&mut self, _epoch_seconds: u32) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -774,6 +783,20 @@ where
                 })?;
                 self.push(Value::U8(byte), ip)
             }
+            CAP_RTC_NOW => {
+                let epoch_seconds = self.hal.rtc_now().map_err(|err| RuntimeError {
+                    ip,
+                    kind: hal_error_kind(err),
+                })?;
+                self.push(Value::U32(epoch_seconds), ip)
+            }
+            CAP_RTC_SET => {
+                let epoch_seconds = self.pop_u32(ip)?;
+                self.hal.rtc_set(epoch_seconds).map_err(|err| RuntimeError {
+                    ip,
+                    kind: hal_error_kind(err),
+                })
+            }
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -1041,12 +1064,15 @@ mod tests {
         CanOpen(u16),
         CanWrite(u32, u8),
         CanRead(u32),
+        RtcNow,
+        RtcSet(u32),
         LedMatrixFrame([u32; 3]),
     }
 
     struct FakeHal {
         events: Vec<Event>,
         now_ms: u32,
+        rtc_epoch_seconds: u32,
     }
 
     impl FakeHal {
@@ -1054,6 +1080,7 @@ mod tests {
             Self {
                 events: Vec::new(),
                 now_ms: 0,
+                rtc_epoch_seconds: 1_700_000_000,
             }
         }
     }
@@ -1068,6 +1095,7 @@ mod tests {
                 .with_spi()
                 .with_uart()
                 .with_can()
+                .with_rtc()
                 .with_led_matrix()
         }
 
@@ -1215,6 +1243,17 @@ mod tests {
         fn can_read(&mut self, token: u32) -> Result<u8, HalError> {
             self.events.push(Event::CanRead(token));
             Ok(0x5a)
+        }
+
+        fn rtc_now(&mut self) -> Result<u32, HalError> {
+            self.events.push(Event::RtcNow);
+            Ok(self.rtc_epoch_seconds)
+        }
+
+        fn rtc_set(&mut self, epoch_seconds: u32) -> Result<(), HalError> {
+            self.rtc_epoch_seconds = epoch_seconds;
+            self.events.push(Event::RtcSet(epoch_seconds));
+            Ok(())
         }
 
         fn led_matrix_frame(&mut self, frame: [u32; 3]) -> Result<(), HalError> {
@@ -1527,6 +1566,30 @@ mod tests {
             runtime.hal().events,
             vec![Event::CanOpen(0), Event::CanRead(0x4_2000)]
         );
+    }
+
+    #[test]
+    fn rtc_now_dispatches_and_returns_epoch_seconds() {
+        let mut runtime: Runtime<FakeHal, 2, 1> = Runtime::new(FakeHal::new());
+        let code = [0x40, CAP_RTC_NOW as u8, 0x50];
+
+        let report = runtime.run_code(&code, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_value, Value::U32(1_700_000_000));
+        assert_eq!(runtime.hal().events, vec![Event::RtcNow]);
+    }
+
+    #[test]
+    fn rtc_set_dispatches_epoch_seconds() {
+        let mut runtime: Runtime<FakeHal, 2, 1> = Runtime::new(FakeHal::new());
+        let code = [0x14, 0x00, 0xf1, 0x53, 0x65, 0x40, CAP_RTC_SET as u8];
+
+        let report = runtime.run_code(&code, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_value, Value::Unit);
+        assert_eq!(runtime.hal().events, vec![Event::RtcSet(1_700_000_000)]);
     }
 
     #[test]

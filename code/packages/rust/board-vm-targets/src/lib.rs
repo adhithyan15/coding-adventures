@@ -175,7 +175,7 @@ pub const BLINK_MVP_CAPABILITIES: [&str; 8] = [
     "program.ram_exec",
 ];
 
-pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 25] = [
+pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 27] = [
     "transport.serial",
     "gpio.open",
     "gpio.write",
@@ -200,10 +200,12 @@ pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 25] = [
     "can.open",
     "can.write",
     "can.read",
+    "rtc.now",
+    "rtc.set",
     "program.ram_exec",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 29] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 31] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -231,6 +233,8 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 29] = [
     "can.open",
     "can.write",
     "can.read",
+    "rtc.now",
+    "rtc.set",
     "led_matrix.frame",
     "program.ram_exec",
 ];
@@ -893,6 +897,10 @@ mod tests {
         let wifi = find_target("arduino-uno-r4-wifi").unwrap();
         assert_eq!(wifi.rtc, minima.rtc);
         assert!(wifi.rtc.unwrap().notes.contains("real-time clock"));
+        assert!(minima.capabilities.contains(&"rtc.now"));
+        assert!(minima.capabilities.contains(&"rtc.set"));
+        assert!(wifi.capabilities.contains(&"rtc.now"));
+        assert!(wifi.capabilities.contains(&"rtc.set"));
 
         assert_eq!(find_target("esp32-devkit-v1").unwrap().rtc, None);
         assert_eq!(find_target("raspberry-pi-pico").unwrap().rtc, None);

@@ -7,17 +7,19 @@ use board_vm_host::{
     DacWriteU12Program, GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram,
     GpioOpenProgram, GpioReadProgram, GpioWriteProgram, I2cOpenProgram, I2cReadProgram,
     I2cReadU8Program, I2cTransferProgram, I2cWriteProgram, I2cWriteU8Program,
-    LedMatrixFrameProgram, PwmWriteProgram, SpiOpenProgram, SpiReadProgram, SpiTransferProgram,
-    SpiWriteProgram, TimeNowProgram, TimeSleepMsProgram, UartOpenProgram, UartReadProgram,
-    UartWriteProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, CAN_OPEN_MODULE_LEN,
+    LedMatrixFrameProgram, PwmWriteProgram, RtcNowProgram, RtcSetProgram, SpiOpenProgram,
+    SpiReadProgram, SpiTransferProgram, SpiWriteProgram, TimeNowProgram, TimeSleepMsProgram,
+    UartOpenProgram, UartReadProgram, UartWriteProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
+    CAN_OPEN_MODULE_LEN,
     CAN_READ_MODULE_LEN, CAN_WRITE_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN,
     GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
     GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN,
     I2C_READ_MODULE_LEN, I2C_READ_U8_MODULE_LEN, I2C_TRANSFER_MAX_MODULE_LEN,
     I2C_WRITE_MAX_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
-    PWM_WRITE_MODULE_LEN, SPI_OPEN_MODULE_LEN, SPI_READ_MODULE_LEN, SPI_TRANSFER_MAX_MODULE_LEN,
-    SPI_WRITE_MAX_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN, UART_OPEN_MODULE_LEN,
-    UART_READ_MODULE_LEN, UART_WRITE_MODULE_LEN,
+    PWM_WRITE_MODULE_LEN, RTC_NOW_MODULE_LEN, RTC_SET_MODULE_LEN, SPI_OPEN_MODULE_LEN,
+    SPI_READ_MODULE_LEN, SPI_TRANSFER_MAX_MODULE_LEN, SPI_WRITE_MAX_MODULE_LEN,
+    TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN, UART_OPEN_MODULE_LEN, UART_READ_MODULE_LEN,
+    UART_WRITE_MODULE_LEN,
 };
 use board_vm_language_core::{
     bluetooth_backend_open_plan as core_bluetooth_backend_open_plan,
@@ -29,7 +31,8 @@ use board_vm_language_core::{
     build_hello_wire_frame, build_i2c_open_module, build_i2c_read_module, build_i2c_read_u8_module,
     build_i2c_transfer_module, build_i2c_write_module, build_i2c_write_u8_module,
     build_led_matrix_frame_module, build_program_begin_wire_frame, build_program_chunk_wire_frame,
-    build_program_end_wire_frame, build_pwm_write_module, build_raw_module,
+    build_program_end_wire_frame, build_pwm_write_module, build_raw_module, build_rtc_now_module,
+    build_rtc_set_module,
     build_run_background_wire_frame, build_run_wire_frame, build_spi_open_module,
     build_spi_read_module, build_spi_transfer_module, build_spi_write_module,
     build_stop_wire_frame, build_store_program_wire_frame, build_time_now_module,
@@ -363,6 +366,27 @@ extern "C" fn session_can_read_module(_self_val: VALUE, max_stack_val: VALUE) ->
 
     let module = build_can_read_module_value(max_stack)
         .unwrap_or_else(|error| raise_core_error("can_read_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_rtc_now_module(_self_val: VALUE, max_stack_val: VALUE) -> VALUE {
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_rtc_now_module_value(max_stack)
+        .unwrap_or_else(|error| raise_core_error("rtc_now_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_rtc_set_module(
+    _self_val: VALUE,
+    epoch_seconds_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let epoch_seconds = rb_u32(epoch_seconds_val, "epoch_seconds");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_rtc_set_module_value(epoch_seconds, max_stack)
+        .unwrap_or_else(|error| raise_core_error("rtc_set_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -1792,6 +1816,29 @@ fn build_can_read_module_value(max_stack: u8) -> Result<Vec<u8>, LanguageCoreErr
     Ok(module)
 }
 
+fn build_rtc_now_module_value(max_stack: u8) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; RTC_NOW_MODULE_LEN];
+    let len = build_rtc_now_module(RtcNowProgram { max_stack }, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_rtc_set_module_value(
+    epoch_seconds: u32,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; RTC_SET_MODULE_LEN];
+    let len = build_rtc_set_module(
+        RtcSetProgram {
+            epoch_seconds,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn build_spi_transfer_module_value(
     cs_pin: u16,
     write_bytes: &[u8],
@@ -2287,6 +2334,18 @@ pub extern "C" fn Init_board_vm_native() {
         "can_read_module",
         session_can_read_module as *const c_void,
         1,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "rtc_now_module",
+        session_rtc_now_module as *const c_void,
+        1,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "rtc_set_module",
+        session_rtc_set_module as *const c_void,
+        2,
     );
     ruby_bridge::define_method_raw(
         session_class,
