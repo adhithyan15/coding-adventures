@@ -63,6 +63,10 @@ documented in this file.
 - A generated WHATWG tokenizer markup declaration fixture and Rust conformance
   test that pins comment, bogus-comment, CDATA-looking declaration, DOCTYPE,
   and seeded declaration continuation recovery.
+- A generated WHATWG tokenizer attribute-edge fixture and Rust conformance test
+  that pins quoted/unquoted values, duplicate attributes, missing-whitespace
+  recovery, NULL replacement, self-closing delimiters, unexpected solidus
+  recovery, and end-tag attribute diagnostics.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the

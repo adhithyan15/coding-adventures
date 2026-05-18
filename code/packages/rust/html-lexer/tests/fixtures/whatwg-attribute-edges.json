@@ -1,0 +1,323 @@
+{
+  "cases": [
+    {
+      "description": "double, single, unquoted, and boolean attributes emit in source order",
+      "diagnostics": [],
+      "id": "mixed-quoted-and-unquoted-values",
+      "input": "<a one=\"1\" two='2' three=3 four>",
+      "tokens": [
+        "StartTag(name=a, attributes=[one=1, two=2, three=3, four=], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "HTML tag and attribute names are ASCII-lowercased",
+      "diagnostics": [],
+      "id": "uppercase-tag-and-attribute-names",
+      "input": "<DIV CLASS=Hero DATA-ID=42>",
+      "tokens": [
+        "StartTag(name=div, attributes=[class=Hero, data-id=42], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "empty quoted attributes stay present with empty values",
+      "diagnostics": [],
+      "id": "empty-quoted-values",
+      "input": "<input disabled value=\"\" data-empty=''>",
+      "tokens": [
+        "StartTag(name=input, attributes=[disabled=, value=, data-empty=], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "quoted attribute values preserve internal ASCII whitespace",
+      "diagnostics": [],
+      "id": "attribute-values-keep-whitespace-inside-quotes",
+      "input": "<p title=\"one two\tthree\nfour\">",
+      "tokens": [
+        "StartTag(name=p, attributes=[title=one two\tthree\nfour], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "attribute character references decode through the attribute return state",
+      "diagnostics": [],
+      "id": "character-references-in-attributes",
+      "input": "<a title=\"A&amp;B\" data='&#x41;&#65;'>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A&B, data=AA], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "semicolonless ambiguous ampersands stay literal in attributes",
+      "diagnostics": [],
+      "id": "ambiguous-ampersand-in-attribute",
+      "input": "<a href=\"?x=1&ampy=2\" title=Tom&ampJerry>",
+      "tokens": [
+        "StartTag(name=a, attributes=[href=?x=1&ampy=2, title=Tom&ampJerry], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "duplicate attribute names keep the first value and report recovery",
+      "diagnostics": [
+        "duplicate-attribute"
+      ],
+      "id": "duplicate-attributes-drop-later-name",
+      "input": "<a href=one HREF=two title=ok>",
+      "tokens": [
+        "StartTag(name=a, attributes=[href=one, title=ok], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "unexpected unquoted value characters are preserved with diagnostics",
+      "diagnostics": [
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value"
+      ],
+      "id": "unexpected-unquoted-characters",
+      "input": "<a data=one=two sq=x'y lt=x<y tick=x`y dq=x\"y>",
+      "tokens": [
+        "StartTag(name=a, attributes=[data=one=two, sq=x'y, lt=x<y, tick=x`y, dq=x\"y], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "unexpected characters at the beginning of unquoted values are preserved",
+      "diagnostics": [
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value"
+      ],
+      "id": "first-unquoted-value-characters",
+      "input": "<a lt=<x eq==x tick=`x ok=value>",
+      "tokens": [
+        "StartTag(name=a, attributes=[lt=<x, eq==x, tick=`x, ok=value], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "quote and less-than characters in attribute names report but stay literal",
+      "diagnostics": [
+        "unexpected-character-in-attribute-name",
+        "unexpected-character-in-attribute-name",
+        "unexpected-character-in-attribute-name"
+      ],
+      "id": "unexpected-attribute-name-characters",
+      "input": "<a \"pre=1 mid'dle=2 done <tail=3>",
+      "tokens": [
+        "StartTag(name=a, attributes=[\"pre=1, mid'dle=2, done=, <tail=3], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "quoted attributes without separating whitespace reconsume into new attributes",
+      "diagnostics": [
+        "missing-whitespace-between-attributes"
+      ],
+      "id": "missing-whitespace-after-quoted-value",
+      "input": "<a first=\"1\"second=2>",
+      "tokens": [
+        "StartTag(name=a, attributes=[first=1, second=2], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "missing whitespace before equals creates a recoverable equals-named attribute",
+      "diagnostics": [
+        "missing-whitespace-between-attributes",
+        "unexpected-equals-before-attribute-name"
+      ],
+      "id": "equals-before-attribute-name-after-quoted-value",
+      "input": "<a eq=\"x\"==y>",
+      "tokens": [
+        "StartTag(name=a, attributes=[eq=x, ==y], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULLs in quoted, unquoted, and bare attribute values become replacement characters",
+      "diagnostics": [
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character"
+      ],
+      "id": "nulls-in-attribute-values",
+      "input": "<a title=\"x\u0000y\" data=x\u0000y bare=\u0000>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=x�y, data=x�y, bare=�], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULLs in tag and attribute names become replacement characters",
+      "diagnostics": [
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character"
+      ],
+      "id": "nulls-in-tag-and-attribute-names",
+      "input": "<x\u0000 \u0000=v a\u0000b=1 first \u0000second=2>",
+      "tokens": [
+        "StartTag(name=x�, attributes=[�=v, a�b=1, first=, �second=2], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "a solidus after whitespace sets the self-closing flag",
+      "diagnostics": [],
+      "id": "self-closing-with-space",
+      "input": "<br />",
+      "tokens": [
+        "StartTag(name=br, attributes=[], self_closing=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "a solidus immediately after the tag name sets the self-closing flag",
+      "diagnostics": [],
+      "id": "self-closing-without-space",
+      "input": "<br/>",
+      "tokens": [
+        "StartTag(name=br, attributes=[], self_closing=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "a second solidus before close is reported then preserves self-closing",
+      "diagnostics": [
+        "unexpected-solidus-in-tag"
+      ],
+      "id": "double-solidus-before-close",
+      "input": "<br//>",
+      "tokens": [
+        "StartTag(name=br, attributes=[], self_closing=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "unexpected solidus before an attribute reconsumes in before-attribute-name",
+      "diagnostics": [
+        "unexpected-solidus-in-tag"
+      ],
+      "id": "unexpected-solidus-before-attribute",
+      "input": "<img/ src=one>",
+      "tokens": [
+        "StartTag(name=img, attributes=[src=one], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "unexpected solidus before a NULL-starting attribute reports both recoveries",
+      "diagnostics": [
+        "unexpected-solidus-in-tag",
+        "unexpected-null-character"
+      ],
+      "id": "unexpected-solidus-before-null-attribute",
+      "input": "<hr/\u0000=x>",
+      "tokens": [
+        "StartTag(name=hr, attributes=[�=x], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "solidus stays value text inside unquoted attribute values",
+      "diagnostics": [],
+      "id": "solidus-in-unquoted-values",
+      "input": "<a href=http://example.test/path data=a/b>",
+      "tokens": [
+        "StartTag(name=a, attributes=[href=http://example.test/path, data=a/b], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "a trailing solidus before tag close belongs to the unquoted value",
+      "diagnostics": [],
+      "id": "trailing-solidus-inside-unquoted-value",
+      "input": "<img src=cat/>",
+      "tokens": [
+        "StartTag(name=img, attributes=[src=cat/], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "end tags with trailing solidus emit the end tag and report recovery",
+      "diagnostics": [
+        "end-tag-with-trailing-solidus"
+      ],
+      "id": "end-tag-with-trailing-solidus",
+      "input": "Before</p/>After",
+      "tokens": [
+        "Text(data=Before)",
+        "EndTag(name=p)",
+        "Text(data=After)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "end-tag whitespace before trailing solidus does not add an attribute diagnostic",
+      "diagnostics": [
+        "end-tag-with-trailing-solidus"
+      ],
+      "id": "end-tag-with-whitespace-and-solidus",
+      "input": "Before</p />After",
+      "tokens": [
+        "Text(data=Before)",
+        "EndTag(name=p)",
+        "Text(data=After)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "form feed is HTML whitespace before an end-tag trailing solidus",
+      "diagnostics": [
+        "end-tag-with-trailing-solidus"
+      ],
+      "id": "end-tag-with-form-feed-and-solidus",
+      "input": "Before</p\f/>After",
+      "tokens": [
+        "Text(data=Before)",
+        "EndTag(name=p)",
+        "Text(data=After)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "end-tag attributes are ignored after reporting a single diagnostic",
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "id": "end-tag-with-attributes",
+      "input": "Before</p class=x data-y>After",
+      "tokens": [
+        "Text(data=Before)",
+        "EndTag(name=p)",
+        "Text(data=After)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "end-tag attributes followed by a solidus stay in attribute recovery",
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "id": "end-tag-with-attributes-and-trailing-solidus",
+      "input": "Before</p class=x/>After",
+      "tokens": [
+        "Text(data=Before)",
+        "EndTag(name=p)",
+        "Text(data=After)",
+        "EOF"
+      ]
+    }
+  ],
+  "description": "Attribute tokenizer recovery for quoted and unquoted values, duplicates, missing whitespace, NULLs, self-closing delimiters, and recoverable end-tag attributes.",
+  "format": "whatwg-html-tokenizer-attribute-edges/v1"
+}

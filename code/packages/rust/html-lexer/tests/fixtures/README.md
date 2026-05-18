@@ -70,6 +70,10 @@ binary while production code continues to link only static Rust source.
 - `whatwg-markup-declarations.json`: generated HTML tokenizer markup
   declaration cases used by Rust tests to pin comment, bogus-comment, CDATA,
   DOCTYPE, and seeded declaration continuation recovery
+- `whatwg-attribute-edges.json`: generated HTML tokenizer attribute-edge cases
+  used by Rust tests to pin quoted/unquoted values, duplicate attributes,
+  missing whitespace recovery, NULL replacement, self-closing delimiters, and
+  end-tag attribute diagnostics
 - `html5lib-smoke.json`: generated normalized Venture fixture corpus derived from
   the raw html5lib-style smoke file
 - `upstream-html5lib-smoke.test`: raw html5lib-style tokenizer cases used to
@@ -96,6 +100,9 @@ binary while production code continues to link only static Rust source.
 - `generate_whatwg_markup_declarations_fixture.py`: importer that generates
   markup declaration recovery cases for the checked-in
   `whatwg-markup-declarations.json` fixture
+- `generate_whatwg_attribute_edges_fixture.py`: importer that generates
+  attribute-edge recovery cases for the checked-in
+  `whatwg-attribute-edges.json` fixture
 
 Regenerate or verify the WHATWG entity fixture with:
 
@@ -152,6 +159,14 @@ Regenerate or verify the WHATWG markup declaration fixture with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_markup_declarations_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_markup_declarations_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG attribute-edge fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_attribute_edges_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_attribute_edges_fixture.py \
   --check
 ```
 
@@ -300,6 +315,10 @@ currently supports:
 - generated text-mode delimiter coverage across RCDATA, RAWTEXT, script data,
   escaped script data, matching/mismatched apparent end tags, recoverable
   whitespace/attribute/solidus delimiters, and seeded end-tag continuations
+- generated attribute-edge coverage across quoted/unquoted values, duplicate
+  attributes, missing whitespace recovery, unexpected attribute characters,
+  NULL replacement, self-closing delimiters, unexpected solidus recovery, and
+  end-tag attributes
 - EOF recovery for unfinished ordinary start and end tags, ensuring partial
   tokens are dropped before the parser sees them
 - EOF recovery for unfinished attribute character references, including named
