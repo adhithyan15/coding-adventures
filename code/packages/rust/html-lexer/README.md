@@ -81,6 +81,9 @@ continuation states so parser-facing recovery stays pinned at stream end.
 The generated text-mode delimiter suite pins how RCDATA, RAWTEXT, script data,
 escaped script data, and seeded end-tag continuation states distinguish real
 matching end tags from literal apparent end tags.
+The generated markup declaration suite pins comment, bogus-comment, DOCTYPE,
+default HTML CDATA-looking bogus-comment recovery, explicit seeded CDATA
+continuation, and seeded declaration continuation behavior.
 Numeric character references report invalid-code-point diagnostics and recover
 with the HTML replacement/remapping rules for null, surrogate, out-of-range,
 noncharacter, and Windows-1252 control references.
@@ -178,10 +181,10 @@ states, CDATA bracket/end states, and script less-than, end-tag-open,
 end-tag-name/whitespace/attributes/self-closing continuation states,
 escape-start, escaped end-tag-open/name/whitespace/attributes/self-closing
 continuations, and double-escape start/end states used by html5lib/WPT-style
-tokenizer fixtures. The markup declaration path also recognizes `<![CDATA[` and
-enters the CDATA section state so the generated lexer can exercise that
-tokenizer subflow end to end; a future parser can still decide when that opener
-is valid for foreign-content contexts.
+tokenizer fixtures. Default HTML data-state `<![CDATA[` reports
+`cdata-in-html-content` and recovers as a bogus comment; foreign-content CDATA
+is exercised through the explicit seeded CDATA context so a future parser can
+opt into that tokenizer subflow only after confirming the namespace context.
 The public Rust API now wraps those parser-controlled entry states in
 `HtmlTokenizerState` and `HtmlLexContext`, including an element-to-context map
 for `title`, `textarea`, raw-text elements, `script`, and `plaintext`. A
@@ -238,10 +241,13 @@ They use a documented JSON schema that Rust tests load with `include_str!`, so
 the test corpus is checked in and shared while production code still links only
 static Rust modules.
 
-Today the package carries two suites:
+Today the package carries these fixture suites:
 
 - `html-skeleton.json` for narrow bootstrap regression coverage
 - `html1.json` for the current Mosaic-era compatibility floor
+- generated WHATWG conformance slices for named references, numeric
+  references, input-stream preprocessing, chunk-boundary invariance, EOF
+  recovery, text-mode delimiters, and markup declarations
 
 The checked-in `whatwg-entities.json` fixture is generated from the HTML
 Standard's `entities.json` table and is exercised directly by Rust tests across
@@ -263,6 +269,16 @@ outside-range values. Regenerate or check it with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py \
+  --check
+```
+
+The checked-in `whatwg-markup-declarations.json` fixture exercises comment,
+bogus-comment, CDATA-looking declaration, DOCTYPE, and seeded declaration
+continuation recovery. Regenerate or check it with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_markup_declarations_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_markup_declarations_fixture.py \
   --check
 ```
 
