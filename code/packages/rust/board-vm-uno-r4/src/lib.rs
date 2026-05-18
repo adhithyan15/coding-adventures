@@ -19,6 +19,8 @@ use board_vm_device::{
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_AND_RTC_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_LED_MATRIX_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_WATCHDOG_CAPABILITIES,
+    BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_RTC_AND_LED_MATRIX_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_ADC_CAPABILITIES, BLINK_MVP_WITH_PWM_AND_DAC_CAPABILITIES,
     BLINK_MVP_WITH_PWM_AND_LED_MATRIX_CAPABILITIES, BLINK_MVP_WITH_PWM_CAPABILITIES,
@@ -481,7 +483,8 @@ pub const UNO_R4_MINIMA: TargetDescriptor = TargetDescriptor {
         .with_uart()
         .with_spi()
         .with_can()
-        .with_rtc(),
+        .with_rtc()
+        .with_watchdog(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_MINIMA_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
@@ -517,7 +520,8 @@ pub const UNO_R4_WIFI: TargetDescriptor = TargetDescriptor {
         .with_uart()
         .with_led_matrix()
         .with_can()
-        .with_rtc(),
+        .with_rtc()
+        .with_watchdog(),
     digital_pins: &UNO_R4_DIGITAL_PINS,
     i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
     spi_buses: &UNO_R4_SPI_BUSES,
@@ -564,6 +568,10 @@ pub trait UnoR4Backend {
     }
 
     fn supports_rtc(&self) -> bool {
+        false
+    }
+
+    fn supports_watchdog(&self) -> bool {
         false
     }
 
@@ -620,6 +628,14 @@ pub trait UnoR4Backend {
     }
 
     fn rtc_set(&mut self, _epoch_seconds: u32) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn watchdog_configure(&mut self, _timeout_ms: u32) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn watchdog_kick(&mut self) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -721,6 +737,7 @@ where
         capabilities.uart = self.backend.supports_uart();
         capabilities.can = self.backend.supports_can();
         capabilities.rtc = self.backend.supports_rtc();
+        capabilities.watchdog = self.backend.supports_watchdog();
         capabilities
     }
 }
@@ -831,6 +848,20 @@ where
             return Err(HalError::UnsupportedMode);
         }
         self.backend.rtc_set(epoch_seconds)
+    }
+
+    fn watchdog_configure(&mut self, timeout_ms: u32) -> Result<(), HalError> {
+        if self.target.watchdog.is_none() {
+            return Err(HalError::UnsupportedMode);
+        }
+        self.backend.watchdog_configure(timeout_ms)
+    }
+
+    fn watchdog_kick(&mut self) -> Result<(), HalError> {
+        if self.target.watchdog.is_none() {
+            return Err(HalError::UnsupportedMode);
+        }
+        self.backend.watchdog_kick()
     }
 
     fn spi_transfer(
@@ -1043,6 +1074,18 @@ fn uno_r4_device_descriptor_for_capabilities(
             && capabilities.uart
             && capabilities.can
             && capabilities.rtc
+            && capabilities.watchdog
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_LED_MATRIX_CAPABILITIES
+        } else if target.supports_led_matrix
+            && capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+            && capabilities.rtc
         {
             &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_LED_MATRIX_CAPABILITIES
         } else if target.supports_led_matrix
@@ -1109,6 +1152,17 @@ fn uno_r4_device_descriptor_for_capabilities(
             &BLINK_MVP_WITH_ADC_AND_LED_MATRIX_CAPABILITIES
         } else if target.supports_led_matrix {
             &BLINK_MVP_WITH_LED_MATRIX_CAPABILITIES
+        } else if capabilities.pwm
+            && capabilities.adc
+            && capabilities.dac
+            && capabilities.i2c
+            && capabilities.spi
+            && capabilities.uart
+            && capabilities.can
+            && capabilities.rtc
+            && capabilities.watchdog
+        {
+            &BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_WATCHDOG_CAPABILITIES
         } else if capabilities.pwm
             && capabilities.adc
             && capabilities.dac
@@ -1241,6 +1295,8 @@ mod tests {
         CanRead(u8),
         RtcNow,
         RtcSet(u32),
+        WatchdogConfigure(u32),
+        WatchdogKick,
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -1316,6 +1372,10 @@ mod tests {
             true
         }
 
+        fn supports_watchdog(&self) -> bool {
+            true
+        }
+
         fn supports_bootloader_reboot(&self) -> bool {
             true
         }
@@ -1382,6 +1442,16 @@ mod tests {
 
         fn rtc_set(&mut self, epoch_seconds: u32) -> Result<(), HalError> {
             self.events.push(Event::RtcSet(epoch_seconds));
+            Ok(())
+        }
+
+        fn watchdog_configure(&mut self, timeout_ms: u32) -> Result<(), HalError> {
+            self.events.push(Event::WatchdogConfigure(timeout_ms));
+            Ok(())
+        }
+
+        fn watchdog_kick(&mut self) -> Result<(), HalError> {
+            self.events.push(Event::WatchdogKick);
             Ok(())
         }
 
@@ -1613,7 +1683,8 @@ mod tests {
         assert_eq!(descriptor.max_frame_payload, DEFAULT_MAX_FRAME_PAYLOAD);
         assert_eq!(
             descriptor.capabilities.len(),
-            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_AND_LED_MATRIX_CAPABILITIES.len()
+            BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_AND_LED_MATRIX_CAPABILITIES
+                .len()
         );
         assert!(UNO_R4_WIFI
             .capabilities
@@ -1656,6 +1727,12 @@ mod tests {
         assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_CAN_READ));
         assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_RTC_NOW));
         assert!(UNO_R4_WIFI.capabilities.supports(board_vm_ir::CAP_RTC_SET));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_WATCHDOG_CONFIGURE));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_WATCHDOG_KICK));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -1713,6 +1790,12 @@ mod tests {
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_RTC_SET));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_WATCHDOG_CONFIGURE));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_WATCHDOG_KICK));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
@@ -1938,6 +2021,27 @@ mod tests {
         board.rtc_set(1_700_000_001).unwrap();
 
         assert_eq!(board.backend().events, vec![Event::RtcSet(1_700_000_001)]);
+    }
+
+    #[test]
+    fn watchdog_configure_runs_through_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        board.watchdog_configure(2_000).unwrap();
+
+        assert_eq!(
+            board.backend().events,
+            vec![Event::WatchdogConfigure(2_000)]
+        );
+    }
+
+    #[test]
+    fn watchdog_kick_runs_through_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        board.watchdog_kick().unwrap();
+
+        assert_eq!(board.backend().events, vec![Event::WatchdogKick]);
     }
 
     #[test]

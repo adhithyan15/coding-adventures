@@ -45,15 +45,16 @@ use board_vm_host::{
     write_rtc_now_module, write_rtc_set_module, write_spi_open_module, write_spi_read_module,
     write_spi_transfer_module, write_spi_write_module, write_time_now_module,
     write_time_sleep_ms_module, write_uart_open_module, write_uart_read_module,
-    write_uart_write_module, AdcReadProgram, BlinkProgram, CanOpenProgram, CanReadProgram,
-    CanWriteProgram, DacWriteU12Program, GpioHandleCloseProgram, GpioHandleReadProgram,
-    GpioHandleWriteProgram, GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError,
-    HostSession, I2cOpenProgram, I2cReadProgram, I2cReadU8Program, I2cTransferProgram,
-    I2cWriteProgram, I2cWriteU8Program, LedMatrixFrameProgram, ModuleSpec, PwmWriteProgram,
-    RtcNowProgram, RtcSetProgram, SpiOpenProgram, SpiReadProgram, SpiTransferProgram,
-    SpiWriteProgram, TimeNowProgram, TimeSleepMsProgram, UartOpenProgram, UartReadProgram,
-    UartWriteProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN, CAN_OPEN_MODULE_LEN,
-    CAN_READ_MODULE_LEN, CAN_WRITE_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN,
+    write_uart_write_module, write_watchdog_configure_module, write_watchdog_kick_module,
+    AdcReadProgram, BlinkProgram, CanOpenProgram, CanReadProgram, CanWriteProgram,
+    DacWriteU12Program, GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram,
+    GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError, HostSession, I2cOpenProgram,
+    I2cReadProgram, I2cReadU8Program, I2cTransferProgram, I2cWriteProgram, I2cWriteU8Program,
+    LedMatrixFrameProgram, ModuleSpec, PwmWriteProgram, RtcNowProgram, RtcSetProgram,
+    SpiOpenProgram, SpiReadProgram, SpiTransferProgram, SpiWriteProgram, TimeNowProgram,
+    TimeSleepMsProgram, UartOpenProgram, UartReadProgram, UartWriteProgram,
+    WatchdogConfigureProgram, WatchdogKickProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
+    CAN_OPEN_MODULE_LEN, CAN_READ_MODULE_LEN, CAN_WRITE_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN,
     DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS,
     GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
     GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, I2C_OPEN_MODULE_LEN,
@@ -61,6 +62,7 @@ use board_vm_host::{
     LED_MATRIX_FRAME_MODULE_LEN, PWM_WRITE_MODULE_LEN, RTC_NOW_MODULE_LEN, RTC_SET_MODULE_LEN,
     SPI_OPEN_MODULE_LEN, SPI_READ_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
     UART_OPEN_MODULE_LEN, UART_READ_MODULE_LEN, UART_WRITE_MODULE_LEN,
+    WATCHDOG_CONFIGURE_MODULE_LEN, WATCHDOG_KICK_MODULE_LEN,
 };
 use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
@@ -1762,6 +1764,20 @@ pub fn build_rtc_set_module(
     Ok(write_rtc_set_module(program, out)?)
 }
 
+pub fn build_watchdog_configure_module(
+    program: WatchdogConfigureProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_watchdog_configure_module(program, out)?)
+}
+
+pub fn build_watchdog_kick_module(
+    program: WatchdogKickProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_watchdog_kick_module(program, out)?)
+}
+
 pub fn build_spi_transfer_module(
     program: SpiTransferProgram<'_>,
     out: &mut [u8],
@@ -2698,6 +2714,45 @@ pub unsafe extern "C" fn board_vm_language_rtc_set_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_watchdog_configure_module(
+    timeout_ms: u32,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_watchdog_configure_module(
+            WatchdogConfigureProgram {
+                timeout_ms,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_watchdog_kick_module(
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_watchdog_kick_module(WatchdogKickProgram { max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_spi_transfer_module(
     cs_pin: u16,
     write_bytes: *const u8,
@@ -3272,6 +3327,16 @@ pub extern "C" fn board_vm_language_rtc_set_module_len() -> u64 {
 }
 
 #[no_mangle]
+pub extern "C" fn board_vm_language_watchdog_configure_module_len() -> u64 {
+    WATCHDOG_CONFIGURE_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_watchdog_kick_module_len() -> u64 {
+    WATCHDOG_KICK_MODULE_LEN as u64
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_spi_transfer_module_len(write_len: u64) -> u64 {
     let Ok(write_len) = usize::try_from(write_len) else {
         return 0;
@@ -3592,6 +3657,8 @@ mod tests {
         assert!(uno.capabilities.contains(&"uart.read".to_owned()));
         assert!(uno.capabilities.contains(&"rtc.now".to_owned()));
         assert!(uno.capabilities.contains(&"rtc.set".to_owned()));
+        assert!(uno.capabilities.contains(&"watchdog.configure".to_owned()));
+        assert!(uno.capabilities.contains(&"watchdog.kick".to_owned()));
         assert_eq!(
             known_target("arduino-uno-r4-minima").unwrap().led_matrix,
             None
@@ -4522,6 +4589,41 @@ mod tests {
         };
         assert_eq!(rtc_set_status.code, BoardVmLanguageStatusCode::Ok as u32);
         assert_eq!(rtc_set_status.len, board_vm_language_rtc_set_module_len());
+
+        let mut watchdog_configure_module = [0u8; WATCHDOG_CONFIGURE_MODULE_LEN];
+        let watchdog_configure_status = unsafe {
+            board_vm_language_watchdog_configure_module(
+                2_000,
+                1,
+                watchdog_configure_module.as_mut_ptr(),
+                watchdog_configure_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            watchdog_configure_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            watchdog_configure_status.len,
+            board_vm_language_watchdog_configure_module_len()
+        );
+
+        let mut watchdog_kick_module = [0u8; WATCHDOG_KICK_MODULE_LEN];
+        let watchdog_kick_status = unsafe {
+            board_vm_language_watchdog_kick_module(
+                1,
+                watchdog_kick_module.as_mut_ptr(),
+                watchdog_kick_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            watchdog_kick_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            watchdog_kick_status.len,
+            board_vm_language_watchdog_kick_module_len()
+        );
 
         let spi_transfer_payload = [0x9f];
         let mut spi_transfer_module = [0u8; board_vm_host::SPI_TRANSFER_MAX_MODULE_LEN];

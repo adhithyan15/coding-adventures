@@ -222,6 +222,8 @@ metadata. The operation is intentionally direct and stateless, mirroring
 | `0x33` | `can.read` | `handle` | `u8` |
 | `0x34` | `rtc.now` | none | `u32` |
 | `0x35` | `rtc.set` | `epoch_seconds: u32` | `unit` |
+| `0x36` | `watchdog.configure` | `timeout_ms: u32` | `unit` |
+| `0x37` | `watchdog.kick` | none | `unit` |
 
 `i2c.open` opens a board-advertised I2C controller and returns a persistent bus
 handle. The handle is the lifetime anchor for transfer operations, keeping bus
@@ -270,6 +272,13 @@ operations are direct and stateless because the initial RTC tranche exposes the
 single board-owned clock instance rather than allocating a persistent handle.
 Boards without an RTC, or without firmware support for setting it, must not
 advertise the corresponding capability.
+
+### Watchdog
+
+`watchdog.configure` arms or reconfigures the board watchdog with a timeout
+budget in milliseconds. `watchdog.kick` refreshes the already-configured
+watchdog. Both operations are direct calls and return `unit`; boards without a
+watchdog backend must not advertise either capability.
 
 ### LED Matrix
 
