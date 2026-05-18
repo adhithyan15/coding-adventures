@@ -4,8 +4,8 @@ use board_vm_ir::{
     CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE,
     CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
     CAP_SPI_TRANSFER, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ,
-    CAP_UART_WRITE, FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
-    MAX_BYTE_BUFFER_LEN, MODULE_MAGIC, MODULE_VERSION,
+    CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK, FLAG_PROGRAM_MAY_RUN_FOREVER,
+    FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MAX_BYTE_BUFFER_LEN, MODULE_MAGIC, MODULE_VERSION,
 };
 use board_vm_protocol::{
     encode_frame, encode_hello, encode_program_begin, encode_program_chunk, encode_program_end,
@@ -79,6 +79,10 @@ pub const RTC_NOW_CODE_LEN: usize = 3;
 pub const RTC_NOW_MODULE_LEN: usize = 13;
 pub const RTC_SET_CODE_LEN: usize = 7;
 pub const RTC_SET_MODULE_LEN: usize = 17;
+pub const WATCHDOG_CONFIGURE_CODE_LEN: usize = 7;
+pub const WATCHDOG_CONFIGURE_MODULE_LEN: usize = 17;
+pub const WATCHDOG_KICK_CODE_LEN: usize = 2;
+pub const WATCHDOG_KICK_MODULE_LEN: usize = 12;
 pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
@@ -273,6 +277,17 @@ pub struct RtcSetProgram {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WatchdogConfigureProgram {
+    pub timeout_ms: u32,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WatchdogKickProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct I2cWriteU8Program {
     pub address: u16,
     pub byte: u8,
@@ -407,6 +422,27 @@ impl RtcSetProgram {
             epoch_seconds,
             max_stack: 1,
         }
+    }
+}
+
+impl WatchdogConfigureProgram {
+    pub const fn new(timeout_ms: u32) -> Self {
+        Self {
+            timeout_ms,
+            max_stack: 1,
+        }
+    }
+}
+
+impl WatchdogKickProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 1 }
+    }
+}
+
+impl Default for WatchdogKickProgram {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -1806,6 +1842,79 @@ pub fn write_rtc_set_module(program: RtcSetProgram, out: &mut [u8]) -> Result<us
     Ok(offset)
 }
 
+pub fn write_watchdog_configure_code(
+    program: WatchdogConfigureProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < WATCHDOG_CONFIGURE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_push_u32(out, &mut offset, program.timeout_ms)?;
+    write_call_u8(out, &mut offset, CAP_WATCHDOG_CONFIGURE)?;
+    Ok(offset)
+}
+
+pub fn write_watchdog_configure_module(
+    program: WatchdogConfigureProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < WATCHDOG_CONFIGURE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; WATCHDOG_CONFIGURE_CODE_LEN];
+    let code_len = write_watchdog_configure_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_watchdog(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_watchdog_kick_code(
+    _program: WatchdogKickProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < WATCHDOG_KICK_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_call_u8(out, &mut offset, CAP_WATCHDOG_KICK)?;
+    Ok(offset)
+}
+
+pub fn write_watchdog_kick_module(
+    program: WatchdogKickProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < WATCHDOG_KICK_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; WATCHDOG_KICK_CODE_LEN];
+    let code_len = write_watchdog_kick_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_watchdog(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn spi_transfer_module_len(write_len: usize) -> Result<usize, HostError> {
     if write_len > MAX_BYTE_BUFFER_LEN {
         return Err(HostError::ProgramTooLarge);
@@ -2340,7 +2449,7 @@ mod tests {
         CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ, CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_I2C_OPEN,
         CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
         CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_UART_READ,
-        CAP_UART_WRITE,
+        CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
     };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -2425,6 +2534,13 @@ mod tests {
     const RTC_SET_1700000000_MODULE_HEX: [u8; RTC_SET_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x07, 0x14, 0x00, 0xF1, 0x53, 0x65, 0x40,
         0x35, 0x00,
+    ];
+    const WATCHDOG_CONFIGURE_2000_MODULE_HEX: [u8; WATCHDOG_CONFIGURE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x07, 0x14, 0xD0, 0x07, 0x00, 0x00, 0x40,
+        0x36, 0x00,
+    ];
+    const WATCHDOG_KICK_MODULE_HEX: [u8; WATCHDOG_KICK_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x02, 0x40, 0x37, 0x00,
     ];
     const SPI_TRANSFER_CS10_9F_READ_03_MODULE_HEX: [u8; 24] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x05, 0x00, 0x0D, 0x20, 0x13, 0x0A, 0x00, 0x16, 0x00,
@@ -2767,6 +2883,36 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_RTC_SET]);
+    }
+
+    #[test]
+    fn builds_watchdog_configure_module() {
+        let mut module = [0u8; WATCHDOG_CONFIGURE_MODULE_LEN];
+        let len =
+            write_watchdog_configure_module(WatchdogConfigureProgram::new(2_000), &mut module)
+                .unwrap();
+        assert_eq!(len, WATCHDOG_CONFIGURE_MODULE_LEN);
+        assert_eq!(module, WATCHDOG_CONFIGURE_2000_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_watchdog(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_WATCHDOG_CONFIGURE]);
+    }
+
+    #[test]
+    fn builds_watchdog_kick_module() {
+        let mut module = [0u8; WATCHDOG_KICK_MODULE_LEN];
+        let len = write_watchdog_kick_module(WatchdogKickProgram::new(), &mut module).unwrap();
+        assert_eq!(len, WATCHDOG_KICK_MODULE_LEN);
+        assert_eq!(module, WATCHDOG_KICK_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_watchdog(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_WATCHDOG_KICK]);
     }
 
     #[test]

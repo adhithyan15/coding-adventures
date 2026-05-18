@@ -175,7 +175,7 @@ pub const BLINK_MVP_CAPABILITIES: [&str; 8] = [
     "program.ram_exec",
 ];
 
-pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 27] = [
+pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 29] = [
     "transport.serial",
     "gpio.open",
     "gpio.write",
@@ -202,10 +202,12 @@ pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 27] = [
     "can.read",
     "rtc.now",
     "rtc.set",
+    "watchdog.configure",
+    "watchdog.kick",
     "program.ram_exec",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 31] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 33] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -235,6 +237,8 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 31] = [
     "can.read",
     "rtc.now",
     "rtc.set",
+    "watchdog.configure",
+    "watchdog.kick",
     "led_matrix.frame",
     "program.ram_exec",
 ];
@@ -918,6 +922,10 @@ mod tests {
         let wifi = find_target("arduino-uno-r4-wifi").unwrap();
         assert_eq!(wifi.watchdog, minima.watchdog);
         assert!(wifi.watchdog.unwrap().notes.contains("watchdog timer"));
+        assert!(minima.capabilities.contains(&"watchdog.configure"));
+        assert!(minima.capabilities.contains(&"watchdog.kick"));
+        assert!(wifi.capabilities.contains(&"watchdog.configure"));
+        assert!(wifi.capabilities.contains(&"watchdog.kick"));
 
         assert_eq!(find_target("esp32-devkit-v1").unwrap().watchdog, None);
         assert_eq!(find_target("raspberry-pi-pico").unwrap().watchdog, None);

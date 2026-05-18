@@ -6,7 +6,7 @@ use board_vm_ir::{
     CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
     CAP_LED_MATRIX_FRAME, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER,
     CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE,
-    MAX_BYTE_BUFFER_LEN,
+    CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -199,6 +199,14 @@ pub trait BoardHal {
     }
 
     fn rtc_set(&mut self, _epoch_seconds: u32) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn watchdog_configure(&mut self, _timeout_ms: u32) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn watchdog_kick(&mut self) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -797,6 +805,19 @@ where
                     kind: hal_error_kind(err),
                 })
             }
+            CAP_WATCHDOG_CONFIGURE => {
+                let timeout_ms = self.pop_u32(ip)?;
+                self.hal
+                    .watchdog_configure(timeout_ms)
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })
+            }
+            CAP_WATCHDOG_KICK => self.hal.watchdog_kick().map_err(|err| RuntimeError {
+                ip,
+                kind: hal_error_kind(err),
+            }),
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -1066,6 +1087,8 @@ mod tests {
         CanRead(u32),
         RtcNow,
         RtcSet(u32),
+        WatchdogConfigure(u32),
+        WatchdogKick,
         LedMatrixFrame([u32; 3]),
     }
 
@@ -1096,6 +1119,7 @@ mod tests {
                 .with_uart()
                 .with_can()
                 .with_rtc()
+                .with_watchdog()
                 .with_led_matrix()
         }
 
@@ -1253,6 +1277,16 @@ mod tests {
         fn rtc_set(&mut self, epoch_seconds: u32) -> Result<(), HalError> {
             self.rtc_epoch_seconds = epoch_seconds;
             self.events.push(Event::RtcSet(epoch_seconds));
+            Ok(())
+        }
+
+        fn watchdog_configure(&mut self, timeout_ms: u32) -> Result<(), HalError> {
+            self.events.push(Event::WatchdogConfigure(timeout_ms));
+            Ok(())
+        }
+
+        fn watchdog_kick(&mut self) -> Result<(), HalError> {
+            self.events.push(Event::WatchdogKick);
             Ok(())
         }
 
@@ -1590,6 +1624,38 @@ mod tests {
         assert_eq!(report.status, RunStatus::Halted);
         assert_eq!(report.return_value, Value::Unit);
         assert_eq!(runtime.hal().events, vec![Event::RtcSet(1_700_000_000)]);
+    }
+
+    #[test]
+    fn watchdog_configure_dispatches_timeout_ms() {
+        let mut runtime: Runtime<FakeHal, 2, 1> = Runtime::new(FakeHal::new());
+        let code = [
+            0x14,
+            0xd0,
+            0x07,
+            0x00,
+            0x00,
+            0x40,
+            CAP_WATCHDOG_CONFIGURE as u8,
+        ];
+
+        let report = runtime.run_code(&code, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_value, Value::Unit);
+        assert_eq!(runtime.hal().events, vec![Event::WatchdogConfigure(2_000)]);
+    }
+
+    #[test]
+    fn watchdog_kick_dispatches() {
+        let mut runtime: Runtime<FakeHal, 2, 1> = Runtime::new(FakeHal::new());
+        let code = [0x40, CAP_WATCHDOG_KICK as u8];
+
+        let report = runtime.run_code(&code, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_value, Value::Unit);
+        assert_eq!(runtime.hal().events, vec![Event::WatchdogKick]);
     }
 
     #[test]
