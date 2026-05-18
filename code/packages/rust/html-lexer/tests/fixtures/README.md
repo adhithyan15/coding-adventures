@@ -64,6 +64,9 @@ binary while production code continues to link only static Rust source.
 - `whatwg-eof-recovery.json`: generated HTML tokenizer EOF recovery cases used
   by Rust tests to pin unfinished tags, comments, doctypes, character
   references, text modes, and seeded continuation states
+- `whatwg-text-mode-delimiters.json`: generated HTML tokenizer text-mode
+  delimiter cases used by Rust tests to pin RCDATA, RAWTEXT, script-data,
+  escaped-script, and seeded end-tag continuation recovery
 - `html5lib-smoke.json`: generated normalized Venture fixture corpus derived from
   the raw html5lib-style smoke file
 - `upstream-html5lib-smoke.test`: raw html5lib-style tokenizer cases used to
@@ -84,6 +87,9 @@ binary while production code continues to link only static Rust source.
   `whatwg-chunk-boundaries.json` fixture
 - `generate_whatwg_eof_recovery_fixture.py`: importer that generates EOF
   recovery cases for the checked-in `whatwg-eof-recovery.json` fixture
+- `generate_whatwg_text_mode_delimiters_fixture.py`: importer that generates
+  text-mode end-tag delimiter cases for the checked-in
+  `whatwg-text-mode-delimiters.json` fixture
 
 Regenerate or verify the WHATWG entity fixture with:
 
@@ -124,6 +130,14 @@ Regenerate or verify the WHATWG EOF recovery fixture with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_eof_recovery_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_eof_recovery_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG text-mode delimiter fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_text_mode_delimiters_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_text_mode_delimiters_fixture.py \
   --check
 ```
 
@@ -269,6 +283,9 @@ currently supports:
 - generated EOF recovery coverage across partial tags, attributes, comments,
   bogus comments, doctypes, named/numeric character references, RCDATA,
   RAWTEXT, script data, PLAINTEXT, CDATA, and seeded continuation states
+- generated text-mode delimiter coverage across RCDATA, RAWTEXT, script data,
+  escaped script data, matching/mismatched apparent end tags, recoverable
+  whitespace/attribute/solidus delimiters, and seeded end-tag continuations
 - EOF recovery for unfinished ordinary start and end tags, ensuring partial
   tokens are dropped before the parser sees them
 - EOF recovery for unfinished attribute character references, including named
