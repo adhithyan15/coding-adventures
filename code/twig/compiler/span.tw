@@ -1,4 +1,4 @@
-; # span.tw — Source Location (LANG57 / TW05-D)
+; # span.tw — Source Location (LANG57 / TW05-D + LANG69 / TW05-O)
 ;
 ; A `Span` records where a token or AST node lives in the source text.
 ; It carries a `source-id` (integer handle identifying which source file),
@@ -16,9 +16,16 @@
 ;   (span-start sp)                  ← accessor
 ;   (span-end sp)                    ← accessor
 ;   (span? v)                        ← predicate
+;
+; ## TW05-O (LANG69): strict mode
+;
+; span.tw is the first compiler module to use `(typed strict)`.  This was
+; made possible by LANG69's builtin pre-registration in `TypeEnv::new()`:
+; `and`, `>=`, `<=` are now resolved without "unresolved variable" errors.
+; span.tw has no imports, so no import-supplied names are needed.
 
 (module compiler/span
-  (typed lenient)
+  (typed strict)
   (export Span span? span-source-id span-start span-end make-span dummy-span))
 
 ; ── Record definition ────────────────────────────────────────────────────────

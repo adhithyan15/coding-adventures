@@ -211,18 +211,25 @@ class NotIn:
 
 @dataclass(frozen=True, slots=True)
 class Like:
-    """``expr LIKE 'pattern'`` — SQL pattern matching with % and _ wildcards."""
+    """``expr LIKE 'pattern' [ESCAPE 'c']`` — SQL pattern matching.
+
+    The optional *escape* character (a single-character string) is stored when
+    the SQL statement contained an ``ESCAPE`` clause.  ``None`` means no escape
+    was specified — wildcards ``%`` and ``_`` retain their default meaning.
+    """
 
     operand: Expr
     pattern: str
+    escape: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
 class NotLike:
-    """``expr NOT LIKE 'pattern'``."""
+    """``expr NOT LIKE 'pattern' [ESCAPE 'c']``."""
 
     operand: Expr
     pattern: str
+    escape: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

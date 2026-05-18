@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-style-ir",
+  "version": "0.1.0",
+  "description": "Forme Style IR: design tokens, selectors, rules, contexts, themes — the typed value tree backends translate to CSS / LaTeX / PDF / terminal (FM04).",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-types": "file:../forme-types"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

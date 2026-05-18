@@ -41,15 +41,36 @@
       "description": "Path to a CSS file to inline in the HTML output (for --backend html)",
       "type": "string",
       "required": false
+    },
+    {
+      "id": "interface",
+      "long": "interface",
+      "description": "Path to a .mil mosmodel interface file (three-file pipeline mode)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "layout",
+      "long": "layout",
+      "description": "Path to a .mll moslayout file (three-file pipeline mode)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "style",
+      "long": "style",
+      "description": "Path to a .msl mosstyle file (three-file pipeline mode)",
+      "type": "string",
+      "required": false
     }
   ],
   "arguments": [
     {
       "id": "source",
       "name": "SOURCE",
-      "description": "Path to the .mosaic source file to compile",
+      "description": "Path to the .mosaic source file to compile (legacy single-file mode). Omit when using --interface/--layout/--style.",
       "type": "string",
-      "required": true
+      "required": false
     }
   ]
 }

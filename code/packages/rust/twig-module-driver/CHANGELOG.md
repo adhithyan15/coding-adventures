@@ -1,5 +1,345 @@
 # Changelog — twig-module-driver
 
+## [0.14.0] — 2026-05-17
+
+### Added (LANG72 — TW05-Q module-driver type-check phase)
+
+Wired `twig-type-checker` into `compile_module_tree` as **Phase 3.5**:
+a topological type-check pass that runs between extern-name collection
+(Phase 3) and IR compilation (Phase 4).
+
+#### Phase 3.5: topological type check
+
+- Added Kahn's-algorithm topological sort on the import-graph adjacency
+  map already built in Phase 1.  Dependencies are processed before
+  importers so cross-module exports are available when each module is
+  checked.
+- For each module, calls
+  `twig_type_checker::check_program_with_globals` with exported names
+  from all direct dependencies seeded as `extra_globals`.
+- Modules with `(typed strict)` whose `result.ok == false` cause
+  `compile_module_tree` to return early with the new
+  `ModuleDriverError::TypeErrors` variant.
+- Modules with `(typed lenient)` or `(typed off)` are type-checked but
+  never fail compilation — lenient mode always returns `ok: true`.
+
+#### New `ModuleDriverError::TypeErrors` variant
+
+```rust
+TypeErrors {
+    path: PathBuf,
+    errors: Vec<type_checker_protocol::TypeErrorDiagnostic>,
+}
+```
+
+#### New dependency
+
+`twig-type-checker` added to `[dependencies]`.
+
+#### New tests (`tw05q_tests`, 4 tests)
+
+| Test | Verifies |
+|------|---------|
+| `compiler_tree_type_checks_clean` | All 11 `.tw` modules: type check passes |
+| `strict_module_bad_varref_fails_type_check` | `(typed strict)` + bad varref → `TypeErrors` |
+| `lenient_module_bad_varref_compiles` | `(typed lenient)` + bad varref → compiles fine |
+| `type_errors_carry_path` | `TypeErrors` error has the correct module path |
+
+## [0.13.0] — 2026-05-17
+
+### Added (LANG68 — TW05-N fixed-point self-compilation)
+
+Added IIR opcode-summary serialisation and fixed-point check to
+`code/twig/compiler/main.tw`.
+
+#### New functions in `main.tw` (6 helpers, main.tw: 2 → 8 functions)
+
+| Function | Description |
+|----------|-------------|
+| `instr-op-tag` | Extract opcode string from one `IirInstr` record |
+| `instr-list-ops` | Join opcodes of an instruction list with `"\|"` |
+| `fn-pair-ops-str` | Serialise `(fn-name . instr-list)` → `"fn-name N op1\|...\|opN"` |
+| `fn-list-ops-str` | Newline-join `fn-pair-ops-str` results for all functions |
+| `self-compile-all-summary` | Compile all 11 files, return full opcode-structure string |
+| `fixed-point-check` | Compile `span.tw` twice, return `#t` if summaries match |
+
+#### Updated function counts
+
+`main.tw` now contributes **8 functions** (was 2 in TW05-M), changing the
+`self-compile-all` total from 173 to **179**.
+
+Full table:
+
+| Module | LANG67 | LANG68 | Delta |
+|--------|--------|--------|-------|
+| `span.tw` | 2 | 2 | — |
+| `token.tw` | 0 | 0 | — |
+| `diagnostic.tw` | 3 | 3 | — |
+| `ast.tw` | 0 | 0 | — |
+| `iir-types.tw` | 0 | 0 | — |
+| `iir-builder.tw` | 8 | 8 | — |
+| `lexer.tw` | 25 | 25 | — |
+| `cst-parser.tw` | 69 | 69 | — |
+| `parser.tw` | 29 | 29 | — |
+| `emit.tw` | 35 | 35 | — |
+| `main.tw` | **2** | **8** | +6 |
+| **Total** | **173** | **179** | **+6** |
+
+#### Fixed-point semantics
+
+`fixed-point-check` calls `lex-source → parse-program → emit-program` twice
+on `span.tw` and compares the two opcode-summary strings.  Since Twig is
+purely functional, this always returns `#t`; the purpose is to make the
+determinism invariant **explicit and testable**.
+
+#### No VM constant changes needed
+
+Largest file is still `cst-parser.tw` at 29 122 chars.  New helpers in
+`main.tw` add ~360 instructions; grand total still well below
+`MAX_INSTRUCTIONS_PER_RUN` (2²⁵ = 32 M).
+
+New `#[cfg(test)] mod tw05n_tests` with 7 integration tests:
+
+| Test | What it verifies |
+|------|-----------------|
+| `main_tw_contributes_8_functions_after_tw05n` | `main.tw` → 8 functions (2 + 6 new) |
+| `self_compile_all_returns_179_after_tw05n` | `self-compile-all` → 179 total functions |
+| `fixed_point_check_returns_true` | `(fixed-point-check dir)` → `#t` |
+| `summary_contains_make_span_12_instrs` | opcode summary has `"make-span 12 "` |
+| `summary_contains_dummy_span_4_instrs` | opcode summary has `"dummy-span 4 "` |
+| `summary_is_non_empty_and_substantial` | summary > 1000 chars |
+| `tw05l_seven_file_regression_still_171` | TW05-L 7-file sum (independent) → 171 |
+
+### Changed
+
+- `tw05m_tests::self_compile_main_tw_returns_2` renamed to
+  `self_compile_main_tw_returns_8` and updated to expect `8`.
+- `tw05m_tests::self_compile_all_returns_173` updated to expect `179`.
+  (The test remains in `tw05m_tests`; the count changed because `main.tw`
+  gained 6 new functions in TW05-N.)
+
+---
+
+## [0.12.0] — 2026-05-17
+
+### Added (LANG67 — TW05-M all-module self-compilation)
+
+Extended `self-compile-all` in `code/twig/compiler/main.tw` from seven files
+(TW05-L, 171 total) to **all eleven** compiler source files (TW05-M, **173 total**)
+by adding `token.tw` (0 fn), `ast.tw` (0 fn), `iir-types.tw` (0 fn), and
+`main.tw` (2 fn).
+
+#### Why union/record modules contribute 0 functions
+
+`emit-program` only counts `DefExpr(LambdaExpr)` top-level forms.  Union and
+record declarations parse as `CallExpr` nodes; `emit-top-level-form` returns
+`nil` for those → skipped by `emit-program-loop`.
+
+#### No VM constant changes needed
+
+Largest file is still `cst-parser.tw` at 29 122 chars.  Additional instruction
+cost: 21 371 chars × 90 ≈ 1.92 M; new grand total ≈ 10.1 M << 32 M.
+
+New `#[cfg(test)] mod tw05m_tests` with 7 integration tests:
+
+| Test | What it verifies |
+|------|-----------------|
+| `self_compile_token_tw_returns_0` | `token.tw` (union/record-only) → 0 functions |
+| `self_compile_ast_tw_returns_0` | `ast.tw` (union-only) → 0 functions |
+| `self_compile_iir_types_tw_returns_0` | `iir-types.tw` (union/record-only) → 0 functions |
+| `self_compile_main_tw_returns_2` | `main.tw` → 2 functions (main, self-compile-all) |
+| `self_compile_all_returns_173` | `self-compile-all` on all 11 files → 173 functions |
+| `self_compile_tw05l_modules_regression` | TW05-L 7-file sum (independent) → 171 |
+| `existing_main_still_returns_2_after_tw05m` | TW05-I regression: `(main)` → 2 |
+
+### Changed
+
+`tw05j_tests::self_compile_all_returns_171`, `tw05k_tests::self_compile_all_returns_171`,
+and `tw05l_tests::self_compile_all_returns_171` all renamed to `self_compile_all_returns_173`
+and updated to expect 173 (the new `self-compile-all` total after TW05-M adds the
+remaining four modules).
+
+#### Updated function count table
+
+| File | Size | Functions |
+|------|------|-----------|
+| `span.tw` | 2 426 | 2 |
+| `token.tw` | 2 782 | 0 ← TW05-M |
+| `diagnostic.tw` | 2 446 | 3 |
+| `ast.tw` | 3 817 | 0 ← TW05-M |
+| `iir-types.tw` | 3 073 | 0 ← TW05-M |
+| `iir-builder.tw` | 6 278 | 8 |
+| `lexer.tw` | 8 593 | 25 |
+| `cst-parser.tw` | 29 122 | 69 |
+| `parser.tw` | 19 708 | 29 |
+| `emit.tw` | 22 697 | 35 |
+| `main.tw` | 11 699 | 2 ← TW05-M |
+| **Total** | 112 641 | **173** |
+
+---
+
+## [0.11.0] — 2026-05-17
+
+### Added (LANG66 — TW05-L cst-parser self-compilation)
+
+#### twig-vm 0.18.0 dependency (MAX_DISPATCH_DEPTH + MAX_INSTRUCTIONS_PER_RUN bumped)
+
+`cst-parser.tw` at 29 122 chars requires both constants to be raised:
+- `MAX_DISPATCH_DEPTH`: 65 536 → 131 072 (lex-loop generates ~2.25 frames/char)
+- `MAX_INSTRUCTIONS_PER_RUN`: 2²³ → 2²⁵ (lex-loop executes ~90 instrs/char; 7-file total ≈ 8.2 M)
+
+
+Extended `self-compile-all` in `code/twig/compiler/main.tw` from six files
+(TW05-K, 102 total) to seven files (TW05-L, 171 total) by adding
+`cst-parser.tw` (69 functions, 29 122 chars).
+
+`cst-parser.tw` is the generated CST parser (produced by `grammar-tools`
+from `twig.grammar`) and is the largest file in the compiler corpus.
+Peak debug-mode stack: 29 122 frames × 60 KiB ≈ 1.75 GiB.
+`run_in_xlarge_stack` (3 GiB) provides ~1.7× headroom.
+
+New `#[cfg(test)] mod tw05l_tests` with 4 integration tests:
+
+| Test | What it verifies |
+|------|-----------------|
+| `self_compile_cst_parser_from_disk` | Real `cst-parser.tw` (29 122 chars) via `host/read_file` → 69 functions |
+| `self_compile_all_returns_171` | `self-compile-all` on all 7 files → 171 functions |
+| `self_compile_tw05k_modules_regression` | Original 6 TW05-K files still → 102 (independent of self-compile-all) |
+| `existing_main_still_returns_2_after_tw05l` | TW05-I regression: `(main)` still → 2 |
+
+### Changed
+
+`tw05j_tests::self_compile_all_returns_102` and
+`tw05k_tests::self_compile_all_returns_102` both renamed to
+`self_compile_all_returns_171` and updated to expect 171 (the new
+`self-compile-all` total after TW05-L adds cst-parser.tw).
+
+#### Updated function count table
+
+| File | Size | Functions |
+|------|------|-----------|
+| `span.tw` | 2 426 | 2 |
+| `diagnostic.tw` | 2 446 | 3 |
+| `iir-builder.tw` | 6 278 | 8 |
+| `lexer.tw` | 8 593 | 25 |
+| `parser.tw` | 19 708 | 29 |
+| `emit.tw` | 22 697 | 35 |
+| `cst-parser.tw` | 29 122 | 69 ← TW05-L |
+| **Total** | 91 270 | **171** |
+
+---
+
+## [0.10.0] — 2026-05-17
+
+### Added (LANG65 — TW05-K extended self-compilation via parser.tw + emit.tw)
+
+Extended `self-compile-all` in `code/twig/compiler/main.tw` from four files
+(TW05-J, 38 total) to six files (TW05-K, 102 total) by adding `parser.tw`
+(29 functions) and `emit.tw` (35 functions).
+
+New `run_in_xlarge_stack` helper (3 GiB thread stack) for tests that lex files
+larger than 8593 chars.  `emit.tw` at 22 697 chars requires ~1.33 GiB debug-
+mode stack (22 697 frames × 60 KiB/frame); 3 GiB gives ≥ 2× headroom.
+
+New `#[cfg(test)] mod tw05k_tests` with 5 integration tests:
+
+| Test | What it verifies |
+|------|-----------------|
+| `self_compile_all_returns_102` | `self-compile-all` on all 6 files → 102 functions |
+| `self_compile_parser_from_disk` | Real `parser.tw` (19 708 chars) via `host/read_file` → 29 functions |
+| `self_compile_emit_from_disk` | Real `emit.tw` (22 697 chars) via `host/read_file` → 35 functions |
+| `self_compile_tw05j_modules_regression` | Original 4 TW05-J files still → 38 (independent of self-compile-all) |
+| `existing_main_still_returns_2_after_tw05k` | TW05-I regression: `(main)` still → 2 |
+
+### Changed
+
+`tw05j_tests::self_compile_all_returns_38` renamed to
+`self_compile_all_returns_102` and updated to expect 102 (TW05-K total).
+Stack upgraded from `run_in_large_stack` (768 MiB) to `run_in_xlarge_stack`
+(3 GiB) since the extended `self-compile-all` now lexes `emit.tw`.
+
+#### Updated function count table
+
+| File | Size | Functions |
+|------|------|-----------|
+| `span.tw` | 2 426 | 2 |
+| `diagnostic.tw` | 2 446 | 3 |
+| `iir-builder.tw` | 6 278 | 8 |
+| `lexer.tw` | 8 593 | 25 |
+| `parser.tw` | 19 708 | 29 ← TW05-K |
+| `emit.tw` | 22 697 | 35 ← TW05-K |
+| **Total** | | **102** |
+
+## [0.9.0] — 2026-05-17
+
+### Added (LANG64 — TW05-J multi-module self-compilation via host/read_file)
+
+New `#[cfg(test)] mod tw05j_tests` with 6 integration tests that exercise
+the full lex → parse → `emit-program` pipeline on four real compiler source
+files read from disk via `host/read_file`.
+
+#### New function in `code/twig/compiler/main.tw`
+
+`(self-compile-all dir)` — reads four `.tw` files from `dir`, compiles each
+through the pipeline, and returns the sum of emitted function counts.
+
+#### Tests added
+
+| Test | What it verifies |
+|------|-----------------|
+| `self_compile_all_returns_38` | `self-compile-all` on all 4 files → 38 total functions (2+3+8+25) |
+| `self_compile_span_from_disk` | Real `span.tw` via `host/read_file` → 2 functions |
+| `self_compile_diagnostic_from_disk` | Real `diagnostic.tw` via `host/read_file` → 3 functions |
+| `self_compile_iir_builder_from_disk` | Real `iir-builder.tw` (6278 chars) via `host/read_file` → 8 functions |
+| `self_compile_lexer_from_disk` | Real `lexer.tw` (8593 chars) via `host/read_file` → 25 functions |
+| `existing_main_still_returns_2` | TW05-I regression: `(main)` still returns 2 after `MAX_DISPATCH_DEPTH` bump |
+
+#### Expected function counts
+
+| File | Size | Functions | Names |
+|---|---|---|---|
+| `span.tw` | 2426 chars | 2 | `make-span`, `dummy-span` |
+| `diagnostic.tw` | 2446 chars | 3 | `make-error`, `make-warning`, `make-info` |
+| `iir-builder.tw` | 6278 chars | 8 | `iirbuilder-with-instrs`, `iirbuilder-with-reg-count`, `iirbuilder-with-label-count`, `new-builder`, `alloc-slot`, `alloc-label`, `append-instr`, `finalise-builder` |
+| `lexer.tw` | 8593 chars | 25 | `lex-digit?`, `lex-whitespace?`, …, `lex-source` |
+| **Total** | | **38** | |
+
+#### Why this required MAX_DISPATCH_DEPTH 4096 → 65536
+
+`lex-loop` recurses once per source character.  `iir-builder.tw` (6278 chars)
+and `lexer.tw` (8593 chars) both exceed the old 4096 limit.  twig-vm was
+bumped to 0.17.0 in the same release with the new 65536 constant.
+
+---
+
+## [0.8.0] — 2026-05-16
+
+### Changed (LANG63 — grammar-driven Twig lexer and CST parser)
+
+`"cst-parser"` added to every `copy_all_tw_modules` helper and every explicit
+module copy list in `src/lib.rs`.
+
+`compiler/parser` now imports `compiler/cst-parser` (the newly generated CST
+parser module).  Without `"cst-parser"` in the copy lists the module driver
+cannot resolve that import and all tests that exercise the parser (i.e. every
+test that calls `parse-program` or `parse-expr` through the pipeline) would
+fail with an `UnresolvedImport` error.
+
+Affected test modules and copy sites:
+
+| Test module         | Updated copy-lists / explicit copies                      |
+|---------------------|----------------------------------------------------------|
+| `tw05e_tests`       | `copy_all_tw_modules` (9-module list, now includes `"cst-parser"`) |
+| `tw05f_tests`       | `copy_all_tw_modules`                                     |
+| `tw05g_tests`       | `copy_all_tw_modules`                                     |
+| `tw05h_tests`       | `copy_all_tw_modules`                                     |
+| `tw05i_tests`       | `copy_all_tw_modules` + two explicit `copy_tw(…, "cst-parser")` calls |
+
+No new tests were added in this release; the change is purely infrastructural
+to support the new `compiler/cst-parser` module introduced in LANG63.
+
+---
+
 ## [0.7.0] — 2026-05-15
 
 ### Added (LANG62 — TW05-I first self-compilation check)

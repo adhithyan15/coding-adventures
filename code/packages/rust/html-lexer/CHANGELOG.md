@@ -41,6 +41,25 @@ documented in this file.
 - html5lib-style smoke fixture coverage for seeded character-reference
   continuations returning to both data and RCDATA, including missing-semicolon
   and absence-of-digits diagnostics.
+- A generated WHATWG `entities.json` fixture and Rust conformance test that
+  exercises every named character reference in data, attribute, and RCDATA
+  contexts, including semicolonless legacy and ambiguous-ampersand behavior.
+- A generated WHATWG numeric character reference edge fixture and Rust
+  conformance test that exercises decimal, hexadecimal, semicolon, and
+  missing-semicolon forms across data, attribute, and RCDATA contexts.
+- A generated WHATWG input-stream preprocessing fixture and Rust conformance
+  test that exercises CRLF and bare-CR normalization across tokenizer contexts,
+  every chunk split point, and diagnostic line/column positions.
+- A generated WHATWG tokenizer chunk-boundary fixture and Rust conformance test
+  that proves tokens, diagnostics, and diagnostic positions are stable across
+  every character split point for representative tokenizer contexts and seeded
+  continuation states.
+- A generated WHATWG tokenizer EOF recovery fixture and Rust conformance test
+  that pins recovery for partial tags, attributes, comments, doctypes,
+  character references, text modes, and seeded continuation states.
+- A generated WHATWG tokenizer text-mode delimiter fixture and Rust conformance
+  test that pins RCDATA, RAWTEXT, script-data, escaped-script, and seeded
+  end-tag continuation recovery.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the

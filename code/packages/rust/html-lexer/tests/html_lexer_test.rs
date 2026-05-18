@@ -756,10 +756,7 @@ fn default_html_lexer_recovers_truncated_doctype_keyword_as_bogus_comment() {
 
     assert_eq!(
         lexer.drain_tokens(),
-        vec![
-            Token::Comment("DOC".to_string()),
-            Token::Eof,
-        ]
+        vec![Token::Comment("DOC".to_string()), Token::Eof,]
     );
     assert!(lexer
         .diagnostics()
@@ -776,10 +773,7 @@ fn default_html_lexer_recovers_invalid_doctype_keyword_as_bogus_comment() {
 
     assert_eq!(
         lexer.drain_tokens(),
-        vec![
-            Token::Comment("DOX".to_string()),
-            Token::Eof,
-        ]
+        vec![Token::Comment("DOX".to_string()), Token::Eof,]
     );
     assert!(lexer
         .diagnostics()
@@ -1642,7 +1636,7 @@ fn default_html_lexer_recovers_end_tag_with_whitespace_then_trailing_solidus() {
             Token::Eof,
         ]
     );
-    assert!(lexer
+    assert!(!lexer
         .diagnostics()
         .iter()
         .any(|diagnostic| diagnostic.code == "unexpected-whitespace-after-end-tag-name"));
@@ -1674,7 +1668,7 @@ fn default_html_lexer_recovers_end_tag_with_form_feed_then_trailing_solidus() {
             Token::Eof,
         ]
     );
-    assert!(lexer
+    assert!(!lexer
         .diagnostics()
         .iter()
         .any(|diagnostic| diagnostic.code == "unexpected-whitespace-after-end-tag-name"));
@@ -1706,7 +1700,7 @@ fn default_html_lexer_recovers_end_tag_with_attributes() {
             Token::Eof,
         ]
     );
-    assert!(lexer
+    assert!(!lexer
         .diagnostics()
         .iter()
         .any(|diagnostic| diagnostic.code == "unexpected-whitespace-after-end-tag-name"));
@@ -1933,6 +1927,10 @@ fn default_html_lexer_does_not_include_comment_end_dashes_at_eof() {
     let tokens = lex_html("<!--x--").unwrap();
 
     assert_eq!(tokens, vec![Token::Comment("x".to_string()), Token::Eof]);
+
+    let tokens = lex_html("<!-- -").unwrap();
+
+    assert_eq!(tokens, vec![Token::Comment(" ".to_string()), Token::Eof]);
 }
 
 #[test]

@@ -49,6 +49,13 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "uart.open"
         assert_includes uno_r4_wifi["capabilities"], "uart.write"
         assert_includes uno_r4_wifi["capabilities"], "uart.read"
+        assert_includes uno_r4_wifi["capabilities"], "can.open"
+        assert_includes uno_r4_wifi["capabilities"], "can.write"
+        assert_includes uno_r4_wifi["capabilities"], "can.read"
+        assert_includes uno_r4_wifi["capabilities"], "rtc.now"
+        assert_includes uno_r4_wifi["capabilities"], "rtc.set"
+        assert_includes uno_r4_wifi["capabilities"], "watchdog.configure"
+        assert_includes uno_r4_wifi["capabilities"], "watchdog.kick"
         assert_equal ["wifi", "bluetooth_le"], uno_r4_wifi["wireless"].map { |item| item["transport"] }
         assert uno_r4_wifi["wireless"].find { |item| item["transport"] == "wifi" }["ota_update"]
         assert_equal ["serial", "wifi", "bluetooth_le"], uno_r4_wifi["connection_options"].map { |item| item["transport"] }
@@ -1359,6 +1366,84 @@ module CodingAdventures
           result.results.map(&:command)
       end
 
+      def test_can_open_dispatches_native_protocol_frames_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          result = board.can.open(bus: 0, program_id: 10, budget: 24)
+        end
+
+        assert_empty runner.calls
+        assert_equal 6, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal transport.frames, result.frames
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          result.results.map(&:command)
+      end
+
+      def test_rtc_now_and_set_dispatch_native_protocol_frames_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        now_result = nil
+        set_result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          now_result = board.rtc.now(program_id: 10, budget: 24)
+          set_result = board.rtc.set(epoch_seconds: 1_700_000_000, program_id: 11, budget: 24)
+        end
+
+        assert_empty runner.calls
+        assert_equal 12, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal now_result.frames + set_result.frames, transport.frames
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          now_result.results.map(&:command)
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          set_result.results.map(&:command)
+      end
+
+      def test_watchdog_configure_and_kick_dispatch_native_protocol_frames_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        configure_result = nil
+        kick_result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          configure_result = board.watchdog.configure(
+            timeout_ms: 2_000,
+            program_id: 10,
+            budget: 24
+          )
+          kick_result = board.watchdog.kick(program_id: 11, budget: 24)
+        end
+
+        assert_empty runner.calls
+        assert_equal 12, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal configure_result.frames + kick_result.frames, transport.frames
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          configure_result.results.map(&:command)
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          kick_result.results.map(&:command)
+      end
+
       def test_uart_write_and_read_dispatch_native_byte_io_through_transport
         runner = FakeRunner.new
         transport = FakeWriteTransport.new
@@ -2071,6 +2156,93 @@ module CodingAdventures
         end
       end
 
+      def test_session_run_command_accepts_repl_style_can_open_write_and_read
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          open = board.session.run_command("can-open 0 24", program_id: 8)
+          write = board.session.run_command("can-write 0xa5 24", program_id: 9)
+          read = board.session.run_command("can-read 24", program_id: 10)
+          upload_write = board.session.run_command("upload-can.write 0xa5", program_id: 11)
+          upload_read = board.session.run_command("upload-can.read", program_id: 12)
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            open.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            write.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            read.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_write.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_read.results.map(&:command)
+          assert_equal open.frames + write.frames + read.frames + upload_write.frames + upload_read.frames,
+            transport.frames
+        end
+      end
+
+      def test_session_run_command_accepts_repl_style_rtc_now_and_set
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          now = board.session.run_command("rtc-now 24", program_id: 13)
+          set = board.session.run_command("rtc-set 1700000000 24", program_id: 14)
+          upload_now = board.session.run_command("upload-rtc.now", program_id: 15)
+          upload_set = board.session.run_command("upload-rtc.set 1700000000", program_id: 16)
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            now.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            set.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_now.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_set.results.map(&:command)
+          assert_equal now.frames + set.frames + upload_now.frames + upload_set.frames,
+            transport.frames
+        end
+      end
+
+      def test_session_run_command_accepts_repl_style_watchdog_configure_and_kick
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          configure = board.session.run_command("watchdog-configure 2000 24", program_id: 13)
+          kick = board.session.run_command("watchdog-kick 24", program_id: 14)
+          upload_configure = board.session.run_command(
+            "upload-watchdog.configure 2000",
+            program_id: 15
+          )
+          upload_kick = board.session.run_command("upload-watchdog.kick", program_id: 16)
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            configure.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            kick.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_configure.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_kick.results.map(&:command)
+          assert_equal configure.frames + kick.frames + upload_configure.frames + upload_kick.frames,
+            transport.frames
+        end
+      end
+
       def test_session_run_command_accepts_repl_style_spi_transfer
         transport = FakeWriteTransport.new
 
@@ -2392,6 +2564,34 @@ module CodingAdventures
         uart_read_module_bytes = session.uart_read_module(2)
         assert_instance_of String, uart_read_module_bytes
         assert_operator uart_read_module_bytes.bytesize, :>, 0
+
+        can_module_bytes = session.can_open_module(0, 2)
+        assert_instance_of String, can_module_bytes
+        assert_operator can_module_bytes.bytesize, :>, 0
+
+        can_write_module_bytes = session.can_write_module(0xa5, 3)
+        assert_instance_of String, can_write_module_bytes
+        assert_operator can_write_module_bytes.bytesize, :>, 0
+
+        can_read_module_bytes = session.can_read_module(2)
+        assert_instance_of String, can_read_module_bytes
+        assert_operator can_read_module_bytes.bytesize, :>, 0
+
+        rtc_now_module_bytes = session.rtc_now_module(1)
+        assert_instance_of String, rtc_now_module_bytes
+        assert_operator rtc_now_module_bytes.bytesize, :>, 0
+
+        rtc_set_module_bytes = session.rtc_set_module(1_700_000_000, 1)
+        assert_instance_of String, rtc_set_module_bytes
+        assert_operator rtc_set_module_bytes.bytesize, :>, 0
+
+        watchdog_configure_module_bytes = session.watchdog_configure_module(2_000, 1)
+        assert_instance_of String, watchdog_configure_module_bytes
+        assert_operator watchdog_configure_module_bytes.bytesize, :>, 0
+
+        watchdog_kick_module_bytes = session.watchdog_kick_module(1)
+        assert_instance_of String, watchdog_kick_module_bytes
+        assert_operator watchdog_kick_module_bytes.bytesize, :>, 0
 
         spi_transfer_module_bytes = session.spi_transfer_module(10, "\x9F".b, 3, 5)
         assert_instance_of String, spi_transfer_module_bytes

@@ -855,6 +855,27 @@ def _do_in_list(ins: InList, st: _VmState) -> None:
 
 
 def _do_like(ins: Like, st: _VmState) -> None:
+    # Stack layout (top → bottom):
+    #     pattern, value         (when has_escape is False)
+    #     escape, pattern, value (when has_escape is True)
+    escape: str | None = None
+    if ins.has_escape:
+        escape_val = st.pop()
+        # NULL escape → result is NULL (three-valued logic).
+        if escape_val is None:
+            st.pop()  # pattern
+            st.pop()  # value
+            st.push(None)
+            return
+        if not isinstance(escape_val, str) or len(escape_val) != 1:
+            from .errors import TypeMismatch
+
+            raise TypeMismatch(
+                expected="single character",
+                got=sql_type_name(escape_val),
+                context="Like ESCAPE",
+            )
+        escape = escape_val
     pattern = st.pop()
     value = st.pop()
     if value is None or pattern is None:
@@ -868,7 +889,7 @@ def _do_like(ins: Like, st: _VmState) -> None:
             got=f"{sql_type_name(value)}, {sql_type_name(pattern)}",
             context="Like",
         )
-    matched = like_match(value, pattern)
+    matched = like_match(value, pattern, escape=escape)
     st.push(not matched if ins.negated else matched)
 
 
@@ -1425,15 +1446,23 @@ def _do_sort(ins: SortResult, st: _VmState) -> None:
             idx = k.column_idx if k.column_idx is not None else columns.index(k.column)
             v = row[idx]
             is_null = v is None
-            # NULLs first/last encoded as 0 / 2 around non-null = 1.
+            # NULL placement is *independent* of direction.  We encode it as a
+            # rank prefix where 0=first / 2=last, with non-null=1 in the middle.
+            # The rank is NOT negated for DESC sorts — only the value comparison
+            # is inverted (via _Rev).  This keeps NULL placement consistent:
+            #   ASC  NULLS FIRST: NULLs at start, non-null ascending
+            #   ASC  NULLS LAST : non-null ascending, NULLs at end
+            #   DESC NULLS FIRST: NULLs at start, non-null descending
+            #   DESC NULLS LAST : non-null descending, NULLs at end  ← SQLite default
             rank = (
                 (0 if is_null else 1)
                 if k.nulls is NullsOrder.FIRST
                 else (2 if is_null else 1)
             )
             if k.direction is Direction.DESC:
-                # Invert: larger values sort first. Trick: use _Reversed wrappers.
-                out.append((-rank, _Rev(v)))
+                # _Rev wraps the value so larger values sort first.  Rank is
+                # kept positive so NULL placement obeys k.nulls, not direction.
+                out.append((rank, _Rev(v)))
             else:
                 out.append((rank, _NoneLast(v)))
         return tuple(out)

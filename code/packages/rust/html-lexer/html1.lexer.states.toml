@@ -5833,7 +5833,6 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-comment)",
-  "append_comment(-)",
   "emit_current_token",
   "emit(EOF)",
 ]
@@ -5940,7 +5939,6 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-comment)",
-  "append_comment(-)",
   "emit_current_token",
   "emit(EOF)",
 ]
@@ -5982,7 +5980,6 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-comment)",
-  "append_comment(-)",
   "emit_current_token",
   "emit(EOF)",
 ]
@@ -7630,31 +7627,26 @@ to = "end_tag_attributes"
 from = "end_tag_name"
 matcher = { literal = " " }
 to = "before_end_tag_close"
-actions = ["parse_error(unexpected-whitespace-after-end-tag-name)"]
 
 [[transitions]]
 from = "end_tag_name"
 matcher = { literal = "\n" }
 to = "before_end_tag_close"
-actions = ["parse_error(unexpected-whitespace-after-end-tag-name)"]
 
 [[transitions]]
 from = "end_tag_name"
 matcher = { literal = "\t" }
 to = "before_end_tag_close"
-actions = ["parse_error(unexpected-whitespace-after-end-tag-name)"]
 
 [[transitions]]
 from = "end_tag_name"
 matcher = { literal = "\r" }
 to = "before_end_tag_close"
-actions = ["parse_error(unexpected-whitespace-after-end-tag-name)"]
 
 [[transitions]]
 from = "end_tag_name"
 matcher = { literal = "\u000C" }
 to = "before_end_tag_close"
-actions = ["parse_error(unexpected-whitespace-after-end-tag-name)"]
 
 [[transitions]]
 from = "end_tag_name"

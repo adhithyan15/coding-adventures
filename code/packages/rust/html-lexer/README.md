@@ -68,6 +68,19 @@ character references.
 The Rust HTML wrapper also enables input-stream newline preprocessing, so CRLF
 pairs and bare carriage returns are tokenized as LF while source offsets still
 advance across the original bytes.
+The conformance suite now generates input-stream preprocessing cases across
+data, tags, attributes, comments, doctypes, character references, RCDATA,
+RAWTEXT, script data, PLAINTEXT, CDATA, and seeded continuation states,
+including chunk splits inside CRLF pairs.
+It also generates streaming chunk-boundary cases for the same tokenizer surface
+area, proving tokens, diagnostics, and diagnostic positions are independent of
+where an embedding splits the input stream.
+The generated EOF recovery suite covers partial tags, attributes, comments,
+bogus comments, doctypes, character references, text modes, and seeded
+continuation states so parser-facing recovery stays pinned at stream end.
+The generated text-mode delimiter suite pins how RCDATA, RAWTEXT, script data,
+escaped script data, and seeded end-tag continuation states distinguish real
+matching end tags from literal apparent end tags.
 Numeric character references report invalid-code-point diagnostics and recover
 with the HTML replacement/remapping rules for null, surrogate, out-of-range,
 noncharacter, and Windows-1252 control references.
@@ -229,6 +242,29 @@ Today the package carries two suites:
 
 - `html-skeleton.json` for narrow bootstrap regression coverage
 - `html1.json` for the current Mosaic-era compatibility floor
+
+The checked-in `whatwg-entities.json` fixture is generated from the HTML
+Standard's `entities.json` table and is exercised directly by Rust tests across
+data, attribute, and RCDATA tokenizer contexts. Regenerate or check it with:
+
+```bash
+curl -L https://html.spec.whatwg.org/entities.json -o /tmp/entities.json
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_entities_fixture.py \
+  /tmp/entities.json
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_entities_fixture.py \
+  /tmp/entities.json --check
+```
+
+The checked-in `whatwg-numeric-references.json` fixture exercises the finite
+edge classes of the HTML numeric character reference algorithm: null, controls,
+Windows-1252 control remaps, surrogates, noncharacters, scalar boundaries, and
+outside-range values. Regenerate or check it with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_numeric_references_fixture.py \
+  --check
+```
 
 There is also an `upstream-html5lib-smoke.test` file that mirrors the raw
 html5lib tokenizer JSON shape in a small supported subset. The Rust test

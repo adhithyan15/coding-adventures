@@ -95,7 +95,12 @@ pub fn build_fft_graph(n: u32, direction: Direction) -> Result<Graph, FftError> 
 /// graph input) and `build_fft_graph_with_input` (where the
 /// input is a `Const`), as well as by `build_bluestein_graph`
 /// which wraps its own `Const`-embedded signal the same way.
-fn wrap_real_as_complex(b: &mut GraphBuilder, real_1d: &Tensor, n: u32) -> Tensor {
+///
+/// Exposed `pub` (was `pub(crate)`) in dsp-fft 0.7.1 so the
+/// dsp-stft Phase 6 STFT graph builder can wrap each per-frame
+/// windowed signal slice the same way before splicing in a
+/// radix-2 FFT subgraph.
+pub fn wrap_real_as_complex(b: &mut GraphBuilder, real_1d: &Tensor, n: u32) -> Tensor {
     let zeros = b.constant(DType::F32, Shape::from(&[n, 1]), vec![0u8; n as usize * 4]);
     let real_2d = b.reshape(real_1d, Shape::from(&[n, 1]));
     b.concat(&[&real_2d, &zeros], 1)
@@ -110,11 +115,16 @@ fn wrap_real_as_complex(b: &mut GraphBuilder, real_1d: &Tensor, n: u32) -> Tenso
 /// public `build_fft_graph` builder; that builder is now a thin
 /// wrapper around `wrap_real_as_complex` + this helper.
 ///
-/// Exposed at module scope (but `pub(crate)`) so the Bluestein
-/// graph builder in `crate::bluestein` can splice three length-`M`
-/// FFTs into a single composite graph without copy-pasting the
-/// butterfly code.
-pub(crate) fn add_radix2_fft_to_builder(
+/// Exposed `pub` (was `pub(crate)` in 0.7.0) so:
+///
+/// - the Bluestein graph builder in `crate::bluestein` can splice
+///   three length-`M` FFTs into a single composite graph without
+///   copy-pasting the butterfly code (the original 0.7.0 use case),
+/// - the dsp-stft Phase 6 STFT graph builder can splice one
+///   length-`n_fft` FFT subgraph per frame into a single composite
+///   graph, glued by `Slice` / `Concat` over the framing axis
+///   (the 0.7.1 reason this turned `pub`).
+pub fn add_radix2_fft_to_builder(
     b: &mut GraphBuilder,
     mut x: Tensor,
     n: u32,

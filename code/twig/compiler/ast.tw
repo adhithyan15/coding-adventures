@@ -32,7 +32,7 @@
 ; resolve nested record/union types.  The runtime heap enforces structure.
 
 (module compiler/ast
-  (typed lenient)
+  (typed strict)
   (export Expr
           IntLit BoolLit StrLit SymLit NilLit VarRef
           IfExpr LetExpr DefExpr CallExpr BeginExpr LambdaExpr

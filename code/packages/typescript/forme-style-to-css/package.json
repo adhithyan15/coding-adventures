@@ -1,0 +1,23 @@
+{
+  "name": "@coding-adventures/forme-style-to-css",
+  "version": "0.1.0",
+  "description": "Reference Style IR → CSS translator: takes a forme-style-ir StyleDocument and emits a CSS string (FM04 §9.2).",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-style-ir": "file:../forme-style-ir",
+    "@coding-adventures/forme-types": "file:../forme-types"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

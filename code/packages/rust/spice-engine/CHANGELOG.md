@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add a sparse-row real linear solver path for large DC / real small-signal
+  matrices while keeping the dense solver for small systems.
+- Add programmatic subcircuits with `SubcircuitDefinition` and `XInstance`
+  expansion into namespaced primitive elements before simulation.
+- Add behavioral B sources for DC current and voltage expressions over
+  constants and `V(node)` / `V(node1,node2)` node-voltage references.
 - Add DC operating-point convergence metadata and configurable Newton controls,
   with nonlinear Gmin/source stepping fallback aids for difficult bias points.
 

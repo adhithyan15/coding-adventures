@@ -18,7 +18,7 @@
 ; TkEOF shifts from tag 8 to tag 9.
 
 (module compiler/token
-  (typed lenient)
+  (typed strict)
   (export TokenKind TkLParen TkRParen TkInteger TkIdentifier
           TkBoolean TkString TkDot TkQuote TkColon TkEOF
           TkLParen? TkRParen? TkInteger? TkIdentifier?

@@ -249,8 +249,15 @@ class InList:
 
 @dataclass(frozen=True, slots=True)
 class Like:
-    """Pop pattern, value; push TRUE iff value matches the SQL LIKE pattern."""
+    """Pop pattern, value; push TRUE iff value matches the SQL LIKE pattern.
+
+    When *has_escape* is True, an ESCAPE clause was present.  The VM pops a
+    third stack value (the escape character) before pattern and value.  The
+    escape character disables wildcard meaning for the next character in the
+    pattern: ``'a\\_b' ESCAPE '\\'`` matches the literal string ``"a_b"``.
+    """
     negated: bool = False  # True for NOT LIKE
+    has_escape: bool = False  # True if an ESCAPE clause is in effect
 
 
 @dataclass(frozen=True, slots=True)

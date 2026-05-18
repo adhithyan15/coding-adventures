@@ -926,10 +926,18 @@ def _resolve(
                 operand=_resolve(operand, scope, schema, outer_scope),
                 values=tuple(_resolve(v, scope, schema, outer_scope) for v in values),
             )
-        case Like(operand, pattern):
-            return Like(operand=_resolve(operand, scope, schema, outer_scope), pattern=pattern)
-        case NotLike(operand, pattern):
-            return NotLike(operand=_resolve(operand, scope, schema, outer_scope), pattern=pattern)
+        case Like(operand, pattern, escape):
+            return Like(
+                operand=_resolve(operand, scope, schema, outer_scope),
+                pattern=pattern,
+                escape=escape,
+            )
+        case NotLike(operand, pattern, escape):
+            return NotLike(
+                operand=_resolve(operand, scope, schema, outer_scope),
+                pattern=pattern,
+                escape=escape,
+            )
         case AggregateExpr(func, arg, distinct, separator, key_arg, filter_expr):
             if arg.star or arg.value is None:
                 return expr

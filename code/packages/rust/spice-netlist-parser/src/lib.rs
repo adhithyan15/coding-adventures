@@ -81,6 +81,18 @@ pub struct NoiseAnalysis {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub enum OptionValue {
+    Number(f64),
+    Text(String),
+    Flag(bool),
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct OptionsAnalysis {
+    pub values: HashMap<String, OptionValue>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum Analysis {
     Op(OpAnalysis),
     Tran(TranAnalysis),
@@ -90,6 +102,7 @@ pub enum Analysis {
     Sens(SensAnalysis),
     Mc(McAnalysis),
     Noise(NoiseAnalysis),
+    Options(OptionsAnalysis),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -183,6 +196,16 @@ impl ParsedNetlist {
             .iter()
             .filter_map(|analysis| match analysis {
                 Analysis::Noise(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn options_cards(&self) -> Vec<&OptionsAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Options(card) => Some(card),
                 _ => None,
             })
             .collect()
@@ -1096,10 +1119,50 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
                 temperature,
             }))
         }
+        ".options" => {
+            require_min_fields(fields, 2, ".options")?;
+            Ok(Analysis::Options(OptionsAnalysis {
+                values: parse_options(&fields[1..])?,
+            }))
+        }
         _ => Err(NetlistParseError::new(format!(
             "unsupported directive {:?}",
             fields[0]
         ))),
+    }
+}
+
+fn parse_options(tokens: &[String]) -> Result<HashMap<String, OptionValue>, NetlistParseError> {
+    let mut values = HashMap::new();
+    for token in tokens {
+        if let Some((raw_key, raw_value)) = token.split_once('=') {
+            let key = raw_key.trim().to_ascii_lowercase();
+            if key.is_empty() {
+                return Err(NetlistParseError::new(format!(
+                    ".options contains empty option name in {token:?}"
+                )));
+            }
+            if raw_value.is_empty() {
+                return Err(NetlistParseError::new(format!(
+                    ".options {key:?} requires a value"
+                )));
+            }
+            values.insert(key, parse_option_value(raw_value));
+        } else {
+            let key = token.trim().to_ascii_lowercase();
+            if key.is_empty() {
+                return Err(NetlistParseError::new(".options contains an empty flag"));
+            }
+            values.insert(key, OptionValue::Flag(true));
+        }
+    }
+    Ok(values)
+}
+
+fn parse_option_value(raw_value: &str) -> OptionValue {
+    match parse_value(raw_value) {
+        Ok(value) => OptionValue::Number(value),
+        Err(_) => OptionValue::Text(raw_value.to_string()),
     }
 }
 

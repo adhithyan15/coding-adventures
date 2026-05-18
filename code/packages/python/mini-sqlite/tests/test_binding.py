@@ -16,9 +16,10 @@ def test_int_float_bool_null():
 
 
 def test_string_escaping():
-    # Backslash and single-quote both need escaping.
-    assert substitute("VALUES (?)", ("O'Brien",)) == "VALUES ('O\\'Brien')"
-    assert substitute("VALUES (?)", ("a\\b",)) == "VALUES ('a\\\\b')"
+    # SQLite-compatible: apostrophes are doubled, backslashes pass through
+    # as literal characters (matches the real sqlite3 module).
+    assert substitute("VALUES (?)", ("O'Brien",)) == "VALUES ('O''Brien')"
+    assert substitute("VALUES (?)", ("a\\b",)) == "VALUES ('a\\b')"
 
 
 def test_placeholders_inside_strings_are_ignored():
@@ -85,9 +86,10 @@ def test_unsupported_type():
         substitute("VALUES (?)", (object(),))
 
 
-def test_escaped_quote_inside_string_parsed_correctly():
-    # Backslash-quote should not terminate the string for scanning purposes.
-    out = substitute("VALUES ('it\\'s') ?", (1,))
+def test_doubled_quote_inside_string_parsed_correctly():
+    # Doubled apostrophes inside a string literal must not be mis-parsed as
+    # the end of the string — the trailing ``?`` should still be substituted.
+    out = substitute("VALUES ('it''s') ?", (1,))
     assert out.endswith(" 1")
 
 

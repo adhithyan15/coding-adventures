@@ -87,6 +87,13 @@ export interface NoiseAnalysis {
   readonly temperature: number;
 }
 
+export type OptionValue = number | string | boolean;
+
+export interface OptionsAnalysis {
+  readonly kind: "options";
+  readonly values: ReadonlyMap<string, OptionValue>;
+}
+
 export type Analysis =
   | OpAnalysis
   | TranAnalysis
@@ -95,7 +102,8 @@ export type Analysis =
   | TfAnalysis
   | SensAnalysis
   | McAnalysis
-  | NoiseAnalysis;
+  | NoiseAnalysis
+  | OptionsAnalysis;
 
 export interface ModelCard {
   readonly name: string;
@@ -143,6 +151,10 @@ export class ParsedNetlist {
     return this.analyses.filter(
       (analysis): analysis is NoiseAnalysis => analysis.kind === "noise",
     );
+  }
+
+  optionsCards(): OptionsAnalysis[] {
+    return this.analyses.filter((analysis): analysis is OptionsAnalysis => analysis.kind === "options");
   }
 }
 
@@ -908,7 +920,45 @@ function parseDirective(fields: readonly string[]): Analysis {
       temperature,
     };
   }
+  if (directive === ".options") {
+    requireMinFields(fields, 2, ".options");
+    return { kind: "options", values: parseOptions(fields.slice(1)) };
+  }
   throw new NetlistParseError(`unsupported directive ${JSON.stringify(fields[0])}`);
+}
+
+function parseOptions(tokens: readonly string[]): ReadonlyMap<string, OptionValue> {
+  const values = new Map<string, OptionValue>();
+  for (const token of tokens) {
+    if (token.includes("=")) {
+      const equalsIndex = token.indexOf("=");
+      const rawKey = token.slice(0, equalsIndex);
+      const rawValue = token.slice(equalsIndex + 1);
+      const key = rawKey.trim().toLowerCase();
+      if (key.length === 0) {
+        throw new NetlistParseError(`.options contains empty option name in ${JSON.stringify(token)}`);
+      }
+      if (rawValue === "") {
+        throw new NetlistParseError(`.options ${JSON.stringify(key)} requires a value`);
+      }
+      values.set(key, parseOptionValue(rawValue));
+    } else {
+      const key = token.trim().toLowerCase();
+      if (key.length === 0) {
+        throw new NetlistParseError(".options contains an empty flag");
+      }
+      values.set(key, true);
+    }
+  }
+  return values;
+}
+
+function parseOptionValue(rawValue: string): OptionValue {
+  try {
+    return parseValue(rawValue);
+  } catch {
+    return rawValue;
+  }
 }
 
 function parseVoltageProbe(token: string, directive: string): string {

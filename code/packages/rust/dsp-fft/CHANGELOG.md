@@ -1,5 +1,25 @@
 # Changelog — dsp-fft
 
+## 0.7.1 — 2026-05-16
+
+### Changed — `pub(crate)` → `pub` for two matrix-IR helpers
+
+Purely additive (no behaviour change): both
+`add_radix2_fft_to_builder` and `wrap_real_as_complex` are now
+`pub` instead of `pub(crate)`.
+
+This lets downstream crates splice radix-2 FFT subgraphs into
+composite matrix-IR graphs the same way `bluestein.rs` already
+does internally.  Specifically: **dsp-stft Phase 6**'s
+`build_stft_graph` splices one length-`n_fft` FFT subgraph per
+frame, glued by `Slice` / `Concat` over the framing axis, into
+a single matrix-IR graph that lifts onto GPU automatically once
+the relevant ops are claimed.
+
+No new tests — the helpers were already exercised by both the
+existing radix-2 graph tests and the Bluestein graph tests in
+this crate; widening their visibility doesn't add a code path.
+
 ## 0.7.0 — 2026-05-15
 
 ### Added — DSP01 Phase 4c (matrix-ir-lowered Bluestein)

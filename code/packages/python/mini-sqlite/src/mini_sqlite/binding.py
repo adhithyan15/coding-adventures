@@ -79,14 +79,16 @@ def substitute(sql: str, parameters: Sequence[Any] | Mapping[str, Any]) -> str:
     while i < n:
         ch = sql[i]
 
-        # String literal: ``'...'`` with backslash escapes (``\'``, ``\\``).
-        # The underlying SQL lexer uses backslash-style escaping — we
-        # scan past such escapes without ending the string.
+        # String literal: ``'...'`` with SQLite-compatible doubled-quote
+        # escaping (``''`` inside a string represents a single literal
+        # apostrophe).  Backslashes are LITERAL characters in SQL strings —
+        # no special handling here.
         if ch == "'":
             start = i
             i += 1
             while i < n:
-                if sql[i] == "\\" and i + 1 < n:
+                if sql[i] == "'" and i + 1 < n and sql[i + 1] == "'":
+                    # Doubled quote — part of the string body, not a terminator.
                     i += 2
                     continue
                 if sql[i] == "'":
@@ -250,12 +252,11 @@ def _to_sql_literal(value: Any) -> str:
             raise ProgrammingError(f"cannot bind non-finite float: {value!r}")
         return repr(f)
     if isinstance(value, str):
-        # The vendored SQL lexer recognises backslash escapes, not ANSI
-        # doubled-quote escapes. Match its rules: escape backslashes and
-        # single quotes with a preceding backslash. ``str.__str__`` forces
+        # SQLite-compatible string-literal encoding: backslashes are LITERAL,
+        # apostrophes are escaped by doubling.  ``str.__str__`` forces
         # base-str semantics so a ``str`` subclass can't override escape.
         s = str.__str__(value)
-        escaped = s.replace("\\", "\\\\").replace("'", "\\'")
+        escaped = s.replace("'", "''")
         return f"'{escaped}'"
     if isinstance(value, bytes | bytearray | memoryview):
         # SQLite blob-literal syntax: X'<hex>' (lowercase hex by convention).

@@ -1,0 +1,22 @@
+// Grid.mil — interface for the VisiCalc spreadsheet grid.
+//
+// Per UI26 §2.1. All state slots are mirror-of-host: the host decides
+// what is selected, what is being edited, and where the viewport sits.
+// The Grid component just renders what it is told.
+
+component Grid {
+  // Display data (host computes from cells + viewport offset).
+  slot column-headers : list<text> ;
+  slot viewport-rows  : list<text> ;
+
+  // Selection (host owns, pushes in).
+  slot selected-row : number ;
+  slot selected-col : number ;
+
+  // Edit state (host owns, pushes in). edit-row = -1 means not editing.
+  slot edit-row     : number ;
+  slot edit-col     : number ;
+
+  // Events fired up to the host reducer.
+  emit onNavigate ( row : number , col : number ) ;
+}

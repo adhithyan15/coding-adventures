@@ -1,5 +1,220 @@
 # Changelog — dsp-stft
 
+## 0.4.0 — 2026-05-16
+
+### Added — DSP05 Phase 6 (matrix-IR-lowered STFT)
+
+Closes the DSP05 phase plan.  The entire STFT — windowing, per-
+frame FFT, and framing — now has a matrix-IR-lowered path
+alongside the scalar reference.  When `matrix-metal` /
+`matrix-cuda` claim Slice + Concat + Mul + Reshape + Const +
+Broadcast in their `supported_ops` bitsets, the same call lifts
+onto GPU automatically — no `dsp-stft` change required.
+
+#### Public API
+
+```rust
+pub fn build_stft_graph(
+    signal_length: u32,
+    n_fft: u32,
+    hop_length: u32,
+    window: WindowType,
+) -> Result<matrix_ir::Graph, StftError>;
+
+pub fn stft_via_runtime(
+    signal: &[f32],
+    n_fft: u32,
+    hop_length: u32,
+    window: WindowType,
+) -> Result<Vec<f32>, StftError>;
+```
+
+Both re-exported at the crate root.
+
+#### Algorithm — graph topology
+
+For each frame `m ∈ [0, num_frames)`:
+
+1. **Slice** the m-th frame out of the full signal:
+   `signal[m·hop .. m·hop + n_fft]`.
+2. **Mul** elementwise by the analysis window (baked in as a
+   `Const`, same formulas as scalar `stft`).
+3. **wrap_real_as_complex** (helper from `dsp-fft`): `[n_fft]`
+   → `[n_fft, 2]` (zero imag lane).
+4. **add_radix2_fft_to_builder** (helper from `dsp-fft`):
+   length-`n_fft` radix-2 forward FFT subgraph spliced in
+   place — same factory `bluestein.rs` uses internally.
+5. **Slice** axis 0 `[0 .. n_fft/2 + 1]` to drop the mirrored
+   Nyquist half (matches `rfft` layout).
+6. **Reshape** to `[1, bins, 2]` so frames can be stacked.
+
+After the loop, a single **Concat** on axis 0 stitches
+all `num_frames` per-frame tensors into the final
+`[num_frames, bins, 2]` STFT output.
+
+#### Coordinated dsp-fft 0.7.1 bump
+
+The shared FFT-subgraph helpers `add_radix2_fft_to_builder` and
+`wrap_real_as_complex` were promoted `pub(crate) → pub` in
+`dsp-fft 0.7.1` specifically so `dsp-stft` can compose them.  No
+behaviour change to dsp-fft; same helpers `bluestein.rs` already
+uses internally.
+
+#### New crate dependencies (Phase 6 only)
+
+- `matrix-ir` — the IR types (Graph, Tensor, Shape, DType).
+- `matrix-cpu` — the CPU executor used by `stft_via_runtime`.
+- `matrix-runtime` — the planner that turns a `Graph` into a
+  `ComputeGraph` with residency placement.
+- `compute-ir` — the placed-graph type.
+- `executor-protocol` — dispatch / download wire types.
+
+(Same set `dsp-fft` already depends on.)
+
+#### Constraints
+
+- **Power-of-two `n_fft` only** — matches the underlying
+  `add_radix2_fft_to_builder` contract.  Bluestein-style
+  arbitrary-`n_fft` lowering is a future iteration (would
+  swap radix-2 for the Bluestein subgraph factory).
+- The bit-reversal Slice explosion in the underlying FFT (one
+  Slice per output index, `O(n_fft)` total) compounds across
+  `num_frames` frames.  Practical limit: a few hundred frames
+  × n_fft ≤ 256 before the graph becomes unwieldy.  A future
+  `Gather` op (MX01 V2 extension) collapses bit-reversal to
+  one op and dissolves this limit.
+
+#### Defensive guards (from security review)
+
+- `stft_via_runtime` rejects `signal.len() > u32::MAX` (would
+  truncate silently to a bogus matrix-IR shape).
+- `build_stft_graph_internal` rejects `num_frames × n_fft > 2²⁴`
+  with `StftError::InvalidParam` — the bit-reversal Slice
+  explosion in the underlying FFT means a malicious caller
+  passing `signal_length = 2³⁰, n_fft = 256, hop = 1` would OOM
+  the process during graph construction.
+- `output_byte_count` in `stft_via_runtime` is computed with
+  `checked_mul` chains so an overflow surfaces as
+  `InvalidParam`, not a wrap-around silently producing a
+  truncated download.
+
+#### New unit tests — 16
+
+`matrix` module:
+- 5 error paths: empty signal, n_fft=0, hop=0, non-power-of-two
+  n_fft, signal shorter than n_fft.
+- 1 graph well-formedness: `build_stft_graph().validate()` passes
+  for `(N, n_fft, hop) ∈ {(128,8,4), (256,16,8), (512,32,16)}`
+  with shape `[num_frames, bins, 2]`.
+- 4 cross-validation against scalar `stft` within `1e-4`:
+  Hann, Hamming, Blackman, Rectangular — all four window types.
+- 3 edge cases also cross-validated:
+  `hop = n_fft` (disjoint frames), `hop = 1` (maximal overlap),
+  `signal.len() = n_fft` (single frame).
+- 1 output shape contract — `num_frames · bins · 2`.
+- 2 defensive guards: `u32::MAX` smoke test, pathological op
+  count rejection.
+
+All 58 unit tests + 1 doctest pass (11 stft + 8 inverse +
+6 spectrogram + 17 mel + 16 matrix).
+
+### Spec note
+
+DSP05 Phase 6 spec is delivered as-described.  The only
+implementation-vs-spec divergence: `build_stft_graph` takes
+`signal_length: u32` (the spec doesn't pin down which Const
+vs Input variant ships) and the actual signal embedding lives
+in `stft_via_runtime` via a private `SignalSource::Const`
+variant — matching the `dsp-fft::build_fft_graph` /
+`build_fft_graph_with_input` split.
+
+## 0.3.0 — 2026-05-16
+
+### Added — DSP05 Phase 5 (mel filterbank + mel-spectrogram + MFCC)
+
+The canonical speech / audio feature pipeline.  Composes
+`spectrogram` (Phase 4) with `dsp-dct` to produce mel-spectrograms
+and Mel-Frequency Cepstral Coefficients — the foundation of every
+classical ASR system and most modern audio ML feature extractors.
+
+#### Public API
+
+```rust
+pub fn mel_filterbank(n_mels: u32, n_fft: u32, sample_rate: f32)
+    -> Vec<f32>;
+    // returns flattened [n_mels, n_fft / 2 + 1] row-major.
+
+pub fn mel_spectrogram(signal, n_fft, hop_length, n_mels,
+                       sample_rate, window)
+    -> Result<Vec<f32>, StftError>;
+    // returns flattened [num_frames, n_mels] row-major.
+
+pub fn mfcc(signal, n_fft, hop_length, n_mels, n_mfcc,
+            sample_rate, window)
+    -> Result<Vec<f32>, StftError>;
+    // returns flattened [num_frames, n_mfcc] row-major.
+```
+
+All three re-exported at the crate root.
+
+#### Algorithm
+
+- **Mel scale (HTK convention):**
+  ```
+  mel(f)    = 2595 · log10(1 + f / 700)
+  mel⁻¹(m) = 700  · (10^(m/2595) − 1)
+  ```
+- **Filterbank** — `n_mels + 2` equally-spaced anchor points on
+  the mel axis between `fmin = 0` and `fmax = sample_rate / 2`
+  (Nyquist), converted back to Hz then to fractional FFT bin
+  indices.  Each triangle `m` has vertices
+  `(left[m], center[m], right[m])` = `(hz_pts[m], hz_pts[m+1],
+  hz_pts[m+2])` — rising slope `(k - left)/(center - left)` on
+  the left, falling slope `(right - k)/(right - center)` on
+  the right, zero outside.  Each row is renormalised to sum to
+  1.0 so mel pooling is a weighted *average* of power bins.
+- **Mel spectrogram** — matrix product
+  `mel_filterbank @ |STFT|²` per frame.
+- **MFCC** — `DCT-II_ortho(log(mel_spectrogram + ε))[:, :n_mfcc]`
+  with `ε = 1e-10`.  Uses `dsp_dct::dct(_, DctType::II,
+  DctNorm::Ortho)`.
+
+#### New crate dependency
+
+`dsp-dct = { path = "../dsp-dct" }` — for the final DCT-II step
+of MFCC.
+
+#### New unit tests — 15
+
+`mel` module:
+- 5 filterbank tests: shape, non-negativity, rows sum to 1.0,
+  zero-n_mels returns empty, zero-n_fft returns empty.
+- 5 mel-spectrogram tests: output shape, non-negativity,
+  zero-signal → all-zero, rejects `n_mels = 0`, rejects
+  `sample_rate ≤ 0`, propagates STFT errors (signal too short).
+- 4 MFCC tests: output shape, rejects `n_mfcc = 0`, rejects
+  `n_mfcc > n_mels`, finite for zero signal (log(ε) + DCT).
+
+All 40 unit tests + 1 doctest pass (11 stft + 8 inverse +
+6 spectrogram + 15 mel).
+
+### What this phase does NOT include
+
+- Phase 6: matrix-ir-lowered stft.
+- Centred-padding mode.
+- Streaming / real-time API.
+- Delta / delta-delta MFCC features.
+- Per-band liftering.
+
+### Spec note
+
+The Phase 5 spec listed `mel_filterbank(n_mels, n_fft,
+sample_rate)` with no `fmin / fmax` parameters; the
+implementation matches the spec exactly and uses
+`fmin = 0`, `fmax = sample_rate / 2` internally.  A future
+phase can introduce explicit `fmin / fmax` overloads
+(librosa-style) without breaking this signature.
+
 ## 0.2.0 — 2026-05-16
 
 ### Added — DSP05 Phase 3 + 4 (ISTFT + spectrogram helpers)

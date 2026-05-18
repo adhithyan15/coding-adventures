@@ -85,6 +85,7 @@ pub use profile::TwigLanguageProfile;
 
 // Re-export the AnnotatedNode type so callers don't need to depend on
 // type-declarations directly just to get the typed_ast out.
+pub use type_checker_protocol::TypeErrorDiagnostic;
 pub use type_declarations::AnnotatedNode;
 
 use twig_parser::{emit_type_declarations, parse, parse_to_ast, Program, TypedMode};
@@ -236,6 +237,152 @@ pub fn check_program(
     check::check_forms(program, &env, &mut scope, &mode, &mut errors);
 
     // Determine ok: strict requires zero errors; lenient is always ok.
+    let ok = match mode {
+        TypedMode::Strict => errors.is_empty(),
+        _ => true,
+    };
+
+    TypeCheckResult {
+        typed_ast: TypedProgram {
+            program: program.clone(),
+            env,
+        },
+        errors,
+        ok,
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Multi-module import propagation (TW05-P Part 2 / LANG71)
+// ---------------------------------------------------------------------------
+
+/// Extract the globals exported by a type-checked module.
+///
+/// When checking a module that imports another, the caller can:
+/// 1. Type-check the dependency with `check_program`.
+/// 2. Call `extract_module_exports(&dep_program, &dep_result.typed_ast.env)`
+///    to get the dependency's exported names.
+/// 3. Pass the returned map as `extra_globals` to
+///    `check_program_with_globals` when checking the importing module.
+///
+/// Only names listed in `(export …)` are included; internal helpers are
+/// filtered out.  Names not found in `env.globals` (e.g. re-exports of
+/// imported symbols the dep itself didn't define) are silently skipped.
+///
+/// # Example
+///
+/// ```no_run
+/// use twig_type_checker::{check_program, extract_module_exports};
+/// use twig_parser::parse;
+///
+/// let span_src = "(module compiler/span (typed strict) \
+///                  (export Span make-span)) \
+///                 (record Span (start : int)) \
+///                 (define (make-span s) (Span s))";
+/// let span_prog = parse(span_src).unwrap();
+/// let span_res  = check_program(&span_prog, None);
+/// let exports   = extract_module_exports(&span_prog, &span_res.typed_ast.env);
+/// assert!(exports.contains_key("make-span"));
+/// ```
+pub fn extract_module_exports(
+    program: &Program,
+    env: &TypeEnv,
+) -> std::collections::HashMap<String, TwigKind> {
+    let export_names: Vec<String> = program
+        .module_info
+        .as_ref()
+        .map(|mi| mi.exports.clone())
+        .unwrap_or_default();
+
+    let mut out = std::collections::HashMap::new();
+    for name in export_names {
+        if let Some(kind) = env.globals.get(&name) {
+            out.insert(name, kind.clone());
+        }
+    }
+    out
+}
+
+/// Type-check a program with additional globals pre-seeded from imported modules.
+///
+/// This is identical to [`check_program`] except that `extra_globals` is
+/// merged into the [`TypeEnv`] **before** Pass 1 (`collect_forms`) runs.
+/// Any name in `extra_globals` is therefore visible to the module body and
+/// will not produce an "unresolved variable" error.
+///
+/// Names defined in the module itself (via `(define …)`, `(record …)`,
+/// `(union …)`) shadow any pre-seeded entry with the same name, because
+/// Pass 1 overwrites entries in `env.globals`.
+///
+/// ## Usage pattern
+///
+/// ```no_run
+/// use twig_type_checker::{check_program, check_program_with_globals,
+///                          extract_module_exports};
+/// use twig_parser::{parse, TypedMode};
+/// use std::collections::HashMap;
+///
+/// // 1. Check the dependency.
+/// let dep_src = "(module compiler/span (typed strict) (export make-span)) \
+///                (define (make-span s e) (cons s e))";
+/// let dep_prog = parse(dep_src).unwrap();
+/// let dep_res  = check_program(&dep_prog, None);
+/// let dep_exports = extract_module_exports(&dep_prog, &dep_res.typed_ast.env);
+///
+/// // 2. Check the importer, seeded with the dep's exports.
+/// let imp_src = "(module compiler/lexer (typed strict) \
+///                  (export lex) \
+///                  (import compiler/span)) \
+///                (define (lex src) (make-span 0 (length src)))";
+/// let imp_prog = parse(imp_src).unwrap();
+/// let result = check_program_with_globals(&imp_prog, None, &dep_exports);
+/// assert!(result.ok);
+/// ```
+pub fn check_program_with_globals(
+    program: &Program,
+    mode_override: Option<TypedMode>,
+    extra_globals: &std::collections::HashMap<String, TwigKind>,
+) -> TypeCheckResult<TypedProgram> {
+    // Determine the effective mode.
+    let mode: TypedMode = mode_override
+        .or_else(|| {
+            program
+                .module_info
+                .as_ref()
+                .and_then(|mi| mi.typed_mode.clone())
+        })
+        .unwrap_or(TypedMode::Off);
+
+    // Off mode: skip entirely.
+    if mode == TypedMode::Off {
+        return TypeCheckResult {
+            typed_ast: TypedProgram {
+                program: program.clone(),
+                env: TypeEnv::new(),
+            },
+            errors: vec![],
+            ok: true,
+        };
+    }
+
+    // ── Seed env with imported globals ────────────────────────────────────
+    let mut env = TypeEnv::new();
+    for (name, kind) in extra_globals {
+        // Only pre-seed if the name is not already a builtin.  Builtins
+        // registered by TypeEnv::new() are trusted; caller-supplied entries
+        // for the same name would just be redundant noise.
+        env.globals.entry(name.clone()).or_insert_with(|| kind.clone());
+    }
+
+    // ── Pass 1: collect declarations ──────────────────────────────────────
+    check::collect_forms(program, &mut env, &mode);
+
+    // ── Pass 2: walk expression bodies ────────────────────────────────────
+    let mut scope = env::ScopeStack::new();
+    let mut errors = Vec::new();
+    check::check_forms(program, &env, &mut scope, &mode, &mut errors);
+
+    // Determine ok.
     let ok = match mode {
         TypedMode::Strict => errors.is_empty(),
         _ => true,
@@ -1005,5 +1152,581 @@ mod tests {
         let r = tc_strict(src);
         // Result might have errors (e.g. b is Any, not Int), but it should not panic.
         let _ = r; // Success: no panic.
+    }
+}
+
+// ---------------------------------------------------------------------------
+// TW05-O integration tests — builtin prelude registration (LANG69)
+// ---------------------------------------------------------------------------
+//
+// TW05-O adds `TypeEnv::register_builtins()`, called from `TypeEnv::new()`,
+// which pre-populates `globals` with every Twig runtime builtin as
+// `TwigKind::Any`.  This eliminates "unresolved variable" warnings/errors
+// for builtins in both lenient and strict mode.
+//
+// The tests below verify:
+// 1. Arithmetic and comparison builtins resolve without errors in strict mode.
+// 2. List operations (`null?`, `car`, `cdr`, `cons`, `list`) resolve.
+// 3. String operations (`string-length`) resolve.
+// 4. `and` and `or` (special forms, not in BUILTINS const) resolve.
+// 5. Host I/O builtins (`host/read_file`) resolve.
+// 6. Higher-order ops (`map`, `filter`) resolve.
+// 7. Explicit `(define ...)` stubs can still shadow pre-registered builtins.
+// 8. `span.tw` content (the smallest compiler module) passes in strict mode.
+
+#[cfg(test)]
+mod tw05o_tests {
+    use super::*;
+
+    // Helper: parse and strict-check without a module declaration wrapper.
+    fn strict(src: &str) -> TypeCheckResult<TypedProgram> {
+        let program = parse(src).unwrap_or_else(|e| panic!("parse failed: {e}"));
+        check_program(&program, Some(TypedMode::Strict))
+    }
+
+    // ── Test 1: arithmetic builtins resolve ────────────────────────────────
+
+    #[test]
+    fn builtin_arithmetic_resolves() {
+        // (+ 1 2) is a call to the pre-registered `+` builtin.
+        // In strict mode, an unresolved callee would produce an error.
+        let r = strict("(define x (+ 1 2))");
+        assert!(r.ok,
+            "arithmetic builtins should resolve in strict mode; errors: {:?}", r.errors);
+        assert!(r.errors.is_empty(),
+            "unexpected errors: {:?}", r.errors);
+
+        // Also verify comparison operators.
+        let r2 = strict("(define y (< 1 2)) (define z (>= 3 3)) (define w (<= 0 1))");
+        assert!(r2.ok,
+            "comparison builtins should resolve; errors: {:?}", r2.errors);
+    }
+
+    // ── Test 2: list builtins resolve ──────────────────────────────────────
+
+    #[test]
+    fn builtin_list_ops_resolve() {
+        // null?, car, cdr, cons, list, length — all list-manipulation builtins.
+        let src = "(define a (null? nil)) \
+                   (define b (cons 1 nil)) \
+                   (define c (car (list 1 2))) \
+                   (define d (length (list 1)))";
+        let r = strict(src);
+        assert!(r.ok,
+            "list builtins should resolve in strict mode; errors: {:?}", r.errors);
+    }
+
+    // ── Test 3: string builtins resolve ───────────────────────────────────
+
+    #[test]
+    fn builtin_string_ops_resolve() {
+        // string-length, string-append, string=?
+        let src = "(define a (string-length \"hello\")) \
+                   (define b (string-append \"x\" \"y\")) \
+                   (define c (string=? \"a\" \"a\"))";
+        let r = strict(src);
+        assert!(r.ok,
+            "string builtins should resolve in strict mode; errors: {:?}", r.errors);
+    }
+
+    // ── Test 4: and / or resolve ───────────────────────────────────────────
+
+    #[test]
+    fn builtin_and_or_resolve() {
+        // `and` and `or` are special-cased in the IR compiler but are parsed
+        // as regular Apply nodes — they must be pre-registered too.
+        let src = "(define a (and #t #f)) (define b (or #f #t))";
+        let r = strict(src);
+        assert!(r.ok,
+            "`and`/`or` should resolve in strict mode; errors: {:?}", r.errors);
+    }
+
+    // ── Test 5: host I/O builtins resolve ─────────────────────────────────
+
+    #[test]
+    fn builtin_host_io_resolves() {
+        // host/read_file is a host builtin dispatched by the VM.
+        let src = "(define contents (host/read_file \"/dev/null\"))";
+        let r = strict(src);
+        assert!(r.ok,
+            "host/read_file should resolve in strict mode; errors: {:?}", r.errors);
+    }
+
+    // ── Test 6: higher-order ops resolve ──────────────────────────────────
+
+    #[test]
+    fn builtin_hof_resolves() {
+        // map and filter are higher-order builtins registered in LANG55.
+        let src = "(define a (map nil nil)) (define b (filter nil nil))";
+        let r = strict(src);
+        assert!(r.ok,
+            "map/filter should resolve in strict mode; errors: {:?}", r.errors);
+    }
+
+    // ── Test 7: stub shadows pre-registered builtin ────────────────────────
+
+    #[test]
+    fn builtin_does_not_block_stub_shadow() {
+        // An explicit (define (+ a b) ...) should shadow the pre-registered `+`
+        // without causing errors — Pass 1 overwrites the pre-registered Any.
+        let src = "(define (+ a b) 0) (define result (+ 1 2))";
+        let r = strict(src);
+        assert!(r.ok,
+            "stub define should shadow pre-registered builtin; errors: {:?}", r.errors);
+    }
+
+    // ── Test 8: span.tw content compiles in strict mode ──────────────────
+
+    #[test]
+    fn span_tw_strict_mode_compiles() {
+        // Minimal reproduction of span.tw in strict mode.
+        // Uses: record Span, and, >=, <= (builtins), Span constructor (record).
+        // No imports needed — all dependencies are within this snippet.
+        let src = "\
+            (module compiler/span (typed strict) \
+              (export Span make-span dummy-span)) \
+            (record Span (source-id : int) (start : int) (end : int)) \
+            (define (make-span source-id start end) \
+              (if (and (>= start 0) (<= start end)) \
+                (Span source-id start end) \
+                nil)) \
+            (define (dummy-span) (Span 0 0 0))";
+        let r = strict(src);
+        assert!(r.ok,
+            "span.tw content should pass strict mode after builtin registration; \
+             errors: {:?}", r.errors);
+        assert!(r.errors.is_empty(),
+            "unexpected type errors in span.tw strict check: {:?}", r.errors);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// TW05-P Part 1 tests — generated symbol registration (LANG70)
+// ---------------------------------------------------------------------------
+//
+// LANG70 extends `register_record` and `register_union` to also register
+// the symbols the IR compiler generates for each record/union declaration:
+//
+//   Record `Foo` with field `x`:
+//     - `foo?`   → the record predicate
+//     - `foo-x`  → the field accessor
+//
+//   Union variant `Bar` with field `y`:
+//     - `Bar?`   → the variant predicate   (original case, NOT lowercased)
+//     - `bar-y`  → the field accessor      (lowercased prefix)
+//
+// These tests verify that strict-mode modules which call their own generated
+// symbols no longer produce "unresolved variable" errors.
+
+#[cfg(test)]
+mod tw05p1_tests {
+    use super::*;
+
+    // Helper: strict-check an inline source snippet.
+    fn strict(src: &str) -> TypeCheckResult<TypedProgram> {
+        let program = parse(src).unwrap_or_else(|e| panic!("parse failed: {e}"));
+        check_program(&program, Some(TypedMode::Strict))
+    }
+
+    // ── Test 1: record predicate resolves ─────────────────────────────────
+    //
+    // `(record Point (x : int) (y : int))` generates `point?`.
+    // A strict-mode function calling `(point? v)` must not produce
+    // "unresolved variable `point?`".
+
+    #[test]
+    fn record_predicate_resolves_in_strict() {
+        let src = "(record Point (x : int) (y : int)) \
+                   (define (is-point? v) (point? v))";
+        let r = strict(src);
+        assert!(r.ok,
+            "record predicate `point?` should resolve in strict mode; \
+             errors: {:?}", r.errors);
+        assert!(r.errors.is_empty(),
+            "unexpected errors: {:?}", r.errors);
+    }
+
+    // ── Test 2: record field accessor resolves ────────────────────────────
+    //
+    // `(record Point (x : int) (y : int))` generates `point-x` and `point-y`.
+    // Strict-mode calls to those accessors must resolve.
+
+    #[test]
+    fn record_accessor_resolves_in_strict() {
+        let src = "(record Point (x : int) (y : int)) \
+                   (define (get-x p) (point-x p)) \
+                   (define (get-y p) (point-y p))";
+        let r = strict(src);
+        assert!(r.ok,
+            "record accessors `point-x`/`point-y` should resolve; \
+             errors: {:?}", r.errors);
+    }
+
+    // ── Test 3: union variant predicate resolves ──────────────────────────
+    //
+    // `(union Color (Red) (Green))` generates `Red?` and `Green?`.
+    // Note: variant predicates keep the ORIGINAL case (`Red?`, not `red?`).
+
+    #[test]
+    fn union_variant_predicate_resolves_in_strict() {
+        let src = "(union Color (Red) (Green) (Blue)) \
+                   (define (is-red? c) (Red? c)) \
+                   (define (is-green? c) (Green? c))";
+        let r = strict(src);
+        assert!(r.ok,
+            "union variant predicates `Red?`/`Green?` should resolve; \
+             errors: {:?}", r.errors);
+    }
+
+    // ── Test 4: union variant field accessor resolves ──────────────────────
+    //
+    // `(union Shape (Circle (radius : int)) (Rect (w : int) (h : int)))` generates:
+    //   `circle-radius`, `rect-w`, `rect-h`  (lowercased variant name prefix)
+
+    #[test]
+    fn union_variant_field_accessor_resolves_in_strict() {
+        let src = "(union Shape \
+                     (Circle (radius : int)) \
+                     (Rect (w : int) (h : int))) \
+                   (define (get-radius s) (circle-radius s)) \
+                   (define (get-width s) (rect-w s))";
+        let r = strict(src);
+        assert!(r.ok,
+            "union variant field accessors `circle-radius`/`rect-w` should resolve; \
+             errors: {:?}", r.errors);
+    }
+
+    // ── Test 5: diagnostic.tw content compiles in strict mode ─────────────
+    //
+    // diagnostic.tw has 3 define forms that call own union constructors only.
+    // No accessor calls.  Should pass trivially.
+
+    #[test]
+    fn diagnostic_tw_strict_mode_compiles() {
+        let src = "\
+            (module compiler/diagnostic (typed strict) \
+              (export Severity SevError SevWarning SevInfo \
+                      SevError? SevWarning? SevInfo? \
+                      Diagnostic diagnostic? diagnostic-severity \
+                      diagnostic-message diagnostic-span \
+                      make-error make-warning make-info)) \
+            (union Severity (SevError) (SevWarning) (SevInfo)) \
+            (record Diagnostic (severity : any) (message : any) (span : any)) \
+            (define (make-error message span) \
+              (Diagnostic (SevError) message span)) \
+            (define (make-warning message span) \
+              (Diagnostic (SevWarning) message span)) \
+            (define (make-info message span) \
+              (Diagnostic (SevInfo) message span))";
+        let r = strict(src);
+        assert!(r.ok,
+            "diagnostic.tw content should pass strict mode; \
+             errors: {:?}", r.errors);
+        assert!(r.errors.is_empty(),
+            "unexpected type errors: {:?}", r.errors);
+    }
+
+    // ── Test 6: iir-builder.tw content compiles in strict mode ────────────
+    //
+    // iir-builder.tw has 8 define forms that call own IirBuilder accessors
+    // (`iirbuilder-name`, `iirbuilder-reg-count`, etc.) and builtins.
+    // This confirms that accessor registration enables strict mode for
+    // a module that uses its own record's generated accessors.
+
+    #[test]
+    fn iir_builder_tw_strict_mode_compiles() {
+        // Minimal reproduction: IirBuilder record + 3 representative functions.
+        // Uses own accessors (iirbuilder-name, iirbuilder-instrs, etc.) and
+        // builtins (cons, reverse).
+        let src = "\
+            (module compiler/iir-builder (typed strict) \
+              (export IirBuilder iirbuilder? \
+                      iirbuilder-name iirbuilder-instrs \
+                      iirbuilder-reg-count iirbuilder-label-count \
+                      new-builder append-instr finalise-builder)) \
+            (record IirBuilder \
+              (name        : any) \
+              (instrs      : any) \
+              (reg-count   : int) \
+              (label-count : int)) \
+            (define (iirbuilder-with-instrs b new-instrs) \
+              (IirBuilder (iirbuilder-name b) new-instrs \
+                          (iirbuilder-reg-count b) (iirbuilder-label-count b))) \
+            (define (new-builder fn-name) \
+              (IirBuilder fn-name nil 0 0)) \
+            (define (append-instr b instr) \
+              (iirbuilder-with-instrs b (cons instr (iirbuilder-instrs b)))) \
+            (define (finalise-builder b) \
+              (reverse (iirbuilder-instrs b)))";
+        let r = strict(src);
+        assert!(r.ok,
+            "iir-builder.tw content should pass strict mode after accessor \
+             registration; errors: {:?}", r.errors);
+        assert!(r.errors.is_empty(),
+            "unexpected type errors in iir-builder strict check: {:?}", r.errors);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// TW05-P Part 2 / LANG71 — multi-module import propagation
+// ---------------------------------------------------------------------------
+//
+// Each test:
+//   1. Type-checks all dependency modules (which are themselves in strict mode).
+//   2. Calls `extract_module_exports` on each to get the exported globals.
+//   3. Merges the exports into a single `extra_globals` map.
+//   4. Calls `check_program_with_globals` on the module under test (strict mode).
+//   5. Asserts `ok: true` and `errors.is_empty()`.
+//
+// The `.tw` source files are embedded at compile time via `include_str!`.
+// Paths are relative to this source file (`src/lib.rs`):
+//   ../../../../twig/compiler/  →  code/twig/compiler/
+
+#[cfg(test)]
+mod tw05p2_tests {
+    use super::*;
+    use std::collections::HashMap;
+
+    // ── helper ──────────────────────────────────────────────────────────────
+
+    /// Type-check a source string, returning (Program, TypeEnv).
+    fn checked(src: &str) -> (Program, TypeEnv) {
+        let prog = parse(src).unwrap_or_else(|e| panic!("parse failed: {e}"));
+        let res = check_program(&prog, None);
+        (prog, res.typed_ast.env)
+    }
+
+    /// Merge exported globals from a dep program+env into an accumulator map.
+    fn add_exports(
+        acc: &mut HashMap<String, TwigKind>,
+        prog: &Program,
+        env: &TypeEnv,
+    ) {
+        let exports = extract_module_exports(prog, env);
+        for (k, v) in exports {
+            acc.entry(k).or_insert(v);
+        }
+    }
+
+    // ── Source constants ─────────────────────────────────────────────────────
+
+    const SPAN_SRC: &str =
+        include_str!("../../../../twig/compiler/span.tw");
+    const TOKEN_SRC: &str =
+        include_str!("../../../../twig/compiler/token.tw");
+    const DIAGNOSTIC_SRC: &str =
+        include_str!("../../../../twig/compiler/diagnostic.tw");
+    const AST_SRC: &str =
+        include_str!("../../../../twig/compiler/ast.tw");
+    const IIR_TYPES_SRC: &str =
+        include_str!("../../../../twig/compiler/iir-types.tw");
+    const IIR_BUILDER_SRC: &str =
+        include_str!("../../../../twig/compiler/iir-builder.tw");
+    const LEXER_SRC: &str =
+        include_str!("../../../../twig/compiler/lexer.tw");
+    const CST_PARSER_SRC: &str =
+        include_str!("../../../../twig/compiler/cst-parser.tw");
+    const PARSER_SRC: &str =
+        include_str!("../../../../twig/compiler/parser.tw");
+    const EMIT_SRC: &str =
+        include_str!("../../../../twig/compiler/emit.tw");
+    const MAIN_SRC: &str =
+        include_str!("../../../../twig/compiler/main.tw");
+
+    // ── Tests ────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn lexer_tw_strict_with_imported_globals() {
+        // lexer.tw imports: compiler/span, compiler/token
+        let (span_prog, span_env) = checked(SPAN_SRC);
+        let (tok_prog, tok_env) = checked(TOKEN_SRC);
+
+        let mut globals: HashMap<String, TwigKind> = HashMap::new();
+        add_exports(&mut globals, &span_prog, &span_env);
+        add_exports(&mut globals, &tok_prog, &tok_env);
+
+        let lexer_prog = parse(LEXER_SRC)
+            .unwrap_or_else(|e| panic!("lexer.tw parse failed: {e}"));
+        let r = check_program_with_globals(&lexer_prog, None, &globals);
+        assert!(
+            r.ok,
+            "lexer.tw should pass strict mode with imported globals; \
+             errors: {:?}",
+            r.errors
+        );
+        assert!(r.errors.is_empty(),
+            "unexpected type errors in lexer.tw strict check: {:?}", r.errors);
+    }
+
+    #[test]
+    fn cst_parser_tw_strict_with_imported_globals() {
+        // cst-parser.tw imports: compiler/token
+        let (tok_prog, tok_env) = checked(TOKEN_SRC);
+
+        let mut globals: HashMap<String, TwigKind> = HashMap::new();
+        add_exports(&mut globals, &tok_prog, &tok_env);
+
+        let prog = parse(CST_PARSER_SRC)
+            .unwrap_or_else(|e| panic!("cst-parser.tw parse failed: {e}"));
+        let r = check_program_with_globals(&prog, None, &globals);
+        assert!(
+            r.ok,
+            "cst-parser.tw should pass strict mode with imported globals; \
+             errors: {:?}",
+            r.errors
+        );
+        assert!(r.errors.is_empty(),
+            "unexpected type errors in cst-parser.tw strict check: {:?}", r.errors);
+    }
+
+    #[test]
+    fn parser_tw_strict_with_imported_globals() {
+        // parser.tw imports: compiler/cst-parser, compiler/token,
+        //                    compiler/ast, compiler/span
+        let (span_prog, span_env) = checked(SPAN_SRC);
+        let (tok_prog, tok_env) = checked(TOKEN_SRC);
+        let (ast_prog, ast_env) = checked(AST_SRC);
+
+        // cst-parser itself needs token exports pre-seeded
+        let mut cst_globals: HashMap<String, TwigKind> = HashMap::new();
+        add_exports(&mut cst_globals, &tok_prog, &tok_env);
+        let cst_prog = parse(CST_PARSER_SRC)
+            .unwrap_or_else(|e| panic!("cst-parser.tw parse failed: {e}"));
+        let cst_res = check_program_with_globals(&cst_prog, None, &cst_globals);
+
+        let mut globals: HashMap<String, TwigKind> = HashMap::new();
+        add_exports(&mut globals, &span_prog, &span_env);
+        add_exports(&mut globals, &tok_prog, &tok_env);
+        add_exports(&mut globals, &ast_prog, &ast_env);
+        add_exports(&mut globals, &cst_prog, &cst_res.typed_ast.env);
+
+        let prog = parse(PARSER_SRC)
+            .unwrap_or_else(|e| panic!("parser.tw parse failed: {e}"));
+        let r = check_program_with_globals(&prog, None, &globals);
+        assert!(
+            r.ok,
+            "parser.tw should pass strict mode with imported globals; \
+             errors: {:?}",
+            r.errors
+        );
+        assert!(r.errors.is_empty(),
+            "unexpected type errors in parser.tw strict check: {:?}", r.errors);
+    }
+
+    #[test]
+    fn emit_tw_strict_with_imported_globals() {
+        // emit.tw imports: compiler/span, compiler/ast,
+        //                  compiler/iir-types, compiler/iir-builder
+        let (span_prog, span_env) = checked(SPAN_SRC);
+        let (ast_prog, ast_env) = checked(AST_SRC);
+        let (iir_t_prog, iir_t_env) = checked(IIR_TYPES_SRC);
+
+        // iir-builder needs iir-types exports
+        let mut ib_globals: HashMap<String, TwigKind> = HashMap::new();
+        add_exports(&mut ib_globals, &iir_t_prog, &iir_t_env);
+        let ib_prog = parse(IIR_BUILDER_SRC)
+            .unwrap_or_else(|e| panic!("iir-builder.tw parse failed: {e}"));
+        let ib_res = check_program_with_globals(&ib_prog, None, &ib_globals);
+
+        let mut globals: HashMap<String, TwigKind> = HashMap::new();
+        add_exports(&mut globals, &span_prog, &span_env);
+        add_exports(&mut globals, &ast_prog, &ast_env);
+        add_exports(&mut globals, &iir_t_prog, &iir_t_env);
+        add_exports(&mut globals, &ib_prog, &ib_res.typed_ast.env);
+
+        let prog = parse(EMIT_SRC)
+            .unwrap_or_else(|e| panic!("emit.tw parse failed: {e}"));
+        let r = check_program_with_globals(&prog, None, &globals);
+        assert!(
+            r.ok,
+            "emit.tw should pass strict mode with imported globals; \
+             errors: {:?}",
+            r.errors
+        );
+        assert!(r.errors.is_empty(),
+            "unexpected type errors in emit.tw strict check: {:?}", r.errors);
+    }
+
+    #[test]
+    fn main_tw_strict_with_imported_globals() {
+        // main.tw imports: all 9 other compiler modules.
+        // Build exports bottom-up following the dependency graph.
+
+        // Leaf modules (no imports from compiler/)
+        let (span_prog, span_env) = checked(SPAN_SRC);
+        let (tok_prog, tok_env) = checked(TOKEN_SRC);
+        let (diag_prog, diag_env) = checked(DIAGNOSTIC_SRC);
+        let (ast_prog, ast_env) = checked(AST_SRC);
+        let (iir_t_prog, iir_t_env) = checked(IIR_TYPES_SRC);
+
+        // iir-builder ← iir-types
+        let mut ib_g: HashMap<String, TwigKind> = HashMap::new();
+        add_exports(&mut ib_g, &iir_t_prog, &iir_t_env);
+        let ib_prog = parse(IIR_BUILDER_SRC).unwrap();
+        let ib_res = check_program_with_globals(&ib_prog, None, &ib_g);
+
+        // diagnostic ← span (already checked above, re-check with span seed)
+        let mut diag_g: HashMap<String, TwigKind> = HashMap::new();
+        add_exports(&mut diag_g, &span_prog, &span_env);
+        let diag_prog2 = parse(DIAGNOSTIC_SRC).unwrap();
+        let diag_res2 = check_program_with_globals(&diag_prog2, None, &diag_g);
+
+        // lexer ← span, token
+        let mut lex_g: HashMap<String, TwigKind> = HashMap::new();
+        add_exports(&mut lex_g, &span_prog, &span_env);
+        add_exports(&mut lex_g, &tok_prog, &tok_env);
+        let lex_prog = parse(LEXER_SRC).unwrap();
+        let lex_res = check_program_with_globals(&lex_prog, None, &lex_g);
+
+        // cst-parser ← token
+        let mut cst_g: HashMap<String, TwigKind> = HashMap::new();
+        add_exports(&mut cst_g, &tok_prog, &tok_env);
+        let cst_prog = parse(CST_PARSER_SRC).unwrap();
+        let cst_res = check_program_with_globals(&cst_prog, None, &cst_g);
+
+        // parser ← cst-parser, token, ast, span
+        let mut par_g: HashMap<String, TwigKind> = HashMap::new();
+        add_exports(&mut par_g, &span_prog, &span_env);
+        add_exports(&mut par_g, &tok_prog, &tok_env);
+        add_exports(&mut par_g, &ast_prog, &ast_env);
+        add_exports(&mut par_g, &cst_prog, &cst_res.typed_ast.env);
+        let par_prog = parse(PARSER_SRC).unwrap();
+        let par_res = check_program_with_globals(&par_prog, None, &par_g);
+
+        // emit ← span, ast, iir-types, iir-builder
+        let mut emit_g: HashMap<String, TwigKind> = HashMap::new();
+        add_exports(&mut emit_g, &span_prog, &span_env);
+        add_exports(&mut emit_g, &ast_prog, &ast_env);
+        add_exports(&mut emit_g, &iir_t_prog, &iir_t_env);
+        add_exports(&mut emit_g, &ib_prog, &ib_res.typed_ast.env);
+        let emit_prog = parse(EMIT_SRC).unwrap();
+        let emit_res = check_program_with_globals(&emit_prog, None, &emit_g);
+
+        // main ← all 9
+        let mut main_g: HashMap<String, TwigKind> = HashMap::new();
+        add_exports(&mut main_g, &span_prog, &span_env);
+        add_exports(&mut main_g, &tok_prog, &tok_env);
+        add_exports(&mut main_g, &diag_prog, &diag_env);
+        // use re-checked diag with span seed for completeness
+        add_exports(&mut main_g, &diag_prog2, &diag_res2.typed_ast.env);
+        add_exports(&mut main_g, &ast_prog, &ast_env);
+        add_exports(&mut main_g, &iir_t_prog, &iir_t_env);
+        add_exports(&mut main_g, &ib_prog, &ib_res.typed_ast.env);
+        add_exports(&mut main_g, &lex_prog, &lex_res.typed_ast.env);
+        add_exports(&mut main_g, &cst_prog, &cst_res.typed_ast.env);
+        add_exports(&mut main_g, &par_prog, &par_res.typed_ast.env);
+        add_exports(&mut main_g, &emit_prog, &emit_res.typed_ast.env);
+
+        let prog = parse(MAIN_SRC)
+            .unwrap_or_else(|e| panic!("main.tw parse failed: {e}"));
+        let r = check_program_with_globals(&prog, None, &main_g);
+        assert!(
+            r.ok,
+            "main.tw should pass strict mode with all imported globals; \
+             errors: {:?}",
+            r.errors
+        );
+        assert!(r.errors.is_empty(),
+            "unexpected type errors in main.tw strict check: {:?}", r.errors);
     }
 }

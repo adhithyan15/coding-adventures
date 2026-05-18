@@ -229,6 +229,34 @@ module CodingAdventures
         native_session.uart_read_module(max_stack)
       end
 
+      def can_open_module(bus:, max_stack: 2)
+        native_session.can_open_module(bus, max_stack)
+      end
+
+      def can_write_module(byte:, max_stack: 3)
+        native_session.can_write_module(byte_value(byte), max_stack)
+      end
+
+      def can_read_module(max_stack: 2)
+        native_session.can_read_module(max_stack)
+      end
+
+      def rtc_now_module(max_stack: 1)
+        native_session.rtc_now_module(max_stack)
+      end
+
+      def rtc_set_module(epoch_seconds:, max_stack: 1)
+        native_session.rtc_set_module(u32_value(epoch_seconds, "epoch_seconds"), max_stack)
+      end
+
+      def watchdog_configure_module(timeout_ms:, max_stack: 1)
+        native_session.watchdog_configure_module(u32_value(timeout_ms, "timeout_ms"), max_stack)
+      end
+
+      def watchdog_kick_module(max_stack: 1)
+        native_session.watchdog_kick_module(max_stack)
+      end
+
       def spi_transfer_module(cs_pin:, write_bytes:, read_length:, max_stack: 5)
         native_session.spi_transfer_module(
           cs_pin,
@@ -394,6 +422,63 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: uart_read_module(max_stack: max_stack)
+        )
+      end
+
+      def upload_can_open(
+        program_id: @program_id,
+        bus:,
+        max_stack: 2
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: can_open_module(bus: bus, max_stack: max_stack)
+        )
+      end
+
+      def upload_can_write(
+        program_id: @program_id,
+        byte:,
+        max_stack: 3
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: can_write_module(byte: byte, max_stack: max_stack)
+        )
+      end
+
+      def upload_can_read(program_id: @program_id, max_stack: 2)
+        upload(
+          program_id: program_id,
+          module_bytes: can_read_module(max_stack: max_stack)
+        )
+      end
+
+      def upload_rtc_now(program_id: @program_id, max_stack: 1)
+        upload(
+          program_id: program_id,
+          module_bytes: rtc_now_module(max_stack: max_stack)
+        )
+      end
+
+      def upload_rtc_set(program_id: @program_id, epoch_seconds:, max_stack: 1)
+        upload(
+          program_id: program_id,
+          module_bytes: rtc_set_module(epoch_seconds: epoch_seconds, max_stack: max_stack)
+        )
+      end
+
+      def upload_watchdog_configure(program_id: @program_id, timeout_ms:, max_stack: 1)
+        upload(
+          program_id: program_id,
+          module_bytes: watchdog_configure_module(timeout_ms: timeout_ms, max_stack: max_stack)
+        )
+      end
+
+      def upload_watchdog_kick(program_id: @program_id, max_stack: 1)
+        upload(
+          program_id: program_id,
+          module_bytes: watchdog_kick_module(max_stack: max_stack)
         )
       end
 
@@ -939,6 +1024,170 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def can_open(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        bus:,
+        max_stack: 2,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(upload_can_open(program_id: program_id, bus: bus, max_stack: max_stack).results)
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
+      def can_write(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        byte:,
+        max_stack: 3
+      )
+        results = upload_can_write(
+          program_id: program_id,
+          byte: byte,
+          max_stack: max_stack
+        ).results
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          reset_vm: false,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
+      def can_read(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        max_stack: 2
+      )
+        results = upload_can_read(
+          program_id: program_id,
+          max_stack: max_stack
+        ).results
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          reset_vm: false,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
+      def rtc_now(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        max_stack: 1,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(upload_rtc_now(program_id: program_id, max_stack: max_stack).results)
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget
+        )
+        SessionResult.new(results: results)
+      end
+
+      def rtc_set(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        epoch_seconds:,
+        max_stack: 1,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(
+          upload_rtc_set(
+            program_id: program_id,
+            epoch_seconds: epoch_seconds,
+            max_stack: max_stack
+          ).results
+        )
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget
+        )
+        SessionResult.new(results: results)
+      end
+
+      def watchdog_configure(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        timeout_ms:,
+        max_stack: 1,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(
+          upload_watchdog_configure(
+            program_id: program_id,
+            timeout_ms: timeout_ms,
+            max_stack: max_stack
+          ).results
+        )
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget
+        )
+        SessionResult.new(results: results)
+      end
+
+      def watchdog_kick(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        max_stack: 1,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(upload_watchdog_kick(program_id: program_id, max_stack: max_stack).results)
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget
+        )
+        SessionResult.new(results: results)
+      end
+
       def spi_transfer(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -1342,6 +1591,24 @@ module CodingAdventures
           upload_uart_write(**uart_write_command_options(words, command, options, require_budget: false))
         when "upload-uart-read", "upload-uart.read"
           upload_uart_read(**uart_read_command_options(words, command, options, require_budget: false))
+        when "upload-can-open", "upload-can.open"
+          upload_can_open(**can_open_command_options(words, command, options, require_budget: false))
+        when "upload-can-write", "upload-can.write"
+          upload_can_write(**can_write_command_options(words, command, options, require_budget: false))
+        when "upload-can-read", "upload-can.read"
+          upload_can_read(**can_read_command_options(words, command, options, require_budget: false))
+        when "upload-rtc-now", "upload-rtc.now"
+          ensure_no_extra_arguments!(words, command)
+          upload_rtc_now(**options)
+        when "upload-rtc-set", "upload-rtc.set"
+          upload_rtc_set(**rtc_set_command_options(words, command, options, require_budget: false))
+        when "upload-watchdog-configure", "upload-watchdog.configure"
+          upload_watchdog_configure(
+            **watchdog_configure_command_options(words, command, options, require_budget: false)
+          )
+        when "upload-watchdog-kick", "upload-watchdog.kick"
+          ensure_no_extra_arguments!(words, command)
+          upload_watchdog_kick(**options)
         when "upload-spi-transfer", "upload-spi.transfer"
           upload_spi_transfer(**spi_transfer_command_options(words, command, options, require_budget: false))
         when "upload-spi-write", "upload-spi.write"
@@ -1404,6 +1671,20 @@ module CodingAdventures
           uart_write(**uart_write_command_options(words, command, options))
         when "uart-read", "uart.read"
           uart_read(**uart_read_command_options(words, command, options))
+        when "can-open", "can.open"
+          can_open(**can_open_command_options(words, command, options))
+        when "can-write", "can.write"
+          can_write(**can_write_command_options(words, command, options))
+        when "can-read", "can.read"
+          can_read(**can_read_command_options(words, command, options))
+        when "rtc-now", "rtc.now"
+          rtc_now(**options.merge(optional_budget(words, command)))
+        when "rtc-set", "rtc.set"
+          rtc_set(**rtc_set_command_options(words, command, options))
+        when "watchdog-configure", "watchdog.configure"
+          watchdog_configure(**watchdog_configure_command_options(words, command, options))
+        when "watchdog-kick", "watchdog.kick"
+          watchdog_kick(**options.merge(optional_budget(words, command)))
         when "spi-transfer", "spi.transfer"
           spi_transfer(**spi_transfer_command_options(words, command, options))
         when "spi-write", "spi.write"
@@ -1668,6 +1949,7 @@ module CodingAdventures
 
       alias spi_open_command_options i2c_open_command_options
       alias uart_open_command_options i2c_open_command_options
+      alias can_open_command_options i2c_open_command_options
 
       def uart_write_command_options(words, command, options, require_budget: true)
         merged = options.dup
@@ -1691,6 +1973,38 @@ module CodingAdventures
         end
 
         ensure_no_extra_arguments!(words, command)
+        merged
+      end
+
+      alias can_write_command_options uart_write_command_options
+      alias can_read_command_options uart_read_command_options
+      alias rtc_now_command_options uart_read_command_options
+
+      def rtc_set_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:epoch_seconds] = u32_value(words.shift, "#{command} epoch_seconds") unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires epoch_seconds" unless merged.key?(:epoch_seconds)
+
+        merged
+      end
+
+      def watchdog_configure_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:timeout_ms] = u32_value(words.shift, "#{command} timeout_ms") unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires timeout_ms" unless merged.key?(:timeout_ms)
+
         merged
       end
 
@@ -1977,6 +2291,21 @@ module CodingAdventures
         raise ArgumentError, "byte must fit in u8" if byte.negative? || byte > 0xFF
 
         byte
+      end
+
+      def u32_value(value, name)
+        integer = if value.is_a?(Integer)
+          value
+        else
+          begin
+            Integer(value, 0)
+          rescue ArgumentError
+            raise ArgumentError, "#{name} must be an integer: #{value.inspect}"
+          end
+        end
+        raise ArgumentError, "#{name} must fit in u32" if integer.negative? || integer > 0xFFFF_FFFF
+
+        integer
       end
 
       def boot_policy_value(value)

@@ -126,6 +126,22 @@ def run(
             re.IGNORECASE,
         ):
             return QueryResult(rows_affected=0)
+        # Normalise TEMP/TEMPORARY before parsing.
+        #
+        # SQLite allows "CREATE TEMP TABLE …" and "CREATE TEMPORARY TABLE …"
+        # as aliases for "CREATE TABLE …".  TEMP and TEMPORARY cannot be hard
+        # keywords in the SQL grammar because they are commonly used as table
+        # names (e.g. "INSERT INTO temp …").  Instead we strip the modifier
+        # here — after parameter substitution, before the parser — so the
+        # grammar stays clean and `temp` remains a valid identifier everywhere.
+        #
+        # The regex matches the pattern at any position in the statement and
+        # removes just the TEMP / TEMPORARY word between CREATE and TABLE/VIEW.
+        bound = re.sub(
+            r"(?i)\b(CREATE)\s+(?:TEMP|TEMPORARY)\s+(TABLE|VIEW)\b",
+            r"\1 \2",
+            bound,
+        )
         ast = parse_sql(bound)
         stmt = to_statement(ast, view_defs=view_defs)
 

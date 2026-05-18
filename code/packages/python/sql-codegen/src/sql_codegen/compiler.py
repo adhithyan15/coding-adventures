@@ -1324,10 +1324,25 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
                 out.extend(_compile_expr(v, ctx))
             out.extend([InList(n=len(vs)), UnaryOp(op=UnaryOpCode.NOT)])
             return out
-        case AstLike(operand=op_, pattern=pat):
-            return _compile_expr(op_, ctx) + [LoadConst(value=pat), Like(negated=False)]
-        case AstNotLike(operand=op_, pattern=pat):
-            return _compile_expr(op_, ctx) + [LoadConst(value=pat), Like(negated=True)]
+        case AstLike(operand=op_, pattern=pat, escape=esc):
+            # Push value, then pattern, then (optionally) the escape character.
+            # The VM's Like handler with has_escape=True pops escape, pattern,
+            # value in that order.
+            insns_l: list[Instruction] = _compile_expr(op_, ctx) + [LoadConst(value=pat)]
+            if esc is not None:
+                insns_l.append(LoadConst(value=esc))
+                insns_l.append(Like(negated=False, has_escape=True))
+            else:
+                insns_l.append(Like(negated=False))
+            return insns_l
+        case AstNotLike(operand=op_, pattern=pat, escape=esc):
+            insns_nl: list[Instruction] = _compile_expr(op_, ctx) + [LoadConst(value=pat)]
+            if esc is not None:
+                insns_nl.append(LoadConst(value=esc))
+                insns_nl.append(Like(negated=True, has_escape=True))
+            else:
+                insns_nl.append(Like(negated=True))
+            return insns_nl
         case FunctionCall(name=name, args=args):
             # Compile all positional arguments onto the stack left-to-right,
             # then emit CallScalar(func, n_args). The VM's built-in function
@@ -1784,7 +1799,18 @@ def _to_sort_key(k: object, agg_alias_map: dict[tuple, str] | None = None) -> So
 
     assert isinstance(k, PlanSortKey)
     direction = Direction.DESC if k.descending else Direction.ASC
-    nulls = NullsOrder.FIRST if k.nulls_first else NullsOrder.LAST
+    # SQLite-compatible NULL ordering:
+    #   • Explicit  NULLS FIRST / NULLS LAST  → honour the request.
+    #   • Default (nulls_first is None)        → NULLs are treated as smaller
+    #     than any non-NULL value.  Therefore an ASC sort puts NULLs FIRST,
+    #     and a DESC sort puts NULLs LAST.  This matches SQLite's behaviour
+    #     and the SQL:2003 default of NULLS LAST for DESC, NULLS FIRST for ASC.
+    if k.nulls_first is True:
+        nulls = NullsOrder.FIRST
+    elif k.nulls_first is False:
+        nulls = NullsOrder.LAST
+    else:
+        nulls = NullsOrder.LAST if k.descending else NullsOrder.FIRST
 
     # Positional sort key (ORDER BY N): use column_idx for direct index lookup.
     if k.positional_index is not None:
