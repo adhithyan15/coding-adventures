@@ -14,7 +14,9 @@
 > Phase 26 log-power IBP Python (PR #3372 ✅ merged),
 > Phase 27 trig-of-log integration Python `symbolic-vm` 0.57.0 (PR #3373 ✅ merged),
 > Phase 28 general IBP Python `symbolic-vm` 0.58.0 (PR #3380 ✅ merged),
-> Phase 28 TypeScript + Rust ports `symbolic-vm` 0.5.0 (PR #3381 in review).
+> Phase 28 TypeScript + Rust ports `symbolic-vm` 0.5.0 (PR #3381 ✅ merged),
+> Phases 29–33 algebraic simplification (Abs/Sqrt/Log/Exp/Trig) — TypeScript +
+> Rust `symbolic-vm` 0.6.0 (PR #3468 in review).
 
 This document is the canonical reference for resuming work on either project.
 It records exactly what is on `main`, what is in flight, and what has not been
@@ -198,6 +200,42 @@ CHANGELOG section. PR #3171 cut proper 0.2.0 releases and created the missing
 |---|---|---|
 | `typescript/symbolic-vm` | 0.5.0 | Phase 28 `∫ P(x)·log(Q(x)) dx` + `∫ P(x)·atan(Q(x)) dx` for non-linear Q; limited rational integrator (Cases A/B) |
 | `rust/symbolic-vm` | 0.5.0 | Same as TypeScript 0.5.0; uses i128 RatPoly arithmetic |
+
+#### Phases 29–33: algebraic simplification rules — TypeScript + Rust ports (PR #3468)
+
+The Python `symbolic-vm` has long shipped algebraic rules for `Abs`, `Sqrt`,
+`Log`, `Exp` and the trig/hyperbolic family.  PR #3468 closes the gap for the
+TypeScript and Rust ports.  Five rule families fire on every re-evaluation of
+the affected expressions and are guarded by the `simplify` flag (the strict
+numeric backend is unaffected).
+
+| Package | Version | Notes |
+|---|---|---|
+| `typescript/symbolic-vm` | 0.6.0 | Phases 29–33; 119 tests pass |
+| `rust/symbolic-vm` | 0.6.0 | Phases 29–33; 153 tests pass |
+
+| Phase | Rule family | Sample identity |
+|---|---|---|
+| **29** | `Abs` / `Sqrt` algebraic rules | `Abs(Abs(x))→Abs(x)`, `Abs(-x)→Abs(x)`, `Abs(x^(2k))→x^(2k)`, `sqrt(x²)→|x|`, `sqrt(x⁴)→x²` |
+| **30** | `Log` / `Exp` cancellation | `log(exp(x))→x`, `exp(log(x))→x`, `exp(n·log(x))→x^n` |
+| **31** | Trig / hyperbolic symmetry + arc-cancellation | `sin(-x)→-sin(x)`, `cos(-x)→cos(x)`, `sin(asin(x))→x` etc. |
+| **32** | Inverse-trig odd symmetry + acos reflection | `asin(-x)→-asin(x)`, `atan(-x)→-atan(x)`, `acos(-x)→π-acos(x)` |
+| **33** | Trig exact values at rational π multiples | `sin(π/6)→1/2`, `cos(π/4)→√2/2`, `tan(π/3)→√3` (16+16+7 entries) |
+
+**Intentionally omitted** in the TS/Rust ports: `log(x^n)→n·log(x)` and
+`sqrt(x²)→x` — both require an `x≥0` assumption context, and the TS/Rust
+ports do not yet have an assumption system.  Python keeps those rules behind
+`is_nonneg(x)` checks.
+
+**Pi-multiple detection** (Phase 33) covers both numeric (`IRFloat ≈ q·π`,
+denominators {1,2,3,4,6}) and structural IR (`%pi`, `Neg(%pi)`, `Mul(n,%pi)`,
+`Div(%pi,n)`, `Div(Mul(n,%pi),d)`) shapes, keyed via a reduced-fraction string
+into period-2 (sin/cos) and period-1 (tan) tables.
+
+**Known regression** baked into the test suite: `D(x^x, x)` now returns
+`x^x · (log(x) + 1)` instead of `exp(x·log(x)) · (log(x) + 1)` because the
+new `exp(x·log(x)) → x^x` rule fires eagerly during the derivative reduction.
+The simplified form is mathematically equivalent.
 
 #### Phase 21 — named variable-coefficient ODE recognition (all three languages)
 
