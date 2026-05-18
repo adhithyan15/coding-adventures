@@ -84,6 +84,10 @@ matching end tags from literal apparent end tags.
 The generated markup declaration suite pins comment, bogus-comment, DOCTYPE,
 default HTML CDATA-looking bogus-comment recovery, explicit seeded CDATA
 continuation, and seeded declaration continuation behavior.
+The generated comment boundary suite then drills into the states after comment
+dispatch: less-than/bang nested-comment recovery, pending dash and end-bang
+handling, bogus comments, EOF, NULL replacement, and seeded continuation
+contexts.
 The generated attribute-edge suite pins quoted/unquoted values, duplicate
 attributes, missing-whitespace recovery, NULL replacement, self-closing
 delimiters, unexpected solidus recovery, and end-tag attribute diagnostics.
@@ -289,6 +293,16 @@ continuation recovery. Regenerate or check it with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_markup_declarations_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_markup_declarations_fixture.py \
+  --check
+```
+
+The checked-in `whatwg-comment-boundaries.json` fixture exercises the focused
+comment and bogus-comment continuation states after markup declaration
+dispatch. Regenerate or check it with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_comment_boundaries_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_comment_boundaries_fixture.py \
   --check
 ```
 

@@ -70,6 +70,10 @@ binary while production code continues to link only static Rust source.
 - `whatwg-markup-declarations.json`: generated HTML tokenizer markup
   declaration cases used by Rust tests to pin comment, bogus-comment, CDATA,
   DOCTYPE, and seeded declaration continuation recovery
+- `whatwg-comment-boundaries.json`: generated HTML tokenizer comment boundary
+  cases used by Rust tests to pin nested-comment recovery, pending dash and
+  end-bang handling, bogus comments, EOF, NULL replacement, and seeded comment
+  continuations
 - `whatwg-attribute-edges.json`: generated HTML tokenizer attribute-edge cases
   used by Rust tests to pin quoted/unquoted values, duplicate attributes,
   missing whitespace recovery, NULL replacement, self-closing delimiters, and
@@ -107,6 +111,9 @@ binary while production code continues to link only static Rust source.
 - `generate_whatwg_markup_declarations_fixture.py`: importer that generates
   markup declaration recovery cases for the checked-in
   `whatwg-markup-declarations.json` fixture
+- `generate_whatwg_comment_boundaries_fixture.py`: importer that generates
+  focused comment and bogus-comment boundary cases for the checked-in
+  `whatwg-comment-boundaries.json` fixture
 - `generate_whatwg_attribute_edges_fixture.py`: importer that generates
   attribute-edge recovery cases for the checked-in
   `whatwg-attribute-edges.json` fixture
@@ -172,6 +179,14 @@ Regenerate or verify the WHATWG markup declaration fixture with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_markup_declarations_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_markup_declarations_fixture.py \
+  --check
+```
+
+Regenerate or verify the WHATWG comment boundary fixture with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_comment_boundaries_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_comment_boundaries_fixture.py \
   --check
 ```
 

@@ -1,0 +1,800 @@
+{
+  "cases": [
+    {
+      "description": "ordinary comments emit their data between opener and close",
+      "diagnostics": [],
+      "id": "comment-basic-close",
+      "input": "a<!--note-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=note)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "empty comments may close abruptly from comment start state",
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ],
+      "id": "comment-empty-abrupt",
+      "input": "a<!-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "comment start dash state closes abruptly on greater-than",
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ],
+      "id": "comment-empty-start-dash",
+      "input": "a<!--->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "the shortest non-abrupt comment close emits empty data",
+      "diagnostics": [],
+      "id": "comment-double-dash-empty",
+      "input": "a<!---->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL inside comment data is replaced with U+FFFD",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "comment-null-body",
+      "input": "a<!--x\u0000y-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x�y)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL immediately after the opener is replaced in comment start state",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "comment-null-after-start",
+      "input": "a<!--\u0000-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=�)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL after one pending dash preserves the dash before replacement",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "comment-null-after-start-dash",
+      "input": "a<!---\u0000-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=-�)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "less-than signs that do not introduce nested comments stay literal",
+      "diagnostics": [],
+      "id": "comment-less-than-text",
+      "input": "a<!--x<y-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x<y)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "repeated less-than signs remain in the comment text",
+      "diagnostics": [],
+      "id": "comment-less-than-repeat",
+      "input": "a<!--x<<y-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x<<y)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "less-than bang without following dashes stays literal",
+      "diagnostics": [],
+      "id": "comment-less-than-bang-text",
+      "input": "a<!--x<!y-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x<!y)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "less-than bang dash without a second dash stays literal",
+      "diagnostics": [],
+      "id": "comment-less-than-bang-dash-text",
+      "input": "a<!--x<!-y-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x<!-y)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "nested-looking comment openers stay literal and report nested-comment",
+      "diagnostics": [
+        "nested-comment"
+      ],
+      "id": "comment-nested-looking-opener",
+      "input": "a<!--x<!--y-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x<!--y)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "a single dash before ordinary data is preserved",
+      "diagnostics": [],
+      "id": "comment-end-dash-nonclose",
+      "input": "a<!--x-y-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x-y)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "double dash followed by data remains part of the comment",
+      "diagnostics": [],
+      "id": "comment-end-double-dash-nonclose",
+      "input": "a<!--x--y-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x--y)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL after an end dash preserves the pending dash before replacement",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "comment-end-dash-null",
+      "input": "a<!--x-\u0000-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x-�)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL after double dash preserves both pending dashes before replacement",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "comment-end-double-dash-null",
+      "input": "a<!--x--\u0000-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x--�)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "incorrect --!> comment close emits the comment and diagnostic",
+      "diagnostics": [
+        "incorrectly-closed-comment"
+      ],
+      "id": "comment-end-bang-close",
+      "input": "a<!--x--!>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "non-closing --! text remains inside the comment",
+      "diagnostics": [],
+      "id": "comment-end-bang-not-close",
+      "input": "a<!--x--!y-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x--!y)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "dash after --! re-enters end-dash handling and keeps greater-than literal",
+      "diagnostics": [
+        "eof-in-comment"
+      ],
+      "id": "comment-end-bang-dash-close",
+      "input": "a<!--x--!->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x--!->b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF in comment body emits the current comment with eof-in-comment",
+      "diagnostics": [
+        "eof-in-comment"
+      ],
+      "id": "comment-eof-body",
+      "input": "a<!--open",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=open)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF in comment start state emits an empty comment",
+      "diagnostics": [
+        "eof-in-comment"
+      ],
+      "id": "comment-eof-start",
+      "input": "a<!--",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF after one initial dash emits an empty comment",
+      "diagnostics": [
+        "eof-in-comment"
+      ],
+      "id": "comment-eof-start-dash",
+      "input": "a<!---",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF after a less-than sign preserves it in the comment",
+      "diagnostics": [
+        "eof-in-comment"
+      ],
+      "id": "comment-eof-less-than",
+      "input": "a<!--x<",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x<)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF after less-than bang preserves both characters",
+      "diagnostics": [
+        "eof-in-comment"
+      ],
+      "id": "comment-eof-less-than-bang",
+      "input": "a<!--x<!",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x<!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF in less-than bang dash state emits without appending the pending dash",
+      "diagnostics": [
+        "eof-in-comment"
+      ],
+      "id": "comment-eof-less-than-bang-dash",
+      "input": "a<!--x<!-",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x<!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF after nested opener punctuation follows end-state EOF recovery",
+      "diagnostics": [
+        "eof-in-comment"
+      ],
+      "id": "comment-eof-less-than-bang-dash-dash",
+      "input": "a<!--x<!--",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x<!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF after one end dash emits the current comment",
+      "diagnostics": [
+        "eof-in-comment"
+      ],
+      "id": "comment-eof-end-dash",
+      "input": "a<!--x-",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF after double dash emits the current comment",
+      "diagnostics": [
+        "eof-in-comment"
+      ],
+      "id": "comment-eof-end",
+      "input": "a<!--x--",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF after --! appends that pending sequence before emission",
+      "diagnostics": [
+        "eof-in-comment"
+      ],
+      "id": "comment-eof-end-bang",
+      "input": "a<!--x--!",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x--!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "question-mark tag open recovers as a bogus comment",
+      "diagnostics": [
+        "unexpected-question-mark-instead-of-tag-name"
+      ],
+      "id": "processing-instruction-bogus-comment",
+      "input": "a<?xml?>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=?xml?)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF in a question-mark bogus comment emits without eof-in-comment",
+      "diagnostics": [
+        "unexpected-question-mark-instead-of-tag-name"
+      ],
+      "id": "processing-instruction-bogus-comment-eof",
+      "input": "a<?xml",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=?xml)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "unknown markup declarations recover as bogus comments",
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ],
+      "id": "malformed-declaration-bogus-comment",
+      "input": "a<!foo>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=foo)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "empty malformed declaration emits an empty bogus comment",
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ],
+      "id": "empty-malformed-declaration",
+      "input": "a<!>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "one-dash markup declaration uses bogus-comment recovery",
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ],
+      "id": "one-dash-declaration",
+      "input": "a<!-x>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=-x)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL inside bogus comments is replaced before emission",
+      "diagnostics": [
+        "incorrectly-opened-comment",
+        "unexpected-null-character"
+      ],
+      "id": "bogus-comment-null",
+      "input": "a<!foo\u0000bar>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=foo�bar)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "EOF in bogus comment emits the current comment without eof-in-comment",
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ],
+      "id": "bogus-comment-eof",
+      "input": "a<!foo",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=foo)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "malformed end-tag openers recover as bogus comments",
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ],
+      "id": "invalid-end-tag-open-bogus-comment",
+      "input": "a</3>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=3)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "",
+      "description": "comment start state closes abruptly on greater-than",
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ],
+      "id": "seeded-comment-start-abrupt-close",
+      "initial_state": "Comment start state",
+      "input": ">after",
+      "tokens": [
+        "Comment(data=)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "comment start state replaces NULL before continuing",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "seeded-comment-start-null",
+      "initial_state": "Comment start state",
+      "input": "\u0000-->after",
+      "tokens": [
+        "Comment(data=seed�)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "",
+      "description": "comment start dash state closes abruptly on greater-than",
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ],
+      "id": "seeded-comment-start-dash-abrupt-close",
+      "initial_state": "Comment start dash state",
+      "input": ">after",
+      "tokens": [
+        "Comment(data=)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "comment start dash state appends the pending dash before NULL replacement",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "seeded-comment-start-dash-null",
+      "initial_state": "Comment start dash state",
+      "input": "\u0000-->after",
+      "tokens": [
+        "Comment(data=seed-�)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "comment body continuation appends text before the close",
+      "diagnostics": [],
+      "id": "seeded-comment-body-close",
+      "initial_state": "Comment state",
+      "input": " tail-->after",
+      "tokens": [
+        "Comment(data=seed tail)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "comment body continuation replaces NULL before closing",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "seeded-comment-body-null",
+      "initial_state": "Comment state",
+      "input": "\u0000-->after",
+      "tokens": [
+        "Comment(data=seed�)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed<",
+      "description": "less-than continuation preserves the already-appended less-than sign",
+      "diagnostics": [],
+      "id": "seeded-comment-less-than-text",
+      "initial_state": "Comment less-than sign state",
+      "input": "x-->after",
+      "tokens": [
+        "Comment(data=seed<x)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed<",
+      "description": "less-than continuation can remain in the less-than state",
+      "diagnostics": [],
+      "id": "seeded-comment-less-than-repeat",
+      "initial_state": "Comment less-than sign state",
+      "input": "<x-->after",
+      "tokens": [
+        "Comment(data=seed<<x)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed<!",
+      "description": "less-than bang continuation falls back to comment body on text",
+      "diagnostics": [],
+      "id": "seeded-comment-less-than-bang-text",
+      "initial_state": "Comment less-than sign bang state",
+      "input": "x-->after",
+      "tokens": [
+        "Comment(data=seed<!x)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed<!",
+      "description": "less-than bang dash continuation appends the pending dash via end-dash state",
+      "diagnostics": [],
+      "id": "seeded-comment-less-than-bang-dash-text",
+      "initial_state": "Comment less-than sign bang dash state",
+      "input": "x-->after",
+      "tokens": [
+        "Comment(data=seed<!-x)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed<!",
+      "description": "less-than bang dash dash reports nested-comment before end-state recovery",
+      "diagnostics": [
+        "nested-comment"
+      ],
+      "id": "seeded-comment-less-than-bang-dash-dash-nested",
+      "initial_state": "Comment less-than sign bang dash dash state",
+      "input": "x-->after",
+      "tokens": [
+        "Comment(data=seed<!--x)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "end dash continuation preserves the pending dash before text",
+      "diagnostics": [],
+      "id": "seeded-comment-end-dash-text",
+      "initial_state": "Comment end dash state",
+      "input": "x-->after",
+      "tokens": [
+        "Comment(data=seed-x)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "end dash continuation preserves dash before NULL replacement",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "seeded-comment-end-dash-null",
+      "initial_state": "Comment end dash state",
+      "input": "\u0000-->after",
+      "tokens": [
+        "Comment(data=seed-�)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "comment end continuation emits on greater-than",
+      "diagnostics": [],
+      "id": "seeded-comment-end-close",
+      "initial_state": "Comment end state",
+      "input": ">after",
+      "tokens": [
+        "Comment(data=seed)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "comment end continuation appends pending double dash before text",
+      "diagnostics": [],
+      "id": "seeded-comment-end-text",
+      "initial_state": "Comment end state",
+      "input": "x-->after",
+      "tokens": [
+        "Comment(data=seed--x)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "comment end continuation appends double dash before NULL replacement",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "seeded-comment-end-null",
+      "initial_state": "Comment end state",
+      "input": "\u0000-->after",
+      "tokens": [
+        "Comment(data=seed--�)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "comment end bang continuation emits with incorrectly-closed-comment",
+      "diagnostics": [
+        "incorrectly-closed-comment"
+      ],
+      "id": "seeded-comment-end-bang-close",
+      "initial_state": "Comment end bang state",
+      "input": ">after",
+      "tokens": [
+        "Comment(data=seed)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "comment end bang continuation appends --! before text",
+      "diagnostics": [],
+      "id": "seeded-comment-end-bang-text",
+      "initial_state": "Comment end bang state",
+      "input": "x-->after",
+      "tokens": [
+        "Comment(data=seed--!x)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "comment end bang continuation appends --! before EOF emission",
+      "diagnostics": [
+        "eof-in-comment"
+      ],
+      "id": "seeded-comment-end-bang-eof",
+      "initial_state": "Comment end bang state",
+      "input": "",
+      "tokens": [
+        "Comment(data=seed--!)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "bogus comment continuation emits on greater-than",
+      "diagnostics": [],
+      "id": "seeded-bogus-comment-close",
+      "initial_state": "Bogus comment state",
+      "input": " tail>after",
+      "tokens": [
+        "Comment(data=seed tail)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "bogus comment continuation replaces NULL before emission",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "seeded-bogus-comment-null",
+      "initial_state": "Bogus comment state",
+      "input": "\u0000>after",
+      "tokens": [
+        "Comment(data=seed�)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "bogus comment continuation emits on EOF without eof-in-comment",
+      "diagnostics": [],
+      "id": "seeded-bogus-comment-eof",
+      "initial_state": "Bogus comment state",
+      "input": " tail",
+      "tokens": [
+        "Comment(data=seed tail)",
+        "EOF"
+      ]
+    }
+  ],
+  "description": "Comment, bogus-comment, nested-comment, EOF, NULL replacement, end-bang, and seeded continuation boundary recovery.",
+  "format": "whatwg-html-tokenizer-comment-boundaries/v1"
+}
