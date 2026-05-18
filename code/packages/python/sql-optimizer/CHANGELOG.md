@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.12.0] - 2026-05-17
+
+### Changed
+
+- **`constant_folding._fold_expr` propagates `Like.escape`** — the constant
+  folder now copies the new `escape` field from `Like` / `NotLike` through
+  the rewrite so the `LIKE … ESCAPE 'c'` clause survives optimisation.
+
 ## [0.11.0] - 2026-05-15
 
 ### Fixed

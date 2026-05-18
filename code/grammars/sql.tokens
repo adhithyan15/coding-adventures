@@ -14,10 +14,16 @@
 # silently ignores the case_sensitive: directive, so this is cross-platform.
 case_sensitive: false
 
+# SQL strings do NOT use backslash escapes — '\\' is two literal backslashes,
+# 'a\_b' is the four characters a, \, _, b.  The only escape sequence is ''
+# (two single quotes) for an embedded apostrophe.  Tell the GrammarLexer to
+# leave string contents alone after stripping the surrounding quotes.
+escapes: none
+
 BLOB_HEX      = /[xX]'[0-9A-Fa-f]*'/ -> BLOB
 NAME          = /[a-zA-Z_][a-zA-Z0-9_]*/
 NUMBER        = /[0-9]+\.?[0-9]*/
-STRING_SQ     = /'(''|[^'\\]|\\.)*'/ -> STRING
+STRING_SQ     = /'(''|[^'])*'/ -> STRING
 QUOTED_ID     = /`[^`]+`/ -> NAME
 # Double-quoted identifiers: SQLite (and ANSI SQL) allow "name" to quote
 # identifiers that contain spaces, are reserved words, or are otherwise
@@ -80,6 +86,7 @@ keywords:
   IN
   BETWEEN
   LIKE
+  ESCAPE
   AS
   DISTINCT
   ALL

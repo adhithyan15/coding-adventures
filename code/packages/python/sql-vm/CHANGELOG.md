@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.28.0 — 2026-05-17
+
+### Added
+
+- **`like_match(value, pattern, escape=None)`** (`operators.py`) — the
+  matcher gained an optional `escape` parameter.  Pattern characters that
+  follow the escape character are treated as literal (wildcard meaning is
+  disabled).  The implementation tokenises the pattern into `star`, `one`,
+  and `lit` units before running a standard wildcard DP, collapsing each
+  escape+char pair into a single literal token.  Consecutive `%` wildcards
+  are collapsed to one star token for adversarial-pattern resilience.
+
+- **`Like.has_escape` dispatch** (`vm.py`, `_do_like`) — when the IR
+  instruction has `has_escape=True`, the handler pops a third stack value
+  (the escape character) before the pattern and value.  A NULL escape
+  yields a NULL result via three-valued logic; a non-single-character
+  escape raises `TypeMismatch`.
+
 ## 1.26.0 — 2026-05-17
 
 ### Fixed

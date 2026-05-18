@@ -855,6 +855,27 @@ def _do_in_list(ins: InList, st: _VmState) -> None:
 
 
 def _do_like(ins: Like, st: _VmState) -> None:
+    # Stack layout (top → bottom):
+    #     pattern, value         (when has_escape is False)
+    #     escape, pattern, value (when has_escape is True)
+    escape: str | None = None
+    if ins.has_escape:
+        escape_val = st.pop()
+        # NULL escape → result is NULL (three-valued logic).
+        if escape_val is None:
+            st.pop()  # pattern
+            st.pop()  # value
+            st.push(None)
+            return
+        if not isinstance(escape_val, str) or len(escape_val) != 1:
+            from .errors import TypeMismatch
+
+            raise TypeMismatch(
+                expected="single character",
+                got=sql_type_name(escape_val),
+                context="Like ESCAPE",
+            )
+        escape = escape_val
     pattern = st.pop()
     value = st.pop()
     if value is None or pattern is None:
@@ -868,7 +889,7 @@ def _do_like(ins: Like, st: _VmState) -> None:
             got=f"{sql_type_name(value)}, {sql_type_name(pattern)}",
             context="Like",
         )
-    matched = like_match(value, pattern)
+    matched = like_match(value, pattern, escape=escape)
     st.push(not matched if ins.negated else matched)
 
 

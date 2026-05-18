@@ -258,10 +258,10 @@ def _fold_expr(e: Expr) -> Expr:
                 operand=_fold_expr(op),
                 values=tuple(_fold_expr(v) for v in vs),
             )
-        case Like(operand=op, pattern=p):
-            return Like(operand=_fold_expr(op), pattern=p)
-        case NotLike(operand=op, pattern=p):
-            return NotLike(operand=_fold_expr(op), pattern=p)
+        case Like(operand=op, pattern=p, escape=e):
+            return Like(operand=_fold_expr(op), pattern=p, escape=e)
+        case NotLike(operand=op, pattern=p, escape=e):
+            return NotLike(operand=_fold_expr(op), pattern=p, escape=e)
         case CaseExpr(whens=whens, else_=else_):
             # Fold each branch, but don't try to short-circuit at plan time
             # — short-circuit evaluation of CASE is the VM's responsibility.
