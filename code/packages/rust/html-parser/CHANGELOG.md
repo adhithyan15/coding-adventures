@@ -8,6 +8,9 @@ documented in this file.
 ### Added
 - Initial HTML parser crate that consumes `coding-adventures-html-lexer` tokens
   and builds a `dom-core` document.
+- Generated WHATWG tree-insertion audit fixture over the html5lib
+  adoption-agency, table/foster-parenting, template, foreign-content fragment,
+  and HTML fragment-shell families, with a dedicated parser regression test.
 - Stack-of-open-elements tree construction seed with void element handling,
   adjacent text merging, simple implied end tags, and unmatched end-tag
   diagnostics.
