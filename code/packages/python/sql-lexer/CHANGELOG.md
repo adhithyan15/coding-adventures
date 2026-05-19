@@ -2,6 +2,15 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.21.0] - 2026-05-19
+
+### Added
+
+- **`MATERIALIZED` keyword** (`sql.tokens`, `_grammar.py`) — added to
+  the keyword list so the parser can recognise the SQLite 3.35+ CTE
+  optimizer hint ``WITH cte AS [NOT] MATERIALIZED (…)``.  The lexer's
+  generated cache was regenerated via ``grammar-tools compile-tokens``.
+
 ## [0.20.0] - 2026-05-18
 
 ### Added

@@ -2,6 +2,26 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.27.0] - 2026-05-19
+
+### Added
+
+- **CTE ``MATERIALIZED`` / ``NOT MATERIALIZED`` hint** (`sql.grammar`,
+  `_grammar.py`, `_tokens.py`) — the ``cte_def`` rule now accepts an
+  optional ``[ NOT ] MATERIALIZED`` between ``AS`` and the opening
+  parenthesis::
+
+      cte_def = NAME [ "(" NAME { "," NAME } ")" ] "AS"
+                [ [ "NOT" ] "MATERIALIZED" ]
+                "(" query_stmt ")" ;
+
+  This is SQLite 3.35+ syntax: the hint tells SQLite's planner whether
+  to materialise the CTE result set or inline it.  Mini-sqlite has no
+  cost-based optimizer, so the keywords are parsed and silently
+  ignored at the adapter level — applications using them for
+  portability still parse and execute correctly.  Five new parser
+  tests in ``TestCteMaterializedHint`` lock the grammar acceptance.
+
 ## [0.26.0] - 2026-05-19
 
 ### Added

@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.51.0] - 2026-05-19
+
+### Added
+
+- **CTE ``MATERIALIZED`` / ``NOT MATERIALIZED`` hint** parser support
+  (via ``sql-lexer 0.21.0``, ``sql-parser 0.27.0``).  SQLite 3.35+
+  optimizer hint::
+
+      WITH cte AS MATERIALIZED (SELECT 1 AS x) SELECT x FROM cte;
+      WITH cte AS NOT MATERIALIZED (SELECT 1 AS x) SELECT x FROM cte;
+      WITH RECURSIVE n(i) AS MATERIALIZED
+          (SELECT 1 UNION ALL SELECT i+1 FROM n WHERE i<5)
+          SELECT * FROM n;
+
+  Mini-sqlite has no cost-based optimizer, so the hint is silently
+  ignored at the adapter level (no code changes needed — the adapter
+  already only pulls NAME, optional column aliases, and ``query_stmt``
+  from the CTE node).
+
+9 new oracle tests in ``test_tier3_cte_materialized.py`` pin
+end-to-end equivalence with real ``sqlite3`` for the hint applied to
+simple CTEs, CTEs with column aliases, recursive CTEs, and multi-CTE
+queries with mixed hints.
+
 ## [1.50.0] - 2026-05-19
 
 ### Added
