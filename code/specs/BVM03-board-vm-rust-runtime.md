@@ -142,9 +142,12 @@ board ports decide when a concrete backend can actually drive a WiFi or
 Ethernet module.
 `network.tcp.connected` is the first socket-control follow-up: it accepts an
 existing TCP handle and returns a boolean connection status without consuming
-that handle. `network.udp.available` mirrors that bounded control shape for UDP:
-it accepts an existing UDP handle and returns whether the backend has a packet
-or byte ready to read without consuming the handle.
+that handle. `network.tcp.available` extends the same bounded control shape for
+read readiness: it accepts an existing TCP handle and returns whether the
+backend has at least one byte ready to read without consuming the handle.
+`network.udp.available` mirrors that bounded control shape for UDP: it accepts
+an existing UDP handle and returns whether the backend has a packet or byte
+ready to read without consuming the handle.
 
 WiFi association control uses the same bounded data path as storage and bus
 transfers. `network.wifi.associate` accepts an interface id, SSID bytes, and
@@ -186,6 +189,7 @@ CALL_U8 0x45 -> network.dns.resolve
 CALL_U8 0x46 -> network.tcp.connected
 CALL_U8 0x47 -> network.udp.available
 CALL_U8 0x48 -> network.dns.set_server
+CALL_U8 0x49 -> network.tcp.available
 ```
 
 Each handler:
