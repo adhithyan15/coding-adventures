@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add multi-corner AC frequency sweeps with `ac_sweep_corners`, returning the
+  same frequency grid evaluated under each named corner.
 - Add multi-corner DC source sweeps with `dc_sweep_corners`, returning the same
   source-value trace evaluated under each named corner.
 - Add multi-corner DC operating point sweeps with named corner specs and

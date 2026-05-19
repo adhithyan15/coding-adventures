@@ -4,6 +4,9 @@
 
 ### Added
 
+- **Multi-corner AC frequency sweeps** — `ac_sweep_corners` runs the same AC
+  frequency grid at each named corner and returns per-corner phasor responses.
+
 - **Multi-corner DC source sweeps** — `dc_sweep_corners` runs the same
   independent-source sweep at each named corner and returns per-corner
   `.DC` traces.

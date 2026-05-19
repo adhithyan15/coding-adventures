@@ -1314,6 +1314,17 @@ pub struct CornerDcSweepResult {
     pub points: Vec<CornerDcSweepPoint>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerAcSweepPoint {
+    pub corner_name: String,
+    pub points: Vec<AcPoint>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerAcSweepResult {
+    pub points: Vec<CornerAcSweepPoint>,
+}
+
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub enum McDistribution {
     Gaussian,
@@ -2168,6 +2179,24 @@ pub fn ac_sweep(
         frequency *= ratio;
     }
     Ok(points)
+}
+
+pub fn ac_sweep_corners(
+    circuit: &Circuit,
+    start_hz: f64,
+    stop_hz: f64,
+    points_per_decade: usize,
+    corners: &[CornerSpec],
+) -> Result<CornerAcSweepResult, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerAcSweepPoint {
+            corner_name: corner.name.clone(),
+            points: ac_sweep(&corner_circuit, start_hz, stop_hz, points_per_decade)?,
+        });
+    }
+    Ok(CornerAcSweepResult { points })
 }
 
 pub fn s_parameters(

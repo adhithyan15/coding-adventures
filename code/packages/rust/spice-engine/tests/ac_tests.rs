@@ -1,7 +1,7 @@
 use spice_engine::{
-    ac_sweep, s_parameters, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource,
-    Element, Inductor, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SpiceError, Vcvs,
-    VoltageSource,
+    ac_sweep, ac_sweep_corners, s_parameters, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit,
+    CornerOverride, CornerSpec, CurrentSource, Element, Inductor, Mosfet, MosfetLevel1Params,
+    MosfetType, Resistor, SpiceError, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -59,6 +59,55 @@ fn ac_rc_low_pass_has_minus_three_db_corner() {
     let out = points[0].voltage("out").unwrap();
     assert_close(out.abs(), 1.0 / 2.0_f64.sqrt());
     assert_close(out.phase(), -std::f64::consts::FRAC_PI_4);
+}
+
+#[test]
+fn ac_sweep_corners_runs_frequency_sweeps_per_corner() {
+    let resistance = 1_000.0;
+    let capacitance = 1.0e-6;
+    let corner = 1.0 / (2.0 * std::f64::consts::PI * resistance * capacitance);
+
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "in", "out", resistance,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new(
+        "C1",
+        "out",
+        "0",
+        capacitance,
+    )));
+
+    let result = ac_sweep_corners(
+        &circuit,
+        corner,
+        corner,
+        10,
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "r-fast",
+                vec![CornerOverride::new("R1", "resistance", 500.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "r-fast");
+    assert_eq!(result.points[0].points.len(), 1);
+    assert_close(result.points[0].points[0].frequency_hz, corner);
+    assert_close(
+        result.points[0].points[0].voltage("out").unwrap().abs(),
+        1.0 / 2.0_f64.sqrt(),
+    );
+    assert_close(
+        result.points[1].points[0].voltage("out").unwrap().abs(),
+        1.0 / 1.25_f64.sqrt(),
+    );
 }
 
 #[test]
