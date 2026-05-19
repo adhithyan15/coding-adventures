@@ -8,6 +8,17 @@ All notable changes to this project will be documented in this file.
 
 - Added scalar `constant` node compilation through `LOAD_CONST`.
 - Added `runNeuralBytecodeForwardWithTrace` for instruction-level VM traces.
+
+### Changed (transparent via dep)
+
+- **MX08 Phase 3 (verification)**: on Node, the `matrix` package's
+  `CpuMatrixBackend` now delegates to the Rust `matrix-cpu` executor
+  via `@coding-adventures/matrix-rust-napi` (MX08 Phase 2, PR #3571).
+  `neural-graph-vm`'s `TypeScriptMatrixBackend` reference adapter picks
+  up the speedup transparently — **no source change in this package**.
+  Verified: all 16 tests pass after the MX08 Phase 2 refactor.  Browser
+  builds keep the pure-TS implementation per the new package.json
+  `exports` conditional.
 - Added XOR bytecode coverage through the neural-network helper graph.
 - Added NN01 matrix plan lowering and a swappable `MatrixBackend` interface.
 - Added `TypeScriptMatrixBackend` as the reference CPU adapter for the existing
