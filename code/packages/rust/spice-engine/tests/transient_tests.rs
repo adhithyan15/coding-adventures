@@ -1,7 +1,7 @@
 use spice_engine::{
-    estimate_period, transient, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element,
-    ExpWaveform, Inductor, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError,
-    VoltageSource, Waveform,
+    estimate_period, pss_residual, transient, Capacitor, Cccs, Ccvs, Circuit, CurrentSource,
+    Element, ExpWaveform, Inductor, PssResidualResult, PulseWaveform, PwlWaveform, Resistor,
+    SinWaveform, SpiceError, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -99,6 +99,41 @@ fn estimate_period_rejects_nonperiodic_or_incommensurate_sources() {
         )),
     )));
     assert!(estimate_period(&incommensurate).is_none());
+}
+
+#[test]
+fn pss_residual_reports_one_period_node_closure() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, 1_000.0)),
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "0", 1_000.0)));
+
+    let result = pss_residual(&circuit, 32).unwrap().unwrap();
+
+    let _: PssResidualResult = result.clone();
+    assert_close(result.period_seconds, 1.0e-3);
+    assert_close(result.time_step_seconds, 1.0e-3 / 32.0);
+    assert_close(*result.node_residuals.get("in").unwrap(), 0.0);
+    assert_close(result.max_abs_residual, 0.0);
+}
+
+#[test]
+fn pss_residual_requires_periodic_sources() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Pwl(PwlWaveform::new(vec![(0.0, 0.0), (1.0e-3, 1.0)])),
+    )));
+
+    assert!(pss_residual(&circuit, 32).unwrap().is_none());
 }
 
 #[test]

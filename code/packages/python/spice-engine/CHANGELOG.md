@@ -4,6 +4,10 @@
 
 ### Added
 
+- **PSS period-closure residual** — `pss_residual` runs one estimated source
+  period and reports node-voltage closure residuals as the next foothold for
+  shooting-Newton periodic steady-state analysis.
+
 - **PSS source-period estimation** — `waveform_period` reports periodic `SIN`
   and `PULSE` source periods, and `estimate_period` derives a harmonic common
   period across independent source waveforms as a foothold for shooting-Newton

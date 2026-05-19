@@ -106,10 +106,10 @@ IC parameters for C/L; AC phasor specs for V/I sources.
 
 ### What is in flight
 
-- PSS source-period estimation across Python, TypeScript, and Rust SPICE
-  engines: periodic `SIN` and `PULSE` independent-source waveforms expose their
-  period, and circuit-level helpers derive a harmonic common source period as
-  the first foothold for shooting-Newton periodic steady-state analysis.
+- PSS period-closure residuals across Python, TypeScript, and Rust SPICE
+  engines: one-period transient runs now report node-voltage residuals against
+  the initial source phase as the next foothold for shooting-Newton periodic
+  steady-state analysis.
 
 ---
 
@@ -131,7 +131,7 @@ and the sparse real solver path landed in PR #3391.
 | Feature | Design notes |
 |---|---|
 | **S-parameter extraction** | Two-port network characterisation. Run AC sweep, compute Y-parameters from node voltages and port currents, convert to S-parameters. Shipped in PR #3490. |
-| **Periodic steady-state (PSS)** | RF / oscillator analysis. Shooting-Newton method: find the initial condition `x(0)` such that `x(T) = x(0)`. Source-period estimation for periodic `SIN` / `PULSE` waveforms is in flight as the first foothold. |
+| **Periodic steady-state (PSS)** | RF / oscillator analysis. Shooting-Newton method: find the initial condition `x(0)` such that `x(T) = x(0)`. Source-period estimation for periodic `SIN` / `PULSE` waveforms shipped in PR #3524; one-period node-closure residual helpers are in flight as the next foothold. |
 | **Multi-corner parallel sweep** | Run the same analysis at N PVT corners in parallel goroutines / subprocesses. Mostly an orchestration problem once the core engine is solid. DC operating-point corners shipped in PR #3495; DC source sweep corners shipped in PR #3501; AC frequency sweep corners shipped in PR #3511; transfer-function corners shipped in PR #3516. |
 | **Mixed-signal coupling with `hardware-vm`** | AMS simulation — digital events feed into analog SPICE nodes and vice versa. Long-range project; `hardware-vm.md` spec describes the interface. |
 | **Verilog-A compact models** | Custom device models. Requires a Verilog-A parser (`code/specs/verilog-a-parser.md` is referenced but not written). |

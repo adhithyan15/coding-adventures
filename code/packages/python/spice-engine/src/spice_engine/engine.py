@@ -320,6 +320,17 @@ class TransientResult:
 
 
 @dataclass
+class PssResidualResult:
+    """One-period node-voltage closure residual for a periodic source period."""
+
+    period: float
+    time_step: float
+    node_residuals: dict[str, float]
+    max_abs_residual: float
+    converged: bool
+
+
+@dataclass
 class AcPoint:
     """Phasor voltages at a single frequency point.
 
@@ -2258,6 +2269,60 @@ def transient(
 
     return TransientResult(points=points, converged=True,
                            method=method, steps_rejected=steps_rejected)
+
+
+def pss_residual(
+    circuit: Circuit,
+    *,
+    steps_per_period: int = 64,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> PssResidualResult | None:
+    """Run one estimated period and report the node-voltage closure residual.
+
+    This is a small PSS foothold: it does not solve the shooting-Newton system,
+    but it exposes the residual that such a solver must drive toward zero.
+    """
+    period = estimate_period(circuit)
+    if period is None:
+        return None
+    if steps_per_period <= 0:
+        raise ValueError("steps_per_period must be positive")
+
+    time_step = period / steps_per_period
+    result = transient(
+        circuit,
+        t_stop=period,
+        t_step=time_step,
+        method=method,
+        max_iterations=max_iterations,
+        tol=tol,
+    )
+    if len(result.points) < 2:
+        return PssResidualResult(
+            period=period,
+            time_step=time_step,
+            node_residuals={},
+            max_abs_residual=0.0,
+            converged=False,
+        )
+
+    start = result.points[0].node_voltages
+    end = result.points[-1].node_voltages
+    nodes = set(start) | set(end)
+    residuals = {
+        node: end.get(node, 0.0) - start.get(node, 0.0)
+        for node in sorted(nodes)
+    }
+    max_abs = max((abs(value) for value in residuals.values()), default=0.0)
+    return PssResidualResult(
+        period=period,
+        time_step=time_step,
+        node_residuals=residuals,
+        max_abs_residual=max_abs,
+        converged=result.converged,
+    )
 
 
 # ---------------------------------------------------------------------------

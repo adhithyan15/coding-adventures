@@ -1666,6 +1666,14 @@ impl TransientPoint {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct PssResidualResult {
+    pub period_seconds: f64,
+    pub time_step_seconds: f64,
+    pub node_residuals: BTreeMap<String, f64>,
+    pub max_abs_residual: f64,
+}
+
 impl DcResult {
     pub fn voltage(&self, node: &str) -> Option<f64> {
         if is_ground(node) {
@@ -2633,6 +2641,70 @@ pub fn transient(
         time += time_step;
     }
     Ok(points)
+}
+
+pub fn pss_residual(
+    circuit: &Circuit,
+    steps_per_period: usize,
+) -> Result<Option<PssResidualResult>, SpiceError> {
+    let Some(period) = estimate_period(circuit) else {
+        return Ok(None);
+    };
+    if steps_per_period == 0 {
+        return Err(SpiceError::InvalidElement {
+            name: "pss_residual".to_string(),
+            reason: "steps per period must be positive".to_string(),
+        });
+    }
+
+    let time_step = period / steps_per_period as f64;
+    validate_reactive_elements(circuit)?;
+    let initial_solution = solve_linear_circuit(
+        circuit,
+        &initial_capacitor_states(circuit, time_step),
+        &initial_inductor_states(circuit, time_step),
+        Some(0.0),
+    )?;
+    let points = transient(circuit, time_step, period)?;
+    let Some(last) = points.last() else {
+        return Ok(Some(PssResidualResult {
+            period_seconds: period,
+            time_step_seconds: time_step,
+            node_residuals: BTreeMap::new(),
+            max_abs_residual: 0.0,
+        }));
+    };
+
+    let mut nodes: Vec<String> = initial_solution
+        .node_voltages
+        .keys()
+        .chain(last.node_voltages.keys())
+        .cloned()
+        .collect();
+    nodes.sort();
+    nodes.dedup();
+
+    let mut node_residuals = BTreeMap::new();
+    let mut max_abs_residual = 0.0;
+    for node in nodes {
+        let residual = last.node_voltages.get(&node).copied().unwrap_or(0.0)
+            - initial_solution
+                .node_voltages
+                .get(&node)
+                .copied()
+                .unwrap_or(0.0);
+        if residual.abs() > max_abs_residual {
+            max_abs_residual = residual.abs();
+        }
+        node_residuals.insert(node, residual);
+    }
+
+    Ok(Some(PssResidualResult {
+        period_seconds: period,
+        time_step_seconds: time_step,
+        node_residuals,
+        max_abs_residual,
+    }))
 }
 
 fn validate_sweep(source_name: &str, start: f64, stop: f64, step: f64) -> Result<(), SpiceError> {
