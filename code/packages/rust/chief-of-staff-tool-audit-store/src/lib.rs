@@ -17,13 +17,16 @@ use chief_of_staff_tool_api::{
 use coding_adventures_json_serializer::serialize as json_serialize;
 use coding_adventures_json_value::{parse as json_parse, JsonNumber, JsonValue};
 use storage_core::{
-    StorageBackend, StorageError, StorageListOptions, StoragePutInput, StorageRecord,
+    Revision, StorageBackend, StorageError, StorageListOptions, StoragePutInput, StorageRecord,
     StorageRecordInventorySummary,
 };
 
 const AUDIT_NAMESPACE: &str = "chief.tool.audit";
 const AUDIT_PREFIX: &str = "calls/";
 const AUDIT_CONTENT_TYPE: &str = "application/vnd.coding-adventures.tool-audit+json";
+const CHECKPOINT_PREFIX: &str = "checkpoints/";
+const CHECKPOINT_CONTENT_TYPE: &str =
+    "application/vnd.coding-adventures.tool-audit-checkpoint+json";
 
 /// Storage-backed D18D audit record store.
 pub struct ToolAuditStore<S> {
@@ -153,6 +156,59 @@ where
         })
     }
 
+    /// Fetch a named replay checkpoint for a supervisor or reader.
+    pub fn fetch_checkpoint(
+        &self,
+        name: &str,
+    ) -> Result<Option<ToolAuditStoredCheckpoint>, StorageError> {
+        self.backend.initialize()?;
+        self.backend
+            .get(AUDIT_NAMESPACE, &checkpoint_key(name)?)?
+            .map(|record| decode_stored_checkpoint(&record))
+            .transpose()
+    }
+
+    /// Persist a named replay checkpoint for a supervisor or reader.
+    pub fn save_checkpoint(
+        &self,
+        name: &str,
+        checkpoint: ToolAuditReadCheckpoint,
+    ) -> Result<ToolAuditStoredCheckpoint, StorageError> {
+        self.backend.initialize()?;
+        let record = self
+            .backend
+            .put(checkpoint_put_input(name, &checkpoint, None)?)?;
+        decode_stored_checkpoint(&record)
+    }
+
+    /// Persist a named checkpoint only when it moves the reader forward.
+    pub fn advance_checkpoint(
+        &self,
+        name: &str,
+        checkpoint: ToolAuditReadCheckpoint,
+    ) -> Result<ToolAuditStoredCheckpoint, StorageError> {
+        self.backend.initialize()?;
+        let key = checkpoint_key(name)?;
+        let existing = self.backend.get(AUDIT_NAMESPACE, &key)?;
+        if let Some(existing) = existing {
+            let stored = decode_stored_checkpoint(&existing)?;
+            if !checkpoint.is_after(&stored.checkpoint) {
+                return Ok(stored);
+            }
+            let record = self.backend.put(checkpoint_put_input(
+                name,
+                &checkpoint,
+                Some(existing.revision.clone()),
+            )?)?;
+            return decode_stored_checkpoint(&record);
+        }
+
+        let record = self
+            .backend
+            .put(checkpoint_put_input(name, &checkpoint, None)?)?;
+        decode_stored_checkpoint(&record)
+    }
+
     /// Replay queried audit rows into another D18D audit sink.
     pub fn replay_audits<T>(
         &self,
@@ -260,6 +316,17 @@ impl ToolAuditCheckpointPage {
     pub fn len(&self) -> usize {
         self.records.len()
     }
+}
+
+/// Durable named replay checkpoint stored beside audit rows.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolAuditStoredCheckpoint {
+    /// Reader or supervisor name that owns the checkpoint.
+    pub name: String,
+    /// Last observed audit checkpoint for the reader.
+    pub checkpoint: ToolAuditReadCheckpoint,
+    /// Storage timestamp for the checkpoint record.
+    pub updated_at: u64,
 }
 
 /// Payload-free summary for a batch audit write.
@@ -494,6 +561,39 @@ fn audit_key(call_id: &str) -> String {
     format!("{AUDIT_PREFIX}{call_id}.json")
 }
 
+fn checkpoint_key(name: &str) -> Result<String, StorageError> {
+    let key = format!("{CHECKPOINT_PREFIX}{name}.json");
+    if name.is_empty() {
+        return Err(StorageError::Validation {
+            field: "checkpoint_name".to_string(),
+            message: "must not be empty".to_string(),
+        });
+    }
+    StoragePutInput::new(
+        AUDIT_NAMESPACE,
+        key.clone(),
+        CHECKPOINT_CONTENT_TYPE,
+        JsonValue::Object(Vec::new()),
+        Vec::new(),
+    )?;
+    Ok(key)
+}
+
+fn checkpoint_put_input(
+    name: &str,
+    checkpoint: &ToolAuditReadCheckpoint,
+    revision: Option<Revision>,
+) -> Result<StoragePutInput, StorageError> {
+    Ok(StoragePutInput::new(
+        AUDIT_NAMESPACE,
+        checkpoint_key(name)?,
+        CHECKPOINT_CONTENT_TYPE,
+        checkpoint_metadata(name, checkpoint),
+        json_to_body(&checkpoint_to_json(name, checkpoint))?,
+    )?
+    .with_if_revision(revision))
+}
+
 fn audit_checkpoint_for(record: &ToolAuditRecord) -> ToolAuditReadCheckpoint {
     ToolAuditReadCheckpoint {
         timestamp_ms: audit_watermark_ms(record),
@@ -531,6 +631,26 @@ fn decode_audit_record(record: &StorageRecord) -> Result<ToolAuditRecord, Storag
     audit_record_from_json(&json)
 }
 
+fn decode_stored_checkpoint(
+    record: &StorageRecord,
+) -> Result<ToolAuditStoredCheckpoint, StorageError> {
+    let text = std::str::from_utf8(&record.body).map_err(|error| StorageError::Backend {
+        message: format!("tool audit checkpoint body was not utf-8: {error}"),
+    })?;
+    let json = json_parse(text).map_err(|error| StorageError::Backend {
+        message: format!("tool audit checkpoint body was not json: {error}"),
+    })?;
+    let object = expect_object(&json, "$")?;
+    Ok(ToolAuditStoredCheckpoint {
+        name: required_string(object, "name")?,
+        checkpoint: ToolAuditReadCheckpoint::new(
+            required_u64(object, "timestamp_ms")?,
+            required_string(object, "call_id")?,
+        ),
+        updated_at: record.updated_at,
+    })
+}
+
 fn audit_metadata(record: &ToolAuditRecord) -> JsonValue {
     JsonValue::Object(vec![
         string_field("call_id", &record.call_id),
@@ -549,6 +669,14 @@ fn audit_metadata(record: &ToolAuditRecord) -> JsonValue {
     ])
 }
 
+fn checkpoint_metadata(name: &str, checkpoint: &ToolAuditReadCheckpoint) -> JsonValue {
+    JsonValue::Object(vec![
+        string_field("name", name),
+        u64_field("timestamp_ms", checkpoint.timestamp_ms),
+        string_field("call_id", &checkpoint.call_id),
+    ])
+}
+
 fn audit_record_to_json(record: &ToolAuditRecord) -> JsonValue {
     JsonValue::Object(vec![
         string_field("call_id", &record.call_id),
@@ -563,6 +691,14 @@ fn audit_record_to_json(record: &ToolAuditRecord) -> JsonValue {
             "result_summary".to_string(),
             result_summary_to_json(&record.result_summary),
         ),
+    ])
+}
+
+fn checkpoint_to_json(name: &str, checkpoint: &ToolAuditReadCheckpoint) -> JsonValue {
+    JsonValue::Object(vec![
+        string_field("name", name),
+        u64_field("timestamp_ms", checkpoint.timestamp_ms),
+        string_field("call_id", &checkpoint.call_id),
     ])
 }
 
@@ -620,6 +756,13 @@ fn bool_field(name: &str, value: bool) -> (String, JsonValue) {
 }
 
 fn usize_field(name: &str, value: usize) -> (String, JsonValue) {
+    (
+        name.to_string(),
+        JsonValue::Number(JsonNumber::Integer(value as i64)),
+    )
+}
+
+fn u64_field(name: &str, value: u64) -> (String, JsonValue) {
     (
         name.to_string(),
         JsonValue::Number(JsonNumber::Integer(value as i64)),
@@ -702,6 +845,11 @@ fn required_usize(
 ) -> Result<usize, StorageError> {
     optional_u64(object, field)?
         .map(|value| value as usize)
+        .ok_or_else(|| invalid_json(field, "must be a non-negative integer"))
+}
+
+fn required_u64(object: &[(String, JsonValue)], field: &'static str) -> Result<u64, StorageError> {
+    optional_u64(object, field)?
         .ok_or_else(|| invalid_json(field, "must be a non-negative integer"))
 }
 
@@ -953,6 +1101,122 @@ mod tests {
         assert_eq!(
             page.next_checkpoint,
             ToolAuditReadCheckpoint::new(120, "call_b")
+        );
+    }
+
+    #[test]
+    fn named_checkpoints_are_persisted_and_resumed() {
+        let root = temp_root("checkpoint-state");
+
+        {
+            let store = ToolAuditStore::new(LocalFolderStorageBackend::new(&root));
+            let stored = store
+                .save_checkpoint(
+                    "supervisors/weather",
+                    ToolAuditReadCheckpoint::new(151, "call_2"),
+                )
+                .unwrap();
+
+            assert_eq!(stored.name, "supervisors/weather");
+            assert_eq!(
+                stored.checkpoint,
+                ToolAuditReadCheckpoint::new(151, "call_2")
+            );
+        }
+
+        {
+            let store = ToolAuditStore::new(LocalFolderStorageBackend::new(&root));
+            let stored = store
+                .fetch_checkpoint("supervisors/weather")
+                .unwrap()
+                .expect("checkpoint should survive backend restart");
+
+            assert_eq!(stored.name, "supervisors/weather");
+            assert_eq!(
+                stored.checkpoint,
+                ToolAuditReadCheckpoint::new(151, "call_2")
+            );
+        }
+
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn advancing_checkpoints_never_regresses_reader_state() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let first = store
+            .advance_checkpoint("supervisor", ToolAuditReadCheckpoint::new(151, "call_2"))
+            .unwrap();
+        let older = store
+            .advance_checkpoint("supervisor", ToolAuditReadCheckpoint::new(120, "call_1"))
+            .unwrap();
+        let newer = store
+            .advance_checkpoint("supervisor", ToolAuditReadCheckpoint::new(151, "call_3"))
+            .unwrap();
+
+        assert_eq!(
+            first.checkpoint,
+            ToolAuditReadCheckpoint::new(151, "call_2")
+        );
+        assert_eq!(older.checkpoint, first.checkpoint);
+        assert_eq!(
+            newer.checkpoint,
+            ToolAuditReadCheckpoint::new(151, "call_3")
+        );
+        assert_eq!(
+            store
+                .fetch_checkpoint("supervisor")
+                .unwrap()
+                .unwrap()
+                .checkpoint,
+            ToolAuditReadCheckpoint::new(151, "call_3")
+        );
+    }
+
+    #[test]
+    fn stored_checkpoints_resume_incremental_audit_pages() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                failed_record("call_2"),
+                sample_record("call_1"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+
+        let initial = store
+            .fetch_checkpoint("supervisor")
+            .unwrap()
+            .map(|stored| stored.checkpoint)
+            .unwrap_or_else(ToolAuditReadCheckpoint::beginning);
+        let first = store
+            .query_audits_after_checkpoint(&initial, Some(2))
+            .unwrap();
+        assert_eq!(
+            first
+                .records
+                .iter()
+                .map(|record| record.call_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["call_1", "call_3"]
+        );
+
+        store
+            .advance_checkpoint("supervisor", first.next_checkpoint.clone())
+            .unwrap();
+        let resumed = store
+            .fetch_checkpoint("supervisor")
+            .unwrap()
+            .expect("checkpoint should be available for the next supervisor tick");
+        let second = store
+            .query_audits_after_checkpoint(&resumed.checkpoint, Some(2))
+            .unwrap();
+
+        assert_eq!(second.len(), 1);
+        assert_eq!(second.records[0].call_id, "call_2");
+        assert_eq!(
+            second.next_checkpoint,
+            ToolAuditReadCheckpoint::new(151, "call_2")
         );
     }
 

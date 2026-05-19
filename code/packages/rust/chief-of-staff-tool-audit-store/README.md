@@ -17,6 +17,8 @@ The crate keeps the boundary narrow:
   with call-id-level storage failures
 - supervisors can read deterministic checkpoint pages to resume audit replay
   after restarts without reprocessing the whole store
+- supervisors can persist named replay checkpoints through the same D18A
+  storage backend and advance them without regressing reader state
 
 ## Development
 
