@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.47.0] - 2026-05-19
+
+### Added
+
+- **SQLite conditional-upsert (`ON CONFLICT … DO UPDATE SET … WHERE`)**
+  fully supported end-to-end (via `sql-parser 0.26.0`,
+  `sql-planner 0.32.0`, `sql-codegen 1.30.0`, `sql-vm 1.31.0`).  When the
+  WHERE predicate evaluates false (or NULL) the row is left untouched —
+  semantically equivalent to `DO NOTHING` for that single conflicting
+  row.  Predicates may freely reference `EXCLUDED.col`, bare existing-row
+  column names, and arbitrary compound boolean expressions::
+
+      INSERT INTO inventory(id, qty) VALUES (1, 5)
+      ON CONFLICT(id) DO UPDATE SET qty = excluded.qty
+      WHERE excluded.qty > qty
+
+  Ten oracle-verified tests in `test_tier10_upsert.py::TestUpsertConditionalWhere`
+  cover both branches (predicate true / false / null), single- and
+  multi-row scenarios, EXCLUDED-only refs, existing-only refs, compound
+  predicates, NULL-as-false, and accumulators with a cap.
+
+### Fixed
+
+- **`EXCLUDED` pseudo-table name is now case-insensitive**
+  (`adapter._rewrite_excluded`).  ``excluded.v`` and ``Excluded.v`` now
+  rewrite to ``ExcludedColumn`` the same as ``EXCLUDED.v``, matching
+  SQLite's case-insensitive identifier semantics.  The helper also
+  descends through `UnaryExpr` so EXCLUDED references inside `NOT …` or
+  unary-minus expressions in WHERE predicates are rewritten correctly.
+
 ## [1.46.0] - 2026-05-18
 
 ### Added

@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.31.0 — 2026-05-19
+
+### Added
+
+- **SQLite conditional-upsert support** (`vm.py::_upsert_apply`).  Before
+  evaluating the SET assignments, the VM now evaluates the
+  pre-compiled `UpsertSpec.where_instructions` (if non-empty) with
+  EXCLUDED and the existing row bound.  When the predicate evaluates
+  falsy (False, 0, 0.0, NULL — same rules as `JumpIfFalse`), the upsert
+  is silently skipped — semantically equivalent to ``DO NOTHING`` for
+  that one row.  The fast paths for cursor cleanup are honoured on the
+  early-exit branch.
+
 ## 1.30.0 — 2026-05-18
 
 ### Added

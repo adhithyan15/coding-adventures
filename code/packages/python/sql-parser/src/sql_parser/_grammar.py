@@ -526,6 +526,11 @@ PARSER_GRAMMAR = ParserGrammar(
                                     RuleReference(name='upsert_assignment', is_token=False),
                                 ]),
                             ),
+                            # Optional trailing WHERE predicate (SQLite
+                            # conditional-upsert syntax).
+                            Optional(element=
+                                RuleReference(name='where_clause', is_token=False),
+                            ),
                         ]),
                     ]),
                 ),

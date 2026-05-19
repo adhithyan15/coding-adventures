@@ -383,3 +383,193 @@ class TestUpsertVsInsertConflict:
 
         assert update_rows == [("new",)]
         assert nothing_rows == [("original",)]
+
+
+# ---------------------------------------------------------------------------
+# TestUpsertConditionalWhere — SQLite conditional-upsert (WHERE clause)
+# ---------------------------------------------------------------------------
+
+
+class TestUpsertConditionalWhere:
+    """``ON CONFLICT … DO UPDATE SET … WHERE pred`` — SQLite 3.24+ extension.
+
+    The WHERE predicate is evaluated against the (EXCLUDED, existing) row
+    pair when a conflict fires.  If true, the SET assignments are applied;
+    if false (or NULL), the conflicting row is left untouched — semantically
+    equivalent to DO NOTHING for that single row.
+
+    All tests are oracle-verified against real sqlite3 so we know we match
+    SQLite's exact semantics (which is the whole point of being a compliant
+    backend).
+    """
+
+    def test_where_true_applies_update(self) -> None:
+        """``WHERE excluded.v > v`` with a strictly larger excluded value updates."""
+        setup = [
+            "CREATE TABLE t (id INTEGER PRIMARY KEY, v INTEGER)",
+            "INSERT INTO t VALUES (1, 10)",
+            "INSERT INTO t VALUES (1, 99) "
+            "ON CONFLICT(id) DO UPDATE SET v = excluded.v WHERE excluded.v > v",
+        ]
+        mini, real = _both(setup, "SELECT id, v FROM t")
+        assert mini == real
+        assert mini == [(1, 99)]
+
+    def test_where_false_skips_update(self) -> None:
+        """``WHERE excluded.v > v`` with a smaller excluded value leaves row alone."""
+        setup = [
+            "CREATE TABLE t (id INTEGER PRIMARY KEY, v INTEGER)",
+            "INSERT INTO t VALUES (1, 10)",
+            "INSERT INTO t VALUES (1, 5) "
+            "ON CONFLICT(id) DO UPDATE SET v = excluded.v WHERE excluded.v > v",
+        ]
+        mini, real = _both(setup, "SELECT id, v FROM t")
+        assert mini == real
+        assert mini == [(1, 10)]  # not 5 — predicate was false
+
+    def test_where_equal_is_false(self) -> None:
+        """``WHERE excluded.v > v`` with equal values is false (strict >)."""
+        setup = [
+            "CREATE TABLE t (id INTEGER PRIMARY KEY, v INTEGER)",
+            "INSERT INTO t VALUES (1, 7)",
+            "INSERT INTO t VALUES (1, 7) "
+            "ON CONFLICT(id) DO UPDATE SET v = excluded.v + 1 WHERE excluded.v > v",
+        ]
+        mini, real = _both(setup, "SELECT id, v FROM t")
+        assert mini == real
+        assert mini == [(1, 7)]
+
+    def test_where_no_conflict_inserts(self) -> None:
+        """When the INSERT does NOT conflict, the WHERE clause is irrelevant."""
+        setup = [
+            "CREATE TABLE t (id INTEGER PRIMARY KEY, v INTEGER)",
+            "INSERT INTO t VALUES (1, 10)",
+            "INSERT INTO t VALUES (2, 99) "
+            "ON CONFLICT(id) DO UPDATE SET v = excluded.v WHERE excluded.v > v",
+        ]
+        mini, real = _both(setup, "SELECT id, v FROM t ORDER BY id")
+        assert mini == real
+        assert mini == [(1, 10), (2, 99)]
+
+    def test_where_references_existing_only(self) -> None:
+        """WHERE may reference the existing row's bare columns (no EXCLUDED)."""
+        setup = [
+            "CREATE TABLE t (id INTEGER PRIMARY KEY, v INTEGER, locked INTEGER)",
+            "INSERT INTO t VALUES (1, 10, 0)",
+            "INSERT INTO t VALUES (2, 20, 1)",
+            # Updates only fire when the existing row is NOT locked.
+            "INSERT INTO t VALUES (1, 100, 0) "
+            "ON CONFLICT(id) DO UPDATE SET v = excluded.v WHERE locked = 0",
+            "INSERT INTO t VALUES (2, 200, 1) "
+            "ON CONFLICT(id) DO UPDATE SET v = excluded.v WHERE locked = 0",
+        ]
+        mini, real = _both(setup, "SELECT id, v, locked FROM t ORDER BY id")
+        assert mini == real
+        assert mini == [(1, 100, 0), (2, 20, 1)]  # only id=1 updated
+
+    def test_where_references_excluded_only(self) -> None:
+        """WHERE may reference only EXCLUDED columns (no existing-row refs)."""
+        setup = [
+            "CREATE TABLE t (id INTEGER PRIMARY KEY, v INTEGER)",
+            "INSERT INTO t VALUES (1, 10)",
+            # Only apply when excluded.v is positive.
+            "INSERT INTO t VALUES (1, -5) "
+            "ON CONFLICT(id) DO UPDATE SET v = excluded.v WHERE excluded.v > 0",
+            "INSERT INTO t VALUES (1, 42) "
+            "ON CONFLICT(id) DO UPDATE SET v = excluded.v WHERE excluded.v > 0",
+        ]
+        mini, real = _both(setup, "SELECT id, v FROM t")
+        assert mini == real
+        assert mini == [(1, 42)]  # -5 skipped, 42 applied
+
+    def test_where_with_compound_predicate(self) -> None:
+        """WHERE accepts AND/OR/NOT compound predicates."""
+        setup = [
+            "CREATE TABLE t (id INTEGER PRIMARY KEY, v INTEGER, tag TEXT)",
+            "INSERT INTO t VALUES (1, 10, 'a')",
+            "INSERT INTO t VALUES (1, 100, 'a') "
+            "ON CONFLICT(id) DO UPDATE SET v = excluded.v "
+            "WHERE excluded.v > v AND tag = 'a'",
+        ]
+        mini, real = _both(setup, "SELECT id, v, tag FROM t")
+        assert mini == real
+        assert mini == [(1, 100, "a")]
+
+    def test_where_null_predicate_is_false(self) -> None:
+        """A WHERE predicate that evaluates to NULL is treated as false."""
+        setup = [
+            "CREATE TABLE t (id INTEGER PRIMARY KEY, v INTEGER)",
+            "INSERT INTO t VALUES (1, NULL)",
+            # NULL > anything is NULL, which is falsy → no update.
+            "INSERT INTO t VALUES (1, 50) "
+            "ON CONFLICT(id) DO UPDATE SET v = excluded.v WHERE v > 0",
+        ]
+        mini, real = _both(setup, "SELECT id, v FROM t")
+        assert mini == real
+        assert mini == [(1, None)]
+
+    def test_where_with_multiple_rows_selective(self) -> None:
+        """Conditional upsert across multiple conflicting rows applies selectively."""
+        setup = [
+            "CREATE TABLE t (id INTEGER PRIMARY KEY, v INTEGER)",
+            "INSERT INTO t VALUES (1, 10)",
+            "INSERT INTO t VALUES (2, 20)",
+            "INSERT INTO t VALUES (3, 30)",
+            # For each row, only update if the new value is strictly larger.
+            "INSERT INTO t VALUES (1, 5)  ON CONFLICT(id) "
+            "DO UPDATE SET v = excluded.v WHERE excluded.v > v",
+            "INSERT INTO t VALUES (2, 99) ON CONFLICT(id) "
+            "DO UPDATE SET v = excluded.v WHERE excluded.v > v",
+            "INSERT INTO t VALUES (3, 30) ON CONFLICT(id) "
+            "DO UPDATE SET v = excluded.v WHERE excluded.v > v",
+        ]
+        mini, real = _both(setup, "SELECT id, v FROM t ORDER BY id")
+        assert mini == real
+        # id=1 unchanged (5 < 10), id=2 updated (99 > 20), id=3 unchanged (30 == 30)
+        assert mini == [(1, 10), (2, 99), (3, 30)]
+
+    def test_where_with_arithmetic_assignment(self) -> None:
+        """WHERE combines with arithmetic in the SET clause."""
+        setup = [
+            "CREATE TABLE counters (id INTEGER PRIMARY KEY, hits INTEGER)",
+            "INSERT INTO counters VALUES (1, 0)",
+            # Increment hits only if it is below a cap.
+            "INSERT INTO counters VALUES (1, 1) "
+            "ON CONFLICT(id) DO UPDATE SET hits = hits + 1 WHERE hits < 3",
+            "INSERT INTO counters VALUES (1, 1) "
+            "ON CONFLICT(id) DO UPDATE SET hits = hits + 1 WHERE hits < 3",
+            "INSERT INTO counters VALUES (1, 1) "
+            "ON CONFLICT(id) DO UPDATE SET hits = hits + 1 WHERE hits < 3",
+            "INSERT INTO counters VALUES (1, 1) "
+            "ON CONFLICT(id) DO UPDATE SET hits = hits + 1 WHERE hits < 3",
+        ]
+        mini, real = _both(setup, "SELECT id, hits FROM counters")
+        assert mini == real
+        assert mini == [(1, 3)]  # capped at 3
+
+    def test_excluded_pseudo_table_is_case_insensitive(self) -> None:
+        """``excluded.v`` (lowercase) is equivalent to ``EXCLUDED.v``.
+
+        SQLite identifies tables case-insensitively, and the EXCLUDED
+        pseudo-table is no exception.  This is a defence against a regression
+        where the adapter's rewrite of ``Column(table='EXCLUDED', …) →
+        ExcludedColumn`` matched only the uppercase form.
+        """
+        setup = [
+            "CREATE TABLE t (id INTEGER PRIMARY KEY, v INTEGER)",
+            "INSERT INTO t VALUES (1, 10)",
+            # All three case variants should behave identically.
+            "INSERT INTO t VALUES (1, 20) ON CONFLICT(id) DO UPDATE SET v = excluded.v",
+        ]
+        mini, real = _both(setup, "SELECT v FROM t")
+        assert mini == real
+        assert mini == [(20,)]
+
+        setup2 = [
+            "CREATE TABLE t (id INTEGER PRIMARY KEY, v INTEGER)",
+            "INSERT INTO t VALUES (1, 10)",
+            "INSERT INTO t VALUES (1, 30) ON CONFLICT(id) DO UPDATE SET v = Excluded.v",
+        ]
+        mini2, real2 = _both(setup2, "SELECT v FROM t")
+        assert mini2 == real2
+        assert mini2 == [(30,)]

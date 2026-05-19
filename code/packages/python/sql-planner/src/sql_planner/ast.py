@@ -244,11 +244,25 @@ class UpsertClause:
     Used only when ``do_nothing=False``.  Each assignment uses the resolved
     ``Expr`` tree; ``EXCLUDED.col`` is represented as ``ExcludedColumn(col=c)``
     after the adapter rewrites ``Column(table="EXCLUDED", col=c)``.
+
+    where
+    -----
+    The optional conditional-upsert WHERE clause::
+
+        ON CONFLICT(id) DO UPDATE SET val = excluded.val WHERE excluded.val > val
+
+    When present, the update is applied only if the predicate evaluates true
+    against the (excluded-row, existing-row) pair.  When the predicate is false
+    (or NULL), the upsert is silently skipped — the existing row is left as-is
+    (semantically equivalent to DO NOTHING for that row only).  The predicate
+    may freely reference ``EXCLUDED.col`` and bare column names (which resolve
+    to the existing row's column).  ``None`` means no WHERE filter.
     """
 
     conflict_target: tuple[str, ...] = ()  # column names; empty = any constraint
     do_nothing: bool = False
     assignments: tuple[UpsertAssignment, ...] = ()  # non-empty when do_nothing=False
+    where: Expr | None = None  # optional conditional-upsert predicate
 
 
 @dataclass(frozen=True, slots=True)

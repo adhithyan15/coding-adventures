@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.30.0] - 2026-05-19
+
+### Added
+
+- **`UpsertSpec.where_instructions`** (`ir.py`) — a pre-compiled
+  instruction sequence carrying the optional SQLite conditional-upsert
+  WHERE predicate.  Empty tuple means "no filter; always apply".  The
+  compiler in `_compile_upsert` invokes `_compile_expr` on the resolved
+  predicate when present.
+
 ## [1.29.0] - 2026-05-17
 
 ### Added

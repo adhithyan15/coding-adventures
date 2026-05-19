@@ -1532,10 +1532,17 @@ def _compile_upsert(upsert: PlanUpsertAction | None, ctx: _Ctx) -> UpsertSpec | 
         )
         for a in upsert.assignments
     )
+    # SQLite conditional-upsert: pre-compile the optional WHERE predicate to
+    # a self-contained instruction sequence the VM evaluates after binding
+    # EXCLUDED and the existing row.  Empty tuple = no filter.
+    where_instrs: tuple[Instruction, ...] = (
+        tuple(_compile_expr(upsert.where, ctx)) if upsert.where is not None else ()
+    )
     return UpsertSpec(
         conflict_target=upsert.conflict_target,
         do_nothing=False,
         assignments=compiled_assignments,
+        where_instructions=where_instrs,
     )
 
 

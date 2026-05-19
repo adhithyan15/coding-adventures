@@ -1273,10 +1273,22 @@ def _resolve_upsert(
         )
         for a in clause.assignments
     )
+
+    # Resolve the optional conditional-upsert WHERE predicate using the same
+    # rules as assignment RHS expressions: bare column refs resolve against
+    # the target table (= the existing-row scope at conflict time) while
+    # ExcludedColumn leaves pass through.
+    resolved_where = (
+        _resolve_upsert_expr(clause.where, table_cols, schema)
+        if clause.where is not None
+        else None
+    )
+
     return P.UpsertAction(
         conflict_target=clause.conflict_target,
         do_nothing=False,
         assignments=resolved_assignments,
+        where=resolved_where,
     )
 
 

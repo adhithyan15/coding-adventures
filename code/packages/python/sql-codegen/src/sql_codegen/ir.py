@@ -574,6 +574,10 @@ class UpsertSpec:
     conflict_target: tuple[str, ...]  # empty = any constraint
     do_nothing: bool = False
     assignments: tuple[UpsertAssignment, ...] = ()  # non-empty when do_nothing=False
+    # Optional SQLite conditional-upsert WHERE predicate, pre-compiled to a
+    # flat instruction sequence that leaves a single boolean on the stack.
+    # Empty tuple means "no WHERE filter; always apply the update".
+    where_instructions: tuple[Instruction, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)

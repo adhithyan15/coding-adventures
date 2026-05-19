@@ -2,6 +2,26 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.26.0] - 2026-05-19
+
+### Added
+
+- **SQLite conditional-upsert WHERE clause** (`sql.grammar`,
+  `_grammar.py`) — the `DO UPDATE` branch of `upsert_clause` now accepts
+  an optional trailing `WHERE expr`:
+
+      upsert_clause = "ON" "CONFLICT"
+                      [ "(" NAME { "," NAME } ")" ]
+                      ( "DO" "NOTHING"
+                      | "DO" "UPDATE" "SET" upsert_assignment { "," upsert_assignment }
+                        [ where_clause ] ) ;
+
+  This is SQLite 3.24+ syntax for *conditional upserts* — the SET
+  assignments fire only when the predicate is true.  Example::
+
+      INSERT INTO t VALUES (1, 99)
+      ON CONFLICT(id) DO UPDATE SET v = excluded.v WHERE excluded.v > v
+
 ## [0.25.0] - 2026-05-18
 
 ### Added
