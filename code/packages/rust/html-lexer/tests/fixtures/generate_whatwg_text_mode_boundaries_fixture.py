@@ -5,8 +5,9 @@
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
+
+from generated_fixture_io import write_fixture_json
 
 
 DEFAULT_OUTPUT = Path(__file__).with_name("whatwg-text-mode-boundaries.json")
@@ -15,15 +16,7 @@ DEFAULT_OUTPUT = Path(__file__).with_name("whatwg-text-mode-boundaries.json")
 def main() -> int:
     args = parse_args()
     output = Path(args.output).expanduser().resolve()
-    text = json.dumps(build_fixture(), indent=2, ensure_ascii=False, sort_keys=True) + "\n"
-
-    if args.check:
-        if output.read_text() != text:
-            raise SystemExit(f"{output} is stale; regenerate it")
-        return 0
-
-    output.write_text(text)
-    return 0
+    return write_fixture_json(output, build_fixture(), check=args.check)
 
 
 def parse_args() -> argparse.Namespace:
