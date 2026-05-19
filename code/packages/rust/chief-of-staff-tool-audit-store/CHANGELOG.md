@@ -20,6 +20,8 @@ All notable changes to this package will be documented in this file.
   signals for bounded replay ticks.
 - Bounded supervisor drain loops that compose replay ticks until end-of-log or
   tick-budget exhaustion.
+- Supervisor drain run reports that keep read-only preflight plans beside the
+  actual bounded drain result.
 - Batch audit write summaries for host flush loops.
 - Replay helpers for loading queried audit rows into any `ToolAuditSink`.
 - `StorageToolAuditSink` for runtime audit emission through D18A storage with

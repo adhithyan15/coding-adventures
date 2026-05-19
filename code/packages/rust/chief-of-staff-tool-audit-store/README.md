@@ -29,6 +29,8 @@ The crate keeps the boundary narrow:
   continuation, and follow-up signals without loading payloads
 - supervisors can run bounded drain loops that stop at end-of-log or report
   tick-budget exhaustion for the next scheduler pass
+- supervisors can capture a preflight drain plan beside the actual bounded
+  drain result, letting schedulers compare expected and delivered audit work
 
 ## Development
 
