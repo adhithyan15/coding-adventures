@@ -47,24 +47,18 @@ struct FixtureAttribute {
 fn whatwg_attribute_boundaries_fixture_parses() {
     let suite = load_suite();
 
-    assert_eq!(
-        suite.format,
-        "whatwg-html-tokenizer-attribute-boundaries/v1"
+    common::assert_suite_metadata(
+        &suite.format,
+        &suite.description,
+        suite.cases.iter().map(|case| case.id.as_str()),
+        "whatwg-html-tokenizer-attribute-boundaries/v1",
+        18,
+        &[
+            "attribute-name-null-replacement",
+            "after-attribute-value-quoted-missing-whitespace",
+            "self-closing-start-tag-reconsumes-attribute",
+        ],
     );
-    assert!(!suite.description.is_empty());
-    assert!(suite.cases.len() >= 18);
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "attribute-name-null-replacement"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "after-attribute-value-quoted-missing-whitespace"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "self-closing-start-tag-reconsumes-attribute"));
 }
 
 #[test]

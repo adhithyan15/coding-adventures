@@ -35,24 +35,18 @@ struct TextModeBoundaryCase {
 fn whatwg_text_mode_boundaries_fixture_parses() {
     let suite = load_suite();
 
-    assert_eq!(
-        suite.format,
-        "whatwg-html-tokenizer-text-mode-boundaries/v1"
+    common::assert_suite_metadata(
+        &suite.format,
+        &suite.description,
+        suite.cases.iter().map(|case| case.id.as_str()),
+        "whatwg-html-tokenizer-text-mode-boundaries/v1",
+        25,
+        &[
+            "rcdata-less-than-end-tag",
+            "rawtext-end-tag-name-self-closing-recovery",
+            "plaintext-markup-stays-text",
+        ],
     );
-    assert!(!suite.description.is_empty());
-    assert!(suite.cases.len() >= 25);
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "rcdata-less-than-end-tag"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "rawtext-end-tag-name-self-closing-recovery"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "plaintext-markup-stays-text"));
 }
 
 #[test]

@@ -54,14 +54,14 @@ struct FixtureDoctypeSeed {
 fn whatwg_eof_recovery_fixture_parses() {
     let suite = load_suite();
 
-    assert_eq!(suite.format, "whatwg-html-tokenizer-eof-recovery/v1");
-    assert!(!suite.description.is_empty());
-    assert!(suite.cases.len() >= 40);
-    assert!(suite.cases.iter().any(|case| case.id == "doctype-name"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "seeded-character-reference-rcdata"));
+    common::assert_suite_metadata(
+        &suite.format,
+        &suite.description,
+        suite.cases.iter().map(|case| case.id.as_str()),
+        "whatwg-html-tokenizer-eof-recovery/v1",
+        40,
+        &["doctype-name", "seeded-character-reference-rcdata"],
+    );
 }
 
 #[test]

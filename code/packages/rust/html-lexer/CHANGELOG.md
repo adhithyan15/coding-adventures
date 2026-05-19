@@ -114,6 +114,8 @@ documented in this file.
   normalization.
 - Generated WHATWG boundary and recovery fixture runners now share case
   description and push/finish boilerplate through the same helper module.
+- Generated WHATWG boundary and recovery fixture runners now share suite
+  metadata assertions for format, description, case-count, and sentinel IDs.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the

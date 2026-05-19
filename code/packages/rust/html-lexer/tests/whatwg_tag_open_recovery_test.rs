@@ -25,21 +25,18 @@ struct TagOpenRecoveryCase {
 fn whatwg_tag_open_recovery_fixture_parses() {
     let suite = load_suite();
 
-    assert_eq!(suite.format, "whatwg-html-tokenizer-tag-open-recovery/v1");
-    assert!(!suite.description.is_empty());
-    assert!(suite.cases.len() >= 20);
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "less-than-null-reconsumes-as-text"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "invalid-end-tag-digit-bogus-comment"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "eof-in-end-tag-attributes"));
+    common::assert_suite_metadata(
+        &suite.format,
+        &suite.description,
+        suite.cases.iter().map(|case| case.id.as_str()),
+        "whatwg-html-tokenizer-tag-open-recovery/v1",
+        20,
+        &[
+            "less-than-null-reconsumes-as-text",
+            "invalid-end-tag-digit-bogus-comment",
+            "eof-in-end-tag-attributes",
+        ],
+    );
 }
 
 #[test]

@@ -54,21 +54,18 @@ struct FixtureDoctypeSeed {
 fn whatwg_markup_declaration_fixture_parses() {
     let suite = load_suite();
 
-    assert_eq!(suite.format, "whatwg-html-tokenizer-markup-declarations/v1");
-    assert!(!suite.description.is_empty());
-    assert!(suite.cases.len() >= 40);
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "comment-nested-looking-opener"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "doctype-public-and-system-identifiers"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "seeded-bogus-doctype-close"));
+    common::assert_suite_metadata(
+        &suite.format,
+        &suite.description,
+        suite.cases.iter().map(|case| case.id.as_str()),
+        "whatwg-html-tokenizer-markup-declarations/v1",
+        40,
+        &[
+            "comment-nested-looking-opener",
+            "doctype-public-and-system-identifiers",
+            "seeded-bogus-doctype-close",
+        ],
+    );
 }
 
 #[test]

@@ -25,21 +25,18 @@ struct AttributeEdgeCase {
 fn whatwg_attribute_edge_fixture_parses() {
     let suite = load_suite();
 
-    assert_eq!(suite.format, "whatwg-html-tokenizer-attribute-edges/v1");
-    assert!(!suite.description.is_empty());
-    assert!(suite.cases.len() >= 25);
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "duplicate-attributes-drop-later-name"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "unexpected-solidus-before-attribute"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "end-tag-with-attributes-and-trailing-solidus"));
+    common::assert_suite_metadata(
+        &suite.format,
+        &suite.description,
+        suite.cases.iter().map(|case| case.id.as_str()),
+        "whatwg-html-tokenizer-attribute-edges/v1",
+        25,
+        &[
+            "duplicate-attributes-drop-later-name",
+            "unexpected-solidus-before-attribute",
+            "end-tag-with-attributes-and-trailing-solidus",
+        ],
+    );
 }
 
 #[test]

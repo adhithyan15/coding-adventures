@@ -30,21 +30,18 @@ struct CdataBoundaryCase {
 fn whatwg_cdata_boundaries_fixture_parses() {
     let suite = load_suite();
 
-    assert_eq!(suite.format, "whatwg-html-tokenizer-cdata-boundaries/v1");
-    assert!(!suite.description.is_empty());
-    assert!(suite.cases.len() >= 25);
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "cdata-markup-stays-text"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "html-cdata-looking-declaration"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "seeded-cdata-end-eof"));
+    common::assert_suite_metadata(
+        &suite.format,
+        &suite.description,
+        suite.cases.iter().map(|case| case.id.as_str()),
+        "whatwg-html-tokenizer-cdata-boundaries/v1",
+        25,
+        &[
+            "cdata-markup-stays-text",
+            "html-cdata-looking-declaration",
+            "seeded-cdata-end-eof",
+        ],
+    );
 }
 
 #[test]

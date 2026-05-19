@@ -44,21 +44,18 @@ struct FixtureDoctypeSeed {
 fn whatwg_doctype_boundaries_fixture_parses() {
     let suite = load_suite();
 
-    assert_eq!(suite.format, "whatwg-html-tokenizer-doctype-boundaries/v1");
-    assert!(!suite.description.is_empty());
-    assert!(suite.cases.len() >= 40);
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "doctype-public-system-missing-whitespace"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "doctype-bogus-null-discard"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "seeded-after-system-keyword-missing-whitespace"));
+    common::assert_suite_metadata(
+        &suite.format,
+        &suite.description,
+        suite.cases.iter().map(|case| case.id.as_str()),
+        "whatwg-html-tokenizer-doctype-boundaries/v1",
+        40,
+        &[
+            "doctype-public-system-missing-whitespace",
+            "doctype-bogus-null-discard",
+            "seeded-after-system-keyword-missing-whitespace",
+        ],
+    );
 }
 
 #[test]
