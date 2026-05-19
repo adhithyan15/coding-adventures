@@ -3,6 +3,81 @@
 All notable changes to `matrix-rust-napi` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.0] — 2026-05-18
+
+### Added — MX07 Phase 3: build pipeline + GitHub Actions smoke
+
+Adds the build and CI plumbing that produces the
+`matrix_rust_napi.node` artifact on each supported platform and
+asserts it loads cleanly into Node.
+
+**New files**
+
+* `package.json` — npm scripts:
+  - `build` runs `cargo build --release` then renames the per-
+    platform shared library to `matrix_rust_napi.node` (handles
+    `.dylib` / `.so` / `.dll` extensions).
+  - `smoke` runs `build` then `node -e "require('./matrix_rust_napi.node')"`,
+    asserting that all four exports are present
+    (`graphRoundTripJson`, `runGraphOnCpu`, `Graph` class,
+    `Runtime` class).
+* `.github/workflows/matrix-rust-napi.yml` — GitHub Actions
+  workflow with a path filter on the addon and its workspace
+  dependencies (`node-bridge`, `matrix-ir`, `matrix-ir-json`,
+  `matrix-runtime`, `matrix-cpu`, `compute-ir`,
+  `executor-protocol`).  Matrix on `ubuntu-latest`
+  (linux-x64-gnu) and `macos-latest` (darwin-arm64 since
+  GitHub's M-series migration in 2024).  Each runner:
+  1. Installs Rust stable + Node.js 20.
+  2. Caches the cargo registry / git / workspace target dir.
+  3. Runs `cargo test -p matrix-rust-napi --release` (22 unit
+     tests).
+  4. Runs `npm run smoke` to build the addon and verify it loads.
+  5. Reports the artifact size as a quick sanity smoke.
+* `.gitignore` — excludes the built `matrix_rust_napi.node`
+  (regenerated per build) and `node_modules/` (used by the
+  future Phase 4 wrapper).
+
+**What's deliberately not in this PR**
+
+* **No publish step.**  Publishing the per-platform prebuilts to
+  npm is its own coordination (gated by manual approval), tracked
+  separately.  This PR proves the build works; the publish
+  workflow is a follow-up that calls `npm publish` after the
+  smoke passes on all platforms.
+* **No Windows.**  MX07 §"Distribution model" defers Windows to
+  the post-v0 follow-up.  The package.json's `cp ... *.dll`
+  branch is wired up so Windows works the moment we add it to
+  the workflow matrix — the workflow just doesn't run it yet.
+* **No `node --test` end-to-end suite.**  That's MX07 Phase 4,
+  which adds the TypeScript wrapper package and the smoke.test.mjs
+  that drives the addon through real JS code (constructs a
+  `Graph`, builds a `Buffer[]`, calls `runtime.run`, asserts on
+  the output bytes).  Phase 3 only proves the addon *loads*.
+
+### Verification
+
+Tested locally on darwin-arm64:
+
+```
+$ npm run smoke
+   Compiling matrix-rust-napi v0.1.0 (...)
+    Finished `release` profile [optimized] target(s) in 18.04s
+matrix-rust-napi addon loaded; exports: graphRoundTripJson, runGraphOnCpu, Graph, Runtime
+```
+
+The `.node` artifact is ~2.5 MiB on macOS arm64 — reasonable for
+a release build pulling matrix-ir + matrix-runtime + matrix-cpu +
+matrix-ir-json + node-bridge + the executor protocol.
+
+### Security
+
+No new untrusted-input surface in this PR (it's a build/CI
+addition).  The workflow runs only `cargo`, `npm`, and `node`
+on the addon's own code on GitHub-hosted runners; standard
+isolation, no secrets used, no external network calls beyond
+crate registry fetches (which are cached).
+
 ## [0.3.0] — 2026-05-18
 
 ### Added — MX07 Phase 2b: Graph + Runtime JS classes with `Buffer[]` I/O

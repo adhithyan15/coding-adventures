@@ -1,0 +1,133 @@
+# ================================================================
+# matrix-rust-napi — Build + smoke test the N-API addon artifact
+# ================================================================
+#
+# MX07 Phase 3.  Builds the `matrix_rust_napi.node` cdylib via
+# `npm run smoke`, which:
+#   1. Runs `cargo build --release` to produce the per-platform
+#      shared library (`libmatrix_rust_napi.{dylib,so,dll}`).
+#   2. Copies it to `matrix_rust_napi.node`.
+#   3. Runs `node -e "require('./matrix_rust_napi.node')"` and
+#      asserts that all four expected exports are present
+#      (graphRoundTripJson, runGraphOnCpu, Graph class, Runtime
+#      class).
+#
+# This is a build-only smoke test — no JS test suite runs here.
+# End-to-end `node --test` exercises land in MX07 Phase 4 once
+# the TypeScript wrapper package exists to drive them.
+#
+# Per the MX07 spec (§"How CI proves this works"), step 1
+# (`cargo test -p matrix-rust-napi`) runs on every PR via the
+# existing workspace `ci.yml`.  This workflow adds step 2 (napi
+# build smoke) on a path filter so it only fires when the addon
+# or its bridge dependency is touched.
+#
+# Target platforms (per MX07 §"Distribution model"):
+#   * darwin-arm64  (macos-latest = M-series runners since 2024)
+#   * linux-x64-gnu (ubuntu-latest)
+#
+# Windows is intentionally out of scope for v0 — adding it is a
+# Phase 3 follow-up once the macOS + Linux smoke is stable.
+
+name: matrix-rust-napi (build smoke)
+
+on:
+  push:
+    branches: ['**']
+    paths:
+      - 'code/packages/rust/matrix-rust-napi/**'
+      - 'code/packages/rust/node-bridge/**'
+      - 'code/packages/rust/matrix-ir/**'
+      - 'code/packages/rust/matrix-ir-json/**'
+      - 'code/packages/rust/matrix-runtime/**'
+      - 'code/packages/rust/matrix-cpu/**'
+      - 'code/packages/rust/compute-ir/**'
+      - 'code/packages/rust/executor-protocol/**'
+      - '.github/workflows/matrix-rust-napi.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'code/packages/rust/matrix-rust-napi/**'
+      - 'code/packages/rust/node-bridge/**'
+      - 'code/packages/rust/matrix-ir/**'
+      - 'code/packages/rust/matrix-ir-json/**'
+      - 'code/packages/rust/matrix-runtime/**'
+      - 'code/packages/rust/matrix-cpu/**'
+      - 'code/packages/rust/compute-ir/**'
+      - 'code/packages/rust/executor-protocol/**'
+      - '.github/workflows/matrix-rust-napi.yml'
+
+# Cancel in-progress runs for the same branch — the smoke is
+# stateless and we always want the latest commit's result.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-smoke:
+    name: build + load smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest    # linux-x64-gnu
+          - macos-latest     # darwin-arm64 (M-series since 2024)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain (stable)
+        # No special components needed — the addon is plain Rust
+        # (no fmt/clippy gates in this workflow; those run via the
+        # main CI job).  Cache via the workspace target directory.
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry + git + target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            code/packages/rust/target
+          key: ${{ runner.os }}-cargo-matrix-rust-napi-${{ hashFiles('code/packages/rust/matrix-rust-napi/Cargo.toml', 'code/packages/rust/node-bridge/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-matrix-rust-napi-
+            ${{ runner.os }}-cargo-
+
+      - name: Install Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run cargo test (pure-Rust unit tests)
+        # 22 tests covering the JSON wire format, end-to-end
+        # plan+execute+download, DoS-cap defence, and class
+        # type-tag invariants.  Fast (~3s after cache hit).
+        working-directory: code/packages/rust
+        run: cargo test -p matrix-rust-napi --release
+
+      - name: Build .node artifact + verify it loads
+        # `npm run smoke` runs:
+        #   1. `cargo build --release`
+        #   2. `cp libmatrix_rust_napi.* matrix_rust_napi.node`
+        #   3. `node -e "require('./matrix_rust_napi.node'); assert exports"`
+        working-directory: code/packages/rust/matrix-rust-napi
+        run: npm run smoke
+
+      - name: Report artifact info
+        # Quick visibility — the .node file's size is a stable
+        # smoke for "did the linker pull everything in?"  Anything
+        # under ~500 KiB is suspicious for a release build of this
+        # crate stack.
+        if: success()
+        working-directory: code/packages/rust/matrix-rust-napi
+        run: |
+          echo "matrix-rust-napi addon built on ${{ matrix.os }}:"
+          ls -lah matrix_rust_napi.node
+          if command -v file >/dev/null 2>&1; then
+            file matrix_rust_napi.node
+          fi
