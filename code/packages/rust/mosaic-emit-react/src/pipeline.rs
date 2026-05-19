@@ -693,6 +693,43 @@ fn emit_grid_jsx(
         validate_slot_or_field_name(v).map_err(PipelineEmitError::UnsafeSlotName)?;
     }
 
+    // WA5 — sticky header support (UI27 §6, §7.3).
+    //
+    // `sticky-header` is a compile-time keyword (`true` / `false`)
+    // similar to Input's `multiline`. When `true`, the emitter
+    //   1. wraps the entire `<table>` in a `<div>` scroll container
+    //      with `overflow: "auto"` and a bounded `maxHeight`;
+    //   2. adds `position: "sticky", top: 0, zIndex: 1` to `<thead>`
+    //      so the header row stays pinned while the body scrolls.
+    //
+    // The scroll wrapper needs a bounded height to actually scroll —
+    // unbounded containers can't sticky-position. The `total-height`
+    // prop provides that bound; it accepts either a literal number
+    // (`total-height: 600`) or a slot ref (`total-height: slot: viewport-px`).
+    // When `sticky-header: true` is set without a `total-height`,
+    // we still emit the wrapper but with no maxHeight — the host then
+    // controls scroll via its own container CSS. Future versions may
+    // emit a useEffect-based console.warn for that case.
+    let sticky_header = find_keyword_prop(node, "sticky-header") == Some("true");
+    let total_height_slot_var = find_slot_ref_prop(node, "total-height")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    if let Some(v) = total_height_slot_var.as_deref() {
+        validate_slot_or_field_name(v).map_err(PipelineEmitError::UnsafeSlotName)?;
+    }
+    let total_height_literal = find_number_prop(node, "total-height");
+    // The JSX expression to use for `maxHeight`. None means no bound is
+    // set; sticky-header still emits sticky `<thead>` and the wrapper
+    // gets `overflow: "auto"` only.
+    let total_height_jsx_expr: Option<String> = match (&total_height_slot_var, total_height_literal) {
+        (Some(v), _) => Some(format!("`${{{v}}}px`")),
+        (None, Some(n)) => {
+            let s = if n.fract() == 0.0 { format!("{}", n as i64) } else { format!("{n}") };
+            Some(format!("\"{s}px\""))
+        }
+        _ => None,
+    };
+
     // Optional state slot refs — render selection / editing highlights when present.
     let selected_row_var = find_slot_ref_prop(node, "selected-row")
         .map(to_camel_case_first_lower)
@@ -842,42 +879,98 @@ fn emit_grid_jsx(
         None => String::new(),
     };
 
+    // WA5 — when sticky-header is on, the entire `<table>` is wrapped in a
+    // `<div>` scroll container, and `<thead>` gets `position: sticky`. The
+    // indentation shifts by one level so the table stays visually nested
+    // inside the wrapper.
+    let (
+        table_pad,
+        thead_pad,
+        tr_pad,
+        td_pad,
+        innermost_pad,
+        rows_open_pad,
+    ) = if sticky_header {
+        (
+            pad2.clone(),
+            " ".repeat(indent + 4),
+            " ".repeat(indent + 6),
+            " ".repeat(indent + 8),
+            " ".repeat(indent + 10),
+            " ".repeat(indent + 6),
+        )
+    } else {
+        (
+            pad.clone(),
+            pad2.clone(),
+            pad4.clone(),
+            pad6.clone(),
+            pad8.clone(),
+            pad4.clone(),
+        )
+    };
+
+    let thead_style_attr = if sticky_header {
+        " style={{ position: \"sticky\", top: 0, zIndex: 1 }}".to_string()
+    } else {
+        String::new()
+    };
+
     let mut out = String::new();
-    writeln!(out, "{pad}<table{table_style_attr}>").unwrap();
+
+    // WA5 — open the scroll-container wrapper when sticky-header is on.
+    if sticky_header {
+        let max_height_frag = match total_height_jsx_expr.as_deref() {
+            Some(expr) => format!(", maxHeight: {expr}"),
+            None => String::new(),
+        };
+        writeln!(
+            out,
+            "{pad}<div style={{{{ overflow: \"auto\"{max_height_frag} }}}}>"
+        )
+        .unwrap();
+    }
+
+    writeln!(out, "{table_pad}<table{table_style_attr}>").unwrap();
     // Emit a `<colgroup>` when column-widths is bound. Each `<col>` carries an
     // inline `style={{ width: "${w}px" }}` so both `<thead>` `<th>` and
     // `<tbody>` `<td>` pick up the column width without needing per-cell
     // styling.
     if let Some(widths_var) = column_widths_var.as_deref() {
-        writeln!(out, "{pad2}<colgroup>").unwrap();
+        writeln!(out, "{thead_pad}<colgroup>").unwrap();
         writeln!(
             out,
-            "{pad4}{{{widths_var}.map((w, c) => <col key={{c}} style={{{{ width: `${{w}}px` }}}} />)}}"
+            "{tr_pad}{{{widths_var}.map((w, c) => <col key={{c}} style={{{{ width: `${{w}}px` }}}} />)}}"
         )
         .unwrap();
-        writeln!(out, "{pad2}</colgroup>").unwrap();
+        writeln!(out, "{thead_pad}</colgroup>").unwrap();
     }
-    writeln!(out, "{pad2}<thead>").unwrap();
+    writeln!(out, "{thead_pad}<thead{thead_style_attr}>").unwrap();
     writeln!(
         out,
-        "{pad4}<tr{header_row_style_attr}>{{{headers_var}.map((h, c) => <th key={{c}}{header_cell_style_attr}>{{h}}</th>)}}</tr>"
+        "{tr_pad}<tr{header_row_style_attr}>{{{headers_var}.map((h, c) => <th key={{c}}{header_cell_style_attr}>{{h}}</th>)}}</tr>"
     )
     .unwrap();
-    writeln!(out, "{pad2}</thead>").unwrap();
-    writeln!(out, "{pad2}<tbody>").unwrap();
-    writeln!(out, "{pad4}{{{rows_var}.map((row, r) => (").unwrap();
-    writeln!(out, "{pad6}<tr key={{r}}{data_row_style_attr}>").unwrap();
-    writeln!(out, "{pad8}{{row.map((cell, c) => (").unwrap();
+    writeln!(out, "{thead_pad}</thead>").unwrap();
+    writeln!(out, "{thead_pad}<tbody>").unwrap();
+    writeln!(out, "{rows_open_pad}{{{rows_var}.map((row, r) => (").unwrap();
+    writeln!(out, "{td_pad}<tr key={{r}}{data_row_style_attr}>").unwrap();
+    writeln!(out, "{innermost_pad}{{row.map((cell, c) => (").unwrap();
     writeln!(
         out,
-        "{pad8}  <td key={{c}}{cell_style_expr}{cell_onclick_attr}>{{cell}}</td>"
+        "{innermost_pad}  <td key={{c}}{cell_style_expr}{cell_onclick_attr}>{{cell}}</td>"
     )
     .unwrap();
-    writeln!(out, "{pad8}))}}").unwrap();
-    writeln!(out, "{pad6}</tr>").unwrap();
-    writeln!(out, "{pad4}))}}").unwrap();
-    writeln!(out, "{pad2}</tbody>").unwrap();
-    writeln!(out, "{pad}</table>").unwrap();
+    writeln!(out, "{innermost_pad}))}}").unwrap();
+    writeln!(out, "{td_pad}</tr>").unwrap();
+    writeln!(out, "{rows_open_pad}))}}").unwrap();
+    writeln!(out, "{thead_pad}</tbody>").unwrap();
+    writeln!(out, "{table_pad}</table>").unwrap();
+
+    if sticky_header {
+        writeln!(out, "{pad}</div>").unwrap();
+    }
+
     Ok(out)
 }
 
@@ -3371,6 +3464,148 @@ mod tests {
             "expected solo conditional spreads inside <tr> style, got:\n{}",
             result.output
         );
+    }
+
+    // -----------------------------------------------------------------
+    // WA5 — sticky header + scroll container
+    // -----------------------------------------------------------------
+
+    fn grid_sticky_layout(
+        component: &str,
+        sticky: bool,
+        total_height: Option<f64>,
+        total_height_slot: Option<&str>,
+    ) -> LayoutDef {
+        let mut props = vec![
+            slot_ref_prop("headers", "col-labels"),
+            slot_ref_prop("rows", "data-rows"),
+        ];
+        if sticky {
+            props.push(LayoutProp {
+                name: "sticky-header".to_string(),
+                value: LayoutPropValue::Keyword("true".to_string()),
+            });
+        }
+        if let Some(n) = total_height {
+            props.push(LayoutProp {
+                name: "total-height".to_string(),
+                value: LayoutPropValue::Number(n),
+            });
+        }
+        if let Some(slot_name) = total_height_slot {
+            props.push(LayoutProp {
+                name: "total-height".to_string(),
+                value: LayoutPropValue::SlotRef(slot_name.to_string()),
+            });
+        }
+        LayoutDef {
+            component_name: component.to_string(),
+            root: LayoutNode {
+                tag: "Grid".to_string(),
+                part_name: None,
+                props,
+                children: Vec::new(),
+            },
+        }
+    }
+
+    /// `sticky-header: true` + literal `total-height: 600` wraps the
+    /// `<table>` in a scroll `<div>` and applies `position: sticky` to
+    /// `<thead>`.
+    #[test]
+    fn grid_sticky_header_with_literal_total_height_wraps_in_scroll_div() {
+        let m = grid_with_stripes_component("G");
+        let l = grid_sticky_layout("G", true, Some(600.0), None);
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<div style={{ overflow: \"auto\", maxHeight: \"600px\" }}>"),
+            "expected wrapper div, got:\n{out}"
+        );
+        assert!(
+            out.contains("<thead style={{ position: \"sticky\", top: 0, zIndex: 1 }}>"),
+            "expected sticky thead, got:\n{out}"
+        );
+        assert!(out.contains("</div>"), "expected wrapper close, got:\n{out}");
+        // Structural: wrapper open must precede `<table>`, wrapper close
+        // must follow `</table>`.
+        let div_open = out.find("<div style={{ overflow:").unwrap();
+        let table_open = out.find("<table").unwrap();
+        let table_close = out.find("</table>").unwrap();
+        let div_close = out.rfind("</div>").unwrap();
+        assert!(div_open < table_open);
+        assert!(table_close < div_close);
+    }
+
+    /// `sticky-header: true` + slot ref `total-height: slot: viewport-px`
+    /// emits a template-literal expression rather than a quoted string
+    /// (so the maxHeight is dynamic at render time).
+    #[test]
+    fn grid_sticky_header_with_slot_total_height_uses_template_literal() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("viewport-px", SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let l = grid_sticky_layout("G", true, None, Some("viewport-px"));
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        assert!(
+            result
+                .output
+                .contains("maxHeight: `${viewportPx}px`"),
+            "expected template literal maxHeight, got:\n{}",
+            result.output
+        );
+    }
+
+    /// `sticky-header: true` without `total-height` still wraps and
+    /// stickies, but omits maxHeight (caller controls scroll via its
+    /// own parent CSS).
+    #[test]
+    fn grid_sticky_header_without_total_height_omits_max_height() {
+        let m = grid_with_stripes_component("G");
+        let l = grid_sticky_layout("G", true, None, None);
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<div style={{ overflow: \"auto\" }}>"),
+            "expected wrapper with only overflow, got:\n{out}"
+        );
+        assert!(!out.contains("maxHeight"));
+        // Still emits sticky thead — partial sticky is still sticky.
+        assert!(out.contains("<thead style={{ position: \"sticky\", top: 0, zIndex: 1 }}>"));
+    }
+
+    /// No `sticky-header` keyword (or `false`) preserves the pre-WA5
+    /// output: bare `<thead>`, no wrapper, no maxHeight.
+    #[test]
+    fn grid_without_sticky_header_keyword_is_unchanged() {
+        let m = grid_with_stripes_component("G");
+        // Don't bind sticky-header at all.
+        let l = grid_sticky_layout("G", false, None, None);
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        let out = &result.output;
+        assert!(!out.contains("overflow: \"auto\""));
+        assert!(!out.contains("position: \"sticky\""));
+        assert!(out.contains("<thead>"), "expected bare <thead>, got:\n{out}");
+    }
+
+    /// `total-height: 600` *without* `sticky-header` is a no-op — total
+    /// height alone doesn't trigger the wrapper. Wrapping requires sticky.
+    /// This matches the spec: sticky is the user-facing feature, total
+    /// height is a configuration value for it.
+    #[test]
+    fn grid_total_height_without_sticky_is_a_noop() {
+        let m = grid_with_stripes_component("G");
+        let l = grid_sticky_layout("G", false, Some(600.0), None);
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        let out = &result.output;
+        assert!(!out.contains("maxHeight"));
+        assert!(!out.contains("<div style={{ overflow:"));
     }
 
     #[test]
