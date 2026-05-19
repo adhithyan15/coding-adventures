@@ -275,6 +275,52 @@ where
         })
     }
 
+    /// Drain bounded supervisor replay ticks until the checkpoint catches up or
+    /// the tick budget is exhausted.
+    pub fn drain_supervisor_checkpoint_loop<T>(
+        &self,
+        checkpoint_name: &str,
+        max_records_per_tick: usize,
+        max_ticks: usize,
+        sink: &mut T,
+    ) -> Result<ToolAuditSupervisorDrainLoopSummary, StorageError>
+    where
+        T: ToolAuditSink,
+    {
+        if max_records_per_tick == 0 {
+            return Err(StorageError::Validation {
+                field: "max_records_per_tick".to_string(),
+                message: "must be greater than zero".to_string(),
+            });
+        }
+        if max_ticks == 0 {
+            return Err(StorageError::Validation {
+                field: "max_ticks".to_string(),
+                message: "must be greater than zero".to_string(),
+            });
+        }
+
+        let mut ticks = Vec::new();
+        let mut drained_records = 0;
+        for _ in 0..max_ticks {
+            let tick =
+                self.drain_supervisor_checkpoint(checkpoint_name, max_records_per_tick, sink)?;
+            drained_records += tick.replay.replayed_records;
+            let reached_end_of_log = tick.reached_end_of_log;
+            ticks.push(tick);
+            if reached_end_of_log {
+                break;
+            }
+        }
+
+        Ok(ToolAuditSupervisorDrainLoopSummary {
+            max_records_per_tick,
+            max_ticks,
+            ticks,
+            drained_records,
+        })
+    }
+
     /// Replay queried audit rows into another D18D audit sink.
     pub fn replay_audits<T>(
         &self,
@@ -459,6 +505,69 @@ impl ToolAuditSupervisorDrainSummary {
     /// Return whether the durable checkpoint advanced during this tick.
     pub fn advanced_checkpoint(&self) -> bool {
         self.made_progress()
+    }
+}
+
+/// Host-loop summary for a bounded supervisor drain run.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainLoopSummary {
+    /// Maximum rows each drain tick may replay.
+    pub max_records_per_tick: usize,
+    /// Maximum drain ticks the supervisor asked to run.
+    pub max_ticks: usize,
+    /// Payload-free summaries for each drain tick that ran.
+    pub ticks: Vec<ToolAuditSupervisorDrainSummary>,
+    /// Total audit rows replayed into the sink across all ticks.
+    pub drained_records: usize,
+}
+
+impl ToolAuditSupervisorDrainLoopSummary {
+    /// Return the number of drain ticks that ran.
+    pub fn tick_count(&self) -> usize {
+        self.ticks.len()
+    }
+
+    /// Return whether no audit rows were replayed.
+    pub fn is_idle(&self) -> bool {
+        self.drained_records == 0
+    }
+
+    /// Return whether at least one audit row was replayed.
+    pub fn made_progress(&self) -> bool {
+        self.drained_records > 0
+    }
+
+    /// Return whether the run reached the current end of the audit log.
+    pub fn reached_end_of_log(&self) -> bool {
+        self.ticks
+            .last()
+            .map(|tick| tick.reached_end_of_log)
+            .unwrap_or(false)
+    }
+
+    /// Return whether the run stopped because it used every allowed tick.
+    pub fn exhausted_tick_budget(&self) -> bool {
+        self.tick_count() == self.max_ticks && !self.reached_end_of_log()
+    }
+
+    /// Return whether the supervisor should schedule another drain run.
+    pub fn should_continue(&self) -> bool {
+        !self.reached_end_of_log()
+    }
+
+    /// Return whether any replayed row needs follow-up.
+    pub fn requires_follow_up(&self) -> bool {
+        self.ticks.iter().any(|tick| tick.requires_follow_up())
+    }
+
+    /// Return whether any durable checkpoint advanced during the run.
+    pub fn advanced_checkpoint(&self) -> bool {
+        self.ticks.iter().any(|tick| tick.advanced_checkpoint())
+    }
+
+    /// Return the last replay checkpoint observed by this run.
+    pub fn last_checkpoint(&self) -> Option<&ToolAuditReadCheckpoint> {
+        self.ticks.last().map(|tick| &tick.replay.next_checkpoint)
     }
 }
 
@@ -1512,6 +1621,129 @@ mod tests {
             .unwrap_err();
 
         assert!(error.to_string().contains("max_records"));
+        assert!(sink.records().is_empty());
+    }
+
+    #[test]
+    fn supervisor_drain_loop_stops_when_checkpoint_catches_up() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                failed_record("call_3"),
+                sample_record("call_1"),
+                sample_record("call_2"),
+            ])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let summary = store
+            .drain_supervisor_checkpoint_loop("supervisor", 2, 3, &mut sink)
+            .unwrap();
+
+        assert_eq!(summary.max_records_per_tick, 2);
+        assert_eq!(summary.max_ticks, 3);
+        assert_eq!(summary.tick_count(), 2);
+        assert_eq!(summary.drained_records, 3);
+        assert!(summary.made_progress());
+        assert!(summary.advanced_checkpoint());
+        assert!(summary.reached_end_of_log());
+        assert!(!summary.exhausted_tick_budget());
+        assert!(!summary.should_continue());
+        assert!(summary.requires_follow_up());
+        assert_eq!(
+            summary.last_checkpoint(),
+            Some(&ToolAuditReadCheckpoint::new(151, "call_3"))
+        );
+        assert_eq!(
+            sink.records()
+                .iter()
+                .map(|record| record.call_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["call_1", "call_2", "call_3"]
+        );
+    }
+
+    #[test]
+    fn supervisor_drain_loop_can_confirm_exact_page_end_with_idle_tick() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+                sample_record("call_4"),
+            ])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let summary = store
+            .drain_supervisor_checkpoint_loop("supervisor", 2, 3, &mut sink)
+            .unwrap();
+
+        assert_eq!(summary.tick_count(), 3);
+        assert_eq!(summary.drained_records, 4);
+        assert!(summary.reached_end_of_log());
+        assert!(!summary.exhausted_tick_budget());
+        assert!(!summary.ticks[2].made_progress());
+        assert_eq!(
+            summary.last_checkpoint(),
+            Some(&ToolAuditReadCheckpoint::new(120, "call_4"))
+        );
+        assert_eq!(sink.records().len(), 4);
+    }
+
+    #[test]
+    fn supervisor_drain_loop_reports_tick_budget_exhaustion() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+                sample_record("call_4"),
+                sample_record("call_5"),
+            ])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let summary = store
+            .drain_supervisor_checkpoint_loop("supervisor", 2, 2, &mut sink)
+            .unwrap();
+
+        assert_eq!(summary.tick_count(), 2);
+        assert_eq!(summary.drained_records, 4);
+        assert!(!summary.reached_end_of_log());
+        assert!(summary.exhausted_tick_budget());
+        assert!(summary.should_continue());
+        assert!(summary.advanced_checkpoint());
+        assert_eq!(
+            summary.last_checkpoint(),
+            Some(&ToolAuditReadCheckpoint::new(120, "call_4"))
+        );
+        assert_eq!(
+            store
+                .fetch_checkpoint("supervisor")
+                .unwrap()
+                .map(|stored| stored.checkpoint),
+            Some(ToolAuditReadCheckpoint::new(120, "call_4"))
+        );
+        assert_eq!(sink.records().len(), 4);
+    }
+
+    #[test]
+    fn supervisor_drain_loop_rejects_zero_limits() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut sink = InMemoryToolAuditSink::new();
+
+        let zero_records = store
+            .drain_supervisor_checkpoint_loop("supervisor", 0, 1, &mut sink)
+            .unwrap_err();
+        assert!(zero_records.to_string().contains("max_records_per_tick"));
+
+        let zero_ticks = store
+            .drain_supervisor_checkpoint_loop("supervisor", 1, 0, &mut sink)
+            .unwrap_err();
+        assert!(zero_ticks.to_string().contains("max_ticks"));
         assert!(sink.records().is_empty());
     }
 

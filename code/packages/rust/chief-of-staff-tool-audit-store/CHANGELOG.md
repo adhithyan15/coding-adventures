@@ -15,6 +15,8 @@ All notable changes to this package will be documented in this file.
   advance durable named checkpoints.
 - Supervisor drain summaries that expose progress, continuation, and follow-up
   signals for bounded replay ticks.
+- Bounded supervisor drain loops that compose replay ticks until end-of-log or
+  tick-budget exhaustion.
 - Batch audit write summaries for host flush loops.
 - Replay helpers for loading queried audit rows into any `ToolAuditSink`.
 - `StorageToolAuditSink` for runtime audit emission through D18A storage with
