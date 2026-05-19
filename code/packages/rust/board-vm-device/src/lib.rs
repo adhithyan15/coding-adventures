@@ -5,13 +5,14 @@ use board_vm_ir::{
     CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_I2C_OPEN,
     CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
     CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_QUERY, CAP_NETWORK_DNS_RESOLVE,
-    CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE, CAP_NETWORK_TCP_CLOSE,
-    CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE,
-    CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
-    CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT,
-    CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
-    CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
-    CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
+    CAP_NETWORK_DNS_RESPONSE_IPV4, CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE,
+    CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
+    CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN,
+    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE,
+    CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET,
+    CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS,
+    CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE,
+    CAP_WATCHDOG_KICK,
 };
 use board_vm_protocol::{
     decode_frame, decode_hello, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -317,6 +318,12 @@ const NETWORK_DNS_QUERY_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDe
     version: 1,
     flags: CAP_FLAG_BYTECODE_CALLABLE,
     name: "network.dns.query",
+};
+const NETWORK_DNS_RESPONSE_IPV4_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
+    id: CAP_NETWORK_DNS_RESPONSE_IPV4,
+    version: 1,
+    flags: CAP_FLAG_BYTECODE_CALLABLE,
+    name: "network.dns.response_ipv4",
 };
 const LED_MATRIX_FRAME_DESCRIPTOR: CapabilityDescriptor<'static> = CapabilityDescriptor {
     id: CAP_LED_MATRIX_FRAME,
@@ -1410,7 +1417,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWO
 ];
 
 pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWORK_TCP_UDP_WIFI_DNS_AND_LED_MATRIX_CAPABILITIES:
-    [CapabilityDescriptor<'static>; 49] = [
+    [CapabilityDescriptor<'static>; 50] = [
     GPIO_OPEN_DESCRIPTOR,
     GPIO_WRITE_DESCRIPTOR,
     GPIO_READ_DESCRIPTOR,
@@ -1457,6 +1464,7 @@ pub const BLINK_MVP_WITH_PWM_ADC_DAC_I2C_SPI_UART_CAN_RTC_WATCHDOG_STORAGE_NETWO
     NETWORK_DNS_RESOLVE_DESCRIPTOR,
     NETWORK_DNS_SET_SERVER_DESCRIPTOR,
     NETWORK_DNS_QUERY_DESCRIPTOR,
+    NETWORK_DNS_RESPONSE_IPV4_DESCRIPTOR,
     LED_MATRIX_FRAME_DESCRIPTOR,
     PROGRAM_RAM_EXEC_DESCRIPTOR,
     PROGRAM_STORE_DESCRIPTOR,
@@ -2624,7 +2632,7 @@ mod tests {
         PROGRAM_STORE_DESCRIPTOR,
     ];
 
-    const NETWORK_SOCKET_CAPABILITIES: [CapabilityDescriptor<'static>; 24] = [
+    const NETWORK_SOCKET_CAPABILITIES: [CapabilityDescriptor<'static>; 25] = [
         GPIO_OPEN_DESCRIPTOR,
         GPIO_WRITE_DESCRIPTOR,
         GPIO_READ_DESCRIPTOR,
@@ -2648,6 +2656,7 @@ mod tests {
         NETWORK_DNS_RESOLVE_DESCRIPTOR,
         NETWORK_DNS_SET_SERVER_DESCRIPTOR,
         NETWORK_DNS_QUERY_DESCRIPTOR,
+        NETWORK_DNS_RESPONSE_IPV4_DESCRIPTOR,
         PROGRAM_RAM_EXEC_DESCRIPTOR,
     ];
 
@@ -2976,7 +2985,7 @@ mod tests {
             header.capability_count,
             NETWORK_SOCKET_CAPABILITIES.len() as u32
         );
-        let mut found = [false; 17];
+        let mut found = [false; 18];
         for _ in 0..header.capability_count {
             let capability = decoder.read_capability_descriptor().unwrap();
             match capability.id {
@@ -3065,11 +3074,16 @@ mod tests {
                     assert_eq!(capability.name, "network.dns.query");
                     assert_eq!(capability.flags, CAP_FLAG_BYTECODE_CALLABLE);
                 }
+                CAP_NETWORK_DNS_RESPONSE_IPV4 => {
+                    found[17] = true;
+                    assert_eq!(capability.name, "network.dns.response_ipv4");
+                    assert_eq!(capability.flags, CAP_FLAG_BYTECODE_CALLABLE);
+                }
                 _ => {}
             }
         }
         decoder.finish().unwrap();
-        assert_eq!(found, [true; 17]);
+        assert_eq!(found, [true; 18]);
     }
 
     #[test]

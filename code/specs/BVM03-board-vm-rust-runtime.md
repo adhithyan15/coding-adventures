@@ -175,6 +175,12 @@ a DNS transaction id plus hostname bytes and returns a standard recursive
 A-record query message in a `ByteBuffer`. It is implemented in the Rust runtime
 instead of a board adapter hook so frontends and board ports can share the same
 wire payload before later tranches add UDP transport and response parsing.
+`network.dns.response_ipv4` is the matching bounded response-payload tranche:
+it accepts the expected transaction id plus DNS response bytes, validates the
+response envelope, skips question records, and returns the first IPv4 A-answer
+as a `u32`. It remains a Rust-runtime operation so UDP transport can be layered
+later without duplicating DNS message parsing across language frontends or board
+ports.
 
 `HandleToken` is private to the board adapter. The portable VM only sees compact
 `Handle` ids.
@@ -196,6 +202,7 @@ CALL_U8 0x47 -> network.udp.available
 CALL_U8 0x48 -> network.dns.set_server
 CALL_U8 0x49 -> network.tcp.available
 CALL_U8 0x4a -> network.dns.query
+CALL_U8 0x4b -> network.dns.response_ipv4
 ```
 
 Each handler:

@@ -3,15 +3,15 @@ use board_vm_ir::{
     CAP_CAN_READ, CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ,
     CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE,
     CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_QUERY, CAP_NETWORK_DNS_RESOLVE,
-    CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE, CAP_NETWORK_TCP_CLOSE,
-    CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE,
-    CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
-    CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT,
-    CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
-    CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
-    CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
-    FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MAX_BYTE_BUFFER_LEN,
-    MODULE_MAGIC, MODULE_VERSION,
+    CAP_NETWORK_DNS_RESPONSE_IPV4, CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE,
+    CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
+    CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN,
+    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE,
+    CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET,
+    CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS,
+    CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE,
+    CAP_WATCHDOG_KICK, FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+    MAX_BYTE_BUFFER_LEN, MODULE_MAGIC, MODULE_VERSION,
 };
 use board_vm_protocol::{
     encode_frame, encode_hello, encode_program_begin, encode_program_chunk, encode_program_end,
@@ -131,6 +131,9 @@ pub const NETWORK_DNS_SET_SERVER_MODULE_LEN: usize = 19;
 pub const NETWORK_DNS_QUERY_CODE_LEN: usize = 10;
 pub const NETWORK_DNS_QUERY_MAX_MODULE_LEN: usize =
     8 + 1 + NETWORK_DNS_QUERY_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const NETWORK_DNS_RESPONSE_IPV4_CODE_LEN: usize = 10;
+pub const NETWORK_DNS_RESPONSE_IPV4_MAX_MODULE_LEN: usize =
+    8 + 1 + NETWORK_DNS_RESPONSE_IPV4_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
 pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
@@ -452,6 +455,13 @@ pub struct NetworkDnsSetServerProgram {
 pub struct NetworkDnsQueryProgram<'a> {
     pub transaction_id: u16,
     pub hostname: &'a [u8],
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkDnsResponseIpv4Program<'a> {
+    pub transaction_id: u16,
+    pub response: &'a [u8],
     pub max_stack: u8,
 }
 
@@ -808,6 +818,16 @@ impl<'a> NetworkDnsQueryProgram<'a> {
         Self {
             transaction_id,
             hostname,
+            max_stack: 2,
+        }
+    }
+}
+
+impl<'a> NetworkDnsResponseIpv4Program<'a> {
+    pub const fn new(transaction_id: u16, response: &'a [u8]) -> Self {
+        Self {
+            transaction_id,
+            response,
             max_stack: 2,
         }
     }
@@ -3495,6 +3515,56 @@ pub fn write_network_dns_query_module(
     Ok(offset)
 }
 
+pub fn network_dns_response_ipv4_module_len(response_len: usize) -> Result<usize, HostError> {
+    if response_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + NETWORK_DNS_RESPONSE_IPV4_CODE_LEN + 1 + response_len)
+}
+
+pub fn write_network_dns_response_ipv4_code(
+    program: NetworkDnsResponseIpv4Program<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.response.len() > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_DNS_RESPONSE_IPV4_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_push_u16(out, &mut offset, program.transaction_id)?;
+    write_push_bytes(out, &mut offset, 0, program.response.len() as u8)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_DNS_RESPONSE_IPV4)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_dns_response_ipv4_module(
+    program: NetworkDnsResponseIpv4Program<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len = network_dns_response_ipv4_module_len(program.response.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_DNS_RESPONSE_IPV4_CODE_LEN];
+    let code_len = write_network_dns_response_ipv4_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]).const_pool(program.response),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_dns(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn write_led_matrix_frame_code(
     program: LedMatrixFrameProgram,
     out: &mut [u8],
@@ -3658,11 +3728,11 @@ mod tests {
         CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ, CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_I2C_OPEN,
         CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
         CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_QUERY, CAP_NETWORK_DNS_RESOLVE,
-        CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE, CAP_NETWORK_TCP_CLOSE,
-        CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
-        CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE,
-        CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE, CAP_PWM_WRITE,
-        CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_UART_READ, CAP_UART_WRITE,
+        CAP_NETWORK_DNS_RESPONSE_IPV4, CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE,
+        CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN,
+        CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE,
+        CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE,
+        CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_UART_READ, CAP_UART_WRITE,
         CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
     };
     use board_vm_protocol::{
@@ -3799,6 +3869,12 @@ mod tests {
     const NETWORK_DNS_QUERY_EXAMPLE_MODULE_HEX: [u8; 27] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x0A, 0x13, 0x34, 0x12, 0x16, 0x00, 0x00,
         0x07, 0x40, 0x4A, 0x50, 0x07, 0x65, 0x78, 0x61, 0x6D, 0x70, 0x6C, 0x65,
+    ];
+    const NETWORK_DNS_RESPONSE_IPV4_ROOT_MODULE_HEX: [u8; 52] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x0A, 0x13, 0x34, 0x12, 0x16, 0x00, 0x00,
+        0x20, 0x40, 0x4B, 0x50, 0x20, 0x12, 0x34, 0x81, 0x80, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00,
+        0x3C, 0x00, 0x04, 0xC0, 0xA8, 0x01, 0x2A,
     ];
     const RTC_NOW_MODULE_HEX: [u8; RTC_NOW_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x03, 0x40, 0x34, 0x50, 0x00,
@@ -4380,6 +4456,27 @@ mod tests {
         validate(&parsed, CapabilitySet::blink_mvp().with_network_dns(), 2).unwrap();
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_NETWORK_DNS_QUERY]);
+
+        let response = [
+            0x12, 0x34, 0x81, 0x80, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x01, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x3C, 0x00, 0x04,
+            0xC0, 0xA8, 0x01, 0x2A,
+        ];
+        let module_len = network_dns_response_ipv4_module_len(response.len()).unwrap();
+        let mut response_ipv4 = [0u8; 52];
+        let response_ipv4_len = write_network_dns_response_ipv4_module(
+            NetworkDnsResponseIpv4Program::new(0x1234, &response),
+            &mut response_ipv4,
+        )
+        .unwrap();
+        assert_eq!(module_len, NETWORK_DNS_RESPONSE_IPV4_ROOT_MODULE_HEX.len());
+        assert_eq!(response_ipv4_len, module_len);
+        assert_eq!(response_ipv4, NETWORK_DNS_RESPONSE_IPV4_ROOT_MODULE_HEX);
+
+        let parsed = parse_module(&response_ipv4).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_dns(), 2).unwrap();
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_DNS_RESPONSE_IPV4]);
     }
 
     #[test]
