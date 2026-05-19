@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/forme-aot-style-tag-emitter",
+  "version": "0.1.0",
+  "description": "Emit HTML <link rel=\"stylesheet\"> + inline <style> tag strings.  Pure transform: URL accept-list (http(s):// OR root-relative), SRI integrity sha256/384/512 (Map-backed algo lookup, per-algo padding check), media-query passthrough HTML-attr-escaped, crossorigin allowlist, inline CSS rejects </style> sequence.  FM00 v0 emitter.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
