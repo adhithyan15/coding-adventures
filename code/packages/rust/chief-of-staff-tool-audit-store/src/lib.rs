@@ -244,6 +244,73 @@ where
         })
     }
 
+    /// Plan bounded supervisor replay pages without delivering rows or
+    /// advancing the durable cursor.
+    pub fn plan_supervisor_checkpoint_drain(
+        &self,
+        checkpoint_name: &str,
+        max_records_per_tick: usize,
+        max_ticks: usize,
+    ) -> Result<ToolAuditSupervisorDrainPlanSummary, StorageError> {
+        if max_records_per_tick == 0 {
+            return Err(StorageError::Validation {
+                field: "max_records_per_tick".to_string(),
+                message: "must be greater than zero".to_string(),
+            });
+        }
+        if max_ticks == 0 {
+            return Err(StorageError::Validation {
+                field: "max_ticks".to_string(),
+                message: "must be greater than zero".to_string(),
+            });
+        }
+
+        let stored_checkpoint = self.fetch_checkpoint(checkpoint_name)?;
+        let starting_checkpoint = stored_checkpoint
+            .as_ref()
+            .map(|stored| stored.checkpoint.clone())
+            .unwrap_or_else(ToolAuditReadCheckpoint::beginning);
+        let mut next_start = starting_checkpoint.clone();
+        let mut pages = Vec::new();
+        let mut planned_records = 0;
+        let mut inventory = ToolAuditStoreInventorySummary::empty();
+
+        for _ in 0..max_ticks {
+            let page =
+                self.query_audits_after_checkpoint(&next_start, Some(max_records_per_tick))?;
+            let pending_records = page.len();
+            let reached_end_of_log = pending_records < max_records_per_tick;
+            merge_inventory(&mut inventory, page.inventory);
+            planned_records += pending_records;
+
+            let summary = ToolAuditSupervisorDrainPlanPage {
+                max_records: max_records_per_tick,
+                starting_checkpoint: next_start,
+                next_checkpoint: page.next_checkpoint,
+                pending_records,
+                inventory: page.inventory,
+                reached_end_of_log,
+            };
+            next_start = summary.next_checkpoint.clone();
+            pages.push(summary);
+
+            if reached_end_of_log {
+                break;
+            }
+        }
+
+        Ok(ToolAuditSupervisorDrainPlanSummary {
+            checkpoint_name: checkpoint_name.to_string(),
+            max_records_per_tick,
+            max_ticks,
+            stored_checkpoint,
+            starting_checkpoint,
+            pages,
+            planned_records,
+            inventory,
+        })
+    }
+
     /// Replay the next deterministic page for a named checkpoint and advance
     /// that checkpoint after delivery.
     pub fn replay_audits_from_checkpoint<T>(
@@ -555,6 +622,111 @@ impl ToolAuditSupervisorCheckpointStatus {
     /// Return whether the next drain page would advance the durable checkpoint.
     pub fn would_advance_checkpoint(&self) -> bool {
         self.has_pending_records()
+    }
+}
+
+/// One read-only page in a planned supervisor drain run.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainPlanPage {
+    /// Maximum rows inspected for this planned page.
+    pub max_records: usize,
+    /// Checkpoint used to start this planned page.
+    pub starting_checkpoint: ToolAuditReadCheckpoint,
+    /// Checkpoint the matching drain tick would advance to after this page.
+    pub next_checkpoint: ToolAuditReadCheckpoint,
+    /// Number of rows waiting in this planned page.
+    pub pending_records: usize,
+    /// Payload-free summary of the planned page.
+    pub inventory: ToolAuditStoreInventorySummary,
+    /// Whether this planned page reached the current end of the audit log.
+    pub reached_end_of_log: bool,
+}
+
+impl ToolAuditSupervisorDrainPlanPage {
+    /// Return whether this planned page has no rows.
+    pub fn is_idle(&self) -> bool {
+        self.pending_records == 0
+    }
+
+    /// Return whether this planned page has rows to drain.
+    pub fn has_pending_records(&self) -> bool {
+        !self.is_idle()
+    }
+
+    /// Return whether any inspected row needs follow-up.
+    pub fn requires_follow_up(&self) -> bool {
+        self.inventory.requires_follow_up()
+    }
+}
+
+/// Read-only plan for a bounded supervisor drain run.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainPlanSummary {
+    /// Reader or supervisor checkpoint name planned.
+    pub checkpoint_name: String,
+    /// Maximum rows each planned drain tick may replay.
+    pub max_records_per_tick: usize,
+    /// Maximum drain ticks the supervisor asked to plan.
+    pub max_ticks: usize,
+    /// Durable checkpoint loaded for the supervisor, if one exists.
+    pub stored_checkpoint: Option<ToolAuditStoredCheckpoint>,
+    /// Checkpoint used to start this plan.
+    pub starting_checkpoint: ToolAuditReadCheckpoint,
+    /// Planned pages in checkpoint order.
+    pub pages: Vec<ToolAuditSupervisorDrainPlanPage>,
+    /// Total rows a matching bounded drain run would replay.
+    pub planned_records: usize,
+    /// Payload-free summary of all planned rows.
+    pub inventory: ToolAuditStoreInventorySummary,
+}
+
+impl ToolAuditSupervisorDrainPlanSummary {
+    /// Return the number of planned pages.
+    pub fn page_count(&self) -> usize {
+        self.pages.len()
+    }
+
+    /// Return whether no rows are waiting in the planned run.
+    pub fn is_idle(&self) -> bool {
+        self.planned_records == 0
+    }
+
+    /// Return whether a matching drain run would replay at least one row.
+    pub fn has_pending_records(&self) -> bool {
+        !self.is_idle()
+    }
+
+    /// Return whether the plan reached the current end of the audit log.
+    pub fn reached_end_of_log(&self) -> bool {
+        self.pages
+            .last()
+            .map(|page| page.reached_end_of_log)
+            .unwrap_or(false)
+    }
+
+    /// Return whether planning stopped because it used every allowed tick.
+    pub fn exhausted_tick_budget(&self) -> bool {
+        self.page_count() == self.max_ticks && !self.reached_end_of_log()
+    }
+
+    /// Return whether the supervisor should schedule another drain run.
+    pub fn should_continue(&self) -> bool {
+        !self.reached_end_of_log()
+    }
+
+    /// Return whether any planned row needs follow-up.
+    pub fn requires_follow_up(&self) -> bool {
+        self.inventory.requires_follow_up()
+    }
+
+    /// Return whether a matching drain run would advance the durable checkpoint.
+    pub fn would_advance_checkpoint(&self) -> bool {
+        self.has_pending_records()
+    }
+
+    /// Return the last checkpoint a matching drain run would observe.
+    pub fn last_checkpoint(&self) -> Option<&ToolAuditReadCheckpoint> {
+        self.pages.last().map(|page| &page.next_checkpoint)
     }
 }
 
@@ -885,6 +1057,21 @@ impl ToolAuditStoreInventorySummary {
             || self.approval_expired_records > 0
             || self.records_with_errors > 0
     }
+}
+
+fn merge_inventory(
+    target: &mut ToolAuditStoreInventorySummary,
+    source: ToolAuditStoreInventorySummary,
+) {
+    target.total_records += source.total_records;
+    target.completed_records += source.completed_records;
+    target.failed_records += source.failed_records;
+    target.active_records += source.active_records;
+    target.approval_pending_records += source.approval_pending_records;
+    target.approval_denied_records += source.approval_denied_records;
+    target.approval_expired_records += source.approval_expired_records;
+    target.records_with_errors += source.records_with_errors;
+    target.records_with_references += source.records_with_references;
 }
 
 fn audit_key(call_id: &str) -> String {
@@ -1718,6 +1905,132 @@ mod tests {
             .unwrap_err();
 
         assert!(error.to_string().contains("max_records"));
+        assert!(store.fetch_checkpoint("supervisor").unwrap().is_none());
+    }
+
+    #[test]
+    fn supervisor_drain_plan_reports_budgeted_pages_without_advancing() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                failed_record("call_5"),
+                sample_record("call_3"),
+                sample_record("call_4"),
+            ])
+            .completed_without_failures());
+        store
+            .save_checkpoint("supervisor", ToolAuditReadCheckpoint::new(120, "call_1"))
+            .unwrap();
+
+        let plan = store
+            .plan_supervisor_checkpoint_drain("supervisor", 2, 2)
+            .unwrap();
+
+        assert_eq!(plan.checkpoint_name, "supervisor");
+        assert_eq!(plan.max_records_per_tick, 2);
+        assert_eq!(plan.max_ticks, 2);
+        assert_eq!(plan.page_count(), 2);
+        assert_eq!(plan.planned_records, 4);
+        assert_eq!(plan.inventory.total_records, 4);
+        assert_eq!(plan.inventory.failed_records, 1);
+        assert!(plan.has_pending_records());
+        assert!(plan.requires_follow_up());
+        assert!(plan.would_advance_checkpoint());
+        assert!(plan.exhausted_tick_budget());
+        assert!(plan.should_continue());
+        assert!(!plan.reached_end_of_log());
+        assert_eq!(
+            plan.starting_checkpoint,
+            ToolAuditReadCheckpoint::new(120, "call_1")
+        );
+        assert_eq!(
+            plan.last_checkpoint(),
+            Some(&ToolAuditReadCheckpoint::new(151, "call_5"))
+        );
+        assert_eq!(plan.pages[0].pending_records, 2);
+        assert_eq!(
+            plan.pages[0].next_checkpoint,
+            ToolAuditReadCheckpoint::new(120, "call_3")
+        );
+        assert_eq!(plan.pages[1].pending_records, 2);
+        assert!(plan.pages[1].requires_follow_up());
+        assert_eq!(
+            store
+                .fetch_checkpoint("supervisor")
+                .unwrap()
+                .map(|stored| stored.checkpoint),
+            Some(ToolAuditReadCheckpoint::new(120, "call_1"))
+        );
+    }
+
+    #[test]
+    fn supervisor_drain_plan_can_confirm_exact_page_end_with_idle_page() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+                sample_record("call_4"),
+            ])
+            .completed_without_failures());
+
+        let plan = store
+            .plan_supervisor_checkpoint_drain("supervisor", 2, 3)
+            .unwrap();
+
+        assert_eq!(plan.page_count(), 3);
+        assert_eq!(plan.planned_records, 4);
+        assert!(plan.reached_end_of_log());
+        assert!(!plan.exhausted_tick_budget());
+        assert!(!plan.should_continue());
+        assert!(!plan.pages[2].has_pending_records());
+        assert_eq!(
+            plan.last_checkpoint(),
+            Some(&ToolAuditReadCheckpoint::new(120, "call_4"))
+        );
+        assert!(store.fetch_checkpoint("supervisor").unwrap().is_none());
+    }
+
+    #[test]
+    fn supervisor_drain_plan_reports_idle_without_creating_checkpoint() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+
+        let plan = store
+            .plan_supervisor_checkpoint_drain("supervisor", 10, 3)
+            .unwrap();
+
+        assert_eq!(plan.page_count(), 1);
+        assert_eq!(plan.planned_records, 0);
+        assert!(plan.is_idle());
+        assert!(!plan.has_pending_records());
+        assert!(!plan.requires_follow_up());
+        assert!(!plan.would_advance_checkpoint());
+        assert!(plan.reached_end_of_log());
+        assert!(!plan.exhausted_tick_budget());
+        assert_eq!(plan.stored_checkpoint, None);
+        assert_eq!(
+            plan.last_checkpoint(),
+            Some(&ToolAuditReadCheckpoint::beginning())
+        );
+        assert!(store.fetch_checkpoint("supervisor").unwrap().is_none());
+    }
+
+    #[test]
+    fn supervisor_drain_plan_rejects_zero_limits() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+
+        let zero_records = store
+            .plan_supervisor_checkpoint_drain("supervisor", 0, 1)
+            .unwrap_err();
+        assert!(zero_records.to_string().contains("max_records_per_tick"));
+
+        let zero_ticks = store
+            .plan_supervisor_checkpoint_drain("supervisor", 1, 0)
+            .unwrap_err();
+        assert!(zero_ticks.to_string().contains("max_ticks"));
         assert!(store.fetch_checkpoint("supervisor").unwrap().is_none());
     }
 
