@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-opengraph",
+  "version": "0.1.0",
+  "description": "OpenGraph + Twitter Card + basic <meta> tag generators for the Forme pipeline (FM00 v0 SEO stage).  Pure transform: meta records → reproducible HTML <meta>/<link>/<title> tag sequence.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-types": "file:../forme-types"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
