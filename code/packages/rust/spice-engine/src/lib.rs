@@ -1682,6 +1682,8 @@ pub struct PssResidualResult {
     pub residual_vector: Vec<PssResidualEntry>,
     pub max_abs_branch_residual: f64,
     pub max_abs_residual: f64,
+    pub residual_l2_norm: f64,
+    pub residual_rms_norm: f64,
     pub residual_tolerance: f64,
     pub within_tolerance: bool,
 }
@@ -2701,6 +2703,8 @@ pub fn pss_residual_with_tolerance(
             residual_vector: Vec::new(),
             max_abs_branch_residual: 0.0,
             max_abs_residual: 0.0,
+            residual_l2_norm: 0.0,
+            residual_rms_norm: 0.0,
             residual_tolerance,
             within_tolerance: false,
         }));
@@ -2767,6 +2771,16 @@ pub fn pss_residual_with_tolerance(
     if max_abs_branch_residual > max_abs_residual {
         max_abs_residual = max_abs_branch_residual;
     }
+    let residual_l2_norm = residual_vector
+        .iter()
+        .map(|entry| entry.value * entry.value)
+        .sum::<f64>()
+        .sqrt();
+    let residual_rms_norm = if residual_vector.is_empty() {
+        0.0
+    } else {
+        residual_l2_norm / (residual_vector.len() as f64).sqrt()
+    };
 
     Ok(Some(PssResidualResult {
         period_seconds: period,
@@ -2776,6 +2790,8 @@ pub fn pss_residual_with_tolerance(
         residual_vector,
         max_abs_branch_residual,
         max_abs_residual,
+        residual_l2_norm,
+        residual_rms_norm,
         residual_tolerance,
         within_tolerance: max_abs_residual <= residual_tolerance,
     }))

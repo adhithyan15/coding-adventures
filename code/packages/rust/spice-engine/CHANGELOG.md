@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add L2 and RMS norms over the ordered PSS residual vector for future
+  shooting-Newton convergence checks.
 - Add a stable node-then-branch residual vector to `PssResidualResult` as the
   next state-vector foothold for shooting-Newton PSS solves.
 - Add branch-current closure residuals to `PssResidualResult` alongside

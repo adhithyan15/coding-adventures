@@ -127,6 +127,11 @@ describe("transient", () => {
     expectClose(result!.residualVector[1].value, 0.0);
     expectClose(result!.maxAbsBranchResidual, 0.0);
     expectClose(result!.maxAbsResidual, 0.0);
+    const expectedL2Norm = Math.sqrt(
+      result!.residualVector.reduce((sum, entry) => sum + entry.value * entry.value, 0.0),
+    );
+    expectClose(result!.residualL2Norm, expectedL2Norm);
+    expectClose(result!.residualRmsNorm, expectedL2Norm / Math.sqrt(result!.residualVector.length));
   });
 
   it("does not report a PSS residual without a periodic source period", () => {

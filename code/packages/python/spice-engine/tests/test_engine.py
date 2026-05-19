@@ -235,6 +235,14 @@ def test_pss_residual_reports_one_period_node_closure() -> None:
     )
     assert result.max_abs_branch_residual == pytest.approx(0.0, abs=1.0e-12)
     assert result.max_abs_residual == pytest.approx(0.0, abs=1.0e-12)
+    expected_l2_norm = math.sqrt(
+        sum(entry.value * entry.value for entry in result.residual_vector)
+    )
+    assert result.residual_l2_norm == pytest.approx(expected_l2_norm, abs=1.0e-12)
+    assert result.residual_rms_norm == pytest.approx(
+        expected_l2_norm / math.sqrt(len(result.residual_vector)),
+        abs=1.0e-12,
+    )
 
 
 def test_pss_residual_requires_periodic_sources() -> None:
