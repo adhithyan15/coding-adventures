@@ -126,6 +126,33 @@ where
             .collect())
     }
 
+    /// Return a deterministic page of audit rows after a replay checkpoint.
+    pub fn query_audits_after_checkpoint(
+        &self,
+        checkpoint: &ToolAuditReadCheckpoint,
+        limit: Option<usize>,
+    ) -> Result<ToolAuditCheckpointPage, StorageError> {
+        let mut records = self.list_all_audits()?;
+        records.sort_by(compare_audit_watermarks);
+        let mut records: Vec<_> = records
+            .into_iter()
+            .filter(|record| audit_checkpoint_for(record).is_after(checkpoint))
+            .collect();
+        if let Some(limit) = limit {
+            records.truncate(limit);
+        }
+        let next_checkpoint = records
+            .last()
+            .map(audit_checkpoint_for)
+            .unwrap_or_else(|| checkpoint.clone());
+        let inventory = ToolAuditStoreInventorySummary::from_records(&records);
+        Ok(ToolAuditCheckpointPage {
+            records,
+            next_checkpoint,
+            inventory,
+        })
+    }
+
     /// Replay queried audit rows into another D18D audit sink.
     pub fn replay_audits<T>(
         &self,
@@ -180,6 +207,58 @@ where
             },
         )?;
         page.records.iter().map(decode_audit_record).collect()
+    }
+}
+
+/// Replay checkpoint for incrementally reading persisted audit rows.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ToolAuditReadCheckpoint {
+    /// Monotonic audit timestamp chosen from completed_at, started_at, or zero.
+    pub timestamp_ms: u64,
+    /// Last call id observed at the timestamp.
+    pub call_id: String,
+}
+
+impl ToolAuditReadCheckpoint {
+    /// Return the beginning-of-log checkpoint.
+    pub fn beginning() -> Self {
+        Self::default()
+    }
+
+    /// Create a checkpoint from a timestamp and call id.
+    pub fn new(timestamp_ms: u64, call_id: impl Into<String>) -> Self {
+        Self {
+            timestamp_ms,
+            call_id: call_id.into(),
+        }
+    }
+
+    /// Return whether this checkpoint is after another checkpoint.
+    pub fn is_after(&self, other: &Self) -> bool {
+        (self.timestamp_ms, self.call_id.as_str()) > (other.timestamp_ms, other.call_id.as_str())
+    }
+}
+
+/// One deterministic page returned after a replay checkpoint.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ToolAuditCheckpointPage {
+    /// Audit rows in checkpoint order.
+    pub records: Vec<ToolAuditRecord>,
+    /// Checkpoint to use for the next read.
+    pub next_checkpoint: ToolAuditReadCheckpoint,
+    /// Payload-free summary of the returned records.
+    pub inventory: ToolAuditStoreInventorySummary,
+}
+
+impl ToolAuditCheckpointPage {
+    /// Return whether the page contains no records.
+    pub fn is_empty(&self) -> bool {
+        self.records.is_empty()
+    }
+
+    /// Return the number of records in the page.
+    pub fn len(&self) -> usize {
+        self.records.len()
     }
 }
 
@@ -413,6 +492,25 @@ impl ToolAuditStoreInventorySummary {
 
 fn audit_key(call_id: &str) -> String {
     format!("{AUDIT_PREFIX}{call_id}.json")
+}
+
+fn audit_checkpoint_for(record: &ToolAuditRecord) -> ToolAuditReadCheckpoint {
+    ToolAuditReadCheckpoint {
+        timestamp_ms: audit_watermark_ms(record),
+        call_id: record.call_id.clone(),
+    }
+}
+
+fn compare_audit_watermarks(left: &ToolAuditRecord, right: &ToolAuditRecord) -> std::cmp::Ordering {
+    (audit_watermark_ms(left), left.call_id.as_str())
+        .cmp(&(audit_watermark_ms(right), right.call_id.as_str()))
+}
+
+fn audit_watermark_ms(record: &ToolAuditRecord) -> u64 {
+    record
+        .completed_at
+        .or(record.started_at)
+        .unwrap_or_default()
 }
 
 fn json_to_body(value: &JsonValue) -> Result<Vec<u8>, StorageError> {
@@ -792,6 +890,70 @@ mod tests {
             .expect_err("call ids are append-only audit keys");
 
         assert!(matches!(error, StorageError::Conflict { .. }));
+    }
+
+    #[test]
+    fn checkpoint_pages_return_incremental_audit_rows() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                failed_record("call_2"),
+                sample_record("call_1"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+
+        let first = store
+            .query_audits_after_checkpoint(&ToolAuditReadCheckpoint::beginning(), Some(1))
+            .unwrap();
+        assert_eq!(first.len(), 1);
+        assert_eq!(first.records[0].call_id, "call_1");
+        assert_eq!(
+            first.next_checkpoint,
+            ToolAuditReadCheckpoint::new(120, "call_1")
+        );
+        assert_eq!(first.inventory.completed_records, 1);
+
+        let second = store
+            .query_audits_after_checkpoint(&first.next_checkpoint, Some(10))
+            .unwrap();
+        assert_eq!(
+            second
+                .records
+                .iter()
+                .map(|record| record.call_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["call_3", "call_2"]
+        );
+        assert_eq!(
+            second.next_checkpoint,
+            ToolAuditReadCheckpoint::new(151, "call_2")
+        );
+
+        let empty = store
+            .query_audits_after_checkpoint(&second.next_checkpoint, Some(10))
+            .unwrap();
+        assert!(empty.is_empty());
+        assert_eq!(empty.next_checkpoint, second.next_checkpoint);
+    }
+
+    #[test]
+    fn checkpoint_pages_use_call_id_tiebreakers() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![sample_record("call_b"), sample_record("call_a")])
+            .completed_without_failures());
+
+        let page = store
+            .query_audits_after_checkpoint(&ToolAuditReadCheckpoint::new(120, "call_a"), None)
+            .unwrap();
+
+        assert_eq!(page.len(), 1);
+        assert_eq!(page.records[0].call_id, "call_b");
+        assert_eq!(
+            page.next_checkpoint,
+            ToolAuditReadCheckpoint::new(120, "call_b")
+        );
     }
 
     #[test]
