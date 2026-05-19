@@ -37,7 +37,7 @@ Source snapshot:
 | EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | descriptor metadata and bounded bytecode read/write implemented | `storage.write`, `storage.read`; stored program / KV layers later |
 | Watchdog | Renesas WDT library | descriptor metadata and direct bytecode operations implemented | `watchdog.configure`, `watchdog.kick` |
 | OPAMP | UNO R4 OPAMP library | pending | analog board-specific capability after ADC/DAC |
-| WiFi | WiFiS3 library through onboard network module | descriptor metadata, network capability strings, first TCP/UDP socket bytecode tranches, bounded TCP/UDP socket-control queries, bounded UDP payload I/O, bounded WiFi association control, bounded DNS resolution, resolver server policy, and first DNS query/response message payloads implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`, `network.dns`, `network.tcp.open`, `network.tcp.write`, `network.tcp.read`, `network.tcp.close`, `network.tcp.connected`, `network.tcp.available`, `network.udp.open`, `network.udp.write`, `network.udp.read`, `network.udp.write_bytes`, `network.udp.read_bytes`, `network.udp.available`, `network.udp.close`, `network.wifi.associate`, `network.wifi.disconnect`, `network.wifi.status`, `network.dns.resolve`, `network.dns.set_server`, `network.dns.query`, `network.dns.response_ipv4` |
+| WiFi | WiFiS3 library through onboard network module | descriptor metadata, network capability strings, first TCP/UDP socket bytecode tranches, bounded TCP/UDP socket-control queries, bounded UDP payload I/O, bounded WiFi association control, bounded DNS resolution, resolver server policy, first DNS query/response message payloads, and first bounded DNS-over-UDP exchange implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`, `network.dns`, `network.tcp.open`, `network.tcp.write`, `network.tcp.read`, `network.tcp.close`, `network.tcp.connected`, `network.tcp.available`, `network.udp.open`, `network.udp.write`, `network.udp.read`, `network.udp.write_bytes`, `network.udp.read_bytes`, `network.udp.available`, `network.udp.close`, `network.wifi.associate`, `network.wifi.disconnect`, `network.wifi.status`, `network.dns.resolve`, `network.dns.set_server`, `network.dns.query`, `network.dns.response_ipv4`, `network.dns.exchange_udp` |
 | USB/HID | TinyUSB device support | pending | transport/device descriptors first; HID later |
 | OTA/SDU | OTAUpdate and SDU libraries | pending | firmware-management capability, separate from bytecode VM |
 
@@ -115,8 +115,10 @@ reject conflicting handles.
    metadata. `network.dns.query` adds the first DNS message-payload tranche by
    constructing a bounded recursive A-record query in the Rust runtime.
    `network.dns.response_ipv4` follows with bounded response-payload parsing for
-   the first IPv4 A-answer, leaving end-to-end DNS UDP exchange policy for later
-   follow-ups.
+   the first IPv4 A-answer. `network.dns.exchange_udp` now composes the bounded
+   DNS query builder with UDP port 53 byte-buffer I/O and returns raw response
+   bytes for the parser, leaving retry/backoff policy, resolver fallback, and
+   larger response handling for later follow-ups.
    `program.store` now has a protocol capability descriptor, `STORE_PROGRAM`
    device dispatch, runtime HAL hook, and an initial UNO R4 storage-backed
    slot-0 layout that writes a compact header plus module chunks through the

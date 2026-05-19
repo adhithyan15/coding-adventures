@@ -189,6 +189,14 @@ response envelope, skips question records, and returns the first IPv4 A-answer
 as a `u32`. It remains a Rust-runtime operation so UDP transport can be layered
 later without duplicating DNS message parsing across language frontends or board
 ports.
+`network.dns.exchange_udp` is the first bounded DNS-over-UDP transport tranche:
+it accepts an interface id, resolver IPv4 address, transaction id, hostname
+bytes, and requested response length, builds the standard A-record query in the
+Rust runtime, opens UDP port 53 through the board adapter, writes the query,
+reads a bounded response `ByteBuffer`, and closes the UDP handle. Response
+parsing remains separate through `network.dns.response_ipv4` so resolver
+policy, retry/backoff, and larger multi-packet DNS behavior can land as later
+thin host/runtime layers instead of being duplicated in language frontends.
 
 `HandleToken` is private to the board adapter. The portable VM only sees compact
 `Handle` ids.
@@ -213,6 +221,7 @@ CALL_U8 0x4a -> network.dns.query
 CALL_U8 0x4b -> network.dns.response_ipv4
 CALL_U8 0x4c -> network.udp.write_bytes
 CALL_U8 0x4d -> network.udp.read_bytes
+CALL_U8 0x4e -> network.dns.exchange_udp
 ```
 
 Each handler:
