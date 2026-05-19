@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.43.0] - 2026-05-18
+
+### Added
+
+Three maintenance PRAGMAs that ORMs and migration tools commonly call:
+
+- **`PRAGMA optimize`** / **`PRAGMA optimize(N)`** — silently succeeds with
+  an empty result.  Real SQLite analyses statistics and may rebuild indexes;
+  mini-sqlite has nothing to do (everything is in-memory).
+- **`PRAGMA integrity_check`** / **`PRAGMA integrity_check(N)`** /
+  **`PRAGMA integrity_check('table')`** — returns `[('ok',)]`, matching the
+  result every healthy real SQLite database returns.  Mini-sqlite's
+  in-memory storage cannot suffer the corruption modes SQLite checks for.
+- **`PRAGMA quick_check`** / **`PRAGMA quick_check(N)`** — same as
+  `integrity_check`, returns `[('ok',)]`.
+
+### Changed
+
+- `_PRAGMA_RE` now accepts numeric arguments in the parenthesised form
+  (e.g. `PRAGMA optimize(0)`, `PRAGMA integrity_check(10)`), in addition
+  to identifier arguments (e.g. `PRAGMA table_info(users)`).  The argument
+  regex `[A-Za-z_0-9][A-Za-z0-9_]*` allows both styles.
+
+### Tests
+
+- 12 new oracle tests in `test_tier3_pragma_maintenance.py` byte-compare
+  against the real `sqlite3` module across all six pragma forms.
+
 ## [1.42.0] - 2026-05-18
 
 ### Added
