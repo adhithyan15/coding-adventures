@@ -26,6 +26,7 @@ All notable changes to this package will be documented in this file.
   continuation, follow-up, and plan-divergence states.
 - Stable supervisor drain outcome labels and action flags for host schedulers.
 - Flattened supervisor drain run summaries for host logs and scheduler loops.
+- Stable supervisor drain scheduler action recommendations for host loops.
 - Batch audit write summaries for host flush loops.
 - Replay helpers for loading queried audit rows into any `ToolAuditSink`.
 - `StorageToolAuditSink` for runtime audit emission through D18A storage with

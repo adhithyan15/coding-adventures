@@ -37,6 +37,8 @@ The crate keeps the boundary narrow:
   for host logs and scheduling decisions
 - supervisor drain reports can emit flattened payload-free run summaries for
   host logs, schedulers, and continuation decisions
+- supervisor drain summaries expose stable scheduler action recommendations
+  for continuation, follow-up routing, and plan-drift investigation
 
 ## Development
 
