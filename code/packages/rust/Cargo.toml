@@ -388,6 +388,7 @@ members = [
     "matrix-profile",
     "matrix-runtime",
     "matrix-rust-napi",
+    "matrix-rust-python",
     "metal-compute",
     "paint-metal",
     "paint-vm-direct2d-c",
