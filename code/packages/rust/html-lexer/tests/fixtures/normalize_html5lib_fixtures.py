@@ -10,6 +10,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+from generated_fixture_io import write_fixture_json
+
 
 SUPPORTED_INITIAL_STATES = {
     "CDATA section bracket state",
@@ -263,6 +265,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "output", type=Path, help="Path to write normalized venture-html-lexer fixture JSON"
     )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Fail if the checked-in normalized fixture is stale.",
+    )
     return parser.parse_args()
 
 
@@ -306,8 +313,19 @@ def main() -> int:
         "skipped": skipped,
     }
 
-    args.output.write_text(json.dumps(normalized, indent=2) + "\n")
-    return 0
+    return write_fixture_json(
+        args.output,
+        normalized,
+        check=args.check,
+        ensure_ascii=True,
+        sort_keys=False,
+        stale_hint=(
+            "with `python3 code/packages/rust/html-lexer/tests/fixtures/"
+            "normalize_html5lib_fixtures.py "
+            "code/packages/rust/html-lexer/tests/fixtures/upstream-html5lib-smoke.test "
+            "code/packages/rust/html-lexer/tests/fixtures/html5lib-smoke.json`."
+        ),
+    )
 
 
 def is_supported(test: dict[str, Any]) -> tuple[bool, str]:

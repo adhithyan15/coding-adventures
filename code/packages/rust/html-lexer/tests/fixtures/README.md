@@ -463,6 +463,15 @@ python3 code/packages/rust/html-lexer/tests/fixtures/normalize_html5lib_fixtures
   code/packages/rust/html-lexer/tests/fixtures/html5lib-smoke.json
 ```
 
+To check whether the normalized corpus is stale:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/normalize_html5lib_fixtures.py \
+  code/packages/rust/html-lexer/tests/fixtures/upstream-html5lib-smoke.test \
+  code/packages/rust/html-lexer/tests/fixtures/html5lib-smoke.json \
+  --check
+```
+
 Planned flow:
 
 1. Import or mirror selected upstream tokenizer cases into a generator script.

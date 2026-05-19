@@ -13,13 +13,14 @@ def write_fixture_json(
     *,
     check: bool,
     ensure_ascii: bool = False,
+    sort_keys: bool = True,
     stale_hint: str | None = None,
 ) -> int:
     text = json.dumps(
         fixture,
         indent=2,
         ensure_ascii=ensure_ascii,
-        sort_keys=True,
+        sort_keys=sort_keys,
     ) + "\n"
 
     if check:
