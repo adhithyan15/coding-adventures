@@ -16,6 +16,7 @@ use chief_of_staff_tool_api::{
 };
 use coding_adventures_json_serializer::serialize as json_serialize;
 use coding_adventures_json_value::{parse as json_parse, JsonNumber, JsonValue};
+use std::fmt::{self, Display, Formatter};
 use storage_core::{
     Revision, StorageBackend, StorageError, StorageListOptions, StoragePutInput, StorageRecord,
     StorageRecordInventorySummary,
@@ -887,6 +888,16 @@ impl ToolAuditSupervisorDrainRunReport {
         ToolAuditSupervisorDrainRunOutcome::Idle
     }
 
+    /// Return the stable scheduler-facing label for this run outcome.
+    pub fn outcome_label(&self) -> &'static str {
+        self.outcome().as_str()
+    }
+
+    /// Return whether this run outcome asks the scheduler to take action.
+    pub fn requires_scheduler_action(&self) -> bool {
+        self.outcome().requires_scheduler_action()
+    }
+
     /// Return whether the actual run delivered the planned number of rows.
     pub fn matches_planned_record_count(&self) -> bool {
         self.plan.planned_records == self.drain.drained_records
@@ -941,6 +952,33 @@ pub enum ToolAuditSupervisorDrainRunOutcome {
     NeedsFollowUp,
     /// The preflight plan and actual drain delivered different row counts.
     PlanDiverged,
+}
+
+impl ToolAuditSupervisorDrainRunOutcome {
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Idle => "idle",
+            Self::CaughtUp => "caught_up",
+            Self::NeedsContinuation => "needs_continuation",
+            Self::NeedsFollowUp => "needs_follow_up",
+            Self::PlanDiverged => "plan_diverged",
+        }
+    }
+
+    /// Return whether the scheduler should take action for this outcome.
+    pub fn requires_scheduler_action(self) -> bool {
+        matches!(
+            self,
+            Self::NeedsContinuation | Self::NeedsFollowUp | Self::PlanDiverged
+        )
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainRunOutcome {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
 }
 
 /// Payload-free summary for a batch audit write.
@@ -2486,6 +2524,63 @@ mod tests {
             report.outcome(),
             ToolAuditSupervisorDrainRunOutcome::PlanDiverged
         );
+    }
+
+    #[test]
+    fn supervisor_drain_outcome_labels_are_stable_for_hosts() {
+        let cases = [
+            (ToolAuditSupervisorDrainRunOutcome::Idle, "idle", false),
+            (
+                ToolAuditSupervisorDrainRunOutcome::CaughtUp,
+                "caught_up",
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainRunOutcome::NeedsContinuation,
+                "needs_continuation",
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainRunOutcome::NeedsFollowUp,
+                "needs_follow_up",
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainRunOutcome::PlanDiverged,
+                "plan_diverged",
+                true,
+            ),
+        ];
+
+        for (outcome, label, requires_action) in cases {
+            assert_eq!(outcome.as_str(), label);
+            assert_eq!(outcome.to_string(), label);
+            assert_eq!(outcome.requires_scheduler_action(), requires_action);
+        }
+    }
+
+    #[test]
+    fn supervisor_drain_report_exposes_outcome_label_and_action_flag() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 1, &mut sink)
+            .unwrap();
+
+        assert_eq!(
+            report.outcome(),
+            ToolAuditSupervisorDrainRunOutcome::NeedsContinuation
+        );
+        assert_eq!(report.outcome_label(), "needs_continuation");
+        assert!(report.requires_scheduler_action());
     }
 
     #[test]
