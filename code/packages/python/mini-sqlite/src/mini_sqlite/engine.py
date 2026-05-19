@@ -448,7 +448,7 @@ _PRAGMA_RE = re.compile(
     (?P<name>[A-Za-z_][A-Za-z0-9_]*)   # pragma name
     (?:                                  # optional argument or assignment
         \s* \(
-            \s* ["']? (?P<arg>[A-Za-z_][A-Za-z0-9_]*) ["']? \s*
+            \s* ["']? (?P<arg>[A-Za-z_0-9][A-Za-z0-9_]*) ["']? \s*
         \)
         |
         \s* = \s* (?P<set_value>-?\d+|[A-Za-z_][A-Za-z0-9_]*)
@@ -826,6 +826,43 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
             return QueryResult(rows_affected=0)
         v = _pragma_get(backend, name)
         return QueryResult(columns=(name,), rows=((v,),))
+
+    # ------------------------------------------------------------------------
+    # Maintenance pragmas — return SQLite-compatible "ok" / empty results.
+    #
+    # These pragmas trigger heavy operations in real SQLite:
+    #
+    #   PRAGMA optimize                  — analyses statistics, maybe rebuilds
+    #                                       indexes.  Returns no rows.
+    #   PRAGMA optimize(N)               — same with bitmask of optimisation
+    #                                       flags (N=0 disables, ignore in mini).
+    #   PRAGMA integrity_check           — full structural + constraint scan.
+    #                                       Returns 'ok' row, or one row per
+    #                                       error found.
+    #   PRAGMA integrity_check(N)        — same but reports at most N errors.
+    #   PRAGMA integrity_check('table')  — restrict the check to one table.
+    #   PRAGMA quick_check               — like integrity_check but skips the
+    #                                       UNIQUE / foreign-key checks.
+    #
+    # Mini-sqlite holds everything in memory; corruption isn't possible in the
+    # ways SQLite worries about (page-level B-tree integrity, partial writes,
+    # etc.).  We unconditionally report `'ok'` for the *_check pragmas — that
+    # matches the result every healthy real SQLite database returns — and
+    # treat `optimize` as a no-op.
+    # ------------------------------------------------------------------------
+    if name == "optimize":
+        # Always succeeds with empty result.  Both `PRAGMA optimize` and
+        # `PRAGMA optimize(N)` for any N produce no rows in real SQLite when
+        # the database is in good shape.
+        return QueryResult(columns=(), rows=())
+
+    if name in ("integrity_check", "quick_check"):
+        # Report 'ok' as a single-row, single-column result — the canonical
+        # successful response from real SQLite.  The "max errors" argument
+        # form (PRAGMA integrity_check(N)) and the "single-table" argument
+        # form (PRAGMA integrity_check('table')) both produce the same 'ok'
+        # row when there are no errors.
+        return QueryResult(columns=("integrity_check",), rows=(("ok",),))
 
     # Unknown PRAGMA — return empty result rather than error, matching SQLite.
     return QueryResult(columns=(), rows=())
