@@ -3839,6 +3839,9 @@ mod tests {
             .capabilities
             .contains(&"network.dns.set_server".to_owned()));
         assert!(uno.capabilities.contains(&"network.dns.query".to_owned()));
+        assert!(uno
+            .capabilities
+            .contains(&"network.dns.response_ipv4".to_owned()));
         assert_eq!(uno.network_interfaces.len(), 1);
         let uno_network = &uno.network_interfaces[0];
         assert_eq!(uno_network.interface, 0);

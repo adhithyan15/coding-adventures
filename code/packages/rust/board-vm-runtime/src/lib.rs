@@ -5,14 +5,14 @@ use board_vm_ir::{
     CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE,
     CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
     CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_QUERY, CAP_NETWORK_DNS_RESOLVE,
-    CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE, CAP_NETWORK_TCP_CLOSE,
-    CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE,
-    CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
-    CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT,
-    CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
-    CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
-    CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
-    MAX_BYTE_BUFFER_LEN,
+    CAP_NETWORK_DNS_RESPONSE_IPV4, CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE,
+    CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
+    CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN,
+    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE,
+    CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET,
+    CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS,
+    CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE,
+    CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1156,6 +1156,13 @@ where
                     .map_err(|kind| RuntimeError { ip, kind })?;
                 self.push(Value::Bytes(query), ip)
             }
+            CAP_NETWORK_DNS_RESPONSE_IPV4 => {
+                let response = self.pop_bytes(ip)?;
+                let transaction_id = self.pop_u16(ip)?;
+                let ipv4 = parse_dns_response_ipv4(transaction_id, response.as_slice())
+                    .map_err(|kind| RuntimeError { ip, kind })?;
+                self.push(Value::U32(ipv4), ip)
+            }
             CAP_LED_MATRIX_FRAME => {
                 let word2 = self.pop_u32(ip)?;
                 let word1 = self.pop_u32(ip)?;
@@ -1428,6 +1435,99 @@ fn push_dns_query_bytes(
     out[*offset..end].copy_from_slice(bytes);
     *offset = end;
     Ok(())
+}
+
+fn parse_dns_response_ipv4(transaction_id: u16, response: &[u8]) -> Result<u32, RuntimeErrorKind> {
+    if response.len() < 12 {
+        return Err(RuntimeErrorKind::InvalidBytecode);
+    }
+    if read_dns_u16(response, 0)? != transaction_id {
+        return Err(RuntimeErrorKind::InvalidBytecode);
+    }
+
+    let flags = read_dns_u16(response, 2)?;
+    if flags & 0x8000 == 0 || flags & 0x000F != 0 {
+        return Err(RuntimeErrorKind::InvalidBytecode);
+    }
+
+    let question_count = read_dns_u16(response, 4)?;
+    let answer_count = read_dns_u16(response, 6)?;
+    let mut offset = 12;
+
+    for _ in 0..question_count {
+        offset = skip_dns_name(response, offset)?;
+        offset = require_dns_range(response, offset, 4)?;
+    }
+
+    for _ in 0..answer_count {
+        offset = skip_dns_name(response, offset)?;
+        let record_end = require_dns_range(response, offset, 10)?;
+        let record_type = read_dns_u16(response, offset)?;
+        let record_class = read_dns_u16(response, offset + 2)?;
+        let data_len = read_dns_u16(response, offset + 8)? as usize;
+        let data_offset = record_end;
+        let data_end = require_dns_range(response, data_offset, data_len)?;
+
+        if record_type == 1 && record_class == 1 && data_len == 4 {
+            return Ok(u32::from_be_bytes([
+                response[data_offset],
+                response[data_offset + 1],
+                response[data_offset + 2],
+                response[data_offset + 3],
+            ]));
+        }
+
+        offset = data_end;
+    }
+
+    Err(RuntimeErrorKind::InvalidBytecode)
+}
+
+fn skip_dns_name(response: &[u8], mut offset: usize) -> Result<usize, RuntimeErrorKind> {
+    loop {
+        let label_len = *response
+            .get(offset)
+            .ok_or(RuntimeErrorKind::InvalidBytecode)?;
+
+        if label_len & 0xC0 == 0xC0 {
+            let pointer_low = *response
+                .get(offset + 1)
+                .ok_or(RuntimeErrorKind::InvalidBytecode)?;
+            let pointer = (((label_len & 0x3F) as usize) << 8) | pointer_low as usize;
+            if pointer >= response.len() {
+                return Err(RuntimeErrorKind::InvalidBytecode);
+            }
+            return require_dns_range(response, offset, 2);
+        }
+        if label_len & 0xC0 != 0 || label_len > 63 {
+            return Err(RuntimeErrorKind::InvalidBytecode);
+        }
+
+        offset = require_dns_range(response, offset, 1)?;
+        if label_len == 0 {
+            return Ok(offset);
+        }
+        offset = require_dns_range(response, offset, label_len as usize)?;
+    }
+}
+
+fn read_dns_u16(response: &[u8], offset: usize) -> Result<u16, RuntimeErrorKind> {
+    require_dns_range(response, offset, 2)?;
+    Ok(u16::from_be_bytes([response[offset], response[offset + 1]]))
+}
+
+fn require_dns_range(
+    response: &[u8],
+    offset: usize,
+    len: usize,
+) -> Result<usize, RuntimeErrorKind> {
+    let end = offset
+        .checked_add(len)
+        .ok_or(RuntimeErrorKind::InvalidBytecode)?;
+    if end > response.len() {
+        return Err(RuntimeErrorKind::InvalidBytecode);
+    }
+    Ok(end)
 }
 
 fn jump_target(next_ip: usize, offset: i8, instruction_ip: usize) -> Result<usize, RuntimeError> {
@@ -2535,6 +2635,39 @@ mod tests {
             report.return_value,
             Value::Bytes(ByteBuffer::from_slice(&expected).unwrap())
         );
+        assert!(runtime.hal().events.is_empty());
+    }
+
+    #[test]
+    fn network_dns_response_ipv4_extracts_first_a_record() {
+        let mut runtime: Runtime<FakeHal, 2, 1> = Runtime::new(FakeHal::new());
+        let response = [
+            0x12, 0x34, 0x81, 0x80, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x01, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x3C, 0x00, 0x04,
+            0xC0, 0xA8, 0x01, 0x2A,
+        ];
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[
+                0x13,
+                0x34,
+                0x12,
+                0x16,
+                0x00,
+                0x00,
+                0x20,
+                0x40,
+                CAP_NETWORK_DNS_RESPONSE_IPV4 as u8,
+                0x50,
+            ],
+            const_pool: &response,
+        };
+
+        let report = runtime.run_module(&module, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_value, Value::U32(0xC0A8_012A));
         assert!(runtime.hal().events.is_empty());
     }
 
