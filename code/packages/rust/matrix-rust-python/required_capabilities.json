@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/matrix-rust-python",
   "capabilities": [],
-  "justification": "Phase 1 surface area is one pure-function Python C API export (graph_round_trip_json) that converts JSON in -> matrix_ir::Graph -> JSON out via the matrix-ir-json crate. No filesystem, no network, no process spawn, no environment access. All extern \"C\" Python C API symbols are resolved at runtime by the embedding CPython interpreter; the extension itself opens no resources."
+  "justification": "Phase 2 surface area is two pure-function Python C API exports: graph_round_trip_json (JSON in -> matrix_ir::Graph -> JSON out via matrix-ir-json) and run_graph_on_cpu (envelope JSON -> plan + execute on matrix-runtime + matrix-cpu -> envelope JSON). No filesystem, no network, no process spawn, no environment access. matrix-runtime and matrix-cpu are pure in-process compute over caller-supplied bytes. All extern \"C\" Python C API symbols are resolved at runtime by the embedding CPython interpreter; the extension itself opens no resources. A 4 GiB hard cap on total placed-tensor byte size (MAX_TOTAL_BUFFER_BYTES in exec.rs) prevents adversarial envelope JSON from triggering a process abort via handle_alloc_error."
 }

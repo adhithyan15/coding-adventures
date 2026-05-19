@@ -6,11 +6,15 @@ to Python.  Sibling crate to
 [`matrix-rust-napi`](../matrix-rust-napi) (the Node.js N-API binding)
 — same shape, different toolchain.
 
-This is **Phase 1** of [MX09](../../../specs/MX09-matrix-rust-python.md).
-Phase 1 ships the crate skeleton plus one exported function
-(`graph_round_trip_json`) — the smoke test that proves the
-matrix-ir-json wire format survives a trip through the Python C API
-boundary.  Phases 2+ add execution and class-based APIs.
+Currently at **Phase 2** of [MX09](../../../specs/MX09-matrix-rust-python.md).
+
+| Phase | Surface |
+|-------|---------|
+| 1 ✅ | `graph_round_trip_json(json_string: str) -> str` |
+| 2 ✅ | `run_graph_on_cpu(envelope_json: str) -> str` |
+| 2b | `Graph` / `Runtime` classes with `bytes` I/O via PyCapsule |
+| 3   | `pyproject.toml` + `maturin` wheel build workflow |
+| 4   | Python wrapper package + `pytest` smoke tests |
 
 ## What this crate is
 
@@ -31,36 +35,35 @@ code/packages/rust/matrix-rust-python/
   required_capabilities.json
 ```
 
-## What ships in Phase 1
-
-One exported Python function:
+## What ships today (Phases 1 + 2)
 
 ```python
 import matrix_rust_python as m
+import json
 
-# Round-trip a matrix-ir-json wire-format Graph through Rust.
+# ── Phase 1: round-trip a matrix-ir-json wire-format Graph through Rust.
 out = m.graph_round_trip_json(json_in)
 # out is a compact JSON string with canonical field order;
 # `json.loads(out)` decodes to a Graph value semantically identical
 # to `json.loads(json_in)`.
+
+# ── Phase 2: plan + execute on matrix-cpu via matrix-runtime.
+envelope = json.dumps({
+    "graph": {...},                                     # matrix-ir-json schema
+    "inputs": ["3f8000003f000000", "..."],              # lowercase-hex bytes
+})
+result = json.loads(m.run_graph_on_cpu(envelope))
+output_bytes = bytes.fromhex(result["outputs"][0])      # little-endian f32 payload
 ```
 
-That's it.  The function is intentionally minimal — three things it
-must prove:
+The Phase 2 envelope shape is bit-identical to `matrix-rust-napi`'s
+`runGraphOnCpu` envelope, so a single JSON test fixture cross-checks
+both bindings.
 
-1. **Build pipeline works.**  The cdylib compiles, exposes a
-   `PyInit_matrix_rust_python` symbol, and is importable from
-   Python.
-2. **Python C API boundary works.**  Strings move in and out of the
-   extension without data loss.
-3. **`matrix-ir-json` is the right interop wire format.**  Anything
-   constructable on either side (Rust, hand-written JSON, future TS)
-   must survive `graph_round_trip_json` unchanged.
-
-Phases 2+ add `run_graph_on_cpu` (envelope JSON execution),
-`Graph` / `Runtime` classes with `bytes` I/O via `PyCapsule`, the
-`maturin` wheel build, and the companion `code/packages/python/`
-wrapper package.
+Phases 2b+ add `Graph` / `Runtime` Python classes with `bytes` I/O
+via `PyCapsule`, the `maturin` wheel build, and the companion
+`code/packages/python/` wrapper package — each as its own PR per
+the MX09 spec.
 
 ## Why `python-bridge`, not `pyo3`
 
