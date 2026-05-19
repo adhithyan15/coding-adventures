@@ -12,6 +12,7 @@ import {
   dcCorners,
   dcOp,
   dcSweep,
+  dcSweepCorners,
   diode,
   inductor,
   mosfet,
@@ -479,5 +480,34 @@ describe("dcCorners", () => {
     expect(result.points[1].result.voltage("out")).toBeCloseTo(10.0 / 3.0, 9);
     expect(result.points[2].result.voltage("out")).toBeCloseTo(6.0, 9);
     expect(result.points[3].result.voltage("out")).toBeCloseTo(-5.0, 9);
+  });
+});
+
+describe("dcSweepCorners", () => {
+  it("runs source sweeps at each named corner", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 0.0));
+    circuit.add(resistor("Rtop", "in", "out", 1_000.0));
+    circuit.add(resistor("Rbot", "out", "0", 1_000.0));
+
+    const result = dcSweepCorners(circuit, "Vin", 0.0, 10.0, 5.0, [
+      { name: "nominal", overrides: [] },
+      {
+        name: "rbot-fast",
+        overrides: [{ elementName: "Rbot", parameter: "resistance", value: 500.0 }],
+      },
+    ]);
+
+    expect(result.sourceName).toBe("Vin");
+    expect(result.points.map((point) => point.cornerName)).toEqual(["nominal", "rbot-fast"]);
+    expect(result.points[0].points.map((point) => point.value)).toEqual([0.0, 5.0, 10.0]);
+    expect(result.points[0].points.map((point) => point.result.voltage("out"))).toEqual([
+      0.0,
+      2.5,
+      5.0,
+    ]);
+    expect(result.points[1].points[0].result.voltage("out")).toBeCloseTo(0.0, 9);
+    expect(result.points[1].points[1].result.voltage("out")).toBeCloseTo(5.0 / 3.0, 9);
+    expect(result.points[1].points[2].result.voltage("out")).toBeCloseTo(10.0 / 3.0, 9);
   });
 });

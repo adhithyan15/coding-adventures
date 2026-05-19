@@ -437,6 +437,16 @@ export interface DcSweepPoint {
   readonly result: DcResult;
 }
 
+export interface CornerDcSweepPoint {
+  readonly cornerName: string;
+  readonly points: readonly DcSweepPoint[];
+}
+
+export interface CornerDcSweepResult {
+  readonly sourceName: string;
+  readonly points: readonly CornerDcSweepPoint[];
+}
+
 export type McDistribution = "gaussian" | "uniform";
 
 export interface McOptions {
@@ -1132,6 +1142,23 @@ export function dcSweep(
     points.push({ value, result: dcOp(swept) });
   }
   return points;
+}
+
+export function dcSweepCorners(
+  circuit: Circuit,
+  sourceName: string,
+  start: number,
+  stop: number,
+  step: number,
+  corners: readonly CornerSpec[],
+): CornerDcSweepResult {
+  return {
+    sourceName,
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      points: dcSweep(circuitWithCorner(circuit, corner), sourceName, start, stop, step),
+    })),
+  };
 }
 
 export function mcDc(
