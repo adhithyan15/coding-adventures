@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-index-renderer",
+  "version": "0.1.0",
+  "description": "Index / archive page renderer for the Forme pipeline (FM00 v0).  Pure transform: IndexItem[] + options → reproducible HTML <ul> list (optionally grouped by category/year/month) suitable for blog archives and index pages.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-types": "file:../forme-types"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
