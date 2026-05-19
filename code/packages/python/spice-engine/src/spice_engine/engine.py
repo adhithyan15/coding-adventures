@@ -348,6 +348,34 @@ class PssResidualResult:
 
 
 @dataclass
+class PssStateEntry:
+    """One ordered PSS shooting-state entry."""
+
+    kind: str
+    name: str
+    value: float
+
+
+@dataclass
+class PssResidualJacobianColumn:
+    """Finite-difference derivatives for one PSS shooting-state entry."""
+
+    state: PssStateEntry
+    residual_derivatives: list[PssResidualEntry]
+
+
+@dataclass
+class PssResidualJacobianResult:
+    """Forward finite-difference Jacobian for the ordered PSS residual vector."""
+
+    residual: PssResidualResult
+    state_vector: list[PssStateEntry]
+    perturbation: float
+    columns: list[PssResidualJacobianColumn]
+    jacobian: list[list[float]]
+
+
+@dataclass
 class AcPoint:
     """Phasor voltages at a single frequency point.
 
@@ -2394,6 +2422,135 @@ def pss_residual(
         residual_tol=residual_tol,
         within_tolerance=result.converged and max_abs <= residual_tol,
         converged=result.converged,
+    )
+
+
+def _pss_state_vector(circuit: Circuit) -> list[PssStateEntry]:
+    state_vector: list[PssStateEntry] = []
+    for element in circuit.elements:
+        if isinstance(element, Capacitor):
+            state_vector.append(
+                PssStateEntry(
+                    kind="capacitor_voltage",
+                    name=element.name,
+                    value=element.initial_voltage,
+                )
+            )
+        elif isinstance(element, Inductor):
+            state_vector.append(
+                PssStateEntry(
+                    kind="inductor_current",
+                    name=element.name,
+                    value=element.initial_current,
+                )
+            )
+    return state_vector
+
+
+def _with_perturbed_pss_state(
+    circuit: Circuit,
+    target: PssStateEntry,
+    perturbation: float,
+) -> Circuit:
+    elements: list[Element] = []
+    for element in circuit.elements:
+        if (
+            target.kind == "capacitor_voltage"
+            and isinstance(element, Capacitor)
+            and element.name == target.name
+        ):
+            elements.append(
+                replace(
+                    element,
+                    initial_voltage=element.initial_voltage + perturbation,
+                )
+            )
+        elif (
+            target.kind == "inductor_current"
+            and isinstance(element, Inductor)
+            and element.name == target.name
+        ):
+            elements.append(
+                replace(
+                    element,
+                    initial_current=element.initial_current + perturbation,
+                )
+            )
+        else:
+            elements.append(element)
+    return Circuit(elements=elements, subcircuits=dict(circuit.subcircuits))
+
+
+def pss_residual_jacobian(
+    circuit: Circuit,
+    *,
+    steps_per_period: int = 64,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    residual_tol: float = 1e-6,
+    perturbation: float = 1e-6,
+) -> PssResidualJacobianResult | None:
+    """Estimate d(residual vector)/d(initial reactive state) for PSS shooting."""
+    if not math.isfinite(perturbation) or perturbation <= 0.0:
+        raise ValueError("perturbation must be finite and positive")
+
+    residual = pss_residual(
+        circuit,
+        steps_per_period=steps_per_period,
+        method=method,
+        max_iterations=max_iterations,
+        tol=tol,
+        residual_tol=residual_tol,
+    )
+    if residual is None:
+        return None
+
+    state_vector = _pss_state_vector(circuit)
+    columns: list[PssResidualJacobianColumn] = []
+    for state in state_vector:
+        perturbed = pss_residual(
+            _with_perturbed_pss_state(circuit, state, perturbation),
+            steps_per_period=steps_per_period,
+            method=method,
+            max_iterations=max_iterations,
+            tol=tol,
+            residual_tol=residual_tol,
+        )
+        if perturbed is None:
+            raise ValueError("perturbed circuit no longer has an estimated period")
+        if len(perturbed.residual_vector) != len(residual.residual_vector):
+            raise ValueError("perturbed residual vector changed shape")
+        derivatives: list[PssResidualEntry] = []
+        for base_entry, perturbed_entry in zip(
+            residual.residual_vector,
+            perturbed.residual_vector,
+            strict=True,
+        ):
+            if (
+                perturbed_entry.kind != base_entry.kind
+                or perturbed_entry.name != base_entry.name
+            ):
+                raise ValueError("perturbed residual vector changed ordering")
+            derivatives.append(
+                PssResidualEntry(
+                    kind=base_entry.kind,
+                    name=base_entry.name,
+                    value=(perturbed_entry.value - base_entry.value) / perturbation,
+                )
+            )
+        columns.append(PssResidualJacobianColumn(state=state, residual_derivatives=derivatives))
+
+    jacobian = [
+        [column.residual_derivatives[row_index].value for column in columns]
+        for row_index in range(len(residual.residual_vector))
+    ]
+    return PssResidualJacobianResult(
+        residual=residual,
+        state_vector=state_vector,
+        perturbation=perturbation,
+        columns=columns,
+        jacobian=jacobian,
     )
 
 

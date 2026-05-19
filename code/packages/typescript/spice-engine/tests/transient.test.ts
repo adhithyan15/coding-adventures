@@ -14,6 +14,7 @@ import {
   estimatePeriod,
   inductor,
   inductorWithInitialCurrent,
+  pssResidualJacobian,
   pssResidual,
   resistor,
   transient,
@@ -134,6 +135,41 @@ describe("transient", () => {
     expectClose(result!.residualRmsNorm, expectedL2Norm / Math.sqrt(result!.residualVector.length));
   });
 
+  it("reports finite-difference PSS residual Jacobian columns", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+    circuit.add(capacitorWithInitialVoltage("C1", "out", "0", 1.0e-6, 0.1));
+
+    const result = pssResidualJacobian(circuit, 32, 1.0e-6, 1.0e-5);
+
+    expect(result).not.toBeUndefined();
+    expectClose(result!.perturbation, 1.0e-5);
+    expect(result!.stateVector).toEqual([
+      { kind: "capacitor_voltage", name: "C1", value: 0.1 },
+    ]);
+    expect(result!.columns[0].state).toEqual(result!.stateVector[0]);
+    expect(result!.jacobian).toHaveLength(result!.residual.residualVector.length);
+    expect(result!.jacobian.every((row) => row.length === 1)).toBe(true);
+    const outDerivative = result!.columns[0].residualDerivatives.find(
+      (entry) => entry.name === "out",
+    )!.value;
+    const outRow = result!.residual.residualVector.findIndex(
+      (entry) => entry.name === "out",
+    );
+    expectClose(result!.jacobian[outRow][0], outDerivative);
+    expect(Math.abs(outDerivative)).toBeGreaterThan(0.1);
+    expect(result!.jacobian.every((row) => Number.isFinite(row[0]))).toBe(true);
+  });
+
   it("does not report a PSS residual without a periodic source period", () => {
     const circuit = new Circuit();
     circuit.add(
@@ -162,6 +198,23 @@ describe("transient", () => {
     );
 
     expect(() => pssResidual(circuit, 32, -1.0)).toThrow(SpiceError);
+  });
+
+  it("rejects non-positive PSS residual Jacobian perturbations", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+
+    expect(() => pssResidualJacobian(circuit, 32, 1.0e-6, 0.0)).toThrow(
+      SpiceError,
+    );
   });
 
   it("uses a backward-Euler capacitor companion for an RC step", () => {

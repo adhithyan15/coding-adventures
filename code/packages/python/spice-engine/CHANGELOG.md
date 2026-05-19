@@ -4,6 +4,10 @@
 
 ### Added
 
+- **PSS residual Jacobian foothold** — `pss_residual_jacobian` now reports a
+  forward finite-difference Jacobian from reactive initial conditions to the
+  ordered residual vector for future shooting-Newton updates.
+
 - **PSS residual vector norms** — `pss_residual` now reports L2 and RMS
   norms over the ordered node-then-branch residual vector for future
   shooting-Newton convergence checks.

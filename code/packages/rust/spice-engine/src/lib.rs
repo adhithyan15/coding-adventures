@@ -1688,6 +1688,28 @@ pub struct PssResidualResult {
     pub within_tolerance: bool,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct PssStateEntry {
+    pub kind: String,
+    pub name: String,
+    pub value: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct PssResidualJacobianColumn {
+    pub state: PssStateEntry,
+    pub residual_derivatives: Vec<PssResidualEntry>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct PssResidualJacobianResult {
+    pub residual: PssResidualResult,
+    pub state_vector: Vec<PssStateEntry>,
+    pub perturbation: f64,
+    pub columns: Vec<PssResidualJacobianColumn>,
+    pub jacobian: Vec<Vec<f64>>,
+}
+
 impl DcResult {
     pub fn voltage(&self, node: &str) -> Option<f64> {
         if is_ground(node) {
@@ -2794,6 +2816,139 @@ pub fn pss_residual_with_tolerance(
         residual_rms_norm,
         residual_tolerance,
         within_tolerance: max_abs_residual <= residual_tolerance,
+    }))
+}
+
+fn pss_state_vector(circuit: &Circuit) -> Vec<PssStateEntry> {
+    let mut state_vector = Vec::new();
+    for element in circuit.elements() {
+        match element {
+            Element::Capacitor(capacitor) => state_vector.push(PssStateEntry {
+                kind: "capacitor_voltage".to_string(),
+                name: capacitor.name.clone(),
+                value: capacitor.initial_voltage,
+            }),
+            Element::Inductor(inductor) => state_vector.push(PssStateEntry {
+                kind: "inductor_current".to_string(),
+                name: inductor.name.clone(),
+                value: inductor.initial_current,
+            }),
+            _ => {}
+        }
+    }
+    state_vector
+}
+
+fn with_perturbed_pss_state(
+    circuit: &Circuit,
+    target: &PssStateEntry,
+    perturbation: f64,
+) -> Circuit {
+    let mut perturbed = circuit.clone();
+    for element in &mut perturbed.elements {
+        match element {
+            Element::Capacitor(capacitor)
+                if target.kind == "capacitor_voltage" && capacitor.name == target.name =>
+            {
+                capacitor.initial_voltage += perturbation;
+            }
+            Element::Inductor(inductor)
+                if target.kind == "inductor_current" && inductor.name == target.name =>
+            {
+                inductor.initial_current += perturbation;
+            }
+            _ => {}
+        }
+    }
+    perturbed
+}
+
+pub fn pss_residual_jacobian(
+    circuit: &Circuit,
+    steps_per_period: usize,
+) -> Result<Option<PssResidualJacobianResult>, SpiceError> {
+    pss_residual_jacobian_with_tolerance(circuit, steps_per_period, 1.0e-6, 1.0e-6)
+}
+
+pub fn pss_residual_jacobian_with_tolerance(
+    circuit: &Circuit,
+    steps_per_period: usize,
+    residual_tolerance: f64,
+    perturbation: f64,
+) -> Result<Option<PssResidualJacobianResult>, SpiceError> {
+    if !perturbation.is_finite() || perturbation <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "pss_residual_jacobian".to_string(),
+            reason: "perturbation must be finite and positive".to_string(),
+        });
+    }
+
+    let Some(residual) =
+        pss_residual_with_tolerance(circuit, steps_per_period, residual_tolerance)?
+    else {
+        return Ok(None);
+    };
+
+    let state_vector = pss_state_vector(circuit);
+    let mut columns = Vec::new();
+    for state in &state_vector {
+        let Some(perturbed) = pss_residual_with_tolerance(
+            &with_perturbed_pss_state(circuit, state, perturbation),
+            steps_per_period,
+            residual_tolerance,
+        )?
+        else {
+            return Err(SpiceError::InvalidElement {
+                name: "pss_residual_jacobian".to_string(),
+                reason: "perturbed circuit no longer has an estimated period".to_string(),
+            });
+        };
+        if perturbed.residual_vector.len() != residual.residual_vector.len() {
+            return Err(SpiceError::InvalidElement {
+                name: "pss_residual_jacobian".to_string(),
+                reason: "perturbed residual vector changed shape".to_string(),
+            });
+        }
+
+        let mut residual_derivatives = Vec::new();
+        for (base_entry, perturbed_entry) in residual
+            .residual_vector
+            .iter()
+            .zip(perturbed.residual_vector.iter())
+        {
+            if base_entry.kind != perturbed_entry.kind || base_entry.name != perturbed_entry.name {
+                return Err(SpiceError::InvalidElement {
+                    name: "pss_residual_jacobian".to_string(),
+                    reason: "perturbed residual vector changed ordering".to_string(),
+                });
+            }
+            residual_derivatives.push(PssResidualEntry {
+                kind: base_entry.kind.clone(),
+                name: base_entry.name.clone(),
+                value: (perturbed_entry.value - base_entry.value) / perturbation,
+            });
+        }
+        columns.push(PssResidualJacobianColumn {
+            state: state.clone(),
+            residual_derivatives,
+        });
+    }
+
+    let jacobian = (0..residual.residual_vector.len())
+        .map(|row_index| {
+            columns
+                .iter()
+                .map(|column| column.residual_derivatives[row_index].value)
+                .collect()
+        })
+        .collect();
+
+    Ok(Some(PssResidualJacobianResult {
+        residual,
+        state_vector,
+        perturbation,
+        columns,
+        jacobian,
     }))
 }
 

@@ -106,6 +106,7 @@ from spice_engine import (
     NoiseEntry,
     NoisePoint,
     NoiseResult,
+    PssResidualJacobianResult,
     PssResidualResult,
     PulseWaveform,
     PwlWaveform,
@@ -128,6 +129,7 @@ from spice_engine import (
     estimate_period,
     mc_dc,
     noise_ac,
+    pss_residual_jacobian,
     pss_residual,
     sens_dc,
     s_parameters,
@@ -245,6 +247,40 @@ def test_pss_residual_reports_one_period_node_closure() -> None:
     )
 
 
+def test_pss_residual_jacobian_reports_reactive_initial_state_columns() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(frequency=1_000.0),
+        )
+    )
+    c.add(Resistor("R1", "in", "out", 1_000.0))
+    c.add(Capacitor("C1", "out", "0", 1.0e-6, initial_voltage=0.1))
+
+    result = pss_residual_jacobian(c, steps_per_period=32, perturbation=1.0e-5)
+
+    assert isinstance(result, PssResidualJacobianResult)
+    assert result.perturbation == pytest.approx(1.0e-5)
+    assert [(state.kind, state.name, state.value) for state in result.state_vector] == [
+        ("capacitor_voltage", "C1", pytest.approx(0.1)),
+    ]
+    assert result.columns[0].state == result.state_vector[0]
+    assert len(result.jacobian) == len(result.residual.residual_vector)
+    assert [len(row) for row in result.jacobian] == [1] * len(result.jacobian)
+    derivative_by_name = {
+        entry.name: entry.value for entry in result.columns[0].residual_derivatives
+    }
+    assert derivative_by_name["out"] == pytest.approx(
+        next(row[0] for row, entry in zip(result.jacobian, result.residual.residual_vector, strict=True) if entry.name == "out")
+    )
+    assert abs(derivative_by_name["out"]) > 0.1
+    assert all(math.isfinite(row[0]) for row in result.jacobian)
+
+
 def test_pss_residual_requires_periodic_sources() -> None:
     c = Circuit()
     c.add(
@@ -274,6 +310,22 @@ def test_pss_residual_rejects_negative_residual_tolerance() -> None:
 
     with pytest.raises(ValueError, match="residual_tol"):
         pss_residual(c, residual_tol=-1.0)
+
+
+def test_pss_residual_jacobian_rejects_non_positive_perturbation() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(frequency=1_000.0),
+        )
+    )
+
+    with pytest.raises(ValueError, match="perturbation"):
+        pss_residual_jacobian(c, perturbation=0.0)
 
 
 # ---- Linear solver ----
