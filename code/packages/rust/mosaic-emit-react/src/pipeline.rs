@@ -94,7 +94,7 @@ use std::fmt::Write as _;
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
 };
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
 use mosstyle_compiler::{StyleDef, StyleProp};
 
 // =====================================================================
@@ -406,6 +406,23 @@ fn emit_jsx_tree(
         return emit_input_jsx(node, indent, part_styles);
     }
 
+    // UI28 §2.1 — standalone `Cell` primitive. Lowers to a `<div>` with an
+    // optional inline `<input>` editor depending on `editable` and
+    // `is-editing` slots. Routed BEFORE Grid so a Cell that ends up at
+    // top-level (or as a child of a non-Grid container) still uses the
+    // standalone lowering. Cell templates that are children of Grid v3 are
+    // NOT walked by `emit_jsx_tree` — `emit_grid_jsx_v3` reads them directly.
+    if node.tag == "Cell" {
+        return emit_cell_jsx_standalone(node, indent, part_styles);
+    }
+
+    // UI28 §2.2 — standalone `Column` primitive. Pure metadata; emits a
+    // single-line JSX comment so downstream tooling sees the node was
+    // discarded on purpose.
+    if node.tag == "Column" {
+        return emit_column_jsx_standalone(node, indent);
+    }
+
     // The `Grid` primitive (UI26 §6.2) has a fixed `<table><thead>...<tbody>{rows.map(...)}</tbody></table>`
     // structure with a header `.map()` over the `headers` slot and a nested
     // `.map()` over the `rows` slot. The general primitive flow can't express
@@ -663,6 +680,15 @@ fn emit_grid_jsx(
     indent: usize,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
+    // UI28 §5.1 — Grid v3 detection. If any child of the Grid is a `Column`
+    // node, this is a Grid v3 layout: read the Column metadata and the
+    // body-cell / header-cell templates from the children and emit a
+    // composition-based table. Otherwise fall back to the v2 monolithic
+    // emitter below (UI28 §2.3 backwards-compat clause).
+    if node.children.iter().any(|c| c.tag == "Column") {
+        return emit_grid_jsx_v3(node, indent, part_styles);
+    }
+
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 2);
     let pad4 = " ".repeat(indent + 4);
@@ -1052,6 +1078,741 @@ fn build_grid_cell_style_expr(
     }
 
     format!(" style={{{{ {} }}}}", parts.join(", "))
+}
+
+// =====================================================================
+// UI28 — Cell + Column primitives, Grid v3 composition
+// =====================================================================
+
+/// UI28 §2.2 — standalone `Column` lowering.
+///
+/// A `Column` outside a Grid is metadata with no rendered output. We emit a
+/// single-line JSX comment so the generated `.tsx` still type-checks and the
+/// host can see that the node was discarded on purpose.
+fn emit_column_jsx_standalone(
+    _node: &LayoutNode,
+    indent: usize,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    Ok(format!("{pad}{{/* Column is metadata; use inside Grid */}}\n"))
+}
+
+/// UI28 §2.1 — standalone `Cell` lowering.
+///
+/// Lowers to a `<div>` with optional click dispatch and an
+/// `editable && isEditing ? <input/> : value` conditional body. Sub-part
+/// styling targets `cell`, `cell:editing`, and `cell:read-only` under the
+/// node's `part_name`.
+///
+/// ## Recognised props
+///
+/// | Prop          | Form                          | Effect                                                              |
+/// |---|---|---|
+/// | `value`       | slot ref OR string literal    | text to display (or initial editor value)                           |
+/// | `editable`    | `true` / `false` keyword OR slot ref | gates the editor branch                                      |
+/// | `is-editing`  | slot ref (default `false`)    | when truthy AND editable, renders the `<input>` editor branch       |
+/// | `alignment`   | string `"left"`/`"right"`/`"center"` | becomes `textAlign` in the inline style                      |
+/// | `cell-type`   | string literal                | advisory; currently unused at lowering (default `"text"`)           |
+/// | `onClick`     | emit ref                      | `onClick={() => dispatch({type:"..."})}` (void payload)             |
+/// | `onCommit`    | emit ref                      | inside the editor's `onKeyDown` Enter branch with `value:` payload  |
+/// | `onCancel`    | emit ref                      | inside the editor's `onKeyDown` Escape branch (void payload)        |
+fn emit_cell_jsx_standalone(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // Resolve `value` — either a slot ref (rendered as `{slotName}`) or a
+    // string literal (rendered as escaped JSX text). Slot ref is the
+    // canonical case; the literal form is mostly useful for "Empty" or
+    // "N/A" placeholders.
+    let value_expr: String = if let Some(slot) = find_slot_ref_prop(node, "value") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        format!("{{{camel}}}")
+    } else if let Some(s) = find_string_prop(node, "value") {
+        escape_for_jsx_double_quoted(s)
+    } else {
+        String::new()
+    };
+
+    // `editable` may be a keyword literal (`true`/`false`) or a slot ref.
+    // Two flags fall out of that:
+    //   * `editable_is_literal_false` — the editor branch is omitted entirely.
+    //   * `editable_expr` — the JS expression used inside the JSX conditional
+    //     when the editor branch IS emitted.
+    let editable_kw = find_keyword_prop(node, "editable");
+    let editable_slot = find_slot_ref_prop(node, "editable");
+    let editable_is_literal_false = editable_kw == Some("false");
+    let editable_expr: Option<String> = if editable_is_literal_false {
+        None
+    } else if editable_kw == Some("true") {
+        Some("true".to_string())
+    } else if let Some(slot) = editable_slot {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        Some(camel)
+    } else {
+        // Default — editable when neither keyword nor slot ref is bound.
+        Some("true".to_string())
+    };
+
+    // `is-editing` defaults to false. Slot ref is the canonical form.
+    let is_editing_expr: Option<String> = if let Some(slot) = find_slot_ref_prop(node, "is-editing")
+    {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        Some(camel)
+    } else if find_keyword_prop(node, "is-editing") == Some("true") {
+        Some("true".to_string())
+    } else {
+        None
+    };
+
+    // `alignment` -> textAlign in the inline style fragment.
+    let alignment_style = find_string_prop(node, "alignment")
+        .map(|s| format!("textAlign: \"{}\"", escape_for_jsx_double_quoted(s)))
+        .unwrap_or_default();
+
+    // Sub-part styling. Author targets `part {name}` for the base style and
+    // `part {name}:editing` / `:read-only` for state overrides. Looked up
+    // under the node's own `part_name` (NOT a Grid path) for the standalone
+    // Cell case.
+    let base_subpart_style: String = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).cloned())
+        .unwrap_or_default();
+    let editing_subpart_style: String = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(&format!("{n}:editing")).cloned())
+        .unwrap_or_default();
+    let read_only_subpart_style: String = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(&format!("{n}:read-only")).cloned())
+        .unwrap_or_default();
+
+    // Build the merged inline-style fragment(s).
+    let mut style_parts: Vec<String> = Vec::new();
+    if !base_subpart_style.is_empty() {
+        style_parts.push(base_subpart_style.clone());
+    }
+    if !alignment_style.is_empty() {
+        style_parts.push(alignment_style);
+    }
+    // Read-only state — gated on the `editable` value when editable is
+    // dynamic. If `editable` is literally false, the read-only fragment
+    // applies unconditionally. If editable is literally true, we omit it.
+    if !read_only_subpart_style.is_empty() {
+        if editable_is_literal_false {
+            style_parts.push(read_only_subpart_style.clone());
+        } else if let Some(ref e_expr) = editable_expr {
+            if e_expr != "true" {
+                style_parts.push(format!(
+                    "...(!{e_expr} ? {{ {read_only_subpart_style} }} : {{}})"
+                ));
+            }
+        }
+    }
+    // Editing state — gated on `editable && isEditing`.
+    if !editing_subpart_style.is_empty()
+        && !editable_is_literal_false
+        && is_editing_expr.is_some()
+    {
+        let editable_expr_str = editable_expr.as_deref().unwrap_or("true");
+        let is_editing_expr_str = is_editing_expr.as_deref().unwrap();
+        style_parts.push(format!(
+            "...(({editable_expr_str}) && ({is_editing_expr_str}) ? {{ {editing_subpart_style} }} : {{}})"
+        ));
+    }
+    let style_attr = if style_parts.is_empty() {
+        String::new()
+    } else {
+        format!(" style={{{{ {} }}}}", style_parts.join(", "))
+    };
+
+    // onClick wiring. The click signal is payload-free — UI28 §2.1 emits
+    // table.
+    let onclick_attr = match find_emit_ref_prop(node, "onClick") {
+        Some(emit_name) => {
+            let t = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&t)?;
+            format!(" onClick={{() => dispatch({{ type: \"{t}\" }})}}")
+        }
+        None => String::new(),
+    };
+
+    // onCommit / onCancel both attach to the `<input>`'s onKeyDown handler.
+    // Pre-validate their names so we can include them inline without
+    // re-validating during the format!.
+    let commit_emit = find_emit_ref_prop(node, "onCommit");
+    let cancel_emit = find_emit_ref_prop(node, "onCancel");
+    let commit_type = if let Some(e) = commit_emit {
+        let t = to_camel_case_first_lower(&strip_on_prefix(e));
+        validate_emit_name(&t)?;
+        Some(t)
+    } else {
+        None
+    };
+    let cancel_type = if let Some(e) = cancel_emit {
+        let t = to_camel_case_first_lower(&strip_on_prefix(e));
+        validate_emit_name(&t)?;
+        Some(t)
+    } else {
+        None
+    };
+
+    // Build the editor branch (`<input ... />`) for the conditional body.
+    let editor_jsx = build_cell_editor_jsx(&value_expr, commit_type.as_deref(), cancel_type.as_deref());
+
+    // Body expression:
+    //   * `editable` literally false                  -> just `{value}`.
+    //   * `is-editing` absent or false                -> just `{value}`.
+    //   * otherwise                                   -> `{editable && isEditing ? <input/> : value}`.
+    let body = if editable_is_literal_false || is_editing_expr.is_none() {
+        value_expr.clone()
+    } else {
+        let editable_expr_str = editable_expr.as_deref().unwrap_or("true");
+        let is_editing_expr_str = is_editing_expr.as_deref().unwrap();
+        format!(
+            "{{({editable_expr_str}) && ({is_editing_expr_str}) ? {editor_jsx} : {value_expr}}}"
+        )
+    };
+
+    Ok(format!("{pad}<div{style_attr}{onclick_attr}>{body}</div>\n"))
+}
+
+/// Build a `<input value={...} onKeyDown={...} />` editor element for a
+/// Cell's editing branch. Used by both the standalone Cell and the Grid v3
+/// body-cell lowering.
+fn build_cell_editor_jsx(
+    value_expr: &str,
+    commit_type: Option<&str>,
+    cancel_type: Option<&str>,
+) -> String {
+    let mut attrs = String::new();
+    // The editor seeds its display value from the cell value. The host owns
+    // the live edit buffer via the `edit-content` slot in Grid v3; standalone
+    // Cell falls back to the cell's value slot.
+    attrs.push_str(&format!(" value={value_expr}"));
+    if commit_type.is_some() || cancel_type.is_some() {
+        let mut h = String::from(" onKeyDown={e => {");
+        if let Some(t) = commit_type {
+            let _ = write!(
+                h,
+                " if (e.key === \"Enter\") dispatch({{ type: \"{t}\", value: e.target.value }});"
+            );
+        }
+        if let Some(t) = cancel_type {
+            let _ = write!(h, " if (e.key === \"Escape\") dispatch({{ type: \"{t}\" }});");
+        }
+        h.push_str(" }}");
+        attrs.push_str(&h);
+    }
+    format!("<input{attrs} />")
+}
+
+// =====================================================================
+// UI28 — Grid v3 composition emitter
+// =====================================================================
+
+/// Compile-time metadata for one declared Grid v3 `Column` child.
+///
+/// Produced by [`collect_grid_columns`] and serialised to the inlined
+/// `const columns = [...]` array via [`serialize_columns_to_js`].
+struct ColumnMeta {
+    key: String,
+    header: String,
+    width: Option<f64>,
+    editable: bool,
+    cell_type: String,
+    default_alignment: String,
+}
+
+fn collect_grid_columns(grid_node: &LayoutNode) -> Vec<ColumnMeta> {
+    grid_node
+        .children
+        .iter()
+        .filter(|c| c.tag == "Column")
+        .map(|c| {
+            let key = find_string_prop(c, "key").unwrap_or("").to_string();
+            let header = find_string_prop(c, "header").unwrap_or("").to_string();
+            let width = find_number_prop(c, "width");
+            let editable = find_keyword_prop(c, "editable") != Some("false");
+            let cell_type = find_string_prop(c, "cell-type").unwrap_or("text").to_string();
+            let default_alignment = find_string_prop(c, "default-alignment")
+                .unwrap_or("left")
+                .to_string();
+            ColumnMeta {
+                key,
+                header,
+                width,
+                editable,
+                cell_type,
+                default_alignment,
+            }
+        })
+        .collect()
+}
+
+fn serialize_columns_to_js(cols: &[ColumnMeta]) -> String {
+    let mut s = String::from("[");
+    for (i, col) in cols.iter().enumerate() {
+        if i > 0 {
+            s.push_str(", ");
+        }
+        let width_str = match col.width {
+            Some(w) if w.fract() == 0.0 => format!("{}", w as i64),
+            Some(w) => format!("{w}"),
+            None => "undefined".to_string(),
+        };
+        let _ = write!(
+            s,
+            "{{ key: \"{}\", header: \"{}\", width: {}, editable: {}, cellType: \"{}\", defaultAlignment: \"{}\" }}",
+            escape_for_jsx_double_quoted(&col.key),
+            escape_for_jsx_double_quoted(&col.header),
+            width_str,
+            col.editable,
+            escape_for_jsx_double_quoted(&col.cell_type),
+            escape_for_jsx_double_quoted(&col.default_alignment),
+        );
+    }
+    s.push(']');
+    s
+}
+
+/// UI28 §3.1 — implicit body-cell template bindings. Maps a moslayout
+/// `Keyword` value (the AST form of an unquoted NAME token) to the JS
+/// expression that Grid v3's body-cell loop substitutes for it.
+///
+/// Returns `None` for bindings that need to be synthesised from multiple
+/// Grid slots (`cell-is-editing`, `cell-is-selected`) — those are handled
+/// specially in [`resolve_body_cell_value_expr`].
+fn resolve_body_cell_binding(name: &str) -> Option<&'static str> {
+    match name {
+        "cell-value" => Some("row[c]"),
+        "cell-row" => Some("r"),
+        "cell-col" => Some("c"),
+        "column-key" => Some("columns[c].key"),
+        "column-header" => Some("columns[c].header"),
+        "column-width" => Some("columns[c].width"),
+        "column-editable" => Some("columns[c].editable"),
+        "column-cell-type" => Some("columns[c].cellType"),
+        "column-default-alignment" => Some("columns[c].defaultAlignment"),
+        _ => None,
+    }
+}
+
+/// UI28 §3.2 — implicit header-cell template bindings.
+fn resolve_header_cell_binding(name: &str) -> Option<&'static str> {
+    match name {
+        "column-key" => Some("col.key"),
+        "column-header" => Some("col.header"),
+        "column-width" => Some("col.width"),
+        "column-editable" => Some("col.editable"),
+        "column-index" => Some("c"),
+        _ => None,
+    }
+}
+
+/// Resolve a Cell-template prop to a JS expression that can appear inside
+/// the v3 body-cell loop. Handles SlotRef (camelCase slot name), Keyword
+/// (implicit binding or `true`/`false`), String literal (JSON-quoted),
+/// Number, and EmitRef (returns `None` — emits are wired separately).
+///
+/// The synthesised bindings `cell-is-editing` / `cell-is-selected` need
+/// access to the Grid's `edit-row` / `selected-row` slot names, so they
+/// are resolved by the caller via the `synth` closure.
+fn resolve_template_prop_to_js<F>(
+    prop: &LayoutProp,
+    is_body: bool,
+    synth: F,
+) -> Option<String>
+where
+    F: Fn(&str) -> Option<String>,
+{
+    match &prop.value {
+        LayoutPropValue::SlotRef(s) => {
+            let camel = to_camel_case_first_lower(s);
+            Some(camel)
+        }
+        LayoutPropValue::Keyword(k) => {
+            if let Some(synth_val) = synth(k) {
+                return Some(synth_val);
+            }
+            let resolver = if is_body {
+                resolve_body_cell_binding
+            } else {
+                resolve_header_cell_binding
+            };
+            if let Some(expr) = resolver(k) {
+                return Some(expr.to_string());
+            }
+            // `true` / `false` keyword literals.
+            if k == "true" || k == "false" {
+                return Some(k.clone());
+            }
+            None
+        }
+        LayoutPropValue::Number(n) => Some(if n.fract() == 0.0 {
+            format!("{}", *n as i64)
+        } else {
+            format!("{n}")
+        }),
+        LayoutPropValue::String(s) => Some(format!("\"{}\"", escape_for_jsx_double_quoted(s))),
+        LayoutPropValue::EmitRef(_) => None,
+    }
+}
+
+/// UI28 §2.3 — Grid v3 lowering.
+///
+/// ```tsx
+/// <div style={{ overflow: "auto", maxHeight: "..." }}>{(() => {
+///   const columns = [{...}, ...];
+///   return (
+///     <table>
+///       <colgroup>{columns.map((col, c) => <col key={c} style={{ width: `${col.width}px` }} />)}</colgroup>
+///       <thead>
+///         <tr>{columns.map((col, c) => <th key={c}>{col.header}</th>)}</tr>
+///       </thead>
+///       <tbody>
+///         {viewportRows.map((row, r) => (
+///           <tr key={r}>{columns.map((col, c) => (
+///             <td key={c} ...>{(r === editRow && c === editCol) ? <input.../> : row[c]}</td>
+///           ))}</tr>
+///         ))}
+///       </tbody>
+///     </table>
+///   );
+/// })()}</div>
+/// ```
+///
+/// The IIFE inlines the `const columns` declaration without changing
+/// `emit_function`'s signature. See UI28 §5.1.
+fn emit_grid_jsx_v3(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // ----- Collect column metadata + cell templates --------------------
+    let columns = collect_grid_columns(node);
+    let columns_js = serialize_columns_to_js(&columns);
+
+    let body_cell_tpl = node
+        .children
+        .iter()
+        .find(|c| c.tag == "Cell" && c.part_name.as_deref() == Some("body-cell"));
+    let header_cell_tpl = node
+        .children
+        .iter()
+        .find(|c| c.tag == "Cell" && c.part_name.as_deref() == Some("header-cell"));
+
+    // ----- Grid-level slot bindings ------------------------------------
+    let viewport_rows_slot = find_slot_ref_prop(node, "viewport-rows").ok_or_else(|| {
+        PipelineEmitError::UnsafeSlotName(
+            "Grid v3 missing required prop 'viewport-rows'".to_string(),
+        )
+    })?;
+    let viewport_rows_var = to_camel_case_first_lower(viewport_rows_slot);
+    validate_slot_or_field_name(&viewport_rows_var).map_err(PipelineEmitError::UnsafeSlotName)?;
+
+    let edit_row_var = find_slot_ref_prop(node, "edit-row")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    let edit_col_var = find_slot_ref_prop(node, "edit-col")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    let selected_row_var = find_slot_ref_prop(node, "selected-row")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    let selected_col_var = find_slot_ref_prop(node, "selected-col")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    let edit_content_var = find_slot_ref_prop(node, "edit-content")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    for v in [
+        &edit_row_var,
+        &edit_col_var,
+        &selected_row_var,
+        &selected_col_var,
+        &edit_content_var,
+    ]
+    .iter()
+    .copied()
+    .flatten()
+    {
+        validate_slot_or_field_name(v).map_err(PipelineEmitError::UnsafeSlotName)?;
+    }
+
+    let sticky_header = find_keyword_prop(node, "sticky-header") == Some("true");
+    let total_height_slot_var = find_slot_ref_prop(node, "total-height")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    let total_height_literal = find_number_prop(node, "total-height");
+    let total_height_jsx_expr: Option<String> = match (&total_height_slot_var, total_height_literal)
+    {
+        (Some(v), _) => Some(format!("`${{{v}}}px`")),
+        (None, Some(n)) => {
+            let s = if n.fract() == 0.0 {
+                format!("{}", n as i64)
+            } else {
+                format!("{n}")
+            };
+            Some(format!("\"{s}px\""))
+        }
+        _ => None,
+    };
+
+    // Sub-part style lookups (matches v2 keys for backward compat with
+    // existing `.msl` files; UI28 §5.2).
+    let lookup_subpart = |suffix: &str| -> String {
+        node.part_name
+            .as_deref()
+            .map(|n| format!("{n}/{suffix}"))
+            .and_then(|key| part_styles.get(&key).cloned())
+            .unwrap_or_default()
+    };
+    let table_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    let body_cell_subpart_style = lookup_subpart("body-cell");
+    let header_cell_subpart_style = lookup_subpart("header-cell");
+
+    let table_style_attr = if table_style_str.is_empty() {
+        String::new()
+    } else {
+        format!(" style={{{{ {table_style_str} }}}}")
+    };
+
+    // ----- Emit wiring helpers -----------------------------------------
+    // The body-cell template's emit refs and Grid's own onNavigate emit are
+    // wired onto the `<td>`'s onClick and the editor's onKeyDown handler.
+    let navigate_type_field = match find_emit_ref_prop(node, "onNavigate") {
+        Some(emit_name) => {
+            let t = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&t)?;
+            Some(t)
+        }
+        None => None,
+    };
+
+    // The body template may declare its own onClick / onCommit / onCancel
+    // emits; these win over the Grid's onNavigate (which is the fallback
+    // when no body template is present).
+    let template_onclick = body_cell_tpl
+        .and_then(|tpl| find_emit_ref_prop(tpl, "onClick"))
+        .map(|e| to_camel_case_first_lower(&strip_on_prefix(e)));
+    let template_oncommit = body_cell_tpl
+        .and_then(|tpl| find_emit_ref_prop(tpl, "onCommit"))
+        .map(|e| to_camel_case_first_lower(&strip_on_prefix(e)));
+    let template_oncancel = body_cell_tpl
+        .and_then(|tpl| find_emit_ref_prop(tpl, "onCancel"))
+        .map(|e| to_camel_case_first_lower(&strip_on_prefix(e)));
+    if let Some(t) = template_onclick.as_deref() {
+        validate_emit_name(t)?;
+    }
+    if let Some(t) = template_oncommit.as_deref() {
+        validate_emit_name(t)?;
+    }
+    if let Some(t) = template_oncancel.as_deref() {
+        validate_emit_name(t)?;
+    }
+
+    // ----- Resolve body-cell template props ----------------------------
+    // We need: value expression, editable expression, is-editing expression.
+    // Defaults fall through to UI28 §2.3's "default cell" when no template
+    // is present.
+    let body_synth = |kw: &str| -> Option<String> {
+        match kw {
+            "cell-is-editing" => {
+                if let (Some(er), Some(ec)) = (edit_row_var.as_deref(), edit_col_var.as_deref()) {
+                    Some(format!("(r === {er} && c === {ec})"))
+                } else {
+                    Some("false".to_string())
+                }
+            }
+            "cell-is-selected" => {
+                if let (Some(sr), Some(sc)) =
+                    (selected_row_var.as_deref(), selected_col_var.as_deref())
+                {
+                    Some(format!("(r === {sr} && c === {sc})"))
+                } else {
+                    Some("false".to_string())
+                }
+            }
+            _ => None,
+        }
+    };
+
+    let body_value_expr = body_cell_tpl
+        .and_then(|tpl| tpl.props.iter().find(|p| p.name == "value"))
+        .and_then(|p| resolve_template_prop_to_js(p, true, body_synth))
+        .unwrap_or_else(|| "row[c]".to_string());
+
+    // The "editable" expression for the body cell. Combines column.editable
+    // (always available in v3) with the template's per-cell editable
+    // expression (defaults to column-editable).
+    let body_editable_expr = body_cell_tpl
+        .and_then(|tpl| tpl.props.iter().find(|p| p.name == "editable"))
+        .and_then(|p| resolve_template_prop_to_js(p, true, body_synth))
+        .unwrap_or_else(|| "columns[c].editable".to_string());
+
+    let body_is_editing_expr = body_cell_tpl
+        .and_then(|tpl| tpl.props.iter().find(|p| p.name == "is-editing"))
+        .and_then(|p| resolve_template_prop_to_js(p, true, body_synth))
+        .unwrap_or_else(|| {
+            if let (Some(er), Some(ec)) = (edit_row_var.as_deref(), edit_col_var.as_deref()) {
+                format!("(r === {er} && c === {ec})")
+            } else {
+                "false".to_string()
+            }
+        });
+
+    let body_alignment_expr = body_cell_tpl
+        .and_then(|tpl| tpl.props.iter().find(|p| p.name == "alignment"))
+        .and_then(|p| resolve_template_prop_to_js(p, true, body_synth))
+        .unwrap_or_else(|| "columns[c].defaultAlignment".to_string());
+
+    // The editor seeds from `edit-content` (the Grid's live edit buffer)
+    // if bound, otherwise from the cell value.
+    let editor_value_expr = match edit_content_var.as_deref() {
+        Some(v) => format!("{{{v}}}"),
+        None => format!("{{{body_value_expr}}}"),
+    };
+
+    // ----- Resolve header-cell template props --------------------------
+    let header_synth = |_kw: &str| -> Option<String> { None };
+    let header_value_expr = header_cell_tpl
+        .and_then(|tpl| tpl.props.iter().find(|p| p.name == "value"))
+        .and_then(|p| resolve_template_prop_to_js(p, false, header_synth))
+        .unwrap_or_else(|| "col.header".to_string());
+
+    // ----- Build per-`<td>` style + onClick ---------------------------
+    // The Grid v3 body-cell style merges:
+    //   * the `body-cell` sub-part style (defaults — borders, padding)
+    //   * the dynamic `textAlign` from the column's `default-alignment`
+    let mut td_style_parts: Vec<String> = Vec::new();
+    if !body_cell_subpart_style.is_empty() {
+        td_style_parts.push(body_cell_subpart_style.clone());
+    }
+    td_style_parts.push(format!("textAlign: {body_alignment_expr}"));
+    let td_style_attr = format!(" style={{{{ {} }}}}", td_style_parts.join(", "));
+
+    let td_onclick_attr = match (template_onclick.as_deref(), navigate_type_field.as_deref()) {
+        (Some(t), _) => format!(
+            " onClick={{() => dispatch({{ type: \"{t}\", row: r, col: c }})}}"
+        ),
+        (None, Some(t)) => format!(
+            " onClick={{() => dispatch({{ type: \"{t}\", row: r, col: c }})}}"
+        ),
+        _ => String::new(),
+    };
+
+    // ----- Editor JSX for the conditional body branch ------------------
+    let editor_jsx = build_cell_editor_jsx(
+        &editor_value_expr,
+        template_oncommit.as_deref(),
+        template_oncancel.as_deref(),
+    );
+
+    // The body branch — gated on (editable && isEditing) per UI28 §2.1.
+    let cell_body_expr = format!(
+        "{{(({body_editable_expr}) && ({body_is_editing_expr})) ? {editor_jsx} : {body_value_expr}}}"
+    );
+
+    // ----- Header `<th>` style ----------------------------------------
+    let th_style_attr = if header_cell_subpart_style.is_empty() {
+        String::new()
+    } else {
+        format!(" style={{{{ {header_cell_subpart_style} }}}}")
+    };
+
+    // ----- Compose the JSX --------------------------------------------
+    // We emit one long expression using indent-by-2 inside the IIFE.
+    let pad_inner = " ".repeat(indent + 2);
+    let pad_inner2 = " ".repeat(indent + 4);
+    let pad_inner3 = " ".repeat(indent + 6);
+    let pad_inner4 = " ".repeat(indent + 8);
+
+    let mut out = String::new();
+
+    // Outer wrapper — `<div style={{ overflow: "auto", maxHeight: ... }}>`.
+    // Always emit the wrapper for v3 (sticky-header is a render hint;
+    // the wrapper is needed for scrolling regardless).
+    let max_height_frag = match total_height_jsx_expr.as_deref() {
+        Some(expr) => format!(", maxHeight: {expr}"),
+        None => String::new(),
+    };
+    writeln!(
+        out,
+        "{pad}<div style={{{{ overflow: \"auto\"{max_height_frag} }}}}>"
+    )
+    .unwrap();
+    writeln!(out, "{pad_inner}{{(() => {{").unwrap();
+    writeln!(out, "{pad_inner2}const columns = {columns_js};").unwrap();
+    writeln!(out, "{pad_inner2}return (").unwrap();
+    writeln!(out, "{pad_inner3}<table{table_style_attr}>").unwrap();
+    // colgroup
+    writeln!(out, "{pad_inner4}<colgroup>").unwrap();
+    writeln!(
+        out,
+        "{pad_inner4}  {{columns.map((col, c) => <col key={{c}} style={{{{ width: col.width !== undefined ? `${{col.width}}px` : undefined }}}} />)}}"
+    )
+    .unwrap();
+    writeln!(out, "{pad_inner4}</colgroup>").unwrap();
+    // thead
+    let thead_style_attr = if sticky_header {
+        " style={{ position: \"sticky\", top: 0, zIndex: 1 }}".to_string()
+    } else {
+        String::new()
+    };
+    writeln!(out, "{pad_inner4}<thead{thead_style_attr}>").unwrap();
+    writeln!(
+        out,
+        "{pad_inner4}  <tr>{{columns.map((col, c) => <th key={{c}}{th_style_attr}>{{{header_value_expr}}}</th>)}}</tr>"
+    )
+    .unwrap();
+    writeln!(out, "{pad_inner4}</thead>").unwrap();
+    // tbody
+    writeln!(out, "{pad_inner4}<tbody>").unwrap();
+    writeln!(
+        out,
+        "{pad_inner4}  {{{viewport_rows_var}.map((row, r) => ("
+    )
+    .unwrap();
+    writeln!(out, "{pad_inner4}    <tr key={{r}}>{{columns.map((col, c) => (").unwrap();
+    writeln!(
+        out,
+        "{pad_inner4}      <td key={{c}}{td_style_attr}{td_onclick_attr}>{cell_body_expr}</td>"
+    )
+    .unwrap();
+    writeln!(out, "{pad_inner4}    ))}}</tr>").unwrap();
+    writeln!(out, "{pad_inner4}  ))}}").unwrap();
+    writeln!(out, "{pad_inner4}</tbody>").unwrap();
+    writeln!(out, "{pad_inner3}</table>").unwrap();
+    writeln!(out, "{pad_inner2});").unwrap();
+    writeln!(out, "{pad_inner}}})()}}").unwrap();
+    writeln!(out, "{pad}</div>").unwrap();
+
+    // Silence unused warnings on optional vars that don't always appear in
+    // the final output.
+    let _ = (
+        &selected_row_var,
+        &selected_col_var,
+        &edit_row_var,
+        &edit_col_var,
+        &edit_content_var,
+    );
+
+    Ok(out)
 }
 
 /// Find a prop on `node` whose value is a `SlotRef`. Returns the slot's
@@ -1983,12 +2744,17 @@ mod tests {
     }
 
     #[test]
-    fn nested_row_inside_column_renders_correctly() {
+    fn nested_row_inside_stack_renders_correctly() {
+        // Pre-UI28 this test used `Column` as a flexbox-column primitive. UI28
+        // re-uses the tag `Column` for table-column metadata, so the test was
+        // rewritten against `Stack` (the other built-in flex container) to
+        // keep the spirit of the original assertion: nested primitives walk
+        // recursively and each layer carries its built-in inline style.
         let m = component("X", vec![], vec![]);
         let l = LayoutDef {
             component_name: "X".to_string(),
             root: LayoutNode {
-                tag: "Column".to_string(),
+                tag: "Stack".to_string(),
                 part_name: None,
                 props: Vec::new(),
                 children: vec![LayoutNode {
@@ -2005,8 +2771,8 @@ mod tests {
             },
         };
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
-        // Column wraps Row wraps Box
-        assert!(result.output.contains("flexDirection: \"column\""));
+        // Stack wraps Row wraps Box
+        assert!(result.output.contains("position: \"relative\""));
         assert!(result.output.contains("flexDirection: \"row\""));
         assert!(result.output.contains("<div></div>"), "expected Box -> empty div");
     }
@@ -3680,5 +4446,466 @@ mod tests {
         assert!(!is_safe_js_identifier("foo-bar"));
         assert!(!is_safe_js_identifier("foo bar"));
         assert!(!is_safe_js_identifier("\"}; alert(1);//"));
+    }
+
+    // =================================================================
+    // UI28 — Cell + Column primitives, Grid v3 composition (WB1)
+    // =================================================================
+
+    fn string_prop(name: &str, val: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::String(val.to_string()),
+        }
+    }
+    fn keyword_prop(name: &str, kw: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::Keyword(kw.to_string()),
+        }
+    }
+    fn number_prop(name: &str, n: f64) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::Number(n),
+        }
+    }
+
+    /// Helper: a Cell layout root with the given props and an optional part name.
+    fn cell_layout(component: &str, part: Option<&str>, props: Vec<LayoutProp>) -> LayoutDef {
+        LayoutDef {
+            component_name: component.to_string(),
+            root: LayoutNode {
+                tag: "Cell".to_string(),
+                part_name: part.map(String::from),
+                props,
+                children: Vec::new(),
+            },
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // Standalone Cell
+    // -----------------------------------------------------------------
+
+    /// UI28 §7 test 1 — standalone Cell with a `value` slot ref renders
+    /// `<div>{foo}</div>`.
+    #[test]
+    fn cell_standalone_renders_a_div_with_value() {
+        let m = component("C", vec![slot("foo", SlotType::Text, true)], vec![]);
+        let l = cell_layout("C", None, vec![slot_ref_prop("value", "foo")]);
+        let result = from_pipeline(&m, &l, &empty_style("C")).unwrap();
+        let out = &result.output;
+        assert!(out.contains("<div"), "expected <div> wrapper, got:\n{out}");
+        assert!(out.contains("{foo}"), "expected slot ref body, got:\n{out}");
+    }
+
+    /// UI28 §7 — `editable: false` literal eliminates the editor branch.
+    /// The body is then just the value expression, never a conditional.
+    #[test]
+    fn cell_standalone_editable_false_omits_editor_branch() {
+        let m = component("C", vec![slot("foo", SlotType::Text, true)], vec![]);
+        let l = cell_layout(
+            "C",
+            None,
+            vec![
+                slot_ref_prop("value", "foo"),
+                keyword_prop("editable", "false"),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("C")).unwrap();
+        let out = &result.output;
+        assert!(
+            !out.contains("<input"),
+            "editable:false must not emit an <input>, got:\n{out}"
+        );
+        assert!(out.contains("{foo}"));
+    }
+
+    /// UI28 §7 — when `editable: true` and `is-editing` is a slot ref,
+    /// the body renders a conditional with `<input>`.
+    #[test]
+    fn cell_standalone_is_editing_true_renders_input() {
+        let m = component(
+            "C",
+            vec![
+                slot("foo", SlotType::Text, true),
+                slot("edit-flag", SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let l = cell_layout(
+            "C",
+            None,
+            vec![
+                slot_ref_prop("value", "foo"),
+                keyword_prop("editable", "true"),
+                slot_ref_prop("is-editing", "edit-flag"),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("C")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<input"),
+            "expected <input> editor branch, got:\n{out}"
+        );
+        assert!(
+            out.contains("editFlag"),
+            "expected camelCased is-editing slot, got:\n{out}"
+        );
+    }
+
+    /// UI28 §7 — Cell's `onClick: emit: onPick` lowers to a payload-free
+    /// dispatch.
+    #[test]
+    fn cell_standalone_on_click_dispatches() {
+        let m = component(
+            "C",
+            vec![slot("foo", SlotType::Text, true)],
+            vec![emit("onPick", vec![])],
+        );
+        let l = cell_layout(
+            "C",
+            None,
+            vec![
+                slot_ref_prop("value", "foo"),
+                emit_ref_prop("onClick", "onPick"),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("C")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("onClick={() => dispatch({ type: \"pick\" })}"),
+            "expected click dispatch, got:\n{out}"
+        );
+    }
+
+    /// UI28 §7 — `onCommit: emit: onSave` becomes a keyDown Enter branch
+    /// that passes `value: e.target.value`.
+    #[test]
+    fn cell_standalone_on_commit_dispatches_with_value() {
+        let m = component(
+            "C",
+            vec![
+                slot("foo", SlotType::Text, true),
+                slot("edit-flag", SlotType::Number, true),
+            ],
+            vec![emit("onSave", vec![param("value", EmitPayloadType::Text)])],
+        );
+        let l = cell_layout(
+            "C",
+            None,
+            vec![
+                slot_ref_prop("value", "foo"),
+                slot_ref_prop("is-editing", "edit-flag"),
+                emit_ref_prop("onCommit", "onSave"),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("C")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("if (e.key === \"Enter\") dispatch({ type: \"save\", value: e.target.value });"),
+            "expected onCommit Enter branch, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Standalone Column
+    // -----------------------------------------------------------------
+
+    /// UI28 §7 test 9 — standalone Column emits the metadata-discard comment.
+    #[test]
+    fn column_standalone_emits_metadata_comment() {
+        let m = component("C", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "C".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: vec![
+                    string_prop("key", "A"),
+                    string_prop("header", "A"),
+                ],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("C")).unwrap();
+        assert!(
+            result.output.contains("/* Column is metadata; use inside Grid */"),
+            "expected metadata comment, got:\n{}",
+            result.output
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Grid v3 — composition
+    // -----------------------------------------------------------------
+
+    /// Helper: build a Grid v3 layout with the given Grid props and children.
+    fn grid_v3_layout(
+        component: &str,
+        grid_props: Vec<LayoutProp>,
+        children: Vec<LayoutNode>,
+    ) -> LayoutDef {
+        LayoutDef {
+            component_name: component.to_string(),
+            root: LayoutNode {
+                tag: "Grid".to_string(),
+                part_name: None,
+                props: grid_props,
+                children,
+            },
+        }
+    }
+
+    fn column_child(props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: "Column".to_string(),
+            part_name: None,
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    fn cell_child(part: &str, props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: "Cell".to_string(),
+            part_name: Some(part.to_string()),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    /// Shared component for v3 tests: viewport-rows slot only.
+    fn grid_v3_component(name: &str) -> MosmodelComponent {
+        component(
+            name,
+            vec![slot(
+                "viewport-rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        )
+    }
+
+    /// UI28 §7 test 4 — Grid v3 generates a `const columns = [...]` block
+    /// (inside the IIFE) populated from the Column children.
+    #[test]
+    fn grid_v3_with_columns_generates_columns_const() {
+        let m = grid_v3_component("G");
+        let l = grid_v3_layout(
+            "G",
+            vec![slot_ref_prop("viewport-rows", "viewport-rows")],
+            vec![
+                column_child(vec![
+                    string_prop("key", "A"),
+                    string_prop("header", "A"),
+                    number_prop("width", 80.0),
+                ]),
+                column_child(vec![
+                    string_prop("key", "B"),
+                    string_prop("header", "B"),
+                    number_prop("width", 80.0),
+                    keyword_prop("editable", "false"),
+                ]),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("const columns = ["),
+            "expected columns const, got:\n{out}"
+        );
+        assert!(out.contains("key: \"A\""), "missing A key");
+        assert!(out.contains("key: \"B\""), "missing B key");
+        assert!(out.contains("width: 80"), "missing width 80");
+        // editable:false propagates into the columns array.
+        assert!(
+            out.contains("editable: false"),
+            "expected editable: false in metadata, got:\n{out}"
+        );
+        assert!(out.contains("editable: true"), "expected default editable: true");
+    }
+
+    /// UI28 §7 — `<colgroup>` uses `col.width` from the metadata.
+    #[test]
+    fn grid_v3_column_widths_drive_colgroup() {
+        let m = grid_v3_component("G");
+        let l = grid_v3_layout(
+            "G",
+            vec![slot_ref_prop("viewport-rows", "viewport-rows")],
+            vec![column_child(vec![
+                string_prop("key", "A"),
+                string_prop("header", "A"),
+                number_prop("width", 80.0),
+            ])],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<colgroup>"),
+            "expected colgroup, got:\n{out}"
+        );
+        assert!(
+            out.contains("col.width"),
+            "expected col.width binding, got:\n{out}"
+        );
+        assert!(out.contains("`${col.width}px`"), "expected template literal");
+    }
+
+    /// UI28 §7 test 7 — `cell-value` binding in body-cell template
+    /// resolves to `row[c]`.
+    #[test]
+    fn grid_v3_body_cell_template_renders_cell_value_binding() {
+        let m = grid_v3_component("G");
+        let l = grid_v3_layout(
+            "G",
+            vec![slot_ref_prop("viewport-rows", "viewport-rows")],
+            vec![
+                column_child(vec![
+                    string_prop("key", "A"),
+                    string_prop("header", "A"),
+                    number_prop("width", 80.0),
+                ]),
+                cell_child(
+                    "body-cell",
+                    vec![keyword_prop("value", "cell-value")],
+                ),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("row[c]"),
+            "expected cell-value -> row[c] binding, got:\n{out}"
+        );
+    }
+
+    /// UI28 §7 — `column-header` binding in header-cell template
+    /// resolves to `col.header`.
+    #[test]
+    fn grid_v3_header_cell_template_renders_column_header_binding() {
+        let m = grid_v3_component("G");
+        let l = grid_v3_layout(
+            "G",
+            vec![slot_ref_prop("viewport-rows", "viewport-rows")],
+            vec![
+                column_child(vec![
+                    string_prop("key", "A"),
+                    string_prop("header", "A"),
+                    number_prop("width", 80.0),
+                ]),
+                cell_child(
+                    "header-cell",
+                    vec![keyword_prop("value", "column-header")],
+                ),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("{col.header}"),
+            "expected column-header -> col.header binding, got:\n{out}"
+        );
+    }
+
+    /// UI28 §7 test 6 — when `Column.editable=false`, body cells in that
+    /// column should not enter edit mode. The serialised `columns` array
+    /// must carry `editable: false`, and the body-cell editable expression
+    /// reads from `columns[c].editable` (so the conditional short-circuits
+    /// for that column at runtime).
+    #[test]
+    fn grid_v3_column_editable_false_propagates_to_cell_editor_gate() {
+        let m = component(
+            "G",
+            vec![
+                slot("viewport-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("edit-row", SlotType::Number, true),
+                slot("edit-col", SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let l = grid_v3_layout(
+            "G",
+            vec![
+                slot_ref_prop("viewport-rows", "viewport-rows"),
+                slot_ref_prop("edit-row", "edit-row"),
+                slot_ref_prop("edit-col", "edit-col"),
+            ],
+            vec![
+                column_child(vec![
+                    string_prop("key", "row-num"),
+                    string_prop("header", ""),
+                    number_prop("width", 40.0),
+                    keyword_prop("editable", "false"),
+                ]),
+                column_child(vec![
+                    string_prop("key", "A"),
+                    string_prop("header", "A"),
+                    number_prop("width", 80.0),
+                ]),
+                cell_child(
+                    "body-cell",
+                    vec![
+                        keyword_prop("value", "cell-value"),
+                        keyword_prop("editable", "column-editable"),
+                        keyword_prop("is-editing", "cell-is-editing"),
+                    ],
+                ),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        let out = &result.output;
+        // The row-num column was declared with editable:false; that flows
+        // into the metadata.
+        assert!(
+            out.contains("editable: false"),
+            "expected metadata to encode editable: false, got:\n{out}"
+        );
+        // The body-cell's editable binding reads from columns[c].editable.
+        assert!(
+            out.contains("columns[c].editable"),
+            "expected body-cell editable to read from columns[c].editable, got:\n{out}"
+        );
+        // The body should be a conditional gated on (editable && isEditing).
+        assert!(
+            out.contains("columns[c].editable") && out.contains("(r === editRow && c === editCol)"),
+            "expected editable && isEditing conditional, got:\n{out}"
+        );
+    }
+
+    /// UI28 §7 test 8 — backwards compat: Grid with no Column children
+    /// still goes through the v2 monolithic emitter, producing the
+    /// `headers.map((h, c) => <th key={c}>{h}</th>)` shape.
+    #[test]
+    fn grid_v3_no_columns_falls_back_to_v2_monolithic() {
+        let m = component(
+            "G",
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![],
+        );
+        let l = grid_layout(
+            "G",
+            vec![
+                slot_ref_prop("headers", "col-labels"),
+                slot_ref_prop("rows", "data-rows"),
+            ],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("G")).unwrap();
+        let out = &result.output;
+        // v2 shape — headers.map, NOT columns.map.
+        assert!(
+            out.contains("{colLabels.map((h, c) => <th key={c}>{h}</th>)}"),
+            "expected v2 headers.map shape, got:\n{out}"
+        );
+        // No v3 IIFE / columns const.
+        assert!(
+            !out.contains("const columns = ["),
+            "v2 path must not emit the v3 columns const"
+        );
     }
 }
