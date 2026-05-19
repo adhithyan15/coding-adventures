@@ -216,7 +216,15 @@ fn resolve_token(token_name: &str, extra: &HashMap<String, String>) -> Option<St
 // ===========================================================================
 
 const VALID_STATES: &[&str] = &[
+    // Interaction states (UI15 §3.1) — visible at runtime via input devices.
     "hover", "pressed", "focused", "disabled", "selected", "editing", "error",
+    // Structural states (UI27 §5) — visible at structural positions in a
+    // primitive's child list. Used by Grid's `sheet/data-row` to declare
+    // alternating row backgrounds (WA4) and similar list-position patterns
+    // that other primitives may grow over time. They are not interaction
+    // states; the emitter resolves them at index time (`r % 2 === 0`) rather
+    // than from user input.
+    "even", "odd",
 ];
 
 // ===========================================================================
