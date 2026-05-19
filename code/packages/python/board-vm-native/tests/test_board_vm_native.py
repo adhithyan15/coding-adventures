@@ -140,6 +140,7 @@ def test_known_targets_are_exposed_from_rust_registry():
     assert "uart.read" in uno_r4_wifi.capabilities
     assert "storage.write" in uno_r4_wifi.capabilities
     assert "storage.read" in uno_r4_wifi.capabilities
+    assert "storage.size" in uno_r4_wifi.capabilities
     assert "network.ipv4" in uno_r4_wifi.capabilities
     assert "network.tcp" in uno_r4_wifi.capabilities
     assert "network.tcp.connected" in uno_r4_wifi.capabilities

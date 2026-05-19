@@ -34,7 +34,7 @@ Source snapshot:
 | Hardware UART | SerialUSB plus UART pin pairs D22/D23, D1/D0, D24/D25 | descriptor metadata, handle open, and single-byte write/read implemented | `uart.open`, `uart.write`, `uart.read`, transport descriptors |
 | CAN | CAN0 TX D10, RX D13 | descriptor metadata, handle open, and single-byte write/read implemented | `can.open`, `can.write`, `can.read` |
 | RTC | one RTC instance in the core | descriptor metadata and direct bytecode operations implemented | `rtc.now`, `rtc.set`, alarms/events later |
-| EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | descriptor metadata and bounded bytecode read/write implemented | `storage.write`, `storage.read`; stored program / KV layers later |
+| EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | descriptor metadata, bounded bytecode read/write, and region-size query implemented | `storage.write`, `storage.read`, `storage.size`; stored program / KV layers later |
 | Watchdog | Renesas WDT library | descriptor metadata and direct bytecode operations implemented | `watchdog.configure`, `watchdog.kick` |
 | OPAMP | UNO R4 OPAMP library | pending | analog board-specific capability after ADC/DAC |
 | WiFi | WiFiS3 library through onboard network module | descriptor metadata, network capability strings, first TCP/UDP socket bytecode tranches, bounded TCP/UDP socket-control queries, bounded UDP payload I/O, bounded WiFi association control, bounded DNS resolution, resolver server policy, first DNS query/response message payloads, first bounded DNS-over-UDP exchange, retry/backoff DNS-over-UDP exchange policy, and resolver fallback policy implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`, `network.dns`, `network.tcp.open`, `network.tcp.write`, `network.tcp.read`, `network.tcp.close`, `network.tcp.connected`, `network.tcp.available`, `network.udp.open`, `network.udp.write`, `network.udp.read`, `network.udp.write_bytes`, `network.udp.read_bytes`, `network.udp.available`, `network.udp.close`, `network.wifi.associate`, `network.wifi.disconnect`, `network.wifi.status`, `network.dns.resolve`, `network.dns.set_server`, `network.dns.query`, `network.dns.response_ipv4`, `network.dns.exchange_udp`, `network.dns.exchange_udp_retry`, `network.dns.exchange_udp_fallback` |
@@ -89,8 +89,9 @@ reject conflicting handles.
    `watchdog.configure` plus `watchdog.kick` establish the first direct
    watchdog bytecode tranche.
    EEPROM/store now has descriptor metadata for the 8 KiB flash-backed
-   EEPROM/data-flash area, and `storage.write` plus `storage.read` establish the
-   bounded byte-buffer bytecode tranche for that region. WiFi/network now has
+   EEPROM/data-flash area, and `storage.write`, `storage.read`, plus
+   `storage.size` establish bounded byte-buffer I/O and region capacity queries
+   for that region. WiFi/network now has
    Rust-owned descriptor metadata for the onboard WiFiS3 interface plus
    `network.ipv4`, `network.tcp`, `network.udp`, and `network.dns` capability
    strings surfaced through the language target APIs. `network.tcp.open`,
@@ -125,8 +126,8 @@ reject conflicting handles.
    `program.store` now has a protocol capability descriptor, `STORE_PROGRAM`
    device dispatch, runtime HAL hook, and an initial UNO R4 storage-backed
    slot-0 layout that writes a compact header plus module chunks through the
-   same bounded storage substrate. Higher-level KV storage, end-to-end DNS UDP
-   transport, and deeper socket controls remain later capability tranches.
+   same bounded storage substrate. Higher-level KV storage, larger DNS response
+   handling, and deeper socket controls remain later capability tranches.
 
 Every tranche should include the same layers: spec entry, IR/protocol capability id,
 runtime HAL method, UNO R4 target descriptor, firmware backend, host builder,

@@ -58,6 +58,7 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "watchdog.kick"
         assert_includes uno_r4_wifi["capabilities"], "storage.write"
         assert_includes uno_r4_wifi["capabilities"], "storage.read"
+        assert_includes uno_r4_wifi["capabilities"], "storage.size"
         assert_includes uno_r4_wifi["capabilities"], "network.ipv4"
         assert_includes uno_r4_wifi["capabilities"], "network.tcp"
         assert_includes uno_r4_wifi["capabilities"], "network.tcp.connected"
@@ -1479,6 +1480,7 @@ module CodingAdventures
         transport = FakeWriteTransport.new
         write_result = nil
         read_result = nil
+        size_result = nil
 
         BoardVM.uno_r4_wifi(
           port: "/dev/cu.usbmodem2201",
@@ -1500,16 +1502,23 @@ module CodingAdventures
             program_id: 11,
             budget: 24
           )
+          size_result = board.storage.size(
+            region: 0,
+            program_id: 12,
+            budget: 24
+          )
         end
 
         assert_empty runner.calls
-        assert_equal 12, transport.frames.length
+        assert_equal 18, transport.frames.length
         assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
-        assert_equal write_result.frames + read_result.frames, transport.frames
+        assert_equal write_result.frames + read_result.frames + size_result.frames, transport.frames
         assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
           write_result.results.map(&:command)
         assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
           read_result.results.map(&:command)
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          size_result.results.map(&:command)
       end
 
       def test_uart_write_and_read_dispatch_native_byte_io_through_transport
@@ -2322,6 +2331,7 @@ module CodingAdventures
         ) do |board|
           write = board.session.run_command("storage-write 0 0x0010 0xaa55 24", program_id: 13)
           read = board.session.run_command("storage-read 0 0x0010 2 24", program_id: 14)
+          size = board.session.run_command("storage-size 0 24", program_id: 17)
           upload_write = board.session.run_command(
             "upload-storage.write 0 0x0010 0xaa55",
             program_id: 15
@@ -2330,16 +2340,24 @@ module CodingAdventures
             "upload-storage.read 0 0x0010 2",
             program_id: 16
           )
+          upload_size = board.session.run_command(
+            "upload-storage.size 0",
+            program_id: 18
+          )
 
           assert_equal [:program_begin, :program_chunk, :program_end, :run],
             write.results.map(&:command)
           assert_equal [:program_begin, :program_chunk, :program_end, :run],
             read.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            size.results.map(&:command)
           assert_equal [:program_begin, :program_chunk, :program_end],
             upload_write.results.map(&:command)
           assert_equal [:program_begin, :program_chunk, :program_end],
             upload_read.results.map(&:command)
-          assert_equal write.frames + read.frames + upload_write.frames + upload_read.frames,
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload_size.results.map(&:command)
+          assert_equal write.frames + read.frames + size.frames + upload_write.frames + upload_read.frames + upload_size.frames,
             transport.frames
         end
       end
@@ -2701,6 +2719,10 @@ module CodingAdventures
         storage_read_module_bytes = session.storage_read_module(0, 0x0010, 2, 3)
         assert_instance_of String, storage_read_module_bytes
         assert_operator storage_read_module_bytes.bytesize, :>, 0
+
+        storage_size_module_bytes = session.storage_size_module(0, 1)
+        assert_instance_of String, storage_size_module_bytes
+        assert_operator storage_size_module_bytes.bytesize, :>, 0
 
         spi_transfer_module_bytes = session.spi_transfer_module(10, "\x9F".b, 3, 5)
         assert_instance_of String, spi_transfer_module_bytes

@@ -12,9 +12,9 @@ use board_vm_ir::{
     CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_READ_BYTES, CAP_NETWORK_UDP_WRITE,
     CAP_NETWORK_UDP_WRITE_BYTES, CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT,
     CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
-    CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
-    CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
-    MAX_BYTE_BUFFER_LEN,
+    CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_SIZE, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS,
+    CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE,
+    CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -228,6 +228,10 @@ pub trait BoardHal {
         _offset: u16,
         _len: u8,
     ) -> Result<ByteBuffer, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn storage_size(&mut self, _region: u16) -> Result<u32, HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -971,6 +975,14 @@ where
                             kind: hal_error_kind(err),
                         })?;
                 self.push(Value::Bytes(bytes), ip)
+            }
+            CAP_STORAGE_SIZE => {
+                let region = self.pop_u16(ip)?;
+                let bytes = self.hal.storage_size(region).map_err(|err| RuntimeError {
+                    ip,
+                    kind: hal_error_kind(err),
+                })?;
+                self.push(Value::U32(bytes), ip)
             }
             CAP_NETWORK_TCP_OPEN => {
                 let remote_port = self.pop_u16(ip)?;
@@ -1842,6 +1854,7 @@ mod tests {
         WatchdogKick,
         StorageWrite(u16, u16, ByteBuffer),
         StorageRead(u16, u16, u8),
+        StorageSize(u16),
         NetworkTcpOpen(u16, u32, u16),
         NetworkTcpWrite(u32, u8),
         NetworkTcpRead(u32),
@@ -2097,6 +2110,11 @@ mod tests {
                 *byte = pattern[index % pattern.len()];
             }
             ByteBuffer::from_slice(&bytes).map_err(|_| HalError::UnsupportedMode)
+        }
+
+        fn storage_size(&mut self, region: u16) -> Result<u32, HalError> {
+            self.events.push(Event::StorageSize(region));
+            Ok(8192)
         }
 
         fn network_tcp_open(
@@ -2682,6 +2700,18 @@ mod tests {
             Value::Bytes(ByteBuffer::from_slice(&[0xde, 0xad]).unwrap())
         );
         assert_eq!(runtime.hal().events, vec![Event::StorageRead(0, 0x0010, 2)]);
+    }
+
+    #[test]
+    fn storage_size_dispatches_and_returns_region_bytes() {
+        let mut runtime: Runtime<FakeHal, 1, 1> = Runtime::new(FakeHal::new());
+        let code = [0x12, 0x00, 0x40, CAP_STORAGE_SIZE as u8, 0x50];
+
+        let report = runtime.run_code(&code, 10).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_value, Value::U32(8192));
+        assert_eq!(runtime.hal().events, vec![Event::StorageSize(0)]);
     }
 
     #[test]
