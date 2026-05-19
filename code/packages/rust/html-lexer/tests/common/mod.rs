@@ -1,4 +1,46 @@
-use coding_adventures_html_lexer::{Attribute, Diagnostic, Token};
+use coding_adventures_html_lexer::{create_html_lexer, Attribute, Diagnostic, HtmlLexer, Token};
+
+pub fn assert_case_description(case_id: &str, description: &str, label: &str) {
+    assert!(
+        !description.is_empty(),
+        "case `{case_id}` should describe its {label}"
+    );
+}
+
+#[allow(dead_code)]
+pub fn assert_default_lexer_case(
+    case_id: &str,
+    input: &str,
+    expected_tokens: &[String],
+    expected_diagnostics: &[String],
+) {
+    let mut lexer = create_html_lexer().expect("HTML lexer should build");
+    assert_lexer_case(
+        case_id,
+        &mut lexer,
+        input,
+        expected_tokens,
+        expected_diagnostics,
+    );
+}
+
+pub fn assert_lexer_case(
+    case_id: &str,
+    lexer: &mut HtmlLexer,
+    input: &str,
+    expected_tokens: &[String],
+    expected_diagnostics: &[String],
+) {
+    lexer
+        .push(input)
+        .unwrap_or_else(|error| panic!("case `{case_id}` push failed: {error:?}"));
+    lexer
+        .finish()
+        .unwrap_or_else(|error| panic!("case `{case_id}` finish failed: {error:?}"));
+
+    assert_token_summaries(case_id, lexer.drain_tokens(), expected_tokens);
+    assert_diagnostic_codes(case_id, lexer.diagnostics(), expected_diagnostics);
+}
 
 pub fn assert_token_summaries(
     case_id: &str,

@@ -100,6 +100,9 @@ constructors instead of test-local context field assembly.
 The generated WHATWG lexer runners share the same test-only assertion helpers,
 so boundary fixtures compare token text, attributes, doctypes, coalesced text
 recovery, and diagnostic codes through one normalization path.
+Those helpers also own the repeated case description, push, and finish checks
+for generated boundary and recovery fixtures, keeping each runner focused on
+the lexer context it seeds.
 The generated text-mode boundary suite drills into parser-seeded RCDATA,
 RAWTEXT, and PLAINTEXT state boundaries: less-than recovery, end-tag-open/name
 continuations, NULL replacement, EOF literal recovery, and PLAINTEXT markup
