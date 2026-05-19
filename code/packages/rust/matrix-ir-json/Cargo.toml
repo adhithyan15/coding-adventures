@@ -1,0 +1,11 @@
+[package]
+name = "matrix-ir-json"
+version = "0.1.0"
+edition = "2021"
+description = "ARCH02 Phase 1 — JSON wire format for matrix-ir Graph values.  A sibling to matrix-ir (which owns the canonical binary wire format and stays zero-dependency per MX00).  matrix-ir-json depends on the workspace JSON crates (coding-adventures-json-{lexer,parser,value,serializer}) and provides Graph -> JSON string and JSON string -> Graph that round-trip losslessly through the same Graph value as the binary format.  Used wherever a graph is exported for browser inspection, cross-language port reference, test fixture commits, or schema documentation."
+license = "MIT"
+
+[dependencies]
+matrix-ir                          = { path = "../matrix-ir" }
+coding-adventures-json-value       = { path = "../json-value" }
+coding-adventures-json-serializer  = { path = "../json-serializer" }

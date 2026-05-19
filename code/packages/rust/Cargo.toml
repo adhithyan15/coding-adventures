@@ -383,6 +383,7 @@ members = [
     "matrix-cpu",
     "matrix-cuda",
     "matrix-ir",
+    "matrix-ir-json",
     "matrix-metal",
     "matrix-profile",
     "matrix-runtime",
