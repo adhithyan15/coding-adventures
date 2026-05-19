@@ -17,6 +17,8 @@ documented in this file.
   the crate links static source instead of loading TOML at runtime.
 - Fixture-backed tests proving the generated lexer definition and emitted
   runtime tokens stay aligned.
+- Shared JSON fixture IO helpers keep generated WHATWG boundary and recovery
+  fixture writers on the same stable `--check` path.
 - Parser-facing seeded RCDATA/RAWTEXT/script end-tag continuation contexts,
   including end-tag-name, whitespace, attributes, and self-closing substates
   with current-end-tag and temporary-buffer seeding.

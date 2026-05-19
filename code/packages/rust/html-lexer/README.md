@@ -105,6 +105,9 @@ for generated boundary and recovery fixtures, keeping each runner focused on
 the lexer context it seeds.
 The same helper module centralizes generated suite metadata guards for format,
 description, case-count floor, and sentinel case IDs.
+The fixture generator scripts also share JSON fixture IO helpers, so `--check`
+mode, stale-file diagnostics, sorted output, and UTF-8 preservation stay
+consistent across generated WHATWG boundary and recovery fixtures.
 The generated text-mode boundary suite drills into parser-seeded RCDATA,
 RAWTEXT, and PLAINTEXT state boundaries: less-than recovery, end-tag-open/name
 continuations, NULL replacement, EOF literal recovery, and PLAINTEXT markup
