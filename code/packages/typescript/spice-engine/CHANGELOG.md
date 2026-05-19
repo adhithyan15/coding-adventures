@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `pssNewtonUpdate`, a least-squares Newton correction helper from the
+  finite-difference residual Jacobian to reactive initial-condition updates.
 - Add `pssResidualJacobian`, a forward finite-difference Jacobian from
   reactive initial conditions to the ordered PSS residual vector for future
   shooting-Newton updates.

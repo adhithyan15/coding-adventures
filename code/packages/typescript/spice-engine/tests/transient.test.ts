@@ -14,6 +14,7 @@ import {
   estimatePeriod,
   inductor,
   inductorWithInitialCurrent,
+  pssNewtonUpdate,
   pssResidualJacobian,
   pssResidual,
   resistor,
@@ -170,6 +171,34 @@ describe("transient", () => {
     expect(result!.jacobian.every((row) => Number.isFinite(row[0]))).toBe(true);
   });
 
+  it("reports least-squares PSS Newton state updates", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+    circuit.add(capacitorWithInitialVoltage("C1", "out", "0", 1.0e-6, 0.1));
+
+    const result = pssNewtonUpdate(circuit, 32, 1.0e-6, 1.0e-5);
+
+    expect(result).not.toBeUndefined();
+    expect(result!.jacobian.stateVector[0].name).toBe("C1");
+    expect(result!.stateUpdates[0].kind).toBe("capacitor_voltage");
+    expect(result!.stateUpdates[0].name).toBe("C1");
+    expectClose(
+      result!.nextStateVector[0].value,
+      result!.jacobian.stateVector[0].value + result!.stateUpdates[0].value,
+    );
+    expectClose(result!.updateL2Norm, Math.abs(result!.stateUpdates[0].value));
+    expect(Number.isFinite(result!.stateUpdates[0].value)).toBe(true);
+  });
+
   it("does not report a PSS residual without a periodic source period", () => {
     const circuit = new Circuit();
     circuit.add(
@@ -215,6 +244,27 @@ describe("transient", () => {
     expect(() => pssResidualJacobian(circuit, 32, 1.0e-6, 0.0)).toThrow(
       SpiceError,
     );
+  });
+
+  it("returns an empty PSS Newton update without reactive state", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+    circuit.add(resistor("R1", "in", "0", 1_000.0));
+
+    const result = pssNewtonUpdate(circuit, 32);
+
+    expect(result).not.toBeUndefined();
+    expect(result!.stateUpdates).toEqual([]);
+    expect(result!.nextStateVector).toEqual([]);
+    expectClose(result!.updateL2Norm, 0.0);
   });
 
   it("uses a backward-Euler capacitor companion for an RC step", () => {

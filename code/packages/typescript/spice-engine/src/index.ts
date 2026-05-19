@@ -631,6 +631,13 @@ export interface PssResidualJacobianResult {
   readonly jacobian: readonly (readonly number[])[];
 }
 
+export interface PssNewtonUpdateResult {
+  readonly jacobian: PssResidualJacobianResult;
+  readonly stateUpdates: readonly PssStateEntry[];
+  readonly nextStateVector: readonly PssStateEntry[];
+  readonly updateL2Norm: number;
+}
+
 export class SpiceError extends Error {
   constructor(
     message: string,
@@ -1933,6 +1940,66 @@ export function pssResidualJacobian(
     perturbation,
     columns,
     jacobian,
+  };
+}
+
+function solvePssNormalEquations(jacobian: PssResidualJacobianResult): number[] {
+  const columnCount = jacobian.stateVector.length;
+  if (columnCount === 0) {
+    return [];
+  }
+
+  const normalMatrix = Array.from({ length: columnCount }, () =>
+    Array.from({ length: columnCount }, () => 0.0),
+  );
+  const normalRhs = Array.from({ length: columnCount }, () => 0.0);
+  for (const [rowIndex, row] of jacobian.jacobian.entries()) {
+    const residualValue = jacobian.residual.residualVector[rowIndex].value;
+    for (let col = 0; col < columnCount; col++) {
+      normalRhs[col] -= row[col] * residualValue;
+      for (let otherCol = 0; otherCol < columnCount; otherCol++) {
+        normalMatrix[col][otherCol] += row[col] * row[otherCol];
+      }
+    }
+  }
+  return solveLinearSystem(normalMatrix, normalRhs);
+}
+
+export function pssNewtonUpdate(
+  circuit: Circuit,
+  stepsPerPeriod = 64,
+  residualTolerance = 1.0e-6,
+  perturbation = 1.0e-6,
+): PssNewtonUpdateResult | undefined {
+  const jacobian = pssResidualJacobian(
+    circuit,
+    stepsPerPeriod,
+    residualTolerance,
+    perturbation,
+  );
+  if (jacobian === undefined) {
+    return undefined;
+  }
+
+  const updateValues = solvePssNormalEquations(jacobian);
+  const stateUpdates = jacobian.stateVector.map((state, index) => ({
+    kind: state.kind,
+    name: state.name,
+    value: updateValues[index],
+  }));
+  const nextStateVector = jacobian.stateVector.map((state, index) => ({
+    kind: state.kind,
+    name: state.name,
+    value: state.value + updateValues[index],
+  }));
+  const updateL2Norm = Math.sqrt(
+    updateValues.reduce((sum, value) => sum + value * value, 0.0),
+  );
+  return {
+    jacobian,
+    stateUpdates,
+    nextStateVector,
+    updateL2Norm,
   };
 }
 

@@ -1,8 +1,9 @@
 use spice_engine::{
-    estimate_period, pss_residual, pss_residual_jacobian_with_tolerance,
-    pss_residual_with_tolerance, transient, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element,
-    ExpWaveform, Inductor, PssResidualJacobianResult, PssResidualResult, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, SpiceError, VoltageSource, Waveform,
+    estimate_period, pss_newton_update, pss_newton_update_with_tolerance, pss_residual,
+    pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance, transient, Capacitor, Cccs,
+    Ccvs, Circuit, CurrentSource, Element, ExpWaveform, Inductor, PssNewtonUpdateResult,
+    PssResidualJacobianResult, PssResidualResult, PulseWaveform, PwlWaveform, Resistor,
+    SinWaveform, SpiceError, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -190,6 +191,37 @@ fn pss_residual_jacobian_reports_reactive_initial_state_columns() {
 }
 
 #[test]
+fn pss_newton_update_reports_reactive_state_corrections() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, 1_000.0)),
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "out", 1_000.0)));
+    circuit.add(Element::Capacitor(Capacitor::with_initial_voltage(
+        "C1", "out", "0", 1.0e-6, 0.1,
+    )));
+
+    let result = pss_newton_update_with_tolerance(&circuit, 32, 1.0e-6, 1.0e-5)
+        .unwrap()
+        .unwrap();
+
+    let _: PssNewtonUpdateResult = result.clone();
+    assert_eq!(result.jacobian.state_vector[0].name, "C1");
+    assert_eq!(result.state_updates[0].kind, "capacitor_voltage");
+    assert_eq!(result.state_updates[0].name, "C1");
+    assert_close(
+        result.next_state_vector[0].value,
+        result.jacobian.state_vector[0].value + result.state_updates[0].value,
+    );
+    assert_close(result.update_l2_norm, result.state_updates[0].value.abs());
+    assert!(result.state_updates[0].value.is_finite());
+}
+
+#[test]
 fn pss_residual_requires_periodic_sources() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
@@ -235,6 +267,25 @@ fn pss_residual_jacobian_rejects_non_positive_perturbation() {
         pss_residual_jacobian_with_tolerance(&circuit, 32, 1.0e-6, 0.0),
         Err(SpiceError::InvalidElement { .. })
     ));
+}
+
+#[test]
+fn pss_newton_update_without_reactive_state_returns_empty_update() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, 1_000.0)),
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "0", 1_000.0)));
+
+    let result = pss_newton_update(&circuit, 32).unwrap().unwrap();
+
+    assert!(result.state_updates.is_empty());
+    assert!(result.next_state_vector.is_empty());
+    assert_close(result.update_l2_norm, 0.0);
 }
 
 #[test]

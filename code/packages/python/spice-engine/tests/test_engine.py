@@ -106,6 +106,7 @@ from spice_engine import (
     NoiseEntry,
     NoisePoint,
     NoiseResult,
+    PssNewtonUpdateResult,
     PssResidualJacobianResult,
     PssResidualResult,
     PulseWaveform,
@@ -129,6 +130,7 @@ from spice_engine import (
     estimate_period,
     mc_dc,
     noise_ac,
+    pss_newton_update,
     pss_residual_jacobian,
     pss_residual,
     sens_dc,
@@ -281,6 +283,33 @@ def test_pss_residual_jacobian_reports_reactive_initial_state_columns() -> None:
     assert all(math.isfinite(row[0]) for row in result.jacobian)
 
 
+def test_pss_newton_update_reports_reactive_state_corrections() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(frequency=1_000.0),
+        )
+    )
+    c.add(Resistor("R1", "in", "out", 1_000.0))
+    c.add(Capacitor("C1", "out", "0", 1.0e-6, initial_voltage=0.1))
+
+    result = pss_newton_update(c, steps_per_period=32, perturbation=1.0e-5)
+
+    assert isinstance(result, PssNewtonUpdateResult)
+    assert result.jacobian.state_vector[0].name == "C1"
+    assert result.state_updates[0].kind == "capacitor_voltage"
+    assert result.state_updates[0].name == "C1"
+    assert result.next_state_vector[0].value == pytest.approx(
+        result.jacobian.state_vector[0].value + result.state_updates[0].value
+    )
+    assert result.update_l2_norm == pytest.approx(abs(result.state_updates[0].value))
+    assert math.isfinite(result.state_updates[0].value)
+
+
 def test_pss_residual_requires_periodic_sources() -> None:
     c = Circuit()
     c.add(
@@ -326,6 +355,27 @@ def test_pss_residual_jacobian_rejects_non_positive_perturbation() -> None:
 
     with pytest.raises(ValueError, match="perturbation"):
         pss_residual_jacobian(c, perturbation=0.0)
+
+
+def test_pss_newton_update_without_reactive_state_returns_empty_update() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(frequency=1_000.0),
+        )
+    )
+    c.add(Resistor("R1", "in", "0", 1_000.0))
+
+    result = pss_newton_update(c, steps_per_period=32)
+
+    assert result is not None
+    assert result.state_updates == []
+    assert result.next_state_vector == []
+    assert result.update_l2_norm == pytest.approx(0.0)
 
 
 # ---- Linear solver ----

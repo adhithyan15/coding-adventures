@@ -376,6 +376,16 @@ class PssResidualJacobianResult:
 
 
 @dataclass
+class PssNewtonUpdateResult:
+    """Least-squares Newton correction for the PSS reactive state vector."""
+
+    jacobian: PssResidualJacobianResult
+    state_updates: list[PssStateEntry]
+    next_state_vector: list[PssStateEntry]
+    update_l2_norm: float
+
+
+@dataclass
 class AcPoint:
     """Phasor voltages at a single frequency point.
 
@@ -2551,6 +2561,68 @@ def pss_residual_jacobian(
         perturbation=perturbation,
         columns=columns,
         jacobian=jacobian,
+    )
+
+
+def _pss_normal_equations_update(jacobian: PssResidualJacobianResult) -> list[float]:
+    column_count = len(jacobian.state_vector)
+    if column_count == 0:
+        return []
+
+    residual_values = [entry.value for entry in jacobian.residual.residual_vector]
+    normal_matrix = [[0.0 for _ in range(column_count)] for _ in range(column_count)]
+    normal_rhs = [0.0 for _ in range(column_count)]
+    for row_index, row in enumerate(jacobian.jacobian):
+        residual_value = residual_values[row_index]
+        for col_index in range(column_count):
+            normal_rhs[col_index] -= row[col_index] * residual_value
+            for other_col in range(column_count):
+                normal_matrix[col_index][other_col] += row[col_index] * row[other_col]
+    return _solve(normal_matrix, normal_rhs)
+
+
+def pss_newton_update(
+    circuit: Circuit,
+    *,
+    steps_per_period: int = 64,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    residual_tol: float = 1e-6,
+    perturbation: float = 1e-6,
+) -> PssNewtonUpdateResult | None:
+    """Compute a least-squares Newton update for PSS reactive initial states."""
+    jacobian = pss_residual_jacobian(
+        circuit,
+        steps_per_period=steps_per_period,
+        method=method,
+        max_iterations=max_iterations,
+        tol=tol,
+        residual_tol=residual_tol,
+        perturbation=perturbation,
+    )
+    if jacobian is None:
+        return None
+
+    update_values = _pss_normal_equations_update(jacobian)
+    state_updates = [
+        PssStateEntry(kind=state.kind, name=state.name, value=update)
+        for state, update in zip(jacobian.state_vector, update_values, strict=True)
+    ]
+    next_state_vector = [
+        PssStateEntry(
+            kind=state.kind,
+            name=state.name,
+            value=state.value + update,
+        )
+        for state, update in zip(jacobian.state_vector, update_values, strict=True)
+    ]
+    update_l2_norm = math.sqrt(sum(update * update for update in update_values))
+    return PssNewtonUpdateResult(
+        jacobian=jacobian,
+        state_updates=state_updates,
+        next_state_vector=next_state_vector,
+        update_l2_norm=update_l2_norm,
     )
 
 
