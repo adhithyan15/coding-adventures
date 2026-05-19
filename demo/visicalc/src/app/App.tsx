@@ -116,6 +116,11 @@ export function App() {
         columnHeaders={state.columnHeaders}
         viewportRows={viewportRows}
         columnWidths={state.columnWidths}
+        // viewport scroll bound. With sticky-header: true in the .mll
+        // (WA5, UI27 §6), the Grid wraps its `<table>` in a scroll div
+        // and pins the `<thead>`. 600px keeps roughly 26 visible rows
+        // at the 22px row height declared in Grid.dark.msl.
+        totalHeight={600}
         selectedRow={state.selectedRow - state.viewportOffset}
         selectedCol={state.selectedCol}
         editRow={state.editRow - state.viewportOffset}
