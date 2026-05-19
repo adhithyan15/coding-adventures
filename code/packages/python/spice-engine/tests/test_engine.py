@@ -106,6 +106,7 @@ from spice_engine import (
     NoiseEntry,
     NoisePoint,
     NoiseResult,
+    PssResidualResult,
     PulseWaveform,
     PwlWaveform,
     Resistor,
@@ -127,6 +128,7 @@ from spice_engine import (
     estimate_period,
     mc_dc,
     noise_ac,
+    pss_residual,
     sens_dc,
     s_parameters,
     tf,
@@ -198,6 +200,44 @@ def test_estimate_period_rejects_nonperiodic_or_incommensurate_sources() -> None
         CurrentSource("I1", "out", "0", 0.0, waveform=PulseWaveform(period=0.7e-3))
     )
     assert estimate_period(incommensurate) is None
+
+
+def test_pss_residual_reports_one_period_node_closure() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(frequency=1_000.0),
+        )
+    )
+    c.add(Resistor("R1", "in", "0", 1_000.0))
+
+    result = pss_residual(c, steps_per_period=32)
+
+    assert isinstance(result, PssResidualResult)
+    assert result.period == pytest.approx(1.0e-3)
+    assert result.time_step == pytest.approx(1.0e-3 / 32.0)
+    assert result.converged is True
+    assert result.node_residuals["in"] == pytest.approx(0.0, abs=1.0e-12)
+    assert result.max_abs_residual == pytest.approx(0.0, abs=1.0e-12)
+
+
+def test_pss_residual_requires_periodic_sources() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-3, 1.0))),
+        )
+    )
+
+    assert pss_residual(c) is None
 
 
 # ---- Linear solver ----

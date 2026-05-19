@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add PSS period-closure residual reporting with `pss_residual` and
+  `PssResidualResult`, which runs one estimated source period and returns
+  node-voltage closure residuals as the next foothold for shooting-Newton
+  periodic steady-state analysis.
 - Add PSS source-period estimation with `Waveform::period_seconds`,
   `estimate_period`, and `estimate_period_with_tolerance` for deriving a
   harmonic common independent-source period.

@@ -592,6 +592,13 @@ export interface TransientPoint {
   branchCurrent(sourceName: string): number | undefined;
 }
 
+export interface PssResidualResult {
+  readonly periodSeconds: number;
+  readonly timeStepSeconds: number;
+  readonly nodeResiduals: ReadonlyMap<string, number>;
+  readonly maxAbsResidual: number;
+}
+
 export class SpiceError extends Error {
   constructor(
     message: string,
@@ -1669,6 +1676,61 @@ export function transient(
     );
   }
   return points;
+}
+
+export function pssResidual(
+  circuit: Circuit,
+  stepsPerPeriod = 64,
+): PssResidualResult | undefined {
+  const period = estimatePeriod(circuit);
+  if (period === undefined) {
+    return undefined;
+  }
+  if (!Number.isInteger(stepsPerPeriod) || stepsPerPeriod <= 0) {
+    throw invalidElement(
+      "pssResidual",
+      "steps per period must be a positive integer",
+    );
+  }
+
+  const timeStep = period / stepsPerPeriod;
+  validateReactiveElements(circuit);
+  const initialSolution = solveLinearCircuit(
+    circuit,
+    initialCapacitorStates(circuit, timeStep),
+    initialInductorStates(circuit, timeStep),
+    0.0,
+  );
+  const points = transient(circuit, timeStep, period);
+  if (points.length === 0) {
+    return {
+      periodSeconds: period,
+      timeStepSeconds: timeStep,
+      nodeResiduals: new Map(),
+      maxAbsResidual: 0.0,
+    };
+  }
+
+  const last = points[points.length - 1];
+  const nodes = new Set<string>([
+    ...initialSolution.nodeVoltages.keys(),
+    ...last.nodeVoltages.keys(),
+  ]);
+  const nodeResiduals = new Map<string, number>();
+  let maxAbsResidual = 0.0;
+  for (const node of [...nodes].sort()) {
+    const residual =
+      (last.nodeVoltages.get(node) ?? 0.0) -
+      (initialSolution.nodeVoltages.get(node) ?? 0.0);
+    nodeResiduals.set(node, residual);
+    maxAbsResidual = Math.max(maxAbsResidual, Math.abs(residual));
+  }
+  return {
+    periodSeconds: period,
+    timeStepSeconds: timeStep,
+    nodeResiduals,
+    maxAbsResidual,
+  };
 }
 
 function validateSweep(

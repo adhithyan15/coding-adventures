@@ -14,6 +14,7 @@ import {
   estimatePeriod,
   inductor,
   inductorWithInitialCurrent,
+  pssResidual,
   resistor,
   transient,
   voltageSource,
@@ -94,6 +95,43 @@ describe("transient", () => {
       ),
     );
     expect(estimatePeriod(incommensurate)).toBeUndefined();
+  });
+
+  it("reports one-period PSS node closure residuals", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+    circuit.add(resistor("R1", "in", "0", 1_000.0));
+
+    const result = pssResidual(circuit, 32);
+
+    expect(result).not.toBeUndefined();
+    expectClose(result!.periodSeconds, 1.0e-3);
+    expectClose(result!.timeStepSeconds, 1.0e-3 / 32.0);
+    expectClose(result!.nodeResiduals.get("in"), 0.0);
+    expectClose(result!.maxAbsResidual, 0.0);
+  });
+
+  it("does not report a PSS residual without a periodic source period", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([[0.0, 0.0], [1.0e-3, 1.0]]),
+      ),
+    );
+
+    expect(pssResidual(circuit)).toBeUndefined();
   });
 
   it("uses a backward-Euler capacitor companion for an RC step", () => {
