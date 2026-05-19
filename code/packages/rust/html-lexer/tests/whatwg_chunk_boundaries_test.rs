@@ -1,5 +1,5 @@
 use coding_adventures_html_lexer::{
-    apply_html_lex_context, create_html_lexer, Diagnostic, DoctypeSeed, HtmlLexContext, HtmlLexer,
+    create_html_lexer_with_context, Diagnostic, DoctypeSeed, HtmlLexContext, HtmlLexer,
     HtmlTokenizerState, Token,
 };
 use serde::Deserialize;
@@ -137,9 +137,7 @@ fn configured_lexer(case: &ChunkBoundaryCase) -> HtmlLexer {
         context = context.with_return_state(return_state);
     }
 
-    let mut lexer = create_html_lexer().expect("HTML lexer should build");
-    apply_html_lex_context(&mut lexer, &context).expect("HTML lexer context should apply");
-    lexer
+    create_html_lexer_with_context(&context).expect("HTML lexer context should apply")
 }
 
 fn chunkings(source: &str) -> Vec<Vec<&str>> {

@@ -2,8 +2,9 @@ use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, create_html_lexer_with_context, html1_definition,
     html1_machine, html_skeleton_definition, html_skeleton_machine, lex_html, lex_html_fragment,
     Attribute, DoctypeSeed, HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, StartTagSeed,
-    Token, HTML_DOCTYPE_TOKENIZER_STATES, HTML_FRAGMENT_TOKENIZER_STATES,
-    HTML_SCRIPT_TOKENIZER_STATES, HTML_START_TAG_TOKENIZER_STATES, HTML_TOKENIZER_STATES,
+    Token, HTML_DOCTYPE_TOKENIZER_STATES, HTML_END_TAG_TOKENIZER_STATES,
+    HTML_FRAGMENT_TOKENIZER_STATES, HTML_SCRIPT_TOKENIZER_STATES, HTML_START_TAG_TOKENIZER_STATES,
+    HTML_TEXT_MODE_TOKENIZER_STATES, HTML_TOKENIZER_STATES,
 };
 use state_machine::END_INPUT;
 
@@ -5314,6 +5315,35 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
             "self_closing_start_tag",
         ]
     );
+    assert_eq!(
+        HTML_END_TAG_TOKENIZER_STATES.map(HtmlTokenizerState::as_machine_state),
+        [
+            "rcdata_end_tag_name",
+            "rcdata_end_tag_whitespace",
+            "rcdata_end_tag_attributes",
+            "rcdata_self_closing_end_tag",
+            "rawtext_end_tag_name",
+            "rawtext_end_tag_whitespace",
+            "rawtext_end_tag_attributes",
+            "rawtext_self_closing_end_tag",
+            "script_data_end_tag_name",
+            "script_data_end_tag_whitespace",
+            "script_data_end_tag_attributes",
+            "script_data_self_closing_end_tag",
+            "script_data_escaped_end_tag_name",
+            "script_data_escaped_end_tag_whitespace",
+            "script_data_escaped_end_tag_attributes",
+            "script_data_escaped_self_closing_end_tag",
+        ]
+    );
+    assert_eq!(HTML_TEXT_MODE_TOKENIZER_STATES.len(), 39);
+    assert!(HTML_TEXT_MODE_TOKENIZER_STATES.contains(&HtmlTokenizerState::Rcdata));
+    assert!(HTML_TEXT_MODE_TOKENIZER_STATES.contains(&HtmlTokenizerState::Rawtext));
+    assert!(HTML_TEXT_MODE_TOKENIZER_STATES.contains(&HtmlTokenizerState::Plaintext));
+    assert!(HTML_TEXT_MODE_TOKENIZER_STATES.contains(&HtmlTokenizerState::ScriptDataEscaped));
+    assert!(
+        HTML_TEXT_MODE_TOKENIZER_STATES.contains(&HtmlTokenizerState::ScriptDataDoubleEscapeEnd)
+    );
 }
 
 #[test]
@@ -6108,10 +6138,13 @@ fn parser_facing_end_tag_continuation_contexts_resume_seeded_tokens() {
             "tail",
         ),
     ] {
-        let context = HtmlLexContext::new(state)
-            .with_last_start_tag(last_start_tag)
-            .with_current_end_tag(current_end_tag)
-            .with_temporary_buffer(temporary_buffer);
+        let context = HtmlLexContext::end_tag_continuation(
+            state,
+            last_start_tag,
+            current_end_tag,
+            temporary_buffer,
+        )
+        .unwrap();
 
         assert_eq!(
             lex_html_fragment(input, &context).unwrap(),
@@ -6174,12 +6207,14 @@ fn parser_facing_end_tag_continuation_contexts_recover_seeded_text_and_diagnosti
         } else {
             "title"
         };
-        let context = HtmlLexContext::new(state)
-            .with_last_start_tag(last_start_tag)
-            .with_current_end_tag(last_start_tag)
-            .with_temporary_buffer(temporary_buffer);
-        let mut lexer = create_html_lexer().unwrap();
-        apply_html_lex_context(&mut lexer, &context).unwrap();
+        let context = HtmlLexContext::end_tag_continuation(
+            state,
+            last_start_tag,
+            last_start_tag,
+            temporary_buffer,
+        )
+        .unwrap();
+        let mut lexer = create_html_lexer_with_context(&context).unwrap();
 
         lexer.push(input).unwrap();
         lexer.finish().unwrap();
@@ -6243,10 +6278,13 @@ fn parser_facing_end_tag_continuation_contexts_keep_mismatches_literal() {
             "</style/>tail",
         ),
     ] {
-        let context = HtmlLexContext::new(state)
-            .with_last_start_tag(last_start_tag)
-            .with_current_end_tag(current_end_tag)
-            .with_temporary_buffer(temporary_buffer);
+        let context = HtmlLexContext::end_tag_continuation(
+            state,
+            last_start_tag,
+            current_end_tag,
+            temporary_buffer,
+        )
+        .unwrap();
 
         assert_eq!(
             lex_html_fragment(input, &context).unwrap(),
@@ -6260,6 +6298,11 @@ fn parser_facing_end_tag_continuation_contexts_keep_mismatches_literal() {
             "context {state:?}"
         );
     }
+
+    assert_eq!(
+        HtmlLexContext::end_tag_continuation(HtmlTokenizerState::Rcdata, "title", "title", "title"),
+        None
+    );
 }
 
 #[test]
