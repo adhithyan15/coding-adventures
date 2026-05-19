@@ -48,31 +48,18 @@ export interface MatrixBackend {
   dot(left: Matrix, right: Matrix): Matrix;
 }
 
-export class CpuMatrixBackend implements MatrixBackend {
-  readonly name = "cpu";
+// MX08 Phase 1 — `CpuMatrixBackend` has been moved verbatim into the
+// `./backends/cpu-pure-ts.ts` sibling module.  Re-exported here so
+// existing `import { CpuMatrixBackend } from "@coding-adventures/matrix"`
+// callers continue to work without source change.  MX08 Phase 2 will
+// add a Node-side sibling (`./backends/cpu-rust-napi.ts`) and a
+// package.json `exports` conditional that routes the right one per
+// environment.
+export { CpuMatrixBackend } from "./backends/cpu-pure-ts";
 
-  add(left: Matrix, right: Matrix): Matrix {
-    return left.add(right);
-  }
+import { CpuMatrixBackend as CpuMatrixBackendImpl } from "./backends/cpu-pure-ts";
 
-  subtract(left: Matrix, right: Matrix): Matrix {
-    return left.subtract(right);
-  }
-
-  scale(matrix: Matrix, scalar: number): Matrix {
-    return matrix.scale(scalar);
-  }
-
-  transpose(matrix: Matrix): Matrix {
-    return matrix.transpose();
-  }
-
-  dot(left: Matrix, right: Matrix): Matrix {
-    return left.dot(right);
-  }
-}
-
-const CPU_MATRIX_BACKEND = new CpuMatrixBackend();
+const CPU_MATRIX_BACKEND = new CpuMatrixBackendImpl();
 let activeMatrixBackend: MatrixBackend = CPU_MATRIX_BACKEND;
 
 export function getMatrixBackend(): MatrixBackend {
