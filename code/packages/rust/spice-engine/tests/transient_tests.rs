@@ -1,7 +1,7 @@
 use spice_engine::{
-    estimate_period, pss_residual, transient, Capacitor, Cccs, Ccvs, Circuit, CurrentSource,
-    Element, ExpWaveform, Inductor, PssResidualResult, PulseWaveform, PwlWaveform, Resistor,
-    SinWaveform, SpiceError, VoltageSource, Waveform,
+    estimate_period, pss_residual, pss_residual_with_tolerance, transient, Capacitor, Cccs, Ccvs,
+    Circuit, CurrentSource, Element, ExpWaveform, Inductor, PssResidualResult, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -118,6 +118,8 @@ fn pss_residual_reports_one_period_node_closure() {
     let _: PssResidualResult = result.clone();
     assert_close(result.period_seconds, 1.0e-3);
     assert_close(result.time_step_seconds, 1.0e-3 / 32.0);
+    assert_close(result.residual_tolerance, 1.0e-6);
+    assert!(result.within_tolerance);
     assert_close(*result.node_residuals.get("in").unwrap(), 0.0);
     assert_close(result.max_abs_residual, 0.0);
 }
@@ -134,6 +136,23 @@ fn pss_residual_requires_periodic_sources() {
     )));
 
     assert!(pss_residual(&circuit, 32).unwrap().is_none());
+}
+
+#[test]
+fn pss_residual_rejects_negative_residual_tolerance() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, 1_000.0)),
+    )));
+
+    assert!(matches!(
+        pss_residual_with_tolerance(&circuit, 32, -1.0),
+        Err(SpiceError::InvalidElement { .. })
+    ));
 }
 
 #[test]

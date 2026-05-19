@@ -327,6 +327,8 @@ class PssResidualResult:
     time_step: float
     node_residuals: dict[str, float]
     max_abs_residual: float
+    residual_tol: float
+    within_tolerance: bool
     converged: bool
 
 
@@ -2278,6 +2280,7 @@ def pss_residual(
     method: str = "trap",
     max_iterations: int = 50,
     tol: float = 1e-6,
+    residual_tol: float = 1e-6,
 ) -> PssResidualResult | None:
     """Run one estimated period and report the node-voltage closure residual.
 
@@ -2289,6 +2292,8 @@ def pss_residual(
         return None
     if steps_per_period <= 0:
         raise ValueError("steps_per_period must be positive")
+    if residual_tol < 0.0:
+        raise ValueError("residual_tol must be non-negative")
 
     time_step = period / steps_per_period
     result = transient(
@@ -2305,6 +2310,8 @@ def pss_residual(
             time_step=time_step,
             node_residuals={},
             max_abs_residual=0.0,
+            residual_tol=residual_tol,
+            within_tolerance=False,
             converged=False,
         )
 
@@ -2321,6 +2328,8 @@ def pss_residual(
         time_step=time_step,
         node_residuals=residuals,
         max_abs_residual=max_abs,
+        residual_tol=residual_tol,
+        within_tolerance=result.converged and max_abs <= residual_tol,
         converged=result.converged,
     )
 

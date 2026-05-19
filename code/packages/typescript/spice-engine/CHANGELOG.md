@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add tolerance-aware PSS residual convergence reporting through
+  `pssResidual`, including `residualTolerance` and `withinTolerance`.
 - Add PSS period-closure residual reporting with `pssResidual`, which runs one
   estimated source period and returns node-voltage closure residuals as the
   next foothold for shooting-Newton periodic steady-state analysis.

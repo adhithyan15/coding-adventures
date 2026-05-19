@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add tolerance-aware PSS residual convergence reporting through
+  `pss_residual_with_tolerance`, including `residual_tolerance` and
+  `within_tolerance` on `PssResidualResult`.
 - Add PSS period-closure residual reporting with `pss_residual` and
   `PssResidualResult`, which runs one estimated source period and returns
   node-voltage closure residuals as the next foothold for shooting-Newton

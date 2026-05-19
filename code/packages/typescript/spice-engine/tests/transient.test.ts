@@ -115,6 +115,8 @@ describe("transient", () => {
     expect(result).not.toBeUndefined();
     expectClose(result!.periodSeconds, 1.0e-3);
     expectClose(result!.timeStepSeconds, 1.0e-3 / 32.0);
+    expectClose(result!.residualTolerance, 1.0e-6);
+    expect(result!.withinTolerance).toBe(true);
     expectClose(result!.nodeResiduals.get("in"), 0.0);
     expectClose(result!.maxAbsResidual, 0.0);
   });
@@ -132,6 +134,21 @@ describe("transient", () => {
     );
 
     expect(pssResidual(circuit)).toBeUndefined();
+  });
+
+  it("rejects negative PSS residual tolerances", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+
+    expect(() => pssResidual(circuit, 32, -1.0)).toThrow(SpiceError);
   });
 
   it("uses a backward-Euler capacitor companion for an RC step", () => {
