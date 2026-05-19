@@ -709,9 +709,14 @@ def _compile_select(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
         else:
             for it in project_items:
                 if isinstance(it.expr, Wildcard):
-                    primary = _primary_cursor(c)
-                    if primary is not None:
-                        out.append(ScanAllColumns(cursor_id=primary))
+                    # SELECT * — emit columns from EVERY open cursor in the
+                    # order they were opened, not just the primary one.  For
+                    # a single-source query this is a no-op change (one
+                    # cursor in alias_to_cursor); for a cross-join across
+                    # N sources this fixes a long-standing bug where only
+                    # the first table's columns appeared in the output.
+                    for cursor_id in c.alias_to_cursor.values():
+                        out.append(ScanAllColumns(cursor_id=cursor_id))
                 else:
                     out.extend(_compile_expr(it.expr, c))
                     out.append(EmitColumn(name=_projection_name(it)))

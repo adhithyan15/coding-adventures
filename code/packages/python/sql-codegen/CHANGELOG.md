@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.31.0] - 2026-05-19
+
+### Fixed
+
+- **``SELECT *`` now emits columns from every open cursor** in
+  ``_compile_project_body``.  The Wildcard branch previously called
+  ``_primary_cursor`` and emitted ``ScanAllColumns`` for *only* the
+  first scan opened, silently dropping columns from any additional
+  cross-join sources.  Now iterates ``ctx.alias_to_cursor.values()``
+  in insertion order, emitting one ``ScanAllColumns`` per cursor.
+
+  Affected queries:
+
+      SELECT * FROM a, b                         -- two plain tables
+      SELECT * FROM (SELECT 1 AS x) t1, (SELECT 2) t2  -- derived tables
+      WITH a AS (...), b AS (...) SELECT * FROM a, b   -- CTEs
+      SELECT * FROM orders, customers WHERE ...        -- ANSI cross-join
+
+  Known follow-up: ``SELECT * FROM a LEFT JOIN b ON ...`` with
+  *unmatched* left rows still under-counts columns because the VM's
+  ``_do_scan_all_columns`` opcode bails out when the right cursor has
+  no current row instead of NULL-padding.  Matched rows are now
+  correct.  Threading the cursor schema into VM state at OpenScan
+  time will close that gap in a separate PR.
+
 ## [1.30.0] - 2026-05-19
 
 ### Added
