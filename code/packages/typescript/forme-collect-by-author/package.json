@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/forme-collect-by-author",
+  "version": "0.1.0",
+  "description": "Group an array of documents by author for author archive pages.  Pure transform: items + authorOf accessor (string | string[]) → Map<normalisedAuthor, items[]> + sorted authorNames list.  Supports co-author arrays (item appears in each author's bucket).  Same normalisation as forme-collect-by-tag.  FM00 v0 §5.4 collector.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
