@@ -596,6 +596,8 @@ export interface PssResidualResult {
   readonly periodSeconds: number;
   readonly timeStepSeconds: number;
   readonly nodeResiduals: ReadonlyMap<string, number>;
+  readonly branchResiduals: ReadonlyMap<string, number>;
+  readonly maxAbsBranchResidual: number;
   readonly maxAbsResidual: number;
   readonly residualTolerance: number;
   readonly withinTolerance: boolean;
@@ -1716,6 +1718,8 @@ export function pssResidual(
       periodSeconds: period,
       timeStepSeconds: timeStep,
       nodeResiduals: new Map(),
+      branchResiduals: new Map(),
+      maxAbsBranchResidual: 0.0,
       maxAbsResidual: 0.0,
       residualTolerance,
       withinTolerance: false,
@@ -1736,10 +1740,26 @@ export function pssResidual(
     nodeResiduals.set(node, residual);
     maxAbsResidual = Math.max(maxAbsResidual, Math.abs(residual));
   }
+  const branches = new Set<string>([
+    ...initialSolution.branchCurrents.keys(),
+    ...last.branchCurrents.keys(),
+  ]);
+  const branchResiduals = new Map<string, number>();
+  let maxAbsBranchResidual = 0.0;
+  for (const branch of [...branches].sort()) {
+    const residual =
+      (last.branchCurrents.get(branch) ?? 0.0) -
+      (initialSolution.branchCurrents.get(branch) ?? 0.0);
+    branchResiduals.set(branch, residual);
+    maxAbsBranchResidual = Math.max(maxAbsBranchResidual, Math.abs(residual));
+  }
+  maxAbsResidual = Math.max(maxAbsResidual, maxAbsBranchResidual);
   return {
     periodSeconds: period,
     timeStepSeconds: timeStep,
     nodeResiduals,
+    branchResiduals,
+    maxAbsBranchResidual,
     maxAbsResidual,
     residualTolerance,
     withinTolerance: maxAbsResidual <= residualTolerance,

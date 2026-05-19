@@ -224,6 +224,8 @@ def test_pss_residual_reports_one_period_node_closure() -> None:
     assert result.residual_tol == pytest.approx(1.0e-6)
     assert result.within_tolerance is True
     assert result.node_residuals["in"] == pytest.approx(0.0, abs=1.0e-12)
+    assert result.branch_residuals["I(V1)"] == pytest.approx(0.0, abs=1.0e-12)
+    assert result.max_abs_branch_residual == pytest.approx(0.0, abs=1.0e-12)
     assert result.max_abs_residual == pytest.approx(0.0, abs=1.0e-12)
 
 
