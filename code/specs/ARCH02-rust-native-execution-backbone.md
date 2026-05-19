@@ -56,9 +56,9 @@ not change any existing code as a precondition.
   `matrix-rocm`, `matrix-vulkan`, `matrix-coreml`, etc.).
 - Every non-Rust, non-browser language binding (Node.js TypeScript,
   Python, Ruby, Lua, Java, …) calls into the Rust matrix execution
-  layer through C-compatible FFI or the language's native-extension
-  mechanism (`napi-rs`, `pyo3`, `magnus`, `mlua`, JNI). The Rust side
-  is the *only* place native code is implemented.
+  layer through the matching **workspace `*-bridge` crate** (see
+  §"Bindings layer: workspace bridges, not ecosystem crates" below).
+  The Rust side is the *only* place native code is implemented.
 - The browser TypeScript runtime is **the single exception**. It
   cannot call host-native APIs directly (no FFI access to Metal /
   CUDA / system NPU), so the browser keeps its own TypeScript
@@ -93,13 +93,17 @@ In one diagram:
             │          / cuda    │                                │ ts                  │
             └─────┬──────────────┘                                └─────────────────────┘
                   │                                                          ▲
-                  │ FFI / native extensions                                   │
-                  │ (napi-rs, pyo3, magnus, mlua, JNI, etc.)                  │
+                  │ FFI via workspace bridge crates                          │
+                  │ (node-bridge, python-bridge, ruby-bridge,                │
+                  │  lua-bridge, erl-nif-bridge, perl-bridge,                │
+                  │  objc-bridge, ... — all zero-dep wrappers                │
+                  │  over each language's C API)                             │
                   │                                                           │
         ┌─────────┼─────────────────────────────────────────────┐             │
         ▼         ▼         ▼         ▼          ▼              ▼             │
-   Rust apps   Node.js   Python    Ruby      Lua /          Java /            │
-   (direct)   (napi)    (pyo3)    (magnus)  mlua/rlua       JNI               │
+   Rust apps   Node.js   Python    Ruby      Lua /          Erlang /         │
+   (direct)   (node-    (python-  (ruby-     lua-bridge     erl-nif-         │
+              bridge)   bridge)   bridge)                    bridge          │
                                                                               │
                                                                 Browser TS ───┘
                                                                 (the one
@@ -109,6 +113,54 @@ In one diagram:
 Every native execution path on the left side terminates in the Rust
 matrix execution layer. The single exception on the right side is the
 browser, which cannot reach host-native APIs.
+
+---
+
+## Bindings layer: workspace bridges, not ecosystem crates
+
+The first cut of this spec mentioned `napi-rs`, `pyo3`, `magnus`,
+`mlua`, and JNI as the FFI mechanisms each language binding would
+use.  Those are the *ecosystem-standard* binding libraries; the
+workspace **does not use them**.  Instead, every language has a
+dedicated workspace `*-bridge` crate that wraps the language's stable
+C ABI directly with safe Rust:
+
+| Target language | Workspace bridge crate | What it wraps |
+|------------------|------------------------|---------------|
+| Node.js          | `node-bridge`          | Node.js N-API |
+| Python           | `python-bridge`        | CPython C API |
+| Ruby             | `ruby-bridge`          | Ruby C API    |
+| Lua 5.4          | `lua-bridge`           | Lua C API     |
+| Erlang           | `erl-nif-bridge`       | `erl_nif`     |
+| Perl             | `perl-bridge`          | Perl C API    |
+| Objective-C      | `objc-bridge`          | Objective-C runtime + Metal / CoreGraphics / CoreText |
+
+Common properties:
+
+* **Zero external dependencies.**  No `bindgen`, no `cc`, no
+  proc-macro crates.  Every bridge declares the C functions it uses
+  with `extern "C"` blocks and pulls them at link time.  C ABIs of
+  these runtimes are stable by design — that's exactly what they
+  exist for — so the bridge crates work across every supported host
+  version.
+* **No macros.**  The bridges expose safe Rust functions
+  (`str_to_js`, `str_from_js`, `vec_str_from_js`, …); binding crates
+  call them directly without `#[napi]` / `#[pyfunction]` / etc.
+  Stack traces stay shallow and `lldb` stepping works without proc-
+  macro indirection.
+* **One reviewer skillset.**  All bridges follow the same shape, so
+  reviewing a new language binding is no harder than reviewing the
+  previous one.
+
+A future binding crate for a language not yet covered (Swift via
+`@_cdecl`, R via `.Call`, Julia via `ccall`, etc.) gets a new
+`<lang>-bridge` crate.  Ecosystem crates may be referenced for
+inspiration but are not consumed as dependencies.
+
+Deviating from this default — for example, if a binding needs an
+async runtime an ecosystem crate provides out of the box — is
+allowed but must be justified in the binding's own design doc
+(typically a sibling MX## spec, as MX07 is for the Node.js binding).
 
 ---
 
@@ -370,13 +422,13 @@ With this rule:
 |-------|-------------------------------------------------------------|--------|
 | 0     | This spec                                                   | **this PR** |
 | 1     | Universal wire format — `Graph::to_json()` / `from_json()` in Rust; matching `matrix-ir-ts` package in TypeScript with `Graph.fromJson()` / `.toJson()`. Round-trip integration test: Rust builds a graph, serialises, TS loads + runs, results match within f32 tolerance. | pending |
-| 2     | `@coding-adventures/matrix-rust-napi` — a Rust-side napi crate that exposes `matrix-cpu` (and indirectly `matrix-metal` / `matrix-cuda` via the runtime planner) to Node.js via napi-rs. | pending |
-| 3     | `typescript/matrix` refactor — conditional `node`/`browser` exports. The Node build calls napi-rs; the browser build keeps the current JS-CPU implementation. All 13 downstream packages keep working without source changes. | pending |
+| 2     | `matrix-rust-napi` — a Rust-side N-API crate that exposes `matrix-cpu` (and indirectly `matrix-metal` / `matrix-cuda` via the runtime planner) to Node.js via the workspace `node-bridge` crate. | pending |
+| 3     | `typescript/matrix` refactor — conditional `node`/`browser` exports. The Node build calls into `matrix-rust-napi` via N-API; the browser build keeps the current JS-CPU implementation. All 13 downstream packages keep working without source changes. | pending |
 | 4     | `matrix-webgpu-ts` package — extracted from `neural-graph-vm/webgpu-matrix-backend.ts`. Consumes the unified `matrix_ir::Graph` shape. | pending |
 | 5     | `matrix-runtime-ts` package — TypeScript mirror of `matrix-runtime` for browser use. Backend selection: WebGPU when available, CPU-TS fallback. | pending |
 | 6     | NN01 implementation — Rust `neural-graph-vm` bytecode → `matrix_ir::Graph` → `matrix-runtime`. (Parallel TS implementation for browser follows the same shape but is its own phase.) | pending |
-| 7     | First non-Rust, non-Node FFI binding — likely Python via `pyo3`. Demonstrates the FFI pattern. | pending |
-| 8     | Subsequent FFI bindings — Ruby (`magnus`), Lua (`mlua`), Java (`jni`), etc. as needed. Each is a thin shim; the pattern is established by Phase 7. | pending |
+| 7     | First non-Rust, non-Node FFI binding — Python via the workspace `python-bridge` crate. Demonstrates the FFI pattern. | pending |
+| 8     | Subsequent FFI bindings — Ruby via `ruby-bridge`, Lua via `lua-bridge`, Erlang via `erl-nif-bridge`, Perl via `perl-bridge`, etc. as needed. Each is a thin shim; the pattern is established by Phase 7. | pending |
 
 Phases 1–3 unblock everything else. Phase 6 is the original NN-on-
 matrix-IR work that motivated this spec.
@@ -392,9 +444,12 @@ This spec does not address:
   ops it supports; extending coverage is Phase 5+ implementation
   work, not architectural.
 - **The neural-graph-vm bytecode design.** Covered by NN00.
-- **Specific FFI binding choices per language** (napi-rs vs neon,
-  pyo3 vs cffi, magnus vs rb-sys). Each language phase picks its
-  binding tool based on the language's standard practice.
+- **Specific FFI binding choices per language**. The workspace
+  default is the matching `*-bridge` crate (see §"Bindings layer:
+  workspace bridges, not ecosystem crates"); if a future binding
+  ever needs to deviate (e.g. for an async runtime an ecosystem
+  crate provides out of the box), that decision is made in the
+  binding's own design doc, not here.
 - **GPU memory management policy.** Already addressed by
   `compute-ir` / `compute-runtime` / `executor-protocol` / `matrix-runtime`.
 - **Training infrastructure.** Forward pass and matrix-IR lowering
