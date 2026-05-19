@@ -120,7 +120,8 @@ insert_stmt       = "INSERT" [ conflict_clause ] "INTO" NAME
 upsert_clause     = "ON" "CONFLICT"
                     [ "(" NAME { "," NAME } ")" ]
                     ( "DO" "NOTHING"
-                    | "DO" "UPDATE" "SET" upsert_assignment { "," upsert_assignment } ) ;
+                    | "DO" "UPDATE" "SET" upsert_assignment { "," upsert_assignment }
+                      [ where_clause ] ) ;
 
 upsert_assignment = NAME "=" expr ;
 replace_stmt      = "REPLACE" "INTO" NAME

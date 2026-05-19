@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.32.0] - 2026-05-19
+
+### Added
+
+- **`UpsertClause.where` (AST) and `UpsertAction.where` (Plan)** —
+  optional `Expr | None` field carrying the SQLite conditional-upsert
+  predicate from ``ON CONFLICT … DO UPDATE SET … WHERE pred``.  The
+  resolver in `planner._resolve_upsert` walks the predicate with the
+  same scope used for assignment RHS values (existing-row table cols +
+  ExcludedColumn pass-through) so bare column names and ``EXCLUDED.col``
+  both resolve correctly.
+
 ## [0.31.0] - 2026-05-17
 
 ### Added

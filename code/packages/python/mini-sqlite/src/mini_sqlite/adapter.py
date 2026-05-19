@@ -693,9 +693,15 @@ def _upsert_clause(node: ASTNode, state: _PlaceholderCounter) -> UpsertClause | 
         upsert_clause = "ON" "CONFLICT"
                         [ "(" NAME { "," NAME } ")" ]
                         ( "DO" "NOTHING"
-                        | "DO" "UPDATE" "SET" upsert_assignment { "," upsert_assignment } ) ;
+                        | "DO" "UPDATE" "SET" upsert_assignment { "," upsert_assignment }
+                          [ where_clause ] ) ;
 
         upsert_assignment = NAME "=" expr ;
+
+    The optional trailing ``WHERE expr`` is SQLite's conditional-upsert
+    extension: the DO UPDATE assignments fire only when the predicate is true.
+    EXCLUDED column references inside that predicate are rewritten just like
+    they are in assignment RHS expressions.
 
     Returns ``None`` when no ``upsert_clause`` child is present.
 
@@ -737,8 +743,9 @@ def _upsert_clause(node: ASTNode, state: _PlaceholderCounter) -> UpsertClause | 
             do_nothing = True
             break
 
+    where_expr: Expr | None = None
     if not do_nothing:
-        # DO UPDATE SET upsert_assignment { "," upsert_assignment }
+        # DO UPDATE SET upsert_assignment { "," upsert_assignment } [ where_clause ]
         for child in uc.children:
             if isinstance(child, ASTNode) and child.rule_name == "upsert_assignment":
                 # upsert_assignment = NAME "=" expr
@@ -751,10 +758,18 @@ def _upsert_clause(node: ASTNode, state: _PlaceholderCounter) -> UpsertClause | 
                 val = _rewrite_excluded(raw_val)
                 assignments.append(AstUpsertAssignment(column=col_tok.value, value=val))
 
+        # Optional trailing WHERE predicate (SQLite conditional-upsert).
+        wc = _maybe_child(uc, "where_clause")
+        if wc is not None:
+            we = _maybe_child(wc, "expr")
+            if we is not None:
+                where_expr = _rewrite_excluded(_expr(we, state))
+
     return UpsertClause(
         conflict_target=tuple(conflict_target),
         do_nothing=do_nothing,
         assignments=tuple(assignments),
+        where=where_expr,
     )
 
 
@@ -766,18 +781,28 @@ def _rewrite_excluded(expr: Expr) -> Expr:
     ``Column`` node; this helper post-processes the expression tree so that the
     ``EXCLUDED`` pseudo-table becomes the dedicated ``ExcludedColumn`` IR node.
 
+    The table-name match is case-insensitive — SQLite accepts ``EXCLUDED``,
+    ``excluded``, and ``Excluded`` interchangeably as the pseudo-table name in
+    upsert assignments.
+
     All other expression types are returned unchanged.  We only need to descend
     into the top-level and binary/unary positions where EXCLUDED.col might
     appear inside a upsert assignment value.
     """
     match expr:
-        case Column(table="EXCLUDED", col=c):
+        case Column(table=t, col=c) if t is not None and t.upper() == "EXCLUDED":
             return ExcludedColumn(col=c)
         case BinaryExpr(op=op, left=left, right=right):
             return BinaryExpr(op=op, left=_rewrite_excluded(left), right=_rewrite_excluded(right))
+        case UnaryExpr(op=uop, operand=inner):
+            # WHERE predicates often use NOT / unary minus; descend through them
+            # so EXCLUDED references nested inside (e.g., ``NOT excluded.flag``)
+            # still get rewritten.
+            return UnaryExpr(op=uop, operand=_rewrite_excluded(inner))
         case _:
             # For the upsert use-case, only literal values and EXCLUDED column
-            # refs are expected; a full recursive walk is overkill here.
+            # refs (possibly wrapped in binary/unary operators) are expected;
+            # a full recursive walk over all Expr variants is overkill.
             return expr
 
 

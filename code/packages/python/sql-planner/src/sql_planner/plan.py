@@ -467,6 +467,7 @@ class UpsertAction:
     conflict_target: tuple[str, ...]  # empty = any unique constraint
     do_nothing: bool = False
     assignments: tuple[UpsertAssignment, ...] = ()  # populated when do_nothing=False
+    where: Expr | None = None  # optional conditional-upsert WHERE predicate
 
 
 @dataclass(frozen=True, slots=True)

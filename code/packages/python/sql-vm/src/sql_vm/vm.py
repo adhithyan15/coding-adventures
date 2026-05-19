@@ -2267,6 +2267,33 @@ def _upsert_apply(
     _saved_row_0 = st.current_row.get(0)
     st.current_row[0] = existing
 
+    # SQLite conditional-upsert: evaluate the optional WHERE predicate.
+    #
+    #     ON CONFLICT(id) DO UPDATE SET v = excluded.v WHERE excluded.v > v
+    #
+    # The predicate sees the EXCLUDED pseudo-row (via LoadExcludedColumn) and
+    # the existing row (via LoadColumn under cursor_id 0).  If it evaluates
+    # falsy (False, 0, NULL, '' per SQL truthiness), we skip the update and
+    # leave the existing row untouched — semantically equivalent to DO NOTHING
+    # for this single conflicting row.
+    if upsert.where_instructions:
+        depth_before = len(st.stack)
+        for instr in upsert.where_instructions:
+            _dispatch(instr, st)
+        if len(st.stack) <= depth_before:
+            raise InternalError(message="upsert WHERE predicate produced no value")
+        pred = st.stack.pop()
+        del st.stack[depth_before:]
+        # SQL truthiness — same rules as JumpIfFalse: NULL, False, 0, 0.0 are
+        # all falsy.  ``not pred`` handles all four cases uniformly.
+        if not pred:
+            # Restore cursor_id 0 before bailing out so we leave the VM clean.
+            if _saved_row_0 is None:
+                st.current_row.pop(0, None)
+            else:
+                st.current_row[0] = _saved_row_0
+            return
+
     # Evaluate each assignment's instruction sequence.
     new_values: dict[str, SqlValue] = {}
     for assignment in upsert.assignments:
