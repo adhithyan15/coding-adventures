@@ -516,9 +516,12 @@ class TestUpsertConditionalWhere:
             "INSERT INTO t VALUES (2, 20)",
             "INSERT INTO t VALUES (3, 30)",
             # For each row, only update if the new value is strictly larger.
-            "INSERT INTO t VALUES (1, 5)  ON CONFLICT(id) DO UPDATE SET v = excluded.v WHERE excluded.v > v",
-            "INSERT INTO t VALUES (2, 99) ON CONFLICT(id) DO UPDATE SET v = excluded.v WHERE excluded.v > v",
-            "INSERT INTO t VALUES (3, 30) ON CONFLICT(id) DO UPDATE SET v = excluded.v WHERE excluded.v > v",
+            "INSERT INTO t VALUES (1, 5)  ON CONFLICT(id) "
+            "DO UPDATE SET v = excluded.v WHERE excluded.v > v",
+            "INSERT INTO t VALUES (2, 99) ON CONFLICT(id) "
+            "DO UPDATE SET v = excluded.v WHERE excluded.v > v",
+            "INSERT INTO t VALUES (3, 30) ON CONFLICT(id) "
+            "DO UPDATE SET v = excluded.v WHERE excluded.v > v",
         ]
         mini, real = _both(setup, "SELECT id, v FROM t ORDER BY id")
         assert mini == real
