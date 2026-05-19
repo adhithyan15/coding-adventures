@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/forme-aot-sitemap-emitter",
+  "version": "0.1.0",
+  "description": "Emit sitemap.xml from a SitemapEntry[] + baseUrl, per https://www.sitemaps.org/protocol.html.  Pure transform: validates URLs (http(s)://-or-root-relative), changefreq (allowlist), priority (clamp [0.0, 1.0]); XML-escapes every interpolated value via single-pass entity replacement (CodeQL-friendly).  FM00 v0 emitter.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
