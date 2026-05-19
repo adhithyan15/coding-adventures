@@ -636,6 +636,84 @@ def _radians(x: SqlValue) -> SqlValue:
 
 
 # ---------------------------------------------------------------------------
+# Hyperbolic trigonometric functions (SQLite "extended math")
+# ---------------------------------------------------------------------------
+#
+# Hyperbolic-trig functions are part of the standard SQLite math library
+# (``--enable-math-functions`` build option, which is the default for the
+# Python ``sqlite3`` module on every modern platform).  Mathematical
+# definitions:
+#
+#   sinh(x) = (e^x − e^−x) / 2          — hyperbolic sine
+#   cosh(x) = (e^x + e^−x) / 2          — hyperbolic cosine
+#   tanh(x) = sinh(x) / cosh(x)         — hyperbolic tangent
+#   asinh(x) = ln(x + √(x² + 1))        — inverse sinh, domain: all reals
+#   acosh(x) = ln(x + √(x² − 1))        — inverse cosh, domain: x ≥ 1
+#   atanh(x) = ½ · ln((1 + x)/(1 − x))  — inverse tanh, domain: |x| < 1
+#
+# Out-of-domain inputs return NULL (e.g. ``acosh(0.5)`` and ``atanh(1)``),
+# matching SQLite's behaviour where math domain errors silently produce NULL.
+
+
+@register("sinh")
+def _sinh(x: SqlValue) -> SqlValue:
+    """Return hyperbolic sine of *x*."""
+    return _safe_math(math.sinh, x)
+
+
+@register("cosh")
+def _cosh(x: SqlValue) -> SqlValue:
+    """Return hyperbolic cosine of *x*."""
+    return _safe_math(math.cosh, x)
+
+
+@register("tanh")
+def _tanh(x: SqlValue) -> SqlValue:
+    """Return hyperbolic tangent of *x*."""
+    return _safe_math(math.tanh, x)
+
+
+@register("asinh")
+def _asinh(x: SqlValue) -> SqlValue:
+    """Return inverse hyperbolic sine of *x* (domain: all reals)."""
+    return _safe_math(math.asinh, x)
+
+
+@register("acosh")
+def _acosh(x: SqlValue) -> SqlValue:
+    """Return inverse hyperbolic cosine of *x* (domain: x ≥ 1)."""
+    return _safe_math(math.acosh, x)
+
+
+@register("atanh")
+def _atanh(x: SqlValue) -> SqlValue:
+    """Return inverse hyperbolic tangent of *x* (domain: |x| < 1)."""
+    return _safe_math(math.atanh, x)
+
+
+@register("trunc")
+def _trunc(x: SqlValue) -> SqlValue:
+    """Truncate *x* toward zero — drop the fractional part.
+
+    Differs from ``floor`` and ``ceiling`` in sign handling:
+
+        trunc( 3.7) =  3.0     floor( 3.7) =  3.0     ceiling( 3.7) =  4.0
+        trunc(−3.7) = −3.0     floor(−3.7) = −4.0     ceiling(−3.7) = −3.0
+
+    SQLite returns the truncated value as REAL (not INTEGER) to match the
+    input type, which is what ``math.trunc`` already produces via float().
+    """
+    if x is None or not isinstance(x, (int, float)):
+        return None
+    try:
+        # math.trunc returns int; SQLite returns REAL.  Cast back to float
+        # so ``trunc(3.7) == 3.0``, not ``3``.
+        return float(math.trunc(float(x)))  # type: ignore[arg-type]
+    except (ValueError, OverflowError):
+        return None
+
+
+# ---------------------------------------------------------------------------
 # String functions
 # ---------------------------------------------------------------------------
 
@@ -1379,6 +1457,87 @@ def _sqlite_source_id() -> SqlValue:
     emulation rather than a real SQLite binary.
     """
     return _MINI_SQLITE_REPORTED_SQLITE_SOURCE_ID
+
+
+# ---------------------------------------------------------------------------
+# Optimizer hints — likely(X), unlikely(X), likelihood(X, Y)
+# ---------------------------------------------------------------------------
+#
+# SQLite exposes three "optimizer hint" functions that always return their
+# first argument unchanged — they exist purely to inform the SQLite query
+# planner's branch-probability estimates.  Mini-sqlite has no cost-based
+# optimizer that uses these hints, but applications written for SQLite
+# routinely sprinkle them in `WHERE` clauses (especially `unlikely`).
+# Implementing them as identity functions makes such queries portable.
+#
+# Real-SQLite semantics::
+#
+#     likely(X)       == X                  (hint: branch is almost always taken)
+#     unlikely(X)     == X                  (hint: branch is almost never taken)
+#     likelihood(X,Y) == X                  (Y is a 0.0–1.0 probability literal,
+#                                            ignored at runtime)
+
+
+@register("likely")
+def _likely(x: SqlValue) -> SqlValue:
+    """Return *x* unchanged.
+
+    SQLite's planner uses this as a hint that the expression is usually true
+    in a WHERE clause; mini-sqlite has no cost-based optimizer so we treat
+    it as the identity function.
+    """
+    return x
+
+
+@register("unlikely")
+def _unlikely(x: SqlValue) -> SqlValue:
+    """Return *x* unchanged.
+
+    SQLite's planner uses this as a hint that the expression is rarely true;
+    mini-sqlite ignores the hint and returns *x* verbatim.
+    """
+    return x
+
+
+@register("likelihood")
+def _likelihood(x: SqlValue, y: SqlValue) -> SqlValue:  # noqa: ARG001 — y is a hint
+    """Return *x* unchanged; *y* is a probability hint (ignored).
+
+    ``likelihood(X, Y)`` tells SQLite's planner that ``X`` is true with
+    probability ``Y`` (a floating-point literal between 0.0 and 1.0).
+    Mini-sqlite has no statistics-based query planner, so we ignore *y*
+    and pass *x* through.
+    """
+    return x
+
+
+# ---------------------------------------------------------------------------
+# sqlite_compileoption_used / sqlite_compileoption_get
+# ---------------------------------------------------------------------------
+#
+# Real SQLite is compiled with feature flags like ``SQLITE_ENABLE_RTREE`` or
+# ``SQLITE_THREADSAFE=1``.  These two functions let applications query which
+# flags were set at compile time:
+#
+#   sqlite_compileoption_used(name)  → 1 if *name* was defined, else 0
+#   sqlite_compileoption_get(N)      → the Nth defined option's name, or NULL
+#
+# Mini-sqlite is not a compiled SQLite binary — there are no compile-time
+# options.  We return ``0`` from ``compileoption_used`` (no options are set)
+# and ``NULL`` from ``compileoption_get`` (no Nth option exists), which is
+# safe behaviour for application code that does feature-detection probes.
+
+
+@register("sqlite_compileoption_used")
+def _sqlite_compileoption_used(name: SqlValue) -> SqlValue:  # noqa: ARG001
+    """Return ``0`` — mini-sqlite has no SQLite compile-time options."""
+    return 0
+
+
+@register("sqlite_compileoption_get")
+def _sqlite_compileoption_get(n: SqlValue) -> SqlValue:  # noqa: ARG001
+    """Return ``NULL`` — mini-sqlite has no Nth SQLite compile-time option."""
+    return None
 
 
 # ---------------------------------------------------------------------------

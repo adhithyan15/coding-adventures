@@ -1472,3 +1472,151 @@ class TestJsonArrowText:
 
     def test_invalid_json_returns_null(self) -> None:
         assert fn("__json_arrow_text", "not json", 0) is None
+
+
+# ---------------------------------------------------------------------------
+# Hyperbolic trig — sinh / cosh / tanh / asinh / acosh / atanh
+# ---------------------------------------------------------------------------
+
+
+class TestHyperbolicTrig:
+    """Hyperbolic trig functions match Python ``math`` (and thus SQLite)."""
+
+    def test_sinh_zero(self) -> None:
+        assert fn("sinh", 0) == 0.0
+
+    def test_sinh_one(self) -> None:
+        assert fn("sinh", 1) == pytest.approx(math.sinh(1))
+
+    def test_cosh_zero(self) -> None:
+        assert fn("cosh", 0) == 1.0
+
+    def test_cosh_one(self) -> None:
+        assert fn("cosh", 1) == pytest.approx(math.cosh(1))
+
+    def test_tanh_zero(self) -> None:
+        assert fn("tanh", 0) == 0.0
+
+    def test_tanh_large(self) -> None:
+        # tanh saturates to ±1 for |x| > ~20
+        assert fn("tanh", 100) == pytest.approx(1.0)
+        assert fn("tanh", -100) == pytest.approx(-1.0)
+
+    def test_asinh_inverse(self) -> None:
+        # asinh(sinh(x)) == x for all reals
+        assert fn("asinh", math.sinh(1.5)) == pytest.approx(1.5)
+
+    def test_asinh_negative(self) -> None:
+        # asinh is defined for all reals, including negatives
+        assert fn("asinh", -1) == pytest.approx(math.asinh(-1))
+
+    def test_acosh_one(self) -> None:
+        # acosh(1) = 0 (the minimum of the domain)
+        assert fn("acosh", 1) == 0.0
+
+    def test_acosh_below_domain_returns_null(self) -> None:
+        # acosh is undefined for x < 1; should yield NULL not error.
+        assert fn("acosh", 0.5) is None
+
+    def test_atanh_zero(self) -> None:
+        assert fn("atanh", 0) == 0.0
+
+    def test_atanh_at_boundary_returns_null(self) -> None:
+        # atanh(±1) = ±∞ → not finite → NULL
+        assert fn("atanh", 1) is None
+        assert fn("atanh", -1) is None
+
+    def test_atanh_outside_domain_returns_null(self) -> None:
+        # atanh undefined for |x| > 1
+        assert fn("atanh", 2) is None
+
+    def test_null_propagates_for_all_hyperbolic(self) -> None:
+        for name in ("sinh", "cosh", "tanh", "asinh", "acosh", "atanh"):
+            assert fn(name, None) is None, f"{name}(NULL) should be NULL"
+
+    def test_non_numeric_returns_null(self) -> None:
+        for name in ("sinh", "cosh", "tanh", "asinh", "acosh", "atanh"):
+            assert fn(name, "hello") is None, f"{name}('hello') should be NULL"
+
+
+# ---------------------------------------------------------------------------
+# trunc(X) — truncate toward zero
+# ---------------------------------------------------------------------------
+
+
+class TestTrunc:
+    """``trunc(X)`` drops the fractional part of *X*, keeping the sign."""
+
+    def test_positive_real(self) -> None:
+        assert fn("trunc", 3.7) == 3.0
+
+    def test_negative_real(self) -> None:
+        # Differs from floor(−3.7) = −4.0
+        assert fn("trunc", -3.7) == -3.0
+
+    def test_positive_integer(self) -> None:
+        # Already truncated; should round-trip as REAL (per SQLite)
+        assert fn("trunc", 5) == 5.0
+
+    def test_zero(self) -> None:
+        assert fn("trunc", 0) == 0.0
+        assert fn("trunc", 0.0) == 0.0
+
+    def test_returns_real_not_int(self) -> None:
+        # SQLite returns REAL even when the truncated value is whole
+        assert isinstance(fn("trunc", 3.0), float)
+
+    def test_null_propagates(self) -> None:
+        assert fn("trunc", None) is None
+
+    def test_non_numeric_returns_null(self) -> None:
+        assert fn("trunc", "hello") is None
+
+
+# ---------------------------------------------------------------------------
+# Optimizer hints — likely / unlikely / likelihood
+# ---------------------------------------------------------------------------
+
+
+class TestOptimizerHints:
+    """``likely``, ``unlikely``, and ``likelihood`` are pure identity passes."""
+
+    def test_likely_passes_integer(self) -> None:
+        assert fn("likely", 42) == 42
+
+    def test_likely_passes_string(self) -> None:
+        assert fn("likely", "hello") == "hello"
+
+    def test_likely_passes_null(self) -> None:
+        assert fn("likely", None) is None
+
+    def test_unlikely_passes_value(self) -> None:
+        assert fn("unlikely", 7) == 7
+        assert fn("unlikely", 3.14) == 3.14
+        assert fn("unlikely", None) is None
+
+    def test_likelihood_passes_first_arg(self) -> None:
+        # The second argument is a probability hint — ignored at runtime.
+        assert fn("likelihood", 99, 0.5) == 99
+        assert fn("likelihood", "x", 0.99) == "x"
+        assert fn("likelihood", None, 0.01) is None
+
+
+# ---------------------------------------------------------------------------
+# sqlite_compileoption_used / sqlite_compileoption_get
+# ---------------------------------------------------------------------------
+
+
+class TestSqliteCompileOptions:
+    """Mini-sqlite has no SQLite compile-time options; both functions stub out."""
+
+    def test_compileoption_used_returns_zero(self) -> None:
+        # Any name returns 0 — no options are defined in mini-sqlite.
+        assert fn("sqlite_compileoption_used", "THREADSAFE") == 0
+        assert fn("sqlite_compileoption_used", "ENABLE_RTREE") == 0
+        assert fn("sqlite_compileoption_used", "ANY_FAKE_NAME") == 0
+
+    def test_compileoption_get_returns_null(self) -> None:
+        # Any index returns NULL — no options exist.
+        assert fn("sqlite_compileoption_get", 0) is None
+        assert fn("sqlite_compileoption_get", 100) is None
