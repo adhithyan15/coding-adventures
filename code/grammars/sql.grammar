@@ -16,7 +16,14 @@ statement         = query_stmt | insert_stmt | replace_stmt | update_stmt
                   | create_view_stmt | drop_view_stmt
                   | create_trigger_stmt | drop_trigger_stmt
                   | begin_stmt | commit_stmt | rollback_to_stmt | rollback_stmt
-                  | savepoint_stmt | release_stmt ;
+                  | savepoint_stmt | release_stmt
+                  | attach_stmt | detach_stmt ;
+
+# ATTACH DATABASE — accept the syntax for ORM/migration compatibility.
+# Mini-sqlite has no multi-database support; ATTACH and DETACH are no-ops.
+# The DATABASE keyword is optional in SQLite ("ATTACH 'file' AS x" also works).
+attach_stmt       = "ATTACH" [ "DATABASE" ] expr "AS" NAME ;
+detach_stmt       = "DETACH" [ "DATABASE" ] NAME ;
 
 # ── QUERY (SELECT + set operations) ──────────────────────────────────────────
 #

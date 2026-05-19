@@ -127,6 +127,17 @@ def run(
             re.IGNORECASE,
         ):
             return QueryResult(rows_affected=0)
+        # ATTACH DATABASE / DETACH DATABASE — accepted but no-op.
+        #
+        # Real SQLite multi-database support requires per-statement schema
+        # routing (e.g. ``SELECT * FROM aux.t``) which mini-sqlite does not
+        # currently implement.  We accept the syntax so ORM/migration code
+        # that opens, then re-attaches, the same logical database doesn't
+        # crash on the ATTACH call.  Queries that reference attached
+        # databases (e.g. ``aux.users``) will still fail because the planner
+        # cannot resolve the schema prefix.
+        if re.match(r"\s*(ATTACH|DETACH)\b", bound, re.IGNORECASE):
+            return QueryResult(rows_affected=0)
         # Normalise TEMP/TEMPORARY before parsing.
         #
         # SQLite allows "CREATE TEMP TABLE …" and "CREATE TEMPORARY TABLE …"
