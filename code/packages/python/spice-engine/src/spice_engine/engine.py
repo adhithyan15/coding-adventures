@@ -340,6 +340,8 @@ class PssResidualResult:
     residual_vector: list[PssResidualEntry]
     max_abs_branch_residual: float
     max_abs_residual: float
+    residual_l2_norm: float
+    residual_rms_norm: float
     residual_tol: float
     within_tolerance: bool
     converged: bool
@@ -2336,6 +2338,8 @@ def pss_residual(
             residual_vector=[],
             max_abs_branch_residual=0.0,
             max_abs_residual=0.0,
+            residual_l2_norm=0.0,
+            residual_rms_norm=0.0,
             residual_tol=residual_tol,
             within_tolerance=False,
             converged=False,
@@ -2369,6 +2373,14 @@ def pss_residual(
     max_abs_node = max((abs(value) for value in node_residuals.values()), default=0.0)
     max_abs_branch = max((abs(value) for value in branch_residuals.values()), default=0.0)
     max_abs = max(max_abs_node, max_abs_branch)
+    residual_l2_norm = math.sqrt(
+        sum(entry.value * entry.value for entry in residual_vector)
+    )
+    residual_rms_norm = (
+        residual_l2_norm / math.sqrt(len(residual_vector))
+        if residual_vector
+        else 0.0
+    )
     return PssResidualResult(
         period=period,
         time_step=time_step,
@@ -2377,6 +2389,8 @@ def pss_residual(
         residual_vector=residual_vector,
         max_abs_branch_residual=max_abs_branch,
         max_abs_residual=max_abs,
+        residual_l2_norm=residual_l2_norm,
+        residual_rms_norm=residual_rms_norm,
         residual_tol=residual_tol,
         within_tolerance=result.converged and max_abs <= residual_tol,
         converged=result.converged,

@@ -130,6 +130,17 @@ fn pss_residual_reports_one_period_node_closure() {
     assert_close(result.residual_vector[1].value, 0.0);
     assert_close(result.max_abs_branch_residual, 0.0);
     assert_close(result.max_abs_residual, 0.0);
+    let expected_l2_norm = result
+        .residual_vector
+        .iter()
+        .map(|entry| entry.value * entry.value)
+        .sum::<f64>()
+        .sqrt();
+    assert_close(result.residual_l2_norm, expected_l2_norm);
+    assert_close(
+        result.residual_rms_norm,
+        expected_l2_norm / (result.residual_vector.len() as f64).sqrt(),
+    );
 }
 
 #[test]

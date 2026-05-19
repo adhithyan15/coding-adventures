@@ -606,6 +606,8 @@ export interface PssResidualResult {
   readonly residualVector: readonly PssResidualEntry[];
   readonly maxAbsBranchResidual: number;
   readonly maxAbsResidual: number;
+  readonly residualL2Norm: number;
+  readonly residualRmsNorm: number;
   readonly residualTolerance: number;
   readonly withinTolerance: boolean;
 }
@@ -1729,6 +1731,8 @@ export function pssResidual(
       residualVector: [],
       maxAbsBranchResidual: 0.0,
       maxAbsResidual: 0.0,
+      residualL2Norm: 0.0,
+      residualRmsNorm: 0.0,
       residualTolerance,
       withinTolerance: false,
     };
@@ -1769,6 +1773,13 @@ export function pssResidual(
     maxAbsBranchResidual = Math.max(maxAbsBranchResidual, Math.abs(residual));
   }
   maxAbsResidual = Math.max(maxAbsResidual, maxAbsBranchResidual);
+  const residualL2Norm = Math.sqrt(
+    residualVector.reduce((sum, entry) => sum + entry.value * entry.value, 0.0),
+  );
+  const residualRmsNorm =
+    residualVector.length > 0
+      ? residualL2Norm / Math.sqrt(residualVector.length)
+      : 0.0;
   return {
     periodSeconds: period,
     timeStepSeconds: timeStep,
@@ -1777,6 +1788,8 @@ export function pssResidual(
     residualVector,
     maxAbsBranchResidual,
     maxAbsResidual,
+    residualL2Norm,
+    residualRmsNorm,
     residualTolerance,
     withinTolerance: maxAbsResidual <= residualTolerance,
   };
