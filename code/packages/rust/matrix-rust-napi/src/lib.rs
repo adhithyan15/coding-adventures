@@ -66,11 +66,16 @@
 
 #![allow(non_camel_case_types)]
 
+mod exec;
+
+use coding_adventures_json_value::{JsonNumber, JsonValue};
 use matrix_ir_json::{decode, encode};
 use node_bridge::{
     create_function, get_cb_info, napi_callback_info, napi_env, napi_value,
     set_named_property, str_from_js, str_to_js, throw_error, undefined,
 };
+
+pub use exec::run_graph_on_cpu;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Pure Rust core: the testable round-trip.
@@ -96,6 +101,167 @@ use node_bridge::{
 pub fn round_trip_json(input: &str) -> Result<String, String> {
     let graph = decode(input).map_err(|e| format!("matrix-ir-json decode failed: {:?}", e))?;
     Ok(encode(&graph))
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Phase 2: end-to-end execution on the CPU executor.
+//
+// The Rust helper `exec::run_graph_on_cpu` does the real work; this
+// section adds a JSON-envelope wrapper so we can expose it over the
+// existing string-in / string-out N-API surface without yet wiring
+// Buffer marshalling into node-bridge.
+//
+// Envelope shape (in):
+//   { "graph": <matrix-ir-json schema>,
+//     "inputs": [ "<lowercase-hex bytes>", ... ] }
+//
+// Envelope shape (out):
+//   { "outputs": [ "<lowercase-hex bytes>", ... ] }
+//
+// Per-tensor byte strings use the same hex encoding the matrix-ir-json
+// crate uses for constants — lowercase, no separator, no 0x prefix,
+// length always `2 * num_bytes`.  Phase 2b will replace this with
+// real Buffer marshalling once node-bridge grows Buffer helpers; for
+// Phase 2 the JSON envelope keeps the napi surface tiny (one
+// function, identical pattern to graphRoundTripJson) while still
+// proving the full plan + execute + return path works.
+// ─────────────────────────────────────────────────────────────────────────────
+
+fn hex_decode(s: &str) -> Result<Vec<u8>, String> {
+    if s.len() % 2 != 0 {
+        return Err(format!("hex string length must be even, got {}", s.len()));
+    }
+    let bytes = s.as_bytes();
+    let mut out = Vec::with_capacity(s.len() / 2);
+    for chunk in bytes.chunks_exact(2) {
+        let hi = hex_nibble(chunk[0])?;
+        let lo = hex_nibble(chunk[1])?;
+        out.push((hi << 4) | lo);
+    }
+    Ok(out)
+}
+
+fn hex_nibble(b: u8) -> Result<u8, String> {
+    match b {
+        b'0'..=b'9' => Ok(b - b'0'),
+        b'a'..=b'f' => Ok(10 + b - b'a'),
+        b'A'..=b'F' => Ok(10 + b - b'A'),
+        other => Err(format!("invalid hex character: 0x{:02X}", other)),
+    }
+}
+
+fn hex_encode(bytes: &[u8]) -> String {
+    const HEX: &[u8; 16] = b"0123456789abcdef";
+    let mut out = String::with_capacity(bytes.len() * 2);
+    for b in bytes {
+        out.push(HEX[(b >> 4) as usize] as char);
+        out.push(HEX[(b & 0x0F) as usize] as char);
+    }
+    out
+}
+
+/// Helper: get a required object field by name, return a clear error
+/// if it's missing or the parent is not an object.
+fn envelope_field<'a>(v: &'a JsonValue, key: &str) -> Result<&'a JsonValue, String> {
+    match v {
+        JsonValue::Object(fields) => fields
+            .iter()
+            .find(|(k, _)| k == key)
+            .map(|(_, v)| v)
+            .ok_or_else(|| format!("envelope missing required field '{}'", key)),
+        _ => Err(format!("envelope must be a JSON object (looking for '{}')", key)),
+    }
+}
+
+/// Pure-Rust entry point for the JSON-envelope-shaped `runGraphOnCpu`.
+/// Parses the envelope, hex-decodes inputs, decodes the graph,
+/// executes via [`run_graph_on_cpu`], hex-encodes outputs, returns
+/// the result envelope JSON.
+pub fn run_graph_on_cpu_via_json_envelope(envelope_json: &str) -> Result<String, String> {
+    // ── parse envelope ──────────────────────────────────────────
+    let env =
+        coding_adventures_json_value::parse(envelope_json).map_err(|e| format!("envelope parse failed: {:?}", e))?;
+
+    // ── extract `graph` field, re-serialise it, pass to matrix-ir-json::decode ──
+    //
+    // We re-serialise rather than pass the JsonValue directly because
+    // matrix-ir-json's public API is string -> Graph, not JsonValue ->
+    // Graph.  One extra serialise per call; cost is negligible at
+    // typical graph sizes and the API is cleaner.
+    let graph_value = envelope_field(&env, "graph")?;
+    let graph_str = coding_adventures_json_serializer::serialize(graph_value)
+        .map_err(|e| format!("graph re-serialise failed: {:?}", e))?;
+    let graph = decode(&graph_str).map_err(|e| format!("matrix-ir-json decode failed: {:?}", e))?;
+
+    // ── extract `inputs` field — array of hex strings ──────────
+    let inputs_value = envelope_field(&env, "inputs")?;
+    let inputs_array = match inputs_value {
+        JsonValue::Array(xs) => xs,
+        _ => return Err("envelope.inputs must be a JSON array".to_string()),
+    };
+    let mut inputs: Vec<Vec<u8>> = Vec::with_capacity(inputs_array.len());
+    for (i, item) in inputs_array.iter().enumerate() {
+        match item {
+            JsonValue::String(s) => inputs.push(
+                hex_decode(s).map_err(|e| format!("envelope.inputs[{}]: {}", i, e))?,
+            ),
+            _ => return Err(format!("envelope.inputs[{}] must be a hex string", i)),
+        }
+    }
+
+    // ── execute ─────────────────────────────────────────────────
+    let outputs = run_graph_on_cpu(&graph, &inputs)?;
+
+    // ── build result envelope ───────────────────────────────────
+    let outputs_array = JsonValue::Array(outputs.iter().map(|b| JsonValue::String(hex_encode(b))).collect());
+    let envelope_out = JsonValue::Object(vec![("outputs".to_string(), outputs_array)]);
+    coding_adventures_json_serializer::serialize(&envelope_out)
+        .map_err(|e| format!("output envelope serialise failed: {:?}", e))
+}
+
+/// `runGraphOnCpu(envelopeJson: string): string` — see
+/// [`run_graph_on_cpu_via_json_envelope`] for the envelope shape.
+///
+/// # Safety
+///
+/// Invoked by Node; `env` and `info` valid for the duration of the call.
+unsafe extern "C" fn napi_run_graph_on_cpu(
+    env: napi_env,
+    info: napi_callback_info,
+) -> napi_value {
+    let (_this, args) = get_cb_info(env, info, 2);
+    if args.len() != 1 {
+        throw_error(
+            env,
+            &format!(
+                "runGraphOnCpu: expected exactly 1 argument (envelopeJson), got {}",
+                args.len()
+            ),
+        );
+        return undefined(env);
+    }
+    let envelope = match str_from_js(env, args[0]) {
+        Some(s) => s,
+        None => {
+            throw_error(env, "runGraphOnCpu: argument 0 must be a string");
+            return undefined(env);
+        }
+    };
+    match run_graph_on_cpu_via_json_envelope(&envelope) {
+        Ok(out) => str_to_js(env, &out),
+        Err(msg) => {
+            throw_error(env, &format!("runGraphOnCpu: {}", msg));
+            undefined(env)
+        }
+    }
+}
+
+// Silence the unused-import warning when JsonNumber isn't used in tests.
+// (Reserved for future envelope fields like `version` that we may want
+// to validate against an integer.)
+#[allow(dead_code)]
+fn _suppress_unused_jsonnumber() {
+    let _ = JsonNumber::Integer(0);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -174,12 +340,12 @@ pub unsafe extern "C" fn napi_register_module_v1(
     env: napi_env,
     exports: napi_value,
 ) -> napi_value {
-    let f = create_function(
-        env,
-        "graphRoundTripJson",
-        Some(napi_graph_round_trip_json),
-    );
-    set_named_property(env, exports, "graphRoundTripJson", f);
+    let f1 = create_function(env, "graphRoundTripJson", Some(napi_graph_round_trip_json));
+    set_named_property(env, exports, "graphRoundTripJson", f1);
+
+    let f2 = create_function(env, "runGraphOnCpu", Some(napi_run_graph_on_cpu));
+    set_named_property(env, exports, "runGraphOnCpu", f2);
+
     exports
 }
 
@@ -283,6 +449,103 @@ mod tests {
     /// (Useful to catch any drift introduced by the encoder — e.g.
     /// if it ever started canonicalising fields differently between
     /// runs.)
+    // ── JSON envelope (Phase 2) ──────────────────────────────────
+
+    /// Build an Add graph, package it + inputs into the envelope JSON,
+    /// run through the napi-shaped string entry point, parse the
+    /// result envelope, hex-decode outputs, assert.
+    #[test]
+    fn envelope_runs_add_end_to_end() {
+        let mut g = GraphBuilder::new();
+        let a = g.input(DType::F32, Shape::from(&[3]));
+        let b = g.input(DType::F32, Shape::from(&[3]));
+        let c = g.add(&a, &b);
+        g.output(&c);
+        let graph_json = encode(&g.build().expect("graph builds"));
+
+        let envelope = format!(
+            r#"{{ "graph": {}, "inputs": ["{}", "{}"] }}"#,
+            graph_json,
+            // 3.0_f32 .to_le_bytes() = [00, 00, 40, 40] etc.
+            hex_encode(
+                &[1.0f32, 2.0, 3.0]
+                    .iter()
+                    .flat_map(|f| f.to_le_bytes())
+                    .collect::<Vec<u8>>()
+            ),
+            hex_encode(
+                &[10.0f32, 20.0, 30.0]
+                    .iter()
+                    .flat_map(|f| f.to_le_bytes())
+                    .collect::<Vec<u8>>()
+            ),
+        );
+
+        let out_envelope =
+            run_graph_on_cpu_via_json_envelope(&envelope).expect("envelope execution succeeds");
+
+        // Parse result envelope and read first output bytes.
+        let parsed =
+            coding_adventures_json_value::parse(&out_envelope).expect("output envelope parses");
+        let outputs = envelope_field(&parsed, "outputs").unwrap();
+        let arr = match outputs {
+            JsonValue::Array(xs) => xs,
+            _ => panic!("outputs not array"),
+        };
+        let bytes = match &arr[0] {
+            JsonValue::String(s) => hex_decode(s).unwrap(),
+            _ => panic!("output not string"),
+        };
+        let floats: Vec<f32> = bytes
+            .chunks_exact(4)
+            .map(|c| f32::from_le_bytes([c[0], c[1], c[2], c[3]]))
+            .collect();
+        assert_eq!(floats, vec![11.0, 22.0, 33.0]);
+    }
+
+    /// Envelope without a `graph` field must fail cleanly.
+    #[test]
+    fn envelope_rejects_missing_graph() {
+        let err = run_graph_on_cpu_via_json_envelope(r#"{"inputs": []}"#)
+            .expect_err("missing graph field rejected");
+        assert!(err.contains("graph"), "got: {}", err);
+    }
+
+    /// Envelope where `inputs` is not an array must fail cleanly.
+    #[test]
+    fn envelope_rejects_non_array_inputs() {
+        let mut g = GraphBuilder::new();
+        let a = g.input(DType::F32, Shape::from(&[2]));
+        g.output(&a);
+        let graph_json = encode(&g.build().unwrap());
+        let envelope = format!(r#"{{ "graph": {}, "inputs": "not-an-array" }}"#, graph_json);
+
+        let err = run_graph_on_cpu_via_json_envelope(&envelope)
+            .expect_err("inputs-not-array rejected");
+        assert!(err.contains("inputs"), "got: {}", err);
+    }
+
+    /// Hex encoder round-trips through the decoder.
+    #[test]
+    fn hex_round_trips() {
+        let bytes = vec![0u8, 1, 2, 0xAB, 0xCD, 0xEF, 0xFF];
+        let s = hex_encode(&bytes);
+        assert_eq!(s, "000102abcdefff");
+        assert_eq!(hex_decode(&s).unwrap(), bytes);
+    }
+
+    /// Hex decoder rejects odd-length input.
+    #[test]
+    fn hex_decoder_rejects_odd_length() {
+        assert!(hex_decode("abc").is_err());
+    }
+
+    /// Hex decoder rejects non-hex characters.
+    #[test]
+    fn hex_decoder_rejects_bad_chars() {
+        assert!(hex_decode("zz").is_err());
+    }
+
     #[test]
     fn round_trip_is_idempotent() {
         let mut g = GraphBuilder::new();

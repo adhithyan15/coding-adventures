@@ -25,6 +25,12 @@ crate-type = ["cdylib"]
 name = "matrix_rust_napi"
 
 [dependencies]
-matrix-ir       = { path = "../matrix-ir" }
-matrix-ir-json  = { path = "../matrix-ir-json" }
-node-bridge     = { path = "../node-bridge" }
+matrix-ir                          = { path = "../matrix-ir" }
+matrix-ir-json                     = { path = "../matrix-ir-json" }
+matrix-runtime                     = { path = "../matrix-runtime" }
+matrix-cpu                         = { path = "../matrix-cpu" }
+compute-ir                         = { path = "../compute-ir" }
+executor-protocol                  = { path = "../executor-protocol" }
+coding-adventures-json-value       = { path = "../json-value" }
+coding-adventures-json-serializer  = { path = "../json-serializer" }
+node-bridge                        = { path = "../node-bridge" }
