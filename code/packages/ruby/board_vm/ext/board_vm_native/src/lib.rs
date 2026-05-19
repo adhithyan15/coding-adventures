@@ -8,8 +8,9 @@ use board_vm_host::{
     GpioOpenProgram, GpioReadProgram, GpioWriteProgram, I2cOpenProgram, I2cReadProgram,
     I2cReadU8Program, I2cTransferProgram, I2cWriteProgram, I2cWriteU8Program,
     LedMatrixFrameProgram, PwmWriteProgram, RtcNowProgram, RtcSetProgram, SpiOpenProgram,
-    SpiReadProgram, SpiTransferProgram, SpiWriteProgram, StorageReadProgram, StorageWriteProgram,
-    TimeNowProgram, TimeSleepMsProgram, UartOpenProgram, UartReadProgram, UartWriteProgram,
+    SpiReadProgram, SpiTransferProgram, SpiWriteProgram, StorageReadProgram, StorageSizeProgram,
+    StorageWriteProgram, TimeNowProgram, TimeSleepMsProgram, UartOpenProgram, UartReadProgram,
+    UartWriteProgram,
     WatchdogConfigureProgram, WatchdogKickProgram, ADC_READ_MODULE_LEN, BLINK_MODULE_LEN,
     CAN_OPEN_MODULE_LEN, CAN_READ_MODULE_LEN, CAN_WRITE_MODULE_LEN, DAC_WRITE_U12_MODULE_LEN,
     GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN,
@@ -18,7 +19,7 @@ use board_vm_host::{
     I2C_WRITE_MAX_MODULE_LEN, I2C_WRITE_U8_MODULE_LEN, LED_MATRIX_FRAME_MODULE_LEN,
     PWM_WRITE_MODULE_LEN, RTC_NOW_MODULE_LEN, RTC_SET_MODULE_LEN, SPI_OPEN_MODULE_LEN,
     SPI_READ_MODULE_LEN, SPI_TRANSFER_MAX_MODULE_LEN, SPI_WRITE_MAX_MODULE_LEN,
-    STORAGE_READ_MODULE_LEN, STORAGE_WRITE_MAX_MODULE_LEN, TIME_NOW_MODULE_LEN,
+    STORAGE_READ_MODULE_LEN, STORAGE_SIZE_MODULE_LEN, STORAGE_WRITE_MAX_MODULE_LEN, TIME_NOW_MODULE_LEN,
     TIME_SLEEP_MS_MODULE_LEN, UART_OPEN_MODULE_LEN, UART_READ_MODULE_LEN, UART_WRITE_MODULE_LEN,
     WATCHDOG_CONFIGURE_MODULE_LEN, WATCHDOG_KICK_MODULE_LEN,
 };
@@ -36,7 +37,7 @@ use board_vm_language_core::{
     build_rtc_set_module, build_run_background_wire_frame, build_run_wire_frame,
     build_spi_open_module, build_spi_read_module, build_spi_transfer_module,
     build_spi_write_module, build_stop_wire_frame, build_storage_read_module,
-    build_storage_write_module, build_store_program_wire_frame, build_time_now_module,
+    build_storage_size_module, build_storage_write_module, build_store_program_wire_frame, build_time_now_module,
     build_time_sleep_ms_module, build_uart_open_module, build_uart_read_module,
     build_uart_write_module, build_watchdog_configure_module, build_watchdog_kick_module,
     capability_board_metadata, capability_bytecode_callable, capability_flag_names,
@@ -445,6 +446,19 @@ extern "C" fn session_storage_read_module(
 
     let module = build_storage_read_module_value(region, offset, len, max_stack)
         .unwrap_or_else(|error| raise_core_error("storage_read_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_storage_size_module(
+    _self_val: VALUE,
+    region_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let region = rb_u8(region_val, "region");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_storage_size_module_value(region, max_stack)
+        .unwrap_or_else(|error| raise_core_error("storage_size_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -2002,6 +2016,16 @@ fn build_storage_read_module_value(
     Ok(module)
 }
 
+fn build_storage_size_module_value(
+    region: u8,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; STORAGE_SIZE_MODULE_LEN];
+    let len = build_storage_size_module(StorageSizeProgram { region, max_stack }, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn build_spi_transfer_module_value(
     cs_pin: u16,
     write_bytes: &[u8],
@@ -2540,6 +2564,12 @@ pub extern "C" fn Init_board_vm_native() {
         "storage_read_module",
         session_storage_read_module as *const c_void,
         4,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "storage_size_module",
+        session_storage_size_module as *const c_void,
+        2,
     );
     ruby_bridge::define_method_raw(
         session_class,

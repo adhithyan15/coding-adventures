@@ -130,6 +130,9 @@ The current no-heap Rust HAL exposes this first tranche as
 `BoardHal::store_program(program_id, slot, boot_policy, module)`. Board adapters
 may lower that protocol-level request into their existing bounded storage writes,
 while leaving language frontends as thin builders for the `STORE_PROGRAM` frame.
+The same storage metadata surface exposes `BoardHal::storage_size(region)`, so
+bytecode can ask for a region's advertised capacity without duplicating
+EEPROM/data-flash constants in language SDKs.
 
 The first network tranches keep the same no-heap shape: `network.tcp.open` and
 `network.udp.open` accept an interface id, an IPv4 address encoded as a `u32`,

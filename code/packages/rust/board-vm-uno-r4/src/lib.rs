@@ -465,7 +465,7 @@ pub const UNO_R4_EEPROM_STORAGE: StorageRegionDescriptor = StorageRegionDescript
     name: "EEPROM emulation",
     kind: "data flash",
     bytes: UNO_R4_DATA_FLASH_BYTES,
-    notes: "Flash-backed EEPROM storage area exposed by the UNO R4 core through storage.write and storage.read",
+    notes: "Flash-backed EEPROM storage area exposed by the UNO R4 core through storage.write, storage.read, and storage.size",
 };
 
 pub const UNO_R4_STORAGE_REGIONS: [StorageRegionDescriptor; 1] = [UNO_R4_EEPROM_STORAGE];
@@ -1027,6 +1027,10 @@ where
         self.backend.storage_read(region, offset, len)
     }
 
+    fn storage_size(&mut self, region: u16) -> Result<u32, HalError> {
+        storage_region_size(self.target, region)
+    }
+
     fn network_tcp_open(
         &mut self,
         interface: u16,
@@ -1420,6 +1424,18 @@ fn normalize_storage_region(
     } else {
         Err(HalError::InvalidPin)
     }
+}
+
+fn storage_region_size(target: &TargetDescriptor, region: u16) -> Result<u32, HalError> {
+    if region > u8::MAX as u16 {
+        return Err(HalError::InvalidPin);
+    }
+    target
+        .storage_regions
+        .iter()
+        .find(|storage| storage.region == region as u8)
+        .map(|storage| storage.bytes)
+        .ok_or(HalError::InvalidPin)
 }
 
 fn normalize_network_interface(interface: u16) -> Result<u8, HalError> {
@@ -2296,6 +2312,7 @@ mod tests {
         assert_eq!(storage.bytes, UNO_R4_DATA_FLASH_BYTES);
         assert!(storage.notes.contains("storage.write"));
         assert!(storage.notes.contains("storage.read"));
+        assert!(storage.notes.contains("storage.size"));
     }
 
     #[test]
@@ -2460,6 +2477,9 @@ mod tests {
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_STORAGE_READ));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_STORAGE_SIZE));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_TCP_OPEN));
@@ -2643,6 +2663,9 @@ mod tests {
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_STORAGE_READ));
+        assert!(UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_STORAGE_SIZE));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_LED_MATRIX_FRAME));
@@ -2917,6 +2940,16 @@ mod tests {
     }
 
     #[test]
+    fn storage_size_uses_region_metadata_without_backend_io() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        let bytes = board.storage_size(0).unwrap();
+
+        assert_eq!(bytes, UNO_R4_DATA_FLASH_BYTES);
+        assert!(board.backend().events.is_empty());
+    }
+
+    #[test]
     fn network_tcp_runs_through_wifi_backend() {
         let mut board = UnoR4Board::wifi(FakeBackend::new());
 
@@ -3089,6 +3122,7 @@ mod tests {
             board.storage_read(0, UNO_R4_DATA_FLASH_BYTES as u16, 1),
             Err(HalError::InvalidPin)
         );
+        assert_eq!(board.storage_size(1), Err(HalError::InvalidPin));
         assert_eq!(
             board.storage_write(0, 0, &[0xaa; u8::MAX as usize + 1]),
             Err(HalError::InvalidPin)

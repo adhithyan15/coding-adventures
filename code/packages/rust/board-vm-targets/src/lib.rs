@@ -195,7 +195,7 @@ pub const BLINK_MVP_CAPABILITIES: [&str; 8] = [
     "program.ram_exec",
 ];
 
-pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 32] = [
+pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 33] = [
     "transport.serial",
     "gpio.open",
     "gpio.write",
@@ -226,11 +226,12 @@ pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 32] = [
     "watchdog.kick",
     "storage.write",
     "storage.read",
+    "storage.size",
     "program.ram_exec",
     "program.store",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 63] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 64] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -291,6 +292,7 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 63] = [
     "watchdog.kick",
     "storage.write",
     "storage.read",
+    "storage.size",
     "led_matrix.frame",
     "program.ram_exec",
     "program.store",
@@ -1024,11 +1026,14 @@ mod tests {
         assert_eq!(wifi.storage_regions, minima.storage_regions);
         assert!(wifi.storage_regions[0].notes.contains("storage.write"));
         assert!(wifi.storage_regions[0].notes.contains("storage.read"));
+        assert!(wifi.storage_regions[0].notes.contains("storage.size"));
         assert!(minima.capabilities.contains(&"storage.write"));
         assert!(minima.capabilities.contains(&"storage.read"));
+        assert!(minima.capabilities.contains(&"storage.size"));
         assert!(minima.capabilities.contains(&"program.store"));
         assert!(wifi.capabilities.contains(&"storage.write"));
         assert!(wifi.capabilities.contains(&"storage.read"));
+        assert!(wifi.capabilities.contains(&"storage.size"));
         assert!(wifi.capabilities.contains(&"program.store"));
 
         assert!(find_target("esp32-devkit-v1")
@@ -1110,6 +1115,7 @@ mod tests {
         assert!(uno.capabilities.contains(&"can.read"));
         assert!(uno.capabilities.contains(&"storage.write"));
         assert!(uno.capabilities.contains(&"storage.read"));
+        assert!(uno.capabilities.contains(&"storage.size"));
         assert!(uno.capabilities.contains(&"program.store"));
     }
 

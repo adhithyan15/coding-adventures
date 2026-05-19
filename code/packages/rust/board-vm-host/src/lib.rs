@@ -11,9 +11,10 @@ use board_vm_ir::{
     CAP_NETWORK_UDP_READ_BYTES, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_UDP_WRITE_BYTES,
     CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS,
     CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ,
-    CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ,
-    CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK, FLAG_PROGRAM_MAY_RUN_FOREVER,
-    FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MAX_BYTE_BUFFER_LEN, MODULE_MAGIC, MODULE_VERSION,
+    CAP_STORAGE_SIZE, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN,
+    CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
+    FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MAX_BYTE_BUFFER_LEN,
+    MODULE_MAGIC, MODULE_VERSION,
 };
 use board_vm_protocol::{
     encode_frame, encode_hello, encode_program_begin, encode_program_chunk, encode_program_end,
@@ -96,6 +97,8 @@ pub const STORAGE_WRITE_MAX_MODULE_LEN: usize =
     8 + 1 + STORAGE_WRITE_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
 pub const STORAGE_READ_CODE_LEN: usize = 10;
 pub const STORAGE_READ_MODULE_LEN: usize = 20;
+pub const STORAGE_SIZE_CODE_LEN: usize = 5;
+pub const STORAGE_SIZE_MODULE_LEN: usize = 15;
 pub const NETWORK_TCP_OPEN_CODE_LEN: usize = 14;
 pub const NETWORK_TCP_OPEN_MODULE_LEN: usize = 24;
 pub const NETWORK_TCP_WRITE_CODE_LEN: usize = 5;
@@ -367,6 +370,12 @@ pub struct StorageReadProgram {
     pub region: u8,
     pub offset: u16,
     pub len: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct StorageSizeProgram {
+    pub region: u8,
     pub max_stack: u8,
 }
 
@@ -705,6 +714,15 @@ impl StorageReadProgram {
             offset,
             len,
             max_stack: 3,
+        }
+    }
+}
+
+impl StorageSizeProgram {
+    pub const fn new(region: u8) -> Self {
+        Self {
+            region,
+            max_stack: 1,
         }
     }
 }
@@ -2543,6 +2561,45 @@ pub fn write_storage_read_module(
     Ok(offset)
 }
 
+pub fn write_storage_size_code(
+    program: StorageSizeProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < STORAGE_SIZE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.region)?;
+    write_call_u8(out, &mut offset, CAP_STORAGE_SIZE)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_storage_size_module(
+    program: StorageSizeProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < STORAGE_SIZE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; STORAGE_SIZE_CODE_LEN];
+    let code_len = write_storage_size_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_storage(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn write_network_tcp_open_code(
     program: NetworkTcpOpenProgram,
     out: &mut [u8],
@@ -4361,6 +4418,9 @@ mod tests {
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x0A, 0x12, 0x00, 0x13, 0x10, 0x00, 0x12,
         0x02, 0x40, 0x39, 0x50, 0x00,
     ];
+    const STORAGE_SIZE_REGION0_MODULE_HEX: [u8; STORAGE_SIZE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x12, 0x00, 0x40, 0x51, 0x50, 0x00,
+    ];
     const SPI_TRANSFER_CS10_9F_READ_03_MODULE_HEX: [u8; 24] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x05, 0x00, 0x0D, 0x20, 0x13, 0x0A, 0x00, 0x16, 0x00,
         0x00, 0x01, 0x12, 0x03, 0x40, 0x2A, 0x50, 0x01, 0x9F,
@@ -5159,6 +5219,20 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_STORAGE_READ]);
+    }
+
+    #[test]
+    fn builds_storage_size_module() {
+        let mut module = [0u8; STORAGE_SIZE_MODULE_LEN];
+        let len = write_storage_size_module(StorageSizeProgram::new(0), &mut module).unwrap();
+        assert_eq!(len, STORAGE_SIZE_MODULE_LEN);
+        assert_eq!(module, STORAGE_SIZE_REGION0_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_storage(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_STORAGE_SIZE]);
     }
 
     #[test]

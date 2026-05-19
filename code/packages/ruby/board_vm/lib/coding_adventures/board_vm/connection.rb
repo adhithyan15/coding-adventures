@@ -716,6 +716,26 @@ module CodingAdventures
         )
       end
 
+      def storage_size!(
+        region:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        ensure_uno_r4_wifi!
+
+        session.storage_size(
+          program_id: program_id,
+          budget: budget,
+          region: region,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
       def spi_transfer!(
         program_id: DEFAULT_PROGRAM_ID,
         budget: DEFAULT_INSTRUCTION_BUDGET,
@@ -1865,6 +1885,22 @@ module CodingAdventures
           region: region,
           offset: offset,
           length: length,
+          max_stack: max_stack
+        )
+      end
+
+      def size(
+        region:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        @connection.storage_size!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          region: region,
           max_stack: max_stack
         )
       end

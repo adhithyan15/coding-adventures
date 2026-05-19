@@ -275,6 +275,10 @@ module CodingAdventures
         )
       end
 
+      def storage_size_module(region:, max_stack: 1)
+        native_session.storage_size_module(byte_value(region), max_stack)
+      end
+
       def spi_transfer_module(cs_pin:, write_bytes:, read_length:, max_stack: 5)
         native_session.spi_transfer_module(
           cs_pin,
@@ -533,6 +537,13 @@ module CodingAdventures
             length: length,
             max_stack: max_stack
           )
+        )
+      end
+
+      def upload_storage_size(program_id: @program_id, region:, max_stack: 1)
+        upload(
+          program_id: program_id,
+          module_bytes: storage_size_module(region: region, max_stack: max_stack)
         )
       end
 
@@ -1306,6 +1317,34 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def storage_size(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        region:,
+        max_stack: 1,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(
+          upload_storage_size(
+            program_id: program_id,
+            region: region,
+            max_stack: max_stack
+          ).results
+        )
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget
+        )
+        SessionResult.new(results: results)
+      end
+
       def spi_transfer(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -1731,6 +1770,8 @@ module CodingAdventures
           upload_storage_write(**storage_write_command_options(words, command, options, require_budget: false))
         when "upload-storage-read", "upload-storage.read"
           upload_storage_read(**storage_read_command_options(words, command, options, require_budget: false))
+        when "upload-storage-size", "upload-storage.size"
+          upload_storage_size(**storage_size_command_options(words, command, options, require_budget: false))
         when "upload-spi-transfer", "upload-spi.transfer"
           upload_spi_transfer(**spi_transfer_command_options(words, command, options, require_budget: false))
         when "upload-spi-write", "upload-spi.write"
@@ -1811,6 +1852,8 @@ module CodingAdventures
           storage_write(**storage_write_command_options(words, command, options))
         when "storage-read", "storage.read"
           storage_read(**storage_read_command_options(words, command, options))
+        when "storage-size", "storage.size"
+          storage_size(**storage_size_command_options(words, command, options))
         when "spi-transfer", "spi.transfer"
           spi_transfer(**spi_transfer_command_options(words, command, options))
         when "spi-write", "spi.write"
@@ -2166,6 +2209,20 @@ module CodingAdventures
         raise ArgumentError, "#{command} requires region" unless merged.key?(:region)
         raise ArgumentError, "#{command} requires offset" unless merged.key?(:offset)
         raise ArgumentError, "#{command} requires length" unless merged.key?(:length)
+
+        merged
+      end
+
+      def storage_size_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:region] = byte_value(words.shift) unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires region" unless merged.key?(:region)
 
         merged
       end

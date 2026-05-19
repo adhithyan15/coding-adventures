@@ -246,7 +246,7 @@ descriptor and fake-backend target, but it is not complete for standalone use.
 | `dac.write_u12` | early when present | later when present | unlikely first |
 | `i2c.master` | early | later | unlikely first |
 | `spi.master` | early | later | unlikely first |
-| `storage.write` / `storage.read` | optional when nonvolatile region metadata exists | optional | profile-specific |
+| `storage.write` / `storage.read` / `storage.size` | optional when nonvolatile region metadata exists | optional | profile-specific |
 | `network.ipv4` / `network.tcp` / `network.udp` | optional when network interface metadata exists | optional | unlikely first |
 | `led_matrix.frame` | board-specific | board-specific | unlikely first |
 | events/interrupts | later | later | profile-specific |

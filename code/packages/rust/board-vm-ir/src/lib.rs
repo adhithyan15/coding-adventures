@@ -64,6 +64,7 @@ pub const CAP_NETWORK_UDP_READ_BYTES: u16 = 0x4D;
 pub const CAP_NETWORK_DNS_EXCHANGE_UDP: u16 = 0x4E;
 pub const CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY: u16 = 0x4F;
 pub const CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK: u16 = 0x50;
+pub const CAP_STORAGE_SIZE: u16 = 0x51;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
 const CAP_GPIO_WRITE_U8: u8 = CAP_GPIO_WRITE as u8;
@@ -95,6 +96,7 @@ const CAP_WATCHDOG_CONFIGURE_U8: u8 = CAP_WATCHDOG_CONFIGURE as u8;
 const CAP_WATCHDOG_KICK_U8: u8 = CAP_WATCHDOG_KICK as u8;
 const CAP_STORAGE_WRITE_U8: u8 = CAP_STORAGE_WRITE as u8;
 const CAP_STORAGE_READ_U8: u8 = CAP_STORAGE_READ as u8;
+const CAP_STORAGE_SIZE_U8: u8 = CAP_STORAGE_SIZE as u8;
 const CAP_NETWORK_TCP_OPEN_U8: u8 = CAP_NETWORK_TCP_OPEN as u8;
 const CAP_NETWORK_TCP_WRITE_U8: u8 = CAP_NETWORK_TCP_WRITE as u8;
 const CAP_NETWORK_TCP_READ_U8: u8 = CAP_NETWORK_TCP_READ as u8;
@@ -350,7 +352,7 @@ impl CapabilitySet {
             CAP_CAN_OPEN | CAP_CAN_WRITE | CAP_CAN_READ => self.can,
             CAP_RTC_NOW | CAP_RTC_SET => self.rtc,
             CAP_WATCHDOG_CONFIGURE | CAP_WATCHDOG_KICK => self.watchdog,
-            CAP_STORAGE_WRITE | CAP_STORAGE_READ => self.storage,
+            CAP_STORAGE_WRITE | CAP_STORAGE_READ | CAP_STORAGE_SIZE => self.storage,
             CAP_NETWORK_TCP_OPEN
             | CAP_NETWORK_TCP_WRITE
             | CAP_NETWORK_TCP_READ
@@ -659,6 +661,7 @@ fn stack_effect(op: Op) -> (i16, i16) {
         Op::CallU8(CAP_WATCHDOG_KICK_U8) | Op::CallU16(CAP_WATCHDOG_KICK) => (0, 0),
         Op::CallU8(CAP_STORAGE_WRITE_U8) | Op::CallU16(CAP_STORAGE_WRITE) => (3, 0),
         Op::CallU8(CAP_STORAGE_READ_U8) | Op::CallU16(CAP_STORAGE_READ) => (3, 1),
+        Op::CallU8(CAP_STORAGE_SIZE_U8) | Op::CallU16(CAP_STORAGE_SIZE) => (1, 1),
         Op::CallU8(CAP_NETWORK_TCP_OPEN_U8) | Op::CallU16(CAP_NETWORK_TCP_OPEN) => (3, 1),
         Op::CallU8(CAP_NETWORK_TCP_WRITE_U8) | Op::CallU16(CAP_NETWORK_TCP_WRITE) => (2, 0),
         Op::CallU8(CAP_NETWORK_TCP_READ_U8) | Op::CallU16(CAP_NETWORK_TCP_READ) => (1, 1),
@@ -1260,6 +1263,21 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_STORAGE_READ]);
+    }
+
+    #[test]
+    fn validates_storage_size_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x12, 0x00, 0x40, CAP_STORAGE_SIZE as u8, 0x50],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_storage(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_STORAGE_SIZE]);
     }
 
     #[test]
@@ -1967,6 +1985,21 @@ mod tests {
         assert_eq!(
             validate(&module, CapabilitySet::blink_mvp(), 3),
             Err(ValidateError::UnsupportedCapability(CAP_STORAGE_READ))
+        );
+    }
+
+    #[test]
+    fn rejects_storage_size_without_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x12, 0x00, 0x40, CAP_STORAGE_SIZE as u8, 0x50],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 1),
+            Err(ValidateError::UnsupportedCapability(CAP_STORAGE_SIZE))
         );
     }
 
