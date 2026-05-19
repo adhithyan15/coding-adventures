@@ -124,6 +124,7 @@ from spice_engine import (
     dc_op,
     dc_sweep,
     dc_sweep_corners,
+    estimate_period,
     mc_dc,
     noise_ac,
     sens_dc,
@@ -131,6 +132,7 @@ from spice_engine import (
     tf,
     tf_corners,
     transient,
+    waveform_period,
 )
 from spice_engine.engine import (
     _build_ss_matrix,
@@ -145,6 +147,58 @@ from spice_engine.engine import (
     _voltage_sources,
     _x_from_result,
 )
+
+
+def test_waveform_period_reports_periodic_source_forms() -> None:
+    assert waveform_period(SinWaveform(frequency=2.0)) == pytest.approx(0.5)
+    assert waveform_period(SinWaveform(frequency=2.0, damping=1.0)) is None
+    assert waveform_period(SinWaveform(frequency=0.0)) is None
+    assert waveform_period(PulseWaveform(period=2.5)) == pytest.approx(2.5)
+    assert waveform_period(PwlWaveform(((0.0, 0.0), (1.0, 1.0)))) is None
+    assert waveform_period(ExpWaveform()) is None
+
+
+def test_estimate_period_finds_harmonic_periodic_source_period() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource("V1", "in", "0", 0.0, waveform=SinWaveform(frequency=1_000.0))
+    )
+    c.add(
+        CurrentSource(
+            "I1",
+            "out",
+            "0",
+            0.0,
+            waveform=PulseWaveform(
+                v_initial=0.0, v_pulsed=1.0e-3, pulse_width=0.25e-3, period=0.5e-3
+            ),
+        )
+    )
+    c.add(Resistor("R1", "in", "out", 1_000.0))
+
+    assert estimate_period(c) == pytest.approx(1.0e-3)
+
+
+def test_estimate_period_rejects_nonperiodic_or_incommensurate_sources() -> None:
+    non_periodic = Circuit()
+    non_periodic.add(VoltageSource(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        waveform=PwlWaveform(((0.0, 0.0), (1.0e-3, 1.0))),
+    ))
+    assert estimate_period(non_periodic) is None
+
+    incommensurate = Circuit()
+    incommensurate.add(
+        VoltageSource("V1", "in", "0", 0.0, waveform=PulseWaveform(period=1.0e-3))
+    )
+    incommensurate.add(
+        CurrentSource("I1", "out", "0", 0.0, waveform=PulseWaveform(period=0.7e-3))
+    )
+    assert estimate_period(incommensurate) is None
+
 
 # ---- Linear solver ----
 

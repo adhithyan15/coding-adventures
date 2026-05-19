@@ -4,6 +4,11 @@
 
 ### Added
 
+- **PSS source-period estimation** — `waveform_period` reports periodic `SIN`
+  and `PULSE` source periods, and `estimate_period` derives a harmonic common
+  period across independent source waveforms as a foothold for shooting-Newton
+  periodic steady-state analysis.
+
 - **Multi-corner transfer-function analysis** — `tf_corners` runs the same
   `.TF` query at each named corner and returns per-corner gain and impedance
   values.

@@ -263,6 +263,25 @@ export class ExpWaveform {
   }
 }
 
+export function waveformPeriod(waveform: Waveform): number | undefined {
+  if (waveform instanceof SinWaveform) {
+    if (
+      Number.isFinite(waveform.frequencyHz) &&
+      waveform.frequencyHz > 0.0 &&
+      waveform.damping === 0.0
+    ) {
+      return 1.0 / waveform.frequencyHz;
+    }
+    return undefined;
+  }
+  if (waveform instanceof PulseWaveform) {
+    if (Number.isFinite(waveform.periodSeconds) && waveform.periodSeconds > 0.0) {
+      return waveform.periodSeconds;
+    }
+  }
+  return undefined;
+}
+
 export interface VoltageSource {
   readonly kind: "voltage-source";
   readonly name: string;
@@ -615,6 +634,49 @@ export class Circuit {
   instantiate(instance: XInstance): void {
     this._elements.push(...expandXInstance(instance, this._subcircuits, []));
   }
+}
+
+function isIntegerMultiple(
+  candidate: number,
+  period: number,
+  tolerance: number,
+): boolean {
+  const ratio = candidate / period;
+  const nearest = Math.round(ratio);
+  return (
+    nearest >= 1 &&
+    Math.abs(ratio - nearest) <= tolerance * Math.max(1.0, Math.abs(ratio))
+  );
+}
+
+export function estimatePeriod(
+  circuit: Circuit,
+  tolerance = 1.0e-9,
+): number | undefined {
+  const periods: number[] = [];
+  for (const element of circuit.elements()) {
+    if (
+      (element.kind === "voltage-source" || element.kind === "current-source") &&
+      element.waveform !== undefined
+    ) {
+      const period = waveformPeriod(element.waveform);
+      if (period === undefined) {
+        return undefined;
+      }
+      periods.push(period);
+    }
+  }
+  if (periods.length === 0) {
+    return undefined;
+  }
+
+  const candidate = Math.max(...periods);
+  if (!Number.isFinite(candidate) || candidate <= 0.0) {
+    return undefined;
+  }
+  return periods.every((period) => isIntegerMultiple(candidate, period, tolerance))
+    ? candidate
+    : undefined;
 }
 
 function expandXInstance(

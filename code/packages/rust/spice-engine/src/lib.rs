@@ -353,6 +353,24 @@ impl Waveform {
         }
     }
 
+    pub fn period_seconds(&self) -> Option<f64> {
+        match self {
+            Self::Sin(waveform)
+                if waveform.frequency_hz.is_finite()
+                    && waveform.frequency_hz > 0.0
+                    && waveform.damping == 0.0 =>
+            {
+                Some(1.0 / waveform.frequency_hz)
+            }
+            Self::Pulse(waveform)
+                if waveform.period_seconds.is_finite() && waveform.period_seconds > 0.0 =>
+            {
+                Some(waveform.period_seconds)
+            }
+            _ => None,
+        }
+    }
+
     fn validate(&self) -> Result<(), String> {
         match self {
             Self::Pwl(waveform) => waveform.validate(),
@@ -651,6 +669,43 @@ pub enum Element {
     Vcvs(Vcvs),
     Cccs(Cccs),
     Ccvs(Ccvs),
+}
+
+fn is_integer_multiple(candidate: f64, period: f64, tolerance: f64) -> bool {
+    let ratio = candidate / period;
+    let nearest = ratio.round();
+    nearest >= 1.0 && (ratio - nearest).abs() <= tolerance * ratio.abs().max(1.0)
+}
+
+pub fn estimate_period(circuit: &Circuit) -> Option<f64> {
+    estimate_period_with_tolerance(circuit, 1.0e-9)
+}
+
+pub fn estimate_period_with_tolerance(circuit: &Circuit, tolerance: f64) -> Option<f64> {
+    let mut periods = Vec::new();
+    for element in circuit.elements() {
+        let waveform = match element {
+            Element::VoltageSource(source) => source.waveform.as_ref(),
+            Element::CurrentSource(source) => source.waveform.as_ref(),
+            _ => None,
+        };
+        if let Some(waveform) = waveform {
+            let period = waveform.period_seconds()?;
+            periods.push(period);
+        }
+    }
+    if periods.is_empty() {
+        return None;
+    }
+
+    let candidate = periods.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+    if !candidate.is_finite() || candidate <= 0.0 {
+        return None;
+    }
+    periods
+        .iter()
+        .all(|period| is_integer_multiple(candidate, *period, tolerance))
+        .then_some(candidate)
 }
 
 #[derive(Debug, Clone, PartialEq)]
