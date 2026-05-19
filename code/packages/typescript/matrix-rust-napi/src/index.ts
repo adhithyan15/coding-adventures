@@ -188,46 +188,58 @@ interface MatrixRustNapi {
 const here = dirname(fileURLToPath(import.meta.url));
 
 /**
- * Path resolved from `src/index.ts` to the Rust crate's built
- * `.node` file:
+ * Candidate addon paths, in resolution order.
  *
- *   `code/packages/typescript/matrix-rust-napi/src/`  (here)
- *   `code/packages/typescript/matrix-rust-napi/`      ('..')
- *   `code/packages/typescript/`                        ('../..')
- *   `code/packages/`                                   ('../../..')
- *   `code/packages/rust/matrix-rust-napi/...`         ('../../../rust/matrix-rust-napi/...')
+ * 1. **Colocated**: `<package-root>/matrix_rust_napi.node`.  The
+ *    `BUILD` script in this package builds the Rust addon and copies
+ *    the platform-specific shared library here, so this is the
+ *    expected location after `./BUILD` runs.  Also where a future
+ *    per-platform npm publishing flow would land the prebuilt binary.
+ *
+ * 2. **Rust-crate fallback**:
+ *    `code/packages/rust/matrix-rust-napi/matrix_rust_napi.node`.  The
+ *    Rust crate's own `npm run build` (MX07 Phase 3) drops the
+ *    `.node` file there for its own load-smoke step.  Resolving to
+ *    that location lets a developer who only built via the Rust
+ *    side still drive this wrapper's smoke tests without having to
+ *    rerun the TS package's `BUILD`.
  */
-const ADDON_PATH = resolve(
-  here,
-  "..",
-  "..",
-  "..",
-  "rust",
-  "matrix-rust-napi",
-  "matrix_rust_napi.node",
-);
+const ADDON_CANDIDATES = [
+  resolve(here, "..", "matrix_rust_napi.node"),
+  resolve(
+    here,
+    "..",
+    "..",
+    "..",
+    "rust",
+    "matrix-rust-napi",
+    "matrix_rust_napi.node",
+  ),
+];
 
 /**
  * Lazy + memoised addon loader.  Defers the `require()` call until
  * first access so that simply importing this module (e.g. for the
  * exported types) doesn't crash on a fresh checkout where the
  * `.node` artifact hasn't been built yet.  Throws a precise,
- * actionable error if the artifact is missing.
+ * actionable error listing every candidate path it tried.
  */
 let cached: MatrixRustNapi | null = null;
 function loadAddon(): MatrixRustNapi {
   if (cached !== null) return cached;
 
-  if (!existsSync(ADDON_PATH)) {
+  const found = ADDON_CANDIDATES.find((p) => existsSync(p));
+  if (!found) {
     throw new Error(
-      `matrix_rust_napi addon not found at ${ADDON_PATH}.\n` +
-        `Run \`npm run build\` in code/packages/rust/matrix-rust-napi/ first.\n` +
-        `(MX07 Phase 3 ships the build pipeline.)`,
+      `matrix_rust_napi addon not found.  Looked at:\n` +
+        ADDON_CANDIDATES.map((p) => `  - ${p}`).join("\n") +
+        `\n\nRun \`./BUILD\` in code/packages/typescript/matrix-rust-napi/, ` +
+        `or \`npm run build\` in code/packages/rust/matrix-rust-napi/.`,
     );
   }
 
   const req = createRequire(import.meta.url);
-  cached = req(ADDON_PATH) as MatrixRustNapi;
+  cached = req(found) as MatrixRustNapi;
   return cached;
 }
 
