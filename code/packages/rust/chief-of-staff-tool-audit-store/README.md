@@ -23,6 +23,8 @@ The crate keeps the boundary narrow:
   and advance the durable cursor after delivery
 - supervisors can drain one checkpointed page per tick and inspect progress,
   continuation, and follow-up signals without loading payloads
+- supervisors can run bounded drain loops that stop at end-of-log or report
+  tick-budget exhaustion for the next scheduler pass
 
 ## Development
 
