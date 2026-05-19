@@ -6,9 +6,9 @@
 //! insertion-mode machinery on top of this DOM target.
 
 use coding_adventures_html_lexer::{
-    apply_html_lex_context, create_html_lexer, Attribute as LexerAttribute, Diagnostic,
-    DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlScriptingMode, HtmlTokenizerState, Token,
-    TokenizerError,
+    apply_html_lex_context, create_html_lexer_with_context, Attribute as LexerAttribute,
+    Diagnostic, DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlScriptingMode, HtmlTokenizerState,
+    Token, TokenizerError,
 };
 use dom_core::{Attribute, Document, DocumentType, Element, Node};
 use std::fmt;
@@ -693,8 +693,8 @@ pub fn parse_html_with_diagnostics_and_options(
     source: &str,
     options: HtmlParseOptions,
 ) -> Result<ParseOutput, ParseError> {
-    let mut lexer = create_html_lexer()?;
-    apply_html_lex_context(&mut lexer, &options.initial_tokenizer_context.lex_context())?;
+    let mut lexer =
+        create_html_lexer_with_context(&options.initial_tokenizer_context.lex_context())?;
     let mut parser = HtmlParser::with_options(options);
 
     for ch in source.chars() {
@@ -722,8 +722,8 @@ pub fn parse_html_fragment_with_diagnostics_and_options(
     source: &str,
     options: HtmlParseOptions,
 ) -> Result<FragmentOutput, ParseError> {
-    let mut lexer = create_html_lexer()?;
-    apply_html_lex_context(&mut lexer, &options.initial_tokenizer_context.lex_context())?;
+    let mut lexer =
+        create_html_lexer_with_context(&options.initial_tokenizer_context.lex_context())?;
     let mut parser = HtmlParser::with_body_fragment_options(options);
 
     for ch in source.chars() {
@@ -753,10 +753,9 @@ pub fn parse_html_fragment_for_context_with_diagnostics_and_options(
     options: HtmlParseOptions,
 ) -> Result<FragmentOutput, ParseError> {
     let context_element = context_element.to_ascii_lowercase();
-    let mut lexer = create_html_lexer()?;
     let lex_context = fragment_initial_lex_context(&context_element, options)
         .unwrap_or_else(|| options.initial_tokenizer_context.lex_context());
-    apply_html_lex_context(&mut lexer, &lex_context)?;
+    let mut lexer = create_html_lexer_with_context(&lex_context)?;
     let mut parser = HtmlParser::with_fragment_context_options(options, &context_element);
 
     for ch in source.chars() {
