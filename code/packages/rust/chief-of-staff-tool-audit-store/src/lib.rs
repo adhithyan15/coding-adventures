@@ -870,6 +870,23 @@ pub struct ToolAuditSupervisorDrainRunReport {
 }
 
 impl ToolAuditSupervisorDrainRunReport {
+    /// Classify the drain run for scheduler decisions.
+    pub fn outcome(&self) -> ToolAuditSupervisorDrainRunOutcome {
+        if !self.matches_planned_record_count() {
+            return ToolAuditSupervisorDrainRunOutcome::PlanDiverged;
+        }
+        if self.requires_follow_up() {
+            return ToolAuditSupervisorDrainRunOutcome::NeedsFollowUp;
+        }
+        if self.should_continue() {
+            return ToolAuditSupervisorDrainRunOutcome::NeedsContinuation;
+        }
+        if self.made_progress() {
+            return ToolAuditSupervisorDrainRunOutcome::CaughtUp;
+        }
+        ToolAuditSupervisorDrainRunOutcome::Idle
+    }
+
     /// Return whether the actual run delivered the planned number of rows.
     pub fn matches_planned_record_count(&self) -> bool {
         self.plan.planned_records == self.drain.drained_records
@@ -909,6 +926,21 @@ impl ToolAuditSupervisorDrainRunReport {
     pub fn last_checkpoint(&self) -> Option<&ToolAuditReadCheckpoint> {
         self.drain.last_checkpoint()
     }
+}
+
+/// Scheduler-facing classification for a bounded supervisor drain run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainRunOutcome {
+    /// No rows were waiting and the checkpoint stayed untouched.
+    Idle,
+    /// Rows were replayed and the drain reached the current end of the log.
+    CaughtUp,
+    /// The tick budget was exhausted before reaching the end of the log.
+    NeedsContinuation,
+    /// Planned or replayed rows contain follow-up pressure.
+    NeedsFollowUp,
+    /// The preflight plan and actual drain delivered different row counts.
+    PlanDiverged,
 }
 
 /// Payload-free summary for a batch audit write.
@@ -2331,6 +2363,10 @@ mod tests {
         assert!(report.should_continue());
         assert!(!report.reached_end_of_log());
         assert_eq!(
+            report.outcome(),
+            ToolAuditSupervisorDrainRunOutcome::NeedsContinuation
+        );
+        assert_eq!(
             report.last_checkpoint(),
             Some(&ToolAuditReadCheckpoint::new(120, "call_4"))
         );
@@ -2369,6 +2405,10 @@ mod tests {
         assert!(!report.exhausted_tick_budget());
         assert!(!report.should_continue());
         assert_eq!(
+            report.outcome(),
+            ToolAuditSupervisorDrainRunOutcome::NeedsFollowUp
+        );
+        assert_eq!(
             report.last_checkpoint(),
             Some(&ToolAuditReadCheckpoint::new(151, "call_3"))
         );
@@ -2399,9 +2439,53 @@ mod tests {
         assert!(!report.advanced_checkpoint());
         assert!(report.reached_end_of_log());
         assert!(!report.should_continue());
+        assert_eq!(report.outcome(), ToolAuditSupervisorDrainRunOutcome::Idle);
         assert!(report.last_checkpoint().is_some());
         assert!(sink.records().is_empty());
         assert!(store.fetch_checkpoint("supervisor").unwrap().is_none());
+    }
+
+    #[test]
+    fn supervisor_drain_report_outcome_reports_caught_up_progress() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![sample_record("call_1"), sample_record("call_2")])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut sink)
+            .unwrap();
+
+        assert!(report.matches_planned_record_count());
+        assert!(report.made_progress());
+        assert!(report.reached_end_of_log());
+        assert!(!report.requires_follow_up());
+        assert!(!report.should_continue());
+        assert_eq!(
+            report.outcome(),
+            ToolAuditSupervisorDrainRunOutcome::CaughtUp
+        );
+    }
+
+    #[test]
+    fn supervisor_drain_report_outcome_detects_plan_drift() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![sample_record("call_1"), sample_record("call_2")])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let mut report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut sink)
+            .unwrap();
+        report.drain.drained_records += 1;
+
+        assert!(!report.matches_planned_record_count());
+        assert_eq!(
+            report.outcome(),
+            ToolAuditSupervisorDrainRunOutcome::PlanDiverged
+        );
     }
 
     #[test]

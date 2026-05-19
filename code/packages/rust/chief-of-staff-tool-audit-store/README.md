@@ -31,6 +31,8 @@ The crate keeps the boundary narrow:
   tick-budget exhaustion for the next scheduler pass
 - supervisors can capture a preflight drain plan beside the actual bounded
   drain result, letting schedulers compare expected and delivered audit work
+- supervisor drain reports classify scheduler outcomes as idle, caught up,
+  needing continuation, needing follow-up, or diverged from preflight
 
 ## Development
 
