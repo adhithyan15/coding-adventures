@@ -2364,6 +2364,31 @@ def _do_insert(ins: InsertRow, st: _VmState) -> None:
     # would not be reached anyway because an exception is raised).
     st.last_inserted_row = row
     st.result.rows_affected = (st.result.rows_affected or 0) + 1
+    # Record the rowid of the inserted row so `last_insert_rowid()` returns
+    # something sensible.  Strategy:
+    #   1. If the row dict has a value for the table's INTEGER PRIMARY KEY,
+    #      use that (matches SQLite — IPK is the rowid).
+    #   2. Otherwise increment by 1 (synthetic rowid).
+    #
+    # We look up the PK column from the backend's schema metadata.  If
+    # neither lookup yields an integer, leave last_inserted_rowid unchanged.
+    try:
+        cols = st.backend.columns(ins.table)
+        rowid_val: int | None = None
+        for col in cols:
+            is_pk = getattr(col, "primary_key", False)
+            type_name = getattr(col, "type_name", "")
+            if is_pk and type_name.upper() == "INTEGER":
+                v = row.get(col.name)
+                if isinstance(v, int) and not isinstance(v, bool):
+                    rowid_val = v
+                    break
+        if rowid_val is None:
+            # Synthetic rowid: increment the previous one (or start at 1).
+            rowid_val = (st.result.last_inserted_rowid or 0) + 1
+        st.result.last_inserted_rowid = rowid_val
+    except Exception:  # noqa: BLE001 — never let metadata-lookup errors abort the insert
+        pass
 
 
 def _do_update(ins: UpdateRows, st: _VmState) -> None:

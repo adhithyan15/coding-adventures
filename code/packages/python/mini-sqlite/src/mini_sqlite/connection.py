@@ -449,6 +449,14 @@ def connect(
     also call :meth:`Connection.set_policy` at any time to swap in a custom
     policy.
     """
+    # Reset the connection-state globals so that ``last_insert_rowid()``,
+    # ``changes()``, and ``total_changes()`` start fresh.  This is a
+    # process-wide reset (mini-sqlite uses module-level globals for these
+    # values) and is correct for the common single-connection case.  Programs
+    # holding multiple connections concurrently will see cross-talk; this
+    # limitation is documented in sql_vm.scalar_functions.
+    from sql_vm.scalar_functions import set_connection_state
+    set_connection_state(last_insert_rowid=0, changes=0, total_changes=0)
     if database == ":memory:":
         return Connection(InMemoryBackend(), autocommit=autocommit, auto_index=auto_index)
     return Connection(SqliteFileBackend(database), autocommit=autocommit, auto_index=auto_index)

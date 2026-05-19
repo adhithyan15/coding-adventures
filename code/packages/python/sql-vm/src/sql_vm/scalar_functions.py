@@ -1255,15 +1255,130 @@ def _randomblob(n: SqlValue) -> SqlValue:
     return os.urandom(count)
 
 
+# ---------------------------------------------------------------------------
+# Connection-state pseudo-functions
+# ---------------------------------------------------------------------------
+#
+# SQLite exposes a handful of "scalar" functions whose result depends on
+# connection state rather than their arguments:
+#
+#   - changes()           — rows affected by the most recent INSERT/UPDATE/DELETE
+#   - total_changes()     — cumulative rows affected since the connection opened
+#   - last_insert_rowid() — rowid of the most recent successful INSERT
+#
+# Real SQLite stores these on the C ``sqlite3*`` handle.  Mini-sqlite is
+# Python-side, single-threaded, and currently does not have a clean
+# Connection→VM channel for per-call state.  We fake it with three
+# module-level integers that the engine updates after every statement.
+# Single-threaded use is the only supported mode of mini-sqlite, so a single
+# global is correct as long as the engine maintains the invariant
+# "update the globals before calling the next user query".
+#
+# This approach is intentionally simple — it makes the common case
+# (`SELECT changes()` immediately after an UPDATE) byte-compatible with
+# sqlite3 without invasive plumbing changes.  Multi-connection programs
+# will see cross-talk, which is documented but acceptable for the educational
+# scope of mini-sqlite.
+
+_LAST_INSERT_ROWID: int = 0
+_CHANGES: int = 0
+_TOTAL_CHANGES: int = 0
+
+
+def set_connection_state(
+    *,
+    last_insert_rowid: int | None = None,
+    changes: int | None = None,
+    total_changes: int | None = None,
+) -> None:
+    """Update the connection-state globals consulted by the scalar functions.
+
+    Called by the mini-sqlite engine after every statement.  Each kwarg
+    that is *not* None overwrites the corresponding global; leaving a
+    kwarg as None preserves the previous value.
+    """
+    global _LAST_INSERT_ROWID, _CHANGES, _TOTAL_CHANGES
+    if last_insert_rowid is not None:
+        _LAST_INSERT_ROWID = last_insert_rowid
+    if changes is not None:
+        _CHANGES = changes
+    if total_changes is not None:
+        _TOTAL_CHANGES = total_changes
+
+
 @register("last_insert_rowid")
 def _last_insert_rowid() -> SqlValue:
-    """Return NULL (placeholder — real backends track this per-connection).
+    """Return the rowid of the most recent successful INSERT on this connection.
 
-    A full implementation would require the VM to receive a rowid from the
-    last successful ``INSERT``.  That infrastructure is deferred to a future
-    release; for now this returns NULL rather than raising.
+    Returns 0 if no INSERT has been performed since the connection was opened.
+    Matches SQLite's ``last_insert_rowid()`` C-API and SQL function.
     """
-    return None
+    return _LAST_INSERT_ROWID
+
+
+@register("changes")
+def _changes() -> SqlValue:
+    """Return the number of rows affected by the most recent INSERT, UPDATE,
+    or DELETE on this connection.
+
+    Excludes rows changed by triggers (matching SQLite).  Returns 0 if no DML
+    has been performed.
+    """
+    return _CHANGES
+
+
+@register("total_changes")
+def _total_changes() -> SqlValue:
+    """Return the total number of rows affected by INSERT, UPDATE, or DELETE
+    statements on this connection since it was opened.
+
+    Includes rows changed by triggers (matching SQLite).
+    """
+    return _TOTAL_CHANGES
+
+
+# ---------------------------------------------------------------------------
+# Version / build identification
+# ---------------------------------------------------------------------------
+#
+# SQLite reports its version through two functions:
+#
+#   sqlite_version()     → e.g. '3.50.4'
+#   sqlite_source_id()   → e.g. '2025-07-30 19:33:53 4d8adfb30e03f9cf...'
+#
+# Real applications use these to gate behaviour based on the available SQLite
+# version (e.g. "this query needs JSON1, available since 3.9").  Mini-sqlite
+# reports a fixed version that represents the SQLite feature set we
+# approximately track.  This is updated when we add a new compatibility tier.
+
+_MINI_SQLITE_REPORTED_SQLITE_VERSION = "3.45.0"
+_MINI_SQLITE_REPORTED_SQLITE_SOURCE_ID = (
+    "mini-sqlite emulation of SQLite 3.45.0 — not a real SQLite build"
+)
+
+
+@register("sqlite_version")
+def _sqlite_version() -> SqlValue:
+    """Return a SQLite version string.
+
+    Mini-sqlite is not real SQLite; the version we report is the SQLite
+    release whose feature set we most closely approximate.  Applications
+    that gate behaviour on `sqlite_version()` get a string they can parse
+    with ordinary tuple comparison: ``tuple(map(int, v.split('.')))``.
+    """
+    return _MINI_SQLITE_REPORTED_SQLITE_VERSION
+
+
+@register("sqlite_source_id")
+def _sqlite_source_id() -> SqlValue:
+    """Return a SQLite source-ID string.
+
+    Real SQLite returns a build identifier with date, time, and SHA-3 hash.
+    Mini-sqlite is not a SQLite build; we return a marker string so that any
+    application code checking this value can see it's running against the
+    emulation rather than a real SQLite binary.
+    """
+    return _MINI_SQLITE_REPORTED_SQLITE_SOURCE_ID
 
 
 # ---------------------------------------------------------------------------

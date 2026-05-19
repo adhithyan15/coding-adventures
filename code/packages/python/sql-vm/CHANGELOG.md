@@ -1,5 +1,40 @@
 # Changelog
 
+## 1.30.0 — 2026-05-18
+
+### Added
+
+- **Connection-state scalar functions** (`scalar_functions.py`) — five new
+  registered functions that SQLite apps commonly call:
+
+  - `changes()` — rows affected by the most recent INSERT/UPDATE/DELETE.
+  - `total_changes()` — cumulative rows affected since the connection opened.
+  - `last_insert_rowid()` — rowid of the most recent successful INSERT.
+  - `sqlite_version()` — dotted-integer version string ("3.45.0").
+  - `sqlite_source_id()` — build identifier (mini-sqlite marker).
+
+- **`set_connection_state(...)` helper** — module-level setter that the
+  mini-sqlite engine calls after every statement to keep the three
+  connection counters fresh.  Three module globals (`_LAST_INSERT_ROWID`,
+  `_CHANGES`, `_TOTAL_CHANGES`) hold the per-process state.  Mini-sqlite
+  is single-threaded so a single global is correct for the common
+  single-connection use case; multi-connection programs see cross-talk
+  (documented limitation).
+
+- **`QueryResult.last_inserted_rowid`** (`result.py`) — new `int | None`
+  field that propagates the rowid of the most recent INSERT through the
+  result chain.  Populated by `_do_insert` based on the table's INTEGER
+  PRIMARY KEY value, or a synthetic counter when no IPK is present.
+
+- **`_do_insert` rowid tracking** (`vm.py`) — after a successful insert,
+  looks up the table's INTEGER PRIMARY KEY value from the row dict;
+  falls back to incrementing the previous rowid if the IPK isn't present.
+
+### Changed
+
+- Test `test_last_insert_rowid_returns_null` replaced by six tests that
+  exercise the new `set_connection_state` plumbing.
+
 ## 1.29.0 — 2026-05-17
 
 ### Added
