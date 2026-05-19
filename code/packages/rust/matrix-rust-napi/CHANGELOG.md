@@ -3,6 +3,125 @@
 All notable changes to `matrix-rust-napi` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.0] — 2026-05-18
+
+### Added — MX07 Phase 2b: Graph + Runtime JS classes with `Buffer[]` I/O
+
+Replaces the Phase 2 JSON-hex envelope with the recommended
+class-based API described in [MX07 §"The binding surface"][mx07].
+The JSON-envelope `runGraphOnCpu` function remains as the
+CLI-friendly / Buffer-free alternative path; both APIs flow through
+the same pure-Rust `run_graph_on_cpu` helper internally, so
+behaviour is identical.
+
+[mx07]: ../../../specs/MX07-matrix-rust-napi.md
+
+**New JS classes**
+
+```javascript
+const m = require("./matrix_rust_napi.node");
+
+// Construct once, reuse many times — no JSON re-parse per run().
+const graph = new m.Graph(jsonString);
+//  or:  m.Graph.fromJson(jsonString)
+
+graph.toJson();           // re-serialise to wire format
+graph.describe();         // "Graph(tensors=4, ops=3, ...)"
+
+const rt = new m.Runtime();
+//  or:  m.Runtime.create()
+
+const outputs = rt.run(graph, [inputBuf1, inputBuf2]);
+// outputs: Array<Buffer> — one Buffer per graph.outputs() tensor.
+```
+
+**What landed**
+
+* `src/classes.rs` — Graph and Runtime class definitions wiring
+  N-API class registration (`napi_define_class`, `napi_wrap` with
+  finalizer, `napi_unwrap` on every instance method, static-method
+  attachment via `set_named_property` on the class itself).
+* Static `AtomicUsize` storage for the class constructors so static
+  methods (`Graph.fromJson`, `Runtime.create`) can look them up via
+  `napi_new_instance` — mirrors font-parser-node's Finding 3.1 fix
+  for Worker-thread safety.
+* Both constructors check `napi_wrap` status BEFORE calling
+  `Box::into_raw` would leak — mirrors font-parser-node's Finding
+  3.5 fix.
+
+**Why both class API and JSON envelope?**
+
+The class API is preferred for any consumer with a real Node.js
+`Buffer`:
+
+* No JSON re-parse per `run()` call.
+* No hex-encoding overhead (2× the byte cost).
+* Mirrors the eventual cross-language API shape.
+
+The JSON envelope is kept because some consumers genuinely don't
+want or have `Buffer`:
+
+* CLI tools that just pipe graph JSON over stdin / stdout.
+* Language hosts that haven't yet adopted the workspace's Buffer
+  helpers.
+* Debugging / golden-file fixtures where everything is text.
+
+Removing it would force those callers to ship a Buffer codec.
+Keeping it costs ~100 lines of code; both paths share the same
+`run_graph_on_cpu` core, so they can never disagree.
+
+### New dependencies
+
+None — the existing `node-bridge` Buffer helpers (added in PR
+#3529) cover everything the class API needs.
+
+### Tests (18, unchanged)
+
+The pure-Rust `run_graph_on_cpu` suite covers the execution path
+behind both APIs.  JS-side end-to-end tests for the class API land
+with **Phase 4** (`node --test` smoke).  Until then, the
+build-succeeds + class-registration-doesn't-panic check on the
+shared cdylib is the smoke test (font-parser-node uses the same
+strategy).
+
+### Security
+
+The Phase 2b class wrappers were security-reviewed by a senior
+Rust-N-API sub-agent.  One CRITICAL finding (Type Confusion between
+`Graph` and `Runtime`) was raised and **fixed in this same PR**.
+Final review notes:
+
+* **CRITICAL fix — type-tag discriminator.**  `napi_unwrap` is
+  type-agnostic by N-API design: it returns whichever raw pointer
+  was stored by *any* previous `napi_wrap` in the env, regardless
+  of which JS class the object belongs to.  Without a software
+  type tag, a JS caller could do `rt.run(rt, [])` and have
+  `unwrap_graph` return a `Box<WrappedRuntime>` pointer cast as
+  `&Graph` — reading `graph.tensors.len()` then reads `(ptr, len,
+  cap)` out of bounds.  Immediate UB; near-guaranteed crash or RCE.
+  Fix: every napi_wrap'd payload in this crate (`WrappedGraph`,
+  `WrappedRuntime`) starts with a 16-byte `tag: [u64; 2]` prefix
+  with a class-specific constant.  `unwrap_graph` / `unwrap_runtime`
+  validate the tag before dereferencing as the typed struct.  Both
+  wrapped types share the `[u64; 2]` prefix layout so reading 16
+  bytes from any pointer we stored is safe; cross-addon collision
+  probability is ~2^-128.  The "right" long-term answer is N-API's
+  `napi_type_tag_object` / `napi_check_object_type_tag` (v8+),
+  deferred to a follow-up node-bridge PR.
+* Static class-ctor storage uses `AtomicUsize` (Release/Acquire) —
+  Worker-thread-safe.
+* Both constructors check `napi_wrap` status before letting
+  `Box::into_raw` leak — no leak on wrap failure.
+* All instance methods validate `napi_unwrap` returned a non-null
+  pointer AND that the type tag matches before dereferencing.
+* `runtime.run` validates input count + reuses the
+  `MAX_TOTAL_BUFFER_BYTES` cap from `run_graph_on_cpu` (Phase 2
+  finding fix) — a malicious graph cannot DoS the host via huge
+  tensors.
+* All buffer transfers go through the node-bridge Buffer helpers
+  with the copy-in / copy-out discipline (PR #3529) — no use-after-
+  detach UB possible.
+
 ## [0.2.0] — 2026-05-18
 
 ### Added — MX07 Phase 2: end-to-end execution on `matrix-cpu`
