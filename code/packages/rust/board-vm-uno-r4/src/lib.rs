@@ -706,6 +706,10 @@ pub trait UnoR4Backend {
         Err(HalError::UnsupportedMode)
     }
 
+    fn connected_network_tcp(&mut self, _socket: u8) -> Result<bool, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
     fn close_network_tcp(&mut self, _socket: u8) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
@@ -1021,6 +1025,11 @@ where
     fn network_tcp_read(&mut self, token: u32) -> Result<u8, HalError> {
         let socket = normalize_network_socket(token)?;
         self.backend.read_network_tcp(socket)
+    }
+
+    fn network_tcp_connected(&mut self, token: u32) -> Result<bool, HalError> {
+        let socket = normalize_network_socket(token)?;
+        self.backend.connected_network_tcp(socket)
     }
 
     fn network_tcp_close(&mut self, token: u32) -> Result<(), HalError> {
@@ -1714,6 +1723,7 @@ mod tests {
         NetworkTcpOpen(u8, u32, u16),
         NetworkTcpWrite(u8, u8),
         NetworkTcpRead(u8),
+        NetworkTcpConnected(u8),
         NetworkTcpClose(u8),
         NetworkUdpOpen(u8, u32, u16),
         NetworkUdpWrite(u8, u8),
@@ -1941,6 +1951,11 @@ mod tests {
         fn read_network_tcp(&mut self, socket: u8) -> Result<u8, HalError> {
             self.events.push(Event::NetworkTcpRead(socket));
             Ok(0x42)
+        }
+
+        fn connected_network_tcp(&mut self, socket: u8) -> Result<bool, HalError> {
+            self.events.push(Event::NetworkTcpConnected(socket));
+            Ok(true)
         }
 
         fn close_network_tcp(&mut self, socket: u8) -> Result<(), HalError> {
@@ -2248,6 +2263,10 @@ mod tests {
                 && capability.name == "network.tcp.open"
         }));
         assert!(descriptor.capabilities.iter().any(|capability| {
+            capability.id == board_vm_ir::CAP_NETWORK_TCP_CONNECTED
+                && capability.name == "network.tcp.connected"
+        }));
+        assert!(descriptor.capabilities.iter().any(|capability| {
             capability.id == board_vm_ir::CAP_NETWORK_UDP_OPEN
                 && capability.name == "network.udp.open"
         }));
@@ -2326,6 +2345,9 @@ mod tests {
             .supports(board_vm_ir::CAP_NETWORK_TCP_CLOSE));
         assert!(UNO_R4_WIFI
             .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_TCP_CONNECTED));
+        assert!(UNO_R4_WIFI
+            .capabilities
             .supports(board_vm_ir::CAP_NETWORK_UDP_OPEN));
         assert!(UNO_R4_WIFI
             .capabilities
@@ -2351,6 +2373,9 @@ mod tests {
         assert!(!UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_TCP_OPEN));
+        assert!(!UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_TCP_CONNECTED));
         assert!(!UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_UDP_OPEN));
@@ -2709,15 +2734,18 @@ mod tests {
         let token = board.network_tcp_open(0, 0xc0a8_012a, 8080).unwrap();
         board.network_tcp_write(token, 0x41).unwrap();
         let byte = board.network_tcp_read(token).unwrap();
+        let connected = board.network_tcp_connected(token).unwrap();
         board.network_tcp_close(token).unwrap();
 
         assert_eq!(byte, 0x42);
+        assert!(connected);
         assert_eq!(
             board.backend().events,
             vec![
                 Event::NetworkTcpOpen(0, 0xc0a8_012a, 8080),
                 Event::NetworkTcpWrite(2, 0x41),
                 Event::NetworkTcpRead(2),
+                Event::NetworkTcpConnected(2),
                 Event::NetworkTcpClose(2),
             ]
         );

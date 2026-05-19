@@ -139,6 +139,9 @@ and a remote port, then return a portable socket handle. `network.tcp.write`,
 delegate to narrow `BoardHal::network_tcp_*` and `BoardHal::network_udp_*`
 hooks. Host SDKs build bytecode for these calls; board ports decide when a
 concrete backend can actually drive a WiFi or Ethernet module.
+`network.tcp.connected` is the first socket-control follow-up: it accepts an
+existing TCP handle and returns a boolean connection status without consuming
+that handle.
 
 WiFi association control uses the same bounded data path as storage and bus
 transfers. `network.wifi.associate` accepts an interface id, SSID bytes, and
@@ -171,6 +174,7 @@ CALL_U8 0x3a -> network.tcp.open
 CALL_U8 0x3e -> network.udp.open
 CALL_U8 0x42 -> network.wifi.associate
 CALL_U8 0x45 -> network.dns.resolve
+CALL_U8 0x46 -> network.tcp.connected
 ```
 
 Each handler:
