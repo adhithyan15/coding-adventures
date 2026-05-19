@@ -37,7 +37,7 @@ Source snapshot:
 | EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | descriptor metadata and bounded bytecode read/write implemented | `storage.write`, `storage.read`; stored program / KV layers later |
 | Watchdog | Renesas WDT library | descriptor metadata and direct bytecode operations implemented | `watchdog.configure`, `watchdog.kick` |
 | OPAMP | UNO R4 OPAMP library | pending | analog board-specific capability after ADC/DAC |
-| WiFi | WiFiS3 library through onboard network module | descriptor metadata, network capability strings, first TCP/UDP socket bytecode tranches, bounded TCP/UDP socket-control queries, bounded WiFi association control, and bounded DNS resolution implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`, `network.dns`, `network.tcp.open`, `network.tcp.write`, `network.tcp.read`, `network.tcp.close`, `network.tcp.connected`, `network.udp.open`, `network.udp.write`, `network.udp.read`, `network.udp.available`, `network.udp.close`, `network.wifi.associate`, `network.wifi.disconnect`, `network.wifi.status`, `network.dns.resolve` |
+| WiFi | WiFiS3 library through onboard network module | descriptor metadata, network capability strings, first TCP/UDP socket bytecode tranches, bounded TCP/UDP socket-control queries, bounded WiFi association control, bounded DNS resolution, and resolver server policy implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`, `network.dns`, `network.tcp.open`, `network.tcp.write`, `network.tcp.read`, `network.tcp.close`, `network.tcp.connected`, `network.udp.open`, `network.udp.write`, `network.udp.read`, `network.udp.available`, `network.udp.close`, `network.wifi.associate`, `network.wifi.disconnect`, `network.wifi.status`, `network.dns.resolve`, `network.dns.set_server` |
 | USB/HID | TinyUSB device support | pending | transport/device descriptors first; HID later |
 | OTA/SDU | OTAUpdate and SDU libraries | pending | firmware-management capability, separate from bytecode VM |
 
@@ -106,11 +106,15 @@ reject conflicting handles.
    association control over the same byte-buffer operand path used by storage
    and bus transfers, while `network.dns.resolve` establishes the first
    hostname-to-IPv4 bytecode tranche over that bounded byte-buffer operand path.
+   `network.dns.set_server` adds the first DNS client-policy bytecode tranche,
+   letting host-built bytecode select a resolver IPv4 address while keeping
+   language frontends thin over Rust-owned bytecode assembly and target
+   metadata.
    `program.store` now has a protocol capability descriptor, `STORE_PROGRAM`
    device dispatch, runtime HAL hook, and an initial UNO R4 storage-backed
    slot-0 layout that writes a compact header plus module chunks through the
-   same bounded storage substrate. Higher-level KV storage, DNS message/client
-   policy, and deeper socket controls remain later capability tranches.
+   same bounded storage substrate. Higher-level KV storage, DNS message
+   payloads, and deeper socket controls remain later capability tranches.
 
 Every tranche should include the same layers: spec entry, IR/protocol capability id,
 runtime HAL method, UNO R4 target descriptor, firmware backend, host builder,

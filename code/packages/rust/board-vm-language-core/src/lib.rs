@@ -3832,6 +3832,9 @@ mod tests {
             .contains(&"network.wifi.disconnect".to_owned()));
         assert!(uno.capabilities.contains(&"network.wifi.status".to_owned()));
         assert!(uno.capabilities.contains(&"network.dns.resolve".to_owned()));
+        assert!(uno
+            .capabilities
+            .contains(&"network.dns.set_server".to_owned()));
         assert_eq!(uno.network_interfaces.len(), 1);
         let uno_network = &uno.network_interfaces[0];
         assert_eq!(uno_network.interface, 0);
