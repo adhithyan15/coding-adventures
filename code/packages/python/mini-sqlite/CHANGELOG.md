@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.49.0] - 2026-05-19
+
+### Added
+
+Datetime modifier and strftime improvements surfaced end-to-end via
+``sql-vm 1.33.0``:
+
+- **Timezone offset modifiers** — ``+HH:MM``, ``-HH:MM``, ``+HH:MM:SS``
+  shift the underlying datetime by the given offset.  Common pattern
+  for converting UTC to a fixed display timezone::
+
+      SELECT datetime('2024-03-15 14:30:00', '+02:00');
+      -- → '2024-03-15 16:30:00'
+
+- **``auto`` modifier** is now accepted as a no-op (SQLite 3.46+).
+  Previously caused NULL propagation as an unrecognised modifier.
+
+### Fixed
+
+- **``%P`` strftime specifier** now returns ``'am'``/``'pm'`` on macOS.
+  Python's macOS libc returns the literal ``'P'`` for ``%P``, which
+  caused mini-sqlite to diverge from real ``sqlite3`` on macOS CI
+  runners.  Pre-processing ``%P`` in ``sql-vm`` fixes the divergence.
+
+17 new oracle tests in ``test_tier3_datetime_modifier_additions.py``
+pin all three behaviours byte-for-byte against ``sqlite3``.
+
 ## [1.48.0] - 2026-05-19
 
 ### Added

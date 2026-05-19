@@ -1773,6 +1773,54 @@ def _apply_modifier(dt: datetime, modifier: str) -> datetime | None:
     if m_lower == "unixepoch":
         return dt
 
+    # auto (SQLite 3.46+) — auto-detect whether a numeric time argument was a
+    # Unix epoch or a Julian day, based on its magnitude.  In mini-sqlite the
+    # parser at :func:`_parse_timevalue` already discriminates by Python type
+    # (``int`` → Unix epoch, ``float`` → Julian day), so this modifier is a
+    # semantic no-op for us: by the time we reach ``_apply_modifier`` the
+    # value is already a ``datetime``.  Accepting ``auto`` prevents NULL
+    # propagation for application SQL written against SQLite 3.46+ that uses
+    # it defensively (e.g. for forward-compatibility with future numeric
+    # encodings).  Real SQLite also accepts ``auto`` on string inputs and
+    # treats it as a pass-through, matching our behaviour here.
+    if m_lower == "auto":
+        return dt
+
+    # Note: we do not accept ``julianday`` as a modifier.  In real SQLite
+    # that modifier *requires* the time value to be a float and returns NULL
+    # otherwise; we can't reliably reproduce that without restructuring
+    # ``_resolve_datetime`` to keep the original value type alongside the
+    # parsed datetime.  For ``float`` inputs mini-sqlite already interprets
+    # them as Julian days via ``_parse_timevalue``, so omitting the modifier
+    # is harmless in the common case.
+
+    # Timezone offset: ±HH:MM, ±HH:MM:SS, ±HH:MM:SS.SSS
+    #
+    # SQLite treats the offset as a *shift* of the underlying datetime: a
+    # positive value moves the wall-clock forward (UTC + offset), a negative
+    # value moves it backward.  Application code typically uses this to
+    # convert from UTC to a fixed timezone for display::
+    #
+    #     datetime('2024-03-15 14:30:00', '+02:00') → '2024-03-15 16:30:00'
+    #     datetime('2024-03-15 14:30:00', '-05:30') → '2024-03-15 09:00:00'
+    #
+    # The seconds/fractional-seconds portions are optional and rarely used
+    # but accepted for completeness with SQLite.
+    tz_match = re.match(
+        r"^([+-])(\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?$",
+        m_lower,
+    )
+    if tz_match:
+        sign = 1 if tz_match.group(1) == "+" else -1
+        h = int(tz_match.group(2))
+        m = int(tz_match.group(3))
+        s = int(tz_match.group(4)) if tz_match.group(4) else 0
+        # Reject out-of-range components (e.g. '+99:99') — match SQLite.
+        if h > 23 or m > 59 or s > 59:
+            return None
+        total_seconds = sign * (h * 3600 + m * 60 + s)
+        return dt + timedelta(seconds=total_seconds)
+
     # Numeric offset: [+-]N unit
     pat = re.match(
         r"^([+-]?\d+(?:\.\d+)?)\s+"
@@ -1951,11 +1999,19 @@ def _unixepoch(*args: SqlValue) -> SqlValue:
 
 # Pre-compiled substitution map for STRFTIME's SQLite-specific specifiers.
 # Python's strftime does not support %f (SQLite = SS.SSS) or %s (epoch) or %J.
-_STRFTIME_PREPROCESS = re.compile(r"%[fJjsW]")
+_STRFTIME_PREPROCESS = re.compile(r"%[fJjsWP]")
 
 
 def _sqlite_strftime(fmt: str, dt: datetime) -> str:
-    """Format *dt* using SQLite's strftime specifiers, delegating to Python."""
+    """Format *dt* using SQLite's strftime specifiers, delegating to Python.
+
+    Cross-platform note on ``%P``
+    -----------------------------
+    SQLite's ``%P`` is lowercase ``am``/``pm`` (the GNU extension).  Python's
+    own ``strftime`` honours this on Linux libc but not on macOS libc — on
+    macOS ``dt.strftime('%P')`` returns the literal ``'P'``.  We pre-process
+    ``%P`` ourselves so output is identical on every platform.
+    """
     def _replace(m: re.Match) -> str:  # type: ignore[type-arg]
         spec = m.group(0)
         if spec == "%f":
@@ -1971,6 +2027,10 @@ def _sqlite_strftime(fmt: str, dt: datetime) -> str:
         if spec == "%W":
             # Week number (Monday as first day, 00–53)
             return f"{dt.isocalendar()[1] - 1:02d}"
+        if spec == "%P":
+            # Lowercase am/pm — Python's macOS libc doesn't support %P so we
+            # synthesise it from %p (uppercase) and lowercase the result.
+            return "am" if dt.hour < 12 else "pm"
         return spec
 
     processed = _STRFTIME_PREPROCESS.sub(_replace, fmt)

@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.33.0 — 2026-05-19
+
+### Added
+
+- **Datetime timezone-offset modifiers** in ``_apply_modifier``: the
+  ``±HH:MM``, ``±HH:MM:SS``, and ``±HH:MM:SS.SSS`` forms now shift the
+  underlying datetime by the given offset, matching SQLite::
+
+      datetime('2024-03-15 14:30:00', '+02:00')    → '2024-03-15 16:30:00'
+      datetime('2024-03-15 14:30:00', '-05:30')    → '2024-03-15 09:00:00'
+      datetime('2024-03-15 14:30:00', '+02:30:45') → '2024-03-15 17:00:45'
+
+  Out-of-range components (e.g. ``+99:00``) return NULL.
+- **``auto`` modifier** is now accepted as a no-op (SQLite 3.46+
+  introduced it for forward-compat with future numeric encodings).
+  Mini-sqlite's per-Python-type dispatch in ``_parse_timevalue`` already
+  achieves what ``auto`` documents, so the modifier becomes a pass-
+  through here; this matches real SQLite's behaviour on string inputs.
+
+### Fixed
+
+- **``%P`` strftime specifier** now returns ``'am'``/``'pm'`` on every
+  platform.  Python's macOS libc returns the literal ``'P'`` for
+  ``strftime('%P')``; we pre-process the specifier ourselves so output
+  matches SQLite on Linux, macOS, and Windows CI runners.
+
 ## 1.32.0 — 2026-05-19
 
 ### Added
