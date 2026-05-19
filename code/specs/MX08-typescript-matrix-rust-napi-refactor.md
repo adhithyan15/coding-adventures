@@ -198,12 +198,34 @@ function bufferToMatrix(buf: Buffer, rows: number, cols: number): Matrix {
 
 That's the entire adapter.  ~120 LOC.
 
-### Why dtype `f64`?
+### Dtype: f32 (with the precision caveat)
 
-`Matrix` today stores JavaScript `number`, which is f64.  Using
-`f32` would silently round values and break the parity tests.
-v1+ adds an optional dtype on `Matrix` so f32 / i32 / u8 graphs
-can flow through too — out of scope for MX08.
+`Matrix` today stores JavaScript `number`, which is f64.  But
+`matrix-cpu`'s `BackendProfile.supported_dtypes` only includes
+F32, U8, I32 (per `matrix-cpu/src/lib.rs:69-70`).  Submitting an
+f64 graph fails at the planner with "no capable executor".
+
+So the adapter **quantises at the boundary** to f32:
+`Buffer.writeFloatLE` on the way in, `Buffer.readFloatLE` on the
+way out.  Values round to ~7 decimal digits at each crossing.
+
+The parity tests then use a **combined absolute + relative
+tolerance** rather than exact equality:
+`|actual - expected| <= 1e-5 + 1e-5 * |expected|`.  Tracking
+f32 precision: tighter for small values (where 1e-5 absolute
+dominates), looser for large values (where 1e-5 relative
+dominates, ~1e-2 for values around 1000).
+
+Two reasons this is acceptable for MX08's scope:
+
+* **Downstream consumers already use f32-precision workloads** —
+  cas-matrix's concrete-number fast path, blas-library, the
+  single/two-layer network demos all live well within f32's
+  ~7-digit window.
+* **Future MX10 (gated by profiling) closes the gap** by adding
+  F64 support to `matrix-cpu` and refactoring `Matrix` to
+  flat-storage `Float64Array`.  At that point precision becomes
+  bit-exact again.
 
 ### Why a single-op graph per call?
 
@@ -299,8 +321,8 @@ equivalence within f64 tolerance.
 | Phase | Lands | Status |
 |-------|-------|--------|
 | 0     | This spec.                                                                                                                                                  | **this PR** |
-| 1     | Split `CpuMatrixBackend` from `src/matrix.ts` into `src/backends/cpu-pure-ts.ts` with zero behaviour change.  Re-export from `matrix.ts` to keep public API stable.  All existing tests pass unchanged. | pending |
-| 2     | Add `src/backends/cpu-rust-napi.ts` + `src/entry-node.ts` + `src/entry-browser.ts` + the `exports` conditional in `package.json`.  Add `parity.test.ts` proving numerical equivalence.  Add `@coding-adventures/matrix-rust-napi` as a `file:` dep.  Update README to document the env routing. | pending |
+| 1     | Split `CpuMatrixBackend` from `src/matrix.ts` into `src/backends/cpu-pure-ts.ts` with zero behaviour change.  Re-export from `matrix.ts` to keep public API stable.  All existing tests pass unchanged. | shipped (#3562) |
+| 2     | Add `src/backends/cpu-rust-napi.ts` + `src/entry-node.ts` + `src/entry-browser.ts` + the `exports` conditional in `package.json`.  Add `parity.test.ts` proving numerical equivalence within f32 precision tolerance.  The adapter `require()`s the `matrix_rust_napi.node` artifact directly from the Rust crate (not via the ESM-only `@coding-adventures/matrix-rust-napi` TS wrapper, which CommonJS consumers can't load).  Update spec to record the f32 quantisation. | **this PR** |
 | 3     | Per-downstream-package verification.  For each of cas-matrix, neural-graph-vm, single-layer-network, two-layer-network, blas-library, network-stack: run `npx vitest run` in the package; assert nothing breaks.  No source change needed (that's the whole point).  Land as 6 individual one-line CHANGELOG bumps. | pending |
 | 4     | (Optional, profile-driven.)  Optimize the per-op shim — cache `Graph` instances by shape, switch to per-call JSON cache.                                                                                                                       | pending |
 
