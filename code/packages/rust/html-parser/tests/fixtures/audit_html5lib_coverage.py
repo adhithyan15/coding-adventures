@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -107,7 +108,17 @@ def main() -> int:
     else:
         print_report(report, upstream_root)
 
-    if missing_tree or missing_tokenizer or normalized_skipped:
+    sys.stdout.flush()
+    expectation_mismatches = collect_expectation_mismatches(report, args)
+    for mismatch in expectation_mismatches:
+        print(f"expectation mismatch: {mismatch}", file=sys.stderr)
+
+    if (
+        missing_tree
+        or missing_tokenizer
+        or normalized_skipped
+        or expectation_mismatches
+    ):
         return 1
     return 0
 
@@ -135,6 +146,36 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=20,
         help="Maximum missing case sources to include in the report.",
+    )
+    parser.add_argument(
+        "--expect-tree-upstream-cases",
+        type=int,
+        help="Require the upstream tree-construction case count to match.",
+    )
+    parser.add_argument(
+        "--expect-tree-local-cases",
+        type=int,
+        help="Require the checked-in tree-construction case count to match.",
+    )
+    parser.add_argument(
+        "--expect-tokenizer-upstream-cases",
+        type=int,
+        help="Require the upstream tokenizer case count to match.",
+    )
+    parser.add_argument(
+        "--expect-tokenizer-local-raw-cases",
+        type=int,
+        help="Require the checked-in raw tokenizer case count to match.",
+    )
+    parser.add_argument(
+        "--expect-normalized-cases",
+        type=int,
+        help="Require the normalized tokenizer case count to match.",
+    )
+    parser.add_argument(
+        "--expect-normalized-skipped",
+        type=int,
+        help="Require the normalized tokenizer skipped-case count to match.",
     )
     return parser.parse_args()
 
@@ -290,6 +331,51 @@ def missing_cases(
 
 def stable_signature(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def collect_expectation_mismatches(
+    report: dict[str, Any], args: argparse.Namespace
+) -> list[str]:
+    tree = report["tree_construction"]
+    tokenizer = report["tokenizer"]
+    checks = [
+        (
+            "tree-construction upstream cases",
+            tree["upstream_cases"],
+            args.expect_tree_upstream_cases,
+        ),
+        (
+            "tree-construction local cases",
+            tree["local_cases"],
+            args.expect_tree_local_cases,
+        ),
+        (
+            "tokenizer upstream cases",
+            tokenizer["upstream_cases"],
+            args.expect_tokenizer_upstream_cases,
+        ),
+        (
+            "tokenizer local raw cases",
+            tokenizer["local_raw_cases"],
+            args.expect_tokenizer_local_raw_cases,
+        ),
+        (
+            "tokenizer normalized cases",
+            tokenizer["normalized_cases"],
+            args.expect_normalized_cases,
+        ),
+        (
+            "tokenizer normalized skipped",
+            tokenizer["normalized_skipped"],
+            args.expect_normalized_skipped,
+        ),
+    ]
+
+    mismatches = []
+    for label, actual, expected in checks:
+        if expected is not None and actual != expected:
+            mismatches.append(f"{label}: expected {expected}, got {actual}")
+    return mismatches
 
 
 def print_report(report: dict[str, Any], upstream_root: Path) -> None:

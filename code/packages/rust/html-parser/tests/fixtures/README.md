@@ -22,6 +22,20 @@ The command exits nonzero if any upstream tree-construction or tokenizer source
 case is missing, or if the normalized tokenizer fixture still has skipped
 runtime gaps.
 
+Use the expectation flags when the audit should also pin the exact upstream and
+checked-in corpus sizes used by the current compliance snapshot:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
+  /path/to/html5lib-tests \
+  --expect-tree-upstream-cases 1778 \
+  --expect-tree-local-cases 2485 \
+  --expect-tokenizer-upstream-cases 6806 \
+  --expect-tokenizer-local-raw-cases 7015 \
+  --expect-normalized-cases 7242 \
+  --expect-normalized-skipped 0
+```
+
 `whatwg-tree-insertion-audit.json` is a generated index over the high-signal
 tree-construction families inside `html5lib-tree-construction-smoke.dat`:
 adoption-agency formatting recovery, table insertion and foster parenting,

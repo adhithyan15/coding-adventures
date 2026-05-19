@@ -101,6 +101,10 @@ binary while production code continues to link only static Rust source.
   exercise the normalization path toward broader upstream corpora
 - `normalize_html5lib_fixtures.py`: importer that lowers supported raw
   html5lib-style tokenizer cases into Venture's portable fixture schema
+- the parser fixture audit can pin the current html5lib tokenizer counts with
+  `--expect-tokenizer-upstream-cases 6806`,
+  `--expect-tokenizer-local-raw-cases 7015`,
+  `--expect-normalized-cases 7242`, and `--expect-normalized-skipped 0`
 - `generate_whatwg_entities_fixture.py`: importer that lowers the HTML
   Standard's `entities.json` table into the checked-in `whatwg-entities.json`
   fixture

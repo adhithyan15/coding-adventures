@@ -80,6 +80,20 @@ The audit fails if an upstream tree-construction case is missing, if an
 upstream tokenizer case is missing from the raw mirrored tokenizer corpus, or
 if the normalized tokenizer corpus records skipped cases.
 
+For CI jobs that need to catch accidental fixture drift as well as missing
+coverage, the audit can pin the current corpus counts:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
+  /path/to/html5lib-tests \
+  --expect-tree-upstream-cases 1778 \
+  --expect-tree-local-cases 2485 \
+  --expect-tokenizer-upstream-cases 6806 \
+  --expect-tokenizer-local-raw-cases 7015 \
+  --expect-normalized-cases 7242 \
+  --expect-normalized-skipped 0
+```
+
 For sharper parser regression reporting, the generated
 `tests/fixtures/whatwg-tree-insertion-audit.json` fixture indexes the
 adoption-agency, table/foster-parenting, template, foreign-content fragment,
