@@ -4,6 +4,31 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — Grid sticky header + scroll container (WA5, UI27 §6/§7.3)
+
+- New compile-time keyword prop `sticky-header: true` on the Grid
+  primitive. When set, the emitter:
+  1. wraps the entire `<table>` in a `<div style={{ overflow: "auto",
+     maxHeight: ... }}>` scroll container;
+  2. adds `position: "sticky", top: 0, zIndex: 1` to `<thead>`.
+- The scroll container takes its bound from a new optional `total-height`
+  prop, which accepts either a literal number (`total-height: 600` →
+  `maxHeight: "600px"`) or a slot ref (`total-height: slot: viewport-px`
+  → `maxHeight: \`${viewportPx}px\``).
+- When `sticky-header: true` is set without `total-height`, the wrapper
+  still emits with `overflow: "auto"` only; the caller controls the
+  scroll bound via its own parent CSS.
+- `total-height` without `sticky-header` is a deliberate no-op — sticky
+  is the user-facing feature, total-height is its configuration.
+- Backwards-compatible: when `sticky-header` is absent or `false`, the
+  emitter produces byte-identical output to pre-WA5 (no wrapper, bare
+  `<thead>`).
+- 5 new tests: literal total-height wraps in scroll div, slot ref
+  total-height uses template literal, sticky without total-height omits
+  maxHeight but still stickies, no sticky keyword preserves pre-WA5
+  output, total-height without sticky is a no-op.
+- End-to-end smoke verified via mosaic-compile.
+
 ### Added — Grid row stripes via `data-row:even` / `:odd` (WA4, UI27 §5)
 
 - Authors can now declare alternating row colours by attaching `state
