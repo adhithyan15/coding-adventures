@@ -749,6 +749,11 @@ impl ToolAuditSupervisorDrainPlanSummary {
         self.inventory.requires_follow_up()
     }
 
+    /// Return the number of planned rows that need follow-up.
+    pub fn follow_up_record_count(&self) -> usize {
+        self.inventory.follow_up_records
+    }
+
     /// Return whether a matching drain run would advance the durable checkpoint.
     pub fn would_advance_checkpoint(&self) -> bool {
         self.has_pending_records()
@@ -790,6 +795,11 @@ impl ToolAuditSupervisorDrainSummary {
     /// Return whether any replayed row needs follow-up.
     pub fn requires_follow_up(&self) -> bool {
         self.replay.requires_follow_up()
+    }
+
+    /// Return the number of replayed rows that need follow-up.
+    pub fn follow_up_record_count(&self) -> usize {
+        self.replay.inventory.follow_up_records
     }
 
     /// Return whether the durable checkpoint advanced during this tick.
@@ -848,6 +858,14 @@ impl ToolAuditSupervisorDrainLoopSummary {
     /// Return whether any replayed row needs follow-up.
     pub fn requires_follow_up(&self) -> bool {
         self.ticks.iter().any(|tick| tick.requires_follow_up())
+    }
+
+    /// Return the number of replayed rows that need follow-up.
+    pub fn follow_up_record_count(&self) -> usize {
+        self.ticks
+            .iter()
+            .map(ToolAuditSupervisorDrainSummary::follow_up_record_count)
+            .sum()
     }
 
     /// Return whether any durable checkpoint advanced during the run.
@@ -915,6 +933,8 @@ impl ToolAuditSupervisorDrainRunReport {
             drain_ticks: self.drain.tick_count(),
             planned_records: self.plan.planned_records,
             drained_records: self.drain.drained_records,
+            planned_follow_up_records: self.plan.follow_up_record_count(),
+            drained_follow_up_records: self.drain.follow_up_record_count(),
             matches_planned_record_count: self.matches_planned_record_count(),
             reached_end_of_log: self.reached_end_of_log(),
             exhausted_tick_budget: self.exhausted_tick_budget(),
@@ -986,6 +1006,10 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub planned_records: usize,
     /// Total rows actually replayed into the sink.
     pub drained_records: usize,
+    /// Planned rows with follow-up pressure.
+    pub planned_follow_up_records: usize,
+    /// Replayed rows with follow-up pressure.
+    pub drained_follow_up_records: usize,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether the actual run reached the current end of the audit log.
@@ -2656,6 +2680,8 @@ mod tests {
         assert_eq!(report.plan.page_count(), 2);
         assert_eq!(report.plan.planned_records, 3);
         assert_eq!(report.drain.drained_records, 3);
+        assert_eq!(report.plan.follow_up_record_count(), 1);
+        assert_eq!(report.drain.follow_up_record_count(), 1);
         assert!(report.matches_planned_record_count());
         assert!(report.requires_follow_up());
         assert!(report.reached_end_of_log());
@@ -2670,6 +2696,8 @@ mod tests {
         assert!(!summary.requests_continuation());
         assert!(summary.routes_follow_up());
         assert!(!summary.requires_plan_drift_investigation());
+        assert_eq!(summary.planned_follow_up_records, 1);
+        assert_eq!(summary.drained_follow_up_records, 1);
         assert_eq!(
             report.last_checkpoint(),
             Some(&ToolAuditReadCheckpoint::new(151, "call_3"))
@@ -2939,6 +2967,8 @@ mod tests {
         assert_eq!(summary.drain_ticks, 1);
         assert_eq!(summary.planned_records, 2);
         assert_eq!(summary.drained_records, 2);
+        assert_eq!(summary.planned_follow_up_records, 0);
+        assert_eq!(summary.drained_follow_up_records, 0);
         assert!(summary.matches_planned_record_count);
         assert!(!summary.reached_end_of_log);
         assert!(summary.exhausted_tick_budget);
