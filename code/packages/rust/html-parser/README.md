@@ -90,6 +90,10 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_tree_inser
   --check
 ```
 
+Both the broad smoke test and the focused tree-insertion audit use the shared
+`tests/common` html5lib parser and DOM dump helpers, so new parser conformance
+fixtures exercise the same normalization path.
+
 ## Usage
 
 ```rust
