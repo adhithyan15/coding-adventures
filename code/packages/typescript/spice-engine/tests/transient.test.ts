@@ -118,6 +118,8 @@ describe("transient", () => {
     expectClose(result!.residualTolerance, 1.0e-6);
     expect(result!.withinTolerance).toBe(true);
     expectClose(result!.nodeResiduals.get("in"), 0.0);
+    expectClose(result!.branchResiduals.get("I(V1)"), 0.0);
+    expectClose(result!.maxAbsBranchResidual, 0.0);
     expectClose(result!.maxAbsResidual, 0.0);
   });
 

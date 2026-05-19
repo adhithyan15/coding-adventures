@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add branch-current closure residuals to `PssResidualResult` alongside
+  node-voltage residuals.
 - Add tolerance-aware PSS residual convergence reporting through
   `pss_residual_with_tolerance`, including `residual_tolerance` and
   `within_tolerance` on `PssResidualResult`.

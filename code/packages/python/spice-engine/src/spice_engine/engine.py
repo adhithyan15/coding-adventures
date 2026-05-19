@@ -294,6 +294,7 @@ class CornerSweepResult:
 class TransientPoint:
     time: float
     node_voltages: dict[str, float]
+    branch_currents: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass
@@ -326,6 +327,8 @@ class PssResidualResult:
     period: float
     time_step: float
     node_residuals: dict[str, float]
+    branch_residuals: dict[str, float]
+    max_abs_branch_residual: float
     max_abs_residual: float
     residual_tol: float
     within_tolerance: bool
@@ -2163,7 +2166,11 @@ def transient(
         return TransientResult(points=[], converged=False, method=method)
 
     points: list[TransientPoint] = [
-        TransientPoint(time=0.0, node_voltages=dict(op.node_voltages))
+        TransientPoint(
+            time=0.0,
+            node_voltages=dict(op.node_voltages),
+            branch_currents=dict(op.branch_currents),
+        )
     ]
 
     # ---- Reactive element history ------------------------------------------
@@ -2252,8 +2259,11 @@ def transient(
                 cap_voltages, cap_currents, ind_currents, ind_voltages,
             )
             cap_voltages_prev = dict(cap_voltages)
-            points.append(TransientPoint(time=t_actual,
-                                         node_voltages=dict(op.node_voltages)))
+            points.append(TransientPoint(
+                time=t_actual,
+                node_voltages=dict(op.node_voltages),
+                branch_currents=dict(op.branch_currents),
+            ))
 
             if lte < tol_lte / 8.0:
                 h = min(h * 2.0, _max_step)
@@ -2264,8 +2274,11 @@ def transient(
                 cap_voltages, cap_currents, ind_currents, ind_voltages,
             )
             cap_voltages_prev = dict(cap_voltages)
-            points.append(TransientPoint(time=t,
-                                         node_voltages=dict(op.node_voltages)))
+            points.append(TransientPoint(
+                time=t,
+                node_voltages=dict(op.node_voltages),
+                branch_currents=dict(op.branch_currents),
+            ))
 
         t += h
 
@@ -2309,24 +2322,37 @@ def pss_residual(
             period=period,
             time_step=time_step,
             node_residuals={},
+            branch_residuals={},
+            max_abs_branch_residual=0.0,
             max_abs_residual=0.0,
             residual_tol=residual_tol,
             within_tolerance=False,
             converged=False,
         )
 
-    start = result.points[0].node_voltages
-    end = result.points[-1].node_voltages
-    nodes = set(start) | set(end)
-    residuals = {
-        node: end.get(node, 0.0) - start.get(node, 0.0)
+    start_nodes = result.points[0].node_voltages
+    end_nodes = result.points[-1].node_voltages
+    nodes = set(start_nodes) | set(end_nodes)
+    node_residuals = {
+        node: end_nodes.get(node, 0.0) - start_nodes.get(node, 0.0)
         for node in sorted(nodes)
     }
-    max_abs = max((abs(value) for value in residuals.values()), default=0.0)
+    start_branches = result.points[0].branch_currents
+    end_branches = result.points[-1].branch_currents
+    branches = set(start_branches) | set(end_branches)
+    branch_residuals = {
+        branch: end_branches.get(branch, 0.0) - start_branches.get(branch, 0.0)
+        for branch in sorted(branches)
+    }
+    max_abs_node = max((abs(value) for value in node_residuals.values()), default=0.0)
+    max_abs_branch = max((abs(value) for value in branch_residuals.values()), default=0.0)
+    max_abs = max(max_abs_node, max_abs_branch)
     return PssResidualResult(
         period=period,
         time_step=time_step,
-        node_residuals=residuals,
+        node_residuals=node_residuals,
+        branch_residuals=branch_residuals,
+        max_abs_branch_residual=max_abs_branch,
         max_abs_residual=max_abs,
         residual_tol=residual_tol,
         within_tolerance=result.converged and max_abs <= residual_tol,

@@ -4,6 +4,9 @@
 
 ### Added
 
+- **PSS branch-current residuals** — `pss_residual` now includes one-period
+  branch-current closure alongside node-voltage closure.
+
 - **PSS residual convergence flag** — `pss_residual` now accepts a residual
   tolerance and reports whether one-period node closure is within tolerance.
 

@@ -1671,6 +1671,8 @@ pub struct PssResidualResult {
     pub period_seconds: f64,
     pub time_step_seconds: f64,
     pub node_residuals: BTreeMap<String, f64>,
+    pub branch_residuals: BTreeMap<String, f64>,
+    pub max_abs_branch_residual: f64,
     pub max_abs_residual: f64,
     pub residual_tolerance: f64,
     pub within_tolerance: bool,
@@ -2687,6 +2689,8 @@ pub fn pss_residual_with_tolerance(
             period_seconds: period,
             time_step_seconds: time_step,
             node_residuals: BTreeMap::new(),
+            branch_residuals: BTreeMap::new(),
+            max_abs_branch_residual: 0.0,
             max_abs_residual: 0.0,
             residual_tolerance,
             within_tolerance: false,
@@ -2717,10 +2721,39 @@ pub fn pss_residual_with_tolerance(
         node_residuals.insert(node, residual);
     }
 
+    let mut branches: Vec<String> = initial_solution
+        .branch_currents
+        .keys()
+        .chain(last.branch_currents.keys())
+        .cloned()
+        .collect();
+    branches.sort();
+    branches.dedup();
+
+    let mut branch_residuals = BTreeMap::new();
+    let mut max_abs_branch_residual = 0.0;
+    for branch in branches {
+        let residual = last.branch_currents.get(&branch).copied().unwrap_or(0.0)
+            - initial_solution
+                .branch_currents
+                .get(&branch)
+                .copied()
+                .unwrap_or(0.0);
+        if residual.abs() > max_abs_branch_residual {
+            max_abs_branch_residual = residual.abs();
+        }
+        branch_residuals.insert(branch, residual);
+    }
+    if max_abs_branch_residual > max_abs_residual {
+        max_abs_residual = max_abs_branch_residual;
+    }
+
     Ok(Some(PssResidualResult {
         period_seconds: period,
         time_step_seconds: time_step,
         node_residuals,
+        branch_residuals,
+        max_abs_branch_residual,
         max_abs_residual,
         residual_tolerance,
         within_tolerance: max_abs_residual <= residual_tolerance,
