@@ -1,9 +1,9 @@
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, create_html_lexer_with_context, html1_definition,
     html1_machine, html_skeleton_definition, html_skeleton_machine, lex_html, lex_html_fragment,
-    Attribute, DoctypeSeed, HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, Token,
-    HTML_DOCTYPE_TOKENIZER_STATES, HTML_FRAGMENT_TOKENIZER_STATES, HTML_SCRIPT_TOKENIZER_STATES,
-    HTML_TOKENIZER_STATES,
+    Attribute, DoctypeSeed, HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, StartTagSeed,
+    Token, HTML_DOCTYPE_TOKENIZER_STATES, HTML_FRAGMENT_TOKENIZER_STATES,
+    HTML_SCRIPT_TOKENIZER_STATES, HTML_START_TAG_TOKENIZER_STATES, HTML_TOKENIZER_STATES,
 };
 use state_machine::END_INPUT;
 
@@ -5065,6 +5065,18 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
         HTML_TOKENIZER_STATES.map(HtmlTokenizerState::as_machine_state),
         [
             "data",
+            "tag_open",
+            "end_tag_open",
+            "tag_name",
+            "before_attribute_name",
+            "attribute_name",
+            "after_attribute_name",
+            "before_attribute_value",
+            "attribute_value_double_quoted",
+            "attribute_value_single_quoted",
+            "attribute_value_unquoted",
+            "after_attribute_value_quoted",
+            "self_closing_start_tag",
             "rcdata",
             "rcdata_less_than_sign",
             "rcdata_end_tag_open",
@@ -5203,8 +5215,19 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
         HtmlTokenizerState::from_html5lib_state("RCDATA end tag open state"),
         Some(HtmlTokenizerState::RcdataEndTagOpen)
     );
+    assert_eq!(
+        HtmlTokenizerState::from_html5lib_state("Attribute value (double-quoted) state"),
+        Some(HtmlTokenizerState::AttributeValueDoubleQuoted)
+    );
     assert_eq!(HtmlTokenizerState::from_html5lib_state("Bogus state"), None);
 
+    assert!(HtmlTokenizerState::TagName.requires_start_tag_seed());
+    assert!(HtmlTokenizerState::BeforeAttributeName.requires_start_tag_seed());
+    assert!(HtmlTokenizerState::AttributeName.requires_start_tag_seed());
+    assert!(HtmlTokenizerState::BeforeAttributeValue.requires_start_tag_seed());
+    assert!(HtmlTokenizerState::SelfClosingStartTag.requires_start_tag_seed());
+    assert!(!HtmlTokenizerState::TagOpen.requires_start_tag_seed());
+    assert!(!HtmlTokenizerState::EndTagOpen.requires_start_tag_seed());
     assert!(HtmlTokenizerState::RcdataLessThanSign.requires_last_start_tag());
     assert!(HtmlTokenizerState::RcdataEndTagOpen.requires_last_start_tag());
     assert!(HtmlTokenizerState::RcdataEndTagName.requires_last_start_tag());
@@ -5274,6 +5297,21 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
             "doctype_system_identifier_single_quoted",
             "after_doctype_system_identifier",
             "bogus_doctype",
+        ]
+    );
+    assert_eq!(
+        HTML_START_TAG_TOKENIZER_STATES.map(HtmlTokenizerState::as_machine_state),
+        [
+            "tag_name",
+            "before_attribute_name",
+            "attribute_name",
+            "after_attribute_name",
+            "before_attribute_value",
+            "attribute_value_double_quoted",
+            "attribute_value_single_quoted",
+            "attribute_value_unquoted",
+            "after_attribute_value_quoted",
+            "self_closing_start_tag",
         ]
     );
 }
@@ -5407,6 +5445,153 @@ fn parser_facing_context_seeds_intermediate_text_states() {
             },
             Token::Eof
         ]
+    );
+}
+
+#[test]
+fn parser_facing_context_seeds_start_tag_continuation_states() {
+    let tag_name =
+        HtmlLexContext::start_tag_continuation(HtmlTokenizerState::TagName, StartTagSeed::new("s"))
+            .unwrap();
+    assert_eq!(
+        lex_html_fragment("pan class=x>tail", &tag_name).unwrap(),
+        vec![
+            Token::StartTag {
+                name: "span".to_string(),
+                attributes: vec![Attribute {
+                    name: "class".to_string(),
+                    value: "x".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("tail".to_string()),
+            Token::Eof,
+        ]
+    );
+
+    let before_attribute_name = HtmlLexContext::start_tag_continuation(
+        HtmlTokenizerState::BeforeAttributeName,
+        StartTagSeed::new("a").with_attribute("href", "/"),
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment(" title=home>", &before_attribute_name).unwrap(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "href".to_string(),
+                        value: "/".to_string(),
+                    },
+                    Attribute {
+                        name: "title".to_string(),
+                        value: "home".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+
+    let attribute_name = HtmlLexContext::start_tag_continuation(
+        HtmlTokenizerState::AttributeName,
+        StartTagSeed::new("button").with_current_attribute("aria-l", ""),
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("abel=Save>", &attribute_name).unwrap(),
+        vec![
+            Token::StartTag {
+                name: "button".to_string(),
+                attributes: vec![Attribute {
+                    name: "aria-label".to_string(),
+                    value: "Save".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+
+    let before_attribute_value = HtmlLexContext::start_tag_continuation(
+        HtmlTokenizerState::BeforeAttributeValue,
+        StartTagSeed::new("img").with_current_attribute("alt", ""),
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("\"Cover\">", &before_attribute_value).unwrap(),
+        vec![
+            Token::StartTag {
+                name: "img".to_string(),
+                attributes: vec![Attribute {
+                    name: "alt".to_string(),
+                    value: "Cover".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+
+    let after_attribute_value = HtmlLexContext::start_tag_continuation(
+        HtmlTokenizerState::AfterAttributeValueQuoted,
+        StartTagSeed::new("input").with_attribute("value", "A"),
+    )
+    .unwrap();
+    let mut lexer = create_html_lexer_with_context(&after_attribute_value).unwrap();
+    lexer.push("checked>").unwrap();
+    lexer.finish().unwrap();
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "input".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "value".to_string(),
+                        value: "A".to_string(),
+                    },
+                    Attribute {
+                        name: "checked".to_string(),
+                        value: "".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec!["missing-whitespace-between-attributes"]
+    );
+
+    let self_closing = HtmlLexContext::start_tag_continuation(
+        HtmlTokenizerState::SelfClosingStartTag,
+        StartTagSeed::new("br").self_closing(),
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment(">", &self_closing).unwrap(),
+        vec![
+            Token::StartTag {
+                name: "br".to_string(),
+                attributes: Vec::new(),
+                self_closing: true,
+            },
+            Token::Eof,
+        ]
+    );
+
+    assert_eq!(
+        HtmlLexContext::start_tag_continuation(HtmlTokenizerState::Data, StartTagSeed::new("p")),
+        None
     );
 }
 

@@ -1,4 +1,7 @@
-use coding_adventures_html_lexer::{create_html_lexer, Attribute, StartTagSeed, Token};
+use coding_adventures_html_lexer::{
+    create_html_lexer_with_context, Attribute, HtmlLexContext, HtmlTokenizerState, StartTagSeed,
+    Token,
+};
 use serde::Deserialize;
 
 const WHATWG_ATTRIBUTE_BOUNDARIES: &str = include_str!("fixtures/whatwg-attribute-boundaries.json");
@@ -73,13 +76,18 @@ fn whatwg_attribute_boundaries_cases_match_default_lexer() {
             "case `{}` should describe its attribute boundary",
             case.id
         );
-        let mut lexer = create_html_lexer().expect("HTML lexer should build");
-        lexer
-            .set_initial_state(&case.initial_state)
-            .unwrap_or_else(|error| {
-                panic!("case `{}` initial-state seed failed: {error:?}", case.id)
-            });
-        lexer.set_current_start_tag(start_tag_seed(&case.start_tag));
+        let initial_state = HtmlTokenizerState::from_machine_state(&case.initial_state)
+            .unwrap_or_else(|| panic!("case `{}` unknown initial state", case.id));
+        let context =
+            HtmlLexContext::start_tag_continuation(initial_state, start_tag_seed(&case.start_tag))
+                .unwrap_or_else(|| {
+                    panic!(
+                        "case `{}` initial state should accept a start-tag seed",
+                        case.id
+                    )
+                });
+        let mut lexer =
+            create_html_lexer_with_context(&context).expect("HTML lexer should build with context");
         lexer
             .push(&case.input)
             .unwrap_or_else(|error| panic!("case `{}` push failed: {error:?}", case.id));

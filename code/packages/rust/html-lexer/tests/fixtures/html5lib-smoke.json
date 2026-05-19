@@ -10,9 +10,17 @@
     "After DOCTYPE public keyword state",
     "After DOCTYPE system identifier state",
     "After DOCTYPE system keyword state",
+    "After attribute name state",
+    "After attribute value (quoted) state",
+    "Attribute name state",
+    "Attribute value (double-quoted) state",
+    "Attribute value (single-quoted) state",
+    "Attribute value (unquoted) state",
     "Before DOCTYPE name state",
     "Before DOCTYPE public identifier state",
     "Before DOCTYPE system identifier state",
+    "Before attribute name state",
+    "Before attribute value state",
     "Between DOCTYPE public and system identifiers state",
     "Bogus DOCTYPE state",
     "Bogus comment state",
@@ -54,6 +62,7 @@
     "DOCTYPE system keyword Y state",
     "Data state",
     "Decimal character reference state",
+    "End tag open state",
     "Hexadecimal character reference start state",
     "Hexadecimal character reference state",
     "Named character reference state",
@@ -96,7 +105,10 @@
     "Script data escaped state",
     "Script data less-than sign state",
     "Script data self-closing end tag state",
-    "Script data state"
+    "Script data state",
+    "Self-closing start tag state",
+    "Tag name state",
+    "Tag open state"
   ],
   "cases": [
     {

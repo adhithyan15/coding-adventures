@@ -16,6 +16,8 @@ SUPPORTED_INITIAL_STATES = {
     "CDATA section end state",
     "CDATA section state",
     "Character reference state",
+    "After attribute name state",
+    "After attribute value (quoted) state",
     "Bogus comment state",
     "Comment end bang state",
     "Comment end dash state",
@@ -28,6 +30,11 @@ SUPPORTED_INITIAL_STATES = {
     "Comment start state",
     "Comment state",
     "Data state",
+    "End tag open state",
+    "Attribute name state",
+    "Attribute value (double-quoted) state",
+    "Attribute value (single-quoted) state",
+    "Attribute value (unquoted) state",
     "DOCTYPE after keyword state",
     "DOCTYPE keyword C state",
     "DOCTYPE keyword E state",
@@ -58,6 +65,8 @@ SUPPORTED_INITIAL_STATES = {
     "Before DOCTYPE name state",
     "Before DOCTYPE public identifier state",
     "Before DOCTYPE system identifier state",
+    "Before attribute name state",
+    "Before attribute value state",
     "Between DOCTYPE public and system identifiers state",
     "Bogus DOCTYPE state",
     "Decimal character reference state",
@@ -104,6 +113,9 @@ SUPPORTED_INITIAL_STATES = {
     "Script data less-than sign state",
     "Script data self-closing end tag state",
     "Script data state",
+    "Self-closing start tag state",
+    "Tag name state",
+    "Tag open state",
 }
 
 LAST_START_TAG_INITIAL_STATES = {
@@ -229,6 +241,19 @@ CHARACTER_REFERENCE_RETURN_STATES = {
     "RCDATA state",
 }
 
+START_TAG_SEED_INITIAL_STATES = {
+    "After attribute name state",
+    "After attribute value (quoted) state",
+    "Attribute name state",
+    "Attribute value (double-quoted) state",
+    "Attribute value (single-quoted) state",
+    "Attribute value (unquoted) state",
+    "Before attribute name state",
+    "Before attribute value state",
+    "Self-closing start tag state",
+    "Tag name state",
+}
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -339,6 +364,21 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     if has_end_tag_seed and len(needs_end_tag_seed) != len(initial_states):
         return False, "currentEndTag/temporaryBuffer only supported for continuation states"
 
+    needs_start_tag_seed = [
+        initial_state
+        for initial_state in initial_states
+        if initial_state in START_TAG_SEED_INITIAL_STATES
+    ]
+    has_start_tag_seed = isinstance(test.get("currentStartTag"), dict)
+    if needs_start_tag_seed and not has_start_tag_seed:
+        return False, f"{needs_start_tag_seed[0]} requires currentStartTag"
+
+    if has_start_tag_seed and len(needs_start_tag_seed) != len(initial_states):
+        return False, "currentStartTag only supported for start-tag continuation states"
+
+    if has_start_tag_seed and (has_end_tag_seed or has_partial_end_tag_seed):
+        return False, "currentStartTag cannot be combined with end-tag continuation context"
+
     needs_character_reference_seed = [
         initial_state
         for initial_state in initial_states
@@ -378,10 +418,11 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     if has_comment_seed and (
         has_end_tag_seed
         or has_partial_end_tag_seed
+        or has_start_tag_seed
         or has_character_reference_seed
         or has_partial_character_reference_seed
     ):
-        return False, "currentComment cannot be combined with end-tag continuation context"
+        return False, "currentComment cannot be combined with other current-token context"
 
     needs_doctype_seed = [
         initial_state
@@ -398,6 +439,7 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     if has_doctype_seed and (
         has_end_tag_seed
         or has_partial_end_tag_seed
+        or has_start_tag_seed
         or has_comment_seed
         or has_character_reference_seed
         or has_partial_character_reference_seed
@@ -483,6 +525,10 @@ def normalize_case(
     current_end_tag = test.get("currentEndTag")
     if current_end_tag is not None:
         normalized["current_end_tag"] = current_end_tag
+
+    current_start_tag = test.get("currentStartTag")
+    if current_start_tag is not None:
+        normalized["current_start_tag"] = current_start_tag
 
     temporary_buffer = test.get("temporaryBuffer")
     if temporary_buffer is not None:

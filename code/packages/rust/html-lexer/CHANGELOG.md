@@ -68,6 +68,13 @@ documented in this file.
   end-tag-open/name, NULL, EOF, and literal markup recovery.
 - A generated WHATWG tokenizer attribute boundary fixture and Rust conformance
   test that pins seeded start-tag and current-attribute continuation recovery.
+- Parser/importer-facing seeded start-tag continuation contexts, including
+  tag-name, before/after attribute name, before attribute value,
+  quoted/unquoted attribute value, and self-closing substates with
+  `StartTagSeed` current-token seeding through `HtmlLexContext`.
+- html5lib-style smoke metadata for generic tag-open, tag-name, and seeded
+  start-tag/attribute continuation states, keeping the normalizer's supported
+  state set aligned with `HTML_TOKENIZER_STATES`.
 - A generated WHATWG tokenizer script escape boundary fixture and Rust
   conformance test that pins escaped and double-escaped script data, escape
   start/end delimiters, EOF diagnostics, NULL replacement, and seeded

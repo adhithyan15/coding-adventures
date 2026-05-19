@@ -25,6 +25,18 @@ pub enum HtmlScriptingMode {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HtmlTokenizerState {
     Data,
+    TagOpen,
+    EndTagOpen,
+    TagName,
+    BeforeAttributeName,
+    AttributeName,
+    AfterAttributeName,
+    BeforeAttributeValue,
+    AttributeValueDoubleQuoted,
+    AttributeValueSingleQuoted,
+    AttributeValueUnquoted,
+    AfterAttributeValueQuoted,
+    SelfClosingStartTag,
     Rcdata,
     RcdataLessThanSign,
     RcdataEndTagOpen,
@@ -119,8 +131,20 @@ pub enum HtmlTokenizerState {
 }
 
 /// Tokenizer states that are valid parser-facing entry points.
-pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 92] = [
+pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 104] = [
     HtmlTokenizerState::Data,
+    HtmlTokenizerState::TagOpen,
+    HtmlTokenizerState::EndTagOpen,
+    HtmlTokenizerState::TagName,
+    HtmlTokenizerState::BeforeAttributeName,
+    HtmlTokenizerState::AttributeName,
+    HtmlTokenizerState::AfterAttributeName,
+    HtmlTokenizerState::BeforeAttributeValue,
+    HtmlTokenizerState::AttributeValueDoubleQuoted,
+    HtmlTokenizerState::AttributeValueSingleQuoted,
+    HtmlTokenizerState::AttributeValueUnquoted,
+    HtmlTokenizerState::AfterAttributeValueQuoted,
+    HtmlTokenizerState::SelfClosingStartTag,
     HtmlTokenizerState::Rcdata,
     HtmlTokenizerState::RcdataLessThanSign,
     HtmlTokenizerState::RcdataEndTagOpen,
@@ -215,7 +239,19 @@ pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 92] = [
 ];
 
 /// Tokenizer states used for parser-controlled text or foreign-content fragments.
-pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 91] = [
+pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 103] = [
+    HtmlTokenizerState::TagOpen,
+    HtmlTokenizerState::EndTagOpen,
+    HtmlTokenizerState::TagName,
+    HtmlTokenizerState::BeforeAttributeName,
+    HtmlTokenizerState::AttributeName,
+    HtmlTokenizerState::AfterAttributeName,
+    HtmlTokenizerState::BeforeAttributeValue,
+    HtmlTokenizerState::AttributeValueDoubleQuoted,
+    HtmlTokenizerState::AttributeValueSingleQuoted,
+    HtmlTokenizerState::AttributeValueUnquoted,
+    HtmlTokenizerState::AfterAttributeValueQuoted,
+    HtmlTokenizerState::SelfClosingStartTag,
     HtmlTokenizerState::Rcdata,
     HtmlTokenizerState::RcdataLessThanSign,
     HtmlTokenizerState::RcdataEndTagOpen,
@@ -373,11 +409,37 @@ pub const HTML_DOCTYPE_TOKENIZER_STATES: [HtmlTokenizerState; 32] = [
     HtmlTokenizerState::BogusDoctype,
 ];
 
+/// Tokenizer states that resume an already-started start tag.
+pub const HTML_START_TAG_TOKENIZER_STATES: [HtmlTokenizerState; 10] = [
+    HtmlTokenizerState::TagName,
+    HtmlTokenizerState::BeforeAttributeName,
+    HtmlTokenizerState::AttributeName,
+    HtmlTokenizerState::AfterAttributeName,
+    HtmlTokenizerState::BeforeAttributeValue,
+    HtmlTokenizerState::AttributeValueDoubleQuoted,
+    HtmlTokenizerState::AttributeValueSingleQuoted,
+    HtmlTokenizerState::AttributeValueUnquoted,
+    HtmlTokenizerState::AfterAttributeValueQuoted,
+    HtmlTokenizerState::SelfClosingStartTag,
+];
+
 impl HtmlTokenizerState {
     /// Machine-state identifier used by the generated static lexer.
     pub fn as_machine_state(self) -> &'static str {
         match self {
             Self::Data => "data",
+            Self::TagOpen => "tag_open",
+            Self::EndTagOpen => "end_tag_open",
+            Self::TagName => "tag_name",
+            Self::BeforeAttributeName => "before_attribute_name",
+            Self::AttributeName => "attribute_name",
+            Self::AfterAttributeName => "after_attribute_name",
+            Self::BeforeAttributeValue => "before_attribute_value",
+            Self::AttributeValueDoubleQuoted => "attribute_value_double_quoted",
+            Self::AttributeValueSingleQuoted => "attribute_value_single_quoted",
+            Self::AttributeValueUnquoted => "attribute_value_unquoted",
+            Self::AfterAttributeValueQuoted => "after_attribute_value_quoted",
+            Self::SelfClosingStartTag => "self_closing_start_tag",
             Self::Rcdata => "rcdata",
             Self::RcdataLessThanSign => "rcdata_less_than_sign",
             Self::RcdataEndTagOpen => "rcdata_end_tag_open",
@@ -484,6 +546,18 @@ impl HtmlTokenizerState {
     pub fn as_html5lib_state(self) -> &'static str {
         match self {
             Self::Data => "Data state",
+            Self::TagOpen => "Tag open state",
+            Self::EndTagOpen => "End tag open state",
+            Self::TagName => "Tag name state",
+            Self::BeforeAttributeName => "Before attribute name state",
+            Self::AttributeName => "Attribute name state",
+            Self::AfterAttributeName => "After attribute name state",
+            Self::BeforeAttributeValue => "Before attribute value state",
+            Self::AttributeValueDoubleQuoted => "Attribute value (double-quoted) state",
+            Self::AttributeValueSingleQuoted => "Attribute value (single-quoted) state",
+            Self::AttributeValueUnquoted => "Attribute value (unquoted) state",
+            Self::AfterAttributeValueQuoted => "After attribute value (quoted) state",
+            Self::SelfClosingStartTag => "Self-closing start tag state",
             Self::Rcdata => "RCDATA state",
             Self::RcdataLessThanSign => "RCDATA less-than sign state",
             Self::RcdataEndTagOpen => "RCDATA end tag open state",
@@ -642,6 +716,11 @@ impl HtmlTokenizerState {
         )
     }
 
+    /// Return whether this state resumes an already-started start tag.
+    pub fn requires_start_tag_seed(self) -> bool {
+        HTML_START_TAG_TOKENIZER_STATES.contains(&self)
+    }
+
     /// Return whether this state can receive recovered character-reference text.
     pub fn is_character_reference_return_state(self) -> bool {
         matches!(self, Self::Data | Self::Rcdata)
@@ -720,6 +799,7 @@ impl HtmlTokenizerState {
 pub struct HtmlLexContext {
     pub initial_state: HtmlTokenizerState,
     pub last_start_tag: Option<String>,
+    pub current_start_tag: Option<StartTagSeed>,
     pub current_end_tag: Option<String>,
     pub current_comment: Option<String>,
     pub current_doctype: Option<DoctypeSeed>,
@@ -732,6 +812,7 @@ impl HtmlLexContext {
         Self {
             initial_state,
             last_start_tag: None,
+            current_start_tag: None,
             current_end_tag: None,
             current_comment: None,
             current_doctype: None,
@@ -777,6 +858,11 @@ impl HtmlLexContext {
         self
     }
 
+    pub fn with_current_start_tag(mut self, seed: StartTagSeed) -> Self {
+        self.current_start_tag = Some(seed);
+        self
+    }
+
     pub fn with_current_comment(mut self, data: impl Into<String>) -> Self {
         self.current_comment = Some(data.into());
         self
@@ -800,6 +886,7 @@ impl HtmlLexContext {
     pub fn is_data(&self) -> bool {
         self.initial_state == HtmlTokenizerState::Data
             && self.last_start_tag.is_none()
+            && self.current_start_tag.is_none()
             && self.current_end_tag.is_none()
             && self.current_comment.is_none()
             && self.current_doctype.is_none()
@@ -819,6 +906,23 @@ impl HtmlLexContext {
     ) -> Option<Self> {
         if initial_state.requires_comment_seed() {
             Some(Self::new(initial_state).with_current_comment(data))
+        } else {
+            None
+        }
+    }
+
+    /// Return a start-tag tokenizer continuation context.
+    ///
+    /// These states resume after the tokenizer has already created a start-tag
+    /// token and, for attribute states, possibly an in-progress current
+    /// attribute. The seed carries the committed start-tag name, attributes,
+    /// self-closing marker, and current attribute data accumulated so far.
+    pub fn start_tag_continuation(
+        initial_state: HtmlTokenizerState,
+        seed: StartTagSeed,
+    ) -> Option<Self> {
+        if initial_state.requires_start_tag_seed() {
+            Some(Self::new(initial_state).with_current_start_tag(seed))
         } else {
             None
         }
@@ -939,7 +1043,9 @@ pub fn apply_html_lex_context(lexer: &mut HtmlLexer, context: &HtmlLexContext) -
     } else {
         lexer.clear_last_start_tag();
     }
-    if let Some(current_end_tag) = context.current_end_tag.as_deref() {
+    if let Some(current_start_tag) = context.current_start_tag.as_ref() {
+        lexer.set_current_start_tag(current_start_tag.clone());
+    } else if let Some(current_end_tag) = context.current_end_tag.as_deref() {
         lexer.set_current_end_tag(current_end_tag);
     } else if let Some(current_comment) = context.current_comment.as_deref() {
         lexer.set_current_comment(current_comment);

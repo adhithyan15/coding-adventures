@@ -1,6 +1,7 @@
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, html1_machine, html_skeleton_machine, Attribute,
-    DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlTokenizerState, Token, HTML_TOKENIZER_STATES,
+    DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlTokenizerState, StartTagSeed, Token,
+    HTML_TOKENIZER_STATES,
 };
 use serde::Deserialize;
 use serde_json::Value;
@@ -33,6 +34,8 @@ struct FixtureCase {
     #[serde(default)]
     last_start_tag: Option<String>,
     #[serde(default)]
+    current_start_tag: Option<FixtureStartTagSeed>,
+    #[serde(default)]
     current_end_tag: Option<String>,
     #[serde(default)]
     current_comment: Option<String>,
@@ -57,6 +60,25 @@ struct FixtureDoctypeSeed {
     force_quirks: bool,
 }
 
+#[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
+struct FixtureStartTagSeed {
+    name: String,
+    #[serde(default)]
+    attributes: Vec<FixtureAttribute>,
+    #[serde(default)]
+    self_closing: bool,
+    #[serde(default)]
+    current_attribute: Option<FixtureAttribute>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
+struct FixtureAttribute {
+    name: String,
+    value: String,
+}
+
 #[derive(Debug, Deserialize)]
 struct Html5libTokenizerFile {
     tests: Vec<Html5libTokenizerTest>,
@@ -72,6 +94,8 @@ struct Html5libTokenizerTest {
     initial_states: Vec<String>,
     #[serde(default, rename = "lastStartTag")]
     last_start_tag: Option<String>,
+    #[serde(default, rename = "currentStartTag")]
+    current_start_tag: Option<FixtureStartTagSeed>,
     #[serde(default, rename = "currentEndTag")]
     current_end_tag: Option<String>,
     #[serde(default, rename = "temporaryBuffer")]
@@ -421,6 +445,7 @@ fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
     match case.initial_state.as_deref() {
         None => {
             case.last_start_tag.is_none()
+                && case.current_start_tag.is_none()
                 && case.current_end_tag.is_none()
                 && case.current_comment.is_none()
                 && case.current_doctype.is_none()
@@ -433,6 +458,7 @@ fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
             };
             let has_end_tag_seed =
                 case.current_end_tag.is_some() && case.temporary_buffer.is_some();
+            let has_start_tag_seed = case.current_start_tag.is_some();
             let has_comment_seed = case.current_comment.is_some();
             let has_doctype_seed = case.current_doctype.is_some();
             let has_character_reference_seed =
@@ -446,6 +472,7 @@ fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
                     && return_state == Some(HtmlTokenizerState::Rcdata));
             needs_last_start_tag == case.last_start_tag.is_some()
                 && state.requires_end_tag_seed() == has_end_tag_seed
+                && state.requires_start_tag_seed() == has_start_tag_seed
                 && state.requires_comment_seed() == has_comment_seed
                 && state.requires_doctype_seed() == has_doctype_seed
                 && state.requires_character_reference_seed() == has_character_reference_seed
@@ -454,10 +481,12 @@ fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
                     || (case.current_end_tag.is_none() && case.temporary_buffer.is_none()))
                 && (!has_doctype_seed
                     || (case.current_end_tag.is_none()
+                        && case.current_start_tag.is_none()
                         && case.current_comment.is_none()
                         && case.temporary_buffer.is_none()))
                 && (!has_character_reference_seed
                     || (case.current_end_tag.is_none()
+                        && case.current_start_tag.is_none()
                         && case.current_comment.is_none()
                         && case.current_doctype.is_none()
                         && return_state
@@ -546,6 +575,9 @@ fn configure_lexer_for_case(
     if let Some(last_start_tag) = case.last_start_tag.as_deref() {
         context = context.with_last_start_tag(last_start_tag);
     }
+    if let Some(current_start_tag) = case.current_start_tag.as_ref() {
+        context = context.with_current_start_tag(start_tag_seed(current_start_tag));
+    }
     if let Some(current_end_tag) = case.current_end_tag.as_deref() {
         context = context.with_current_end_tag(current_end_tag);
     }
@@ -571,6 +603,24 @@ fn configure_lexer_for_case(
         context = context.with_return_state(return_state);
     }
     apply_html_lex_context(lexer, &context)
+}
+
+fn start_tag_seed(seed: &FixtureStartTagSeed) -> StartTagSeed {
+    StartTagSeed {
+        name: seed.name.clone(),
+        attributes: seed.attributes.iter().cloned().map(Into::into).collect(),
+        self_closing: seed.self_closing,
+        current_attribute: seed.current_attribute.clone().map(Into::into),
+    }
+}
+
+impl From<FixtureAttribute> for Attribute {
+    fn from(attribute: FixtureAttribute) -> Self {
+        Self {
+            name: attribute.name,
+            value: attribute.value,
+        }
+    }
 }
 
 fn token_summary(token: Token) -> String {
