@@ -1718,6 +1718,14 @@ pub struct PssNewtonUpdateResult {
     pub update_l2_norm: f64,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct PssNewtonCandidateResult {
+    pub update: PssNewtonUpdateResult,
+    pub candidate_circuit: Circuit,
+    pub candidate_state_vector: Vec<PssStateEntry>,
+    pub candidate_residual: PssResidualResult,
+}
+
 impl DcResult {
     pub fn voltage(&self, node: &str) -> Option<f64> {
         if is_ground(node) {
@@ -2871,6 +2879,32 @@ fn with_perturbed_pss_state(
     perturbed
 }
 
+fn with_pss_state_vector(circuit: &Circuit, state_vector: &[PssStateEntry]) -> Circuit {
+    let mut candidate = circuit.clone();
+    for element in &mut candidate.elements {
+        match element {
+            Element::Capacitor(capacitor) => {
+                if let Some(state) = state_vector
+                    .iter()
+                    .find(|state| state.kind == "capacitor_voltage" && state.name == capacitor.name)
+                {
+                    capacitor.initial_voltage = state.value;
+                }
+            }
+            Element::Inductor(inductor) => {
+                if let Some(state) = state_vector
+                    .iter()
+                    .find(|state| state.kind == "inductor_current" && state.name == inductor.name)
+                {
+                    inductor.initial_current = state.value;
+                }
+            }
+            _ => {}
+        }
+    }
+    candidate
+}
+
 pub fn pss_residual_jacobian(
     circuit: &Circuit,
     steps_per_period: usize,
@@ -3037,6 +3071,48 @@ pub fn pss_newton_update_with_tolerance(
         state_updates,
         next_state_vector,
         update_l2_norm,
+    }))
+}
+
+pub fn pss_newton_candidate(
+    circuit: &Circuit,
+    steps_per_period: usize,
+) -> Result<Option<PssNewtonCandidateResult>, SpiceError> {
+    pss_newton_candidate_with_tolerance(circuit, steps_per_period, 1.0e-6, 1.0e-6)
+}
+
+pub fn pss_newton_candidate_with_tolerance(
+    circuit: &Circuit,
+    steps_per_period: usize,
+    residual_tolerance: f64,
+    perturbation: f64,
+) -> Result<Option<PssNewtonCandidateResult>, SpiceError> {
+    let Some(update) = pss_newton_update_with_tolerance(
+        circuit,
+        steps_per_period,
+        residual_tolerance,
+        perturbation,
+    )?
+    else {
+        return Ok(None);
+    };
+
+    let candidate_circuit = with_pss_state_vector(circuit, &update.next_state_vector);
+    let Some(candidate_residual) =
+        pss_residual_with_tolerance(&candidate_circuit, steps_per_period, residual_tolerance)?
+    else {
+        return Err(SpiceError::InvalidElement {
+            name: "pss_newton_candidate".to_string(),
+            reason: "candidate circuit no longer has an estimated period".to_string(),
+        });
+    };
+    let candidate_state_vector = pss_state_vector(&candidate_circuit);
+
+    Ok(Some(PssNewtonCandidateResult {
+        update,
+        candidate_circuit,
+        candidate_state_vector,
+        candidate_residual,
     }))
 }
 

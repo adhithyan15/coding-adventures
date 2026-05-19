@@ -1,7 +1,8 @@
 use spice_engine::{
-    estimate_period, pss_newton_update, pss_newton_update_with_tolerance, pss_residual,
-    pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance, transient, Capacitor, Cccs,
-    Ccvs, Circuit, CurrentSource, Element, ExpWaveform, Inductor, PssNewtonUpdateResult,
+    estimate_period, pss_newton_candidate_with_tolerance, pss_newton_update,
+    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
+    pss_residual_with_tolerance, transient, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element,
+    ExpWaveform, Inductor, PssNewtonCandidateResult, PssNewtonUpdateResult,
     PssResidualJacobianResult, PssResidualResult, PulseWaveform, PwlWaveform, Resistor,
     SinWaveform, SpiceError, VoltageSource, Waveform,
 };
@@ -219,6 +220,60 @@ fn pss_newton_update_reports_reactive_state_corrections() {
     );
     assert_close(result.update_l2_norm, result.state_updates[0].value.abs());
     assert!(result.state_updates[0].value.is_finite());
+}
+
+#[test]
+fn pss_newton_candidate_applies_reactive_state_update() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, 1_000.0)),
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "out", 1_000.0)));
+    circuit.add(Element::Capacitor(Capacitor::with_initial_voltage(
+        "C1", "out", "0", 1.0e-6, 0.1,
+    )));
+
+    let result = pss_newton_candidate_with_tolerance(&circuit, 32, 1.0e-6, 1.0e-5)
+        .unwrap()
+        .unwrap();
+
+    let _: PssNewtonCandidateResult = result.clone();
+    assert_eq!(result.update.next_state_vector[0].name, "C1");
+    assert_eq!(
+        result.candidate_state_vector,
+        result.update.next_state_vector
+    );
+    let candidate_cap = result
+        .candidate_circuit
+        .elements()
+        .iter()
+        .find_map(|element| match element {
+            Element::Capacitor(capacitor) if capacitor.name == "C1" => Some(capacitor),
+            _ => None,
+        })
+        .unwrap();
+    let original_cap = circuit
+        .elements()
+        .iter()
+        .find_map(|element| match element {
+            Element::Capacitor(capacitor) if capacitor.name == "C1" => Some(capacitor),
+            _ => None,
+        })
+        .unwrap();
+    assert_close(original_cap.initial_voltage, 0.1);
+    assert_close(
+        candidate_cap.initial_voltage,
+        result.update.next_state_vector[0].value,
+    );
+    assert_close(
+        result.candidate_residual.period_seconds,
+        result.update.jacobian.residual.period_seconds,
+    );
+    assert!(result.candidate_residual.residual_l2_norm.is_finite());
 }
 
 #[test]

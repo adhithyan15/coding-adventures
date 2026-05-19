@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `pss_newton_candidate`, which applies one least-squares Newton update to
+  reactive initial conditions and reports the candidate circuit plus its
+  refreshed one-period residual.
 - Add `pss_newton_update`, a least-squares Newton correction helper from the
   finite-difference residual Jacobian to reactive initial-condition updates.
 - Add `pss_residual_jacobian`, a forward finite-difference Jacobian from

@@ -106,6 +106,7 @@ from spice_engine import (
     NoiseEntry,
     NoisePoint,
     NoiseResult,
+    PssNewtonCandidateResult,
     PssNewtonUpdateResult,
     PssResidualJacobianResult,
     PssResidualResult,
@@ -130,6 +131,7 @@ from spice_engine import (
     estimate_period,
     mc_dc,
     noise_ac,
+    pss_newton_candidate,
     pss_newton_update,
     pss_residual_jacobian,
     pss_residual,
@@ -308,6 +310,41 @@ def test_pss_newton_update_reports_reactive_state_corrections() -> None:
     )
     assert result.update_l2_norm == pytest.approx(abs(result.state_updates[0].value))
     assert math.isfinite(result.state_updates[0].value)
+
+
+def test_pss_newton_candidate_applies_reactive_state_update() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(frequency=1_000.0),
+        )
+    )
+    c.add(Resistor("R1", "in", "out", 1_000.0))
+    c.add(Capacitor("C1", "out", "0", 1.0e-6, initial_voltage=0.1))
+
+    result = pss_newton_candidate(c, steps_per_period=32, perturbation=1.0e-5)
+
+    assert isinstance(result, PssNewtonCandidateResult)
+    assert result.update.next_state_vector[0].name == "C1"
+    assert result.candidate_state_vector == result.update.next_state_vector
+    candidate_cap = next(
+        element
+        for element in result.candidate_circuit.elements
+        if isinstance(element, Capacitor) and element.name == "C1"
+    )
+    original_cap = next(element for element in c.elements if isinstance(element, Capacitor))
+    assert original_cap.initial_voltage == pytest.approx(0.1)
+    assert candidate_cap.initial_voltage == pytest.approx(
+        result.update.next_state_vector[0].value
+    )
+    assert result.candidate_residual.period == pytest.approx(
+        result.update.jacobian.residual.period
+    )
+    assert math.isfinite(result.candidate_residual.residual_l2_norm)
 
 
 def test_pss_residual_requires_periodic_sources() -> None:

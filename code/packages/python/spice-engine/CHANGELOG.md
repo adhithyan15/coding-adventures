@@ -4,6 +4,10 @@
 
 ### Added
 
+- **PSS Newton candidate foothold** — `pss_newton_candidate` now applies one
+  least-squares Newton update to reactive initial conditions and reports the
+  candidate circuit plus its refreshed one-period residual.
+
 - **PSS Newton update foothold** — `pss_newton_update` now solves a
   least-squares Newton correction from the finite-difference residual
   Jacobian for reactive initial-condition updates.
