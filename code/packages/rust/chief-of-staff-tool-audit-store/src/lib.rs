@@ -209,6 +209,42 @@ where
         decode_stored_checkpoint(&record)
     }
 
+    /// Replay the next deterministic page for a named checkpoint and advance
+    /// that checkpoint after delivery.
+    pub fn replay_audits_from_checkpoint<T>(
+        &self,
+        checkpoint_name: &str,
+        limit: Option<usize>,
+        sink: &mut T,
+    ) -> Result<ToolAuditCheckpointReplaySummary, StorageError>
+    where
+        T: ToolAuditSink,
+    {
+        let starting_checkpoint = self
+            .fetch_checkpoint(checkpoint_name)?
+            .map(|stored| stored.checkpoint)
+            .unwrap_or_else(ToolAuditReadCheckpoint::beginning);
+        let page = self.query_audits_after_checkpoint(&starting_checkpoint, limit)?;
+        let replayed_records = page.len();
+        for record in page.records {
+            sink.record_tool_audit(record);
+        }
+        let stored_checkpoint = if replayed_records == 0 {
+            self.fetch_checkpoint(checkpoint_name)?
+        } else {
+            Some(self.advance_checkpoint(checkpoint_name, page.next_checkpoint.clone())?)
+        };
+
+        Ok(ToolAuditCheckpointReplaySummary {
+            checkpoint_name: checkpoint_name.to_string(),
+            starting_checkpoint,
+            next_checkpoint: page.next_checkpoint,
+            stored_checkpoint,
+            replayed_records,
+            inventory: page.inventory,
+        })
+    }
+
     /// Replay queried audit rows into another D18D audit sink.
     pub fn replay_audits<T>(
         &self,
@@ -327,6 +363,35 @@ pub struct ToolAuditStoredCheckpoint {
     pub checkpoint: ToolAuditReadCheckpoint,
     /// Storage timestamp for the checkpoint record.
     pub updated_at: u64,
+}
+
+/// Summary for replaying one named checkpoint page into a sink.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolAuditCheckpointReplaySummary {
+    /// Reader or supervisor checkpoint name used for replay.
+    pub checkpoint_name: String,
+    /// Checkpoint used to start this replay page.
+    pub starting_checkpoint: ToolAuditReadCheckpoint,
+    /// Checkpoint for the next replay call.
+    pub next_checkpoint: ToolAuditReadCheckpoint,
+    /// Durable checkpoint after replay, if a checkpoint exists.
+    pub stored_checkpoint: Option<ToolAuditStoredCheckpoint>,
+    /// Number of audit records replayed into the sink.
+    pub replayed_records: usize,
+    /// Payload-free summary of the replayed records.
+    pub inventory: ToolAuditStoreInventorySummary,
+}
+
+impl ToolAuditCheckpointReplaySummary {
+    /// Return whether no audit rows were replayed.
+    pub fn is_empty(&self) -> bool {
+        self.replayed_records == 0
+    }
+
+    /// Return whether any replayed row needs follow-up.
+    pub fn requires_follow_up(&self) -> bool {
+        self.inventory.requires_follow_up()
+    }
 }
 
 /// Payload-free summary for a batch audit write.
@@ -1218,6 +1283,88 @@ mod tests {
             second.next_checkpoint,
             ToolAuditReadCheckpoint::new(151, "call_2")
         );
+    }
+
+    #[test]
+    fn checkpointed_replay_advances_named_checkpoint() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                failed_record("call_2"),
+                sample_record("call_1"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let first = store
+            .replay_audits_from_checkpoint("supervisor", Some(2), &mut sink)
+            .unwrap();
+
+        assert_eq!(first.checkpoint_name, "supervisor");
+        assert_eq!(
+            first.starting_checkpoint,
+            ToolAuditReadCheckpoint::beginning()
+        );
+        assert_eq!(
+            first.next_checkpoint,
+            ToolAuditReadCheckpoint::new(120, "call_3")
+        );
+        assert_eq!(
+            first
+                .stored_checkpoint
+                .as_ref()
+                .map(|stored| &stored.checkpoint),
+            Some(&first.next_checkpoint)
+        );
+        assert_eq!(first.replayed_records, 2);
+        assert!(!first.requires_follow_up());
+        assert_eq!(
+            sink.records()
+                .iter()
+                .map(|record| record.call_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["call_1", "call_3"]
+        );
+
+        let second = store
+            .replay_audits_from_checkpoint("supervisor", Some(2), &mut sink)
+            .unwrap();
+
+        assert_eq!(second.starting_checkpoint, first.next_checkpoint);
+        assert_eq!(
+            second.next_checkpoint,
+            ToolAuditReadCheckpoint::new(151, "call_2")
+        );
+        assert_eq!(second.replayed_records, 1);
+        assert!(second.requires_follow_up());
+        assert_eq!(
+            sink.records()
+                .iter()
+                .map(|record| record.call_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["call_1", "call_3", "call_2"]
+        );
+    }
+
+    #[test]
+    fn checkpointed_replay_preserves_empty_checkpoint_state() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut sink = InMemoryToolAuditSink::new();
+
+        let empty = store
+            .replay_audits_from_checkpoint("supervisor", Some(10), &mut sink)
+            .unwrap();
+
+        assert!(empty.is_empty());
+        assert_eq!(
+            empty.starting_checkpoint,
+            ToolAuditReadCheckpoint::beginning()
+        );
+        assert_eq!(empty.next_checkpoint, ToolAuditReadCheckpoint::beginning());
+        assert_eq!(empty.stored_checkpoint, None);
+        assert!(sink.records().is_empty());
+        assert!(store.fetch_checkpoint("supervisor").unwrap().is_none());
     }
 
     #[test]
