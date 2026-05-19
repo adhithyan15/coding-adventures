@@ -898,11 +898,17 @@ impl ToolAuditSupervisorDrainRunReport {
         self.outcome().requires_scheduler_action()
     }
 
+    /// Return the recommended scheduler action for this drain run.
+    pub fn scheduler_action(&self) -> ToolAuditSupervisorDrainSchedulerAction {
+        self.outcome().scheduler_action()
+    }
+
     /// Return a payload-free, flattened summary for host logs and schedulers.
     pub fn summary(&self) -> ToolAuditSupervisorDrainRunSummary {
         ToolAuditSupervisorDrainRunSummary {
             checkpoint_name: self.plan.checkpoint_name.clone(),
             outcome: self.outcome(),
+            scheduler_action: self.scheduler_action(),
             max_records_per_tick: self.plan.max_records_per_tick,
             max_ticks: self.plan.max_ticks,
             planned_pages: self.plan.page_count(),
@@ -966,6 +972,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub checkpoint_name: String,
     /// Scheduler-facing classification for this run.
     pub outcome: ToolAuditSupervisorDrainRunOutcome,
+    /// Recommended host scheduler action for this run.
+    pub scheduler_action: ToolAuditSupervisorDrainSchedulerAction,
     /// Maximum rows each drain tick may replay.
     pub max_records_per_tick: usize,
     /// Maximum drain ticks requested for this run.
@@ -1000,7 +1008,12 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether this run outcome asks the scheduler to take action.
     pub fn requires_scheduler_action(&self) -> bool {
-        self.outcome.requires_scheduler_action()
+        self.scheduler_action.requires_scheduler_action()
+    }
+
+    /// Return the stable scheduler-action label for host logs.
+    pub fn scheduler_action_label(&self) -> &'static str {
+        self.scheduler_action.as_str()
     }
 
     /// Return whether no audit rows were replayed.
@@ -1048,14 +1061,59 @@ impl ToolAuditSupervisorDrainRunOutcome {
 
     /// Return whether the scheduler should take action for this outcome.
     pub fn requires_scheduler_action(self) -> bool {
-        matches!(
-            self,
-            Self::NeedsContinuation | Self::NeedsFollowUp | Self::PlanDiverged
-        )
+        self.scheduler_action().requires_scheduler_action()
+    }
+
+    /// Return the recommended scheduler action for this outcome.
+    pub fn scheduler_action(self) -> ToolAuditSupervisorDrainSchedulerAction {
+        match self {
+            Self::Idle | Self::CaughtUp => ToolAuditSupervisorDrainSchedulerAction::NoAction,
+            Self::NeedsContinuation => {
+                ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation
+            }
+            Self::NeedsFollowUp => ToolAuditSupervisorDrainSchedulerAction::RouteFollowUp,
+            Self::PlanDiverged => ToolAuditSupervisorDrainSchedulerAction::InvestigatePlanDrift,
+        }
     }
 }
 
 impl Display for ToolAuditSupervisorDrainRunOutcome {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Scheduler recommendation derived from a bounded supervisor drain outcome.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainSchedulerAction {
+    /// The run is terminal for now and needs no scheduler follow-up.
+    NoAction,
+    /// Schedule another bounded drain pass from the advanced checkpoint.
+    ScheduleContinuation,
+    /// Route replayed or planned follow-up pressure to the supervising host.
+    RouteFollowUp,
+    /// Investigate a mismatch between the preflight plan and actual drain.
+    InvestigatePlanDrift,
+}
+
+impl ToolAuditSupervisorDrainSchedulerAction {
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoAction => "no_action",
+            Self::ScheduleContinuation => "schedule_continuation",
+            Self::RouteFollowUp => "route_follow_up",
+            Self::InvestigatePlanDrift => "investigate_plan_drift",
+        }
+    }
+
+    /// Return whether the host scheduler needs to take an explicit action.
+    pub fn requires_scheduler_action(self) -> bool {
+        !matches!(self, Self::NoAction)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainSchedulerAction {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -2609,33 +2667,75 @@ mod tests {
     #[test]
     fn supervisor_drain_outcome_labels_are_stable_for_hosts() {
         let cases = [
-            (ToolAuditSupervisorDrainRunOutcome::Idle, "idle", false),
+            (
+                ToolAuditSupervisorDrainRunOutcome::Idle,
+                "idle",
+                ToolAuditSupervisorDrainSchedulerAction::NoAction,
+                false,
+            ),
             (
                 ToolAuditSupervisorDrainRunOutcome::CaughtUp,
                 "caught_up",
+                ToolAuditSupervisorDrainSchedulerAction::NoAction,
                 false,
             ),
             (
                 ToolAuditSupervisorDrainRunOutcome::NeedsContinuation,
                 "needs_continuation",
+                ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation,
                 true,
             ),
             (
                 ToolAuditSupervisorDrainRunOutcome::NeedsFollowUp,
                 "needs_follow_up",
+                ToolAuditSupervisorDrainSchedulerAction::RouteFollowUp,
                 true,
             ),
             (
                 ToolAuditSupervisorDrainRunOutcome::PlanDiverged,
                 "plan_diverged",
+                ToolAuditSupervisorDrainSchedulerAction::InvestigatePlanDrift,
                 true,
             ),
         ];
 
-        for (outcome, label, requires_action) in cases {
+        for (outcome, label, scheduler_action, requires_action) in cases {
             assert_eq!(outcome.as_str(), label);
             assert_eq!(outcome.to_string(), label);
+            assert_eq!(outcome.scheduler_action(), scheduler_action);
             assert_eq!(outcome.requires_scheduler_action(), requires_action);
+        }
+    }
+
+    #[test]
+    fn supervisor_drain_scheduler_action_labels_are_stable_for_hosts() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainSchedulerAction::NoAction,
+                "no_action",
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation,
+                "schedule_continuation",
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainSchedulerAction::RouteFollowUp,
+                "route_follow_up",
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainSchedulerAction::InvestigatePlanDrift,
+                "investigate_plan_drift",
+                true,
+            ),
+        ];
+
+        for (action, label, requires_action) in cases {
+            assert_eq!(action.as_str(), label);
+            assert_eq!(action.to_string(), label);
+            assert_eq!(action.requires_scheduler_action(), requires_action);
         }
     }
 
@@ -2661,6 +2761,10 @@ mod tests {
         );
         assert_eq!(report.outcome_label(), "needs_continuation");
         assert!(report.requires_scheduler_action());
+        assert_eq!(
+            report.scheduler_action(),
+            ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation
+        );
     }
 
     #[test]
@@ -2686,6 +2790,11 @@ mod tests {
             ToolAuditSupervisorDrainRunOutcome::NeedsContinuation
         );
         assert_eq!(summary.outcome_label(), "needs_continuation");
+        assert_eq!(
+            summary.scheduler_action,
+            ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation
+        );
+        assert_eq!(summary.scheduler_action_label(), "schedule_continuation");
         assert!(summary.requires_scheduler_action());
         assert_eq!(summary.max_records_per_tick, 2);
         assert_eq!(summary.max_ticks, 1);
@@ -2723,6 +2832,11 @@ mod tests {
             ToolAuditSupervisorDrainRunOutcome::PlanDiverged
         );
         assert_eq!(summary.outcome_label(), "plan_diverged");
+        assert_eq!(
+            summary.scheduler_action,
+            ToolAuditSupervisorDrainSchedulerAction::InvestigatePlanDrift
+        );
+        assert_eq!(summary.scheduler_action_label(), "investigate_plan_drift");
         assert!(!summary.matches_planned_record_count);
         assert!(summary.requires_scheduler_action());
     }
