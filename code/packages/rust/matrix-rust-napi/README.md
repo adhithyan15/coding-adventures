@@ -12,44 +12,64 @@ lands in Phase 2.
 
 ## What's here
 
-Two exported functions:
+Two exported functions and two classes:
 
 ```javascript
 const m = require("./matrix_rust_napi.node");
 
-// Phase 1 — JSON round-trip smoke (validates that the matrix-ir-json
-// schema survives the napi boundary).
-const roundTripped = m.graphRoundTripJson(jsonString);
-// jsonString -> matrix_ir::Graph -> jsonString
+// ── Phase 2b: recommended API — class-based, Buffer[] I/O ──
+//
+// Construct the Graph once, run it many times with raw Buffer I/O.
+// No JSON re-parsing per call, no hex encoding overhead.
+const graph = new m.Graph(jsonString);
+//  or:  m.Graph.fromJson(jsonString)   (static-method sugar)
 
-// Phase 2 — actually execute the graph on the Rust CPU executor.
-// Envelope shape:
-//   { "graph": <matrix-ir-json schema>,
-//     "inputs": [ "<lowercase-hex bytes>", ... ] }
-// Returns:
-//   { "outputs": [ "<lowercase-hex bytes>", ... ] }
+const summary = graph.describe();
+// "Graph(tensors=4, ops=3, inputs=1, outputs=1, constants=2)"
+
+const json = graph.toJson();
+// re-serialise back to the matrix-ir-json wire format
+
+const rt = new m.Runtime();
+//  or:  m.Runtime.create()             (static-method sugar)
+
+const outputs = rt.run(graph, [inputBuf1, inputBuf2]);
+// outputs is an Array<Buffer> — one Buffer per graph.outputs() tensor,
+// each containing the tensor's little-endian byte payload.
+
+// ── Phase 1: JSON-string utility — validation / debugging ──
+const roundTripped = m.graphRoundTripJson(jsonString);
+// Useful as a JSON-schema validator: throws if the graph JSON is malformed.
+
+// ── Phase 2: JSON-envelope alternative — CLI-friendly, no Buffers ──
+//
+// Kept as a Buffer-free path for environments where exchanging Node
+// `Buffer` objects is awkward (CLI tools that just want to JSON-pipe
+// graphs over stdin, language hosts that don't have a Buffer concept).
 const result = m.runGraphOnCpu(JSON.stringify({
   graph: { matrix_ir_version: 1, /* ... */ },
-  inputs: ["3f8000003f000000", /* ... */],   // hex-encoded f32 inputs
+  inputs: ["3f8000003f000000", /* hex-encoded f32 input */],
 }));
 const { outputs } = JSON.parse(result);
-// outputs[0] is a hex string of the first output tensor's bytes.
 ```
 
-`runGraphOnCpu` runs the full plan + allocate + upload + dispatch +
-download pipeline through `matrix-runtime` and `matrix-cpu`, with
-the planner's BufferIds rewritten to the executor's real BufferIds
-in place.
+The class-based API and the JSON-envelope API are semantically
+equivalent — they both flow through the same `run_graph_on_cpu`
+pure-Rust helper, which does the full plan → allocate → upload →
+dispatch → download pipeline through `matrix-runtime` and
+`matrix-cpu`.
 
-### Why hex-encoded inputs instead of `Buffer[]`?
+### Why the class-based API is preferred
 
-Per MX07 §"Phases", real `Buffer[]` marshalling is Phase 2b — it
-requires extending `node-bridge` with Buffer helpers (`napi_create_buffer`,
-`napi_get_buffer_info`, finalizer plumbing).  For Phase 2 we keep
-the napi surface as one string-in, string-out function (the same
-pattern as `graphRoundTripJson`), with hex bytes inside the JSON
-envelope.  The wire cost is 2× the raw bytes plus JSON overhead;
-fine for the proof-of-concept, replaced in Phase 2b.
+* **No JSON re-parse per call.**  `new Graph(json)` pays the parse
+  cost once; subsequent `rt.run(graph, ...)` calls reuse the parsed
+  value.  Critical when running the same graph in a hot loop.
+* **Raw bytes via `Buffer`.**  No hex encoding overhead.  Tensors
+  flow through as the same little-endian bytes the Rust executors
+  use natively.
+* **Mirrors the eventual Graph/Runtime API surface across other
+  language bindings** (`python-bridge`, `ruby-bridge`, etc. as the
+  workspace adds them).
 
 ## Why N-API instead of napi-rs?
 
@@ -73,8 +93,8 @@ been updated in this same PR to record the divergence.
 | Phase | Lands |
 |-------|-------|
 | 1 | `graphRoundTripJson(jsonString)` — round-trip smoke. |
-| 2 (this PR) | `runGraphOnCpu(envelopeJson)` — full plan + allocate + dispatch + download pipeline on `matrix-cpu`. JSON-envelope I/O (hex-encoded bytes). |
-| 2b | Replace JSON envelope with real `Buffer[]` marshalling (extend `node-bridge` with `napi_create_buffer` / `napi_get_buffer_info` helpers; bind `Graph` + `Runtime` as handle-based JS classes). |
+| 2 | `runGraphOnCpu(envelopeJson)` — full plan + allocate + dispatch + download pipeline on `matrix-cpu`. JSON-envelope I/O (hex-encoded bytes). |
+| 2b (this PR) | `Graph` + `Runtime` JS classes with `Buffer[]` I/O via the node-bridge Buffer helpers (added in PR #3529). |
 | 3 | `package.json` + workflow that builds the `.node` artifact on `darwin-arm64` and `linux-x64-gnu` and confirms it loads. |
 | 4 | TypeScript wrapper package with `node --test` smoke. |
 | 5 (MX08) | `typescript/matrix` refactor — separately scoped. |

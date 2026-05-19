@@ -66,6 +66,7 @@
 
 #![allow(non_camel_case_types)]
 
+mod classes;
 mod exec;
 
 use coding_adventures_json_value::{JsonNumber, JsonValue};
@@ -340,11 +341,17 @@ pub unsafe extern "C" fn napi_register_module_v1(
     env: napi_env,
     exports: napi_value,
 ) -> napi_value {
+    // Phase 1 — JSON-string round-trip (validation utility).
     let f1 = create_function(env, "graphRoundTripJson", Some(napi_graph_round_trip_json));
     set_named_property(env, exports, "graphRoundTripJson", f1);
 
+    // Phase 2 — JSON-envelope one-shot execution (kept as the
+    // CLI-friendly / Node-Buffer-free alternative path).
     let f2 = create_function(env, "runGraphOnCpu", Some(napi_run_graph_on_cpu));
     set_named_property(env, exports, "runGraphOnCpu", f2);
+
+    // Phase 2b — class-based API (Graph + Runtime, Buffer[] I/O).
+    classes::register(env, exports);
 
     exports
 }
