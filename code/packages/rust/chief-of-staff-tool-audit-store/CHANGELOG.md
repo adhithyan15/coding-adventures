@@ -29,6 +29,8 @@ All notable changes to this package will be documented in this file.
 - Stable, parseable supervisor drain outcome labels and action flags for host
   schedulers.
 - Flattened supervisor drain run summaries for host logs and scheduler loops.
+- Flattened planned and replayed follow-up row counts in supervisor drain run
+  summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Typed scheduler action intent helpers for continuation, follow-up routing, and
