@@ -94,6 +94,10 @@ python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py
   --expect-normalized-skipped 0
 ```
 
+The audit also owns a checked `tests/fixtures/html5lib-coverage-audit.json`
+summary. Regenerate or verify that exact report with `--write-report` or
+`--check-report`.
+
 For sharper parser regression reporting, the generated
 `tests/fixtures/whatwg-tree-insertion-audit.json` fixture indexes the
 adoption-agency, table/foster-parenting, template, foreign-content fragment,

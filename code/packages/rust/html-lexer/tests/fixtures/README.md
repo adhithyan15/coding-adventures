@@ -277,6 +277,10 @@ The command exits nonzero if any upstream tokenizer case is missing from
 missing from the parser fixture, or if `html5lib-smoke.json` still records
 skipped runtime gaps.
 
+The same audit can verify the checked
+`html-parser/tests/fixtures/html5lib-coverage-audit.json` report with
+`--check-report`, so fixture-count and missing-source drift stays visible in CI.
+
 ## WPT Path
 
 The next layer normalizes WHATWG/WPT or html5lib-style tokenizer coverage into
