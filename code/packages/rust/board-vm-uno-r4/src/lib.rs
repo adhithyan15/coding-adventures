@@ -2399,6 +2399,10 @@ mod tests {
             capability.id == board_vm_ir::CAP_NETWORK_DNS_EXCHANGE_UDP
                 && capability.name == "network.dns.exchange_udp"
         }));
+        assert!(descriptor.capabilities.iter().any(|capability| {
+            capability.id == board_vm_ir::CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY
+                && capability.name == "network.dns.exchange_udp_retry"
+        }));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -2515,6 +2519,9 @@ mod tests {
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_DNS_EXCHANGE_UDP));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY));
         assert!(!UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_TCP_OPEN));
@@ -2554,6 +2561,9 @@ mod tests {
         assert!(!UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_DNS_EXCHANGE_UDP));
+        assert!(!UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));

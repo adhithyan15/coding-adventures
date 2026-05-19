@@ -197,6 +197,11 @@ reads a bounded response `ByteBuffer`, and closes the UDP handle. Response
 parsing remains separate through `network.dns.response_ipv4` so resolver
 policy, retry/backoff, and larger multi-packet DNS behavior can land as later
 thin host/runtime layers instead of being duplicated in language frontends.
+`network.dns.exchange_udp_retry` is the first retry-policy follow-up for that
+same bounded transport path. It adds a total attempt count and millisecond
+backoff operand, retries transient UDP exchange failures inside the Rust
+runtime, sleeps between failed attempts through the board HAL, and still returns
+raw DNS response bytes for the separate parser.
 
 `HandleToken` is private to the board adapter. The portable VM only sees compact
 `Handle` ids.
@@ -222,6 +227,7 @@ CALL_U8 0x4b -> network.dns.response_ipv4
 CALL_U8 0x4c -> network.udp.write_bytes
 CALL_U8 0x4d -> network.udp.read_bytes
 CALL_U8 0x4e -> network.dns.exchange_udp
+CALL_U8 0x4f -> network.dns.exchange_udp_retry
 ```
 
 Each handler:

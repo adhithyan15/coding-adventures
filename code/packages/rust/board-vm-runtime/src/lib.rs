@@ -4,16 +4,16 @@ use board_vm_ir::{
     decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ,
     CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE,
     CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
-    CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_EXCHANGE_UDP, CAP_NETWORK_DNS_QUERY,
-    CAP_NETWORK_DNS_RESOLVE, CAP_NETWORK_DNS_RESPONSE_IPV4, CAP_NETWORK_DNS_SET_SERVER,
-    CAP_NETWORK_TCP_AVAILABLE, CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_CONNECTED,
-    CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE,
-    CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_READ_BYTES,
-    CAP_NETWORK_UDP_WRITE, CAP_NETWORK_UDP_WRITE_BYTES, CAP_NETWORK_WIFI_ASSOCIATE,
-    CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET,
-    CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS,
-    CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE,
-    CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
+    CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_EXCHANGE_UDP, CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY,
+    CAP_NETWORK_DNS_QUERY, CAP_NETWORK_DNS_RESOLVE, CAP_NETWORK_DNS_RESPONSE_IPV4,
+    CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE, CAP_NETWORK_TCP_CLOSE,
+    CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE,
+    CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
+    CAP_NETWORK_UDP_READ_BYTES, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_UDP_WRITE_BYTES,
+    CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS,
+    CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ,
+    CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ,
+    CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1205,6 +1205,26 @@ where
                 )?;
                 self.push(Value::Bytes(response), ip)
             }
+            CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY => {
+                let backoff_ms = self.pop_u16(ip)?;
+                let attempts = self.pop_u8(ip)?;
+                let response_len = self.pop_u8(ip)?;
+                let hostname = self.pop_bytes(ip)?;
+                let transaction_id = self.pop_u16(ip)?;
+                let resolver_ipv4 = self.pop_u32(ip)?;
+                let interface = self.pop_u16(ip)?;
+                let response = self.network_dns_exchange_udp_retry(
+                    interface,
+                    resolver_ipv4,
+                    transaction_id,
+                    hostname.as_slice(),
+                    response_len,
+                    attempts,
+                    backoff_ms,
+                    ip,
+                )?;
+                self.push(Value::Bytes(response), ip)
+            }
             CAP_NETWORK_DNS_RESPONSE_IPV4 => {
                 let response = self.pop_bytes(ip)?;
                 let transaction_id = self.pop_u16(ip)?;
@@ -1476,6 +1496,53 @@ where
 
         Ok(response)
     }
+
+    fn network_dns_exchange_udp_retry(
+        &mut self,
+        interface: u16,
+        resolver_ipv4: u32,
+        transaction_id: u16,
+        hostname: &[u8],
+        response_len: u8,
+        attempts: u8,
+        backoff_ms: u16,
+        ip: usize,
+    ) -> Result<ByteBuffer, RuntimeError> {
+        if attempts == 0 {
+            return Err(RuntimeError {
+                ip,
+                kind: RuntimeErrorKind::InvalidBytecode,
+            });
+        }
+
+        let mut attempt = 0;
+        loop {
+            match self.network_dns_exchange_udp(
+                interface,
+                resolver_ipv4,
+                transaction_id,
+                hostname,
+                response_len,
+                ip,
+            ) {
+                Ok(response) => return Ok(response),
+                Err(err) => {
+                    attempt += 1;
+                    if attempt >= attempts || !is_retryable_dns_udp_exchange_error(err.kind) {
+                        return Err(err);
+                    }
+                    if backoff_ms != 0 {
+                        self.hal
+                            .sleep_ms(backoff_ms)
+                            .map_err(|sleep_err| RuntimeError {
+                                ip,
+                                kind: hal_error_kind(sleep_err),
+                            })?;
+                    }
+                }
+            }
+        }
+    }
 }
 
 fn encode_dns_a_query(
@@ -1654,6 +1721,13 @@ fn hal_error_kind(error: HalError) -> RuntimeErrorKind {
     }
 }
 
+fn is_retryable_dns_udp_exchange_error(kind: RuntimeErrorKind) -> bool {
+    matches!(
+        kind,
+        RuntimeErrorKind::ResourceBusy | RuntimeErrorKind::BoardFault
+    )
+}
+
 #[cfg(test)]
 extern crate std;
 
@@ -1722,6 +1796,7 @@ mod tests {
         now_ms: u32,
         rtc_epoch_seconds: u32,
         last_udp_transaction_id: u16,
+        udp_read_failures_remaining: u8,
     }
 
     impl FakeHal {
@@ -1731,6 +1806,7 @@ mod tests {
                 now_ms: 0,
                 rtc_epoch_seconds: 1_700_000_000,
                 last_udp_transaction_id: 0x1234,
+                udp_read_failures_remaining: 0,
             }
         }
     }
@@ -2024,6 +2100,10 @@ mod tests {
                 return Err(HalError::UnsupportedMode);
             }
             self.events.push(Event::NetworkUdpReadBytes(token, len));
+            if self.udp_read_failures_remaining > 0 {
+                self.udp_read_failures_remaining -= 1;
+                return Err(HalError::ResourceBusy);
+            }
             if len as usize == MAX_BYTE_BUFFER_LEN {
                 let response = dns_response_ipv4(self.last_udp_transaction_id, 0xC0A8_012A);
                 return ByteBuffer::from_slice(&response).map_err(|_| HalError::UnsupportedMode);
@@ -2856,6 +2936,76 @@ mod tests {
         assert_eq!(
             runtime.hal().events,
             vec![
+                Event::NetworkUdpOpen(0, 0x0808_0808, 53),
+                Event::NetworkUdpWriteBytes(
+                    0x6_2003,
+                    ByteBuffer::from_slice(&expected_query).unwrap()
+                ),
+                Event::NetworkUdpReadBytes(0x6_2003, MAX_BYTE_BUFFER_LEN as u8),
+                Event::NetworkUdpClose(0x6_2003),
+            ]
+        );
+    }
+
+    #[test]
+    fn network_dns_exchange_udp_retry_backs_off_after_transport_failure() {
+        let mut runtime: Runtime<FakeHal, 7, 1> = Runtime::new(FakeHal::new());
+        runtime.hal_mut().udp_read_failures_remaining = 1;
+        let module = Module {
+            flags: 0,
+            max_stack: 7,
+            code: &[
+                0x12,
+                0x00,
+                0x14,
+                0x08,
+                0x08,
+                0x08,
+                0x08,
+                0x13,
+                0x34,
+                0x12,
+                0x16,
+                0x00,
+                0x00,
+                0x07,
+                0x12,
+                0x20,
+                0x12,
+                0x02,
+                0x13,
+                0x19,
+                0x00,
+                0x40,
+                CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY as u8,
+                0x50,
+            ],
+            const_pool: b"example",
+        };
+        let expected_query = [
+            0x12, 0x34, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, b'e',
+            b'x', b'a', b'm', b'p', b'l', b'e', 0x00, 0x00, 0x01, 0x00, 0x01,
+        ];
+        let expected_response = dns_response_ipv4(0x1234, 0xC0A8_012A);
+
+        let report = runtime.run_module(&module, 16).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(
+            report.return_value,
+            Value::Bytes(ByteBuffer::from_slice(&expected_response).unwrap())
+        );
+        assert_eq!(
+            runtime.hal().events,
+            vec![
+                Event::NetworkUdpOpen(0, 0x0808_0808, 53),
+                Event::NetworkUdpWriteBytes(
+                    0x6_2003,
+                    ByteBuffer::from_slice(&expected_query).unwrap()
+                ),
+                Event::NetworkUdpReadBytes(0x6_2003, MAX_BYTE_BUFFER_LEN as u8),
+                Event::NetworkUdpClose(0x6_2003),
+                Event::Sleep(25),
                 Event::NetworkUdpOpen(0, 0x0808_0808, 53),
                 Event::NetworkUdpWriteBytes(
                     0x6_2003,
