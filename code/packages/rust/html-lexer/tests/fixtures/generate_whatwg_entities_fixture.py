@@ -19,6 +19,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from generated_fixture_io import write_fixture_json
+
 
 DEFAULT_OUTPUT = Path(__file__).with_name("whatwg-entities.json")
 SOURCE_URL = "https://html.spec.whatwg.org/entities.json"
@@ -31,16 +33,12 @@ def main() -> int:
 
     entities = json.loads(source.read_text())
     fixture = build_fixture(entities)
-    text = json.dumps(fixture, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
-
-    if args.check:
-        existing = output.read_text()
-        if existing != text:
-            raise SystemExit(f"{output} is stale; regenerate it from {source}")
-        return 0
-
-    output.write_text(text)
-    return 0
+    return write_fixture_json(
+        output,
+        fixture,
+        check=args.check,
+        stale_hint=f"from {source}",
+    )
 
 
 def parse_args() -> argparse.Namespace:
