@@ -10,6 +10,7 @@ All notable changes to this package will be documented in this file.
 - JSON encoding/decoding for payload-free `ToolAuditRecord` rows.
 - Query and inventory helpers over persisted audit records.
 - Deterministic checkpoint pages for incremental audit replay.
+- Durable named checkpoint state for supervisors that resume audit replay.
 - Batch audit write summaries for host flush loops.
 - Replay helpers for loading queried audit rows into any `ToolAuditSink`.
 - `StorageToolAuditSink` for runtime audit emission through D18A storage with
