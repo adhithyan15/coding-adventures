@@ -36,6 +36,8 @@ from spice_engine.engine import (
     CornerPoint,
     CornerSpec,
     CornerSweepResult,
+    CornerTfPoint,
+    CornerTfResult,
     DcResult,
     DcSweepPoint,
     DcSweepResult,
@@ -62,6 +64,7 @@ from spice_engine.engine import (
     sens_dc,
     s_parameters,
     tf,
+    tf_corners,
     transient,
 )
 
@@ -85,6 +88,8 @@ __all__ = [
     "CornerPoint",
     "CornerSpec",
     "CornerSweepResult",
+    "CornerTfPoint",
+    "CornerTfResult",
     "CurrentSource",
     "DcResult",
     "DcSweepPoint",
@@ -128,5 +133,6 @@ __all__ = [
     "sens_dc",
     "s_parameters",
     "tf",
+    "tf_corners",
     "transient",
 ]

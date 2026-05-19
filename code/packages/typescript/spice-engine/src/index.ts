@@ -488,6 +488,17 @@ export interface TfResult {
   gain(): number;
 }
 
+export interface CornerTfPoint {
+  readonly cornerName: string;
+  readonly result: TfResult;
+}
+
+export interface CornerTfResult {
+  readonly inputSource: string;
+  readonly outputNode: string;
+  readonly points: readonly CornerTfPoint[];
+}
+
 export interface SensEntry {
   readonly elementName: string;
   readonly parameter: string;
@@ -1290,6 +1301,22 @@ export function tf(
     outputIndex === undefined ? 0.0 : output[outputIndex];
 
   return makeTfResult(transferRatio, inputImpedanceOhms, outputImpedanceOhms);
+}
+
+export function tfCorners(
+  circuit: Circuit,
+  outputNode: string,
+  inputSource: string,
+  corners: readonly CornerSpec[],
+): CornerTfResult {
+  return {
+    inputSource,
+    outputNode,
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: tf(circuitWithCorner(circuit, corner), outputNode, inputSource),
+    })),
+  };
 }
 
 export function sensDc(circuit: Circuit, outputNode: string): SensResult {

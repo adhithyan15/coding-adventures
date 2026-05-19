@@ -8,6 +8,7 @@ import {
   inductor,
   resistor,
   tf,
+  tfCorners,
   vccs,
   voltageSource,
 } from "../src/index.js";
@@ -52,6 +53,39 @@ describe("tf", () => {
     expectClose(result.gain(), 0.75);
     expectClose(result.inputImpedanceOhms, 4_000.0);
     expectClose(result.outputImpedanceOhms, 750.0);
+  });
+
+  it("runs transfer-function analysis at each named corner", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 10.0));
+    circuit.add(resistor("Rtop", "in", "out", 1_000.0));
+    circuit.add(resistor("Rbot", "out", "0", 1_000.0));
+
+    const result = tfCorners(circuit, "out", "Vin", [
+      { name: "nominal", overrides: [] },
+      {
+        name: "rbot-fast",
+        overrides: [{ elementName: "Rbot", parameter: "resistance", value: 500.0 }],
+      },
+      {
+        name: "rbot-slow",
+        overrides: [{ elementName: "Rbot", parameter: "resistance", value: 2_000.0 }],
+      },
+    ]);
+
+    expect(result.inputSource).toBe("Vin");
+    expect(result.outputNode).toBe("out");
+    expect(result.points.map((point) => point.cornerName)).toEqual([
+      "nominal",
+      "rbot-fast",
+      "rbot-slow",
+    ]);
+    expectClose(result.points[0].result.gain(), 0.5);
+    expectClose(result.points[1].result.gain(), 1.0 / 3.0);
+    expectClose(result.points[2].result.gain(), 2.0 / 3.0);
+    expectClose(result.points[0].result.inputImpedanceOhms, 2_000.0);
+    expectClose(result.points[1].result.inputImpedanceOhms, 1_500.0);
+    expectClose(result.points[2].result.inputImpedanceOhms, 3_000.0);
   });
 
   it("reports current-source transimpedance", () => {

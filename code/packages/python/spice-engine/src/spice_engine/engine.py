@@ -496,6 +496,23 @@ class CornerAcSweepResult:
     points: list[CornerAcSweepPoint]
 
 
+@dataclass(frozen=True)
+class CornerTfPoint:
+    """Transfer-function result for one named analysis corner."""
+
+    corner_name: str
+    result: TfResult
+
+
+@dataclass(frozen=True)
+class CornerTfResult:
+    """Multi-corner transfer-function analysis result."""
+
+    points: list[CornerTfPoint]
+    input_source: str
+    output_node: str
+
+
 # ---------------------------------------------------------------------------
 # MNA infrastructure
 # ---------------------------------------------------------------------------
@@ -3539,6 +3556,40 @@ def ac_sweep_corners(
             )
             for corner in corners
         ]
+    )
+
+
+def tf_corners(
+    circuit: Circuit,
+    input_source: str,
+    output_node: str,
+    corners: list[CornerSpec],
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerTfResult:
+    """Run DC small-signal transfer-function analysis at each named corner.
+
+    Each corner clones the circuit with explicit element-parameter overrides,
+    then reuses :func:`tf` so every corner reports the same transfer-function
+    query with its own gain and impedance values.
+    """
+    return CornerTfResult(
+        points=[
+            CornerTfPoint(
+                corner_name=corner.name,
+                result=tf(
+                    _circuit_with_corner(circuit, corner),
+                    output_node=output_node,
+                    input_source=input_source,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                ),
+            )
+            for corner in corners
+        ],
+        input_source=input_source,
+        output_node=output_node,
     )
 
 
