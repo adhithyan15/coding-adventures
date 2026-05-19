@@ -230,7 +230,7 @@ pub const UNO_R4_MINIMA_CAPABILITIES: [&str; 32] = [
     "program.store",
 ];
 
-pub const UNO_R4_WIFI_CAPABILITIES: [&str; 61] = [
+pub const UNO_R4_WIFI_CAPABILITIES: [&str; 62] = [
     "transport.serial",
     "transport.wifi",
     "transport.bluetooth_le",
@@ -260,6 +260,7 @@ pub const UNO_R4_WIFI_CAPABILITIES: [&str; 61] = [
     "network.dns.query",
     "network.dns.response_ipv4",
     "network.dns.exchange_udp",
+    "network.dns.exchange_udp_retry",
     "gpio.open",
     "gpio.write",
     "gpio.read",
@@ -1176,6 +1177,9 @@ mod tests {
         assert!(uno_r4_wifi
             .capabilities
             .contains(&"network.dns.exchange_udp"));
+        assert!(uno_r4_wifi
+            .capabilities
+            .contains(&"network.dns.exchange_udp_retry"));
         assert_eq!(
             uno_r4_wifi.network_interfaces,
             &UNO_R4_WIFI_NETWORK_INTERFACES

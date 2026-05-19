@@ -72,6 +72,7 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "network.dns.query"
         assert_includes uno_r4_wifi["capabilities"], "network.dns.response_ipv4"
         assert_includes uno_r4_wifi["capabilities"], "network.dns.exchange_udp"
+        assert_includes uno_r4_wifi["capabilities"], "network.dns.exchange_udp_retry"
         assert_equal ["wifi", "bluetooth_le"], uno_r4_wifi["wireless"].map { |item| item["transport"] }
         assert uno_r4_wifi["wireless"].find { |item| item["transport"] == "wifi" }["ota_update"]
         assert_equal [
