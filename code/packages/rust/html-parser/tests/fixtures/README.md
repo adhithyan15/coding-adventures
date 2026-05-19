@@ -36,6 +36,16 @@ python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py
   --expect-normalized-skipped 0
 ```
 
+The stable JSON report is checked in as `html5lib-coverage-audit.json`.
+Regenerate or check it with:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
+  /path/to/html5lib-tests --write-report
+python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
+  /path/to/html5lib-tests --check-report
+```
+
 `whatwg-tree-insertion-audit.json` is a generated index over the high-signal
 tree-construction families inside `html5lib-tree-construction-smoke.dat`:
 adoption-agency formatting recovery, table insertion and foster parenting,

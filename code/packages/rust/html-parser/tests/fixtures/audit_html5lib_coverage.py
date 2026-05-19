@@ -32,6 +32,8 @@ TOKENIZER_SIGNATURE_KEYS = (
     "errors",
 )
 
+DEFAULT_REPORT_PATH = Path(__file__).with_name("html5lib-coverage-audit.json")
+
 
 @dataclass(frozen=True)
 class TreeCase:
@@ -108,6 +110,15 @@ def main() -> int:
     else:
         print_report(report, upstream_root)
 
+    report_mismatch = None
+    if args.write_report:
+        write_report(args.report_path, report)
+    if args.check_report:
+        report_mismatch = check_report(args.report_path, report)
+        if report_mismatch:
+            sys.stdout.flush()
+            print(report_mismatch, file=sys.stderr)
+
     sys.stdout.flush()
     expectation_mismatches = collect_expectation_mismatches(report, args)
     for mismatch in expectation_mismatches:
@@ -117,6 +128,7 @@ def main() -> int:
         missing_tree
         or missing_tokenizer
         or normalized_skipped
+        or report_mismatch
         or expectation_mismatches
     ):
         return 1
@@ -146,6 +158,22 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=20,
         help="Maximum missing case sources to include in the report.",
+    )
+    parser.add_argument(
+        "--report-path",
+        type=Path,
+        default=DEFAULT_REPORT_PATH,
+        help="Path for --write-report or --check-report.",
+    )
+    parser.add_argument(
+        "--write-report",
+        action="store_true",
+        help="Write the stable machine-readable audit report.",
+    )
+    parser.add_argument(
+        "--check-report",
+        action="store_true",
+        help="Exit non-zero if the stable audit report differs from --report-path.",
     )
     parser.add_argument(
         "--expect-tree-upstream-cases",
@@ -331,6 +359,25 @@ def missing_cases(
 
 def stable_signature(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def stable_report_json(report: dict[str, Any]) -> str:
+    return json.dumps(report, indent=2, sort_keys=True) + "\n"
+
+
+def write_report(path: Path, report: dict[str, Any]) -> None:
+    path.write_text(stable_report_json(report))
+
+
+def check_report(path: Path, report: dict[str, Any]) -> str | None:
+    actual = stable_report_json(report)
+    if not path.exists():
+        return f"report mismatch: {path} does not exist"
+
+    expected = path.read_text()
+    if actual == expected:
+        return None
+    return f"report mismatch: regenerate {path} with --write-report"
 
 
 def collect_expectation_mismatches(

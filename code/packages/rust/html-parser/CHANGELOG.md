@@ -13,6 +13,9 @@ documented in this file.
   and HTML fragment-shell families, with a dedicated parser regression test.
 - Shared html5lib tree-construction test helpers keep smoke and focused
   tree-insertion audit checks on the same parser and DOM dump path.
+- The html5lib source-coverage audit now has a checked JSON report plus
+  `--write-report` and `--check-report` modes for parser/tokenizer fixture
+  drift detection.
 - Stack-of-open-elements tree construction seed with void element handling,
   adjacent text merging, simple implied end tags, and unmatched end-tag
   diagnostics.
