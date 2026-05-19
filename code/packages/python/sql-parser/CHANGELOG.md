@@ -2,6 +2,24 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.28.0] - 2026-05-19
+
+### Fixed
+
+- **Derived table aliases now accept implicit ``AS``**.  The grammar
+  previously required ``"AS" NAME`` after a parenthesised subquery in a
+  FROM clause::
+
+      table_ref = "(" query_stmt ")" "AS" NAME | ... ;   (old)
+
+  Standard SQL and SQLite accept both ``(query) AS alias`` and
+  ``(query) alias`` (with AS omitted).  The rule is now::
+
+      table_ref = "(" query_stmt ")" [ "AS" ] NAME | ... ;
+
+  Three new parser tests in ``TestDerivedTableImplicitAS`` lock both
+  forms (and a multi-source cross-join variant) as accepted.
+
 ## [0.27.0] - 2026-05-19
 
 ### Added

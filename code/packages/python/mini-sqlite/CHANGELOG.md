@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.52.0] - 2026-05-19
+
+### Fixed
+
+- **Derived tables can now omit the ``AS`` keyword** (via ``sql-parser
+  0.28.0``).  Both forms are accepted, matching SQLite::
+
+      SELECT t.x FROM (SELECT 1 AS x) AS t   -- always worked
+      SELECT t.x FROM (SELECT 1 AS x) t      -- now also works
+
+  This is important for portability: a lot of application SQL written
+  for real SQLite uses the implicit-AS form, especially in cross-join
+  contexts like ``FROM (subq1) t1, (subq2) t2``.
+
+  The fix is two-fold:
+
+  - ``sql.grammar``: ``table_ref`` rule's derived-table branch now
+    accepts an optional ``[ "AS" ]`` between ``)`` and the alias NAME.
+  - ``adapter._table_ref``: scans for the first NAME token after the
+    closing ``)`` (skipping any optional AS keyword) rather than
+    requiring AS to immediately precede the alias.
+
+  The alias itself is still required — bare ``FROM (SELECT 1)`` (no
+  alias) raises ``ProgrammingError`` as before.
+
+  8 new oracle tests in ``test_tier3_derived_table_implicit_as.py``
+  cover single derived tables, comma-cross-join with derived tables on
+  both sides (with and without AS, including mixed-style queries with
+  three sources), and the nested-IN-subquery case that initially
+  surfaced the bug.
+
 ## [1.51.0] - 2026-05-19
 
 ### Added

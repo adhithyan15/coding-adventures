@@ -62,7 +62,7 @@ select_item       = expr [ "AS" NAME ] ;
 # second branch.  The alias alternatives are ordered: "AS" NAME first so that
 # "AS" is consumed when present; bare NAME second for the no-AS form.
 # NAME never matches SQL keywords, so WHERE, JOIN, ON etc. are never eaten.
-table_ref         = "(" query_stmt ")" "AS" NAME | table_name [ "AS" NAME | NAME ] ;
+table_ref         = "(" query_stmt ")" [ "AS" ] NAME | table_name [ "AS" NAME | NAME ] ;
 table_name        = NAME [ "." NAME ] ;
 
 # join_clause covers two forms:

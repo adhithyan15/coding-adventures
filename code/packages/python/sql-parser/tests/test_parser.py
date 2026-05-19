@@ -856,3 +856,28 @@ class TestCteMaterializedHint:
             "SELECT a.x FROM a"
         )
         assert ast.rule_name == "program"
+
+
+# ---------------------------------------------------------------------------
+# Derived table — implicit AS
+# ---------------------------------------------------------------------------
+#
+# Standard SQL accepts both ``(query) AS alias`` and ``(query) alias`` in a
+# FROM clause.  Mini-sqlite previously required AS; these tests pin the
+# grammar acceptance after the fix.
+
+
+class TestDerivedTableImplicitAS:
+    def test_explicit_as(self) -> None:
+        ast = parse_sql("SELECT t.x FROM (SELECT 1 AS x) AS t")
+        assert ast.rule_name == "program"
+
+    def test_implicit_as(self) -> None:
+        ast = parse_sql("SELECT t.x FROM (SELECT 1 AS x) t")
+        assert ast.rule_name == "program"
+
+    def test_implicit_as_with_cross_join(self) -> None:
+        ast = parse_sql(
+            "SELECT t1.x, t2.y FROM (SELECT 1 AS x) t1, (SELECT 2 AS y) t2"
+        )
+        assert ast.rule_name == "program"
