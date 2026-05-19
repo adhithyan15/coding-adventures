@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/forme-collect-by-tag",
+  "version": "0.1.0",
+  "description": "Group an array of documents by tag for tag archive pages.  Pure transform: items + tagsOf accessor → Map<normalisedTag, items[]> + sorted tag-name list.  Tags normalised (lowercase + slugified) so case / punctuation variants collide.  Map-based grouping defends against __proto__-style tag-name pollution.  FM00 v0 §5.4 collector.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
