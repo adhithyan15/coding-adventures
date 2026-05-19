@@ -1,11 +1,10 @@
 use coding_adventures_html_lexer::{
-    apply_html_lex_context, create_html_lexer, Attribute, DoctypeSeed, HtmlLexContext, HtmlLexer,
+    create_html_lexer_with_context, Attribute, DoctypeSeed, HtmlLexContext, HtmlLexer,
     HtmlTokenizerState, Token,
 };
 use serde::Deserialize;
 
-const WHATWG_TEXT_MODE_DELIMITERS: &str =
-    include_str!("fixtures/whatwg-text-mode-delimiters.json");
+const WHATWG_TEXT_MODE_DELIMITERS: &str = include_str!("fixtures/whatwg-text-mode-delimiters.json");
 
 #[derive(Debug, Deserialize)]
 struct TextModeDelimiterSuite {
@@ -153,9 +152,7 @@ fn configured_lexer(case: &TextModeDelimiterCase) -> HtmlLexer {
         context = context.with_return_state(return_state);
     }
 
-    let mut lexer = create_html_lexer().expect("HTML lexer should build");
-    apply_html_lex_context(&mut lexer, &context).expect("HTML lexer context should apply");
-    lexer
+    create_html_lexer_with_context(&context).expect("HTML lexer context should apply")
 }
 
 fn token_summary(token: Token) -> String {

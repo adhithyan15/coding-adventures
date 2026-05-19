@@ -373,6 +373,49 @@ pub const HTML_SCRIPT_TOKENIZER_STATES: [HtmlTokenizerState; 24] = [
     HtmlTokenizerState::ScriptDataDoubleEscapeEnd,
 ];
 
+/// Tokenizer states used by parser-selected text modes.
+pub const HTML_TEXT_MODE_TOKENIZER_STATES: [HtmlTokenizerState; 39] = [
+    HtmlTokenizerState::Rcdata,
+    HtmlTokenizerState::RcdataLessThanSign,
+    HtmlTokenizerState::RcdataEndTagOpen,
+    HtmlTokenizerState::RcdataEndTagName,
+    HtmlTokenizerState::RcdataEndTagWhitespace,
+    HtmlTokenizerState::RcdataEndTagAttributes,
+    HtmlTokenizerState::RcdataSelfClosingEndTag,
+    HtmlTokenizerState::Rawtext,
+    HtmlTokenizerState::RawtextLessThanSign,
+    HtmlTokenizerState::RawtextEndTagOpen,
+    HtmlTokenizerState::RawtextEndTagName,
+    HtmlTokenizerState::RawtextEndTagWhitespace,
+    HtmlTokenizerState::RawtextEndTagAttributes,
+    HtmlTokenizerState::RawtextSelfClosingEndTag,
+    HtmlTokenizerState::Plaintext,
+    HtmlTokenizerState::ScriptData,
+    HtmlTokenizerState::ScriptDataLessThanSign,
+    HtmlTokenizerState::ScriptDataEndTagOpen,
+    HtmlTokenizerState::ScriptDataEndTagName,
+    HtmlTokenizerState::ScriptDataEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEndTagAttributes,
+    HtmlTokenizerState::ScriptDataSelfClosingEndTag,
+    HtmlTokenizerState::ScriptDataEscapeStart,
+    HtmlTokenizerState::ScriptDataEscapeStartDash,
+    HtmlTokenizerState::ScriptDataEscaped,
+    HtmlTokenizerState::ScriptDataEscapedDash,
+    HtmlTokenizerState::ScriptDataEscapedDashDash,
+    HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataEscapedEndTagOpen,
+    HtmlTokenizerState::ScriptDataEscapedEndTagName,
+    HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+    HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
+    HtmlTokenizerState::ScriptDataDoubleEscapeStart,
+    HtmlTokenizerState::ScriptDataDoubleEscaped,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataDoubleEscapeEnd,
+];
+
 /// Tokenizer states that resume an already-created DOCTYPE token.
 pub const HTML_DOCTYPE_TOKENIZER_STATES: [HtmlTokenizerState; 32] = [
     HtmlTokenizerState::DoctypeKeywordO,
@@ -407,6 +450,26 @@ pub const HTML_DOCTYPE_TOKENIZER_STATES: [HtmlTokenizerState; 32] = [
     HtmlTokenizerState::DoctypeSystemIdentifierSingleQuoted,
     HtmlTokenizerState::AfterDoctypeSystemIdentifier,
     HtmlTokenizerState::BogusDoctype,
+];
+
+/// Tokenizer states that resume an already-started text-mode end tag.
+pub const HTML_END_TAG_TOKENIZER_STATES: [HtmlTokenizerState; 16] = [
+    HtmlTokenizerState::RcdataEndTagName,
+    HtmlTokenizerState::RcdataEndTagWhitespace,
+    HtmlTokenizerState::RcdataEndTagAttributes,
+    HtmlTokenizerState::RcdataSelfClosingEndTag,
+    HtmlTokenizerState::RawtextEndTagName,
+    HtmlTokenizerState::RawtextEndTagWhitespace,
+    HtmlTokenizerState::RawtextEndTagAttributes,
+    HtmlTokenizerState::RawtextSelfClosingEndTag,
+    HtmlTokenizerState::ScriptDataEndTagName,
+    HtmlTokenizerState::ScriptDataEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEndTagAttributes,
+    HtmlTokenizerState::ScriptDataSelfClosingEndTag,
+    HtmlTokenizerState::ScriptDataEscapedEndTagName,
+    HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+    HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
 ];
 
 /// Tokenizer states that resume an already-started start tag.
@@ -733,25 +796,7 @@ impl HtmlTokenizerState {
 
     /// Return whether this state resumes an already-started end tag.
     pub fn requires_end_tag_seed(self) -> bool {
-        matches!(
-            self,
-            Self::RcdataEndTagName
-                | Self::RcdataEndTagWhitespace
-                | Self::RcdataEndTagAttributes
-                | Self::RcdataSelfClosingEndTag
-                | Self::RawtextEndTagName
-                | Self::RawtextEndTagWhitespace
-                | Self::RawtextEndTagAttributes
-                | Self::RawtextSelfClosingEndTag
-                | Self::ScriptDataEndTagName
-                | Self::ScriptDataEndTagWhitespace
-                | Self::ScriptDataEndTagAttributes
-                | Self::ScriptDataSelfClosingEndTag
-                | Self::ScriptDataEscapedEndTagName
-                | Self::ScriptDataEscapedEndTagWhitespace
-                | Self::ScriptDataEscapedEndTagAttributes
-                | Self::ScriptDataEscapedSelfClosingEndTag
-        )
+        HTML_END_TAG_TOKENIZER_STATES.contains(&self)
     }
 
     /// Return whether this state resumes an already-started comment token.
@@ -923,6 +968,31 @@ impl HtmlLexContext {
     ) -> Option<Self> {
         if initial_state.requires_start_tag_seed() {
             Some(Self::new(initial_state).with_current_start_tag(seed))
+        } else {
+            None
+        }
+    }
+
+    /// Return a text-mode end-tag continuation context.
+    ///
+    /// These states resume after the tokenizer has already created an end-tag
+    /// token while scanning RCDATA, RAWTEXT, script data, or escaped script
+    /// data. The current end-tag seed and temporary buffer must stay aligned
+    /// because literal mismatch recovery re-emits the temporary buffer with the
+    /// appropriate `</` or `</.../` delimiter text.
+    pub fn end_tag_continuation(
+        initial_state: HtmlTokenizerState,
+        last_start_tag: impl Into<String>,
+        current_end_tag: impl Into<String>,
+        temporary_buffer: impl Into<String>,
+    ) -> Option<Self> {
+        if initial_state.requires_end_tag_seed() {
+            Some(
+                Self::new(initial_state)
+                    .with_last_start_tag(last_start_tag)
+                    .with_current_end_tag(current_end_tag)
+                    .with_temporary_buffer(temporary_buffer),
+            )
         } else {
             None
         }

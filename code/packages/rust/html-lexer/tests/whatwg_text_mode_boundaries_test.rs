@@ -1,6 +1,5 @@
 use coding_adventures_html_lexer::{
-    apply_html_lex_context, create_html_lexer, Attribute, HtmlLexContext, HtmlLexer,
-    HtmlTokenizerState, Token,
+    create_html_lexer_with_context, Attribute, HtmlLexContext, HtmlLexer, HtmlTokenizerState, Token,
 };
 use serde::Deserialize;
 
@@ -116,9 +115,7 @@ fn configured_lexer(case: &TextModeBoundaryCase) -> HtmlLexer {
         context = context.with_temporary_buffer(temporary_buffer);
     }
 
-    let mut lexer = create_html_lexer().expect("HTML lexer should build");
-    apply_html_lex_context(&mut lexer, &context).expect("HTML lexer context should apply");
-    lexer
+    create_html_lexer_with_context(&context).expect("HTML lexer context should apply")
 }
 
 fn token_summary(token: Token) -> String {

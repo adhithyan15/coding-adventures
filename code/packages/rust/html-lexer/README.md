@@ -81,6 +81,12 @@ continuation states so parser-facing recovery stays pinned at stream end.
 The generated text-mode delimiter suite pins how RCDATA, RAWTEXT, script data,
 escaped script data, and seeded end-tag continuation states distinguish real
 matching end tags from literal apparent end tags.
+The public wrapper exposes those parser-facing text-mode families through
+`HTML_TEXT_MODE_TOKENIZER_STATES`, `HTML_SCRIPT_TOKENIZER_STATES`, and
+`HTML_END_TAG_TOKENIZER_STATES`; seeded end-tag continuation tests now enter
+the lexer through `HtmlLexContext::end_tag_continuation` and
+`create_html_lexer_with_context`, matching the surface a parser or importer
+would use.
 The generated text-mode boundary suite drills into parser-seeded RCDATA,
 RAWTEXT, and PLAINTEXT state boundaries: less-than recovery, end-tag-open/name
 continuations, NULL replacement, EOF literal recovery, and PLAINTEXT markup

@@ -75,6 +75,9 @@ documented in this file.
 - html5lib-style smoke metadata for generic tag-open, tag-name, and seeded
   start-tag/attribute continuation states, keeping the normalizer's supported
   state set aligned with `HTML_TOKENIZER_STATES`.
+- Parser/importer-facing seeded text-mode end-tag continuation contexts through
+  `HtmlLexContext::end_tag_continuation`, plus exported text-mode and end-tag
+  tokenizer state families used by wrapper-level fixture tests.
 - A generated WHATWG tokenizer script escape boundary fixture and Rust
   conformance test that pins escaped and double-escaped script data, escape
   start/end delimiters, EOF diagnostics, NULL replacement, and seeded
