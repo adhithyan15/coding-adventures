@@ -19,6 +19,8 @@ documented in this file.
   runtime tokens stay aligned.
 - Shared JSON fixture IO helpers keep generated WHATWG fixture writers on the
   same stable `--check` path.
+- The html5lib tokenizer normalizer shares the same checked fixture IO path,
+  including `--check` stale detection for `html5lib-smoke.json`.
 - Parser-facing seeded RCDATA/RAWTEXT/script end-tag continuation contexts,
   including end-tag-name, whitespace, attributes, and self-closing substates
   with current-end-tag and temporary-buffer seeding.
