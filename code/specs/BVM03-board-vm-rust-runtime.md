@@ -170,6 +170,11 @@ to `BoardHal::network_dns_set_server` without changing the `network.dns.resolve`
 operand shape. Board ports may map it to firmware resolver configuration,
 ignore it when the active link owns resolver policy, or cache it for a later
 bounded DNS message stack.
+`network.dns.query` is the first bounded DNS message-payload tranche: it accepts
+a DNS transaction id plus hostname bytes and returns a standard recursive
+A-record query message in a `ByteBuffer`. It is implemented in the Rust runtime
+instead of a board adapter hook so frontends and board ports can share the same
+wire payload before later tranches add UDP transport and response parsing.
 
 `HandleToken` is private to the board adapter. The portable VM only sees compact
 `Handle` ids.
@@ -190,6 +195,7 @@ CALL_U8 0x46 -> network.tcp.connected
 CALL_U8 0x47 -> network.udp.available
 CALL_U8 0x48 -> network.dns.set_server
 CALL_U8 0x49 -> network.tcp.available
+CALL_U8 0x4a -> network.dns.query
 ```
 
 Each handler:
