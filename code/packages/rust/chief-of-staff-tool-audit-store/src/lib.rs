@@ -1351,6 +1351,8 @@ pub struct ToolAuditStoreInventorySummary {
     pub records_with_errors: usize,
     /// Calls whose result summary emitted artifact or memory references.
     pub records_with_references: usize,
+    /// Rows with any follow-up pressure, counted once per row.
+    pub follow_up_records: usize,
 }
 
 impl ToolAuditStoreInventorySummary {
@@ -1385,6 +1387,9 @@ impl ToolAuditStoreInventorySummary {
             if record.result_summary.emitted_references() {
                 summary.records_with_references += 1;
             }
+            if audit_record_requires_follow_up(record) {
+                summary.follow_up_records += 1;
+            }
         }
         summary
     }
@@ -1396,7 +1401,8 @@ impl ToolAuditStoreInventorySummary {
 
     /// Return whether any row needs follow-up.
     pub fn requires_follow_up(&self) -> bool {
-        self.active_records > 0
+        self.follow_up_records > 0
+            || self.active_records > 0
             || self.failed_records > 0
             || self.approval_pending_records > 0
             || self.approval_denied_records > 0
@@ -1418,6 +1424,21 @@ fn merge_inventory(
     target.approval_expired_records += source.approval_expired_records;
     target.records_with_errors += source.records_with_errors;
     target.records_with_references += source.records_with_references;
+    target.follow_up_records += source.follow_up_records;
+}
+
+fn audit_record_requires_follow_up(record: &ToolAuditRecord) -> bool {
+    matches!(
+        record.status,
+        ToolCallStatus::Queued
+            | ToolCallStatus::Validating
+            | ToolCallStatus::AwaitingApproval
+            | ToolCallStatus::Running
+            | ToolCallStatus::Failed
+    ) || matches!(
+        record.approval_state,
+        ApprovalState::Pending | ApprovalState::Denied | ApprovalState::Expired
+    ) || record.result_summary.has_error
 }
 
 fn audit_key(call_id: &str) -> String {
@@ -2281,6 +2302,7 @@ mod tests {
         assert_eq!(plan.planned_records, 4);
         assert_eq!(plan.inventory.total_records, 4);
         assert_eq!(plan.inventory.failed_records, 1);
+        assert_eq!(plan.inventory.follow_up_records, 1);
         assert!(plan.has_pending_records());
         assert!(plan.requires_follow_up());
         assert!(plan.would_advance_checkpoint());
@@ -2301,6 +2323,7 @@ mod tests {
             ToolAuditReadCheckpoint::new(120, "call_3")
         );
         assert_eq!(plan.pages[1].pending_records, 2);
+        assert_eq!(plan.pages[1].inventory.follow_up_records, 1);
         assert!(plan.pages[1].requires_follow_up());
         assert_eq!(
             store
@@ -2991,6 +3014,7 @@ mod tests {
         assert!(summary.requires_follow_up());
         assert_eq!(summary.inventory.total_records, 2);
         assert_eq!(summary.inventory.failed_records, 1);
+        assert_eq!(summary.inventory.follow_up_records, 1);
         assert_eq!(summary.failures.len(), 1);
         assert_eq!(summary.failures[0].call_id, "call_1");
 
@@ -3022,6 +3046,7 @@ mod tests {
                 approval_expired_records: 0,
                 records_with_errors: 1,
                 records_with_references: 1,
+                follow_up_records: 1,
             }
         );
         assert!(inventory.requires_follow_up());
@@ -3030,6 +3055,30 @@ mod tests {
         assert_eq!(storage.total_records, 2);
         assert_eq!(storage.records_with_metadata, 2);
         assert_eq!(storage.json_records, 2);
+    }
+
+    #[test]
+    fn inventory_summaries_count_follow_up_rows_once() {
+        let clean = sample_record("call_clean");
+        let failed = failed_record("call_failed");
+        let mut active = sample_record("call_active");
+        active.status = ToolCallStatus::Running;
+        active.approval_state = ApprovalState::Pending;
+        active.result_summary.ok = false;
+        active.result_summary.has_error = true;
+        active.result_summary.error_kind = Some(ToolErrorKind::ToolApprovalRequired);
+
+        let inventory = ToolAuditStoreInventorySummary::from_records(&[clean, failed, active]);
+
+        assert_eq!(inventory.total_records, 3);
+        assert_eq!(inventory.completed_records, 1);
+        assert_eq!(inventory.failed_records, 1);
+        assert_eq!(inventory.active_records, 1);
+        assert_eq!(inventory.approval_pending_records, 1);
+        assert_eq!(inventory.approval_denied_records, 1);
+        assert_eq!(inventory.records_with_errors, 2);
+        assert_eq!(inventory.follow_up_records, 2);
+        assert!(inventory.requires_follow_up());
     }
 
     #[test]
@@ -3051,6 +3100,7 @@ mod tests {
         assert_eq!(summary.replayed_records, 1);
         assert!(summary.requires_follow_up());
         assert_eq!(summary.inventory.failed_records, 1);
+        assert_eq!(summary.inventory.follow_up_records, 1);
         assert_eq!(sink.records(), &[failed_record("call_2")]);
     }
 

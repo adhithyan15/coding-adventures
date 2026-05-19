@@ -27,6 +27,8 @@ The crate keeps the boundary narrow:
   can preview workload and follow-up pressure before committing a tick
 - supervisors can drain one checkpointed page per tick and inspect progress,
   continuation, and follow-up signals without loading payloads
+- supervisor inventory summaries include payload-free follow-up row counts so
+  hosts can size follow-up pressure without inspecting audit payloads
 - supervisors can run bounded drain loops that stop at end-of-log or report
   tick-budget exhaustion for the next scheduler pass
 - supervisors can capture a preflight drain plan beside the actual bounded
