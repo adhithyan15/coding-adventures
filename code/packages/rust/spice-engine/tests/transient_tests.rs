@@ -1,6 +1,7 @@
 use spice_engine::{
-    estimate_period, pss_residual, pss_residual_with_tolerance, transient, Capacitor, Cccs, Ccvs,
-    Circuit, CurrentSource, Element, ExpWaveform, Inductor, PssResidualResult, PulseWaveform,
+    estimate_period, pss_residual, pss_residual_jacobian_with_tolerance,
+    pss_residual_with_tolerance, transient, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element,
+    ExpWaveform, Inductor, PssResidualJacobianResult, PssResidualResult, PulseWaveform,
     PwlWaveform, Resistor, SinWaveform, SpiceError, VoltageSource, Waveform,
 };
 
@@ -144,6 +145,51 @@ fn pss_residual_reports_one_period_node_closure() {
 }
 
 #[test]
+fn pss_residual_jacobian_reports_reactive_initial_state_columns() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, 1_000.0)),
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "out", 1_000.0)));
+    circuit.add(Element::Capacitor(Capacitor::with_initial_voltage(
+        "C1", "out", "0", 1.0e-6, 0.1,
+    )));
+
+    let result = pss_residual_jacobian_with_tolerance(&circuit, 32, 1.0e-6, 1.0e-5)
+        .unwrap()
+        .unwrap();
+
+    let _: PssResidualJacobianResult = result.clone();
+    assert_close(result.perturbation, 1.0e-5);
+    assert_eq!(result.state_vector.len(), 1);
+    assert_eq!(result.state_vector[0].kind, "capacitor_voltage");
+    assert_eq!(result.state_vector[0].name, "C1");
+    assert_close(result.state_vector[0].value, 0.1);
+    assert_eq!(result.columns[0].state, result.state_vector[0]);
+    assert_eq!(result.jacobian.len(), result.residual.residual_vector.len());
+    assert!(result.jacobian.iter().all(|row| row.len() == 1));
+    let out_derivative = result.columns[0]
+        .residual_derivatives
+        .iter()
+        .find(|entry| entry.name == "out")
+        .unwrap()
+        .value;
+    let out_row = result
+        .residual
+        .residual_vector
+        .iter()
+        .position(|entry| entry.name == "out")
+        .unwrap();
+    assert_close(result.jacobian[out_row][0], out_derivative);
+    assert!(out_derivative.abs() > 0.1);
+    assert!(result.jacobian.iter().all(|row| row[0].is_finite()));
+}
+
+#[test]
 fn pss_residual_requires_periodic_sources() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
@@ -170,6 +216,23 @@ fn pss_residual_rejects_negative_residual_tolerance() {
 
     assert!(matches!(
         pss_residual_with_tolerance(&circuit, 32, -1.0),
+        Err(SpiceError::InvalidElement { .. })
+    ));
+}
+
+#[test]
+fn pss_residual_jacobian_rejects_non_positive_perturbation() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, 1_000.0)),
+    )));
+
+    assert!(matches!(
+        pss_residual_jacobian_with_tolerance(&circuit, 32, 1.0e-6, 0.0),
         Err(SpiceError::InvalidElement { .. })
     ));
 }

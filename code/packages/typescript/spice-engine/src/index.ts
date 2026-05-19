@@ -612,6 +612,25 @@ export interface PssResidualResult {
   readonly withinTolerance: boolean;
 }
 
+export interface PssStateEntry {
+  readonly kind: "capacitor_voltage" | "inductor_current";
+  readonly name: string;
+  readonly value: number;
+}
+
+export interface PssResidualJacobianColumn {
+  readonly state: PssStateEntry;
+  readonly residualDerivatives: readonly PssResidualEntry[];
+}
+
+export interface PssResidualJacobianResult {
+  readonly residual: PssResidualResult;
+  readonly stateVector: readonly PssStateEntry[];
+  readonly perturbation: number;
+  readonly columns: readonly PssResidualJacobianColumn[];
+  readonly jacobian: readonly (readonly number[])[];
+}
+
 export class SpiceError extends Error {
   constructor(
     message: string,
@@ -1792,6 +1811,128 @@ export function pssResidual(
     residualRmsNorm,
     residualTolerance,
     withinTolerance: maxAbsResidual <= residualTolerance,
+  };
+}
+
+function pssStateVector(circuit: Circuit): PssStateEntry[] {
+  const stateVector: PssStateEntry[] = [];
+  for (const element of circuit.elements()) {
+    if (element.kind === "capacitor") {
+      stateVector.push({
+        kind: "capacitor_voltage",
+        name: element.name,
+        value: element.initialVoltage,
+      });
+    } else if (element.kind === "inductor") {
+      stateVector.push({
+        kind: "inductor_current",
+        name: element.name,
+        value: element.initialCurrent,
+      });
+    }
+  }
+  return stateVector;
+}
+
+function withPerturbedPssState(
+  circuit: Circuit,
+  target: PssStateEntry,
+  perturbation: number,
+): Circuit {
+  const perturbed = new Circuit();
+  for (const element of circuit.elements()) {
+    if (
+      target.kind === "capacitor_voltage" &&
+      element.kind === "capacitor" &&
+      element.name === target.name
+    ) {
+      perturbed.add({
+        ...element,
+        initialVoltage: element.initialVoltage + perturbation,
+      });
+    } else if (
+      target.kind === "inductor_current" &&
+      element.kind === "inductor" &&
+      element.name === target.name
+    ) {
+      perturbed.add({
+        ...element,
+        initialCurrent: element.initialCurrent + perturbation,
+      });
+    } else {
+      perturbed.add(element);
+    }
+  }
+  return perturbed;
+}
+
+export function pssResidualJacobian(
+  circuit: Circuit,
+  stepsPerPeriod = 64,
+  residualTolerance = 1.0e-6,
+  perturbation = 1.0e-6,
+): PssResidualJacobianResult | undefined {
+  if (!Number.isFinite(perturbation) || perturbation <= 0.0) {
+    throw invalidElement(
+      "pssResidualJacobian",
+      "perturbation must be finite and positive",
+    );
+  }
+
+  const residual = pssResidual(circuit, stepsPerPeriod, residualTolerance);
+  if (residual === undefined) {
+    return undefined;
+  }
+
+  const stateVector = pssStateVector(circuit);
+  const columns: PssResidualJacobianColumn[] = [];
+  for (const state of stateVector) {
+    const perturbed = pssResidual(
+      withPerturbedPssState(circuit, state, perturbation),
+      stepsPerPeriod,
+      residualTolerance,
+    );
+    if (perturbed === undefined) {
+      throw invalidElement(
+        "pssResidualJacobian",
+        "perturbed circuit no longer has an estimated period",
+      );
+    }
+    if (perturbed.residualVector.length !== residual.residualVector.length) {
+      throw invalidElement(
+        "pssResidualJacobian",
+        "perturbed residual vector changed shape",
+      );
+    }
+    const residualDerivatives = residual.residualVector.map((baseEntry, index) => {
+      const perturbedEntry = perturbed.residualVector[index];
+      if (
+        perturbedEntry.kind !== baseEntry.kind ||
+        perturbedEntry.name !== baseEntry.name
+      ) {
+        throw invalidElement(
+          "pssResidualJacobian",
+          "perturbed residual vector changed ordering",
+        );
+      }
+      return {
+        kind: baseEntry.kind,
+        name: baseEntry.name,
+        value: (perturbedEntry.value - baseEntry.value) / perturbation,
+      };
+    });
+    columns.push({ state, residualDerivatives });
+  }
+
+  const jacobian = residual.residualVector.map((_entry, rowIndex) =>
+    columns.map((column) => column.residualDerivatives[rowIndex].value),
+  );
+  return {
+    residual,
+    stateVector,
+    perturbation,
+    columns,
+    jacobian,
   };
 }
 

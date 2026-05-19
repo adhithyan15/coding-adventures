@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `pssResidualJacobian`, a forward finite-difference Jacobian from
+  reactive initial conditions to the ordered PSS residual vector for future
+  shooting-Newton updates.
 - Add L2 and RMS norms over the ordered PSS residual vector for future
   shooting-Newton convergence checks.
 - Add a stable node-then-branch residual vector to `pssResidual` as the next
