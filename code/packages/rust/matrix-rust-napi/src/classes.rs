@@ -56,9 +56,9 @@ use matrix_ir::Graph;
 use matrix_ir_json::{decode, encode};
 use node_bridge::{
     create_function, define_class, get_cb_info, method_property, napi_callback_info,
-    napi_env, napi_new_instance, napi_set_named_property, napi_unwrap, napi_value,
-    napi_wrap, set_named_property, str_from_js, str_to_js, throw_error, undefined,
-    vec_buf_from_js, vec_buf_to_js, NAPI_OK,
+    napi_create_reference, napi_env, napi_get_reference_value, napi_new_instance, napi_ref,
+    napi_set_named_property, napi_unwrap, napi_value, napi_wrap, set_named_property,
+    str_from_js, str_to_js, throw_error, undefined, vec_buf_from_js, vec_buf_to_js, NAPI_OK,
 };
 
 use crate::exec::run_graph_on_cpu;
@@ -119,29 +119,86 @@ struct WrappedRuntime {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Static storage for the class constructor `napi_value`s.
+// Static storage for the class constructor references.
 //
-// Worker threads load addons concurrently; storing `napi_value` (a
-// pointer-sized opaque handle) in `static mut` would be a data race.
-// `AtomicUsize` is the standard fix — same size as a pointer on every
-// supported target, Release-on-write / Acquire-on-read makes the
-// publish-once / read-many access pattern race-free.
+// **Why `napi_ref` and not `napi_value`?**
+//
+// `napi_value` is a "local reference" — valid only inside the current
+// handle scope (typically the duration of one N-API callback).
+// Storing a `napi_value` in a `static` and dereferencing it from a
+// later callback uses a stale handle; `napi_new_instance` returns
+// `napi_invalid_arg` (status 1) because the `napi_value` no longer
+// points at a live JS function.  This bit us on the first run of the
+// MX07 Phase 4 smoke tests — `Runtime.create()` returned `undefined`
+// because the constructor handle stored from `napi_register_module_v1`
+// was already invalid by the time JS first called the static method.
+//
+// `napi_ref` is the persistent equivalent: created with refcount 1
+// via `napi_create_reference`, it keeps the wrapped JS value alive
+// across handle scopes until explicitly deleted via
+// `napi_delete_reference`.  We use that for the class constructors so
+// `Graph.fromJson` and `Runtime.create` can resolve them from any
+// later JS-triggered callback.
+//
+// Worker threads still load addons concurrently, so we keep the
+// `AtomicUsize` Release/Acquire publish-once pattern from
+// font-parser-node's Finding 3.1 fix.  Storing `napi_ref` (also a
+// pointer-sized opaque) instead of `napi_value` is the only change.
+//
+// **What about the lesson for node-bridge?**
+//
+// font-parser-node uses the `napi_value` AtomicUsize pattern too.
+// As far as we can tell, no existing test in that crate actually
+// exercises the failure mode (`fp.load` rejects every input we tried
+// before reaching `napi_new_instance`), but the bug is latent there.
+// `lessons.md` is updated to call this out so the next napi addon
+// gets it right from day one.
 // ─────────────────────────────────────────────────────────────────────────────
 
-static GRAPH_CTOR: AtomicUsize = AtomicUsize::new(0);
-static RUNTIME_CTOR: AtomicUsize = AtomicUsize::new(0);
+static GRAPH_CTOR_REF: AtomicUsize = AtomicUsize::new(0);
+static RUNTIME_CTOR_REF: AtomicUsize = AtomicUsize::new(0);
 
-fn store_graph_ctor(v: napi_value) {
-    GRAPH_CTOR.store(v as usize, Ordering::Release);
+fn store_graph_ctor_ref(r: napi_ref) {
+    GRAPH_CTOR_REF.store(r as usize, Ordering::Release);
 }
-fn load_graph_ctor() -> napi_value {
-    GRAPH_CTOR.load(Ordering::Acquire) as napi_value
+fn load_graph_ctor_ref() -> napi_ref {
+    GRAPH_CTOR_REF.load(Ordering::Acquire) as napi_ref
 }
-fn store_runtime_ctor(v: napi_value) {
-    RUNTIME_CTOR.store(v as usize, Ordering::Release);
+fn store_runtime_ctor_ref(r: napi_ref) {
+    RUNTIME_CTOR_REF.store(r as usize, Ordering::Release);
 }
-fn load_runtime_ctor() -> napi_value {
-    RUNTIME_CTOR.load(Ordering::Acquire) as napi_value
+fn load_runtime_ctor_ref() -> napi_ref {
+    RUNTIME_CTOR_REF.load(Ordering::Acquire) as napi_ref
+}
+
+/// Resolve a stored class-constructor `napi_ref` into a `napi_value`
+/// valid for the current handle scope.  Returns `None` (with a JS
+/// exception thrown) if the reference is null (registration never
+/// ran) or `napi_get_reference_value` fails.
+unsafe fn resolve_ctor(env: napi_env, ctor_ref: napi_ref, class_name: &str) -> Option<napi_value> {
+    if ctor_ref.is_null() {
+        throw_error(
+            env,
+            &format!(
+                "{}: class not initialised (napi_register_module_v1 didn't run?)",
+                class_name
+            ),
+        );
+        return None;
+    }
+    let mut value: napi_value = ptr::null_mut();
+    let status = napi_get_reference_value(env, ctor_ref, &mut value);
+    if status != NAPI_OK || value.is_null() {
+        throw_error(
+            env,
+            &format!(
+                "{}: napi_get_reference_value failed (status {})",
+                class_name, status
+            ),
+        );
+        return None;
+    }
+    Some(value)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -326,18 +383,28 @@ unsafe extern "C" fn graph_from_json_static(
         );
         return undefined(env);
     }
-    let ctor = load_graph_ctor();
-    if ctor.is_null() {
-        throw_error(env, "Graph.fromJson: class not initialised");
-        return undefined(env);
-    }
+    let ctor = match resolve_ctor(env, load_graph_ctor_ref(), "Graph.fromJson") {
+        Some(c) => c,
+        None => return undefined(env),
+    };
     let mut instance: napi_value = ptr::null_mut();
     // Forward args[0] verbatim to the constructor — it does all the
     // parsing + wrapping work.
     let status = napi_new_instance(env, ctor, 1, args.as_ptr(), &mut instance);
-    if status != NAPI_OK || instance.is_null() {
-        // Constructor would have thrown a precise error; just return
-        // undefined to let the JS engine surface the pending exception.
+    if status != NAPI_OK {
+        throw_error(
+            env,
+            &format!(
+                "Graph.fromJson: napi_new_instance failed (status {})",
+                status
+            ),
+        );
+        return undefined(env);
+    }
+    if instance.is_null() {
+        // If status was OK but instance is null, the constructor
+        // itself threw and we should let the pending exception
+        // propagate.
         return undefined(env);
     }
     instance
@@ -489,15 +556,24 @@ unsafe extern "C" fn runtime_create_static(
         );
         return undefined(env);
     }
-    let ctor = load_runtime_ctor();
-    if ctor.is_null() {
-        throw_error(env, "Runtime.create: class not initialised");
-        return undefined(env);
-    }
+    let ctor = match resolve_ctor(env, load_runtime_ctor_ref(), "Runtime.create") {
+        Some(c) => c,
+        None => return undefined(env),
+    };
     let mut instance: napi_value = ptr::null_mut();
     let no_args: [napi_value; 0] = [];
     let status = napi_new_instance(env, ctor, 0, no_args.as_ptr(), &mut instance);
-    if status != NAPI_OK || instance.is_null() {
+    if status != NAPI_OK {
+        throw_error(
+            env,
+            &format!(
+                "Runtime.create: napi_new_instance failed (status {})",
+                status
+            ),
+        );
+        return undefined(env);
+    }
+    if instance.is_null() {
         return undefined(env);
     }
     instance
@@ -588,7 +664,24 @@ pub unsafe fn register(env: napi_env, exports: napi_value) {
             method_property("describe", Some(graph_describe)),
         ],
     );
-    store_graph_ctor(graph_class);
+    // SAFETY: napi_value is a local handle valid only in this scope.
+    // Wrap it in a persistent napi_ref (refcount 1) so static-method
+    // callbacks fired from later JS calls can still resolve the
+    // class constructor.  See the GRAPH_CTOR_REF docs above for the
+    // full rationale.
+    let mut graph_ref: napi_ref = ptr::null_mut();
+    let st = napi_create_reference(env, graph_class, 1, &mut graph_ref);
+    if st != NAPI_OK {
+        throw_error(
+            env,
+            &format!(
+                "Graph: napi_create_reference failed (status {})",
+                st
+            ),
+        );
+        return;
+    }
+    store_graph_ctor_ref(graph_ref);
 
     // Attach the static-method sugar `Graph.fromJson` on the class
     // itself (JS classes are functions; you can hang properties off
@@ -608,7 +701,21 @@ pub unsafe fn register(env: napi_env, exports: napi_value) {
         Some(runtime_ctor),
         &[method_property("run", Some(runtime_run))],
     );
-    store_runtime_ctor(runtime_class);
+    // SAFETY: same as for graph_ref above — wrap the local handle in
+    // a persistent napi_ref so Runtime.create() can resolve it later.
+    let mut runtime_ref: napi_ref = ptr::null_mut();
+    let st = napi_create_reference(env, runtime_class, 1, &mut runtime_ref);
+    if st != NAPI_OK {
+        throw_error(
+            env,
+            &format!(
+                "Runtime: napi_create_reference failed (status {})",
+                st
+            ),
+        );
+        return;
+    }
+    store_runtime_ctor_ref(runtime_ref);
 
     let create = create_function(env, "create", Some(runtime_create_static));
     let key = CString::new("create").expect("name has no NUL");

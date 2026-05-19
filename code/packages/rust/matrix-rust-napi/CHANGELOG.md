@@ -3,6 +3,48 @@
 All notable changes to `matrix-rust-napi` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.0] — 2026-05-18
+
+### Fixed — CRITICAL: class constructors stored as stale `napi_value` instead of persistent `napi_ref`
+
+Surfaced during MX07 Phase 4 vitest end-to-end runs.  The class
+constructors for `Graph` and `Runtime` were stored in `AtomicUsize`
+as raw `napi_value` (a **local handle** valid only inside the
+current handle scope).  When a later JS-triggered callback
+(`Graph.fromJson(...)` or `Runtime.create()`) loaded the stored
+value and passed it to `napi_new_instance`, the call returned
+`napi_invalid_arg` (status 1) — because the local handle had
+been invalidated when its scope ended.  Both static methods
+silently returned `undefined`.
+
+Fix.  Switched `GRAPH_CTOR` / `RUNTIME_CTOR` (now
+`GRAPH_CTOR_REF` / `RUNTIME_CTOR_REF`) to store **`napi_ref`**, the
+persistent equivalent:
+
+* In `register()`, after `define_class`, wrap the class
+  `napi_value` in a `napi_ref` via
+  `napi_create_reference(env, class, 1, &mut ref)`.
+* Each static-method callback calls a new `resolve_ctor` helper that
+  reads the stored `napi_ref`, calls
+  `napi_get_reference_value(env, ref, &mut value)` to get a
+  scope-bound `napi_value`, and passes that to
+  `napi_new_instance`.
+* On any failure (null ref, `get_reference_value` error,
+  `new_instance` error), throw a precise JS error instead of
+  silently returning `undefined`.
+
+This also tightens error reporting: the old static methods returned
+`undefined` for any failure mode, which masked exactly the kind of
+issue we hit.  The new ones throw with the failing N-API call name
+and status code.
+
+A `lessons.md` entry was added so the next napi addon doesn't
+re-discover this.  `font-parser-node` has the same latent bug
+(`FONT_FILE_CTOR` stores a raw `napi_value`), but no existing test
+in that crate reaches `napi_new_instance` (every input rejects
+earlier via `fp::load`), so the bug never fired.  Filed for a
+follow-up fix there.
+
 ## [0.4.0] — 2026-05-18
 
 ### Added — MX07 Phase 3: build pipeline + GitHub Actions smoke
