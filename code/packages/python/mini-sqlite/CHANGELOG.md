@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.53.0] - 2026-05-19
+
+### Fixed
+
+- **``SELECT *`` now returns columns from every FROM source**, not
+  just the first one (via ``sql-codegen 1.31.0``).  The bug was in
+  the Wildcard branch of ``_compile_project_body``, which called
+  ``_primary_cursor`` and emitted ``ScanAllColumns`` for only the
+  first opened cursor.  Cross-join queries silently dropped columns
+  from later sources.
+
+  Example::
+
+      mini-sqlite (before): [(1,)]      -- only first table's columns
+      mini-sqlite (now):    [(1, 2)]    -- matches real SQLite
+      real SQLite:          [(1, 2)]
+
+  Affected forms (all now correct):
+
+      SELECT * FROM a, b
+      SELECT * FROM (SELECT 1 AS x) t1, (SELECT 2 AS y) t2
+      WITH x AS (...), y AS (...) SELECT * FROM x, y
+      SELECT * FROM orders, customers WHERE ...
+
+  11 new oracle tests in ``test_tier3_select_star_cross_join.py``
+  cover the cross-join cases for plain tables, derived tables, CTEs,
+  and the explicit JOIN-ON forms (regression guard).
+
+  Known follow-up (separate PR): the LEFT JOIN unmatched-row case
+  still needs NULL-padding work in the VM.  Matched rows are now
+  fully correct; unmatched left rows return fewer columns than
+  expected.
+
 ## [1.52.0] - 2026-05-19
 
 ### Fixed
