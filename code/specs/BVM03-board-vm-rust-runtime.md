@@ -161,6 +161,12 @@ as a `u32`. The VM keeps the operation transport-neutral and delegates the
 actual resolver policy to the board adapter through `BoardHal::network_dns_resolve`,
 so frontends can keep emitting bounded bytecode while board ports decide whether
 to use WiFi firmware DNS helpers, a later DNS message stack, or cached entries.
+`network.dns.set_server` is the first DNS client-policy follow-up: it accepts
+an interface id plus a resolver IPv4 address encoded as a `u32`, then delegates
+to `BoardHal::network_dns_set_server` without changing the `network.dns.resolve`
+operand shape. Board ports may map it to firmware resolver configuration,
+ignore it when the active link owns resolver policy, or cache it for a later
+bounded DNS message stack.
 
 `HandleToken` is private to the board adapter. The portable VM only sees compact
 `Handle` ids.
@@ -179,6 +185,7 @@ CALL_U8 0x42 -> network.wifi.associate
 CALL_U8 0x45 -> network.dns.resolve
 CALL_U8 0x46 -> network.tcp.connected
 CALL_U8 0x47 -> network.udp.available
+CALL_U8 0x48 -> network.dns.set_server
 ```
 
 Each handler:

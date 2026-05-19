@@ -55,6 +55,7 @@ pub const CAP_NETWORK_WIFI_STATUS: u16 = 0x44;
 pub const CAP_NETWORK_DNS_RESOLVE: u16 = 0x45;
 pub const CAP_NETWORK_TCP_CONNECTED: u16 = 0x46;
 pub const CAP_NETWORK_UDP_AVAILABLE: u16 = 0x47;
+pub const CAP_NETWORK_DNS_SET_SERVER: u16 = 0x48;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
 const CAP_GPIO_WRITE_U8: u8 = CAP_GPIO_WRITE as u8;
@@ -100,6 +101,7 @@ const CAP_NETWORK_WIFI_STATUS_U8: u8 = CAP_NETWORK_WIFI_STATUS as u8;
 const CAP_NETWORK_DNS_RESOLVE_U8: u8 = CAP_NETWORK_DNS_RESOLVE as u8;
 const CAP_NETWORK_TCP_CONNECTED_U8: u8 = CAP_NETWORK_TCP_CONNECTED as u8;
 const CAP_NETWORK_UDP_AVAILABLE_U8: u8 = CAP_NETWORK_UDP_AVAILABLE as u8;
+const CAP_NETWORK_DNS_SET_SERVER_U8: u8 = CAP_NETWORK_DNS_SET_SERVER as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Op {
@@ -346,7 +348,7 @@ impl CapabilitySet {
             CAP_NETWORK_WIFI_ASSOCIATE | CAP_NETWORK_WIFI_DISCONNECT | CAP_NETWORK_WIFI_STATUS => {
                 self.network_wifi
             }
-            CAP_NETWORK_DNS_RESOLVE => self.network_dns,
+            CAP_NETWORK_DNS_RESOLVE | CAP_NETWORK_DNS_SET_SERVER => self.network_dns,
             _ => false,
         }
     }
@@ -650,6 +652,9 @@ fn stack_effect(op: Op) -> (i16, i16) {
         }
         Op::CallU8(CAP_NETWORK_WIFI_STATUS_U8) | Op::CallU16(CAP_NETWORK_WIFI_STATUS) => (1, 1),
         Op::CallU8(CAP_NETWORK_DNS_RESOLVE_U8) | Op::CallU16(CAP_NETWORK_DNS_RESOLVE) => (2, 1),
+        Op::CallU8(CAP_NETWORK_DNS_SET_SERVER_U8) | Op::CallU16(CAP_NETWORK_DNS_SET_SERVER) => {
+            (2, 0)
+        }
         Op::CallU8(_) | Op::CallU16(_) => (0, 0),
         Op::ReturnTop => (1, 0),
     }
@@ -1299,6 +1304,31 @@ mod tests {
     }
 
     #[test]
+    fn validates_network_dns_set_server_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[
+                0x12,
+                0x00,
+                0x14,
+                0x08,
+                0x08,
+                0x08,
+                0x08,
+                0x40,
+                CAP_NETWORK_DNS_SET_SERVER as u8,
+            ],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_network_dns(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_DNS_SET_SERVER]);
+    }
+
+    #[test]
     fn validates_network_tcp_connected_capability() {
         let module = Module {
             flags: 0,
@@ -1697,6 +1727,33 @@ mod tests {
             validate(&module, CapabilitySet::blink_mvp(), 2),
             Err(ValidateError::UnsupportedCapability(
                 CAP_NETWORK_DNS_RESOLVE
+            ))
+        );
+    }
+
+    #[test]
+    fn rejects_network_dns_set_server_without_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 2,
+            code: &[
+                0x12,
+                0x00,
+                0x14,
+                0x08,
+                0x08,
+                0x08,
+                0x08,
+                0x40,
+                CAP_NETWORK_DNS_SET_SERVER as u8,
+            ],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 2),
+            Err(ValidateError::UnsupportedCapability(
+                CAP_NETWORK_DNS_SET_SERVER
             ))
         );
     }

@@ -760,6 +760,14 @@ pub trait UnoR4Backend {
         Err(HalError::UnsupportedMode)
     }
 
+    fn set_network_dns_server(
+        &mut self,
+        _interface: u8,
+        _server_ipv4: u32,
+    ) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
     fn transfer_spi(
         &mut self,
         _bus: u8,
@@ -1117,6 +1125,14 @@ where
             return Err(HalError::InvalidPin);
         }
         self.backend.resolve_network_dns(interface, hostname)
+    }
+
+    fn network_dns_set_server(&mut self, interface: u16, server_ipv4: u32) -> Result<(), HalError> {
+        if !self.target.supports_wifi_module {
+            return Err(HalError::UnsupportedMode);
+        }
+        let interface = normalize_network_interface(interface)?;
+        self.backend.set_network_dns_server(interface, server_ipv4)
     }
 
     fn store_program(
@@ -1743,6 +1759,7 @@ mod tests {
         NetworkWifiDisconnect(u8),
         NetworkWifiStatus(u8),
         NetworkDnsResolve(u8, Vec<u8>),
+        NetworkDnsSetServer(u8, u32),
         LedMatrixFrame([u32; 3]),
         BootloaderReboot,
     }
@@ -2034,6 +2051,16 @@ mod tests {
             Ok(0xc0a8_012a)
         }
 
+        fn set_network_dns_server(
+            &mut self,
+            interface: u8,
+            server_ipv4: u32,
+        ) -> Result<(), HalError> {
+            self.events
+                .push(Event::NetworkDnsSetServer(interface, server_ipv4));
+            Ok(())
+        }
+
         fn transfer_spi(
             &mut self,
             bus: u8,
@@ -2297,6 +2324,10 @@ mod tests {
             capability.id == board_vm_ir::CAP_NETWORK_DNS_RESOLVE
                 && capability.name == "network.dns.resolve"
         }));
+        assert!(descriptor.capabilities.iter().any(|capability| {
+            capability.id == board_vm_ir::CAP_NETWORK_DNS_SET_SERVER
+                && capability.name == "network.dns.set_server"
+        }));
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -2392,6 +2423,9 @@ mod tests {
         assert!(UNO_R4_WIFI
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_DNS_RESOLVE));
+        assert!(UNO_R4_WIFI
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_DNS_SET_SERVER));
         assert!(!UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_TCP_OPEN));
@@ -2410,6 +2444,9 @@ mod tests {
         assert!(!UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_DNS_RESOLVE));
+        assert!(!UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_DNS_SET_SERVER));
         assert!(UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_PWM_WRITE));
@@ -2834,6 +2871,18 @@ mod tests {
     }
 
     #[test]
+    fn network_dns_set_server_runs_through_wifi_backend() {
+        let mut board = UnoR4Board::wifi(FakeBackend::new());
+
+        board.network_dns_set_server(0, 0x0808_0808).unwrap();
+
+        assert_eq!(
+            board.backend().events,
+            vec![Event::NetworkDnsSetServer(0, 0x0808_0808)]
+        );
+    }
+
+    #[test]
     fn network_sockets_reject_non_wifi_target_or_unknown_interface() {
         let mut minima = UnoR4Board::minima(FakeBackend::new());
         assert_eq!(
@@ -2867,6 +2916,10 @@ mod tests {
             minima.network_dns_resolve(0, b"example"),
             Err(HalError::UnsupportedMode)
         );
+        assert_eq!(
+            minima.network_dns_set_server(0, 0x0808_0808),
+            Err(HalError::UnsupportedMode)
+        );
 
         let mut wifi = UnoR4Board::wifi(FakeBackend::new());
         assert_eq!(
@@ -2876,6 +2929,10 @@ mod tests {
         assert_eq!(wifi.network_wifi_status(1), Err(HalError::InvalidPin));
         assert_eq!(
             wifi.network_dns_resolve(1, b"example"),
+            Err(HalError::InvalidPin)
+        );
+        assert_eq!(
+            wifi.network_dns_set_server(1, 0x0808_0808),
             Err(HalError::InvalidPin)
         );
         assert_eq!(
