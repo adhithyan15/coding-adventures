@@ -4,16 +4,17 @@ use board_vm_ir::{
     decode_next, validate, CapabilitySet, Module, Op, CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ,
     CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE,
     CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
-    CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_EXCHANGE_UDP, CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY,
-    CAP_NETWORK_DNS_QUERY, CAP_NETWORK_DNS_RESOLVE, CAP_NETWORK_DNS_RESPONSE_IPV4,
-    CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE, CAP_NETWORK_TCP_CLOSE,
-    CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE,
-    CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
-    CAP_NETWORK_UDP_READ_BYTES, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_UDP_WRITE_BYTES,
-    CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS,
-    CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ,
-    CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ,
-    CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
+    CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_EXCHANGE_UDP, CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK,
+    CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY, CAP_NETWORK_DNS_QUERY, CAP_NETWORK_DNS_RESOLVE,
+    CAP_NETWORK_DNS_RESPONSE_IPV4, CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE,
+    CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
+    CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN,
+    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_READ_BYTES, CAP_NETWORK_UDP_WRITE,
+    CAP_NETWORK_UDP_WRITE_BYTES, CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT,
+    CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
+    CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
+    MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1225,6 +1226,28 @@ where
                 )?;
                 self.push(Value::Bytes(response), ip)
             }
+            CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK => {
+                let backoff_ms = self.pop_u16(ip)?;
+                let attempts_per_resolver = self.pop_u8(ip)?;
+                let response_len = self.pop_u8(ip)?;
+                let hostname = self.pop_bytes(ip)?;
+                let transaction_id = self.pop_u16(ip)?;
+                let fallback_resolver_ipv4 = self.pop_u32(ip)?;
+                let primary_resolver_ipv4 = self.pop_u32(ip)?;
+                let interface = self.pop_u16(ip)?;
+                let response = self.network_dns_exchange_udp_fallback(
+                    interface,
+                    primary_resolver_ipv4,
+                    fallback_resolver_ipv4,
+                    transaction_id,
+                    hostname.as_slice(),
+                    response_len,
+                    attempts_per_resolver,
+                    backoff_ms,
+                    ip,
+                )?;
+                self.push(Value::Bytes(response), ip)
+            }
             CAP_NETWORK_DNS_RESPONSE_IPV4 => {
                 let response = self.pop_bytes(ip)?;
                 let transaction_id = self.pop_u16(ip)?;
@@ -1540,6 +1563,55 @@ where
                             })?;
                     }
                 }
+            }
+        }
+    }
+
+    fn network_dns_exchange_udp_fallback(
+        &mut self,
+        interface: u16,
+        primary_resolver_ipv4: u32,
+        fallback_resolver_ipv4: u32,
+        transaction_id: u16,
+        hostname: &[u8],
+        response_len: u8,
+        attempts_per_resolver: u8,
+        backoff_ms: u16,
+        ip: usize,
+    ) -> Result<ByteBuffer, RuntimeError> {
+        match self.network_dns_exchange_udp_retry(
+            interface,
+            primary_resolver_ipv4,
+            transaction_id,
+            hostname,
+            response_len,
+            attempts_per_resolver,
+            backoff_ms,
+            ip,
+        ) {
+            Ok(response) => Ok(response),
+            Err(err) => {
+                if !is_retryable_dns_udp_exchange_error(err.kind) {
+                    return Err(err);
+                }
+                if backoff_ms != 0 {
+                    self.hal
+                        .sleep_ms(backoff_ms)
+                        .map_err(|sleep_err| RuntimeError {
+                            ip,
+                            kind: hal_error_kind(sleep_err),
+                        })?;
+                }
+                self.network_dns_exchange_udp_retry(
+                    interface,
+                    fallback_resolver_ipv4,
+                    transaction_id,
+                    hostname,
+                    response_len,
+                    attempts_per_resolver,
+                    backoff_ms,
+                    ip,
+                )
             }
         }
     }
@@ -3007,6 +3079,81 @@ mod tests {
                 Event::NetworkUdpClose(0x6_2003),
                 Event::Sleep(25),
                 Event::NetworkUdpOpen(0, 0x0808_0808, 53),
+                Event::NetworkUdpWriteBytes(
+                    0x6_2003,
+                    ByteBuffer::from_slice(&expected_query).unwrap()
+                ),
+                Event::NetworkUdpReadBytes(0x6_2003, MAX_BYTE_BUFFER_LEN as u8),
+                Event::NetworkUdpClose(0x6_2003),
+            ]
+        );
+    }
+
+    #[test]
+    fn network_dns_exchange_udp_fallback_tries_second_resolver_after_transport_failure() {
+        let mut runtime: Runtime<FakeHal, 8, 1> = Runtime::new(FakeHal::new());
+        runtime.hal_mut().udp_read_failures_remaining = 1;
+        let module = Module {
+            flags: 0,
+            max_stack: 8,
+            code: &[
+                0x12,
+                0x00,
+                0x14,
+                0x08,
+                0x08,
+                0x08,
+                0x08,
+                0x14,
+                0x01,
+                0x01,
+                0x01,
+                0x01,
+                0x13,
+                0x34,
+                0x12,
+                0x16,
+                0x00,
+                0x00,
+                0x07,
+                0x12,
+                0x20,
+                0x12,
+                0x01,
+                0x13,
+                0x19,
+                0x00,
+                0x40,
+                CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK as u8,
+                0x50,
+            ],
+            const_pool: b"example",
+        };
+        let expected_query = [
+            0x12, 0x34, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, b'e',
+            b'x', b'a', b'm', b'p', b'l', b'e', 0x00, 0x00, 0x01, 0x00, 0x01,
+        ];
+        let expected_response = dns_response_ipv4(0x1234, 0xC0A8_012A);
+
+        let report = runtime.run_module(&module, 18).unwrap();
+
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(
+            report.return_value,
+            Value::Bytes(ByteBuffer::from_slice(&expected_response).unwrap())
+        );
+        assert_eq!(
+            runtime.hal().events,
+            vec![
+                Event::NetworkUdpOpen(0, 0x0808_0808, 53),
+                Event::NetworkUdpWriteBytes(
+                    0x6_2003,
+                    ByteBuffer::from_slice(&expected_query).unwrap()
+                ),
+                Event::NetworkUdpReadBytes(0x6_2003, MAX_BYTE_BUFFER_LEN as u8),
+                Event::NetworkUdpClose(0x6_2003),
+                Event::Sleep(25),
+                Event::NetworkUdpOpen(0, 0x0101_0101, 53),
                 Event::NetworkUdpWriteBytes(
                     0x6_2003,
                     ByteBuffer::from_slice(&expected_query).unwrap()

@@ -63,6 +63,7 @@ pub const CAP_NETWORK_UDP_WRITE_BYTES: u16 = 0x4C;
 pub const CAP_NETWORK_UDP_READ_BYTES: u16 = 0x4D;
 pub const CAP_NETWORK_DNS_EXCHANGE_UDP: u16 = 0x4E;
 pub const CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY: u16 = 0x4F;
+pub const CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK: u16 = 0x50;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
 const CAP_GPIO_WRITE_U8: u8 = CAP_GPIO_WRITE as u8;
@@ -116,6 +117,7 @@ const CAP_NETWORK_UDP_WRITE_BYTES_U8: u8 = CAP_NETWORK_UDP_WRITE_BYTES as u8;
 const CAP_NETWORK_UDP_READ_BYTES_U8: u8 = CAP_NETWORK_UDP_READ_BYTES as u8;
 const CAP_NETWORK_DNS_EXCHANGE_UDP_U8: u8 = CAP_NETWORK_DNS_EXCHANGE_UDP as u8;
 const CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY_U8: u8 = CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY as u8;
+const CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK_U8: u8 = CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Op {
@@ -369,9 +371,9 @@ impl CapabilitySet {
             | CAP_NETWORK_DNS_SET_SERVER
             | CAP_NETWORK_DNS_QUERY
             | CAP_NETWORK_DNS_RESPONSE_IPV4 => self.network_dns,
-            CAP_NETWORK_DNS_EXCHANGE_UDP | CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY => {
-                self.network_dns && self.network_udp
-            }
+            CAP_NETWORK_DNS_EXCHANGE_UDP
+            | CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY
+            | CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK => self.network_dns && self.network_udp,
             _ => false,
         }
     }
@@ -693,6 +695,8 @@ fn stack_effect(op: Op) -> (i16, i16) {
         }
         Op::CallU8(CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY_U8)
         | Op::CallU16(CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY) => (7, 1),
+        Op::CallU8(CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK_U8)
+        | Op::CallU16(CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK) => (8, 1),
         Op::CallU8(_) | Op::CallU16(_) => (0, 0),
         Op::ReturnTop => (1, 0),
     }
@@ -1597,6 +1601,61 @@ mod tests {
     }
 
     #[test]
+    fn validates_network_dns_udp_exchange_fallback_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 8,
+            code: &[
+                0x12,
+                0x00,
+                0x14,
+                0x08,
+                0x08,
+                0x08,
+                0x08,
+                0x14,
+                0x01,
+                0x01,
+                0x01,
+                0x01,
+                0x13,
+                0x34,
+                0x12,
+                0x16,
+                0x00,
+                0x00,
+                0x07,
+                0x12,
+                0x20,
+                0x12,
+                0x01,
+                0x13,
+                0x19,
+                0x00,
+                0x40,
+                CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK as u8,
+                0x50,
+            ],
+            const_pool: b"example",
+        };
+
+        validate(
+            &module,
+            CapabilitySet::blink_mvp()
+                .with_network_dns()
+                .with_network_udp(),
+            8,
+        )
+        .unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(
+            &capabilities[..count],
+            &[CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK]
+        );
+    }
+
+    #[test]
     fn validates_spi_transfer_capability() {
         let module = Module {
             flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
@@ -2246,6 +2305,65 @@ mod tests {
             validate(&module, CapabilitySet::blink_mvp().with_network_udp(), 7),
             Err(ValidateError::UnsupportedCapability(
                 CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY
+            ))
+        );
+    }
+
+    #[test]
+    fn rejects_network_dns_udp_exchange_fallback_without_both_capabilities() {
+        let module = Module {
+            flags: 0,
+            max_stack: 8,
+            code: &[
+                0x12,
+                0x00,
+                0x14,
+                0x08,
+                0x08,
+                0x08,
+                0x08,
+                0x14,
+                0x01,
+                0x01,
+                0x01,
+                0x01,
+                0x13,
+                0x34,
+                0x12,
+                0x16,
+                0x00,
+                0x00,
+                0x07,
+                0x12,
+                0x20,
+                0x12,
+                0x01,
+                0x13,
+                0x19,
+                0x00,
+                0x40,
+                CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK as u8,
+                0x50,
+            ],
+            const_pool: b"example",
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 8),
+            Err(ValidateError::UnsupportedCapability(
+                CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK
+            ))
+        );
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp().with_network_dns(), 8),
+            Err(ValidateError::UnsupportedCapability(
+                CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK
+            ))
+        );
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp().with_network_udp(), 8),
+            Err(ValidateError::UnsupportedCapability(
+                CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK
             ))
         );
     }
