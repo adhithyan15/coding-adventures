@@ -2,6 +2,16 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.19.0] - 2026-05-18
+
+### Added
+
+- **`ATTACH`, `DETACH`, `DATABASE` keywords** (`sql.tokens`, `_grammar.py`)
+  — added to the keyword list so the parser can recognise the SQLite
+  `ATTACH [DATABASE] expr AS name` and `DETACH [DATABASE] name` statements.
+  Mini-sqlite no-ops these (single-database engine), but accepting the
+  syntax unlocks ORM/migration code.
+
 ## [0.18.0] - 2026-05-18
 
 ### Added

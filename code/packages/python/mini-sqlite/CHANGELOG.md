@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.45.0] - 2026-05-18
+
+### Added
+
+- **`ATTACH DATABASE` / `DETACH DATABASE`** (`sql-lexer 0.19.0`,
+  `sql-parser 0.24.0`, `engine.py`) — accept-and-no-op support for these
+  SQLite statements.  Real SQLite uses ATTACH to mount additional
+  databases under a schema name; mini-sqlite is a single-database engine
+  and silently succeeds without actually attaching anything.  This unlocks
+  ORM/migration code that issues these statements during connection setup
+  or schema verification.
+
+  Limitations (documented):
+
+  - Multi-database queries (`SELECT * FROM aux.t`) are not supported.
+  - `PRAGMA database_list` still reports only the `main` schema.
+
+### Tests
+
+- 9 new tests in `test_tier3_attach_detach.py` verify that both engines
+  accept all four syntactic forms (`ATTACH DATABASE`/`ATTACH`,
+  `DETACH DATABASE`/`DETACH`) and that round-trip patterns common in
+  ORM code don't raise.
+
 ## [1.44.0] - 2026-05-18
 
 ### Added

@@ -69,8 +69,36 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='rollback_stmt', is_token=False),
                 RuleReference(name='savepoint_stmt', is_token=False),
                 RuleReference(name='release_stmt', is_token=False),
+                RuleReference(name='attach_stmt', is_token=False),
+                RuleReference(name='detach_stmt', is_token=False),
             ]),
             line_number=12,
+        ),
+        GrammarRule(
+            name='attach_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='ATTACH'),
+                Optional(element=
+                    Literal(value='DATABASE'),
+                ),
+                RuleReference(name='expr', is_token=False),
+                Literal(value='AS'),
+                RuleReference(name='NAME', is_token=True),
+            ]),
+            line_number=23,
+        ),
+        GrammarRule(
+            name='detach_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='DETACH'),
+                Optional(element=
+                    Literal(value='DATABASE'),
+                ),
+                RuleReference(name='NAME', is_token=True),
+            ]),
+            line_number=24,
         ),
         GrammarRule(
             name='query_stmt',

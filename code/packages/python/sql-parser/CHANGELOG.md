@@ -2,6 +2,20 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.24.0] - 2026-05-18
+
+### Added
+
+- **`attach_stmt` / `detach_stmt`** (`sql.grammar`, `_grammar.py`) — two
+  new top-level statement rules:
+
+      attach_stmt = "ATTACH" [ "DATABASE" ] expr "AS" NAME ;
+      detach_stmt = "DETACH" [ "DATABASE" ] NAME ;
+
+  Added as alternatives in the top-level `statement` rule.  The
+  `DATABASE` keyword is optional (SQLite accepts both `ATTACH DATABASE …`
+  and `ATTACH …`).
+
 ## [0.23.0] - 2026-05-18
 
 ### Added
