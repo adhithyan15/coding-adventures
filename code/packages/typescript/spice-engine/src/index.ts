@@ -638,6 +638,13 @@ export interface PssNewtonUpdateResult {
   readonly updateL2Norm: number;
 }
 
+export interface PssNewtonCandidateResult {
+  readonly update: PssNewtonUpdateResult;
+  readonly candidateCircuit: Circuit;
+  readonly candidateStateVector: readonly PssStateEntry[];
+  readonly candidateResidual: PssResidualResult;
+}
+
 export class SpiceError extends Error {
   constructor(
     message: string,
@@ -1873,6 +1880,32 @@ function withPerturbedPssState(
   return perturbed;
 }
 
+function withPssStateVector(
+  circuit: Circuit,
+  stateVector: readonly PssStateEntry[],
+): Circuit {
+  const targetByKey = new Map(
+    stateVector.map((state) => [`${state.kind}\u0000${state.name}`, state.value]),
+  );
+  const candidate = new Circuit();
+  for (const element of circuit.elements()) {
+    if (element.kind === "capacitor") {
+      const value = targetByKey.get(`capacitor_voltage\u0000${element.name}`);
+      candidate.add(
+        value === undefined ? element : { ...element, initialVoltage: value },
+      );
+    } else if (element.kind === "inductor") {
+      const value = targetByKey.get(`inductor_current\u0000${element.name}`);
+      candidate.add(
+        value === undefined ? element : { ...element, initialCurrent: value },
+      );
+    } else {
+      candidate.add(element);
+    }
+  }
+  return candidate;
+}
+
 export function pssResidualJacobian(
   circuit: Circuit,
   stepsPerPeriod = 64,
@@ -2000,6 +2033,43 @@ export function pssNewtonUpdate(
     stateUpdates,
     nextStateVector,
     updateL2Norm,
+  };
+}
+
+export function pssNewtonCandidate(
+  circuit: Circuit,
+  stepsPerPeriod = 64,
+  residualTolerance = 1.0e-6,
+  perturbation = 1.0e-6,
+): PssNewtonCandidateResult | undefined {
+  const update = pssNewtonUpdate(
+    circuit,
+    stepsPerPeriod,
+    residualTolerance,
+    perturbation,
+  );
+  if (update === undefined) {
+    return undefined;
+  }
+
+  const candidateCircuit = withPssStateVector(circuit, update.nextStateVector);
+  const candidateResidual = pssResidual(
+    candidateCircuit,
+    stepsPerPeriod,
+    residualTolerance,
+  );
+  if (candidateResidual === undefined) {
+    throw invalidElement(
+      "pssNewtonCandidate",
+      "candidate circuit no longer has an estimated period",
+    );
+  }
+
+  return {
+    update,
+    candidateCircuit,
+    candidateStateVector: pssStateVector(candidateCircuit),
+    candidateResidual,
   };
 }
 

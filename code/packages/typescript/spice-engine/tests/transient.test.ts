@@ -14,6 +14,7 @@ import {
   estimatePeriod,
   inductor,
   inductorWithInitialCurrent,
+  pssNewtonCandidate,
   pssNewtonUpdate,
   pssResidualJacobian,
   pssResidual,
@@ -197,6 +198,49 @@ describe("transient", () => {
     );
     expectClose(result!.updateL2Norm, Math.abs(result!.stateUpdates[0].value));
     expect(Number.isFinite(result!.stateUpdates[0].value)).toBe(true);
+  });
+
+  it("applies PSS Newton updates to a candidate reactive state", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+    circuit.add(capacitorWithInitialVoltage("C1", "out", "0", 1.0e-6, 0.1));
+
+    const result = pssNewtonCandidate(circuit, 32, 1.0e-6, 1.0e-5);
+
+    expect(result).not.toBeUndefined();
+    expect(result!.update.nextStateVector[0].name).toBe("C1");
+    expect(result!.candidateStateVector).toEqual(result!.update.nextStateVector);
+    const candidateCap = result!.candidateCircuit.elements().find(
+      (element) => element.kind === "capacitor" && element.name === "C1",
+    );
+    if (candidateCap?.kind !== "capacitor") {
+      throw new Error("missing candidate capacitor");
+    }
+    const originalCap = circuit.elements().find(
+      (element) => element.kind === "capacitor" && element.name === "C1",
+    );
+    if (originalCap?.kind !== "capacitor") {
+      throw new Error("missing original capacitor");
+    }
+    expectClose(originalCap.initialVoltage, 0.1);
+    expectClose(
+      candidateCap.initialVoltage,
+      result!.update.nextStateVector[0].value,
+    );
+    expectClose(
+      result!.candidateResidual.periodSeconds,
+      result!.update.jacobian.residual.periodSeconds,
+    );
+    expect(Number.isFinite(result!.candidateResidual.residualL2Norm)).toBe(true);
   });
 
   it("does not report a PSS residual without a periodic source period", () => {

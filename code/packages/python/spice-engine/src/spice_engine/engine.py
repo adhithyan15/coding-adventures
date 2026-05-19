@@ -386,6 +386,16 @@ class PssNewtonUpdateResult:
 
 
 @dataclass
+class PssNewtonCandidateResult:
+    """Candidate PSS circuit after applying one Newton reactive-state update."""
+
+    update: PssNewtonUpdateResult
+    candidate_circuit: Circuit
+    candidate_state_vector: list[PssStateEntry]
+    candidate_residual: PssResidualResult
+
+
+@dataclass
 class AcPoint:
     """Phasor voltages at a single frequency point.
 
@@ -2491,6 +2501,30 @@ def _with_perturbed_pss_state(
     return Circuit(elements=elements, subcircuits=dict(circuit.subcircuits))
 
 
+def _with_pss_state_vector(
+    circuit: Circuit,
+    state_vector: list[PssStateEntry],
+) -> Circuit:
+    target_by_key = {(state.kind, state.name): state.value for state in state_vector}
+    elements: list[Element] = []
+    for element in circuit.elements:
+        if isinstance(element, Capacitor):
+            value = target_by_key.get(("capacitor_voltage", element.name))
+            if value is not None:
+                elements.append(replace(element, initial_voltage=value))
+            else:
+                elements.append(element)
+        elif isinstance(element, Inductor):
+            value = target_by_key.get(("inductor_current", element.name))
+            if value is not None:
+                elements.append(replace(element, initial_current=value))
+            else:
+                elements.append(element)
+        else:
+            elements.append(element)
+    return Circuit(elements=elements, subcircuits=dict(circuit.subcircuits))
+
+
 def pss_residual_jacobian(
     circuit: Circuit,
     *,
@@ -2623,6 +2657,49 @@ def pss_newton_update(
         state_updates=state_updates,
         next_state_vector=next_state_vector,
         update_l2_norm=update_l2_norm,
+    )
+
+
+def pss_newton_candidate(
+    circuit: Circuit,
+    *,
+    steps_per_period: int = 64,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    residual_tol: float = 1e-6,
+    perturbation: float = 1e-6,
+) -> PssNewtonCandidateResult | None:
+    """Apply one PSS Newton update and report the candidate residual."""
+    update = pss_newton_update(
+        circuit,
+        steps_per_period=steps_per_period,
+        method=method,
+        max_iterations=max_iterations,
+        tol=tol,
+        residual_tol=residual_tol,
+        perturbation=perturbation,
+    )
+    if update is None:
+        return None
+
+    candidate_circuit = _with_pss_state_vector(circuit, update.next_state_vector)
+    candidate_residual = pss_residual(
+        candidate_circuit,
+        steps_per_period=steps_per_period,
+        method=method,
+        max_iterations=max_iterations,
+        tol=tol,
+        residual_tol=residual_tol,
+    )
+    if candidate_residual is None:
+        raise ValueError("candidate circuit no longer has an estimated period")
+
+    return PssNewtonCandidateResult(
+        update=update,
+        candidate_circuit=candidate_circuit,
+        candidate_state_vector=_pss_state_vector(candidate_circuit),
+        candidate_residual=candidate_residual,
     )
 
 
