@@ -148,6 +148,14 @@ backend has at least one byte ready to read without consuming the handle.
 `network.udp.available` mirrors that bounded control shape for UDP: it accepts
 an existing UDP handle and returns whether the backend has a packet or byte
 ready to read without consuming the handle.
+`network.udp.write_bytes` and `network.udp.read_bytes` add bounded UDP payload
+I/O over that same persistent handle shape. The write operation accepts a UDP
+handle plus a `ByteBuffer` and returns unit after delegating to
+`BoardHal::network_udp_write_bytes`; the read operation accepts a UDP handle
+plus a requested byte count and returns a `ByteBuffer` from
+`BoardHal::network_udp_read_bytes`. These operations are the transport-side
+counterpart to the DNS query/response message payload tranches, without moving
+DNS policy or message parsing into language frontends.
 
 WiFi association control uses the same bounded data path as storage and bus
 transfers. `network.wifi.associate` accepts an interface id, SSID bytes, and
@@ -203,6 +211,8 @@ CALL_U8 0x48 -> network.dns.set_server
 CALL_U8 0x49 -> network.tcp.available
 CALL_U8 0x4a -> network.dns.query
 CALL_U8 0x4b -> network.dns.response_ipv4
+CALL_U8 0x4c -> network.udp.write_bytes
+CALL_U8 0x4d -> network.udp.read_bytes
 ```
 
 Each handler:

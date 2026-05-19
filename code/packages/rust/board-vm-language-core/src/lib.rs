@@ -3825,6 +3825,12 @@ mod tests {
         assert!(uno.capabilities.contains(&"network.udp.read".to_owned()));
         assert!(uno
             .capabilities
+            .contains(&"network.udp.write_bytes".to_owned()));
+        assert!(uno
+            .capabilities
+            .contains(&"network.udp.read_bytes".to_owned()));
+        assert!(uno
+            .capabilities
             .contains(&"network.udp.available".to_owned()));
         assert!(uno.capabilities.contains(&"network.udp.close".to_owned()));
         assert!(uno

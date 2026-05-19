@@ -63,6 +63,8 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "network.tcp.connected"
         assert_includes uno_r4_wifi["capabilities"], "network.tcp.available"
         assert_includes uno_r4_wifi["capabilities"], "network.udp"
+        assert_includes uno_r4_wifi["capabilities"], "network.udp.write_bytes"
+        assert_includes uno_r4_wifi["capabilities"], "network.udp.read_bytes"
         assert_includes uno_r4_wifi["capabilities"], "network.udp.available"
         assert_includes uno_r4_wifi["capabilities"], "network.dns"
         assert_includes uno_r4_wifi["capabilities"], "network.dns.resolve"

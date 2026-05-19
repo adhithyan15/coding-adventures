@@ -37,7 +37,7 @@ Source snapshot:
 | EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | descriptor metadata and bounded bytecode read/write implemented | `storage.write`, `storage.read`; stored program / KV layers later |
 | Watchdog | Renesas WDT library | descriptor metadata and direct bytecode operations implemented | `watchdog.configure`, `watchdog.kick` |
 | OPAMP | UNO R4 OPAMP library | pending | analog board-specific capability after ADC/DAC |
-| WiFi | WiFiS3 library through onboard network module | descriptor metadata, network capability strings, first TCP/UDP socket bytecode tranches, bounded TCP/UDP socket-control queries, bounded WiFi association control, bounded DNS resolution, resolver server policy, and first DNS query/response message payloads implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`, `network.dns`, `network.tcp.open`, `network.tcp.write`, `network.tcp.read`, `network.tcp.close`, `network.tcp.connected`, `network.tcp.available`, `network.udp.open`, `network.udp.write`, `network.udp.read`, `network.udp.available`, `network.udp.close`, `network.wifi.associate`, `network.wifi.disconnect`, `network.wifi.status`, `network.dns.resolve`, `network.dns.set_server`, `network.dns.query`, `network.dns.response_ipv4` |
+| WiFi | WiFiS3 library through onboard network module | descriptor metadata, network capability strings, first TCP/UDP socket bytecode tranches, bounded TCP/UDP socket-control queries, bounded UDP payload I/O, bounded WiFi association control, bounded DNS resolution, resolver server policy, and first DNS query/response message payloads implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`, `network.dns`, `network.tcp.open`, `network.tcp.write`, `network.tcp.read`, `network.tcp.close`, `network.tcp.connected`, `network.tcp.available`, `network.udp.open`, `network.udp.write`, `network.udp.read`, `network.udp.write_bytes`, `network.udp.read_bytes`, `network.udp.available`, `network.udp.close`, `network.wifi.associate`, `network.wifi.disconnect`, `network.wifi.status`, `network.dns.resolve`, `network.dns.set_server`, `network.dns.query`, `network.dns.response_ipv4` |
 | USB/HID | TinyUSB device support | pending | transport/device descriptors first; HID later |
 | OTA/SDU | OTAUpdate and SDU libraries | pending | firmware-management capability, separate from bytecode VM |
 
@@ -101,8 +101,10 @@ reject conflicting handles.
    and UNO R4 WiFi backend hooks, and `network.tcp.connected` now establishes
    the first bounded socket-control query over an existing persistent TCP handle.
    `network.tcp.available` adds TCP read-readiness over that same persistent
-   handle shape, and `network.udp.available` mirrors the readiness control path
-   for UDP. `network.wifi.associate`,
+   handle shape, `network.udp.available` mirrors the readiness control path for
+   UDP, and `network.udp.write_bytes`/`network.udp.read_bytes` add bounded UDP
+   payload I/O so later DNS UDP exchange code can stay thin over Rust-owned
+   transport bytecode. `network.wifi.associate`,
    `network.wifi.disconnect`, and `network.wifi.status` now establish bounded
    association control over the same byte-buffer operand path used by storage
    and bus transfers, while `network.dns.resolve` establishes the first
@@ -113,12 +115,13 @@ reject conflicting handles.
    metadata. `network.dns.query` adds the first DNS message-payload tranche by
    constructing a bounded recursive A-record query in the Rust runtime.
    `network.dns.response_ipv4` follows with bounded response-payload parsing for
-   the first IPv4 A-answer, leaving UDP transport policy for later follow-ups.
+   the first IPv4 A-answer, leaving end-to-end DNS UDP exchange policy for later
+   follow-ups.
    `program.store` now has a protocol capability descriptor, `STORE_PROGRAM`
    device dispatch, runtime HAL hook, and an initial UNO R4 storage-backed
    slot-0 layout that writes a compact header plus module chunks through the
-   same bounded storage substrate. Higher-level KV storage, DNS UDP transport,
-   and deeper socket controls remain later capability tranches.
+   same bounded storage substrate. Higher-level KV storage, end-to-end DNS UDP
+   transport, and deeper socket controls remain later capability tranches.
 
 Every tranche should include the same layers: spec entry, IR/protocol capability id,
 runtime HAL method, UNO R4 target descriptor, firmware backend, host builder,
