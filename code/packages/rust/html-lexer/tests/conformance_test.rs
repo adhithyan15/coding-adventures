@@ -1,6 +1,6 @@
 use coding_adventures_html_lexer::{
-    apply_html_lex_context, create_html_lexer, html1_machine, html_skeleton_machine, Attribute,
-    DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlTokenizerState, StartTagSeed, Token,
+    apply_html_lex_context, create_html_lexer_with_context, html1_machine, html_skeleton_machine,
+    Attribute, DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlTokenizerState, StartTagSeed, Token,
     HTML_TOKENIZER_STATES,
 };
 use serde::Deserialize;
@@ -359,9 +359,8 @@ fn html1_conformance_cases_match_generated_machine() {
 fn html1_conformance_cases_match_default_wrapper() {
     let suite = load_suite(HTML1_FIXTURES);
     run_fixture_suite(&suite, |case| {
-        let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;
-        configure_lexer_for_case(&mut lexer, case).map_err(|error| format!("{error:?}"))?;
-        Ok(lexer)
+        let context = lexer_context_for_case(case);
+        create_html_lexer_with_context(&context).map_err(|error| format!("{error:?}"))
     });
 }
 
@@ -375,9 +374,8 @@ fn normalized_html5lib_cases_match_default_wrapper() {
     assert_eq!(suite.cases.len(), normalized.cases.len());
 
     run_fixture_suite(&suite, |case| {
-        let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;
-        configure_lexer_for_case(&mut lexer, case).map_err(|error| format!("{error:?}"))?;
-        Ok(lexer)
+        let context = lexer_context_for_case(case);
+        create_html_lexer_with_context(&context).map_err(|error| format!("{error:?}"))
     });
 }
 
@@ -566,43 +564,131 @@ fn configure_lexer_for_case(
     lexer: &mut HtmlLexer,
     case: &FixtureCase,
 ) -> coding_adventures_html_lexer::Result<()> {
+    apply_html_lex_context(lexer, &lexer_context_for_case(case))
+}
+
+fn lexer_context_for_case(case: &FixtureCase) -> HtmlLexContext {
     let initial_state = case
         .initial_state
         .as_deref()
         .and_then(HtmlTokenizerState::from_html5lib_state)
         .unwrap_or(HtmlTokenizerState::Data);
-    let mut context = HtmlLexContext::new(initial_state);
+
+    let mut context = seeded_lexer_context_for_case(initial_state, case)
+        .unwrap_or_else(|| HtmlLexContext::new(initial_state));
+
     if let Some(last_start_tag) = case.last_start_tag.as_deref() {
         context = context.with_last_start_tag(last_start_tag);
     }
-    if let Some(current_start_tag) = case.current_start_tag.as_ref() {
-        context = context.with_current_start_tag(start_tag_seed(current_start_tag));
+    if !initial_state.requires_start_tag_seed() {
+        if let Some(current_start_tag) = case.current_start_tag.as_ref() {
+            context = context.with_current_start_tag(start_tag_seed(current_start_tag));
+        }
     }
-    if let Some(current_end_tag) = case.current_end_tag.as_deref() {
-        context = context.with_current_end_tag(current_end_tag);
+    if !initial_state.requires_end_tag_seed() {
+        if let Some(current_end_tag) = case.current_end_tag.as_deref() {
+            context = context.with_current_end_tag(current_end_tag);
+        }
     }
-    if let Some(current_comment) = case.current_comment.as_deref() {
-        context = context.with_current_comment(current_comment);
+    if !initial_state.requires_comment_seed() {
+        if let Some(current_comment) = case.current_comment.as_deref() {
+            context = context.with_current_comment(current_comment);
+        }
     }
-    if let Some(current_doctype) = case.current_doctype.as_ref() {
-        context = context.with_current_doctype(DoctypeSeed {
-            name: current_doctype.name.clone(),
-            public_identifier: current_doctype.public_identifier.clone(),
-            system_identifier: current_doctype.system_identifier.clone(),
-            force_quirks: current_doctype.force_quirks,
-        });
+    if !initial_state.requires_doctype_seed() {
+        if let Some(current_doctype) = case.current_doctype.as_ref() {
+            context = context.with_current_doctype(doctype_seed(current_doctype));
+        }
     }
-    if let Some(temporary_buffer) = case.temporary_buffer.as_deref() {
-        context = context.with_temporary_buffer(temporary_buffer);
-    }
-    if let Some(return_state) = case
-        .return_state
-        .as_deref()
-        .and_then(HtmlTokenizerState::from_html5lib_state)
+    if !initial_state.requires_character_reference_seed() && !initial_state.requires_end_tag_seed()
     {
-        context = context.with_return_state(return_state);
+        if let Some(temporary_buffer) = case.temporary_buffer.as_deref() {
+            context = context.with_temporary_buffer(temporary_buffer);
+        }
     }
-    apply_html_lex_context(lexer, &context)
+    if !initial_state.requires_character_reference_seed() {
+        if let Some(return_state) = case
+            .return_state
+            .as_deref()
+            .and_then(HtmlTokenizerState::from_html5lib_state)
+        {
+            context = context.with_return_state(return_state);
+        }
+    }
+
+    context
+}
+
+fn seeded_lexer_context_for_case(
+    initial_state: HtmlTokenizerState,
+    case: &FixtureCase,
+) -> Option<HtmlLexContext> {
+    if initial_state.requires_start_tag_seed() {
+        let current_start_tag = case
+            .current_start_tag
+            .as_ref()
+            .unwrap_or_else(|| panic!("state {initial_state:?} requires a current start-tag seed"));
+        return HtmlLexContext::start_tag_continuation(
+            initial_state,
+            start_tag_seed(current_start_tag),
+        );
+    }
+
+    if initial_state.requires_end_tag_seed() {
+        let last_start_tag = case
+            .last_start_tag
+            .as_deref()
+            .unwrap_or_else(|| panic!("state {initial_state:?} requires a last start tag"));
+        let current_end_tag = case
+            .current_end_tag
+            .as_deref()
+            .unwrap_or_else(|| panic!("state {initial_state:?} requires a current end-tag seed"));
+        let temporary_buffer = case.temporary_buffer.as_deref().unwrap_or_else(|| {
+            panic!("state {initial_state:?} requires an end-tag temporary buffer")
+        });
+        return HtmlLexContext::end_tag_continuation(
+            initial_state,
+            last_start_tag,
+            current_end_tag,
+            temporary_buffer,
+        );
+    }
+
+    if initial_state.requires_comment_seed() {
+        let current_comment = case
+            .current_comment
+            .as_deref()
+            .unwrap_or_else(|| panic!("state {initial_state:?} requires a comment seed"));
+        return HtmlLexContext::comment_continuation(initial_state, current_comment);
+    }
+
+    if initial_state.requires_doctype_seed() {
+        let current_doctype = case
+            .current_doctype
+            .as_ref()
+            .unwrap_or_else(|| panic!("state {initial_state:?} requires a doctype seed"));
+        return HtmlLexContext::doctype_continuation(initial_state, doctype_seed(current_doctype));
+    }
+
+    if initial_state.requires_character_reference_seed() {
+        let return_state = case
+            .return_state
+            .as_deref()
+            .and_then(HtmlTokenizerState::from_html5lib_state)
+            .unwrap_or_else(|| {
+                panic!("state {initial_state:?} requires a character-reference return state")
+            });
+        let temporary_buffer = case.temporary_buffer.as_deref().unwrap_or_else(|| {
+            panic!("state {initial_state:?} requires a character-reference temporary buffer")
+        });
+        return HtmlLexContext::character_reference_continuation(
+            initial_state,
+            return_state,
+            temporary_buffer,
+        );
+    }
+
+    None
 }
 
 fn start_tag_seed(seed: &FixtureStartTagSeed) -> StartTagSeed {
@@ -611,6 +697,15 @@ fn start_tag_seed(seed: &FixtureStartTagSeed) -> StartTagSeed {
         attributes: seed.attributes.iter().cloned().map(Into::into).collect(),
         self_closing: seed.self_closing,
         current_attribute: seed.current_attribute.clone().map(Into::into),
+    }
+}
+
+fn doctype_seed(seed: &FixtureDoctypeSeed) -> DoctypeSeed {
+    DoctypeSeed {
+        name: seed.name.clone(),
+        public_identifier: seed.public_identifier.clone(),
+        system_identifier: seed.system_identifier.clone(),
+        force_quirks: seed.force_quirks,
     }
 }
 

@@ -93,6 +93,10 @@ continuation families through `HTML_COMMENT_TOKENIZER_STATES`,
 `HTML_CHARACTER_REFERENCE_RETURN_STATES`, and the generated boundary,
 input-stream, EOF, and markup-declaration fixtures build their seeded lexers
 through the typed `HtmlLexContext` constructors.
+The normalized html5lib smoke importer follows that same wrapper path for
+default-lexer cases: seeded start-tag, end-tag, comment, DOCTYPE, and
+character-reference continuations now enter through the public typed
+constructors instead of test-local context field assembly.
 The generated text-mode boundary suite drills into parser-seeded RCDATA,
 RAWTEXT, and PLAINTEXT state boundaries: less-than recovery, end-tag-open/name
 continuations, NULL replacement, EOF literal recovery, and PLAINTEXT markup
