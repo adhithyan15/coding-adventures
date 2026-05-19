@@ -67,6 +67,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use node_bridge::{
     napi_env, napi_value, napi_callback_info,
     napi_status, NAPI_OK,
+    napi_ref, napi_create_reference, napi_get_reference_value,
     str_to_js,
     get_cb_info,
     throw_error,
@@ -103,25 +104,71 @@ extern "C" {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FONT_FILE_CTOR — thread-safe storage for the FontFile constructor VALUE
+// FONT_FILE_CTOR_REF — thread-safe storage for the FontFile constructor REFERENCE
 // ─────────────────────────────────────────────────────────────────────────────
 //
-// SECURITY (Finding 3.1): `napi_value` is a pointer-sized opaque handle.
-// Storing it in a `static mut` is a data race when Node.js Worker threads
-// load the addon concurrently. We use an `AtomicUsize` (same size as a
-// pointer on 64-bit and 32-bit) so reads/writes are race-free.
-//
-// Release ordering on write, Acquire on read — this is the standard
+// SECURITY (Finding 3.1, original): `napi_value` is a pointer-sized opaque
+// handle.  Storing it in a `static mut` would be a data race when Node.js
+// Worker threads load the addon concurrently.  We use an `AtomicUsize`
+// (same size as a pointer on 64-bit and 32-bit) so reads/writes are
+// race-free.  Release ordering on write, Acquire on read — the standard
 // "publish once, read many" pattern.
+//
+// LATENT BUG FIX (matrix-rust-napi Phase 4 / PR #3551): the original
+// code stored a raw `napi_value` (a scope-local N-API handle).  Local
+// handles are valid only inside the current handle scope; storing one
+// in a `static` and dereferencing it from a later callback uses a stale
+// handle, and `napi_new_instance` returns `napi_invalid_arg` (status 1).
+//
+// The bug never fired in this crate because every existing test path
+// for `fp.load(bytes)` rejects in `fp::load` (invalid-magic, buffer-
+// too-short, etc.) BEFORE reaching `napi_new_instance`.  The first
+// consumer to call `fp.load` with a valid TTF would have hit it.
+//
+// Fix (matching the matrix-rust-napi pattern): store a persistent
+// `napi_ref` (created via `napi_create_reference` with refcount 1) and
+// resolve it back to a scope-bound `napi_value` per-callback via
+// `napi_get_reference_value`.  The `napi_ref` keeps the wrapped JS
+// value alive across handle scopes.
+//
+// See lessons.md "N-API: napi_value is a local handle; storing it
+// across calls requires napi_ref" for the full story.
 
-static FONT_FILE_CTOR: AtomicUsize = AtomicUsize::new(0);
+static FONT_FILE_CTOR_REF: AtomicUsize = AtomicUsize::new(0);
 
-fn store_ctor(val: napi_value) {
-    FONT_FILE_CTOR.store(val as usize, Ordering::Release);
+fn store_ctor_ref(r: napi_ref) {
+    FONT_FILE_CTOR_REF.store(r as usize, Ordering::Release);
 }
 
-fn load_ctor() -> napi_value {
-    FONT_FILE_CTOR.load(Ordering::Acquire) as napi_value
+fn load_ctor_ref() -> napi_ref {
+    FONT_FILE_CTOR_REF.load(Ordering::Acquire) as napi_ref
+}
+
+/// Resolve the stored class-constructor `napi_ref` into a scope-bound
+/// `napi_value` for the current callback.  Throws a precise JS error
+/// (and returns `None`) on any failure.
+unsafe fn resolve_ctor(env: napi_env) -> Option<napi_value> {
+    let r = load_ctor_ref();
+    if r.is_null() {
+        throw_error(
+            env,
+            "FontFile: class not initialised (napi_register_module_v1 didn't run?)",
+        );
+        return None;
+    }
+    let mut value: napi_value = ptr::null_mut();
+    let status = napi_get_reference_value(env, r, &mut value);
+    if status != NAPI_OK || value.is_null() {
+        throw_error(
+            env,
+            &format!(
+                "FontFile: napi_get_reference_value failed (status {})",
+                status
+            ),
+        );
+        return None;
+    }
+    Some(value)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -304,11 +351,16 @@ unsafe extern "C" fn napi_load(env: napi_env, info: napi_callback_info) -> napi_
     // SECURITY (Finding 3.5): check napi_new_instance status BEFORE boxing.
     // If instance creation fails, we must NOT call Box::into_raw — there is
     // nothing to wrap and the pointer would leak.
-    let ctor = load_ctor();
-    if ctor.is_null() {
-        throw_error(env, "load(): FontFile class not initialised");
-        return undef(env);
-    }
+    //
+    // LATENT BUG FIX (matrix-rust-napi Phase 4 / PR #3551): resolve the
+    // constructor through the persistent `napi_ref` rather than treating
+    // the stored value as a still-live `napi_value`.  See FONT_FILE_CTOR_REF
+    // docs above.  `resolve_ctor` throws a precise JS error on null /
+    // get_reference_value failure.
+    let ctor = match resolve_ctor(env) {
+        Some(c) => c,
+        None => return undef(env),
+    };
     let mut instance: napi_value = ptr::null_mut();
     let no_args: [napi_value; 0] = [];
     let inst_status = napi_new_instance(env, ctor, 0, no_args.as_ptr(), &mut instance);
@@ -451,9 +503,27 @@ pub unsafe extern "C" fn napi_register_module_v1(
         ptr::null(),
         &mut ff_class,
     );
+    // LATENT BUG FIX (matrix-rust-napi Phase 4 / PR #3551): wrap the
+    // local `napi_value` in a persistent `napi_ref` (refcount 1) so
+    // `napi_load` can resolve it later through any handle scope.
+    // Storing the raw `napi_value` would yield a stale handle by the
+    // time the first JS call reaches `napi_load`.  See
+    // FONT_FILE_CTOR_REF docs above for the full story.
+    let mut ff_ref: napi_ref = ptr::null_mut();
+    let ref_status = napi_create_reference(env, ff_class, 1, &mut ff_ref);
+    if ref_status != NAPI_OK {
+        throw_error(
+            env,
+            &format!(
+                "FontFile: napi_create_reference failed (status {})",
+                ref_status
+            ),
+        );
+        return exports;
+    }
     // SECURITY (Finding 3.1): use atomic store (Release) so Worker threads
-    // that read with Acquire ordering see the fully-initialised class value.
-    store_ctor(ff_class);
+    // that read with Acquire ordering see the fully-initialised ref.
+    store_ctor_ref(ff_ref);
 
     set_named_property(env, exports, "FontFile", ff_class);
 
