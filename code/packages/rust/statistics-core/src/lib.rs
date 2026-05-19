@@ -19,6 +19,7 @@ pub mod rank;
 pub mod special;
 pub mod rng;
 pub mod distributions;
+pub mod distributions_more;
 
 pub use numeric_tower::Number;
 pub use r_vector::{is_na_real, na_real, Character, Double, Vector};
