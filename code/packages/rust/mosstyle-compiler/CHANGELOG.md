@@ -1,5 +1,19 @@
 # Changelog — mosstyle-compiler
 
+## [Unreleased]
+
+### Added — structural states (`even`, `odd`) for row-stripe sub-parts
+
+- `VALID_STATES` now includes `even` and `odd` alongside the existing
+  interaction states (`hover`/`pressed`/`focused`/`disabled`/`selected`/
+  `editing`/`error`).
+- Unlike interaction states (which depend on input devices), structural
+  states resolve from a primitive's child position. Used by Grid's
+  `sheet/data-row` sub-part (WA4) to declare alternating row colours:
+  `part sheet/data-row { state even { ... } state odd { ... } }`.
+- Backwards-compatible: existing `.msl` files don't reference these
+  state names; no behaviour change for them.
+
 ## [0.1.0] — 2026-05-11
 
 ### Added

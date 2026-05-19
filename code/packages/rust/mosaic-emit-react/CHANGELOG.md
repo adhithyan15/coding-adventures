@@ -4,6 +4,30 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — Grid row stripes via `data-row:even` / `:odd` (WA4, UI27 §5)
+
+- Authors can now declare alternating row colours by attaching `state
+  even { ... }` and / or `state odd { ... }` blocks to the
+  `sheet/data-row` sub-part. The emitter resolves them via the existing
+  composite-key map (`sheet/data-row:even`, `sheet/data-row:odd`) and
+  emits a conditional spread per `<tr>`:
+  `<tr key={r} style={{ ...base, ...(r % 2 === 0 ? { evenProps } : {}), ...(r % 2 === 1 ? { oddProps } : {}) }}>`.
+- Either state can be declared independently — only the declared spread
+  appears in the output. When neither is declared, the static
+  `style={{ <data-row defaults> }}` path is preserved exactly
+  (backwards-compatible).
+- `lookup_state` (formerly hardcoded to look up `cell:{state}`) was
+  generalised to `lookup_state_on(subpart, state)` so other sub-parts
+  can grow state blocks in the same way (e.g. `header-cell:hover` for
+  future column-header hover styling).
+- 5 new tests covering: even-only emits one conditional spread,
+  even+odd emits two in source order, base data-row props precede
+  conditional stripes (UI27 §2 cascade), no states keeps the static
+  pre-WA4 output, stripes without base props emit solo conditionals.
+- End-to-end smoke: a 3-file grid with `state even / odd` blocks
+  compiles to TSX with the expected conditional `<tr>` style. Verified.
+
+
 ### Added — Input `placeholder` from string-literal prop values
 
 - The Input emitter consumes the new `LayoutPropValue::String` variant

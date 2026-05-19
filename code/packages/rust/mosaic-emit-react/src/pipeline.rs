@@ -755,15 +755,23 @@ fn emit_grid_jsx(
     // `state editing { ... }` blocks declared under `part sheet/cell`.
     // Empty when the author left those state blocks out — the emitter
     // then falls back to its hardcoded defaults (see `build_grid_cell_style_expr`).
-    let lookup_state = |state_name: &str| -> String {
+    let lookup_state_on = |subpart: &str, state_name: &str| -> String {
         node.part_name
             .as_deref()
-            .map(|n| format!("{n}/cell:{state_name}"))
+            .map(|n| format!("{n}/{subpart}:{state_name}"))
             .and_then(|key| part_styles.get(&key).map(String::clone))
             .unwrap_or_default()
     };
-    let selected_state_style = lookup_state("selected");
-    let editing_state_style = lookup_state("editing");
+    let selected_state_style = lookup_state_on("cell", "selected");
+    let editing_state_style = lookup_state_on("cell", "editing");
+
+    // WA4: alternating row stripes. The author declares
+    //   part sheet/data-row { state even { background: ... } state odd { ... } }
+    // and the per-`<tr>` style spreads conditionally on `r % 2 === 0`.
+    // When neither state block is declared, the data-row style stays
+    // static (the pre-WA4 behaviour) and no conditional is emitted.
+    let data_row_even_state_style = lookup_state_on("data-row", "even");
+    let data_row_odd_state_style = lookup_state_on("data-row", "odd");
 
     let table_style_attr = if table_style_str.is_empty() {
         String::new()
@@ -775,10 +783,37 @@ fn emit_grid_jsx(
     } else {
         format!(" style={{{{ {header_row_subpart_style} }}}}")
     };
-    let data_row_style_attr = if data_row_subpart_style.is_empty() {
-        String::new()
+    // The per-row style attribute. Three shapes depending on what the
+    // author declared:
+    //   1. No defaults, no stripes → no `style` attribute on `<tr>`.
+    //   2. Defaults, no stripes → static `style={{ <defaults> }}` (pre-WA4 path).
+    //   3. Stripes declared → dynamic `style={{ <defaults>, ...(r % 2 === 0 ? {...} : {}), ...(r % 2 === 1 ? {...} : {}) }}`.
+    // Stripes never need React keys — they ride along inside the existing
+    // `<tr key={r}>`'s style spread.
+    let has_stripes = !data_row_even_state_style.is_empty()
+        || !data_row_odd_state_style.is_empty();
+    let data_row_style_attr = if !has_stripes {
+        if data_row_subpart_style.is_empty() {
+            String::new()
+        } else {
+            format!(" style={{{{ {data_row_subpart_style} }}}}")
+        }
     } else {
-        format!(" style={{{{ {data_row_subpart_style} }}}}")
+        let mut parts: Vec<String> = Vec::new();
+        if !data_row_subpart_style.is_empty() {
+            parts.push(data_row_subpart_style.clone());
+        }
+        if !data_row_even_state_style.is_empty() {
+            parts.push(format!(
+                "...(r % 2 === 0 ? {{ {data_row_even_state_style} }} : {{}})"
+            ));
+        }
+        if !data_row_odd_state_style.is_empty() {
+            parts.push(format!(
+                "...(r % 2 === 1 ? {{ {data_row_odd_state_style} }} : {{}})"
+            ));
+        }
+        format!(" style={{{{ {} }}}}", parts.join(", "))
     };
     let header_cell_style_attr = if header_cell_subpart_style.is_empty() {
         String::new()
@@ -3129,6 +3164,211 @@ mod tests {
         assert!(
             result.output.contains("<td key={c} style={{ padding: \"4px\" }}>"),
             "expected just the sub-part fragment on <td>; got:\n{}",
+            result.output
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // WA4 — alternating row stripes via `data-row:even` / `:odd` state
+    // blocks on the `sheet/data-row` sub-part.
+    // -----------------------------------------------------------------
+
+    /// Helper: build a Grid StyleDef whose `sheet/data-row` sub-part
+    /// declares `state even` and `state odd` blocks with the given props.
+    fn style_with_data_row_states(
+        component: &str,
+        even: &[(&str, &str)],
+        odd: &[(&str, &str)],
+    ) -> StyleDef {
+        let mut states: Vec<StateStyle> = Vec::new();
+        if !even.is_empty() {
+            states.push(StateStyle {
+                state: "even".to_string(),
+                props: even
+                    .iter()
+                    .map(|(k, v)| StyleProp {
+                        name: k.to_string(),
+                        value: v.to_string(),
+                    })
+                    .collect(),
+            });
+        }
+        if !odd.is_empty() {
+            states.push(StateStyle {
+                state: "odd".to_string(),
+                props: odd
+                    .iter()
+                    .map(|(k, v)| StyleProp {
+                        name: k.to_string(),
+                        value: v.to_string(),
+                    })
+                    .collect(),
+            });
+        }
+        StyleDef {
+            component_name: component.to_string(),
+            parts: vec![PartStyle {
+                name: "sheet/data-row".to_string(),
+                base: Vec::new(),
+                states,
+            }],
+        }
+    }
+
+    fn grid_with_stripes_layout(component: &str) -> LayoutDef {
+        LayoutDef {
+            component_name: component.to_string(),
+            root: LayoutNode {
+                tag: "Grid".to_string(),
+                part_name: Some("sheet".to_string()),
+                props: vec![
+                    slot_ref_prop("headers", "col-labels"),
+                    slot_ref_prop("rows", "data-rows"),
+                ],
+                children: Vec::new(),
+            },
+        }
+    }
+
+    fn grid_with_stripes_component(name: &str) -> MosmodelComponent {
+        component(
+            name,
+            vec![
+                slot("col-labels", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("data-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![],
+        )
+    }
+
+    /// When the author declares only `state even { ... }` on
+    /// `sheet/data-row`, every `<tr>` carries a conditional spread that
+    /// applies the even-row props on rows where `r % 2 === 0` and
+    /// nothing on odd rows.
+    #[test]
+    fn grid_data_row_state_even_emits_conditional_spread() {
+        let m = grid_with_stripes_component("G");
+        let s = style_with_data_row_states("G", &[("background", "#252526")], &[]);
+        let l = grid_with_stripes_layout("G");
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        assert!(
+            result
+                .output
+                .contains("...(r % 2 === 0 ? { background: \"#252526\" } : {})"),
+            "expected even-row conditional spread, got:\n{}",
+            result.output
+        );
+        // No odd-state spread.
+        assert!(
+            !result.output.contains("r % 2 === 1"),
+            "no odd state was declared, so the odd-row spread must be absent"
+        );
+    }
+
+    /// Author declares both `state even` and `state odd` — both spreads
+    /// appear on the same `<tr>`, in source-declaration order.
+    #[test]
+    fn grid_data_row_state_even_and_odd_both_emit_spreads() {
+        let m = grid_with_stripes_component("G");
+        let s = style_with_data_row_states(
+            "G",
+            &[("background", "#1e1e1e")],
+            &[("background", "#252526")],
+        );
+        let l = grid_with_stripes_layout("G");
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        let out = &result.output;
+        let even_pos = out
+            .find("...(r % 2 === 0 ? { background: \"#1e1e1e\" } : {})")
+            .expect("even conditional spread present");
+        let odd_pos = out
+            .find("...(r % 2 === 1 ? { background: \"#252526\" } : {})")
+            .expect("odd conditional spread present");
+        assert!(even_pos < odd_pos, "even spread must appear before odd");
+    }
+
+    /// When data-row also has *base* properties (e.g. `height: 22px`),
+    /// they appear first in the style spread, followed by the conditional
+    /// even/odd spreads. This is the cascade defined in UI27 §2.
+    #[test]
+    fn grid_data_row_base_props_precede_conditional_stripes() {
+        let m = grid_with_stripes_component("G");
+        let s = StyleDef {
+            component_name: "G".to_string(),
+            parts: vec![PartStyle {
+                name: "sheet/data-row".to_string(),
+                base: vec![StyleProp {
+                    name: "height".to_string(),
+                    value: "22px".to_string(),
+                }],
+                states: vec![StateStyle {
+                    state: "even".to_string(),
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#222".to_string(),
+                    }],
+                }],
+            }],
+        };
+        let l = grid_with_stripes_layout("G");
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        let out = &result.output;
+        let height_pos = out.find("height: \"22px\"").expect("base height present");
+        let even_pos = out
+            .find("...(r % 2 === 0 ? { background: \"#222\" } : {})")
+            .expect("even spread present");
+        assert!(
+            height_pos < even_pos,
+            "base data-row props must precede conditional stripes, got:\n{out}"
+        );
+    }
+
+    /// Backwards-compatible: when the author declares neither stripe
+    /// state, the existing static `style={{ <data-row defaults> }}`
+    /// path is preserved exactly. This guards the pre-WA4 behaviour.
+    #[test]
+    fn grid_without_data_row_states_keeps_static_data_row_style() {
+        let m = grid_with_stripes_component("G");
+        let s = StyleDef {
+            component_name: "G".to_string(),
+            parts: vec![PartStyle {
+                name: "sheet/data-row".to_string(),
+                base: vec![StyleProp {
+                    name: "height".to_string(),
+                    value: "22px".to_string(),
+                }],
+                states: Vec::new(),
+            }],
+        };
+        let l = grid_with_stripes_layout("G");
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        // Static spread, no conditional expression.
+        assert!(
+            result.output.contains("<tr key={r} style={{ height: \"22px\" }}>"),
+            "expected static data-row style, got:\n{}",
+            result.output
+        );
+        assert!(!result.output.contains("r % 2 ==="),
+            "no conditional spread should be emitted when no stripe state declared");
+    }
+
+    /// Stripes work when there are *no* base data-row properties —
+    /// the conditional spreads stand alone inside `style={{ ... }}`.
+    #[test]
+    fn grid_data_row_stripes_without_base_props() {
+        let m = grid_with_stripes_component("G");
+        let s = style_with_data_row_states(
+            "G",
+            &[("background", "#222")],
+            &[("background", "#111")],
+        );
+        let l = grid_with_stripes_layout("G");
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        assert!(
+            result.output.contains(
+                "<tr key={r} style={{ ...(r % 2 === 0 ? { background: \"#222\" } : {}), ...(r % 2 === 1 ? { background: \"#111\" } : {}) }}>"
+            ),
+            "expected solo conditional spreads inside <tr> style, got:\n{}",
             result.output
         );
     }
