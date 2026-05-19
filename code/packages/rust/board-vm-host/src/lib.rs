@@ -6,12 +6,13 @@ use board_vm_ir::{
     CAP_NETWORK_DNS_RESPONSE_IPV4, CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE,
     CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
     CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN,
-    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE,
-    CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET,
-    CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS,
-    CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE,
-    CAP_WATCHDOG_KICK, FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
-    MAX_BYTE_BUFFER_LEN, MODULE_MAGIC, MODULE_VERSION,
+    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_READ_BYTES, CAP_NETWORK_UDP_WRITE,
+    CAP_NETWORK_UDP_WRITE_BYTES, CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT,
+    CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
+    CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
+    FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MAX_BYTE_BUFFER_LEN,
+    MODULE_MAGIC, MODULE_VERSION,
 };
 use board_vm_protocol::{
     encode_frame, encode_hello, encode_program_begin, encode_program_chunk, encode_program_end,
@@ -112,6 +113,11 @@ pub const NETWORK_UDP_WRITE_CODE_LEN: usize = 5;
 pub const NETWORK_UDP_WRITE_MODULE_LEN: usize = 15;
 pub const NETWORK_UDP_READ_CODE_LEN: usize = 4;
 pub const NETWORK_UDP_READ_MODULE_LEN: usize = 14;
+pub const NETWORK_UDP_WRITE_BYTES_CODE_LEN: usize = 7;
+pub const NETWORK_UDP_WRITE_BYTES_MAX_MODULE_LEN: usize =
+    8 + 1 + NETWORK_UDP_WRITE_BYTES_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const NETWORK_UDP_READ_BYTES_CODE_LEN: usize = 6;
+pub const NETWORK_UDP_READ_BYTES_MODULE_LEN: usize = 16;
 pub const NETWORK_UDP_AVAILABLE_CODE_LEN: usize = 4;
 pub const NETWORK_UDP_AVAILABLE_MODULE_LEN: usize = 14;
 pub const NETWORK_UDP_CLOSE_CODE_LEN: usize = 2;
@@ -404,6 +410,18 @@ pub struct NetworkUdpWriteProgram {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct NetworkUdpReadProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkUdpWriteBytesProgram<'a> {
+    pub bytes: &'a [u8],
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkUdpReadBytesProgram {
+    pub len: u8,
     pub max_stack: u8,
 }
 
@@ -737,6 +755,21 @@ impl NetworkUdpReadProgram {
 impl Default for NetworkUdpReadProgram {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl<'a> NetworkUdpWriteBytesProgram<'a> {
+    pub const fn new(bytes: &'a [u8]) -> Self {
+        Self {
+            bytes,
+            max_stack: 3,
+        }
+    }
+}
+
+impl NetworkUdpReadBytesProgram {
+    pub const fn new(len: u8) -> Self {
+        Self { len, max_stack: 3 }
     }
 }
 
@@ -2776,6 +2809,107 @@ pub fn write_network_udp_read_module(
     Ok(offset)
 }
 
+pub fn network_udp_write_bytes_module_len(byte_len: usize) -> Result<usize, HostError> {
+    if byte_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + NETWORK_UDP_WRITE_BYTES_CODE_LEN + 1 + byte_len)
+}
+
+pub fn write_network_udp_write_bytes_code(
+    program: NetworkUdpWriteBytesProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.bytes.len() > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_UDP_WRITE_BYTES_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_push_bytes(out, &mut offset, 0, program.bytes.len() as u8)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_UDP_WRITE_BYTES)?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_write_bytes_module(
+    program: NetworkUdpWriteBytesProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len = network_udp_write_bytes_module_len(program.bytes.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_UDP_WRITE_BYTES_CODE_LEN];
+    let code_len = write_network_udp_write_bytes_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        )
+        .const_pool(program.bytes),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_udp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_read_bytes_code(
+    program: NetworkUdpReadBytesProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.len as usize > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_UDP_READ_BYTES_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.len)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_UDP_READ_BYTES)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_read_bytes_module(
+    program: NetworkUdpReadBytesProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_UDP_READ_BYTES_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_UDP_READ_BYTES_CODE_LEN];
+    let code_len = write_network_udp_read_bytes_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_udp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn write_network_udp_available_code(
     _program: NetworkUdpAvailableProgram,
     out: &mut [u8],
@@ -3731,7 +3865,8 @@ mod tests {
         CAP_NETWORK_DNS_RESPONSE_IPV4, CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE,
         CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN,
         CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE,
-        CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE,
+        CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
+        CAP_NETWORK_UDP_READ_BYTES, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_UDP_WRITE_BYTES,
         CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_UART_READ, CAP_UART_WRITE,
         CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
     };
@@ -3840,6 +3975,14 @@ mod tests {
     ];
     const NETWORK_UDP_READ_MODULE_HEX: [u8; NETWORK_UDP_READ_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x02, 0x00, 0x04, 0x20, 0x40, 0x40, 0x50, 0x00,
+    ];
+    const NETWORK_UDP_WRITE_BYTES_DNS_MODULE_HEX: [u8; 20] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x03, 0x00, 0x07, 0x20, 0x16, 0x00, 0x00, 0x03, 0x40,
+        0x4C, 0x03, 0x64, 0x6E, 0x73,
+    ];
+    const NETWORK_UDP_READ_BYTES_3_MODULE_HEX: [u8; NETWORK_UDP_READ_BYTES_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x03, 0x00, 0x06, 0x20, 0x12, 0x03, 0x40, 0x4D, 0x50,
+        0x00,
     ];
     const NETWORK_UDP_AVAILABLE_MODULE_HEX: [u8; NETWORK_UDP_AVAILABLE_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x02, 0x00, 0x04, 0x20, 0x40, 0x47, 0x50, 0x00,
@@ -4332,6 +4475,36 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_NETWORK_UDP_READ]);
+
+        let module_len = network_udp_write_bytes_module_len(3).unwrap();
+        let mut write_bytes = [0u8; 20];
+        let write_bytes_len = write_network_udp_write_bytes_module(
+            NetworkUdpWriteBytesProgram::new(b"dns"),
+            &mut write_bytes,
+        )
+        .unwrap();
+        assert_eq!(module_len, NETWORK_UDP_WRITE_BYTES_DNS_MODULE_HEX.len());
+        assert_eq!(write_bytes_len, module_len);
+        assert_eq!(write_bytes, NETWORK_UDP_WRITE_BYTES_DNS_MODULE_HEX);
+        let parsed = parse_module(&write_bytes).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_udp(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_UDP_WRITE_BYTES]);
+
+        let mut read_bytes = [0u8; NETWORK_UDP_READ_BYTES_MODULE_LEN];
+        let read_bytes_len = write_network_udp_read_bytes_module(
+            NetworkUdpReadBytesProgram::new(3),
+            &mut read_bytes,
+        )
+        .unwrap();
+        assert_eq!(read_bytes_len, NETWORK_UDP_READ_BYTES_MODULE_LEN);
+        assert_eq!(read_bytes, NETWORK_UDP_READ_BYTES_3_MODULE_HEX);
+        let parsed = parse_module(&read_bytes).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_udp(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_UDP_READ_BYTES]);
 
         let mut available = [0u8; NETWORK_UDP_AVAILABLE_MODULE_LEN];
         let available_len =

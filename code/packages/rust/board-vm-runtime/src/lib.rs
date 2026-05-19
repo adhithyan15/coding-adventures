@@ -8,11 +8,12 @@ use board_vm_ir::{
     CAP_NETWORK_DNS_RESPONSE_IPV4, CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE,
     CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
     CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN,
-    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE,
-    CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET,
-    CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS,
-    CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE,
-    CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
+    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_READ_BYTES, CAP_NETWORK_UDP_WRITE,
+    CAP_NETWORK_UDP_WRITE_BYTES, CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT,
+    CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
+    CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
+    MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -272,6 +273,14 @@ pub trait BoardHal {
     }
 
     fn network_udp_read(&mut self, _token: u32) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn network_udp_write_bytes(&mut self, _token: u32, _bytes: &[u8]) -> Result<(), HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn network_udp_read_bytes(&mut self, _token: u32, _len: u8) -> Result<ByteBuffer, HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -1071,6 +1080,30 @@ where
                     })?;
                 self.push(Value::U8(byte), ip)
             }
+            CAP_NETWORK_UDP_WRITE_BYTES => {
+                let bytes = self.pop_bytes(ip)?;
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::NetworkUdp, ip)?;
+                self.hal
+                    .network_udp_write_bytes(token, bytes.as_slice())
+                    .map_err(|err| RuntimeError {
+                        ip,
+                        kind: hal_error_kind(err),
+                    })
+            }
+            CAP_NETWORK_UDP_READ_BYTES => {
+                let len = self.pop_u8(ip)?;
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::NetworkUdp, ip)?;
+                let bytes =
+                    self.hal
+                        .network_udp_read_bytes(token, len)
+                        .map_err(|err| RuntimeError {
+                            ip,
+                            kind: hal_error_kind(err),
+                        })?;
+                self.push(Value::Bytes(bytes), ip)
+            }
             CAP_NETWORK_UDP_AVAILABLE => {
                 let handle = self.pop_handle(ip)?;
                 let token = self.handle_token(handle, HandleKind::NetworkUdp, ip)?;
@@ -1601,6 +1634,8 @@ mod tests {
         NetworkUdpOpen(u16, u32, u16),
         NetworkUdpWrite(u32, u8),
         NetworkUdpRead(u32),
+        NetworkUdpWriteBytes(u32, ByteBuffer),
+        NetworkUdpReadBytes(u32, u8),
         NetworkUdpAvailable(u32),
         NetworkUdpClose(u32),
         NetworkWifiAssociate(u16, ByteBuffer, ByteBuffer),
@@ -1898,6 +1933,27 @@ mod tests {
         fn network_udp_read(&mut self, token: u32) -> Result<u8, HalError> {
             self.events.push(Event::NetworkUdpRead(token));
             Ok(0x43)
+        }
+
+        fn network_udp_write_bytes(&mut self, token: u32, bytes: &[u8]) -> Result<(), HalError> {
+            self.events.push(Event::NetworkUdpWriteBytes(
+                token,
+                ByteBuffer::from_slice(bytes).map_err(|_| HalError::UnsupportedMode)?,
+            ));
+            Ok(())
+        }
+
+        fn network_udp_read_bytes(&mut self, token: u32, len: u8) -> Result<ByteBuffer, HalError> {
+            if len as usize > MAX_BYTE_BUFFER_LEN {
+                return Err(HalError::UnsupportedMode);
+            }
+            self.events.push(Event::NetworkUdpReadBytes(token, len));
+            let pattern = [0x44, 0x45, 0x46];
+            let mut bytes = [0u8; MAX_BYTE_BUFFER_LEN];
+            for (index, byte) in bytes[..len as usize].iter_mut().enumerate() {
+                *byte = pattern[index % pattern.len()];
+            }
+            ByteBuffer::from_slice(&bytes[..len as usize]).map_err(|_| HalError::UnsupportedMode)
         }
 
         fn network_udp_available(&mut self, token: u32) -> Result<bool, HalError> {
@@ -2423,7 +2479,13 @@ mod tests {
             CAP_NETWORK_TCP_CLOSE as u8,
         ];
 
-        let report = runtime.run_code(&code, 24).unwrap();
+        let module = Module {
+            flags: 0,
+            max_stack: 4,
+            code: &code,
+            const_pool: b"dns",
+        };
+        let report = runtime.run_module(&module, 32).unwrap();
 
         assert_eq!(report.status, RunStatus::Halted);
         assert_eq!(report.open_handles, 0);
@@ -2462,6 +2524,13 @@ mod tests {
             0x40,
             CAP_NETWORK_UDP_WRITE as u8,
             0x20,
+            0x16,
+            0x00,
+            0x00,
+            0x03,
+            0x40,
+            CAP_NETWORK_UDP_WRITE_BYTES as u8,
+            0x20,
             0x40,
             CAP_NETWORK_UDP_AVAILABLE as u8,
             0x21,
@@ -2469,11 +2538,23 @@ mod tests {
             0x40,
             CAP_NETWORK_UDP_READ as u8,
             0x21,
+            0x20,
+            0x12,
+            0x03,
+            0x40,
+            CAP_NETWORK_UDP_READ_BYTES as u8,
+            0x21,
             0x40,
             CAP_NETWORK_UDP_CLOSE as u8,
         ];
 
-        let report = runtime.run_code(&code, 24).unwrap();
+        let module = Module {
+            flags: 0,
+            max_stack: 4,
+            code: &code,
+            const_pool: b"dns",
+        };
+        let report = runtime.run_module(&module, 32).unwrap();
 
         assert_eq!(report.status, RunStatus::Halted);
         assert_eq!(report.open_handles, 0);
@@ -2482,8 +2563,10 @@ mod tests {
             vec![
                 Event::NetworkUdpOpen(0, 0xc0a8_012a, 0x1235),
                 Event::NetworkUdpWrite(0x6_2003, 0x41),
+                Event::NetworkUdpWriteBytes(0x6_2003, ByteBuffer::from_slice(b"dns").unwrap()),
                 Event::NetworkUdpAvailable(0x6_2003),
                 Event::NetworkUdpRead(0x6_2003),
+                Event::NetworkUdpReadBytes(0x6_2003, 3),
                 Event::NetworkUdpClose(0x6_2003),
             ]
         );

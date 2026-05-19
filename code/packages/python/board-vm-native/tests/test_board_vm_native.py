@@ -145,6 +145,8 @@ def test_known_targets_are_exposed_from_rust_registry():
     assert "network.tcp.connected" in uno_r4_wifi.capabilities
     assert "network.tcp.available" in uno_r4_wifi.capabilities
     assert "network.udp" in uno_r4_wifi.capabilities
+    assert "network.udp.write_bytes" in uno_r4_wifi.capabilities
+    assert "network.udp.read_bytes" in uno_r4_wifi.capabilities
     assert "network.udp.available" in uno_r4_wifi.capabilities
     assert "network.dns" in uno_r4_wifi.capabilities
     assert "network.dns.resolve" in uno_r4_wifi.capabilities
