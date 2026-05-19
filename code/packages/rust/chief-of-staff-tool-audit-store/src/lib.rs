@@ -1059,6 +1059,18 @@ impl ToolAuditSupervisorDrainRunOutcome {
         }
     }
 
+    /// Parse a stable snake_case outcome label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "idle" => Some(Self::Idle),
+            "caught_up" => Some(Self::CaughtUp),
+            "needs_continuation" => Some(Self::NeedsContinuation),
+            "needs_follow_up" => Some(Self::NeedsFollowUp),
+            "plan_diverged" => Some(Self::PlanDiverged),
+            _ => None,
+        }
+    }
+
     /// Return whether the scheduler should take action for this outcome.
     pub fn requires_scheduler_action(self) -> bool {
         self.scheduler_action().requires_scheduler_action()
@@ -1104,6 +1116,17 @@ impl ToolAuditSupervisorDrainSchedulerAction {
             Self::ScheduleContinuation => "schedule_continuation",
             Self::RouteFollowUp => "route_follow_up",
             Self::InvestigatePlanDrift => "investigate_plan_drift",
+        }
+    }
+
+    /// Parse a stable snake_case scheduler action label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_action" => Some(Self::NoAction),
+            "schedule_continuation" => Some(Self::ScheduleContinuation),
+            "route_follow_up" => Some(Self::RouteFollowUp),
+            "investigate_plan_drift" => Some(Self::InvestigatePlanDrift),
+            _ => None,
         }
     }
 
@@ -2702,9 +2725,17 @@ mod tests {
         for (outcome, label, scheduler_action, requires_action) in cases {
             assert_eq!(outcome.as_str(), label);
             assert_eq!(outcome.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainRunOutcome::from_label(label),
+                Some(outcome)
+            );
             assert_eq!(outcome.scheduler_action(), scheduler_action);
             assert_eq!(outcome.requires_scheduler_action(), requires_action);
         }
+        assert_eq!(
+            ToolAuditSupervisorDrainRunOutcome::from_label("needs_attention"),
+            None
+        );
     }
 
     #[test]
@@ -2735,8 +2766,16 @@ mod tests {
         for (action, label, requires_action) in cases {
             assert_eq!(action.as_str(), label);
             assert_eq!(action.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainSchedulerAction::from_label(label),
+                Some(action)
+            );
             assert_eq!(action.requires_scheduler_action(), requires_action);
         }
+        assert_eq!(
+            ToolAuditSupervisorDrainSchedulerAction::from_label("rerun_everything"),
+            None
+        );
     }
 
     #[test]
