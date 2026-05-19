@@ -1,4 +1,4 @@
-import { Matrix } from "matrix/src/matrix";
+import { Matrix } from "matrix";
 import type {
   ActivationName,
   ExampleTrace,
