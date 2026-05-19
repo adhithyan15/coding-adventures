@@ -13,6 +13,8 @@ layout Grid {
     selected-col:  slot: selected-col,
     edit-row:      slot: edit-row,
     edit-col:      slot: edit-col,
+    sticky-header: true,
+    total-height:  slot: total-height,
     onNavigate:    emit: onNavigate
   )
 }

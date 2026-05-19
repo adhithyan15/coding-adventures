@@ -69,10 +69,19 @@ style Grid {
     height: 24px ;
   }
 
-  // Body data rows share the cell height. Once row-stripe styling
-  // arrives (UI27 §5 `data-row:even`), alternating backgrounds will
-  // also live here.
+  // Body data rows share the cell height and alternate between two
+  // backgrounds for readability. The Grid emitter (WA4) reads
+  // `state even` / `state odd` blocks under `sheet/data-row` and emits
+  // a conditional spread per `<tr>`, picking the background based on
+  // `r % 2 === 0`.
   part sheet/data-row {
     height: 22px ;
+
+    state even {
+      background: #1e1e1e ;
+    }
+    state odd {
+      background: #252526 ;
+    }
   }
 }

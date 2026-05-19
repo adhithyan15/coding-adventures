@@ -21,6 +21,12 @@ component Grid {
   // regardless of its content. UI26 §2.1.
   slot column-widths  : list<number> ;
 
+  // Total pixel height of the grid's scroll viewport. The Grid emitter
+  // wires this into the `maxHeight` of the scroll wrapper it emits
+  // when `sticky-header: true` is set in the layout (WA5, UI27 §6).
+  // Without sticky-header, this slot is unused.
+  slot total-height   : number ;
+
   // Selection (host owns, pushes in).
   slot selected-row : number ;
   slot selected-col : number ;
