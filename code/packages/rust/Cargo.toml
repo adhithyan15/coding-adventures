@@ -363,6 +363,7 @@ members = [
     "mosaic-emit-html",
     "mosaic-emit-paint",
     "mosaic-emit-react",
+    "mosaic-emit-swiftui",
     "mosaic-emit-webcomponent",
     "mosaic-lexer",
     "mosaic-parser",
