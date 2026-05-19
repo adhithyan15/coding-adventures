@@ -89,28 +89,8 @@ fn whatwg_markup_declaration_cases_match_default_lexer() {
             .finish()
             .unwrap_or_else(|error| panic!("case `{}` finish failed: {error:?}", case.id));
 
-        let actual_tokens = lexer
-            .drain_tokens()
-            .into_iter()
-            .map(common::token_summary)
-            .collect::<Vec<_>>();
-        assert_eq!(
-            common::coalesce_adjacent_text_summaries(actual_tokens),
-            common::coalesce_adjacent_text_summaries(case.tokens.clone()),
-            "case `{}` token mismatch",
-            case.id
-        );
-
-        let actual_diagnostics = lexer
-            .diagnostics()
-            .iter()
-            .map(|diagnostic| diagnostic.code.clone())
-            .collect::<Vec<_>>();
-        assert_eq!(
-            actual_diagnostics, case.diagnostics,
-            "case `{}` diagnostic mismatch",
-            case.id
-        );
+        common::assert_token_summaries(&case.id, lexer.drain_tokens(), &case.tokens);
+        common::assert_diagnostic_codes(&case.id, lexer.diagnostics(), &case.diagnostics);
     }
 }
 

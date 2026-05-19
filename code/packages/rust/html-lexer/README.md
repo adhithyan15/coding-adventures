@@ -97,9 +97,9 @@ The normalized html5lib smoke importer follows that same wrapper path for
 default-lexer cases: seeded start-tag, end-tag, comment, DOCTYPE, and
 character-reference continuations now enter through the public typed
 constructors instead of test-local context field assembly.
-The generated WHATWG lexer runners share the same test-only token-summary
-helpers, so boundary fixtures compare token text, attributes, doctypes, and
-coalesced text recovery through one normalization path.
+The generated WHATWG lexer runners share the same test-only assertion helpers,
+so boundary fixtures compare token text, attributes, doctypes, coalesced text
+recovery, and diagnostic codes through one normalization path.
 The generated text-mode boundary suite drills into parser-seeded RCDATA,
 RAWTEXT, and PLAINTEXT state boundaries: less-than recovery, end-tag-open/name
 continuations, NULL replacement, EOF literal recovery, and PLAINTEXT markup

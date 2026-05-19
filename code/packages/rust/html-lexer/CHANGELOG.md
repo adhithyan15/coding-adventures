@@ -109,8 +109,9 @@ documented in this file.
 - The generic html5lib smoke importer now builds default-wrapper seeded lexer
   cases through the same typed `HtmlLexContext` constructors used by generated
   WHATWG boundary runners.
-- Generated WHATWG lexer fixture runners now share a test-only token summary
-  helper for token, attribute, DOCTYPE, and adjacent-text normalization.
+- Generated WHATWG lexer fixture runners now share test-only assertion helpers
+  for token, attribute, DOCTYPE, adjacent-text, and diagnostic-code
+  normalization.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the
