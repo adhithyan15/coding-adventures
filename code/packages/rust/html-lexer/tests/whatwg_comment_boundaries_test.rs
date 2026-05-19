@@ -1,6 +1,5 @@
 use coding_adventures_html_lexer::{
-    apply_html_lex_context, create_html_lexer, Attribute, HtmlLexContext, HtmlLexer,
-    HtmlTokenizerState, Token,
+    create_html_lexer_with_context, Attribute, HtmlLexContext, HtmlLexer, HtmlTokenizerState, Token,
 };
 use serde::Deserialize;
 
@@ -102,14 +101,14 @@ fn configured_lexer(case: &CommentBoundaryCase) -> HtmlLexer {
         .as_deref()
         .and_then(HtmlTokenizerState::from_html5lib_state)
         .unwrap_or(HtmlTokenizerState::Data);
-    let mut context = HtmlLexContext::new(state);
-    if let Some(current_comment) = case.current_comment.as_deref() {
-        context = context.with_current_comment(current_comment);
-    }
+    let context = if let Some(current_comment) = case.current_comment.as_deref() {
+        HtmlLexContext::comment_continuation(state, current_comment)
+            .unwrap_or_else(|| panic!("case `{}` cannot seed comment state", case.id))
+    } else {
+        HtmlLexContext::new(state)
+    };
 
-    let mut lexer = create_html_lexer().expect("HTML lexer should build");
-    apply_html_lex_context(&mut lexer, &context).expect("HTML lexer context should apply");
-    lexer
+    create_html_lexer_with_context(&context).expect("HTML lexer context should apply")
 }
 
 fn token_summary(token: Token) -> String {

@@ -78,6 +78,10 @@ documented in this file.
 - Parser/importer-facing seeded text-mode end-tag continuation contexts through
   `HtmlLexContext::end_tag_continuation`, plus exported text-mode and end-tag
   tokenizer state families used by wrapper-level fixture tests.
+- Exported comment and character-reference tokenizer state families, plus the
+  valid character-reference return states, so generated conformance runners and
+  parser/importer adapters use the same public continuation predicates as
+  `HtmlLexContext`.
 - A generated WHATWG tokenizer script escape boundary fixture and Rust
   conformance test that pins escaped and double-escaped script data, escape
   start/end delimiters, EOF diagnostics, NULL replacement, and seeded

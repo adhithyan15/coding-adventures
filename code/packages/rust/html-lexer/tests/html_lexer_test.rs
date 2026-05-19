@@ -2,7 +2,8 @@ use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, create_html_lexer_with_context, html1_definition,
     html1_machine, html_skeleton_definition, html_skeleton_machine, lex_html, lex_html_fragment,
     Attribute, DoctypeSeed, HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, StartTagSeed,
-    Token, HTML_DOCTYPE_TOKENIZER_STATES, HTML_END_TAG_TOKENIZER_STATES,
+    Token, HTML_CHARACTER_REFERENCE_RETURN_STATES, HTML_CHARACTER_REFERENCE_TOKENIZER_STATES,
+    HTML_COMMENT_TOKENIZER_STATES, HTML_DOCTYPE_TOKENIZER_STATES, HTML_END_TAG_TOKENIZER_STATES,
     HTML_FRAGMENT_TOKENIZER_STATES, HTML_SCRIPT_TOKENIZER_STATES, HTML_START_TAG_TOKENIZER_STATES,
     HTML_TEXT_MODE_TOKENIZER_STATES, HTML_TOKENIZER_STATES,
 };
@@ -5299,6 +5300,37 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
             "after_doctype_system_identifier",
             "bogus_doctype",
         ]
+    );
+    assert_eq!(
+        HTML_COMMENT_TOKENIZER_STATES.map(HtmlTokenizerState::as_machine_state),
+        [
+            "comment_start",
+            "comment_start_dash",
+            "comment",
+            "comment_less_than_sign",
+            "comment_less_than_sign_bang",
+            "comment_less_than_sign_bang_dash",
+            "comment_less_than_sign_bang_dash_dash",
+            "comment_end_dash",
+            "comment_end",
+            "comment_end_bang",
+            "bogus_comment",
+        ]
+    );
+    assert_eq!(
+        HTML_CHARACTER_REFERENCE_TOKENIZER_STATES.map(HtmlTokenizerState::as_machine_state),
+        [
+            "text_character_reference",
+            "text_named_character_reference",
+            "text_numeric_character_reference",
+            "text_numeric_hex_character_reference_start",
+            "text_numeric_hex_character_reference",
+            "text_numeric_decimal_character_reference",
+        ]
+    );
+    assert_eq!(
+        HTML_CHARACTER_REFERENCE_RETURN_STATES.map(HtmlTokenizerState::as_machine_state),
+        ["data", "rcdata"]
     );
     assert_eq!(
         HTML_START_TAG_TOKENIZER_STATES.map(HtmlTokenizerState::as_machine_state),
