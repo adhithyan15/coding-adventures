@@ -33,12 +33,13 @@ The crate keeps the boundary narrow:
   drain result, letting schedulers compare expected and delivered audit work
 - supervisor drain reports classify scheduler outcomes as idle, caught up,
   needing continuation, needing follow-up, or diverged from preflight
-- supervisor drain outcomes expose stable snake_case labels and action flags
-  for host logs and scheduling decisions
+- supervisor drain outcomes expose stable, parseable snake_case labels and
+  action flags for host logs and scheduling decisions
 - supervisor drain reports can emit flattened payload-free run summaries for
   host logs, schedulers, and continuation decisions
-- supervisor drain summaries expose stable scheduler action recommendations
-  for continuation, follow-up routing, and plan-drift investigation
+- supervisor drain summaries expose stable, parseable scheduler action
+  recommendations for continuation, follow-up routing, and plan-drift
+  investigation
 
 ## Development
 
