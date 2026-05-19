@@ -66,21 +66,15 @@ fn whatwg_doctype_boundaries_cases_match_default_lexer() {
     let suite = load_suite();
 
     for case in &suite.cases {
-        assert!(
-            !case.description.is_empty(),
-            "case `{}` should describe its DOCTYPE boundary",
-            case.id
-        );
+        common::assert_case_description(&case.id, &case.description, "DOCTYPE boundary");
         let mut lexer = configured_lexer(case);
-        lexer
-            .push(&case.input)
-            .unwrap_or_else(|error| panic!("case `{}` push failed: {error:?}", case.id));
-        lexer
-            .finish()
-            .unwrap_or_else(|error| panic!("case `{}` finish failed: {error:?}", case.id));
-
-        common::assert_token_summaries(&case.id, lexer.drain_tokens(), &case.tokens);
-        common::assert_diagnostic_codes(&case.id, lexer.diagnostics(), &case.diagnostics);
+        common::assert_lexer_case(
+            &case.id,
+            &mut lexer,
+            &case.input,
+            &case.tokens,
+            &case.diagnostics,
+        );
     }
 }
 

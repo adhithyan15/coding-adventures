@@ -112,6 +112,8 @@ documented in this file.
 - Generated WHATWG lexer fixture runners now share test-only assertion helpers
   for token, attribute, DOCTYPE, adjacent-text, and diagnostic-code
   normalization.
+- Generated WHATWG boundary and recovery fixture runners now share case
+  description and push/finish boilerplate through the same helper module.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the
