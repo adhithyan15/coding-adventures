@@ -530,6 +530,17 @@ _PRAGMA_DEFAULTS: dict[str, tuple[object, str]] = {
     "encoding":         ("UTF-8",          "text"),
     "journal_mode":     ("memory",         "text"),     # mini-sqlite is in-memory
     "locking_mode":     ("normal",         "text"),
+    # Additional PRAGMAs that applications written for real SQLite often probe
+    # defensively.  Mini-sqlite has no on-disk file, no WAL log, and no
+    # thread pool, so most of these are accept-and-store cosmetic state — the
+    # value round-trips but otherwise has no effect on execution.  Defaults
+    # mirror SQLite's documented defaults so a fresh read matches the oracle.
+    "reverse_unordered_selects": (0,       "integer"),  # bool; off by default
+    "cell_size_check":  (0,                "integer"),  # bool; off by default
+    "fullfsync":        (0,                "integer"),  # bool; off by default
+    "wal_autocheckpoint": (1000,           "integer"),  # pages between autocheckpoints
+    "journal_size_limit": (-1,             "integer"),  # bytes; -1 = no limit
+    "threads":          (0,                "integer"),  # worker threads in sort/index
 }
 
 # Per-connection PRAGMA state.  Keyed by the backend object's id() so each
@@ -779,6 +790,10 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
         "legacy_alter_table",
         "defer_foreign_keys",
         "secure_delete",
+        # Accept-and-store cosmetic flags (no semantic effect in mini-sqlite):
+        "reverse_unordered_selects",  # planner hint, no scrambling implemented
+        "cell_size_check",            # btree integrity flag, no btree in mini
+        "fullfsync",                  # fsync mode, no disk I/O in mini
     }
     _INT_PRAGMAS = {
         "temp_store",
@@ -789,6 +804,10 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
         "page_size",
         "page_count",
         "freelist_count",
+        # Accept-and-store integer-valued flags (no semantic effect):
+        "wal_autocheckpoint",  # WAL autocheckpoint threshold (no WAL in mini)
+        "journal_size_limit",  # journal size cap in bytes (no journal in mini)
+        "threads",             # worker-thread pool size (no threading in mini)
     }
     _TEXT_PRAGMAS = {
         "encoding",
@@ -819,6 +838,14 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
             # We mirror that: silently swallow the assignment.
             if name not in ("page_size", "page_count", "freelist_count"):
                 _pragma_set(backend, name, iv)
+            # Most ``PRAGMA name = value`` forms return an empty result, but
+            # a few echo the new value back as a one-row scalar.  This is a
+            # SQLite quirk documented per-PRAGMA: ``wal_autocheckpoint``,
+            # ``journal_size_limit``, and ``threads`` all echo on set;
+            # ``application_id``, ``user_version``, and the cache/temp/
+            # synchronous family stay silent.
+            if name in {"wal_autocheckpoint", "journal_size_limit", "threads"}:
+                return QueryResult(columns=(name,), rows=((iv,),))
             return QueryResult(rows_affected=0)
         v = _pragma_get(backend, name)
         return QueryResult(columns=(name,), rows=((v,),))
