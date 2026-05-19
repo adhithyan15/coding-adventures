@@ -234,6 +234,22 @@ class ExpWaveform:
 Waveform = PwlWaveform | SinWaveform | PulseWaveform | ExpWaveform
 
 
+def waveform_period(waveform: Waveform) -> float | None:
+    """Return the waveform's repeat period in seconds, when it is periodic."""
+    if isinstance(waveform, SinWaveform):
+        if (
+            math.isfinite(waveform.frequency)
+            and waveform.frequency > 0.0
+            and waveform.damping == 0.0
+        ):
+            return 1.0 / waveform.frequency
+        return None
+    if isinstance(waveform, PulseWaveform):
+        if math.isfinite(waveform.period) and waveform.period > 0.0:
+            return waveform.period
+    return None
+
+
 @dataclass(frozen=True, slots=True)
 class AcSource:
     """Small-signal AC source specification.

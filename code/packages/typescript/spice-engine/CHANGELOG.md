@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add PSS source-period estimation with `waveformPeriod` for periodic `SIN` and
+  `PULSE` source forms plus `estimatePeriod` for deriving a harmonic common
+  independent-source period.
 - Add multi-corner transfer-function analysis with `tfCorners`, returning the
   same `.TF` query evaluated under each named corner.
 - Add multi-corner AC frequency sweeps with `acSweepCorners`, returning the

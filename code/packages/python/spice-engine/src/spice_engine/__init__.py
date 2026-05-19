@@ -23,6 +23,7 @@ from spice_engine.elements import (
     VoltageSource,
     Waveform,
     XInstance,
+    waveform_period,
 )
 from spice_engine.engine import (
     AcPoint,
@@ -59,6 +60,7 @@ from spice_engine.engine import (
     dc_corners,
     dc_sweep,
     dc_sweep_corners,
+    estimate_period,
     mc_dc,
     noise_ac,
     sens_dc,
@@ -128,6 +130,7 @@ __all__ = [
     "dc_corners",
     "dc_sweep",
     "dc_sweep_corners",
+    "estimate_period",
     "mc_dc",
     "noise_ac",
     "sens_dc",
@@ -135,4 +138,5 @@ __all__ = [
     "tf",
     "tf_corners",
     "transient",
+    "waveform_period",
 ]

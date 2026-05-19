@@ -73,6 +73,7 @@ from spice_engine.elements import (
     SubcircuitDefinition,
     VoltageSource,
     XInstance,
+    waveform_period,
 )
 
 
@@ -101,6 +102,42 @@ class Circuit:
 
     def instantiate(self, instance: XInstance) -> None:
         self.elements.extend(_expand_xinstance(instance, self.subcircuits, ()))
+
+
+def _is_integer_multiple(candidate: float, period: float, tolerance: float) -> bool:
+    ratio = candidate / period
+    nearest = round(ratio)
+    return nearest >= 1 and math.isclose(
+        ratio, nearest, rel_tol=tolerance, abs_tol=tolerance
+    )
+
+
+def estimate_period(circuit: Circuit, *, tolerance: float = 1.0e-9) -> float | None:
+    """Estimate a PSS source period from periodic independent-source waveforms.
+
+    Static independent sources do not constrain the period.  If any time-varying
+    independent source is non-periodic, or if periodic source periods are not
+    harmonic multiples of a common candidate, no reliable period is reported.
+    """
+    periods: list[float] = []
+    for element in circuit.elements:
+        if (
+            isinstance(element, (VoltageSource, CurrentSource))
+            and element.waveform is not None
+        ):
+            period = waveform_period(element.waveform)
+            if period is None:
+                return None
+            periods.append(period)
+    if not periods:
+        return None
+
+    candidate = max(periods)
+    if not math.isfinite(candidate) or candidate <= 0.0:
+        return None
+    if all(_is_integer_multiple(candidate, period, tolerance) for period in periods):
+        return candidate
+    return None
 
 
 def _expand_xinstance(

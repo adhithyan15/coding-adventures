@@ -11,12 +11,14 @@ import {
   cccs,
   ccvs,
   currentSourceWithWaveform,
+  estimatePeriod,
   inductor,
   inductorWithInitialCurrent,
   resistor,
   transient,
   voltageSource,
   voltageSourceWithWaveform,
+  waveformPeriod,
 } from "../src/index.js";
 
 function expectClose(actual: number | undefined, expected: number): void {
@@ -25,6 +27,75 @@ function expectClose(actual: number | undefined, expected: number): void {
 }
 
 describe("transient", () => {
+  it("reports periods for periodic source waveforms", () => {
+    expectClose(waveformPeriod(new SinWaveform(0.0, 1.0, 2.0)), 0.5);
+    expect(waveformPeriod(new SinWaveform(0.0, 1.0, 2.0, 0.0, 1.0))).toBeUndefined();
+    expect(waveformPeriod(new SinWaveform(0.0, 1.0, 0.0))).toBeUndefined();
+    expectClose(waveformPeriod(new PulseWaveform(0.0, 1.0, 0.0, 0.0, 0.0, 0.5, 2.5)), 2.5);
+    expect(waveformPeriod(new PwlWaveform([[0.0, 0.0], [1.0, 1.0]]))).toBeUndefined();
+    expect(waveformPeriod(new ExpWaveform())).toBeUndefined();
+  });
+
+  it("estimates a harmonic period for periodic independent sources", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+    circuit.add(
+      currentSourceWithWaveform(
+        "I1",
+        "out",
+        "0",
+        0.0,
+        new PulseWaveform(0.0, 1.0e-3, 0.0, 0.0, 0.0, 0.25e-3, 0.5e-3),
+      ),
+    );
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+
+    expectClose(estimatePeriod(circuit), 1.0e-3);
+  });
+
+  it("does not estimate a period for nonperiodic or incommensurate sources", () => {
+    const nonPeriodic = new Circuit();
+    nonPeriodic.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([[0.0, 0.0], [1.0e-3, 1.0]]),
+      ),
+    );
+    expect(estimatePeriod(nonPeriodic)).toBeUndefined();
+
+    const incommensurate = new Circuit();
+    incommensurate.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new PulseWaveform(0.0, 1.0, 0.0, 0.0, 0.0, 0.25e-3, 1.0e-3),
+      ),
+    );
+    incommensurate.add(
+      currentSourceWithWaveform(
+        "I1",
+        "out",
+        "0",
+        0.0,
+        new PulseWaveform(0.0, 1.0e-3, 0.0, 0.0, 0.0, 0.25e-3, 0.7e-3),
+      ),
+    );
+    expect(estimatePeriod(incommensurate)).toBeUndefined();
+  });
+
   it("uses a backward-Euler capacitor companion for an RC step", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("V1", "vin", "0", 1.0));

@@ -1,6 +1,7 @@
 use spice_engine::{
-    transient, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element, ExpWaveform, Inductor,
-    PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, VoltageSource, Waveform,
+    estimate_period, transient, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element,
+    ExpWaveform, Inductor, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError,
+    VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -8,6 +9,96 @@ fn assert_close(actual: f64, expected: f64) {
         (actual - expected).abs() < 1.0e-9,
         "expected {expected}, got {actual}"
     );
+}
+
+#[test]
+fn waveform_period_reports_periodic_source_forms() {
+    assert_close(
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, 2.0))
+            .period_seconds()
+            .unwrap(),
+        0.5,
+    );
+    assert!(
+        Waveform::Sin(SinWaveform::with_delay_damping(0.0, 1.0, 2.0, 0.0, 1.0))
+            .period_seconds()
+            .is_none()
+    );
+    assert!(Waveform::Sin(SinWaveform::new(0.0, 1.0, 0.0))
+        .period_seconds()
+        .is_none());
+    assert_close(
+        Waveform::Pulse(PulseWaveform::new(0.0, 1.0, 0.0, 0.0, 0.0, 0.5, 2.5))
+            .period_seconds()
+            .unwrap(),
+        2.5,
+    );
+    assert!(
+        Waveform::Pwl(PwlWaveform::new(vec![(0.0, 0.0), (1.0, 1.0)]))
+            .period_seconds()
+            .is_none()
+    );
+    assert!(
+        Waveform::Exp(ExpWaveform::new(0.0, 1.0, 0.0, 0.5, 1.0, 0.5))
+            .period_seconds()
+            .is_none()
+    );
+}
+
+#[test]
+fn estimate_period_finds_harmonic_periodic_source_period() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, 1_000.0)),
+    )));
+    circuit.add(Element::CurrentSource(CurrentSource::with_waveform(
+        "I1",
+        "out",
+        "0",
+        0.0,
+        Waveform::Pulse(PulseWaveform::new(
+            0.0, 1.0e-3, 0.0, 0.0, 0.0, 0.25e-3, 0.5e-3,
+        )),
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "out", 1_000.0)));
+
+    assert_close(estimate_period(&circuit).unwrap(), 1.0e-3);
+}
+
+#[test]
+fn estimate_period_rejects_nonperiodic_or_incommensurate_sources() {
+    let mut non_periodic = Circuit::new();
+    non_periodic.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Pwl(PwlWaveform::new(vec![(0.0, 0.0), (1.0e-3, 1.0)])),
+    )));
+    assert!(estimate_period(&non_periodic).is_none());
+
+    let mut incommensurate = Circuit::new();
+    incommensurate.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Pulse(PulseWaveform::new(0.0, 1.0, 0.0, 0.0, 0.0, 0.25e-3, 1.0e-3)),
+    )));
+    incommensurate.add(Element::CurrentSource(CurrentSource::with_waveform(
+        "I1",
+        "out",
+        "0",
+        0.0,
+        Waveform::Pulse(PulseWaveform::new(
+            0.0, 1.0e-3, 0.0, 0.0, 0.0, 0.25e-3, 0.7e-3,
+        )),
+    )));
+    assert!(estimate_period(&incommensurate).is_none());
 }
 
 #[test]
