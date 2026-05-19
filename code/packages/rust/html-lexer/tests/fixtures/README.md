@@ -29,6 +29,7 @@ Each file is a JSON object with this shape:
       ],
       "initial_state": "optional tokenizer state context",
       "last_start_tag": "optional tokenizer tag context",
+      "current_start_tag": "optional in-progress start-tag token context",
       "current_end_tag": "optional in-progress end-tag token context",
       "current_doctype": "optional in-progress doctype token context",
       "temporary_buffer": "optional tokenizer temporary-buffer context",
@@ -295,6 +296,10 @@ lowered to `current_doctype`, with optional `name`, `public_identifier`,
 Character-reference continuation fixtures accept `temporaryBuffer` plus
 `returnState`, lowered to `temporary_buffer` and `return_state`, so seeded
 named/numeric reference substates can recover back into data or RCDATA.
+Start-tag and attribute continuation fixtures accept a `currentStartTag`
+extension object, lowered to `current_start_tag`, with a required `name`, an
+optional `attributes` list, an optional `current_attribute`, and an optional
+`self_closing` flag.
 
 `normalize_html5lib_fixtures.py` is the checked-in importer for this shape. It
 currently supports:
@@ -329,6 +334,9 @@ currently supports:
 - RCDATA, RAWTEXT, script-data, and script-data-escaped end-tag `name`,
   `whitespace`, `attributes`, and `self-closing` continuation substates
   together with `lastStartTag`, `currentEndTag`, and `temporaryBuffer`
+- generic `tag open` and `end tag open` states, plus seeded start-tag `name`,
+  attribute name/value, after-attribute-value, and `self-closing` continuation
+  substates together with `currentStartTag`
 - multi-state html5lib fixture entries for supported states, expanded into
   stable per-state Venture fixture cases
 - `StartTag`, `EndTag`, `Character`, `Comment`, and `DOCTYPE` output tokens

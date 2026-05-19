@@ -242,6 +242,13 @@ strings. The accepted script entry states are also available as
 `HTML_SCRIPT_TOKENIZER_STATES`, and `HtmlTokenizerState::is_script_substate()`
 lets parser adapters validate user-selected fragment contexts before seeding a
 lexer.
+Generic start-tag and attribute continuation states are exposed the same way:
+`HtmlLexContext::start_tag_continuation(...)` accepts a `StartTagSeed` so
+parser adapters and html5lib-style importers can resume `tag name`,
+`before/after attribute name`, quoted/unquoted attribute value, and
+self-closing start-tag states through the public wrapper. The accepted seeded
+start-tag states are available as `HTML_START_TAG_TOKENIZER_STATES`, and
+`HtmlTokenizerState::requires_start_tag_seed()` keeps validation in one place.
 For importers and parser fragment APIs that need to enumerate the whole
 supported surface, `HTML_TOKENIZER_STATES` lists every parser-facing tokenizer
 entry state and `HTML_FRAGMENT_TOKENIZER_STATES` lists the non-data fragment
@@ -349,10 +356,10 @@ python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_text_mode_b
 ```
 
 The checked-in `whatwg-attribute-boundaries.json` fixture exercises seeded
-start-tag attribute continuation states, including current-attribute recovery,
-quoted and unquoted value completion, NULL replacement, EOF diagnostics,
-missing-whitespace recovery, and self-closing boundaries. Regenerate or check it
-with:
+start-tag attribute continuation states through `HtmlLexContext`, including
+current-attribute recovery, quoted and unquoted value completion, NULL
+replacement, EOF diagnostics, missing-whitespace recovery, and self-closing
+boundaries. Regenerate or check it with:
 
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_attribute_boundaries_fixture.py
@@ -380,9 +387,10 @@ without coupling the shared harness to upstream file formats or requiring raw
 fixture normalization logic to live forever inside the Rust tests.
 
 The normalized corpus now carries optional tokenizer-context metadata such as
-`initial_state` and `last_start_tag`, so upstream RCDATA, RAWTEXT, PLAINTEXT,
-CDATA section, comment, character-reference, and DOCTYPE continuation states,
-script data, script data escaped/dash/less-than/end-tag-open substates, and script data
+`initial_state`, `last_start_tag`, and seeded current-token data, so upstream
+RCDATA, RAWTEXT, PLAINTEXT, CDATA section, comment, start-tag,
+character-reference, and DOCTYPE continuation states, script data, script data
+escaped/dash/less-than/end-tag-open substates, and script data
 double-escaped/dash/less-than substates can already live in the shared Venture
 fixture format. Current Rust conformance tests now seed that context into the
 generated lexer so non-data-state cases execute through the same static Rust
