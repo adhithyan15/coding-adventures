@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-transform-internal-links",
+  "version": "0.1.0",
+  "description": "Resolve root-relative `/slug` references in LinkNode destinations to caller-supplied canonical URLs.  Pure transform: walks a DocumentNode, calls `(slug) => string | null` resolver on every internal link, validates the resolved URL against an http(s) accept-list, returns a transformed Document copy.  FM00 v0 §5.3 transform.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
