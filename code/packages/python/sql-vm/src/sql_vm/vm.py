@@ -1218,7 +1218,7 @@ def _do_advance(ins: AdvanceCursor, st: _VmState) -> None:
         # work with even after the cursor exhausts.
         if ins.cursor_id not in st.cursor_schema:
             st.cursor_schema[ins.cursor_id] = [
-                k for k in row.keys() if not k.startswith("\x00")
+                k for k in row if not k.startswith("\x00")
             ]
 
 
