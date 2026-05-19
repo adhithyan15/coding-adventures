@@ -3,17 +3,17 @@ use board_vm_ir::{
     CAP_CAN_READ, CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ,
     CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE,
     CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_EXCHANGE_UDP,
-    CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY, CAP_NETWORK_DNS_QUERY, CAP_NETWORK_DNS_RESOLVE,
-    CAP_NETWORK_DNS_RESPONSE_IPV4, CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE,
-    CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
-    CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN,
-    CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_READ_BYTES, CAP_NETWORK_UDP_WRITE,
-    CAP_NETWORK_UDP_WRITE_BYTES, CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT,
-    CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
-    CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
-    CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
-    FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MAX_BYTE_BUFFER_LEN,
-    MODULE_MAGIC, MODULE_VERSION,
+    CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK, CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY,
+    CAP_NETWORK_DNS_QUERY, CAP_NETWORK_DNS_RESOLVE, CAP_NETWORK_DNS_RESPONSE_IPV4,
+    CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE, CAP_NETWORK_TCP_CLOSE,
+    CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE,
+    CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
+    CAP_NETWORK_UDP_READ_BYTES, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_UDP_WRITE_BYTES,
+    CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS,
+    CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ,
+    CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ,
+    CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK, FLAG_PROGRAM_MAY_RUN_FOREVER,
+    FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MAX_BYTE_BUFFER_LEN, MODULE_MAGIC, MODULE_VERSION,
 };
 use board_vm_protocol::{
     encode_frame, encode_hello, encode_program_begin, encode_program_chunk, encode_program_end,
@@ -147,6 +147,9 @@ pub const NETWORK_DNS_EXCHANGE_UDP_MAX_MODULE_LEN: usize =
 pub const NETWORK_DNS_EXCHANGE_UDP_RETRY_CODE_LEN: usize = 24;
 pub const NETWORK_DNS_EXCHANGE_UDP_RETRY_MAX_MODULE_LEN: usize =
     8 + 1 + NETWORK_DNS_EXCHANGE_UDP_RETRY_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const NETWORK_DNS_EXCHANGE_UDP_FALLBACK_CODE_LEN: usize = 29;
+pub const NETWORK_DNS_EXCHANGE_UDP_FALLBACK_MAX_MODULE_LEN: usize =
+    8 + 1 + NETWORK_DNS_EXCHANGE_UDP_FALLBACK_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
 pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
 pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
 
@@ -508,6 +511,19 @@ pub struct NetworkDnsExchangeUdpRetryProgram<'a> {
     pub hostname: &'a [u8],
     pub response_len: u8,
     pub attempts: u8,
+    pub backoff_ms: u16,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkDnsExchangeUdpFallbackProgram<'a> {
+    pub interface: u8,
+    pub primary_resolver_ipv4: u32,
+    pub fallback_resolver_ipv4: u32,
+    pub transaction_id: u16,
+    pub hostname: &'a [u8],
+    pub response_len: u8,
+    pub attempts_per_resolver: u8,
     pub backoff_ms: u16,
     pub max_stack: u8,
 }
@@ -933,6 +949,31 @@ impl<'a> NetworkDnsExchangeUdpRetryProgram<'a> {
             attempts,
             backoff_ms,
             max_stack: 7,
+        }
+    }
+}
+
+impl<'a> NetworkDnsExchangeUdpFallbackProgram<'a> {
+    pub const fn new(
+        interface: u8,
+        primary_resolver_ipv4: u32,
+        fallback_resolver_ipv4: u32,
+        transaction_id: u16,
+        hostname: &'a [u8],
+        response_len: u8,
+        attempts_per_resolver: u8,
+        backoff_ms: u16,
+    ) -> Self {
+        Self {
+            interface,
+            primary_resolver_ipv4,
+            fallback_resolver_ipv4,
+            transaction_id,
+            hostname,
+            response_len,
+            attempts_per_resolver,
+            backoff_ms,
+            max_stack: 8,
         }
     }
 }
@@ -3894,6 +3935,73 @@ pub fn write_network_dns_exchange_udp_retry_module(
     Ok(offset)
 }
 
+pub fn network_dns_exchange_udp_fallback_module_len(
+    hostname_len: usize,
+) -> Result<usize, HostError> {
+    if hostname_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + NETWORK_DNS_EXCHANGE_UDP_FALLBACK_CODE_LEN + 1 + hostname_len)
+}
+
+pub fn write_network_dns_exchange_udp_fallback_code(
+    program: NetworkDnsExchangeUdpFallbackProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.hostname.len() > MAX_BYTE_BUFFER_LEN
+        || program.response_len == 0
+        || program.response_len as usize > MAX_BYTE_BUFFER_LEN
+        || program.attempts_per_resolver == 0
+    {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_DNS_EXCHANGE_UDP_FALLBACK_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_push_u32(out, &mut offset, program.primary_resolver_ipv4)?;
+    write_push_u32(out, &mut offset, program.fallback_resolver_ipv4)?;
+    write_push_u16(out, &mut offset, program.transaction_id)?;
+    write_push_bytes(out, &mut offset, 0, program.hostname.len() as u8)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.response_len)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.attempts_per_resolver)?;
+    write_push_u16(out, &mut offset, program.backoff_ms)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_dns_exchange_udp_fallback_module(
+    program: NetworkDnsExchangeUdpFallbackProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len = network_dns_exchange_udp_fallback_module_len(program.hostname.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_DNS_EXCHANGE_UDP_FALLBACK_CODE_LEN];
+    let code_len = write_network_dns_exchange_udp_fallback_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]).const_pool(program.hostname),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp()
+            .with_network_dns()
+            .with_network_udp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
 pub fn write_led_matrix_frame_code(
     program: LedMatrixFrameProgram,
     out: &mut [u8],
@@ -4056,15 +4164,15 @@ mod tests {
         collect_required_capabilities, parse_module, validate, CapabilitySet, ModuleError,
         CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ, CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_I2C_OPEN,
         CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
-        CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_EXCHANGE_UDP, CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY,
-        CAP_NETWORK_DNS_QUERY, CAP_NETWORK_DNS_RESOLVE, CAP_NETWORK_DNS_RESPONSE_IPV4,
-        CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE, CAP_NETWORK_TCP_CLOSE,
-        CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ,
-        CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE,
-        CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_READ_BYTES,
-        CAP_NETWORK_UDP_WRITE, CAP_NETWORK_UDP_WRITE_BYTES, CAP_PWM_WRITE, CAP_RTC_NOW,
-        CAP_RTC_SET, CAP_SPI_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE,
-        CAP_WATCHDOG_KICK,
+        CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_EXCHANGE_UDP, CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK,
+        CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY, CAP_NETWORK_DNS_QUERY, CAP_NETWORK_DNS_RESOLVE,
+        CAP_NETWORK_DNS_RESPONSE_IPV4, CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE,
+        CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN,
+        CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE,
+        CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
+        CAP_NETWORK_UDP_READ_BYTES, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_UDP_WRITE_BYTES,
+        CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_UART_READ, CAP_UART_WRITE,
+        CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
     };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -4224,6 +4332,12 @@ mod tests {
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x07, 0x00, 0x18, 0x12, 0x00, 0x14, 0x08, 0x08, 0x08,
         0x08, 0x13, 0x34, 0x12, 0x16, 0x00, 0x00, 0x07, 0x12, 0x20, 0x12, 0x03, 0x13, 0x19, 0x00,
         0x40, 0x4F, 0x50, 0x07, 0x65, 0x78, 0x61, 0x6D, 0x70, 0x6C, 0x65,
+    ];
+    const NETWORK_DNS_EXCHANGE_UDP_FALLBACK_EXAMPLE_MODULE_HEX: [u8; 46] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x08, 0x00, 0x1D, 0x12, 0x00, 0x14, 0x08, 0x08, 0x08,
+        0x08, 0x14, 0x01, 0x01, 0x01, 0x01, 0x13, 0x34, 0x12, 0x16, 0x00, 0x00, 0x07, 0x12, 0x20,
+        0x12, 0x01, 0x13, 0x19, 0x00, 0x40, 0x50, 0x50, 0x07, 0x65, 0x78, 0x61, 0x6D, 0x70, 0x6C,
+        0x65,
     ];
     const RTC_NOW_MODULE_HEX: [u8; RTC_NOW_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x03, 0x40, 0x34, 0x50, 0x00,
@@ -4910,6 +5024,47 @@ mod tests {
         assert_eq!(
             &capabilities[..count],
             &[CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY]
+        );
+
+        let module_len = network_dns_exchange_udp_fallback_module_len(7).unwrap();
+        let mut fallback = [0u8; 46];
+        let fallback_len = write_network_dns_exchange_udp_fallback_module(
+            NetworkDnsExchangeUdpFallbackProgram::new(
+                0,
+                0x0808_0808,
+                0x0101_0101,
+                0x1234,
+                b"example",
+                32,
+                1,
+                25,
+            ),
+            &mut fallback,
+        )
+        .unwrap();
+        assert_eq!(
+            module_len,
+            NETWORK_DNS_EXCHANGE_UDP_FALLBACK_EXAMPLE_MODULE_HEX.len()
+        );
+        assert_eq!(fallback_len, module_len);
+        assert_eq!(
+            fallback,
+            NETWORK_DNS_EXCHANGE_UDP_FALLBACK_EXAMPLE_MODULE_HEX
+        );
+
+        let parsed = parse_module(&fallback).unwrap();
+        validate(
+            &parsed,
+            CapabilitySet::blink_mvp()
+                .with_network_dns()
+                .with_network_udp(),
+            8,
+        )
+        .unwrap();
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(
+            &capabilities[..count],
+            &[CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK]
         );
     }
 
