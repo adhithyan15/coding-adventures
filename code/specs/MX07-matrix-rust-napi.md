@@ -38,21 +38,18 @@ This spec answers each.
 
 ```
 code/packages/rust/matrix-rust-napi/
-  Cargo.toml             # rlib + cdylib
+  Cargo.toml             # cdylib only (workspace convention)
   BUILD                  # cargo test invocation
   BUILD_windows
   CHANGELOG.md
   README.md
-  build.rs               # napi-build setup
-  package.json           # napi-rs CLI consumes this for build/publish
+  package.json           # Phase 3: lists the per-platform .node packages
   src/
-    lib.rs               # public napi exports
-    graph.rs             # JsGraph wrapper (handle-based)
-    runtime.rs           # JsRuntime wrapper
-    error.rs             # napi::Error mapping
+    lib.rs               # round_trip_json (Phase 1) + future
+                         # Graph / Runtime wrappers + N-API exports
   required_capabilities.json
   __test__/
-    smoke.test.mjs       # node --test
+    smoke.test.mjs       # node --test (lands with Phase 4)
 ```
 
 It lives under `code/packages/rust/` because it **is** a Rust crate
@@ -60,6 +57,33 @@ It lives under `code/packages/rust/` because it **is** a Rust crate
 build output ends up in a Node.js consumer is incidental — the same
 way `font-parser-node` is a Rust crate that happens to be consumed by
 a Node-side wrapper.
+
+### N-API binding: `node-bridge`, not `napi-rs`
+
+The workspace convention — established by `font-parser-node` — is
+to use the sibling **`node-bridge`** crate: a zero-dependency safe
+Rust wrapper over the raw N-API `extern "C"` interface.  No
+`napi-rs`, no `napi-sys`, no `napi-derive`, no `napi-build`, no
+build-time header requirements.  N-API is ABI-stable by design;
+extern declarations work on every Node version that supports the
+targeted N-API revision.
+
+This is the **default for every Node binding in the workspace**.
+An earlier draft of this spec specified `napi` + `napi-derive` +
+`napi-build`; that draft has been superseded.  Reasons to prefer
+`node-bridge`:
+
+* Zero crates.io dependencies (matches the workspace's broader
+  minimum-dependency ethos).
+* Same pattern as the existing `font-parser-node` addon — one
+  reviewer skillset, one debugging surface.
+* No proc-macro at the binding boundary — easier to read, easier
+  to step through under `lldb`.
+
+If a future addon hits a real ceiling that only `napi-rs` can
+break through (very complex async patterns, heavy class wrapping,
+etc.), the option remains open — but each addon makes that call
+on its own merits, and the default is `node-bridge`.
 
 Companion TypeScript wrapper:
 
@@ -245,37 +269,47 @@ a dependency from this work.
 
 `matrix-rust-napi` is **not** bound by MX00.  It is explicitly an
 FFI/binding crate at the edge of the workspace — its job is to
-glue the zero-dep core to external runtimes.  Its `Cargo.toml`
-dependencies:
+glue the zero-dep core to external runtimes.
+
+But because it depends on `node-bridge` rather than `napi-rs`, it
+still has **zero crates.io dependencies**.  Its `Cargo.toml` reads:
 
 ```toml
 [dependencies]
 matrix-ir                          = { path = "../matrix-ir" }
 matrix-ir-json                     = { path = "../matrix-ir-json" }
-matrix-runtime                     = { path = "../matrix-runtime" }
-matrix-cpu                         = { path = "../matrix-cpu" }
-compute-ir                         = { path = "../compute-ir" }
-executor-protocol                  = { path = "../executor-protocol" }
-napi                               = { version = "2", features = ["napi8"] }
-napi-derive                        = "2"
+node-bridge                        = { path = "../node-bridge" }
 
-[target.'cfg(target_os = "macos")'.dependencies]
-matrix-metal                       = { path = "../matrix-metal" }
-
-[target.'cfg(any(target_os = "linux", target_os = "windows"))'.dependencies]
-matrix-cuda                        = { path = "../matrix-cuda" }
-
-[build-dependencies]
-napi-build                         = "2"
+# Phase 2 adds:
+# matrix-runtime  = { path = "../matrix-runtime" }
+# matrix-cpu      = { path = "../matrix-cpu" }
+# compute-ir      = { path = "../compute-ir" }
+# executor-protocol = { path = "../executor-protocol" }
+#
+# Phase 2+ platform-conditional GPU deps:
+# [target.'cfg(target_os = "macos")'.dependencies]
+# matrix-metal = { path = "../matrix-metal" }
+# [target.'cfg(any(target_os = "linux", target_os = "windows"))'.dependencies]
+# matrix-cuda  = { path = "../matrix-cuda" }
 
 [lib]
-crate-type = ["cdylib", "rlib"]
+crate-type = ["cdylib"]
+name = "matrix_rust_napi"
 ```
 
-The `cdylib` is what `napi build` packages into `index.node`.  The
-`rlib` keeps the crate `cargo test`-able as a normal Rust library —
-without it, `cargo test` can't link the test harness against a
-cdylib-only crate.
+The single `cdylib` target produces
+`libmatrix_rust_napi.{dylib,so,dll}`, which Phase 3's
+`package.json` build script renames to `matrix_rust_napi.node` for
+Node to `require()`.
+
+**Why `cdylib`-only and not `cdylib + rlib`?**  `font-parser-node`
+uses cdylib-only; an empty cargo test (zero `#[test]` functions in
+the lib) still compiles and "runs" successfully because the test
+harness builds the lib as cdylib + a tiny test binary that
+references it.  We confirmed locally: a cdylib-only crate with
+`#[cfg(test)] mod tests` *does* compile and run tests under
+`cargo test`.  Adding an `rlib` target would double the build time
+and produce an extra artifact for no benefit.
 
 ---
 
@@ -327,8 +361,8 @@ end.
 
 | Phase | Lands | Status |
 |-------|-------|--------|
-| 0 | This spec. | **this PR** |
-| 1 | Rust crate skeleton — `Cargo.toml` (`cdylib + rlib`), `build.rs`, `src/lib.rs` exporting only `Graph` (JSON round-trip via `matrix-ir-json`). One smoke `cargo test`. No Node side yet. | pending |
+| 0 | This spec. | shipped (#3508) |
+| 1 | Rust crate skeleton — `Cargo.toml` (`cdylib`), `src/lib.rs` exporting `graphRoundTripJson` (one function, JSON in → `matrix-ir-json::decode` → `matrix-ir-json::encode` → JSON out), 5 unit tests on the pure-Rust core. No Node side yet. | **this PR** |
 | 2 | `Runtime::create()` + `Runtime::run(graph, inputs)` on the CPU executor.  Internal-testing feature flag for in-Rust round-trip tests of `graph_in → run → outputs_out`. | pending |
 | 3 | `package.json` + `napi build` workflow file.  CI step that builds the `.node` artifact on `darwin-arm64` and `linux-x64-gnu` and confirms it loads.  No publish step. | pending |
 | 4 | TypeScript wrapper package `typescript/matrix-rust-napi/` — re-exports the napi binding with typed declarations.  `__test__/smoke.test.mjs` round-trips a `MatMul` graph through the binding. | pending |
@@ -372,12 +406,16 @@ To pre-empt overreach:
 
 These are deferred until the implementation PRs hit them:
 
-* **napi-rs version pin** — `napi@2` is current stable; whether to
-  pin to `2.16` exactly or `^2` is a Phase 1 decision.
-* **MSRV** — must match the workspace; bumped only if napi-rs
-  requires newer rustc.
-* **Whether the wrapper package republishes the `.node` binary or
-  uses napi-rs's `@napi-rs/cli`-managed per-platform packages** is
-  a Phase 3 question.  This spec assumes the latter (standard
-  napi-rs model); we revisit if it doesn't fit the workspace's
-  npm publishing setup.
+* **N-API revision target** — `font-parser-node` targets N-API v4
+  (Node 10.16+ / 12+).  `matrix-rust-napi` defaults to the same
+  unless a needed function requires a newer revision.  Decided per
+  Phase as new N-API calls are added.
+* **MSRV** — matches the workspace; revisited only if `node-bridge`
+  or a workspace upstream crate forces a bump.
+* **Per-platform packaging strategy** — Phase 3 question.  The
+  workspace pattern (font-parser-node's `package.json` runs
+  `cargo build --release` then `cp` the `.dylib` to `.node`) works
+  for a single platform; cross-platform distribution needs a
+  publish workflow.  Likely a GitHub Actions matrix builds each
+  triple's `.node`, the wrapper consumes them as
+  `optionalDependencies`.  Decided when Phase 3 lands.
