@@ -94,21 +94,32 @@ been updated in this same PR to record the divergence.
 |-------|-------|
 | 1 | `graphRoundTripJson(jsonString)` — round-trip smoke. |
 | 2 | `runGraphOnCpu(envelopeJson)` — full plan + allocate + dispatch + download pipeline on `matrix-cpu`. JSON-envelope I/O (hex-encoded bytes). |
-| 2b (this PR) | `Graph` + `Runtime` JS classes with `Buffer[]` I/O via the node-bridge Buffer helpers (added in PR #3529). |
-| 3 | `package.json` + workflow that builds the `.node` artifact on `darwin-arm64` and `linux-x64-gnu` and confirms it loads. |
+| 2b | `Graph` + `Runtime` JS classes with `Buffer[]` I/O via the node-bridge Buffer helpers (added in PR #3529). |
+| 3 (this PR) | `package.json` + GitHub Actions workflow that builds the `.node` artifact on `darwin-arm64` and `linux-x64-gnu` and confirms it loads. |
 | 4 | TypeScript wrapper package with `node --test` smoke. |
 | 5 (MX08) | `typescript/matrix` refactor — separately scoped. |
 
 ## Building
 
+The addon ships a `package.json` with two convenience scripts:
+
 ```sh
-cargo build -p matrix-rust-napi --release
+cd code/packages/rust/matrix-rust-napi
+
+npm run build    # cargo build --release + rename .dylib/.so/.dll -> .node
+npm run smoke    # build + load + assert all 4 exports are present
 ```
 
-The output `target/release/libmatrix_rust_napi.{dylib,so,dll}` is
-what Node.js renames to `matrix_rust_napi.node` and loads via
-`require()`.  Phase 3 adds the build script that does the rename
-and the per-platform packaging.
+Under the hood, `npm run build` runs `cargo build --release`
+(which produces `code/packages/rust/target/release/libmatrix_rust_napi.{dylib,so,dll}`)
+and copies it to `matrix_rust_napi.node` alongside `package.json`.
+That's the file Node.js loads via `require("./matrix_rust_napi.node")`.
+
+CI runs `npm run smoke` on `ubuntu-latest` (linux-x64-gnu) and
+`macos-latest` (darwin-arm64) for every PR that touches the addon
+or its workspace dependencies, ensuring the .node artifact
+actually loads.  See
+[`.github/workflows/matrix-rust-napi.yml`](../../../../.github/workflows/matrix-rust-napi.yml).
 
 ## Testing
 
