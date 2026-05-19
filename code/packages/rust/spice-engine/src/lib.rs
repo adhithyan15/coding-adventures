@@ -1672,6 +1672,8 @@ pub struct PssResidualResult {
     pub time_step_seconds: f64,
     pub node_residuals: BTreeMap<String, f64>,
     pub max_abs_residual: f64,
+    pub residual_tolerance: f64,
+    pub within_tolerance: bool,
 }
 
 impl DcResult {
@@ -2647,6 +2649,14 @@ pub fn pss_residual(
     circuit: &Circuit,
     steps_per_period: usize,
 ) -> Result<Option<PssResidualResult>, SpiceError> {
+    pss_residual_with_tolerance(circuit, steps_per_period, 1.0e-6)
+}
+
+pub fn pss_residual_with_tolerance(
+    circuit: &Circuit,
+    steps_per_period: usize,
+    residual_tolerance: f64,
+) -> Result<Option<PssResidualResult>, SpiceError> {
     let Some(period) = estimate_period(circuit) else {
         return Ok(None);
     };
@@ -2654,6 +2664,12 @@ pub fn pss_residual(
         return Err(SpiceError::InvalidElement {
             name: "pss_residual".to_string(),
             reason: "steps per period must be positive".to_string(),
+        });
+    }
+    if !residual_tolerance.is_finite() || residual_tolerance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "pss_residual".to_string(),
+            reason: "residual tolerance must be finite and non-negative".to_string(),
         });
     }
 
@@ -2672,6 +2688,8 @@ pub fn pss_residual(
             time_step_seconds: time_step,
             node_residuals: BTreeMap::new(),
             max_abs_residual: 0.0,
+            residual_tolerance,
+            within_tolerance: false,
         }));
     };
 
@@ -2704,6 +2722,8 @@ pub fn pss_residual(
         time_step_seconds: time_step,
         node_residuals,
         max_abs_residual,
+        residual_tolerance,
+        within_tolerance: max_abs_residual <= residual_tolerance,
     }))
 }
 

@@ -4,6 +4,9 @@
 
 ### Added
 
+- **PSS residual convergence flag** — `pss_residual` now accepts a residual
+  tolerance and reports whether one-period node closure is within tolerance.
+
 - **PSS period-closure residual** — `pss_residual` runs one estimated source
   period and reports node-voltage closure residuals as the next foothold for
   shooting-Newton periodic steady-state analysis.

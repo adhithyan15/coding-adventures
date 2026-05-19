@@ -221,6 +221,8 @@ def test_pss_residual_reports_one_period_node_closure() -> None:
     assert result.period == pytest.approx(1.0e-3)
     assert result.time_step == pytest.approx(1.0e-3 / 32.0)
     assert result.converged is True
+    assert result.residual_tol == pytest.approx(1.0e-6)
+    assert result.within_tolerance is True
     assert result.node_residuals["in"] == pytest.approx(0.0, abs=1.0e-12)
     assert result.max_abs_residual == pytest.approx(0.0, abs=1.0e-12)
 
@@ -238,6 +240,22 @@ def test_pss_residual_requires_periodic_sources() -> None:
     )
 
     assert pss_residual(c) is None
+
+
+def test_pss_residual_rejects_negative_residual_tolerance() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(frequency=1_000.0),
+        )
+    )
+
+    with pytest.raises(ValueError, match="residual_tol"):
+        pss_residual(c, residual_tol=-1.0)
 
 
 # ---- Linear solver ----

@@ -597,6 +597,8 @@ export interface PssResidualResult {
   readonly timeStepSeconds: number;
   readonly nodeResiduals: ReadonlyMap<string, number>;
   readonly maxAbsResidual: number;
+  readonly residualTolerance: number;
+  readonly withinTolerance: boolean;
 }
 
 export class SpiceError extends Error {
@@ -1681,6 +1683,7 @@ export function transient(
 export function pssResidual(
   circuit: Circuit,
   stepsPerPeriod = 64,
+  residualTolerance = 1.0e-6,
 ): PssResidualResult | undefined {
   const period = estimatePeriod(circuit);
   if (period === undefined) {
@@ -1690,6 +1693,12 @@ export function pssResidual(
     throw invalidElement(
       "pssResidual",
       "steps per period must be a positive integer",
+    );
+  }
+  if (!Number.isFinite(residualTolerance) || residualTolerance < 0.0) {
+    throw invalidElement(
+      "pssResidual",
+      "residual tolerance must be finite and non-negative",
     );
   }
 
@@ -1708,6 +1717,8 @@ export function pssResidual(
       timeStepSeconds: timeStep,
       nodeResiduals: new Map(),
       maxAbsResidual: 0.0,
+      residualTolerance,
+      withinTolerance: false,
     };
   }
 
@@ -1730,6 +1741,8 @@ export function pssResidual(
     timeStepSeconds: timeStep,
     nodeResiduals,
     maxAbsResidual,
+    residualTolerance,
+    withinTolerance: maxAbsResidual <= residualTolerance,
   };
 }
 
