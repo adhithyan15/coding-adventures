@@ -1118,6 +1118,10 @@ PARSER_GRAMMAR = ParserGrammar(
                                 Literal(value='+'),
                                 Literal(value='-'),
                                 Literal(value='||'),
+                                # JSON path-shortcut operators (SQLite 3.38+).
+                                # ->> first for longest-match.
+                                RuleReference(name='JSON_ARROW_TEXT', is_token=True),
+                                RuleReference(name='JSON_ARROW', is_token=True),
                             ]),
                         ),
                         RuleReference(name='multiplicative', is_token=False),

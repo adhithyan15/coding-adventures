@@ -1331,3 +1331,112 @@ class TestDateTimeFunctions:
     def test_date_unixepoch_modifier(self) -> None:
         # 'unixepoch' as a modifier is a no-op in our model.
         assert fn("date", "2024-01-15", "unixepoch") == "2024-01-15"
+
+
+# ===========================================================================
+# JSON path-shortcut operator helpers (__json_arrow / __json_arrow_text)
+# ===========================================================================
+#
+# These are the implementations behind the `->` and `->>` operators
+# (SQLite 3.38+).  The adapter rewrites the operator into a call to one of
+# these functions; they are not user-facing under their double-underscore
+# names but are reachable via the registry like any other scalar.
+
+
+class TestJsonArrow:
+    """``__json_arrow(j, path)`` — implements ``j -> path`` (JSON-typed result)."""
+
+    def test_array_index(self) -> None:
+        # JSON form of an integer is the JSON-encoded string "1"
+        assert fn("__json_arrow", "[1,2,3]", 0) == "1"
+
+    def test_array_index_middle(self) -> None:
+        assert fn("__json_arrow", "[1,2,3]", 1) == "2"
+
+    def test_array_string_value(self) -> None:
+        assert fn("__json_arrow", '["a","b","c"]', 1) == '"b"'
+
+    def test_object_key(self) -> None:
+        assert fn("__json_arrow", '{"a":1,"b":2}', "a") == "1"
+
+    def test_object_missing_key(self) -> None:
+        assert fn("__json_arrow", '{"a":1}', "missing") is None
+
+    def test_object_returns_nested_as_json(self) -> None:
+        result = fn("__json_arrow", '{"x":{"y":42}}', "x")
+        assert result == '{"y":42}'
+
+    def test_array_returns_array_as_json(self) -> None:
+        assert fn("__json_arrow", '{"items":[1,2,3]}', "items") == "[1,2,3]"
+
+    def test_explicit_dollar_path(self) -> None:
+        assert fn("__json_arrow", '[10,20,30]', "$[2]") == "30"
+
+    def test_explicit_nested_dollar_path(self) -> None:
+        assert fn("__json_arrow", '{"a":{"b":7}}', "$.a.b") == "7"
+
+    def test_null_json_propagates(self) -> None:
+        assert fn("__json_arrow", None, 0) is None
+
+    def test_null_path_propagates(self) -> None:
+        assert fn("__json_arrow", "[1,2,3]", None) is None
+
+    def test_non_string_json_returns_null(self) -> None:
+        assert fn("__json_arrow", 42, 0) is None
+
+    def test_invalid_json_returns_null(self) -> None:
+        assert fn("__json_arrow", "not json", 0) is None
+
+    def test_array_out_of_bounds_returns_null(self) -> None:
+        assert fn("__json_arrow", "[1,2,3]", 99) is None
+
+    def test_boolean_path_is_rejected(self) -> None:
+        # SQLite rejects booleans on the right of -> / ->>; we return NULL.
+        assert fn("__json_arrow", "[1,2,3]", True) is None
+
+    def test_float_path_is_rejected(self) -> None:
+        # Floats are also not a valid path type.
+        assert fn("__json_arrow", "[1,2,3]", 1.5) is None
+
+
+class TestJsonArrowText:
+    """``__json_arrow_text(j, path)`` — implements ``j ->> path`` (SQL-typed)."""
+
+    def test_array_index_returns_integer(self) -> None:
+        assert fn("__json_arrow_text", "[1,2,3]", 0) == 1
+
+    def test_array_string_value_unwrapped(self) -> None:
+        assert fn("__json_arrow_text", '["a","b","c"]', 1) == "b"
+
+    def test_object_key_returns_integer(self) -> None:
+        assert fn("__json_arrow_text", '{"a":1,"b":2}', "a") == 1
+
+    def test_object_key_returns_text(self) -> None:
+        assert fn("__json_arrow_text", '{"name":"alice"}', "name") == "alice"
+
+    def test_object_value_stays_json_text(self) -> None:
+        """``->>`` does NOT unwrap composite values — they stay as JSON text."""
+        result = fn("__json_arrow_text", '{"a":{"b":1}}', "a")
+        assert result == '{"b":1}'
+
+    def test_array_value_stays_json_text(self) -> None:
+        result = fn("__json_arrow_text", '{"items":[1,2,3]}', "items")
+        assert result == "[1,2,3]"
+
+    def test_null_json_propagates(self) -> None:
+        assert fn("__json_arrow_text", None, 0) is None
+
+    def test_null_path_propagates(self) -> None:
+        assert fn("__json_arrow_text", "[1,2,3]", None) is None
+
+    def test_missing_path_returns_null(self) -> None:
+        assert fn("__json_arrow_text", '{"a":1}', "missing") is None
+
+    def test_explicit_dollar_path(self) -> None:
+        assert fn("__json_arrow_text", '{"a":{"b":42}}', "$.a.b") == 42
+
+    def test_non_string_json_returns_null(self) -> None:
+        assert fn("__json_arrow_text", 42, 0) is None
+
+    def test_invalid_json_returns_null(self) -> None:
+        assert fn("__json_arrow_text", "not json", 0) is None

@@ -93,6 +93,20 @@ TOKEN_GRAMMAR = TokenGrammar(
             alias=None,
         ),
         TokenDefinition(
+            name='JSON_ARROW_TEXT',
+            pattern='->>',
+            is_regex=False,
+            line_number=34,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='JSON_ARROW',
+            pattern='->',
+            is_regex=False,
+            line_number=35,
+            alias=None,
+        ),
+        TokenDefinition(
             name='EQUALS',
             pattern='=',
             is_regex=False,

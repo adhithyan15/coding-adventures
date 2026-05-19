@@ -1476,19 +1476,58 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
 
 
 def _additive(node: ASTNode, state: _PlaceholderCounter) -> Expr:
-    # additive = multiplicative { ("+"|"-"|"||") multiplicative }
-    #
-    # "||" is SQL string concatenation (same as Python's str + str but for any
-    # type — the VM coerces both sides to str before joining them).  It has the
-    # same precedence as arithmetic + and - because it is in the same grammar
-    # level.  This matches SQLite, PostgreSQL, and the SQL standard.
-    return _left_assoc_punct(
-        node,
-        "multiplicative",
-        _multiplicative,
-        {"PLUS": BinaryOp.ADD, "MINUS": BinaryOp.SUB, "CONCAT_OP": BinaryOp.CONCAT},
-        state,
-    )
+    """Handle the ``additive`` grammar rule.
+
+    Grammar::
+
+        additive = multiplicative
+                   { ( "+" | "-" | "||" | JSON_ARROW | JSON_ARROW_TEXT )
+                     multiplicative }
+
+    ``+``, ``-``, and ``||`` are ordinary binary operators (BinaryExpr).
+    ``->`` and ``->>`` are SQLite 3.38+ JSON path-shortcut operators; they
+    translate at this layer into function calls to the built-in scalar
+    helpers ``__json_arrow`` and ``__json_arrow_text`` respectively.  The
+    helpers internally normalise their second argument to a JSON path:
+
+    * an integer ``N`` becomes ``$[N]`` (array index)
+    * a string ``"a"`` becomes ``$.a`` (object key)
+    * a string already starting with ``$`` is used as-is
+
+    ``->`` returns the result re-encoded as JSON text (matching SQLite's
+    JSON-typed return); ``->>`` returns the unwrapped SQL scalar.
+    """
+    children = node.children
+    subs = [c for c in children if isinstance(c, ASTNode) and c.rule_name == "multiplicative"]
+    if len(subs) == 1:
+        return _multiplicative(subs[0], state)
+
+    result = _multiplicative(subs[0], state)
+    sub_idx = 1
+    arrow_token_map = {
+        "PLUS": BinaryOp.ADD,
+        "MINUS": BinaryOp.SUB,
+        "CONCAT_OP": BinaryOp.CONCAT,
+    }
+    for c in children:
+        if not isinstance(c, Token):
+            continue
+        ttype = _token_type(c)
+        if ttype in arrow_token_map and sub_idx < len(subs):
+            op = arrow_token_map[ttype]
+            result = BinaryExpr(op=op, left=result, right=_multiplicative(subs[sub_idx], state))
+            sub_idx += 1
+        elif ttype in ("JSON_ARROW", "JSON_ARROW_TEXT") and sub_idx < len(subs):
+            # `j -> p` and `j ->> p` desugar to function calls so the codegen
+            # can route them through the existing scalar-function dispatcher.
+            fn_name = "__json_arrow" if ttype == "JSON_ARROW" else "__json_arrow_text"
+            rhs = _multiplicative(subs[sub_idx], state)
+            result = FunctionCall(
+                name=fn_name,
+                args=(FuncArg(value=result), FuncArg(value=rhs)),
+            )
+            sub_idx += 1
+    return result
 
 
 def _multiplicative(node: ASTNode, state: _PlaceholderCounter) -> Expr:

@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.29.0 — 2026-05-17
+
+### Added
+
+- **`__json_arrow(json, path)` scalar function** (`scalar_functions.py`) —
+  implements `j -> path`.  Returns the value at the path as JSON text
+  (numbers as quoted strings, objects/arrays as canonical JSON).  This
+  keeps chained `j -> 'a' -> 'b'` expressions parsable as JSON at each
+  step.
+- **`__json_arrow_text(json, path)` scalar function** (`scalar_functions.py`) —
+  implements `j ->> path`.  Returns the SQL-typed value (TEXT, INTEGER,
+  REAL, or NULL).  Object/array results stay as JSON text (matching
+  SQLite — `->>` does NOT unwrap composite values).
+- **`_path_arg_to_jsonpath()` helper** — normalises the right-hand side of
+  the arrow operator to a SQLite-style JSON path:
+    integer N           → `$[N]`  (array index)
+    string "a"          → `$.a`   (object key)
+    string starting `$` → used verbatim
+
+The functions are registered under `__`-prefixed names because they are
+syntactic-sugar implementations rather than user-facing functions; the
+adapter rewrites the operators into calls to these internal helpers.
+
 ## 1.28.0 — 2026-05-17
 
 ### Added
