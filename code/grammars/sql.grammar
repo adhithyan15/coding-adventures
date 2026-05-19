@@ -159,11 +159,23 @@ alter_table_stmt  = "ALTER" "TABLE" NAME "ADD" [ "COLUMN" ] col_def ;
 # The UNIQUE flag is stored but not enforced in v2 (reserved for v3).
 
 create_index_stmt = "CREATE" [ "UNIQUE" ] "INDEX" [ "IF" "NOT" "EXISTS" ] NAME
-                    "ON" NAME "(" index_col { "," index_col } ")" ;
-# index_col: a column name with an optional sort direction (ASC or DESC).
-# The direction hint is accepted for SQLite compatibility but ignored by the
-# backend (B-tree indexes are bidirectional at query time).
-index_col         = NAME [ "ASC" | "DESC" ] ;
+                    "ON" NAME "(" index_col { "," index_col } ")"
+                    [ where_clause ] ;
+# index_col: a column name (or arbitrary expression) with an optional
+# COLLATE clause and sort direction (ASC or DESC).
+#
+# Expression form (SQLite "indexed expression"):
+#   CREATE INDEX idx ON t(LOWER(name))
+#   CREATE INDEX idx ON t(name COLLATE NOCASE, age DESC)
+# Mini-sqlite parses these without using the expression for actual indexing —
+# the index becomes a no-op for lookups that involve the expression.  This
+# unlocks ORM/migration code that creates such indexes without affecting
+# correctness (only performance).
+#
+# The direction hint and COLLATE name are accepted for SQLite compatibility
+# but ignored by the backend (B-tree indexes are bidirectional at query time;
+# only BINARY collation is implemented).
+index_col         = expr [ "COLLATE" NAME ] [ "ASC" | "DESC" ] ;
 
 drop_index_stmt   = "DROP" "INDEX" [ "IF" "EXISTS" ] NAME ;
 

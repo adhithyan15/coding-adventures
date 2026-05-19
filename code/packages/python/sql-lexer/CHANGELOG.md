@@ -2,6 +2,16 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.18.0] - 2026-05-18
+
+### Added
+
+- **`COLLATE` keyword** (`sql.tokens`, `_grammar.py`) — added to the keyword
+  list so the parser can recognise `COLLATE NOCASE` / `COLLATE BINARY` /
+  `COLLATE RTRIM` clauses in `CREATE INDEX … ON t(col COLLATE …)` and
+  similar contexts.  Mini-sqlite ignores the collation name (only BINARY
+  is implemented), but accepting the syntax unlocks ORM/migration code.
+
 ## [0.17.0] - 2026-05-17
 
 ### Added

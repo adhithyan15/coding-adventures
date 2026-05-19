@@ -2,6 +2,23 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.23.0] - 2026-05-18
+
+### Added
+
+- **Indexed expressions in `CREATE INDEX`** (`sql.grammar`, `_grammar.py`)
+  — the `index_col` rule now accepts a full `expr` (not just a bare NAME),
+  plus an optional `COLLATE name` clause and the existing optional
+  `ASC`/`DESC`.  This enables SQLite-compatible indexed-expression syntax:
+
+      CREATE INDEX idx ON t(LOWER(name))
+      CREATE INDEX idx ON t(name COLLATE NOCASE)
+      CREATE INDEX idx ON t(LOWER(name), id ASC)
+
+  The grammar also accepts an optional trailing `WHERE` clause on
+  `CREATE INDEX` for the SQLite "partial index" syntax.  The adapter
+  silently ignores the predicate; partial-index lookup is not implemented.
+
 ## [0.22.0] - 2026-05-17
 
 ### Added
