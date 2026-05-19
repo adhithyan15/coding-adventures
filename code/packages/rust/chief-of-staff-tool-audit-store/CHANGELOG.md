@@ -29,6 +29,8 @@ All notable changes to this package will be documented in this file.
 - Flattened supervisor drain run summaries for host logs and scheduler loops.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
+- Typed scheduler action intent helpers for continuation, follow-up routing, and
+  plan-drift investigation branches.
 - Batch audit write summaries for host flush loops.
 - Replay helpers for loading queried audit rows into any `ToolAuditSink`.
 - `StorageToolAuditSink` for runtime audit emission through D18A storage with

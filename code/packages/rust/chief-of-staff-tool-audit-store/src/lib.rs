@@ -1011,6 +1011,21 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.scheduler_action.requires_scheduler_action()
     }
 
+    /// Return whether the scheduler should run another drain pass.
+    pub fn requests_continuation(&self) -> bool {
+        self.scheduler_action.requests_continuation()
+    }
+
+    /// Return whether follow-up pressure should be routed to the host.
+    pub fn routes_follow_up(&self) -> bool {
+        self.scheduler_action.routes_follow_up()
+    }
+
+    /// Return whether the host should investigate preflight/drain drift.
+    pub fn requires_plan_drift_investigation(&self) -> bool {
+        self.scheduler_action.requires_plan_drift_investigation()
+    }
+
     /// Return the stable scheduler-action label for host logs.
     pub fn scheduler_action_label(&self) -> &'static str {
         self.scheduler_action.as_str()
@@ -1133,6 +1148,26 @@ impl ToolAuditSupervisorDrainSchedulerAction {
     /// Return whether the host scheduler needs to take an explicit action.
     pub fn requires_scheduler_action(self) -> bool {
         !matches!(self, Self::NoAction)
+    }
+
+    /// Return whether this action intentionally leaves the scheduler idle.
+    pub fn is_no_action(self) -> bool {
+        matches!(self, Self::NoAction)
+    }
+
+    /// Return whether this action asks the host to schedule another drain pass.
+    pub fn requests_continuation(self) -> bool {
+        matches!(self, Self::ScheduleContinuation)
+    }
+
+    /// Return whether this action routes follow-up pressure to the host.
+    pub fn routes_follow_up(self) -> bool {
+        matches!(self, Self::RouteFollowUp)
+    }
+
+    /// Return whether this action asks the host to investigate plan drift.
+    pub fn requires_plan_drift_investigation(self) -> bool {
+        matches!(self, Self::InvestigatePlanDrift)
     }
 }
 
@@ -2607,6 +2642,11 @@ mod tests {
             report.outcome(),
             ToolAuditSupervisorDrainRunOutcome::NeedsFollowUp
         );
+        let summary = report.summary();
+        assert!(summary.requires_scheduler_action());
+        assert!(!summary.requests_continuation());
+        assert!(summary.routes_follow_up());
+        assert!(!summary.requires_plan_drift_investigation());
         assert_eq!(
             report.last_checkpoint(),
             Some(&ToolAuditReadCheckpoint::new(151, "call_3"))
@@ -2745,25 +2785,50 @@ mod tests {
                 ToolAuditSupervisorDrainSchedulerAction::NoAction,
                 "no_action",
                 false,
+                true,
+                false,
+                false,
+                false,
             ),
             (
                 ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation,
                 "schedule_continuation",
                 true,
+                false,
+                true,
+                false,
+                false,
             ),
             (
                 ToolAuditSupervisorDrainSchedulerAction::RouteFollowUp,
                 "route_follow_up",
                 true,
+                false,
+                false,
+                true,
+                false,
             ),
             (
                 ToolAuditSupervisorDrainSchedulerAction::InvestigatePlanDrift,
                 "investigate_plan_drift",
                 true,
+                false,
+                false,
+                false,
+                true,
             ),
         ];
 
-        for (action, label, requires_action) in cases {
+        for (
+            action,
+            label,
+            requires_action,
+            is_no_action,
+            requests_continuation,
+            routes_follow_up,
+            requires_plan_drift_investigation,
+        ) in cases
+        {
             assert_eq!(action.as_str(), label);
             assert_eq!(action.to_string(), label);
             assert_eq!(
@@ -2771,6 +2836,13 @@ mod tests {
                 Some(action)
             );
             assert_eq!(action.requires_scheduler_action(), requires_action);
+            assert_eq!(action.is_no_action(), is_no_action);
+            assert_eq!(action.requests_continuation(), requests_continuation);
+            assert_eq!(action.routes_follow_up(), routes_follow_up);
+            assert_eq!(
+                action.requires_plan_drift_investigation(),
+                requires_plan_drift_investigation
+            );
         }
         assert_eq!(
             ToolAuditSupervisorDrainSchedulerAction::from_label("rerun_everything"),
@@ -2835,6 +2907,9 @@ mod tests {
         );
         assert_eq!(summary.scheduler_action_label(), "schedule_continuation");
         assert!(summary.requires_scheduler_action());
+        assert!(summary.requests_continuation());
+        assert!(!summary.routes_follow_up());
+        assert!(!summary.requires_plan_drift_investigation());
         assert_eq!(summary.max_records_per_tick, 2);
         assert_eq!(summary.max_ticks, 1);
         assert_eq!(summary.planned_pages, 1);
@@ -2878,6 +2953,9 @@ mod tests {
         assert_eq!(summary.scheduler_action_label(), "investigate_plan_drift");
         assert!(!summary.matches_planned_record_count);
         assert!(summary.requires_scheduler_action());
+        assert!(!summary.requests_continuation());
+        assert!(!summary.routes_follow_up());
+        assert!(summary.requires_plan_drift_investigation());
     }
 
     #[test]
