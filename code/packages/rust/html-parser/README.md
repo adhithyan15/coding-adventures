@@ -96,7 +96,9 @@ python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py
 
 The audit also owns a checked `tests/fixtures/html5lib-coverage-audit.json`
 summary. Regenerate or verify that exact report with `--write-report` or
-`--check-report`.
+`--check-report`. The Rust integration tests also parse that report and compare
+its local corpus counts against the checked tree-construction and tokenizer
+fixtures.
 
 For sharper parser regression reporting, the generated
 `tests/fixtures/whatwg-tree-insertion-audit.json` fixture indexes the
