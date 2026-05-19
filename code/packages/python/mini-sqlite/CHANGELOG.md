@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.50.0] - 2026-05-19
+
+### Added
+
+Six additional PRAGMAs that application code commonly probes when
+running against real SQLite — all are oracle-verified round-trip
+storage with no semantic effect on execution (mini-sqlite has no
+on-disk file, no WAL, no thread pool):
+
+- **`reverse_unordered_selects`** — bool, default 0
+- **`cell_size_check`** — bool, default 0
+- **`fullfsync`** — bool, default 0
+- **`wal_autocheckpoint`** — int, default 1000
+- **`journal_size_limit`** — int, default -1 (no limit)
+- **`threads`** — int, default 0
+
+The three integer-valued PRAGMAs (`wal_autocheckpoint`,
+`journal_size_limit`, `threads`) echo their new value back on set —
+a SQLite quirk where most `PRAGMA name = X` forms return an empty
+result but these three return a one-row scalar.  Mini-sqlite now
+matches that distinction byte-for-byte.
+
+18 oracle tests in `test_tier3_pragma_audit_additions.py` pin both
+default values and round-trip behaviour against `sqlite3`.
+
 ## [1.49.0] - 2026-05-19
 
 ### Added
