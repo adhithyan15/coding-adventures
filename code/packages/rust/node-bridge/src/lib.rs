@@ -400,6 +400,60 @@ extern "C" {
     /// reaches zero the underlying JS object becomes eligible for GC.
     pub fn napi_delete_reference(env: napi_env, reference: napi_ref) -> napi_status;
 
+    // -- Buffer operations -------------------------------------------------
+    //
+    // Node `Buffer` is the standard way to move binary data in/out of an
+    // addon.  Internally it is a `Uint8Array` backed by an ArrayBuffer.
+    // Use these for raw bytes (tensor data, image pixels, network payloads,
+    // crypto blobs).
+    //
+    // ⚠️  Safety note: per the N-API contract, the buffer returned by
+    // `napi_get_buffer_info` may have its backing ArrayBuffer detached or
+    // transferred by JS code at any later point.  Callers MUST copy the
+    // data into a Rust-owned `Vec<u8>` before releasing control back to the
+    // JS engine (the safe wrapper `buffer_from_js` below does this).
+
+    /// Allocate a fresh `Buffer` of `length` bytes and yield a writable
+    /// pointer into it (`data`) so the caller can fill it in.  The N-API
+    /// runtime owns the underlying storage; the returned `napi_value` keeps
+    /// it alive for the rest of the current JS scope.
+    ///
+    /// Use [`napi_create_buffer_copy`] when you already have the bytes in a
+    /// Rust buffer — it does the memcpy for you.
+    pub fn napi_create_buffer(
+        env: napi_env,
+        length: usize,
+        data: *mut *mut c_void,
+        result: *mut napi_value,
+    ) -> napi_status;
+
+    /// Allocate a fresh `Buffer` of `length` bytes and copy `data` into it.
+    /// The `result_data` out-parameter receives a pointer to the new
+    /// buffer's storage (pass null if you don't need it).
+    pub fn napi_create_buffer_copy(
+        env: napi_env,
+        length: usize,
+        data: *const c_void,
+        result_data: *mut *mut c_void,
+        result: *mut napi_value,
+    ) -> napi_status;
+
+    /// Read the underlying byte storage of a JS `Buffer`.  `data` is a
+    /// pointer into the buffer's ArrayBuffer; `length` is the byte count.
+    /// The pointer is valid only until the next JS-engine reentry, and
+    /// then only if the underlying ArrayBuffer has not been transferred
+    /// or detached — copy immediately.
+    pub fn napi_get_buffer_info(
+        env: napi_env,
+        value: napi_value,
+        data: *mut *mut c_void,
+        length: *mut usize,
+    ) -> napi_status;
+
+    /// Write `true` into `*result` when `value` is a JS `Buffer` (i.e.
+    /// a `Uint8Array` constructed via Node's `Buffer.alloc` / `from` APIs).
+    pub fn napi_is_buffer(env: napi_env, value: napi_value, result: *mut bool) -> napi_status;
+
     // -- Threadsafe functions ----------------------------------------------
     //
     // These allow any OS thread to queue a JS function call onto the V8
@@ -1134,4 +1188,124 @@ pub fn tsfn_unref(env: napi_env, tsfn: napi_threadsafe_function) {
         unsafe { napi_unref_threadsafe_function(env, tsfn) },
         "napi_unref_threadsafe_function",
     );
+}
+
+// ---------------------------------------------------------------------------
+// Safe wrappers — Buffers
+// ---------------------------------------------------------------------------
+//
+// All Buffer helpers follow the copy-in / copy-out discipline.  Reasons:
+//
+// * **Detachment safety.**  Per the N-API contract, a JS Buffer's
+//   underlying ArrayBuffer can be detached or transferred to a Worker at
+//   any later point.  Holding a raw pointer past that moment is
+//   undefined behaviour.  Copying immediately into a Rust `Vec<u8>`
+//   eliminates the entire class of use-after-detach bugs.
+// * **Lifetime independence.**  Outputs are fresh Buffers owned by the
+//   napi env, decoupled from any Rust storage that produced them.
+// * **Simplicity.**  No `napi_wrap`, no finalizer plumbing, no lifetime
+//   parameters in the helper signatures — just bytes in, bytes out.
+//
+// For the (rare) performance-critical case where copies matter, callers
+// can drop down to the raw `napi_create_buffer` / `napi_get_buffer_info`
+// externs and manage the lifetimes by hand.  But these wrappers are the
+// default — and the default is "safe and obvious".
+
+/// Build a fresh JS `Buffer` containing a copy of `bytes`.  The buffer's
+/// storage is owned by the napi runtime; the returned `napi_value` is
+/// scope-bound to the current call frame (use `napi_create_reference` if
+/// you need to keep it alive past the call).
+pub fn buffer_to_js(env: napi_env, bytes: &[u8]) -> napi_value {
+    let mut result: napi_value = ptr::null_mut();
+    let mut copy_dst: *mut c_void = ptr::null_mut();
+    check_status(
+        unsafe {
+            napi_create_buffer_copy(
+                env,
+                bytes.len(),
+                bytes.as_ptr() as *const c_void,
+                &mut copy_dst,
+                &mut result,
+            )
+        },
+        "napi_create_buffer_copy",
+    );
+    result
+}
+
+/// Extract the bytes of a JS `Buffer` into an owned `Vec<u8>`, copying
+/// immediately to avoid use-after-detach if the underlying ArrayBuffer is
+/// transferred or detached later.  Returns `None` if `value` is not a
+/// `Buffer` — caller is responsible for throwing a clean JS error in
+/// that case.
+pub fn buffer_from_js(env: napi_env, value: napi_value) -> Option<Vec<u8>> {
+    // Type check first — `napi_get_buffer_info` on a non-buffer would
+    // return `napi_invalid_arg` and we'd panic via check_status.  Better
+    // to return None and let the caller throw a precise error.
+    let mut is_buf = false;
+    if unsafe { napi_is_buffer(env, value, &mut is_buf) } != NAPI_OK || !is_buf {
+        return None;
+    }
+
+    let mut data: *mut c_void = ptr::null_mut();
+    let mut len: usize = 0;
+    check_status(
+        unsafe { napi_get_buffer_info(env, value, &mut data, &mut len) },
+        "napi_get_buffer_info",
+    );
+
+    if len == 0 || data.is_null() {
+        // Empty buffer (or zero-length view) — return empty Vec without
+        // dereferencing the pointer.
+        return Some(Vec::new());
+    }
+
+    // SAFETY: per N-API contract, `data` is a valid pointer to `len`
+    // initialized bytes of buffer storage for the duration of this call
+    // frame.  We copy into a fresh Vec before returning so the result
+    // outlives any subsequent ArrayBuffer detachment.
+    let slice = unsafe { std::slice::from_raw_parts(data as *const u8, len) };
+    Some(slice.to_vec())
+}
+
+/// Return `true` iff `value` is a JS `Buffer`.  Convenience wrapper over
+/// the raw `napi_is_buffer` so callers don't have to deal with the bool
+/// out-pointer themselves.
+pub fn is_buffer(env: napi_env, value: napi_value) -> bool {
+    let mut result = false;
+    if unsafe { napi_is_buffer(env, value, &mut result) } != NAPI_OK {
+        return false;
+    }
+    result
+}
+
+/// Build a JS `Array<Buffer>` from a slice of byte vectors.  Each entry
+/// is a fresh Buffer copy of the corresponding `items[i]`.
+pub fn vec_buf_to_js(env: napi_env, items: &[Vec<u8>]) -> napi_value {
+    let array = array_new(env);
+    for (i, bytes) in items.iter().enumerate() {
+        let buf = buffer_to_js(env, bytes);
+        array_set(env, array, i as u32, buf);
+    }
+    array
+}
+
+/// Read a JS `Array<Buffer>` into a `Vec<Vec<u8>>`.  Each entry is
+/// extracted via [`buffer_from_js`] (copy-in for detachment safety).
+/// Returns `None` if `value` is not an array, or if any element is not a
+/// Buffer — caller is responsible for throwing a precise JS error.
+pub fn vec_buf_from_js(env: napi_env, value: napi_value) -> Option<Vec<Vec<u8>>> {
+    if !is_array(env, value) {
+        return None;
+    }
+    let len = array_len(env, value);
+    let mut out = Vec::with_capacity(len as usize);
+    for i in 0..len {
+        let item = array_get(env, value, i);
+        match buffer_from_js(env, item) {
+            Some(bytes) => out.push(bytes),
+            None => return None, // not a Buffer at index i
+        }
+    }
+    Some(out)
 }
