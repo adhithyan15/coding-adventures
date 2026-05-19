@@ -423,28 +423,40 @@ def _table_ref(
 
     The grammar has two forms::
 
-        table_ref = "(" query_stmt ")" "AS" NAME   -- derived table
-                  | table_name [ "AS" NAME ]        -- plain table
+        table_ref = "(" query_stmt ")" [ "AS" ] NAME   -- derived table
+                  | table_name [ "AS" NAME | NAME ]     -- plain table
 
     We detect the derived-table form by checking for a ``query_stmt`` child.
     When the plain-table form names a non-recursive CTE, we substitute a
     DerivedTableRef.  For recursive CTEs we return RecursiveCTERef (with the
     alias updated from the usage site) so the planner can build the correct
     fixed-point iteration plan.
+
+    Derived-table alias parsing
+    ---------------------------
+    SQLite accepts both ``(query) AS alias`` and ``(query) alias`` — the AS
+    keyword is optional, matching standard SQL.  We find the alias by
+    scanning for the first NAME token that appears after the closing
+    parenthesis of the inner query (skipping any optional AS keyword in
+    between).  An alias is still required (you can't have a bare ``(query)``
+    in FROM); we raise if no NAME follows the closing paren.
     """
-    # Derived-table form: "(" query_stmt ")" "AS" NAME
+    # Derived-table form: "(" query_stmt ")" [ "AS" ] NAME
     q = _maybe_child(node, "query_stmt")
     if q is not None:
         inner_stmt = _query_stmt(q, ctes=ctes, view_defs=view_defs)
         if not isinstance(inner_stmt, SelectStmt):
             raise ProgrammingError("derived table must be a plain SELECT, not a set operation")
-        # The mandatory alias comes after the "AS" keyword.
+        # The alias is the first NAME token AFTER the closing parenthesis,
+        # optionally preceded by an AS keyword.  Walk the children and grab
+        # the NAME once we're past the ")" token.
         alias: str | None = None
-        found_as = False
+        past_close_paren = False
         for c in node.children:
-            if _is_keyword(c, "AS"):
-                found_as = True
-            elif found_as and isinstance(c, Token) and _token_type(c) == "NAME":
+            if isinstance(c, Token) and c.value == ")":
+                past_close_paren = True
+                continue
+            if past_close_paren and isinstance(c, Token) and _token_type(c) == "NAME":
                 alias = c.value
                 break
         if alias is None:

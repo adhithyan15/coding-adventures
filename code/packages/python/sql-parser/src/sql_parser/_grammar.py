@@ -261,7 +261,9 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value='('),
                     RuleReference(name='query_stmt', is_token=False),
                     Literal(value=')'),
-                    Literal(value='AS'),
+                    Optional(element=
+                        Literal(value='AS'),
+                    ),
                     RuleReference(name='NAME', is_token=True),
                 ]),
                 Sequence(elements=[
