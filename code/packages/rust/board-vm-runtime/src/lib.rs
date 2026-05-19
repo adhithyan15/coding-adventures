@@ -6,11 +6,12 @@ use board_vm_ir::{
     CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
     CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_RESOLVE, CAP_NETWORK_TCP_CLOSE,
     CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE,
-    CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ, CAP_NETWORK_UDP_WRITE,
-    CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS,
-    CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ,
-    CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN, CAP_UART_READ,
-    CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK, MAX_BYTE_BUFFER_LEN,
+    CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
+    CAP_NETWORK_UDP_WRITE, CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT,
+    CAP_NETWORK_WIFI_STATUS, CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN,
+    CAP_SPI_TRANSFER, CAP_STORAGE_READ, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    CAP_UART_OPEN, CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
+    MAX_BYTE_BUFFER_LEN,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -266,6 +267,10 @@ pub trait BoardHal {
     }
 
     fn network_udp_read(&mut self, _token: u32) -> Result<u8, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
+    fn network_udp_available(&mut self, _token: u32) -> Result<bool, HalError> {
         Err(HalError::UnsupportedMode)
     }
 
@@ -1041,6 +1046,18 @@ where
                     })?;
                 self.push(Value::U8(byte), ip)
             }
+            CAP_NETWORK_UDP_AVAILABLE => {
+                let handle = self.pop_handle(ip)?;
+                let token = self.handle_token(handle, HandleKind::NetworkUdp, ip)?;
+                let available =
+                    self.hal
+                        .network_udp_available(token)
+                        .map_err(|err| RuntimeError {
+                            ip,
+                            kind: hal_error_kind(err),
+                        })?;
+                self.push(Value::Bool(available), ip)
+            }
             CAP_NETWORK_UDP_CLOSE => {
                 let handle = self.pop_handle(ip)?;
                 let token = self.handle_token(handle, HandleKind::NetworkUdp, ip)?;
@@ -1378,6 +1395,7 @@ mod tests {
         NetworkUdpOpen(u16, u32, u16),
         NetworkUdpWrite(u32, u8),
         NetworkUdpRead(u32),
+        NetworkUdpAvailable(u32),
         NetworkUdpClose(u32),
         NetworkWifiAssociate(u16, ByteBuffer, ByteBuffer),
         NetworkWifiDisconnect(u16),
@@ -1668,6 +1686,11 @@ mod tests {
         fn network_udp_read(&mut self, token: u32) -> Result<u8, HalError> {
             self.events.push(Event::NetworkUdpRead(token));
             Ok(0x43)
+        }
+
+        fn network_udp_available(&mut self, token: u32) -> Result<bool, HalError> {
+            self.events.push(Event::NetworkUdpAvailable(token));
+            Ok(true)
         }
 
         fn network_udp_close(&mut self, token: u32) -> Result<(), HalError> {
@@ -2213,13 +2236,17 @@ mod tests {
             CAP_NETWORK_UDP_WRITE as u8,
             0x20,
             0x40,
+            CAP_NETWORK_UDP_AVAILABLE as u8,
+            0x21,
+            0x20,
+            0x40,
             CAP_NETWORK_UDP_READ as u8,
             0x21,
             0x40,
             CAP_NETWORK_UDP_CLOSE as u8,
         ];
 
-        let report = runtime.run_code(&code, 20).unwrap();
+        let report = runtime.run_code(&code, 24).unwrap();
 
         assert_eq!(report.status, RunStatus::Halted);
         assert_eq!(report.open_handles, 0);
@@ -2228,6 +2255,7 @@ mod tests {
             vec![
                 Event::NetworkUdpOpen(0, 0xc0a8_012a, 0x1235),
                 Event::NetworkUdpWrite(0x6_2003, 0x41),
+                Event::NetworkUdpAvailable(0x6_2003),
                 Event::NetworkUdpRead(0x6_2003),
                 Event::NetworkUdpClose(0x6_2003),
             ]
