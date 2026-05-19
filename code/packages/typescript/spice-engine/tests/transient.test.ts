@@ -119,6 +119,12 @@ describe("transient", () => {
     expect(result!.withinTolerance).toBe(true);
     expectClose(result!.nodeResiduals.get("in"), 0.0);
     expectClose(result!.branchResiduals.get("I(V1)"), 0.0);
+    expect(result!.residualVector.map((entry) => [entry.kind, entry.name])).toEqual([
+      ["node", "in"],
+      ["branch_current", "I(V1)"],
+    ]);
+    expectClose(result!.residualVector[0].value, 0.0);
+    expectClose(result!.residualVector[1].value, 0.0);
     expectClose(result!.maxAbsBranchResidual, 0.0);
     expectClose(result!.maxAbsResidual, 0.0);
   });
