@@ -6,13 +6,13 @@ to Python.  Sibling crate to
 [`matrix-rust-napi`](../matrix-rust-napi) (the Node.js N-API binding)
 — same shape, different toolchain.
 
-Currently at **Phase 2** of [MX09](../../../specs/MX09-matrix-rust-python.md).
+Currently at **Phase 2b** of [MX09](../../../specs/MX09-matrix-rust-python.md).
 
 | Phase | Surface |
 |-------|---------|
 | 1 ✅ | `graph_round_trip_json(json_string: str) -> str` |
 | 2 ✅ | `run_graph_on_cpu(envelope_json: str) -> str` |
-| 2b | `Graph` / `Runtime` classes with `bytes` I/O via PyCapsule |
+| 2b ✅ | `m.Graph(json_str)` + `.to_json()` / `.describe()`; `m.Runtime()` + `.run(graph, [bytes]) -> [bytes]` |
 | 3   | `pyproject.toml` + `maturin` wheel build workflow |
 | 4   | Python wrapper package + `pytest` smoke tests |
 
@@ -35,7 +35,7 @@ code/packages/rust/matrix-rust-python/
   required_capabilities.json
 ```
 
-## What ships today (Phases 1 + 2)
+## What ships today (Phases 1 + 2 + 2b)
 
 ```python
 import matrix_rust_python as m
@@ -43,27 +43,28 @@ import json
 
 # ── Phase 1: round-trip a matrix-ir-json wire-format Graph through Rust.
 out = m.graph_round_trip_json(json_in)
-# out is a compact JSON string with canonical field order;
-# `json.loads(out)` decodes to a Graph value semantically identical
-# to `json.loads(json_in)`.
 
-# ── Phase 2: plan + execute on matrix-cpu via matrix-runtime.
-envelope = json.dumps({
-    "graph": {...},                                     # matrix-ir-json schema
-    "inputs": ["3f8000003f000000", "..."],              # lowercase-hex bytes
-})
+# ── Phase 2: plan + execute on matrix-cpu via matrix-runtime (hex JSON envelope).
+envelope = json.dumps({"graph": {...}, "inputs": ["3f80...", "..."]})
 result = json.loads(m.run_graph_on_cpu(envelope))
-output_bytes = bytes.fromhex(result["outputs"][0])      # little-endian f32 payload
+output_bytes = bytes.fromhex(result["outputs"][0])
+
+# ── Phase 2b: idiomatic class-based API (parse once, bytes I/O).
+graph = m.Graph(json_string)
+print(graph.describe())             # "Graph(tensors=4, ops=3, inputs=1, outputs=1, constants=2)"
+
+rt = m.Runtime()
+outputs = rt.run(graph, [b1, b2])   # list[bytes] in -> list[bytes] out
 ```
 
-The Phase 2 envelope shape is bit-identical to `matrix-rust-napi`'s
-`runGraphOnCpu` envelope, so a single JSON test fixture cross-checks
-both bindings.
+The Phase 2 envelope is bit-identical to `matrix-rust-napi`'s
+`runGraphOnCpu` envelope; the Phase 2b class API matches the
+matrix-rust-napi class shape modulo Python idioms (snake_case vs
+camelCase, `bytes` vs `Buffer`).
 
-Phases 2b+ add `Graph` / `Runtime` Python classes with `bytes` I/O
-via `PyCapsule`, the `maturin` wheel build, and the companion
-`code/packages/python/` wrapper package — each as its own PR per
-the MX09 spec.
+Phases 3+ add the `maturin` wheel build and the companion
+`code/packages/python/matrix-rust-python/` wrapper package — each as
+its own PR per the MX09 spec.
 
 ## Why `python-bridge`, not `pyo3`
 

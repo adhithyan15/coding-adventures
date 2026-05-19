@@ -1,5 +1,100 @@
 # Changelog — matrix-rust-python (Rust)
 
+## [0.3.0] — 2026-05-19
+
+### Added — MX09 Phase 2b: `Graph` and `Runtime` Python classes with `bytes` I/O
+
+Adds the class-based API described in [MX09 §"The binding surface"](../../../specs/MX09-matrix-rust-python.md):
+
+```python
+import matrix_rust_python as m
+
+graph = m.Graph(json_string)                  # parses once, holds Box<Graph>
+print(graph.describe())                        # "Graph(tensors=4, ops=3, ...)"
+re_serialised = graph.to_json()
+
+rt = m.Runtime()
+outputs = rt.run(graph, [b1, b2])              # list[bytes] in -> list[bytes] out
+```
+
+Mirrors `matrix-rust-napi`'s Phase 2b (PR #3539 / PR #3546 / PR #3551).
+Two improvements over the napi version are inherent to the Python C API:
+
+1. **No 128-bit type-tag invention needed.**  napi's `napi_unwrap` is
+   type-agnostic and forced matrix-rust-napi to invent a 16-byte
+   `[u64; 2]` discriminator prefix to defend against
+   `Graph` ↔ `Runtime` type confusion.  Python's type system
+   already provides instance-of discrimination via
+   `PyObject_IsInstance(obj, GRAPH_TYPE)` — built into the runtime,
+   ~free.
+2. **No `napi_value` → `napi_ref` lifetime trap.**  N-API constructor
+   handles are scope-local; matrix-rust-napi's Phase 4 had to fix a
+   latent bug (PR #3551) by switching to persistent `napi_ref`
+   storage.  Python's `PyTypeObject*` from `PyType_FromSpec` is
+   persistent for the life of the interpreter — store the raw
+   pointer in an `AtomicUsize`, done.
+
+### Implementation notes
+
+- **New module `src/classes.rs`** (~590 lines) — defines `GraphInstance`
+  and `RuntimeInstance` `#[repr(C)]` structs starting with
+  `PyObject_HEAD`-sized opaque headers, followed by inline payload.
+  `PyType_FromSpec` creates heap types from `PyType_Spec` + slot tables
+  at module-load time.
+- **Slots used:** `Py_tp_init = 60`, `Py_tp_dealloc = 52`,
+  `Py_tp_methods = 72`.  Defaults used for `tp_new` and `tp_alloc`
+  (`PyType_GenericNew` / `PyType_GenericAlloc`), so the instance
+  struct is zero-initialised before `tp_init` runs.
+- **Refcounting discipline.**  Methods return new references via
+  `str_to_py` / `bytes_to_py` / `PyList_New` (CPython takes
+  ownership); we never decref what we return.  `PyList_SetItem`
+  steals the bytes reference — no Py_DecRef needed on the items
+  we add to the output list.
+- **Bytes I/O via python-bridge's `bytes_to_py` / `bytes_from_py`** —
+  the latter copies into an owned `Vec<u8>` immediately (no
+  borrowed-buffer lifetime hazards across a GIL release).
+- **Inline extern declarations** — `PyObject_Free` and
+  `PyObject_IsInstance` aren't yet in `python-bridge`; declared
+  inline in `classes.rs` (same pattern font-parser-python uses for
+  `PyCapsule_New` etc.).  Both are stable Limited API symbols since
+  Python 3.2.
+
+### Tests (now 25, was 19)
+
+6 new pure-Rust tests on the class-layout invariants the unwrap
+helpers depend on (mirrors matrix-rust-napi's tag-layout tests):
+
+- `graph_instance_head_lives_at_offset_zero`
+- `runtime_instance_head_lives_at_offset_zero`
+- `graph_instance_head_size_matches_constant`
+- `graph_instance_inner_is_one_pointer_wide`
+- `graph_and_runtime_basicsize_at_least_one_pointer_past_head`
+- `slot_constants_match_python_stable_abi`
+
+End-to-end class behavior (calling `m.Graph(...)` from real Python,
+asserting `graph.describe()`, etc.) is exercised in Phase 4's
+`pytest` smoke suite via the wrapper package.
+
+### Security
+
+The 4 GiB DoS cap (`MAX_TOTAL_BUFFER_BYTES` from Phase 2) is unchanged
+and still fires before any `AllocBuffer` call — `rt.run` goes through
+the same `run_graph_on_cpu` pure-Rust helper as the Phase 2 envelope
+path.
+
+Type discrimination is enforced via `PyObject_IsInstance(obj, GRAPH_TYPE)`
+before any `obj as *mut GraphInstance` cast.  This makes
+`rt.run(rt, [])` (passing a Runtime where a Graph is expected) raise
+`TypeError` cleanly rather than blindly dereferencing.
+
+### What's not shipped in Phase 2b
+
+- No `pyproject.toml` / `maturin` wheel build (Phase 3).
+- No companion Python wrapper package (Phase 4).
+- No static-method sugar (`Graph.from_json`, `Runtime.create`) —
+  matches napi's eventual Phase 4 shape; Python users can just do
+  `m.Graph(json)` / `m.Runtime()`.
+
 ## [0.2.0] — 2026-05-19
 
 ### Added — MX09 Phase 2: envelope-shaped one-shot CPU execution

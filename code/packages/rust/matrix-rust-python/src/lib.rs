@@ -70,6 +70,7 @@
 
 #![allow(non_snake_case)] // C API names are PascalCase / SCREAMING_SNAKE_CASE
 
+mod classes;
 mod exec;
 
 use std::ffi::{c_char, c_int};
@@ -453,7 +454,13 @@ static mut MODULE_DEF: PyModuleDef = PyModuleDef {
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_matrix_rust_python() -> PyObjectPtr {
-    PyModule_Create2(&raw mut MODULE_DEF, PYTHON_API_VERSION as c_int)
+    let module = PyModule_Create2(&raw mut MODULE_DEF, PYTHON_API_VERSION as c_int);
+    if module.is_null() {
+        return module;
+    }
+    // Phase 2b — register Graph + Runtime classes on the module.
+    classes::register(module);
+    module
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
