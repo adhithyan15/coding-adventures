@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.32.0 — 2026-05-19
+
+### Added
+
+Eleven new built-in scalar functions, all oracle-verified against real
+``sqlite3``:
+
+- **Hyperbolic trig** — ``sinh``, ``cosh``, ``tanh``, ``asinh``,
+  ``acosh``, ``atanh``.  Standard entries from SQLite's math function
+  library (``--enable-math-functions``, default in Python's sqlite3).
+  Out-of-domain inputs (e.g. ``acosh(0.5)``, ``atanh(1.0)``) return
+  NULL via the existing ``_safe_math`` helper.
+- **``trunc(X)``** — truncate toward zero.  Distinct from ``floor``
+  for negative inputs: ``trunc(-3.7) = -3.0`` while ``floor(-3.7) =
+  -4.0``.  Returns REAL to match SQLite.
+- **Optimizer hints** — ``likely(X)``, ``unlikely(X)``, and
+  ``likelihood(X, Y)``.  All three are identity functions in
+  mini-sqlite (we have no cost-based optimizer), pinning portability
+  for application SQL that sprinkles them in ``WHERE`` clauses.
+- **Compile-option probes** — ``sqlite_compileoption_used(name)``
+  returns ``0`` (mini-sqlite is not a SQLite build, so no compile
+  options are defined) and ``sqlite_compileoption_get(N)`` returns
+  ``NULL`` (no Nth option exists).  Safe responses for feature-
+  detection probes in application code.
+
 ## 1.31.0 — 2026-05-19
 
 ### Added

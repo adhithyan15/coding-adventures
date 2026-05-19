@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.48.0] - 2026-05-19
+
+### Added
+
+Eleven additional scalar functions surfaced end-to-end (via
+``sql-vm 1.32.0``), each pinned with oracle tests in
+``test_tier3_scalar_fn_additions.py``:
+
+- **Hyperbolic trig** — ``sinh``, ``cosh``, ``tanh``, ``asinh``,
+  ``acosh``, ``atanh``.  Out-of-domain inputs return NULL.
+- **``trunc(X)``** — truncate toward zero; distinct from ``floor`` for
+  negative inputs.
+- **Optimizer hints** — ``likely(X)``, ``unlikely(X)``,
+  ``likelihood(X, Y)``.  All pass *X* through unchanged (no-op hints).
+- **Compile-option probes** — ``sqlite_compileoption_used(name) → 0``
+  and ``sqlite_compileoption_get(N) → NULL``, since mini-sqlite is
+  not a compiled SQLite binary.
+
+These close common gaps that application SQL written for real SQLite
+relies on (math libraries that use hyperbolic trig, optimizer-hint
+sprinkling, feature-detection probes).
+
 ## [1.47.0] - 2026-05-19
 
 ### Added
