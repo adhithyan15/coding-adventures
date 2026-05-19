@@ -10,24 +10,46 @@ This is **Phase 1** of [MX07](../../../specs/MX07-matrix-rust-napi.md)
 the JSON wire format survive the napi boundary.  Real execution
 lands in Phase 2.
 
-## What's here (v0.1)
+## What's here
 
-One exported function:
+Two exported functions:
 
 ```javascript
 const m = require("./matrix_rust_napi.node");
 
+// Phase 1 — JSON round-trip smoke (validates that the matrix-ir-json
+// schema survives the napi boundary).
 const roundTripped = m.graphRoundTripJson(jsonString);
 // jsonString -> matrix_ir::Graph -> jsonString
+
+// Phase 2 — actually execute the graph on the Rust CPU executor.
+// Envelope shape:
+//   { "graph": <matrix-ir-json schema>,
+//     "inputs": [ "<lowercase-hex bytes>", ... ] }
+// Returns:
+//   { "outputs": [ "<lowercase-hex bytes>", ... ] }
+const result = m.runGraphOnCpu(JSON.stringify({
+  graph: { matrix_ir_version: 1, /* ... */ },
+  inputs: ["3f8000003f000000", /* ... */],   // hex-encoded f32 inputs
+}));
+const { outputs } = JSON.parse(result);
+// outputs[0] is a hex string of the first output tensor's bytes.
 ```
 
-`graphRoundTripJson` parses its input via the `matrix-ir-json`
-crate, re-encodes the resulting `matrix_ir::Graph`, and returns the
-canonical JSON form.  Malformed input throws a JS error.
+`runGraphOnCpu` runs the full plan + allocate + upload + dispatch +
+download pipeline through `matrix-runtime` and `matrix-cpu`, with
+the planner's BufferIds rewritten to the executor's real BufferIds
+in place.
 
-That's deliberately tiny.  It proves three things — see the source
-of `lib.rs` for the full rationale — and gives Phase 2 a known-good
-build pipeline to extend.
+### Why hex-encoded inputs instead of `Buffer[]`?
+
+Per MX07 §"Phases", real `Buffer[]` marshalling is Phase 2b — it
+requires extending `node-bridge` with Buffer helpers (`napi_create_buffer`,
+`napi_get_buffer_info`, finalizer plumbing).  For Phase 2 we keep
+the napi surface as one string-in, string-out function (the same
+pattern as `graphRoundTripJson`), with hex bytes inside the JSON
+envelope.  The wire cost is 2× the raw bytes plus JSON overhead;
+fine for the proof-of-concept, replaced in Phase 2b.
 
 ## Why N-API instead of napi-rs?
 
@@ -50,8 +72,9 @@ been updated in this same PR to record the divergence.
 
 | Phase | Lands |
 |-------|-------|
-| 1 (this PR) | `graphRoundTripJson(jsonString)` — round-trip smoke. |
-| 2 | `Graph` + `Runtime` classes; `runtime.run(graph, inputs)` on CPU. |
+| 1 | `graphRoundTripJson(jsonString)` — round-trip smoke. |
+| 2 (this PR) | `runGraphOnCpu(envelopeJson)` — full plan + allocate + dispatch + download pipeline on `matrix-cpu`. JSON-envelope I/O (hex-encoded bytes). |
+| 2b | Replace JSON envelope with real `Buffer[]` marshalling (extend `node-bridge` with `napi_create_buffer` / `napi_get_buffer_info` helpers; bind `Graph` + `Runtime` as handle-based JS classes). |
 | 3 | `package.json` + workflow that builds the `.node` artifact on `darwin-arm64` and `linux-x64-gnu` and confirms it loads. |
 | 4 | TypeScript wrapper package with `node --test` smoke. |
 | 5 (MX08) | `typescript/matrix` refactor — separately scoped. |

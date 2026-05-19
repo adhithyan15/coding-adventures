@@ -58,6 +58,40 @@ build output ends up in a Node.js consumer is incidental — the same
 way `font-parser-node` is a Rust crate that happens to be consumed by
 a Node-side wrapper.
 
+### Phase 2 deviation: JSON-envelope I/O before `Buffer[]`
+
+ARCH02 and MX07's §"The binding surface" both describe the eventual
+shape — `Runtime.run(graph: Graph, inputs: TypedArray[]):
+TypedArray[]` — with `Graph` and `Runtime` as napi-wrapped classes
+and inputs as `Buffer` / `TypedArray` views.
+
+But the workspace's `node-bridge` crate doesn't yet expose Buffer
+helpers (`napi_create_buffer`, `napi_get_buffer_info`).  Adding them
+is straightforward but is its own change with its own review surface.
+
+Rather than gate Phase 2's execution work on that extension, Phase 2
+ships a **JSON-envelope-shaped** binding:
+
+```javascript
+const result = m.runGraphOnCpu(JSON.stringify({
+  graph: { matrix_ir_version: 1, /* ... */ },
+  inputs: ["<lowercase-hex>", "..."],  // byte payloads as hex strings
+}));
+const { outputs } = JSON.parse(result);
+// outputs[i] is a hex string of the i-th output tensor's LE bytes.
+```
+
+This keeps the napi surface as **one string-in, string-out function**
+(identical pattern to Phase 1's `graphRoundTripJson`), proves the
+end-to-end execution path works through the napi boundary, and
+defers the Buffer marshalling work to **Phase 2b** (which also
+introduces the `Graph` and `Runtime` JS classes — the natural
+place to wrap each handle is once we have Buffer support to
+exchange tensor data).
+
+Cost of the JSON envelope: 2× the raw bytes plus JSON overhead per
+call.  Acceptable for the proof-of-concept; Phase 2b removes it.
+
 ### N-API binding: `node-bridge`, not `napi-rs`
 
 The workspace convention — established by `font-parser-node` — is
@@ -362,7 +396,9 @@ end.
 | Phase | Lands | Status |
 |-------|-------|--------|
 | 0 | This spec. | shipped (#3508) |
-| 1 | Rust crate skeleton — `Cargo.toml` (`cdylib`), `src/lib.rs` exporting `graphRoundTripJson` (one function, JSON in → `matrix-ir-json::decode` → `matrix-ir-json::encode` → JSON out), 5 unit tests on the pure-Rust core. No Node side yet. | **this PR** |
+| 1 | Rust crate skeleton — `Cargo.toml` (`cdylib`), `src/lib.rs` exporting `graphRoundTripJson` (one function, JSON in → `matrix-ir-json::decode` → `matrix-ir-json::encode` → JSON out), 5 unit tests on the pure-Rust core. No Node side yet. | shipped (#3518) |
+| 2 | `runGraphOnCpu(envelopeJson)` — end-to-end execution on `matrix-cpu` via `matrix-runtime`'s planner. JSON envelope with hex-encoded byte payloads (one string-in, string-out function — same napi pattern as Phase 1). Pure-Rust `run_graph_on_cpu(graph, inputs)` helper unit-tested with end-to-end Add, MatMul, and ReLU layer. | **this PR** |
+| 2b | Replace JSON envelope with real `Buffer[]` marshalling — extend `node-bridge` with `napi_create_buffer` / `napi_get_buffer_info` / finalizer helpers; bind `Graph` and `Runtime` as handle-based JS classes per §"The binding surface". | pending |
 | 2 | `Runtime::create()` + `Runtime::run(graph, inputs)` on the CPU executor.  Internal-testing feature flag for in-Rust round-trip tests of `graph_in → run → outputs_out`. | pending |
 | 3 | `package.json` + `napi build` workflow file.  CI step that builds the `.node` artifact on `darwin-arm64` and `linux-x64-gnu` and confirms it loads.  No publish step. | pending |
 | 4 | TypeScript wrapper package `typescript/matrix-rust-napi/` — re-exports the napi binding with typed declarations.  `__test__/smoke.test.mjs` round-trips a `MatMul` graph through the binding. | pending |
