@@ -13,6 +13,7 @@ All notable changes to this package will be documented in this file.
 - Durable named checkpoint state for supervisors that resume audit replay.
 - Checkpointed replay helpers that deliver bounded pages into audit sinks and
   advance durable named checkpoints.
+- Read-only supervisor checkpoint status inspection before draining.
 - Supervisor drain summaries that expose progress, continuation, and follow-up
   signals for bounded replay ticks.
 - Bounded supervisor drain loops that compose replay ticks until end-of-log or

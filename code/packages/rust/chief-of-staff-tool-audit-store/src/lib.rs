@@ -209,6 +209,41 @@ where
         decode_stored_checkpoint(&record)
     }
 
+    /// Inspect a supervisor checkpoint without delivering rows or advancing the
+    /// durable cursor.
+    pub fn inspect_supervisor_checkpoint(
+        &self,
+        checkpoint_name: &str,
+        max_records: usize,
+    ) -> Result<ToolAuditSupervisorCheckpointStatus, StorageError> {
+        if max_records == 0 {
+            return Err(StorageError::Validation {
+                field: "max_records".to_string(),
+                message: "must be greater than zero".to_string(),
+            });
+        }
+
+        let stored_checkpoint = self.fetch_checkpoint(checkpoint_name)?;
+        let starting_checkpoint = stored_checkpoint
+            .as_ref()
+            .map(|stored| stored.checkpoint.clone())
+            .unwrap_or_else(ToolAuditReadCheckpoint::beginning);
+        let page = self.query_audits_after_checkpoint(&starting_checkpoint, Some(max_records))?;
+        let pending_records = page.len();
+        let reached_end_of_log = pending_records < max_records;
+
+        Ok(ToolAuditSupervisorCheckpointStatus {
+            checkpoint_name: checkpoint_name.to_string(),
+            max_records,
+            stored_checkpoint,
+            starting_checkpoint,
+            next_checkpoint: page.next_checkpoint,
+            pending_records,
+            inventory: page.inventory,
+            reached_end_of_log,
+        })
+    }
+
     /// Replay the next deterministic page for a named checkpoint and advance
     /// that checkpoint after delivery.
     pub fn replay_audits_from_checkpoint<T>(
@@ -467,6 +502,59 @@ impl ToolAuditCheckpointReplaySummary {
     /// Return whether any replayed row needs follow-up.
     pub fn requires_follow_up(&self) -> bool {
         self.inventory.requires_follow_up()
+    }
+}
+
+/// Read-only status for a supervisor checkpoint.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolAuditSupervisorCheckpointStatus {
+    /// Reader or supervisor checkpoint name inspected.
+    pub checkpoint_name: String,
+    /// Maximum rows inspected for this status check.
+    pub max_records: usize,
+    /// Durable checkpoint loaded for the supervisor, if one exists.
+    pub stored_checkpoint: Option<ToolAuditStoredCheckpoint>,
+    /// Checkpoint used to start this status check.
+    pub starting_checkpoint: ToolAuditReadCheckpoint,
+    /// Checkpoint the next drain would advance to after this inspected page.
+    pub next_checkpoint: ToolAuditReadCheckpoint,
+    /// Number of rows ready for the next drain page.
+    pub pending_records: usize,
+    /// Payload-free summary of the inspected pending rows.
+    pub inventory: ToolAuditStoreInventorySummary,
+    /// Whether this status check reached the current end of the audit log.
+    pub reached_end_of_log: bool,
+}
+
+impl ToolAuditSupervisorCheckpointStatus {
+    /// Return whether no rows are waiting after this checkpoint.
+    pub fn is_idle(&self) -> bool {
+        self.pending_records == 0
+    }
+
+    /// Return whether a drain tick would deliver at least one row.
+    pub fn has_pending_records(&self) -> bool {
+        !self.is_idle()
+    }
+
+    /// Return whether a supervisor should run a drain tick.
+    pub fn should_drain(&self) -> bool {
+        self.has_pending_records()
+    }
+
+    /// Return whether more rows may remain beyond the inspected page.
+    pub fn should_continue_after_page(&self) -> bool {
+        !self.reached_end_of_log
+    }
+
+    /// Return whether any inspected pending row needs follow-up.
+    pub fn requires_follow_up(&self) -> bool {
+        self.inventory.requires_follow_up()
+    }
+
+    /// Return whether the next drain page would advance the durable checkpoint.
+    pub fn would_advance_checkpoint(&self) -> bool {
+        self.has_pending_records()
     }
 }
 
@@ -1541,6 +1629,95 @@ mod tests {
         assert_eq!(empty.next_checkpoint, ToolAuditReadCheckpoint::beginning());
         assert_eq!(empty.stored_checkpoint, None);
         assert!(sink.records().is_empty());
+        assert!(store.fetch_checkpoint("supervisor").unwrap().is_none());
+    }
+
+    #[test]
+    fn supervisor_checkpoint_status_reports_pending_without_advancing() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                failed_record("call_3"),
+                sample_record("call_1"),
+                sample_record("call_2"),
+            ])
+            .completed_without_failures());
+        store
+            .save_checkpoint("supervisor", ToolAuditReadCheckpoint::new(120, "call_1"))
+            .unwrap();
+
+        let status = store
+            .inspect_supervisor_checkpoint("supervisor", 2)
+            .unwrap();
+
+        assert_eq!(status.checkpoint_name, "supervisor");
+        assert_eq!(status.max_records, 2);
+        assert_eq!(
+            status.starting_checkpoint,
+            ToolAuditReadCheckpoint::new(120, "call_1")
+        );
+        assert_eq!(
+            status.next_checkpoint,
+            ToolAuditReadCheckpoint::new(151, "call_3")
+        );
+        assert_eq!(status.pending_records, 2);
+        assert!(status.has_pending_records());
+        assert!(status.should_drain());
+        assert!(status.should_continue_after_page());
+        assert!(status.requires_follow_up());
+        assert!(status.would_advance_checkpoint());
+        assert_eq!(status.inventory.total_records, 2);
+        assert_eq!(
+            status
+                .stored_checkpoint
+                .as_ref()
+                .map(|stored| &stored.checkpoint),
+            Some(&ToolAuditReadCheckpoint::new(120, "call_1"))
+        );
+        assert_eq!(
+            store
+                .fetch_checkpoint("supervisor")
+                .unwrap()
+                .map(|stored| stored.checkpoint),
+            Some(ToolAuditReadCheckpoint::new(120, "call_1"))
+        );
+    }
+
+    #[test]
+    fn supervisor_checkpoint_status_reports_idle_without_creating_checkpoint() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+
+        let status = store
+            .inspect_supervisor_checkpoint("supervisor", 10)
+            .unwrap();
+
+        assert_eq!(status.checkpoint_name, "supervisor");
+        assert_eq!(status.max_records, 10);
+        assert_eq!(
+            status.starting_checkpoint,
+            ToolAuditReadCheckpoint::beginning()
+        );
+        assert_eq!(status.next_checkpoint, ToolAuditReadCheckpoint::beginning());
+        assert_eq!(status.pending_records, 0);
+        assert!(status.is_idle());
+        assert!(!status.has_pending_records());
+        assert!(!status.should_drain());
+        assert!(!status.should_continue_after_page());
+        assert!(!status.requires_follow_up());
+        assert!(!status.would_advance_checkpoint());
+        assert_eq!(status.stored_checkpoint, None);
+        assert!(store.fetch_checkpoint("supervisor").unwrap().is_none());
+    }
+
+    #[test]
+    fn supervisor_checkpoint_status_rejects_zero_record_pages() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+
+        let error = store
+            .inspect_supervisor_checkpoint("supervisor", 0)
+            .unwrap_err();
+
+        assert!(error.to_string().contains("max_records"));
         assert!(store.fetch_checkpoint("supervisor").unwrap().is_none());
     }
 
