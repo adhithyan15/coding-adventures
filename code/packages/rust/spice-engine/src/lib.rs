@@ -1667,11 +1667,19 @@ impl TransientPoint {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct PssResidualEntry {
+    pub kind: String,
+    pub name: String,
+    pub value: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct PssResidualResult {
     pub period_seconds: f64,
     pub time_step_seconds: f64,
     pub node_residuals: BTreeMap<String, f64>,
     pub branch_residuals: BTreeMap<String, f64>,
+    pub residual_vector: Vec<PssResidualEntry>,
     pub max_abs_branch_residual: f64,
     pub max_abs_residual: f64,
     pub residual_tolerance: f64,
@@ -2690,6 +2698,7 @@ pub fn pss_residual_with_tolerance(
             time_step_seconds: time_step,
             node_residuals: BTreeMap::new(),
             branch_residuals: BTreeMap::new(),
+            residual_vector: Vec::new(),
             max_abs_branch_residual: 0.0,
             max_abs_residual: 0.0,
             residual_tolerance,
@@ -2707,6 +2716,7 @@ pub fn pss_residual_with_tolerance(
     nodes.dedup();
 
     let mut node_residuals = BTreeMap::new();
+    let mut residual_vector = Vec::new();
     let mut max_abs_residual = 0.0;
     for node in nodes {
         let residual = last.node_voltages.get(&node).copied().unwrap_or(0.0)
@@ -2718,6 +2728,11 @@ pub fn pss_residual_with_tolerance(
         if residual.abs() > max_abs_residual {
             max_abs_residual = residual.abs();
         }
+        residual_vector.push(PssResidualEntry {
+            kind: "node".to_string(),
+            name: node.clone(),
+            value: residual,
+        });
         node_residuals.insert(node, residual);
     }
 
@@ -2742,6 +2757,11 @@ pub fn pss_residual_with_tolerance(
         if residual.abs() > max_abs_branch_residual {
             max_abs_branch_residual = residual.abs();
         }
+        residual_vector.push(PssResidualEntry {
+            kind: "branch_current".to_string(),
+            name: branch.clone(),
+            value: residual,
+        });
         branch_residuals.insert(branch, residual);
     }
     if max_abs_branch_residual > max_abs_residual {
@@ -2753,6 +2773,7 @@ pub fn pss_residual_with_tolerance(
         time_step_seconds: time_step,
         node_residuals,
         branch_residuals,
+        residual_vector,
         max_abs_branch_residual,
         max_abs_residual,
         residual_tolerance,

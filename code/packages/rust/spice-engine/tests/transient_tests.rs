@@ -122,6 +122,12 @@ fn pss_residual_reports_one_period_node_closure() {
     assert!(result.within_tolerance);
     assert_close(*result.node_residuals.get("in").unwrap(), 0.0);
     assert_close(*result.branch_residuals.get("I(V1)").unwrap(), 0.0);
+    assert_eq!(result.residual_vector[0].kind, "node");
+    assert_eq!(result.residual_vector[0].name, "in");
+    assert_eq!(result.residual_vector[1].kind, "branch_current");
+    assert_eq!(result.residual_vector[1].name, "I(V1)");
+    assert_close(result.residual_vector[0].value, 0.0);
+    assert_close(result.residual_vector[1].value, 0.0);
     assert_close(result.max_abs_branch_residual, 0.0);
     assert_close(result.max_abs_residual, 0.0);
 }

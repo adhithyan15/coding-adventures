@@ -4,6 +4,9 @@
 
 ### Added
 
+- **PSS ordered residual vector** — `pss_residual` now exposes a stable
+  node-then-branch residual vector for future shooting-Newton solves.
+
 - **PSS branch-current residuals** — `pss_residual` now includes one-period
   branch-current closure alongside node-voltage closure.
 

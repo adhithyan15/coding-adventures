@@ -592,11 +592,18 @@ export interface TransientPoint {
   branchCurrent(sourceName: string): number | undefined;
 }
 
+export interface PssResidualEntry {
+  readonly kind: "node" | "branch_current";
+  readonly name: string;
+  readonly value: number;
+}
+
 export interface PssResidualResult {
   readonly periodSeconds: number;
   readonly timeStepSeconds: number;
   readonly nodeResiduals: ReadonlyMap<string, number>;
   readonly branchResiduals: ReadonlyMap<string, number>;
+  readonly residualVector: readonly PssResidualEntry[];
   readonly maxAbsBranchResidual: number;
   readonly maxAbsResidual: number;
   readonly residualTolerance: number;
@@ -1719,6 +1726,7 @@ export function pssResidual(
       timeStepSeconds: timeStep,
       nodeResiduals: new Map(),
       branchResiduals: new Map(),
+      residualVector: [],
       maxAbsBranchResidual: 0.0,
       maxAbsResidual: 0.0,
       residualTolerance,
@@ -1732,12 +1740,14 @@ export function pssResidual(
     ...last.nodeVoltages.keys(),
   ]);
   const nodeResiduals = new Map<string, number>();
+  const residualVector: PssResidualEntry[] = [];
   let maxAbsResidual = 0.0;
   for (const node of [...nodes].sort()) {
     const residual =
       (last.nodeVoltages.get(node) ?? 0.0) -
       (initialSolution.nodeVoltages.get(node) ?? 0.0);
     nodeResiduals.set(node, residual);
+    residualVector.push({ kind: "node", name: node, value: residual });
     maxAbsResidual = Math.max(maxAbsResidual, Math.abs(residual));
   }
   const branches = new Set<string>([
@@ -1751,6 +1761,11 @@ export function pssResidual(
       (last.branchCurrents.get(branch) ?? 0.0) -
       (initialSolution.branchCurrents.get(branch) ?? 0.0);
     branchResiduals.set(branch, residual);
+    residualVector.push({
+      kind: "branch_current",
+      name: branch,
+      value: residual,
+    });
     maxAbsBranchResidual = Math.max(maxAbsBranchResidual, Math.abs(residual));
   }
   maxAbsResidual = Math.max(maxAbsResidual, maxAbsBranchResidual);
@@ -1759,6 +1774,7 @@ export function pssResidual(
     timeStepSeconds: timeStep,
     nodeResiduals,
     branchResiduals,
+    residualVector,
     maxAbsBranchResidual,
     maxAbsResidual,
     residualTolerance,

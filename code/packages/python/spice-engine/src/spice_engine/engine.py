@@ -321,13 +321,23 @@ class TransientResult:
 
 
 @dataclass
+class PssResidualEntry:
+    """One ordered entry in the PSS state-closure residual vector."""
+
+    kind: str
+    name: str
+    value: float
+
+
+@dataclass
 class PssResidualResult:
-    """One-period node-voltage closure residual for a periodic source period."""
+    """One-period state-closure residual for a periodic source period."""
 
     period: float
     time_step: float
     node_residuals: dict[str, float]
     branch_residuals: dict[str, float]
+    residual_vector: list[PssResidualEntry]
     max_abs_branch_residual: float
     max_abs_residual: float
     residual_tol: float
@@ -2323,6 +2333,7 @@ def pss_residual(
             time_step=time_step,
             node_residuals={},
             branch_residuals={},
+            residual_vector=[],
             max_abs_branch_residual=0.0,
             max_abs_residual=0.0,
             residual_tol=residual_tol,
@@ -2344,6 +2355,17 @@ def pss_residual(
         branch: end_branches.get(branch, 0.0) - start_branches.get(branch, 0.0)
         for branch in sorted(branches)
     }
+    residual_vector = [
+        PssResidualEntry(kind="node", name=node, value=node_residuals[node])
+        for node in sorted(node_residuals)
+    ] + [
+        PssResidualEntry(
+            kind="branch_current",
+            name=branch,
+            value=branch_residuals[branch],
+        )
+        for branch in sorted(branch_residuals)
+    ]
     max_abs_node = max((abs(value) for value in node_residuals.values()), default=0.0)
     max_abs_branch = max((abs(value) for value in branch_residuals.values()), default=0.0)
     max_abs = max(max_abs_node, max_abs_branch)
@@ -2352,6 +2374,7 @@ def pss_residual(
         time_step=time_step,
         node_residuals=node_residuals,
         branch_residuals=branch_residuals,
+        residual_vector=residual_vector,
         max_abs_branch_residual=max_abs_branch,
         max_abs_residual=max_abs,
         residual_tol=residual_tol,
