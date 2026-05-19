@@ -1620,3 +1620,110 @@ class TestSqliteCompileOptions:
         # Any index returns NULL — no options exist.
         assert fn("sqlite_compileoption_get", 0) is None
         assert fn("sqlite_compileoption_get", 100) is None
+
+
+# ---------------------------------------------------------------------------
+# Datetime modifier — timezone offsets, auto, julianday-no-op
+# ---------------------------------------------------------------------------
+
+
+class TestTimezoneOffsetModifier:
+    """``+HH:MM`` / ``-HH:MM`` / ``+HH:MM:SS`` shift the datetime by that offset."""
+
+    def test_positive_hours(self) -> None:
+        # Adding +02:00 moves UTC clock forward by 2 hours.
+        assert fn("datetime", "2024-03-15 14:30:00", "+02:00") == "2024-03-15 16:30:00"
+
+    def test_negative_hours_minutes(self) -> None:
+        # -05:30 moves clock back 5h30m.
+        assert fn("datetime", "2024-03-15 14:30:00", "-05:30") == "2024-03-15 09:00:00"
+
+    def test_with_seconds(self) -> None:
+        # +02:30:45 → +2h30m45s
+        assert fn("datetime", "2024-03-15 14:30:00", "+02:30:45") == "2024-03-15 17:00:45"
+
+    def test_zero_offset(self) -> None:
+        # +00:00 is a no-op.
+        assert fn("datetime", "2024-03-15 14:30:00", "+00:00") == "2024-03-15 14:30:00"
+
+    def test_offset_at_day_boundary(self) -> None:
+        # -05:00 from 02:00 should roll back to previous day.
+        assert fn("datetime", "2024-03-15 02:00:00", "-05:00") == "2024-03-14 21:00:00"
+
+    def test_hour_out_of_range_returns_null(self) -> None:
+        # SQLite returns NULL for invalid offsets like +99:00.
+        assert fn("datetime", "2024-03-15 14:30:00", "+99:00") is None
+
+    def test_minute_out_of_range_returns_null(self) -> None:
+        assert fn("datetime", "2024-03-15 14:30:00", "+02:99") is None
+
+    def test_with_date_only(self) -> None:
+        # Applying timezone to date() crops back to date — verify via date().
+        # date('2024-03-15', '+12:00') → still 2024-03-15 (midnight + 12h)
+        assert fn("date", "2024-03-15", "+12:00") == "2024-03-15"
+
+    def test_offset_chained_with_other_modifier(self) -> None:
+        # Modifiers compose left-to-right.
+        result = fn(
+            "datetime", "2024-03-15 14:30:00", "+02:00", "+1 day"
+        )
+        assert result == "2024-03-16 16:30:00"
+
+
+class TestAutoModifier:
+    """The ``auto`` modifier no longer triggers NULL propagation.
+
+    Mini-sqlite's :func:`_parse_timevalue` dispatches numeric time values
+    by Python type (``int`` → Unix epoch, ``float`` → Julian day), so
+    ``auto`` is a semantic no-op here.  Accepting it matches SQLite's
+    behaviour on string inputs (pass-through).
+    """
+
+    def test_auto_modifier_no_op_on_string(self) -> None:
+        # 'auto' should not cause NULL propagation; passes the datetime through.
+        assert fn("datetime", "2024-03-15 14:30:00", "auto") == "2024-03-15 14:30:00"
+
+    def test_auto_modifier_with_chained_offset(self) -> None:
+        # 'auto' composes with subsequent modifiers.
+        assert (
+            fn("datetime", "2024-03-15 14:30:00", "auto", "+1 day")
+            == "2024-03-16 14:30:00"
+        )
+
+    def test_unrecognised_modifier_still_returns_null(self) -> None:
+        # Confirm that we didn't accidentally swallow unknown modifiers.
+        assert fn("datetime", "2024-03-15 14:30:00", "totally_made_up") is None
+
+
+# ---------------------------------------------------------------------------
+# strftime %P (lowercase am/pm) cross-platform
+# ---------------------------------------------------------------------------
+
+
+class TestStrftimeLowerCaseAmPm:
+    """``%P`` produces ``am``/``pm`` on every platform.
+
+    Python's macOS libc returns the literal ``'P'`` for ``strftime('%P')``
+    rather than ``'pm'``.  We pre-process ``%P`` ourselves so output is
+    identical on Linux, macOS, and Windows CI.
+    """
+
+    def test_pm_at_afternoon(self) -> None:
+        assert fn("strftime", "%P", "2024-03-15 14:30:00") == "pm"
+
+    def test_am_at_morning(self) -> None:
+        assert fn("strftime", "%P", "2024-03-15 06:30:00") == "am"
+
+    def test_am_at_midnight(self) -> None:
+        # 00:00 — should be 'am' (12 AM convention).
+        assert fn("strftime", "%P", "2024-03-15 00:00:00") == "am"
+
+    def test_pm_at_noon(self) -> None:
+        # 12:00 — should be 'pm' (12 PM convention).
+        assert fn("strftime", "%P", "2024-03-15 12:00:00") == "pm"
+
+    def test_combined_format(self) -> None:
+        # %P composes with other specifiers.
+        assert (
+            fn("strftime", "%I:%M %P", "2024-03-15 14:30:00") == "02:30 pm"
+        )
