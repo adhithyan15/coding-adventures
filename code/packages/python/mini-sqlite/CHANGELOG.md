@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.42.0] - 2026-05-18
+
+### Added
+
+- **Connection-state scalar functions** (via `sql-vm 1.30.0`) — five new
+  SQLite-compatible functions:
+  `changes()`, `total_changes()`, `last_insert_rowid()`, `sqlite_version()`,
+  `sqlite_source_id()`.
+- **Engine wiring** (`engine.py`) — after every successful statement the
+  engine calls `set_connection_state(...)` to propagate `rows_affected`
+  and `last_inserted_rowid` from the VM result into the global state that
+  backs the scalar functions.  Only DML statements bump the counters; SELECT
+  leaves them unchanged.
+- **`connect()` resets state** (`connection.py`) — opening a new
+  `Connection` clears the connection-state globals so that fresh
+  connections start with `changes() == 0` and friends, matching SQLite.
+
+### Tests
+
+- 12 new oracle tests in `test_tier3_connection_state_fns.py` byte-compare
+  against the real `sqlite3` module across INSERT, multi-value INSERT,
+  UPDATE, DELETE, repeated INSERT, integer-PK rowid pickup, and the
+  zero-before-any-insert default.
+
 ## [1.41.0] - 2026-05-17
 
 ### Added

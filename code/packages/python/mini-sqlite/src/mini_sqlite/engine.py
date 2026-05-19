@@ -229,7 +229,7 @@ def run(
                 view_defs=view_defs,
                 user_functions=user_functions,
             )
-        return execute(
+        result = execute(
             program,
             backend,
             check_registry=check_registry,
@@ -241,6 +241,23 @@ def run(
             trigger_depth=trigger_depth,
             user_functions=user_functions or None,
         )
+        # Update the connection-state globals consulted by changes(),
+        # total_changes(), and last_insert_rowid().  Only DML statements
+        # (with non-empty rows_affected) bump these counters — SELECTs do not.
+        # The total_changes counter is updated within mini-sqlite's process,
+        # not strictly per-connection; this is a known simplification.
+        from sql_vm.scalar_functions import _TOTAL_CHANGES, set_connection_state
+        if result.rows_affected is not None and result.rows_affected > 0:
+            set_connection_state(
+                changes=result.rows_affected,
+                total_changes=_TOTAL_CHANGES + result.rows_affected,
+                last_insert_rowid=(
+                    int(result.last_inserted_rowid)
+                    if getattr(result, "last_inserted_rowid", None)
+                    else None
+                ),
+            )
+        return result
     except ProgrammingError:
         # Already-translated errors raised from our own code pass through.
         raise

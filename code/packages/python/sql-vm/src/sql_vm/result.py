@@ -32,6 +32,11 @@ class QueryResult:
     columns: tuple[str, ...] = ()
     rows: tuple[Row, ...] = ()
     rows_affected: int | None = None
+    # The rowid of the most recent successful INSERT in this statement.
+    # Used by the facade to feed ``last_insert_rowid()`` via the
+    # connection-state plumbing in sql_vm.scalar_functions.  ``None``
+    # means the statement was not an INSERT or had no rowid to report.
+    last_inserted_rowid: int | None = None
 
     def to_dicts(self) -> list[dict[str, SqlValue]]:
         """Re-zip rows into dicts keyed by column name — useful in tests."""
@@ -49,10 +54,12 @@ class _MutableResult:
     columns: tuple[str, ...] = ()
     rows: list[Row] = field(default_factory=list)
     rows_affected: int | None = None
+    last_inserted_rowid: int | None = None
 
     def freeze(self) -> QueryResult:
         return QueryResult(
             columns=self.columns,
             rows=tuple(self.rows),
             rows_affected=self.rows_affected,
+            last_inserted_rowid=self.last_inserted_rowid,
         )

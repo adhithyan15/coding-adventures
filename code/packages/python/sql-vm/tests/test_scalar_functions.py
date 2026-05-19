@@ -810,9 +810,41 @@ class TestRandom:
         values = {fn("random") for _ in range(10)}
         assert len(values) > 1
 
-    def test_last_insert_rowid_returns_null(self) -> None:
-        # Placeholder — not yet wired to backend.
-        assert fn("last_insert_rowid") is None
+    def test_last_insert_rowid_default_zero(self) -> None:
+        # With connection-state plumbing the VM-level default is 0;
+        # engine-level integration tests cover the real values.
+        from sql_vm.scalar_functions import set_connection_state
+        set_connection_state(last_insert_rowid=0, changes=0, total_changes=0)
+        assert fn("last_insert_rowid") == 0
+
+    def test_changes_default_zero(self) -> None:
+        from sql_vm.scalar_functions import set_connection_state
+        set_connection_state(changes=0)
+        assert fn("changes") == 0
+
+    def test_total_changes_default_zero(self) -> None:
+        from sql_vm.scalar_functions import set_connection_state
+        set_connection_state(total_changes=0)
+        assert fn("total_changes") == 0
+
+    def test_set_connection_state_updates_globals(self) -> None:
+        from sql_vm.scalar_functions import set_connection_state
+        set_connection_state(last_insert_rowid=42, changes=7, total_changes=99)
+        assert fn("last_insert_rowid") == 42
+        assert fn("changes") == 7
+        assert fn("total_changes") == 99
+
+    def test_sqlite_version_returns_string(self) -> None:
+        v = fn("sqlite_version")
+        assert isinstance(v, str)
+        parts = v.split(".")
+        assert len(parts) >= 2
+        assert all(p.isdigit() for p in parts)
+
+    def test_sqlite_source_id_returns_string(self) -> None:
+        s = fn("sqlite_source_id")
+        assert isinstance(s, str)
+        assert len(s) > 0
 
 
 # ===========================================================================
