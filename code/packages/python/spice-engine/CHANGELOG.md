@@ -4,6 +4,10 @@
 
 ### Added
 
+- **PSS Newton update foothold** — `pss_newton_update` now solves a
+  least-squares Newton correction from the finite-difference residual
+  Jacobian for reactive initial-condition updates.
+
 - **PSS residual Jacobian foothold** — `pss_residual_jacobian` now reports a
   forward finite-difference Jacobian from reactive initial conditions to the
   ordered residual vector for future shooting-Newton updates.

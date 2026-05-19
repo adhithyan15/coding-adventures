@@ -1710,6 +1710,14 @@ pub struct PssResidualJacobianResult {
     pub jacobian: Vec<Vec<f64>>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct PssNewtonUpdateResult {
+    pub jacobian: PssResidualJacobianResult,
+    pub state_updates: Vec<PssStateEntry>,
+    pub next_state_vector: Vec<PssStateEntry>,
+    pub update_l2_norm: f64,
+}
+
 impl DcResult {
     pub fn voltage(&self, node: &str) -> Option<f64> {
         if is_ground(node) {
@@ -2949,6 +2957,86 @@ pub fn pss_residual_jacobian_with_tolerance(
         perturbation,
         columns,
         jacobian,
+    }))
+}
+
+fn solve_pss_normal_equations(
+    jacobian: &PssResidualJacobianResult,
+) -> Result<Vec<f64>, SpiceError> {
+    let column_count = jacobian.state_vector.len();
+    if column_count == 0 {
+        return Ok(Vec::new());
+    }
+
+    let mut normal_matrix = vec![vec![0.0; column_count]; column_count];
+    let mut normal_rhs = vec![0.0; column_count];
+    for (row_index, row) in jacobian.jacobian.iter().enumerate() {
+        let residual_value = jacobian.residual.residual_vector[row_index].value;
+        for col in 0..column_count {
+            normal_rhs[col] -= row[col] * residual_value;
+            for other_col in 0..column_count {
+                normal_matrix[col][other_col] += row[col] * row[other_col];
+            }
+        }
+    }
+    solve_linear_system(normal_matrix, normal_rhs)
+}
+
+pub fn pss_newton_update(
+    circuit: &Circuit,
+    steps_per_period: usize,
+) -> Result<Option<PssNewtonUpdateResult>, SpiceError> {
+    pss_newton_update_with_tolerance(circuit, steps_per_period, 1.0e-6, 1.0e-6)
+}
+
+pub fn pss_newton_update_with_tolerance(
+    circuit: &Circuit,
+    steps_per_period: usize,
+    residual_tolerance: f64,
+    perturbation: f64,
+) -> Result<Option<PssNewtonUpdateResult>, SpiceError> {
+    let Some(jacobian) = pss_residual_jacobian_with_tolerance(
+        circuit,
+        steps_per_period,
+        residual_tolerance,
+        perturbation,
+    )?
+    else {
+        return Ok(None);
+    };
+
+    let update_values = solve_pss_normal_equations(&jacobian)?;
+    let state_updates = jacobian
+        .state_vector
+        .iter()
+        .zip(update_values.iter())
+        .map(|(state, update)| PssStateEntry {
+            kind: state.kind.clone(),
+            name: state.name.clone(),
+            value: *update,
+        })
+        .collect::<Vec<_>>();
+    let next_state_vector = jacobian
+        .state_vector
+        .iter()
+        .zip(update_values.iter())
+        .map(|(state, update)| PssStateEntry {
+            kind: state.kind.clone(),
+            name: state.name.clone(),
+            value: state.value + update,
+        })
+        .collect::<Vec<_>>();
+    let update_l2_norm = update_values
+        .iter()
+        .map(|update| update * update)
+        .sum::<f64>()
+        .sqrt();
+
+    Ok(Some(PssNewtonUpdateResult {
+        jacobian,
+        state_updates,
+        next_state_vector,
+        update_l2_norm,
     }))
 }
 
