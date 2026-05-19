@@ -2,6 +2,23 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.25.0] - 2026-05-18
+
+### Added
+
+- **`STRICT` and `WITHOUT ROWID` table options** (`sql.grammar`,
+  `_grammar.py`) — `create_table_stmt` now accepts an optional
+  comma-separated list of table options after the closing `)`:
+
+      create_table_stmt = ... ")" [ table_options ] ;
+      table_options     = table_option { "," table_option } ;
+      table_option      = "STRICT" | "WITHOUT" NAME ;
+
+  The `WITHOUT NAME` form intentionally uses NAME (not a `ROWID` keyword)
+  so that `rowid` remains a valid column name elsewhere in SQL.  Both
+  options are syntactically accepted and semantically ignored by
+  mini-sqlite.
+
 ## [0.24.0] - 2026-05-18
 
 ### Added

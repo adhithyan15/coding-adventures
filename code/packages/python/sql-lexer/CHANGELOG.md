@@ -2,6 +2,20 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.20.0] - 2026-05-18
+
+### Added
+
+- **`STRICT` and `WITHOUT` keywords** (`sql.tokens`, `_grammar.py`) —
+  added to the keyword list so the parser can recognise the
+  `CREATE TABLE … STRICT` (SQLite 3.37+) and `… WITHOUT ROWID`
+  (SQLite 3.8.2+) table options.  Mini-sqlite ignores both, but accepting
+  the syntax unlocks ORM/migration code.
+
+  Note: `ROWID` is intentionally NOT promoted to a keyword — it remains
+  usable as an ordinary column name (`SELECT rowid FROM t`), and the
+  parser matches it as a NAME inside the `WITHOUT NAME` table option.
+
 ## [0.19.0] - 2026-05-18
 
 ### Added

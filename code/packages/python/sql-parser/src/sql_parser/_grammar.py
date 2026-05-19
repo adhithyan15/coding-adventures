@@ -690,8 +690,39 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
                 Literal(value=')'),
+                Optional(element=
+                    RuleReference(name='table_options', is_token=False),
+                ),
             ]),
             line_number=136,
+        ),
+        GrammarRule(
+            name='table_options',
+            body=
+            Sequence(elements=[
+                RuleReference(name='table_option', is_token=False),
+                Repetition(element=
+                    Sequence(elements=[
+                        Literal(value=','),
+                        RuleReference(name='table_option', is_token=False),
+                    ]),
+                ),
+            ]),
+            line_number=145,
+        ),
+        GrammarRule(
+            name='table_option',
+            body=
+            Alternation(choices=[
+                Literal(value='STRICT'),
+                Sequence(elements=[
+                    Literal(value='WITHOUT'),
+                    # NAME (not Literal "ROWID") because ROWID is a common
+                    # column name in SQLite and must not become a keyword.
+                    RuleReference(name='NAME', is_token=True),
+                ]),
+            ]),
+            line_number=146,
         ),
         GrammarRule(
             name='col_def',

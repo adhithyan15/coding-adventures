@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.46.0] - 2026-05-18
+
+### Added
+
+- **`STRICT` and `WITHOUT ROWID` table options** in CREATE TABLE (via
+  `sql-lexer 0.20.0`, `sql-parser 0.25.0`).  Both syntactically accepted
+  and silently ignored — mini-sqlite uses lenient type affinity regardless
+  of STRICT, and its single storage model regardless of WITHOUT ROWID.
+
+      CREATE TABLE t (id INTEGER) STRICT
+      CREATE TABLE t (id INTEGER PRIMARY KEY) WITHOUT ROWID
+      CREATE TABLE t (id INTEGER PRIMARY KEY) STRICT, WITHOUT ROWID
+
+### Tests
+
+- 12 new tests in `test_tier3_strict_without_rowid.py` cover all syntactic
+  variants plus a regression test confirming that `rowid` remains a valid
+  column reference in SELECT statements.
+
 ## [1.45.0] - 2026-05-18
 
 ### Added

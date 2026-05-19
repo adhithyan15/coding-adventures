@@ -141,7 +141,20 @@ returning_clause  = "RETURNING" expr { "," expr } ;
 # ── CREATE TABLE / DROP TABLE ─────────────────────────────────────────────────
 
 create_table_stmt = "CREATE" "TABLE" [ "IF" "NOT" "EXISTS" ] NAME
-                    "(" col_def { "," col_def } ")" ;
+                    "(" col_def { "," col_def } ")"
+                    [ table_options ] ;
+# Trailing table options (SQLite 3.8.2+ / 3.37+ extensions):
+#   WITHOUT ROWID — store rows in the primary-key B-tree instead of a
+#                   rowid table.  Mini-sqlite accepts and ignores.
+#   STRICT        — enforce strict typing per column.  Mini-sqlite accepts
+#                   and ignores; type affinity remains lenient.
+# Multiple options may be comma-separated.
+table_options     = table_option { "," table_option } ;
+table_option      = "STRICT" | "WITHOUT" NAME ;
+# Note: in `WITHOUT NAME`, the NAME is expected to be "rowid" (case-
+# insensitive).  We don't model ROWID as a keyword because it is widely
+# used as a column name in SQLite (`SELECT rowid FROM t`); making it a
+# keyword would break those queries.
 col_def           = NAME col_type { col_constraint } ;
 # col_type accepts simple names (INTEGER, TEXT) and parameterised types
 # (VARCHAR(8), DECIMAL(10,2)) — the length/precision arguments are parsed
