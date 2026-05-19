@@ -61,6 +61,7 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "network.ipv4"
         assert_includes uno_r4_wifi["capabilities"], "network.tcp"
         assert_includes uno_r4_wifi["capabilities"], "network.tcp.connected"
+        assert_includes uno_r4_wifi["capabilities"], "network.tcp.available"
         assert_includes uno_r4_wifi["capabilities"], "network.udp"
         assert_includes uno_r4_wifi["capabilities"], "network.udp.available"
         assert_includes uno_r4_wifi["capabilities"], "network.dns"

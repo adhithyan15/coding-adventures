@@ -3817,6 +3817,9 @@ mod tests {
         assert!(uno
             .capabilities
             .contains(&"network.tcp.connected".to_owned()));
+        assert!(uno
+            .capabilities
+            .contains(&"network.tcp.available".to_owned()));
         assert!(uno.capabilities.contains(&"network.udp.open".to_owned()));
         assert!(uno.capabilities.contains(&"network.udp.write".to_owned()));
         assert!(uno.capabilities.contains(&"network.udp.read".to_owned()));
