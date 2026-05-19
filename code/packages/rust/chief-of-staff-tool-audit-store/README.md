@@ -23,6 +23,8 @@ The crate keeps the boundary narrow:
   and advance the durable cursor after delivery
 - supervisors can inspect named checkpoint status before draining without
   advancing durable cursor state
+- supervisors can plan bounded drain pages without emitting rows, so schedulers
+  can preview workload and follow-up pressure before committing a tick
 - supervisors can drain one checkpointed page per tick and inspect progress,
   continuation, and follow-up signals without loading payloads
 - supervisors can run bounded drain loops that stop at end-of-log or report
