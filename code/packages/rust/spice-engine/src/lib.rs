@@ -1398,6 +1398,19 @@ impl TfResult {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct CornerTfPoint {
+    pub corner_name: String,
+    pub result: TfResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerTfResult {
+    pub input_source: String,
+    pub output_node: String,
+    pub points: Vec<CornerTfPoint>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct SensEntry {
     pub element_name: String,
     pub parameter: String,
@@ -2081,6 +2094,27 @@ pub fn tf(
         transfer_ratio,
         input_impedance_ohms,
         output_impedance_ohms,
+    })
+}
+
+pub fn tf_corners(
+    circuit: &Circuit,
+    output_node: &str,
+    input_source: &str,
+    corners: &[CornerSpec],
+) -> Result<CornerTfResult, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerTfPoint {
+            corner_name: corner.name.clone(),
+            result: tf(&corner_circuit, output_node, input_source)?,
+        });
+    }
+    Ok(CornerTfResult {
+        input_source: input_source.to_string(),
+        output_node: output_node.to_string(),
+        points,
     })
 }
 

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add multi-corner transfer-function analysis with `tfCorners`, returning the
+  same `.TF` query evaluated under each named corner.
 - Add multi-corner AC frequency sweeps with `acSweepCorners`, returning the
   same frequency grid evaluated under each named corner.
 - Add multi-corner DC source sweeps with `dcSweepCorners`, returning the same

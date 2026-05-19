@@ -94,6 +94,7 @@ from spice_engine import (
     CornerOverride,
     CornerSpec,
     CornerSweepResult,
+    CornerTfResult,
     CurrentSource,
     DcSweepPoint,
     DcSweepResult,
@@ -128,6 +129,7 @@ from spice_engine import (
     sens_dc,
     s_parameters,
     tf,
+    tf_corners,
     transient,
 )
 from spice_engine.engine import (
@@ -5370,3 +5372,29 @@ def test_ac_sweep_corners_runs_frequency_sweeps_per_corner() -> None:
     fast_out = result.points[1].result.points[0].node_voltages["out"]
     assert abs(nominal_out) == pytest.approx(1.0 / math.sqrt(2.0))
     assert abs(fast_out) == pytest.approx(1.0 / math.sqrt(1.25))
+
+
+def test_tf_corners_runs_transfer_function_per_corner() -> None:
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 10.0),
+        Resistor("Rtop", "in", "out", 1000.0),
+        Resistor("Rbot", "out", "0", 1000.0),
+    ])
+
+    result = tf_corners(
+        c,
+        "Vin",
+        "out",
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rbot-fast", (CornerOverride("Rbot", "resistance", 500.0),)),
+            CornerSpec("rbot-slow", (CornerOverride("Rbot", "resistance", 2000.0),)),
+        ],
+    )
+
+    assert isinstance(result, CornerTfResult)
+    assert result.input_source == "Vin"
+    assert result.output_node == "out"
+    assert [point.corner_name for point in result.points] == ["nominal", "rbot-fast", "rbot-slow"]
+    assert [point.result.gain for point in result.points] == pytest.approx([0.5, 1.0 / 3.0, 2.0 / 3.0])
+    assert [point.result.input_impedance for point in result.points] == pytest.approx([2000.0, 1500.0, 3000.0])

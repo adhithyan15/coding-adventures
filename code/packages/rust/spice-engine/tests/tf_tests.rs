@@ -1,6 +1,7 @@
 use spice_engine::{
-    tf, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element, Inductor, Mosfet,
-    MosfetLevel1Params, MosfetType, Resistor, SpiceError, TfResult, Vccs, Vcvs, VoltageSource,
+    tf, tf_corners, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec,
+    CurrentSource, Element, Inductor, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SpiceError,
+    TfResult, Vccs, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -57,6 +58,50 @@ fn tf_unequal_divider_matches_thevenin_values() {
     assert_close(result.gain(), 0.75);
     assert_close(result.input_impedance_ohms, 4_000.0);
     assert_close(result.output_impedance_ohms, 750.0);
+}
+
+#[test]
+fn tf_corners_runs_transfer_function_per_corner() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+
+    let result = tf_corners(
+        &circuit,
+        "out",
+        "Vin",
+        &[
+            CornerSpec::new("nominal", vec![]),
+            CornerSpec::new(
+                "rbot-fast",
+                vec![CornerOverride::new("Rbot", "resistance", 500.0)],
+            ),
+            CornerSpec::new(
+                "rbot-slow",
+                vec![CornerOverride::new("Rbot", "resistance", 2_000.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(result.input_source, "Vin");
+    assert_eq!(result.output_node, "out");
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "rbot-fast");
+    assert_eq!(result.points[2].corner_name, "rbot-slow");
+    assert_close(result.points[0].result.gain(), 0.5);
+    assert_close(result.points[1].result.gain(), 1.0 / 3.0);
+    assert_close(result.points[2].result.gain(), 2.0 / 3.0);
+    assert_close(result.points[0].result.input_impedance_ohms, 2_000.0);
+    assert_close(result.points[1].result.input_impedance_ohms, 1_500.0);
+    assert_close(result.points[2].result.input_impedance_ohms, 3_000.0);
 }
 
 #[test]

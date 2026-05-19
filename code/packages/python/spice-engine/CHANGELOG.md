@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Multi-corner transfer-function analysis** — `tf_corners` runs the same
+  `.TF` query at each named corner and returns per-corner gain and impedance
+  values.
+
 - **Multi-corner AC frequency sweeps** — `ac_sweep_corners` runs the same AC
   frequency grid at each named corner and returns per-corner phasor responses.
 
