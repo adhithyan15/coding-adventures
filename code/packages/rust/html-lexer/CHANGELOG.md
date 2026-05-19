@@ -66,6 +66,8 @@ documented in this file.
 - A generated WHATWG tokenizer text-mode boundary fixture and Rust conformance
   test that pins parser-seeded RCDATA, RAWTEXT, and PLAINTEXT less-than,
   end-tag-open/name, NULL, EOF, and literal markup recovery.
+- A generated WHATWG tokenizer attribute boundary fixture and Rust conformance
+  test that pins seeded start-tag and current-attribute continuation recovery.
 - A generated WHATWG tokenizer script escape boundary fixture and Rust
   conformance test that pins escaped and double-escaped script data, escape
   start/end delimiters, EOF diagnostics, NULL replacement, and seeded

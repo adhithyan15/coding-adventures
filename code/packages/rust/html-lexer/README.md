@@ -85,6 +85,10 @@ The generated text-mode boundary suite drills into parser-seeded RCDATA,
 RAWTEXT, and PLAINTEXT state boundaries: less-than recovery, end-tag-open/name
 continuations, NULL replacement, EOF literal recovery, and PLAINTEXT markup
 preservation.
+The generated attribute boundary suite adds seeded start-tag continuation
+coverage for before-attribute-name, attribute-name, after-attribute-name,
+before-attribute-value, quoted/unquoted value, after-quoted-value, and
+self-closing states.
 The generated markup declaration suite pins comment, bogus-comment, DOCTYPE,
 default HTML CDATA-looking bogus-comment recovery, explicit seeded CDATA
 continuation, and seeded declaration continuation behavior.
@@ -341,6 +345,18 @@ PLAINTEXT literal markup. Regenerate or check it with:
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_text_mode_boundaries_fixture.py
 python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_text_mode_boundaries_fixture.py \
+  --check
+```
+
+The checked-in `whatwg-attribute-boundaries.json` fixture exercises seeded
+start-tag attribute continuation states, including current-attribute recovery,
+quoted and unquoted value completion, NULL replacement, EOF diagnostics,
+missing-whitespace recovery, and self-closing boundaries. Regenerate or check it
+with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_attribute_boundaries_fixture.py
+python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_attribute_boundaries_fixture.py \
   --check
 ```
 

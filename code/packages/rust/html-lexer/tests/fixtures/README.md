@@ -404,6 +404,9 @@ currently supports:
 - generated text-mode boundary coverage across parser-seeded RCDATA, RAWTEXT,
   and PLAINTEXT less-than recovery, end-tag-open/name continuations, NULL/EOF
   recovery, character-reference differences, and literal markup preservation
+- generated attribute boundary coverage across seeded start-tag and
+  current-attribute continuation states, quoted/unquoted values, EOF recovery,
+  missing-whitespace recovery, and self-closing boundaries
 - generated attribute-edge coverage across quoted/unquoted values, duplicate
   attributes, missing whitespace recovery, unexpected attribute characters,
   NULL replacement, self-closing delimiters, unexpected solidus recovery, and
