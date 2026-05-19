@@ -89,6 +89,7 @@ from spice_engine import (
     AcSource,
     Capacitor,
     Circuit,
+    CornerAcSweepResult,
     CornerDcSweepResult,
     CornerOverride,
     CornerSpec,
@@ -117,6 +118,7 @@ from spice_engine import (
     VoltageSource,
     XInstance,
     ac_sweep,
+    ac_sweep_corners,
     dc_corners,
     dc_op,
     dc_sweep,
@@ -5338,3 +5340,33 @@ def test_dc_sweep_corners_runs_source_sweeps_per_corner() -> None:
     assert [point.source_value for point in result.points[0].result.points] == pytest.approx([0.0, 5.0, 10.0])
     assert [point.node_voltages["out"] for point in result.points[0].result.points] == pytest.approx([0.0, 2.5, 5.0])
     assert [point.node_voltages["out"] for point in result.points[1].result.points] == pytest.approx([0.0, 5.0 / 3.0, 10.0 / 3.0])
+
+
+def test_ac_sweep_corners_runs_frequency_sweeps_per_corner() -> None:
+    resistance = 1000.0
+    capacitance = 1.0e-6
+    corner_freq = 1.0 / (2.0 * math.pi * resistance * capacitance)
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("R1", "in", "out", resistance),
+        Capacitor("C1", "out", "0", capacitance),
+    ])
+
+    result = ac_sweep_corners(
+        c,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("r-fast", (CornerOverride("R1", "resistance", 500.0),)),
+        ],
+        f_start=corner_freq,
+        f_stop=corner_freq,
+        n_points=1,
+    )
+
+    assert isinstance(result, CornerAcSweepResult)
+    assert [point.corner_name for point in result.points] == ["nominal", "r-fast"]
+    assert result.points[0].result.points[0].freq == pytest.approx(corner_freq)
+    nominal_out = result.points[0].result.points[0].node_voltages["out"]
+    fast_out = result.points[1].result.points[0].node_voltages["out"]
+    assert abs(nominal_out) == pytest.approx(1.0 / math.sqrt(2.0))
+    assert abs(fast_out) == pytest.approx(1.0 / math.sqrt(1.25))

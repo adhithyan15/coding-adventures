@@ -3,6 +3,7 @@ import {
   Circuit,
   SpiceError,
   acSweep,
+  acSweepCorners,
   capacitor,
   cccs,
   ccvs,
@@ -59,6 +60,43 @@ describe("acSweep", () => {
     expect(out).not.toBeUndefined();
     expectClose(complexAbs(out!), 1.0 / Math.sqrt(2.0));
     expectClose(complexPhase(out!), -Math.PI / 4.0);
+  });
+
+  it("runs frequency sweeps at each named corner", () => {
+    const resistance = 1_000.0;
+    const capacitance = 1.0e-6;
+    const cornerFrequency = 1.0 / (2.0 * Math.PI * resistance * capacitance);
+
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "out", resistance));
+    circuit.add(capacitor("C1", "out", "0", capacitance));
+
+    const result = acSweepCorners(
+      circuit,
+      cornerFrequency,
+      cornerFrequency,
+      10,
+      [
+        { name: "nominal", overrides: [] },
+        {
+          name: "r-fast",
+          overrides: [{ elementName: "R1", parameter: "resistance", value: 500.0 }],
+        },
+      ],
+    );
+
+    expect(result.points.map((point) => point.cornerName)).toEqual(["nominal", "r-fast"]);
+    expect(result.points[0].points).toHaveLength(1);
+    expect(result.points[0].points[0].frequencyHz).toBeCloseTo(cornerFrequency, 9);
+    expect(complexAbs(result.points[0].points[0].voltage("out")!)).toBeCloseTo(
+      1.0 / Math.sqrt(2.0),
+      9,
+    );
+    expect(complexAbs(result.points[1].points[0].voltage("out")!)).toBeCloseTo(
+      1.0 / Math.sqrt(1.25),
+      9,
+    );
   });
 
   it("places an RL high-pass at the minus-three-dB corner", () => {

@@ -481,6 +481,21 @@ class CornerDcSweepResult:
     source_name: str
 
 
+@dataclass(frozen=True)
+class CornerAcSweepPoint:
+    """AC frequency sweep result for one named analysis corner."""
+
+    corner_name: str
+    result: AcResult
+
+
+@dataclass(frozen=True)
+class CornerAcSweepResult:
+    """Multi-corner AC frequency sweep result."""
+
+    points: list[CornerAcSweepPoint]
+
+
 # ---------------------------------------------------------------------------
 # MNA infrastructure
 # ---------------------------------------------------------------------------
@@ -3492,6 +3507,38 @@ def dc_sweep_corners(
             for corner in corners
         ],
         source_name=source_name,
+    )
+
+
+def ac_sweep_corners(
+    circuit: Circuit,
+    corners: list[CornerSpec],
+    *,
+    f_start: float,
+    f_stop: float,
+    n_points: int = 50,
+    sweep: str = "log",
+) -> CornerAcSweepResult:
+    """Run an AC frequency sweep at each named corner.
+
+    Each corner clones the circuit with explicit element-parameter overrides,
+    then reuses :func:`ac_sweep` so every corner returns the same frequency
+    grid with its own complex phasor response.
+    """
+    return CornerAcSweepResult(
+        points=[
+            CornerAcSweepPoint(
+                corner_name=corner.name,
+                result=ac_sweep(
+                    _circuit_with_corner(circuit, corner),
+                    f_start=f_start,
+                    f_stop=f_stop,
+                    n_points=n_points,
+                    sweep=sweep,
+                ),
+            )
+            for corner in corners
+        ]
     )
 
 
