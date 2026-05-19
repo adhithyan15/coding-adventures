@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-transform-typography",
+  "version": "0.1.0",
+  "description": "Apply smart-quote / em-dash / en-dash / ellipsis (and optional ligature) substitution to every TextNode in a DocumentNode.  Pure transform: returns a transformed Document copy without mutating the input.  Single-pass character loop — no regex backtracking surface.  FM00 v0 §5.3 transform.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
