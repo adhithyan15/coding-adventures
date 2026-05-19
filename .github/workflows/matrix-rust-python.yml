@@ -1,0 +1,189 @@
+# ================================================================
+# matrix-rust-python — Build + smoke-import the Python C extension
+# ================================================================
+#
+# MX09 Phase 3.  Builds the `matrix_rust_python` wheel via
+# `maturin build --release`, installs it, and asserts the four
+# expected exports are importable from real Python:
+#
+#   - graph_round_trip_json   (Phase 1 module-level fn)
+#   - run_graph_on_cpu        (Phase 2 module-level fn)
+#   - Graph                   (Phase 2b class)
+#   - Runtime                 (Phase 2b class)
+#
+# This is a build-only smoke — no pytest suite runs here.
+# End-to-end pytest exercises land in MX09 Phase 4 once the
+# Python wrapper package at code/packages/python/matrix-rust-python/
+# exists to drive them.
+#
+# Mirrors the matrix-rust-napi.yml shape (path filter, OS matrix,
+# cargo cache, build-only smoke) — Python toolchain replaces Node.
+#
+# Target platforms (per MX09 §"Distribution model"):
+#   * darwin-arm64   (macos-latest = M-series runners since 2024)
+#   * linux-x64-gnu  (ubuntu-latest)
+#
+# Windows is intentionally out of scope for v0 — adding it is a
+# Phase 3 follow-up once macOS + Linux smoke is stable.  Matches
+# matrix-rust-napi's v0 platform list.
+
+name: matrix-rust-python (build smoke)
+
+on:
+  push:
+    branches: ['**']
+    paths:
+      - 'code/packages/rust/matrix-rust-python/**'
+      - 'code/packages/rust/python-bridge/**'
+      - 'code/packages/rust/matrix-ir/**'
+      - 'code/packages/rust/matrix-ir-json/**'
+      - 'code/packages/rust/matrix-runtime/**'
+      - 'code/packages/rust/matrix-cpu/**'
+      - 'code/packages/rust/compute-ir/**'
+      - 'code/packages/rust/executor-protocol/**'
+      - '.github/workflows/matrix-rust-python.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'code/packages/rust/matrix-rust-python/**'
+      - 'code/packages/rust/python-bridge/**'
+      - 'code/packages/rust/matrix-ir/**'
+      - 'code/packages/rust/matrix-ir-json/**'
+      - 'code/packages/rust/matrix-runtime/**'
+      - 'code/packages/rust/matrix-cpu/**'
+      - 'code/packages/rust/compute-ir/**'
+      - 'code/packages/rust/executor-protocol/**'
+      - '.github/workflows/matrix-rust-python.yml'
+
+# Cancel in-progress runs for the same branch — the smoke is
+# stateless and we always want the latest commit's result.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-smoke:
+    name: build + import smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest    # linux-x64-gnu
+          - macos-latest     # darwin-arm64 (M-series since 2024)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain (stable)
+        # No special components needed — the extension is plain Rust
+        # (no fmt/clippy gates in this workflow; those run via the
+        # main CI job).  Cache via the workspace target directory.
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry + git + target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            code/packages/rust/target
+          key: ${{ runner.os }}-cargo-matrix-rust-python-${{ hashFiles('code/packages/rust/matrix-rust-python/Cargo.toml', 'code/packages/rust/python-bridge/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-matrix-rust-python-
+            ${{ runner.os }}-cargo-
+
+      - name: Install Python 3.11
+        # Pin a specific Python for reproducibility.  pyproject.toml
+        # advertises 3.10+; CI runs against one of the supported
+        # versions.  Phase 3b can fan out to a 3.10/3.11/3.12 matrix
+        # once the build is stable on one.
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install maturin
+        run: pip install --upgrade pip maturin
+
+      - name: Run cargo test (pure-Rust unit tests)
+        # 25 tests covering JSON wire format, end-to-end
+        # plan+execute, DoS-cap defence, envelope helper, class
+        # layout invariants.  Fast (~3s after cache hit).  Same
+        # tests the workspace BUILD file runs on every PR; we run
+        # them here too so a path-filter-triggered workflow never
+        # falsely reports green on a broken build.
+        working-directory: code/packages/rust
+        run: cargo test -p matrix-rust-python --release
+
+      - name: Build wheel via maturin
+        # `maturin build --release` produces a per-platform wheel
+        # under `target/wheels/`.  The wheel's tagged with the
+        # current Python version + OS + arch — pip will pick the
+        # matching one at install time.
+        working-directory: code/packages/rust/matrix-rust-python
+        run: maturin build --release --out target/wheels
+
+      - name: Install wheel into the active Python
+        # The wheel name varies by platform/version so we glob.
+        # Maturin only produces one wheel per build invocation, so
+        # the glob is unambiguous.
+        working-directory: code/packages/rust/matrix-rust-python
+        run: |
+          set -eu
+          wheel=$(ls target/wheels/matrix_rust_python-*.whl | head -n1)
+          if [ -z "$wheel" ]; then
+            echo "ERROR: maturin produced no wheel" >&2
+            ls -la target/wheels/ || true
+            exit 1
+          fi
+          echo "Installing: $wheel"
+          pip install "$wheel"
+
+      - name: Smoke-import the four expected exports
+        # The headline Phase 3 acceptance test: `import` works,
+        # and the four names the MX09 spec promised are present.
+        # Any failure here means the extension was built but
+        # CPython can't load it (libpython link mismatch, missing
+        # PyInit symbol, ABI tag mismatch, etc.).
+        run: |
+          python - <<'PY'
+          import matrix_rust_python as m
+
+          expected = ["graph_round_trip_json", "run_graph_on_cpu", "Graph", "Runtime"]
+          missing = [name for name in expected if not hasattr(m, name)]
+          if missing:
+              print(f"FAIL: missing exports: {missing}")
+              print(f"  have: {sorted(n for n in dir(m) if not n.startswith('_'))}")
+              raise SystemExit(1)
+
+          # Sanity: confirm the classes actually behave as types.
+          assert isinstance(m.Graph, type), f"Graph is not a type: {type(m.Graph)}"
+          assert isinstance(m.Runtime, type), f"Runtime is not a type: {type(m.Runtime)}"
+
+          # Sanity: confirm the module-level functions are callable.
+          assert callable(m.graph_round_trip_json)
+          assert callable(m.run_graph_on_cpu)
+
+          print("matrix_rust_python imported OK")
+          print(f"  exports: {sorted(n for n in dir(m) if not n.startswith('_'))}")
+          PY
+
+      - name: Report artifact info
+        # Quick visibility — the wheel's size is a stable smoke for
+        # "did the linker pull everything in?"  Anything under
+        # ~500 KiB is suspicious for a release build of this crate
+        # stack (matrix-ir + matrix-runtime + matrix-cpu + ...).
+        if: success()
+        working-directory: code/packages/rust/matrix-rust-python
+        run: |
+          echo "matrix-rust-python wheel built on ${{ matrix.os }}:"
+          ls -lah target/wheels/
+          if command -v file >/dev/null 2>&1; then
+            for whl in target/wheels/*.whl; do
+              echo "--- $whl ---"
+              file "$whl"
+            done
+          fi
