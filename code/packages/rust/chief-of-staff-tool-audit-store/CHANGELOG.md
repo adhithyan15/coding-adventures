@@ -24,6 +24,7 @@ All notable changes to this package will be documented in this file.
   actual bounded drain result.
 - Scheduler-facing supervisor drain outcomes for idle, caught-up,
   continuation, follow-up, and plan-divergence states.
+- Stable supervisor drain outcome labels and action flags for host schedulers.
 - Batch audit write summaries for host flush loops.
 - Replay helpers for loading queried audit rows into any `ToolAuditSink`.
 - `StorageToolAuditSink` for runtime audit emission through D18A storage with
