@@ -7,12 +7,25 @@ from pathlib import Path
 from typing import Any
 
 
-def write_fixture_json(output: Path, fixture: dict[str, Any], *, check: bool) -> int:
-    text = json.dumps(fixture, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
+def write_fixture_json(
+    output: Path,
+    fixture: dict[str, Any],
+    *,
+    check: bool,
+    ensure_ascii: bool = False,
+    stale_hint: str | None = None,
+) -> int:
+    text = json.dumps(
+        fixture,
+        indent=2,
+        ensure_ascii=ensure_ascii,
+        sort_keys=True,
+    ) + "\n"
 
     if check:
         if output.read_text() != text:
-            raise SystemExit(f"{output} is stale; regenerate it")
+            hint = f" {stale_hint}" if stale_hint is not None else ""
+            raise SystemExit(f"{output} is stale; regenerate it{hint}")
         return 0
 
     output.write_text(text)

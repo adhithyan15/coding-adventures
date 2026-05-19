@@ -12,12 +12,17 @@ the catch-all smoke test.
 from __future__ import annotations
 
 import argparse
-import json
 import re
+import sys
 from pathlib import Path
 
 
 FIXTURE_DIR = Path(__file__).resolve().parent
+LEXER_FIXTURE_DIR = FIXTURE_DIR.parents[2] / "html-lexer" / "tests" / "fixtures"
+sys.path.insert(0, str(LEXER_FIXTURE_DIR))
+
+from generated_fixture_io import write_fixture_json
+
 DEFAULT_INPUT = FIXTURE_DIR / "html5lib-tree-construction-smoke.dat"
 DEFAULT_OUTPUT = FIXTURE_DIR / "whatwg-tree-insertion-audit.json"
 
@@ -57,16 +62,7 @@ def main() -> int:
 
     sources = parse_sources(input_path)
     fixture = build_fixture(sources)
-    text = json.dumps(fixture, indent=2, sort_keys=True) + "\n"
-
-    if args.check:
-        existing = output_path.read_text()
-        if existing != text:
-            raise SystemExit(f"{output_path} is stale; regenerate it")
-        return 0
-
-    output_path.write_text(text)
-    return 0
+    return write_fixture_json(output_path, fixture, check=args.check, ensure_ascii=True)
 
 
 def parse_args() -> argparse.Namespace:
