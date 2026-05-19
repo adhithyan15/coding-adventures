@@ -34,6 +34,7 @@ from sql_optimizer import optimize
 from sql_parser import parse_sql
 from sql_planner import (
     AggregateExpr,
+    CreateIndexStmt,
     CreateViewStmt,
     DropViewStmt,
     IndexScan,
@@ -164,6 +165,17 @@ def run(
                     del view_defs[stmt.name]
                 elif not stmt.if_exists:
                     raise ProgrammingError(f"no such view: {stmt.name}")
+            return QueryResult(rows_affected=0)
+        # CREATE INDEX on expressions is accepted-and-ignored.  Mini-sqlite
+        # parses ``CREATE INDEX idx ON t(LOWER(name))`` so ORM/migration
+        # tools don't error, but doesn't create an actual index (the storage
+        # backend can't index a synthetic ``__expr_N`` column name).  Bare-
+        # column CREATE INDEX still goes through normally.
+        if isinstance(stmt, CreateIndexStmt) and any(
+            c.startswith("__expr_") for c in stmt.columns
+        ):
+            # Silently no-op the index creation.  Returning rows_affected=0
+            # matches SQLite's behaviour for successful DDL.
             return QueryResult(rows_affected=0)
         # SAVEPOINT / RELEASE / ROLLBACK TO are intercepted here.
         # The planner and VM never see them — the engine calls the backend

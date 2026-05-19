@@ -1080,17 +1080,39 @@ def _create_index(node: ASTNode) -> CreateIndexStmt:
     table_name = direct_names[1]
 
     # Column names come from index_col child nodes (new grammar).
-    # Fall back to direct NAME tokens beyond position 2 for any grammar
-    # that hasn't been regenerated yet.
+    # Each ``index_col`` may be a NAME, a function_call, or a parenthesised
+    # expression — the latter two are SQLite "indexed expressions" (e.g.
+    # ``CREATE INDEX idx ON t(LOWER(name))``).  Mini-sqlite parses the
+    # expression but indexes only when the index_col is a bare NAME; expression
+    # indices are accepted-and-ignored (still listed in PRAGMA index_list, but
+    # the underlying index is empty / not consulted by the optimizer).  This
+    # unlocks ORM/migration code that issues such indexes without affecting
+    # correctness (only performance).
+    #
+    # Strategy: synthesise a synthetic column name from the expression so the
+    # IndexDef.columns tuple has the right arity.  Real lookups against bare
+    # NAME columns still work; lookups against the expression do not match the
+    # index (but the planner doesn't try, so it transparently falls back to a
+    # table scan).
+    #
+    # COLLATE clause is silently discarded.  Only the BINARY collation is
+    # implemented; the index behaves as if no COLLATE was specified.
     index_col_nodes = _child_nodes(node, "index_col")
     if index_col_nodes:
-        columns: tuple[str, ...] = tuple(
-            next(
-                (c.value for c in ic.children if isinstance(c, Token) and _token_type(c) == "NAME"),
-                "",
-            )
-            for ic in index_col_nodes
-        )
+        col_names: list[str] = []
+        for i, ic in enumerate(index_col_nodes):
+            # The index_col body is `expr [COLLATE NAME] [ASC|DESC]`.  Detect
+            # the simple "bare column" case where the expression is a single
+            # column_ref (with no operator / function / parens around it).
+            # Anything more complex (LOWER(col), col+1, etc.) is a SQLite
+            # "indexed expression" — accept-and-ignore by assigning a synthetic
+            # column name so the index registers but no lookups match.
+            bare_name = _extract_bare_column_name(ic)
+            if bare_name is not None:
+                col_names.append(bare_name)
+            else:
+                col_names.append(f"__expr_{i}")
+        columns: tuple[str, ...] = tuple(col_names)
     else:
         columns = tuple(direct_names[2:])
 
@@ -2105,6 +2127,83 @@ def _is_token(x: object, *, type_: str | None = None) -> bool:
 
 def _is_keyword(x: object, kw: str) -> bool:
     return isinstance(x, Token) and _token_type(x) == "KEYWORD" and x.value.upper() == kw.upper()
+
+
+def _extract_bare_column_name(node: ASTNode) -> str | None:
+    """Return the column name if *node* (an ``index_col``) wraps a single
+    bare column reference; otherwise None.
+
+    The ``index_col`` body is ``expr [COLLATE NAME] [ASC|DESC]``.  When the
+    expression is just a column reference (no operator, no function call),
+    the chain of grammar rules
+    ``expr → or_expr → and_expr → not_expr → comparison → additive →
+    multiplicative → unary → primary → column_ref → NAME``
+    contains exactly one ASTNode child at each level.  We walk down the
+    chain; if at any level there's more than one significant child (i.e. an
+    operator was used), or the leaf isn't a NAME token, we return None.
+
+    This conservatively detects the bare-column case so the index registers
+    under the real column name in PRAGMA index_list.  Compound expressions
+    fall back to a synthetic ``__expr_N`` placeholder name.
+    """
+    cur: ASTNode | Token | None = node
+    # Walk through nested wrapper rules.  At each level the node must have
+    # exactly one ASTNode child (other than ignorable tokens).
+    while isinstance(cur, ASTNode):
+        # Collect just the meaningful children: ASTNodes are the recursion
+        # path; Tokens here would indicate an operator or punctuation that
+        # makes this expression non-bare.
+        child_nodes = [c for c in cur.children if isinstance(c, ASTNode)]
+        child_tokens = [c for c in cur.children if isinstance(c, Token)]
+        # The presence of an ASC/DESC/COLLATE token at the index_col level
+        # is fine — those are recorded separately and the bare column is
+        # still bare.  At lower levels (additive, multiplicative, etc.)
+        # operator tokens mean the expression is compound.
+        if cur.rule_name == "index_col":
+            # First ASTNode child is the expr; subsequent tokens are
+            # COLLATE / ASC / DESC.  Recurse into the expr only.
+            if len(child_nodes) != 1:
+                return None
+            cur = child_nodes[0]
+            continue
+        # column_ref is the leaf: NAME [. NAME].  Bare column = exactly one
+        # NAME token; "t.col" form gets the trailing NAME (the column name).
+        if cur.rule_name == "column_ref":
+            name_tokens = [
+                c.value for c in cur.children
+                if isinstance(c, Token) and _token_type(c) == "NAME"
+            ]
+            if not name_tokens:
+                return None
+            # For "table.col" the last NAME is the column.
+            return name_tokens[-1]
+        # function_call, paren-expr, etc.: not a bare column.
+        if cur.rule_name in (
+            "function_call", "window_func_call", "case_expr",
+            "cast_expr",
+        ):
+            return None
+        # Any operator token at this level → compound expression.
+        # Punctuation like commas can appear; skip those.
+        operator_tokens = [
+            t for t in child_tokens
+            if _token_type(t) in (
+                "PLUS", "MINUS", "STAR", "SLASH", "PERCENT", "CONCAT_OP",
+                "JSON_ARROW", "JSON_ARROW_TEXT",
+            )
+            or (_token_type(t) == "KEYWORD" and t.value.upper() in (
+                "AND", "OR", "NOT", "BETWEEN", "IN", "LIKE", "GLOB",
+                "ESCAPE", "IS",
+            ))
+        ]
+        if operator_tokens:
+            return None
+        # Recurse into the single ASTNode child if there is exactly one.
+        if len(child_nodes) == 1:
+            cur = child_nodes[0]
+            continue
+        return None
+    return None
 
 
 def _cte_col_aliases(cte_node: ASTNode) -> list[str]:

@@ -1,5 +1,43 @@
 # Changelog
 
+## [1.44.0] - 2026-05-18
+
+### Added
+
+- **Indexed expressions** (`sql-lexer 0.18.0`, `sql-parser 0.23.0`,
+  `adapter.py`, `engine.py`) — `CREATE INDEX` now accepts arbitrary
+  expressions in the column list, plus `COLLATE …` and the optional
+  `WHERE` predicate of partial indexes:
+
+      CREATE INDEX idx_lower    ON t(LOWER(name))
+      CREATE INDEX idx_collate  ON t(name COLLATE NOCASE)
+      CREATE INDEX idx_compound ON t(LOWER(name), id)
+
+  Implementation:
+
+  - The adapter's `_create_index` walks the `index_col`'s expression tree
+    via the new `_extract_bare_column_name` helper.  Bare-column index
+    columns create a real index (PRAGMA index_list registers it).
+    Expression-based index columns are assigned a synthetic
+    `__expr_<N>` placeholder name.
+  - The engine intercepts `CreateIndexStmt` and, if any column name starts
+    with `__expr_`, silently no-ops the index creation.  The SQL parses
+    and the DDL succeeds; the lookup falls back to a table scan.
+
+  COLLATE clauses are discarded (only BINARY is implemented).  ASC/DESC
+  hints are discarded (B-tree indexes are bidirectional).
+
+  This unlocks SQLAlchemy / Alembic / Django migration code that creates
+  indexed expressions for case-insensitive search.  Lookups against the
+  expression don't benefit from the index — but they remain correct.
+
+### Tests
+
+- 17 new oracle tests in `test_tier3_indexed_expressions.py` byte-compare
+  against the real `sqlite3` module across bare columns, function-call
+  expressions, COLLATE clauses, compound indexes, `IF NOT EXISTS`,
+  `UNIQUE`, and direction hints.
+
 ## [1.43.0] - 2026-05-18
 
 ### Added

@@ -805,6 +805,9 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
                 Literal(value=')'),
+                Optional(element=
+                    RuleReference(name='where_clause', is_token=False),
+                ),
             ]),
             line_number=161,
         ),
@@ -812,7 +815,16 @@ PARSER_GRAMMAR = ParserGrammar(
             name='index_col',
             body=
             Sequence(elements=[
-                RuleReference(name='NAME', is_token=True),
+                # Accept any expression — covers bare column names (LOWER form
+                # of column_ref), function calls (LOWER(name)), parenthesised
+                # expressions, and string-concat / arithmetic expressions.
+                RuleReference(name='expr', is_token=False),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='COLLATE'),
+                        RuleReference(name='NAME', is_token=True),
+                    ]),
+                ),
                 Optional(element=
                     Alternation(choices=[
                         Literal(value='ASC'),
