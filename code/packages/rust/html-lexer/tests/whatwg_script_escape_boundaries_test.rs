@@ -1,6 +1,5 @@
 use coding_adventures_html_lexer::{
-    apply_html_lex_context, create_html_lexer, Attribute, HtmlLexContext, HtmlLexer,
-    HtmlTokenizerState, Token,
+    create_html_lexer_with_context, Attribute, HtmlLexContext, HtmlLexer, HtmlTokenizerState, Token,
 };
 use serde::Deserialize;
 
@@ -103,14 +102,16 @@ fn load_suite() -> ScriptEscapeBoundarySuite {
 fn configured_lexer(case: &ScriptEscapeBoundaryCase) -> HtmlLexer {
     let state = HtmlTokenizerState::from_html5lib_state(&case.initial_state)
         .unwrap_or_else(|| panic!("case `{}` has unknown initial state", case.id));
-    let mut context = HtmlLexContext::new(state).with_last_start_tag(&case.last_start_tag);
+    let mut context = HtmlLexContext::script_substate(state)
+        .unwrap_or_else(|| panic!("case `{}` cannot seed script substate", case.id));
+    if context.last_start_tag.as_deref() != Some(case.last_start_tag.as_str()) {
+        context = context.with_last_start_tag(&case.last_start_tag);
+    }
     if let Some(temporary_buffer) = case.temporary_buffer.as_deref() {
         context = context.with_temporary_buffer(temporary_buffer);
     }
 
-    let mut lexer = create_html_lexer().expect("HTML lexer should build");
-    apply_html_lex_context(&mut lexer, &context).expect("HTML lexer context should apply");
-    lexer
+    create_html_lexer_with_context(&context).expect("HTML lexer context should apply")
 }
 
 fn token_summary(token: Token) -> String {

@@ -1,6 +1,5 @@
 use coding_adventures_html_lexer::{
-    apply_html_lex_context, create_html_lexer, Attribute, HtmlLexContext, HtmlLexer,
-    HtmlTokenizerState, Token,
+    create_html_lexer_with_context, Attribute, HtmlLexContext, HtmlLexer, HtmlTokenizerState, Token,
 };
 use serde::Deserialize;
 
@@ -110,22 +109,20 @@ fn configured_lexer(case: &CharacterReferenceBoundaryCase) -> HtmlLexer {
         .as_deref()
         .and_then(HtmlTokenizerState::from_html5lib_state)
         .unwrap_or(HtmlTokenizerState::Data);
-    let mut context = HtmlLexContext::new(state);
-    if let Some(return_state) = case.return_state.as_deref() {
+    let mut context = if let Some(return_state) = case.return_state.as_deref() {
         let return_state = HtmlTokenizerState::from_html5lib_state(return_state)
             .unwrap_or_else(|| panic!("case `{}` has unknown return state", case.id));
-        context = context.with_return_state(return_state);
-    }
-    if let Some(temporary_buffer) = case.temporary_buffer.as_deref() {
-        context = context.with_temporary_buffer(temporary_buffer);
-    }
+        let temporary_buffer = case.temporary_buffer.as_deref().unwrap_or("");
+        HtmlLexContext::character_reference_continuation(state, return_state, temporary_buffer)
+            .unwrap_or_else(|| panic!("case `{}` cannot seed character reference state", case.id))
+    } else {
+        HtmlLexContext::new(state)
+    };
     if let Some(last_start_tag) = case.last_start_tag.as_deref() {
         context = context.with_last_start_tag(last_start_tag);
     }
 
-    let mut lexer = create_html_lexer().expect("HTML lexer should build");
-    apply_html_lex_context(&mut lexer, &context).expect("HTML lexer context should apply");
-    lexer
+    create_html_lexer_with_context(&context).expect("HTML lexer context should apply")
 }
 
 fn token_summary(token: Token) -> String {

@@ -87,6 +87,12 @@ The public wrapper exposes those parser-facing text-mode families through
 the lexer through `HtmlLexContext::end_tag_continuation` and
 `create_html_lexer_with_context`, matching the surface a parser or importer
 would use.
+The same public context surface now exposes comment and character-reference
+continuation families through `HTML_COMMENT_TOKENIZER_STATES`,
+`HTML_CHARACTER_REFERENCE_TOKENIZER_STATES`, and
+`HTML_CHARACTER_REFERENCE_RETURN_STATES`, and the generated boundary,
+input-stream, EOF, and markup-declaration fixtures build their seeded lexers
+through the typed `HtmlLexContext` constructors.
 The generated text-mode boundary suite drills into parser-seeded RCDATA,
 RAWTEXT, and PLAINTEXT state boundaries: less-than recovery, end-tag-open/name
 continuations, NULL replacement, EOF literal recovery, and PLAINTEXT markup

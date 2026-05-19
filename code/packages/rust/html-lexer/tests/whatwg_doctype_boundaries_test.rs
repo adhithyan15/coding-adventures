@@ -1,5 +1,5 @@
 use coding_adventures_html_lexer::{
-    apply_html_lex_context, create_html_lexer, Attribute, DoctypeSeed, HtmlLexContext, HtmlLexer,
+    create_html_lexer_with_context, Attribute, DoctypeSeed, HtmlLexContext, HtmlLexer,
     HtmlTokenizerState, Token,
 };
 use serde::Deserialize;
@@ -114,19 +114,22 @@ fn configured_lexer(case: &DoctypeBoundaryCase) -> HtmlLexer {
         .as_deref()
         .and_then(HtmlTokenizerState::from_html5lib_state)
         .unwrap_or(HtmlTokenizerState::Data);
-    let mut context = HtmlLexContext::new(state);
-    if let Some(current_doctype) = case.current_doctype.as_ref() {
-        context = context.with_current_doctype(DoctypeSeed {
-            name: current_doctype.name.clone(),
-            public_identifier: current_doctype.public_identifier.clone(),
-            system_identifier: current_doctype.system_identifier.clone(),
-            force_quirks: current_doctype.force_quirks,
-        });
-    }
+    let context = if let Some(current_doctype) = case.current_doctype.as_ref() {
+        HtmlLexContext::doctype_continuation(
+            state,
+            DoctypeSeed {
+                name: current_doctype.name.clone(),
+                public_identifier: current_doctype.public_identifier.clone(),
+                system_identifier: current_doctype.system_identifier.clone(),
+                force_quirks: current_doctype.force_quirks,
+            },
+        )
+        .unwrap_or_else(|| panic!("case `{}` cannot seed DOCTYPE state", case.id))
+    } else {
+        HtmlLexContext::new(state)
+    };
 
-    let mut lexer = create_html_lexer().expect("HTML lexer should build");
-    apply_html_lex_context(&mut lexer, &context).expect("HTML lexer context should apply");
-    lexer
+    create_html_lexer_with_context(&context).expect("HTML lexer context should apply")
 }
 
 fn token_summary(token: Token) -> String {

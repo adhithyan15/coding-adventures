@@ -1,5 +1,5 @@
 use coding_adventures_html_lexer::{
-    apply_html_lex_context, create_html_lexer, Attribute, DoctypeSeed, HtmlLexContext, HtmlLexer,
+    create_html_lexer_with_context, Attribute, DoctypeSeed, HtmlLexContext, HtmlLexer,
     HtmlTokenizerState, Token,
 };
 use serde::Deserialize;
@@ -116,38 +116,58 @@ fn configured_lexer(case: &EofRecoveryCase) -> HtmlLexer {
         .as_deref()
         .and_then(HtmlTokenizerState::from_html5lib_state)
         .unwrap_or(HtmlTokenizerState::Data);
-    let mut context = HtmlLexContext::new(state);
-    if let Some(last_start_tag) = case.last_start_tag.as_deref() {
-        context = context.with_last_start_tag(last_start_tag);
-    }
-    if let Some(current_end_tag) = case.current_end_tag.as_deref() {
-        context = context.with_current_end_tag(current_end_tag);
-    }
-    if let Some(current_comment) = case.current_comment.as_deref() {
-        context = context.with_current_comment(current_comment);
-    }
-    if let Some(current_doctype) = case.current_doctype.as_ref() {
-        context = context.with_current_doctype(DoctypeSeed {
-            name: current_doctype.name.clone(),
-            public_identifier: current_doctype.public_identifier.clone(),
-            system_identifier: current_doctype.system_identifier.clone(),
-            force_quirks: current_doctype.force_quirks,
-        });
-    }
-    if let Some(temporary_buffer) = case.temporary_buffer.as_deref() {
-        context = context.with_temporary_buffer(temporary_buffer);
-    }
-    if let Some(return_state) = case
+    let mut context = if let Some(current_doctype) = case.current_doctype.as_ref() {
+        HtmlLexContext::doctype_continuation(state, doctype_seed(current_doctype))
+            .unwrap_or_else(|| panic!("case `{}` cannot seed DOCTYPE state", case.id))
+    } else if let Some(current_comment) = case.current_comment.as_deref() {
+        HtmlLexContext::comment_continuation(state, current_comment)
+            .unwrap_or_else(|| panic!("case `{}` cannot seed comment state", case.id))
+    } else if let Some(current_end_tag) = case.current_end_tag.as_deref() {
+        HtmlLexContext::end_tag_continuation(
+            state,
+            case.last_start_tag.as_deref().unwrap_or(""),
+            current_end_tag,
+            case.temporary_buffer.as_deref().unwrap_or(""),
+        )
+        .unwrap_or_else(|| panic!("case `{}` cannot seed end-tag state", case.id))
+    } else if let Some(return_state) = case
         .return_state
         .as_deref()
         .and_then(HtmlTokenizerState::from_html5lib_state)
     {
-        context = context.with_return_state(return_state);
+        HtmlLexContext::character_reference_continuation(
+            state,
+            return_state,
+            case.temporary_buffer.as_deref().unwrap_or(""),
+        )
+        .unwrap_or_else(|| panic!("case `{}` cannot seed character reference state", case.id))
+    } else if state.is_script_substate() {
+        HtmlLexContext::script_substate(state)
+            .unwrap_or_else(|| panic!("case `{}` cannot seed script substate", case.id))
+    } else {
+        HtmlLexContext::new(state)
+    };
+    if let Some(last_start_tag) = case.last_start_tag.as_deref() {
+        if context.last_start_tag.is_none() {
+            context = context.with_last_start_tag(last_start_tag);
+        }
+    }
+    if let Some(temporary_buffer) = case.temporary_buffer.as_deref() {
+        if context.temporary_buffer.is_none() {
+            context = context.with_temporary_buffer(temporary_buffer);
+        }
     }
 
-    let mut lexer = create_html_lexer().expect("HTML lexer should build");
-    apply_html_lex_context(&mut lexer, &context).expect("HTML lexer context should apply");
-    lexer
+    create_html_lexer_with_context(&context).expect("HTML lexer context should apply")
+}
+
+fn doctype_seed(seed: &FixtureDoctypeSeed) -> DoctypeSeed {
+    DoctypeSeed {
+        name: seed.name.clone(),
+        public_identifier: seed.public_identifier.clone(),
+        system_identifier: seed.system_identifier.clone(),
+        force_quirks: seed.force_quirks,
+    }
 }
 
 fn token_summary(token: Token) -> String {

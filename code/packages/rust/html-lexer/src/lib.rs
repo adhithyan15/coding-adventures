@@ -452,6 +452,35 @@ pub const HTML_DOCTYPE_TOKENIZER_STATES: [HtmlTokenizerState; 32] = [
     HtmlTokenizerState::BogusDoctype,
 ];
 
+/// Tokenizer states that resume an already-created comment token.
+pub const HTML_COMMENT_TOKENIZER_STATES: [HtmlTokenizerState; 11] = [
+    HtmlTokenizerState::CommentStart,
+    HtmlTokenizerState::CommentStartDash,
+    HtmlTokenizerState::Comment,
+    HtmlTokenizerState::CommentLessThanSign,
+    HtmlTokenizerState::CommentLessThanSignBang,
+    HtmlTokenizerState::CommentLessThanSignBangDash,
+    HtmlTokenizerState::CommentLessThanSignBangDashDash,
+    HtmlTokenizerState::CommentEndDash,
+    HtmlTokenizerState::CommentEnd,
+    HtmlTokenizerState::CommentEndBang,
+    HtmlTokenizerState::BogusComment,
+];
+
+/// Tokenizer states that resume an in-progress text/RCDATA character reference.
+pub const HTML_CHARACTER_REFERENCE_TOKENIZER_STATES: [HtmlTokenizerState; 6] = [
+    HtmlTokenizerState::TextCharacterReference,
+    HtmlTokenizerState::TextNamedCharacterReference,
+    HtmlTokenizerState::TextNumericCharacterReference,
+    HtmlTokenizerState::TextNumericHexCharacterReferenceStart,
+    HtmlTokenizerState::TextNumericHexCharacterReference,
+    HtmlTokenizerState::TextNumericDecimalCharacterReference,
+];
+
+/// Tokenizer states that can receive recovered text from a character reference.
+pub const HTML_CHARACTER_REFERENCE_RETURN_STATES: [HtmlTokenizerState; 2] =
+    [HtmlTokenizerState::Data, HtmlTokenizerState::Rcdata];
+
 /// Tokenizer states that resume an already-started text-mode end tag.
 pub const HTML_END_TAG_TOKENIZER_STATES: [HtmlTokenizerState; 16] = [
     HtmlTokenizerState::RcdataEndTagName,
@@ -768,15 +797,7 @@ impl HtmlTokenizerState {
 
     /// Return whether this state resumes an in-progress text character reference.
     pub fn requires_character_reference_seed(self) -> bool {
-        matches!(
-            self,
-            Self::TextCharacterReference
-                | Self::TextNamedCharacterReference
-                | Self::TextNumericCharacterReference
-                | Self::TextNumericHexCharacterReferenceStart
-                | Self::TextNumericHexCharacterReference
-                | Self::TextNumericDecimalCharacterReference
-        )
+        HTML_CHARACTER_REFERENCE_TOKENIZER_STATES.contains(&self)
     }
 
     /// Return whether this state resumes an already-started start tag.
@@ -786,7 +807,7 @@ impl HtmlTokenizerState {
 
     /// Return whether this state can receive recovered character-reference text.
     pub fn is_character_reference_return_state(self) -> bool {
-        matches!(self, Self::Data | Self::Rcdata)
+        HTML_CHARACTER_REFERENCE_RETURN_STATES.contains(&self)
     }
 
     /// Return whether this state is a parser-approved fragment entry point.
@@ -801,20 +822,7 @@ impl HtmlTokenizerState {
 
     /// Return whether this state resumes an already-started comment token.
     pub fn requires_comment_seed(self) -> bool {
-        matches!(
-            self,
-            Self::CommentStart
-                | Self::CommentStartDash
-                | Self::Comment
-                | Self::CommentLessThanSign
-                | Self::CommentLessThanSignBang
-                | Self::CommentLessThanSignBangDash
-                | Self::CommentLessThanSignBangDashDash
-                | Self::CommentEndDash
-                | Self::CommentEnd
-                | Self::CommentEndBang
-                | Self::BogusComment
-        )
+        HTML_COMMENT_TOKENIZER_STATES.contains(&self)
     }
 
     /// Return whether a seeded state needs the parser's last-start-tag context.

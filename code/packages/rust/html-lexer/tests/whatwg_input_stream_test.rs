@@ -1,6 +1,6 @@
 use coding_adventures_html_lexer::{
-    apply_html_lex_context, create_html_lexer, DoctypeSeed, HtmlLexContext, HtmlLexer,
-    HtmlTokenizerState, SourcePosition, Token,
+    create_html_lexer_with_context, DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlTokenizerState,
+    SourcePosition, Token,
 };
 use serde::Deserialize;
 
@@ -71,16 +71,14 @@ struct Lexed {
 fn whatwg_input_stream_fixture_parses() {
     let suite = load_suite();
 
-    assert_eq!(
-        suite.format,
-        "whatwg-html-input-stream-preprocessing/v1"
-    );
+    assert_eq!(suite.format, "whatwg-html-input-stream-preprocessing/v1");
     assert_eq!(suite.newline_forms.len(), 4);
     assert_eq!(suite.cases.len(), 92);
     assert_eq!(suite.position_cases.len(), 16);
-    assert!(suite.newline_forms.iter().any(|form| {
-        form.id == "crlf" && form.source == "\r\n" && form.normalized == "\n"
-    }));
+    assert!(suite
+        .newline_forms
+        .iter()
+        .any(|form| { form.id == "crlf" && form.source == "\r\n" && form.normalized == "\n" }));
     assert!(suite.newline_forms.iter().any(|form| {
         form.id == "mixed" && form.source == "\r\n\r\n\r" && form.normalized == "\n\n\n"
     }));
@@ -115,7 +113,9 @@ fn whatwg_input_stream_newline_positions_are_stable_across_chunks() {
                 (position.line, position.column),
                 (case.expected_line, case.expected_column),
                 "case `{}` chunks {:?} should report {:?} at normalized line/column",
-                case.id, chunks, case.diagnostic
+                case.id,
+                chunks,
+                case.diagnostic
             );
         }
     }
@@ -178,25 +178,33 @@ fn configured_lexer(
     let state = initial_state
         .and_then(HtmlTokenizerState::from_html5lib_state)
         .unwrap_or(HtmlTokenizerState::Data);
-    let mut context = HtmlLexContext::new(state);
+    let mut context = if let Some(current_doctype) = current_doctype {
+        HtmlLexContext::doctype_continuation(state, doctype_seed(current_doctype))
+            .expect("HTML lexer DOCTYPE context should apply")
+    } else if let Some(current_comment) = current_comment {
+        HtmlLexContext::comment_continuation(state, current_comment)
+            .expect("HTML lexer comment context should apply")
+    } else if state.is_script_substate() {
+        HtmlLexContext::script_substate(state).expect("HTML lexer script context should apply")
+    } else {
+        HtmlLexContext::new(state)
+    };
     if let Some(last_start_tag) = last_start_tag {
-        context = context.with_last_start_tag(last_start_tag);
-    }
-    if let Some(current_comment) = current_comment {
-        context = context.with_current_comment(current_comment);
-    }
-    if let Some(current_doctype) = current_doctype {
-        context = context.with_current_doctype(DoctypeSeed {
-            name: current_doctype.name.clone(),
-            public_identifier: current_doctype.public_identifier.clone(),
-            system_identifier: current_doctype.system_identifier.clone(),
-            force_quirks: current_doctype.force_quirks,
-        });
+        if context.last_start_tag.is_none() {
+            context = context.with_last_start_tag(last_start_tag);
+        }
     }
 
-    let mut lexer = create_html_lexer().expect("HTML lexer should build");
-    apply_html_lex_context(&mut lexer, &context).expect("HTML lexer context should apply");
-    lexer
+    create_html_lexer_with_context(&context).expect("HTML lexer context should apply")
+}
+
+fn doctype_seed(seed: &FixtureDoctypeSeed) -> DoctypeSeed {
+    DoctypeSeed {
+        name: seed.name.clone(),
+        public_identifier: seed.public_identifier.clone(),
+        system_identifier: seed.system_identifier.clone(),
+        force_quirks: seed.force_quirks,
+    }
 }
 
 fn chunkings(source: &str) -> Vec<Vec<&str>> {
