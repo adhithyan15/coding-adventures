@@ -936,6 +936,7 @@ impl ToolAuditSupervisorDrainRunReport {
             planned_follow_up_records: self.plan.follow_up_record_count(),
             drained_follow_up_records: self.drain.follow_up_record_count(),
             matches_planned_record_count: self.matches_planned_record_count(),
+            matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
             reached_end_of_log: self.reached_end_of_log(),
             exhausted_tick_budget: self.exhausted_tick_budget(),
             requires_follow_up: self.requires_follow_up(),
@@ -947,6 +948,11 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return whether the actual run delivered the planned number of rows.
     pub fn matches_planned_record_count(&self) -> bool {
         self.plan.planned_records == self.drain.drained_records
+    }
+
+    /// Return whether the actual run preserved the planned follow-up pressure count.
+    pub fn matches_planned_follow_up_record_count(&self) -> bool {
+        self.plan.follow_up_record_count() == self.drain.follow_up_record_count()
     }
 
     /// Return whether the actual run replayed at least one row.
@@ -1012,6 +1018,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub drained_follow_up_records: usize,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
+    /// Whether the actual run preserved the planned follow-up pressure count.
+    pub matches_planned_follow_up_record_count: bool,
     /// Whether the actual run reached the current end of the audit log.
     pub reached_end_of_log: bool,
     /// Whether the actual run used every allowed tick.
@@ -1048,6 +1056,11 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the host should investigate preflight/drain drift.
     pub fn requires_plan_drift_investigation(&self) -> bool {
         self.scheduler_action.requires_plan_drift_investigation()
+    }
+
+    /// Return whether planned and replayed follow-up pressure counts match.
+    pub fn matches_follow_up_pressure(&self) -> bool {
+        self.matches_planned_follow_up_record_count
     }
 
     /// Return the stable scheduler-action label for host logs.
@@ -2683,6 +2696,7 @@ mod tests {
         assert_eq!(report.plan.follow_up_record_count(), 1);
         assert_eq!(report.drain.follow_up_record_count(), 1);
         assert!(report.matches_planned_record_count());
+        assert!(report.matches_planned_follow_up_record_count());
         assert!(report.requires_follow_up());
         assert!(report.reached_end_of_log());
         assert!(!report.exhausted_tick_budget());
@@ -2698,6 +2712,8 @@ mod tests {
         assert!(!summary.requires_plan_drift_investigation());
         assert_eq!(summary.planned_follow_up_records, 1);
         assert_eq!(summary.drained_follow_up_records, 1);
+        assert!(summary.matches_planned_follow_up_record_count);
+        assert!(summary.matches_follow_up_pressure());
         assert_eq!(
             report.last_checkpoint(),
             Some(&ToolAuditReadCheckpoint::new(151, "call_3"))
@@ -2970,6 +2986,8 @@ mod tests {
         assert_eq!(summary.planned_follow_up_records, 0);
         assert_eq!(summary.drained_follow_up_records, 0);
         assert!(summary.matches_planned_record_count);
+        assert!(summary.matches_planned_follow_up_record_count);
+        assert!(summary.matches_follow_up_pressure());
         assert!(!summary.reached_end_of_log);
         assert!(summary.exhausted_tick_budget);
         assert!(!summary.requires_follow_up);
@@ -3009,6 +3027,29 @@ mod tests {
         assert!(!summary.requests_continuation());
         assert!(!summary.routes_follow_up());
         assert!(summary.requires_plan_drift_investigation());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_detects_follow_up_count_drift() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![failed_record("call_1"), sample_record("call_2")])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let mut report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut sink)
+            .unwrap();
+        report.drain.ticks[0].replay.inventory.follow_up_records = 0;
+        let summary = report.summary();
+
+        assert!(report.matches_planned_record_count());
+        assert!(!report.matches_planned_follow_up_record_count());
+        assert_eq!(summary.planned_follow_up_records, 1);
+        assert_eq!(summary.drained_follow_up_records, 0);
+        assert!(summary.matches_planned_record_count);
+        assert!(!summary.matches_planned_follow_up_record_count);
+        assert!(!summary.matches_follow_up_pressure());
     }
 
     #[test]
