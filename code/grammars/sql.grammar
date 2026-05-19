@@ -37,7 +37,13 @@ detach_stmt       = "DETACH" [ "DATABASE" ] NAME ;
 
 query_stmt        = [ with_clause ] select_stmt { set_op_clause } ;
 with_clause       = "WITH" [ "RECURSIVE" ] cte_def { "," cte_def } ;
-cte_def           = NAME [ "(" NAME { "," NAME } ")" ] "AS" "(" query_stmt ")" ;
+# The optional [NOT] MATERIALIZED hint (SQLite 3.35+) tells the planner
+# whether to materialise the CTE result set.  Mini-sqlite has no
+# cost-based optimizer, so the hint is parsed and silently ignored;
+# applications using it for portability with real SQLite still parse.
+cte_def           = NAME [ "(" NAME { "," NAME } ")" ] "AS"
+                    [ [ "NOT" ] "MATERIALIZED" ]
+                    "(" query_stmt ")" ;
 set_op_clause     = ( "UNION" | "INTERSECT" | "EXCEPT" ) [ "ALL" ] select_stmt ;
 
 # ── SELECT ───────────────────────────────────────────────────────────────────

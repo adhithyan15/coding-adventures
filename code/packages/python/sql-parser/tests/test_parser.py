@@ -815,3 +815,44 @@ class TestErrorPath:
         monkeypatch.setattr(_parser_module, "_sql_grammar_path", "")
         ast = parse_sql("SELECT id FROM users")
         assert ast.rule_name == "program"
+
+
+# ---------------------------------------------------------------------------
+# CTE MATERIALIZED / NOT MATERIALIZED hint (SQLite 3.35+)
+# ---------------------------------------------------------------------------
+#
+# Mini-sqlite's planner ignores the hint, but the parser still has to accept
+# it so application SQL written for portability with real SQLite parses
+# without error.  These tests lock the grammar acceptance.
+
+
+class TestCteMaterializedHint:
+    def test_materialized_parses(self) -> None:
+        ast = parse_sql("WITH cte AS MATERIALIZED (SELECT 1) SELECT * FROM cte")
+        assert ast.rule_name == "program"
+
+    def test_not_materialized_parses(self) -> None:
+        ast = parse_sql("WITH cte AS NOT MATERIALIZED (SELECT 1) SELECT * FROM cte")
+        assert ast.rule_name == "program"
+
+    def test_without_hint_still_parses(self) -> None:
+        """Sanity: plain ``AS (`` still works (no regression)."""
+        ast = parse_sql("WITH cte AS (SELECT 1) SELECT * FROM cte")
+        assert ast.rule_name == "program"
+
+    def test_recursive_with_materialized(self) -> None:
+        ast = parse_sql(
+            "WITH RECURSIVE n(i) AS MATERIALIZED "
+            "(SELECT 1 UNION ALL SELECT i+1 FROM n WHERE i<3) "
+            "SELECT * FROM n"
+        )
+        assert ast.rule_name == "program"
+
+    def test_multiple_ctes_mixed_hints(self) -> None:
+        ast = parse_sql(
+            "WITH a AS MATERIALIZED (SELECT 1), "
+            "b AS NOT MATERIALIZED (SELECT 2), "
+            "c AS (SELECT 3) "
+            "SELECT a.x FROM a"
+        )
+        assert ast.rule_name == "program"
