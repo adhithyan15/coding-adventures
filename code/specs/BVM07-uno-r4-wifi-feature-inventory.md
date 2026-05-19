@@ -37,7 +37,7 @@ Source snapshot:
 | EEPROM/flash emulation | 8 KiB flash-backed EEPROM area | descriptor metadata and bounded bytecode read/write implemented | `storage.write`, `storage.read`; stored program / KV layers later |
 | Watchdog | Renesas WDT library | descriptor metadata and direct bytecode operations implemented | `watchdog.configure`, `watchdog.kick` |
 | OPAMP | UNO R4 OPAMP library | pending | analog board-specific capability after ADC/DAC |
-| WiFi | WiFiS3 library through onboard network module | descriptor metadata, network capability strings, first TCP/UDP socket bytecode tranches, bounded TCP connection-status control, bounded WiFi association control, and bounded DNS resolution implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`, `network.dns`, `network.tcp.open`, `network.tcp.write`, `network.tcp.read`, `network.tcp.close`, `network.tcp.connected`, `network.udp.open`, `network.udp.write`, `network.udp.read`, `network.udp.close`, `network.wifi.associate`, `network.wifi.disconnect`, `network.wifi.status`, `network.dns.resolve` |
+| WiFi | WiFiS3 library through onboard network module | descriptor metadata, network capability strings, first TCP/UDP socket bytecode tranches, bounded TCP/UDP socket-control queries, bounded WiFi association control, and bounded DNS resolution implemented | `transport.wifi`, `network.ipv4`, `network.tcp`, `network.udp`, `network.dns`, `network.tcp.open`, `network.tcp.write`, `network.tcp.read`, `network.tcp.close`, `network.tcp.connected`, `network.udp.open`, `network.udp.write`, `network.udp.read`, `network.udp.available`, `network.udp.close`, `network.wifi.associate`, `network.wifi.disconnect`, `network.wifi.status`, `network.dns.resolve` |
 | USB/HID | TinyUSB device support | pending | transport/device descriptors first; HID later |
 | OTA/SDU | OTAUpdate and SDU libraries | pending | firmware-management capability, separate from bytecode VM |
 
@@ -95,11 +95,13 @@ reject conflicting handles.
    `network.ipv4`, `network.tcp`, `network.udp`, and `network.dns` capability
    strings surfaced through the language target APIs. `network.tcp.open`,
    `network.tcp.write`, `network.tcp.read`, `network.tcp.close`, `network.udp.open`,
-   `network.udp.write`, `network.udp.read`, and `network.udp.close` now
-   establish the first socket bytecode tranches with runtime handle-table
-   ownership, host builders, device capability descriptors, and UNO R4 WiFi
-   backend hooks, and `network.tcp.connected` now establishes the first bounded
-   socket-control query over an existing persistent TCP handle. `network.wifi.associate`,
+   `network.udp.write`, `network.udp.read`, `network.udp.available`, and
+   `network.udp.close` now establish the first socket bytecode tranches with
+   runtime handle-table ownership, host builders, device capability descriptors,
+   and UNO R4 WiFi backend hooks, and `network.tcp.connected` now establishes
+   the first bounded socket-control query over an existing persistent TCP handle.
+   `network.udp.available` mirrors that control path for UDP readiness over an
+   existing persistent UDP handle. `network.wifi.associate`,
    `network.wifi.disconnect`, and `network.wifi.status` now establish bounded
    association control over the same byte-buffer operand path used by storage
    and bus transfers, while `network.dns.resolve` establishes the first

@@ -135,13 +135,16 @@ The first network tranches keep the same no-heap shape: `network.tcp.open` and
 `network.udp.open` accept an interface id, an IPv4 address encoded as a `u32`,
 and a remote port, then return a portable socket handle. `network.tcp.write`,
 `network.tcp.read`, `network.tcp.close`, `network.udp.write`,
-`network.udp.read`, and `network.udp.close` operate on those handles and
-delegate to narrow `BoardHal::network_tcp_*` and `BoardHal::network_udp_*`
-hooks. Host SDKs build bytecode for these calls; board ports decide when a
-concrete backend can actually drive a WiFi or Ethernet module.
+`network.udp.read`, `network.udp.available`, and `network.udp.close` operate
+on those handles and delegate to narrow `BoardHal::network_tcp_*` and
+`BoardHal::network_udp_*` hooks. Host SDKs build bytecode for these calls;
+board ports decide when a concrete backend can actually drive a WiFi or
+Ethernet module.
 `network.tcp.connected` is the first socket-control follow-up: it accepts an
 existing TCP handle and returns a boolean connection status without consuming
-that handle.
+that handle. `network.udp.available` mirrors that bounded control shape for UDP:
+it accepts an existing UDP handle and returns whether the backend has a packet
+or byte ready to read without consuming the handle.
 
 WiFi association control uses the same bounded data path as storage and bus
 transfers. `network.wifi.associate` accepts an interface id, SSID bytes, and
@@ -175,6 +178,7 @@ CALL_U8 0x3e -> network.udp.open
 CALL_U8 0x42 -> network.wifi.associate
 CALL_U8 0x45 -> network.dns.resolve
 CALL_U8 0x46 -> network.tcp.connected
+CALL_U8 0x47 -> network.udp.available
 ```
 
 Each handler:

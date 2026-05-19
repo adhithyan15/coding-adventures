@@ -62,6 +62,7 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "network.tcp"
         assert_includes uno_r4_wifi["capabilities"], "network.tcp.connected"
         assert_includes uno_r4_wifi["capabilities"], "network.udp"
+        assert_includes uno_r4_wifi["capabilities"], "network.udp.available"
         assert_includes uno_r4_wifi["capabilities"], "network.dns"
         assert_includes uno_r4_wifi["capabilities"], "network.dns.resolve"
         assert_equal ["wifi", "bluetooth_le"], uno_r4_wifi["wireless"].map { |item| item["transport"] }

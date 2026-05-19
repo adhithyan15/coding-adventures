@@ -54,6 +54,7 @@ pub const CAP_NETWORK_WIFI_DISCONNECT: u16 = 0x43;
 pub const CAP_NETWORK_WIFI_STATUS: u16 = 0x44;
 pub const CAP_NETWORK_DNS_RESOLVE: u16 = 0x45;
 pub const CAP_NETWORK_TCP_CONNECTED: u16 = 0x46;
+pub const CAP_NETWORK_UDP_AVAILABLE: u16 = 0x47;
 
 const CAP_GPIO_OPEN_U8: u8 = CAP_GPIO_OPEN as u8;
 const CAP_GPIO_WRITE_U8: u8 = CAP_GPIO_WRITE as u8;
@@ -98,6 +99,7 @@ const CAP_NETWORK_WIFI_DISCONNECT_U8: u8 = CAP_NETWORK_WIFI_DISCONNECT as u8;
 const CAP_NETWORK_WIFI_STATUS_U8: u8 = CAP_NETWORK_WIFI_STATUS as u8;
 const CAP_NETWORK_DNS_RESOLVE_U8: u8 = CAP_NETWORK_DNS_RESOLVE as u8;
 const CAP_NETWORK_TCP_CONNECTED_U8: u8 = CAP_NETWORK_TCP_CONNECTED as u8;
+const CAP_NETWORK_UDP_AVAILABLE_U8: u8 = CAP_NETWORK_UDP_AVAILABLE as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Op {
@@ -339,7 +341,8 @@ impl CapabilitySet {
             CAP_NETWORK_UDP_OPEN
             | CAP_NETWORK_UDP_WRITE
             | CAP_NETWORK_UDP_READ
-            | CAP_NETWORK_UDP_CLOSE => self.network_udp,
+            | CAP_NETWORK_UDP_CLOSE
+            | CAP_NETWORK_UDP_AVAILABLE => self.network_udp,
             CAP_NETWORK_WIFI_ASSOCIATE | CAP_NETWORK_WIFI_DISCONNECT | CAP_NETWORK_WIFI_STATUS => {
                 self.network_wifi
             }
@@ -638,6 +641,7 @@ fn stack_effect(op: Op) -> (i16, i16) {
         Op::CallU8(CAP_NETWORK_UDP_WRITE_U8) | Op::CallU16(CAP_NETWORK_UDP_WRITE) => (2, 0),
         Op::CallU8(CAP_NETWORK_UDP_READ_U8) | Op::CallU16(CAP_NETWORK_UDP_READ) => (1, 1),
         Op::CallU8(CAP_NETWORK_UDP_CLOSE_U8) | Op::CallU16(CAP_NETWORK_UDP_CLOSE) => (1, 0),
+        Op::CallU8(CAP_NETWORK_UDP_AVAILABLE_U8) | Op::CallU16(CAP_NETWORK_UDP_AVAILABLE) => (1, 1),
         Op::CallU8(CAP_NETWORK_WIFI_ASSOCIATE_U8) | Op::CallU16(CAP_NETWORK_WIFI_ASSOCIATE) => {
             (3, 1)
         }
@@ -1310,6 +1314,21 @@ mod tests {
     }
 
     #[test]
+    fn validates_network_udp_available_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x12, 0x00, 0x40, CAP_NETWORK_UDP_AVAILABLE as u8, 0x50],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp().with_network_udp(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_UDP_AVAILABLE]);
+    }
+
+    #[test]
     fn validates_spi_transfer_capability() {
         let module = Module {
             flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
@@ -1695,6 +1714,23 @@ mod tests {
             validate(&module, CapabilitySet::blink_mvp(), 1),
             Err(ValidateError::UnsupportedCapability(
                 CAP_NETWORK_TCP_CONNECTED
+            ))
+        );
+    }
+
+    #[test]
+    fn rejects_network_udp_available_without_capability() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x12, 0x00, 0x40, CAP_NETWORK_UDP_AVAILABLE as u8, 0x50],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 1),
+            Err(ValidateError::UnsupportedCapability(
+                CAP_NETWORK_UDP_AVAILABLE
             ))
         );
     }

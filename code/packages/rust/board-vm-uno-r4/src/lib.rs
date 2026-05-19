@@ -731,6 +731,10 @@ pub trait UnoR4Backend {
         Err(HalError::UnsupportedMode)
     }
 
+    fn available_network_udp(&mut self, _socket: u8) -> Result<bool, HalError> {
+        Err(HalError::UnsupportedMode)
+    }
+
     fn close_network_udp(&mut self, _socket: u8) -> Result<(), HalError> {
         Err(HalError::UnsupportedMode)
     }
@@ -1059,6 +1063,11 @@ where
     fn network_udp_read(&mut self, token: u32) -> Result<u8, HalError> {
         let socket = normalize_network_socket(token)?;
         self.backend.read_network_udp(socket)
+    }
+
+    fn network_udp_available(&mut self, token: u32) -> Result<bool, HalError> {
+        let socket = normalize_network_socket(token)?;
+        self.backend.available_network_udp(socket)
     }
 
     fn network_udp_close(&mut self, token: u32) -> Result<(), HalError> {
@@ -1728,6 +1737,7 @@ mod tests {
         NetworkUdpOpen(u8, u32, u16),
         NetworkUdpWrite(u8, u8),
         NetworkUdpRead(u8),
+        NetworkUdpAvailable(u8),
         NetworkUdpClose(u8),
         NetworkWifiAssociate(u8, Vec<u8>, Vec<u8>),
         NetworkWifiDisconnect(u8),
@@ -1982,6 +1992,11 @@ mod tests {
         fn read_network_udp(&mut self, socket: u8) -> Result<u8, HalError> {
             self.events.push(Event::NetworkUdpRead(socket));
             Ok(0x43)
+        }
+
+        fn available_network_udp(&mut self, socket: u8) -> Result<bool, HalError> {
+            self.events.push(Event::NetworkUdpAvailable(socket));
+            Ok(true)
         }
 
         fn close_network_udp(&mut self, socket: u8) -> Result<(), HalError> {
@@ -2271,6 +2286,10 @@ mod tests {
                 && capability.name == "network.udp.open"
         }));
         assert!(descriptor.capabilities.iter().any(|capability| {
+            capability.id == board_vm_ir::CAP_NETWORK_UDP_AVAILABLE
+                && capability.name == "network.udp.available"
+        }));
+        assert!(descriptor.capabilities.iter().any(|capability| {
             capability.id == board_vm_ir::CAP_NETWORK_WIFI_ASSOCIATE
                 && capability.name == "network.wifi.associate"
         }));
@@ -2357,6 +2376,9 @@ mod tests {
             .supports(board_vm_ir::CAP_NETWORK_UDP_READ));
         assert!(UNO_R4_WIFI
             .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_UDP_AVAILABLE));
+        assert!(UNO_R4_WIFI
+            .capabilities
             .supports(board_vm_ir::CAP_NETWORK_UDP_CLOSE));
         assert!(UNO_R4_WIFI
             .capabilities
@@ -2379,6 +2401,9 @@ mod tests {
         assert!(!UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_UDP_OPEN));
+        assert!(!UNO_R4_MINIMA
+            .capabilities
+            .supports(board_vm_ir::CAP_NETWORK_UDP_AVAILABLE));
         assert!(!UNO_R4_MINIMA
             .capabilities
             .supports(board_vm_ir::CAP_NETWORK_WIFI_ASSOCIATE));
@@ -2757,15 +2782,18 @@ mod tests {
 
         let token = board.network_udp_open(0, 0xc0a8_012a, 0x1235).unwrap();
         board.network_udp_write(token, 0x41).unwrap();
+        let available = board.network_udp_available(token).unwrap();
         let byte = board.network_udp_read(token).unwrap();
         board.network_udp_close(token).unwrap();
 
+        assert!(available);
         assert_eq!(byte, 0x43);
         assert_eq!(
             board.backend().events,
             vec![
                 Event::NetworkUdpOpen(0, 0xc0a8_012a, 0x1235),
                 Event::NetworkUdpWrite(3, 0x41),
+                Event::NetworkUdpAvailable(3),
                 Event::NetworkUdpRead(3),
                 Event::NetworkUdpClose(3),
             ]
