@@ -1,5 +1,31 @@
 use coding_adventures_html_lexer::{create_html_lexer, Attribute, Diagnostic, HtmlLexer, Token};
 
+pub fn assert_suite_metadata<'a, I>(
+    actual_format: &str,
+    description: &str,
+    case_ids: I,
+    expected_format: &str,
+    minimum_cases: usize,
+    required_case_ids: &[&str],
+) where
+    I: IntoIterator<Item = &'a str>,
+{
+    let case_ids = case_ids.into_iter().collect::<Vec<_>>();
+
+    assert_eq!(actual_format, expected_format);
+    assert!(!description.is_empty());
+    assert!(
+        case_ids.len() >= minimum_cases,
+        "fixture should include at least {minimum_cases} cases"
+    );
+    for required_case_id in required_case_ids {
+        assert!(
+            case_ids.contains(required_case_id),
+            "fixture should include case `{required_case_id}`"
+        );
+    }
+}
+
 pub fn assert_case_description(case_id: &str, description: &str, label: &str) {
     assert!(
         !description.is_empty(),

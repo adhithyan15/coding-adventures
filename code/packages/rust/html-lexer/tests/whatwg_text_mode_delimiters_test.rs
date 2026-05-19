@@ -54,20 +54,17 @@ struct FixtureDoctypeSeed {
 fn whatwg_text_mode_delimiter_fixture_parses() {
     let suite = load_suite();
 
-    assert_eq!(
-        suite.format,
-        "whatwg-html-tokenizer-text-mode-delimiters/v1"
+    common::assert_suite_metadata(
+        &suite.format,
+        &suite.description,
+        suite.cases.iter().map(|case| case.id.as_str()),
+        "whatwg-html-tokenizer-text-mode-delimiters/v1",
+        50,
+        &[
+            "rcdata-matching-end-tag",
+            "script-escaped-double-escape-start",
+        ],
     );
-    assert!(!suite.description.is_empty());
-    assert!(suite.cases.len() >= 50);
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "rcdata-matching-end-tag"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "script-escaped-double-escape-start"));
 }
 
 #[test]

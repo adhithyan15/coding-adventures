@@ -37,24 +37,18 @@ struct CharacterReferenceBoundaryCase {
 fn whatwg_character_reference_boundaries_fixture_parses() {
     let suite = load_suite();
 
-    assert_eq!(
-        suite.format,
-        "whatwg-html-tokenizer-character-reference-boundaries/v1"
+    common::assert_suite_metadata(
+        &suite.format,
+        &suite.description,
+        suite.cases.iter().map(|case| case.id.as_str()),
+        "whatwg-html-tokenizer-character-reference-boundaries/v1",
+        40,
+        &[
+            "data-ambiguous-name-text",
+            "attribute-ambiguous-preserved",
+            "seeded-decimal-reference-rcdata",
+        ],
     );
-    assert!(!suite.description.is_empty());
-    assert!(suite.cases.len() >= 40);
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "data-ambiguous-name-text"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "attribute-ambiguous-preserved"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "seeded-decimal-reference-rcdata"));
 }
 
 #[test]

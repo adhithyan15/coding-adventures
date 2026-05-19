@@ -103,6 +103,8 @@ recovery, and diagnostic codes through one normalization path.
 Those helpers also own the repeated case description, push, and finish checks
 for generated boundary and recovery fixtures, keeping each runner focused on
 the lexer context it seeds.
+The same helper module centralizes generated suite metadata guards for format,
+description, case-count floor, and sentinel case IDs.
 The generated text-mode boundary suite drills into parser-seeded RCDATA,
 RAWTEXT, and PLAINTEXT state boundaries: less-than recovery, end-tag-open/name
 continuations, NULL replacement, EOF literal recovery, and PLAINTEXT markup

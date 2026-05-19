@@ -32,21 +32,18 @@ struct CommentBoundaryCase {
 fn whatwg_comment_boundaries_fixture_parses() {
     let suite = load_suite();
 
-    assert_eq!(suite.format, "whatwg-html-tokenizer-comment-boundaries/v1");
-    assert!(!suite.description.is_empty());
-    assert!(suite.cases.len() >= 45);
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "comment-nested-looking-opener"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "comment-eof-end-bang"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "seeded-bogus-comment-eof"));
+    common::assert_suite_metadata(
+        &suite.format,
+        &suite.description,
+        suite.cases.iter().map(|case| case.id.as_str()),
+        "whatwg-html-tokenizer-comment-boundaries/v1",
+        45,
+        &[
+            "comment-nested-looking-opener",
+            "comment-eof-end-bang",
+            "seeded-bogus-comment-eof",
+        ],
+    );
 }
 
 #[test]

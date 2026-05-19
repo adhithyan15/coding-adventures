@@ -33,24 +33,18 @@ struct ScriptEscapeBoundaryCase {
 fn whatwg_script_escape_boundaries_fixture_parses() {
     let suite = load_suite();
 
-    assert_eq!(
-        suite.format,
-        "whatwg-html-tokenizer-script-escape-boundaries/v1"
+    common::assert_suite_metadata(
+        &suite.format,
+        &suite.description,
+        suite.cases.iter().map(|case| case.id.as_str()),
+        "whatwg-html-tokenizer-script-escape-boundaries/v1",
+        40,
+        &[
+            "script-data-comment-eof",
+            "script-escaped-less-than-uppercase-script",
+            "script-double-escape-end-script",
+        ],
     );
-    assert!(!suite.description.is_empty());
-    assert!(suite.cases.len() >= 40);
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "script-data-comment-eof"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "script-escaped-less-than-uppercase-script"));
-    assert!(suite
-        .cases
-        .iter()
-        .any(|case| case.id == "script-double-escape-end-script"));
 }
 
 #[test]
