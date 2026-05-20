@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.32.0] - 2026-05-19
+
+### Fixed
+
+- **RIGHT JOIN + ``SELECT *`` column order**.  The codegen implements
+  RIGHT JOIN by swapping the two sides and emitting a LEFT JOIN
+  (``_compile_join(rgt, lft, JoinKind.LEFT, …)``), which works for
+  explicit column projections (the Project node above the join controls
+  output order by name).  But ``SELECT *`` iterates
+  ``ctx.alias_to_cursor`` in insertion order — and the swap caused the
+  right-side cursor to be allocated first, emitting RIGHT columns
+  before LEFT columns and diverging from SQLite.
+
+  The RIGHT JOIN branch now wraps ``body`` in a closure that reorders
+  ``alias_to_cursor`` (original-left first, original-right second) for
+  the duration of each body invocation, restoring left→right column
+  order in ``SELECT *`` output.
+
+  Example::
+
+      Before: SELECT * FROM a RIGHT JOIN b ON a.id = b.id
+              → (b.id, b.y, a.id, a.x)   -- wrong order
+      Now:    → (a.id, a.x, b.id, b.y)   -- matches sqlite3
+
+- **New helper ``_plan_alias``** — mirrors the alias-extraction logic
+  in ``_compile_source`` for each plan-node type.  Used by the RIGHT
+  JOIN reorder to find the lft/rgt aliases without duplicating the
+  match.
+
 ## [1.31.0] - 2026-05-19
 
 ### Fixed

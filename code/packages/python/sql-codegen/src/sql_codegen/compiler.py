@@ -747,6 +747,37 @@ def _primary_cursor(ctx: _Ctx) -> int | None:
     return next(iter(ctx.alias_to_cursor.values()))
 
 
+def _plan_alias(p: LogicalPlan) -> str | None:
+    """Return the alias a plan node would register in ``alias_to_cursor``.
+
+    Used by the RIGHT JOIN compiler to reorder ``alias_to_cursor`` so that
+    ``SELECT *`` emits columns in original FROM-clause order even when the
+    physical scan loops have been swapped (rgt as outer, lft as inner).
+
+    Mirrors the alias-extraction logic inside :func:`_compile_source` for
+    each scan-producing plan node:
+
+    - :class:`Scan` / :class:`IndexScan`: ``alias`` if given, else ``table``.
+    - :class:`DerivedTable`, :class:`RecursiveCTE`, :class:`WorkingSetScan`:
+      the node carries its alias directly.
+    - Any other node type (Filter, Project, Join, etc.) doesn't open a
+      cursor directly — returns ``None`` and the caller skips reordering.
+    """
+    match p:
+        case Scan(table=t, alias=a):
+            return a or t
+        case IndexScan(table=t, alias=a):
+            return a or t
+        case DerivedTable(alias=a):
+            return a
+        case PlanRecursiveCTE(alias=a):
+            return a
+        case WorkingSetScan(alias=a):
+            return a
+        case _:
+            return None
+
+
 # --------------------------------------------------------------------------
 # Data-source compilation — Scan / Join. These emit the loop scaffolding
 # and splice ``body(ctx)`` inside.
@@ -1027,9 +1058,52 @@ def _compile_join(
         # reversing which side is the outer loop is sufficient: the original
         # right table becomes the outer "left" (preserved for every row) and
         # the original left table becomes the inner "right" (null-padded when
-        # no ON match is found).  Output column order is controlled by the
-        # Project node above the join and is not affected by the swap.
-        return _compile_join(rgt, lft, JoinKind.LEFT, cond, body, ctx)
+        # no ON match is found).
+        #
+        # ``SELECT *`` column order
+        # -------------------------
+        # The Project node above the join handles explicit column lists by
+        # name, so swapping doesn't affect output order for those.  But for
+        # ``SELECT *``, the codegen iterates ``ctx.alias_to_cursor.values()``
+        # in insertion order (PR #3605), and the swap below would otherwise
+        # cause the RIGHT side's cursor to be allocated first — making
+        # ``SELECT *`` emit right-table columns before left-table columns,
+        # diverging from SQLite.  We wrap ``body`` so that for the duration
+        # of each invocation, ``alias_to_cursor`` is reordered to put the
+        # original LEFT side's alias first, restoring left→right column
+        # order in the output.
+        lft_alias = _plan_alias(lft)
+        rgt_alias = _plan_alias(rgt)
+
+        def reorder_body(c: _Ctx) -> list[Instruction]:
+            """Reorder alias_to_cursor for ``SELECT *`` then call body."""
+            # Only reorder if both aliases are present in the dict.  Defensive
+            # against unusual cases (e.g. one side without an alias key).
+            if (
+                lft_alias is not None
+                and rgt_alias is not None
+                and lft_alias in c.alias_to_cursor
+                and rgt_alias in c.alias_to_cursor
+            ):
+                original_order = c.alias_to_cursor
+                reordered: dict[str, int] = {
+                    lft_alias: original_order[lft_alias],
+                    rgt_alias: original_order[rgt_alias],
+                }
+                # Preserve any other aliases that happen to be in scope (e.g.
+                # outer-query refs in correlated subqueries) at their original
+                # positions after the two reordered ones.
+                for k, v in original_order.items():
+                    if k not in reordered:
+                        reordered[k] = v
+                c.alias_to_cursor = reordered
+                try:
+                    return body(c)
+                finally:
+                    c.alias_to_cursor = original_order
+            return body(c)
+
+        return _compile_join(rgt, lft, JoinKind.LEFT, cond, reorder_body, ctx)
 
     if kind == JoinKind.FULL:
         # FULL OUTER JOIN — two-pass strategy:

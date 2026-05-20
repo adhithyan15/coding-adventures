@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.55.0] - 2026-05-19
+
+### Fixed
+
+- **``SELECT *`` over RIGHT JOIN now emits columns in original FROM
+  order** (via ``sql-codegen 1.32.0``).  Completes the SELECT-star /
+  outer-join saga across the recent PRs:
+
+  - #3600: derived table implicit AS
+  - #3605: SELECT * across cross-join sources
+  - #3612: LEFT JOIN unmatched-row NULL-padding
+  - This PR: RIGHT JOIN column order
+
+  Before::
+
+      SELECT * FROM a RIGHT JOIN b ON a.id = b.id
+      -- mini-sqlite: (b.id, b.y, a.id, a.x)    -- wrong order
+      -- real SQLite: (a.id, a.x, b.id, b.y)
+
+  12 new oracle tests in ``test_tier3_right_join.py`` cover matched,
+  partial-match, no-match, empty-left, explicit-projection sanity,
+  LEFT/FULL/INNER regression guards, and the derived-table /
+  CTE-on-the-left variants.
+
 ## [1.54.0] - 2026-05-19
 
 ### Fixed
