@@ -65,6 +65,16 @@ pub struct I2cBusInfo {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct I2cConnectorInfo {
+    pub bus: u8,
+    pub name: &'static str,
+    pub connector: &'static str,
+    pub arduino_object: &'static str,
+    pub controller: &'static str,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SpiBusInfo {
     pub bus: u8,
     pub name: &'static str,
@@ -223,6 +233,7 @@ pub struct BoardTargetInfo {
     pub digital_pin_count: usize,
     pub digital_pins: &'static [DigitalPinInfo],
     pub i2c_buses: &'static [I2cBusInfo],
+    pub i2c_connectors: &'static [I2cConnectorInfo],
     pub spi_buses: &'static [SpiBusInfo],
     pub uart_buses: &'static [UartBusInfo],
     pub can_buses: &'static [CanBusInfo],
@@ -873,7 +884,16 @@ pub const ARDUINO_NANO_R4_I2C_BUSES: [I2cBusInfo; 1] = [I2cBusInfo {
     sda_pin: 18,
     scl_pin: 19,
     qwiic: false,
-    notes: "Arduino Nano R4 A4/A5 Wire metadata only; the separate Qwiic Wire1 connector needs connector-local metadata before it is exposed here.",
+    notes: "Arduino Nano R4 A4/A5 Wire header metadata only; the separate Qwiic Wire1 connector is exposed as connector-local metadata.",
+}];
+
+pub const ARDUINO_NANO_R4_I2C_CONNECTORS: [I2cConnectorInfo; 1] = [I2cConnectorInfo {
+    bus: 1,
+    name: "Wire1",
+    connector: "Qwiic/STEMMA QT",
+    arduino_object: "Wire1",
+    controller: "RA4M1 IIC0",
+    notes: "Arduino Nano R4 connector-local Qwiic/STEMMA QT I2C metadata only; shared Arduino runtime does not enable i2c.* bytecode adapters yet.",
 }];
 
 pub const ARDUINO_NANO_R4_SPI_BUSES: [SpiBusInfo; 1] = [SpiBusInfo {
@@ -1249,6 +1269,7 @@ const fn arduino_board_target_with_buses_and_can(
         target,
         digital_pins,
         i2c_buses,
+        &[],
         spi_buses,
         uart_buses,
         can_buses,
@@ -1262,6 +1283,7 @@ const fn arduino_board_target_with_buses_can_and_rtc(
     target: board_vm_arduino::ArduinoTargetDescriptor,
     digital_pins: &'static [DigitalPinInfo],
     i2c_buses: &'static [I2cBusInfo],
+    i2c_connectors: &'static [I2cConnectorInfo],
     spi_buses: &'static [SpiBusInfo],
     uart_buses: &'static [UartBusInfo],
     can_buses: &'static [CanBusInfo],
@@ -1287,6 +1309,7 @@ const fn arduino_board_target_with_buses_can_and_rtc(
         digital_pin_count: digital_pins.len(),
         digital_pins,
         i2c_buses,
+        i2c_connectors,
         spi_buses,
         uart_buses,
         can_buses,
@@ -1322,6 +1345,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         digital_pin_count: UNO_R4_DIGITAL_PINS.len(),
         digital_pins: &UNO_R4_DIGITAL_PINS,
         i2c_buses: &UNO_R4_MINIMA_I2C_BUSES,
+        i2c_connectors: &[],
         spi_buses: &UNO_R4_SPI_BUSES,
         uart_buses: &UNO_R4_MINIMA_UART_BUSES,
         can_buses: &UNO_R4_CAN_BUSES,
@@ -1354,6 +1378,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         digital_pin_count: UNO_R4_DIGITAL_PINS.len(),
         digital_pins: &UNO_R4_DIGITAL_PINS,
         i2c_buses: &UNO_R4_WIFI_I2C_BUSES,
+        i2c_connectors: &[],
         spi_buses: &UNO_R4_SPI_BUSES,
         uart_buses: &UNO_R4_WIFI_UART_BUSES,
         can_buses: &UNO_R4_CAN_BUSES,
@@ -1450,6 +1475,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         board_vm_arduino::ARDUINO_NANO_R4,
         &ARDUINO_NANO_R4_DIGITAL_PINS,
         &ARDUINO_NANO_R4_I2C_BUSES,
+        &ARDUINO_NANO_R4_I2C_CONNECTORS,
         &ARDUINO_NANO_R4_SPI_BUSES,
         &ARDUINO_NANO_R4_UART_BUSES,
         &ARDUINO_NANO_R4_CAN_BUSES,
@@ -1565,6 +1591,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         digital_pin_count: ESP32_DIGITAL_PINS.len(),
         digital_pins: &ESP32_DIGITAL_PINS,
         i2c_buses: &[],
+        i2c_connectors: &[],
         spi_buses: &[],
         uart_buses: &[],
         can_buses: &[],
@@ -1597,6 +1624,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         digital_pin_count: PICO_DIGITAL_PINS.len(),
         digital_pins: &PICO_DIGITAL_PINS,
         i2c_buses: &[],
+        i2c_connectors: &[],
         spi_buses: &[],
         uart_buses: &[],
         can_buses: &[],
@@ -1629,6 +1657,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         digital_pin_count: PICO_DIGITAL_PINS.len(),
         digital_pins: &PICO_DIGITAL_PINS,
         i2c_buses: &[],
+        i2c_connectors: &[],
         spi_buses: &[],
         uart_buses: &[],
         can_buses: &[],
@@ -1895,6 +1924,12 @@ mod tests {
         assert_eq!(nano_r4.i2c_buses[0].sda_pin, 18);
         assert_eq!(nano_r4.i2c_buses[0].scl_pin, 19);
         assert!(nano_r4.i2c_buses[0].notes.contains("Qwiic Wire1"));
+        assert_eq!(nano_r4.i2c_connectors, &ARDUINO_NANO_R4_I2C_CONNECTORS);
+        assert_eq!(nano_r4.i2c_connectors[0].name, "Wire1");
+        assert_eq!(nano_r4.i2c_connectors[0].connector, "Qwiic/STEMMA QT");
+        assert_eq!(nano_r4.i2c_connectors[0].arduino_object, "Wire1");
+        assert_eq!(nano_r4.i2c_connectors[0].controller, "RA4M1 IIC0");
+        assert!(nano_r4.i2c_connectors[0].notes.contains("connector-local"));
         for target in [
             uno_r3, nano, pro_mini, mega, leonardo, micro, nano_every, nano_r4,
         ] {

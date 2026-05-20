@@ -100,6 +100,11 @@ Nano R4 RTC metadata records the RA4M1 real-time clock as a passive descriptor.
 The shared Arduino runtime still leaves `rtc.*` bytecode adapters disabled until
 a board-specific firmware path owns clock access.
 
+Nano R4 Qwiic metadata records the board-local `Wire1` connector separately
+from A4/A5 `Wire` header pins. The descriptor names the Qwiic/STEMMA QT
+connector and RA4M1 IIC0 controller while the shared Arduino runtime keeps
+`i2c.*` bytecode adapters disabled.
+
 Host-side validation:
 
 ```sh
