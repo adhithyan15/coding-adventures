@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.43.0 — 2026-05-20
+
+### Fixed
+
+- **``date(..., '+N year')`` no longer clamps Feb 29 — it rolls over
+  to March 1** matching SQLite.  Previously
+  ``date('2024-02-29', '+1 year')`` returned ``'2025-02-28'`` (clamp);
+  SQLite returns ``'2025-03-01'`` because the naive ``2025-02-29``
+  is invalid and the overflow day pushes into March.
+
+  The fix ports the existing month-rollover algorithm to the year
+  branch: try the literal ``(year + n, month, day)``; on ``ValueError``
+  add the overflow as extra days starting from the month's last valid
+  day.  The ``'+1 month'`` arithmetic was already correct because
+  that's where the algorithm originated.
+
 ## 1.42.0 — 2026-05-20
 
 ### Fixed
