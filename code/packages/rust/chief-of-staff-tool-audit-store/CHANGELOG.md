@@ -52,6 +52,7 @@ All notable changes to this package will be documented in this file.
 - Flattened scheduler-action intent flags in supervisor drain run summaries.
 - Flattened scheduler-action labels in supervisor drain run summaries.
 - Flattened outcome labels in supervisor drain run summaries.
+- Flattened no-action scheduler flags in supervisor drain run summaries.
 - Batch audit write summaries for host flush loops.
 - Replay helpers for loading queried audit rows into any `ToolAuditSink`.
 - `StorageToolAuditSink` for runtime audit emission through D18A storage with
