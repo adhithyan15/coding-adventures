@@ -1344,17 +1344,37 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether planned and replayed row counts match.
     pub fn matches_record_count(&self) -> bool {
-        self.matches_planned_record_count
+        self.matches_planned_record_count()
     }
 
     /// Return whether planned and replayed follow-up pressure counts match.
     pub fn matches_follow_up_pressure(&self) -> bool {
+        self.matches_planned_follow_up_record_count()
+    }
+
+    /// Return whether the actual run delivered the planned number of rows.
+    pub fn matches_planned_record_count(&self) -> bool {
+        self.matches_planned_record_count
+    }
+
+    /// Return whether the actual run preserved the planned follow-up pressure count.
+    pub fn matches_planned_follow_up_record_count(&self) -> bool {
         self.matches_planned_follow_up_record_count
+    }
+
+    /// Return whether row count drift was observed.
+    pub fn has_record_count_drift(&self) -> bool {
+        self.has_record_count_drift
+    }
+
+    /// Return whether follow-up pressure count drift was observed.
+    pub fn has_follow_up_record_count_drift(&self) -> bool {
+        self.has_follow_up_record_count_drift
     }
 
     /// Return whether any planned-vs-actual count drift was observed.
     pub fn has_count_drift(&self) -> bool {
-        self.has_record_count_drift || self.has_follow_up_record_count_drift
+        self.has_record_count_drift() || self.has_follow_up_record_count_drift()
     }
 
     /// Return the typed count-drift classification.
@@ -3293,7 +3313,9 @@ mod tests {
         assert_eq!(summary.record_count_delta, 0);
         assert_eq!(summary.follow_up_record_count_delta, 0);
         assert!(!summary.has_record_count_drift);
+        assert!(!summary.has_record_count_drift());
         assert!(!summary.has_follow_up_record_count_drift);
+        assert!(!summary.has_follow_up_record_count_drift());
         assert!(!summary.has_count_drift());
         assert_eq!(
             summary.count_drift_kind,
@@ -3786,8 +3808,10 @@ mod tests {
         assert!(!summary.requires_host_investigation);
         assert!(!summary.requires_host_investigation());
         assert!(summary.matches_planned_record_count);
+        assert!(summary.matches_planned_record_count());
         assert!(summary.matches_record_count());
         assert!(summary.matches_planned_follow_up_record_count);
+        assert!(summary.matches_planned_follow_up_record_count());
         assert!(summary.matches_follow_up_pressure());
         assert!(!summary.reached_end_of_log);
         assert!(!summary.reached_end_of_log());
@@ -3852,7 +3876,9 @@ mod tests {
         assert!(!report.missed_planned_records());
         assert_eq!(summary.record_count_delta, 1);
         assert!(summary.has_record_count_drift);
+        assert!(summary.has_record_count_drift());
         assert!(!summary.has_follow_up_record_count_drift);
+        assert!(!summary.has_follow_up_record_count_drift());
         assert!(summary.has_count_drift());
         assert_eq!(
             summary.count_drift_kind,
@@ -3982,7 +4008,9 @@ mod tests {
         assert_eq!(summary.record_count_delta, 0);
         assert_eq!(summary.follow_up_record_count_delta, -1);
         assert!(!summary.has_record_count_drift);
+        assert!(!summary.has_record_count_drift());
         assert!(summary.has_follow_up_record_count_drift);
+        assert!(summary.has_follow_up_record_count_drift());
         assert!(summary.has_count_drift());
         assert_eq!(
             summary.count_drift_kind,
@@ -4001,7 +4029,9 @@ mod tests {
         assert!(summary.requires_host_investigation);
         assert!(summary.requires_host_investigation());
         assert!(summary.matches_planned_record_count);
+        assert!(summary.matches_planned_record_count());
         assert!(!summary.matches_planned_follow_up_record_count);
+        assert!(!summary.matches_planned_follow_up_record_count());
         assert!(!summary.matches_follow_up_pressure());
         assert!(!summary.replayed_extra_follow_up_records());
         assert!(summary.missed_planned_follow_up_records());
