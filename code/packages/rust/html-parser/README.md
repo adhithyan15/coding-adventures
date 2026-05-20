@@ -176,6 +176,16 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_document_s
   --check
 ```
 
+The generated `tests/fixtures/whatwg-select-list-audit.json` fixture indexes
+select shells, option implied-end recovery, optgroup boundaries,
+select-in-table handling, select fragment contexts, and stray select/list end
+tags:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_select_list_audit_fixture.py \
+  --check
+```
+
 The broad smoke test and the focused audit fixtures use the shared
 `tests/common` html5lib parser and DOM dump helpers, so new parser conformance
 fixtures exercise the same normalization path.
