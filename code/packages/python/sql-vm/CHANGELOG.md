@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.41.0 — 2026-05-20
+
+### Fixed
+
+- **``date()/datetime()/time()`` with the ``'unixepoch'`` modifier now
+  forces numeric interpretation of the time value** — matching SQLite.
+
+  Previously the modifier was a no-op: ``date('2024-01-15', 'unixepoch')``
+  returned ``'2024-01-15'`` (SQLite returns NULL), and pure numeric
+  strings like ``date('1704067200', 'unixepoch')`` returned NULL
+  (SQLite returns ``'2024-01-01'``).
+
+  The fix centralises ``unixepoch`` handling in ``_resolve_datetime``:
+  when the modifier appears in the chain we coerce the time value to
+  a number directly (via a ``re.fullmatch`` that requires the entire
+  string be numeric — strings containing ``-`` like ISO dates have
+  internal punctuation and fail the match), then strip the modifier
+  from the chain so the downstream handler doesn't re-process it.
+
+  Two existing test cases in ``test_scalar_functions.py`` were
+  updated — they had pinned the previous no-op behaviour.
+
 ## 1.40.0 — 2026-05-20
 
 ### Fixed
