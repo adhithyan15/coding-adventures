@@ -124,6 +124,25 @@ export function evaluateSum(f: IRNode, k: IRNode, lo: IRNode, hi: IRNode, evalFn
     if (raw !== undefined) return evalFn(raw);
   }
 
+  // Phase 39: telescoping sums. Detect ``f = g(k+1) − g(k)`` (or the
+  // antisymmetric ``g(k) − g(k+1)``) and emit ``g(hi+1) − g(lo)``
+  // (resp. ``g(lo) − g(hi+1)``).  Only the finite case is handled —
+  // infinite telescopes need a limit argument we leave to a future
+  // phase.  When ``α = 1, β = 0`` this is purely structural, no
+  // partial-fraction work is attempted.
+  if (!infUpper) {
+    const tele = tryTelescoping(f, k, evalFn);
+    if (tele !== undefined) {
+      const hiPlusOne = app(ADD, [hi, int(1)]);
+      const gAtHiPlusOne = substitute(tele.gExpr, k, hiPlusOne);
+      const gAtLo = substitute(tele.gExpr, k, lo);
+      if (tele.sign === 1) {
+        return evalFn(app(SUB, [gAtHiPlusOne, gAtLo]));
+      }
+      return evalFn(app(SUB, [gAtLo, gAtHiPlusOne]));
+    }
+  }
+
   if (infUpper) {
     const raw = trySpecialInfinite(f, k, lo);
     if (raw !== undefined) return evalFn(raw);
@@ -192,6 +211,48 @@ function tryGeometric(f: IRNode, k: IRNode): { coeff: IRNode; base: IRNode } | u
         return { coeff, base: pow.args[0] };
       }
     }
+  }
+  return undefined;
+}
+
+/**
+ * Phase 39: Detect a *structurally telescoping* summand
+ * ``f = g(k+1) − g(k)`` (or its antisymmetric ``g(k) − g(k+1)``).
+ *
+ * The dispatcher then emits the closed form
+ * ``g(hi+1) − g(lo)`` (sign +1) or ``g(lo) − g(hi+1)`` (sign −1)
+ * by substituting the bounds into ``g_expr`` and subtracting.
+ *
+ * Detection is purely structural: substitute ``k → k+1`` in one half
+ * of the ``SUB`` shape and compare against the other half after
+ * normalisation via ``evalFn``.  No partial-fraction expansion is
+ * attempted — the classic ``1/(k(k+1))`` form needs an explicit
+ * ``Apart`` step first, which a follow-on phase can compose.
+ *
+ * Returns ``undefined`` when the summand is not a ``SUB`` of two
+ * shifted halves of the same ``g(k)`` expression.
+ */
+function tryTelescoping(
+  f: IRNode,
+  k: IRNode,
+  evalFn: EvalFn,
+): { gExpr: IRNode; sign: 1 | -1 } | undefined {
+  if (f.kind !== "apply" || !equals(f.head, SUB) || f.args.length !== 2) {
+    return undefined;
+  }
+  const [left, right] = f.args;
+  const kPlusOne = app(ADD, [k, int(1)]);
+  // Standard orientation: f = g(k+1) − g(k).  We check whether
+  // substituting k → k+1 in `right` yields `left` (after normalisation).
+  const rightShifted = substitute(right, k, kPlusOne);
+  if (equals(evalFn(rightShifted), evalFn(left))) {
+    return { gExpr: right, sign: 1 };
+  }
+  // Antisymmetric: f = g(k) − g(k+1).  Check whether substituting
+  // k → k+1 in `left` yields `right`.
+  const leftShifted = substitute(left, k, kPlusOne);
+  if (equals(evalFn(leftShifted), evalFn(right))) {
+    return { gExpr: left, sign: -1 };
   }
   return undefined;
 }
