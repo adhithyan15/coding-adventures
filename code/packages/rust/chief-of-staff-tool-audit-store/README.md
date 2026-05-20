@@ -68,6 +68,8 @@ The crate keeps the boundary narrow:
   host logs and scheduling dashboards
 - supervisor drain run summaries flatten stable scheduler-action labels beside
   the typed recommendation
+- supervisor drain run summaries flatten stable outcome labels beside the typed
+  run outcome
 
 ## Development
 
