@@ -1,25 +1,40 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-18. Sprint complete: TypeScript 0.2.0 releases (PR #3170 ✅
+> Last updated: 2026-05-20.
+>
+> **Phases 37 + 38 sprint complete:**
+> - **Phase 37** — Weierstrass log form cos branch covers `b < −|a|`: Python
+>   `symbolic-vm` 0.62.0 (PR #3683 ✅ merged), TypeScript 0.10.0 (PR #3685 ✅
+>   merged), Rust 0.10.0 (PR #3689 ✅ merged). Removed overly conservative
+>   guards in `_try_weierstrass_log_form` cos branch — the `Abs` wrapping on
+>   the log argument already handles the sign flip across `b = ±|a|`.
+> - **Phase 38** — Weierstrass closed forms lifted to linear trig arguments
+>   `sin(α·x + β)` / `cos(α·x + β)`: Python `symbolic-vm` 0.63.0 (PR #3690 ✅
+>   merged), TypeScript 0.11.0 (PR #3691 ✅ merged), Rust 0.11.0 (PR #3692 ✅
+>   merged). The inner change of variable `u = α·x + β` (with `du = α·dx`)
+>   gives a `1/α` outer scaling and `tan((α·x+β)/2)` in place of `tan(x/2)`;
+>   every existing branch (arctan / degenerate / log) inherits the
+>   generalisation unchanged.
+>
+> Prior sprints still on main: TypeScript 0.2.0 releases (PR #3170 ✅
 > merged), Rust 0.2.0 releases (PR #3171 ✅ merged), Python EllipticE/Pi —
 > `symbolic-vm` 0.55.0 (PR #3173 ✅ merged), TypeScript EllipticE/Pi —
 > `symbolic-vm` 0.3.0 (PR #3179 ✅ merged), Rust EllipticE/Pi —
 > `symbolic-vm` 0.3.0 (PR #3178 ✅ merged), Python `macsyma-runtime` 1.26.0,
-> `spice-engine` 0.13.0 (inductor IC, AcSource phasors, waveforms already implemented),
-> `rust/macsyma-runtime` 0.3.0 (EllipticE/Pi pipeline tests),
-> Phase 21 named variable-coefficient ODEs Python (PR #3360 ✅ merged),
-> Phase 21 TypeScript + Rust ports (PR #3369 ✅ merged),
+> `spice-engine` 0.13.0, `rust/macsyma-runtime` 0.3.0,
+> Phase 21 named variable-coefficient ODEs (PRs #3360, #3369 ✅ merged),
 > version housekeeping chore (PR #3354 ✅ merged),
 > Phase 26 log-power IBP Python (PR #3372 ✅ merged),
 > Phase 27 trig-of-log integration Python `symbolic-vm` 0.57.0 (PR #3373 ✅ merged),
 > Phase 28 general IBP Python `symbolic-vm` 0.58.0 (PR #3380 ✅ merged),
 > Phase 28 TypeScript + Rust ports `symbolic-vm` 0.5.0 (PR #3381 ✅ merged),
 > Phases 29–33 algebraic simplification (Abs/Sqrt/Log/Exp/Trig) — TypeScript +
-> Rust `symbolic-vm` 0.6.0 (PR #3468 in review),
+> Rust `symbolic-vm` 0.6.0 (PR #3468 ✅ merged),
 > Phase 34 Weierstrass substitution `∫ 1/(a + b·sin/cos x) dx` — Python
 > `symbolic-vm` 0.59.0 (PR #3472), TypeScript 0.7.0 (PR #3473), Rust 0.7.0
-> (PR #3475), all in review.
+> (PR #3475), Phase 35 degenerate `a² = b²` cases, Phase 36 log-form
+> `a² < b²` sin branch + cos `b > |a|` — all merged.
 
 This document is the canonical reference for resuming work on either project.
 It records exactly what is on `main`, what is in flight, and what has not been
@@ -263,19 +278,23 @@ disc=16) collapse to integer scalars without leaving a `Sqrt` node.
 | `typescript/symbolic-vm` | 0.7.0 | #3473 | 14 new |
 | `rust/symbolic-vm` | 0.7.0 | #3475 | 14 new |
 
-**Deliberately deferred** to a later phase (each port returns the
-unevaluated integrand):
+**Originally deferred** at Phase 34; status as of 2026-05-20:
 
-- `a² < b²` — log form on `(a·tan(x/2) + b ± √(b²−a²))` (sign analysis
-  on the log argument).
-- `a² = b²` — degenerate, reduces to a rational in `tan(x/2)` and
-  needs special-cased outputs for the four sign combinations.
-- `a ≤ 0` for the cos case — `(a−b)/(a+b)` sign analysis.
-- Non-bare trig arguments (e.g. `sin(2x)`) — composition with a future
-  linear-substitution phase will lift this.
-- Symbolic `a` or `b` — discriminant sign undecidable without an
-  assumption context; only the Python port has assumptions today and
-  even there the Phase 34 helper requires `a, b ∈ Q`.
+- ~~`a² < b²` — log form on `(a·tan(x/2) + b ± √(b²−a²))`.~~
+  **✅ closed by Phase 36 (sin branch + cos `b > |a|`) and Phase 37 (cos
+  `b < −|a|`).** The same `log|(D + (b−a)·tan(arg/2)) / (D − (b−a)·tan(arg/2))|`
+  formula covers both sign regimes thanks to the `Abs` wrapping.
+- ~~`a² = b²` — degenerate, reduces to a rational in `tan(x/2)`.~~
+  **✅ closed by Phase 35** in all four sign combinations.
+- ~~`a ≤ 0` for the cos case~~ — **✅ closed by Phase 37**.
+- ~~Non-bare trig arguments (e.g. `sin(2x)`)~~ — **✅ closed by Phase 38**
+  via the inner substitution `u = α·x + β` (with `du = α·dx`); every
+  closed-form branch inherits the lift unchanged.
+- Symbolic `a` or `b` — still deferred. Discriminant sign undecidable
+  without an assumption context; only the Python port has assumptions
+  today and even there the Phase 34 helper requires `a, b ∈ ℚ`.
+- Trig argument involving `x²` or other nonlinear forms — out of scope
+  for Weierstrass; would need a separate substitution phase.
 
 **Version sequencing**: the TypeScript and Rust ports both jump
 `0.5.0 → 0.7.0` to leave `0.6.0` for the in-flight Phase 29-33
@@ -429,7 +448,7 @@ The Risch integration suite is ~90% complete. Known remaining gaps:
 | `∫ log(ax+b)^n dx`, `∫ Q(x)·log(x)^n dx` (Phase 26 log-power IBP) | IBP reduction `F_n = (ax+b)/a·log(ax+b)^n − n·F_{n-1}` and term-by-term poly×log^n | ✅ Python PR #3372 `symbolic-vm` 0.56.0; TS + Rust `symbolic-vm` 0.4.0 (same PR as Phase 27) |
 | `∫ sin(log(x)) dx`, `∫ cos(log(x)) dx`, `∫ xᵏ·sin/cos(log(x)) dx` (Phase 27 trig-of-log) | u=log(x) substitution converts to exp×trig form; closed form `x^(k+1)·((k+1)trig(log x)∓cotrig(log x))/((k+1)²+1)` | ✅ Python PR #3373 `symbolic-vm` 0.57.0; TS + Rust `symbolic-vm` 0.4.0 |
 | `∫ P(x)·log(Q(x)) dx`, `∫ P(x)·atan(Q(x)) dx` for non-linear Q (Phase 28 general IBP) | IBP with residual integrated via polynomial long division + Case A (prop to D′) / Case B (const/quadratic) | ✅ Python PR #3380 `symbolic-vm` 0.58.0; TS + Rust `symbolic-vm` 0.5.0 (PR #3381) |
-| `∫ 1/(a + b·sin x) dx`, `∫ 1/(a + b·cos x) dx` for rational `a, b` with `a² > b²` (Phase 34 Weierstrass) | Weierstrass substitution `u = tan(x/2)` reduces both shapes to a rational in `u`; closed form is `(2/√(a²−b²))·arctan(...)` | ✅ Python PR #3472 `symbolic-vm` 0.59.0; TS PR #3473 0.7.0; Rust PR #3475 0.7.0 (all in review). Discriminant cases `a² ≤ b²` (log form) and the `a ≤ 0` cos branch remain open. |
+| `∫ c / (a + b·sin/cos(α·x + β)) dx` for rational `a, b, α, β` with `α ≠ 0` (Phases 34–38 Weierstrass family) | `u = tan((α·x+β)/2)` substitution: arctan form (`a² > b²`), degenerate `a² = b²`, log form (`a² < b²`), and linear-argument lifting all wired. | ✅ All discriminant regimes and both `b > |a|` / `b < −|a|` cos branches closed across all three languages. Phase 34 (PRs #3472/#3473/#3475 — arctan), Phase 35 (degenerate), Phase 36 (log form, `b > |a|`), Phase 37 (cos `b < −|a|` — PRs #3683/#3685/#3689), Phase 38 (non-bare linear arguments — PRs #3690/#3691/#3692). Symbolic `a, b, α, β` still need an assumption context. |
 | `∫ f(x)·g(x)` where neither integrates alone | General IBP fallback missing; only specific matched patterns work | Open |
 
 #### Completed REPL and session features
