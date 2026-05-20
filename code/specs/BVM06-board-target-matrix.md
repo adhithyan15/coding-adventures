@@ -113,9 +113,15 @@ identity. Companion/sensor boards whose microcontrollers are not directly
 user-programmable, such as Nicla Sense Env, should be modeled as board
 peripherals or carrier-managed adapters instead of fake firmware runtimes.
 
-The next tranches should add board-specific firmware/upload adapters and richer
-peripheral tables for each family without moving generic Arduino discovery into
-`board-vm-uno-r4`.
+The upload profile tranche exposes the first Rust-owned flashing descriptors
+through the target matrix: Arduino-family boards use an Arduino CLI profile,
+ESP32 uses an ESP ROM serial profile, and Pico/Pico W use a UF2 mass-storage
+profile. Language frontends should consume these profiles instead of branching
+on board names.
+
+The next tranches should deepen board-specific firmware/upload adapters and
+richer peripheral tables for each family without moving generic Arduino
+discovery into `board-vm-uno-r4`.
 
 ### Raspberry Pi Pico
 

@@ -6,7 +6,10 @@ The registry gives generic front ends and language bindings one stable place to
 ask which boards are known, what runtime id they use, what Rust target they
 compile for, where their onboard LED lives, and which host transports are
 available. Board-specific runtime crates remain responsible for HAL behavior,
-pin validation, wireless stack integration, and upload mechanics.
+pin validation, and wireless stack integration. Upload metadata stays in this
+registry so language frontends can ask Rust whether a target uses Arduino CLI,
+ESP ROM serial flashing, UF2 mass-storage copy, or another board-specific
+adapter.
 
 Arduino coverage is deliberately split in two:
 
@@ -24,6 +27,16 @@ same target registry shape, but they do not pretend to share Uno header pins.
 Nicla and Portenta targets likewise carry their own MCU/runtime descriptors so
 the next board-specific firmware and upload adapters can attach without adding
 special cases to Ruby, Python, Lua, or other language frontends.
+
+Upload metadata is intentionally profile-shaped rather than a frontend command
+builder:
+
+- Arduino-family targets use an Arduino CLI profile so the board package owns
+  bootloader reset, programmer selection, and firmware artifact layout.
+- ESP32 DevKit targets use an ESP ROM serial profile so image layout and boot
+  pin reset remain Rust-owned.
+- Raspberry Pi Pico targets use a Pico UF2 mass-storage profile so BOOTSEL mount
+  discovery and UF2 copy behavior are exposed without frontend special cases.
 
 Wireless metadata separates physical support from the generic front-end sugar:
 
