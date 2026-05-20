@@ -1,0 +1,38 @@
+// Cell.mil — interface for one editable spreadsheet cell.
+//
+// A Cell is the smallest unit of a Grid: a single rendered slot whose
+// display flips between a static Text and an editable HostInput based on
+// the is-editing slot.  Composed by Grid; usable standalone if a host
+// wants a one-off editable cell outside a Grid.
+//
+// Slot vocabulary
+// ---------------
+//   value         the text currently displayed (and the seed for the
+//                 editor's initial value when editing begins)
+//   editable      whether this cell may transition into edit mode at all
+//                 (advisory; the Grid host enforces the policy by setting
+//                 is-editing or not)
+//   is-editing    when true, the cell renders HostInput; otherwise Text
+//   alignment     visual alignment hint ("left" | "right" | "center")
+//   cell-type     advisory type hint ("text" | "number"); v1 treats both
+//                 the same — number-specific formatting/validation is a
+//                 v0.2.0 concern
+//
+// Emit vocabulary
+// ---------------
+//   onClick       fired when the cell is activated (host promotes to edit)
+//   onCommit      fired when an in-progress edit confirms; carries the
+//                 final string value the host should persist
+//   onCancel      fired when an in-progress edit is abandoned
+
+component Cell {
+  slot value      : text ;
+  slot editable   : bool ;
+  slot is-editing : bool ;
+  slot alignment  : text ;
+  slot cell-type  : text ;
+
+  emit onClick ;
+  emit onCommit ( value : text ) ;
+  emit onCancel ;
+}

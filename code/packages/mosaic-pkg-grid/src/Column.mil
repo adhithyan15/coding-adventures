@@ -1,0 +1,23 @@
+// Column.mil — interface for a Grid column declaration (metadata-only).
+//
+// Column has no visible output of its own.  Authors place Column nodes as
+// children of a Grid in the host's layout to describe one column's
+// metadata: a stable key, a display header, a width, edit policy,
+// type-class, and a default alignment.  The Grid component reads these
+// fields off its child Column instances at compose time and threads them
+// into the per-row Cell renderings.
+//
+// In other words: Column is a *declarative metadata bag* the framework
+// reads.  Its .mll exists only because moslayout currently requires every
+// component to have a (single) root layout node — Column's is a hollow
+// Box marker.  v0.2.0 may collapse the marker once the resolver accepts
+// declaration-only components.
+
+component Column {
+  slot key               : text ;
+  slot header            : text ;
+  slot width             : number ;
+  slot editable          : bool ;
+  slot cell-type         : text ;
+  slot default-alignment : text ;
+}

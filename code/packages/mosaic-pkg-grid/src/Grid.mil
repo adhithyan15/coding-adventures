@@ -1,0 +1,40 @@
+// Grid.mil — interface for the spreadsheet-style data grid.
+//
+// Grid is the headline composition of UI29: a Cell-and-Column composer
+// built entirely from kernel primitives (HostTable + HostTableHead +
+// HostTableBody + Row + For + Cell).  No bespoke per-backend code; the
+// React, SwiftUI, Qt, WebComponent and HTML emitters lower this purely
+// by running their kernel-primitive lowerings.
+//
+// Slot vocabulary
+// ---------------
+//   viewport-rows   the data to render, one inner list per row.  Each
+//                   row[c] is the cell text for column c.  In v0.1.0
+//                   only row[0] is wired (see Grid.mll comment) — full
+//                   per-column iteration arrives with the v0.2.0
+//                   `columns` metadata slot.
+//   selected-row    the row index currently selected (for highlight)
+//   selected-col    the column index currently selected (for highlight)
+//   edit-row        the row index currently being edited (-1 = none)
+//   edit-col        the column index currently being edited (-1 = none)
+//   edit-content    the in-progress edit value (echoed back to the cell
+//                   so the host owns the edit-buffer state)
+//
+// Emit vocabulary
+// ---------------
+//   onNavigate      fired when a different cell is activated
+//   onEditCommit    fired when the in-progress edit confirms
+//   onEditCancel    fired when the in-progress edit is abandoned
+
+component Grid {
+  slot viewport-rows : list<list<text>> ;
+  slot selected-row  : number ;
+  slot selected-col  : number ;
+  slot edit-row      : number ;
+  slot edit-col      : number ;
+  slot edit-content  : text ;
+
+  emit onNavigate    ( row : number , col : number ) ;
+  emit onEditCommit  ( value : text ) ;
+  emit onEditCancel ;
+}
