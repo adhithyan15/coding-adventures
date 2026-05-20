@@ -4,6 +4,31 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `For` / `If` / `Else` meta-primitives (UI29 §3.1, §3.2)
+
+- New pipeline emitters for the three control-flow meta-primitives that
+  complete the React kernel surface (U29-K-react).
+- `For (each: <slot-or-expr>, as: <name>, index: <name>?) { ... }` lowers
+  to a JSX `{coll.map((<as>, <index>?) => <body-jsx>)}` expression.
+  - SlotRef `each:` camelCases to an identifier; `Expr` `each:` passes
+    through verbatim.
+  - When `index:` is omitted the callback declares a single parameter.
+  - The body renders through the standard tree emitter, so a
+    `Text (content: slot: <as>)` reference inside the body resolves to
+    `{<as>}` and naturally closes over the callback parameter.
+- `If (when: <slot-or-expr>) { <then> }` lowers to `{cond && (<then>)}`
+  when no `Else` sibling follows.
+- `If` immediately followed by `Else { <else> }` is paired by a small
+  sibling-lookahead helper in the container children loop and lowers to
+  `{cond ? (<then>) : (<else>)}`.
+- An orphan `Else` (no preceding `If`) emits a `{/* Else with no
+  preceding If — ignored */}` JSX comment instead of failing the emit.
+- 11 new tests covering: slot-ref `each:`, expression `each:`, `index:`
+  bindings, body resolving the `as:` name, `If` short-circuit form,
+  `If/Else` ternary form, expression `when:`, orphan `Else` comment,
+  nested `For` loops, `For` body containing `If/Else`, and a regression
+  pin for the plain Box/Text container path.
+
 ### Added — Grid sticky header + scroll container (WA5, UI27 §6/§7.3)
 
 - New compile-time keyword prop `sticky-header: true` on the Grid
