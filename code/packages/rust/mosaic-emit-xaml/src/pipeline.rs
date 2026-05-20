@@ -126,6 +126,83 @@ pub struct ProjectFiles {
     pub package_manifest: String,
 }
 
+/// Registry of components that the emitter is allowed to reference as
+/// non-kernel tags (UI29 §4.4 component references).
+///
+/// The CLI builds this by walking the active manifest's
+/// `[dependencies]`, parsing each one's `mosaic-package.toml`, and
+/// registering every exported component name → its
+/// (xmlns_prefix, xmlns_value, package_name) tuple.
+///
+/// Tests build the registry inline with synthetic entries.
+///
+/// PR-5 lands the registry type and the lookup logic; the actual
+/// file-walking from disk is the CLI's responsibility (mosaic-compile's
+/// run_pipeline) and is wired up in the same PR series.
+#[derive(Debug, Clone, Default)]
+pub struct ComponentRegistry {
+    /// component_name → resolution info. Keyed by the PascalCase tag
+    /// that appears in `.mll` source.
+    entries: std::collections::HashMap<String, ComponentRef>,
+}
+
+/// One entry in the [`ComponentRegistry`] — the metadata needed to
+/// emit a `<{prefix}:{Tag} ... />` XAML reference plus the
+/// `xmlns:prefix="using:Namespace"` declaration on the `<UserControl>`
+/// root.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ComponentRef {
+    /// The xmlns prefix that appears in the `<{prefix}:{Tag}/>`
+    /// reference and in the matching `xmlns:{prefix}` declaration on
+    /// the `<UserControl>` root. Conventionally derived from the
+    /// package name (`mosaic-pkg-grid` → `grid`).
+    pub xmlns_prefix: String,
+    /// The value of the xmlns declaration, e.g. `using:Mosaic.Package.Grid`.
+    /// Derived from the package's C# namespace.
+    pub xmlns_value: String,
+    /// The package name (used in diagnostics).
+    pub package_name: String,
+}
+
+impl ComponentRegistry {
+    /// Construct an empty registry. The emitter treats this the same
+    /// way it treats `None` — every non-kernel tag becomes
+    /// [`PipelineEmitError::UnknownComponent`].
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Register one component reference.
+    ///
+    /// `tag` is the PascalCase identifier that appears in `.mll`
+    /// source (matches the package's `[components].exports`).
+    pub fn register(
+        &mut self,
+        tag: impl Into<String>,
+        xmlns_prefix: impl Into<String>,
+        xmlns_value: impl Into<String>,
+        package_name: impl Into<String>,
+    ) {
+        let entry = ComponentRef {
+            xmlns_prefix: xmlns_prefix.into(),
+            xmlns_value: xmlns_value.into(),
+            package_name: package_name.into(),
+        };
+        self.entries.insert(tag.into(), entry);
+    }
+
+    /// Look up a tag. Returns `None` when the tag isn't registered.
+    pub fn lookup(&self, tag: &str) -> Option<&ComponentRef> {
+        self.entries.get(tag)
+    }
+
+    /// Returns `true` when no entries are registered. Equivalent to
+    /// passing `None` for the registry argument of `from_pipeline`.
+    pub fn is_empty(&self) -> bool {
+        self.entries.is_empty()
+    }
+}
+
 /// Options controlling the emitter's behaviour.
 ///
 /// Default: produces only the component triple (`xaml`, `code_behind`,
@@ -276,7 +353,7 @@ pub fn from_pipeline(
     interface: &MosmodelComponent,
     layout: &LayoutDef,
     style: &StyleDef,
-    _manifest: Option<&()>,
+    registry: Option<&ComponentRegistry>,
     options: &EmitOptions,
 ) -> Result<XamlEmitResult, PipelineEmitError> {
     // 1. The three IRs must agree on the component name. The style IR's
@@ -301,6 +378,7 @@ pub fn from_pipeline(
     //    walker so `For`/`If` can register helpers, RowVms, and the
     //    converter requirement (PR-2).
     let mut ctx = EmitContext::new(name, &interface.slots);
+    ctx.registry = registry;
 
     // 4. Emit each of the three files.
     let xaml = emit_xaml(name, &layout.root, &part_styles, options, &mut ctx)?;
@@ -454,6 +532,14 @@ struct EmitContext<'a> {
     /// Counter used to disambiguate Host* `x:Name`s when the node has
     /// no `part_name`. Incremented per emitted Host* primitive.
     host_counter: u32,
+    /// Optional registry of resolvable component references. Populated
+    /// by `from_pipeline`'s `registry` argument. PR-5 uses this to
+    /// emit `<{prefix}:{Tag}/>` references for non-kernel tags.
+    registry: Option<&'a ComponentRegistry>,
+    /// xmlns declarations that need to land on the `<UserControl>`
+    /// root after the walk completes. One entry per distinct package
+    /// referenced. Keyed by xmlns prefix to dedupe.
+    used_xmlns: std::collections::BTreeMap<String, String>,
 }
 
 impl<'a> EmitContext<'a> {
@@ -472,6 +558,8 @@ impl<'a> EmitContext<'a> {
             row_vms: Vec::new(),
             host_handlers: Vec::new(),
             host_counter: 0,
+            registry: None,
+            used_xmlns: std::collections::BTreeMap::new(),
         }
     }
 
@@ -669,6 +757,27 @@ fn emit_xaml(
         out = format!("{head}{resources}{tail}");
     }
 
+    // PR-5: inject `xmlns:{prefix}="{value}"` declarations for any
+    // resolved component references onto the `<UserControl>` open tag.
+    // Insert just before the `>` that closes the open tag. The xmlns
+    // table is BTreeMap-keyed so the output is alphabetically sorted
+    // (deterministic across runs).
+    if !ctx.used_xmlns.is_empty() {
+        let mut xmlns_lines = String::new();
+        for (prefix, value) in &ctx.used_xmlns {
+            xmlns_lines.push_str(&format!(
+                "\n    xmlns:{prefix}=\"{}\"",
+                escape_xaml_attr(value)
+            ));
+        }
+        // Find the closing `>` of the `<UserControl ...>` open tag
+        // (the first `>` followed by a newline).
+        if let Some(close) = out.find(">\n") {
+            let (head, tail) = out.split_at(close);
+            out = format!("{head}{xmlns_lines}{tail}");
+        }
+    }
+
     writeln!(out).unwrap();
     writeln!(out, "</UserControl>").unwrap();
     Ok(out)
@@ -737,9 +846,13 @@ fn emit_xaml_node(
             )))
         }
 
-        // Anything else is a component reference; will route through the
-        // manifest resolver in PR-5. PR-1 simply errors.
-        other => Err(PipelineEmitError::UnsupportedPrimitive(other.to_string())),
+        // Anything else is a component reference (UI29 §4.4). PR-5
+        // resolves it through the optional `ComponentRegistry`. When the
+        // registry is absent or the tag isn't registered, the error
+        // path makes the failure clear: a missing manifest dependency
+        // is `UnknownComponent`; a registry-less invocation falls back
+        // to `UnsupportedPrimitive` for parity with the pre-PR-5 shape.
+        other => emit_component_reference(other, node, indent, ctx),
     }
 }
 
@@ -2643,6 +2756,124 @@ fn emit_host_table_rows(
 }
 
 // =====================================================================
+// PR-5: Component reference resolution (UI29 §4.4)
+// =====================================================================
+
+/// Emit a `<{prefix}:{Tag} ... />` reference for a non-kernel tag.
+///
+/// Resolution: look the tag up in `ctx.registry`. If absent (no registry
+/// or tag not registered), the error path picks one of two variants:
+///
+/// - When a registry IS present (even if empty) → `UnknownComponent`
+///   means "the host gave us a registry, the tag isn't in it". This is
+///   the spec's intended error for "missing manifest dependency".
+/// - When the registry is absent → `UnsupportedPrimitive` for parity
+///   with the pre-PR-5 shape (preserves the diagnostic for `--backend
+///   xaml` invocations that don't use packages at all).
+fn emit_component_reference(
+    tag: &str,
+    node: &LayoutNode,
+    indent: usize,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let registry = match ctx.registry {
+        Some(r) => r,
+        None => return Err(PipelineEmitError::UnsupportedPrimitive(tag.to_string())),
+    };
+
+    let entry = match registry.lookup(tag) {
+        Some(e) => e.clone(),
+        None => return Err(PipelineEmitError::UnknownComponent(tag.to_string())),
+    };
+
+    // Record the xmlns prefix → value mapping for the `<UserControl>`
+    // root injection. BTreeMap-keyed for deterministic output ordering.
+    ctx.used_xmlns
+        .insert(entry.xmlns_prefix.clone(), entry.xmlns_value.clone());
+
+    // Build per-prop attributes. PR-5 supports slot refs, string
+    // literals, numbers, and keywords. EmitRef props (`onClick: emit:
+    // X`) are deferred — they need a host-side handler-stub
+    // generation that is out of scope for PR-5. A clear comment in the
+    // emitted XAML flags any deferred emit-ref props rather than
+    // silently dropping them.
+    let pad = " ".repeat(indent);
+    let mut attrs = String::new();
+    let mut emit_ref_skipped: Vec<String> = Vec::new();
+
+    for prop in &node.props {
+        let attr_name = kebab_to_pascal_case(&prop.name);
+        match &prop.value {
+            LayoutPropValue::SlotRef(slot) => {
+                let pascal = kebab_to_pascal_case(slot);
+                if !is_safe_identifier(&pascal) {
+                    return Err(PipelineEmitError::UnsafeSlotName(pascal));
+                }
+                attrs.push_str(&format!(
+                    " {attr_name}=\"{{x:Bind {pascal}}}\""
+                ));
+            }
+            LayoutPropValue::String(s) => {
+                attrs.push_str(&format!(
+                    " {attr_name}=\"{}\"",
+                    escape_xaml_attr(s)
+                ));
+            }
+            LayoutPropValue::Number(n) => {
+                attrs.push_str(&format!(" {attr_name}=\"{n}\""));
+            }
+            LayoutPropValue::Keyword(k) => {
+                if ctx.lookup_for_binding(k).is_some()
+                    || ctx.lookup_for_index(k).is_some()
+                {
+                    let pascal = kebab_to_pascal_case(k);
+                    attrs.push_str(&format!(
+                        " {attr_name}=\"{{x:Bind {pascal}}}\""
+                    ));
+                } else {
+                    attrs.push_str(&format!(
+                        " {attr_name}=\"{}\"",
+                        escape_xaml_attr(k)
+                    ));
+                }
+            }
+            LayoutPropValue::EmitRef(emit) => {
+                emit_ref_skipped.push(format!("{}: emit: {}", prop.name, emit));
+            }
+            LayoutPropValue::Expr(src) => {
+                match lower_expr_for_xbind(src, ctx) {
+                    ExprLowering::Bindable(path) => {
+                        attrs.push_str(&format!(
+                            " {attr_name}=\"{{x:Bind {path}}}\""
+                        ));
+                    }
+                    ExprLowering::Helper(call) => {
+                        attrs.push_str(&format!(
+                            " {attr_name}=\"{{x:Bind {call}}}\""
+                        ));
+                    }
+                    ExprLowering::Unsupported(reason) => {
+                        return Err(PipelineEmitError::UnsupportedExpression(reason));
+                    }
+                }
+            }
+        }
+    }
+
+    let prefix = &entry.xmlns_prefix;
+    let mut out = format!("{pad}<{prefix}:{tag}{attrs}/>\n");
+    if !emit_ref_skipped.is_empty() {
+        // Surface the deferred props as a XAML comment so they're
+        // visible to reviewers and the diff makes the deferral obvious.
+        let list = emit_ref_skipped.join(", ");
+        out = format!(
+            "{pad}<!-- Deferred (PR-5+ work): emit-ref props on component reference {tag}: {list} -->\n{out}"
+        );
+    }
+    Ok(out)
+}
+
+// =====================================================================
 // Tests
 // =====================================================================
 
@@ -3592,6 +3823,283 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // PR-5: ComponentRegistry / component-reference resolution
+    // ─────────────────────────────────────────────────────────────────
+
+    fn component_ref_node(tag: &str, props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    fn compile_with_registry(
+        c: &MosmodelComponent,
+        l: &LayoutDef,
+        s: &StyleDef,
+        reg: &ComponentRegistry,
+    ) -> XamlEmitResult {
+        from_pipeline(c, l, s, Some(reg), &opts()).expect("emit ok")
+    }
+
+    #[test]
+    fn registry_register_and_lookup_round_trip() {
+        let mut reg = ComponentRegistry::new();
+        reg.register("Grid", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid");
+        let entry = reg.lookup("Grid").expect("registered");
+        assert_eq!(entry.xmlns_prefix, "grid");
+        assert_eq!(entry.xmlns_value, "using:Mosaic.Package.Grid");
+        assert_eq!(entry.package_name, "mosaic-pkg-grid");
+    }
+
+    #[test]
+    fn registry_lookup_misses_return_none() {
+        let reg = ComponentRegistry::new();
+        assert!(reg.lookup("Missing").is_none());
+        assert!(reg.is_empty());
+    }
+
+    #[test]
+    fn component_reference_with_no_registry_falls_back_to_unsupported() {
+        // Pre-PR-5 behaviour: no registry → non-kernel tags surface as
+        // UnsupportedPrimitive (preserves the old diagnostic so demos
+        // not using packages still get a clear error).
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", component_ref_node("Whatever", Vec::new()));
+        let s = empty_style("Foo");
+        let err = from_pipeline(&c, &l, &s, None, &opts()).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t == "Whatever"));
+    }
+
+    #[test]
+    fn component_reference_with_empty_registry_returns_unknown() {
+        // With an explicit (but empty) registry, missing-component
+        // becomes UnknownComponent — the spec's intended error for
+        // "missing manifest dependency".
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", component_ref_node("Whatever", Vec::new()));
+        let s = empty_style("Foo");
+        let reg = ComponentRegistry::new();
+        let err =
+            from_pipeline(&c, &l, &s, Some(&reg), &opts()).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnknownComponent(ref t) if t == "Whatever"));
+    }
+
+    #[test]
+    fn component_reference_lowers_to_prefixed_xaml_tag() {
+        let c = component("Demo", vec![], vec![]);
+        let l = layout_with_root("Demo", component_ref_node("Grid", Vec::new()));
+        let mut reg = ComponentRegistry::new();
+        reg.register("Grid", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid");
+        let r = compile_with_registry(&c, &l, &empty_style("Demo"), &reg);
+        assert!(r.xaml.contains("<grid:Grid/>"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn component_reference_emits_xmlns_declaration_on_usercontrol() {
+        let c = component("Demo", vec![], vec![]);
+        let l = layout_with_root("Demo", component_ref_node("Grid", Vec::new()));
+        let mut reg = ComponentRegistry::new();
+        reg.register("Grid", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid");
+        let r = compile_with_registry(&c, &l, &empty_style("Demo"), &reg);
+        // xmlns declaration on the open UserControl tag.
+        assert!(
+            r.xaml.contains("xmlns:grid=\"using:Mosaic.Package.Grid\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn component_reference_slot_ref_prop_emits_xbind_attribute() {
+        let c = component(
+            "Demo",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Demo",
+            component_ref_node(
+                "Grid",
+                vec![LayoutProp {
+                    name: "rows".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                }],
+            ),
+        );
+        let mut reg = ComponentRegistry::new();
+        reg.register("Grid", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid");
+        let r = compile_with_registry(&c, &l, &empty_style("Demo"), &reg);
+        assert!(
+            r.xaml.contains("Rows=\"{x:Bind Rows}\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn component_reference_string_literal_prop_emits_literal_attribute() {
+        let c = component("Demo", vec![], vec![]);
+        let l = layout_with_root(
+            "Demo",
+            component_ref_node(
+                "Grid",
+                vec![LayoutProp {
+                    name: "title".to_string(),
+                    value: LayoutPropValue::String("My Grid".to_string()),
+                }],
+            ),
+        );
+        let mut reg = ComponentRegistry::new();
+        reg.register("Grid", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid");
+        let r = compile_with_registry(&c, &l, &empty_style("Demo"), &reg);
+        assert!(r.xaml.contains("Title=\"My Grid\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn component_reference_emit_ref_prop_surfaces_as_deferred_comment() {
+        // Emit-ref props on component references aren't yet wired
+        // (host-side handler-stub generation is PR-5+ work). The
+        // emitter surfaces a XAML comment listing the deferred props
+        // so reviewers see the gap immediately.
+        let c = component(
+            "Demo",
+            vec![],
+            vec![emit("onNavigate", vec![])],
+        );
+        let l = layout_with_root(
+            "Demo",
+            component_ref_node(
+                "Grid",
+                vec![LayoutProp {
+                    name: "onNavigate".to_string(),
+                    value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+                }],
+            ),
+        );
+        let mut reg = ComponentRegistry::new();
+        reg.register("Grid", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid");
+        let r = compile_with_registry(&c, &l, &empty_style("Demo"), &reg);
+        // Comment present.
+        assert!(
+            r.xaml.contains("<!-- Deferred (PR-5+ work)"),
+            "got:\n{}",
+            r.xaml
+        );
+        // Emit ref doesn't leak into the tag's attributes.
+        assert!(
+            !r.xaml.contains("OnNavigate=\""),
+            "emit-ref should not appear as a direct attribute, got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn component_reference_multiple_packages_emit_distinct_xmlns() {
+        let c = component("Demo", vec![], vec![]);
+        let l = layout_with_root(
+            "Demo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    component_ref_node("Grid", Vec::new()),
+                    component_ref_node("FancyInput", Vec::new()),
+                ],
+            },
+        );
+        let mut reg = ComponentRegistry::new();
+        reg.register("Grid", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid");
+        reg.register(
+            "FancyInput",
+            "input",
+            "using:Mosaic.Package.Input",
+            "mosaic-pkg-input",
+        );
+        let r = compile_with_registry(&c, &l, &empty_style("Demo"), &reg);
+        // Both xmlns declarations land on the UserControl.
+        assert!(
+            r.xaml.contains("xmlns:grid=\"using:Mosaic.Package.Grid\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("xmlns:input=\"using:Mosaic.Package.Input\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn component_reference_dedupes_xmlns_for_same_package_used_twice() {
+        // Two component references to the same package should NOT
+        // produce two xmlns declarations on the root.
+        let c = component(
+            "Demo",
+            vec![slot("rows-a", SlotType::List(Box::new(ListInnerType::Text)), true),
+                 slot("rows-b", SlotType::List(Box::new(ListInnerType::Text)), true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Demo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    component_ref_node(
+                        "Grid",
+                        vec![LayoutProp {
+                            name: "rows".to_string(),
+                            value: LayoutPropValue::SlotRef("rows-a".to_string()),
+                        }],
+                    ),
+                    component_ref_node(
+                        "Grid",
+                        vec![LayoutProp {
+                            name: "rows".to_string(),
+                            value: LayoutPropValue::SlotRef("rows-b".to_string()),
+                        }],
+                    ),
+                ],
+            },
+        );
+        let mut reg = ComponentRegistry::new();
+        reg.register("Grid", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid");
+        let r = compile_with_registry(&c, &l, &empty_style("Demo"), &reg);
+        let count = r.xaml.matches("xmlns:grid=\"using:Mosaic.Package.Grid\"").count();
+        assert_eq!(count, 1, "expected dedup to one xmlns declaration");
+    }
+
+    #[test]
+    fn registered_kernel_primitive_name_is_ignored_in_favour_of_kernel_emitter() {
+        // If a registry happens to contain a name that ALSO matches a
+        // kernel primitive, the kernel emitter wins. This protects
+        // against accidental package shadowing of `Box`, `Text`, etc.
+        let c = component("Demo", vec![], vec![]);
+        let l = layout_with_root("Demo", box_root());
+        let mut reg = ComponentRegistry::new();
+        reg.register(
+            "Box",
+            "evil",
+            "using:Evil.Override",
+            "evil-package",
+        );
+        let r = compile_with_registry(&c, &l, &empty_style("Demo"), &reg);
+        // The kernel <Border> emission is used, not the shadowing pkg.
+        assert!(r.xaml.contains("<Border"), "got:\n{}", r.xaml);
+        // No `evil:Box` reference.
+        assert!(!r.xaml.contains("<evil:"));
     }
 
     #[test]
