@@ -74,7 +74,7 @@ Three things to notice:
    event dispatch — the host application binds the properties and
    connects handlers to the signals.
 
-## Primitive lowering table (this PR — narrow first cut)
+## Primitive lowering table
 
 | moslayout tag | QML element                                                                  |
 |---|---|
@@ -85,6 +85,49 @@ Three things to notice:
 | `Spacer`      | `Item { Layout.fillWidth: true; Layout.fillHeight: true }`                  |
 | `Image`       | `Image { source: "..." }` or `Image { source: slotName }`                   |
 | `Divider`     | `Rectangle { height: 1; color: "#888"; Layout.fillWidth: true }`            |
+| `Stack`       | `Item { ... }` with `anchors.fill: parent` on each child — Z-axis overlay   |
+| `HostInput`   | `TextInput { text: ...; readOnly: ...; onAccepted/Keys.onEscapePressed }`   |
+| `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (from Controls 2.15)   |
+| `HostScroll`  | `ScrollView { ... children ... }` (from Controls 2.15)                      |
+
+The `QtQuick.Controls 2.15` import is added **only when** the layout
+tree uses a Controls-backed primitive (`HostButton` or `HostScroll`),
+keeping the import set minimal for components that don't need it.
+
+### Host primitive prop mappings (UI29 §3)
+
+**`HostInput` (`TextInput`):**
+
+| moslayout prop          | QML output                                              |
+|---|---|
+| `value: slot: x`        | `text: x`                                               |
+| `value: "literal"`      | `text: "literal"`                                       |
+| `read-only: slot: x`    | `readOnly: x`                                           |
+| `read-only: true/false` | `readOnly: true/false`                                  |
+| `placeholder: "..."`    | Comment only — `TextInput` has no placeholder attr; the |
+|                         | QML idiom is a sibling `Text` shown when `text === ""`. |
+|                         | Deferred to a follow-up PR.                             |
+| `onChange: emit: onE`   | `onTextChanged: e()`                                    |
+| `onCommit: emit: onE`   | `onAccepted: e(text)` (Enter)                           |
+| `onCancel: emit: onE`   | `Keys.onEscapePressed: { e(); event.accepted = true }`  |
+
+**`HostButton` (`Button` from Controls):**
+
+| moslayout prop          | QML output             |
+|---|---|
+| `label: slot: x`        | `text: x`              |
+| `label: "literal"`      | `text: "literal"`      |
+| `disabled: slot: x`     | `enabled: !x`          |
+| `disabled: true/false`  | `enabled: !true/false` |
+| `onTap: emit: onE`      | `onClicked: e()`       |
+
+**`Stack` (`Item` overlay):**
+
+QtQuick has no `ZStack` primitive. The idiomatic Z-overlay shape is an
+`Item` whose children each set `anchors.fill: parent`. We deliberately
+do **not** use `StackLayout` from `QtQuick.Layouts` — its semantics are
+"show one child at a time, switch with `currentIndex`", which is a
+*navigation* primitive, not a Z-axis overlay.
 
 ## Slot type → QML property type
 
@@ -116,9 +159,12 @@ lowerCamelCase. The emitter converts:
 
 ## What is NOT in this PR (deferred follow-ups)
 
-This is a **narrow, skeleton first cut** — the structural translation is
-in place, but several Mosaic features are accepted but not yet emitted:
+Several Mosaic features are accepted but not yet emitted:
 
+- **No `If`, `For`, or `HostTable` lowering.** The remaining three
+  primitives in UI29's kernel wait on grammar PRs (U29-G1..U29-G3) and
+  a `TableView` spec. Today a layout node with `tag = "If"`, `"For"`,
+  or `"HostTable"` returns `UnknownPrimitive`.
 - **No `Cell` / data-`Column` / `Grid v3` lowering.** UI28 §2 introduces
   a richer Grid model. UI28 §4.5 sketches a Qt mapping in C++
   (`QStyledItemDelegate` / `QAbstractTableModel` / `QTableView`); the
@@ -127,22 +173,26 @@ in place, but several Mosaic features are accepted but not yet emitted:
   data-Column, the same ambiguity SwiftUI faces) is documented inline
   in `pipeline.rs::primitive_to_qml` and will be resolved by context-
   sensitive lowering once the data primitives land.
-- **No `connects` wiring.** Today a `signal` is declared on the root
-  `Item` but no `signalEmit()` call is fired from inside the layout
-  tree. The follow-up will attach JSX-style handlers (e.g. a `MouseArea`
-  inside an `Item` whose `onClicked` fires the matching signal).
+- **No `connects` wiring on non-Host primitives.** `HostButton` and
+  `HostInput` emit their event handlers directly. For the other
+  primitives, a `signal` is declared on the root `Item` but no
+  `signalEmit()` call is fired from inside the layout tree. The
+  follow-up will attach a `MouseArea` (or similar) to each layout
+  element whose props contain an `EmitRef` value.
 - **No style inlining.** The mosstyle `StyleDef` is accepted in the
   signature so downstream callers can build against the stable
   shape, but its properties are not yet inlined into element
   attributes.
+- **`HostInput` placeholder text is not rendered.** `TextInput` has no
+  placeholder attribute; the QML idiom requires a sibling `Text`
+  element. Today the emitter writes a `// placeholder: "..."` comment
+  so the value is at least visible in the generated source.
 
-Each deferred item is intentionally a focused, additive PR — the
-current PR proves the *interface shape* and the *primitive translation*
-end-to-end without coupling those to the harder design decisions.
+Each deferred item is intentionally a focused, additive PR.
 
 ## Tests
 
-17 unit tests cover:
+26 unit tests cover:
 
 - Empty layout produces valid QML skeleton.
 - Slots lower to `property` declarations.
@@ -160,7 +210,16 @@ end-to-end without coupling those to the harder design decisions.
 - Name mismatch between IRs errors with `ComponentNameMismatch`.
 - Unknown primitive errors with `UnknownPrimitive`.
 - Imports always precede the root `Item`.
-- Crate version is `0.1.0`.
+- Crate version is `0.2.0`.
+- `Stack` lowers to `Item` with `anchors.fill: parent` on each child.
+- `HostInput` lowers to `TextInput` with `text` / `readOnly` bindings.
+- `HostInput` `onCommit` lowers to `onAccepted`; `onCancel` lowers to
+  `Keys.onEscapePressed`.
+- `HostButton` lowers to `Button` with `text` / `enabled: !disabled` /
+  `onClicked`.
+- `HostScroll` lowers to `ScrollView { ... children ... }`.
+- `QtQuick.Controls 2.15` import is added only when needed.
+- `If`, `For`, `HostTable` still return `UnknownPrimitive` (deferred).
 
 ```bash
 cargo test -p mosaic-emit-qt
