@@ -327,3 +327,93 @@ fn end_to_end_basic_for_loop_prints_1_2_3() {
         String::from_utf8_lossy(&out.stderr),
     );
 }
+
+// ── NIB04: Nib AOT — print + cross-function calls ────────────────────────────
+
+/// NIB04 — a Nib program with a user-defined `double` function that
+/// `main` calls.  Asserts the exit code is `double(21) = 42`.
+const NIB_DOUBLE: &str = "fn double(x: u8) -> u8 { return x + x; } \
+                          fn main() -> u8 { return double(21); }";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_nib_cross_fn_call_returns_42() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("double.nib");
+    let exe = dir.path().join("double.exe");
+    std::fs::write(&src, NIB_DOUBLE).unwrap();
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::Nib)
+        .unwrap_or_else(|e| panic!("Nib compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.status.code(), Some(42),
+        "expected double(21)=42, got {:?}; stderr={:?}",
+        out.status.code(),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_nib_cross_fn_call_returns_42() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("double.nib");
+    let exe = dir.path().join("double");
+    std::fs::write(&src, NIB_DOUBLE).unwrap();
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::Nib)
+        .unwrap_or_else(|e| panic!("Nib compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.status.code(), Some(42),
+        "expected double(21)=42, got {:?}; stderr={:?}",
+        out.status.code(),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+/// NIB04 — `print(42)` writes "42\n" to stdout via `__twig_print_i64`.
+const NIB_PRINT_42: &str = "fn main() -> u8 { print(42); return 0; }";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_nib_print_writes_42() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("print.nib");
+    let exe = dir.path().join("print.exe");
+    std::fs::write(&src, NIB_PRINT_42).unwrap();
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::Nib)
+        .unwrap_or_else(|e| panic!("Nib compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"42\n",
+        "expected stdout '42\\n', got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_nib_print_writes_42() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("print.nib");
+    let exe = dir.path().join("print");
+    std::fs::write(&src, NIB_PRINT_42).unwrap();
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::Nib)
+        .unwrap_or_else(|e| panic!("Nib compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"42\n",
+        "expected stdout '42\\n', got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
