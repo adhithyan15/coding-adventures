@@ -1167,9 +1167,19 @@ pub struct ToolAuditSupervisorDrainRunSummary {
 }
 
 impl ToolAuditSupervisorDrainRunSummary {
+    /// Return the typed scheduler-facing classification for this run.
+    pub fn outcome(&self) -> ToolAuditSupervisorDrainRunOutcome {
+        self.outcome
+    }
+
     /// Return the stable scheduler-facing label for this run outcome.
     pub fn outcome_label(&self) -> &'static str {
         self.outcome_label
+    }
+
+    /// Return the recommended scheduler action for this run.
+    pub fn scheduler_action(&self) -> ToolAuditSupervisorDrainSchedulerAction {
+        self.scheduler_action
     }
 
     /// Return whether this run outcome asks the scheduler to take action.
@@ -1207,6 +1217,11 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.has_record_count_drift || self.has_follow_up_record_count_drift
     }
 
+    /// Return the typed count-drift classification.
+    pub fn count_drift_kind(&self) -> ToolAuditSupervisorDrainCountDriftKind {
+        self.count_drift_kind
+    }
+
     /// Return the stable count-drift classification label.
     pub fn count_drift_label(&self) -> &'static str {
         self.count_drift_kind.as_str()
@@ -1215,6 +1230,11 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether count drift should be investigated by the host.
     pub fn requires_count_drift_investigation(&self) -> bool {
         self.requires_count_drift_investigation
+    }
+
+    /// Return the typed host-investigation classification.
+    pub fn host_investigation_kind(&self) -> ToolAuditSupervisorDrainHostInvestigationKind {
+        self.host_investigation_kind
     }
 
     /// Return the stable host-investigation classification label.
@@ -3508,10 +3528,18 @@ mod tests {
             summary.outcome,
             ToolAuditSupervisorDrainRunOutcome::NeedsContinuation
         );
+        assert_eq!(
+            summary.outcome(),
+            ToolAuditSupervisorDrainRunOutcome::NeedsContinuation
+        );
         assert_eq!(summary.outcome_label, "needs_continuation");
         assert_eq!(summary.outcome_label(), "needs_continuation");
         assert_eq!(
             summary.scheduler_action,
+            ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation
+        );
+        assert_eq!(
+            summary.scheduler_action(),
             ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation
         );
         assert_eq!(summary.scheduler_action_label, "schedule_continuation");
@@ -3543,11 +3571,19 @@ mod tests {
             summary.count_drift_kind,
             ToolAuditSupervisorDrainCountDriftKind::NoDrift
         );
+        assert_eq!(
+            summary.count_drift_kind(),
+            ToolAuditSupervisorDrainCountDriftKind::NoDrift
+        );
         assert_eq!(summary.count_drift_label(), "no_count_drift");
         assert!(!summary.requires_count_drift_investigation);
         assert!(!summary.requires_count_drift_investigation());
         assert_eq!(
             summary.host_investigation_kind,
+            ToolAuditSupervisorDrainHostInvestigationKind::NoInvestigation
+        );
+        assert_eq!(
+            summary.host_investigation_kind(),
             ToolAuditSupervisorDrainHostInvestigationKind::NoInvestigation
         );
         assert_eq!(summary.host_investigation_label(), "no_investigation");

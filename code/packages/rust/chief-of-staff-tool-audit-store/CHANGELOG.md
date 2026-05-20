@@ -29,6 +29,7 @@ All notable changes to this package will be documented in this file.
 - Stable, parseable supervisor drain outcome labels and action flags for host
   schedulers.
 - Flattened supervisor drain run summaries for host logs and scheduler loops.
+- Typed classifier accessors for supervisor drain run summaries.
 - Flattened planned and replayed follow-up row counts in supervisor drain run
   summaries.
 - Follow-up pressure drift flags in supervisor drain run reports and summaries.
