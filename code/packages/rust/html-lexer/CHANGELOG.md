@@ -42,6 +42,8 @@ documented in this file.
   alongside the other parser audit fixture generators.
 - The generated fixture manifest now includes the parser noscript audit
   generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser head/body audit
+  generator alongside the other parser audit fixture generators.
 - The generated fixture manifest now includes the parser document-shell audit
   generator alongside the other parser audit fixture generators.
 - The generated fixture manifest now includes the parser template audit
