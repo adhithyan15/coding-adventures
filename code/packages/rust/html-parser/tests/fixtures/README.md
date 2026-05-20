@@ -131,6 +131,17 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_document_s
   --check
 ```
 
+`whatwg-template-audit.json` is a generated index over tree-construction cases
+that stress template insertion modes, nested template stacks, EOF recovery,
+and template interactions with tables, selects, framesets, document shells,
+text modes, foreign content, and template fragment contexts:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_template_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_template_audit_fixture.py \
+  --check
+```
+
 `whatwg-select-list-audit.json` is a generated index over tree-construction
 cases that stress select shells, adjacent option implied-end recovery, optgroup
 boundaries, select-in-table handling, select fragment contexts, and stray
