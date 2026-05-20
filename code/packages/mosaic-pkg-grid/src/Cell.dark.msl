@@ -1,0 +1,25 @@
+// Cell.dark.msl — dark theme style for the Cell component.
+//
+// Targets exactly one part: `cell` (the Box wrapping the Text/HostInput).
+// State `editing` is appended via class suffix at render time — when the
+// host promotes a Cell to editing, the React/SwiftUI/Qt emitter adds the
+// `editing` state class so this block's rules apply.
+//
+// Colour palette:
+//   #1e1e1e   — VS Code dark surface, matches Grid sheet background
+//   #cccccc   — VS Code dark foreground text
+//   #007acc   — VS Code accent blue, used for editing outline
+//   #1f4f3f   — desaturated green tint signalling an active edit field
+
+style Cell {
+  part cell {
+    padding:    4px ;
+    background: #1e1e1e ;
+    color:      #cccccc ;
+
+    state editing {
+      outline:    1px solid #007acc ;
+      background: #1f4f3f ;
+    }
+  }
+}

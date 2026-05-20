@@ -1,0 +1,22 @@
+# mosaic-package.toml — manifest for mosaic-pkg-grid.
+#
+# Conforms to the UI29 §4.2 package-manifest shape: a [package] table for
+# identity, [components] listing the publicly exported components, an empty
+# [dependencies] table (this package is built only from UI29 kernel
+# primitives — no other userland packages), and a [kernel] table declaring
+# the UI29 kernel revision the package targets.
+
+[package]
+name = "mosaic-pkg-grid"
+version = "0.1.0"
+description = "Spreadsheet-style data grid built on UI29 kernel primitives"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["Grid", "Cell", "Column"]
+
+[dependencies]
+# no other packages — built only from UI29 kernel primitives
+
+[kernel]
+version = "1"
