@@ -65,10 +65,15 @@
 //! | HostScroll   | `ScrollView { ... }` *(v0.2.0; UI29 kernel)*       |
 //! | HostInput    | `TextField(placeholder, text: .constant(value))`   |
 //! | HostButton   | `Button(action: { dispatch(.tap) }) { Text(label) }` |
+//! | HostTable    | `VStack(alignment: .leading, spacing: 0) { HStack { ... } }` |
 //!
-//! The remaining UI29 kernel primitives — `If`, `For`, `HostTable` —
-//! still lower to `UnknownPrimitive` errors; they wait on the moslayout
-//! grammar additions (U29-G3) and a `HostTable` spec. Legacy primitives
+//! `HostTable` lowers to a `VStack` of `HStack` rows rather than
+//! SwiftUI's data-driven `Table` view: the data-driven form needs a
+//! row-shape that the IR does not yet carry. See the per-function doc
+//! comment on `pipeline::emit_host_table` for the full rationale. The
+//! remaining UI29 kernel primitives — `If`, `For` — still lower to
+//! `UnknownPrimitive` errors; they wait on the moslayout
+//! grammar additions (U29-G3). Legacy primitives
 //! (`Icon`, `Grid` v2) also still return `UnknownPrimitive` and will land
 //! in their own follow-up PRs. `Cell` + `Column`-as-metadata + `Grid` v3
 //! from UI28 §2 are deliberately deferred — the `Column` primitive in

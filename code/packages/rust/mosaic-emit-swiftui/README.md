@@ -63,6 +63,7 @@ struct ProfileCardView: View {
 | `HostScroll`     | `ScrollView { ... }` *(v0.2.0; UI29 kernel)*  |
 | `HostInput`      | `TextField(placeholder, text: .constant(value))` *(v0.2.0; UI29 kernel)* |
 | `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |
+| `HostTable`      | `VStack(alignment: .leading, spacing: 0) { HStack { ... } }` *(v0.3.0; UI29 kernel)* |
 
 ### `HostInput` binding choice — `.constant(value)`
 
@@ -107,10 +108,13 @@ analog of TypeScript's `type NameEvent = never` in the React backend.
   Per UI28 §4.4 the SwiftUI lowering is
   `Grid → SwiftUI.Table { TableColumn(...) }` with each `Column` becoming
   a `TableColumn` definition.
-- `If`, `For`, `HostTable` — UI29 kernel primitives that wait on the
-  moslayout grammar additions (U29-G3) and a `HostTable` spec. Until those
-  land, this crate returns `UnknownPrimitive` for them so authors get a
-  clear "not yet supported" diagnostic.
+- `If`, `For` — UI29 kernel primitives that wait on the moslayout
+  grammar additions (U29-G3). Until those land, this crate returns
+  `UnknownPrimitive` for them so authors get a clear "not yet supported"
+  diagnostic.
+- `HostTable` lowers to a structural `VStack` of `HStack` rows (see
+  primitive table above); the data-driven `SwiftUI.Table` form waits on
+  a follow-up that wires `For`-inside-table.
 - `Icon`, `Grid` (v2), legacy `Scroll` / `Input` (pre-UI29 names) — return
   `UnknownPrimitive` errors today; each lands in its own follow-up.
 - `connects` wiring (gesture / event modifiers beyond what `HostButton` /

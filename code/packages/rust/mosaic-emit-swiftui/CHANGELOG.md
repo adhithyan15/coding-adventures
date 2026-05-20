@@ -2,6 +2,53 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-05-19
+
+### Added — UI29 `HostTable` kernel primitive
+
+`HostTable` is now recognised by the SwiftUI emitter and lowers to a
+`VStack(alignment: .leading, spacing: 0)` of `HStack` rows rather than
+SwiftUI's data-driven `Table` view. SwiftUI's `Table` needs a
+`[RowType]` collection plus per-column `TableColumn(key:)` declarations
+that don't naturally fall out of the structural "compose from children"
+emitter — full `SwiftUI.Table` integration waits on `For`-inside-table
+in a follow-up PR.
+
+Sub-tag handling:
+
+- `HostTableHead` → `HStack` rows whose `Text(...)` children carry
+  `.bold()` modifiers.
+- `HostTableBody` → `HStack` rows, plain.
+- `HostTableFoot` → preceded by `Divider()`, then `HStack` rows.
+- `HostTableColGroup` → emits a Swift comment
+  `// HostTableColGroup ignored in SwiftUI` (no SwiftUI analog).
+
+When a `HostTableHead` is followed by any non-head section, a
+`Divider()` is auto-inserted between them so the visual head/body
+separation matches the HTML `<thead>` / `<tbody>` convention.
+
+Orphan sub-tags (`HostTableHead` / `Body` / `Foot` / `ColGroup` used
+outside a `HostTable` parent) emit a self-documenting Swift comment
+rather than erroring; comments are statement-level no-ops, so the
+generated file still type-checks.
+
+`part_name` on a `HostTable` is currently surfaced as a Swift comment
+`// part: <name>` directly before the VStack opener. SwiftUI has no
+native equivalent of CSS `part`; a future style-inlining PR can swap
+this for a real modifier.
+
+### Added — tests
+
+- 8 new tests covering: empty HostTable, head-only (bold), body-only,
+  foot preceded by divider, head+body ordering with auto-divider,
+  ColGroup-emits-comment, orphan sub-tag handling, and `part_name`
+  emission. The recognised-vs-deferred matrix test now lists
+  `HostTable` as recognised; only `If` and `For` remain deferred.
+
+### Crate version
+
+- Bumped from `0.2.0` → `0.3.0`.
+
 ## [0.2.0] - 2026-05-19
 
 ### Added — UI29 kernel primitives (partial)
