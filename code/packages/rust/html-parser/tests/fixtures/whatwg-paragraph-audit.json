@@ -1,0 +1,2299 @@
+{
+  "case_count": 380,
+  "cases": [
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "adoption01-dat-1",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "adoption01.dat:1"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "adoption01-dat-2",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "adoption01.dat:2"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "adoption01-dat-6",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "adoption01.dat:6"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "adoption01-dat-7",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "adoption01.dat:7"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "adoption01-dat-8",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "adoption01.dat:8"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "adoption01-dat-9",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "adoption01.dat:9"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "adoption01-dat-10",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "adoption01.dat:10"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "adoption01-dat-17",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "adoption01.dat:17"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "adoption02-dat-18",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "adoption02.dat:18"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-20",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:20"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-21",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:21"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-22",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:22"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-23",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:23"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-24",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:24"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-25",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:25"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-26",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:26"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-27",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:27"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-28",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:28"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-29",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:29"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-30",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:30"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-31",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:31"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-32",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:32"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-33",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:33"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-34",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:34"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-35",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:35"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-36",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:36"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-37",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:37"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-38",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:38"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-39",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:39"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-40",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:40"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-41",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:41"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-42",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:42"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-43",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:43"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-44",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:44"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-45",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:45"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-46",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:46"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-47",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:47"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-48",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:48"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-49",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:49"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-50",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:50"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-51",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:51"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "blocks-dat-52",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "blocks.dat:52"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "blocks-dat-53",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "blocks.dat:53"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-54",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:54"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-55",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:55"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-56",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:56"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-57",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:57"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-58",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:58"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-59",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:59"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "blocks-dat-60",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "blocks.dat:60"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "blocks-dat-61",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "blocks.dat:61"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-62",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:62"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-63",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:63"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "blocks-dat-64",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "blocks.dat:64"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "blocks-dat-65",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "blocks.dat:65"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-66",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:66"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "blocks-dat-67",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "blocks.dat:67"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "domjs-unsafe-dat-133",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "domjs-unsafe.dat:133"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "html5test-com-dat-291",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "html5test-com.dat:291"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "inbody01-dat-296",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "inbody01.dat:296"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "main-element-dat-303",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "main-element.dat:303"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "main-element-dat-304",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "main-element.dat:304"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "menuitem-element-dat-313",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "menuitem-element.dat:313"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "menuitem-element-dat-314",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "menuitem-element.dat:314"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "menuitem-element-dat-324",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "menuitem-element.dat:324"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "noscript01-dat-341",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "noscript01.dat:341"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "noscript01-dat-342",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "noscript01.dat:342"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "plain-text-unsafe-dat-371",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "plain-text-unsafe.dat:371"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "quirks01-dat-382",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "quirks01.dat:382"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "quirks01-dat-383",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "quirks01.dat:383"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "quirks01-dat-384",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "quirks01.dat:384"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "quirks01-dat-385",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "quirks01.dat:385"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "search-element-dat-433",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "search-element.dat:433"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "search-element-dat-434",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "search-element.dat:434"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tables01-dat-440",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tables01.dat:440"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests1-dat-567",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests1.dat:567"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-588",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:588"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-591",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:591"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests1-dat-592",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests1.dat:592"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests1-dat-594",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests1.dat:594"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-617",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:617"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-618",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:618"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-619",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:619"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests1-dat-620",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests1.dat:620"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-622",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:622"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-634",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:634"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-635",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:635"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-636",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:636"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-637",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:637"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-638",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:638"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-639",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:639"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-640",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:640"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-641",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:641"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests1-dat-653",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests1.dat:653"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests1-dat-654",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests1.dat:654"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests1-dat-655",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests1.dat:655"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests1-dat-656",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:656"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests1-dat-657",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests1.dat:657"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests1-dat-658",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests1.dat:658"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-661",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:661"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-663",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:663"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests1-dat-664",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests1.dat:664"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-675",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:675"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests1-dat-676",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:676"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-689",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:689"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-690",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:690"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-691",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:691"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-692",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:692"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-693",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:693"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-694",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:694"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-695",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:695"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests10-dat-696",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests10.dat:696"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests10-dat-697",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests10.dat:697"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests10-dat-698",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests10.dat:698"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests10-dat-699",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests10.dat:699"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "tests10-dat-709",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "tests10.dat:709"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests10-dat-712",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests10.dat:712"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests10-dat-713",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests10.dat:713"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "tests10-dat-714",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "tests10.dat:714"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests12-dat-745",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests12.dat:745"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests12-dat-746",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests12.dat:746"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests15-dat-754",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests15.dat:754"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests15-dat-755",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests15.dat:755"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests19-dat-1015",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests19.dat:1015"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests19-dat-1016",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests19.dat:1016"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests19-dat-1017",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests19.dat:1017"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests19-dat-1018",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests19.dat:1018"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests19-dat-1019",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests19.dat:1019"
+    },
+    {
+      "axis": "paragraph-heading-boundary",
+      "id": "tests19-dat-1020",
+      "reason": "paragraph implied end tags before heading starts",
+      "source": "tests19.dat:1020"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-1022",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:1022"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "tests19-dat-1024",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "tests19.dat:1024"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-1025",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:1025"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "tests19-dat-1027",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "tests19.dat:1027"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-1036",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:1036"
+    },
+    {
+      "axis": "paragraph-heading-boundary",
+      "id": "tests19-dat-1044",
+      "reason": "paragraph implied end tags before heading starts",
+      "source": "tests19.dat:1044"
+    },
+    {
+      "axis": "paragraph-heading-boundary",
+      "id": "tests19-dat-1045",
+      "reason": "paragraph implied end tags before heading starts",
+      "source": "tests19.dat:1045"
+    },
+    {
+      "axis": "paragraph-heading-boundary",
+      "id": "tests19-dat-1046",
+      "reason": "paragraph implied end tags before heading starts",
+      "source": "tests19.dat:1046"
+    },
+    {
+      "axis": "paragraph-heading-boundary",
+      "id": "tests19-dat-1047",
+      "reason": "paragraph implied end tags before heading starts",
+      "source": "tests19.dat:1047"
+    },
+    {
+      "axis": "paragraph-heading-boundary",
+      "id": "tests19-dat-1048",
+      "reason": "paragraph implied end tags before heading starts",
+      "source": "tests19.dat:1048"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-1055",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:1055"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests19-dat-1056",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests19.dat:1056"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-1059",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:1059"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-1060",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:1060"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-1061",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:1061"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests19-dat-1095",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests19.dat:1095"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests19-dat-1096",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests19.dat:1096"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests19-dat-1115",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests19.dat:1115"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests19-dat-1116",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests19.dat:1116"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1117",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1117"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1118",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1118"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1119",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1119"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1120",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1120"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1121",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1121"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1122",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1122"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1123",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1123"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1124",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1124"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1125",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1125"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1126",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1126"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1127",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1127"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1128",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1128"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1129",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1129"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1130",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1130"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1131",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1131"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1132",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1132"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1133",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1133"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1134",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1134"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1135",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1135"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1136",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1136"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1137",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1137"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1138",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1138"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1139",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1139"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1140",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1140"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1141",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1141"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1142",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1142"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1143",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1143"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1144",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1144"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests20-dat-1145",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests20.dat:1145"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests20-dat-1146",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests20.dat:1146"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1147",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1147"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1148",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1148"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1149",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1149"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1150",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1150"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests20-dat-1151",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests20.dat:1151"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests20-dat-1152",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests20.dat:1152"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1153",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1153"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1154",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1154"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1155",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1155"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1156",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1156"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests20-dat-1158",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests20.dat:1158"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "tests20-dat-1160",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "tests20.dat:1160"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests20-dat-1161",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests20.dat:1161"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests20-dat-1165",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests20.dat:1165"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests23-dat-1209",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests23.dat:1209"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests23-dat-1210",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests23.dat:1210"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests23-dat-1211",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests23.dat:1211"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests23-dat-1212",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests23.dat:1212"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests23-dat-1213",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests23.dat:1213"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests26-dat-1257",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests26.dat:1257"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests26-dat-1258",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests26.dat:1258"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests26-dat-1259",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests26.dat:1259"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests26-dat-1260",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests26.dat:1260"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests26-dat-1261",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests26.dat:1261"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests26-dat-1263",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests26.dat:1263"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests26-dat-1264",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests26.dat:1264"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests26-dat-1266",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests26.dat:1266"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests2-dat-10",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests2.dat:10"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests2-dat-26",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests2.dat:26"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests2-dat-27",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests2.dat:27"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests2-dat-28",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests2.dat:28"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests2-dat-29",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests2.dat:29"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests2-dat-30",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests2.dat:30"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests2-dat-58",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests2.dat:58"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests2-dat-59",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests2.dat:59"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests5-dat-11",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests5.dat:11"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests9-dat-13",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests9.dat:13"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests9-dat-14",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests9.dat:14"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests9-dat-15",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests9.dat:15"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests9-dat-16",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests9.dat:16"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests9-dat-17",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests9.dat:17"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests9-dat-18",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests9.dat:18"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests9-dat-19",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests9.dat:19"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests9-dat-20",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests9.dat:20"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests9-dat-21",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests9.dat:21"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests9-dat-22",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests9.dat:22"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests9-dat-23",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests9.dat:23"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests2-dat-61",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests2.dat:61"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "tests3-dat-20",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "tests3.dat:20"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests3-dat-23",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests3.dat:23"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests3-dat-24",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests3.dat:24"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests7-dat-14",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests7.dat:14"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests7-dat-15",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests7.dat:15"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "tests7-dat-29",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "tests7.dat:29"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests8-dat-10",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests8.dat:10"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests1-dat-2",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests1.dat:2"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-23",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:23"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-26",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:26"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests1-dat-27",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests1.dat:27"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests1-dat-29",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests1.dat:29"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-52",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:52"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-53",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:53"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-54",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:54"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests1-dat-55",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests1.dat:55"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-57",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:57"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-69",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:69"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-70",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:70"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-71",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:71"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-72",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:72"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-73",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:73"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-74",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:74"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-75",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:75"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-76",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:76"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests1-dat-88",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests1.dat:88"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests1-dat-89",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests1.dat:89"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests1-dat-90",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests1.dat:90"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests1-dat-91",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:91"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests1-dat-92",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests1.dat:92"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests1-dat-93",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests1.dat:93"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-96",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:96"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-98",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:98"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests1-dat-99",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests1.dat:99"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests1-dat-110",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests1.dat:110"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests1-dat-111",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:111"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-12",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:12"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-13",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:13"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-14",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:14"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-15",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:15"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-16",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:16"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-17",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:17"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests10-dat-18",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests10.dat:18"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests10-dat-19",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests10.dat:19"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests10-dat-20",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests10.dat:20"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests10-dat-21",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests10.dat:21"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests10-dat-22",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests10.dat:22"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "tests10-dat-32",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "tests10.dat:32"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests10-dat-35",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests10.dat:35"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests10-dat-36",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests10.dat:36"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "tests10-dat-37",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "tests10.dat:37"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests12-dat-1",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests12.dat:1"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests12-dat-2",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests12.dat:2"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests15-dat-1",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests15.dat:1"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests15-dat-2",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests15.dat:2"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests19-dat-2",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests19.dat:2"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests19-dat-3",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests19.dat:3"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests19-dat-4",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests19.dat:4"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests19-dat-5",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests19.dat:5"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests19-dat-6",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests19.dat:6"
+    },
+    {
+      "axis": "paragraph-heading-boundary",
+      "id": "tests19-dat-7",
+      "reason": "paragraph implied end tags before heading starts",
+      "source": "tests19.dat:7"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-9",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:9"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "tests19-dat-11",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "tests19.dat:11"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-12",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:12"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "tests19-dat-14",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "tests19.dat:14"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-23",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:23"
+    },
+    {
+      "axis": "paragraph-heading-boundary",
+      "id": "tests19-dat-31",
+      "reason": "paragraph implied end tags before heading starts",
+      "source": "tests19.dat:31"
+    },
+    {
+      "axis": "paragraph-heading-boundary",
+      "id": "tests19-dat-32",
+      "reason": "paragraph implied end tags before heading starts",
+      "source": "tests19.dat:32"
+    },
+    {
+      "axis": "paragraph-heading-boundary",
+      "id": "tests19-dat-33",
+      "reason": "paragraph implied end tags before heading starts",
+      "source": "tests19.dat:33"
+    },
+    {
+      "axis": "paragraph-heading-boundary",
+      "id": "tests19-dat-34",
+      "reason": "paragraph implied end tags before heading starts",
+      "source": "tests19.dat:34"
+    },
+    {
+      "axis": "paragraph-heading-boundary",
+      "id": "tests19-dat-35",
+      "reason": "paragraph implied end tags before heading starts",
+      "source": "tests19.dat:35"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-42",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:42"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests19-dat-43",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests19.dat:43"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-46",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:46"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-47",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:47"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests19-dat-48",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests19.dat:48"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests19-dat-82",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests19.dat:82"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests19-dat-83",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests19.dat:83"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests19-dat-102",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests19.dat:102"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests19-dat-103",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests19.dat:103"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-1",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:1"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-2",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:2"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-3",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:3"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-4",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:4"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-5",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:5"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-6",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:6"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-7",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:7"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-8",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:8"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-9",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:9"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-10",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:10"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-11",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:11"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-12",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:12"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-13",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:13"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-14",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:14"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-15",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:15"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-16",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:16"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-17",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:17"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-18",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:18"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-19",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:19"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-20",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:20"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-21",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:21"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-22",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:22"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-23",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:23"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-24",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:24"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-25",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:25"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-26",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:26"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-27",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:27"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-28",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:28"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests20-dat-29",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests20.dat:29"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests20-dat-30",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests20.dat:30"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-31",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:31"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-32",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:32"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-33",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:33"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-34",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:34"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "tests20-dat-35",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "tests20.dat:35"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests20-dat-36",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests20.dat:36"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-37",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:37"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-38",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:38"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-39",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:39"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests20-dat-40",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests20.dat:40"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests20-dat-42",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests20.dat:42"
+    },
+    {
+      "axis": "paragraph-block-boundary",
+      "id": "tests20-dat-44",
+      "reason": "paragraph implied end tags before block-level boundaries",
+      "source": "tests20.dat:44"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests20-dat-45",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests20.dat:45"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "tests20-dat-49",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "tests20.dat:49"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests23-dat-1",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests23.dat:1"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests23-dat-2",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests23.dat:2"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests23-dat-3",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests23.dat:3"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests23-dat-4",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests23.dat:4"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests23-dat-5",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests23.dat:5"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests26-dat-10",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests26.dat:10"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests26-dat-11",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests26.dat:11"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests26-dat-12",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests26.dat:12"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tests26-dat-13",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tests26.dat:13"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tests26-dat-14",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tests26.dat:14"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "tests26-dat-16",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "tests26.dat:16"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests26-dat-17",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests26.dat:17"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "tests26-dat-19",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "tests26.dat:19"
+    },
+    {
+      "axis": "paragraph-fragment-context",
+      "id": "foreign-fragment-dat-58",
+      "reason": "paragraph handling in html5lib fragment contexts",
+      "source": "foreign-fragment.dat:58"
+    },
+    {
+      "axis": "paragraph-fragment-context",
+      "id": "foreign-fragment-dat-59",
+      "reason": "paragraph handling in html5lib fragment contexts",
+      "source": "foreign-fragment.dat:59"
+    },
+    {
+      "axis": "paragraph-fragment-context",
+      "id": "foreign-fragment-dat-60",
+      "reason": "paragraph handling in html5lib fragment contexts",
+      "source": "foreign-fragment.dat:60"
+    },
+    {
+      "axis": "paragraph-fragment-context",
+      "id": "foreign-fragment-dat-62",
+      "reason": "paragraph handling in html5lib fragment contexts",
+      "source": "foreign-fragment.dat:62"
+    },
+    {
+      "axis": "paragraph-fragment-context",
+      "id": "foreign-fragment-dat-65",
+      "reason": "paragraph handling in html5lib fragment contexts",
+      "source": "foreign-fragment.dat:65"
+    },
+    {
+      "axis": "paragraph-fragment-context",
+      "id": "foreign-fragment-dat-66",
+      "reason": "paragraph handling in html5lib fragment contexts",
+      "source": "foreign-fragment.dat:66"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "scripted-adoption01-dat-1",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "scripted/adoption01.dat:1"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "scripted-ark-dat-1",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "scripted/ark.dat:1"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tricky01-dat-1",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tricky01.dat:1"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tricky01-dat-2",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tricky01.dat:2"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "tricky01-dat-3",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "tricky01.dat:3"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tricky01-dat-7",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tricky01.dat:7"
+    },
+    {
+      "axis": "paragraph-table-boundary",
+      "id": "tricky01-dat-8",
+      "reason": "paragraph boundaries around table insertion and foster parenting modes",
+      "source": "tricky01.dat:8"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "webkit01-dat-13",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "webkit01.dat:13"
+    },
+    {
+      "axis": "paragraph-text-mode-boundary",
+      "id": "webkit01-dat-40",
+      "reason": "paragraph boundaries around pre, listing, plaintext, and text-mode elements",
+      "source": "webkit01.dat:40"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "webkit02-dat-2",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "webkit02.dat:2"
+    },
+    {
+      "axis": "paragraph-formatting-boundary",
+      "id": "webkit02-dat-3",
+      "reason": "paragraph boundaries with active formatting reconstruction",
+      "source": "webkit02.dat:3"
+    }
+  ],
+  "counts_by_axis": {
+    "paragraph-basic-boundary": 51,
+    "paragraph-block-boundary": 56,
+    "paragraph-form-boundary": 75,
+    "paragraph-formatting-boundary": 73,
+    "paragraph-fragment-context": 6,
+    "paragraph-heading-boundary": 12,
+    "paragraph-special-end-tag": 25,
+    "paragraph-table-boundary": 48,
+    "paragraph-text-mode-boundary": 34
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress paragraph implied end tags, formatting reconstruction, table/foster-parenting boundaries, form controls, text modes, headings, special end-tag recovery, and fragment contexts.",
+  "format": "whatwg-html-paragraph-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

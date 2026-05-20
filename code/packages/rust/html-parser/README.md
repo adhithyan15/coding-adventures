@@ -214,6 +214,16 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_list_item_
   --check
 ```
 
+The generated `tests/fixtures/whatwg-paragraph-audit.json` fixture indexes
+paragraph implied-end tags, formatting reconstruction, table/foster-parenting
+boundaries, form controls, text modes, headings, special end-tag recovery, and
+fragment contexts:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_paragraph_audit_fixture.py \
+  --check
+```
+
 The generated `tests/fixtures/whatwg-document-shell-audit.json` fixture indexes
 doctypes, comments, `html`/`head`/`body` synthesis, frameset boundaries, and
 shell fragment contexts:
