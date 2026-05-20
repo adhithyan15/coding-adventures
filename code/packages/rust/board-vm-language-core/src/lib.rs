@@ -98,6 +98,8 @@ pub const LANGUAGE_ESP_DEFAULT_FLASH_OFFSET: u32 = 0x1000;
 pub const LANGUAGE_ESP_DEFAULT_FLASH_SIZE: u32 = 4 * 1024 * 1024;
 pub const LANGUAGE_BOARD_VM_WIRE_PROTOCOL: &str = "board_vm_cobs_crc";
 pub const ARDUINO_CLI_NATIVE_USB_BOOTLOADER_TOUCH_BAUD: u32 = 1_200;
+pub const ARDUINO_CLI_UPLOAD_PORT_PLACEHOLDER: &str = "<port>";
+pub const ARDUINO_CLI_UPLOAD_INPUT_FILE_PLACEHOLDER: &str = "<firmware-image>";
 
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -593,6 +595,30 @@ pub struct LanguageArduinoCliPortDiscovery {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageArduinoCliUploadInvocation {
+    pub board_id: String,
+    pub executable: String,
+    pub subcommand: String,
+    pub fqbn: String,
+    pub port_hint: String,
+    pub port_selection_step: String,
+    pub port_flag: String,
+    pub fqbn_flag: String,
+    pub input_file_flag: String,
+    pub input_dir_flag: String,
+    pub upload_property_flag: String,
+    pub verify_flag: String,
+    pub port_placeholder: String,
+    pub input_file_placeholder: String,
+    pub args_template: Vec<String>,
+    pub requires_port: bool,
+    pub accepts_input_file: bool,
+    pub accepts_input_dir: bool,
+    pub accepts_upload_properties: bool,
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageUploadOptions {
     pub board_id: String,
     pub adapter: String,
@@ -1026,6 +1052,42 @@ pub fn arduino_cli_port_discovery_for_target(
         reset_delegated_to_board_package: upload.reset_method
             == TargetUploadResetMethod::ArduinoBoardPackage,
         notes: arduino_cli_port_discovery_notes(Some(port_hint)).to_owned(),
+    })
+}
+
+pub fn arduino_cli_upload_invocation_for_target(
+    selector: &str,
+) -> Option<LanguageArduinoCliUploadInvocation> {
+    let target = detect_board_target(selector)?;
+    let upload = target.upload?;
+    if upload.adapter != TargetUploadAdapter::ArduinoCli {
+        return None;
+    }
+
+    let port_hint = upload.port_hint?;
+    let fqbn = upload.fqbn?;
+    let (executable, subcommand) = arduino_cli_command_parts(upload.command)?;
+    Some(LanguageArduinoCliUploadInvocation {
+        board_id: target.board_id.to_owned(),
+        executable: executable.to_owned(),
+        subcommand: subcommand.to_owned(),
+        fqbn: fqbn.to_owned(),
+        port_hint: upload_port_hint_name(port_hint).to_owned(),
+        port_selection_step: arduino_cli_port_selection_step(Some(port_hint)).to_owned(),
+        port_flag: "-p".to_owned(),
+        fqbn_flag: "-b".to_owned(),
+        input_file_flag: "-i".to_owned(),
+        input_dir_flag: "--input-dir".to_owned(),
+        upload_property_flag: "--upload-property".to_owned(),
+        verify_flag: "-t".to_owned(),
+        port_placeholder: ARDUINO_CLI_UPLOAD_PORT_PLACEHOLDER.to_owned(),
+        input_file_placeholder: ARDUINO_CLI_UPLOAD_INPUT_FILE_PLACEHOLDER.to_owned(),
+        args_template: arduino_cli_upload_args_template(fqbn),
+        requires_port: upload.transport == TargetUploadTransport::Serial,
+        accepts_input_file: true,
+        accepts_input_dir: true,
+        accepts_upload_properties: true,
+        notes: arduino_cli_upload_invocation_notes(port_hint).to_owned(),
     })
 }
 
@@ -1634,6 +1696,43 @@ fn arduino_cli_port_discovery_notes(hint: Option<TargetUploadPortHint>) -> &'sta
             "External serial adapter Arduino CLI uploads require the caller to provide the adapter port before the board package handles reset and programmer behavior."
         }
         _ => "Arduino CLI upload port discovery is delegated to the board package.",
+    }
+}
+
+fn arduino_cli_command_parts(command: &str) -> Option<(&str, &str)> {
+    let mut parts = command.split_whitespace();
+    let executable = parts.next()?;
+    let subcommand = parts.next()?;
+    if parts.next().is_some() {
+        return None;
+    }
+    Some((executable, subcommand))
+}
+
+fn arduino_cli_upload_args_template(fqbn: &str) -> Vec<String> {
+    vec![
+        "upload".to_owned(),
+        "-p".to_owned(),
+        ARDUINO_CLI_UPLOAD_PORT_PLACEHOLDER.to_owned(),
+        "-b".to_owned(),
+        fqbn.to_owned(),
+        "-i".to_owned(),
+        ARDUINO_CLI_UPLOAD_INPUT_FILE_PLACEHOLDER.to_owned(),
+    ]
+}
+
+fn arduino_cli_upload_invocation_notes(hint: TargetUploadPortHint) -> &'static str {
+    match hint {
+        TargetUploadPortHint::NativeUsb => {
+            "Fill the port placeholder with the selected or rediscovered native USB CDC port and the input placeholder with a concrete Board VM firmware image."
+        }
+        TargetUploadPortHint::UsbSerialBridge => {
+            "Fill the port placeholder with the USB serial bridge path and the input placeholder with a concrete Board VM firmware image."
+        }
+        TargetUploadPortHint::ExternalSerialAdapter => {
+            "Fill the port placeholder with the external serial adapter path and the input placeholder with a concrete Board VM firmware image."
+        }
+        _ => "Fill the port placeholder with the Arduino upload port and the input placeholder with a concrete Board VM firmware image.",
     }
 }
 
@@ -5405,6 +5504,61 @@ mod tests {
         assert!(arduino_cli_port_discovery_for_target("esp32").is_none());
         assert!(arduino_cli_port_discovery_for_target("pico").is_none());
         assert!(arduino_cli_port_discovery_for_target("not-a-board").is_none());
+    }
+
+    #[test]
+    fn arduino_cli_upload_invocation_is_owned_by_rust_language_core() {
+        let nano_r4 =
+            arduino_cli_upload_invocation_for_target("arduino:renesas_uno:nanor4").unwrap();
+        assert_eq!(nano_r4.board_id, "arduino-nano-r4");
+        assert_eq!(nano_r4.executable, "arduino-cli");
+        assert_eq!(nano_r4.subcommand, "upload");
+        assert_eq!(nano_r4.fqbn, "arduino:renesas_uno:nanor4");
+        assert_eq!(nano_r4.port_hint, "native_usb");
+        assert_eq!(nano_r4.port_selection_step, "select_native_usb_port");
+        assert_eq!(nano_r4.port_flag, "-p");
+        assert_eq!(nano_r4.fqbn_flag, "-b");
+        assert_eq!(nano_r4.input_file_flag, "-i");
+        assert_eq!(nano_r4.input_dir_flag, "--input-dir");
+        assert_eq!(nano_r4.upload_property_flag, "--upload-property");
+        assert_eq!(nano_r4.verify_flag, "-t");
+        assert_eq!(
+            nano_r4.args_template,
+            vec![
+                "upload",
+                "-p",
+                ARDUINO_CLI_UPLOAD_PORT_PLACEHOLDER,
+                "-b",
+                "arduino:renesas_uno:nanor4",
+                "-i",
+                ARDUINO_CLI_UPLOAD_INPUT_FILE_PLACEHOLDER,
+            ]
+        );
+        assert!(nano_r4.requires_port);
+        assert!(nano_r4.accepts_input_file);
+        assert!(nano_r4.accepts_input_dir);
+        assert!(nano_r4.accepts_upload_properties);
+        assert!(nano_r4.notes.contains("native USB CDC port"));
+
+        let mega =
+            arduino_cli_upload_invocation_for_target("arduino:avr:mega:cpu=atmega2560").unwrap();
+        assert_eq!(mega.board_id, "arduino-mega-2560");
+        assert_eq!(mega.fqbn, "arduino:avr:mega:cpu=atmega2560");
+        assert_eq!(mega.port_hint, "usb_serial_bridge");
+        assert_eq!(mega.port_selection_step, "select_usb_serial_port");
+        assert!(mega.notes.contains("USB serial bridge path"));
+
+        let pro_mini = arduino_cli_upload_invocation_for_target("arduino-pro-mini").unwrap();
+        assert_eq!(pro_mini.port_hint, "external_serial_adapter");
+        assert_eq!(
+            pro_mini.port_selection_step,
+            "select_external_serial_adapter"
+        );
+        assert!(pro_mini.notes.contains("external serial adapter path"));
+
+        assert!(arduino_cli_upload_invocation_for_target("esp32").is_none());
+        assert!(arduino_cli_upload_invocation_for_target("pico").is_none());
+        assert!(arduino_cli_upload_invocation_for_target("not-a-board").is_none());
     }
 
     #[test]
