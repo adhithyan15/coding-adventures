@@ -1467,54 +1467,184 @@ fn weierstrass_sqrt_fraction_ir(rc_val: RatC) -> IRNode {
     apply_node(SQRT, vec![inside])
 }
 
-/// Match `c·sin(x)`, `c·cos(x)`, `sin(x)`, `cos(x)`, or any `Neg`-wrapping.
-/// Returns `(c, trig_head_str)` where `trig_head_str` is `SIN` or `COS`.
-fn weierstrass_parse_const_times_trig_x(node: &IRNode, x: &str) -> Option<(RatC, &'static str)> {
+/// Phase 38: Parse a linear-in-`x` rational expression `α·x + β` and return
+/// `(α, β)` with `α, β ∈ ℚ` and `α ≠ 0`.  Recognised shapes (any operand
+/// ordering within commutative heads):
+///
+/// | Shape          | Returns   |
+/// |----------------|-----------|
+/// | `x`            | `(1, 0)`  |
+/// | `α·x`          | `(α, 0)`  |
+/// | `α·x + β`      | `(α, β)`  |
+/// | `β + α·x`      | `(α, β)`  |
+/// | `α·x − β`      | `(α, −β)` |
+/// | `β − α·x`      | `(−α, β)` |
+/// | `−(α·x + β)`   | `(−α, −β)`|
+///
+/// Returns `None` when the expression is not linear in `x` (e.g. `x²`,
+/// `sin(x)`, pure constants, or nested nonlinear shapes).  `α = 0` is
+/// filtered out so callers may rely on `α ≠ 0` throughout.
+fn weierstrass_parse_linear_in_x(node: &IRNode, x: &str) -> Option<(RatC, RatC)> {
     let target = IRNode::Symbol(x.to_string());
-    if let IRNode::Apply(apply) = node {
-        // Bare sin(x) / cos(x) — coefficient is 1.
-        if apply.args.len() == 1 && apply.args[0] == target {
-            if apply.head == IRNode::Symbol(SIN.to_string()) {
-                return Some(((1, 1), SIN));
-            }
-            if apply.head == IRNode::Symbol(COS.to_string()) {
-                return Some(((1, 1), COS));
-            }
-        }
-        // Mul(c, sin/cos(x)) or Mul(sin/cos(x), c)
-        if apply.head == IRNode::Symbol(MUL.to_string()) && apply.args.len() == 2 {
-            let (a, b) = (&apply.args[0], &apply.args[1]);
-            for (const_side, trig_side) in [(a, b), (b, a)] {
-                if let Some(c) = node_to_rc(const_side) {
-                    if let IRNode::Apply(trig) = trig_side {
-                        if trig.args.len() == 1 && trig.args[0] == target {
-                            if trig.head == IRNode::Symbol(SIN.to_string()) {
-                                return Some((c, SIN));
-                            }
-                            if trig.head == IRNode::Symbol(COS.to_string()) {
-                                return Some((c, COS));
-                            }
-                        }
-                    }
-                }
+    if node == &target {
+        return Some(((1, 1), (0, 1)));
+    }
+    // Pure constants free of x are not linear-in-x (no x term).
+    if !depends_on(node, x) {
+        return None;
+    }
+    let IRNode::Apply(apply) = node else {
+        return None;
+    };
+    // α·x — Mul(constant, x) in either order.  α = 0 is rejected.
+    if apply.head == IRNode::Symbol(MUL.to_string()) && apply.args.len() == 2 {
+        let (left, right) = (&apply.args[0], &apply.args[1]);
+        if let Some(c_left) = node_to_rc(left) {
+            if right == &target && c_left.0 != 0 {
+                return Some((c_left, (0, 1)));
             }
         }
-        // Neg(inner) — recurse one level and negate the coefficient.
-        if apply.head == IRNode::Symbol(NEG.to_string()) && apply.args.len() == 1 {
-            if let Some((c, head)) = weierstrass_parse_const_times_trig_x(&apply.args[0], x) {
-                return Some((rc_neg(c), head));
+        if let Some(c_right) = node_to_rc(right) {
+            if left == &target && c_right.0 != 0 {
+                return Some((c_right, (0, 1)));
+            }
+        }
+        return None;
+    }
+    // −(linear) — recurse and negate both coefficients.
+    if apply.head == IRNode::Symbol(NEG.to_string()) && apply.args.len() == 1 {
+        let inner = weierstrass_parse_linear_in_x(&apply.args[0], x)?;
+        return Some((rc_neg(inner.0), rc_neg(inner.1)));
+    }
+    // ADD: constant + linear or linear + constant.
+    if apply.head == IRNode::Symbol(ADD.to_string()) && apply.args.len() == 2 {
+        let (left, right) = (&apply.args[0], &apply.args[1]);
+        for (const_side, lin_side) in [(left, right), (right, left)] {
+            let Some(c) = node_to_rc(const_side) else {
+                continue;
+            };
+            let Some((alpha, beta)) = weierstrass_parse_linear_in_x(lin_side, x) else {
+                continue;
+            };
+            return rc_add(beta, c).map(|sum| (alpha, sum));
+        }
+        return None;
+    }
+    // SUB: two cases depending on which side carries `x`.
+    if apply.head == IRNode::Symbol(SUB.to_string()) && apply.args.len() == 2 {
+        let (left, right) = (&apply.args[0], &apply.args[1]);
+        // Case A: linear − constant → (α, β − c)
+        if let Some(c_right) = node_to_rc(right) {
+            if let Some((alpha, beta)) = weierstrass_parse_linear_in_x(left, x) {
+                return rc_sub(beta, c_right).map(|d| (alpha, d));
+            }
+        }
+        // Case B: constant − linear → (−α, c − β)
+        if let Some(c_left) = node_to_rc(left) {
+            if let Some((alpha, beta)) = weierstrass_parse_linear_in_x(right, x) {
+                return rc_sub(c_left, beta).map(|d| (rc_neg(alpha), d));
             }
         }
     }
     None
 }
 
-/// Parse `a + b·sin(x)` / `a + b·cos(x)` (any operand order, plus the
-/// SUB-headed variant) into `(a, b, trig_head_str)`.
+/// Phase 38: Build the IR node for `α·x + β`, collapsing trivial cases so the
+/// emitted `tan(arg/2)` carries the simplest equivalent argument.
+///
+/// - `α = 1, β = 0` → `x`     (bit-for-bit identical to the Phase 34 bare path)
+/// - `α = 1, β ≠ 0` → `x + β`
+/// - `β = 0, α ≠ 1` → `α·x`
+/// - otherwise       → `α·x + β`
+fn weierstrass_build_linear_arg_ir(alpha: RatC, beta: RatC, x: &str) -> Option<IRNode> {
+    let alpha_is_one = alpha == (1, 1);
+    let beta_is_zero = beta.0 == 0;
+    let x_node = IRNode::Symbol(x.to_string());
+    if alpha_is_one && beta_is_zero {
+        return Some(x_node);
+    }
+    if beta_is_zero {
+        return Some(apply_node(MUL, vec![rc_to_ir(alpha)?, x_node]));
+    }
+    if alpha_is_one {
+        return Some(apply_node(ADD, vec![x_node, rc_to_ir(beta)?]));
+    }
+    let ax = apply_node(MUL, vec![rc_to_ir(alpha)?, x_node]);
+    Some(apply_node(ADD, vec![ax, rc_to_ir(beta)?]))
+}
+
+/// Phase 38: match `c·sin(α·x + β)` / `c·cos(α·x + β)` (and the c=1 / α=1 /
+/// β=0 degenerate variants) and return `(c, head_str, α, β)`.
+///
+/// Accepts both argument orders within `Mul` and unwraps a leading `Neg`.
+/// The trig argument must be linear in `x` per
+/// [`weierstrass_parse_linear_in_x`].  Supersedes the Phase 34 bare-`x`
+/// predecessor `weierstrass_parse_const_times_trig_x`.
+fn weierstrass_parse_const_times_trig_linear(
+    node: &IRNode,
+    x: &str,
+) -> Option<(RatC, &'static str, RatC, RatC)> {
+    if let IRNode::Apply(apply) = node {
+        // Bare sin(arg) / cos(arg) — coefficient is 1.
+        if apply.args.len() == 1 {
+            let head_str = if apply.head == IRNode::Symbol(SIN.to_string()) {
+                Some(SIN)
+            } else if apply.head == IRNode::Symbol(COS.to_string()) {
+                Some(COS)
+            } else {
+                None
+            };
+            if let Some(head) = head_str {
+                if let Some((alpha, beta)) = weierstrass_parse_linear_in_x(&apply.args[0], x) {
+                    return Some(((1, 1), head, alpha, beta));
+                }
+            }
+        }
+        // Mul(c, sin/cos(arg)) or Mul(sin/cos(arg), c)
+        if apply.head == IRNode::Symbol(MUL.to_string()) && apply.args.len() == 2 {
+            let (a, b) = (&apply.args[0], &apply.args[1]);
+            for (const_side, trig_side) in [(a, b), (b, a)] {
+                let Some(c) = node_to_rc(const_side) else {
+                    continue;
+                };
+                let IRNode::Apply(trig) = trig_side else {
+                    continue;
+                };
+                if trig.args.len() != 1 {
+                    continue;
+                }
+                let head_str = if trig.head == IRNode::Symbol(SIN.to_string()) {
+                    Some(SIN)
+                } else if trig.head == IRNode::Symbol(COS.to_string()) {
+                    Some(COS)
+                } else {
+                    None
+                };
+                let Some(head) = head_str else { continue };
+                if let Some((alpha, beta)) = weierstrass_parse_linear_in_x(&trig.args[0], x) {
+                    return Some((c, head, alpha, beta));
+                }
+            }
+        }
+        // Neg(inner) — recurse and negate `c`.
+        if apply.head == IRNode::Symbol(NEG.to_string()) && apply.args.len() == 1 {
+            if let Some((c, head, alpha, beta)) =
+                weierstrass_parse_const_times_trig_linear(&apply.args[0], x)
+            {
+                return Some((rc_neg(c), head, alpha, beta));
+            }
+        }
+    }
+    None
+}
+
+/// Parse `a + b·sin(α·x+β)` / `a + b·cos(α·x+β)` (any operand order, plus the
+/// SUB-headed variant) into `(a, b, trig_head_str, α, β)`.  Phase 38 generalises
+/// the Phase 34 bare-`x` predecessor.
 fn weierstrass_parse_a_plus_b_sincos(
     node: &IRNode,
     x: &str,
-) -> Option<(RatC, RatC, &'static str)> {
+) -> Option<(RatC, RatC, &'static str, RatC, RatC)> {
     let IRNode::Apply(apply) = node else {
         return None;
     };
@@ -1525,24 +1655,30 @@ fn weierstrass_parse_a_plus_b_sincos(
     if apply.head == IRNode::Symbol(ADD.to_string()) {
         for (const_side, trig_side) in [(left, right), (right, left)] {
             if let Some(a_rc) = node_to_rc(const_side) {
-                if let Some((b_rc, head)) = weierstrass_parse_const_times_trig_x(trig_side, x) {
-                    return Some((a_rc, b_rc, head));
+                if let Some((b_rc, head, alpha, beta)) =
+                    weierstrass_parse_const_times_trig_linear(trig_side, x)
+                {
+                    return Some((a_rc, b_rc, head, alpha, beta));
                 }
             }
         }
         return None;
     }
     if apply.head == IRNode::Symbol(SUB.to_string()) {
-        // a − b·trig(x) = a + (−b)·trig(x)
+        // a − b·trig(...) = a + (−b)·trig(...)
         if let Some(a_left) = node_to_rc(left) {
-            if let Some((b_rc, head)) = weierstrass_parse_const_times_trig_x(right, x) {
-                return Some((a_left, rc_neg(b_rc), head));
+            if let Some((b_rc, head, alpha, beta)) =
+                weierstrass_parse_const_times_trig_linear(right, x)
+            {
+                return Some((a_left, rc_neg(b_rc), head, alpha, beta));
             }
         }
-        // b·trig(x) − a = −a + b·trig(x)
-        if let Some((b_left, head)) = weierstrass_parse_const_times_trig_x(left, x) {
+        // b·trig(...) − a = −a + b·trig(...)
+        if let Some((b_left, head, alpha, beta)) =
+            weierstrass_parse_const_times_trig_linear(left, x)
+        {
             if let Some(a_right) = node_to_rc(right) {
-                return Some((rc_neg(a_right), b_left, head));
+                return Some((rc_neg(a_right), b_left, head, alpha, beta));
             }
         }
     }
@@ -1566,19 +1702,20 @@ fn try_weierstrass_degenerate(
     a: RatC,
     b: RatC,
     trig_head: &'static str,
-    x: &str,
+    arg_node: &IRNode,
 ) -> Option<IRNode> {
     // `RatC` is in lowest terms; (n, d) with d > 0 and gcd(|n|, d) = 1.
     // a == 0 iff a.0 == 0.  Same shape check works for b.
     if a.0 == 0 {
         return None;
     }
+    // Phase 38: `arg_node` is the IR for `α·x + β`; the inner factor `α`
+    // has been pre-absorbed into `c` by the caller, so the closed form's
+    // shape is identical to the bare-`x` case with `tan(arg/2)` in place
+    // of `tan(x/2)`.
     let tan_half = apply_node(
         TAN,
-        vec![apply_node(
-            DIV,
-            vec![IRNode::Symbol(x.to_string()), IRNode::Integer(2)],
-        )],
+        vec![apply_node(DIV, vec![arg_node.clone(), IRNode::Integer(2)])],
     );
     // Helper closures.
     let two_c = rc_mul(c, (2, 1))?;
@@ -1626,7 +1763,7 @@ fn try_weierstrass_log_form(
     a: RatC,
     b: RatC,
     trig_head: &'static str,
-    x: &str,
+    arg_node: &IRNode,
 ) -> Option<IRNode> {
     // disc_sq = b² − a² > 0 (caller passed disc = a² − b² < 0).
     let b_sq = rc_mul(b, b)?;
@@ -1636,12 +1773,11 @@ fn try_weierstrass_log_form(
         return None;
     }
     let sqrt_disc_ir = weierstrass_sqrt_fraction_ir(disc_sq);
+    // Phase 38: `arg_node` is the IR for `α·x + β`; the inner factor
+    // `α` has been pre-absorbed into `c` by the caller.
     let tan_half = apply_node(
         TAN,
-        vec![apply_node(
-            DIV,
-            vec![IRNode::Symbol(x.to_string()), IRNode::Integer(2)],
-        )],
+        vec![apply_node(DIV, vec![arg_node.clone(), IRNode::Integer(2)])],
     );
     if trig_head == SIN {
         if a.0 == 0 {
@@ -1678,38 +1814,43 @@ fn try_weierstrass_log_form(
     Some(apply_node(MUL, vec![coef_ir, apply_node(LOG, vec![log_arg])]))
 }
 
-/// Phase 34 entry point.  Returns the closed form when the integrand is
-/// `c / (a + b·sin/cos(x))` with rational c, a, b and a² > b² (a > 0 for cos),
-/// or `None` otherwise.
+/// Phase 34 + 38 entry point.  Returns the closed form when the integrand is
+/// `c / (a + b·sin/cos(α·x + β))` with rational c, a, b, α, β (α ≠ 0) and the
+/// relevant discriminant guard for each branch, or `None` otherwise.  When
+/// `α = 1` and `β = 0`, this is bit-for-bit identical to the original Phase
+/// 34/35/36/37 behaviour.
 fn try_weierstrass_one_over_linear_trig(
     num: &IRNode,
     den: &IRNode,
     x: &str,
 ) -> Option<IRNode> {
-    let c_rc = node_to_rc(num)?;
-    let (a_rc, b_rc, trig_head) = weierstrass_parse_a_plus_b_sincos(den, x)?;
+    let c_in = node_to_rc(num)?;
+    let (a_rc, b_rc, trig_head, alpha, beta) = weierstrass_parse_a_plus_b_sincos(den, x)?;
+    // Phase 38: fold the inner substitution u = α·x + β (du = α·dx) into the
+    // numerator constant once at entry: c ← c/α.  `α ≠ 0` is guaranteed by
+    // `weierstrass_parse_linear_in_x`.  Every branch below uses the original
+    // closed-form formulas with `tan(arg/2)` substituted for `tan(x/2)`.
+    let c_rc = rc_div(c_in, alpha)?;
+    let arg_node = weierstrass_build_linear_arg_ir(alpha, beta, x)?;
     // disc = a² − b².  Three sub-cases:
     //   disc > 0  → Phase 34 arctan form (below)
     //   disc == 0 → Phase 35 degenerate form (four sign combinations)
-    //   disc < 0  → log form (still deferred)
+    //   disc < 0  → Phase 36/37 log form
     let a_sq = rc_mul(a_rc, a_rc)?;
     let b_sq = rc_mul(b_rc, b_rc)?;
     let disc = rc_sub(a_sq, b_sq)?;
     if disc.0 == 0 {
-        return try_weierstrass_degenerate(c_rc, a_rc, b_rc, trig_head, x);
+        return try_weierstrass_degenerate(c_rc, a_rc, b_rc, trig_head, &arg_node);
     }
     if disc.0 < 0 {
-        // Phase 36: a² < b² → log form via partial fractions on the two
-        // distinct real roots of the quadratic in tan(x/2).
-        return try_weierstrass_log_form(c_rc, a_rc, b_rc, trig_head, x);
+        // Phase 36/37: a² < b² → log form via partial fractions on the two
+        // distinct real roots of the quadratic in tan(arg/2).
+        return try_weierstrass_log_form(c_rc, a_rc, b_rc, trig_head, &arg_node);
     }
     let sqrt_disc_ir = weierstrass_sqrt_fraction_ir(disc);
     let tan_half = apply_node(
         TAN,
-        vec![apply_node(
-            DIV,
-            vec![IRNode::Symbol(x.to_string()), IRNode::Integer(2)],
-        )],
+        vec![apply_node(DIV, vec![arg_node.clone(), IRNode::Integer(2)])],
     );
     let atan_arg = if trig_head == SIN {
         // (a·tan(x/2) + b) / √disc

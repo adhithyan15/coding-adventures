@@ -2654,17 +2654,9 @@ fn phase35_rational_coefficients() {
     }
 }
 
-#[test]
-fn phase34_fallthrough_non_bare_argument() {
-    // ∫ 1/(2 + sin(2x)) dx — argument isn't bare x.  Deferred.
-    let two_x = apply(sym(MUL), vec![int(2), sym("x")]);
-    let integrand = apply(
-        sym(DIV),
-        vec![int(1), apply(sym(ADD), vec![int(2), apply(sym(SIN), vec![two_x])])],
-    );
-    let result = integrate(integrand);
-    assert!(is_unevaluated_integrate(&result));
-}
+// The "non-bare argument falls through" deferral previously asserted here has
+// been promoted to a Phase 38 success test below — Phase 38 closes such
+// integrals via the linear-substitution dispatcher.
 
 #[test]
 fn phase34_fallthrough_symbolic_coefficient() {
@@ -2848,4 +2840,185 @@ fn phase37_cos_negative_b_with_numerator_coefficient() {
         let expected = 5.0 / (1.0 - 2.0 * x_val.cos());
         assert!((got - expected).abs() < 1e-3);
     }
+}
+
+// ---------------------------------------------------------------------------
+// Phase 38: linear-argument substitution lifts Weierstrass to ``trig(α·x + β)``.
+//
+// With ``u = α·x + β`` (``du = α·dx``), every Phase 34/35/36/37 closed form
+// applies unchanged with ``tan((α·x+β)/2)`` in place of ``tan(x/2)`` and the
+// outer coefficient scaled by ``1/α``.  Each case is verified by central
+// differencing the closed form against the original integrand at sample
+// points away from the integrand's singularities.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase38_sin_two_x_closes() {
+    // ∫ 1/(2 + sin 2x) dx — promoted from Phase 34 deferral.
+    let two_x = apply(sym(MUL), vec![int(2), sym("x")]);
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(2), apply(sym(SIN), vec![two_x])])],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-1.0_f64, -0.3, 0.0, 0.3, 1.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (2.0 + (2.0 * x_val).sin());
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase38_cos_three_x() {
+    // ∫ 1/(2 + cos 3x) dx — α = 3, β = 0.
+    let three_x = apply(sym(MUL), vec![int(3), sym("x")]);
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(2), apply(sym(COS), vec![three_x])])],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-0.5_f64, -0.2, 0.0, 0.2, 0.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (2.0 + (3.0 * x_val).cos());
+        assert!((got - expected).abs() < 1e-4);
+    }
+}
+
+#[test]
+fn phase38_sin_x_plus_constant_phase() {
+    // ∫ 1/(2 + sin(x + 1)) dx — pure phase shift α = 1, β = 1.
+    let x_plus_one = apply(sym(ADD), vec![sym("x"), int(1)]);
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(2), apply(sym(SIN), vec![x_plus_one])])],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-2.0_f64, -1.0, 0.0, 1.0, 2.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (2.0 + (x_val + 1.0).sin());
+        assert!((got - expected).abs() < 1e-4);
+    }
+}
+
+#[test]
+fn phase38_sin_two_x_plus_phase() {
+    // ∫ 1/(2 + sin(2x + 1)) dx — full α = 2, β = 1.
+    let two_x_plus_one = apply(
+        sym(ADD),
+        vec![apply(sym(MUL), vec![int(2), sym("x")]), int(1)],
+    );
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(2), apply(sym(SIN), vec![two_x_plus_one])])],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-0.8_f64, -0.3, 0.0, 0.3, 0.8] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (2.0 + (2.0 * x_val + 1.0).sin());
+        assert!((got - expected).abs() < 1e-4);
+    }
+}
+
+#[test]
+fn phase38_rational_alpha() {
+    // ∫ 1/(2 + sin(x/2)) dx — rational α = 1/2.
+    let half_x = apply(sym(MUL), vec![rat(1, 2), sym("x")]);
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(2), apply(sym(SIN), vec![half_x])])],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-2.0_f64, -1.0, 0.5, 1.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (2.0 + (0.5 * x_val).sin());
+        assert!((got - expected).abs() < 1e-4);
+    }
+}
+
+#[test]
+fn phase38_negative_alpha() {
+    // ∫ 1/(2 + sin(−2x)) dx — α = −2, sign-flipped.
+    let neg_two_x = apply(sym(MUL), vec![int(-2), sym("x")]);
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(2), apply(sym(SIN), vec![neg_two_x])])],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-1.0_f64, -0.3, 0.0, 0.3, 1.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (2.0 + (-2.0 * x_val).sin());
+        assert!((got - expected).abs() < 1e-4);
+    }
+}
+
+#[test]
+fn phase38_degenerate_branch_under_substitution() {
+    // ∫ 1/(1 + cos 2x) dx — Phase 35 degenerate path with α = 2.
+    // 1 + cos 2x = 2·cos²(x); antiderivative is (1/2)·tan(x).
+    let two_x = apply(sym(MUL), vec![int(2), sym("x")]);
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(1), apply(sym(COS), vec![two_x])])],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[-1.0_f64, -0.3, 0.3, 1.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (1.0 + (2.0 * x_val).cos());
+        assert!((got - expected).abs() < 1e-3);
+    }
+}
+
+#[test]
+fn phase38_log_form_under_substitution() {
+    // ∫ 1/(1 + 2·sin 2x) dx — Phase 36 log path with α = 2.
+    let two_x = apply(sym(MUL), vec![int(2), sym("x")]);
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(1),
+            apply(
+                sym(ADD),
+                vec![int(1), apply(sym(MUL), vec![int(2), apply(sym(SIN), vec![two_x])])],
+            ),
+        ],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    // 1 + 2·sin 2x zeros at sin 2x = −1/2 (2x ≈ ±π/6 ≈ ±0.52).  Sample away.
+    for &x_val in &[-1.0_f64, -0.5, 0.0, 0.5, 1.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (1.0 + 2.0 * (2.0 * x_val).sin());
+        assert!((got - expected).abs() < 1e-3);
+    }
+}
+
+#[test]
+fn phase38_fallthrough_nonlinear_argument() {
+    // ∫ 1/(2 + sin(x²)) dx — argument is x², not linear in x.  Deferred.
+    let x_sq = apply(sym(MUL), vec![sym("x"), sym("x")]);
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(2), apply(sym(SIN), vec![x_sq])])],
+    );
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result));
+}
+
+#[test]
+fn phase38_fallthrough_symbolic_alpha() {
+    // ∫ 1/(2 + sin(α·x)) dx — symbolic α can't be tested for ≠ 0.  Deferred.
+    let alpha_x = apply(sym(MUL), vec![sym("alpha"), sym("x")]);
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(2), apply(sym(SIN), vec![alpha_x])])],
+    );
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result));
 }

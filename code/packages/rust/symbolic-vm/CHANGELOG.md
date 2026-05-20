@@ -1,5 +1,87 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.11.0] — 2026-05-20
+
+### Added — Phase 38: Weierstrass closed forms lifted to linear trig arguments
+
+Mirrors Python `symbolic-vm` 0.63.0 (PR #3690) and TypeScript
+`symbolic-vm` 0.11.0 (PR #3691).
+
+The previous Phases 34–37 closed Weierstrass for
+`∫ c / (a + b·trig(x)) dx` in all discriminant regimes (`a² > b²` arctan,
+`a² = b²` degenerate, `a² < b²` log) but only when the trig argument
+was the bare variable `x`.  Phase 38 generalises every branch to accept
+any linear-in-`x` rational argument `α·x + β` (with `α, β ∈ ℚ`, `α ≠ 0`).
+
+The mathematics is a single inner change of variable: with
+`u = α·x + β` we have `du = α · dx`, so
+
+    ∫ c / (a + b·sin(α·x + β)) dx
+        = (1/α) · ∫ c / (a + b·sin u) du  (Phase 34/36/37 closed form in u)
+
+The closed form is the existing one with `tan((α·x + β)/2)` substituted
+for `tan(x/2)` and the outer constant scaled by `1/α`.  When `α = 1`
+and `β = 0`, the new code path is bit-for-bit identical to the original
+Phase 34–37 behaviour — full backwards compatibility.
+
+### Added
+
+- **`weierstrass_parse_linear_in_x(node, x) -> Option<(RatC, RatC)>`** in
+  `handlers.rs` — parses a node into `(α, β)` rational pair when it
+  represents `α·x + β`.  Handles bare `x`, scalar multiples, ADD/SUB
+  with any operand ordering, and leading `Neg` wrappers.  Rejects
+  nonlinear (`x²`) and pure-constant shapes by returning `None`.
+  `α = 0` is filtered out so callers may rely on `α ≠ 0` throughout.
+- **`weierstrass_build_linear_arg_ir(α, β, x)`** — builds the IR for
+  `α·x + β`, collapsing trivial cases (`α=1, β=0 → x`, etc.) so the
+  emitted `tan(arg/2)` carries the simplest equivalent argument.
+- **`weierstrass_parse_const_times_trig_linear`** — supersedes the
+  Phase 34 bare-`x` predecessor.  Returns `(c, head, α, β)` for any
+  shape matching `c·sin(α·x + β)` or `c·cos(α·x + β)`.
+
+### Changed
+
+- **`weierstrass_parse_a_plus_b_sincos`** — now returns
+  `(a, b, head, α, β)` instead of `(a, b, head)`.
+- **`try_weierstrass_degenerate`, `try_weierstrass_log_form`,
+  `try_weierstrass_one_over_linear_trig`** — accept an
+  `arg_node: &IRNode` parameter representing `α·x + β` and substitute it
+  into the `tan(arg/2)` construction.  The outer `c ← c/α` scaling is
+  applied once at the dispatcher entry, so each branch's closed form is
+  otherwise unchanged.
+
+### Added — tests
+
+`tests/test_vm.rs` — 9 new Phase 38 cases (1 promoted from the prior
+fallthrough deferral):
+
+- `phase38_sin_two_x_closes` — `∫ 1/(2 + sin 2x) dx`.
+- `phase38_cos_three_x` — `α = 3` cos variant.
+- `phase38_sin_x_plus_constant_phase` — pure phase shift `α = 1, β = 1`.
+- `phase38_sin_two_x_plus_phase` — full `α = 2, β = 1`.
+- `phase38_rational_alpha` — `α = 1/2`.
+- `phase38_negative_alpha` — `α = −2` sign-flipped.
+- `phase38_degenerate_branch_under_substitution` — `(1 + cos 2x)`
+  exercises the Phase 35 degenerate path with α=2.
+- `phase38_log_form_under_substitution` — `(1 + 2·sin 2x)` exercises
+  the Phase 36 log path with α=2.
+- `phase38_fallthrough_nonlinear_argument` — `sin(x²)` is correctly
+  left unevaluated.
+- `phase38_fallthrough_symbolic_alpha` — `sin(α·x)` with symbolic
+  α defers gracefully.
+
+The pre-existing `phase34_fallthrough_non_bare_argument` is removed
+(commented-out with a pointer to the new Phase 38 success test).
+
+All 188 tests pass (179 prior + 9 net new).
+
+### Still deferred
+
+- Symbolic coefficients (`a`, `b`, `α`, or `β` non-numeric) — needs an
+  assumption context to decide discriminant sign.
+- Trig argument involving `x²` or other nonlinear forms — out of scope
+  for Weierstrass.
+
 ## [0.10.0] — 2026-05-20
 
 ### Changed — Phase 37: Weierstrass log form cos branch covers `b < −|a|`
