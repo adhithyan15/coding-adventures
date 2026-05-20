@@ -926,9 +926,22 @@ impl ToolAuditSupervisorDrainRunReport {
         self.scheduler_action().requires_plan_drift_investigation()
     }
 
+    /// Classify why the host should investigate this run.
+    pub fn host_investigation_kind(&self) -> ToolAuditSupervisorDrainHostInvestigationKind {
+        ToolAuditSupervisorDrainHostInvestigationKind::from_investigation_flags(
+            self.requires_plan_drift_investigation(),
+            self.requires_count_drift_investigation(),
+        )
+    }
+
+    /// Return the stable host-investigation classification label.
+    pub fn host_investigation_label(&self) -> &'static str {
+        self.host_investigation_kind().as_str()
+    }
+
     /// Return whether the host should investigate any run divergence.
     pub fn requires_host_investigation(&self) -> bool {
-        self.requires_plan_drift_investigation() || self.requires_count_drift_investigation()
+        self.host_investigation_kind().requires_investigation()
     }
 
     /// Return a payload-free, flattened summary for host logs and schedulers.
@@ -951,6 +964,7 @@ impl ToolAuditSupervisorDrainRunReport {
             has_follow_up_record_count_drift: self.has_follow_up_record_count_drift(),
             count_drift_kind: self.count_drift_kind(),
             requires_count_drift_investigation: self.requires_count_drift_investigation(),
+            host_investigation_kind: self.host_investigation_kind(),
             requires_host_investigation: self.requires_host_investigation(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -1091,6 +1105,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub count_drift_kind: ToolAuditSupervisorDrainCountDriftKind,
     /// Whether count drift should be investigated by the host.
     pub requires_count_drift_investigation: bool,
+    /// Stable classification of why the host should investigate this run.
+    pub host_investigation_kind: ToolAuditSupervisorDrainHostInvestigationKind,
     /// Whether the host should investigate any run divergence.
     pub requires_host_investigation: bool,
     /// Whether the actual run delivered the planned number of rows.
@@ -1153,6 +1169,11 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether count drift should be investigated by the host.
     pub fn requires_count_drift_investigation(&self) -> bool {
         self.requires_count_drift_investigation
+    }
+
+    /// Return the stable host-investigation classification label.
+    pub fn host_investigation_label(&self) -> &'static str {
+        self.host_investigation_kind.as_str()
     }
 
     /// Return whether the host should investigate any run divergence.
@@ -1409,6 +1430,79 @@ impl ToolAuditSupervisorDrainCountDriftKind {
 }
 
 impl Display for ToolAuditSupervisorDrainCountDriftKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable classification of why a host should investigate a drain run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHostInvestigationKind {
+    /// No host investigation is needed.
+    NoInvestigation,
+    /// The preflight plan and actual drain diverged.
+    PlanDrift,
+    /// Planned-vs-actual counts drifted without a plan-drift action.
+    CountDrift,
+    /// Both plan drift and count drift need investigation.
+    PlanAndCountDrift,
+}
+
+impl ToolAuditSupervisorDrainHostInvestigationKind {
+    /// Classify the required host investigation from plan and count flags.
+    pub fn from_investigation_flags(
+        requires_plan_drift_investigation: bool,
+        requires_count_drift_investigation: bool,
+    ) -> Self {
+        match (
+            requires_plan_drift_investigation,
+            requires_count_drift_investigation,
+        ) {
+            (false, false) => Self::NoInvestigation,
+            (true, false) => Self::PlanDrift,
+            (false, true) => Self::CountDrift,
+            (true, true) => Self::PlanAndCountDrift,
+        }
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoInvestigation => "no_investigation",
+            Self::PlanDrift => "plan_drift",
+            Self::CountDrift => "count_drift",
+            Self::PlanAndCountDrift => "plan_and_count_drift",
+        }
+    }
+
+    /// Parse a stable snake_case host-investigation label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_investigation" => Some(Self::NoInvestigation),
+            "plan_drift" => Some(Self::PlanDrift),
+            "count_drift" => Some(Self::CountDrift),
+            "plan_and_count_drift" => Some(Self::PlanAndCountDrift),
+            _ => None,
+        }
+    }
+
+    /// Return whether plan drift should be investigated by the host.
+    pub fn requires_plan_drift_investigation(self) -> bool {
+        matches!(self, Self::PlanDrift | Self::PlanAndCountDrift)
+    }
+
+    /// Return whether count drift should be investigated by the host.
+    pub fn requires_count_drift_investigation(self) -> bool {
+        matches!(self, Self::CountDrift | Self::PlanAndCountDrift)
+    }
+
+    /// Return whether any host investigation is needed.
+    pub fn requires_investigation(self) -> bool {
+        !matches!(self, Self::NoInvestigation)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostInvestigationKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -2913,6 +3007,11 @@ mod tests {
         assert_eq!(report.count_drift_label(), "no_count_drift");
         assert!(!report.requires_count_drift_investigation());
         assert!(!report.requires_plan_drift_investigation());
+        assert_eq!(
+            report.host_investigation_kind(),
+            ToolAuditSupervisorDrainHostInvestigationKind::NoInvestigation
+        );
+        assert_eq!(report.host_investigation_label(), "no_investigation");
         assert!(!report.requires_host_investigation());
         assert!(report.requires_follow_up());
         assert!(report.reached_end_of_log());
@@ -2943,6 +3042,11 @@ mod tests {
         assert_eq!(summary.count_drift_label(), "no_count_drift");
         assert!(!summary.requires_count_drift_investigation);
         assert!(!summary.requires_count_drift_investigation());
+        assert_eq!(
+            summary.host_investigation_kind,
+            ToolAuditSupervisorDrainHostInvestigationKind::NoInvestigation
+        );
+        assert_eq!(summary.host_investigation_label(), "no_investigation");
         assert!(!summary.requires_host_investigation);
         assert!(!summary.requires_host_investigation());
         assert!(!summary.replayed_extra_records());
@@ -3216,6 +3320,70 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_investigation_kind_labels_are_stable_for_hosts() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainHostInvestigationKind::NoInvestigation,
+                "no_investigation",
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostInvestigationKind::PlanDrift,
+                "plan_drift",
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostInvestigationKind::CountDrift,
+                "count_drift",
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainHostInvestigationKind::PlanAndCountDrift,
+                "plan_and_count_drift",
+                true,
+                true,
+            ),
+        ];
+
+        for (kind, label, requires_plan_drift_investigation, requires_count_drift_investigation) in
+            cases
+        {
+            assert_eq!(kind.as_str(), label);
+            assert_eq!(kind.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostInvestigationKind::from_label(label),
+                Some(kind)
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainHostInvestigationKind::from_investigation_flags(
+                    requires_plan_drift_investigation,
+                    requires_count_drift_investigation
+                ),
+                kind
+            );
+            assert_eq!(
+                kind.requires_plan_drift_investigation(),
+                requires_plan_drift_investigation
+            );
+            assert_eq!(
+                kind.requires_count_drift_investigation(),
+                requires_count_drift_investigation
+            );
+            assert_eq!(
+                kind.requires_investigation(),
+                requires_plan_drift_investigation || requires_count_drift_investigation
+            );
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainHostInvestigationKind::from_label("look_into_it"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_report_exposes_outcome_label_and_action_flag() {
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(store
@@ -3238,6 +3406,11 @@ mod tests {
         assert_eq!(report.outcome_label(), "needs_continuation");
         assert!(report.requires_scheduler_action());
         assert!(!report.requires_plan_drift_investigation());
+        assert_eq!(
+            report.host_investigation_kind(),
+            ToolAuditSupervisorDrainHostInvestigationKind::NoInvestigation
+        );
+        assert_eq!(report.host_investigation_label(), "no_investigation");
         assert!(!report.requires_host_investigation());
         assert_eq!(
             report.scheduler_action(),
@@ -3297,6 +3470,11 @@ mod tests {
         assert_eq!(summary.count_drift_label(), "no_count_drift");
         assert!(!summary.requires_count_drift_investigation);
         assert!(!summary.requires_count_drift_investigation());
+        assert_eq!(
+            summary.host_investigation_kind,
+            ToolAuditSupervisorDrainHostInvestigationKind::NoInvestigation
+        );
+        assert_eq!(summary.host_investigation_label(), "no_investigation");
         assert!(!summary.requires_host_investigation);
         assert!(!summary.requires_host_investigation());
         assert!(summary.matches_planned_record_count);
@@ -3348,6 +3526,11 @@ mod tests {
         assert_eq!(report.count_drift_label(), "record_count_drift");
         assert!(report.requires_count_drift_investigation());
         assert!(report.requires_plan_drift_investigation());
+        assert_eq!(
+            report.host_investigation_kind(),
+            ToolAuditSupervisorDrainHostInvestigationKind::PlanAndCountDrift
+        );
+        assert_eq!(report.host_investigation_label(), "plan_and_count_drift");
         assert!(report.requires_host_investigation());
         assert_eq!(summary.record_count_delta, 1);
         assert!(summary.has_record_count_drift);
@@ -3360,6 +3543,11 @@ mod tests {
         assert_eq!(summary.count_drift_label(), "record_count_drift");
         assert!(summary.requires_count_drift_investigation);
         assert!(summary.requires_count_drift_investigation());
+        assert_eq!(
+            summary.host_investigation_kind,
+            ToolAuditSupervisorDrainHostInvestigationKind::PlanAndCountDrift
+        );
+        assert_eq!(summary.host_investigation_label(), "plan_and_count_drift");
         assert!(summary.requires_host_investigation);
         assert!(summary.requires_host_investigation());
         assert!(summary.replayed_extra_records());
@@ -3394,6 +3582,11 @@ mod tests {
             ToolAuditSupervisorDrainCountDriftKind::RecordCountDrift
         );
         assert!(report.requires_count_drift_investigation());
+        assert_eq!(
+            report.host_investigation_kind(),
+            ToolAuditSupervisorDrainHostInvestigationKind::PlanAndCountDrift
+        );
+        assert_eq!(report.host_investigation_label(), "plan_and_count_drift");
         assert!(report.requires_host_investigation());
         assert_eq!(summary.record_count_delta, -1);
         assert!(summary.has_record_count_drift);
@@ -3405,6 +3598,11 @@ mod tests {
         );
         assert!(summary.requires_count_drift_investigation);
         assert!(summary.requires_count_drift_investigation());
+        assert_eq!(
+            summary.host_investigation_kind,
+            ToolAuditSupervisorDrainHostInvestigationKind::PlanAndCountDrift
+        );
+        assert_eq!(summary.host_investigation_label(), "plan_and_count_drift");
         assert!(summary.requires_host_investigation);
         assert!(summary.requires_host_investigation());
         assert!(!summary.replayed_extra_records());
@@ -3445,6 +3643,11 @@ mod tests {
         assert_eq!(report.count_drift_label(), "follow_up_record_count_drift");
         assert!(report.requires_count_drift_investigation());
         assert!(!report.requires_plan_drift_investigation());
+        assert_eq!(
+            report.host_investigation_kind(),
+            ToolAuditSupervisorDrainHostInvestigationKind::CountDrift
+        );
+        assert_eq!(report.host_investigation_label(), "count_drift");
         assert!(report.requires_host_investigation());
         assert_eq!(summary.record_count_delta, 0);
         assert_eq!(summary.follow_up_record_count_delta, -1);
@@ -3458,6 +3661,11 @@ mod tests {
         assert_eq!(summary.count_drift_label(), "follow_up_record_count_drift");
         assert!(summary.requires_count_drift_investigation);
         assert!(summary.requires_count_drift_investigation());
+        assert_eq!(
+            summary.host_investigation_kind,
+            ToolAuditSupervisorDrainHostInvestigationKind::CountDrift
+        );
+        assert_eq!(summary.host_investigation_label(), "count_drift");
         assert!(summary.requires_host_investigation);
         assert!(summary.requires_host_investigation());
         assert!(summary.matches_planned_record_count);
