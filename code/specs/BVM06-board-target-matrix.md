@@ -170,8 +170,11 @@ chip select, and D0/D1 `Serial1`.
 
 The Nano R4 CAN metadata tranche adds the D4/D5 CAN0 descriptor and records the
 external transceiver requirement, while leaving `can.*` capabilities disabled
-for the shared Arduino runtime. Native USB, Qwiic `Wire1`, and RTC details
-remain follow-up adapter metadata.
+for the shared Arduino runtime.
+
+The Nano R4 RTC metadata tranche records the RA4M1 real-time clock as passive
+target metadata and keeps `rtc.*` capabilities disabled for the shared Arduino
+runtime. Native USB and Qwiic `Wire1` details remain follow-up adapter metadata.
 
 The next tranches should deepen board-specific firmware/upload adapters and
 richer peripheral tables for each family without moving generic Arduino

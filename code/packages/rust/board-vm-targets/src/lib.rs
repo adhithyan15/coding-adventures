@@ -905,6 +905,13 @@ pub const ARDUINO_NANO_R4_CAN_BUSES: [CanBusInfo; 1] = [CanBusInfo {
     notes: "Arduino Nano R4 D4/D5 CAN metadata only; external transceiver required and shared Arduino runtime does not enable can.* bytecode adapters yet.",
 }];
 
+pub const ARDUINO_NANO_R4_RTC: RtcInfo = RtcInfo {
+    instance: 0,
+    name: "RTC",
+    peripheral: "RA4M1 RTC",
+    notes: "Arduino Nano R4 RA4M1 real-time clock metadata only; shared Arduino runtime does not enable rtc.* bytecode adapters yet.",
+};
+
 const fn map_arduino_digital_pins<const N: usize>(
     source: [board_vm_arduino::DigitalPinDescriptor; N],
 ) -> [DigitalPinInfo; N] {
@@ -1238,6 +1245,30 @@ const fn arduino_board_target_with_buses_and_can(
     wireless: &'static [WirelessInterfaceInfo],
     network_interfaces: &'static [NetworkInterfaceInfo],
 ) -> BoardTargetInfo {
+    arduino_board_target_with_buses_can_and_rtc(
+        target,
+        digital_pins,
+        i2c_buses,
+        spi_buses,
+        uart_buses,
+        can_buses,
+        None,
+        wireless,
+        network_interfaces,
+    )
+}
+
+const fn arduino_board_target_with_buses_can_and_rtc(
+    target: board_vm_arduino::ArduinoTargetDescriptor,
+    digital_pins: &'static [DigitalPinInfo],
+    i2c_buses: &'static [I2cBusInfo],
+    spi_buses: &'static [SpiBusInfo],
+    uart_buses: &'static [UartBusInfo],
+    can_buses: &'static [CanBusInfo],
+    rtc: Option<RtcInfo>,
+    wireless: &'static [WirelessInterfaceInfo],
+    network_interfaces: &'static [NetworkInterfaceInfo],
+) -> BoardTargetInfo {
     BoardTargetInfo {
         board_id: target.board_id,
         display_name: target.display_name,
@@ -1259,7 +1290,7 @@ const fn arduino_board_target_with_buses_and_can(
         spi_buses,
         uart_buses,
         can_buses,
-        rtc: None,
+        rtc,
         watchdog: None,
         storage_regions: &[],
         wireless,
@@ -1415,13 +1446,14 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         &[],
         &[],
     ),
-    arduino_board_target_with_buses_and_can(
+    arduino_board_target_with_buses_can_and_rtc(
         board_vm_arduino::ARDUINO_NANO_R4,
         &ARDUINO_NANO_R4_DIGITAL_PINS,
         &ARDUINO_NANO_R4_I2C_BUSES,
         &ARDUINO_NANO_R4_SPI_BUSES,
         &ARDUINO_NANO_R4_UART_BUSES,
         &ARDUINO_NANO_R4_CAN_BUSES,
+        Some(ARDUINO_NANO_R4_RTC),
         &[],
         &[],
     ),
@@ -2049,6 +2081,15 @@ mod tests {
         assert!(minima.capabilities.contains(&"rtc.set"));
         assert!(wifi.capabilities.contains(&"rtc.now"));
         assert!(wifi.capabilities.contains(&"rtc.set"));
+
+        let nano_r4 = find_target("arduino-nano-r4").unwrap();
+        assert_eq!(nano_r4.rtc, Some(ARDUINO_NANO_R4_RTC));
+        assert_eq!(nano_r4.rtc.unwrap().instance, 0);
+        assert_eq!(nano_r4.rtc.unwrap().name, "RTC");
+        assert_eq!(nano_r4.rtc.unwrap().peripheral, "RA4M1 RTC");
+        assert!(nano_r4.rtc.unwrap().notes.contains("metadata only"));
+        assert!(!nano_r4.capabilities.contains(&"rtc.now"));
+        assert!(!nano_r4.capabilities.contains(&"rtc.set"));
 
         assert_eq!(find_target("esp32-devkit-v1").unwrap().rtc, None);
         assert_eq!(find_target("raspberry-pi-pico").unwrap().rtc, None);
