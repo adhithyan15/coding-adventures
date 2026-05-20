@@ -18,10 +18,10 @@
 //! - Twig: trivially exercises the existing pipeline.
 //! - Nib: the new piece — confirms that the Nib frontend wires through
 //!   the shared LANG VM chain.
-//! - Brainfuck: SKIPPED at the executable level because the
-//!   brainfuck-iir-compiler emits IR ops (`load_mem`, `putchar`, …)
-//!   that the AOT backend doesn't lower yet.  A separate "IIR
-//!   produced" test in `src/lib.rs` confirms the routing is correct.
+//! - Brainfuck: compiled end-to-end via the BF07 lowering pass.  The
+//!   `++++++++[>+++++++++<-]>.<++++[>++++<-]>+.+++++++..+++.>++++[>+++<-]>.+.--------.<++.<.`
+//!   program (canonical "Hello\n") is fed through `lang-aot`, linked,
+//!   and the resulting executable's stdout is asserted byte-for-byte.
 
 use std::io::Write;
 use std::process::Command;
@@ -174,4 +174,63 @@ fn end_to_end_nib_arithmetic_via_lang_aot() {
         let out = Command::new(&exe).output().expect("launch");
         assert_eq!(out.status.code(), Some(*expected));
     }
+}
+
+// ── BF07: Brainfuck end-to-end via lang-aot ───────────────────────────────────
+
+/// `++++++++[>++++++++<-]>+.` is the shortest canonical BF for "print
+/// 'A'": cell0=8, loop adds 8 to cell1 each pass (8 passes) → cell1=64,
+/// then `+` to 65, then `.` prints.  Asserts stdout = `"A"` exactly.
+///
+/// This single test exercises every mechanic LANG75 + LANG76 deliver:
+/// pointer shift (`>`), cell mutation (`+`/`-` via load_byte +
+/// arithmetic + store_byte), nested loop via `[` `]` (jmp_if_false on
+/// cell value), the 30000-byte tape from `alloc_bytes`, and `.` →
+/// `call_builtin "putchar"`.
+const BF_PRINT_A: &str = "++++++++[>++++++++<-]>+.";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_brainfuck_prints_a_via_lang_aot() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("a.bf");
+    let exe = dir.path().join("a.exe");
+    std::fs::write(&src, BF_PRINT_A).unwrap();
+
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::Brainfuck)
+        .unwrap_or_else(|e| panic!("BF compile failed: {e}"));
+
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"A",
+        "expected stdout 'A', got {:?}; stderr={:?}; exit={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+        out.status.code(),
+    );
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_brainfuck_prints_a_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("a.bf");
+    let exe = dir.path().join("a");
+    std::fs::write(&src, BF_PRINT_A).unwrap();
+
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::Brainfuck)
+        .unwrap_or_else(|e| panic!("BF compile failed: {e}"));
+
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"A",
+        "expected stdout 'A', got {:?}; stderr={:?}; exit={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+        out.status.code(),
+    );
 }

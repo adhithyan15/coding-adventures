@@ -182,11 +182,13 @@ pub fn compile_source_to_iir(
                 })
         }
         Language::Brainfuck => {
-            brainfuck_iir_compiler::compile_source(source, module_name)
+            let mut module = brainfuck_iir_compiler::compile_source(source, module_name)
                 .map_err(|e| LangAotError::FrontendError {
                     language,
                     message: e,
-                })
+                })?;
+            lower_brainfuck_for_aot(&mut module);
+            Ok(module)
         }
         Language::DartmouthBasic => Err(LangAotError::UnsupportedLanguage {
             language,
@@ -256,6 +258,118 @@ pub fn compile_file_to_macos_executable(
 }
 
 // ===========================================================================
+// BF07 — Brainfuck → LANG76 lowering pass
+// ===========================================================================
+//
+// The `brainfuck-iir-compiler` crate emits IIR that targets a hypothetical
+// VM with an implicit byte tape: `load_mem v, ptr` reads `*ptr`,
+// `store_mem ptr, v` writes `*ptr = v`, and `ptr` is just a cell index
+// (0..30000).  That shape works for `vm-core`, `jit-core`, and
+// `iir-to-wasm` — they each materialise the tape themselves.
+//
+// The AOT chain has no implicit tape: the backends only know about
+// `alloc_bytes` + `load_byte` + `store_byte` (LANG76).  This pass
+// rewrites a Brainfuck-shaped `IIRModule` into a LANG76-shaped one
+// without touching the frontend (so existing consumers keep working):
+//
+// 1. Prepend `const __bf_tape_size = 30000` and `alloc_bytes
+//    __bf_tape_size -> __bf_tape` to `main`.
+// 2. Rewrite `load_mem v, ptr` (one src) → `load_byte __bf_tape, ptr -> v`.
+// 3. Rewrite `store_mem ptr, v` (two srcs) → `store_byte __bf_tape, ptr, v`.
+// 4. Change `main`'s return type from `void` to `i64` and replace the
+//    trailing `ret_void` with `const r = 0; ret r` — Brainfuck has no
+//    exit code so we always return 0 from main, which the LANG VM AOT
+//    chain requires (the entry-point's return value is the process
+//    exit code).
+
+fn lower_brainfuck_for_aot(module: &mut IIRModule) {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    const TAPE: &str = "__bf_tape";
+    const TAPE_SIZE_VAR: &str = "__bf_tape_size";
+
+    for func in &mut module.functions {
+        if func.name != "main" {
+            // Defensive: BF compiler today only emits a single `main`,
+            // but the pass is correct regardless.  Functions other than
+            // `main` are passed through untouched.
+            continue;
+        }
+
+        // Step 1 — preamble: const TAPE_SIZE = 30000; alloc_bytes -> TAPE.
+        let mut new_instrs = Vec::with_capacity(func.instructions.len() + 2);
+        new_instrs.push(IIRInstr::new(
+            "const",
+            Some(TAPE_SIZE_VAR.to_string()),
+            vec![Operand::Int(30_000)],
+            "i64",
+        ));
+        new_instrs.push(IIRInstr::new(
+            "alloc_bytes",
+            Some(TAPE.to_string()),
+            vec![Operand::Var(TAPE_SIZE_VAR.to_string())],
+            "i64",
+        ));
+
+        // Step 2 & 3 — rewrite load_mem / store_mem.
+        for instr in std::mem::take(&mut func.instructions) {
+            match instr.op.as_str() {
+                // load_mem  v <- ptr   ⇒   load_byte v <- TAPE, ptr
+                "load_mem" => {
+                    let mut srcs = Vec::with_capacity(2);
+                    srcs.push(Operand::Var(TAPE.to_string()));
+                    if let Some(ptr) = instr.srcs.into_iter().next() {
+                        srcs.push(ptr);
+                    }
+                    new_instrs.push(IIRInstr::new(
+                        "load_byte",
+                        instr.dest,
+                        srcs,
+                        instr.type_hint,
+                    ));
+                }
+                // store_mem ptr, v   ⇒   store_byte TAPE, ptr, v
+                "store_mem" => {
+                    let mut srcs = Vec::with_capacity(3);
+                    srcs.push(Operand::Var(TAPE.to_string()));
+                    srcs.extend(instr.srcs.into_iter());
+                    new_instrs.push(IIRInstr::new(
+                        "store_byte",
+                        None,
+                        srcs,
+                        instr.type_hint,
+                    ));
+                }
+                // Step 4 — replace `ret_void` with `const r=0; ret r`.
+                //
+                // We synthesise a fresh register name (`__bf_ret`) to
+                // avoid colliding with the BF compiler's fixed names
+                // `ptr` / `v` / `c` / `k`.
+                "ret_void" => {
+                    new_instrs.push(IIRInstr::new(
+                        "const",
+                        Some("__bf_ret".to_string()),
+                        vec![Operand::Int(0)],
+                        "i64",
+                    ));
+                    new_instrs.push(IIRInstr::new(
+                        "ret",
+                        None,
+                        vec![Operand::Var("__bf_ret".to_string())],
+                        "i64",
+                    ));
+                }
+                _ => new_instrs.push(instr),
+            }
+        }
+        func.instructions = new_instrs;
+        // Reflect the step-4 return-type change so downstream type
+        // propagation in twig-aot sees i64 instead of void.
+        func.return_type = "i64".to_string();
+    }
+}
+
+// ===========================================================================
 // Tests
 // ===========================================================================
 
@@ -298,6 +412,50 @@ mod tests {
             Language::Brainfuck, "++++++++++++++++++++++++++++++++.", "bf"
         ).expect("brainfuck must compile");
         assert!(!iir.functions.is_empty(), "BF module must have at least main");
+    }
+
+    /// BF07: verify the Brainfuck lowering pass rewrites the module
+    /// shape correctly — `load_mem` / `store_mem` become `load_byte` /
+    /// `store_byte`, the `alloc_bytes` preamble is prepended, and the
+    /// implicit `ret_void` becomes an `i64` return of 0.
+    #[test]
+    fn brainfuck_lowering_inserts_tape_and_byte_ops() {
+        let iir = compile_source_to_iir(
+            Language::Brainfuck, "+.", "bf"
+        ).expect("brainfuck must compile");
+        let main = iir.functions.iter().find(|f| f.name == "main")
+            .expect("BF main must exist");
+
+        // Step 1: first two instructions must be the tape preamble.
+        let ops: Vec<&str> = main.instructions.iter()
+            .map(|i| i.op.as_str()).collect();
+        assert_eq!(ops[0], "const",
+                   "first instr must be const for tape size; got {ops:?}");
+        assert_eq!(ops[1], "alloc_bytes",
+                   "second instr must be alloc_bytes; got {ops:?}");
+
+        // Step 2/3: no `load_mem` or `store_mem` should remain.
+        for op in &ops {
+            assert_ne!(*op, "load_mem", "load_mem leaked through lowering");
+            assert_ne!(*op, "store_mem", "store_mem leaked through lowering");
+        }
+
+        // At least one load_byte and one store_byte must be present
+        // (the `+` command writes back, the `.` command loads).
+        assert!(ops.contains(&"load_byte"),
+                "lowered module must contain load_byte; got {ops:?}");
+        assert!(ops.contains(&"store_byte"),
+                "lowered module must contain store_byte; got {ops:?}");
+
+        // Step 4: ret_void must be gone, replaced by `const __bf_ret = 0; ret`.
+        assert!(!ops.iter().any(|o| *o == "ret_void"),
+                "ret_void must be replaced by ret i64 0");
+        assert_eq!(main.return_type, "i64",
+                   "main return type must be i64 after lowering");
+        // Last two instrs are `const __bf_ret = 0; ret __bf_ret`.
+        let last_two = &ops[ops.len()-2..];
+        assert_eq!(last_two, &["const", "ret"],
+                   "epilogue must be `const; ret`; got {last_two:?}");
     }
 
     #[test]
