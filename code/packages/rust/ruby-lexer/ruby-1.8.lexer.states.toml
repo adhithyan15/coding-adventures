@@ -172,6 +172,15 @@ id = "int_body"
 id = "string_d_body"     # inside "..."
 [[states]]
 id = "string_d_escape"   # inside "..." after a backslash
+[[states]]
+id = "string_d_hash"     # inside "..." after a `#` — peeking for `{` to
+                         # decide between literal `#` and interpolation
+                         # opener `#{`.
+[[states]]
+id = "string_d_interp"   # inside "...#{...}..." — capturing the
+                         # interpolation expression verbatim until the
+                         # matching `}` (interp_brace_depth tracked by
+                         # the action interpreter for nested braces).
 
 [[states]]
 id = "string_s_body"     # inside '...'
@@ -550,13 +559,20 @@ consume = false
 actions = ["emit(Int)", "emit(Eof)"]
 
 # ─────────────────────────────────────────────────────────────────
-# Double-quoted string body (no interpolation in Phase 1)
+# Double-quoted string body (Phase 3b: with `#{...}` interpolation)
 # ─────────────────────────────────────────────────────────────────
 
 [[transitions]]
 from = "string_d_body"
 matcher = { literal = "\\" }
 to = "string_d_escape"
+
+# `#` inside `"..."` may open an interpolation (`#{...}`).  We peek
+# the next char in `string_d_hash` to decide.
+[[transitions]]
+from = "string_d_body"
+matcher = { literal = "#" }
+to = "string_d_hash"
 
 [[transitions]]
 from = "string_d_body"
@@ -626,6 +642,57 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = ["parse_error(unterminated_string)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# String interpolation (Phase 3b) — inside `"..."`, `#{` opens an
+# embedded expression that runs until a matching `}`.  v0 captures
+# the expression text verbatim (recursive sub-lexing is a future
+# refinement); the parser can dispatch on the `#{...}` substring
+# when it needs to evaluate.
+# ─────────────────────────────────────────────────────────────────
+
+# Saw `#` inside `"..."`: peek for `{`.
+[[transitions]]
+from = "string_d_hash"
+matcher = { literal = "{" }
+to = "string_d_interp"
+actions = ["append_text(#)", "append_text(current)"]   # append "#{"
+
+# `#` not followed by `{`: re-dispatch the char as ordinary string
+# content.  Append the leading `#` first, then let `string_d_body`
+# handle the follower via consume=false.
+[[transitions]]
+from = "string_d_hash"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_text(#)", "parse_error(unterminated_string)", "emit(Eof)"]
+
+[[transitions]]
+from = "string_d_hash"
+matcher = { anything = true }
+to = "string_d_body"
+consume = false
+actions = ["append_text(#)"]
+
+# Inside `#{...}`: accumulate verbatim.  The action interpreter
+# tracks `interp_brace_depth` and forces the engine back to
+# `string_d_body` when a `}` is seen at depth 0 (closing the
+# interpolation).  Until then, every char including `{` / `}` is
+# appended; the engine never observes the matching `}` because the
+# interpreter consumes it manually before feeding to the engine.
+[[transitions]]
+from = "string_d_interp"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_interpolation)", "emit(Eof)"]
+
+[[transitions]]
+from = "string_d_interp"
+matcher = { anything = true }
+to = "string_d_interp"
+actions = ["append_text(current)"]
 
 # ─────────────────────────────────────────────────────────────────
 # Single-quoted string — fewer escapes (only \' and \\).
