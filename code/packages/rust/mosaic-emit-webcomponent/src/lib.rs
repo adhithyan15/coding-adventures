@@ -79,6 +79,17 @@
 use mosaic_vm::{EmitResult, MosaicRenderer, ResolvedProperty, ResolvedValue};
 use mosaic_analyzer::{MosaicSlot, MosaicType};
 
+// =====================================================================
+// New three-file pipeline entry point.
+//
+// `pub mod pipeline` introduces the UI24-compliant `from_pipeline`
+// function alongside the legacy `MosaicVM`-driven `WebComponentRenderer`.
+// The two code paths do not share state — adding the new pipeline
+// support cannot regress the legacy path.
+// =====================================================================
+pub mod pipeline;
+pub use pipeline::{from_pipeline, PipelineEmitError, PipelineEmitResult};
+
 // ===========================================================================
 // HtmlFragment — typed pieces of the template literal body
 // ===========================================================================

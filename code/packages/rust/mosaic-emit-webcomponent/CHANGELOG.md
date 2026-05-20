@@ -2,6 +2,34 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-05-19
+
+### Added
+
+- New `pipeline` module exposing `from_pipeline(interface, layout, style)`
+  that consumes the three-language pipeline triple (mosmodel +
+  moslayout + mosstyle) and emits a Custom Element class with shadow
+  DOM, observed attributes per slot, and CustomEvent-based dispatch
+  following the UI24 Flux pattern.
+- `PipelineEmitResult` and `PipelineEmitError` public types matching
+  the React / Qt / SwiftUI backends so `mosaic-compile` can treat all
+  pipeline backends uniformly.
+- Primitive lowering for `Box`, `Row`, `Column`, `Text`, `Image`,
+  `Spacer`, `Divider`, `Icon` on the new path. UI29 kernel primitives
+  (`Stack`, `HostInput`, `HostButton`, `HostScroll`, `If`, `For`,
+  `HostTable`) are tracked as a follow-up PR.
+
+### Dependencies
+
+- Added `mosmodel-compiler`, `moslayout-compiler`, `mosstyle-compiler`
+  as path dependencies.
+
+### Unchanged
+
+- The legacy `WebComponentRenderer` driven by `MosaicVM` is left
+  intact for backwards compatibility with any consumer still on the
+  single-file `.mosaic` path.
+
 ## [0.1.0] - 2026-04-04
 
 ### Added
