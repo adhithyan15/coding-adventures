@@ -140,7 +140,11 @@ jobs:
             exit 1
           fi
           echo "Installing: $wheel"
-          pip install "$wheel"
+          # --no-deps: matrix-rust-python has no Python deps (pure C
+          # extension); blocking pip from going to the public index
+          # makes the no-network intent explicit and future-proofs
+          # against silent dep creep that could enable a typosquat.
+          pip install --no-deps "$wheel"
 
       - name: Smoke-import the four expected exports
         # The headline Phase 3 acceptance test: `import` works,
