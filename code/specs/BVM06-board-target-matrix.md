@@ -114,15 +114,15 @@ user-programmable, such as Nicla Sense Env, should be modeled as board
 peripherals or carrier-managed adapters instead of fake firmware runtimes.
 
 The upload profile tranche exposes the first Rust-owned flashing descriptors
-through the target matrix: Arduino-family boards use an Arduino CLI profile,
-ESP32 uses an ESP ROM serial profile, and Pico/Pico W use a UF2 mass-storage
-profile. Language frontends should consume these profiles instead of branching
-on board names.
+through the target matrix: Arduino-family boards use an Arduino CLI profile
+with board-specific platform/FQBN metadata, ESP32 uses an ESP ROM serial
+profile, and Pico/Pico W use a UF2 mass-storage profile. Language frontends
+should consume these profiles instead of branching on board names.
 
 The upload plan tranche turns those descriptors into declarative host actions:
 artifact kind, artifact extension when one exists, serial or mount-path
-requirements, reset method, and adapter steps are emitted by Rust language core
-for each supported upload profile.
+requirements, reset method, board package identity, and adapter steps are
+emitted by Rust language core for each supported upload profile.
 
 The next tranches should deepen board-specific firmware/upload adapters and
 richer peripheral tables for each family without moving generic Arduino

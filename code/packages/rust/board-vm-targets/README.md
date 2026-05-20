@@ -32,7 +32,8 @@ Upload metadata is intentionally profile-shaped rather than a frontend command
 builder:
 
 - Arduino-family targets use an Arduino CLI profile so the board package owns
-  bootloader reset, programmer selection, and firmware artifact layout.
+  bootloader reset, programmer selection, firmware artifact layout, and the
+  selected platform/FQBN string for each concrete board descriptor.
 - ESP32 DevKit targets use an ESP ROM serial profile so image layout and boot
   pin reset remain Rust-owned.
 - Raspberry Pi Pico targets use a Pico UF2 mass-storage profile so BOOTSEL mount

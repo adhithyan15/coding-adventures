@@ -22,7 +22,9 @@ The first matrix covers representative Arduino families:
 
 Each target currently proves the shared GPIO/time backend path. Board-specific
 firmware/upload crates can extend the same descriptor with richer peripherals
-without falling back to Uno R4 assumptions.
+without falling back to Uno R4 assumptions. The descriptors also carry the
+Arduino CLI platform/FQBN for each board so host SDKs can ask Rust for upload
+metadata instead of maintaining language-local board tables.
 
 Opta terminals are modeled as board-local input and relay-output pins instead
 of pretending the PLC has Uno-style headers. Nicla sensor/audio/vision hardware

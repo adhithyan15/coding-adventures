@@ -155,6 +155,8 @@ pub struct UploadInfo {
     pub transport: UploadTransport,
     pub reset_method: UploadResetMethod,
     pub command: &'static str,
+    pub platform_id: Option<&'static str>,
+    pub fqbn: Option<&'static str>,
     pub notes: &'static str,
 }
 
@@ -446,12 +448,33 @@ pub const PICO_W_WIRELESS: [WirelessInterfaceInfo; 3] = [
     },
 ];
 
+const fn arduino_cli_upload(platform_id: &'static str, fqbn: &'static str) -> UploadInfo {
+    UploadInfo {
+        adapter: UploadAdapter::ArduinoCli,
+        image_format: UploadImageFormat::ArduinoCliBuildOutput,
+        transport: UploadTransport::Serial,
+        reset_method: UploadResetMethod::ArduinoBoardPackage,
+        command: "arduino-cli upload",
+        platform_id: Some(platform_id),
+        fqbn: Some(fqbn),
+        notes: "Board-specific Arduino CLI platform/FQBN owns bootloader reset, programmer, and final firmware artifact shape.",
+    }
+}
+
+pub const UNO_R4_MINIMA_UPLOAD: UploadInfo =
+    arduino_cli_upload("arduino:renesas_uno", "arduino:renesas_uno:minima");
+
+pub const UNO_R4_WIFI_UPLOAD: UploadInfo =
+    arduino_cli_upload("arduino:renesas_uno", "arduino:renesas_uno:unor4wifi");
+
 pub const ARDUINO_CLI_UPLOAD: UploadInfo = UploadInfo {
     adapter: UploadAdapter::ArduinoCli,
     image_format: UploadImageFormat::ArduinoCliBuildOutput,
     transport: UploadTransport::Serial,
     reset_method: UploadResetMethod::ArduinoBoardPackage,
     command: "arduino-cli upload",
+    platform_id: None,
+    fqbn: None,
     notes:
         "Board-specific Arduino CLI package owns bootloader reset, programmer, and final firmware artifact shape.",
 };
@@ -462,6 +485,8 @@ pub const ESP_ROM_SERIAL_UPLOAD: UploadInfo = UploadInfo {
     transport: UploadTransport::Serial,
     reset_method: UploadResetMethod::EspRomBootPins,
     command: "esp-rom",
+    platform_id: None,
+    fqbn: None,
     notes:
         "Serial ESP ROM flashing path with boot-pin reset and image-layout metadata owned by Rust.",
 };
@@ -472,6 +497,8 @@ pub const PICO_UF2_UPLOAD: UploadInfo = UploadInfo {
     transport: UploadTransport::MassStorage,
     reset_method: UploadResetMethod::PicoBootsel,
     command: "pico-uf2",
+    platform_id: None,
+    fqbn: None,
     notes: "UF2 copy-to-volume flashing path with BOOTSEL mount discovery owned by Rust.",
 };
 
@@ -858,7 +885,10 @@ const fn arduino_board_target(
         storage_regions: &[],
         wireless: &[],
         network_interfaces: &[],
-        upload: Some(ARDUINO_CLI_UPLOAD),
+        upload: Some(arduino_cli_upload(
+            target.arduino_cli.platform_id,
+            target.arduino_cli.fqbn,
+        )),
         capabilities: &BLINK_MVP_CAPABILITIES,
     }
 }
@@ -889,7 +919,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         storage_regions: &UNO_R4_STORAGE_REGIONS,
         wireless: &[],
         network_interfaces: &[],
-        upload: Some(ARDUINO_CLI_UPLOAD),
+        upload: Some(UNO_R4_MINIMA_UPLOAD),
         capabilities: &UNO_R4_MINIMA_CAPABILITIES,
     },
     BoardTargetInfo {
@@ -921,7 +951,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         storage_regions: &UNO_R4_STORAGE_REGIONS,
         wireless: &UNO_R4_WIFI_WIRELESS,
         network_interfaces: &UNO_R4_WIFI_NETWORK_INTERFACES,
-        upload: Some(ARDUINO_CLI_UPLOAD),
+        upload: Some(UNO_R4_WIFI_UPLOAD),
         capabilities: &UNO_R4_WIFI_CAPABILITIES,
     },
     arduino_board_target(
@@ -1162,6 +1192,14 @@ mod tests {
             assert_eq!(target.mcu, arduino_target.mcu);
             assert_eq!(target.rust_target, arduino_target.rust_target.name());
             assert_eq!(target.digital_pin_count, arduino_target.digital_pins.len());
+            assert_eq!(
+                target.upload.unwrap().platform_id,
+                Some(arduino_target.arduino_cli.platform_id)
+            );
+            assert_eq!(
+                target.upload.unwrap().fqbn,
+                Some(arduino_target.arduino_cli.fqbn)
+            );
             assert!(target.capabilities.contains(&"transport.serial"));
             assert!(target.capabilities.contains(&"gpio.open"));
             assert!(target.capabilities.contains(&"gpio.write"));
@@ -1173,18 +1211,35 @@ mod tests {
     #[test]
     fn registry_exposes_upload_profiles() {
         let uno = find_target("arduino-uno-r4-wifi").unwrap();
-        assert_eq!(uno.upload, Some(ARDUINO_CLI_UPLOAD));
+        assert_eq!(uno.upload, Some(UNO_R4_WIFI_UPLOAD));
+        assert_eq!(uno.upload.unwrap().platform_id, Some("arduino:renesas_uno"));
+        assert_eq!(
+            uno.upload.unwrap().fqbn,
+            Some("arduino:renesas_uno:unor4wifi")
+        );
 
         let opta = find_target("arduino-opta-wifi").unwrap();
-        assert_eq!(opta.upload, Some(ARDUINO_CLI_UPLOAD));
         assert_eq!(opta.upload.unwrap().command, "arduino-cli upload");
+        assert_eq!(opta.upload.unwrap().platform_id, Some("arduino:mbed_opta"));
+        assert_eq!(opta.upload.unwrap().fqbn, Some("arduino:mbed_opta:opta"));
         assert_eq!(
             opta.upload.unwrap().reset_method,
             UploadResetMethod::ArduinoBoardPackage
         );
 
+        let nano_esp32 = find_target("arduino-nano-esp32").unwrap();
+        assert_eq!(
+            nano_esp32.upload.unwrap().platform_id,
+            Some("arduino:esp32")
+        );
+        assert_eq!(
+            nano_esp32.upload.unwrap().fqbn,
+            Some("arduino:esp32:nano_nora")
+        );
+
         let esp32 = find_target("esp32-devkit-v1").unwrap();
         assert_eq!(esp32.upload, Some(ESP_ROM_SERIAL_UPLOAD));
+        assert_eq!(esp32.upload.unwrap().fqbn, None);
         assert_eq!(
             esp32.upload.unwrap().image_format,
             UploadImageFormat::EspFlashImage
