@@ -139,6 +139,16 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_form_inter
   --check
 ```
 
+The generated `tests/fixtures/whatwg-text-control-audit.json` fixture indexes
+script RAWTEXT, title/textarea RCDATA, RAWTEXT elements, noscript scripting
+modes, PLAINTEXT, pre/listing initial newlines, text-control fragment contexts,
+and stray text-control end tags:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_text_control_audit_fixture.py \
+  --check
+```
+
 The broad smoke test and the focused audit fixtures use the shared
 `tests/common` html5lib parser and DOM dump helpers, so new parser conformance
 fixtures exercise the same normalization path.

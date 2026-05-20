@@ -88,3 +88,14 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_form_inter
 python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_form_interactive_audit_fixture.py \
   --check
 ```
+
+`whatwg-text-control-audit.json` is a generated index over tree-construction
+cases that stress script RAWTEXT, title/textarea RCDATA, RAWTEXT elements,
+noscript scripting modes, PLAINTEXT, pre/listing initial newlines, text-control
+fragment contexts, and stray text-control end tags:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_text_control_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_text_control_audit_fixture.py \
+  --check
+```
