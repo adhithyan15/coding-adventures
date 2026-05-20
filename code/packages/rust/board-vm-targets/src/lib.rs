@@ -142,6 +142,15 @@ pub enum UploadTransport {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum UploadPortHint {
+    UsbSerialBridge,
+    NativeUsb,
+    ExternalSerialAdapter,
+    EspRomSerial,
+    MassStorageBootloader,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UploadResetMethod {
     ArduinoBoardPackage,
     EspRomBootPins,
@@ -154,6 +163,7 @@ pub struct UploadInfo {
     pub image_format: UploadImageFormat,
     pub transport: UploadTransport,
     pub reset_method: UploadResetMethod,
+    pub port_hint: Option<UploadPortHint>,
     pub command: &'static str,
     pub platform_id: Option<&'static str>,
     pub fqbn: Option<&'static str>,
@@ -448,12 +458,17 @@ pub const PICO_W_WIRELESS: [WirelessInterfaceInfo; 3] = [
     },
 ];
 
-const fn arduino_cli_upload(platform_id: &'static str, fqbn: &'static str) -> UploadInfo {
+const fn arduino_cli_upload(
+    platform_id: &'static str,
+    fqbn: &'static str,
+    port_hint: UploadPortHint,
+) -> UploadInfo {
     UploadInfo {
         adapter: UploadAdapter::ArduinoCli,
         image_format: UploadImageFormat::ArduinoCliBuildOutput,
         transport: UploadTransport::Serial,
         reset_method: UploadResetMethod::ArduinoBoardPackage,
+        port_hint: Some(port_hint),
         command: "arduino-cli upload",
         platform_id: Some(platform_id),
         fqbn: Some(fqbn),
@@ -461,17 +476,24 @@ const fn arduino_cli_upload(platform_id: &'static str, fqbn: &'static str) -> Up
     }
 }
 
-pub const UNO_R4_MINIMA_UPLOAD: UploadInfo =
-    arduino_cli_upload("arduino:renesas_uno", "arduino:renesas_uno:minima");
+pub const UNO_R4_MINIMA_UPLOAD: UploadInfo = arduino_cli_upload(
+    "arduino:renesas_uno",
+    "arduino:renesas_uno:minima",
+    UploadPortHint::NativeUsb,
+);
 
-pub const UNO_R4_WIFI_UPLOAD: UploadInfo =
-    arduino_cli_upload("arduino:renesas_uno", "arduino:renesas_uno:unor4wifi");
+pub const UNO_R4_WIFI_UPLOAD: UploadInfo = arduino_cli_upload(
+    "arduino:renesas_uno",
+    "arduino:renesas_uno:unor4wifi",
+    UploadPortHint::NativeUsb,
+);
 
 pub const ARDUINO_CLI_UPLOAD: UploadInfo = UploadInfo {
     adapter: UploadAdapter::ArduinoCli,
     image_format: UploadImageFormat::ArduinoCliBuildOutput,
     transport: UploadTransport::Serial,
     reset_method: UploadResetMethod::ArduinoBoardPackage,
+    port_hint: None,
     command: "arduino-cli upload",
     platform_id: None,
     fqbn: None,
@@ -484,6 +506,7 @@ pub const ESP_ROM_SERIAL_UPLOAD: UploadInfo = UploadInfo {
     image_format: UploadImageFormat::EspFlashImage,
     transport: UploadTransport::Serial,
     reset_method: UploadResetMethod::EspRomBootPins,
+    port_hint: Some(UploadPortHint::EspRomSerial),
     command: "esp-rom",
     platform_id: None,
     fqbn: None,
@@ -496,6 +519,7 @@ pub const PICO_UF2_UPLOAD: UploadInfo = UploadInfo {
     image_format: UploadImageFormat::Uf2,
     transport: UploadTransport::MassStorage,
     reset_method: UploadResetMethod::PicoBootsel,
+    port_hint: Some(UploadPortHint::MassStorageBootloader),
     command: "pico-uf2",
     platform_id: None,
     fqbn: None,
@@ -855,6 +879,16 @@ const fn pico_digital_pin(pin: board_vm_pico::DigitalPinDescriptor) -> DigitalPi
     }
 }
 
+const fn arduino_cli_port_hint(hint: board_vm_arduino::ArduinoCliPortHint) -> UploadPortHint {
+    match hint {
+        board_vm_arduino::ArduinoCliPortHint::UsbSerialBridge => UploadPortHint::UsbSerialBridge,
+        board_vm_arduino::ArduinoCliPortHint::NativeUsb => UploadPortHint::NativeUsb,
+        board_vm_arduino::ArduinoCliPortHint::ExternalSerialAdapter => {
+            UploadPortHint::ExternalSerialAdapter
+        }
+    }
+}
+
 const fn arduino_board_target(
     target: board_vm_arduino::ArduinoTargetDescriptor,
     digital_pins: &'static [DigitalPinInfo],
@@ -888,6 +922,7 @@ const fn arduino_board_target(
         upload: Some(arduino_cli_upload(
             target.arduino_cli.platform_id,
             target.arduino_cli.fqbn,
+            arduino_cli_port_hint(target.arduino_cli.port_hint),
         )),
         capabilities: &BLINK_MVP_CAPABILITIES,
     }
@@ -1200,6 +1235,10 @@ mod tests {
                 target.upload.unwrap().fqbn,
                 Some(arduino_target.arduino_cli.fqbn)
             );
+            assert_eq!(
+                target.upload.unwrap().port_hint,
+                Some(arduino_cli_port_hint(arduino_target.arduino_cli.port_hint))
+            );
             assert!(target.capabilities.contains(&"transport.serial"));
             assert!(target.capabilities.contains(&"gpio.open"));
             assert!(target.capabilities.contains(&"gpio.write"));
@@ -1217,14 +1256,28 @@ mod tests {
             uno.upload.unwrap().fqbn,
             Some("arduino:renesas_uno:unor4wifi")
         );
+        assert_eq!(
+            uno.upload.unwrap().port_hint,
+            Some(UploadPortHint::NativeUsb)
+        );
 
         let opta = find_target("arduino-opta-wifi").unwrap();
         assert_eq!(opta.upload.unwrap().command, "arduino-cli upload");
         assert_eq!(opta.upload.unwrap().platform_id, Some("arduino:mbed_opta"));
         assert_eq!(opta.upload.unwrap().fqbn, Some("arduino:mbed_opta:opta"));
         assert_eq!(
+            opta.upload.unwrap().port_hint,
+            Some(UploadPortHint::NativeUsb)
+        );
+        assert_eq!(
             opta.upload.unwrap().reset_method,
             UploadResetMethod::ArduinoBoardPackage
+        );
+
+        let pro_mini = find_target("arduino-pro-mini").unwrap();
+        assert_eq!(
+            pro_mini.upload.unwrap().port_hint,
+            Some(UploadPortHint::ExternalSerialAdapter)
         );
 
         let nano_esp32 = find_target("arduino-nano-esp32").unwrap();
@@ -1241,6 +1294,10 @@ mod tests {
         assert_eq!(esp32.upload, Some(ESP_ROM_SERIAL_UPLOAD));
         assert_eq!(esp32.upload.unwrap().fqbn, None);
         assert_eq!(
+            esp32.upload.unwrap().port_hint,
+            Some(UploadPortHint::EspRomSerial)
+        );
+        assert_eq!(
             esp32.upload.unwrap().image_format,
             UploadImageFormat::EspFlashImage
         );
@@ -1248,6 +1305,10 @@ mod tests {
         let pico = find_target("raspberry-pi-pico").unwrap();
         assert_eq!(pico.upload, Some(PICO_UF2_UPLOAD));
         assert_eq!(pico.upload.unwrap().transport, UploadTransport::MassStorage);
+        assert_eq!(
+            pico.upload.unwrap().port_hint,
+            Some(UploadPortHint::MassStorageBootloader)
+        );
     }
 
     #[test]
