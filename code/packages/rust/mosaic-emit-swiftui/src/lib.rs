@@ -61,12 +61,19 @@
 //! | Spacer       | `Spacer()`                                         |
 //! | Image        | `Image(systemName: "...")` placeholder             |
 //! | Divider      | `Divider()`                                        |
+//! | Stack        | `ZStack { ... }` *(v0.2.0; UI29 kernel)*           |
+//! | HostScroll   | `ScrollView { ... }` *(v0.2.0; UI29 kernel)*       |
+//! | HostInput    | `TextField(placeholder, text: .constant(value))`   |
+//! | HostButton   | `Button(action: { dispatch(.tap) }) { Text(label) }` |
 //!
-//! Other primitives (`Scroll`, `Stack`, `Icon`, `Grid`, `Input`) lower to
-//! `UnknownPrimitive` errors in this first cut and will land in follow-up
-//! PRs. `Cell` + `Column`-as-metadata + `Grid` v3 from UI28 §2 are
-//! deliberately deferred — the `Column` primitive in this PR still maps to
-//! `VStack` (i.e. UI14 `Column`, not UI28 `Column`-metadata).
+//! The remaining UI29 kernel primitives — `If`, `For`, `HostTable` —
+//! still lower to `UnknownPrimitive` errors; they wait on the moslayout
+//! grammar additions (U29-G3) and a `HostTable` spec. Legacy primitives
+//! (`Icon`, `Grid` v2) also still return `UnknownPrimitive` and will land
+//! in their own follow-up PRs. `Cell` + `Column`-as-metadata + `Grid` v3
+//! from UI28 §2 are deliberately deferred — the `Column` primitive in
+//! this PR still maps to `VStack` (i.e. UI14 `Column`, not UI28
+//! `Column`-metadata).
 //!
 //! ## TODO — UI28 §2.2 conflict
 //!

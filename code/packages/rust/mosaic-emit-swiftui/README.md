@@ -59,6 +59,27 @@ struct ProfileCardView: View {
 | `Spacer`         | `Spacer()`                                    |
 | `Image`          | `Image(systemName: "...")` placeholder        |
 | `Divider`        | `Divider()`                                   |
+| `Stack`          | `ZStack { ... }` *(v0.2.0; UI29 kernel)*      |
+| `HostScroll`     | `ScrollView { ... }` *(v0.2.0; UI29 kernel)*  |
+| `HostInput`      | `TextField(placeholder, text: .constant(value))` *(v0.2.0; UI29 kernel)* |
+| `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |
+
+### `HostInput` binding choice — `.constant(value)`
+
+SwiftUI `TextField` requires `text: Binding<String>`, but Mosaic components
+receive slots as immutable `let` properties. We thread the slot through
+`.constant(value)`, which means **inline typing does not echo back through
+the slot** — the host's flux dispatch loop owns updates via
+`dispatch(.commit(value: ...))`. This matches UI24's dispatch-driven
+pattern. A future revision will offer a `@State`-proxy lowering that
+dispatches per-keystroke.
+
+### `HostInput` platform note — `.onExitCommand`
+
+The `onCancel` emit lowers to SwiftUI's `.onExitCommand` modifier, which is
+**macOS-only** (Escape key via the AppKit responder chain). On iOS / iPadOS
+the modifier compiles but never fires; a platform-aware lowering is a
+future enhancement.
 
 ## Slot type mapping
 
@@ -86,9 +107,14 @@ analog of TypeScript's `type NameEvent = never` in the React backend.
   Per UI28 §4.4 the SwiftUI lowering is
   `Grid → SwiftUI.Table { TableColumn(...) }` with each `Column` becoming
   a `TableColumn` definition.
-- `Scroll`, `Stack`, `Icon`, `Grid` (v2), `Input` — return
+- `If`, `For`, `HostTable` — UI29 kernel primitives that wait on the
+  moslayout grammar additions (U29-G3) and a `HostTable` spec. Until those
+  land, this crate returns `UnknownPrimitive` for them so authors get a
+  clear "not yet supported" diagnostic.
+- `Icon`, `Grid` (v2), legacy `Scroll` / `Input` (pre-UI29 names) — return
   `UnknownPrimitive` errors today; each lands in its own follow-up.
-- `connects` wiring (gesture / event modifiers).
+- `connects` wiring (gesture / event modifiers beyond what `HostButton` /
+  `HostInput` already wire).
 - `mosstyle::StyleDef` inlining (accepted in the signature so callers can
   build against the stable interface, not yet applied).
 
