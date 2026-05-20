@@ -1,5 +1,26 @@
 # Changelog — `aarch64-backend`
 
+## 0.4.0 — 2026-05-20 (LANG76 — byte memory ops + heap allocation)
+
+Three new CIR opcodes mirroring the LANG76 work in `x86_64-backend`
+0.6.0:
+
+- `alloc_bytes <n> -> <dest>` — sugar for `call_builtin "alloc_bytes",
+  n`.  Loads n into X0, emits `BL __twig_alloc_bytes`, stores X0 into
+  the dest slot.
+- `load_byte <ptr>, <offset> -> <dest>` — `ldr x0,[sp,ptr]; ldr
+  x1,[sp,off]; add x0,x0,x1; ldrb w0,[x0]; str x0,[sp,dest]`.  The
+  LDRB instruction zero-extends to 32 bits and AArch64 zeroes the
+  upper 32 bits of X0 automatically — exactly the 64-bit
+  zero-extension semantics LANG76 specifies.
+- `store_byte <ptr>, <offset>, <value>` — `ldr x0,[sp,ptr]; ldr
+  x1,[sp,off]; add x0,x0,x1; ldr x2,[sp,val]; strb w2,[x0]`.
+
+**Tests added (5):** alloc_bytes records `__twig_alloc_bytes` BL
+placeholder; load_byte/store_byte emit the expected ldrb/strb words
+(`0x39400000` / `0x39000002`); load_byte missing operand refusal;
+store_byte with dest refusal.
+
 ## 0.3.0 — 2026-05-20 (LANG75 — generic `call_builtin` dispatch)
 
 Adds a single CIR opcode `call_builtin "<name>", <args>` that

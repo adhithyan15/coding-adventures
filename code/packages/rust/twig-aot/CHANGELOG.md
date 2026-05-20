@@ -1,5 +1,22 @@
 # Changelog — `twig-aot`
 
+## 0.7.0 — 2026-05-20 (LANG76 — byte memory ops + heap allocation)
+
+Runtime archive gains one new helper:
+
+| Symbol                | Purpose                                              |
+|-----------------------|------------------------------------------------------|
+| `__twig_alloc_bytes`  | `calloc(1, n)` — zero-initialised heap allocation.   |
+
+V1 leaks (no `__twig_free`); per the LANG76 spec, that's fine for AOT'd
+command-line scripts.  Negative or zero `n` returns NULL (`0`).
+
+**End-to-end smoke tests:** `tests/{windows,linux}_x86_64_smoke.rs`
+each grow a new `end_to_end_lang76_heap_byte_io_writes_hi` test that
+hand-builds an `IIRModule` calling `alloc_bytes 4`, writes `'H','i','\n'`
+via three `store_byte` instructions, then calls `print_string` over
+the buffer.  Asserts stdout is exactly `"Hi\n"`.
+
 ## 0.6.0 — 2026-05-20 (LANG75 — runtime-archive expansion)
 
 **Runtime archive grows the V1 helper table.**

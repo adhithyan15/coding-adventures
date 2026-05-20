@@ -169,6 +169,76 @@ fn build_putchar_hi_module() -> interpreter_ir::module::IIRModule {
     module
 }
 
+/// LANG76 — end-to-end heap byte I/O on Linux x86-64.
+///
+/// Mirrors the Windows test: alloc 4 bytes, write `'H','i','\n'` at
+/// offsets 0/1/2, call `print_string(buf, 3)`, return 0.  Asserts
+/// stdout = `"Hi\n"`.
+#[test]
+fn end_to_end_lang76_heap_byte_io_writes_hi() {
+    let module = build_heap_byte_io_module();
+    let dir = tempfile::tempdir().expect("tempdir");
+    let exe_path = dir.path().join("heap_byte_io");
+
+    twig_aot::compile_module_to_linux_executable(&module, &exe_path)
+        .unwrap_or_else(|e| panic!("compile failed: {e}"));
+
+    let out = Command::new(&exe_path).output()
+        .unwrap_or_else(|e| panic!("launch failed: {e}"));
+    assert_eq!(
+        out.stdout, b"Hi\n",
+        "expected stdout == \"Hi\\n\", got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+fn build_heap_byte_io_module() -> interpreter_ir::module::IIRModule {
+    use interpreter_ir::function::IIRFunction;
+    use interpreter_ir::instr::{IIRInstr, Operand};
+    use interpreter_ir::module::IIRModule;
+
+    let mut ins = Vec::new();
+    let mut con = |slot: &str, n: i64| {
+        IIRInstr::new("const", Some(slot.to_string()),
+                      vec![Operand::Int(n)], "i64")
+    };
+
+    ins.push(con("c4", 4));
+    ins.push(IIRInstr::new("alloc_bytes", Some("buf".into()),
+        vec![Operand::Var("c4".into())], "i64"));
+
+    for (slot, off, byte) in [
+        ("o0", 0_i64, 72_i64),
+        ("o1", 1,     105),
+        ("o2", 2,     10),
+    ] {
+        ins.push(con(slot, off));
+        let v = format!("v_{slot}");
+        ins.push(con(&v, byte));
+        ins.push(IIRInstr::new("store_byte", None,
+            vec![Operand::Var("buf".into()),
+                 Operand::Var(slot.into()),
+                 Operand::Var(v)], "void"));
+    }
+
+    ins.push(con("len3", 3));
+    ins.push(IIRInstr::new("call_builtin", None,
+        vec![Operand::Var("print_string".into()),
+             Operand::Var("buf".into()),
+             Operand::Var("len3".into())], "void"));
+
+    ins.push(con("r", 0));
+    ins.push(IIRInstr::new("ret", None,
+        vec![Operand::Var("r".into())], "i64"));
+
+    let main = IIRFunction::new("main", vec![], "i64", ins);
+    let mut module = IIRModule::new("heap_byte_io", "lang");
+    module.functions.push(main);
+    module.entry_point = Some("main".to_string());
+    module
+}
+
 #[test]
 fn elf_object_has_correct_machine_field() {
     // Byte-level sanity check: produce an object for `42` and assert

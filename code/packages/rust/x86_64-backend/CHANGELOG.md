@@ -1,5 +1,30 @@
 # Changelog — `x86_64-backend`
 
+## 0.6.0 — 2026-05-20 (LANG76 — byte memory ops + heap allocation)
+
+Three new CIR opcodes that complete the substrate for Brainfuck and
+future array work:
+
+- `alloc_bytes <n> -> <dest>` — sugar for `call_builtin "alloc_bytes",
+  n`; emits the same CALL into `__twig_alloc_bytes` and stores the
+  returned pointer (RAX) into `dest`.  Also registered in
+  `V1_BUILTINS` so `call_builtin "alloc_bytes"` works equivalently.
+- `load_byte <ptr>, <offset> -> <dest>` — reads one byte from `[ptr +
+  offset]`, zero-extends to 64 bits, stores into `dest`.  Lowers to:
+  `mov rax,ptr; mov rcx,off; add rax,rcx; movzx rax,byte [rax]; mov
+  [rbp+dest_slot],rax`.
+- `store_byte <ptr>, <offset>, <value>` — writes the low 8 bits of
+  `value` to `[ptr + offset]`.  Lowers to: `mov rax,ptr; mov rcx,off;
+  add rax,rcx; mov rdx,val; mov byte [rax], dl`.
+
+**Error handling.**  Missing operands → `MalformedInstr`; supplying a
+dest to `store_byte` → `MalformedInstr`.
+
+**Tests added (5):** alloc_bytes records `__twig_alloc_bytes` PltRel32
+reloc + RAX→dest store; load_byte byte-sequence assertion; store_byte
+byte-sequence assertion (forced empty REX); load_byte missing operand
+refusal; store_byte with dest refusal.
+
 ## 0.5.0 — 2026-05-20 (LANG75 — generic `call_builtin` dispatch)
 
 Adds a single CIR opcode `call_builtin "<name>", <args>` that dispatches

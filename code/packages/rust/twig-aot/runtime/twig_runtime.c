@@ -55,6 +55,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* __twig_print_i64 — print a signed 64-bit integer followed by a newline.
  *
@@ -147,4 +148,29 @@ __declspec(noreturn)
 #endif
 void __twig_exit(int32_t code) {
     exit((int)code);
+}
+
+/* __twig_alloc_bytes — allocate `n` zero-initialised bytes on the heap
+ * (LANG76).
+ *
+ * Returns a 64-bit pointer.  The pointer is valid until process exit;
+ * V1 has no `__twig_free` and intentionally leaks — fine for AOT'd
+ * command-line scripts.
+ *
+ * `calloc(1, n)` is used (rather than `malloc(n) + memset`) so the
+ * compiler/libc can take the zero-initialised-page fast path when one
+ * is available.  Negative or zero `n` returns NULL — programs that
+ * dereference the result without a null check will crash, which is
+ * acceptable per the V1 "no bounds checking, no null checking"
+ * contract.
+ *
+ * The returned `void*` is treated as `int64_t` by the frontend (the
+ * AAPCS64 / System V / MS x64 ABIs all return pointers in `x0` / `rax`
+ * regardless of pointer-vs-integer typing, so no type coercion is
+ * needed at the call site).
+ */
+int64_t __twig_alloc_bytes(int64_t n) {
+    if (n <= 0) return 0;
+    void *p = calloc(1, (size_t)n);
+    return (int64_t)(intptr_t)p;
 }

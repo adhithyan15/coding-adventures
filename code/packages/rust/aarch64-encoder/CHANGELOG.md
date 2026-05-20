@@ -1,5 +1,21 @@
 # Changelog — `aarch64-encoder`
 
+## 0.3.0 — 2026-05-20 (LANG76 — byte memory primitives)
+
+Adds the unsigned-offset byte load/store instructions used by
+`aarch64-backend` to lower `load_byte` / `store_byte`:
+
+- `ldrb(rt, rn, imm)` — `LDRB Wt, [Xn, #imm]`, `imm ∈ [0, 4095]`.
+  Loads one byte from `[Xn + imm]`, zero-extends to 32 bits in `Wt`
+  (which also zeros the upper 32 bits of `Xt` per AArch64 spec).
+- `strb(rt, rn, imm)` — `STRB Wt, [Xn, #imm]`, same `imm` range.
+  Writes the low byte of `Wt` to `[Xn + imm]`.
+
+Encoding base: `0x39400000` (LDRB) / `0x39000000` (STRB); imm12 in
+bits 21..10, Rn in 9..5, Rt in 4..0.  Unlike `LDR Xt` / `STR Xt` the
+byte form is **not** scaled — `imm` is interpreted as a raw byte
+offset.
+
 ## 0.2.2 — 2026-05-13 (LANG40)
 
 **Pre-indexed byte store — `STRB Wt, [Xn, #-1]!`.**

@@ -218,6 +218,109 @@ fn build_putchar_hi_module() -> interpreter_ir::module::IIRModule {
     module
 }
 
+/// LANG76 — end-to-end heap byte I/O on Windows x86-64.
+///
+/// Builds a tiny `IIRModule`:
+///
+/// ```text
+/// fn main() -> i64 {
+///   const c4   = 4
+///   alloc_bytes c4 -> buf       ; calloc(1, 4)
+///   const c0   = 0
+///   const cH   = 72
+///   store_byte buf, c0, cH
+///   const c1   = 1
+///   const ci   = 105
+///   store_byte buf, c1, ci
+///   const c2_  = 2
+///   const cnl  = 10
+///   store_byte buf, c2_, cnl
+///   const c3   = 3
+///   call_builtin "print_string", buf, c3
+///   const r    = 0
+///   ret r
+/// }
+/// ```
+///
+/// Compiles, links, runs, asserts stdout = `"Hi\n"`.  This exercises
+/// the full LANG76 chain: `alloc_bytes` → `__twig_alloc_bytes`,
+/// `store_byte` (low-byte write), and `call_builtin "print_string"`
+/// reading those bytes back.
+#[test]
+fn end_to_end_lang76_heap_byte_io_writes_hi() {
+    if !linker_available() {
+        eprintln!("skipping: no Windows linker on PATH");
+        return;
+    }
+
+    let module = build_heap_byte_io_module();
+    let dir = tempfile::tempdir().expect("tempdir");
+    let exe_path = dir.path().join("heap_byte_io.exe");
+
+    twig_aot::compile_module_to_windows_executable(&module, &exe_path)
+        .unwrap_or_else(|e| panic!("compile failed: {e}"));
+
+    let out = Command::new(&exe_path).output()
+        .unwrap_or_else(|e| panic!("launch failed: {e}"));
+    assert_eq!(
+        out.stdout, b"Hi\n",
+        "expected stdout == \"Hi\\n\", got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+/// Build a module that allocates a 4-byte buffer, writes `'H','i','\n'`
+/// at offsets 0/1/2, calls `print_string(buf, 3)`, and returns 0.
+fn build_heap_byte_io_module() -> interpreter_ir::module::IIRModule {
+    use interpreter_ir::function::IIRFunction;
+    use interpreter_ir::instr::{IIRInstr, Operand};
+    use interpreter_ir::module::IIRModule;
+
+    let mut ins = Vec::new();
+    let mut con = |slot: &str, n: i64| {
+        IIRInstr::new("const", Some(slot.to_string()),
+                      vec![Operand::Int(n)], "i64")
+    };
+
+    ins.push(con("c4", 4));
+    ins.push(IIRInstr::new("alloc_bytes", Some("buf".into()),
+        vec![Operand::Var("c4".into())], "i64"));
+
+    // store bytes 'H','i','\n' at offsets 0, 1, 2
+    for (slot, off, byte) in [
+        ("o0", 0_i64, 72_i64),   // 'H'
+        ("o1", 1,     105),      // 'i'
+        ("o2", 2,     10),       // '\n'
+    ] {
+        ins.push(con(slot, off));
+        let v = format!("v_{slot}");
+        ins.push(con(&v, byte));
+        ins.push(IIRInstr::new("store_byte", None,
+            vec![Operand::Var("buf".into()),
+                 Operand::Var(slot.into()),
+                 Operand::Var(v)], "void"));
+    }
+
+    // print_string(buf, 3)
+    ins.push(con("len3", 3));
+    ins.push(IIRInstr::new("call_builtin", None,
+        vec![Operand::Var("print_string".into()),
+             Operand::Var("buf".into()),
+             Operand::Var("len3".into())], "void"));
+
+    // ret 0
+    ins.push(con("r", 0));
+    ins.push(IIRInstr::new("ret", None,
+        vec![Operand::Var("r".into())], "i64"));
+
+    let main = IIRFunction::new("main", vec![], "i64", ins);
+    let mut module = IIRModule::new("heap_byte_io", "lang");
+    module.functions.push(main);
+    module.entry_point = Some("main".to_string());
+    module
+}
+
 #[test]
 fn pe_object_has_correct_machine_field() {
     // Byte-level sanity check: produce an object for `42` and assert
