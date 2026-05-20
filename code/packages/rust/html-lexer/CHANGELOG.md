@@ -28,6 +28,8 @@ documented in this file.
   generator covered by that umbrella stale check.
 - The generated fixture manifest now includes the parser frameset audit
   generator alongside the tree-insertion audit.
+- The generated fixture manifest now includes the parser table audit generator
+  alongside the tree-insertion and frameset audits.
 - Parser-facing seeded RCDATA/RAWTEXT/script end-tag continuation contexts,
   including end-tag-name, whitespace, attributes, and self-closing substates
   with current-end-tag and temporary-buffer seeding.

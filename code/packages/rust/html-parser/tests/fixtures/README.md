@@ -67,3 +67,13 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_frameset_a
 python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_frameset_audit_fixture.py \
   --check
 ```
+
+`whatwg-table-audit.json` is a generated index over tree-construction cases
+that stress table shells, row groups, cells, captions/colgroups,
+foster-parenting, select-in-table recovery, and table fragment contexts:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_table_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_table_audit_fixture.py \
+  --check
+```
