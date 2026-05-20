@@ -1,5 +1,31 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.9.0] — 2026-05-20
+
+### Added — Phase 36: Weierstrass log form for `a² < b²`
+
+Mirrors Python `symbolic-vm` 0.61.0 (PR #3672) and TypeScript `symbolic-vm`
+0.9.0 (PR #3674).  Closes the deferred `a² < b²` branch of Phase 34 by
+emitting the explicit log-form closed solution:
+
+    ∫ c/(a + b·sin x) dx = (c/D)·log|(a·tan(x/2)+b−D)/(a·tan(x/2)+b+D)| + C
+    ∫ c/(a + b·cos x) dx = (c/D)·log|(D+(b−a)·tan(x/2))/(D−(b−a)·tan(x/2))| + C
+
+where `D = √(b²−a²) > 0`.  Sin handles any nonzero rational `a`; cos
+requires `b > |a|` strictly.
+
+New free function `try_weierstrass_log_form(c, a, b, trig_head, x)` in
+`src/handlers.rs` replaces the prior `return None` in the `disc < 0`
+arm of `try_weierstrass_one_over_linear_trig`.  The log argument is
+wrapped via `apply_node("Abs", ...)` so the closed form evaluates
+numerically across the integrand's singularities.
+
+Tests: 5 new `#[test]` functions in `tests/test_vm.rs` plus one
+promoted from fallthrough (`phase36_a_less_than_b_sin_now_closes`,
+replacing `phase34_fallthrough_a_less_than_b`).
+
+Full suite: **177 passed** (172 prior + 5 net new).
+
 ## [0.8.0] — 2026-05-18
 
 ### Added — Phase 35: degenerate `a² = b²` Weierstrass cases

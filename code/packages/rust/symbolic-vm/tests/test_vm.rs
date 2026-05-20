@@ -2516,8 +2516,8 @@ fn phase34_sin_operand_order_swapped() {
 }
 
 #[test]
-fn phase34_fallthrough_a_less_than_b() {
-    // ∫ 1/(1 + 2·sin x) dx — a²−b² = −3 < 0.  Log form deferred.
+fn phase36_a_less_than_b_sin_now_closes() {
+    // ∫ 1/(1 + 2·sin x) dx — Phase 36 closes the log form that Phase 34 deferred.
     let integrand = apply(
         sym(DIV),
         vec![
@@ -2528,8 +2528,14 @@ fn phase34_fallthrough_a_less_than_b() {
             ),
         ],
     );
-    let result = integrate(integrand);
-    assert!(is_unevaluated_integrate(&result));
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    // 1 + 2 sin x zero at sin x = -1/2.  Sample inside (-π/4, π/4).
+    for &x_val in &[-0.7_f64, -0.2, 0.0, 0.2, 0.7] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (1.0 + 2.0 * x_val.sin());
+        assert!((got - expected).abs() < 1e-3);
+    }
 }
 
 #[test]
@@ -2692,4 +2698,108 @@ fn phase34_regression_one_over_cos_not_misinterpreted() {
             panic!("Phase 34 incorrectly fired on ∫ 1/cos(x) dx: {result:?}");
         }
     }
+}
+
+// ---------------------------------------------------------------------------
+// Phase 36 — Weierstrass log form for a² < b² (cos + edge cases)
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase36_a_less_than_b_cos_now_closes() {
+    // ∫ 1/(1 + 2·cos x) dx — cos branch with b > |a|, b² > a².
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(1),
+            apply(
+                sym(ADD),
+                vec![int(1), apply(sym(MUL), vec![int(2), apply(sym(COS), vec![sym("x")])])],
+            ),
+        ],
+    );
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    // 1+2 cos x zero at x=±2π/3.  Sample inside (-π/2, π/2).
+    for &x_val in &[-1.2_f64, -0.5, 0.0, 0.5, 1.2] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (1.0 + 2.0 * x_val.cos());
+        assert!((got - expected).abs() < 1e-3);
+    }
+}
+
+#[test]
+fn phase36_negative_a_sin() {
+    // ∫ 1/(−1 + 2·sin x) dx — sin branch with a < 0.
+    let neg_one_plus_two_sin = apply(
+        sym(ADD),
+        vec![int(-1), apply(sym(MUL), vec![int(2), apply(sym(SIN), vec![sym("x")])])],
+    );
+    let integrand = apply(sym(DIV), vec![int(1), neg_one_plus_two_sin]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[1.0_f64, 1.5, 2.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (-1.0 + 2.0 * x_val.sin());
+        assert!((got - expected).abs() < 1e-3);
+    }
+}
+
+#[test]
+fn phase36_with_numerator_coefficient() {
+    // ∫ 3/(1 + 2·sin x) dx — c=3 scaling.
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(3),
+            apply(
+                sym(ADD),
+                vec![int(1), apply(sym(MUL), vec![int(2), apply(sym(SIN), vec![sym("x")])])],
+            ),
+        ],
+    );
+    let phi = integrate(integrand);
+    for &x_val in &[-0.7_f64, -0.2, 0.0, 0.2, 0.7] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 3.0 / (1.0 + 2.0 * x_val.sin());
+        assert!((got - expected).abs() < 1e-3);
+    }
+}
+
+#[test]
+fn phase36_perfect_square_discriminant() {
+    // ∫ 1/(3 + 5·sin x) dx — disc=−16, perfect-square magnitude.
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(1),
+            apply(
+                sym(ADD),
+                vec![int(3), apply(sym(MUL), vec![int(5), apply(sym(SIN), vec![sym("x")])])],
+            ),
+        ],
+    );
+    let phi = integrate(integrand);
+    assert!(!contains_head(&phi, SQRT), "Perfect-square |disc|=16 should fold");
+    for &x_val in &[-0.3_f64, 0.0, 0.3, 0.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (3.0 + 5.0 * x_val.sin());
+        assert!((got - expected).abs() < 1e-3);
+    }
+}
+
+#[test]
+fn phase36_cos_negative_b_still_defers() {
+    // ∫ 1/(1 − 2·cos x) dx — effective b=-2 < |a|=1; cos branch defers.
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(1),
+            apply(
+                sym(SUB),
+                vec![int(1), apply(sym(MUL), vec![int(2), apply(sym(COS), vec![sym("x")])])],
+            ),
+        ],
+    );
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result));
 }
