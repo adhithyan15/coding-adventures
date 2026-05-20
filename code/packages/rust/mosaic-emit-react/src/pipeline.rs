@@ -439,13 +439,21 @@ fn emit_jsx_tree(
         return emit_cell_jsx_standalone(node, indent, part_styles);
     }
 
-    // UI28 §2.2 — standalone `Column` primitive. Pure metadata; emits a
-    // single-line JSX comment so downstream tooling sees the node was
-    // discarded on purpose.
-    if node.tag == "Column" {
-        return emit_column_jsx_standalone(node, indent);
-    }
-
+    // UI29 §2.1 — `Column` is a normal kernel layout primitive (vertical flex
+    // container). It falls through to the generic `primitive_to_jsx_tag` path
+    // below, which lowers it to `<div style={{display:"flex",flexDirection:"column"}}>`.
+    //
+    // Historical note: under UI28, the tag `Column` was *also* re-used as
+    // pure Grid-metadata (declaring a table column's key/header/width). That
+    // dual meaning was retired when UI29 moved Grid into the
+    // `mosaic-pkg-grid` userland package; the old standalone-Column routing
+    // arm here used to short-circuit to a `{/* Column is metadata; use inside
+    // Grid */}` JSX comment with no rendered output, silently dropping the
+    // node's children. That arm has been removed. Column-as-metadata is still
+    // read by [`emit_grid_jsx`] when it walks a `Grid` node's children —
+    // see the v3 detection at the top of that function — so legacy Grid
+    // layouts continue to work.
+    //
     // The `Grid` primitive (UI26 §6.2) has a fixed `<table><thead>...<tbody>{rows.map(...)}</tbody></table>`
     // structure with a header `.map()` over the `headers` slot and a nested
     // `.map()` over the `rows` slot. The general primitive flow can't express
@@ -1600,19 +1608,6 @@ fn build_grid_cell_style_expr(
 // =====================================================================
 // UI28 — Cell + Column primitives, Grid v3 composition
 // =====================================================================
-
-/// UI28 §2.2 — standalone `Column` lowering.
-///
-/// A `Column` outside a Grid is metadata with no rendered output. We emit a
-/// single-line JSX comment so the generated `.tsx` still type-checks and the
-/// host can see that the node was discarded on purpose.
-fn emit_column_jsx_standalone(
-    _node: &LayoutNode,
-    indent: usize,
-) -> Result<String, PipelineEmitError> {
-    let pad = " ".repeat(indent);
-    Ok(format!("{pad}{{/* Column is metadata; use inside Grid */}}\n"))
-}
 
 /// UI28 §2.1 — standalone `Cell` lowering.
 ///
@@ -2881,6 +2876,13 @@ mod tests {
             required,
             default: None,
         }
+    }
+
+    /// Convenience wrapper for the common `slot(name, SlotType::Text, required)`
+    /// case. Most tests want a plain text slot; spelling out the SlotType
+    /// variant on every call is noise.
+    fn slot_text(name: &str, required: bool) -> SlotDecl {
+        slot(name, SlotType::Text, required)
     }
 
     fn emit(name: &str, params: Vec<EmitParam>) -> EmitDecl {
@@ -5142,31 +5144,56 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
-    // Standalone Column
+    // Standalone Column — UI29 regression
     // -----------------------------------------------------------------
 
-    /// UI28 §7 test 9 — standalone Column emits the metadata-discard comment.
+    /// Regression test (UI29 §2.1): a standalone `Column` outside a `Grid`
+    /// is a kernel layout primitive — a vertical flex container. It must
+    /// lower to `<div style={{display:"flex",flexDirection:"column"}}>` and
+    /// continue to walk its children.
+    ///
+    /// Historical bug: pre-UI29, the React emitter treated standalone
+    /// `Column` as Grid-metadata and emitted `{/* Column is metadata; use
+    /// inside Grid */}` instead of a real flex container, silently dropping
+    /// the children. The dual-meaning routing arm was retired when Grid moved
+    /// into the `mosaic-pkg-grid` userland package, but the React emitter
+    /// kept the stale arm. This test pins the corrected behaviour.
     #[test]
-    fn column_standalone_emits_metadata_comment() {
-        let m = component("C", vec![], vec![]);
-        let l = LayoutDef {
-            component_name: "C".to_string(),
+    fn column_is_a_flex_layout_primitive_not_grid_metadata() {
+        // Regression test: kernel Column should lower to a flex container,
+        // NOT an empty <div> with the legacy "Column is metadata" comment.
+        let mil = component("Card", vec![slot_text("body", true)], vec![]);
+        let layout = LayoutDef {
+            component_name: "Card".to_string(),
             root: LayoutNode {
                 tag: "Column".to_string(),
-                part_name: None,
-                props: vec![
-                    string_prop("key", "A"),
-                    string_prop("header", "A"),
+                part_name: Some("root".to_string()),
+                props: Vec::new(),
+                children: vec![
+                    LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::SlotRef("body".to_string()),
+                        }],
+                        children: Vec::new(),
+                    },
                 ],
-                children: Vec::new(),
             },
         };
-        let result = from_pipeline(&m, &l, &empty_style("C")).unwrap();
+        let style = empty_style("Card");
+        let out = from_pipeline(&mil, &layout, &style).unwrap().output;
         assert!(
-            result.output.contains("/* Column is metadata; use inside Grid */"),
-            "expected metadata comment, got:\n{}",
-            result.output
+            out.contains("flexDirection: \"column\""),
+            "Column should lower to a flex container; got:\n{out}"
         );
+        assert!(
+            !out.contains("Column is metadata"),
+            "Column should NOT carry the legacy UI28 metadata comment; got:\n{out}"
+        );
+        // And the Text child should still render.
+        assert!(out.contains("{body}"));
     }
 
     // -----------------------------------------------------------------
