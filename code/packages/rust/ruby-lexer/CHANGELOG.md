@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.4.0] - 2026-05-20
+
+### Added (Phase 3a — regex flags + `%w[]` / `%q{}` percent literals)
+- Regex flag suffixes (`/foo/i`, `/foo/im`, `/foo/IM`, …) — both cases accepted, greedy slurp on `imxoeunsIMXOEUNS`.
+- `%w[...]` string-array percent literal (canonical `[` delimiter only in v0).
+- `%q{...}` non-interpolating string percent literal (canonical `{` delimiter only in v0).
+- New `regex_flags`, `after_percent`, `percent_w_open`, `percent_w_body`, `percent_q_open`, `percent_q_body` states in [`ruby-1.8.lexer.states.toml`](./ruby-1.8.lexer.states.toml).
+- New `PercentW` and `PercentQ` token kinds in the declared token vocabulary (action interpreter maps both to `TokenType::String` with the verbatim source-shape preserved as the value).
+- 11 new unit tests; total now 54 (was 43 in Phase 2).
+
+### Changed
+- The `data → %` transition now routes through `after_percent` to peek for a type letter.  When the follower is not `w` or `q`, `%` falls back to the modulo operator (matches Phase 1 behaviour).
+- The `regex_body → /` closing transition now goes to `regex_flags` (instead of `data`), appending the `/` to the text buffer.  When `regex_flags` exits, the emitted token's value has the source-shape `/body/` (no flags) or `/body/flags` (with flags).
+
+### Deferred (subsequent Phase 3 follow-ups)
+- Phase 3b: string interpolation `"a#{expr}b"` — recursive sub-lexer / sub-machine.
+- Phase 3c: heredocs (`<<X`, `<<-X`, `<<~X`) with deferred body capture and FIFO queue for multi-per-line heredocs.
+- Additional percent literals: `%W`, `%Q`, `%i`, `%I`, `%r`, `%s`, `%x` and the full set of delimiter pairs (`(...)`, `<...>`, `|...|`, any non-alphanumeric).
+
 ## [0.3.0] - 2026-05-20
 
 ### Added (Phase 2 — parser-feedback)

@@ -53,6 +53,9 @@ alphabet = [
   # underscore — ident starter / digit separator (referenced as `literal`
   # in `data` and `ident_body` / `int_body`)
   "_",
+  # percent-literal type letters: `w` for `%w[...]`, `q` for `%q{...}`.
+  # Both are referenced as `literal` matchers in `after_percent`.
+  "w", "q",
 ]
 
 # ── Token vocabulary ──────────────────────────────────────────────
@@ -73,7 +76,17 @@ name = "String"        # quoted string literal (escapes resolved by runtime)
 fields = ["value", "quote"]
 
 [[tokens]]
-name = "Regex"         # /.../  literal — Phase 2 (no flags yet)
+name = "Regex"         # /.../[imxoeunsIMXOEUNS]*  literal
+                       # Phase 2 introduced the body; Phase 3a adds
+                       # the trailing-flag-letter suffix.
+fields = ["value"]
+
+[[tokens]]
+name = "PercentW"      # %w[a b c]  — array-of-strings percent literal
+fields = ["value"]
+
+[[tokens]]
+name = "PercentQ"      # %q{single-quoted-style string}
 fields = ["value"]
 
 [[tokens]]
@@ -174,6 +187,28 @@ id = "regex_body"        # inside /.../ — entered manually from `data`
                          # `set_current_state` call in src/lib.rs.
 [[states]]
 id = "regex_escape"      # inside /.../ after `\\`
+[[states]]
+id = "regex_flags"       # after the closing `/`, slurp trailing
+                         # flag letters (i/m/x/o/u/e/n/s, case-
+                         # insensitive).  Greedy — matches as many
+                         # flag chars as appear contiguously, then
+                         # emits the whole `/body/flags` literal.
+
+# Percent literals (Phase 3a) — `%w[a b c]` and `%q{string body}`.
+[[states]]
+id = "after_percent"     # saw `%`, peeking for type letter (w / q
+                         # / i / r / s / x / W / Q / I / R).  If the
+                         # follower isn't a known type letter, `%`
+                         # falls back to a modulo operator.
+[[states]]
+id = "percent_w_open"    # saw `%w`, peeking for opening delimiter
+                         # (`[` is the v0 canonical delimiter).
+[[states]]
+id = "percent_w_body"    # inside `%w[...]` — accumulating string-array body.
+[[states]]
+id = "percent_q_open"    # saw `%q`, peeking for `{` opening delim.
+[[states]]
+id = "percent_q_body"    # inside `%q{...}` — accumulating string body.
 
 [[states]]
 id = "comment_body"      # # to end-of-line
@@ -349,11 +384,13 @@ matcher = { literal = "/" }
 to = "data"
 actions = ["set_text(/)", "emit(Op)"]
 
+# `%` enters `after_percent` to disambiguate modulo operator vs
+# percent literal start.  See after_percent transitions below.
 [[transitions]]
 from = "data"
 matcher = { literal = "%" }
-to = "data"
-actions = ["set_text(%)", "emit(Op)"]
+to = "after_percent"
+actions = ["clear_text", "append_text(%)"]
 
 [[transitions]]
 from = "data"
@@ -662,11 +699,16 @@ from = "regex_body"
 matcher = { literal = "\\" }
 to = "regex_escape"
 
+# Closing `/` of a regex body: append it to the text buffer (as a
+# separator between body and flags) and transition into the flag-
+# slurp state.  The emit(Regex) interpreter then wraps the buffer
+# with a single leading `/`, yielding `/body/` (no flags) or
+# `/body/flags` (with flags).
 [[transitions]]
 from = "regex_body"
 matcher = { literal = "/" }
-to = "data"
-actions = ["emit(Regex)"]
+to = "regex_flags"
+actions = ["append_text(/)"]
 
 [[transitions]]
 from = "regex_body"
@@ -696,6 +738,153 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = ["parse_error(unterminated_regex)", "emit(Eof)"]
+
+# Regex flag slurp (Phase 3a).  After the closing `/`, accept any
+# of the standard MRI flag letters in either case.  Greedy — stays
+# in this state as long as flag-letter chars appear contiguously.
+# Any other character ends the literal and re-dispatches the char
+# to `data` (consume=false).
+[[transitions]]
+from = "regex_flags"
+matcher = { one_of = "imxoeunsIMXOEUNS" }
+to = "regex_flags"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "regex_flags"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Regex)", "emit(Eof)"]
+
+[[transitions]]
+from = "regex_flags"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Regex)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Percent literals (Phase 3a) — `%w[a b c]` and `%q{string body}`.
+#
+# `%` already entered `after_percent` (data → after_percent earlier
+# in this file).  The text buffer contains `%` at that point.
+# ─────────────────────────────────────────────────────────────────
+
+# `%w` — string-array literal.
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "w" }
+to = "percent_w_open"
+actions = ["append_text(current)"]
+
+# `%q` — single-quoted-style string.
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "q" }
+to = "percent_q_open"
+actions = ["append_text(current)"]
+
+# Any other follower: `%` is a modulo operator.  Re-dispatch the
+# next char to `data` so it lexes normally.
+[[transitions]]
+from = "after_percent"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "after_percent"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(%)", "emit(Op)", "emit(Eof)"]
+
+# After `%w`, the next char must be the opening delimiter.  v0
+# supports `[` as the canonical delimiter; other delimiters fall
+# back to "% is modulo, w is a name" — emit the percent as Op and
+# re-dispatch the `w` to data.
+[[transitions]]
+from = "percent_w_open"
+matcher = { literal = "[" }
+to = "percent_w_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_w_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_w_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_w_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_w_no_delim)", "set_text(%)", "emit(Op)"]
+
+# Inside `%w[...]` — slurp characters until matching `]`.
+[[transitions]]
+from = "percent_w_body"
+matcher = { literal = "]" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentW)"]
+
+[[transitions]]
+from = "percent_w_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_w)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_w_body"
+matcher = { anything = true }
+to = "percent_w_body"
+actions = ["append_text(current)"]
+
+# After `%q`, the next char must be the opening `{` delimiter.
+[[transitions]]
+from = "percent_q_open"
+matcher = { literal = "{" }
+to = "percent_q_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_q_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_q_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_q_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_q_no_delim)", "set_text(%)", "emit(Op)"]
+
+# Inside `%q{...}` — slurp characters until matching `}`.
+[[transitions]]
+from = "percent_q_body"
+matcher = { literal = "}" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentQ)"]
+
+[[transitions]]
+from = "percent_q_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_q)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_q_body"
+matcher = { anything = true }
+to = "percent_q_body"
+actions = ["append_text(current)"]
 
 # ─────────────────────────────────────────────────────────────────
 # Line comment
