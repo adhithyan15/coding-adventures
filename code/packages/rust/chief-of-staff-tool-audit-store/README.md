@@ -43,6 +43,8 @@ The crate keeps the boundary narrow:
   scheduler and investigation decisions
 - supervisor drain reports and summaries expose workload accessors for checkpoint,
   budget, planned, replayed, and delta fields
+- supervisor drain reports and summaries expose last-checkpoint scalar accessors
+  for timestamp and call-id host logs
 - supervisor drain run summaries flatten planned and replayed follow-up row
   counts for host routing decisions
 - supervisor drain run summaries flag when planned and replayed follow-up

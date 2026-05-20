@@ -1175,6 +1175,23 @@ impl ToolAuditSupervisorDrainRunReport {
     pub fn last_checkpoint(&self) -> Option<&ToolAuditReadCheckpoint> {
         self.drain.last_checkpoint()
     }
+
+    /// Return whether the actual run observed a replay checkpoint.
+    pub fn has_last_checkpoint(&self) -> bool {
+        self.last_checkpoint().is_some()
+    }
+
+    /// Return the timestamp for the last replay checkpoint observed by the actual run.
+    pub fn last_checkpoint_timestamp_ms(&self) -> Option<u64> {
+        self.last_checkpoint()
+            .map(|checkpoint| checkpoint.timestamp_ms)
+    }
+
+    /// Return the call id for the last replay checkpoint observed by the actual run.
+    pub fn last_checkpoint_call_id(&self) -> Option<&str> {
+        self.last_checkpoint()
+            .map(|checkpoint| checkpoint.call_id.as_str())
+    }
 }
 
 /// Payload-free, flattened host summary for a bounded supervisor drain run.
@@ -1476,6 +1493,23 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return the last replay checkpoint observed by the actual run.
     pub fn last_checkpoint(&self) -> Option<&ToolAuditReadCheckpoint> {
         self.last_checkpoint.as_ref()
+    }
+
+    /// Return whether the actual run observed a replay checkpoint.
+    pub fn has_last_checkpoint(&self) -> bool {
+        self.last_checkpoint().is_some()
+    }
+
+    /// Return the timestamp for the last replay checkpoint observed by the actual run.
+    pub fn last_checkpoint_timestamp_ms(&self) -> Option<u64> {
+        self.last_checkpoint()
+            .map(|checkpoint| checkpoint.timestamp_ms)
+    }
+
+    /// Return the call id for the last replay checkpoint observed by the actual run.
+    pub fn last_checkpoint_call_id(&self) -> Option<&str> {
+        self.last_checkpoint()
+            .map(|checkpoint| checkpoint.call_id.as_str())
     }
 }
 
@@ -3228,6 +3262,9 @@ mod tests {
             report.last_checkpoint(),
             Some(&ToolAuditReadCheckpoint::new(120, "call_4"))
         );
+        assert!(report.has_last_checkpoint());
+        assert_eq!(report.last_checkpoint_timestamp_ms(), Some(120));
+        assert_eq!(report.last_checkpoint_call_id(), Some("call_4"));
         assert_eq!(sink.records().len(), 4);
         assert_eq!(
             store
@@ -3831,6 +3868,9 @@ mod tests {
         assert!(summary.advanced_checkpoint());
         assert_eq!(summary.last_checkpoint, report.last_checkpoint().cloned());
         assert_eq!(summary.last_checkpoint(), report.last_checkpoint());
+        assert!(summary.has_last_checkpoint());
+        assert_eq!(summary.last_checkpoint_timestamp_ms(), Some(120));
+        assert_eq!(summary.last_checkpoint_call_id(), Some("call_2"));
         assert!(!summary.is_idle());
         assert!(summary.made_progress());
         assert!(summary.should_continue());
