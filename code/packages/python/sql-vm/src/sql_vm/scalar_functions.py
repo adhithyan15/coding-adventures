@@ -230,13 +230,39 @@ _REAL_PREFIX = re.compile(
 )
 
 
+# SQLite's INTEGER type is a signed 64-bit value.  Out-of-range numeric
+# casts saturate at the int64 endpoints rather than wrapping or raising.
+_INT64_MAX = 2**63 - 1
+_INT64_MIN = -(2**63)
+
+
+def _clamp_int64(value: int) -> int:
+    """Clamp *value* to the signed 64-bit integer range.
+
+    SQLite's INTEGER affinity is an signed 64-bit value; CAST to
+    INTEGER saturates at ``-2**63`` / ``2**63 - 1`` rather than
+    wrapping or producing a Python bigint.  Apply this clamp to every
+    INTEGER cast result so callers see SQLite-compatible output.
+    """
+    if value > _INT64_MAX:
+        return _INT64_MAX
+    if value < _INT64_MIN:
+        return _INT64_MIN
+    return value
+
+
 def _sqlite_str_to_int(s: str) -> int:
-    """Take the longest leading integer prefix of *s*; 0 if none."""
+    """Take the longest leading integer prefix of *s*; 0 if none.
+
+    The result is clamped to the signed 64-bit range, matching SQLite's
+    INTEGER affinity: ``CAST('99999999999999999999' AS INTEGER)`` gives
+    ``9223372036854775807``, not the unclamped Python bigint.
+    """
     m = _INT_PREFIX.match(s)
     if not m:
         return 0
     try:
-        return int(m.group().strip())
+        return _clamp_int64(int(m.group().strip()))
     except (ValueError, OverflowError):
         return 0
 
@@ -290,15 +316,27 @@ def _cast_fn(x: SqlValue, target_type: SqlValue) -> SqlValue:
     try:
         if t in ("integer", "int", "int2", "int8", "tinyint", "smallint",
                  "mediumint", "bigint", "unsigned big int"):
+            # All four numeric→int paths flow through ``_clamp_int64`` so
+            # the result fits in a signed 64-bit value, matching SQLite's
+            # INTEGER affinity.  Truncation (float→int) happens *before*
+            # the clamp so ``CAST(1e20 AS INTEGER)`` yields ``int64_max``
+            # rather than overflowing Python's int conversion.
             if isinstance(x, bool):
                 return int(x)
             if isinstance(x, float):
-                return int(x)
+                # Float→int: truncate toward zero, then clamp.  ``float``
+                # values outside int64 range (e.g. ``1e20``, ``inf``)
+                # would raise OverflowError from ``int()`` — handle by
+                # saturating to the appropriate endpoint.
+                try:
+                    return _clamp_int64(int(x))
+                except (OverflowError, ValueError):
+                    return _INT64_MAX if x > 0 else _INT64_MIN
             if isinstance(x, str):
                 return _sqlite_str_to_int(x)
             if isinstance(x, bytes):
                 return _sqlite_str_to_int(x.decode("utf-8", errors="replace"))
-            return int(x)
+            return _clamp_int64(int(x))
         if t in ("real", "float", "double", "double precision",
                  "numeric", "decimal"):
             if isinstance(x, bool):
