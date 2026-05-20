@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.70.0] - 2026-05-20
+
+### Added
+
+- **``TIMEDIFF(A, B)`` scalar function** (via ``sql-vm 1.44.0``) —
+  SQLite 3.43+.  Returns ``±YYYY-MM-DD HH:MM:SS.sss`` calendar-aware
+  difference ``A − B`` matching SQLite byte-for-byte.
+
+  21 oracle tests in ``test_tier3_timediff.py`` covering basic
+  positive/negative differences, fractional seconds, calendar-field
+  borrowing across Feb's variable day count, year boundaries, NULL
+  propagation, and unparseable inputs.
+
 ## [1.69.0] - 2026-05-20
 
 ### Fixed

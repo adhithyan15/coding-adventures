@@ -2373,6 +2373,94 @@ def _unixepoch(*args: SqlValue) -> SqlValue:
     return int(dt.timestamp())
 
 
+@register("timediff")
+def _timediff(a: SqlValue, b: SqlValue) -> SqlValue:
+    """Return the calendar-aware difference *A* − *B* as text.
+
+    ``TIMEDIFF(A, B)`` returns a string of the form
+    ``±YYYY-MM-DD HH:MM:SS.sss`` representing how much later *A* is than
+    *B*.  When *A* is earlier than *B* the sign is ``-`` and the
+    magnitude is the time from *A* to *B*.  Returns NULL if either
+    argument is NULL or fails to parse as a time value.
+
+    Available in SQLite 3.43+ (see https://sqlite.org/lang_datefunc.html).
+
+    **Calendar borrowing.**  The output components are *not* simply
+    seconds-converted: the year and month fields use calendar
+    arithmetic with monthly borrowing.  Concretely, the algorithm
+    walks the seven fields from microseconds upward and borrows from
+    the next higher field when the current one goes negative.  The
+    month-borrow step uses the day count of the month immediately
+    preceding ``A``'s month — that's what makes
+    ``timediff('2024-03-15', '2024-01-20')`` come out to
+    ``'+0000-01-24 00:00:00.000'`` (24 days because February 2024 has
+    29 days, hence ``15 + 29 − 20 = 24``).
+
+    Examples::
+
+        TIMEDIFF('2024-01-02 10:30:00', '2024-01-01 09:00:00')
+            → '+0000-00-01 01:30:00.000'
+        TIMEDIFF('2024-01-01 09:00:00', '2024-01-02 10:30:00')
+            → '-0000-00-01 01:30:00.000'
+        TIMEDIFF('2025-01-01', '2024-01-01') → '+0001-00-00 00:00:00.000'
+        TIMEDIFF('2024-02-29', '2024-01-31') → '+0000-00-29 00:00:00.000'
+        TIMEDIFF('not-a-date', '2024-01-01') → NULL
+    """
+    if a is None or b is None:
+        return None
+    dt_a = _parse_timevalue(a)
+    dt_b = _parse_timevalue(b)
+    if dt_a is None or dt_b is None:
+        return None
+    sign = "+"
+    if dt_a < dt_b:
+        sign = "-"
+        dt_a, dt_b = dt_b, dt_a
+    # Field-by-field calendar borrow.  Subtract from microseconds up;
+    # borrow from the next higher field whenever a component goes
+    # negative.  The day-borrow uses the day count of the month preceding
+    # ``dt_a``'s month, which is what gives ``timediff`` its
+    # calendar-aware (rather than seconds-only) flavour.
+    micro = dt_a.microsecond - dt_b.microsecond
+    sec = dt_a.second - dt_b.second
+    if micro < 0:
+        micro += 1_000_000
+        sec -= 1
+    minute = dt_a.minute - dt_b.minute
+    if sec < 0:
+        sec += 60
+        minute -= 1
+    hour = dt_a.hour - dt_b.hour
+    if minute < 0:
+        minute += 60
+        hour -= 1
+    day = dt_a.day - dt_b.day
+    if hour < 0:
+        hour += 24
+        day -= 1
+    month = dt_a.month - dt_b.month
+    if day < 0:
+        # Borrow one month — add the day count of the *previous* month
+        # (in dt_a's frame of reference) to the day field.
+        if dt_a.month > 1:
+            prev_month_year, prev_month = dt_a.year, dt_a.month - 1
+        else:
+            prev_month_year, prev_month = dt_a.year - 1, 12
+        day += calendar.monthrange(prev_month_year, prev_month)[1]
+        month -= 1
+    year = dt_a.year - dt_b.year
+    if month < 0:
+        month += 12
+        year -= 1
+    # Truncate microseconds to milliseconds (3 decimal places) — matches
+    # SQLite's output format.  No rounding; SQLite truncates here too.
+    millis = micro // 1000
+    return (
+        f"{sign}{year:04d}-{month:02d}-{day:02d} "
+        f"{hour:02d}:{minute:02d}:{sec:02d}.{millis:03d}"
+    )
+
+
 # Pre-compiled substitution map for STRFTIME's SQLite-specific specifiers.
 # Python's strftime does not support %f (SQLite = SS.SSS), %s (epoch),
 # %J (Julian day), or %P (lowercase am/pm on macOS libc).  We intercept
