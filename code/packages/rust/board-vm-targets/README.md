@@ -52,7 +52,9 @@ USB-serial bridge and external-adapter boards keep their simpler port paths.
 The final Arduino CLI invocation template is likewise emitted from
 `board-vm-language-core`, so frontends fill concrete port and firmware-image
 paths into Rust-owned `arduino-cli upload` flags instead of rebuilding the
-command shape.
+command shape. The matching command builder now accepts the concrete selected
+port and firmware image path and returns the final argv, including optional
+Arduino CLI upload properties and verify mode.
 
 Wireless metadata separates physical support from the generic front-end sugar:
 

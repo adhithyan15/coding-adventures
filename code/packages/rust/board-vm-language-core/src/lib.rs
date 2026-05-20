@@ -619,6 +619,21 @@ pub struct LanguageArduinoCliUploadInvocation {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageArduinoCliUploadCommand {
+    pub board_id: String,
+    pub executable: String,
+    pub args: Vec<String>,
+    pub fqbn: String,
+    pub port: String,
+    pub input_file: String,
+    pub upload_properties: Vec<String>,
+    pub verify: bool,
+    pub port_hint: String,
+    pub port_selection_step: String,
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageUploadOptions {
     pub board_id: String,
     pub adapter: String,
@@ -1088,6 +1103,66 @@ pub fn arduino_cli_upload_invocation_for_target(
         accepts_input_dir: true,
         accepts_upload_properties: true,
         notes: arduino_cli_upload_invocation_notes(port_hint).to_owned(),
+    })
+}
+
+pub fn arduino_cli_upload_command_for_target(
+    selector: &str,
+    port: &str,
+    input_file: &str,
+) -> Option<LanguageArduinoCliUploadCommand> {
+    arduino_cli_upload_command_with_options_for_target(selector, port, input_file, &[], false)
+}
+
+pub fn arduino_cli_upload_command_with_options_for_target(
+    selector: &str,
+    port: &str,
+    input_file: &str,
+    upload_properties: &[&str],
+    verify: bool,
+) -> Option<LanguageArduinoCliUploadCommand> {
+    let invocation = arduino_cli_upload_invocation_for_target(selector)?;
+    if port.trim().is_empty()
+        || input_file.trim().is_empty()
+        || upload_properties
+            .iter()
+            .any(|property| property.trim().is_empty())
+    {
+        return None;
+    }
+
+    let mut args = vec![
+        invocation.subcommand.clone(),
+        invocation.port_flag.clone(),
+        port.to_owned(),
+        invocation.fqbn_flag.clone(),
+        invocation.fqbn.clone(),
+        invocation.input_file_flag.clone(),
+        input_file.to_owned(),
+    ];
+    for property in upload_properties {
+        args.push(invocation.upload_property_flag.clone());
+        args.push((*property).to_owned());
+    }
+    if verify {
+        args.push(invocation.verify_flag.clone());
+    }
+
+    Some(LanguageArduinoCliUploadCommand {
+        board_id: invocation.board_id,
+        executable: invocation.executable,
+        args,
+        fqbn: invocation.fqbn,
+        port: port.to_owned(),
+        input_file: input_file.to_owned(),
+        upload_properties: upload_properties
+            .iter()
+            .map(|property| (*property).to_owned())
+            .collect(),
+        verify,
+        port_hint: invocation.port_hint,
+        port_selection_step: invocation.port_selection_step,
+        notes: arduino_cli_upload_command_notes().to_owned(),
     })
 }
 
@@ -1734,6 +1809,10 @@ fn arduino_cli_upload_invocation_notes(hint: TargetUploadPortHint) -> &'static s
         }
         _ => "Fill the port placeholder with the Arduino upload port and the input placeholder with a concrete Board VM firmware image.",
     }
+}
+
+fn arduino_cli_upload_command_notes() -> &'static str {
+    "Concrete Arduino CLI argv built by Rust after target resolution, port selection, and firmware artifact selection."
 }
 
 fn language_upload_plan(board_id: &str, upload: TargetUploadInfo) -> LanguageUploadPlan {
@@ -5559,6 +5638,96 @@ mod tests {
         assert!(arduino_cli_upload_invocation_for_target("esp32").is_none());
         assert!(arduino_cli_upload_invocation_for_target("pico").is_none());
         assert!(arduino_cli_upload_invocation_for_target("not-a-board").is_none());
+    }
+
+    #[test]
+    fn arduino_cli_upload_command_is_owned_by_rust_language_core() {
+        let command = arduino_cli_upload_command_for_target(
+            "arduino:renesas_uno:nanor4",
+            "/dev/cu.usbmodem101",
+            "/tmp/board-vm-nano-r4.bin",
+        )
+        .unwrap();
+        assert_eq!(command.board_id, "arduino-nano-r4");
+        assert_eq!(command.executable, "arduino-cli");
+        assert_eq!(command.fqbn, "arduino:renesas_uno:nanor4");
+        assert_eq!(command.port, "/dev/cu.usbmodem101");
+        assert_eq!(command.input_file, "/tmp/board-vm-nano-r4.bin");
+        assert_eq!(command.port_hint, "native_usb");
+        assert_eq!(command.port_selection_step, "select_native_usb_port");
+        assert!(!command.verify);
+        assert!(command.upload_properties.is_empty());
+        assert_eq!(
+            command.args,
+            vec![
+                "upload",
+                "-p",
+                "/dev/cu.usbmodem101",
+                "-b",
+                "arduino:renesas_uno:nanor4",
+                "-i",
+                "/tmp/board-vm-nano-r4.bin",
+            ]
+        );
+        assert!(command.notes.contains("Concrete Arduino CLI argv"));
+
+        let command = arduino_cli_upload_command_with_options_for_target(
+            "arduino-mega-2560",
+            "COM7",
+            "C:/tmp/mega.hex",
+            &["upload.speed=115200", "programmer=arduinoasisp"],
+            true,
+        )
+        .unwrap();
+        assert_eq!(command.board_id, "arduino-mega-2560");
+        assert_eq!(command.port_hint, "usb_serial_bridge");
+        assert!(command.verify);
+        assert_eq!(
+            command.upload_properties,
+            vec!["upload.speed=115200", "programmer=arduinoasisp"]
+        );
+        assert_eq!(
+            command.args,
+            vec![
+                "upload",
+                "-p",
+                "COM7",
+                "-b",
+                "arduino:avr:mega:cpu=atmega2560",
+                "-i",
+                "C:/tmp/mega.hex",
+                "--upload-property",
+                "upload.speed=115200",
+                "--upload-property",
+                "programmer=arduinoasisp",
+                "-t",
+            ]
+        );
+
+        assert!(
+            arduino_cli_upload_command_for_target("arduino-pro-mini", "", "/tmp/pro-mini.hex")
+                .is_none()
+        );
+        assert!(arduino_cli_upload_command_for_target(
+            "arduino-pro-mini",
+            "/dev/cu.usbserial-1420",
+            ""
+        )
+        .is_none());
+        assert!(arduino_cli_upload_command_with_options_for_target(
+            "arduino-pro-mini",
+            "/dev/cu.usbserial-1420",
+            "/tmp/pro-mini.hex",
+            &[""],
+            false,
+        )
+        .is_none());
+        assert!(arduino_cli_upload_command_for_target(
+            "esp32",
+            "/dev/cu.usbserial-esp32",
+            "/tmp/esp32.bin"
+        )
+        .is_none());
     }
 
     #[test]
