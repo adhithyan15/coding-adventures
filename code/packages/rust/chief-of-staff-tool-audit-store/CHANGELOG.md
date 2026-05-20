@@ -30,6 +30,7 @@ All notable changes to this package will be documented in this file.
   schedulers.
 - Flattened supervisor drain run summaries for host logs and scheduler loops.
 - Typed classifier accessors for supervisor drain run summaries.
+- Workload accessors for supervisor drain run reports.
 - Workload accessors for supervisor drain run summaries.
 - Flattened planned and replayed follow-up row counts in supervisor drain run
   summaries.
