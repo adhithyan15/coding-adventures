@@ -224,6 +224,16 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_paragraph_
   --check
 ```
 
+The generated `tests/fixtures/whatwg-block-boundary-audit.json` fixture indexes
+grouping, sectioning, list-container, heading, formatting, table,
+foreign-content, template, form, text-mode, ruby, select/list, and fragment
+context block boundaries:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_block_boundary_audit_fixture.py \
+  --check
+```
+
 The generated `tests/fixtures/whatwg-document-shell-audit.json` fixture indexes
 doctypes, comments, `html`/`head`/`body` synthesis, frameset boundaries, and
 shell fragment contexts:
