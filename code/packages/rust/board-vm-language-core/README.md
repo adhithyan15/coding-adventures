@@ -35,6 +35,10 @@ CLI platform/FQBN metadata for each board family. Generic clients can use
 `upload_plan_for_target`; Arduino CLI-specific clients can use
 `arduino_cli_upload_options_for_target` so native USB, USB-serial bridge, and
 external-adapter port selection stay in Rust instead of language-local tables.
+`arduino_cli_port_discovery_for_target` adds the matching discovery/reset
+metadata, including the 1200-baud native USB bootloader touch convention and
+runtime port rediscovery expectation for boards whose Arduino package owns that
+reset path.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves

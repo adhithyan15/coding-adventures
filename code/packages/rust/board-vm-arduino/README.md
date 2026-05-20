@@ -31,6 +31,9 @@ boards from being treated like onboard-USB Arduinos.
 `board-vm-language-core` turns those descriptors into typed Arduino CLI upload
 options, including the port-selection step and board-package reset delegation,
 so language frontends do not need their own Arduino upload adapter matrix.
+It also exposes the matching port discovery and reset hints, including the
+native-USB 1200-baud bootloader touch and runtime port rediscovery expectation
+for boards whose Arduino package owns that behavior.
 
 The shared target registry also records physical wireless radios for the
 Arduino-family boards that have Wi-Fi or BLE hardware, including MKR/Nano
