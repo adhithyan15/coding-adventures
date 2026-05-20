@@ -58,6 +58,9 @@ documented in this file.
 - Generated WHATWG fragment-context audit fixture over html5lib table, shell,
   block, foreign-content, text-mode, select/list, template, and ordinary
   fragment parsing contexts, with a dedicated parser regression test.
+- Generated WHATWG character-reference audit fixture over html5lib named,
+  numeric, ambiguous ampersand, attribute, RCDATA, and fragment-context
+  character-reference cases, with a dedicated parser regression test.
 - Generated WHATWG document-shell audit fixture over html5lib doctype, comment,
   html/head/body synthesis, frameset-boundary, and shell fragment-context
   cases, with a dedicated parser regression test.
@@ -72,7 +75,8 @@ documented in this file.
   tree-insertion, frameset, table, form/interactive, text-control,
   foreign-content, formatting, ruby, noscript, head/body, document-shell,
   void-element, list-item, paragraph, block-boundary, fragment-context,
-  template, and select/list audit checks on the same parser and DOM dump path.
+  character-reference, template, and select/list audit checks on the same
+  parser and DOM dump path.
 - The html5lib source-coverage audit now has a checked JSON report plus
   `--write-report` and `--check-report` modes for parser/tokenizer fixture
   drift detection.
