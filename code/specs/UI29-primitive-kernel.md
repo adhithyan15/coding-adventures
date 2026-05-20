@@ -146,14 +146,20 @@ component was bespoke-coded in Rust, but for userland components to be
 expressive enough to subsume Grid+Cell+Input+etc., the grammar must
 gain three additions.
 
-### 3.1 `For each: <expr>, as: <name>, index: <name>? { <children> }`
+### 3.1 `For (each: <expr>, as: <name>, index: <name>?) { <children> }`
 
-Iterate over a list. Binds two names into the body scope:
+Iterate over a list. Binds two names into the body scope. The bindings
+sit inside parentheses — the same shape every other primitive uses for
+its props, e.g. `Grid (headers: ..., rows: ...)`. Earlier drafts of this
+spec showed a paren-less form, but the implementation in U29-G1 (#3622)
+landed paren-required for grammar consistency: a `For` node is still
+just a regular `node` per the moslayout grammar, with no special parser
+rule.
 
 ```moslayout
-For each: slot: viewport-rows, as: row, index: r {
+For (each: slot: viewport-rows, as: row, index: r) {
   Row [data-row] {
-    For each: slot: columns, as: col, index: c {
+    For (each: slot: columns, as: col, index: c) {
       Cell [body] (
         value: row[c],
         editable: col.editable,
@@ -175,12 +181,15 @@ Lowering:
 
 The `index:` binding is optional. When omitted, only `as:` is bound.
 
-### 3.2 `If when: <expr> { <then> } else { <else>? }`
+### 3.2 `If (when: <expr>) { <then> } Else { <else>? }`
 
-Conditional render:
+Conditional render. As with `For`, the `when:` binding sits inside
+parentheses — paren-required matches U29-G2 (#3623). `Else` is a
+sibling primitive that must immediately follow an `If`; the analyzer
+enforces this in `validate_node`.
 
 ```moslayout
-If when: slot: editable && slot: is-editing {
+If (when: slot: editable && slot: is-editing) {
   HostInput (value: slot: value, onCommit: emit: onCommit)
 }
 Else {
@@ -188,9 +197,9 @@ Else {
 }
 ```
 
-The `else` block is optional. `If`+`Else` chain by parsing two
-consecutive nodes; `Else If` is rewritten by the parser to a nested
-`Else { If ... }`.
+The `Else` block is optional. `If`+`Else` chain by parsing two
+consecutive nodes (no special chained parser rule); `Else If` is
+rewritten by the parser to a nested `Else { If ... }`.
 
 Lowering:
 
