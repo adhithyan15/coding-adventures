@@ -6,15 +6,17 @@ to Python.  Sibling crate to
 [`matrix-rust-napi`](../matrix-rust-napi) (the Node.js N-API binding)
 — same shape, different toolchain.
 
-Currently at **Phase 3** of [MX09](../../../specs/MX09-matrix-rust-python.md).
+Currently at **Phase 3b** of [MX09](../../../specs/MX09-matrix-rust-python.md).
 
 | Phase | Surface |
 |-------|---------|
 | 1 ✅ | `graph_round_trip_json(json_string: str) -> str` |
 | 2 ✅ | `run_graph_on_cpu(envelope_json: str) -> str` |
 | 2b ✅ | `m.Graph(json_str)` + `.to_json()` / `.describe()`; `m.Runtime()` + `.run(graph, [bytes]) -> [bytes]` |
-| 3 ✅ | `pyproject.toml` + `maturin` wheel build CI workflow (ubuntu + macos) |
-| 4   | Python wrapper package + `pytest` smoke tests |
+| 3 ✅ | `pyproject.toml` + cargo+cp+smoke CI workflow (ubuntu + macos × py 3.11) |
+| 3b ✅ | Extends CI to **windows-latest** and **py 3.10 / 3.11 / 3.12** (9 cells) |
+| 4 ✅ | Companion Python wrapper package + `pytest` smoke |
+| 3c  | Maturin shim / actual wheel packaging |
 | 5   | PyPI publish |
 
 ## What this crate is

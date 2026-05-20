@@ -89,16 +89,69 @@ permissions:
 
 jobs:
   build-smoke:
-    name: build + import smoke (${{ matrix.os }})
+    name: build + import smoke (${{ matrix.os }}, py ${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
     strategy:
+      # Don't cancel the rest of the matrix when one cell fails —
+      # we want the full per-OS / per-Python-version signal on every
+      # PR.  Cells are independent.
       fail-fast: false
       matrix:
+        # 3 OS × 3 Python versions = 9 cells.  Each pins the
+        # cdylib filename cargo produces (cargo's naming convention
+        # is platform-specific) and the name Python's import
+        # machinery expects on sys.path (`.so` on POSIX, `.pyd` on
+        # Windows).
         include:
+          # ── ubuntu-latest × py 3.10/3.11/3.12 ────────────────
           - os: ubuntu-latest
-            cdylib_ext: so
+            python-version: '3.10'
+            cdylib_filename: libmatrix_rust_python.so
+            staged_filename: matrix_rust_python.so
+          - os: ubuntu-latest
+            python-version: '3.11'
+            cdylib_filename: libmatrix_rust_python.so
+            staged_filename: matrix_rust_python.so
+          - os: ubuntu-latest
+            python-version: '3.12'
+            cdylib_filename: libmatrix_rust_python.so
+            staged_filename: matrix_rust_python.so
+          # ── macos-latest × py 3.10/3.11/3.12 ─────────────────
           - os: macos-latest
-            cdylib_ext: dylib
+            python-version: '3.10'
+            cdylib_filename: libmatrix_rust_python.dylib
+            staged_filename: matrix_rust_python.so
+          - os: macos-latest
+            python-version: '3.11'
+            cdylib_filename: libmatrix_rust_python.dylib
+            staged_filename: matrix_rust_python.so
+          - os: macos-latest
+            python-version: '3.12'
+            cdylib_filename: libmatrix_rust_python.dylib
+            staged_filename: matrix_rust_python.so
+          # ── windows-latest × py 3.10/3.11/3.12 ───────────────
+          # Windows requires the build.rs to link against
+          # python3.lib (Limited API).  setup-python below puts the
+          # right Python's `libs/` on the linker search path via the
+          # PYO3_PYTHON env we set in the build step.
+          - os: windows-latest
+            python-version: '3.10'
+            cdylib_filename: matrix_rust_python.dll
+            staged_filename: matrix_rust_python.pyd
+          - os: windows-latest
+            python-version: '3.11'
+            cdylib_filename: matrix_rust_python.dll
+            staged_filename: matrix_rust_python.pyd
+          - os: windows-latest
+            python-version: '3.12'
+            cdylib_filename: matrix_rust_python.dll
+            staged_filename: matrix_rust_python.pyd
+    # Run every script step via bash so the same `set -eu` + `mkdir`
+    # + `cp` syntax works on Windows runners (which default to pwsh).
+    # Git-for-Windows bash ships with the runner image.
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -116,19 +169,19 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             code/packages/rust/target
-          key: ${{ runner.os }}-cargo-matrix-rust-python-${{ hashFiles('code/packages/rust/matrix-rust-python/Cargo.toml', 'code/packages/rust/python-bridge/Cargo.toml') }}
+          # Cache key includes python-version so each cell gets its
+          # own slot (the build.rs probes Python at build time on
+          # Windows, so the linked output is version-sensitive).
+          key: ${{ runner.os }}-py${{ matrix.python-version }}-cargo-matrix-rust-python-${{ hashFiles('code/packages/rust/matrix-rust-python/Cargo.toml', 'code/packages/rust/python-bridge/Cargo.toml') }}
           restore-keys: |
+            ${{ runner.os }}-py${{ matrix.python-version }}-cargo-matrix-rust-python-
             ${{ runner.os }}-cargo-matrix-rust-python-
             ${{ runner.os }}-cargo-
 
-      - name: Install Python 3.11
-        # Pin a specific Python for reproducibility.  pyproject.toml
-        # advertises 3.10+; CI runs against one of the supported
-        # versions.  Phase 3b can fan out to a 3.10/3.11/3.12 matrix
-        # once the build is stable on one.
+      - name: Install Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: ${{ matrix.python-version }}
 
       - name: Run cargo test (pure-Rust unit tests)
         # 25 tests covering JSON wire format, end-to-end
@@ -141,32 +194,39 @@ jobs:
         run: cargo test -p matrix-rust-python --release
 
       - name: Build the cdylib (release)
-        # The build.rs in this crate emits the macOS
-        # `-undefined dynamic_lookup` linker flag so the cdylib can
-        # reference Python C API symbols that get resolved at
-        # `import` time by the loading CPython interpreter.  On
-        # Linux ELF shared libraries permit undefined symbols by
-        # default — no extra config needed.
+        # build.rs handles the per-OS linker shenanigans:
+        #
+        # * Linux: nothing — ELF cdylibs permit undefined symbols by
+        #   default.
+        # * macOS: emits `-undefined dynamic_lookup`.
+        # * Windows: probes the active `python` (from PATH; placed
+        #   there by the setup-python step above) via `python -c
+        #   "import sysconfig; print(sysconfig.get_paths()['data'])"`
+        #   to locate `<install>/libs/python3.lib` (Limited API) and
+        #   emits `cargo:rustc-link-search` + `cargo:rustc-link-lib`.
         working-directory: code/packages/rust
         run: cargo build -p matrix-rust-python --release
 
-      - name: Stage the cdylib as a Python-importable .so
-        # Python's import machinery looks for `matrix_rust_python.so`
-        # (POSIX) on sys.path.  Copy the cargo-built library to that
-        # exact name in a fresh staging dir, then add that dir to
-        # PYTHONPATH for the smoke step.
+      - name: Stage the cdylib under its Python-importable name
+        # CPython's import machinery looks for:
+        #   * matrix_rust_python.so   (Linux, macOS)
+        #   * matrix_rust_python.pyd  (Windows)
         #
-        # The cdylib's name on disk is `libmatrix_rust_python.{so,dylib}`
-        # (cargo prefixes "lib" by convention).  Strip the prefix
-        # and use a `.so` suffix on both platforms — CPython on
-        # macOS accepts `.so` as well as `.dylib` for extension
-        # modules.
+        # cargo's output filename is platform-specific:
+        #   * libmatrix_rust_python.so       (Linux)
+        #   * libmatrix_rust_python.dylib    (macOS, "lib" prefix kept)
+        #   * matrix_rust_python.dll         (Windows, no "lib")
+        #
+        # The matrix declares both names per-cell so the bash here
+        # stays simple.  We use Git-Bash on Windows (the workflow
+        # default-shell is bash) so the script is byte-identical
+        # across all three OSes.
         working-directory: code/packages/rust
         run: |
           set -eu
           mkdir -p target/python-import
-          src="target/release/libmatrix_rust_python.${{ matrix.cdylib_ext }}"
-          dst="target/python-import/matrix_rust_python.so"
+          src="target/release/${{ matrix.cdylib_filename }}"
+          dst="target/python-import/${{ matrix.staged_filename }}"
           if [ ! -f "$src" ]; then
             echo "ERROR: cargo built no cdylib at $src" >&2
             ls -la target/release/ | head -30 >&2
@@ -182,11 +242,28 @@ jobs:
         # failure here means the extension was built but CPython
         # can't load it (libpython link mismatch, missing PyInit
         # symbol, ABI tag mismatch, etc.).
+        #
+        # We use `sys.path.insert` from inside the heredoc rather
+        # than setting PYTHONPATH at the shell level so the path
+        # separator (`:` on POSIX, `;` on Windows) and path style
+        # (forward-slash POSIX vs back-slash Win32) are handled by
+        # Python.  `cygpath -w` converts Git-Bash's Unix-y `/c/...`
+        # path to the `C:\...` form Python actually wants on
+        # Windows.
         working-directory: code/packages/rust
         run: |
           set -eu
-          export PYTHONPATH="$PWD/target/python-import:${PYTHONPATH:-}"
+          STAGING_DIR="$PWD/target/python-import"
+          if command -v cygpath >/dev/null 2>&1; then
+            STAGING_DIR=$(cygpath -w "$STAGING_DIR")
+          fi
+          export STAGING_DIR
           python - <<'PY'
+          import os
+          import sys
+
+          sys.path.insert(0, os.environ["STAGING_DIR"])
+
           import matrix_rust_python as m
 
           expected = ["graph_round_trip_json", "run_graph_on_cpu", "Graph", "Runtime"]
@@ -213,11 +290,16 @@ jobs:
         # "did the linker pull everything in?"  Anything under
         # ~500 KiB is suspicious for a release build of this crate
         # stack (matrix-ir + matrix-runtime + matrix-cpu + ...).
+        #
+        # Glob matches both `lib*.{so,dylib}` (POSIX, cargo's "lib"
+        # prefix) and `*.dll` (Windows, no prefix).  `file` isn't
+        # installed on the Windows Git-Bash image — make it
+        # conditional.
         if: success()
         working-directory: code/packages/rust
         run: |
-          echo "matrix-rust-python cdylib built on ${{ matrix.os }}:"
-          ls -lah target/release/libmatrix_rust_python.*
+          echo "matrix-rust-python cdylib built on ${{ matrix.os }} (py ${{ matrix.python-version }}):"
+          ls -lah target/release/*matrix_rust_python.* || true
           if command -v file >/dev/null 2>&1; then
-            file target/release/libmatrix_rust_python.${{ matrix.cdylib_ext }}
+            file "target/release/${{ matrix.cdylib_filename }}" || true
           fi
