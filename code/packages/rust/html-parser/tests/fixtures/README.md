@@ -109,3 +109,14 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_foreign_au
 python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_foreign_audit_fixture.py \
   --check
 ```
+
+`whatwg-formatting-audit.json` is a generated index over tree-construction
+cases that stress active formatting elements, adoption-agency recovery,
+paragraph/list implied end tags, ruby scopes, headings, and formatting
+reconstruction:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_formatting_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_formatting_audit_fixture.py \
+  --check
+```
