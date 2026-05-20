@@ -1768,9 +1768,13 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             filter_expr=filter_expr_val,
         )
 
-    if upper == "GROUP_CONCAT":
+    if upper in ("GROUP_CONCAT", "STRING_AGG"):
         # GROUP_CONCAT(col)          — SQLite default separator ','
         # GROUP_CONCAT(col, sep)     — explicit string literal separator
+        # STRING_AGG(col, sep)       — SQLite 3.44+ synonym for GROUP_CONCAT;
+        #                              separator is mandatory in standard SQL
+        #                              but SQLite is permissive and accepts a
+        #                              single-arg form too (defaults to ',').
         #
         # SQL:2003 §10.9 requires the separator to be a character-string
         # literal; we enforce that at parse time so the codegen can bake the
@@ -1778,7 +1782,7 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
         # dynamically each time.
         if len(args) == 0 or len(args) > 2:
             raise ProgrammingError(
-                "GROUP_CONCAT: expected 1 or 2 arguments "
+                f"{upper}: expected 1 or 2 arguments "
                 "(column [, separator_literal])"
             )
         separator: str | None = None
@@ -1786,7 +1790,7 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             sep_expr = args[1].value
             if not isinstance(sep_expr, Literal) or not isinstance(sep_expr.value, str):
                 raise ProgrammingError(
-                    "GROUP_CONCAT: separator must be a string literal, "
+                    f"{upper}: separator must be a string literal, "
                     f"got {type(sep_expr).__name__}"
                 )
             separator = sep_expr.value
