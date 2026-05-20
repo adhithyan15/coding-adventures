@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.60.0] - 2026-05-19
+
+### Fixed
+
+- **``GROUP_CONCAT(DISTINCT expr)`` deduplication** — the DISTINCT
+  modifier was silently dropped by the adapter on its way from the AST
+  to the planner IR.  The parser correctly captured ``DISTINCT``, and
+  both codegen (``InitAgg(distinct=...)``) and the VM (``_AggState``
+  ``seen`` set) honoured the flag, but
+  ``mini_sqlite.adapter._function_call``'s ``GROUP_CONCAT`` branch
+  forgot to propagate ``distinct`` into the returned ``AggregateExpr``
+  — so ``group_concat(DISTINCT x)`` behaved identically to
+  ``group_concat(x)``.
+
+  Latent bug surfaced while reviewing the ``STRING_AGG`` alias landed
+  in 1.59.0; the COUNT/SUM/MIN/MAX branch in the same function was
+  already correct.  One-line fix: thread ``distinct=distinct`` into
+  the GROUP_CONCAT ``AggregateExpr`` (mirrors the existing pattern for
+  the other aggregates).
+
+  10 oracle tests in ``test_tier3_group_concat_distinct.py`` cover
+  integer/string/all-same dedup, GROUP BY per-group dedup, NULL
+  skipping with DISTINCT, all-NULL groups, ``string_agg`` alias
+  equivalence, and non-DISTINCT regression guards.
+
 ## [1.59.0] - 2026-05-19
 
 ### Added
