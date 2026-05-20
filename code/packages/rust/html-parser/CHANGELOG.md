@@ -16,6 +16,9 @@ documented in this file.
 - The html5lib source-coverage audit now has a checked JSON report plus
   `--write-report` and `--check-report` modes for parser/tokenizer fixture
   drift detection.
+- A parser integration test verifies that the checked coverage-audit report
+  still matches the checked tree-construction, raw tokenizer, and normalized
+  tokenizer fixture corpora.
 - Stack-of-open-elements tree construction seed with void element handling,
   adjacent text merging, simple implied end tags, and unmatched end-tag
   diagnostics.
