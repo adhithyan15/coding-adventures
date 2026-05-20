@@ -60,13 +60,13 @@
 //!   and `HostButton` landed in v0.2.0 (UI29 kernel partial); the
 //!   remaining primitives get dedicated emitters in follow-ups.
 //!
-//! ## UI29 kernel partial (v0.2.0)
+//! ## UI29 kernel partial (v0.2.0 / v0.3.0)
 //!
-//! Four of UI29's kernel primitives lower in this revision. The remaining
-//! three — `If`, `For`, `HostTable` — wait on the moslayout grammar
-//! additions (U29-G3) and a `HostTable` spec, and are intentionally still
-//! routed through the `UnknownPrimitive` arm so authors who reach for them
-//! get a clear "not yet supported" diagnostic.
+//! Five of UI29's kernel primitives lower in this revision. The remaining
+//! two — `If`, `For` — wait on the moslayout grammar additions (U29-G3)
+//! and are intentionally still routed through the `UnknownPrimitive` arm
+//! so authors who reach for them get a clear "not yet supported"
+//! diagnostic.
 //!
 //! | UI29 primitive | SwiftUI lowering                                |
 //! |----------------|-------------------------------------------------|
@@ -74,6 +74,7 @@
 //! | `HostScroll`   | `ScrollView { ... }`                            |
 //! | `HostInput`    | `TextField(placeholder, text: .constant(value))` |
 //! | `HostButton`   | `Button(action:) { Text(label) }`               |
+//! | `HostTable`    | `VStack { HStack { ... } }` (see [`emit_host_table`]) |
 //!
 //! ### `HostInput` binding choice
 //!
@@ -394,6 +395,28 @@ fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
         "HostInput" => emit_host_input(node, indent),
         "HostButton" => emit_host_button(node, indent),
 
+        // UI29 kernel — `HostTable` is the semantic data-table primitive.
+        // See [`emit_host_table`] for the lowering rationale (VStack +
+        // HStack rows, not SwiftUI.Table — for now).
+        "HostTable" => emit_host_table(node, indent),
+
+        // UI29 kernel — table sub-tags. When they appear OUTSIDE of a
+        // HostTable parent they have nothing to attach to in SwiftUI;
+        // we emit a self-documenting comment rather than erroring so the
+        // generated file still type-checks (a Swift comment is a
+        // statement-level no-op).
+        "HostTableHead"
+        | "HostTableBody"
+        | "HostTableFoot"
+        | "HostTableColGroup" => Ok(format!(
+            "{pad}// {} outside HostTable — ignored\n",
+            node.tag
+        )),
+
+        // `Row` outside a HostTable (and outside the normal Row container
+        // path handled above) cannot appear here because `Row` is matched
+        // earlier in this `match`. Sub-tag `Row` is only reached via
+        // [`emit_host_table`]'s explicit recursion, not via this walker.
         other => Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     }
 }
@@ -662,6 +685,183 @@ fn emit_host_button(node: &LayoutNode, indent: usize) -> Result<String, Pipeline
     out.push_str(&closing);
 
     Ok(out)
+}
+
+// =====================================================================
+// UI29 kernel — HostTable emitter
+// =====================================================================
+
+/// Lower a UI29 `HostTable` node to a SwiftUI `VStack` of `HStack` rows.
+///
+/// ## Why not `SwiftUI.Table`?
+///
+/// SwiftUI's `Table` view is data-driven: it takes a `[RowType]` collection
+/// plus `TableColumn`s with key-paths, and is not naturally produced by a
+/// structural "compose from children" emitter — the data shape lives in the
+/// host, not in the layout IR. The follow-up that wires `For` into
+/// `HostTable` will revisit this and emit a real `Table { ... }` once the
+/// IR carries the row-data shape needed to drive it.
+///
+/// For now we do the simpler structural thing: emit a `VStack` whose
+/// children are `HStack` rows, with a `Divider` separating head from body.
+/// Headers render `.bold()`. The visual result is the same as
+/// `SwiftUI.Table` for static rows, just without the built-in sorting /
+/// selection / column-resize behaviour Table provides.
+///
+/// ## Sub-tag handling
+///
+/// | Sub-tag             | Lowering                                    |
+/// |---------------------|---------------------------------------------|
+/// | `HostTableHead`     | `HStack` rows, each `Text` gets `.bold()`   |
+/// | `HostTableBody`     | `HStack` rows, plain text                   |
+/// | `HostTableFoot`     | `Divider` then `HStack` rows                |
+/// | `HostTableColGroup` | Ignored (no SwiftUI analog) — emits comment |
+///
+/// Section ordering follows the IR (children are walked in source order),
+/// with one structural rule: when a `HostTableHead` is followed by any
+/// non-head section, a `Divider()` is inserted between them. This matches
+/// the HTML `<thead>` / `<tbody>` visual convention.
+///
+/// `Row` children inside each section become `HStack`s; the `Row`'s
+/// children are emitted via the normal walker, except inside
+/// `HostTableHead` where we recursively wrap every emitted `Text(...)`
+/// with `.bold()`.
+///
+/// ## `part_name` on the table itself
+///
+/// SwiftUI has no native concept matching CSS `part`. For now we emit a
+/// Swift comment `// part: <name>` ahead of the VStack so the part
+/// metadata survives in the generated source for downstream tooling.
+/// A future PR can swap this for a SwiftUI modifier once the style
+/// inlining lands.
+fn emit_host_table(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 4);
+
+    let mut out = String::new();
+    if let Some(part) = &node.part_name {
+        writeln!(out, "{pad}// part: {part}").unwrap();
+    }
+    // NOTE: This first cut lowers HostTable to a VStack of HStack rows
+    // rather than SwiftUI.Table. SwiftUI.Table is data-driven and needs a
+    // row-data shape the IR does not yet carry. See [`emit_host_table`]
+    // doc comment for the rationale.
+    if node.children.is_empty() {
+        writeln!(out, "{pad}VStack(alignment: .leading, spacing: 0) {{ }}").unwrap();
+        return Ok(out);
+    }
+    writeln!(out, "{pad}VStack(alignment: .leading, spacing: 0) {{").unwrap();
+
+    // Walk sections in source order. We track whether we just emitted a
+    // head section so we can insert a Divider before the first non-head
+    // section that follows.
+    let mut head_just_emitted = false;
+    for section in &node.children {
+        match section.tag.as_str() {
+            "HostTableHead" => {
+                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ true)?;
+                head_just_emitted = true;
+            }
+            "HostTableBody" => {
+                if head_just_emitted {
+                    writeln!(out, "{inner_pad}Divider()").unwrap();
+                    head_just_emitted = false;
+                }
+                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ false)?;
+            }
+            "HostTableFoot" => {
+                // Per the brief, HostTableFoot is preceded by a Divider
+                // unconditionally — it visually separates totals/summary
+                // rows from the body above.
+                writeln!(out, "{inner_pad}Divider()").unwrap();
+                head_just_emitted = false;
+                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ false)?;
+            }
+            "HostTableColGroup" => {
+                // No SwiftUI analog — column-width metadata is part of
+                // the host's data model in SwiftUI.Table-land, but here
+                // there's no column-width hook to attach it to. Emit a
+                // comment so the IR's intent is visible in the output.
+                writeln!(
+                    out,
+                    "{inner_pad}// HostTableColGroup ignored in SwiftUI"
+                )
+                .unwrap();
+                head_just_emitted = false;
+            }
+            other => {
+                // Anything else nested directly under HostTable is not a
+                // recognised table section. Mirror the orphan-sub-tag
+                // path: emit a comment, don't error.
+                writeln!(out, "{inner_pad}// unexpected child '{other}' in HostTable").unwrap();
+                head_just_emitted = false;
+            }
+        }
+    }
+
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Walk a `HostTableHead` / `HostTableBody` / `HostTableFoot` section,
+/// emitting one `HStack { ... }` per `Row` child.
+///
+/// `bold` toggles whether each emitted `Text(...)` line inside the row
+/// gets a `.bold()` modifier — true for header rows, false otherwise.
+/// Non-`Row` children of a section are passed through the regular walker
+/// so the file still compiles if an author puts (say) a `Divider` between
+/// rows; an explicit comment is emitted documenting the unusual nesting.
+fn emit_table_section_rows(
+    out: &mut String,
+    section: &LayoutNode,
+    indent: usize,
+    bold: bool,
+) -> Result<(), PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    for child in &section.children {
+        if child.tag == "Row" {
+            if child.children.is_empty() {
+                writeln!(out, "{pad}HStack {{ }}").unwrap();
+                continue;
+            }
+            writeln!(out, "{pad}HStack {{").unwrap();
+            for cell in &child.children {
+                let emitted = emit_view_tree(cell, indent + 4)?;
+                if bold {
+                    // Apply `.bold()` to every `Text(...)` line we just
+                    // produced. We do this by string-rewriting the
+                    // emitted child rather than threading a "bold" flag
+                    // through the entire walker: header text content is
+                    // the only case that needs it today, and keeping the
+                    // bolding scope-local prevents the rest of the
+                    // walker from carrying a styling parameter.
+                    for line in emitted.lines() {
+                        let trimmed = line.trim_start();
+                        if trimmed.starts_with("Text(") {
+                            writeln!(out, "{line}.bold()").unwrap();
+                        } else {
+                            writeln!(out, "{line}").unwrap();
+                        }
+                    }
+                } else {
+                    out.push_str(&emitted);
+                }
+                // emit_view_tree already terminates each line with '\n';
+                // the bold path uses writeln! which also terminates each
+                // line. No additional newline needed here.
+            }
+            writeln!(out, "{pad}}}").unwrap();
+        } else {
+            // Non-Row child inside a table section. Pass through the
+            // walker so e.g. a stray Divider still compiles, and prepend
+            // a comment so the unusual nesting is visible.
+            writeln!(out, "{pad}// non-Row child '{}' in table section", child.tag).unwrap();
+            let emitted = emit_view_tree(child, indent)?;
+            out.push_str(&emitted);
+        }
+    }
+    Ok(())
 }
 
 // =====================================================================
@@ -1365,8 +1565,8 @@ mod tests {
     // ---------------------------------------------------------------------
 
     #[test]
-    fn version_is_0_2_0() {
-        assert_eq!(env!("CARGO_PKG_VERSION"), "0.2.0");
+    fn version_is_0_3_0() {
+        assert_eq!(env!("CARGO_PKG_VERSION"), "0.3.0");
     }
 
     // ---------------------------------------------------------------------
@@ -1663,20 +1863,18 @@ mod tests {
     }
 
     // ---------------------------------------------------------------------
-    // Test 21 — the four UI29 kernel primitives added in v0.2.0 are
-    // recognised (no `UnknownPrimitive` error), but `If`, `For`, and
-    // `HostTable` still trip the `UnknownPrimitive` arm so authors who
-    // reach for them get a clear "not yet supported" diagnostic.
-    //
-    // The deferred trio waits on the moslayout grammar additions
-    // (U29-G3) and a `HostTable` spec; until those land, this test
-    // pins the current behaviour.
+    // Test 21 — the UI29 kernel primitives recognised through this PR
+    // (Stack, HostScroll, HostInput, HostButton, HostTable) must NOT fire
+    // `UnknownPrimitive`. `If` and `For` still wait on the moslayout
+    // grammar additions (U29-G3) and trip the `UnknownPrimitive` arm so
+    // authors who reach for them get a clear "not yet supported"
+    // diagnostic.
     // ---------------------------------------------------------------------
 
     #[test]
     fn ui29_kernel_recognised_set_and_deferred_set() {
         // Recognised — must NOT return UnknownPrimitive.
-        for tag in ["Stack", "HostScroll", "HostInput", "HostButton"] {
+        for tag in ["Stack", "HostScroll", "HostInput", "HostButton", "HostTable"] {
             let layout = layout_with(
                 "X",
                 container_node("Box", vec![leaf(tag, vec![])]),
@@ -1693,7 +1891,7 @@ mod tests {
         }
 
         // Deferred — must still fire UnknownPrimitive.
-        for tag in ["If", "For", "HostTable"] {
+        for tag in ["If", "For"] {
             let layout = layout_with(
                 "X",
                 container_node("Box", vec![leaf(tag, vec![])]),
@@ -1709,5 +1907,336 @@ mod tests {
                 "expected UnknownPrimitive({tag}), got: {err:?}"
             );
         }
+    }
+
+    // ---------------------------------------------------------------------
+    // UI29 kernel — HostTable tests (22 through 29).
+    //
+    // HostTable lowers to a `VStack(alignment: .leading, spacing: 0)` of
+    // `HStack` rows. SwiftUI's data-driven `Table` view is deferred to a
+    // follow-up that wires `For`-inside-table — see the doc comment on
+    // [`emit_host_table`] for the rationale.
+    // ---------------------------------------------------------------------
+
+    /// Build a HostTable section node (`HostTableHead` / `HostTableBody` /
+    /// `HostTableFoot`) from a list of `Row` children, where each row is
+    /// itself a list of `Text` content cells.
+    fn table_section(tag: &str, rows: Vec<Vec<&str>>) -> LayoutNode {
+        let row_nodes = rows
+            .into_iter()
+            .map(|cells| {
+                container_node(
+                    "Row",
+                    cells
+                        .into_iter()
+                        .map(|c| leaf("Text", vec![prop_string("content", c)]))
+                        .collect(),
+                )
+            })
+            .collect();
+        container_node(tag, row_nodes)
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 22 — empty HostTable emits an empty VStack.
+    //
+    // The `alignment: .leading, spacing: 0` arguments are part of the
+    // generated source even for empty bodies, so downstream tooling can
+    // grep for the canonical opener.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_table_empty_emits_vstack() {
+        let layout = layout_with(
+            "T",
+            container_node("Box", vec![leaf("HostTable", vec![])]),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("VStack(alignment: .leading, spacing: 0) { }"),
+            "expected empty VStack, got:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 23 — HostTable with a HostTableHead emits an HStack whose Text
+    // children carry a `.bold()` modifier.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_table_head_emits_bold_hstack() {
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![table_section("HostTableHead", vec![vec!["A", "B"]])],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("HStack {"), "expected HStack opener, got:\n{out}");
+        assert!(
+            out.contains(r#"Text("A")"#) && out.contains(".bold()"),
+            "expected bold header text, got:\n{out}"
+        );
+        // Every header Text must carry `.bold()`.
+        assert!(
+            out.contains(r#"Text("A")"#) && out.contains(r#"Text("B")"#),
+            "expected both header cells, got:\n{out}"
+        );
+        let bold_count = out.matches(".bold()").count();
+        assert!(
+            bold_count >= 2,
+            "expected at least 2 .bold() modifiers (one per header cell), got {bold_count}:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 24 — HostTable with a HostTableBody emits HStack rows without
+    // `.bold()`. Body rows are plain.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_table_body_emits_plain_hstack() {
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![table_section(
+                        "HostTableBody",
+                        vec![vec!["r1c1", "r1c2"], vec!["r2c1", "r2c2"]],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        // Two HStacks (one per Row), four Texts total, no .bold().
+        let hstack_count = out.matches("HStack {").count();
+        assert_eq!(hstack_count, 2, "expected 2 HStacks, got {hstack_count}:\n{out}");
+        assert!(out.contains(r#"Text("r1c1")"#));
+        assert!(out.contains(r#"Text("r2c2")"#));
+        assert!(
+            !out.contains(".bold()"),
+            "body rows must not be bolded, got:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 25 — HostTable with a HostTableFoot is preceded by a `Divider`.
+    //
+    // The foot section is unconditionally separated from whatever came
+    // before it (head, body, or nothing) by a visual divider.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_table_foot_is_preceded_by_divider() {
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![table_section("HostTableFoot", vec![vec!["total"]])],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        let divider_pos = out.find("Divider()").expect("Divider present");
+        let foot_text = out.find(r#"Text("total")"#).expect("foot text present");
+        assert!(
+            divider_pos < foot_text,
+            "Divider must precede foot row, got:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 26 — head + body together emit Head, then Divider, then Body.
+    //
+    // The Divider auto-inserts between head and the first non-head
+    // section that follows it.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_table_head_then_body_emits_divider_between() {
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![
+                        table_section("HostTableHead", vec![vec!["Name", "Age"]]),
+                        table_section(
+                            "HostTableBody",
+                            vec![vec!["Alice", "30"], vec!["Bob", "25"]],
+                        ),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        let head_pos = out.find(r#"Text("Name")"#).expect("head present");
+        let divider_pos = out.find("Divider()").expect("divider present");
+        let body_pos = out.find(r#"Text("Alice")"#).expect("body present");
+        assert!(
+            head_pos < divider_pos && divider_pos < body_pos,
+            "expected Head < Divider < Body ordering, got:\n{out}"
+        );
+        // Headers bolded, body rows not.
+        assert!(out.contains(r#"Text("Name")"#) && out.contains(".bold()"));
+        // The two body rows should not be bolded.
+        let bold_count = out.matches(".bold()").count();
+        assert_eq!(
+            bold_count, 2,
+            "expected 2 .bold() (one per header cell), got {bold_count}:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 27 — HostTableColGroup nested under HostTable emits a Swift
+    // comment (no SwiftUI analog) and does not break compilation.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_table_col_group_emits_comment() {
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![
+                        container_node("HostTableColGroup", vec![]),
+                        table_section("HostTableBody", vec![vec!["x"]]),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("// HostTableColGroup ignored in SwiftUI"),
+            "expected ColGroup comment, got:\n{out}"
+        );
+        assert!(out.contains(r#"Text("x")"#));
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 28 — orphan HostTableHead (used outside any HostTable) emits a
+    // self-documenting Swift comment rather than erroring. The Swift
+    // comment is a statement-level no-op, so the file still type-checks.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn orphan_host_table_head_emits_comment_no_error() {
+        let layout = layout_with(
+            "T",
+            container_node("Box", vec![leaf("HostTableHead", vec![])]),
+        );
+        let result = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        );
+        let out = result.expect("orphan sub-tag must not error").output;
+        assert!(
+            out.contains("// HostTableHead outside HostTable — ignored"),
+            "expected orphan sub-tag comment, got:\n{out}"
+        );
+
+        // Sanity: HostTableBody / HostTableFoot / HostTableColGroup
+        // orphans take the same path.
+        for tag in ["HostTableBody", "HostTableFoot", "HostTableColGroup"] {
+            let layout = layout_with(
+                "T",
+                container_node("Box", vec![leaf(tag, vec![])]),
+            );
+            let out = from_pipeline(
+                &component("T", vec![], vec![]),
+                &layout,
+                &empty_style("T"),
+            )
+            .expect("orphan sub-tag must not error")
+            .output;
+            assert!(
+                out.contains(&format!("// {tag} outside HostTable — ignored")),
+                "expected orphan comment for {tag}, got:\n{out}"
+            );
+        }
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 29 — `part_name` on a HostTable surfaces in the generated
+    // source as a Swift comment `// part: <name>` directly preceding the
+    // VStack. SwiftUI has no native equivalent of CSS `part`; a future
+    // style-inlining PR can swap the comment for a real modifier.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_table_part_name_emits_comment_before_vstack() {
+        let table_node = LayoutNode {
+            tag: "HostTable".to_string(),
+            part_name: Some("data-table".to_string()),
+            props: Vec::new(),
+            children: vec![table_section("HostTableBody", vec![vec!["x"]])],
+        };
+        let layout = layout_with(
+            "T",
+            container_node("Box", vec![table_node]),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        let part_pos = out.find("// part: data-table").expect("part comment present");
+        let vstack_pos = out
+            .find("VStack(alignment: .leading, spacing: 0)")
+            .expect("VStack present");
+        assert!(
+            part_pos < vstack_pos,
+            "expected // part comment to precede VStack, got:\n{out}"
+        );
     }
 }
