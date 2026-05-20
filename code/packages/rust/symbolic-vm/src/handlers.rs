@@ -1657,16 +1657,18 @@ fn try_weierstrass_log_form(
         let coef_ir = apply_node(DIV, vec![rc_to_ir(c)?, sqrt_disc_ir]);
         return Some(apply_node(MUL, vec![coef_ir, apply_node(LOG, vec![log_arg])]));
     }
-    // COS branch: require b > |a| strictly.
-    let abs_a = (a.0.abs(), a.1);
-    let b_minus_abs_a = rc_sub(b, abs_a)?;
-    if b_minus_abs_a.0 <= 0 {
-        return None;
-    }
+    // COS branch — handles both b > |a| and b < −|a| (Phase 37 extension).
+    //
+    // The same expression log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|
+    // is valid for both sign regimes because the inner rational is wrapped
+    // in Abs: when (b−a) flips sign, the numerator and denominator of the
+    // log argument swap (D − k·u and D + k·u), but |N/D'| = |D'/N| so the
+    // absolute value collapses them to the same value.
+    //
+    // Caller already ensures b² > a² (disc < 0 entry); the only additional
+    // precondition is a + b ≠ 0, which is automatic because b² > a² rules
+    // out b = −a.
     let b_minus_a = rc_sub(b, a)?;
-    if b_minus_a.0 <= 0 {
-        return None;
-    }
     // log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|
     let bma_tan = apply_node(MUL, vec![rc_to_ir(b_minus_a)?, tan_half]);
     let numer = apply_node(ADD, vec![sqrt_disc_ir.clone(), bma_tan.clone()]);

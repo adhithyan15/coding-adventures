@@ -1,5 +1,24 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.10.0] — 2026-05-20
+
+### Changed — Phase 37: Weierstrass log form cos branch covers `b < −|a|`
+
+Mirrors Python `symbolic-vm` 0.62.0 (PR #3683) and TypeScript
+`symbolic-vm` 0.10.0 (PR #3685).
+
+`try_weierstrass_log_form` cos branch: removed the
+`b_minus_abs_a` and `b_minus_a` positivity guards.  The same log
+formula with `Abs` wrapping handles both `b > |a|` and `b < −|a|`.
+
+Tests: 3 new in `tests/test_vm.rs` (one promoted from
+fallthrough):
+- `phase37_cos_negative_b_now_closes` — `∫ 1/(1 − 2·cos x) dx`
+- `phase37_cos_negative_b_with_negative_a` — `∫ 1/(−1 − 3·cos x) dx`
+- `phase37_cos_negative_b_with_numerator_coefficient` — `∫ 5/(1 − 2·cos x) dx`
+
+Full suite: **179 passed** (177 prior + 3 new − 1 promoted).
+
 ## [0.9.0] — 2026-05-20
 
 ### Added — Phase 36: Weierstrass log form for `a² < b²`
