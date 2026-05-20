@@ -2,6 +2,24 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.29.0] - 2026-05-19
+
+### Added
+
+- **``ORDER BY ... NULLS FIRST | NULLS LAST``** (SQLite 3.30+).  The
+  ``order_item`` rule in ``sql.grammar`` now accepts an optional
+  null-placement clause::
+
+      order_item = expr [ "ASC" | "DESC" ] [ "NULLS" NAME ] ;
+
+  The NAME must be ``FIRST`` or ``LAST`` (case-insensitive); the
+  adapter raises ``ProgrammingError`` for anything else.  Keeping
+  FIRST/LAST as plain identifiers preserves their use as common
+  column names (``first_name``, ``last``).
+
+  The planner already supported per-key NULL placement via
+  ``SortKey.nulls_first``; this PR just connects the grammar to it.
+
 ## [0.28.0] - 2026-05-19
 
 ### Fixed

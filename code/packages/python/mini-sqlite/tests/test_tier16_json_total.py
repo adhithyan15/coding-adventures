@@ -510,12 +510,16 @@ class TestTotal:
 
     def test_total_all_null(self) -> None:
         """TOTAL() on all-NULL group returns 0.0."""
+        # Table renamed from "nulls" to "all_nulls" — NULLS is now a keyword
+        # (for ORDER BY ... NULLS FIRST | LAST, SQLite 3.30+), so the bare
+        # table name no longer parses.  The behaviour under test is
+        # unchanged.
         setup = [
-            "CREATE TABLE nulls (x INTEGER)",
-            "INSERT INTO nulls VALUES (NULL)",
-            "INSERT INTO nulls VALUES (NULL)",
+            "CREATE TABLE all_nulls (x INTEGER)",
+            "INSERT INTO all_nulls VALUES (NULL)",
+            "INSERT INTO all_nulls VALUES (NULL)",
         ]
-        ref, got = _both("SELECT TOTAL(x) FROM nulls", setup=setup)
+        ref, got = _both("SELECT TOTAL(x) FROM all_nulls", setup=setup)
         assert got == [(0.0,)]
         assert ref == [(0.0,)]
 
