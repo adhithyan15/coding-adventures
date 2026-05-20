@@ -1570,7 +1570,7 @@ def _printf_format(template: str, args: list[SqlValue]) -> str:  # noqa: C901
             # the C library here, which already matches Python for those
             # cases on every platform we test).
             if conv in "fF" and prec_s:
-                from decimal import Decimal, ROUND_HALF_UP, localcontext
+                from decimal import ROUND_HALF_UP, Decimal, localcontext
                 with localcontext() as ctx:
                     ctx.prec = 80  # bigger than any reasonable precision
                     quant = Decimal(10) ** -int(prec_s)
