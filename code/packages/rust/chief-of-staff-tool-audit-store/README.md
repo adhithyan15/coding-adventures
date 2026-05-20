@@ -41,6 +41,8 @@ The crate keeps the boundary narrow:
   host logs, schedulers, and continuation decisions
 - supervisor drain run summaries expose typed classifier accessors for host
   scheduler and investigation decisions
+- supervisor drain run summaries expose workload accessors for checkpoint,
+  budget, planned, replayed, and delta fields
 - supervisor drain run summaries flatten planned and replayed follow-up row
   counts for host routing decisions
 - supervisor drain run summaries flag when planned and replayed follow-up

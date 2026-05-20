@@ -1202,6 +1202,11 @@ pub struct ToolAuditSupervisorDrainRunSummary {
 }
 
 impl ToolAuditSupervisorDrainRunSummary {
+    /// Return the reader or supervisor checkpoint name drained by this run.
+    pub fn checkpoint_name(&self) -> &str {
+        &self.checkpoint_name
+    }
+
     /// Return the typed scheduler-facing classification for this run.
     pub fn outcome(&self) -> ToolAuditSupervisorDrainRunOutcome {
         self.outcome
@@ -1240,6 +1245,56 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the host should investigate preflight/drain drift.
     pub fn requires_plan_drift_investigation(&self) -> bool {
         self.requires_plan_drift_investigation
+    }
+
+    /// Return the maximum rows each drain tick was allowed to replay.
+    pub fn max_records_per_tick(&self) -> usize {
+        self.max_records_per_tick
+    }
+
+    /// Return the maximum drain ticks requested for this run.
+    pub fn max_ticks(&self) -> usize {
+        self.max_ticks
+    }
+
+    /// Return the number of pages discovered by the preflight plan.
+    pub fn planned_pages(&self) -> usize {
+        self.planned_pages
+    }
+
+    /// Return the number of drain ticks that actually ran.
+    pub fn drain_ticks(&self) -> usize {
+        self.drain_ticks
+    }
+
+    /// Return the total rows the preflight plan expected to replay.
+    pub fn planned_records(&self) -> usize {
+        self.planned_records
+    }
+
+    /// Return the total rows actually replayed into the sink.
+    pub fn drained_records(&self) -> usize {
+        self.drained_records
+    }
+
+    /// Return planned rows with follow-up pressure.
+    pub fn planned_follow_up_records(&self) -> usize {
+        self.planned_follow_up_records
+    }
+
+    /// Return replayed rows with follow-up pressure.
+    pub fn drained_follow_up_records(&self) -> usize {
+        self.drained_follow_up_records
+    }
+
+    /// Return replayed-minus-planned row count delta.
+    pub fn record_count_delta(&self) -> i128 {
+        self.record_count_delta
+    }
+
+    /// Return replayed-minus-planned follow-up pressure count delta.
+    pub fn follow_up_record_count_delta(&self) -> i128 {
+        self.follow_up_record_count_delta
     }
 
     /// Return whether planned and replayed row counts match.
@@ -3598,6 +3653,7 @@ mod tests {
         let summary = report.summary();
 
         assert_eq!(summary.checkpoint_name, "supervisor");
+        assert_eq!(summary.checkpoint_name(), "supervisor");
         assert_eq!(
             summary.outcome,
             ToolAuditSupervisorDrainRunOutcome::NeedsContinuation
@@ -3629,15 +3685,25 @@ mod tests {
         assert!(!summary.requires_plan_drift_investigation);
         assert!(!summary.requires_plan_drift_investigation());
         assert_eq!(summary.max_records_per_tick, 2);
+        assert_eq!(summary.max_records_per_tick(), 2);
         assert_eq!(summary.max_ticks, 1);
+        assert_eq!(summary.max_ticks(), 1);
         assert_eq!(summary.planned_pages, 1);
+        assert_eq!(summary.planned_pages(), 1);
         assert_eq!(summary.drain_ticks, 1);
+        assert_eq!(summary.drain_ticks(), 1);
         assert_eq!(summary.planned_records, 2);
+        assert_eq!(summary.planned_records(), 2);
         assert_eq!(summary.drained_records, 2);
+        assert_eq!(summary.drained_records(), 2);
         assert_eq!(summary.planned_follow_up_records, 0);
+        assert_eq!(summary.planned_follow_up_records(), 0);
         assert_eq!(summary.drained_follow_up_records, 0);
+        assert_eq!(summary.drained_follow_up_records(), 0);
         assert_eq!(summary.record_count_delta, 0);
+        assert_eq!(summary.record_count_delta(), 0);
         assert_eq!(summary.follow_up_record_count_delta, 0);
+        assert_eq!(summary.follow_up_record_count_delta(), 0);
         assert!(!summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
         assert!(!summary.has_count_drift());
