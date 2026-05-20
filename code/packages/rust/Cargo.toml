@@ -369,6 +369,7 @@ members = [
     "mosaic-emit-webcomponent",
     "mosaic-lexer",
     "mosaic-package-manifest",
+    "mosaic-package-resolver",
     "mosaic-parser",
     "mosaic-vm",
     "moslayout-compiler",
