@@ -29,6 +29,8 @@
 //! literals, string interpolation, and parser-driven `f /x/`
 //! resolution all arrive in later phases.
 
+use std::collections::VecDeque;
+
 use lexer::token::{Token, TokenType};
 use state_machine::transducer::{EffectfulInput, EffectfulStateMachine};
 
@@ -81,6 +83,45 @@ pub struct RubyLexer {
     /// `}`, and `}` at depth 0 closes the interpolation (interpreter
     /// manually transitions the engine back to `string_d_body`).
     interp_brace_depth: usize,
+    /// Phase 3c: FIFO queue of heredoc openers (`<<TAG`) whose body
+    /// has not yet been captured.  When a `<<TAG` is detected at an
+    /// expression-start position, a [`PendingHeredoc`] is pushed
+    /// here; when the line containing the opener ends (a `\n` is
+    /// fed), [`RubyLexer::capture_heredoc_bodies`] slurps subsequent
+    /// lines into each pending body until each `TAG`-only terminator
+    /// line is seen, in FIFO order.  Multiple `<<A; x = <<B` on one
+    /// line is supported.
+    pending_heredocs: VecDeque<PendingHeredoc>,
+    /// Phase 3c: when we just emitted an `<<` Op token at expression
+    /// start, we may be at the front of a heredoc.  This field holds
+    /// the index of that `<<` token in [`RubyLexer::tokens`]; the very
+    /// next emit decides what to do:
+    /// - if it's a `Name` token whose lexeme is a valid tag, that
+    ///   name is queued as a [`PendingHeredoc`];
+    /// - otherwise the candidate is cleared and the `<<` stays as a
+    ///   plain left-shift operator.
+    heredoc_op_candidate: Option<usize>,
+}
+
+/// Phase 3c — a heredoc opener whose body we still owe.
+#[derive(Debug, Clone)]
+struct PendingHeredoc {
+    /// The tag name (e.g. `EOF`).  The body ends at the first line
+    /// whose entire content equals this tag (v0: no leading
+    /// whitespace permitted — `<<-`/`<<~` indent modifiers arrive in
+    /// Phase 3d).
+    tag: String,
+    /// Index in [`RubyLexer::tokens`] of the `<<` Op token.  When
+    /// the body is captured we replace this token with the assembled
+    /// `String` token carrying the verbatim heredoc source.
+    op_idx: usize,
+    /// Index in [`RubyLexer::tokens`] of the `Name` token that holds
+    /// the tag lexeme.  Removed when the heredoc is finalized.
+    tag_idx: usize,
+    /// Accumulated body text — everything between the opener's
+    /// trailing newline and the terminator line, including embedded
+    /// newlines.
+    body: String,
 }
 
 impl RubyLexer {
@@ -115,6 +156,8 @@ impl RubyLexer {
             last_name: String::new(),
             oracle,
             interp_brace_depth: 0,
+            pending_heredocs: VecDeque::new(),
+            heredoc_op_candidate: None,
         })
     }
 
@@ -125,11 +168,124 @@ impl RubyLexer {
     }
 
     /// Feed the whole source into the lexer.
+    ///
+    /// Phase 3c: heredoc-aware.  Characters normally flow through the
+    /// engine one at a time via `step_char`, but when a line-ending
+    /// `\n` is fed and one or more `<<TAG` openers are pending, this
+    /// method diverts the *next* lines straight into each pending
+    /// heredoc body (bypassing the engine) until every terminator
+    /// has been seen — only then does normal char-by-char lexing
+    /// resume.  This is the cleanest way to implement Ruby's
+    /// "line-based" heredoc semantics on top of a fundamentally
+    /// character-based state machine.
     pub fn push(&mut self, source: &str) -> Result<(), String> {
-        for ch in source.chars() {
+        let chars: Vec<char> = source.chars().collect();
+        let mut i = 0;
+        while i < chars.len() {
+            let ch = chars[i];
             self.step_char(ch)?;
+            i += 1;
+            if ch == '\n' && !self.pending_heredocs.is_empty() {
+                i = self.capture_heredoc_bodies(&chars, i)?;
+            }
         }
         Ok(())
+    }
+
+    /// Phase 3c body slurp.  Called after the `\n` that ends the
+    /// opener line.  Reads whole lines from `chars[i..]`, appending
+    /// each to the front pending heredoc's body until a line equal
+    /// to its tag arrives (the terminator).  Terminators pop the
+    /// heredoc; non-terminators extend the body.  Returns the new
+    /// cursor position so the outer scan can resume normal lexing.
+    ///
+    /// Multi-heredoc FIFO example: `x = <<A; y = <<B\n` queues `A`
+    /// then `B`.  After the `\n`, this method reads lines into A's
+    /// body until a line "A" terminates it, then into B's body
+    /// until "B" terminates it.
+    fn capture_heredoc_bodies(
+        &mut self,
+        chars: &[char],
+        mut i: usize,
+    ) -> Result<usize, String> {
+        let mut finalized: Vec<PendingHeredoc> = Vec::new();
+        while !self.pending_heredocs.is_empty() {
+            if i >= chars.len() {
+                // Unterminated heredoc — record a diagnostic, then
+                // finalize each pending entry with whatever body we
+                // managed to collect so the token stream still
+                // reflects user intent.
+                self.diagnostics.push(Diagnostic {
+                    code: "unterminated-heredoc".to_string(),
+                    line: self.line,
+                    column: self.column,
+                });
+                while let Some(h) = self.pending_heredocs.pop_front() {
+                    finalized.push(h);
+                }
+                break;
+            }
+            // Read one line (up to and including `\n`, or to EOF).
+            let line_start = i;
+            while i < chars.len() && chars[i] != '\n' {
+                i += 1;
+            }
+            let line: String = chars[line_start..i].iter().collect();
+            let had_newline = i < chars.len() && chars[i] == '\n';
+            if had_newline {
+                i += 1;
+                self.line += 1;
+                self.column = 1;
+            }
+
+            // Terminator check uses exact-equality (v0): no leading
+            // whitespace tolerance.  `<<-`/`<<~` arrive in Phase 3d.
+            let front_tag = self.pending_heredocs.front().unwrap().tag.clone();
+            if line == front_tag {
+                let h = self.pending_heredocs.pop_front().unwrap();
+                finalized.push(h);
+            } else {
+                let front_mut = self.pending_heredocs.front_mut().unwrap();
+                front_mut.body.push_str(&line);
+                if had_newline {
+                    front_mut.body.push('\n');
+                }
+            }
+        }
+        // Apply token replacements in descending order so earlier
+        // indices remain valid as later tokens are removed.
+        finalized.sort_by_key(|h| std::cmp::Reverse(h.op_idx));
+        for h in finalized {
+            self.finalize_heredoc(h);
+        }
+        Ok(i)
+    }
+
+    /// Splice a captured heredoc into the token stream.  The `<<` Op
+    /// token at `h.op_idx` becomes a `String` token carrying the
+    /// verbatim heredoc source (`<<TAG\n<body>TAG`); the following
+    /// `Name` token at `h.tag_idx` (the tag lexeme) is removed.
+    fn finalize_heredoc(&mut self, h: PendingHeredoc) {
+        let value = format!("<<{}\n{}{}", h.tag, h.body, h.tag);
+        // Remove the tag Name first (higher index) so op_idx stays
+        // valid.  Both indices were captured at emit time and the
+        // tokens between them have not moved (body capture inserts
+        // no tokens).
+        if h.tag_idx < self.tokens.len() {
+            self.tokens.remove(h.tag_idx);
+        }
+        if h.op_idx < self.tokens.len() {
+            let line = self.tokens[h.op_idx].line;
+            let column = self.tokens[h.op_idx].column;
+            self.tokens[h.op_idx] = Token {
+                type_: TokenType::String,
+                value,
+                line,
+                column,
+                type_name: None,
+                flags: None,
+            };
+        }
     }
 
     /// Signal end-of-input.  Drains any pending state (some peek
@@ -322,6 +478,14 @@ impl RubyLexer {
     }
 
     fn emit_token_by_name(&mut self, kind_name: &str) {
+        // Phase 3c: snapshot the lex_state and the prior heredoc
+        // candidate before `push_token` mutates self.  We consult
+        // `prev_state` to decide whether a `<<` opener is at an
+        // expression-start position; `prior_candidate` is what an
+        // immediately-preceding `<<` set up for *this* emit to
+        // potentially consume as a tag.
+        let prev_state = self.lex_state;
+        let prior_candidate = self.heredoc_op_candidate.take();
         match kind_name {
             "Eof" => self.push_token(TokenType::Eof, String::new()),
             "Newline" => self.push_token(TokenType::Newline, "\n".to_string()),
@@ -358,7 +522,33 @@ impl RubyLexer {
                 // lex_state transition table handles the keyword case
                 // by routing past `ExprArg`.
                 self.last_name = text.clone();
-                self.push_token(kind, text);
+                self.push_token(kind, text.clone());
+                // Phase 3c: if the immediately-preceding emit was a
+                // `<<` Op at expression-start, this Name's lexeme is
+                // the heredoc tag.  Queue the opener (FIFO) — the
+                // body will be slurped after the line's `\n`.  Keep
+                // both the Op and Name tokens in the stream for now;
+                // `finalize_heredoc` rewrites the Op into a String
+                // and removes this Name once the body is captured.
+                if let Some(op_idx) = prior_candidate {
+                    // The engine emitted a "Name" event, which the
+                    // interpreter may have classified as `Keyword`
+                    // (e.g. `<<END` — `END` is the reserved at-exit
+                    // hook).  Either kind is a valid heredoc tag —
+                    // we only care that the lexeme shape is an
+                    // identifier.
+                    let lexeme_kind_ok =
+                        matches!(kind, TokenType::Name | TokenType::Keyword);
+                    if lexeme_kind_ok && is_heredoc_tag(&text) {
+                        let tag_idx = self.tokens.len() - 1;
+                        self.pending_heredocs.push_back(PendingHeredoc {
+                            tag: text,
+                            op_idx,
+                            tag_idx,
+                            body: String::new(),
+                        });
+                    }
+                }
             }
             "Regex" => {
                 // Phase 3a shape: the text buffer holds `body/`
@@ -392,7 +582,18 @@ impl RubyLexer {
             "Op" => {
                 let text = std::mem::take(&mut self.text_buffer);
                 let kind = classify_op_token(&text);
+                let is_heredoc_open = text == "<<"
+                    && matches!(prev_state, LexState::ExprBeg | LexState::ExprMid);
                 self.push_token(kind, text);
+                // Phase 3c: arm the heredoc detector.  The very next
+                // emitted token is examined as a possible tag (see
+                // the `"Name"` arm above).  If it isn't a Name, the
+                // `prior_candidate` snapshot at the top of this
+                // function will clear it naturally — no extra
+                // bookkeeping needed because we `take()` the field.
+                if is_heredoc_open {
+                    self.heredoc_op_candidate = Some(self.tokens.len() - 1);
+                }
             }
             other => {
                 self.diagnostics.push(Diagnostic {
@@ -527,6 +728,21 @@ fn classify_op_token(text: &str) -> TokenType {
         "!" => TokenType::Bang,
         _ => TokenType::Name,
     }
+}
+
+/// Phase 3c: is `s` a valid heredoc tag?
+///
+/// v0 rule: non-empty identifier (ASCII letters / digits / underscore,
+/// not starting with a digit).  Ruby itself permits any identifier
+/// shape here — the heredoc-vs-shift decision is driven purely by
+/// the expression-start context that the call site already checked.
+fn is_heredoc_tag(s: &str) -> bool {
+    let mut chars = s.chars();
+    match chars.next() {
+        Some(c) if c.is_ascii_alphabetic() || c == '_' => {}
+        _ => return false,
+    }
+    chars.all(|c| c.is_ascii_alphanumeric() || c == '_')
 }
 
 fn is_ruby_keyword(s: &str) -> bool {
@@ -1216,5 +1432,196 @@ mod tests {
             .map(|t| t.value.as_str())
             .collect();
         assert_eq!(kw, vec!["class", "def", "end", "end"]);
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 3c — heredocs (`<<TAG\nbody\nTAG`).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn heredoc_simple() {
+        // `<<EOF` at expression-start, body slurped to terminator.
+        let toks = tokenize_ruby("x = <<EOF\nhello\nworld\nEOF\n");
+        let s: Vec<(TokenType, &str)> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| (t.type_, t.value.as_str()))
+            .collect();
+        assert_eq!(
+            s,
+            vec![
+                (TokenType::Name, "x"),
+                (TokenType::Equals, "="),
+                (TokenType::String, "<<EOF\nhello\nworld\nEOF"),
+                (TokenType::Newline, "\n"),
+            ]
+        );
+    }
+
+    #[test]
+    fn heredoc_empty_body() {
+        // Opener-line then terminator-line with no body content.
+        let toks = tokenize_ruby("x = <<EOF\nEOF\n");
+        let strings: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::String)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(strings, vec!["<<EOF\nEOF"]);
+    }
+
+    #[test]
+    fn heredoc_single_line_body() {
+        let toks = tokenize_ruby("x = <<EOF\nhello\nEOF\n");
+        let strings: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::String)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(strings, vec!["<<EOF\nhello\nEOF"]);
+    }
+
+    #[test]
+    fn heredoc_preserves_special_chars_in_body() {
+        // The body is captured verbatim — interpolation syntax is
+        // preserved as text (no `#{...}` expansion at the lexer level,
+        // matching the Phase 3b precedent).  Use `<<MARKER` rather
+        // than `<<END` because `END` is a Ruby keyword (paired with
+        // `BEGIN` for top-level blocks), and a keyword-shaped tag
+        // would land in the keyword branch of `classify_name_token` —
+        // the action interpreter accepts either kind, but starting
+        // with the unambiguous case here keeps the test focused on
+        // the verbatim-body invariant.
+        let toks = tokenize_ruby("x = <<MARKER\nhi #{name} bye\nMARKER\n");
+        let strings: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::String)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(strings, vec!["<<MARKER\nhi #{name} bye\nMARKER"]);
+    }
+
+    #[test]
+    fn heredoc_with_keyword_shaped_tag() {
+        // Ruby permits any identifier-shaped tag, including those
+        // that double as keywords (`<<END` is the classic example —
+        // `END { ... }` is the at-exit hook).  The action interpreter
+        // queues the heredoc regardless of whether `classify_name_token`
+        // categorized the tag as `Name` or `Keyword`.
+        let toks = tokenize_ruby("x = <<END\nbody\nEND\n");
+        let strings: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::String)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(strings, vec!["<<END\nbody\nEND"]);
+    }
+
+    #[test]
+    fn heredoc_lowercase_tag() {
+        // Tag identifiers can be any case — Ruby accepts `<<eof`.
+        let toks = tokenize_ruby("x = <<eof\nbody\neof\n");
+        let strings: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::String)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(strings, vec!["<<eof\nbody\neof"]);
+    }
+
+    #[test]
+    fn heredoc_multiple_per_line_fifo() {
+        // Two heredocs on one line — bodies arrive FIFO.
+        let toks = tokenize_ruby("x = <<A; y = <<B\nbody-a\nA\nbody-b\nB\n");
+        let strings: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::String)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(strings, vec!["<<A\nbody-a\nA", "<<B\nbody-b\nB"]);
+    }
+
+    #[test]
+    fn heredoc_chained_method_call_keeps_postfix_tokens() {
+        // `x = <<EOF.upcase` — the `.upcase` after the tag must stay
+        // in the token stream after heredoc rewriting.
+        let toks = tokenize_ruby("x = <<EOF.upcase\nbody\nEOF\n");
+        let s: Vec<(TokenType, String)> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| (t.type_, t.value.clone()))
+            .collect();
+        assert_eq!(
+            s,
+            vec![
+                (TokenType::Name, "x".to_string()),
+                (TokenType::Equals, "=".to_string()),
+                (TokenType::String, "<<EOF\nbody\nEOF".to_string()),
+                (TokenType::Dot, ".".to_string()),
+                (TokenType::Name, "upcase".to_string()),
+                (TokenType::Newline, "\n".to_string()),
+            ]
+        );
+    }
+
+    #[test]
+    fn double_left_shift_is_not_heredoc_after_value() {
+        // After an integer (`ExprEnd`), `<<` is the left-shift
+        // operator, not a heredoc opener.  No heredoc gets queued
+        // and the tokens following `<<` are lexed normally.
+        let toks = tokenize_ruby("3 << 1\n");
+        let s: Vec<(TokenType, String)> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| (t.type_, t.value.clone()))
+            .collect();
+        assert_eq!(
+            s,
+            vec![
+                (TokenType::Number, "3".to_string()),
+                (TokenType::Name, "<<".to_string()),
+                (TokenType::Number, "1".to_string()),
+                (TokenType::Newline, "\n".to_string()),
+            ]
+        );
+    }
+
+    #[test]
+    fn unterminated_heredoc_records_diagnostic() {
+        // EOF before the terminator line is reached — the lexer
+        // still finalizes the heredoc (with whatever body it managed
+        // to collect) and records a diagnostic.
+        let (toks, diags) = tokenize_ruby_diag("x = <<EOF\nhello\n");
+        let strings: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::String)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(strings, vec!["<<EOF\nhello\nEOF"]);
+        assert!(diags.iter().any(|d| d.code == "unterminated-heredoc"));
+    }
+
+    #[test]
+    fn heredoc_after_lparen_at_expression_start() {
+        // `(<<EOF)` — `<<` follows `(`, which is expression-start.
+        let toks = tokenize_ruby("(<<EOF)\nbody\nEOF\n");
+        let strings: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::String)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(strings, vec!["<<EOF\nbody\nEOF"]);
+    }
+
+    #[test]
+    fn is_heredoc_tag_accepts_valid_idents() {
+        assert!(is_heredoc_tag("EOF"));
+        assert!(is_heredoc_tag("eof"));
+        assert!(is_heredoc_tag("_PRIVATE"));
+        assert!(is_heredoc_tag("My_Tag_2"));
+        assert!(!is_heredoc_tag(""));
+        assert!(!is_heredoc_tag("2tag"));
+        assert!(!is_heredoc_tag("with space"));
+        assert!(!is_heredoc_tag("dash-tag"));
     }
 }
