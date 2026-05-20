@@ -41,6 +41,12 @@ metadata through `board-vm-targets`. The metadata tells language frontends which
 board has a physical Wi-Fi stack while leaving `network.*` capabilities disabled
 until a concrete board adapter can own sockets, DNS, and association behavior.
 
+The target registry also carries passive classic-Arduino peripheral metadata for
+standard Wire/SPI/Serial pins on Uno R3, Nano classic, and Pro Mini, plus the
+Mega 2560 SDA/SCL, SPI, and multi-UART surface. These are descriptors only: the
+shared Arduino runtime still exposes the GPIO/time MVP until concrete board
+adapters own I2C, SPI, and UART bytecode operations.
+
 Opta terminals are modeled as board-local input and relay-output pins instead
 of pretending the PLC has Uno-style headers. Nicla sensor/audio/vision hardware
 is similarly registered as its own target family so follow-up capability work

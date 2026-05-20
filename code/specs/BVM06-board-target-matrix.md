@@ -147,6 +147,13 @@ name, radio transport, chip identity, and expected IP/TCP/UDP/DNS protocol
 family, but use `max_sockets = 0` and leave `network.*` capabilities disabled
 until each board has a concrete runtime adapter.
 
+The Arduino peripheral metadata tranche starts the same descriptor-first path
+for classic Arduino buses. Uno R3, Nano classic, and Pro Mini report their
+standard Wire/SPI/Serial pins, and Mega 2560 reports its dedicated SDA/SCL
+header, SPI header, and four hardware UARTs. These are passive target
+descriptors only: `i2c.*`, `spi.*`, and `uart.*` capabilities remain disabled
+for the shared Arduino runtime until board-specific adapters own those commands.
+
 The next tranches should deepen board-specific firmware/upload adapters and
 richer peripheral tables for each family without moving generic Arduino
 discovery into `board-vm-uno-r4`.

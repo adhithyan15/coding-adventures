@@ -69,6 +69,13 @@ Portenta C33, Nicla Vision, and Opta WiFi now report their physical WiFi
 interfaces with `max_sockets = 0` and no `network.*` capabilities until
 board-specific runtime adapters own socket, DNS, and association commands.
 
+Classic shared Arduino targets now expose passive peripheral bus descriptors:
+Uno R3, Nano classic, and Pro Mini report their standard Wire/SPI/Serial pins,
+while Mega 2560 reports its SDA/SCL header, SPI header, and four hardware UARTs.
+These descriptors deliberately leave `i2c.*`, `spi.*`, and `uart.*`
+capabilities disabled for the shared Arduino runtime until board-specific
+firmware adapters own those bytecode paths.
+
 Host-side validation:
 
 ```sh

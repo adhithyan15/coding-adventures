@@ -722,6 +722,93 @@ pub const ARDUINO_OPTA_RS485_DIGITAL_PINS: [DigitalPinInfo; 12] =
 pub const ARDUINO_OPTA_WIFI_DIGITAL_PINS: [DigitalPinInfo; 12] =
     map_arduino_digital_pins(board_vm_arduino::ARDUINO_OPTA_TERMINAL_PINS);
 
+pub const ARDUINO_STANDARD_I2C_BUSES: [I2cBusInfo; 1] = [I2cBusInfo {
+    bus: 0,
+    name: "Wire",
+    sda_pin: 18,
+    scl_pin: 19,
+    qwiic: false,
+    notes: "Arduino A4/A5 I2C header metadata only; shared Arduino runtime does not enable i2c.* bytecode adapters yet.",
+}];
+
+pub const ARDUINO_STANDARD_SPI_BUSES: [SpiBusInfo; 1] = [SpiBusInfo {
+    bus: 0,
+    name: "SPI",
+    copi_pin: 11,
+    cipo_pin: 12,
+    sck_pin: 13,
+    default_cs_pin: 10,
+    notes: "Arduino D11/D12/D13 SPI header metadata only; shared Arduino runtime does not enable spi.* bytecode adapters yet.",
+}];
+
+pub const ARDUINO_STANDARD_UART_BUSES: [UartBusInfo; 1] = [UartBusInfo {
+    bus: 0,
+    name: "Serial",
+    tx_pin: 1,
+    rx_pin: 0,
+    arduino_uart: 0,
+    internal: false,
+    notes: "Arduino D1/D0 hardware serial metadata only; upload transport and runtime serial command channel stay adapter-owned.",
+}];
+
+pub const ARDUINO_MEGA_2560_I2C_BUSES: [I2cBusInfo; 1] = [I2cBusInfo {
+    bus: 0,
+    name: "Wire",
+    sda_pin: 20,
+    scl_pin: 21,
+    qwiic: false,
+    notes: "Arduino Mega SDA/SCL header metadata only; shared Arduino runtime does not enable i2c.* bytecode adapters yet.",
+}];
+
+pub const ARDUINO_MEGA_2560_SPI_BUSES: [SpiBusInfo; 1] = [SpiBusInfo {
+    bus: 0,
+    name: "SPI",
+    copi_pin: 51,
+    cipo_pin: 50,
+    sck_pin: 52,
+    default_cs_pin: 53,
+    notes: "Arduino Mega SPI header metadata only; shared Arduino runtime does not enable spi.* bytecode adapters yet.",
+}];
+
+pub const ARDUINO_MEGA_2560_UART_BUSES: [UartBusInfo; 4] = [
+    UartBusInfo {
+        bus: 0,
+        name: "Serial",
+        tx_pin: 1,
+        rx_pin: 0,
+        arduino_uart: 0,
+        internal: false,
+        notes: "Arduino Mega primary D1/D0 serial metadata only; upload transport and runtime serial command channel stay adapter-owned.",
+    },
+    UartBusInfo {
+        bus: 1,
+        name: "Serial1",
+        tx_pin: 18,
+        rx_pin: 19,
+        arduino_uart: 1,
+        internal: false,
+        notes: "Arduino Mega Serial1 metadata only; shared Arduino runtime does not enable uart.* bytecode adapters yet.",
+    },
+    UartBusInfo {
+        bus: 2,
+        name: "Serial2",
+        tx_pin: 16,
+        rx_pin: 17,
+        arduino_uart: 2,
+        internal: false,
+        notes: "Arduino Mega Serial2 metadata only; shared Arduino runtime does not enable uart.* bytecode adapters yet.",
+    },
+    UartBusInfo {
+        bus: 3,
+        name: "Serial3",
+        tx_pin: 14,
+        rx_pin: 15,
+        arduino_uart: 3,
+        internal: false,
+        notes: "Arduino Mega Serial3 metadata only; shared Arduino runtime does not enable uart.* bytecode adapters yet.",
+    },
+];
+
 const fn map_arduino_digital_pins<const N: usize>(
     source: [board_vm_arduino::DigitalPinDescriptor; N],
 ) -> [DigitalPinInfo; N] {
@@ -1013,6 +1100,26 @@ const fn arduino_board_target(
     wireless: &'static [WirelessInterfaceInfo],
     network_interfaces: &'static [NetworkInterfaceInfo],
 ) -> BoardTargetInfo {
+    arduino_board_target_with_buses(
+        target,
+        digital_pins,
+        &[],
+        &[],
+        &[],
+        wireless,
+        network_interfaces,
+    )
+}
+
+const fn arduino_board_target_with_buses(
+    target: board_vm_arduino::ArduinoTargetDescriptor,
+    digital_pins: &'static [DigitalPinInfo],
+    i2c_buses: &'static [I2cBusInfo],
+    spi_buses: &'static [SpiBusInfo],
+    uart_buses: &'static [UartBusInfo],
+    wireless: &'static [WirelessInterfaceInfo],
+    network_interfaces: &'static [NetworkInterfaceInfo],
+) -> BoardTargetInfo {
     BoardTargetInfo {
         board_id: target.board_id,
         display_name: target.display_name,
@@ -1030,9 +1137,9 @@ const fn arduino_board_target(
         led_matrix: None,
         digital_pin_count: digital_pins.len(),
         digital_pins,
-        i2c_buses: &[],
-        spi_buses: &[],
-        uart_buses: &[],
+        i2c_buses,
+        spi_buses,
+        uart_buses,
         can_buses: &[],
         rtc: None,
         watchdog: None,
@@ -1109,27 +1216,39 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         upload: Some(UNO_R4_WIFI_UPLOAD),
         capabilities: &UNO_R4_WIFI_CAPABILITIES,
     },
-    arduino_board_target(
+    arduino_board_target_with_buses(
         board_vm_arduino::ARDUINO_UNO_R3,
         &ARDUINO_UNO_R3_DIGITAL_PINS,
+        &ARDUINO_STANDARD_I2C_BUSES,
+        &ARDUINO_STANDARD_SPI_BUSES,
+        &ARDUINO_STANDARD_UART_BUSES,
         &[],
         &[],
     ),
-    arduino_board_target(
+    arduino_board_target_with_buses(
         board_vm_arduino::ARDUINO_NANO_CLASSIC,
         &ARDUINO_NANO_CLASSIC_DIGITAL_PINS,
+        &ARDUINO_STANDARD_I2C_BUSES,
+        &ARDUINO_STANDARD_SPI_BUSES,
+        &ARDUINO_STANDARD_UART_BUSES,
         &[],
         &[],
     ),
-    arduino_board_target(
+    arduino_board_target_with_buses(
         board_vm_arduino::ARDUINO_PRO_MINI,
         &ARDUINO_PRO_MINI_DIGITAL_PINS,
+        &ARDUINO_STANDARD_I2C_BUSES,
+        &ARDUINO_STANDARD_SPI_BUSES,
+        &ARDUINO_STANDARD_UART_BUSES,
         &[],
         &[],
     ),
-    arduino_board_target(
+    arduino_board_target_with_buses(
         board_vm_arduino::ARDUINO_MEGA_2560,
         &ARDUINO_MEGA_2560_DIGITAL_PINS,
+        &ARDUINO_MEGA_2560_I2C_BUSES,
+        &ARDUINO_MEGA_2560_SPI_BUSES,
+        &ARDUINO_MEGA_2560_UART_BUSES,
         &[],
         &[],
     ),
@@ -1588,6 +1707,22 @@ mod tests {
         assert_eq!(wifi.i2c_buses[1].scl_pin, 26);
         assert!(wifi.i2c_buses[1].qwiic);
 
+        let uno_r3 = find_target("arduino-uno-r3").unwrap();
+        let nano = find_target("arduino-nano-classic").unwrap();
+        let pro_mini = find_target("arduino-pro-mini").unwrap();
+        let mega = find_target("arduino-mega-2560").unwrap();
+        assert_eq!(uno_r3.i2c_buses, &ARDUINO_STANDARD_I2C_BUSES);
+        assert_eq!(nano.i2c_buses, &ARDUINO_STANDARD_I2C_BUSES);
+        assert_eq!(pro_mini.i2c_buses, &ARDUINO_STANDARD_I2C_BUSES);
+        assert_eq!(mega.i2c_buses, &ARDUINO_MEGA_2560_I2C_BUSES);
+        assert_eq!(mega.i2c_buses[0].sda_pin, 20);
+        assert_eq!(mega.i2c_buses[0].scl_pin, 21);
+        for target in [uno_r3, nano, pro_mini, mega] {
+            assert!(target.i2c_buses[0].notes.contains("metadata only"));
+            assert!(!target.capabilities.contains(&"i2c.open"));
+            assert!(!target.capabilities.contains(&"i2c.transfer"));
+        }
+
         assert!(find_target("esp32-devkit-v1").unwrap().i2c_buses.is_empty());
     }
 
@@ -1600,6 +1735,24 @@ mod tests {
         assert_eq!(uno.spi_buses[0].cipo_pin, 12);
         assert_eq!(uno.spi_buses[0].sck_pin, 13);
         assert_eq!(uno.spi_buses[0].default_cs_pin, 10);
+
+        let uno_r3 = find_target("arduino-uno-r3").unwrap();
+        let nano = find_target("arduino-nano-classic").unwrap();
+        let pro_mini = find_target("arduino-pro-mini").unwrap();
+        let mega = find_target("arduino-mega-2560").unwrap();
+        assert_eq!(uno_r3.spi_buses, &ARDUINO_STANDARD_SPI_BUSES);
+        assert_eq!(nano.spi_buses, &ARDUINO_STANDARD_SPI_BUSES);
+        assert_eq!(pro_mini.spi_buses, &ARDUINO_STANDARD_SPI_BUSES);
+        assert_eq!(mega.spi_buses, &ARDUINO_MEGA_2560_SPI_BUSES);
+        assert_eq!(mega.spi_buses[0].copi_pin, 51);
+        assert_eq!(mega.spi_buses[0].cipo_pin, 50);
+        assert_eq!(mega.spi_buses[0].sck_pin, 52);
+        assert_eq!(mega.spi_buses[0].default_cs_pin, 53);
+        for target in [uno_r3, nano, pro_mini, mega] {
+            assert!(target.spi_buses[0].notes.contains("metadata only"));
+            assert!(!target.capabilities.contains(&"spi.open"));
+            assert!(!target.capabilities.contains(&"spi.transfer"));
+        }
 
         assert!(find_target("esp32-devkit-v1").unwrap().spi_buses.is_empty());
     }
@@ -1626,6 +1779,28 @@ mod tests {
         assert_eq!(wifi.uart_buses[2].tx_pin, 24);
         assert_eq!(wifi.uart_buses[2].rx_pin, 25);
         assert!(wifi.uart_buses[2].internal);
+
+        let uno_r3 = find_target("arduino-uno-r3").unwrap();
+        let nano = find_target("arduino-nano-classic").unwrap();
+        let pro_mini = find_target("arduino-pro-mini").unwrap();
+        let mega = find_target("arduino-mega-2560").unwrap();
+        assert_eq!(uno_r3.uart_buses, &ARDUINO_STANDARD_UART_BUSES);
+        assert_eq!(nano.uart_buses, &ARDUINO_STANDARD_UART_BUSES);
+        assert_eq!(pro_mini.uart_buses, &ARDUINO_STANDARD_UART_BUSES);
+        assert_eq!(mega.uart_buses, &ARDUINO_MEGA_2560_UART_BUSES);
+        assert_eq!(mega.uart_buses.len(), 4);
+        assert_eq!(mega.uart_buses[1].name, "Serial1");
+        assert_eq!(mega.uart_buses[1].tx_pin, 18);
+        assert_eq!(mega.uart_buses[1].rx_pin, 19);
+        assert_eq!(mega.uart_buses[3].name, "Serial3");
+        assert_eq!(mega.uart_buses[3].tx_pin, 14);
+        assert_eq!(mega.uart_buses[3].rx_pin, 15);
+        for target in [uno_r3, nano, pro_mini, mega] {
+            assert!(target.uart_buses[0].notes.contains("metadata"));
+            assert!(!target.capabilities.contains(&"uart.open"));
+            assert!(!target.capabilities.contains(&"uart.write"));
+            assert!(!target.capabilities.contains(&"uart.read"));
+        }
 
         assert!(find_target("esp32-devkit-v1")
             .unwrap()
