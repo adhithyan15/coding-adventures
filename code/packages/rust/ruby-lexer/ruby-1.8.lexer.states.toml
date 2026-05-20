@@ -1050,6 +1050,17 @@ matcher = { literal = "=" }
 to = "data"
 actions = ["set_text(<=)", "emit(Op)"]
 
+# Phase 3c: `<<` is the heredoc opener (and the left-shift operator).
+# The action interpreter inspects the resulting `<<` Op token in
+# combination with the prior lex_state to decide whether to start a
+# heredoc capture (expression-start positions) or treat it as plain
+# left-shift (anywhere else).
+[[transitions]]
+from = "after_lt"
+matcher = { literal = "<" }
+to = "data"
+actions = ["set_text(<<)", "emit(Op)"]
+
 [[transitions]]
 from = "after_lt"
 matcher = { anything = true }

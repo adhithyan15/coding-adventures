@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.6.0] - 2026-05-20
+
+### Added (Phase 3c — heredocs `<<TAG`)
+- `<<` is now recognized as a single Op token in [`ruby-1.8.lexer.states.toml`](./ruby-1.8.lexer.states.toml) (new transition `after_lt + "<" → emit(Op)` with text `<<`).  In Phase 1/2/3a/3b the engine emitted two separate `<` Ops, never `<<`.
+- `pending_heredocs: VecDeque<PendingHeredoc>` field on `RubyLexer`.  Each entry tracks the tag string, the indices of the `<<` Op and tag Name tokens in `self.tokens`, and the body buffer.  Multiple heredocs on one line are queued FIFO and finalized in source order.
+- `heredoc_op_candidate: Option<usize>` field on `RubyLexer`.  Set when an `<<` Op is emitted at expression-start (`ExprBeg` / `ExprMid` per the Phase 2 lex-state machine); consumed on the very next emit — if it's a name-shaped Name or Keyword token, the heredoc is queued.
+- `RubyLexer::push` rewritten to be heredoc-aware.  After every `\n` that closes a line with pending heredoc openers, control jumps to `capture_heredoc_bodies`, which slurps whole lines from the source cursor (bypassing the engine) until each pending terminator has been seen, then resumes normal lexing.
+- `finalize_heredoc` splices each captured heredoc into the token stream — the `<<` Op becomes a `String` token carrying the verbatim `<<TAG\n<body>TAG` source-shape; the tag Name (or Keyword) token is removed.  Replacements are applied in reverse index order so earlier indices remain valid as later tokens are removed.
+
+### Tests (+12 new, total 77)
+- Simple, empty-body, single-line-body, and chained-method (`<<EOF.upcase`) cases.
+- Multi-heredoc-per-line FIFO (`<<A; y = <<B\nA body\nA\nB body\nB`) — bodies arrive in opener order.
+- Lowercase tag (`<<eof`) and keyword-shaped tag (`<<END`) are both accepted.
+- `<<` after a value (`3 << 1`) is a left-shift operator, not a heredoc opener.
+- `<<EOF` after `(` is recognized (paren is expression-start).
+- Unterminated heredoc records an `unterminated-heredoc` diagnostic and still emits the partial body as a `String` token.
+- Body content with `#{...}` interpolation syntax is preserved verbatim (no `#{}` expansion at the lexer level, matching the Phase 3b precedent).
+- Heredoc tag shape predicate `is_heredoc_tag` accepts identifiers (letters/digits/underscore, non-digit first) and rejects empty / digit-leading / whitespace-containing inputs.
+
+### Deferred (subsequent Phase 3 follow-ups)
+- Phase 3d: indent-modifier heredoc forms — `<<-TAG` (terminator may be indented) and `<<~TAG` (terminator may be indented *and* common leading whitespace is stripped from every body line).
+- Quoted-tag forms: `<<"TAG"` (interpolating, same as `<<TAG`) and `<<'TAG'` (non-interpolating, suppress `#{...}` even semantically).
+- Recursive sub-lexing of `#{...}` expressions in heredoc bodies (currently captured verbatim, same as Phase 3b strings).
+
 ## [0.5.0] - 2026-05-20
 
 ### Added (Phase 3b — string interpolation `"#{...}"`)
