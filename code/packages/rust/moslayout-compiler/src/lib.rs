@@ -41,6 +41,7 @@
 //! | `Image` | no        | `slot: <name>` (must be image-typed)        |
 //! | `Spacer`| no        | optional `grow: <number>`                   |
 //! | `Grid`  | no        | `headers: slot: <name>`, `rows: slot: <name>`, … |
+//! | `For`   | yes       | `each: slot: <name>, as: <NAME>, index: <NAME>?` (UI29 §3.1) |
 //!
 //! # Quick start
 //!
@@ -78,10 +79,19 @@ mod _grammar;
 ///
 /// Everything else at a node position is either a component reference (upper-
 /// case first letter) or a compile error (unknown identifier).
+///
+/// UI29 §2.1 froze the kernel at 15 primitives. `For` is one of the two
+/// meta-primitives in that set (the other is `If`, landing in U29-G2).
+/// `Grid` is retained in this list for backwards-compatibility with the
+/// pre-UI29 backends and will be removed by U29-X1 once the userland
+/// `mosaic-pkg-grid` package proves the new architecture end-to-end.
 const PRIMITIVES: &[&str] = &[
     "Box", "Row", "Column", "Text", "Image", "Spacer", "Grid",
-    // Extended set from the spec (included for completeness):
+    // Extended set from earlier specs (kept for completeness):
     "Scroll", "Divider", "Stack", "Icon",
+    // U29-G1 — control-flow meta-primitive. See `validate_for_node` for the
+    // prop contract (`each:`, `as:`, optional `index:`).
+    "For",
 ];
 
 fn is_primitive(tag: &str) -> bool {
@@ -222,6 +232,10 @@ pub enum ErrorKind {
     UnknownPrimitive,
     /// The layout body has zero or more than one root nodes.
     BadRootCount,
+    /// A primitive is used with an invalid or incomplete prop set. Used for
+    /// kernel meta-primitives (`For`, `If`) where prop validity is structural
+    /// rather than per-slot-type. UI29 §3.1 / §3.2.
+    InvalidPrimitiveUsage,
     /// The AST has an unexpected shape (internal error).
     InternalError,
 }
@@ -351,6 +365,17 @@ fn validate_node(
     part_names: &mut HashSet<String>,
     errors: &mut Vec<CompileError>,
 ) {
+    // U29-G1 — kernel meta-primitive structural validation.
+    //
+    // `For` carries control-flow semantics, not visual ones; its prop set is
+    // fixed and its part_name is meaningless. Validation runs first because
+    // a malformed For should report `InvalidPrimitiveUsage` before the rest
+    // of the prop-walking surfaces `UnknownSlot` for `each:`-referenced
+    // slots that the user already mistyped.
+    if node.tag == "For" {
+        validate_for_node(node, errors);
+    }
+
     // Collect part name.
     if let Some(part) = &node.part_name {
         if part_names.contains(part) {
@@ -408,6 +433,112 @@ fn validate_node(
             errors,
         );
     }
+}
+
+// ===========================================================================
+// U29-G1 — `For` meta-primitive validation
+// ===========================================================================
+//
+// Per UI29 §3.1 a `For` node carries exactly three structural props:
+//
+//   For (each: slot: <name>, as: <name>, index: <name>?) { ...children... }
+//
+// • `each:` — required. Must be a SlotRef pointing at a list-typed slot.
+//   (Type-of-list checking belongs in a later pass that has access to the
+//   .mil descriptor's slot types; here we only enforce the slot-ref shape.)
+// • `as:`   — required. Must be a NAME-keyword (parsed as `Keyword(...)`).
+//   This is the per-element binding visible to children.
+// • `index:` — optional. Same shape as `as:`.
+//
+// A `For` node may carry children — that is the whole point — but it should
+// not carry a `part_name` because it produces no visual element of its own
+// (control-flow primitives are styled through their children). We surface
+// that as an `InvalidPrimitiveUsage` rather than silently accepting and
+// dropping the part_name.
+//
+// What this function deliberately does NOT validate:
+//
+// • The `as:` / `index:` bindings are usable inside the children's expression
+//   contexts. That requires `expr` (U29-G3) and a real lexical-scope walker;
+//   it cannot be checked at the `LayoutNode` level today.
+// • The `each:` slot's element type. Needs interface-aware analysis.
+fn validate_for_node(node: &LayoutNode, errors: &mut Vec<CompileError>) {
+    // Part_name on a control-flow primitive is a category error.
+    if let Some(part) = &node.part_name {
+        errors.push(CompileError {
+            kind: ErrorKind::InvalidPrimitiveUsage,
+            message: format!(
+                "`For` is a control-flow primitive and cannot declare a part name (got '{}'); \
+                 style its children instead",
+                part
+            ),
+        });
+    }
+
+    let mut saw_each = false;
+    let mut saw_as = false;
+    let mut saw_index = false;
+
+    for prop in &node.props {
+        match prop.name.as_str() {
+            "each" => {
+                saw_each = true;
+                if !matches!(prop.value, LayoutPropValue::SlotRef(_)) {
+                    errors.push(CompileError {
+                        kind: ErrorKind::InvalidPrimitiveUsage,
+                        message:
+                            "`For` prop `each:` must be a slot reference (e.g. `each: slot: rows`)"
+                                .to_string(),
+                    });
+                }
+            }
+            "as" => {
+                saw_as = true;
+                if !matches!(prop.value, LayoutPropValue::Keyword(_)) {
+                    errors.push(CompileError {
+                        kind: ErrorKind::InvalidPrimitiveUsage,
+                        message: "`For` prop `as:` must be a NAME (e.g. `as: row`)".to_string(),
+                    });
+                }
+            }
+            "index" => {
+                saw_index = true;
+                if !matches!(prop.value, LayoutPropValue::Keyword(_)) {
+                    errors.push(CompileError {
+                        kind: ErrorKind::InvalidPrimitiveUsage,
+                        message: "`For` prop `index:` must be a NAME (e.g. `index: r`)".to_string(),
+                    });
+                }
+            }
+            other => {
+                errors.push(CompileError {
+                    kind: ErrorKind::InvalidPrimitiveUsage,
+                    message: format!(
+                        "`For` does not accept prop `{}`; allowed props are `each:`, `as:`, \
+                         and optional `index:`",
+                        other
+                    ),
+                });
+            }
+        }
+    }
+
+    if !saw_each {
+        errors.push(CompileError {
+            kind: ErrorKind::InvalidPrimitiveUsage,
+            message: "`For` is missing required prop `each:` (a slot reference to iterate over)"
+                .to_string(),
+        });
+    }
+    if !saw_as {
+        errors.push(CompileError {
+            kind: ErrorKind::InvalidPrimitiveUsage,
+            message: "`For` is missing required prop `as:` (the per-element binding name)"
+                .to_string(),
+        });
+    }
+    // `index:` is optional — no missing check.
+    let _ = saw_index;
 }
 
 // ===========================================================================
@@ -1304,5 +1435,211 @@ mod tests {
         assert_eq!(result.def.root.tag, "Box");
         assert_eq!(result.def.root.children.len(), 1);
         assert_eq!(result.def.root.children[0].tag, "Text");
+    }
+
+    // =====================================================================
+    // U29-G1 — `For` meta-primitive validation tests
+    // =====================================================================
+    //
+    // These tests pin down the `For` prop contract in UI29 §3.1:
+    //   `For (each: slot: <name>, as: <NAME>, index: <NAME>?) { ... }`
+    //
+    // They run through `compile(src, None)` (no interface) so the only
+    // validation surface in play is the structural one in
+    // `validate_for_node`. Adding the interface (and slot/type checks for
+    // `each:`) is a follow-up once G3 / R2 land — see UI29 §6.
+
+    /// Helper: assert at least one error of the given kind matches `needle`.
+    fn assert_error(
+        errors: &[CompileError],
+        kind: ErrorKind,
+        needle: &str,
+    ) {
+        let matched = errors
+            .iter()
+            .any(|e| e.kind == kind && e.message.contains(needle));
+        assert!(
+            matched,
+            "expected error with kind {:?} containing '{}', got: {:?}",
+            kind, needle, errors
+        );
+    }
+
+    #[test]
+    fn for_each_as_index_well_formed_compiles_clean() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: row, index: r ) {
+                Text ( slot: row )
+              }
+            }
+          }
+        "#;
+        let result = compile(src, None).expect("well-formed For should compile");
+        // Root is the Column; first child is the For node.
+        let for_node = &result.def.root.children[0];
+        assert_eq!(for_node.tag, "For");
+        assert_eq!(for_node.props.len(), 3, "For should carry three props");
+        // The For body still gets parsed and lives in `children`.
+        assert_eq!(for_node.children.len(), 1);
+        assert_eq!(for_node.children[0].tag, "Text");
+    }
+
+    #[test]
+    fn for_without_index_is_allowed() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: row ) {
+                Text ( slot: row )
+              }
+            }
+          }
+        "#;
+        let result = compile(src, None).expect("`index:` is optional");
+        assert_eq!(result.def.root.children[0].props.len(), 2);
+    }
+
+    #[test]
+    fn for_missing_each_errors() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( as: row ) {
+                Text ( slot: row )
+              }
+            }
+          }
+        "#;
+        let errors = compile(src, None).expect_err("missing each: should reject");
+        assert_error(&errors, ErrorKind::InvalidPrimitiveUsage, "missing required prop `each:`");
+    }
+
+    #[test]
+    fn for_missing_as_errors() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows ) {
+                Text ( slot: rows )
+              }
+            }
+          }
+        "#;
+        let errors = compile(src, None).expect_err("missing as: should reject");
+        assert_error(&errors, ErrorKind::InvalidPrimitiveUsage, "missing required prop `as:`");
+    }
+
+    #[test]
+    fn for_each_must_be_slot_ref() {
+        // `each: 5` is a number — wrong shape for a list-binding prop.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: 5 , as: row ) {
+                Text ( slot: rows )
+              }
+            }
+          }
+        "#;
+        let errors = compile(src, None).expect_err("each: must be a slot ref");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "must be a slot reference",
+        );
+    }
+
+    #[test]
+    fn for_part_name_is_rejected() {
+        // Control-flow primitives have no visual surface to style.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For [ loop ] ( each: slot: rows, as: row ) {
+                Text ( slot: row )
+              }
+            }
+          }
+        "#;
+        let errors =
+            compile(src, None).expect_err("part_name on a For should reject");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "cannot declare a part name",
+        );
+    }
+
+    #[test]
+    fn for_unknown_prop_rejected() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: row, limit: 10 ) {
+                Text ( slot: row )
+              }
+            }
+          }
+        "#;
+        let errors = compile(src, None).expect_err("limit: is not allowed");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "does not accept prop `limit`",
+        );
+    }
+
+    #[test]
+    fn for_nested_compiles_clean() {
+        // The visicalc 2-D loop shape: row loop wraps a column loop.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: viewport-rows, as: row, index: r ) {
+                Row {
+                  For ( each: slot: columns, as: col, index: c ) {
+                    Text ( slot: row )
+                  }
+                }
+              }
+            }
+          }
+        "#;
+        let result = compile(src, None).expect("nested For should compile");
+        let outer = &result.def.root.children[0];
+        assert_eq!(outer.tag, "For");
+        let inner_row = &outer.children[0];
+        assert_eq!(inner_row.tag, "Row");
+        let inner_for = &inner_row.children[0];
+        assert_eq!(inner_for.tag, "For");
+    }
+
+    #[test]
+    fn for_appears_in_the_primitive_list() {
+        // Pins the `For` entry in PRIMITIVES so a future refactor that
+        // accidentally drops it is caught at test time. (The validator
+        // currently doesn't fire `UnknownPrimitive` at all — `is_primitive`
+        // is wired up by a follow-up — but PRIMITIVES is the canonical
+        // place backends and tooling look for the kernel surface.)
+        assert!(
+            PRIMITIVES.contains(&"For"),
+            "`For` must be in PRIMITIVES (UI29 §2.1 kernel meta-primitive)"
+        );
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: row ) {
+                Text ( slot: row )
+              }
+            }
+          }
+        "#;
+        let result = compile(src, None).expect("For must compile end-to-end");
+        fn contains_for(n: &LayoutNode) -> bool {
+            n.tag == "For" || n.children.iter().any(contains_for)
+        }
+        assert!(contains_for(&result.def.root));
     }
 }
