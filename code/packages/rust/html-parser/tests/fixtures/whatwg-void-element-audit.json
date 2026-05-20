@@ -1,0 +1,1380 @@
+{
+  "case_count": 227,
+  "cases": [
+    {
+      "axis": "void-in-table",
+      "id": "adoption01-dat-13",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "adoption01.dat:13"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "html5test-com-dat-290",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "html5test-com.dat:290"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "menuitem-element-dat-311",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "menuitem-element.dat:311"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "noscript01-dat-332",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "noscript01.dat:332"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "noscript01-dat-333",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "noscript01.dat:333"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "noscript01-dat-334",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "noscript01.dat:334"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "noscript01-dat-335",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "noscript01.dat:335"
+    },
+    {
+      "axis": "stray-void-end-tags",
+      "id": "noscript01-dat-338",
+      "reason": "stray end tags for void elements and legacy void-like tags",
+      "source": "noscript01.dat:338"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "pending-spec-changes-dat-346",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "pending-spec-changes.dat:346"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tables01-dat-438",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tables01.dat:438"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tables01-dat-441",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tables01.dat:441"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tables01-dat-446",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tables01.dat:446"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tables01-dat-449",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tables01.dat:449"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "template-dat-493",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "template.dat:493"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "template-dat-494",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "template.dat:494"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "template-dat-495",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "template.dat:495"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "template-dat-515",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "template.dat:515"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "template-dat-516",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "template.dat:516"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "template-dat-517",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "template.dat:517"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "template-dat-520",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "template.dat:520"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "template-dat-521",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "template.dat:521"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "template-dat-525",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "template.dat:525"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "template-dat-526",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "template.dat:526"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "template-dat-527",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "template.dat:527"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "template-dat-528",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "template.dat:528"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "template-dat-529",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "template.dat:529"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "template-dat-530",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "template.dat:530"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "template-dat-544",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "template.dat:544"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "template-dat-547",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "template.dat:547"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests1-dat-568",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests1.dat:568"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests1-dat-594",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests1.dat:594"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests1-dat-647",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests1.dat:647"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests1-dat-649",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests1.dat:649"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests1-dat-650",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests1.dat:650"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests1-dat-651",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests1.dat:651"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests1-dat-653",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests1.dat:653"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests1-dat-657",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests1.dat:657"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests1-dat-658",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests1.dat:658"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "tests1-dat-670",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "tests1.dat:670"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests1-dat-672",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests1.dat:672"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests1-dat-673",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests1.dat:673"
+    },
+    {
+      "axis": "stray-void-end-tags",
+      "id": "tests1-dat-675",
+      "reason": "stray end tags for void elements and legacy void-like tags",
+      "source": "tests1.dat:675"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests1-dat-676",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests1.dat:676"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests12-dat-745",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests12.dat:745"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests12-dat-746",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests12.dat:746"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests15-dat-757",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests15.dat:757"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests15-dat-760",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests15.dat:760"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "tests15-dat-766",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "tests15.dat:766"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests16-dat-843",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests16.dat:843"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests16-dat-850",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests16.dat:850"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests16-dat-940",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests16.dat:940"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests16-dat-947",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests16.dat:947"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "tests19-dat-1059",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "tests19.dat:1059"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "tests19-dat-1061",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "tests19.dat:1061"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-1072",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:1072"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-1073",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:1073"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-1074",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:1074"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-1075",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:1075"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-1076",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:1076"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-1077",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:1077"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-1078",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:1078"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-1080",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:1080"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-1081",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:1081"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests19-dat-1086",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests19.dat:1086"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests19-dat-1087",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests19.dat:1087"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests19-dat-1088",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests19.dat:1088"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests19-dat-1089",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests19.dat:1089"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests19-dat-1090",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests19.dat:1090"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-1098",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:1098"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-1099",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:1099"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-1100",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:1100"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-1109",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:1109"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-1110",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:1110"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-1111",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:1111"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-1112",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:1112"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests20-dat-1153",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests20.dat:1153"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-1223",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:1223"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests25-dat-1224",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests25.dat:1224"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests25-dat-1225",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests25.dat:1225"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests25-dat-1226",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests25.dat:1226"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-1227",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:1227"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests25-dat-1228",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests25.dat:1228"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-1230",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:1230"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "tests25-dat-1231",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "tests25.dat:1231"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-1232",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:1232"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-1233",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:1233"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-1234",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:1234"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests25-dat-1242",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests25.dat:1242"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests25-dat-1243",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests25.dat:1243"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-1244",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:1244"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-1245",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:1245"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-1246",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:1246"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-1247",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:1247"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests26-dat-1248",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests26.dat:1248"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests26-dat-1265",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests26.dat:1265"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests26-dat-1267",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests26.dat:1267"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "tests2-dat-5",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "tests2.dat:5"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests2-dat-41",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests2.dat:41"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests2-dat-48",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests2.dat:48"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests3-dat-13",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests3.dat:13"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests6-dat-22",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests6.dat:22"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests6-dat-24",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests6.dat:24"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests6-dat-28",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests6.dat:28"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests6-dat-40",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests6.dat:40"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests6-dat-43",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests6.dat:43"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests6-dat-48",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests6.dat:48"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests6-dat-49",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests6.dat:49"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests6-dat-50",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests6.dat:50"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests7-dat-5",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests7.dat:5"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests7-dat-6",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests7.dat:6"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests7-dat-7",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests7.dat:7"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests7-dat-8",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests7.dat:8"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests7-dat-9",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests7.dat:9"
+    },
+    {
+      "axis": "void-in-select",
+      "id": "tests7-dat-17",
+      "reason": "void elements while select, option, and optgroup modes are active",
+      "source": "tests7.dat:17"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests7-dat-19",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests7.dat:19"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests7-dat-20",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests7.dat:20"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests7-dat-21",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests7.dat:21"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests7-dat-22",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests7.dat:22"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests7-dat-23",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests7.dat:23"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "tests6-dat-27",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "tests6.dat:27"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "tests6-dat-30",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "tests6.dat:30"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "tests6-dat-37",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "tests6.dat:37"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "tests-innerhtml-1-dat-13",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "tests_innerHTML_1.dat:13"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "tests-innerhtml-1-dat-26",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "tests_innerHTML_1.dat:26"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "tests-innerhtml-1-dat-36",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "tests_innerHTML_1.dat:36"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "tests-innerhtml-1-dat-37",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "tests_innerHTML_1.dat:37"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "tests-innerhtml-1-dat-39",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "tests_innerHTML_1.dat:39"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "tests-innerhtml-1-dat-51",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "tests_innerHTML_1.dat:51"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "tests-innerhtml-1-dat-60",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "tests_innerHTML_1.dat:60"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "tests-innerhtml-1-dat-80",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "tests_innerHTML_1.dat:80"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests1-dat-3",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests1.dat:3"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests1-dat-29",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests1.dat:29"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests1-dat-82",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests1.dat:82"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests1-dat-84",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests1.dat:84"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests1-dat-85",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests1.dat:85"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests1-dat-86",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests1.dat:86"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests1-dat-88",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests1.dat:88"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests1-dat-92",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests1.dat:92"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests1-dat-93",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests1.dat:93"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "tests1-dat-105",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "tests1.dat:105"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests1-dat-107",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests1.dat:107"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests1-dat-108",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests1.dat:108"
+    },
+    {
+      "axis": "stray-void-end-tags",
+      "id": "tests1-dat-110",
+      "reason": "stray end tags for void elements and legacy void-like tags",
+      "source": "tests1.dat:110"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests1-dat-111",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests1.dat:111"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests12-dat-1",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests12.dat:1"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests12-dat-2",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests12.dat:2"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests15-dat-4",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests15.dat:4"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests15-dat-7",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests15.dat:7"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "tests15-dat-13",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "tests15.dat:13"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests16-dat-76",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests16.dat:76"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests16-dat-83",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests16.dat:83"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests16-dat-173",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests16.dat:173"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests16-dat-180",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests16.dat:180"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "tests19-dat-46",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "tests19.dat:46"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "tests19-dat-48",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "tests19.dat:48"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-59",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:59"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-60",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:60"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-61",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:61"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-62",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:62"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-63",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:63"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-64",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:64"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-65",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:65"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-67",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:67"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests19-dat-68",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests19.dat:68"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests19-dat-73",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests19.dat:73"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests19-dat-74",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests19.dat:74"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests19-dat-75",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests19.dat:75"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests19-dat-76",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests19.dat:76"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests19-dat-77",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests19.dat:77"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-85",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:85"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-86",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:86"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-87",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:87"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-96",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:96"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-97",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:97"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-98",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:98"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests19-dat-99",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests19.dat:99"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests20-dat-37",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests20.dat:37"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-2",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:2"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests25-dat-3",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests25.dat:3"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests25-dat-4",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests25.dat:4"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests25-dat-5",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests25.dat:5"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-6",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:6"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tests25-dat-7",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tests25.dat:7"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-9",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:9"
+    },
+    {
+      "axis": "legacy-void-elements",
+      "id": "tests25-dat-10",
+      "reason": "legacy frame and other void elements outside specialized contexts",
+      "source": "tests25.dat:10"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-11",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:11"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-12",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:12"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-13",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:13"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests25-dat-21",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests25.dat:21"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "tests25-dat-22",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "tests25.dat:22"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-23",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:23"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-24",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:24"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-25",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:25"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests25-dat-26",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests25.dat:26"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "tests26-dat-1",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "tests26.dat:1"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests26-dat-18",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests26.dat:18"
+    },
+    {
+      "axis": "void-foreign-boundary",
+      "id": "tests26-dat-20",
+      "reason": "void elements near SVG, MathML, and HTML integration points",
+      "source": "tests26.dat:20"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "foreign-fragment-dat-61",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "foreign-fragment.dat:61"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "foreign-fragment-dat-63",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "foreign-fragment.dat:63"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "tricky01-dat-6",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "tricky01.dat:6"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "webkit01-dat-12",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "webkit01.dat:12"
+    },
+    {
+      "axis": "stray-void-end-tags",
+      "id": "webkit01-dat-18",
+      "reason": "stray end tags for void elements and legacy void-like tags",
+      "source": "webkit01.dat:18"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "webkit01-dat-19",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "webkit01.dat:19"
+    },
+    {
+      "axis": "stray-void-end-tags",
+      "id": "webkit01-dat-20",
+      "reason": "stray end tags for void elements and legacy void-like tags",
+      "source": "webkit01.dat:20"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "webkit01-dat-21",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "webkit01.dat:21"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "webkit01-dat-37",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "webkit01.dat:37"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "webkit01-dat-38",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "webkit01.dat:38"
+    },
+    {
+      "axis": "metadata-void-elements",
+      "id": "webkit01-dat-40",
+      "reason": "head metadata void elements in head, body, noscript, and templates",
+      "source": "webkit01.dat:40"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "webkit01-dat-45",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "webkit01.dat:45"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "webkit01-dat-51",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "webkit01.dat:51"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "webkit01-dat-52",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "webkit01.dat:52"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "webkit02-dat-5",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "webkit02.dat:5"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "webkit02-dat-11",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "webkit02.dat:11"
+    },
+    {
+      "axis": "void-in-select",
+      "id": "webkit02-dat-26",
+      "reason": "void elements while select, option, and optgroup modes are active",
+      "source": "webkit02.dat:26"
+    },
+    {
+      "axis": "void-in-select",
+      "id": "webkit02-dat-27",
+      "reason": "void elements while select, option, and optgroup modes are active",
+      "source": "webkit02.dat:27"
+    },
+    {
+      "axis": "void-in-select",
+      "id": "webkit02-dat-28",
+      "reason": "void elements while select, option, and optgroup modes are active",
+      "source": "webkit02.dat:28"
+    },
+    {
+      "axis": "void-in-select",
+      "id": "webkit02-dat-29",
+      "reason": "void elements while select, option, and optgroup modes are active",
+      "source": "webkit02.dat:29"
+    },
+    {
+      "axis": "void-in-select",
+      "id": "webkit02-dat-30",
+      "reason": "void elements while select, option, and optgroup modes are active",
+      "source": "webkit02.dat:30"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "webkit02-dat-31",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "webkit02.dat:31"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "webkit02-dat-32",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "webkit02.dat:32"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "webkit02-dat-33",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "webkit02.dat:33"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "webkit02-dat-34",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "webkit02.dat:34"
+    },
+    {
+      "axis": "void-in-table",
+      "id": "webkit02-dat-35",
+      "reason": "void elements and void-like end tags through table insertion modes",
+      "source": "webkit02.dat:35"
+    },
+    {
+      "axis": "void-in-select",
+      "id": "webkit02-dat-43",
+      "reason": "void elements while select, option, and optgroup modes are active",
+      "source": "webkit02.dat:43"
+    },
+    {
+      "axis": "void-in-select",
+      "id": "webkit02-dat-44",
+      "reason": "void elements while select, option, and optgroup modes are active",
+      "source": "webkit02.dat:44"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "template-dat-109",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "template.dat:109"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "tests-innerhtml-1-dat-76",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "tests_innerHTML_1.dat:76"
+    }
+  ],
+  "counts_by_axis": {
+    "body-void-elements": 61,
+    "legacy-void-elements": 15,
+    "metadata-void-elements": 56,
+    "stray-void-end-tags": 5,
+    "void-foreign-boundary": 14,
+    "void-fragment-context": 15,
+    "void-in-select": 8,
+    "void-in-table": 53
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress void element insertion, stray void end tags, table/select contexts, fragment contexts, foreign-content boundaries, and legacy void-like elements.",
+  "format": "whatwg-html-void-element-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

@@ -153,6 +153,17 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_head_body_
   --check
 ```
 
+`whatwg-void-element-audit.json` is a generated index over tree-construction
+cases that stress void element insertion, stray void end tags, table/select
+contexts, fragment contexts, foreign-content boundaries, and legacy void-like
+elements:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_void_element_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_void_element_audit_fixture.py \
+  --check
+```
+
 `whatwg-document-shell-audit.json` is a generated index over tree-construction
 cases that stress doctypes, comments, `html`/`head`/`body` synthesis, frameset
 boundaries, and shell fragment contexts:
