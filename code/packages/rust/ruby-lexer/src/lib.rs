@@ -325,15 +325,33 @@ impl RubyLexer {
                 self.push_token(kind, text);
             }
             "Regex" => {
+                // Phase 3a shape: the text buffer holds `body/`
+                // (when no flags follow) or `body/flags` (when one
+                // or more flag letters were slurped in
+                // `regex_flags`).  The closing `/` is appended to
+                // the buffer by the `regex_body → regex_flags`
+                // transition, so we only need to prepend the
+                // leading `/` here to get the verbatim source-shape
+                // of the literal.
                 let text = std::mem::take(&mut self.text_buffer);
-                // Encode regex literals as a String token with a
-                // recognisable prefix so the parser can disambiguate
-                // without needing a new TokenType.  Phase 3 will
-                // introduce a dedicated kind; for now the value
-                // shape `/regex-body/` round-trips cleanly through
-                // the parser layer.
-                let value = format!("/{}/", text);
+                let value = format!("/{}", text);
                 self.push_token(TokenType::String, value);
+            }
+            "PercentW" => {
+                // %w[a b c] — string-array literal.  The text buffer
+                // contains the verbatim source `%w[a b c]` (including
+                // the `%w[` opener and `]` closer).  Encode as
+                // TokenType::String with the verbatim value; the
+                // parser inspects the lexeme prefix to know it's a
+                // string array.
+                let text = std::mem::take(&mut self.text_buffer);
+                self.push_token(TokenType::String, text);
+            }
+            "PercentQ" => {
+                // %q{single-quoted-style body} — non-interpolating
+                // string.  Same encoding strategy as PercentW.
+                let text = std::mem::take(&mut self.text_buffer);
+                self.push_token(TokenType::String, text);
             }
             "Op" => {
                 let text = std::mem::take(&mut self.text_buffer);
@@ -841,6 +859,119 @@ mod tests {
                 (TokenType::Number, "2"),
             ]
         );
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Phase 3a — regex flags + `%w[]` / `%q{}` percent literals
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn regex_with_single_flag() {
+        let toks = tokenize_ruby("/foo/i");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "/foo/i")]);
+    }
+
+    #[test]
+    fn regex_with_multiple_flags() {
+        let toks = tokenize_ruby("/foo/imx");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "/foo/imx")]);
+    }
+
+    #[test]
+    fn regex_with_uppercase_flag() {
+        // Uppercase `I`, `M`, etc. are also recognised flag letters.
+        let toks = tokenize_ruby("/foo/IM");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "/foo/IM")]);
+    }
+
+    #[test]
+    fn regex_flag_slurp_is_greedy_then_splits() {
+        // `/foo/i puts` → regex with `i` flag, then a separate `puts`
+        // Name token.  Greedy flag matching exits on the space.
+        let toks = tokenize_ruby("/foo/i puts");
+        let p = pairs(&toks);
+        assert_eq!(
+            p,
+            vec![
+                (TokenType::String, "/foo/i"),
+                (TokenType::Name, "puts"),
+            ]
+        );
+    }
+
+    #[test]
+    fn regex_without_flags_preserves_phase_2_behaviour() {
+        // /\d+/ — no flag letter follows; emit `/\d+/`.
+        let toks = tokenize_ruby(r"/\d+/");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, r"/\d+/")]);
+    }
+
+    #[test]
+    fn percent_w_array_basic() {
+        let toks = tokenize_ruby("%w[a b c]");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "%w[a b c]")]);
+    }
+
+    #[test]
+    fn percent_w_array_with_newlines_inside_body() {
+        let toks = tokenize_ruby("%w[a\n  b\n  c]");
+        // The token preserves the verbatim body including the
+        // newlines — the parser splits on whitespace later.
+        let strings: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::String)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(strings, vec!["%w[a\n  b\n  c]"]);
+    }
+
+    #[test]
+    fn percent_q_string_basic() {
+        let toks = tokenize_ruby("%q{hello world}");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "%q{hello world}")]);
+    }
+
+    #[test]
+    fn percent_q_string_with_quotes_inside() {
+        // `%q{...}` preserves embedded `"` and `'` literally.
+        let toks = tokenize_ruby(r#"%q{he said "hi"}"#);
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, r#"%q{he said "hi"}"#)]);
+    }
+
+    #[test]
+    fn modulo_operator_still_works() {
+        // `%` not followed by `w` / `q` is still the modulo operator.
+        // `1 % 2` — there's no special letter following `%`, so it
+        // falls back to Op.
+        let toks = tokenize_ruby("1 % 2");
+        let p = pairs(&toks);
+        assert_eq!(
+            p,
+            vec![
+                (TokenType::Number, "1"),
+                (TokenType::Name, "%"),
+                (TokenType::Number, "2"),
+            ]
+        );
+        // (`%` lands on TokenType::Name with value "%" because the
+        // existing op-classifier doesn't have a dedicated kind for
+        // modulo.  Match Phase 1 behaviour.)
+    }
+
+    #[test]
+    fn percent_w_then_method_call() {
+        let toks = tokenize_ruby("%w[a b c].length");
+        let values: Vec<&str> = toks.iter().map(|t| t.value.as_str()).collect();
+        assert!(values.contains(&"%w[a b c]"));
+        assert!(values.contains(&"."));
+        assert!(values.contains(&"length"));
     }
 
     #[test]
