@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.59.0] - 2026-05-19
+
+### Added
+
+- **``STRING_AGG(expr, sep)`` aggregate** — SQLite 3.44+ synonym for
+  ``GROUP_CONCAT``.  Standard SQL spells string aggregation with this
+  name; mini-sqlite previously raised ``unknown scalar function:
+  'string_agg'`` because the alias wasn't wired into the adapter's
+  aggregate dispatch.  Routed through the same code path as
+  ``GROUP_CONCAT`` (planner emits the same ``AggregateExpr`` IR; VM
+  handles both via ``AggFunc.GROUP_CONCAT``).
+
+  10 oracle tests in ``test_tier3_string_agg.py`` cover separator
+  variants, GROUP BY composition, NULL skipping, all-NULL groups, and
+  GROUP_CONCAT regression guards.
+
 ## [1.58.0] - 2026-05-19
 
 ### Added
