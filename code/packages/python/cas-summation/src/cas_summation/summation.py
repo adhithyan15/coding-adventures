@@ -21,17 +21,23 @@ Dispatch order for ``evaluate_sum``
 3. **Power of index** — f = coeff · k^m (m = 0…5):
        Uses Faulhaber's formula  Σ_{k=lo}^{hi} k^m = F(hi,m) − F(lo−1,m)
 
-4. **Classic infinite series** — when hi = %inf (or inf):
+4. **Telescoping** (Phase 39) — f = g(k+1) − g(k) (or its antisymmetric):
+       Σ_{k=lo}^{hi} [g(k+1) − g(k)] = g(hi+1) − g(lo)
+       Σ_{k=lo}^{hi} [g(k) − g(k+1)] = g(lo) − g(hi+1)
+   Pure structural detection: substitute k → k+1 in one half and
+   compare to the other half after VM normalisation.
+
+5. **Classic infinite series** — when hi = %inf (or inf):
        Σ 1/k²        → π²/6
        Σ 1/k⁴        → π⁴/90
        Σ (-1)^k/(2k+1) → π/4
        Σ 1/k!        → %e
        Σ x^k/k!      → exp(x)
 
-5. **Numeric small range** — lo and hi are concrete integers (range ≤ 1000):
+6. **Numeric small range** — lo and hi are concrete integers (range ≤ 1000):
        Compute directly via repeated substitution + VM eval.
 
-6. **Fallback** — return unevaluated ``SUM(f, k, lo, hi)``.
+7. **Fallback** — return unevaluated ``SUM(f, k, lo, hi)``.
 """
 
 from __future__ import annotations
@@ -160,6 +166,72 @@ def _try_geometric(
     return None
 
 
+def _try_telescoping(
+    f: IRNode, k: IRSymbol, vm: object
+) -> tuple[IRNode, IRNode] | None:
+    """Detect a *structurally telescoping* summand ``f = g(k+1) − g(k)``.
+
+    Returns the pair ``(g_expr, sign)`` where:
+    - ``g_expr`` is the expression representing ``g(k)`` (i.e. the
+      "minus" half of the SUB shape).  The closed form is then
+      ``g(hi+1) − g(lo)``.
+    - ``sign`` is ``+1`` for the standard ``g(k+1) − g(k)`` orientation
+      and ``-1`` for the antisymmetric ``g(k) − g(k+1)`` form
+      (in which case the closed form is ``g(lo) − g(hi+1)``).
+
+    The detection is purely structural: we substitute ``k → k+1`` in one
+    half of the SUB and compare to the other half *after* normalising
+    both through ``vm.eval``.  No partial-fraction decomposition is
+    attempted here — that would be a follow-on phase.  Returns ``None``
+    when the shape doesn't match (caller will fall through to later
+    rules or to the unevaluated fallback).
+
+    Detection table
+    ---------------
+    +-------------------------+----------------+----------------------------+
+    | Summand shape           | Returns        | Closed form                |
+    +=========================+================+============================+
+    | ``g(k+1) − g(k)``       | ``(g, +1)``    | ``g(hi+1) − g(lo)``        |
+    | ``g(k) − g(k+1)``       | ``(g, −1)``    | ``g(lo) − g(hi+1)``        |
+    +-------------------------+----------------+----------------------------+
+
+    Examples
+    --------
+    - ``∑_{k=1}^{N} [(k+1)² − k²] = (N+1)² − 1 = N² + 2N``
+    - ``∑_{k=1}^{N} [1/k − 1/(k+1)] = 1 − 1/(N+1)`` (antisymmetric)
+
+    Notes
+    -----
+    The classic ``1/(k(k+1))`` form is recognisable *only after* a
+    partial-fraction expansion to ``1/k − 1/(k+1)``.  This rule does
+    not perform that expansion; a Phase 40-style helper could compose
+    it later by trying ``Apart(f, k)`` before this check.
+    """
+    if not isinstance(f, IRApply) or f.head != SUB or len(f.args) != 2:
+        return None
+    from cas_substitution import subst
+
+    left, right = f.args
+    k_plus_one = IRApply(ADD, (k, IRInteger(1)))
+    # Helper: True when ``a[k → k+1]`` evaluates equal to ``b``.
+    def shifted_equals(a: IRNode, b: IRNode) -> bool:
+        shifted = subst(k_plus_one, k, a)
+        return vm.eval(shifted) == vm.eval(b)  # type: ignore[attr-defined]
+
+    # Standard orientation: f = g(k+1) − g(k).  Check whether
+    # ``right[k → k+1] == left``: that is, ``g(k)`` shifted equals
+    # ``g(k+1)``.
+    if shifted_equals(right, left):
+        # right is g(k); standard orientation.
+        return right, IRInteger(1)
+    # Antisymmetric: f = g(k) − g(k+1).  Check whether
+    # ``left[k → k+1] == right``.
+    if shifted_equals(left, right):
+        # left is g(k); antisymmetric orientation.
+        return left, IRInteger(-1)
+    return None
+
+
 def _try_power_of_k(
     f: IRNode, k: IRSymbol
 ) -> tuple[Fraction, int] | None:
@@ -273,13 +345,34 @@ def evaluate_sum(
             if raw is not None:
                 return vm.eval(raw)
 
-    # ── 4. Classic infinite series ──────────────────────────────────────────
+    # ── 4. Telescoping sums (Phase 39) ──────────────────────────────────────
+    # Detect ``f = g(k+1) − g(k)`` (or its antisymmetric ``g(k) − g(k+1)``)
+    # and emit ``g(hi+1) − g(lo)`` (or ``g(lo) − g(hi+1)``).  Only the
+    # finite case is handled — an infinite telescope needs a limit
+    # argument that we leave to a future phase.
+    if not inf_upper:
+        tele = _try_telescoping(f, k, vm)
+        if tele is not None:
+            from cas_substitution import subst
+
+            g_expr, sign = tele
+            hi_plus_one = IRApply(ADD, (hi, IRInteger(1)))
+            g_at_hi_plus_one = subst(hi_plus_one, k, g_expr)
+            g_at_lo = subst(lo, k, g_expr)
+            sign_val = _ir_int_val(sign)
+            if sign_val == 1:
+                # ∑[g(k+1) − g(k)] = g(hi+1) − g(lo)
+                return vm.eval(IRApply(SUB, (g_at_hi_plus_one, g_at_lo)))
+            # ∑[g(k) − g(k+1)] = g(lo) − g(hi+1)
+            return vm.eval(IRApply(SUB, (g_at_lo, g_at_hi_plus_one)))
+
+    # ── 5. Classic infinite series ──────────────────────────────────────────
     if inf_upper:
         result = try_special_infinite(f, k, lo)
         if result is not None:
             return vm.eval(result)
 
-    # ── 5. Numeric small range ──────────────────────────────────────────────
+    # ── 6. Numeric small range ──────────────────────────────────────────────
     lo_int = _ir_int_val(lo)
     hi_int = _ir_int_val(hi)
     if lo_int is not None and hi_int is not None and 0 <= hi_int - lo_int <= 999:
@@ -300,7 +393,7 @@ def evaluate_sum(
         except Exception:
             pass
 
-    # ── 6. Unevaluated ──────────────────────────────────────────────────────
+    # ── 7. Unevaluated ──────────────────────────────────────────────────────
     return IRApply(SUM, (f, k, lo, hi))
 
 

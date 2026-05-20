@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.2.0 — 2026-05-20
+
+**Phase 39 — Telescoping sum recognition.**
+
+The dispatcher in `summation.py` now detects structurally telescoping
+summands of the form `f = g(k+1) − g(k)` (and the antisymmetric
+`g(k) − g(k+1)`) and emits the closed form
+
+    ∑_{k=lo}^{hi} [g(k+1) − g(k)]  =  g(hi+1) − g(lo)
+    ∑_{k=lo}^{hi} [g(k) − g(k+1)]  =  g(lo) − g(hi+1)
+
+Detection is purely structural: we substitute `k → k+1` in one half of
+the `SUB` shape and compare against the other half after VM
+normalisation.  No partial-fraction expansion is attempted — the
+classic `1/(k(k+1)) = 1/k − 1/(k+1)` example becomes telescoping only
+*after* an explicit `Apart` step, which a follow-on phase will
+compose.  The infinite case is left to a future limit-aware phase.
+
+### Added
+
+- **`_try_telescoping(f, k, vm)`** in `cas_summation/summation.py` —
+  detects the structural telescope and returns `(g_expr, sign)` so the
+  dispatcher can build `g(hi+1) − g(lo)` (sign +1) or `g(lo) − g(hi+1)`
+  (sign −1).
+- **Step 4 in the dispatch order** (between geometric/Faulhaber and
+  classic infinite series) calls `_try_telescoping` for finite ranges
+  and emits the closed form via the existing `cas_substitution.subst`
+  helper.
+
+### Added — tests
+
+`tests/test_summation.py` — new `TestEvaluateSumTelescoping` class with
+8 cases covering:
+
+- Standard `(k+1)² − k²` telescope at concrete bounds.
+- Antisymmetric `k² − (k+1)²` orientation.
+- Linear `g(k) = k` (i.e. `f ≡ 1` telescopes to count).
+- `g(k) = k + 5` (constant offset is preserved through the substitution).
+- Negative result: telescope where `g(k+1) − g(k)` would be negative.
+- Fallthrough: `k² − k` is **not** telescoping; falls back to
+  Faulhaber/numeric.
+- Constant-difference summand routes through Step 1 (constant rule),
+  not the telescope.
+- Symbolic upper bound `n` still produces a non-unevaluated tree.
+- Infinite upper bound correctly stays unevaluated.
+
+Full `cas-summation` suite: **66 passed** (58 prior + 8 net new).
+
 ## 0.1.1 — 2026-05-14
 
 **Bug fix: geometric series now recognises `1/base^k` (division form) in addition to `base^k`.**
