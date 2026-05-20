@@ -41,8 +41,8 @@
 //! | `Image` | no        | `slot: <name>` (must be image-typed)        |
 //! | `Spacer`| no        | optional `grow: <number>`                   |
 //! | `Grid`  | no        | `headers: slot: <name>`, `rows: slot: <name>`, … |
-//! | `For`   | yes       | `each: slot: <name>, as: <NAME>, index: <NAME>?` (UI29 §3.1) |
-//! | `If`    | yes       | `when: slot: <name>` (boolean slot for now; full `expr` lands in U29-G3) |
+//! | `For`   | yes       | `each: <expr>` (slot ref or expression), `as: <NAME>`, `index: <NAME>?` (UI29 §3.1, §3.3) |
+//! | `If`    | yes       | `when: <expr>` (slot ref or expression) (UI29 §3.2, §3.3) |
 //! | `Else`  | yes       | no props; must follow an `If` sibling (UI29 §3.2) |
 //!
 //! # Quick start
@@ -205,6 +205,19 @@ pub enum LayoutPropValue {
     /// strips them and resolves `\n`, `\t`, `\\`, `\"`, etc. so downstream
     /// emitters can treat the value as the literal text the author meant.
     String(String),
+    /// An expression in the moslayout `expr` non-terminal (UI29 §3.3).
+    ///
+    /// Stored as the reconstructed source substring (tokens joined with
+    /// spaces). Backends parse it themselves for now — a future PR can
+    /// lower this to a typed expression AST.
+    ///
+    /// Only constructed when the parsed `expr` contains at least one
+    /// operator (`==`, `!=`, `<`, `<=`, `>`, `>=`, `&&`, `||`, `!`),
+    /// member access (`.`), index access (`[...]`), or grouping (`(...)`).
+    /// The four legacy primary forms (slot ref, NAME, NUMBER, STRING)
+    /// still come back as `SlotRef`/`EmitRef`/`Keyword`/`Number`/`String`
+    /// so all G1/G2 tests and downstream backends keep working unchanged.
+    Expr(String),
 }
 
 /// A named part exported by this layout (consumed by the mosstyle compiler).
@@ -517,11 +530,22 @@ fn validate_for_node(node: &LayoutNode, errors: &mut Vec<CompileError>) {
         match prop.name.as_str() {
             "each" => {
                 saw_each = true;
-                if !matches!(prop.value, LayoutPropValue::SlotRef(_)) {
+                // Pre-G3 this was SlotRef-only. U29-G3 lifted the restriction
+                // so `each:` can be either a slot reference (`each: slot: rows`)
+                // or any expression that evaluates to a list at runtime
+                // (`each: cols.visible`, `each: row.cells`). Type-of-list
+                // checking still belongs in a later pass with .mil-aware
+                // analysis; here we only enforce that the value is something
+                // list-shaped (SlotRef or Expr — never Number/String/Keyword).
+                if !matches!(
+                    prop.value,
+                    LayoutPropValue::SlotRef(_) | LayoutPropValue::Expr(_)
+                ) {
                     errors.push(CompileError {
                         kind: ErrorKind::InvalidPrimitiveUsage,
                         message:
-                            "`For` prop `each:` must be a slot reference (e.g. `each: slot: rows`)"
+                            "`For` prop `each:` must be a slot reference or expression \
+                             (e.g. `each: slot: rows` or `each: cols.visible`)"
                                 .to_string(),
                     });
                 }
@@ -613,15 +637,24 @@ fn validate_if_node(node: &LayoutNode, errors: &mut Vec<CompileError>) {
         match prop.name.as_str() {
             "when" => {
                 saw_when = true;
-                // Pre-U29-G3 we accept only a SlotRef (a boolean-typed slot).
-                // When `expr` lands, this match arm will accept any expr.
-                if !matches!(prop.value, LayoutPropValue::SlotRef(_)) {
+                // U29-G3 broadened the accepted shape: a boolean slot ref
+                // (`when: slot: editing`) OR any expression (`when: r == editRow`,
+                // `when: editing && !readonly`, `when: !disabled`). Bare NAME
+                // values (parsed as `Keyword(...)`) are still rejected — those
+                // mean a name in the *property-value enum* sense (`row`,
+                // `true`, `false`, `center`), not a bound-name reference.
+                // Once scoping (UI29 §3.4) is implemented we can let those in
+                // too, but for now require either a slot ref or an explicit
+                // expression with at least one operator / `.` / `[]` / `(`.
+                if !matches!(
+                    prop.value,
+                    LayoutPropValue::SlotRef(_) | LayoutPropValue::Expr(_)
+                ) {
                     errors.push(CompileError {
                         kind: ErrorKind::InvalidPrimitiveUsage,
                         message:
-                            "`If` prop `when:` must currently be a slot reference \
-                             (e.g. `when: slot: editing`); richer expressions arrive \
-                             with U29-G3"
+                            "`If` prop `when:` must be a slot reference or expression \
+                             (e.g. `when: slot: editing` or `when: r == editRow`)"
                                 .to_string(),
                     });
                 }
@@ -1055,60 +1088,127 @@ fn extract_prop(prop_ast: &GrammarASTNode) -> Result<LayoutProp, CompileError> {
 
 /// Extract a `prop_value` from its AST node.
 ///
-/// Grammar: `prop_value = KEYWORD COLON NAME | NAME | NUMBER | STRING`
+/// # Grammar context (UI29 §3.3, U29-G3)
 ///
-/// The four alternatives are distinguished by the first child token's type:
-/// - Keyword → slot/emit binding
-/// - Name    → keyword value
-/// - Number  → numeric value
-/// - String  → string literal (surrounding quotes are stripped and
-///             standard `\`-escapes are resolved by `unescape_string_literal`)
+/// `prop_value` is now an expression — `prop_value = expr` — and `expr`
+/// reaches down through `or_expr → and_expr → eq_expr → rel_expr → unary
+/// → postfix → primary`. A `primary` is one of:
+///
+/// * `KEYWORD COLON NAME` — slot/emit binding
+/// * `NAME`               — keyword value (`row`, `true`, `center`)
+/// * `NUMBER`             — numeric literal
+/// * `STRING`             — quoted string literal
+/// * `LPAREN expr RPAREN` — parenthesised sub-expression
+///
+/// # Strategy
+///
+/// We start at `prop_value` and descend through any chain of single-child
+/// rule references. If we land at a `primary` whose only content is one of
+/// the four legacy forms, we emit the same variant as pre-G3 — `SlotRef`,
+/// `EmitRef`, `Keyword`, `Number`, or `String`. That keeps every G1/G2
+/// test and every downstream backend (mosaic-emit-react, mosaic-vm, etc.)
+/// working unchanged.
+///
+/// If anywhere along the descent we hit a node whose body is *more* than
+/// a single rule reference (i.e. it actually used an operator: `||`,
+/// `&&`, `==`, `!=`, comparison, `!`, postfix `.` / `[]`, or parenthesised
+/// grouping), we treat the value as an opaque expression and emit
+/// `Expr(text)`, where `text` is the reconstructed source substring
+/// (tokens joined with spaces).
 fn extract_prop_value(pv_ast: &GrammarASTNode) -> Result<LayoutPropValue, CompileError> {
-    let children = &pv_ast.children;
-
-    match children.as_slice() {
-        // KEYWORD COLON NAME — slot: column-headers OR emit: onNavigate
-        [
-            ASTNodeOrToken::Token(kw),
-            ASTNodeOrToken::Token(_colon),
-            ASTNodeOrToken::Token(name_tok),
-        ] if kw.type_ == TokenType::Keyword => {
-            let ref_name = name_tok.value.clone();
-            if kw.value == "slot" {
-                Ok(LayoutPropValue::SlotRef(ref_name))
-            } else if kw.value == "emit" {
-                Ok(LayoutPropValue::EmitRef(ref_name))
-            } else {
-                Err(CompileError {
-                    kind: ErrorKind::InternalError,
-                    message: format!(
-                        "Unknown binding keyword '{}' in prop_value (expected 'slot' or 'emit')",
-                        kw.value
-                    ),
-                })
+    // ── Descend the chain rules (prop_value → expr → or_expr → and_expr →
+    //    eq_expr → rel_expr → unary → postfix) while each level has exactly
+    //    one structural child (a single nested rule node). Stop when we
+    //    either reach `primary` or hit a node that carries an actual operator.
+    let mut cur = pv_ast;
+    loop {
+        // A node is "transparent" when its only child is one nested rule node.
+        // That happens for `prop_value`, `expr`, and for any of the precedence
+        // wrappers whose RHS produced no operator at this level.
+        if cur.children.len() == 1 {
+            if let ASTNodeOrToken::Node(inner) = &cur.children[0] {
+                cur = inner;
+                continue;
             }
         }
-        // NAME — keyword value: row, column, true, false, center, …
-        [ASTNodeOrToken::Token(t)] if t.type_ == TokenType::Name => {
-            Ok(LayoutPropValue::Keyword(t.value.clone()))
+        break;
+    }
+
+    // ── If we're at `primary`, try the four legacy shapes first. The
+    //    primary rule's children are direct token references (no nesting),
+    //    except for the parenthesised form which contains an `expr` child.
+    if cur.rule_name == "primary" {
+        match cur.children.as_slice() {
+            // KEYWORD COLON NAME — slot: column-headers OR emit: onNavigate
+            [
+                ASTNodeOrToken::Token(kw),
+                ASTNodeOrToken::Token(_colon),
+                ASTNodeOrToken::Token(name_tok),
+            ] if kw.type_ == TokenType::Keyword => {
+                let ref_name = name_tok.value.clone();
+                if kw.value == "slot" {
+                    return Ok(LayoutPropValue::SlotRef(ref_name));
+                } else if kw.value == "emit" {
+                    return Ok(LayoutPropValue::EmitRef(ref_name));
+                } else {
+                    return Err(CompileError {
+                        kind: ErrorKind::InternalError,
+                        message: format!(
+                            "Unknown binding keyword '{}' in primary (expected 'slot' or 'emit')",
+                            kw.value
+                        ),
+                    });
+                }
+            }
+            // NAME — keyword value: row, column, true, false, center, …
+            [ASTNodeOrToken::Token(t)] if t.type_ == TokenType::Name => {
+                return Ok(LayoutPropValue::Keyword(t.value.clone()));
+            }
+            // NUMBER — numeric value: 1.5, 0, 2
+            [ASTNodeOrToken::Token(t)] if t.type_ == TokenType::Number => {
+                let n = t.value.parse::<f64>().map_err(|_| CompileError {
+                    kind: ErrorKind::InternalError,
+                    message: format!("Invalid number literal '{}'", t.value),
+                })?;
+                return Ok(LayoutPropValue::Number(n));
+            }
+            // STRING — quoted literal: "Enter formula", "system-ui", …
+            [ASTNodeOrToken::Token(t)] if t.type_ == TokenType::String => {
+                return Ok(LayoutPropValue::String(unescape_string_literal(&t.value)?));
+            }
+            // LPAREN expr RPAREN — parenthesised expression. Fall through to
+            // the expression-reconstruction path below; even `(x)` carries
+            // meaningful grouping semantics worth preserving as `Expr`.
+            _ => {}
         }
-        // NUMBER — numeric value: 1.5, 0, 2
-        [ASTNodeOrToken::Token(t)] if t.type_ == TokenType::Number => {
-            let n = t.value.parse::<f64>().map_err(|_| CompileError {
-                kind: ErrorKind::InternalError,
-                message: format!("Invalid number literal '{}'", t.value),
-            })?;
-            Ok(LayoutPropValue::Number(n))
+    }
+
+    // ── Otherwise reconstruct the source substring from the tokens under
+    //    this subtree. The grammar guarantees this only happens when the
+    //    author actually wrote an operator, member access, index access,
+    //    or grouping — i.e. when they meant an expression.
+    let text = reconstruct_expr_text(pv_ast);
+    Ok(LayoutPropValue::Expr(text))
+}
+
+/// Flatten an AST subtree to its underlying source-token string.
+///
+/// Tokens are joined with single spaces. This is lossy with respect to the
+/// original formatting but preserves every token, which is what the backend
+/// needs to re-parse the expression. A future PR can replace this with a
+/// proper typed expression AST.
+fn reconstruct_expr_text(node: &GrammarASTNode) -> String {
+    let mut parts: Vec<String> = Vec::new();
+    collect_tokens(node, &mut parts);
+    parts.join(" ")
+}
+
+fn collect_tokens(node: &GrammarASTNode, out: &mut Vec<String>) {
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Token(t) => out.push(t.value.clone()),
+            ASTNodeOrToken::Node(n) => collect_tokens(n, out),
         }
-        // STRING — quoted literal: "Enter formula", "system-ui", …
-        // The lexer emits the value with surrounding `"`s; strip and unescape.
-        [ASTNodeOrToken::Token(t)] if t.type_ == TokenType::String => {
-            Ok(LayoutPropValue::String(unescape_string_literal(&t.value)?))
-        }
-        other => Err(CompileError {
-            kind: ErrorKind::InternalError,
-            message: format!("Unexpected prop_value shape: {:?}", other.len()),
-        }),
     }
 }
 
@@ -1812,9 +1912,13 @@ mod tests {
     }
 
     #[test]
-    fn if_when_must_be_slot_ref_pre_g3() {
-        // Until U29-G3 lands, `when:` must be a slot ref. A NAME-keyword
-        // (`when: true`) would be a richer expression we don't yet accept.
+    fn if_when_bare_name_rejected() {
+        // `when: true` parses as a bare NAME → `Keyword("true")`. After G3,
+        // `when:` accepts SlotRef or Expr only — bare NAMEs without any
+        // operator/access are still rejected. (Once UI29 §3.4 scoping is in
+        // and bound-name resolution exists, this can be revisited.) This
+        // test guards that "must be a slot reference or expression" still
+        // fires for the no-operator NAME case.
         let src = r#"
           layout L {
             Column [ root ] {
@@ -1824,11 +1928,11 @@ mod tests {
             }
           }
         "#;
-        let errors = compile(src, None).expect_err("non-slot when: rejected pre-G3");
+        let errors = compile(src, None).expect_err("bare-name when: rejected");
         assert_error(
             &errors,
             ErrorKind::InvalidPrimitiveUsage,
-            "must currently be a slot reference",
+            "must be a slot reference or expression",
         );
     }
 
@@ -1959,6 +2063,310 @@ mod tests {
     fn if_and_else_are_in_primitives() {
         assert!(PRIMITIVES.contains(&"If"));
         assert!(PRIMITIVES.contains(&"Else"));
+    }
+
+    // =====================================================================
+    // U29-G3 — `expr` non-terminal parse/compile tests
+    // =====================================================================
+    //
+    // These pin down the new expression grammar (UI29 §3.3). The tests live
+    // at the `compile()` level so the whole pipeline (lex → parse → analyze)
+    // is exercised end-to-end. The shape we're checking is always the
+    // resulting `LayoutPropValue`: for the four legacy primary forms it must
+    // *still* be `SlotRef`/`Keyword`/`Number`/`String`; for anything that
+    // uses an operator, member access, index access, or grouping it must
+    // come back as `Expr(text)` with all the source tokens preserved.
+    //
+    // Operators excluded by UI29 §3.3 (arithmetic, ternary, function calls,
+    // string concatenation) are NOT tested for parse-error here — they
+    // simply never made it into the tokens file, so the lexer fails earlier
+    // and that failure mode is not the contract this PR is pinning.
+
+    /// Helper: pull the first prop value off the first child of the root.
+    fn first_prop_value(src: &str) -> LayoutPropValue {
+        let result = compile(src, None).expect("compile should succeed");
+        let child = &result.def.root.children[0];
+        child.props[0].value.clone()
+    }
+
+    /// G3-1: A comparison expression (`r == editRow`) round-trips through
+    /// the parser into a `LayoutPropValue::Expr` carrying every source token.
+    #[test]
+    fn g3_comparison_expr_parses_as_expr() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: r == editRow ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        match first_prop_value(src) {
+            LayoutPropValue::Expr(text) => {
+                assert!(text.contains("r"), "Expr text should include LHS: {text:?}");
+                assert!(text.contains("=="), "Expr text should include ==: {text:?}");
+                assert!(
+                    text.contains("editRow"),
+                    "Expr text should include RHS: {text:?}"
+                );
+            }
+            other => panic!("expected Expr, got {other:?}"),
+        }
+    }
+
+    /// G3-2: A logical-AND expression (`editing && readonly`) lands as an Expr.
+    #[test]
+    fn g3_logical_and_expr_parses_as_expr() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: editing && readonly ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        match first_prop_value(src) {
+            LayoutPropValue::Expr(text) => {
+                assert!(text.contains("&&"), "Expr should include &&: {text:?}");
+                assert!(text.contains("editing") && text.contains("readonly"));
+            }
+            other => panic!("expected Expr, got {other:?}"),
+        }
+    }
+
+    /// G3-3: Field access (`col.editable`) lands as an Expr — the postfix
+    /// `DOT NAME` form makes this non-trivial even with no top-level operator.
+    #[test]
+    fn g3_field_access_parses_as_expr() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: col.editable ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        match first_prop_value(src) {
+            LayoutPropValue::Expr(text) => {
+                assert!(text.contains("col"), "Expr should mention base: {text:?}");
+                assert!(text.contains("."), "Expr should include DOT: {text:?}");
+                assert!(
+                    text.contains("editable"),
+                    "Expr should include field name: {text:?}"
+                );
+            }
+            other => panic!("expected Expr, got {other:?}"),
+        }
+    }
+
+    /// G3-4: Index access (`row[c]`) lands as an Expr.
+    #[test]
+    fn g3_index_access_parses_as_expr() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: row[c] ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        match first_prop_value(src) {
+            LayoutPropValue::Expr(text) => {
+                assert!(text.contains("row"), "Expr should include base: {text:?}");
+                assert!(text.contains("["), "Expr should include LBRACKET: {text:?}");
+                assert!(text.contains("c"), "Expr should include index: {text:?}");
+                assert!(text.contains("]"), "Expr should include RBRACKET: {text:?}");
+            }
+            other => panic!("expected Expr, got {other:?}"),
+        }
+    }
+
+    /// G3-5: A nested expression mixing comparison + logical-AND parses cleanly.
+    /// This is the canonical visicalc "this cell is the editing cell" predicate.
+    #[test]
+    fn g3_nested_expr_parses() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: r == editRow && c == editCol ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        match first_prop_value(src) {
+            LayoutPropValue::Expr(text) => {
+                assert!(text.contains("=="), "should contain ==: {text:?}");
+                assert!(text.contains("&&"), "should contain &&: {text:?}");
+                assert!(text.contains("editRow"));
+                assert!(text.contains("editCol"));
+            }
+            other => panic!("expected Expr, got {other:?}"),
+        }
+    }
+
+    /// G3-6: A parenthesised expression (`(a && b)`) parses as an Expr. The
+    /// LPAREN ... RPAREN form is the `primary` alternative that always
+    /// produces an Expr regardless of inner shape — even `(x)` is grouping
+    /// and worth preserving as such.
+    #[test]
+    fn g3_parenthesised_expr_parses_as_expr() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: (a && b) ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        match first_prop_value(src) {
+            LayoutPropValue::Expr(text) => {
+                assert!(text.contains("("), "should include LPAREN: {text:?}");
+                assert!(text.contains("&&"));
+                assert!(text.contains(")"), "should include RPAREN: {text:?}");
+            }
+            other => panic!("expected Expr, got {other:?}"),
+        }
+    }
+
+    /// G3-7: Prefix NOT (`!editing`) parses as an Expr.
+    #[test]
+    fn g3_not_operator_parses_as_expr() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: !editing ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        match first_prop_value(src) {
+            LayoutPropValue::Expr(text) => {
+                assert!(text.contains("!"), "Expr should include NOT: {text:?}");
+                assert!(text.contains("editing"));
+            }
+            other => panic!("expected Expr, got {other:?}"),
+        }
+    }
+
+    /// G3-8: `For` accepts an expression for `each:` — the canonical
+    /// "iterate only the visible columns" use case from UI29 §3.1 examples.
+    #[test]
+    fn g3_for_each_accepts_expr() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: cols.visible, as: col ) {
+                Text ( slot: col )
+              }
+            }
+          }
+        "#;
+        let result = compile(src, None).expect("For with expr `each:` should compile");
+        let for_node = &result.def.root.children[0];
+        assert_eq!(for_node.tag, "For");
+        assert_eq!(for_node.props[0].name, "each");
+        assert!(
+            matches!(for_node.props[0].value, LayoutPropValue::Expr(_)),
+            "each: expression should land as Expr, got {:?}",
+            for_node.props[0].value
+        );
+    }
+
+    /// G3-9: `If` accepts an expression for `when:` — the comparison
+    /// `r == editRow` is what U29-G3 was created to enable.
+    #[test]
+    fn g3_if_when_accepts_expr() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: r == editRow ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        let result = compile(src, None).expect("If with expr `when:` should compile");
+        let if_node = &result.def.root.children[0];
+        assert_eq!(if_node.tag, "If");
+        assert_eq!(if_node.props[0].name, "when");
+        assert!(
+            matches!(if_node.props[0].value, LayoutPropValue::Expr(_)),
+            "when: expression should land as Expr, got {:?}",
+            if_node.props[0].value
+        );
+    }
+
+    /// G3-10: Regression guard for G2 — `when: slot: editing` STILL parses
+    /// as a `SlotRef`, not as an `Expr`. The grammar change must not break
+    /// the legacy primary form.
+    #[test]
+    fn g3_if_when_slot_ref_still_slot_ref() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: slot: editing ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        let result = compile(src, None).expect("legacy SlotRef `when:` still compiles");
+        let if_node = &result.def.root.children[0];
+        assert_eq!(
+            if_node.props[0].value,
+            LayoutPropValue::SlotRef("editing".to_string()),
+            "when: slot: editing must still come back as SlotRef, not Expr"
+        );
+    }
+
+    /// G3-11: Regression guard for G1 — `each: slot: rows` STILL parses
+    /// as a `SlotRef`, not as an `Expr`.
+    #[test]
+    fn g3_for_each_slot_ref_still_slot_ref() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: row ) {
+                Text ( slot: row )
+              }
+            }
+          }
+        "#;
+        let result = compile(src, None).expect("legacy SlotRef `each:` still compiles");
+        let for_node = &result.def.root.children[0];
+        assert_eq!(
+            for_node.props[0].value,
+            LayoutPropValue::SlotRef("rows".to_string()),
+            "each: slot: rows must still come back as SlotRef, not Expr"
+        );
+    }
+
+    /// G3-12: Regression guard — bare NAME prop values (`direction: row`)
+    /// must STILL parse as `Keyword("row")` and NOT as `Expr("row")`. The
+    /// chain-rule descent must collapse cleanly through the precedence
+    /// levels to `primary → NAME` for the no-operator case.
+    #[test]
+    fn g3_bare_name_prop_still_keyword() {
+        let src = r#"
+          layout L {
+            Box [ root ] ( direction: row ) { }
+          }
+        "#;
+        let result = compile(src, None).expect("direction: row still compiles");
+        let root = &result.def.root;
+        assert_eq!(root.props[0].name, "direction");
+        assert_eq!(
+            root.props[0].value,
+            LayoutPropValue::Keyword("row".to_string()),
+            "bare NAME values must stay as Keyword, not become Expr"
+        );
     }
 
     #[test]
