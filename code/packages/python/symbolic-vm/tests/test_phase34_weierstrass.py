@@ -494,16 +494,205 @@ def test_phase35_rational_coefficients(vm: VM) -> None:
         assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
 
 
-def test_fallthrough_non_bare_argument(vm: VM) -> None:
-    """``∫ 1/(2 + sin(2x)) dx`` — argument inside Sin is not bare x.
+# ---------------------------------------------------------------------------
+# Phase 38: linear substitution lifts Weierstrass to ``trig(α·x + β)``
+# ---------------------------------------------------------------------------
+#
+# When the trig argument is ``α·x + β`` rather than the bare ``x``, the
+# substitution ``u = α·x + β`` (with ``du = α·dx``) divides the antiderivative
+# by ``α`` and replaces ``tan(x/2)`` with ``tan((α·x+β)/2)``.  The same closed
+# forms then apply unchanged.  These tests cover all three regimes
+# (a² > b² arctan, a² = b² degenerate, a² < b² log) under non-bare arguments
+# and verify the closed form by numerical differentiation against the original
+# integrand.
+# ---------------------------------------------------------------------------
 
-    Phase 34 only handles the canonical bare-variable form.  A future
-    Phase could compose with substitution to handle linear arguments;
-    for now the integral remains unevaluated.
+
+def test_phase38_sin_two_x_closes(vm: VM) -> None:
+    """``∫ 1/(2 + sin(2x)) dx`` — Phase 38 lifts to ``tan((2x)/2) = tan(x)``.
+
+    With ``α = 2, β = 0`` the antiderivative is
+    ``(1/2)·(2/√3)·arctan((2·tan(x) + 1)/√3)``.  Verified by numerical
+    differentiation against ``1/(2 + sin(2x))``.
     """
     two_x = IRApply(MUL, (IRInteger(2), X))
     integrand = IRApply(
         DIV, (IRInteger(1), IRApply(ADD, (IRInteger(2), IRApply(SIN, (two_x,)))))
+    )
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE), (
+        f"Phase 38 should close ∫ 1/(2+sin 2x) dx; got {phi!r}"
+    )
+    assert _contains_head(phi, ATAN)
+    # Sample on (−π/2, π/2) avoiding singularities of tan(x).
+    for x_val in (-1.0, -0.3, 0.0, 0.3, 1.0):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (2.0 + math.sin(2.0 * x_val))
+        assert math.isclose(got, expected, abs_tol=1e-4, rel_tol=1e-4), (
+            f"At x={x_val}: derivative={got}, expected={expected}"
+        )
+
+
+def test_phase38_cos_three_x(vm: VM) -> None:
+    """``∫ 1/(2 + cos(3x)) dx`` — Phase 38 with ``α = 3, β = 0``."""
+    three_x = IRApply(MUL, (IRInteger(3), X))
+    integrand = IRApply(
+        DIV, (IRInteger(1), IRApply(ADD, (IRInteger(2), IRApply(COS, (three_x,)))))
+    )
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE)
+    # Sample on a window where tan(3x/2) is finite.
+    for x_val in (-0.5, -0.2, 0.0, 0.2, 0.5):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (2.0 + math.cos(3.0 * x_val))
+        assert math.isclose(got, expected, abs_tol=1e-4, rel_tol=1e-4)
+
+
+def test_phase38_sin_x_plus_constant_phase(vm: VM) -> None:
+    """``∫ 1/(2 + sin(x + 1)) dx`` — Phase 38 with ``α = 1, β = 1``.
+
+    The ``1/α`` scaling is trivial (α=1) so this isolates the β shift in the
+    argument; ``tan(x/2)`` is replaced by ``tan((x+1)/2)``.
+    """
+    x_plus_one = IRApply(ADD, (X, IRInteger(1)))
+    integrand = IRApply(
+        DIV,
+        (IRInteger(1), IRApply(ADD, (IRInteger(2), IRApply(SIN, (x_plus_one,))))),
+    )
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE)
+    for x_val in (-2.0, -1.0, -0.5, 0.0, 0.5, 1.0, 2.0):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (2.0 + math.sin(x_val + 1.0))
+        assert math.isclose(got, expected, abs_tol=1e-4, rel_tol=1e-4)
+
+
+def test_phase38_sin_two_x_plus_phase(vm: VM) -> None:
+    """``∫ 1/(2 + sin(2x + 1)) dx`` — full Phase 38 with α=2, β=1.
+
+    Both the inner ``1/α = 1/2`` scaling and the constant phase shift β=1
+    are exercised.  The substitution ``u = 2x + 1`` yields
+    ``(1/2)·∫ 1/(2 + sin u) du`` whose closed form Weierstrass-derives.
+    """
+    two_x_plus_one = IRApply(ADD, (IRApply(MUL, (IRInteger(2), X)), IRInteger(1)))
+    integrand = IRApply(
+        DIV,
+        (IRInteger(1), IRApply(ADD, (IRInteger(2), IRApply(SIN, (two_x_plus_one,))))),
+    )
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE)
+    for x_val in (-0.8, -0.3, 0.0, 0.3, 0.8):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (2.0 + math.sin(2.0 * x_val + 1.0))
+        assert math.isclose(got, expected, abs_tol=1e-4, rel_tol=1e-4)
+
+
+def test_phase38_rational_alpha(vm: VM) -> None:
+    """``∫ 1/(2 + sin(x/2)) dx`` — Phase 38 with rational ``α = 1/2``.
+
+    The 1/α = 2 scaling makes the outer coefficient ``2·(2/√3) = 4/√3``.
+    Verified numerically.
+    """
+    half_x = IRApply(MUL, (IRRational(1, 2), X))
+    integrand = IRApply(
+        DIV, (IRInteger(1), IRApply(ADD, (IRInteger(2), IRApply(SIN, (half_x,)))))
+    )
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE)
+    for x_val in (-2.0, -1.0, -0.3, 0.5, 1.5):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (2.0 + math.sin(0.5 * x_val))
+        assert math.isclose(got, expected, abs_tol=1e-4, rel_tol=1e-4)
+
+
+def test_phase38_negative_alpha(vm: VM) -> None:
+    """``∫ 1/(2 + sin(−2x)) dx`` — Phase 38 with ``α = −2``.
+
+    The negative ``α`` introduces a ``1/α = −1/2`` factor in the closed form;
+    structurally this just flips the sign of the outer coefficient.  The
+    derivative check confirms the sign is correct.
+    """
+    neg_two_x = IRApply(MUL, (IRInteger(-2), X))
+    integrand = IRApply(
+        DIV, (IRInteger(1), IRApply(ADD, (IRInteger(2), IRApply(SIN, (neg_two_x,)))))
+    )
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE)
+    for x_val in (-1.0, -0.3, 0.0, 0.3, 1.0):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (2.0 + math.sin(-2.0 * x_val))
+        assert math.isclose(got, expected, abs_tol=1e-4, rel_tol=1e-4)
+
+
+def test_phase38_degenerate_branch_under_substitution(vm: VM) -> None:
+    """Degenerate ``a² = b²`` case under Phase 38: ``∫ 1/(1 + cos(2x)) dx``.
+
+    Bare ``x``: ``1 + cos x = 2·cos²(x/2)`` → antiderivative ``tan(x/2)``.
+    With ``α = 2``: antiderivative scales to ``(1/2)·tan(x)``, derivative
+    ``(1/2)·sec²(x) = 1/(1 + cos(2x))`` since ``1 + cos(2x) = 2·cos²(x)``.
+    """
+    two_x = IRApply(MUL, (IRInteger(2), X))
+    integrand = IRApply(
+        DIV, (IRInteger(1), IRApply(ADD, (IRInteger(1), IRApply(COS, (two_x,)))))
+    )
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE)
+    for x_val in (-1.0, -0.3, 0.3, 1.0):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (1.0 + math.cos(2.0 * x_val))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
+
+
+def test_phase38_log_form_under_substitution(vm: VM) -> None:
+    """Log-form ``a² < b²`` case under Phase 38: ``∫ 1/(1 + 2·sin(2x)) dx``.
+
+    Same closed form as Phase 36 with ``tan(x)`` instead of ``tan(x/2)`` and
+    an extra ``1/2`` outer factor from ``α = 2``.
+    """
+    two_x = IRApply(MUL, (IRInteger(2), X))
+    integrand = IRApply(
+        DIV,
+        (
+            IRInteger(1),
+            IRApply(
+                ADD,
+                (IRInteger(1), IRApply(MUL, (IRInteger(2), IRApply(SIN, (two_x,))))),
+            ),
+        ),
+    )
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE)
+    # Sample at points where 1 + 2·sin(2x) ≠ 0 and away from log
+    # singularities.  sin(2x) = −1/2 at 2x ∈ {−π/6, 7π/6, ...} so we
+    # stay clear of x ≈ ±π/12 (~ ±0.26).
+    for x_val in (-1.0, -0.5, 0.0, 0.5, 1.0):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (1.0 + 2.0 * math.sin(2.0 * x_val))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
+
+
+def test_phase38_fallthrough_nonlinear_argument(vm: VM) -> None:
+    """``∫ 1/(2 + sin(x²)) dx`` — argument is not linear in x.
+
+    Phase 38 only covers linear ``α·x + β`` arguments.  A quadratic argument
+    falls through and the integral is left unevaluated.
+    """
+    x_sq = IRApply(MUL, (X, X))
+    integrand = IRApply(
+        DIV, (IRInteger(1), IRApply(ADD, (IRInteger(2), IRApply(SIN, (x_sq,)))))
+    )
+    result = vm.eval(_integrate(integrand))
+    assert isinstance(result, IRApply) and result.head == INTEGRATE
+
+
+def test_phase38_fallthrough_symbolic_alpha(vm: VM) -> None:
+    """``∫ 1/(2 + sin(α·x)) dx`` with symbolic ``α`` — sign of α undecidable,
+    so the linear-argument parser refuses.  Stays unevaluated.
+    """
+    alpha = IRSymbol("alpha")
+    alpha_x = IRApply(MUL, (alpha, X))
+    integrand = IRApply(
+        DIV, (IRInteger(1), IRApply(ADD, (IRInteger(2), IRApply(SIN, (alpha_x,)))))
     )
     result = vm.eval(_integrate(integrand))
     assert isinstance(result, IRApply) and result.head == INTEGRATE

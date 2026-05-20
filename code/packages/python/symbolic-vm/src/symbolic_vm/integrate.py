@@ -806,21 +806,39 @@ def _rational_to_ir(
 
 
 # ----------------------------------------------------------------------
-# Phase 34 — Weierstrass substitution for ∫ c/(a + b·sin(x)) dx and
-# ∫ c/(a + b·cos(x)) dx with numeric a, b satisfying a² > b².
+# Phase 34/35/36/37/38 — Weierstrass substitution for
+# ∫ c / (a + b·trig(α·x + β)) dx with numeric (rational) `c, a, b, α, β`
+# and `α ≠ 0`.
 #
-# The substitution u = tan(x/2) gives sin(x) = 2u/(1+u²),
-# cos(x) = (1-u²)/(1+u²), dx = 2/(1+u²) du.  Applying it to the two
-# canonical integrands reduces both to a single rational function of u
-# that integrates to an arctan (when the resulting quadratic in u has
-# negative discriminant, i.e. a² > b²).  Direct closed forms:
+# The substitution `u = tan(arg/2)` with `arg = α·x + β` gives
+# `sin(arg) = 2u/(1+u²)`, `cos(arg) = (1−u²)/(1+u²)`,
+# `darg = α·dx = 2/(1+u²) du`.  Reducing both canonical integrands to a
+# rational function of `u` yields, depending on the discriminant
+# `disc = a² − b²`:
 #
-#     ∫ 1/(a + b·sin x) dx  =  (2/√(a²−b²)) · arctan((a·tan(x/2) + b)/√(a²−b²))
-#     ∫ 1/(a + b·cos x) dx  =  (2/√(a²−b²)) · arctan(√((a−b)/(a+b)) · tan(x/2))
+#   Phase 34 (disc > 0 — arctan):
+#     ∫ 1/(a + b·sin arg) dx
+#         =  (2/(α·√(a²−b²))) · arctan((a·tan(arg/2) + b)/√(a²−b²))
+#     ∫ 1/(a + b·cos arg) dx                (a > 0 required for this form)
+#         =  (2/(α·√(a²−b²))) · arctan(√((a−b)/(a+b)) · tan(arg/2))
 #
-# Cases a² < b² (log form) and a² = b² (rational-in-tan form) are
-# intentionally deferred — they need a sign-determination on the
-# argument inside log, and are less common in practice.
+#   Phase 35 (disc = 0 — degenerate, no outer arctan):
+#     Four sign combinations on (a, b, head) ⇒ tan(arg/2) / cot(arg/2)
+#     closed forms.
+#
+#   Phase 36/37 (disc < 0 — log form):
+#     ∫ 1/(a + b·sin arg) dx
+#         =  (1/(α·D)) · log|(a·tan(arg/2) + b − D)/(a·tan(arg/2) + b + D)|
+#     ∫ 1/(a + b·cos arg) dx
+#         =  (1/(α·D)) · log|(D + (b−a)·tan(arg/2))/(D − (b−a)·tan(arg/2))|
+#     where D = √(b² − a²).  The Abs wrapping covers both `b > |a|` and
+#     `b < −|a|` regimes simultaneously (Phase 37).
+#
+# Phase 38 lifts the entire family from the bare-`x` argument to any
+# linear rational ``α·x + β``.  The single change of variable
+# `u = α·x + β` (with `du = α·dx`) scales the antiderivative by `1/α`,
+# which we fold into the numerator constant `c ← c/α` at the dispatcher
+# entry — so each branch's closed form remains unchanged structurally.
 # ----------------------------------------------------------------------
 
 
@@ -845,19 +863,136 @@ def _sqrt_fraction_ir(f: Fraction) -> IRNode:
     return IRApply(SQRT, (_frac_ir(f),))
 
 
-def _parse_const_times_trig_x(
+def _parse_linear_in_x(
     node: IRNode, x: IRSymbol
-) -> tuple[Fraction, IRSymbol] | None:
-    """Match ``c·sin(x)`` / ``c·cos(x)`` / ``sin(x)`` / ``cos(x)`` and return
-    ``(c, head)``.
+) -> tuple[Fraction, Fraction] | None:
+    """Parse ``α·x + β`` (with α, β ∈ Q, α ≠ 0) and return ``(α, β)``.
+
+    Recognised shapes (any operand ordering within commutative heads):
+
+    +----------------------+----------+
+    | Shape                | Returns  |
+    +======================+==========+
+    | ``x``                | (1, 0)   |
+    | ``α·x``              | (α, 0)   |
+    | ``α·x + β``          | (α, β)   |
+    | ``β + α·x``          | (α, β)   |
+    | ``α·x − β``          | (α, −β)  |
+    | ``β − α·x``          | (−α, β)  |
+    | ``−(α·x + β)``       | (−α, −β) |
+    +----------------------+----------+
+
+    Returns ``None`` when ``node`` is not a linear-in-``x`` rational
+    combination (e.g. ``x²``, ``sin(x)``, pure constants free of ``x``,
+    or a nested nonlinear form).  This is the Phase 38 generalisation
+    of the bare-``x`` predecessor: ``α = 1, β = 0`` recovers the old
+    behaviour exactly.
+    """
+    # Bare variable shortcut.
+    if node == x:
+        return Fraction(1), Fraction(0)
+    # Constants free of ``x`` are not linear-in-``x`` (no x term).
+    if not _depends_on(node, x):
+        return None
+    # ``α·x`` — Mul of constant and ``x`` (either order).  Reject α = 0
+    # so callers can rely on α ≠ 0 throughout.
+    if isinstance(node, IRApply) and node.head == MUL and len(node.args) == 2:
+        left, right = node.args
+        c_left = _node_to_frac(left)
+        if c_left is not None and right == x and c_left != 0:
+            return c_left, Fraction(0)
+        c_right = _node_to_frac(right)
+        if c_right is not None and left == x and c_right != 0:
+            return c_right, Fraction(0)
+        return None
+    # ``−(linear)`` — unwrap and negate both coefficients.
+    if isinstance(node, IRApply) and node.head == NEG and len(node.args) == 1:
+        inner = _parse_linear_in_x(node.args[0], x)
+        if inner is None:
+            return None
+        a, b = inner
+        return -a, -b
+    # ``ADD(const, linear)`` or ``ADD(linear, const)``.
+    if isinstance(node, IRApply) and node.head == ADD and len(node.args) == 2:
+        left, right = node.args
+        for const_side, lin_side in ((left, right), (right, left)):
+            c = _node_to_frac(const_side)
+            if c is None:
+                continue
+            lin = _parse_linear_in_x(lin_side, x)
+            if lin is None:
+                continue
+            a, b = lin
+            return a, b + c
+        return None
+    # ``SUB(left, right)`` — two distinct cases depending on which side
+    # carries the ``x`` dependence.
+    if isinstance(node, IRApply) and node.head == SUB and len(node.args) == 2:
+        left, right = node.args
+        # Case A: ``linear − constant`` → (α, β − c).
+        c_right = _node_to_frac(right)
+        if c_right is not None:
+            lin = _parse_linear_in_x(left, x)
+            if lin is not None:
+                a, b = lin
+                return a, b - c_right
+        # Case B: ``constant − linear`` → (−α, c − β).
+        c_left = _node_to_frac(left)
+        if c_left is not None:
+            lin = _parse_linear_in_x(right, x)
+            if lin is not None:
+                a, b = lin
+                return -a, c_left - b
+        return None
+    return None
+
+
+def _build_linear_arg_ir(
+    alpha: Fraction, beta: Fraction, x: IRSymbol
+) -> IRNode:
+    """Build an IR node for ``α·x + β`` collapsing the trivial cases.
+
+    The output is used inside ``tan(arg/2)`` in every Weierstrass closed
+    form, so we prefer the simplest equivalent shape:
+
+    - ``α = 1, β = 0`` → ``x``      (the historical bare path)
+    - ``α = 1, β ≠ 0`` → ``x + β``
+    - ``β = 0, α ≠ 1`` → ``α·x``
+    - otherwise         → ``(α·x) + β``
+    """
+    if alpha == 1 and beta == 0:
+        return x
+    if beta == 0:
+        return IRApply(MUL, (_frac_ir(alpha), x))
+    if alpha == 1:
+        return IRApply(ADD, (x, _frac_ir(beta)))
+    a_x = IRApply(MUL, (_frac_ir(alpha), x))
+    return IRApply(ADD, (a_x, _frac_ir(beta)))
+
+
+def _parse_const_times_trig_linear(
+    node: IRNode, x: IRSymbol
+) -> tuple[Fraction, IRSymbol, Fraction, Fraction] | None:
+    """Match ``c·sin(α·x + β)`` / ``c·cos(α·x + β)`` (and the c=1 / α=1 /
+    β=0 degenerate variants) and return ``(c, head, α, β)``.
 
     Accepts both argument orders within ``Mul`` and unwraps a leading
-    ``Neg``.  Argument inside trig must be the bare variable ``x``.
-    Returns ``None`` if the shape doesn't match.
+    ``Neg``.  The argument inside the trig must be linear in ``x`` per
+    :func:`_parse_linear_in_x`.  Returns ``None`` when the shape doesn't
+    fit (e.g. ``sin(x²)`` or ``sin(x)·cos(x)``).
+
+    Phase 38 generalises the predecessor :func:`_parse_const_times_trig_x`
+    which only accepted the bare-``x`` argument.
     """
-    if isinstance(node, IRApply) and node.head in (SIN, COS):
-        if len(node.args) == 1 and node.args[0] == x:
-            return Fraction(1), node.head
+    if (
+        isinstance(node, IRApply)
+        and node.head in (SIN, COS)
+        and len(node.args) == 1
+    ):
+        lin = _parse_linear_in_x(node.args[0], x)
+        if lin is not None:
+            alpha, beta = lin
+            return Fraction(1), node.head, alpha, beta
     if isinstance(node, IRApply) and node.head == MUL and len(node.args) == 2:
         left, right = node.args
         for const_side, trig_side in ((left, right), (right, left)):
@@ -868,50 +1003,53 @@ def _parse_const_times_trig_x(
                 isinstance(trig_side, IRApply)
                 and trig_side.head in (SIN, COS)
                 and len(trig_side.args) == 1
-                and trig_side.args[0] == x
             ):
-                return c, trig_side.head
+                lin = _parse_linear_in_x(trig_side.args[0], x)
+                if lin is not None:
+                    alpha, beta = lin
+                    return c, trig_side.head, alpha, beta
     if isinstance(node, IRApply) and node.head == NEG and len(node.args) == 1:
-        inner = _parse_const_times_trig_x(node.args[0], x)
+        inner = _parse_const_times_trig_linear(node.args[0], x)
         if inner is not None:
-            c, head = inner
-            return -c, head
+            c, head, alpha, beta = inner
+            return -c, head, alpha, beta
     return None
 
 
 def _parse_a_plus_b_sincos(
     node: IRNode, x: IRSymbol
-) -> tuple[Fraction, Fraction, IRSymbol] | None:
-    """Parse ``a + b·sin(x)`` / ``a + b·cos(x)`` (any operand order) into
-    ``(a, b, head)`` with ``a, b ∈ Q``.
+) -> tuple[Fraction, Fraction, IRSymbol, Fraction, Fraction] | None:
+    """Parse ``a + b·sin(α·x+β)`` / ``a + b·cos(α·x+β)`` (any operand
+    order) into ``(a, b, head, α, β)`` with ``a, b, α, β ∈ Q`` and
+    ``α ≠ 0``.
 
-    Accepts the SUB shape too (``a − b·sin(x)`` becomes ``(a, −b, sin)``).
-    Returns ``None`` if the shape isn't a binary linear combination of a
-    constant and a constant-multiple-of-trig-x.
+    Accepts the SUB shape too (``a − b·trig(αx+β)`` becomes
+    ``(a, −b, head, α, β)``).  Returns ``None`` if the shape isn't a
+    binary linear combination of a constant and a constant-multiple of a
+    trig function of a linear-in-``x`` argument.  Phase 38 supersedes
+    the bare-``x``-only predecessor.
     """
     if not isinstance(node, IRApply) or len(node.args) != 2:
         return None
     if node.head == ADD:
         left, right = node.args
     elif node.head == SUB:
-        # Treat ``a − b·trig(x)`` as ``a + (−b)·trig(x)``: parse the
-        # right side and negate.  Symmetric ``b·trig(x) − a`` is rarely
+        # Treat ``a − b·trig(...)`` as ``a + (−b)·trig(...)``: parse the
+        # right side and negate.  Symmetric ``b·trig(...) − a`` is rarely
         # the canonical form but we cover it via the swap branch below.
         left, right_raw = node.args
-        # Wrap right_raw in Neg synthetically — but we can't mutate; we'll
-        # just try both arrangements directly.
         a_left = _node_to_frac(left)
         if a_left is not None:
-            trig_parse = _parse_const_times_trig_x(right_raw, x)
+            trig_parse = _parse_const_times_trig_linear(right_raw, x)
             if trig_parse is not None:
-                b, head = trig_parse
-                return a_left, -b, head
-        # Try ``b·trig(x) − a`` = (−a) + b·trig(x)
-        b_trig_left = _parse_const_times_trig_x(left, x)
+                b, head, alpha, beta = trig_parse
+                return a_left, -b, head, alpha, beta
+        # Try ``b·trig(...) − a`` = (−a) + b·trig(...)
+        b_trig_left = _parse_const_times_trig_linear(left, x)
         a_right = _node_to_frac(right_raw)
         if b_trig_left is not None and a_right is not None:
-            b, head = b_trig_left
-            return -a_right, b, head
+            b, head, alpha, beta = b_trig_left
+            return -a_right, b, head, alpha, beta
         return None
     else:
         return None
@@ -920,11 +1058,11 @@ def _parse_a_plus_b_sincos(
         a = _node_to_frac(const_side)
         if a is None:
             continue
-        trig_parse = _parse_const_times_trig_x(trig_side, x)
+        trig_parse = _parse_const_times_trig_linear(trig_side, x)
         if trig_parse is None:
             continue
-        b, head = trig_parse
-        return a, b, head
+        b, head, alpha, beta = trig_parse
+        return a, b, head, alpha, beta
     return None
 
 
@@ -933,9 +1071,16 @@ def _try_weierstrass_degenerate(
     a: Fraction,
     b: Fraction,
     trig_head: IRSymbol,
-    x: IRSymbol,
+    arg_node: IRNode,
 ) -> IRNode | None:
     """Phase 35: degenerate ``a² = b²`` Weierstrass cases.
+
+    Phase 38 generalisation: ``arg_node`` is the IR for the trig
+    argument ``α·x + β``.  The substitution ``u = tan(arg/2)`` carries
+    through unchanged because the inner factor ``α`` has already been
+    absorbed into ``c`` by the caller (``c ← c/α``); see
+    :func:`_try_weierstrass_one_over_linear_trig`.
+
 
     Four sign combinations on ``(a, b, trig_head)``:
 
@@ -973,7 +1118,7 @@ def _try_weierstrass_degenerate(
         # disc = 0 and a = 0 implies b = 0 too — degenerate denominator
         # ``0 + 0·sin x = 0``; integrating 1/0 is undefined.  Punt.
         return None
-    tan_half = IRApply(TAN, (IRApply(DIV, (x, TWO)),))
+    tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
     if trig_head == SIN:
         if b == a:
             # ∫ c/(a + a·sin x) dx = -2c / (a · (tan(x/2) + 1))
@@ -1009,11 +1154,16 @@ def _try_weierstrass_log_form(
     a: Fraction,
     b: Fraction,
     trig_head: IRSymbol,
-    x: IRSymbol,
+    arg_node: IRNode,
 ) -> IRNode | None:
     """Phase 36: ``∫ c / (a + b·sin(x)) dx`` and ``∫ c / (a + b·cos(x)) dx``
     when ``a² < b²`` (the quadratic in u = tan(x/2) has two distinct real
     roots).
+
+    Phase 38 generalisation: ``arg_node`` is the IR for the trig
+    argument ``α·x + β``; the inner factor ``α`` has been pre-absorbed
+    into ``c`` by the caller.  The same closed forms apply with
+    ``tan(arg/2)`` in place of ``tan(x/2)``.
 
     Derivation for the sin branch
     -----------------------------
@@ -1068,7 +1218,7 @@ def _try_weierstrass_log_form(
     if disc_sq <= 0:
         return None
     sqrt_disc_ir = _sqrt_fraction_ir(disc_sq)
-    tan_half = IRApply(TAN, (IRApply(DIV, (x, TWO)),))
+    tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
     abs_head = IRSymbol("Abs")
     if trig_head == SIN:
         if a == 0:
@@ -1109,13 +1259,18 @@ def _try_weierstrass_log_form(
 def _try_weierstrass_one_over_linear_trig(
     integrand: IRNode, x: IRSymbol
 ) -> IRNode | None:
-    """Phase 34: ``∫ c / (a + b·sin(x)) dx`` and ``∫ c / (a + b·cos(x)) dx``
-    via the Weierstrass substitution ``u = tan(x/2)``.
+    """Phase 34 + 38: ``∫ c / (a + b·sin(α·x+β)) dx`` and
+    ``∫ c / (a + b·cos(α·x+β)) dx`` via the Weierstrass substitution
+    ``u = tan((α·x+β)/2)``.
 
-    Both ``c`` (numerator) and the coefficients ``a, b`` must be numeric
-    (Integer or Rational); a closed form is only emitted when
-    ``a² > b²`` (denominator never zero on ℝ).  Returns ``None``
-    otherwise — log-form and linear-in-tan cases remain unevaluated.
+    Both ``c`` (numerator) and the coefficients ``a, b, α, β`` must be
+    numeric (Integer or Rational) with ``α ≠ 0``.  When ``α = 1`` and
+    ``β = 0`` this recovers the original bare-``x`` Phase 34/35/36/37
+    behaviour exactly; otherwise the inner change of variable
+    ``u = α·x + β`` (with ``du = α·dx``) divides the antiderivative by
+    ``α``, which we fold into the numerator constant ``c ← c/α`` so the
+    same closed forms apply with ``tan((α·x+β)/2)`` in place of
+    ``tan(x/2)``.
     """
     if not isinstance(integrand, IRApply) or integrand.head != DIV:
         return None
@@ -1130,27 +1285,36 @@ def _try_weierstrass_one_over_linear_trig(
     parsed = _parse_a_plus_b_sincos(den, x)
     if parsed is None:
         return None
-    a, b, trig_head = parsed
+    a, b, trig_head, alpha, beta = parsed
+    # ``α ≠ 0`` is guaranteed by _parse_linear_in_x; the assert documents
+    # the invariant for future readers and triggers in debug builds if a
+    # caller ever weakens that contract.
+    assert alpha != 0
+    # Apply ``u = α·x + β`` change of variable upfront by folding 1/α
+    # into the numerator scaling.
+    c = c / alpha
+    arg_node = _build_linear_arg_ir(alpha, beta, x)
     disc = a * a - b * b
     if disc == 0:
-        # Phase 35: degenerate a² = b² cases — closed forms in tan(x/2)
+        # Phase 35: degenerate a² = b² cases — closed forms in tan(arg/2)
         # without an outer arctan.  Four sign combinations are handled
         # below; cases where a + b = 0 (sin/cos coefficient cancel) are
         # picked up via the `b == -a` / `b == a` checks.
-        degen = _try_weierstrass_degenerate(c, a, b, trig_head, x)
+        degen = _try_weierstrass_degenerate(c, a, b, trig_head, arg_node)
         if degen is not None:
             return degen
         # Defensive: if degenerate matcher can't close it, leave unevaluated.
         return None
     if disc < 0:
         # Phase 36: a² < b² → log form on the partial-fraction decomposition
-        # of the resulting quadratic in tan(x/2) with two distinct real roots.
-        log_form = _try_weierstrass_log_form(c, a, b, trig_head, x)
+        # of the resulting quadratic in tan(arg/2) with two distinct real
+        # roots.
+        log_form = _try_weierstrass_log_form(c, a, b, trig_head, arg_node)
         if log_form is not None:
             return log_form
         return None
     sqrt_disc_ir = _sqrt_fraction_ir(disc)
-    tan_half = IRApply(TAN, (IRApply(DIV, (x, TWO)),))
+    tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
     if trig_head == SIN:
         # arctan argument: (a·tan(x/2) + b) / √(a²−b²)
         atan_arg_top = IRApply(
