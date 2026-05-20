@@ -63,8 +63,8 @@ The crate keeps the boundary narrow:
   flag accessors for host branching
 - supervisor drain run summaries expose typed run-status accessors for
   continuation, follow-up, checkpoint, and budget decisions
-- supervisor drain reports and summaries expose remaining tick-budget helpers
-  for host scheduler budget logs
+- supervisor drain plans, reports, and summaries expose remaining tick-budget
+  helpers for host scheduler budget logs
 - supervisor drain run summaries flatten idle, progress, and continuation flags
   for host log entries
 - supervisor drain run summaries expose count-drift presence flags beside
