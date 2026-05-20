@@ -1044,6 +1044,9 @@ impl ToolAuditSupervisorDrainRunReport {
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
             reached_end_of_log: self.reached_end_of_log(),
             exhausted_tick_budget: self.exhausted_tick_budget(),
+            is_idle: self.is_idle(),
+            made_progress: self.made_progress(),
+            should_continue: self.should_continue(),
             requires_follow_up: self.requires_follow_up(),
             advanced_checkpoint: self.advanced_checkpoint(),
             last_checkpoint: self.last_checkpoint().cloned(),
@@ -1263,6 +1266,12 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub reached_end_of_log: bool,
     /// Whether the actual run used every allowed tick.
     pub exhausted_tick_budget: bool,
+    /// Whether no audit rows were replayed.
+    pub is_idle: bool,
+    /// Whether at least one audit row was replayed.
+    pub made_progress: bool,
+    /// Whether the supervisor should schedule another drain run.
+    pub should_continue: bool,
     /// Whether planned or replayed rows need follow-up.
     pub requires_follow_up: bool,
     /// Whether any durable checkpoint advanced during the run.
@@ -1463,17 +1472,17 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether no audit rows were replayed.
     pub fn is_idle(&self) -> bool {
-        self.drained_records == 0
+        self.is_idle
     }
 
     /// Return whether at least one audit row was replayed.
     pub fn made_progress(&self) -> bool {
-        self.drained_records > 0
+        self.made_progress
     }
 
     /// Return whether the supervisor should schedule another drain run.
     pub fn should_continue(&self) -> bool {
-        !self.reached_end_of_log
+        self.should_continue
     }
 
     /// Return whether the actual run reached the current end of the audit log.
@@ -3877,8 +3886,11 @@ mod tests {
         assert!(summary.has_last_checkpoint());
         assert_eq!(summary.last_checkpoint_timestamp_ms(), Some(120));
         assert_eq!(summary.last_checkpoint_call_id(), Some("call_2"));
+        assert!(!summary.is_idle);
         assert!(!summary.is_idle());
+        assert!(summary.made_progress);
         assert!(summary.made_progress());
+        assert!(summary.should_continue);
         assert!(summary.should_continue());
     }
 

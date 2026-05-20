@@ -47,6 +47,8 @@ All notable changes to this package will be documented in this file.
 - Planned-count match and drift flag accessors for supervisor drain run
   summaries.
 - Run-status accessors for supervisor drain run summaries.
+- Flattened idle, progress, and continuation flags in supervisor drain run
+  summaries.
 - Count-drift presence flags for supervisor drain run reports and summaries.
 - Stable count-drift classifications for supervisor drain run reports and
   summaries.
