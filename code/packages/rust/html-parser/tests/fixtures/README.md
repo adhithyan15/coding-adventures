@@ -131,6 +131,17 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_ruby_audit
   --check
 ```
 
+`whatwg-noscript-audit.json` is a generated index over tree-construction cases
+that stress `noscript` behavior with scripting enabled and disabled, head
+insertion-mode boundaries, comment-looking text, RAWTEXT/PLAINTEXT
+descendants, paragraph integration, and stray noscript end tags:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_noscript_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_noscript_audit_fixture.py \
+  --check
+```
+
 `whatwg-document-shell-audit.json` is a generated index over tree-construction
 cases that stress doctypes, comments, `html`/`head`/`body` synthesis, frameset
 boundaries, and shell fragment contexts:

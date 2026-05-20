@@ -176,6 +176,16 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_ruby_audit
   --check
 ```
 
+The generated `tests/fixtures/whatwg-noscript-audit.json` fixture indexes
+`noscript` behavior with scripting enabled and disabled, head insertion-mode
+boundaries, comment-looking text, RAWTEXT/PLAINTEXT descendants, paragraph
+integration, and stray noscript end tags:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_noscript_audit_fixture.py \
+  --check
+```
+
 The generated `tests/fixtures/whatwg-document-shell-audit.json` fixture indexes
 doctypes, comments, `html`/`head`/`body` synthesis, frameset boundaries, and
 shell fragment contexts:

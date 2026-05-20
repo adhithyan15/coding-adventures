@@ -1,0 +1,379 @@
+{
+  "case_count": 52,
+  "cases": [
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-327",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:327"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-328",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:328"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-329",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:329"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-330",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:330"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-331",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:331"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-332",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:332"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-333",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:333"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-334",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:334"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-335",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:335"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-336",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:336"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-337",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:337"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-338",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:338"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-339",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:339"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-340",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:340"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-341",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:341"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-342",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:342"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-343",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:343"
+    },
+    {
+      "axis": "head-noscript-disabled",
+      "id": "noscript01-dat-344",
+      "reason": "head insertion-mode noscript handling with scripting disabled",
+      "scripting": "disabled",
+      "source": "noscript01.dat:344"
+    },
+    {
+      "axis": "stray-noscript-end-tag",
+      "id": "tests1-dat-675",
+      "reason": "stray noscript end tags in body and table insertion contexts",
+      "scripting": "enabled",
+      "source": "tests1.dat:675"
+    },
+    {
+      "axis": "stray-noscript-end-tag",
+      "id": "tests1-dat-676",
+      "reason": "stray noscript end tags in body and table insertion contexts",
+      "scripting": "enabled",
+      "source": "tests1.dat:676"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-851",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "enabled",
+      "source": "tests16.dat:851"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-852",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "disabled",
+      "source": "tests16.dat:852"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-853",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "enabled",
+      "source": "tests16.dat:853"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-854",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "disabled",
+      "source": "tests16.dat:854"
+    },
+    {
+      "axis": "textmode-descendant",
+      "id": "tests16-dat-855",
+      "reason": "noscript interaction with RAWTEXT and PLAINTEXT descendants",
+      "scripting": "enabled",
+      "source": "tests16.dat:855"
+    },
+    {
+      "axis": "textmode-descendant",
+      "id": "tests16-dat-856",
+      "reason": "noscript interaction with RAWTEXT and PLAINTEXT descendants",
+      "scripting": "disabled",
+      "source": "tests16.dat:856"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-948",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "enabled",
+      "source": "tests16.dat:948"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-949",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "disabled",
+      "source": "tests16.dat:949"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-950",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "enabled",
+      "source": "tests16.dat:950"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-951",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "disabled",
+      "source": "tests16.dat:951"
+    },
+    {
+      "axis": "textmode-descendant",
+      "id": "tests16-dat-952",
+      "reason": "noscript interaction with RAWTEXT and PLAINTEXT descendants",
+      "scripting": "enabled",
+      "source": "tests16.dat:952"
+    },
+    {
+      "axis": "textmode-descendant",
+      "id": "tests16-dat-953",
+      "reason": "noscript interaction with RAWTEXT and PLAINTEXT descendants",
+      "scripting": "disabled",
+      "source": "tests16.dat:953"
+    },
+    {
+      "axis": "textmode-descendant",
+      "id": "tests18-dat-982",
+      "reason": "noscript interaction with RAWTEXT and PLAINTEXT descendants",
+      "scripting": "disabled",
+      "source": "tests18.dat:982"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests5-dat-16",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "enabled",
+      "source": "tests5.dat:16"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests5-dat-17",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "disabled",
+      "source": "tests5.dat:17"
+    },
+    {
+      "axis": "stray-noscript-end-tag",
+      "id": "tests1-dat-110",
+      "reason": "stray noscript end tags in body and table insertion contexts",
+      "scripting": "enabled",
+      "source": "tests1.dat:110"
+    },
+    {
+      "axis": "stray-noscript-end-tag",
+      "id": "tests1-dat-111",
+      "reason": "stray noscript end tags in body and table insertion contexts",
+      "scripting": "enabled",
+      "source": "tests1.dat:111"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-84",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "enabled",
+      "source": "tests16.dat:84"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-85",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "disabled",
+      "source": "tests16.dat:85"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-86",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "enabled",
+      "source": "tests16.dat:86"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-87",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "disabled",
+      "source": "tests16.dat:87"
+    },
+    {
+      "axis": "textmode-descendant",
+      "id": "tests16-dat-88",
+      "reason": "noscript interaction with RAWTEXT and PLAINTEXT descendants",
+      "scripting": "enabled",
+      "source": "tests16.dat:88"
+    },
+    {
+      "axis": "textmode-descendant",
+      "id": "tests16-dat-89",
+      "reason": "noscript interaction with RAWTEXT and PLAINTEXT descendants",
+      "scripting": "disabled",
+      "source": "tests16.dat:89"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-181",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "enabled",
+      "source": "tests16.dat:181"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-182",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "disabled",
+      "source": "tests16.dat:182"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-183",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "enabled",
+      "source": "tests16.dat:183"
+    },
+    {
+      "axis": "comment-boundary",
+      "id": "tests16-dat-184",
+      "reason": "noscript text/comment-looking boundaries under both scripting modes",
+      "scripting": "disabled",
+      "source": "tests16.dat:184"
+    },
+    {
+      "axis": "textmode-descendant",
+      "id": "tests16-dat-185",
+      "reason": "noscript interaction with RAWTEXT and PLAINTEXT descendants",
+      "scripting": "enabled",
+      "source": "tests16.dat:185"
+    },
+    {
+      "axis": "textmode-descendant",
+      "id": "tests16-dat-186",
+      "reason": "noscript interaction with RAWTEXT and PLAINTEXT descendants",
+      "scripting": "disabled",
+      "source": "tests16.dat:186"
+    },
+    {
+      "axis": "textmode-descendant",
+      "id": "tests18-dat-5",
+      "reason": "noscript interaction with RAWTEXT and PLAINTEXT descendants",
+      "scripting": "disabled",
+      "source": "tests18.dat:5"
+    },
+    {
+      "axis": "paragraph-noscript",
+      "id": "webkit02-dat-2",
+      "reason": "noscript inside paragraph phrasing flow with sibling content",
+      "scripting": "enabled",
+      "source": "webkit02.dat:2"
+    },
+    {
+      "axis": "paragraph-noscript",
+      "id": "webkit02-dat-3",
+      "reason": "noscript inside paragraph phrasing flow with sibling content",
+      "scripting": "disabled",
+      "source": "webkit02.dat:3"
+    }
+  ],
+  "counts_by_axis": {
+    "comment-boundary": 18,
+    "head-noscript-disabled": 18,
+    "paragraph-noscript": 2,
+    "stray-noscript-end-tag": 4,
+    "textmode-descendant": 10
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress noscript insertion-mode boundaries, scripting-on/off tokenization, comment-looking text, RAWTEXT/PLAINTEXT descendants, stray end tags, and paragraph integration.",
+  "format": "whatwg-html-noscript-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}
