@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.47.0 — 2026-05-20
+
+### Fixed
+
+- **``x / 0`` returns NULL** instead of raising ``DivisionByZero``.
+  Matches SQLite's "arithmetic errors yield NULL" policy and lets
+  callers wrap risky math in ``COALESCE(a/b, fallback)`` the way they
+  would with real sqlite3.
+
+- **``%`` operator follows C-style ``fmod`` semantics.**  Result sign
+  matches the *dividend* (not the divisor like Python's ``%``):
+  ``-7 % 3 → -1``, ``7 % -3 → 1``.
+
+- **``%`` operator truncates floats to integers first** for the
+  modulo computation, then casts back to float — so ``7.5 % 2.0 →
+  1.0`` (because ``int(7.5) % int(2.0) == 7 % 2 == 1``).  This is
+  *different* from the ``mod()`` scalar function, which still uses
+  true ``math.fmod`` for backward compatibility with portable code
+  written against the function spelling.
+
+- **``mod()`` scalar function** now also uses ``math.fmod`` correctly
+  for negative operands and always returns float (matches SQLite's
+  documented ``mod()`` behaviour).
+
 ## 1.46.0 — 2026-05-20
 
 ### Fixed

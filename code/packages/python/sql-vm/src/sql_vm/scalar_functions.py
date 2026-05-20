@@ -556,20 +556,31 @@ def _sign(x: SqlValue) -> SqlValue:
 @register("mod")
 @null_propagating
 def _mod(x: SqlValue, y: SqlValue) -> SqlValue:
-    """Return *x* modulo *y*.
+    """Return *x* modulo *y* — C-style ``fmod`` semantics, float result.
 
-    Returns NULL for NULL inputs.  Returns NULL (not an error) for
-    division-by-zero — matching SQLite's ``x % 0 → NULL`` behaviour.
+    SQLite's ``MOD(x, y)`` is implemented on top of ``fmod`` from the
+    C math library: the result has the sign of the *dividend* (``x``)
+    and is always returned as a floating-point value (even for integer
+    inputs).  Python's built-in ``%`` operator follows the *divisor*
+    sign and preserves the integer type — neither matches.
+
+    Returns NULL for NULL inputs and for division-by-zero (matching
+    SQLite's "arithmetic errors return NULL" policy).
 
     Examples::
 
-        MOD(10, 3)   → 1
-        MOD(10, 0)   → NULL
+        MOD(10, 3)    → 1.0    (Python ``10 % 3``   == 1, same magnitude)
+        MOD(-7, 3)    → -1.0   (Python ``-7 % 3``   == 2; wrong sign)
+        MOD(7, -3)    → 1.0    (Python ``7 % -3``   == -2; wrong sign)
+        MOD(7.5, 2.0) → 1.5
+        MOD(10, 0)    → NULL
     """
     if isinstance(x, (int, float)) and isinstance(y, (int, float)):
         if y == 0:
             return None
-        return x % y  # type: ignore[operator]
+        # math.fmod implements C-style modulo: result sign matches dividend.
+        import math
+        return math.fmod(float(x), float(y))
     return None
 
 

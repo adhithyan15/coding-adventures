@@ -344,12 +344,34 @@ def _apply_binary(op: BinaryOp, lv: object, rv: object) -> object:
         case BinaryOp.MUL:
             return lv * rv  # type: ignore[operator]
         case BinaryOp.DIV:
+            # SQLite returns NULL for x / 0 rather than raising — defer
+            # to the VM by leaving the expression un-folded so the
+            # runtime error path is used uniformly.
+            if rv == 0:
+                raise ZeroDivisionError
             # Integer-style division matches SQL: 7/2 = 3 for integers.
             if isinstance(lv, int) and isinstance(rv, int) and not isinstance(lv, bool):
-                return lv // rv
+                # SQLite truncates toward zero (e.g. ``-7 / 2 == -3``),
+                # whereas Python's ``//`` floors (-7 // 2 == -4).
+                q = abs(lv) // abs(rv)
+                return -q if (lv < 0) ^ (rv < 0) else q
             return lv / rv  # type: ignore[operator]
         case BinaryOp.MOD:
-            return lv % rv  # type: ignore[operator]
+            # See the matching comment in sql_vm.operators._arithmetic
+            # for the rationale.  Briefly: SQLite's ``%`` truncates floats
+            # to integers first, then computes C-style modulo (sign
+            # follows the dividend), and casts back to float if either
+            # input was floating-point.  ``mod()`` (the scalar function)
+            # uses true fmod and is handled separately.
+            if rv == 0:
+                raise ZeroDivisionError
+            is_float = isinstance(lv, float) or isinstance(rv, float)
+            ilv, irv = int(lv), int(rv)  # type: ignore[arg-type]
+            if irv == 0:
+                raise ZeroDivisionError
+            magnitude = abs(ilv) % abs(irv)
+            result = -magnitude if ilv < 0 else magnitude
+            return float(result) if is_float else result
         case BinaryOp.CONCAT:
             # SQL || string concatenation. Both sides are strings (the SQL type
             # system guarantees this; if they aren't, fall through to TypeError
