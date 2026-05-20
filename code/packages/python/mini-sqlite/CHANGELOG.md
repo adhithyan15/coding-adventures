@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.74.0] - 2026-05-20
+
+### Fixed
+
+- **``CAST(... AS INTEGER)`` saturates at signed 64-bit endpoints**
+  (via ``sql-vm 1.48.0``).  Previously preserved Python bigints,
+  diverging from SQLite's INTEGER affinity which is always a 64-bit
+  signed integer.  16 oracle tests in ``test_tier3_cast_int64_clamp.py``
+  cover numeric-literal, string, and float overflow at both
+  endpoints; plus regressions for normal-range values.
+
 ## [1.73.0] - 2026-05-20
 
 ### Fixed

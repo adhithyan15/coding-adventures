@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.48.0 — 2026-05-20
+
+### Fixed
+
+- **``CAST(... AS INTEGER)`` saturates at signed 64-bit bounds**
+  matching SQLite's INTEGER affinity.  Previously the cast preserved
+  arbitrary-precision Python bigints — so
+  ``CAST(99999999999999999999 AS INTEGER)`` returned the full bigint
+  instead of clamping to ``9223372036854775807``.  All four numeric
+  paths (bool, float, string-prefix, native int) now flow through a
+  new ``_clamp_int64`` helper.  Float overflow during ``int()`` is
+  caught and saturated to the appropriate endpoint.
+
 ## 1.47.0 — 2026-05-20
 
 ### Fixed
