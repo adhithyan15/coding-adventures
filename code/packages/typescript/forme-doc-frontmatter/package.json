@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/forme-doc-frontmatter",
+  "version": "0.1.0",
+  "description": "Strip YAML or TOML frontmatter from a markdown source string.  Returns { body, frontmatter }.  Tiny safe parser (no eval, no prototype pollution); supports the docs-frontmatter subset (scalars, dates as strings, flat arrays of scalars, flat maps).  Rejects malformed input.  DOC00 v0 content-pipeline package.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
