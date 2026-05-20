@@ -39,6 +39,7 @@ All notable changes to this package will be documented in this file.
   summaries.
 - Count-drift investigation flags for supervisor drain run reports and
   summaries.
+- Flattened plan-drift investigation flags for supervisor drain run summaries.
 - Host-investigation flags for supervisor drain run reports and summaries.
 - Stable host-investigation classifications for supervisor drain run reports
   and summaries.

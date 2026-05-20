@@ -963,6 +963,7 @@ impl ToolAuditSupervisorDrainRunReport {
             has_record_count_drift: self.has_record_count_drift(),
             has_follow_up_record_count_drift: self.has_follow_up_record_count_drift(),
             count_drift_kind: self.count_drift_kind(),
+            requires_plan_drift_investigation: self.requires_plan_drift_investigation(),
             requires_count_drift_investigation: self.requires_count_drift_investigation(),
             host_investigation_kind: self.host_investigation_kind(),
             requires_host_investigation: self.requires_host_investigation(),
@@ -1103,6 +1104,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub has_follow_up_record_count_drift: bool,
     /// Stable classification of observed planned-vs-actual count drift.
     pub count_drift_kind: ToolAuditSupervisorDrainCountDriftKind,
+    /// Whether preflight/drain drift should be investigated by the host.
+    pub requires_plan_drift_investigation: bool,
     /// Whether count drift should be investigated by the host.
     pub requires_count_drift_investigation: bool,
     /// Stable classification of why the host should investigate this run.
@@ -1148,7 +1151,7 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether the host should investigate preflight/drain drift.
     pub fn requires_plan_drift_investigation(&self) -> bool {
-        self.scheduler_action.requires_plan_drift_investigation()
+        self.requires_plan_drift_investigation
     }
 
     /// Return whether planned and replayed follow-up pressure counts match.
@@ -3025,6 +3028,7 @@ mod tests {
         assert!(summary.requires_scheduler_action());
         assert!(!summary.requests_continuation());
         assert!(summary.routes_follow_up());
+        assert!(!summary.requires_plan_drift_investigation);
         assert!(!summary.requires_plan_drift_investigation());
         assert_eq!(summary.planned_follow_up_records, 1);
         assert_eq!(summary.drained_follow_up_records, 1);
@@ -3449,6 +3453,7 @@ mod tests {
         assert!(summary.requires_scheduler_action());
         assert!(summary.requests_continuation());
         assert!(!summary.routes_follow_up());
+        assert!(!summary.requires_plan_drift_investigation);
         assert!(!summary.requires_plan_drift_investigation());
         assert_eq!(summary.max_records_per_tick, 2);
         assert_eq!(summary.max_ticks, 1);
@@ -3555,6 +3560,7 @@ mod tests {
         assert!(summary.requires_scheduler_action());
         assert!(!summary.requests_continuation());
         assert!(!summary.routes_follow_up());
+        assert!(summary.requires_plan_drift_investigation);
         assert!(summary.requires_plan_drift_investigation());
     }
 
@@ -3659,6 +3665,8 @@ mod tests {
             ToolAuditSupervisorDrainCountDriftKind::FollowUpRecordCountDrift
         );
         assert_eq!(summary.count_drift_label(), "follow_up_record_count_drift");
+        assert!(!summary.requires_plan_drift_investigation);
+        assert!(!summary.requires_plan_drift_investigation());
         assert!(summary.requires_count_drift_investigation);
         assert!(summary.requires_count_drift_investigation());
         assert_eq!(

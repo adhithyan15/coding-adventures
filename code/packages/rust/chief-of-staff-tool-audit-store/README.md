@@ -51,6 +51,8 @@ The crate keeps the boundary narrow:
   hosts can distinguish row, follow-up pressure, and combined drift
 - supervisor drain reports and summaries expose explicit count-drift
   investigation flags for host schedulers
+- supervisor drain summaries flatten plan-drift investigation flags beside
+  count- and host-investigation flags
 - supervisor drain reports and summaries expose host-investigation flags that
   combine plan-drift and count-drift signals
 - supervisor drain reports and summaries expose stable host-investigation
