@@ -42,16 +42,17 @@
 //! | `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (Controls 2.15)        |
 //! | `HostScroll`  | `ScrollView { ... children ... }`                                           |
 //! | `HostTable`   | `ColumnLayout { ... }` of `RowLayout` rows (first-cut shape — see `emit_host_table_qml` for the deferred true-`TableView` lowering) |
+//! | `For`         | `Repeater { model: <coll>; delegate: Item { property var <as>: modelData; <children> } }` — see `emit_for_qml` |
+//! | `If`/`Else`   | `Loader { active: <cond>; sourceComponent: Component { ... } }` pairs — see `emit_if_qml` |
 //!
 //! ## What this emitter does NOT yet do
 //!
 //! See the module-level doc on the crate root (`src/lib.rs`). The short list:
 //! Cell/data-Column/Grid v3 primitives (UI28 §2); `connects` wiring from
 //! `EmitRef` props to `signal` emissions inside the tree; and mosstyle
-//! inlining into element attributes. The remaining UI29 kernel primitives
-//! `If` and `For` wait on the U29-G1..U29-G2 grammar work; `HostTable`
-//! lowers to a structural `ColumnLayout`+`RowLayout` shape today (true
-//! `TableView` + `QAbstractTableModel` integration is a follow-up).
+//! inlining into element attributes. `HostTable` lowers to a structural
+//! `ColumnLayout`+`RowLayout` shape today (true `TableView` +
+//! `QAbstractTableModel` integration is a follow-up).
 //!
 //! ## Why the root is always `Item`
 //!
@@ -294,6 +295,24 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
         "HostInput" => return emit_host_input_qml(node, depth),
         "HostButton" => return emit_host_button_qml(node, depth),
         "HostTable" => return emit_host_table_qml(node, depth),
+        // UI29 §3.1 — `For` meta-primitive: lower to a `Repeater` with an
+        // `Item` delegate that re-exports `modelData` / `index` under the
+        // author's chosen names.
+        "For" => return emit_for_qml(node, depth),
+        // UI29 §3.2 — `If` meta-primitive. When `If` appears as a *root*
+        // node (no preceding sibling to pair with `Else`), it is emitted
+        // as a single-Loader conditional with no else branch. The
+        // `If`+`Else` sibling pairing happens in `emit_qml_children`
+        // when walking a parent's children list.
+        "If" => return emit_if_qml(node, None, depth),
+        // UI29 §3.2 — a top-level `Else` (no preceding `If`) has no
+        // semantic home. Emit a self-documenting QML comment rather
+        // than erroring. Defensive: the grammar should prevent this,
+        // but the emitter must not crash on malformed trees.
+        "Else" => {
+            let pad = "    ".repeat(depth);
+            return Ok(format!("{pad}// orphan Else (no preceding If)\n"));
+        }
         // Orphan sub-tags: `HostTableHead`/`HostTableBody`/`HostTableFoot`/
         // `HostTableColGroup` outside a `HostTable` parent have no semantic
         // home in QML. Emit a self-documenting comment rather than erroring
@@ -369,16 +388,61 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
     // each child block, inserting `anchors.fill: parent` immediately
     // after the child's opening `{`. This is mechanical string editing
     // on already-trusted output (we generated it), so it's safe.
-    for child in &node.children {
-        let child_qml = emit_qml_tree(child, depth + 1)?;
+    //
+    // Children are walked through `emit_qml_children` rather than a
+    // bare `for` so that `If`+`Else` sibling pairs are recognised
+    // (UI29 §3.2).
+    out.push_str(&emit_qml_children(&node.children, depth + 1, is_stack)?);
+
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Walk an ordered list of sibling layout nodes, emitting each one's
+/// QML. Performs two extra things on top of a naive map-over-children:
+///
+/// 1. **`If`+`Else` pairing (UI29 §3.2).** When an `If` is followed
+///    *immediately* by an `Else` sibling, the two are consumed
+///    together and emitted as a paired `Loader { active: cond } /
+///    Loader { active: !cond }` block. A bare `If` (next sibling is
+///    not `Else`, or it's the last child) lowers to a single Loader.
+///    A bare `Else` (no preceding `If` in the consumed-pair sense)
+///    falls through to `emit_qml_tree`, which emits a `// orphan
+///    Else …` comment.
+/// 2. **`Stack` z-overlay injection.** When `is_stack` is `true`, each
+///    emitted child block is post-processed to insert
+///    `anchors.fill: parent` after the opening brace.
+fn emit_qml_children(
+    children: &[LayoutNode],
+    depth: usize,
+    is_stack: bool,
+) -> Result<String, PipelineEmitError> {
+    let mut out = String::new();
+    let mut i = 0;
+    while i < children.len() {
+        let child = &children[i];
+        // UI29 §3.2 — `If`+`Else` sibling pairing. We *only* pair when
+        // the immediately-following sibling is `Else`; if the author
+        // wrote `If { } Text { } Else { }`, the `Else` will be reached
+        // standalone and emit a comment via the orphan-Else path in
+        // `emit_qml_tree`.
+        let child_qml = if child.tag == "If" {
+            let else_sibling = children.get(i + 1).filter(|n| n.tag == "Else");
+            if else_sibling.is_some() {
+                i += 1; // consume the Else along with the If
+            }
+            emit_if_qml(child, else_sibling, depth)?
+        } else {
+            emit_qml_tree(child, depth)?
+        };
+
         if is_stack {
-            out.push_str(&inject_anchors_fill_parent(&child_qml, depth + 1));
+            out.push_str(&inject_anchors_fill_parent(&child_qml, depth));
         } else {
             out.push_str(&child_qml);
         }
+        i += 1;
     }
-
-    writeln!(out, "{pad}}}").unwrap();
     Ok(out)
 }
 
@@ -875,6 +939,279 @@ fn emit_table_section_rows(
         writeln!(out, "{pad}}}").unwrap();
     }
     Ok(())
+}
+
+// =====================================================================
+// UI29 meta-primitive emitters — For / If / Else
+// =====================================================================
+
+/// Lower a `For` node to a QML `Repeater { model: ...; delegate: Item
+/// { ... } }`.
+///
+/// ## Prop contract (UI29 §3.1)
+///
+/// | moslayout prop            | QML output                                                  |
+/// |---|---|
+/// | `each: slot: <name>`      | `model: <camelName>` — bare-identifier binding              |
+/// | `each: <expr>`            | `model: <expr-verbatim>` — passed through to QML            |
+/// | `as: <NAME>`              | `property var <NAME>: modelData` on the delegate `Item`     |
+/// | `index: <NAME>` (optional)| `property int <NAME>: index` on the delegate `Item`         |
+///
+/// ## QML repeater shape — and why the delegate is an `Item`
+///
+/// QML's `Repeater` instantiates its `delegate` once per element in
+/// `model`. Inside the delegate, the implicit names `modelData` (the
+/// element) and `index` (the position) are in scope. The author wrote
+/// `as: row, index: r` though, so we have to re-export those values
+/// under the *user-chosen* names. The cleanest way to do that in QML
+/// is to declare them as properties on the delegate's root `Item`,
+/// which makes them visible to every descendant binding through QML's
+/// normal scope rules:
+///
+/// ```qml
+/// Repeater {
+///   model: viewportRows
+///   delegate: Item {
+///     property var row: modelData
+///     property int r: index
+///     // any descendant can now refer to `row` or `r` like a slot
+///     Text { text: row }
+///   }
+/// }
+/// ```
+///
+/// The delegate is always an `Item` (not e.g. `RowLayout`) for the same
+/// reason the component root is an `Item`: it carries the bindings
+/// without taking on layout semantics. Layout primitives that the
+/// author wrote as children of the `For` are placed *inside* the
+/// delegate `Item`.
+///
+/// ## What about the iterated slot's type?
+///
+/// `Repeater` happily accepts a JS array as `model:`. Our slot
+/// declarations lower `list<T>` to QML `var`, which is exactly that.
+/// We therefore make no attempt to specialise the delegate's
+/// `property var <as>` to a typed property — `var` is the right shape.
+fn emit_for_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let delegate_pad = "    ".repeat(depth + 1);
+    let prop_pad = "    ".repeat(depth + 2);
+
+    let model_expr = find_each_expression(node).unwrap_or_else(|| "[]".to_string());
+    let as_name = find_keyword_prop(node, "as")
+        .filter(|s| is_safe_identifier(s))
+        .unwrap_or("item")
+        .to_string();
+    let index_name = find_keyword_prop(node, "index")
+        .filter(|s| is_safe_identifier(s))
+        .map(str::to_string);
+
+    let mut out = String::new();
+    writeln!(out, "{pad}Repeater {{").unwrap();
+    writeln!(out, "{delegate_pad}model: {model_expr}").unwrap();
+    writeln!(out, "{delegate_pad}delegate: Item {{").unwrap();
+    writeln!(out, "{prop_pad}property var {as_name}: modelData").unwrap();
+    if let Some(idx) = &index_name {
+        writeln!(out, "{prop_pad}property int {idx}: index").unwrap();
+    }
+
+    // Children of the `For` go inside the delegate Item. We use the
+    // shared children walker so nested `If`/`Else` and `For` inside the
+    // loop body work without special-casing.
+    out.push_str(&emit_qml_children(&node.children, depth + 2, false)?);
+
+    writeln!(out, "{delegate_pad}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Lower an `If` (with an optional paired `Else` sibling) to one or two
+/// QML `Loader` elements.
+///
+/// ## Lowering (UI29 §3.2)
+///
+/// ```qml
+/// // If only:
+/// Loader {
+///   active: <cond>
+///   sourceComponent: Component { <then-children> }
+/// }
+///
+/// // If + Else:
+/// Loader {
+///   active: <cond>
+///   sourceComponent: Component { <then-children> }
+/// }
+/// Loader {
+///   active: !<cond>
+///   sourceComponent: Component { <else-children> }
+/// }
+/// ```
+///
+/// ## Why `Loader`+`Component` rather than a single conditional
+///
+/// QML has no view-builder `if`/`else` syntax. The idiomatic
+/// shape for conditional instantiation is `Loader`, which builds and
+/// destroys its `sourceComponent` based on `active`. Two `Loader`s with
+/// inverted `active` predicates is the natural way to express
+/// `if cond { A } else { B }` — only one branch is live at a time, and
+/// the `Component { ... }` wrapper provides the lazy instantiation that
+/// `Loader` expects.
+///
+/// ## `Component` body shape
+///
+/// A `Component { ... }` must wrap a single top-level QML element. When
+/// the `If` body contains exactly one child we emit that child
+/// directly. When the body contains multiple children (or zero), we
+/// wrap them in an `Item { ... }` so the `Component` stays well-formed.
+fn emit_if_qml(
+    if_node: &LayoutNode,
+    else_node: Option<&LayoutNode>,
+    depth: usize,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner_pad = "    ".repeat(depth + 1);
+
+    let cond_expr = find_when_expression(if_node).unwrap_or_else(|| "false".to_string());
+    let neg_cond = negate_qml_condition(&cond_expr);
+
+    let mut out = String::new();
+
+    // The `If` branch — always emitted.
+    writeln!(out, "{pad}Loader {{").unwrap();
+    writeln!(out, "{inner_pad}active: {cond_expr}").unwrap();
+    writeln!(out, "{inner_pad}sourceComponent: Component {{").unwrap();
+    out.push_str(&emit_branch_body(&if_node.children, depth + 2)?);
+    writeln!(out, "{inner_pad}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+
+    // The `Else` branch — only emitted when an `Else` sibling was paired.
+    if let Some(else_n) = else_node {
+        writeln!(out, "{pad}Loader {{").unwrap();
+        writeln!(out, "{inner_pad}active: {neg_cond}").unwrap();
+        writeln!(out, "{inner_pad}sourceComponent: Component {{").unwrap();
+        out.push_str(&emit_branch_body(&else_n.children, depth + 2)?);
+        writeln!(out, "{inner_pad}}}").unwrap();
+        writeln!(out, "{pad}}}").unwrap();
+    }
+
+    Ok(out)
+}
+
+/// Emit the body of an `If`/`Else` branch, suitable for wrapping in a
+/// QML `Component { ... }`.
+///
+/// `Component` accepts exactly one top-level child. We therefore:
+///
+/// - `0 children` → an empty `Item { }` (the branch is well-formed but
+///   renders nothing — matches the spec's "Else can be omitted; both
+///   branches can have empty bodies" wording).
+/// - `1 child`    → emit the child directly. The most common shape; no
+///   extra wrapper means cleaner output.
+/// - `N > 1`      → wrap in an `Item { ... }` so the `Component` has a
+///   single root. Inside the `Item`, the N children are emitted
+///   normally.
+fn emit_branch_body(
+    children: &[LayoutNode],
+    depth: usize,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    match children.len() {
+        0 => Ok(format!("{pad}Item {{ }}\n")),
+        1 => emit_qml_tree(&children[0], depth),
+        _ => {
+            let mut out = String::new();
+            writeln!(out, "{pad}Item {{").unwrap();
+            out.push_str(&emit_qml_children(children, depth + 1, false)?);
+            writeln!(out, "{pad}}}").unwrap();
+            Ok(out)
+        }
+    }
+}
+
+/// Build the QML expression for a `For`'s `each:` prop.
+///
+/// - `each: slot: foo`  → `Some("foo")` (camelCased identifier, bound
+///   to the property declared on the root `Item`).
+/// - `each: <expr>`     → `Some(<expr verbatim>)`. The grammar reports
+///   the expression as the reconstructed source substring; QML's
+///   expression syntax overlaps with JavaScript, so most reasonable
+///   bindings pass through unchanged. Names from enclosing `For`
+///   bindings resolve at runtime through QML's normal scope lookup.
+/// - any other shape    → `None` (the caller falls back to `[]`).
+fn find_each_expression(node: &LayoutNode) -> Option<String> {
+    let prop = node.props.iter().find(|p| p.name == "each")?;
+    match &prop.value {
+        LayoutPropValue::SlotRef(s) => {
+            let camel = to_camel_case_first_lower(s);
+            if is_safe_identifier(&camel) {
+                Some(camel)
+            } else {
+                None
+            }
+        }
+        LayoutPropValue::Expr(text) => Some(text.clone()),
+        _ => None,
+    }
+}
+
+/// Build the QML expression for an `If`'s `when:` prop. Same shape as
+/// [`find_each_expression`] — SlotRef → camelCased identifier, Expr →
+/// passed verbatim.
+fn find_when_expression(node: &LayoutNode) -> Option<String> {
+    let prop = node.props.iter().find(|p| p.name == "when")?;
+    match &prop.value {
+        LayoutPropValue::SlotRef(s) => {
+            let camel = to_camel_case_first_lower(s);
+            if is_safe_identifier(&camel) {
+                Some(camel)
+            } else {
+                None
+            }
+        }
+        LayoutPropValue::Expr(text) => Some(text.clone()),
+        _ => None,
+    }
+}
+
+/// Negate a QML boolean expression in a syntactically robust way.
+///
+/// For a bare identifier or a simple parenthesised expression we can
+/// prefix `!`; for anything more complex (an expression with `&&`,
+/// `||`, comparison operators, etc.) we wrap in parens first so the
+/// negation binds to the whole expression: `!a && b` would otherwise
+/// parse as `(!a) && b`, which is the wrong polarity for the else
+/// branch.
+fn negate_qml_condition(expr: &str) -> String {
+    let trimmed = expr.trim();
+    if trimmed.is_empty() {
+        return "true".to_string();
+    }
+    // Bare identifiers and simple member accesses are safe to prefix;
+    // everything else gets wrapped in parens.
+    let is_simple = trimmed
+        .chars()
+        .all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '.');
+    if is_simple {
+        format!("!{trimmed}")
+    } else {
+        format!("!({trimmed})")
+    }
+}
+
+/// Find a `Keyword`-typed prop on `node` and return the keyword string.
+///
+/// Used for `as:`/`index:` props on `For`, which the grammar lowers as
+/// `Keyword(<name>)` — a bare identifier with no `slot:` prefix.
+fn find_keyword_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::Keyword(k) = &p.value {
+                return Some(k.as_str());
+            }
+        }
+        None
+    })
 }
 
 /// Build the `text: ...` attribute for a `HostInput` from its `value` prop.
@@ -2330,33 +2667,566 @@ mod tests {
         );
     }
 
-    // -------- Test 26: For/If still produce UnknownPrimitive errors --------
+    // -------- Test 26: unknown primitives still produce UnknownPrimitive --------
 
-    /// The remaining UI29 kernel primitives `If` and `For` are
-    /// out-of-scope for this PR (they wait on grammar PRs). Verify the
-    /// existing error path still works: a layout node with these tags
-    /// produces `UnknownPrimitive` rather than silently being accepted.
-    /// (`HostTable` is no longer in this list — it lowers via
-    /// `emit_host_table_qml` as of U29-K-qt.)
+    /// `If`, `For`, `Else`, and `HostTable` are all now lowered by
+    /// dedicated emitters. Verify that the `UnknownPrimitive` error path
+    /// still fires for *genuinely* unknown tags so we don't silently
+    /// accept malformed input. (`HostTable`/`For`/`If` lowerings have
+    /// their own dedicated tests below.)
     #[test]
-    fn deferred_if_for_and_host_table_still_error_as_unknown() {
-        for tag in ["If", "For"] {
-            let m = component("X", vec![], vec![]);
-            let l = LayoutDef {
-                component_name: "X".to_string(),
-                root: LayoutNode {
-                    tag: tag.to_string(),
-                    part_name: None,
-                    props: Vec::new(),
-                    children: Vec::new(),
-                },
-            };
-            let err = from_pipeline(&m, &l, &empty_style("X"))
-                .expect_err(&format!("{tag} must still be UnknownPrimitive"));
-            assert!(
-                matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t == tag),
-                "expected UnknownPrimitive({tag}), got {err:?}"
-            );
+    fn unknown_primitive_still_errors() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "FlibbertyJibbet".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let err = from_pipeline(&m, &l, &empty_style("X"))
+            .expect_err("unknown primitive must error");
+        assert!(
+            matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t == "FlibbertyJibbet"),
+            "expected UnknownPrimitive(FlibbertyJibbet), got {err:?}"
+        );
+    }
+
+    // =====================================================================
+    // U29-K-qt — `For` / `If` / `Else` meta-primitive tests
+    // =====================================================================
+    //
+    // The For/If/Else lowering is described in `emit_for_qml` and
+    // `emit_if_qml`. The tests below pin every documented case.
+
+    // ---- Test fixtures for For/If --------
+
+    /// Build a `For` node with `each: slot: <each_slot>`, `as: <as_name>`,
+    /// optional `index: <index_name>`, wrapping the given body.
+    fn for_with_slot_each(
+        each_slot: &str,
+        as_name: &str,
+        index_name: Option<&str>,
+        body: Vec<LayoutNode>,
+    ) -> LayoutNode {
+        let mut props = vec![
+            LayoutProp {
+                name: "each".to_string(),
+                value: LayoutPropValue::SlotRef(each_slot.to_string()),
+            },
+            LayoutProp {
+                name: "as".to_string(),
+                value: LayoutPropValue::Keyword(as_name.to_string()),
+            },
+        ];
+        if let Some(idx) = index_name {
+            props.push(LayoutProp {
+                name: "index".to_string(),
+                value: LayoutPropValue::Keyword(idx.to_string()),
+            });
         }
+        LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props,
+            children: body,
+        }
+    }
+
+    /// Build an `If` node with `when: slot: <slot>` wrapping the given body.
+    fn if_with_slot_when(slot: &str, body: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "If".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "when".to_string(),
+                value: LayoutPropValue::SlotRef(slot.to_string()),
+            }],
+            children: body,
+        }
+    }
+
+    /// Build a bare `Else` node with the given body.
+    fn else_node(body: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "Else".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: body,
+        }
+    }
+
+    // -------- Test 35: For (each: slot) emits Repeater + camelCased model --------
+
+    /// `For (each: slot: viewport-rows, as: row)` lowers to
+    /// `Repeater { model: viewportRows; delegate: Item { property var row: modelData; ... } }`.
+    /// Verifies the model name is camelCased and the delegate exposes
+    /// the `as:` binding as a property.
+    #[test]
+    fn for_with_slot_each_emits_repeater_with_camel_model() {
+        let m = component("X", vec![], vec![]);
+        let row = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![for_with_slot_each("viewport-rows", "row", None, vec![])],
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: row,
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("Repeater {"),
+            "missing Repeater in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("model: viewportRows"),
+            "missing camelCased model in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("delegate: Item {"),
+            "missing delegate Item in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("property var row: modelData"),
+            "missing as-binding property in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 36: For with index: binds both name properties --------
+
+    /// `For (each: slot: rows, as: row, index: r)` produces *both*
+    /// delegate properties: `property var row: modelData` and
+    /// `property int r: index`. When `index:` is omitted, only the
+    /// `as:` property appears.
+    #[test]
+    fn for_with_index_binds_both_as_and_index_properties() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: for_with_slot_each("rows", "row", Some("r"), vec![]),
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("property var row: modelData"),
+            "missing as-binding in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("property int r: index"),
+            "missing index-binding in:\n{}",
+            result.output
+        );
+
+        // Negative: dropping index: → only one property line.
+        let l2 = LayoutDef {
+            component_name: "X".to_string(),
+            root: for_with_slot_each("rows", "row", None, vec![]),
+        };
+        let r2 = from_pipeline(&m, &l2, &empty_style("X")).unwrap();
+        assert!(
+            !r2.output.contains("property int"),
+            "index property should be absent when index: is unbound; got:\n{}",
+            r2.output
+        );
+    }
+
+    // -------- Test 37: For with Expr each emits expression verbatim --------
+
+    /// `For (each: <expr>, as: col)` passes the expression text through
+    /// verbatim into `model:`. The `Expr` variant of `LayoutPropValue`
+    /// carries the reconstructed source substring (UI29 §3.3); QML's
+    /// expression grammar overlaps with JavaScript so member access /
+    /// comparisons / boolean ops just pass through.
+    #[test]
+    fn for_with_expr_each_emits_expression_verbatim() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "each".to_string(),
+                        value: LayoutPropValue::Expr("cols.visible".to_string()),
+                    },
+                    LayoutProp {
+                        name: "as".to_string(),
+                        value: LayoutPropValue::Keyword("col".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("model: cols.visible"),
+            "missing verbatim Expr in model:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 38: For body uses the as-bound name as bare identifier --------
+
+    /// A `Text { content: slot: row }` *inside* a `For (..., as: row)`
+    /// body lowers to `text: row` — the delegate `property var row:
+    /// modelData` puts the user-chosen name in QML's scope, so the bare
+    /// identifier resolves to the per-iteration value. (We treat the
+    /// inner reference as a slot ref because the moslayout grammar
+    /// reuses the `slot:` prefix for both real slots and `For`-bound
+    /// names — see UI29 §3.4.)
+    #[test]
+    fn for_body_references_as_bound_name() {
+        let m = component("X", vec![], vec![]);
+        let inner_text = LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::SlotRef("row".to_string()),
+            }],
+            children: Vec::new(),
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: for_with_slot_each("rows", "row", None, vec![inner_text]),
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("property var row: modelData"),
+            "missing delegate property in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("text: row"),
+            "missing bare-identifier text binding in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 39: If with then branch only emits one Loader --------
+
+    /// A bare `If (when: slot: editing) { ... }` with no following
+    /// `Else` sibling lowers to a *single* `Loader { active: editing;
+    /// sourceComponent: Component { ... } }`. The negated-condition
+    /// loader is omitted.
+    #[test]
+    fn if_with_then_only_emits_single_loader() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: if_with_slot_when(
+                "editing",
+                vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("on".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            ),
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert_eq!(
+            count_occurrences(&result.output, "Loader {"),
+            1,
+            "expected exactly 1 Loader for bare If in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("active: editing"),
+            "missing active:editing binding in:\n{}",
+            result.output
+        );
+        assert!(
+            !result.output.contains("active: !editing"),
+            "unexpected negated active without Else in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 40: If + Else emits two Loaders with inverted active --------
+
+    /// When an `If` is followed by a paired `Else` sibling, the emitter
+    /// produces two Loaders: one with `active: <cond>` and one with
+    /// `active: !<cond>`. The sibling pairing is performed by
+    /// `emit_qml_children` on the enclosing parent.
+    #[test]
+    fn if_plus_else_emits_two_loaders_with_inverted_active() {
+        let m = component("X", vec![], vec![]);
+        // Parent Row containing If, Else as adjacent siblings.
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    if_with_slot_when(
+                        "editing",
+                        vec![LayoutNode {
+                            tag: "Text".to_string(),
+                            part_name: None,
+                            props: vec![LayoutProp {
+                                name: "content".to_string(),
+                                value: LayoutPropValue::String("yes".to_string()),
+                            }],
+                            children: Vec::new(),
+                        }],
+                    ),
+                    else_node(vec![LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("no".to_string()),
+                        }],
+                        children: Vec::new(),
+                    }]),
+                ],
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert_eq!(
+            count_occurrences(&result.output, "Loader {"),
+            2,
+            "expected 2 Loaders for paired If+Else in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("active: editing"),
+            "missing then-branch active in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("active: !editing"),
+            "missing else-branch negated active in:\n{}",
+            result.output
+        );
+        // The two branch bodies should appear in source order.
+        let yes_pos = result.output.find("text: \"yes\"").expect("missing then body");
+        let no_pos = result.output.find("text: \"no\"").expect("missing else body");
+        assert!(
+            yes_pos < no_pos,
+            "Else body must follow If body in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 41: If with Expr when: emits expression verbatim --------
+
+    /// An `If (when: <expr>) { ... }` writes the expression text
+    /// verbatim into `active:`. The negated `active:` for the Else
+    /// branch wraps the whole expression in parens so operator
+    /// precedence isn't disturbed.
+    #[test]
+    fn if_with_expr_when_emits_expression_verbatim() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    LayoutNode {
+                        tag: "If".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "when".to_string(),
+                            value: LayoutPropValue::Expr("r == editRow".to_string()),
+                        }],
+                        children: vec![],
+                    },
+                    else_node(vec![]),
+                ],
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("active: r == editRow"),
+            "missing verbatim Expr active in:\n{}",
+            result.output
+        );
+        // The else's `active:` must wrap the complex expression in parens
+        // so the leading `!` binds correctly.
+        assert!(
+            result.output.contains("active: !(r == editRow)"),
+            "missing parenthesised negated active in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 42: Orphan Else emits a QML comment --------
+
+    /// A standalone `Else` at the root (no preceding `If` to pair
+    /// with) emits a `// orphan Else (no preceding If)` comment
+    /// rather than erroring. Same defensive shape as the orphan
+    /// HostTable-sub-tag handling.
+    #[test]
+    fn orphan_else_emits_comment() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: else_node(vec![]),
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("// orphan Else (no preceding If)"),
+            "missing orphan-Else comment in:\n{}",
+            result.output
+        );
+        // Defensive: no Loader should be emitted for an orphan Else.
+        assert!(
+            !result.output.contains("Loader {"),
+            "orphan Else must not emit Loader in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 43: Else not immediately following If is orphan --------
+
+    /// `If { } Text { } Else { }` is **not** a paired chain — the
+    /// pairing rule (UI29 §3.2) requires `Else` to *immediately* follow
+    /// the `If`. The intervening `Text` breaks the pair, so the `Else`
+    /// emits as an orphan comment and the `If` lowers as a single
+    /// Loader.
+    #[test]
+    fn else_not_immediately_after_if_is_orphan() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    if_with_slot_when("editing", vec![]),
+                    LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("spacer".to_string()),
+                        }],
+                        children: Vec::new(),
+                    },
+                    else_node(vec![]),
+                ],
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert_eq!(
+            count_occurrences(&result.output, "Loader {"),
+            1,
+            "expected exactly 1 Loader (the If only) in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("// orphan Else"),
+            "missing orphan-Else comment in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 44: Nested For loops work --------
+
+    /// A `For` inside a `For` body produces two nested `Repeater`s,
+    /// each with its own `as:` binding on its delegate. The inner
+    /// delegate property uses the inner `as:` name; the outer uses
+    /// the outer `as:` name. This pins the shared
+    /// `emit_qml_children` walk inside the delegate.
+    #[test]
+    fn nested_for_loops_work() {
+        let m = component("X", vec![], vec![]);
+        let inner = for_with_slot_each("columns", "col", Some("c"), vec![]);
+        let outer = for_with_slot_each("rows", "row", Some("r"), vec![inner]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: outer,
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert_eq!(
+            count_occurrences(&result.output, "Repeater {"),
+            2,
+            "expected 2 Repeaters for nested For in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("property var row: modelData"),
+            "missing outer as-binding in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("property var col: modelData"),
+            "missing inner as-binding in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("property int r: index"),
+            "missing outer index-binding in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("property int c: index"),
+            "missing inner index-binding in:\n{}",
+            result.output
+        );
+        // The outer Repeater must enclose the inner one (positionally).
+        let outer_pos = result.output.find("model: rows").expect("outer model");
+        let inner_pos = result.output.find("model: columns").expect("inner model");
+        assert!(
+            outer_pos < inner_pos,
+            "outer Repeater must enclose inner in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 45: If branch body wrapped in Item when multi-child --------
+
+    /// QML's `Component { ... }` requires exactly one top-level child.
+    /// A multi-child `If` body is wrapped in an `Item { ... }` so the
+    /// `Component` stays well-formed. A single-child body is emitted
+    /// inline without the wrapper to keep the output clean.
+    #[test]
+    fn if_multi_child_body_wraps_in_item() {
+        let m = component("X", vec![], vec![]);
+        let text = |s: &str| LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::String(s.to_string()),
+            }],
+            children: Vec::new(),
+        };
+
+        // Multi-child If body → wrapped in Item.
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: if_with_slot_when("show", vec![text("a"), text("b")]),
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        // Both children's content must appear (literal text values).
+        assert!(result.output.contains("text: \"a\""), "got:\n{}", result.output);
+        assert!(result.output.contains("text: \"b\""), "got:\n{}", result.output);
+        // And there must be an inner `Item {` wrapping them in addition
+        // to the root `Item { ... }` of the component itself, so we
+        // expect at least 2 occurrences of `Item {`.
+        assert!(
+            count_occurrences(&result.output, "Item {") >= 2,
+            "expected an inner Item wrapping multi-child If body in:\n{}",
+            result.output
+        );
     }
 }
