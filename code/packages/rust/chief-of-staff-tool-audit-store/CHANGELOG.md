@@ -37,6 +37,7 @@ All notable changes to this package will be documented in this file.
   drain run summaries.
 - Delta-direction helpers for supervisor drain run reports.
 - Status aliases for supervisor drain run reports.
+- Row-count match helpers for supervisor drain run reports and summaries.
 - Count-drift presence flags for supervisor drain run reports and summaries.
 - Stable count-drift classifications for supervisor drain run reports and
   summaries.
