@@ -57,7 +57,7 @@ The crate keeps the boundary narrow:
   combine plan-drift and count-drift signals
 - supervisor drain reports and summaries expose stable host-investigation
   classifications for plan drift, count drift, or combined drift
-- supervisor drain summaries expose stable, parseable scheduler action
+- supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
 - scheduler action recommendations expose typed intent helpers so hosts can
