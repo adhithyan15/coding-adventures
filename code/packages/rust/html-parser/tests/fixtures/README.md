@@ -120,3 +120,13 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_formatting
 python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_formatting_audit_fixture.py \
   --check
 ```
+
+`whatwg-document-shell-audit.json` is a generated index over tree-construction
+cases that stress doctypes, comments, `html`/`head`/`body` synthesis, frameset
+boundaries, and shell fragment contexts:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_document_shell_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_document_shell_audit_fixture.py \
+  --check
+```
