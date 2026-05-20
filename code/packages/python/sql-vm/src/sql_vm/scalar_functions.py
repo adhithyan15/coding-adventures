@@ -2166,14 +2166,70 @@ def _apply_modifier(dt: datetime, modifier: str) -> datetime | None:
 
 
 def _resolve_datetime(args: list[SqlValue], skip_first: bool = False) -> datetime | None:
-    """Parse time value from args[0] (or args[1] if skip_first), apply modifiers."""
+    """Parse time value from args[0] (or args[1] if skip_first), apply modifiers.
+
+    The ``unixepoch`` modifier is special: it changes how the *time value
+    itself* is interpreted (not a post-processing step on an already-parsed
+    datetime).  Specifically, when ``unixepoch`` appears anywhere in the
+    modifier list:
+
+    - A numeric time value (int or float) is read as Unix-epoch seconds.
+    - A string time value is parsed via SQLite's longest-numeric-prefix
+      rule and read as Unix-epoch seconds.  Strings that lack a numeric
+      prefix — including ISO-8601 date strings like ``'2024-01-01'`` —
+      return NULL.
+
+    Without the ``unixepoch`` modifier, mini-sqlite still accepts bare
+    integer time values as Unix epoch (more lenient than real SQLite,
+    which returns NULL); changing that is a behavioural break held back
+    for a future PR.
+    """
     offset = 1 if skip_first else 0
     if len(args) <= offset:
         return None
-    dt = _parse_timevalue(args[offset])
-    if dt is None:
-        return None
-    for mod in args[offset + 1:]:
+    raw_tv = args[offset]
+    modifiers = list(args[offset + 1:])
+
+    force_unixepoch = any(
+        isinstance(m, str) and m.strip().lower() == "unixepoch"
+        for m in modifiers
+    )
+    if force_unixepoch:
+        if raw_tv is None:
+            return None
+        # SQLite requires the *entire* string (modulo surrounding
+        # whitespace) to be a valid number — ``'2024-01-15'`` does not
+        # count as ``2024`` followed by garbage, it counts as not-a-number
+        # and produces NULL.  We enforce the whole-string match via
+        # ``fullmatch`` rather than the longest-prefix rule used by CAST.
+        if isinstance(raw_tv, str):
+            num_m = re.fullmatch(r"\s*[+-]?\d+(?:\.\d+)?\s*", raw_tv)
+            if not num_m:
+                return None
+            text = raw_tv.strip()
+            try:
+                raw_tv = float(text) if "." in text else int(text)
+            except (ValueError, OverflowError):
+                return None
+        elif isinstance(raw_tv, bool) or not isinstance(raw_tv, (int, float)):
+            return None
+        try:
+            dt = datetime.fromtimestamp(float(raw_tv), tz=UTC).replace(microsecond=0)
+        except (ValueError, OSError, OverflowError):
+            return None
+        # Strip ``unixepoch`` from the remaining modifier chain so the
+        # downstream handler doesn't see it twice (it's currently a no-op
+        # there, but we want the modifier semantics centralised here).
+        modifiers = [
+            m for m in modifiers
+            if not (isinstance(m, str) and m.strip().lower() == "unixepoch")
+        ]
+    else:
+        dt = _parse_timevalue(raw_tv)
+        if dt is None:
+            return None
+
+    for mod in modifiers:
         if mod is None:
             return None
         if not isinstance(mod, str):

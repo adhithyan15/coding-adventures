@@ -1361,12 +1361,20 @@ class TestDateTimeFunctions:
         assert fn("date", "2024-01-15", "weekday 0") == "2024-01-21"
 
     # ------------------------------------------------------------------
-    # unixepoch modifier (no-op — we already store as datetime)
+    # unixepoch modifier — forces numeric interpretation of the time value
     # ------------------------------------------------------------------
 
-    def test_date_unixepoch_modifier(self) -> None:
-        # 'unixepoch' as a modifier is a no-op in our model.
-        assert fn("date", "2024-01-15", "unixepoch") == "2024-01-15"
+    def test_date_unixepoch_modifier_rejects_date_string(self) -> None:
+        # SQLite returns NULL when the unixepoch modifier is applied to a
+        # date-formatted string (it has no numeric prefix).  Mini-sqlite
+        # previously ignored the modifier and returned the date as-is;
+        # the corrected behaviour matches sqlite3.
+        assert fn("date", "2024-01-15", "unixepoch") is None
+
+    def test_date_unixepoch_modifier_numeric_string(self) -> None:
+        # Numeric string IS valid input for the unixepoch modifier — it
+        # is parsed as an integer count of seconds since the epoch.
+        assert fn("date", "1704067200", "unixepoch") == "2024-01-01"
 
 
 # ===========================================================================

@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.67.0] - 2026-05-20
+
+### Fixed
+
+- **``date()/datetime()/time()`` with ``'unixepoch'`` modifier now
+  matches SQLite byte-for-byte** (via ``sql-vm 1.41.0``).  The
+  modifier was previously a no-op:
+
+  * ``date('2024-01-01', 'unixepoch')`` returned ``'2024-01-01'``
+    (ignoring the modifier); SQLite returns NULL because the input
+    is not a numeric Unix-epoch value.
+  * ``date('1704067200', 'unixepoch')`` returned NULL (ISO parse
+    failed); SQLite returns ``'2024-01-01'`` after parsing the
+    numeric string as Unix-epoch seconds.
+
+  Now strings are accepted *only* if the entire value (modulo
+  whitespace) is a valid number — ISO dates and numeric prefixes
+  followed by garbage both produce NULL.  20 oracle tests in
+  ``test_tier3_date_unixepoch.py``.
+
 ## [1.66.0] - 2026-05-20
 
 ### Fixed
