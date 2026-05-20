@@ -1,0 +1,2577 @@
+{
+  "case_count": 427,
+  "cases": [
+    {
+      "axis": "table-foreign-boundary",
+      "id": "adoption01-dat-13",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "adoption01.dat:13"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "domjs-unsafe-dat-121",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "domjs-unsafe.dat:121"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "domjs-unsafe-dat-122",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "domjs-unsafe.dat:122"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "domjs-unsafe-dat-123",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "domjs-unsafe.dat:123"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "domjs-unsafe-dat-164",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "domjs-unsafe.dat:164"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "domjs-unsafe-dat-165",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "domjs-unsafe.dat:165"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "domjs-unsafe-dat-166",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "domjs-unsafe.dat:166"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "domjs-unsafe-dat-167",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "domjs-unsafe.dat:167"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "domjs-unsafe-dat-168",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "domjs-unsafe.dat:168"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "domjs-unsafe-dat-169",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "domjs-unsafe.dat:169"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "html5test-com-dat-293",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "html5test-com.dat:293"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "html5test-com-dat-294",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "html5test-com.dat:294"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "main-element-dat-305",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "main-element.dat:305"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "namespace-sensitivity-dat-326",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "namespace-sensitivity.dat:326"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "pending-spec-changes-dat-347",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "pending-spec-changes.dat:347"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "pending-spec-changes-dat-348",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "pending-spec-changes.dat:348"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "plain-text-unsafe-dat-359",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "plain-text-unsafe.dat:359"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "plain-text-unsafe-dat-362",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "plain-text-unsafe.dat:362"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "plain-text-unsafe-dat-363",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "plain-text-unsafe.dat:363"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "plain-text-unsafe-dat-364",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "plain-text-unsafe.dat:364"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "plain-text-unsafe-dat-365",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "plain-text-unsafe.dat:365"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "plain-text-unsafe-dat-366",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "plain-text-unsafe.dat:366"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "plain-text-unsafe-dat-367",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "plain-text-unsafe.dat:367"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "plain-text-unsafe-dat-368",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "plain-text-unsafe.dat:368"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "plain-text-unsafe-dat-369",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "plain-text-unsafe.dat:369"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "plain-text-unsafe-dat-370",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "plain-text-unsafe.dat:370"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "plain-text-unsafe-dat-371",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "plain-text-unsafe.dat:371"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "plain-text-unsafe-dat-375",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "plain-text-unsafe.dat:375"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "plain-text-unsafe-dat-376",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "plain-text-unsafe.dat:376"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "plain-text-unsafe-dat-377",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "plain-text-unsafe.dat:377"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "plain-text-unsafe-dat-378",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "plain-text-unsafe.dat:378"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "plain-text-unsafe-dat-379",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "plain-text-unsafe.dat:379"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "plain-text-unsafe-dat-380",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "plain-text-unsafe.dat:380"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "plain-text-unsafe-dat-381",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "plain-text-unsafe.dat:381"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "search-element-dat-435",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "search-element.dat:435"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tables01-dat-452",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tables01.dat:452"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tables01-dat-453",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tables01.dat:453"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "template-dat-553",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "template.dat:553"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "template-dat-554",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "template.dat:554"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-678",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:678"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-679",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:679"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-680",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:680"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-681",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:681"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-682",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:682"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-683",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:683"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-684",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:684"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-685",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:685"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-686",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:686"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-687",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:687"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-688",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:688"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-689",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:689"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-690",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:690"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-691",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:691"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-692",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:692"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-693",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:693"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-694",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:694"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-695",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:695"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-696",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:696"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-697",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:697"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-698",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:698"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-699",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:699"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-700",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:700"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-701",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:701"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-702",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:702"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-703",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:703"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-704",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:704"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-705",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:705"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-706",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:706"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-707",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:707"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-708",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:708"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-709",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:709"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-710",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:710"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-711",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:711"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-712",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:712"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-713",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:713"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-714",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:714"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-715",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:715"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-716",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:716"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-717",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:717"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-718",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:718"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-719",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:719"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-720",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:720"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-721",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:721"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-722",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:722"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-723",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:723"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-724",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:724"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-725",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:725"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-726",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:726"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-727",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:727"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-728",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:728"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-729",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:729"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-730",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:730"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-731",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:731"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-732",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:732"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-733",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:733"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-734",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:734"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests11-dat-735",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests11.dat:735"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-736",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:736"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-737",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:737"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-738",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:738"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests11-dat-739",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests11.dat:739"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests11-dat-740",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests11.dat:740"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests11-dat-741",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests11.dat:741"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests11-dat-742",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests11.dat:742"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests11-dat-743",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests11.dat:743"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-744",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:744"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests12-dat-745",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests12.dat:745"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests12-dat-746",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests12.dat:746"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests18-dat-999",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests18.dat:999"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests18-dat-1000",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests18.dat:1000"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests18-dat-1013",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests18.dat:1013"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-1014",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:1014"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-1032",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:1032"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests19-dat-1033",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests19.dat:1033"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-1044",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:1044"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-1045",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:1045"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-1046",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:1046"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-1047",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:1047"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-1048",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:1048"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests19-dat-1086",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests19.dat:1086"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-1087",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:1087"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests19-dat-1088",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests19.dat:1088"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests19-dat-1089",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests19.dat:1089"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests19-dat-1090",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests19.dat:1090"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-1095",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:1095"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-1096",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:1096"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-1097",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:1097"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests20-dat-1159",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests20.dat:1159"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1165",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1165"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1166",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1166"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1169",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1169"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1170",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1170"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1171",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1171"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1172",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1172"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1173",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1173"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1174",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1174"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1175",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1175"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1176",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1176"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1177",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1177"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1178",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1178"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1179",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1179"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-1180",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:1180"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1181",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1181"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests21-dat-1182",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests21.dat:1182"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1184",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1184"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1185",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1185"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1186",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1186"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1187",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1187"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1188",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1188"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1189",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1189"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1190",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1190"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1191",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1191"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1192",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1192"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1193",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1193"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests21-dat-1194",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests21.dat:1194"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1195",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1195"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1196",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1196"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1197",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1197"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1198",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1198"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1199",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1199"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1200",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1200"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1201",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1201"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1202",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1202"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1203",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1203"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests26-dat-1258",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests26.dat:1258"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests26-dat-1259",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests26.dat:1259"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests26-dat-1260",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests26.dat:1260"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests26-dat-1261",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests26.dat:1261"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests26-dat-1264",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests26.dat:1264"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests26-dat-1265",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests26.dat:1265"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests26-dat-1266",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests26.dat:1266"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests26-dat-1267",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests26.dat:1267"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests9-dat-1",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests9.dat:1"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests9-dat-2",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests9.dat:2"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests9-dat-3",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests9.dat:3"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests9-dat-4",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests9.dat:4"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests9-dat-5",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests9.dat:5"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests9-dat-6",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests9.dat:6"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests9-dat-7",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests9.dat:7"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests9-dat-8",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests9.dat:8"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests9-dat-9",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests9.dat:9"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests9-dat-10",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests9.dat:10"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests9-dat-11",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests9.dat:11"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests9-dat-12",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests9.dat:12"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests9-dat-13",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests9.dat:13"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests9-dat-14",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests9.dat:14"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests9-dat-15",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests9.dat:15"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests9-dat-16",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests9.dat:16"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests9-dat-17",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests9.dat:17"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests9-dat-18",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests9.dat:18"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests9-dat-19",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests9.dat:19"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests9-dat-20",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests9.dat:20"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests9-dat-21",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests9.dat:21"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests9-dat-22",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests9.dat:22"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests9-dat-23",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests9.dat:23"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests9-dat-24",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests9.dat:24"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests9-dat-25",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests9.dat:25"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests9-dat-26",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests9.dat:26"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests9-dat-27",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests9.dat:27"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-1",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:1"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-2",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:2"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-3",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:3"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-4",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:4"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-5",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:5"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-6",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:6"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-7",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:7"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-8",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:8"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-9",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:9"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-10",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:10"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-11",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:11"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-12",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:12"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-13",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:13"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-14",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:14"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-15",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:15"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-16",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:16"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-17",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:17"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-18",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:18"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-19",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:19"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-20",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:20"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-21",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:21"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-22",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:22"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-23",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:23"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-24",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:24"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-25",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:25"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-26",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:26"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-27",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:27"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-28",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:28"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-29",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:29"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-30",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:30"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-31",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:31"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-32",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:32"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-33",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:33"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-34",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:34"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-35",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:35"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-36",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:36"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-37",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:37"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-38",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:38"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-39",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:39"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests10-dat-40",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests10.dat:40"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests10-dat-41",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests10.dat:41"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-42",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:42"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-43",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:43"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-44",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:44"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-45",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:45"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-46",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:46"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-47",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:47"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-48",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:48"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-49",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:49"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-50",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:50"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests10-dat-51",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests10.dat:51"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-52",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:52"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-53",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:53"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests10-dat-54",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests10.dat:54"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-1",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:1"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-2",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:2"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-3",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:3"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests11-dat-4",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests11.dat:4"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-5",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:5"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-6",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:6"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-7",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:7"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests11-dat-8",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests11.dat:8"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests11-dat-9",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests11.dat:9"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests11-dat-10",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests11.dat:10"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests11-dat-11",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests11.dat:11"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests11-dat-12",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests11.dat:12"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests11-dat-13",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests11.dat:13"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests12-dat-1",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests12.dat:1"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests12-dat-2",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests12.dat:2"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests18-dat-22",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests18.dat:22"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests18-dat-23",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests18.dat:23"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests18-dat-36",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests18.dat:36"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-1",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:1"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-19",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:19"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests19-dat-20",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests19.dat:20"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-31",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:31"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-32",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:32"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-33",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:33"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-34",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:34"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-35",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:35"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests19-dat-73",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests19.dat:73"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-74",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:74"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests19-dat-75",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests19.dat:75"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests19-dat-76",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests19.dat:76"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests19-dat-77",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests19.dat:77"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-82",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:82"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-83",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:83"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests19-dat-84",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests19.dat:84"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests20-dat-43",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests20.dat:43"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-49",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:49"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-50",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:50"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-53",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:53"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-54",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:54"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-55",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:55"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-56",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:56"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-57",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:57"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-58",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:58"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-59",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:59"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-60",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:60"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-61",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:61"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-62",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:62"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-63",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:63"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests20-dat-64",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests20.dat:64"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-1",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:1"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests21-dat-2",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests21.dat:2"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-4",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:4"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-5",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:5"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-6",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:6"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-7",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:7"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-8",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:8"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-9",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:9"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-10",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:10"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-11",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:11"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-12",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:12"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-13",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:13"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests21-dat-14",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests21.dat:14"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-15",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:15"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-16",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:16"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-17",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:17"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-18",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:18"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-19",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:19"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-20",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:20"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-21",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:21"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-22",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:22"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests21-dat-23",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests21.dat:23"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests26-dat-11",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests26.dat:11"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "tests26-dat-12",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "tests26.dat:12"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests26-dat-13",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests26.dat:13"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "tests26-dat-14",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "tests26.dat:14"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests26-dat-17",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests26.dat:17"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "tests26-dat-18",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "tests26.dat:18"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests26-dat-19",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests26.dat:19"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "tests26-dat-20",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "tests26.dat:20"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-1",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:1"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-2",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:2"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-3",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:3"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-4",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:4"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-5",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:5"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-6",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:6"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-7",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:7"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-8",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:8"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-9",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:9"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-10",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:10"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-11",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:11"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-12",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:12"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-13",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:13"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-14",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:14"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-15",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:15"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-16",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:16"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-17",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:17"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-18",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:18"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-19",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:19"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-20",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:20"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-21",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:21"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-22",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:22"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-23",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:23"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-24",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:24"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-25",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:25"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-26",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:26"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-27",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:27"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-28",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:28"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-29",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:29"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-30",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:30"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-31",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:31"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-32",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:32"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-33",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:33"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-34",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:34"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-35",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:35"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-36",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:36"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-37",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:37"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-38",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:38"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-39",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:39"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-40",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:40"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-41",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:41"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-42",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:42"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-43",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:43"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-44",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:44"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-45",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:45"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-46",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:46"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-47",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:47"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-48",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:48"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-49",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:49"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-50",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:50"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-51",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:51"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-52",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:52"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-53",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:53"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-54",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:54"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-55",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:55"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-56",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:56"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-57",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:57"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-58",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:58"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-59",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:59"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-60",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:60"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-61",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:61"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-62",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:62"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-63",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:63"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-64",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:64"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-65",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:65"
+    },
+    {
+      "axis": "foreign-fragment",
+      "id": "foreign-fragment-dat-66",
+      "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
+      "source": "foreign-fragment.dat:66"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "math-dat-1",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "math.dat:1"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "math-dat-2",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "math.dat:2"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "math-dat-3",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "math.dat:3"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "math-dat-4",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "math.dat:4"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "math-dat-5",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "math.dat:5"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "math-dat-6",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "math.dat:6"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "math-dat-7",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "math.dat:7"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "math-dat-8",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "math.dat:8"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "svg-dat-1",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "svg.dat:1"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "svg-dat-2",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "svg.dat:2"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "svg-dat-3",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "svg.dat:3"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "svg-dat-4",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "svg.dat:4"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "svg-dat-5",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "svg.dat:5"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "svg-dat-6",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "svg.dat:6"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "svg-dat-7",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "svg.dat:7"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "svg-dat-8",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "svg.dat:8"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "webkit01-dat-42",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "webkit01.dat:42"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "webkit01-dat-43",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "webkit01.dat:43"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "webkit01-dat-44",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "webkit01.dat:44"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "webkit01-dat-47",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "webkit01.dat:47"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "webkit01-dat-48",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "webkit01.dat:48"
+    },
+    {
+      "axis": "table-foreign-boundary",
+      "id": "webkit01-dat-49",
+      "reason": "foreign-content tokens crossing table insertion-mode boundaries",
+      "source": "webkit01.dat:49"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "webkit01-dat-50",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "webkit01.dat:50"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "webkit02-dat-20",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "webkit02.dat:20"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "webkit02-dat-21",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "webkit02.dat:21"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "webkit02-dat-22",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "webkit02.dat:22"
+    },
+    {
+      "axis": "svg-boundary",
+      "id": "webkit02-dat-23",
+      "reason": "SVG insertion-mode boundaries, special tags, and CDATA recovery",
+      "source": "webkit02.dat:23"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "webkit02-dat-24",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "webkit02.dat:24"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "webkit02-dat-25",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "webkit02.dat:25"
+    }
+  ],
+  "counts_by_axis": {
+    "foreign-fragment": 66,
+    "html-integration-point": 96,
+    "mathml-boundary": 78,
+    "svg-boundary": 130,
+    "table-foreign-boundary": 57
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress SVG, MathML, foreign fragments, HTML integration points, and table/foreign-content boundaries.",
+  "format": "whatwg-html-foreign-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

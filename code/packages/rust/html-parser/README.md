@@ -149,6 +149,15 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_text_contr
   --check
 ```
 
+The generated `tests/fixtures/whatwg-foreign-audit.json` fixture indexes SVG,
+MathML, foreign-content fragments, HTML integration points, and
+table/foreign-content boundaries:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_foreign_audit_fixture.py \
+  --check
+```
+
 The broad smoke test and the focused audit fixtures use the shared
 `tests/common` html5lib parser and DOM dump helpers, so new parser conformance
 fixtures exercise the same normalization path.
