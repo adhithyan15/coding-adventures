@@ -30,7 +30,6 @@ import pytest
 import mini_sqlite
 from mini_sqlite import ProgrammingError
 
-
 _DISTINCT_MSG = "DISTINCT aggregates must have exactly one argument"
 
 
