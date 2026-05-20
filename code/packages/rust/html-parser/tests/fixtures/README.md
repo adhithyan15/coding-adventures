@@ -142,6 +142,17 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_noscript_a
   --check
 ```
 
+`whatwg-head-body-audit.json` is a generated index over tree-construction
+cases that stress `html`/`head`/`body` shell transitions, head metadata
+relocation, title/style/script handoff, frameset/body compatibility, and late
+shell tags:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_head_body_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_head_body_audit_fixture.py \
+  --check
+```
+
 `whatwg-document-shell-audit.json` is a generated index over tree-construction
 cases that stress doctypes, comments, `html`/`head`/`body` synthesis, frameset
 boundaries, and shell fragment contexts:

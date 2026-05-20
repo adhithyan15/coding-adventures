@@ -186,6 +186,15 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_noscript_a
   --check
 ```
 
+The generated `tests/fixtures/whatwg-head-body-audit.json` fixture indexes
+`html`/`head`/`body` shell transitions, head metadata relocation, title/style/
+script handoff, frameset/body compatibility, and late shell tags:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_head_body_audit_fixture.py \
+  --check
+```
+
 The generated `tests/fixtures/whatwg-document-shell-audit.json` fixture indexes
 doctypes, comments, `html`/`head`/`body` synthesis, frameset boundaries, and
 shell fragment contexts:

@@ -36,6 +36,9 @@ documented in this file.
 - Generated WHATWG noscript audit fixture over html5lib scripting-on/off,
   head-insertion, comment-boundary, text-mode-descendant, paragraph, and stray
   end-tag cases, with a dedicated parser regression test.
+- Generated WHATWG head/body audit fixture over html5lib shell transitions,
+  head metadata relocation, head text-mode handoff, frameset/body
+  compatibility, and late shell tags, with a dedicated parser regression test.
 - Generated WHATWG document-shell audit fixture over html5lib doctype, comment,
   html/head/body synthesis, frameset-boundary, and shell fragment-context
   cases, with a dedicated parser regression test.
@@ -48,8 +51,8 @@ documented in this file.
   stray select/list end-tag cases, with a dedicated parser regression test.
 - Shared html5lib tree-construction test helpers keep smoke and focused
   tree-insertion, frameset, table, form/interactive, text-control,
-  foreign-content, formatting, ruby, noscript, document-shell, template, and
-  select/list audit checks on the same parser and DOM dump path.
+  foreign-content, formatting, ruby, noscript, head/body, document-shell,
+  template, and select/list audit checks on the same parser and DOM dump path.
 - The html5lib source-coverage audit now has a checked JSON report plus
   `--write-report` and `--check-report` modes for parser/tokenizer fixture
   drift detection.
