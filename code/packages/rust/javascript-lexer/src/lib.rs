@@ -1,4 +1,4 @@
-//! JavaScript lexer backed by compiled generic and ECMAScript token grammars.
+//! JavaScript lexer backed by compiled ECMAScript token grammars (es1 through es2025).
 
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
@@ -6,7 +6,7 @@ use lexer::token::Token;
 mod _grammar;
 
 pub const SUPPORTED_VERSIONS: &[&str] = _grammar::SUPPORTED_VERSIONS;
-pub const DEFAULT_VERSION: &str = "";
+pub const DEFAULT_VERSION: &str = "es2025";
 
 fn validate_version(version: &str) -> Result<&str, String> {
     if SUPPORTED_VERSIONS.contains(&version) {
@@ -49,8 +49,8 @@ mod tests {
     use lexer::token::TokenType;
 
     #[test]
-    fn tokenizes_generic_javascript() {
-        let tokens = tokenize_javascript("var x = 1;", "").unwrap();
+    fn tokenizes_es5_javascript() {
+        let tokens = tokenize_javascript("var x = 1;", "es5").unwrap();
         assert_eq!(tokens[0].type_, TokenType::Keyword);
         assert_eq!(tokens[0].value, "var");
     }
@@ -58,6 +58,13 @@ mod tests {
     #[test]
     fn tokenizes_versioned_ecmascript() {
         let tokens = tokenize_javascript("let x = 1;", "es2015").unwrap();
+        assert_eq!(tokens[0].type_, TokenType::Keyword);
+        assert_eq!(tokens[0].value, "let");
+    }
+
+    #[test]
+    fn default_version_resolves_to_es2025() {
+        let tokens = tokenize_javascript("let x = 1;", DEFAULT_VERSION).unwrap();
         assert_eq!(tokens[0].type_, TokenType::Keyword);
         assert_eq!(tokens[0].value, "let");
     }

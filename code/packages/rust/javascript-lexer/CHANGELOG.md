@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## [0.3.0] - 2026-05-20
+
+### Removed
+- Dropped support for the empty-string `""` "generic" version that pointed at the stub `code/grammars/javascript.tokens`. The stub was a 35-line proof-of-concept subset; the full ES1 through ES2025 grammars under `code/grammars/ecmascript/` supersede it.
+- Removed the embedded `mod generic` block (~228 lines) from `_grammar.rs`.
+
+### Changed
+- `DEFAULT_VERSION` is now `"es2025"` (was `""`). Callers passing the old empty-string version now get `Err` with the supported-versions list.
+- Crate docstring no longer mentions the "generic" grammar.
+
+### Added
+- `default_version_resolves_to_es2025` test verifies the new default.
+
+### Migration
+- Replace `tokenize_javascript(source, "")` with `tokenize_javascript(source, "es2025")` (or another explicit ES version).
+
+### Notes
+- This PR is the Rust-only first step of CLOC01 Phase 1 stub retirement. The stub `.tokens`/`.grammar` files remain on disk for now because the Go, Python, TypeScript, and Ruby ports still embed them. Those ports get equivalent follow-up PRs; once all are migrated, the stub source files will be deleted.
+
 ## [0.2.0] - 2026-04-05
 
 ### Changed

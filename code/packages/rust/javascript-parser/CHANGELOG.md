@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.3.0] - 2026-05-20
+
+### Removed
+- Dropped support for the empty-string `""` "generic" version that pointed at the stub `code/grammars/javascript.grammar`. The full ES1 through ES2025 grammars under `code/grammars/ecmascript/` supersede it.
+- Removed the embedded `mod generic` block (~103 lines) from `_grammar.rs`.
+
+### Changed
+- Crate docstring no longer mentions the "generic" grammar.
+
+### Migration
+- Replace `parse_javascript(source, "")` with `parse_javascript(source, "es2025")` (or another explicit ES version).
+
+### Notes
+- Rust-only first step of CLOC01 Phase 1 stub retirement. Other language ports (Go, Python, TypeScript, Ruby) get equivalent follow-up PRs; the stub `.grammar` source file is preserved until all ports migrate.
+
 ## [0.2.0] - 2026-04-05
 
 ### Changed
