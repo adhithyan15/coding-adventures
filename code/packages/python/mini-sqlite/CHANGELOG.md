@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.61.0] - 2026-05-20
+
+### Fixed
+
+- **Reject ``DISTINCT`` on multi-argument aggregates** — SQLite
+  enforces a parse-time rule that any ``DISTINCT`` aggregate must take
+  exactly one argument; calling ``group_concat(DISTINCT col, sep)``,
+  ``string_agg(DISTINCT col, sep)``, or
+  ``json_group_object(DISTINCT key, val)`` raises
+  ``OperationalError: DISTINCT aggregates must have exactly one
+  argument`` in the reference engine.
+
+  mini-sqlite previously accepted all three forms silently — the
+  separator/value was simply ignored or, worse, the dedup happened on
+  the wrong column.  Latent bug surfaced while writing the 1.60.0
+  oracle tests: ``test_tier3_group_concat_distinct.py`` had to skip
+  the explicit-separator DISTINCT form because there was no way to
+  compare against the reference engine (which rejected the query).
+
+  Now both engines raise the same diagnostic; the adapter validates
+  ``distinct and len(args) > 1`` in the ``GROUP_CONCAT`` / ``STRING_AGG``
+  and ``JSON_GROUP_OBJECT`` branches and surfaces SQLite's exact
+  message text.
+
+  10 tests in ``test_tier3_distinct_aggregate_arity.py`` cover the
+  rejected forms (group_concat / string_agg with separator,
+  json_group_object), exact-text diagnostic pinning, and legal-form
+  regressions (single-arg DISTINCT, multi-arg without DISTINCT,
+  COUNT/SUM DISTINCT).
+
 ## [1.60.0] - 2026-05-19
 
 ### Fixed
