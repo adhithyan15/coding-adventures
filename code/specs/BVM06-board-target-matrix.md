@@ -154,6 +154,11 @@ header, SPI header, and four hardware UARTs. These are passive target
 descriptors only: `i2c.*`, `spi.*`, and `uart.*` capabilities remain disabled
 for the shared Arduino runtime until board-specific adapters own those commands.
 
+The USB AVR bus metadata tranche extends passive descriptors to Leonardo and
+Micro. Those ATmega32U4 boards report D2/D3 Wire, ICSP SPI, and D0/D1
+`Serial1`; native USB remains upload/transport metadata rather than a GPIO UART
+surface.
+
 The next tranches should deepen board-specific firmware/upload adapters and
 richer peripheral tables for each family without moving generic Arduino
 discovery into `board-vm-uno-r4`.

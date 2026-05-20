@@ -76,6 +76,11 @@ These descriptors deliberately leave `i2c.*`, `spi.*`, and `uart.*`
 capabilities disabled for the shared Arduino runtime until board-specific
 firmware adapters own those bytecode paths.
 
+USB AVR Arduino targets follow the same passive-descriptor shape. Leonardo and
+Micro report ATmega32U4 Wire pins on D2/D3, ICSP SPI pins, and the D0/D1
+`Serial1` hardware UART, while native USB Serial remains upload/transport
+metadata instead of being modeled as a GPIO UART.
+
 Host-side validation:
 
 ```sh

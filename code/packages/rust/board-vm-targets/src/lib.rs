@@ -809,6 +809,35 @@ pub const ARDUINO_MEGA_2560_UART_BUSES: [UartBusInfo; 4] = [
     },
 ];
 
+pub const ARDUINO_USB_AVR_I2C_BUSES: [I2cBusInfo; 1] = [I2cBusInfo {
+    bus: 0,
+    name: "Wire",
+    sda_pin: 2,
+    scl_pin: 3,
+    qwiic: false,
+    notes: "Arduino ATmega32U4 D2/D3 I2C metadata only; shared Arduino runtime does not enable i2c.* bytecode adapters yet.",
+}];
+
+pub const ARDUINO_USB_AVR_SPI_BUSES: [SpiBusInfo; 1] = [SpiBusInfo {
+    bus: 0,
+    name: "SPI",
+    copi_pin: 16,
+    cipo_pin: 14,
+    sck_pin: 15,
+    default_cs_pin: 17,
+    notes: "Arduino ATmega32U4 ICSP SPI metadata only; shared Arduino runtime does not enable spi.* bytecode adapters yet.",
+}];
+
+pub const ARDUINO_USB_AVR_UART_BUSES: [UartBusInfo; 1] = [UartBusInfo {
+    bus: 0,
+    name: "Serial1",
+    tx_pin: 1,
+    rx_pin: 0,
+    arduino_uart: 1,
+    internal: false,
+    notes: "Arduino ATmega32U4 D1/D0 hardware serial metadata only; native USB Serial remains upload/transport metadata, not a GPIO UART.",
+}];
+
 const fn map_arduino_digital_pins<const N: usize>(
     source: [board_vm_arduino::DigitalPinDescriptor; N],
 ) -> [DigitalPinInfo; N] {
@@ -1252,15 +1281,21 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         &[],
         &[],
     ),
-    arduino_board_target(
+    arduino_board_target_with_buses(
         board_vm_arduino::ARDUINO_LEONARDO,
         &ARDUINO_LEONARDO_DIGITAL_PINS,
+        &ARDUINO_USB_AVR_I2C_BUSES,
+        &ARDUINO_USB_AVR_SPI_BUSES,
+        &ARDUINO_USB_AVR_UART_BUSES,
         &[],
         &[],
     ),
-    arduino_board_target(
+    arduino_board_target_with_buses(
         board_vm_arduino::ARDUINO_MICRO,
         &ARDUINO_MICRO_DIGITAL_PINS,
+        &ARDUINO_USB_AVR_I2C_BUSES,
+        &ARDUINO_USB_AVR_SPI_BUSES,
+        &ARDUINO_USB_AVR_UART_BUSES,
         &[],
         &[],
     ),
@@ -1711,13 +1746,19 @@ mod tests {
         let nano = find_target("arduino-nano-classic").unwrap();
         let pro_mini = find_target("arduino-pro-mini").unwrap();
         let mega = find_target("arduino-mega-2560").unwrap();
+        let leonardo = find_target("arduino-leonardo").unwrap();
+        let micro = find_target("arduino-micro").unwrap();
         assert_eq!(uno_r3.i2c_buses, &ARDUINO_STANDARD_I2C_BUSES);
         assert_eq!(nano.i2c_buses, &ARDUINO_STANDARD_I2C_BUSES);
         assert_eq!(pro_mini.i2c_buses, &ARDUINO_STANDARD_I2C_BUSES);
         assert_eq!(mega.i2c_buses, &ARDUINO_MEGA_2560_I2C_BUSES);
         assert_eq!(mega.i2c_buses[0].sda_pin, 20);
         assert_eq!(mega.i2c_buses[0].scl_pin, 21);
-        for target in [uno_r3, nano, pro_mini, mega] {
+        assert_eq!(leonardo.i2c_buses, &ARDUINO_USB_AVR_I2C_BUSES);
+        assert_eq!(micro.i2c_buses, &ARDUINO_USB_AVR_I2C_BUSES);
+        assert_eq!(leonardo.i2c_buses[0].sda_pin, 2);
+        assert_eq!(leonardo.i2c_buses[0].scl_pin, 3);
+        for target in [uno_r3, nano, pro_mini, mega, leonardo, micro] {
             assert!(target.i2c_buses[0].notes.contains("metadata only"));
             assert!(!target.capabilities.contains(&"i2c.open"));
             assert!(!target.capabilities.contains(&"i2c.transfer"));
@@ -1740,6 +1781,8 @@ mod tests {
         let nano = find_target("arduino-nano-classic").unwrap();
         let pro_mini = find_target("arduino-pro-mini").unwrap();
         let mega = find_target("arduino-mega-2560").unwrap();
+        let leonardo = find_target("arduino-leonardo").unwrap();
+        let micro = find_target("arduino-micro").unwrap();
         assert_eq!(uno_r3.spi_buses, &ARDUINO_STANDARD_SPI_BUSES);
         assert_eq!(nano.spi_buses, &ARDUINO_STANDARD_SPI_BUSES);
         assert_eq!(pro_mini.spi_buses, &ARDUINO_STANDARD_SPI_BUSES);
@@ -1748,7 +1791,13 @@ mod tests {
         assert_eq!(mega.spi_buses[0].cipo_pin, 50);
         assert_eq!(mega.spi_buses[0].sck_pin, 52);
         assert_eq!(mega.spi_buses[0].default_cs_pin, 53);
-        for target in [uno_r3, nano, pro_mini, mega] {
+        assert_eq!(leonardo.spi_buses, &ARDUINO_USB_AVR_SPI_BUSES);
+        assert_eq!(micro.spi_buses, &ARDUINO_USB_AVR_SPI_BUSES);
+        assert_eq!(leonardo.spi_buses[0].copi_pin, 16);
+        assert_eq!(leonardo.spi_buses[0].cipo_pin, 14);
+        assert_eq!(leonardo.spi_buses[0].sck_pin, 15);
+        assert_eq!(leonardo.spi_buses[0].default_cs_pin, 17);
+        for target in [uno_r3, nano, pro_mini, mega, leonardo, micro] {
             assert!(target.spi_buses[0].notes.contains("metadata only"));
             assert!(!target.capabilities.contains(&"spi.open"));
             assert!(!target.capabilities.contains(&"spi.transfer"));
@@ -1784,6 +1833,8 @@ mod tests {
         let nano = find_target("arduino-nano-classic").unwrap();
         let pro_mini = find_target("arduino-pro-mini").unwrap();
         let mega = find_target("arduino-mega-2560").unwrap();
+        let leonardo = find_target("arduino-leonardo").unwrap();
+        let micro = find_target("arduino-micro").unwrap();
         assert_eq!(uno_r3.uart_buses, &ARDUINO_STANDARD_UART_BUSES);
         assert_eq!(nano.uart_buses, &ARDUINO_STANDARD_UART_BUSES);
         assert_eq!(pro_mini.uart_buses, &ARDUINO_STANDARD_UART_BUSES);
@@ -1795,7 +1846,13 @@ mod tests {
         assert_eq!(mega.uart_buses[3].name, "Serial3");
         assert_eq!(mega.uart_buses[3].tx_pin, 14);
         assert_eq!(mega.uart_buses[3].rx_pin, 15);
-        for target in [uno_r3, nano, pro_mini, mega] {
+        assert_eq!(leonardo.uart_buses, &ARDUINO_USB_AVR_UART_BUSES);
+        assert_eq!(micro.uart_buses, &ARDUINO_USB_AVR_UART_BUSES);
+        assert_eq!(leonardo.uart_buses[0].name, "Serial1");
+        assert_eq!(leonardo.uart_buses[0].arduino_uart, 1);
+        assert!(!leonardo.uart_buses[0].internal);
+        assert!(leonardo.uart_buses[0].notes.contains("native USB Serial"));
+        for target in [uno_r3, nano, pro_mini, mega, leonardo, micro] {
             assert!(target.uart_buses[0].notes.contains("metadata"));
             assert!(!target.capabilities.contains(&"uart.open"));
             assert!(!target.capabilities.contains(&"uart.write"));

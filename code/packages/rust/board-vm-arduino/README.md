@@ -47,6 +47,10 @@ Mega 2560 SDA/SCL, SPI, and multi-UART surface. These are descriptors only: the
 shared Arduino runtime still exposes the GPIO/time MVP until concrete board
 adapters own I2C, SPI, and UART bytecode operations.
 
+Leonardo and Micro extend that passive bus metadata to ATmega32U4 boards by
+reporting D2/D3 Wire, ICSP SPI, and D0/D1 `Serial1`; native USB remains upload
+and transport metadata, not a GPIO UART.
+
 Opta terminals are modeled as board-local input and relay-output pins instead
 of pretending the PLC has Uno-style headers. Nicla sensor/audio/vision hardware
 is similarly registered as its own target family so follow-up capability work
