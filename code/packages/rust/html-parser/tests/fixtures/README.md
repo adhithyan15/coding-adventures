@@ -186,6 +186,17 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_paragraph_
   --check
 ```
 
+`whatwg-block-boundary-audit.json` is a generated index over tree-construction
+cases that stress grouping, sectioning, list-container, heading, formatting,
+table/foster-parenting, foreign-content, template, form, text-mode, ruby,
+select/list, and fragment-context block boundaries:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_block_boundary_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_block_boundary_audit_fixture.py \
+  --check
+```
+
 `whatwg-document-shell-audit.json` is a generated index over tree-construction
 cases that stress doctypes, comments, `html`/`head`/`body` synthesis, frameset
 boundaries, and shell fragment contexts:

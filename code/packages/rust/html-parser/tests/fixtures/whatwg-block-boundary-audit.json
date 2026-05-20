@@ -1,0 +1,2597 @@
+{
+  "case_count": 429,
+  "cases": [
+    {
+      "axis": "block-formatting-boundary",
+      "id": "adoption01-dat-5",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "adoption01.dat:5"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "adoption01-dat-14",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "adoption01.dat:14"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "adoption01-dat-15",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "adoption01.dat:15"
+    },
+    {
+      "axis": "block-text-mode-boundary",
+      "id": "adoption02-dat-19",
+      "reason": "block boundaries around RAWTEXT, RCDATA, PLAINTEXT, pre, and listing modes",
+      "source": "adoption02.dat:19"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-20",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:20"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-21",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:21"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-22",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:22"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-23",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:23"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-24",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:24"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-25",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:25"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-26",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:26"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-27",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:27"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-28",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:28"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-29",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:29"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-30",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:30"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-31",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:31"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-32",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:32"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-33",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:33"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "blocks-dat-34",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "blocks.dat:34"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "blocks-dat-35",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "blocks.dat:35"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-36",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:36"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-37",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:37"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "blocks-dat-38",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "blocks.dat:38"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "blocks-dat-39",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "blocks.dat:39"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-40",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:40"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-41",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:41"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-42",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:42"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-43",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:43"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-44",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:44"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-45",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:45"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-46",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:46"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-47",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:47"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-48",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:48"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-49",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:49"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-50",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:50"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-51",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:51"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "blocks-dat-54",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "blocks.dat:54"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "blocks-dat-55",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "blocks.dat:55"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-56",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:56"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-57",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:57"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "blocks-dat-58",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "blocks.dat:58"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "blocks-dat-59",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "blocks.dat:59"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-62",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:62"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "blocks-dat-63",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "blocks.dat:63"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-64",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:64"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "blocks-dat-65",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "blocks.dat:65"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "blocks-dat-66",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "blocks.dat:66"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "blocks-dat-67",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "blocks.dat:67"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-245",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:245"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-246",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:246"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-247",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:247"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-248",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:248"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-249",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:249"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-250",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:250"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-251",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:251"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-252",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:252"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-253",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:253"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-254",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:254"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-255",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:255"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-256",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:256"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-257",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:257"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-258",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:258"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-259",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:259"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-260",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:260"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-261",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:261"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-262",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:262"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-263",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:263"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-264",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:264"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-265",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:265"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-266",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:266"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-267",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:267"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-268",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:268"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-269",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:269"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "entities02-dat-270",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "entities02.dat:270"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "html5test-com-dat-271",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "html5test-com.dat:271"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "html5test-com-dat-272",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "html5test-com.dat:272"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "html5test-com-dat-273",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "html5test-com.dat:273"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "html5test-com-dat-274",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "html5test-com.dat:274"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "html5test-com-dat-289",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "html5test-com.dat:289"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "html5test-com-dat-290",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "html5test-com.dat:290"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "html5test-com-dat-292",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "html5test-com.dat:292"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "main-element-dat-303",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "main-element.dat:303"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "main-element-dat-304",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "main-element.dat:304"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "main-element-dat-305",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "main-element.dat:305"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "menuitem-element-dat-310",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "menuitem-element.dat:310"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tables01-dat-453",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tables01.dat:453"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-457",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:457"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-459",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:459"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-460",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:460"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-461",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:461"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-462",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:462"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "template-dat-464",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "template.dat:464"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "template-dat-465",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "template.dat:465"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "template-dat-466",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "template.dat:466"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "template-dat-483",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "template.dat:483"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-496",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:496"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-497",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:497"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "template-dat-499",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "template.dat:499"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "template-dat-511",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "template.dat:511"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-518",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:518"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-519",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:519"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-528",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:528"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-529",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:529"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-531",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:531"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "template-dat-532",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "template.dat:532"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "template-dat-533",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "template.dat:533"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "template-dat-534",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "template.dat:534"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-536",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:536"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-537",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:537"
+    },
+    {
+      "axis": "block-template-boundary",
+      "id": "template-dat-554",
+      "reason": "block boundaries around template insertion-mode transitions",
+      "source": "template.dat:554"
+    },
+    {
+      "axis": "block-heading-boundary",
+      "id": "tests1-dat-587",
+      "reason": "heading start/end recovery and nested heading boundaries",
+      "source": "tests1.dat:587"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-591",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:591"
+    },
+    {
+      "axis": "block-text-mode-boundary",
+      "id": "tests1-dat-592",
+      "reason": "block boundaries around RAWTEXT, RCDATA, PLAINTEXT, pre, and listing modes",
+      "source": "tests1.dat:592"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests1-dat-593",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests1.dat:593"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests1-dat-598",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:598"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "tests1-dat-599",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "tests1.dat:599"
+    },
+    {
+      "axis": "block-text-mode-boundary",
+      "id": "tests1-dat-620",
+      "reason": "block boundaries around RAWTEXT, RCDATA, PLAINTEXT, pre, and listing modes",
+      "source": "tests1.dat:620"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-624",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:624"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-625",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:625"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-626",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:626"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests1-dat-628",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests1.dat:628"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests1-dat-629",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests1.dat:629"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-630",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:630"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-631",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:631"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-632",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:632"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-633",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:633"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-634",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:634"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-635",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:635"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-636",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:636"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-637",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:637"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-638",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:638"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-639",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:639"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-640",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:640"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-641",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:641"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests1-dat-656",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:656"
+    },
+    {
+      "axis": "block-heading-boundary",
+      "id": "tests1-dat-660",
+      "reason": "heading start/end recovery and nested heading boundaries",
+      "source": "tests1.dat:660"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-663",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:663"
+    },
+    {
+      "axis": "block-text-mode-boundary",
+      "id": "tests1-dat-664",
+      "reason": "block boundaries around RAWTEXT, RCDATA, PLAINTEXT, pre, and listing modes",
+      "source": "tests1.dat:664"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-668",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:668"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "tests1-dat-669",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "tests1.dat:669"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests1-dat-671",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:671"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests1-dat-675",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:675"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests1-dat-676",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:676"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-705",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:705"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-706",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:706"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-707",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:707"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-708",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:708"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-709",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:709"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-710",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:710"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-711",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:711"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-714",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:714"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-715",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:715"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-716",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:716"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-730",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:730"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests15-dat-765",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests15.dat:765"
+    },
+    {
+      "axis": "block-heading-boundary",
+      "id": "tests19-dat-1020",
+      "reason": "heading start/end recovery and nested heading boundaries",
+      "source": "tests19.dat:1020"
+    },
+    {
+      "axis": "block-ruby-boundary",
+      "id": "tests19-dat-1023",
+      "reason": "block boundaries around ruby annotation scopes",
+      "source": "tests19.dat:1023"
+    },
+    {
+      "axis": "block-ruby-boundary",
+      "id": "tests19-dat-1024",
+      "reason": "block boundaries around ruby annotation scopes",
+      "source": "tests19.dat:1024"
+    },
+    {
+      "axis": "block-ruby-boundary",
+      "id": "tests19-dat-1026",
+      "reason": "block boundaries around ruby annotation scopes",
+      "source": "tests19.dat:1026"
+    },
+    {
+      "axis": "block-ruby-boundary",
+      "id": "tests19-dat-1027",
+      "reason": "block boundaries around ruby annotation scopes",
+      "source": "tests19.dat:1027"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests19-dat-1034",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests19.dat:1034"
+    },
+    {
+      "axis": "block-heading-boundary",
+      "id": "tests19-dat-1035",
+      "reason": "heading start/end recovery and nested heading boundaries",
+      "source": "tests19.dat:1035"
+    },
+    {
+      "axis": "block-heading-boundary",
+      "id": "tests19-dat-1036",
+      "reason": "heading start/end recovery and nested heading boundaries",
+      "source": "tests19.dat:1036"
+    },
+    {
+      "axis": "block-heading-boundary",
+      "id": "tests19-dat-1037",
+      "reason": "heading start/end recovery and nested heading boundaries",
+      "source": "tests19.dat:1037"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests19-dat-1044",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests19.dat:1044"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests19-dat-1045",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests19.dat:1045"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests19-dat-1046",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests19.dat:1046"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests19-dat-1047",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests19.dat:1047"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests19-dat-1048",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests19.dat:1048"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests19-dat-1088",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests19.dat:1088"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests19-dat-1093",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests19.dat:1093"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests19-dat-1094",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests19.dat:1094"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests19-dat-1104",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests19.dat:1104"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests19-dat-1105",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests19.dat:1105"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests19-dat-1106",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests19.dat:1106"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests19-dat-1107",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests19.dat:1107"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests19-dat-1108",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests19.dat:1108"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "tests19-dat-1113",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "tests19.dat:1113"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "tests19-dat-1114",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "tests19.dat:1114"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests19-dat-1116",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests19.dat:1116"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1118",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1118"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1119",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1119"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1120",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1120"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1121",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1121"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1122",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1122"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1123",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1123"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1124",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1124"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1125",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1125"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1126",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1126"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1127",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1127"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1128",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1128"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1129",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1129"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1130",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1130"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1131",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1131"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1132",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1132"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1133",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1133"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1134",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1134"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1135",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1135"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1136",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1136"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1137",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1137"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1140",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1140"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1141",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1141"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1142",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1142"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1143",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1143"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1144",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1144"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-1157",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:1157"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests20-dat-1160",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests20.dat:1160"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests20-dat-1161",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests20.dat:1161"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-1169",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:1169"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-1170",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:1170"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-1171",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:1171"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-1172",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:1172"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-1173",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:1173"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-1174",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:1174"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-1175",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:1175"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests21-dat-1183",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests21.dat:1183"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests21-dat-1194",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests21.dat:1194"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests22-dat-1204",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests22.dat:1204"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests22-dat-1205",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests22.dat:1205"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests22-dat-1206",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests22.dat:1206"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests22-dat-1207",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests22.dat:1207"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests22-dat-1208",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests22.dat:1208"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests26-dat-1252",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests26.dat:1252"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests26-dat-1253",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests26.dat:1253"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests26-dat-1262",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests26.dat:1262"
+    },
+    {
+      "axis": "block-text-mode-boundary",
+      "id": "tests2-dat-2",
+      "reason": "block boundaries around RAWTEXT, RCDATA, PLAINTEXT, pre, and listing modes",
+      "source": "tests2.dat:2"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests2-dat-11",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests2.dat:11"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests8-dat-1",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests8.dat:1"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests8-dat-2",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests8.dat:2"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests8-dat-3",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests8.dat:3"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests8-dat-4",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests8.dat:4"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests8-dat-5",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests8.dat:5"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests2-dat-63",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests2.dat:63"
+    },
+    {
+      "axis": "block-text-mode-boundary",
+      "id": "tests3-dat-11",
+      "reason": "block boundaries around RAWTEXT, RCDATA, PLAINTEXT, pre, and listing modes",
+      "source": "tests3.dat:11"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "tests3-dat-20",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "tests3.dat:20"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests6-dat-2",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests6.dat:2"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests6-dat-10",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests6.dat:10"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests6-dat-12",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests6.dat:12"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests6-dat-17",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests6.dat:17"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests6-dat-19",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests6.dat:19"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests6-dat-23",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests6.dat:23"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests6-dat-29",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests6.dat:29"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests6-dat-31",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests6.dat:31"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests6-dat-33",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests6.dat:33"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests6-dat-36",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests6.dat:36"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests6-dat-41",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests6.dat:41"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests7-dat-29",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests7.dat:29"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests8-dat-9",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests8.dat:9"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests8-dat-10",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests8.dat:10"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "tests6-dat-7",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "tests6.dat:7"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "tests6-dat-18",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "tests6.dat:18"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "tests6-dat-21",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "tests6.dat:21"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "tests6-dat-25",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "tests6.dat:25"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "tests6-dat-32",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "tests6.dat:32"
+    },
+    {
+      "axis": "block-heading-boundary",
+      "id": "tests1-dat-22",
+      "reason": "heading start/end recovery and nested heading boundaries",
+      "source": "tests1.dat:22"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-26",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:26"
+    },
+    {
+      "axis": "block-text-mode-boundary",
+      "id": "tests1-dat-27",
+      "reason": "block boundaries around RAWTEXT, RCDATA, PLAINTEXT, pre, and listing modes",
+      "source": "tests1.dat:27"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests1-dat-28",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests1.dat:28"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests1-dat-33",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:33"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "tests1-dat-34",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "tests1.dat:34"
+    },
+    {
+      "axis": "block-text-mode-boundary",
+      "id": "tests1-dat-55",
+      "reason": "block boundaries around RAWTEXT, RCDATA, PLAINTEXT, pre, and listing modes",
+      "source": "tests1.dat:55"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-59",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:59"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-60",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:60"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-61",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:61"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests1-dat-63",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests1.dat:63"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests1-dat-64",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests1.dat:64"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-65",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:65"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-66",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:66"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-67",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:67"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-68",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:68"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-69",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:69"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-70",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:70"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-71",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:71"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-72",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:72"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-73",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:73"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-74",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:74"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-75",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:75"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-76",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:76"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests1-dat-91",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:91"
+    },
+    {
+      "axis": "block-heading-boundary",
+      "id": "tests1-dat-95",
+      "reason": "heading start/end recovery and nested heading boundaries",
+      "source": "tests1.dat:95"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-98",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:98"
+    },
+    {
+      "axis": "block-text-mode-boundary",
+      "id": "tests1-dat-99",
+      "reason": "block boundaries around RAWTEXT, RCDATA, PLAINTEXT, pre, and listing modes",
+      "source": "tests1.dat:99"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests1-dat-103",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests1.dat:103"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "tests1-dat-104",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "tests1.dat:104"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests1-dat-106",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:106"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests1-dat-110",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:110"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests1-dat-111",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests1.dat:111"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-28",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:28"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-29",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:29"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-30",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:30"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-31",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:31"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-32",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:32"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-33",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:33"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-34",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:34"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-37",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:37"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-38",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:38"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-39",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:39"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests10-dat-53",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests10.dat:53"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests15-dat-12",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests15.dat:12"
+    },
+    {
+      "axis": "block-heading-boundary",
+      "id": "tests19-dat-7",
+      "reason": "heading start/end recovery and nested heading boundaries",
+      "source": "tests19.dat:7"
+    },
+    {
+      "axis": "block-ruby-boundary",
+      "id": "tests19-dat-10",
+      "reason": "block boundaries around ruby annotation scopes",
+      "source": "tests19.dat:10"
+    },
+    {
+      "axis": "block-ruby-boundary",
+      "id": "tests19-dat-11",
+      "reason": "block boundaries around ruby annotation scopes",
+      "source": "tests19.dat:11"
+    },
+    {
+      "axis": "block-ruby-boundary",
+      "id": "tests19-dat-13",
+      "reason": "block boundaries around ruby annotation scopes",
+      "source": "tests19.dat:13"
+    },
+    {
+      "axis": "block-ruby-boundary",
+      "id": "tests19-dat-14",
+      "reason": "block boundaries around ruby annotation scopes",
+      "source": "tests19.dat:14"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests19-dat-21",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests19.dat:21"
+    },
+    {
+      "axis": "block-heading-boundary",
+      "id": "tests19-dat-22",
+      "reason": "heading start/end recovery and nested heading boundaries",
+      "source": "tests19.dat:22"
+    },
+    {
+      "axis": "block-heading-boundary",
+      "id": "tests19-dat-23",
+      "reason": "heading start/end recovery and nested heading boundaries",
+      "source": "tests19.dat:23"
+    },
+    {
+      "axis": "block-heading-boundary",
+      "id": "tests19-dat-24",
+      "reason": "heading start/end recovery and nested heading boundaries",
+      "source": "tests19.dat:24"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests19-dat-31",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests19.dat:31"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests19-dat-32",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests19.dat:32"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests19-dat-33",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests19.dat:33"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests19-dat-34",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests19.dat:34"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests19-dat-35",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests19.dat:35"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests19-dat-75",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests19.dat:75"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests19-dat-80",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests19.dat:80"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests19-dat-81",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests19.dat:81"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests19-dat-91",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests19.dat:91"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests19-dat-92",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests19.dat:92"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests19-dat-93",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests19.dat:93"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests19-dat-94",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests19.dat:94"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tests19-dat-95",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tests19.dat:95"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "tests19-dat-100",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "tests19.dat:100"
+    },
+    {
+      "axis": "block-sectioning-boundary",
+      "id": "tests19-dat-101",
+      "reason": "sectioning and page-structure block boundaries",
+      "source": "tests19.dat:101"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests19-dat-103",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests19.dat:103"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-2",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:2"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-3",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:3"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-4",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:4"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-5",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:5"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-6",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:6"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-7",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:7"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-8",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:8"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-9",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:9"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-10",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:10"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-11",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:11"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-12",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:12"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-13",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:13"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-14",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:14"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-15",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:15"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-16",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:16"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-17",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:17"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-18",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:18"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-19",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:19"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-20",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:20"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-21",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:21"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-24",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:24"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-25",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:25"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-26",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:26"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-27",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:27"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-28",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:28"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "tests20-dat-41",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "tests20.dat:41"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests20-dat-44",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests20.dat:44"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests20-dat-45",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests20.dat:45"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-53",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:53"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-54",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:54"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-55",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:55"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-56",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:56"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-57",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:57"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-58",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:58"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests20-dat-59",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests20.dat:59"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests21-dat-3",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests21.dat:3"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "tests21-dat-14",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "tests21.dat:14"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests22-dat-1",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests22.dat:1"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests22-dat-2",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests22.dat:2"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests22-dat-3",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests22.dat:3"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests22-dat-4",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests22.dat:4"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests22-dat-5",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests22.dat:5"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests26-dat-5",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests26.dat:5"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tests26-dat-6",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tests26.dat:6"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "tests26-dat-15",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "tests26.dat:15"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "adoption01-dat-18",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "adoption01.dat:18"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-21",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:21"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-22",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:22"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-25",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:25"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-26",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:26"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-29",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:29"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-30",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:30"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-33",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:33"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-34",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:34"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-37",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:37"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-38",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:38"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-39",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:39"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-40",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:40"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-41",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:41"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-42",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:42"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-43",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:43"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-44",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:44"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-45",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:45"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-46",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:46"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-47",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:47"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-48",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:48"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-49",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:49"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "foreign-fragment-dat-50",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "foreign-fragment.dat:50"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tricky01-dat-4",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tricky01.dat:4"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "tricky01-dat-5",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "tricky01.dat:5"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tricky01-dat-6",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tricky01.dat:6"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "tricky01-dat-8",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "tricky01.dat:8"
+    },
+    {
+      "axis": "block-text-mode-boundary",
+      "id": "tricky01-dat-9",
+      "reason": "block boundaries around RAWTEXT, RCDATA, PLAINTEXT, pre, and listing modes",
+      "source": "tricky01.dat:9"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "webkit01-dat-2",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "webkit01.dat:2"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "webkit01-dat-3",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "webkit01.dat:3"
+    },
+    {
+      "axis": "block-text-mode-boundary",
+      "id": "webkit01-dat-5",
+      "reason": "block boundaries around RAWTEXT, RCDATA, PLAINTEXT, pre, and listing modes",
+      "source": "webkit01.dat:5"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "webkit01-dat-6",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "webkit01.dat:6"
+    },
+    {
+      "axis": "block-text-mode-boundary",
+      "id": "webkit01-dat-7",
+      "reason": "block boundaries around RAWTEXT, RCDATA, PLAINTEXT, pre, and listing modes",
+      "source": "webkit01.dat:7"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "webkit01-dat-12",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "webkit01.dat:12"
+    },
+    {
+      "axis": "block-ruby-boundary",
+      "id": "webkit01-dat-29",
+      "reason": "block boundaries around ruby annotation scopes",
+      "source": "webkit01.dat:29"
+    },
+    {
+      "axis": "block-ruby-boundary",
+      "id": "webkit01-dat-30",
+      "reason": "block boundaries around ruby annotation scopes",
+      "source": "webkit01.dat:30"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "webkit01-dat-34",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "webkit01.dat:34"
+    },
+    {
+      "axis": "block-table-boundary",
+      "id": "webkit01-dat-38",
+      "reason": "block and heading boundaries around table insertion and foster parenting modes",
+      "source": "webkit01.dat:38"
+    },
+    {
+      "axis": "block-text-mode-boundary",
+      "id": "webkit01-dat-41",
+      "reason": "block boundaries around RAWTEXT, RCDATA, PLAINTEXT, pre, and listing modes",
+      "source": "webkit01.dat:41"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "webkit01-dat-42",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "webkit01.dat:42"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "webkit01-dat-43",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "webkit01.dat:43"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "webkit01-dat-44",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "webkit01.dat:44"
+    },
+    {
+      "axis": "block-list-container-boundary",
+      "id": "webkit01-dat-46",
+      "reason": "list container boundaries outside focused list-item implied-end coverage",
+      "source": "webkit01.dat:46"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "webkit02-dat-4",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "webkit02.dat:4"
+    },
+    {
+      "axis": "block-grouping-boundary",
+      "id": "webkit02-dat-5",
+      "reason": "generic grouping and block container start/end recovery",
+      "source": "webkit02.dat:5"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "webkit02-dat-12",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "webkit02.dat:12"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "webkit02-dat-13",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "webkit02.dat:13"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "webkit02-dat-14",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "webkit02.dat:14"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "webkit02-dat-15",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "webkit02.dat:15"
+    },
+    {
+      "axis": "block-formatting-boundary",
+      "id": "webkit02-dat-16",
+      "reason": "block starts and ends that interact with active formatting elements",
+      "source": "webkit02.dat:16"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "webkit02-dat-17",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "webkit02.dat:17"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "webkit02-dat-18",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "webkit02.dat:18"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "webkit02-dat-20",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "webkit02.dat:20"
+    },
+    {
+      "axis": "block-foreign-boundary",
+      "id": "webkit02-dat-22",
+      "reason": "block and heading boundaries around SVG and MathML integration points",
+      "source": "webkit02.dat:22"
+    },
+    {
+      "axis": "block-select-boundary",
+      "id": "webkit02-dat-36",
+      "reason": "block boundaries inside select, option, optgroup, and datalist contexts",
+      "source": "webkit02.dat:36"
+    },
+    {
+      "axis": "block-select-boundary",
+      "id": "webkit02-dat-37",
+      "reason": "block boundaries inside select, option, optgroup, and datalist contexts",
+      "source": "webkit02.dat:37"
+    },
+    {
+      "axis": "block-select-boundary",
+      "id": "webkit02-dat-38",
+      "reason": "block boundaries inside select, option, optgroup, and datalist contexts",
+      "source": "webkit02.dat:38"
+    },
+    {
+      "axis": "block-select-boundary",
+      "id": "webkit02-dat-42",
+      "reason": "block boundaries inside select, option, optgroup, and datalist contexts",
+      "source": "webkit02.dat:42"
+    },
+    {
+      "axis": "block-select-boundary",
+      "id": "webkit02-dat-43",
+      "reason": "block boundaries inside select, option, optgroup, and datalist contexts",
+      "source": "webkit02.dat:43"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "template-dat-109",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "template.dat:109"
+    }
+  ],
+  "counts_by_axis": {
+    "block-foreign-boundary": 56,
+    "block-form-boundary": 54,
+    "block-formatting-boundary": 66,
+    "block-fragment-context": 32,
+    "block-grouping-boundary": 87,
+    "block-heading-boundary": 12,
+    "block-list-container-boundary": 18,
+    "block-ruby-boundary": 10,
+    "block-sectioning-boundary": 20,
+    "block-select-boundary": 5,
+    "block-table-boundary": 41,
+    "block-template-boundary": 15,
+    "block-text-mode-boundary": 13
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress block and heading boundaries across grouping, sectioning, list containers, table/foster-parenting modes, foreign content, formatting reconstruction, form controls, text modes, template insertion modes, ruby scopes, select/list contexts, and fragment parsing.",
+  "format": "whatwg-html-block-boundary-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}
