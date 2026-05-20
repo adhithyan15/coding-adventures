@@ -867,6 +867,35 @@ pub const ARDUINO_NANO_EVERY_UART_BUSES: [UartBusInfo; 1] = [UartBusInfo {
     notes: "Arduino Nano Every D1/D0 Serial1 metadata only; USB serial bridge remains upload/transport metadata, not a separate GPIO UART.",
 }];
 
+pub const ARDUINO_NANO_R4_I2C_BUSES: [I2cBusInfo; 1] = [I2cBusInfo {
+    bus: 0,
+    name: "Wire",
+    sda_pin: 18,
+    scl_pin: 19,
+    qwiic: false,
+    notes: "Arduino Nano R4 A4/A5 Wire metadata only; the separate Qwiic Wire1 connector needs connector-local metadata before it is exposed here.",
+}];
+
+pub const ARDUINO_NANO_R4_SPI_BUSES: [SpiBusInfo; 1] = [SpiBusInfo {
+    bus: 0,
+    name: "SPI",
+    copi_pin: 11,
+    cipo_pin: 12,
+    sck_pin: 13,
+    default_cs_pin: 10,
+    notes: "Arduino Nano R4 D11/D12/D13 SPI metadata only; shared Arduino runtime does not enable spi.* bytecode adapters yet.",
+}];
+
+pub const ARDUINO_NANO_R4_UART_BUSES: [UartBusInfo; 1] = [UartBusInfo {
+    bus: 0,
+    name: "Serial1",
+    tx_pin: 1,
+    rx_pin: 0,
+    arduino_uart: 1,
+    internal: false,
+    notes: "Arduino Nano R4 D1/D0 serial metadata only; native USB remains upload/transport metadata, not a separate GPIO UART.",
+}];
+
 const fn map_arduino_digital_pins<const N: usize>(
     source: [board_vm_arduino::DigitalPinDescriptor; N],
 ) -> [DigitalPinInfo; N] {
@@ -1355,9 +1384,12 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         &[],
         &[],
     ),
-    arduino_board_target(
+    arduino_board_target_with_buses(
         board_vm_arduino::ARDUINO_NANO_R4,
         &ARDUINO_NANO_R4_DIGITAL_PINS,
+        &ARDUINO_NANO_R4_I2C_BUSES,
+        &ARDUINO_NANO_R4_SPI_BUSES,
+        &ARDUINO_NANO_R4_UART_BUSES,
         &[],
         &[],
     ),
@@ -1781,6 +1813,7 @@ mod tests {
         let leonardo = find_target("arduino-leonardo").unwrap();
         let micro = find_target("arduino-micro").unwrap();
         let nano_every = find_target("arduino-nano-every").unwrap();
+        let nano_r4 = find_target("arduino-nano-r4").unwrap();
         assert_eq!(uno_r3.i2c_buses, &ARDUINO_STANDARD_I2C_BUSES);
         assert_eq!(nano.i2c_buses, &ARDUINO_STANDARD_I2C_BUSES);
         assert_eq!(pro_mini.i2c_buses, &ARDUINO_STANDARD_I2C_BUSES);
@@ -1794,7 +1827,13 @@ mod tests {
         assert_eq!(nano_every.i2c_buses, &ARDUINO_NANO_EVERY_I2C_BUSES);
         assert_eq!(nano_every.i2c_buses[0].sda_pin, 18);
         assert_eq!(nano_every.i2c_buses[0].scl_pin, 19);
-        for target in [uno_r3, nano, pro_mini, mega, leonardo, micro, nano_every] {
+        assert_eq!(nano_r4.i2c_buses, &ARDUINO_NANO_R4_I2C_BUSES);
+        assert_eq!(nano_r4.i2c_buses[0].sda_pin, 18);
+        assert_eq!(nano_r4.i2c_buses[0].scl_pin, 19);
+        assert!(nano_r4.i2c_buses[0].notes.contains("Qwiic Wire1"));
+        for target in [
+            uno_r3, nano, pro_mini, mega, leonardo, micro, nano_every, nano_r4,
+        ] {
             assert!(target.i2c_buses[0].notes.contains("metadata only"));
             assert!(!target.capabilities.contains(&"i2c.open"));
             assert!(!target.capabilities.contains(&"i2c.transfer"));
@@ -1820,6 +1859,7 @@ mod tests {
         let leonardo = find_target("arduino-leonardo").unwrap();
         let micro = find_target("arduino-micro").unwrap();
         let nano_every = find_target("arduino-nano-every").unwrap();
+        let nano_r4 = find_target("arduino-nano-r4").unwrap();
         assert_eq!(uno_r3.spi_buses, &ARDUINO_STANDARD_SPI_BUSES);
         assert_eq!(nano.spi_buses, &ARDUINO_STANDARD_SPI_BUSES);
         assert_eq!(pro_mini.spi_buses, &ARDUINO_STANDARD_SPI_BUSES);
@@ -1839,7 +1879,14 @@ mod tests {
         assert_eq!(nano_every.spi_buses[0].cipo_pin, 12);
         assert_eq!(nano_every.spi_buses[0].sck_pin, 13);
         assert_eq!(nano_every.spi_buses[0].default_cs_pin, 10);
-        for target in [uno_r3, nano, pro_mini, mega, leonardo, micro, nano_every] {
+        assert_eq!(nano_r4.spi_buses, &ARDUINO_NANO_R4_SPI_BUSES);
+        assert_eq!(nano_r4.spi_buses[0].copi_pin, 11);
+        assert_eq!(nano_r4.spi_buses[0].cipo_pin, 12);
+        assert_eq!(nano_r4.spi_buses[0].sck_pin, 13);
+        assert_eq!(nano_r4.spi_buses[0].default_cs_pin, 10);
+        for target in [
+            uno_r3, nano, pro_mini, mega, leonardo, micro, nano_every, nano_r4,
+        ] {
             assert!(target.spi_buses[0].notes.contains("metadata only"));
             assert!(!target.capabilities.contains(&"spi.open"));
             assert!(!target.capabilities.contains(&"spi.transfer"));
@@ -1878,6 +1925,7 @@ mod tests {
         let leonardo = find_target("arduino-leonardo").unwrap();
         let micro = find_target("arduino-micro").unwrap();
         let nano_every = find_target("arduino-nano-every").unwrap();
+        let nano_r4 = find_target("arduino-nano-r4").unwrap();
         assert_eq!(uno_r3.uart_buses, &ARDUINO_STANDARD_UART_BUSES);
         assert_eq!(nano.uart_buses, &ARDUINO_STANDARD_UART_BUSES);
         assert_eq!(pro_mini.uart_buses, &ARDUINO_STANDARD_UART_BUSES);
@@ -1899,7 +1947,13 @@ mod tests {
         assert_eq!(nano_every.uart_buses[0].name, "Serial1");
         assert_eq!(nano_every.uart_buses[0].arduino_uart, 1);
         assert!(nano_every.uart_buses[0].notes.contains("USB serial bridge"));
-        for target in [uno_r3, nano, pro_mini, mega, leonardo, micro, nano_every] {
+        assert_eq!(nano_r4.uart_buses, &ARDUINO_NANO_R4_UART_BUSES);
+        assert_eq!(nano_r4.uart_buses[0].name, "Serial1");
+        assert_eq!(nano_r4.uart_buses[0].arduino_uart, 1);
+        assert!(nano_r4.uart_buses[0].notes.contains("native USB"));
+        for target in [
+            uno_r3, nano, pro_mini, mega, leonardo, micro, nano_every, nano_r4,
+        ] {
             assert!(target.uart_buses[0].notes.contains("metadata"));
             assert!(!target.capabilities.contains(&"uart.open"));
             assert!(!target.capabilities.contains(&"uart.write"));

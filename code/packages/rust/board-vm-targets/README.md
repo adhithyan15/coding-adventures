@@ -86,6 +86,11 @@ path by reporting A4/A5 Wire, D11/D12/D13 SPI with D10 as the default chip
 select, and D0/D1 `Serial1`. Its USB serial bridge remains upload/transport
 metadata rather than a second GPIO UART.
 
+Nano R4 follows with the same external header descriptors for its RA4M1 Nano
+form factor: A4/A5 `Wire`, D11/D12/D13 SPI with D10 chip select, and D0/D1
+`Serial1`. The native USB path remains upload/transport metadata, and the
+separate Qwiic `Wire1` connector stays out of this header-pin tranche.
+
 Host-side validation:
 
 ```sh
