@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.36.0 — 2026-05-20
+
+### Fixed
+
+- **``ROUND(x[, n])`` now rounds half away from zero** — Python's
+  built-in ``round`` uses banker's rounding (round half to even), so
+  ``round(0.5) == 0`` and ``round(2.5) == 2``.  SQLite uses the
+  school-arithmetic convention: ``round(0.5) == 1.0``,
+  ``round(2.5) == 3.0``, ``round(-2.5) == -3.0``.  The single-arg form
+  now uses ``int64(x ± 0.5)``; the two-arg form quantises the exact
+  IEEE 754 representation via ``Decimal(x).quantize(10**-n,
+  ROUND_HALF_UP)``, which matches sqlite3's internal
+  ``printf("%.*f", n, x)``-then-reparse path byte-for-byte.
+
+- **``ROUND(x, n)`` clamps ``n`` to ``[0, 30]``** matching SQLite —
+  negative ``n`` no longer rounds to the left of the decimal point,
+  and excessively large ``n`` is capped at 30 (the maximum meaningful
+  precision for a float64).
+
+- **``ROUND(x, NULL)`` returns NULL** — SQLite short-circuits when
+  either argument is NULL.  Mini-sqlite was previously coercing a
+  NULL digits argument to the default ``0`` and returning a value.
+
+  32 unit tests in ``test_round_half_away_from_zero.py`` cover one-arg
+  and two-arg forms, NULL handling, and the [0, 30] clamping.
+
 ## 1.35.0 — 2026-05-19
 
 ### Added

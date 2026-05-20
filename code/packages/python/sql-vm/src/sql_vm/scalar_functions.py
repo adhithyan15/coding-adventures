@@ -376,22 +376,76 @@ def _round(*args: SqlValue) -> SqlValue:
     ``ROUND(x, n)`` → rounded to *n* places.  Negative *n* rounds to the
     left of the decimal point.
 
-    Returns NULL for NULL *x*.
+    **Tie-breaking — half away from zero, not banker's rounding.**
+
+    Python's built-in ``round()`` uses *banker's rounding* (round half
+    to even): ``round(0.5) == 0`` and ``round(2.5) == 2``.  SQLite uses
+    *round half away from zero*: ``round(0.5) == 1.0`` and
+    ``round(2.5) == 3.0`` — the same convention taught in school.
+
+    For the two-argument form, the rounding is applied to the *exact
+    IEEE 754 representation* of *x*, not its shortest decimal repr.
+    So ``round(2.355, 2) == 2.35`` because the underlying float is
+    ≈ 2.3549999…, but ``round(2.345, 2) == 2.35`` because that float is
+    ≈ 2.3450000…  This matches sqlite3's printf-based implementation
+    (which converts the double to decimal, then rounds half-up).
+
+    **NULL handling.**  Either argument being NULL returns NULL; this
+    matches SQLite, which short-circuits if either ``x`` or ``digits``
+    is NULL (mini-sqlite previously coerced a NULL digits argument to
+    the default ``0`` — wrong).
 
     Examples::
 
         ROUND(3.14159, 2)  → 3.14
-        ROUND(3.5)         → 4.0
-        ROUND(-3.5)        → -4.0
+        ROUND(0.5)         → 1.0   (not 0.0)
+        ROUND(2.5)         → 3.0   (not 2.0)
+        ROUND(-2.5)        → -3.0  (not -2.0)
+        ROUND(0.25, 1)     → 0.3
+        ROUND(1.5, NULL)   → NULL
     """
     _arity("round", list(args), 1, 2)
     x = args[0]
     if x is None:
         return None
+    # NULL digits → NULL result (SQLite short-circuits, unlike Python's
+    # ``round(x, None)`` which falls back to integer rounding).
+    if len(args) == 2 and args[1] is None:
+        return None
     if not isinstance(x, (int, float)):
         return x
-    n = int(args[1]) if len(args) == 2 and args[1] is not None else 0
-    return round(float(x), n)  # type: ignore[return-value]
+    n = int(args[1]) if len(args) == 2 else 0
+    # SQLite clamps the digits argument to [0, 30]: negative values are
+    # treated as 0 (no rounding to the left of the decimal point) and
+    # values above 30 are capped (the IEEE 754 double has at most ~17
+    # decimal digits of precision anyway).
+    if n < 0:
+        n = 0
+    elif n > 30:
+        n = 30
+    xf = float(x)
+    if n == 0:
+        # One-arg form: int64 cast of ``x ± 0.5`` — half away from zero.
+        # SQLite uses ``(double)((int64)(r + (r<0 ? -0.5 : +0.5)))`` so
+        # the result is always a whole-number double.
+        return float(int(xf + 0.5)) if xf >= 0 else float(int(xf - 0.5))
+    # Two-arg form: SQLite uses its own printf("%.*f", n, x) on the
+    # exact IEEE 754 value and re-parses the resulting string.  We
+    # emulate via ``decimal.Decimal(float)`` (which gives the exact
+    # binary representation) followed by ``quantize`` with
+    # ROUND_HALF_UP — equivalent because both engines work in decimal
+    # space on the actual stored double.
+    #
+    # The default Decimal precision (28 digits) is not enough to hold
+    # the exact representation of a double when ``n`` approaches 30 —
+    # ``Decimal(0.1)`` already needs ~17 digits, plus ``n`` more for the
+    # quantize target — so we bump the local precision to 80 (well above
+    # the maximum meaningful digit count for a float64).
+    from decimal import ROUND_HALF_UP, Decimal, localcontext
+    with localcontext() as ctx:
+        ctx.prec = 80
+        q = Decimal(10) ** -n
+        return float(Decimal(xf).quantize(q, rounding=ROUND_HALF_UP))
 
 
 @register("ceil", "ceiling")

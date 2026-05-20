@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.62.0] - 2026-05-20
+
+### Fixed
+
+- **``ROUND`` now matches SQLite byte-for-byte** (via ``sql-vm
+  1.36.0``).  Mini-sqlite was delegating to Python's built-in
+  ``round`` which uses banker's rounding (round half to even), so
+  ``round(0.5)`` returned 0.0 instead of SQLite's 1.0 and ``round(2.5)``
+  returned 2.0 instead of 3.0.  The single-arg form now uses
+  half-away-from-zero ties; the two-arg form rounds half-up on the
+  exact IEEE 754 value (so ``round(2.355, 2) == 2.35`` because the
+  stored double is ≈ 2.3549…).  Negative ``n`` is now clamped to 0
+  (matching SQLite), and ``round(x, NULL)`` correctly returns NULL.
+
+  9 oracle tests in ``test_tier3_round_half_away_from_zero.py`` pair
+  each interesting input against the reference ``sqlite3`` module.
+
 ## [1.61.0] - 2026-05-20
 
 ### Fixed
