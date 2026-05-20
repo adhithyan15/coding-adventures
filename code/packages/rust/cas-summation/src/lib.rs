@@ -268,6 +268,25 @@ where
         }
     }
 
+    // Phase 39: telescoping sums.  Detect `f = g(k+1) − g(k)` (or the
+    // antisymmetric `g(k) − g(k+1)`) and emit `g(hi+1) − g(lo)` (resp.
+    // `g(lo) − g(hi+1)`).  Pure structural detection — no partial
+    // fraction expansion; infinite case deferred to a future limit-aware
+    // phase.
+    if !inf_upper {
+        if let Some((g_expr, sign)) = try_telescoping(&f, &k, &mut eval_fn) {
+            let hi_plus_one = binary(ADD, hi.clone(), int(1));
+            let g_at_hi_plus_one = substitute(&g_expr, &k, &hi_plus_one);
+            let g_at_lo = substitute(&g_expr, &k, &lo);
+            let closed = if sign > 0 {
+                binary(SUB, g_at_hi_plus_one, g_at_lo)
+            } else {
+                binary(SUB, g_at_lo, g_at_hi_plus_one)
+            };
+            return eval_fn(closed);
+        }
+    }
+
     if inf_upper {
         if let Some(raw) = try_special_infinite(&f, &k, &lo) {
             return eval_fn(raw);
@@ -419,6 +438,42 @@ fn try_power_of_k(f: &IRNode, k: &IRNode) -> Option<(Rational, i64)> {
                 }
             }
         }
+    }
+    None
+}
+
+/// Phase 39: Detect a *structurally telescoping* summand
+/// `f = g(k+1) − g(k)` (or its antisymmetric `g(k) − g(k+1)`).
+///
+/// Returns `(g_expr, sign)` where:
+/// - `g_expr` is the expression representing `g(k)` — the "minus" half
+///   of the SUB shape.  The closed form is then `g(hi+1) − g(lo)` for
+///   `sign = +1` and `g(lo) − g(hi+1)` for `sign = -1`.
+/// - Detection is purely structural: substitute `k → k+1` in one half
+///   of the SUB and compare against the other half after `eval_fn`
+///   normalisation.  No partial-fraction expansion is attempted — the
+///   classic `1/(k(k+1))` form needs an explicit `Apart` step first.
+fn try_telescoping<E>(f: &IRNode, k: &IRNode, eval_fn: &mut E) -> Option<(IRNode, i32)>
+where
+    E: FnMut(IRNode) -> IRNode,
+{
+    let node = match f {
+        IRNode::Apply(node) if head_is(&node.head, SUB) && node.args.len() == 2 => node,
+        _ => return None,
+    };
+    let left = &node.args[0];
+    let right = &node.args[1];
+    let k_plus_one = binary(ADD, k.clone(), int(1));
+    // Standard orientation: f = g(k+1) − g(k).  Check whether
+    // substituting k → k+1 in `right` yields `left` (after normalisation).
+    let right_shifted = substitute(right, k, &k_plus_one);
+    if eval_fn(right_shifted) == eval_fn(left.clone()) {
+        return Some((right.clone(), 1));
+    }
+    // Antisymmetric: f = g(k) − g(k+1).
+    let left_shifted = substitute(left, k, &k_plus_one);
+    if eval_fn(left_shifted) == eval_fn(right.clone()) {
+        return Some((left.clone(), -1));
     }
     None
 }
