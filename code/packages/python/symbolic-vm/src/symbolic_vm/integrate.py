@@ -1083,15 +1083,20 @@ def _try_weierstrass_log_form(
         log_arg = IRApply(abs_head, (IRApply(DIV, (numer, denom)),))
         coef_ir = IRApply(DIV, (_frac_ir(c), sqrt_disc_ir))
         return IRApply(MUL, (coef_ir, IRApply(LOG, (log_arg,))))
-    # COS branch
-    if b <= abs(a):
-        # Sign preconditions don't hold; defer the (b < -|a|) flipped case.
-        return None
-    # b > |a| > 0 case (forces b > 0 and either a ≥ 0 or a < 0 with b > -a).
-    # (b - a) > 0 always here.
+    # COS branch — handles both b > |a| and b < −|a| (Phase 37 extension).
+    #
+    # The same expression ``log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|``
+    # is valid for both sign regimes because the inner rational is
+    # wrapped in ``Abs``: when ``b−a`` flips sign across the two cases,
+    # the numerator and denominator of the log argument swap (one goes to
+    # ``D − k·u``, the other to ``D + k·u``), but ``|N/D'| = |D'/N|`` so
+    # the absolute value collapses them to the same value.  The
+    # antiderivative is then continuous on both sides of ``b = ±|a|``.
+    #
+    # Caller already ensures ``b² > a²`` (disc < 0 entry); the only
+    # additional precondition is ``a + b ≠ 0``, which is automatic
+    # because ``b² > a²`` rules out ``b = −a``.
     b_minus_a = b - a
-    if b_minus_a <= 0:
-        return None
     # log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|
     bma_tan = IRApply(MUL, (_frac_ir(b_minus_a), tan_half))
     numer = IRApply(ADD, (sqrt_disc_ir, bma_tan))

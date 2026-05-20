@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.62.0 — 2026-05-20
+
+**Phase 37 — Weierstrass log form extended to `b < −|a|` cos branch.**
+
+Phase 36 closed the `a² < b²` log form for the `b > |a|` case but
+explicitly deferred the symmetric `b < −|a|` case under the
+(incorrect) assumption that a separate sign-flipped formula was
+needed.  A more careful derivation shows that the existing
+``log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|`` formula already
+handles both sign regimes correctly when the `Abs` wrapping is in
+place — the numerator and denominator swap as `b−a` changes sign, and
+``|N/D'| = |D'/N|`` collapses them to the same value.
+
+### Changed
+
+- **`_try_weierstrass_log_form` cos branch** (`integrate.py`): removed
+  the ``if b <= abs(a): return None`` and ``if b_minus_a <= 0: return None``
+  guards.  The remaining caller-side guarantee (``b² > a²``, from the
+  Phase 34 dispatcher's ``disc < 0`` entry condition) is sufficient for
+  the formula to produce the correct antiderivative across all sign
+  combinations of `a` and `b` with `|b| > |a|`.
+
+### Added — tests
+
+`tests/test_phase34_weierstrass.py` (3 new cases — one promoted from
+the prior fallthrough):
+
+- `test_phase37_cos_negative_b_now_closes` — `∫ 1/(1 − 2·cos x) dx`
+  closes; numerical derivative matches across the open interval where
+  the integrand is finite (avoiding the zeros at `cos x = 1/2`).
+- `test_phase37_cos_negative_b_with_negative_a` — `∫ 1/(−1 − 3·cos x) dx`
+  with both `a` and `b` negative.
+- `test_phase37_cos_negative_b_with_numerator_coefficient` —
+  `∫ 5/(1 − 2·cos x) dx` confirms the coefficient passes through.
+
+Full suite: **1686 passed, 85 skipped, 81.44% coverage.**
+
+### Still deferred
+
+- Non-bare trig arguments (e.g. `sin(αx + β)`) — needs composition with
+  a linear-substitution phase.
+- Symbolic `a` or `b`.
+- `a = 0` sin branch (would reduce to `∫ c/(b·sin x) dx` — falls back
+  to the elementary table).
+
 ## 0.61.0 — 2026-05-20
 
 **Phase 36 integration — Weierstrass log form for `a² < b²` denominators.**
