@@ -1,9 +1,9 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-20.
+> Last updated: 2026-05-20 (after Phase 39 telescoping sums landed).
 >
-> **Phases 37 + 38 sprint complete:**
+> **Phases 37 + 38 + 39 sprint complete:**
 > - **Phase 37** — Weierstrass log form cos branch covers `b < −|a|`: Python
 >   `symbolic-vm` 0.62.0 (PR #3683 ✅ merged), TypeScript 0.10.0 (PR #3685 ✅
 >   merged), Rust 0.10.0 (PR #3689 ✅ merged). Removed overly conservative
@@ -16,6 +16,14 @@
 >   gives a `1/α` outer scaling and `tan((α·x+β)/2)` in place of `tan(x/2)`;
 >   every existing branch (arctan / degenerate / log) inherits the
 >   generalisation unchanged.
+> - **Phase 39** — Telescoping sum recognition in `cas-summation`: Python
+>   0.2.0 (PR #3706 ✅ merged), TypeScript 0.2.0 (PR #3720 ✅ merged), Rust
+>   0.2.0 (PR #3724 ✅ merged). The dispatcher detects structurally
+>   telescoping summands `f = g(k+1) − g(k)` (or the antisymmetric
+>   `g(k) − g(k+1)`) and emits `g(hi+1) − g(lo)` (resp. `g(lo) − g(hi+1)`).
+>   Pure structural detection — no partial-fraction expansion (`1/(k(k+1))`
+>   needs an `Apart` step first, deferred to a follow-on phase).  Infinite
+>   ranges fall through (limit-aware phase deferred).
 >
 > Prior sprints still on main: TypeScript 0.2.0 releases (PR #3170 ✅
 > merged), Rust 0.2.0 releases (PR #3171 ✅ merged), Python EllipticE/Pi —
@@ -465,7 +473,7 @@ The Risch integration suite is ~90% complete. Known remaining gaps:
 | Feature | Priority | Notes |
 |---|---|---|
 | **MACSYMA package system** | Low | `:load`, `:algebraic`, `:orthopoly` etc. No design yet. |
-| **Symbolic infinite sums** | Low | `sum` handles Faulhaber and geometric closed forms. Hypergeometric / telescoping detection not done. |
+| **Symbolic infinite sums** | Low | `sum` handles Faulhaber, geometric, classic-series, and Phase 39 structural telescoping (finite range) across Python, TypeScript, and Rust (`cas-summation` 0.2.0 — PRs #3706 ✅, #3720 ✅, #3724 ✅). Hypergeometric and partial-fraction-induced telescoping (`Apart` + telescope composition) still open. Infinite telescopes need a limit-aware phase. |
 
 #### Diagnostic / tooling gaps
 
