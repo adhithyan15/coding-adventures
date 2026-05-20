@@ -76,6 +76,11 @@ pub struct RubyLexer {
     /// Phase 2: the parser-feedback contract.  Defaults to
     /// [`NoLocals`] which treats every name as a method.
     oracle: Box<dyn ParserOracle>,
+    /// Phase 3b: nesting depth of `{` / `}` inside a `#{...}`
+    /// string interpolation.  Incremented on `{`, decremented on
+    /// `}`, and `}` at depth 0 closes the interpolation (interpreter
+    /// manually transitions the engine back to `string_d_body`).
+    interp_brace_depth: usize,
 }
 
 impl RubyLexer {
@@ -109,6 +114,7 @@ impl RubyLexer {
             lex_state: LexState::default(),
             last_name: String::new(),
             oracle,
+            interp_brace_depth: 0,
         })
     }
 
@@ -182,6 +188,36 @@ impl RubyLexer {
             // the regex literal.  Advance position past it.
             self.column += 1;
             return Ok(());
+        }
+
+        // Phase 3b: `}` at brace-depth 0 inside `string_d_interp`
+        // closes the `#{...}` interpolation.  Append the `}` to the
+        // string body and force the engine back to `string_d_body`.
+        // Inner `{` / `}` increment / decrement the depth and pass
+        // through to the engine's normal `append_text(current)` arm.
+        if self.machine.current_state() == "string_d_interp" {
+            if ch == '{' {
+                self.interp_brace_depth += 1;
+            } else if ch == '}' {
+                if self.interp_brace_depth > 0 {
+                    self.interp_brace_depth -= 1;
+                } else {
+                    // Closing brace of the interpolation.  Append
+                    // `}` to the string body and pop back to
+                    // string_d_body.  Note: we DO NOT feed `}` to
+                    // the engine — the engine's `anything` arm
+                    // would re-enter string_d_interp and keep
+                    // accumulating.
+                    self.text_buffer.push('}');
+                    self.machine
+                        .set_current_state("string_d_body")
+                        .map_err(|e| {
+                            format!("ruby lexer: failed to leave string_d_interp: {e}")
+                        })?;
+                    self.column += 1;
+                    return Ok(());
+                }
+            }
         }
 
         let mut buf = [0u8; 4];
@@ -972,6 +1008,102 @@ mod tests {
         assert!(values.contains(&"%w[a b c]"));
         assert!(values.contains(&"."));
         assert!(values.contains(&"length"));
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Phase 3b — string interpolation `"#{...}"`
+    //
+    // v0 captures the interpolation expression verbatim inside the
+    // String token's value; the parser decides how to evaluate.
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn string_with_simple_interpolation() {
+        let toks = tokenize_ruby("\"hello #{name}\"");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "hello #{name}")]);
+    }
+
+    #[test]
+    fn string_with_expression_interpolation() {
+        let toks = tokenize_ruby("\"sum is #{1+2}\"");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "sum is #{1+2}")]);
+    }
+
+    #[test]
+    fn string_with_interpolation_at_start() {
+        let toks = tokenize_ruby("\"#{x}!\"");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "#{x}!")]);
+    }
+
+    #[test]
+    fn string_with_interpolation_at_end() {
+        let toks = tokenize_ruby("\"hi #{name}\"");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "hi #{name}")]);
+    }
+
+    #[test]
+    fn string_with_multiple_interpolations() {
+        let toks = tokenize_ruby("\"a #{x} b #{y} c\"");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "a #{x} b #{y} c")]);
+    }
+
+    #[test]
+    fn string_with_hash_but_no_brace_is_literal() {
+        // `"a # b"` — the `#` is just a literal character because
+        // it isn't followed by `{`.
+        let toks = tokenize_ruby("\"a # b\"");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "a # b")]);
+    }
+
+    #[test]
+    fn string_with_hash_at_end_is_literal() {
+        let toks = tokenize_ruby("\"trailing #\"");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "trailing #")]);
+    }
+
+    #[test]
+    fn string_interpolation_with_nested_braces() {
+        // `"#{ {a: 1} }"` — the inner `{a: 1}` is part of the
+        // interpolation expression, not a closing brace.  The brace
+        // depth tracker handles the nesting.
+        let toks = tokenize_ruby("\"#{ {a: 1} }\"");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "#{ {a: 1} }")]);
+    }
+
+    #[test]
+    fn string_interpolation_with_method_call() {
+        // `"#{arr.length}"` — interpolation containing a method call.
+        let toks = tokenize_ruby("\"len = #{arr.length}\"");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "len = #{arr.length}")]);
+    }
+
+    #[test]
+    fn single_quoted_string_does_not_interpolate() {
+        // `'#{name}'` — single-quoted strings DO NOT interpolate.
+        // The `#{...}` stays as literal text.
+        let toks = tokenize_ruby("'#{name}'");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "#{name}")]);
+    }
+
+    #[test]
+    fn string_interpolation_with_string_inside() {
+        // `"#{ "inner" }"` — the brace tracker is string-agnostic,
+        // so after `#{` we accumulate everything (including
+        // embedded `"`s) until matching `}` at depth 0.  Result:
+        // a single String with body `x #{"y"}`.
+        let toks = tokenize_ruby("\"x #{\"y\"}\"");
+        let p = pairs(&toks);
+        assert_eq!(p, vec![(TokenType::String, "x #{\"y\"}")]);
     }
 
     #[test]

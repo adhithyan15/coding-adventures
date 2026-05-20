@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.5.0] - 2026-05-20
+
+### Added (Phase 3b — string interpolation `"#{...}"`)
+- `string_d_hash` and `string_d_interp` states in [`ruby-1.8.lexer.states.toml`](./ruby-1.8.lexer.states.toml).  `"..."` body now branches on `#`: if followed by `{` it enters interpolation (`string_d_interp`), otherwise the `#` is treated as a literal character and the follower is re-dispatched to `string_d_body`.
+- New `interp_brace_depth: usize` field on `RubyLexer`.  Tracks nesting of `{` / `}` inside an interpolation expression so that `"#{ {a: 1} }"` correctly closes only on the outermost matching `}`.
+- The action interpreter intercepts `}` in `string_d_interp` — at depth 0 it appends the `}` to the string buffer and forces the engine back to `string_d_body` via `set_current_state`.  Same pattern as the Phase 2 `/` interceptor.
+- v0 captures interpolation **verbatim** — the `#{expr}` substring is preserved inside the `TokenType::String` value.  Recursive sub-lexing of the embedded expression is a future refinement; the parser can dispatch on the `#{` substring when it needs to evaluate.
+
+### Tests (+11 new, total 65)
+- Simple, expression, at-start, at-end, multiple-interpolation cases.
+- `#` without following `{` is literal (`"a # b"`, `"trailing #"`).
+- Nested braces inside interpolation (`"#{ {a: 1} }"`) close correctly.
+- Method call inside interpolation (`"#{arr.length}"`).
+- Single-quoted strings do **not** interpolate (`'#{name}'` stays as `#{name}`).
+- Embedded double-quotes inside `#{...}` are accepted (brace tracker is string-agnostic).
+
+### Deferred (subsequent Phase 3 follow-ups)
+- Phase 3c: heredocs (`<<X`, `<<-X`, `<<~X`) with deferred body capture and FIFO queue for multi-per-line heredocs.
+- Future refinement: recursive sub-lexing of the interpolation expression (so the parser receives individual tokens for the embedded code instead of one verbatim string).
+
 ## [0.4.0] - 2026-05-20
 
 ### Added (Phase 3a — regex flags + `%w[]` / `%q{}` percent literals)
