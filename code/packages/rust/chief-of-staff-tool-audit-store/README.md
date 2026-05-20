@@ -67,6 +67,8 @@ The crate keeps the boundary narrow:
   helpers for host scheduler budget logs
 - supervisor drain plan pages expose per-page drain, continuation, and
   checkpoint-advance helpers for host preflight scheduling
+- supervisor drain plan pages expose starting and next checkpoint scalar
+  accessors for host preflight logs
 - supervisor drain run summaries flatten idle, progress, and continuation flags
   for host log entries
 - supervisor drain run summaries expose count-drift presence flags beside

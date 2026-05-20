@@ -51,6 +51,7 @@ All notable changes to this package will be documented in this file.
   summaries.
 - Per-page drain, continuation, and checkpoint-advance helpers for supervisor
   drain plans.
+- Starting and next checkpoint scalar accessors for supervisor drain plan pages.
 - Flattened idle, progress, and continuation flags in supervisor drain run
   summaries.
 - Count-drift presence flags for supervisor drain run reports and summaries.
