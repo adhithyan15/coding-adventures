@@ -47,14 +47,20 @@ Wireless metadata separates physical support from the generic front-end sugar:
 - every current target exposes `transport.serial`
 - Arduino Uno R4 WiFi exposes Wi-Fi and Bluetooth LE through its ESP32-S3
   coprocessor
+- shared Arduino-family descriptors record physical radios for MKR WiFi 1010,
+  Nano 33 IoT, Nano 33 BLE Rev2, Nano RP2040 Connect, Nano ESP32, GIGA R1
+  WiFi, Portenta H7 Lite Connected, Portenta C33, Nicla Vision, Nicla Sense ME,
+  Nicla Voice, and Opta WiFi without claiming command or OTA transport support
+  until board-specific adapters land
 - ESP32 DevKit V1 exposes Wi-Fi, Bluetooth LE, and Bluetooth Classic natively
 - Raspberry Pi Pico exposes no wireless transports
 - Raspberry Pi Pico W exposes Wi-Fi, Bluetooth LE, and Bluetooth Classic through
   its CYW43439 radio
 
-Wi-Fi OTA is marked as a feasible Board VM update path for the wireless targets;
-Bluetooth command channels are tracked separately because OTA over Bluetooth is
-possible but not the first practical update path.
+Wi-Fi OTA is marked as a feasible Board VM update path only for targets with a
+runtime adapter that already owns that transport. Bluetooth command channels are
+tracked separately because OTA over Bluetooth is possible but not the first
+practical update path.
 
 Host-side validation:
 

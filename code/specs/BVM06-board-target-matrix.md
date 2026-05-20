@@ -134,6 +134,13 @@ same descriptors. Arduino CLI boards now report whether their upload path starts
 from a USB serial bridge, native USB bootloader port, or external serial
 adapter before delegating reset/programmer behavior to the board package.
 
+The Arduino wireless metadata tranche records physical Wi-Fi and Bluetooth LE
+radios for non-Uno boards such as MKR WiFi 1010, Nano 33 IoT, Nano 33 BLE Rev2,
+Nano RP2040 Connect, Nano ESP32, GIGA R1 WiFi, Portenta H7 Lite Connected,
+Portenta C33, Nicla Vision, Nicla Sense ME, Nicla Voice, and Opta WiFi. These
+entries intentionally keep command transport, OTA, and network capabilities
+disabled until a board-specific runtime adapter owns the path.
+
 The next tranches should deepen board-specific firmware/upload adapters and
 richer peripheral tables for each family without moving generic Arduino
 discovery into `board-vm-uno-r4`.
