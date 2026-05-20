@@ -81,8 +81,8 @@ use board_vm_targets::{
     SpiBusInfo as TargetSpiBus, UartBusInfo as TargetUartBus, UploadAdapter as TargetUploadAdapter,
     UploadImageFormat as TargetUploadImageFormat, UploadInfo as TargetUploadInfo,
     UploadPortHint as TargetUploadPortHint, UploadResetMethod as TargetUploadResetMethod,
-    UploadTransport as TargetUploadTransport, WirelessInterfaceInfo as TargetWirelessInterface,
-    WirelessTransport as TargetWirelessTransport,
+    UploadTransport as TargetUploadTransport, UsbInterfaceInfo as TargetUsbInterface,
+    WirelessInterfaceInfo as TargetWirelessInterface, WirelessTransport as TargetWirelessTransport,
 };
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
@@ -432,6 +432,7 @@ pub struct LanguageTargetInfo {
     pub i2c_connectors: Vec<LanguageI2cConnector>,
     pub spi_buses: Vec<LanguageSpiBus>,
     pub uart_buses: Vec<LanguageUartBus>,
+    pub usb_interfaces: Vec<LanguageUsbInterface>,
     pub can_buses: Vec<LanguageCanBus>,
     pub rtc: Option<LanguageRtc>,
     pub wireless: Vec<LanguageWirelessInterface>,
@@ -480,6 +481,18 @@ pub struct LanguageUartBus {
     pub rx_pin: u8,
     pub arduino_uart: u8,
     pub internal: bool,
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageUsbInterface {
+    pub interface: u8,
+    pub name: String,
+    pub controller: String,
+    pub class: String,
+    pub native: bool,
+    pub upload: bool,
+    pub command_transport: bool,
     pub notes: String,
 }
 
@@ -1329,6 +1342,11 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
             .collect(),
         spi_buses: target.spi_buses.iter().map(language_spi_bus).collect(),
         uart_buses: target.uart_buses.iter().map(language_uart_bus).collect(),
+        usb_interfaces: target
+            .usb_interfaces
+            .iter()
+            .map(language_usb_interface)
+            .collect(),
         can_buses: target.can_buses.iter().map(language_can_bus).collect(),
         rtc: target.rtc.map(language_rtc),
         wireless: target
@@ -1414,6 +1432,19 @@ fn language_uart_bus(bus: &TargetUartBus) -> LanguageUartBus {
         arduino_uart: bus.arduino_uart,
         internal: bus.internal,
         notes: bus.notes.to_owned(),
+    }
+}
+
+fn language_usb_interface(interface: &TargetUsbInterface) -> LanguageUsbInterface {
+    LanguageUsbInterface {
+        interface: interface.interface,
+        name: interface.name.to_owned(),
+        controller: interface.controller.to_owned(),
+        class: interface.class.to_owned(),
+        native: interface.native,
+        upload: interface.upload,
+        command_transport: interface.command_transport,
+        notes: interface.notes.to_owned(),
     }
 }
 
@@ -4204,6 +4235,14 @@ mod tests {
         assert_eq!(nano_r4.uart_buses[0].tx_pin, 1);
         assert_eq!(nano_r4.uart_buses[0].rx_pin, 0);
         assert!(nano_r4.uart_buses[0].notes.contains("native USB"));
+        assert_eq!(nano_r4.usb_interfaces.len(), 1);
+        assert_eq!(nano_r4.usb_interfaces[0].name, "Native USB");
+        assert_eq!(nano_r4.usb_interfaces[0].controller, "RA4M1 native USB");
+        assert_eq!(nano_r4.usb_interfaces[0].class, "CDC serial");
+        assert!(nano_r4.usb_interfaces[0].native);
+        assert!(nano_r4.usb_interfaces[0].upload);
+        assert!(nano_r4.usb_interfaces[0].command_transport);
+        assert!(nano_r4.usb_interfaces[0].notes.contains("not a GPIO UART"));
         assert_eq!(nano_r4.can_buses.len(), 1);
         assert_eq!(nano_r4.can_buses[0].name, "CAN0");
         assert_eq!(nano_r4.can_buses[0].tx_pin, 4);

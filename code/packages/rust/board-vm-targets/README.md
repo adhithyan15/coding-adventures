@@ -105,6 +105,11 @@ from A4/A5 `Wire` header pins. The descriptor names the Qwiic/STEMMA QT
 connector and RA4M1 IIC0 controller while the shared Arduino runtime keeps
 `i2c.*` bytecode adapters disabled.
 
+Nano R4 native USB metadata records the board-local CDC serial/upload endpoint
+separately from D0/D1 `Serial1`. The descriptor keeps the native USB path in
+target/upload metadata, not in GPIO UART tables, and leaves deeper
+board-specific USB firmware behavior to later adapters.
+
 Host-side validation:
 
 ```sh
