@@ -532,6 +532,50 @@ pub const ARDUINO_NRF52832_WIRELESS: [WirelessInterfaceInfo; 1] = [WirelessInter
     ota_update: false,
 }];
 
+pub const ARDUINO_NINA_W102_NETWORK_INTERFACES: [NetworkInterfaceInfo; 1] =
+    [NetworkInterfaceInfo {
+        interface: 0,
+        name: "WiFiNINA",
+        transport: WirelessTransport::Wifi,
+        chip: "u-blox NINA-W102",
+        protocols: &UNO_R4_WIFI_NETWORK_PROTOCOLS,
+        max_sockets: 0,
+        notes: "Physical Arduino WiFiNINA interface metadata only; Board VM network bytecode adapter is not enabled for shared Arduino boards yet.",
+    }];
+
+pub const ARDUINO_NANO_ESP32_NETWORK_INTERFACES: [NetworkInterfaceInfo; 1] =
+    [NetworkInterfaceInfo {
+        interface: 0,
+        name: "WiFi",
+        transport: WirelessTransport::Wifi,
+        chip: "ESP32-S3",
+        protocols: &UNO_R4_WIFI_NETWORK_PROTOCOLS,
+        max_sockets: 0,
+        notes: "Physical Arduino Nano ESP32 WiFi interface metadata only; Board VM network bytecode adapter is not enabled for this board yet.",
+    }];
+
+pub const ARDUINO_WIFI_BLE_MODULE_NETWORK_INTERFACES: [NetworkInterfaceInfo; 1] =
+    [NetworkInterfaceInfo {
+        interface: 0,
+        name: "Onboard WiFi",
+        transport: WirelessTransport::Wifi,
+        chip: "Arduino onboard WiFi/BLE module",
+        protocols: &UNO_R4_WIFI_NETWORK_PROTOCOLS,
+        max_sockets: 0,
+        notes: "Physical Arduino Pro/Nicla/Opta WiFi interface metadata only; Board VM network bytecode adapter is not enabled for this board yet.",
+    }];
+
+pub const ARDUINO_ESP32_C3_NETWORK_INTERFACES: [NetworkInterfaceInfo; 1] =
+    [NetworkInterfaceInfo {
+        interface: 0,
+        name: "ESP32-C3 WiFi",
+        transport: WirelessTransport::Wifi,
+        chip: "ESP32-C3 module",
+        protocols: &UNO_R4_WIFI_NETWORK_PROTOCOLS,
+        max_sockets: 0,
+        notes: "Physical Portenta C33 ESP32-C3 WiFi interface metadata only; Board VM network bytecode adapter is not enabled for this board yet.",
+    }];
+
 const fn arduino_cli_upload(
     platform_id: &'static str,
     fqbn: &'static str,
@@ -967,6 +1011,7 @@ const fn arduino_board_target(
     target: board_vm_arduino::ArduinoTargetDescriptor,
     digital_pins: &'static [DigitalPinInfo],
     wireless: &'static [WirelessInterfaceInfo],
+    network_interfaces: &'static [NetworkInterfaceInfo],
 ) -> BoardTargetInfo {
     BoardTargetInfo {
         board_id: target.board_id,
@@ -993,7 +1038,7 @@ const fn arduino_board_target(
         watchdog: None,
         storage_regions: &[],
         wireless,
-        network_interfaces: &[],
+        network_interfaces,
         upload: Some(arduino_cli_upload(
             target.arduino_cli.platform_id,
             target.arduino_cli.fqbn,
@@ -1068,131 +1113,157 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         board_vm_arduino::ARDUINO_UNO_R3,
         &ARDUINO_UNO_R3_DIGITAL_PINS,
         &[],
+        &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_NANO_CLASSIC,
         &ARDUINO_NANO_CLASSIC_DIGITAL_PINS,
+        &[],
         &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_PRO_MINI,
         &ARDUINO_PRO_MINI_DIGITAL_PINS,
         &[],
+        &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_MEGA_2560,
         &ARDUINO_MEGA_2560_DIGITAL_PINS,
+        &[],
         &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_LEONARDO,
         &ARDUINO_LEONARDO_DIGITAL_PINS,
         &[],
+        &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_MICRO,
         &ARDUINO_MICRO_DIGITAL_PINS,
+        &[],
         &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_DUE,
         &ARDUINO_DUE_DIGITAL_PINS,
         &[],
+        &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_ZERO,
         &ARDUINO_ZERO_DIGITAL_PINS,
+        &[],
         &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_MKR_WIFI_1010,
         &ARDUINO_MKR_WIFI_1010_DIGITAL_PINS,
         &ARDUINO_NINA_W102_WIRELESS,
+        &ARDUINO_NINA_W102_NETWORK_INTERFACES,
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_NANO_EVERY,
         &ARDUINO_NANO_EVERY_DIGITAL_PINS,
+        &[],
         &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_NANO_R4,
         &ARDUINO_NANO_R4_DIGITAL_PINS,
         &[],
+        &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_NANO_33_IOT,
         &ARDUINO_NANO_33_IOT_DIGITAL_PINS,
         &ARDUINO_NINA_W102_WIRELESS,
+        &ARDUINO_NINA_W102_NETWORK_INTERFACES,
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_NANO_33_BLE_REV2,
         &ARDUINO_NANO_33_BLE_REV2_DIGITAL_PINS,
         &ARDUINO_NRF52840_WIRELESS,
+        &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_NANO_RP2040_CONNECT,
         &ARDUINO_NANO_RP2040_CONNECT_DIGITAL_PINS,
         &ARDUINO_NINA_W102_WIRELESS,
+        &ARDUINO_NINA_W102_NETWORK_INTERFACES,
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_NANO_ESP32,
         &ARDUINO_NANO_ESP32_DIGITAL_PINS,
         &ARDUINO_NANO_ESP32_WIRELESS,
+        &ARDUINO_NANO_ESP32_NETWORK_INTERFACES,
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_GIGA_R1_WIFI,
         &ARDUINO_GIGA_R1_WIFI_DIGITAL_PINS,
         &ARDUINO_WIFI_BLE_MODULE_WIRELESS,
+        &ARDUINO_WIFI_BLE_MODULE_NETWORK_INTERFACES,
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_PORTENTA_H7,
         &ARDUINO_PORTENTA_H7_DIGITAL_PINS,
+        &[],
         &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_PORTENTA_H7_LITE,
         &ARDUINO_PORTENTA_H7_LITE_DIGITAL_PINS,
         &[],
+        &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_PORTENTA_H7_LITE_CONNECTED,
         &ARDUINO_PORTENTA_H7_LITE_CONNECTED_DIGITAL_PINS,
         &ARDUINO_WIFI_BLE_MODULE_WIRELESS,
+        &ARDUINO_WIFI_BLE_MODULE_NETWORK_INTERFACES,
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_PORTENTA_C33,
         &ARDUINO_PORTENTA_C33_DIGITAL_PINS,
         &ARDUINO_ESP32_C3_WIRELESS,
+        &ARDUINO_ESP32_C3_NETWORK_INTERFACES,
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_NICLA_VISION,
         &ARDUINO_NICLA_VISION_DIGITAL_PINS,
         &ARDUINO_WIFI_BLE_MODULE_WIRELESS,
+        &ARDUINO_WIFI_BLE_MODULE_NETWORK_INTERFACES,
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_NICLA_SENSE_ME,
         &ARDUINO_NICLA_SENSE_ME_DIGITAL_PINS,
         &ARDUINO_NRF52832_WIRELESS,
+        &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_NICLA_VOICE,
         &ARDUINO_NICLA_VOICE_DIGITAL_PINS,
         &ARDUINO_NRF52832_WIRELESS,
+        &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_OPTA_LITE,
         &ARDUINO_OPTA_LITE_DIGITAL_PINS,
+        &[],
         &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_OPTA_RS485,
         &ARDUINO_OPTA_RS485_DIGITAL_PINS,
         &[],
+        &[],
     ),
     arduino_board_target(
         board_vm_arduino::ARDUINO_OPTA_WIFI,
         &ARDUINO_OPTA_WIFI_DIGITAL_PINS,
         &ARDUINO_WIFI_BLE_MODULE_WIRELESS,
+        &ARDUINO_WIFI_BLE_MODULE_NETWORK_INTERFACES,
     ),
     BoardTargetInfo {
         board_id: board_vm_esp32::ESP32_DEVKIT_V1.board_id,
@@ -1739,7 +1810,7 @@ mod tests {
     }
 
     #[test]
-    fn registry_exposes_wireless_only_for_wireless_boards() {
+    fn registry_exposes_wireless_descriptors_for_wireless_boards() {
         let uno_r4_minima = find_target("arduino-uno-r4-minima").unwrap();
         let uno_r4_wifi = find_target("arduino-uno-r4-wifi").unwrap();
         let uno_r3 = find_target("arduino-uno-r3").unwrap();
@@ -1803,7 +1874,6 @@ mod tests {
                     && !interface.command_transport
                     && !interface.ota_update));
             assert!(!target.capabilities.contains(&"transport.wifi"));
-            assert!(target.network_interfaces.is_empty());
         }
 
         for target in [nano_ble, nicla_sense, nicla_voice] {
@@ -1820,6 +1890,71 @@ mod tests {
         assert_eq!(nano_esp32.wireless, &ARDUINO_NANO_ESP32_WIRELESS);
         assert_eq!(portenta_c33.wireless, &ARDUINO_ESP32_C3_WIRELESS);
         assert_eq!(nicla_sense.wireless, &ARDUINO_NRF52832_WIRELESS);
+    }
+
+    #[test]
+    fn registry_exposes_shared_arduino_network_interface_metadata() {
+        let mkr_wifi = find_target("arduino-mkr-wifi-1010").unwrap();
+        let nano_iot = find_target("arduino-nano-33-iot").unwrap();
+        let nano_ble = find_target("arduino-nano-33-ble-rev2").unwrap();
+        let nano_rp2040 = find_target("arduino-nano-rp2040-connect").unwrap();
+        let nano_esp32 = find_target("arduino-nano-esp32").unwrap();
+        let giga = find_target("arduino-giga-r1-wifi").unwrap();
+        let portenta_c33 = find_target("arduino-portenta-c33").unwrap();
+        let nicla_vision = find_target("arduino-nicla-vision").unwrap();
+        let opta_wifi = find_target("arduino-opta-wifi").unwrap();
+
+        assert_eq!(
+            mkr_wifi.network_interfaces,
+            &ARDUINO_NINA_W102_NETWORK_INTERFACES
+        );
+        assert_eq!(
+            nano_iot.network_interfaces,
+            &ARDUINO_NINA_W102_NETWORK_INTERFACES
+        );
+        assert_eq!(
+            nano_rp2040.network_interfaces,
+            &ARDUINO_NINA_W102_NETWORK_INTERFACES
+        );
+        assert_eq!(
+            nano_esp32.network_interfaces,
+            &ARDUINO_NANO_ESP32_NETWORK_INTERFACES
+        );
+        assert_eq!(
+            portenta_c33.network_interfaces,
+            &ARDUINO_ESP32_C3_NETWORK_INTERFACES
+        );
+
+        for target in [giga, nicla_vision, opta_wifi] {
+            assert_eq!(
+                target.network_interfaces,
+                &ARDUINO_WIFI_BLE_MODULE_NETWORK_INTERFACES
+            );
+        }
+
+        assert!(nano_ble.network_interfaces.is_empty());
+
+        for target in [
+            mkr_wifi,
+            nano_iot,
+            nano_rp2040,
+            nano_esp32,
+            giga,
+            portenta_c33,
+            nicla_vision,
+            opta_wifi,
+        ] {
+            let interface = target.network_interfaces[0];
+            assert_eq!(interface.interface, 0);
+            assert_eq!(interface.transport, WirelessTransport::Wifi);
+            assert_eq!(interface.protocols, &UNO_R4_WIFI_NETWORK_PROTOCOLS);
+            assert_eq!(interface.max_sockets, 0);
+            assert!(interface.notes.contains("metadata only"));
+            assert!(!target.capabilities.contains(&"network.ipv4"));
+            assert!(!target.capabilities.contains(&"network.tcp"));
+            assert!(!target.capabilities.contains(&"network.udp"));
+            assert!(!target.capabilities.contains(&"network.dns"));
+        }
     }
 
     #[test]

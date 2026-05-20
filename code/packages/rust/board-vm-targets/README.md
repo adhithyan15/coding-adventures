@@ -62,6 +62,13 @@ runtime adapter that already owns that transport. Bluetooth command channels are
 tracked separately because OTA over Bluetooth is possible but not the first
 practical update path.
 
+Network interface metadata follows the same split. Uno R4 WiFi exposes the
+first active Board VM WiFi network adapter, while MKR WiFi 1010, Nano 33 IoT,
+Nano RP2040 Connect, Nano ESP32, GIGA R1 WiFi, Portenta H7 Lite Connected,
+Portenta C33, Nicla Vision, and Opta WiFi now report their physical WiFi
+interfaces with `max_sockets = 0` and no `network.*` capabilities until
+board-specific runtime adapters own socket, DNS, and association commands.
+
 Host-side validation:
 
 ```sh

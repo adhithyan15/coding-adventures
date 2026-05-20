@@ -36,6 +36,11 @@ WiFi. Those descriptors do not add command or OTA capabilities by themselves;
 board-specific firmware and upload adapters still own the actual transport
 behavior.
 
+Wi-Fi-capable shared Arduino descriptors also expose passive network-interface
+metadata through `board-vm-targets`. The metadata tells language frontends which
+board has a physical Wi-Fi stack while leaving `network.*` capabilities disabled
+until a concrete board adapter can own sockets, DNS, and association behavior.
+
 Opta terminals are modeled as board-local input and relay-output pins instead
 of pretending the PLC has Uno-style headers. Nicla sensor/audio/vision hardware
 is similarly registered as its own target family so follow-up capability work

@@ -141,6 +141,12 @@ Portenta C33, Nicla Vision, Nicla Sense ME, Nicla Voice, and Opta WiFi. These
 entries intentionally keep command transport, OTA, and network capabilities
 disabled until a board-specific runtime adapter owns the path.
 
+The Arduino network metadata tranche adds passive Wi-Fi interface descriptors
+for the non-Uno boards that have Wi-Fi hardware. These entries expose interface
+name, radio transport, chip identity, and expected IP/TCP/UDP/DNS protocol
+family, but use `max_sockets = 0` and leave `network.*` capabilities disabled
+until each board has a concrete runtime adapter.
+
 The next tranches should deepen board-specific firmware/upload adapters and
 richer peripheral tables for each family without moving generic Arduino
 discovery into `board-vm-uno-r4`.
