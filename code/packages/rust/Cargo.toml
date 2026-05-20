@@ -368,6 +368,7 @@ members = [
     "mosaic-emit-swiftui",
     "mosaic-emit-webcomponent",
     "mosaic-lexer",
+    "mosaic-package-manifest",
     "mosaic-parser",
     "mosaic-vm",
     "moslayout-compiler",
