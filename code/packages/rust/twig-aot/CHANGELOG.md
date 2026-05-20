@@ -1,5 +1,35 @@
 # Changelog — `twig-aot`
 
+## 0.6.0 — 2026-05-20 (LANG75 — runtime-archive expansion)
+
+**Runtime archive grows the V1 helper table.**
+
+`runtime/twig_runtime.c` adds five new helpers to support the LANG75
+`call_builtin` opcode that both backends now emit:
+
+| Symbol                | Purpose                                      |
+|-----------------------|----------------------------------------------|
+| `__twig_putchar`      | Write one byte to stdout.                    |
+| `__twig_getchar`      | Read one byte from stdin (-1 on EOF).        |
+| `__twig_print_string` | Write `len` bytes from `ptr` to stdout.      |
+| `__twig_input_i64`    | Read a line and parse a signed int64.        |
+| `__twig_exit`         | Terminate the program with the given code.   |
+
+The existing `__twig_print_i64` is unchanged.  No changes to the
+build-time archive packaging — `cc::Build::compile` rebuilds the
+single C file and embeds the resulting archive bytes the same way it
+always has.
+
+**End-to-end smoke tests:** `tests/windows_x86_64_smoke.rs` and
+`tests/linux_x86_64_smoke.rs` each grow a new
+`end_to_end_call_builtin_putchar_writes_hi` test that hand-builds an
+`IIRModule` emitting three `call_builtin "putchar"` instructions and
+asserts the linked executable writes exactly `"Hi\n"` to stdout.
+
+**Compatibility.**  Existing Twig programs that compile today (which
+use only `io_out`, lowering to `__twig_print_i64`) produce
+byte-identical output — the new helpers are additive only.
+
 ## 0.5.0 — 2026-05-16 (`--emit-object` for cross-OS workflows)
 
 **Cross-OS object emission via a new `--emit-object` flag.**

@@ -84,6 +84,91 @@ fn end_to_end_twig_arithmetic_on_linux() {
     }
 }
 
+/// LANG75 — end-to-end `call_builtin "putchar"` on Linux x86-64.
+///
+/// Builds a tiny `IIRModule` by hand:
+///
+/// ```text
+/// fn main() -> i64 {
+///   const c0 = 72   ; 'H'
+///   call_builtin "putchar", c0
+///   const c1 = 105  ; 'i'
+///   call_builtin "putchar", c1
+///   const c2 = 10   ; '\n'
+///   call_builtin "putchar", c2
+///   ret 0
+/// }
+/// ```
+///
+/// Compiles to an executable, runs it, and asserts stdout is exactly
+/// `"Hi\n"`.  Proves the entire chain — frontend IIR → CIR specialiser
+/// → x86_64 backend → ELF packager → `cc` linker → runtime archive —
+/// wires `__twig_putchar` correctly through the System V AMD64 ABI
+/// (`int` arg passed in `EDI`/`RDI`).
+#[test]
+fn end_to_end_call_builtin_putchar_writes_hi() {
+    let module = build_putchar_hi_module();
+    let dir = tempfile::tempdir().expect("tempdir");
+    let exe_path = dir.path().join("putchar_hi");
+
+    twig_aot::compile_module_to_linux_executable(&module, &exe_path)
+        .unwrap_or_else(|e| panic!("compile failed: {e}"));
+
+    let out = Command::new(&exe_path).output()
+        .unwrap_or_else(|e| panic!("launch failed: {e}"));
+    assert_eq!(
+        out.stdout, b"Hi\n",
+        "expected stdout == \"Hi\\n\", got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+/// Construct an `IIRModule` that emits `"Hi\n"` via three `call_builtin
+/// "putchar"` instructions, then returns 0 from main.
+fn build_putchar_hi_module() -> interpreter_ir::module::IIRModule {
+    use interpreter_ir::function::IIRFunction;
+    use interpreter_ir::instr::{IIRInstr, Operand};
+    use interpreter_ir::module::IIRModule;
+
+    let mut instructions = Vec::new();
+
+    for (slot, code) in [("c0", 72_i64), ("c1", 105), ("c2", 10)] {
+        instructions.push(IIRInstr::new(
+            "const",
+            Some(slot.to_string()),
+            vec![Operand::Int(code)],
+            "i64",
+        ));
+        instructions.push(IIRInstr::new(
+            "call_builtin",
+            None,
+            vec![Operand::Var("putchar".to_string()),
+                 Operand::Var(slot.to_string())],
+            "void",
+        ));
+    }
+    // Return 0 from main.
+    instructions.push(IIRInstr::new(
+        "const",
+        Some("r".to_string()),
+        vec![Operand::Int(0)],
+        "i64",
+    ));
+    instructions.push(IIRInstr::new(
+        "ret",
+        None,
+        vec![Operand::Var("r".to_string())],
+        "i64",
+    ));
+
+    let main = IIRFunction::new("main", vec![], "i64", instructions);
+    let mut module = IIRModule::new("putchar_hi", "lang");
+    module.functions.push(main);
+    module.entry_point = Some("main".to_string());
+    module
+}
+
 #[test]
 fn elf_object_has_correct_machine_field() {
     // Byte-level sanity check: produce an object for `42` and assert

@@ -1,5 +1,44 @@
 # Changelog — `aarch64-backend`
 
+## 0.3.0 — 2026-05-20 (LANG75 — generic `call_builtin` dispatch)
+
+Adds a single CIR opcode `call_builtin "<name>", <args>` that
+dispatches to runtime helpers via the V1 helper table.  Mirrors the
+LANG75 work in `x86_64-backend` 0.5.0 — both backends now share the
+same six-entry helper table, so a frontend that emits `call_builtin
+"putchar", c` produces a working `BL __twig_putchar` on aarch64 and a
+working `CALL __twig_putchar` on x86_64 with no per-target divergence.
+
+**New CIR opcode:**
+
+- `call_builtin "<name>", <arg0>, <arg1>, …` — looks `name` up in the
+  V1 helper table, loads each arg into `x0..x7` per AAPCS64, emits
+  `BL __twig_<name>` (placeholder; AOT linker patches), and (if the
+  helper returns) stores `x0` into the dest slot.
+
+**V1 helper table (same as `x86_64-backend`):**
+
+| Name           | Args     | Returns |
+|----------------|----------|---------|
+| `print_i64`    | `[i64]`  | no      |
+| `putchar`      | `[i32]`  | no      |
+| `getchar`      | `[]`     | yes     |
+| `print_string` | `[ptr,i64]` | no   |
+| `input_i64`    | `[]`     | yes     |
+| `exit`         | `[i32]`  | no      |
+
+**Error handling.**  Unknown helper names, wrong arity, and dest/void
+mismatches all return `BackendError::MalformedInstr` (the spec's
+"BackendRefused" — a soft refusal, not a panic).
+
+**Behaviour preserved.**  `io_out` is unchanged and still emits the
+same single `BL __twig_print_i64`; `call_builtin "print_i64", v`
+produces the same bytes via the new generic path.
+
+**Tests added (6):** putchar emits BL reloc, getchar stores x0 to
+dest, print_string records two arg loads, unknown name refuses, wrong
+arity refuses, print_i64-via-builtin matches io_out.
+
 ## 0.2.3 — 2026-05-13 (LANG41)
 
 **Remove self-contained `emit_print_helper`; resolve `__twig_print_i64` from
