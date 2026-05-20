@@ -1013,6 +1013,11 @@ impl ToolAuditSupervisorDrainRunReport {
         self.plan.follow_up_record_count() == self.drain.follow_up_record_count()
     }
 
+    /// Return whether planned and replayed follow-up pressure counts match.
+    pub fn matches_follow_up_pressure(&self) -> bool {
+        self.matches_planned_follow_up_record_count()
+    }
+
     /// Return the replayed-minus-planned row count delta.
     pub fn record_count_delta(&self) -> i128 {
         signed_count_delta(self.drain.drained_records, self.plan.planned_records)
@@ -1077,6 +1082,11 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return whether count drift should be investigated by the host.
     pub fn requires_count_drift_investigation(&self) -> bool {
         self.count_drift_kind().requires_investigation()
+    }
+
+    /// Return whether no audit rows were replayed.
+    pub fn is_idle(&self) -> bool {
+        self.drain.is_idle()
     }
 
     /// Return whether the actual run replayed at least one row.
@@ -3081,6 +3091,7 @@ mod tests {
         assert_eq!(report.drain.follow_up_record_count(), 1);
         assert!(report.matches_planned_record_count());
         assert!(report.matches_planned_follow_up_record_count());
+        assert!(report.matches_follow_up_pressure());
         assert_eq!(report.record_count_delta(), 0);
         assert_eq!(report.follow_up_record_count_delta(), 0);
         assert!(!report.replayed_extra_records());
@@ -3107,6 +3118,8 @@ mod tests {
         assert!(report.reached_end_of_log());
         assert!(!report.exhausted_tick_budget());
         assert!(!report.should_continue());
+        assert!(!report.is_idle());
+        assert!(report.made_progress());
         assert_eq!(
             report.outcome(),
             ToolAuditSupervisorDrainRunOutcome::NeedsFollowUp
@@ -3180,6 +3193,7 @@ mod tests {
         assert_eq!(report.drain.tick_count(), 1);
         assert_eq!(report.drain.drained_records, 0);
         assert!(report.matches_planned_record_count());
+        assert!(report.is_idle());
         assert!(!report.made_progress());
         assert!(!report.advanced_checkpoint());
         assert!(report.reached_end_of_log());
