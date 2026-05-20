@@ -131,6 +131,13 @@ def default_checks() -> list[FixtureCheck]:
                 "--check",
             ),
         ),
+        FixtureCheck(
+            "whatwg-form-interactive-audit",
+            (
+                str(PARSER_FIXTURE_DIR / "generate_whatwg_form_interactive_audit_fixture.py"),
+                "--check",
+            ),
+        ),
     ]
 
 

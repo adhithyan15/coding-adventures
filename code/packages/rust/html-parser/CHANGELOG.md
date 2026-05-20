@@ -17,9 +17,12 @@ documented in this file.
 - Generated WHATWG table audit fixture over html5lib table shells, row groups,
   cells, captions/colgroups, foster-parenting, select-in-table recovery, and
   table fragment contexts, with a dedicated parser regression test.
+- Generated WHATWG form/interactive audit fixture over html5lib anchor/nobr,
+  button, form-control, select/option, textarea, fragment-context, and stray
+  interactive end-tag cases, with a dedicated parser regression test.
 - Shared html5lib tree-construction test helpers keep smoke and focused
-  tree-insertion, frameset, and table audit checks on the same parser and DOM
-  dump path.
+  tree-insertion, frameset, table, and form/interactive audit checks on the same
+  parser and DOM dump path.
 - The html5lib source-coverage audit now has a checked JSON report plus
   `--write-report` and `--check-report` modes for parser/tokenizer fixture
   drift detection.
