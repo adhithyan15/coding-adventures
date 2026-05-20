@@ -77,11 +77,12 @@ use board_vm_targets::{
     all_targets, BoardFamily, BoardTargetInfo, CanBusInfo as TargetCanBus,
     DigitalPinInfo as TargetDigitalPin, I2cBusInfo as TargetI2cBus,
     NetworkInterfaceInfo as TargetNetworkInterface, NetworkProtocol as TargetNetworkProtocol,
-    OnboardLed as TargetOnboardLed, SpiBusInfo as TargetSpiBus, UartBusInfo as TargetUartBus,
-    UploadAdapter as TargetUploadAdapter, UploadImageFormat as TargetUploadImageFormat,
-    UploadInfo as TargetUploadInfo, UploadPortHint as TargetUploadPortHint,
-    UploadResetMethod as TargetUploadResetMethod, UploadTransport as TargetUploadTransport,
-    WirelessInterfaceInfo as TargetWirelessInterface, WirelessTransport as TargetWirelessTransport,
+    OnboardLed as TargetOnboardLed, RtcInfo as TargetRtc, SpiBusInfo as TargetSpiBus,
+    UartBusInfo as TargetUartBus, UploadAdapter as TargetUploadAdapter,
+    UploadImageFormat as TargetUploadImageFormat, UploadInfo as TargetUploadInfo,
+    UploadPortHint as TargetUploadPortHint, UploadResetMethod as TargetUploadResetMethod,
+    UploadTransport as TargetUploadTransport, WirelessInterfaceInfo as TargetWirelessInterface,
+    WirelessTransport as TargetWirelessTransport,
 };
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
@@ -431,6 +432,7 @@ pub struct LanguageTargetInfo {
     pub spi_buses: Vec<LanguageSpiBus>,
     pub uart_buses: Vec<LanguageUartBus>,
     pub can_buses: Vec<LanguageCanBus>,
+    pub rtc: Option<LanguageRtc>,
     pub wireless: Vec<LanguageWirelessInterface>,
     pub network_interfaces: Vec<LanguageNetworkInterface>,
     pub connection_options: Vec<LanguageConnectionOption>,
@@ -477,6 +479,14 @@ pub struct LanguageCanBus {
     pub tx_pin: u8,
     pub rx_pin: u8,
     pub controller: String,
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageRtc {
+    pub instance: u8,
+    pub name: String,
+    pub peripheral: String,
     pub notes: String,
 }
 
@@ -1304,6 +1314,7 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
         spi_buses: target.spi_buses.iter().map(language_spi_bus).collect(),
         uart_buses: target.uart_buses.iter().map(language_uart_bus).collect(),
         can_buses: target.can_buses.iter().map(language_can_bus).collect(),
+        rtc: target.rtc.map(language_rtc),
         wireless: target
             .wireless
             .iter()
@@ -1387,6 +1398,15 @@ fn language_can_bus(bus: &TargetCanBus) -> LanguageCanBus {
         rx_pin: bus.rx_pin,
         controller: bus.controller.to_owned(),
         notes: bus.notes.to_owned(),
+    }
+}
+
+fn language_rtc(rtc: TargetRtc) -> LanguageRtc {
+    LanguageRtc {
+        instance: rtc.instance,
+        name: rtc.name.to_owned(),
+        peripheral: rtc.peripheral.to_owned(),
+        notes: rtc.notes.to_owned(),
     }
 }
 
@@ -4063,6 +4083,11 @@ mod tests {
         assert_eq!(board_family_name(esp32.family), "esp32");
         assert_eq!(esp32.runtime_id, "board-vm-esp32");
         assert_eq!(esp32.onboard_led, Some(LanguageOnboardLed::Gpio(2)));
+        assert_eq!(uno.rtc.as_ref().unwrap().name, "RTC");
+        assert_eq!(uno.rtc.as_ref().unwrap().peripheral, "RA4M1 RTC");
+        assert!(uno.rtc.as_ref().unwrap().notes.contains("real-time clock"));
+        assert!(uno.capabilities.contains(&"rtc.now".to_owned()));
+        assert!(uno.capabilities.contains(&"rtc.set".to_owned()));
         assert_eq!(mega.family, LanguageBoardFamily::Arduino);
         assert_eq!(board_family_name(mega.family), "arduino");
         assert_eq!(mega.runtime_id, "board-vm-arduino");
@@ -4152,12 +4177,22 @@ mod tests {
         assert_eq!(nano_r4.can_buses[0].rx_pin, 5);
         assert_eq!(nano_r4.can_buses[0].controller, "RA4M1 CAN0");
         assert!(nano_r4.can_buses[0].notes.contains("external transceiver"));
+        assert_eq!(nano_r4.rtc.as_ref().unwrap().name, "RTC");
+        assert_eq!(nano_r4.rtc.as_ref().unwrap().peripheral, "RA4M1 RTC");
+        assert!(nano_r4
+            .rtc
+            .as_ref()
+            .unwrap()
+            .notes
+            .contains("metadata only"));
         assert!(!nano_r4.capabilities.contains(&"i2c.open".to_owned()));
         assert!(!nano_r4.capabilities.contains(&"spi.open".to_owned()));
         assert!(!nano_r4.capabilities.contains(&"uart.open".to_owned()));
         assert!(!nano_r4.capabilities.contains(&"can.open".to_owned()));
         assert!(!nano_r4.capabilities.contains(&"can.write".to_owned()));
         assert!(!nano_r4.capabilities.contains(&"can.read".to_owned()));
+        assert!(!nano_r4.capabilities.contains(&"rtc.now".to_owned()));
+        assert!(!nano_r4.capabilities.contains(&"rtc.set".to_owned()));
         assert_eq!(nano_iot.family, LanguageBoardFamily::Arduino);
         assert_eq!(nano_iot.mcu, "SAMD21G18");
         assert_eq!(nano_ble.family, LanguageBoardFamily::Arduino);

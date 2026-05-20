@@ -96,6 +96,10 @@ descriptor records the RA4M1 CAN0 controller and external transceiver
 requirement, while `can.*` bytecode capabilities remain disabled for the shared
 Arduino runtime.
 
+Nano R4 RTC metadata records the RA4M1 real-time clock as a passive descriptor.
+The shared Arduino runtime still leaves `rtc.*` bytecode adapters disabled until
+a board-specific firmware path owns clock access.
+
 Host-side validation:
 
 ```sh
