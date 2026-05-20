@@ -396,6 +396,20 @@ class PssNewtonCandidateResult:
 
 
 @dataclass
+class PssNewtonIterationResult:
+    """Accepted or rejected single PSS Newton shooting iteration."""
+
+    candidate: PssNewtonCandidateResult
+    accepted: bool
+    residual_l2_reduction: float
+    residual_l2_ratio: float
+    next_circuit: Circuit
+    next_state_vector: list[PssStateEntry]
+    next_residual: PssResidualResult
+    converged: bool
+
+
+@dataclass
 class AcPoint:
     """Phasor voltages at a single frequency point.
 
@@ -2700,6 +2714,53 @@ def pss_newton_candidate(
         candidate_circuit=candidate_circuit,
         candidate_state_vector=_pss_state_vector(candidate_circuit),
         candidate_residual=candidate_residual,
+    )
+
+
+def pss_newton_iteration(
+    circuit: Circuit,
+    *,
+    steps_per_period: int = 64,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    residual_tol: float = 1e-6,
+    perturbation: float = 1e-6,
+) -> PssNewtonIterationResult | None:
+    """Run one PSS Newton iteration and keep only an improving candidate."""
+    candidate = pss_newton_candidate(
+        circuit,
+        steps_per_period=steps_per_period,
+        method=method,
+        max_iterations=max_iterations,
+        tol=tol,
+        residual_tol=residual_tol,
+        perturbation=perturbation,
+    )
+    if candidate is None:
+        return None
+
+    base_residual = candidate.update.jacobian.residual
+    candidate_residual = candidate.candidate_residual
+    base_norm = base_residual.residual_l2_norm
+    candidate_norm = candidate_residual.residual_l2_norm
+    accepted = candidate_norm <= base_norm
+    next_circuit = candidate.candidate_circuit if accepted else circuit
+    next_state_vector = (
+        candidate.candidate_state_vector if accepted else candidate.update.jacobian.state_vector
+    )
+    next_residual = candidate_residual if accepted else base_residual
+    residual_l2_ratio = candidate_norm / base_norm if base_norm > 0.0 else 0.0
+
+    return PssNewtonIterationResult(
+        candidate=candidate,
+        accepted=accepted,
+        residual_l2_reduction=base_norm - candidate_norm,
+        residual_l2_ratio=residual_l2_ratio,
+        next_circuit=next_circuit,
+        next_state_vector=next_state_vector,
+        next_residual=next_residual,
+        converged=next_residual.within_tolerance,
     )
 
 

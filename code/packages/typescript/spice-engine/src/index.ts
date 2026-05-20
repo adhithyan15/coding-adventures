@@ -645,6 +645,17 @@ export interface PssNewtonCandidateResult {
   readonly candidateResidual: PssResidualResult;
 }
 
+export interface PssNewtonIterationResult {
+  readonly candidate: PssNewtonCandidateResult;
+  readonly accepted: boolean;
+  readonly residualL2Reduction: number;
+  readonly residualL2Ratio: number;
+  readonly nextCircuit: Circuit;
+  readonly nextStateVector: readonly PssStateEntry[];
+  readonly nextResidual: PssResidualResult;
+  readonly converged: boolean;
+}
+
 export class SpiceError extends Error {
   constructor(
     message: string,
@@ -2070,6 +2081,43 @@ export function pssNewtonCandidate(
     candidateCircuit,
     candidateStateVector: pssStateVector(candidateCircuit),
     candidateResidual,
+  };
+}
+
+export function pssNewtonIteration(
+  circuit: Circuit,
+  stepsPerPeriod = 64,
+  residualTolerance = 1.0e-6,
+  perturbation = 1.0e-6,
+): PssNewtonIterationResult | undefined {
+  const candidate = pssNewtonCandidate(
+    circuit,
+    stepsPerPeriod,
+    residualTolerance,
+    perturbation,
+  );
+  if (candidate === undefined) {
+    return undefined;
+  }
+
+  const baseResidual = candidate.update.jacobian.residual;
+  const candidateResidual = candidate.candidateResidual;
+  const baseNorm = baseResidual.residualL2Norm;
+  const candidateNorm = candidateResidual.residualL2Norm;
+  const accepted = candidateNorm <= baseNorm;
+  const nextResidual = accepted ? candidateResidual : baseResidual;
+
+  return {
+    candidate,
+    accepted,
+    residualL2Reduction: baseNorm - candidateNorm,
+    residualL2Ratio: baseNorm > 0.0 ? candidateNorm / baseNorm : 0.0,
+    nextCircuit: accepted ? candidate.candidateCircuit : circuit,
+    nextStateVector: accepted
+      ? candidate.candidateStateVector
+      : candidate.update.jacobian.stateVector,
+    nextResidual,
+    converged: nextResidual.withinTolerance,
   };
 }
 
