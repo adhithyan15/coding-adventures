@@ -60,7 +60,8 @@ The crate keeps the boundary narrow:
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
-- scheduler action recommendations expose typed intent helpers so hosts can
+- scheduler action recommendations expose typed intent helpers on reports and
+  summaries so hosts can
   branch on continuation, follow-up routing, or plan-drift investigation
   without parsing labels
 

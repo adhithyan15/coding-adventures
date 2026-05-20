@@ -926,6 +926,16 @@ impl ToolAuditSupervisorDrainRunReport {
         self.scheduler_action().as_str()
     }
 
+    /// Return whether the scheduler should run another drain pass.
+    pub fn requests_continuation(&self) -> bool {
+        self.scheduler_action().requests_continuation()
+    }
+
+    /// Return whether follow-up pressure should be routed to the host.
+    pub fn routes_follow_up(&self) -> bool {
+        self.scheduler_action().routes_follow_up()
+    }
+
     /// Return whether the host should investigate preflight/drain drift.
     pub fn requires_plan_drift_investigation(&self) -> bool {
         self.scheduler_action().requires_plan_drift_investigation()
@@ -3414,6 +3424,8 @@ mod tests {
         );
         assert_eq!(report.outcome_label(), "needs_continuation");
         assert!(report.requires_scheduler_action());
+        assert!(report.requests_continuation());
+        assert!(!report.routes_follow_up());
         assert!(!report.requires_plan_drift_investigation());
         assert_eq!(
             report.host_investigation_kind(),

@@ -46,6 +46,7 @@ All notable changes to this package will be documented in this file.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Report-level scheduler action labels for supervisor drain runs.
+- Report-level scheduler action intent helpers for supervisor drain runs.
 - Typed scheduler action intent helpers for continuation, follow-up routing, and
   plan-drift investigation branches.
 - Batch audit write summaries for host flush loops.
