@@ -6,6 +6,7 @@ members = [
     "x86_64-encoder",
     "x86_64-backend",
     "twig-aot",
+    "lang-aot",
     "nib-iir-compiler",
     "jit-loader-macos",
     "activation-functions",
