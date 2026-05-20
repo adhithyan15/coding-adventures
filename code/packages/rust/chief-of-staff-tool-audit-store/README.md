@@ -64,6 +64,8 @@ The crate keeps the boundary narrow:
   summaries so hosts can
   branch on continuation, follow-up routing, or plan-drift investigation
   without parsing labels
+- supervisor drain run summaries flatten scheduler-action intent flags for
+  host logs and scheduling dashboards
 
 ## Development
 
