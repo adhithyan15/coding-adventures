@@ -765,6 +765,19 @@ pub fn detect_target(selector: &str) -> Option<LanguageTargetInfo> {
     detect_board_target(selector).map(language_target_info)
 }
 
+pub fn targets_for_upload_selector(selector: &str) -> Vec<LanguageTargetInfo> {
+    let normalized = normalize_target_selector(selector);
+    if normalized.is_empty() {
+        return Vec::new();
+    }
+
+    all_targets()
+        .iter()
+        .filter(|target| upload_selector_matches(target, &normalized))
+        .map(language_target_info)
+        .collect()
+}
+
 fn known_board_target(board_id: &str) -> Option<&'static BoardTargetInfo> {
     all_targets()
         .iter()
@@ -783,6 +796,10 @@ fn detect_board_target(selector: &str) -> Option<&'static BoardTargetInfo> {
         {
             return Some(target);
         }
+    }
+
+    if let Some(target) = unique_upload_selector_target(&normalized) {
+        return Some(target);
     }
 
     let board_id = match normalized.as_str() {
@@ -805,6 +822,32 @@ fn detect_board_target(selector: &str) -> Option<&'static BoardTargetInfo> {
         _ => return None,
     };
     known_board_target(board_id)
+}
+
+fn unique_upload_selector_target(normalized: &str) -> Option<&'static BoardTargetInfo> {
+    let mut match_target = None;
+    for target in all_targets() {
+        if upload_selector_matches(target, normalized) {
+            if match_target.is_some() {
+                return None;
+            }
+            match_target = Some(target);
+        }
+    }
+    match_target
+}
+
+fn upload_selector_matches(target: &BoardTargetInfo, normalized: &str) -> bool {
+    let Some(upload) = target.upload else {
+        return false;
+    };
+
+    upload
+        .fqbn
+        .is_some_and(|fqbn| normalize_target_selector(fqbn) == normalized)
+        || upload
+            .platform_id
+            .is_some_and(|platform_id| normalize_target_selector(platform_id) == normalized)
 }
 
 pub fn esp_upload_options_for_target(selector: &str) -> Option<LanguageEspUploadOptions> {
@@ -4736,6 +4779,12 @@ mod tests {
             detect_target("UNO R4 WiFi").unwrap().board_id,
             "arduino-uno-r4-wifi"
         );
+        assert_eq!(
+            detect_target("arduino:renesas_uno:nanor4")
+                .unwrap()
+                .board_id,
+            "arduino-nano-r4"
+        );
         assert_eq!(detect_target("esp32").unwrap().board_id, "esp32-devkit-v1");
         assert_eq!(
             detect_target("pico-w").unwrap().board_id,
@@ -4749,7 +4798,38 @@ mod tests {
             normalize_target_selector("ESP32 DevKit V1"),
             "esp32_devkit_v1"
         );
+        assert!(detect_target("arduino:mbed_opta:opta").is_none());
         assert!(detect_target("definitely-not-a-board").is_none());
+    }
+
+    #[test]
+    fn rust_core_resolves_upload_selectors_from_target_metadata() {
+        let renesas_uno_targets = targets_for_upload_selector("arduino:renesas_uno");
+        assert_eq!(renesas_uno_targets.len(), 3);
+        assert!(renesas_uno_targets
+            .iter()
+            .any(|target| target.board_id == "arduino-uno-r4-wifi"));
+        assert!(renesas_uno_targets
+            .iter()
+            .any(|target| target.board_id == "arduino-nano-r4"));
+
+        let mega = targets_for_upload_selector("arduino:avr:mega:cpu=atmega2560");
+        assert_eq!(mega.len(), 1);
+        assert_eq!(mega[0].board_id, "arduino-mega-2560");
+
+        let opta_targets = targets_for_upload_selector("arduino:mbed_opta:opta");
+        assert_eq!(opta_targets.len(), 3);
+        assert!(opta_targets
+            .iter()
+            .any(|target| target.board_id == "arduino-opta-lite"));
+        assert!(opta_targets
+            .iter()
+            .any(|target| target.board_id == "arduino-opta-rs485"));
+        assert!(opta_targets
+            .iter()
+            .any(|target| target.board_id == "arduino-opta-wifi"));
+
+        assert!(targets_for_upload_selector("not-a-board").is_empty());
     }
 
     #[test]
@@ -4793,6 +4873,10 @@ mod tests {
         assert_eq!(opta.platform_id.as_deref(), Some("arduino:mbed_opta"));
         assert_eq!(opta.fqbn.as_deref(), Some("arduino:mbed_opta:opta"));
 
+        let nano_r4 = upload_options_for_target("arduino:renesas_uno:nanor4").unwrap();
+        assert_eq!(nano_r4.board_id, "arduino-nano-r4");
+        assert_eq!(nano_r4.fqbn.as_deref(), Some("arduino:renesas_uno:nanor4"));
+
         let esp32 = upload_options_for_target("esp32").unwrap();
         assert_eq!(esp32.board_id, "esp32-devkit-v1");
         assert_eq!(esp32.adapter, "esp_rom_serial");
@@ -4831,6 +4915,13 @@ mod tests {
                 "delegate_reset_to_board_package",
                 "upload_with_arduino_cli",
             ]
+        );
+
+        let mega = upload_plan_for_target("arduino:avr:mega:cpu=atmega2560").unwrap();
+        assert_eq!(mega.board_id, "arduino-mega-2560");
+        assert_eq!(
+            mega.fqbn.as_deref(),
+            Some("arduino:avr:mega:cpu=atmega2560")
         );
 
         let esp32 = upload_plan_for_target("esp32").unwrap();

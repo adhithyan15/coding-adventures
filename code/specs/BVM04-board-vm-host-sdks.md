@@ -203,6 +203,12 @@ serial or mount-path requirements, bootloader reset behavior, Arduino CLI
 platform/FQBN metadata, and transfer steps remain shared across Ruby, Python,
 Lua, Java, JS, and future CLIs.
 
+Selector handling follows the same ownership boundary. If a frontend receives
+an Arduino CLI FQBN such as `arduino:renesas_uno:nanor4`, it should ask the Rust
+language core to resolve that selector instead of maintaining a language-local
+board mapping. Shared package selectors may return multiple board targets so
+variant choices, such as Opta Lite/RS485/WiFi, remain explicit.
+
 ## Error Handling
 
 Every SDK maps protocol errors to language-native exceptions or result types,

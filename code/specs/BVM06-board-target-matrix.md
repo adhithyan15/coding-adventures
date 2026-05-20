@@ -124,6 +124,11 @@ artifact kind, artifact extension when one exists, serial or mount-path
 requirements, reset method, board package identity, and adapter steps are
 emitted by Rust language core for each supported upload profile.
 
+The FQBN selector tranche lets the same Rust target matrix resolve Arduino CLI
+platform/FQBN strings back to Board VM board targets. Unique FQBNs can resolve
+directly to one target; shared package identities return every matching board
+so language frontends do not guess between variants.
+
 The next tranches should deepen board-specific firmware/upload adapters and
 richer peripheral tables for each family without moving generic Arduino
 discovery into `board-vm-uno-r4`.

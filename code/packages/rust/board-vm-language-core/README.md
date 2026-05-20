@@ -32,3 +32,8 @@ Firmware flashing follows the same rule: frontends can present native options,
 but they should query `upload_plan_for_target` to learn the artifact kind,
 transport requirements, reset behavior, adapter steps, and Arduino CLI
 platform/FQBN metadata for each board family.
+
+Frontends that already have an Arduino CLI platform or FQBN should pass it back
+to Rust rather than carrying their own selector table. `detect_target` resolves
+unique FQBNs to a concrete board target, and `targets_for_upload_selector`
+returns every target for broader or intentionally shared package identities.
