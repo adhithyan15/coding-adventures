@@ -1,0 +1,281 @@
+{
+  "case_count": 44,
+  "cases": [
+    {
+      "axis": "legacy-isindex",
+      "id": "isindex-dat-299",
+      "reason": "obsolete isindex insertion and form-control replacement recovery",
+      "source": "isindex.dat:299"
+    },
+    {
+      "axis": "legacy-isindex",
+      "id": "isindex-dat-300",
+      "reason": "obsolete isindex insertion and form-control replacement recovery",
+      "source": "isindex.dat:300"
+    },
+    {
+      "axis": "legacy-isindex",
+      "id": "isindex-dat-301",
+      "reason": "obsolete isindex insertion and form-control replacement recovery",
+      "source": "isindex.dat:301"
+    },
+    {
+      "axis": "legacy-isindex",
+      "id": "isindex-dat-302",
+      "reason": "obsolete isindex insertion and form-control replacement recovery",
+      "source": "isindex.dat:302"
+    },
+    {
+      "axis": "main-element-boundary",
+      "id": "main-element-dat-303",
+      "reason": "main element boundaries around paragraphs and nested main starts",
+      "source": "main-element.dat:303"
+    },
+    {
+      "axis": "main-element-boundary",
+      "id": "main-element-dat-304",
+      "reason": "main element boundaries around paragraphs and nested main starts",
+      "source": "main-element.dat:304"
+    },
+    {
+      "axis": "main-element-boundary",
+      "id": "main-element-dat-305",
+      "reason": "main element boundaries around paragraphs and nested main starts",
+      "source": "main-element.dat:305"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-306",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:306"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-307",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:307"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-308",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:308"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-309",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:309"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-310",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:310"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-311",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:311"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-312",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:312"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-313",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:313"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-314",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:314"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-315",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:315"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-316",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:316"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-317",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:317"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-318",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:318"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-319",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:319"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-320",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:320"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-321",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:321"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-322",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:322"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-323",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:323"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-324",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:324"
+    },
+    {
+      "axis": "obsolete-menuitem",
+      "id": "menuitem-element-dat-325",
+      "reason": "obsolete menuitem parsing through body, list, table, and select contexts",
+      "source": "menuitem-element.dat:325"
+    },
+    {
+      "axis": "namespace-sensitivity",
+      "id": "namespace-sensitivity-dat-326",
+      "reason": "namespace-sensitive integration-point recovery in the parser DOM",
+      "source": "namespace-sensitivity.dat:326"
+    },
+    {
+      "axis": "pending-spec-boundary",
+      "id": "pending-spec-changes-plain-text-unsafe-dat-345",
+      "reason": "pending WHATWG tree-construction edge cases in the checked corpus",
+      "source": "pending-spec-changes-plain-text-unsafe.dat:345"
+    },
+    {
+      "axis": "pending-spec-boundary",
+      "id": "pending-spec-changes-dat-346",
+      "reason": "pending WHATWG tree-construction edge cases in the checked corpus",
+      "source": "pending-spec-changes.dat:346"
+    },
+    {
+      "axis": "pending-spec-boundary",
+      "id": "pending-spec-changes-dat-347",
+      "reason": "pending WHATWG tree-construction edge cases in the checked corpus",
+      "source": "pending-spec-changes.dat:347"
+    },
+    {
+      "axis": "pending-spec-boundary",
+      "id": "pending-spec-changes-dat-348",
+      "reason": "pending WHATWG tree-construction edge cases in the checked corpus",
+      "source": "pending-spec-changes.dat:348"
+    },
+    {
+      "axis": "search-element-boundary",
+      "id": "search-element-dat-433",
+      "reason": "search element boundaries around paragraphs and nested search starts",
+      "source": "search-element.dat:433"
+    },
+    {
+      "axis": "search-element-boundary",
+      "id": "search-element-dat-434",
+      "reason": "search element boundaries around paragraphs and nested search starts",
+      "source": "search-element.dat:434"
+    },
+    {
+      "axis": "search-element-boundary",
+      "id": "search-element-dat-435",
+      "reason": "search element boundaries around paragraphs and nested search starts",
+      "source": "search-element.dat:435"
+    },
+    {
+      "axis": "tricky-parser-recovery",
+      "id": "tricky01-dat-1",
+      "reason": "legacy tricky parser recovery cases retained by html5lib",
+      "source": "tricky01.dat:1"
+    },
+    {
+      "axis": "tricky-parser-recovery",
+      "id": "tricky01-dat-2",
+      "reason": "legacy tricky parser recovery cases retained by html5lib",
+      "source": "tricky01.dat:2"
+    },
+    {
+      "axis": "tricky-parser-recovery",
+      "id": "tricky01-dat-3",
+      "reason": "legacy tricky parser recovery cases retained by html5lib",
+      "source": "tricky01.dat:3"
+    },
+    {
+      "axis": "tricky-parser-recovery",
+      "id": "tricky01-dat-4",
+      "reason": "legacy tricky parser recovery cases retained by html5lib",
+      "source": "tricky01.dat:4"
+    },
+    {
+      "axis": "tricky-parser-recovery",
+      "id": "tricky01-dat-5",
+      "reason": "legacy tricky parser recovery cases retained by html5lib",
+      "source": "tricky01.dat:5"
+    },
+    {
+      "axis": "tricky-parser-recovery",
+      "id": "tricky01-dat-6",
+      "reason": "legacy tricky parser recovery cases retained by html5lib",
+      "source": "tricky01.dat:6"
+    },
+    {
+      "axis": "tricky-parser-recovery",
+      "id": "tricky01-dat-7",
+      "reason": "legacy tricky parser recovery cases retained by html5lib",
+      "source": "tricky01.dat:7"
+    },
+    {
+      "axis": "tricky-parser-recovery",
+      "id": "tricky01-dat-8",
+      "reason": "legacy tricky parser recovery cases retained by html5lib",
+      "source": "tricky01.dat:8"
+    },
+    {
+      "axis": "tricky-parser-recovery",
+      "id": "tricky01-dat-9",
+      "reason": "legacy tricky parser recovery cases retained by html5lib",
+      "source": "tricky01.dat:9"
+    }
+  ],
+  "counts_by_axis": {
+    "legacy-isindex": 4,
+    "main-element-boundary": 3,
+    "namespace-sensitivity": 1,
+    "obsolete-menuitem": 20,
+    "pending-spec-boundary": 4,
+    "search-element-boundary": 3,
+    "tricky-parser-recovery": 9
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress legacy, obsolete, pending-spec, tricky, and namespace-sensitive element recovery.",
+  "format": "whatwg-html-legacy-element-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}
