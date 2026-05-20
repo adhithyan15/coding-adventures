@@ -42,6 +42,11 @@ builder:
 - Raspberry Pi Pico targets use a Pico UF2 mass-storage profile so BOOTSEL mount
   discovery and UF2 copy behavior are exposed without frontend special cases.
 
+`board-vm-language-core` exposes typed Arduino CLI upload options from these
+profiles, including platform/FQBN, port-selection step, native USB versus
+USB-serial bridge hints, and board-package reset delegation. Language frontends
+should call that helper instead of reconstructing Arduino upload tables.
+
 Wireless metadata separates physical support from the generic front-end sugar:
 
 - every current target exposes `transport.serial`

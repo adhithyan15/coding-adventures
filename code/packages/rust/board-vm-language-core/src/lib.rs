@@ -560,6 +560,24 @@ pub struct LanguagePicoUf2UploadOptions {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageArduinoCliUploadOptions {
+    pub board_id: String,
+    pub command: String,
+    pub image_format: String,
+    pub transport: String,
+    pub reset_method: String,
+    pub platform_id: String,
+    pub fqbn: String,
+    pub port_hint: String,
+    pub port_selection_step: String,
+    pub native_usb: bool,
+    pub usb_serial_bridge: bool,
+    pub external_serial_adapter: bool,
+    pub requires_serial_port: bool,
+    pub delegate_reset_to_board_package: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageUploadOptions {
     pub board_id: String,
     pub adapter: String,
@@ -939,6 +957,35 @@ pub fn pico_uf2_upload_options_for_target(selector: &str) -> Option<LanguagePico
         volume_label: "RPI-RP2".to_owned(),
         image_extension: ".uf2".to_owned(),
         auto_detect_mount: true,
+    })
+}
+
+pub fn arduino_cli_upload_options_for_target(
+    selector: &str,
+) -> Option<LanguageArduinoCliUploadOptions> {
+    let target = detect_board_target(selector)?;
+    let upload = target.upload?;
+    if upload.adapter != TargetUploadAdapter::ArduinoCli {
+        return None;
+    }
+
+    let port_hint = upload.port_hint?;
+    Some(LanguageArduinoCliUploadOptions {
+        board_id: target.board_id.to_owned(),
+        command: upload.command.to_owned(),
+        image_format: upload_image_format_name(upload.image_format).to_owned(),
+        transport: upload_transport_name(upload.transport).to_owned(),
+        reset_method: upload_reset_method_name(upload.reset_method).to_owned(),
+        platform_id: upload.platform_id?.to_owned(),
+        fqbn: upload.fqbn?.to_owned(),
+        port_hint: upload_port_hint_name(port_hint).to_owned(),
+        port_selection_step: arduino_cli_port_selection_step(upload.port_hint).to_owned(),
+        native_usb: port_hint == TargetUploadPortHint::NativeUsb,
+        usb_serial_bridge: port_hint == TargetUploadPortHint::UsbSerialBridge,
+        external_serial_adapter: port_hint == TargetUploadPortHint::ExternalSerialAdapter,
+        requires_serial_port: upload.transport == TargetUploadTransport::Serial,
+        delegate_reset_to_board_package: upload.reset_method
+            == TargetUploadResetMethod::ArduinoBoardPackage,
     })
 }
 
@@ -5204,6 +5251,46 @@ mod tests {
         assert!(options.auto_detect_mount);
         assert!(pico_uf2_upload_options_for_target("pico-w").is_some());
         assert!(pico_uf2_upload_options_for_target("esp32").is_none());
+    }
+
+    #[test]
+    fn arduino_cli_upload_options_are_owned_by_rust_language_core() {
+        let nano_r4 = arduino_cli_upload_options_for_target("arduino:renesas_uno:nanor4").unwrap();
+        assert_eq!(nano_r4.board_id, "arduino-nano-r4");
+        assert_eq!(nano_r4.command, "arduino-cli upload");
+        assert_eq!(nano_r4.image_format, "arduino_cli_build_output");
+        assert_eq!(nano_r4.transport, "serial");
+        assert_eq!(nano_r4.reset_method, "arduino_board_package");
+        assert_eq!(nano_r4.platform_id, "arduino:renesas_uno");
+        assert_eq!(nano_r4.fqbn, "arduino:renesas_uno:nanor4");
+        assert_eq!(nano_r4.port_hint, "native_usb");
+        assert_eq!(nano_r4.port_selection_step, "select_native_usb_port");
+        assert!(nano_r4.native_usb);
+        assert!(!nano_r4.usb_serial_bridge);
+        assert!(!nano_r4.external_serial_adapter);
+        assert!(nano_r4.requires_serial_port);
+        assert!(nano_r4.delegate_reset_to_board_package);
+
+        let mega =
+            arduino_cli_upload_options_for_target("arduino:avr:mega:cpu=atmega2560").unwrap();
+        assert_eq!(mega.board_id, "arduino-mega-2560");
+        assert_eq!(mega.platform_id, "arduino:avr");
+        assert_eq!(mega.port_hint, "usb_serial_bridge");
+        assert_eq!(mega.port_selection_step, "select_usb_serial_port");
+        assert!(mega.usb_serial_bridge);
+        assert!(!mega.native_usb);
+
+        let pro_mini = arduino_cli_upload_options_for_target("arduino-pro-mini").unwrap();
+        assert_eq!(pro_mini.port_hint, "external_serial_adapter");
+        assert_eq!(
+            pro_mini.port_selection_step,
+            "select_external_serial_adapter"
+        );
+        assert!(pro_mini.external_serial_adapter);
+
+        assert!(arduino_cli_upload_options_for_target("esp32").is_none());
+        assert!(arduino_cli_upload_options_for_target("pico").is_none());
+        assert!(arduino_cli_upload_options_for_target("not-a-board").is_none());
     }
 
     #[test]

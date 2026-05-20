@@ -134,6 +134,12 @@ same descriptors. Arduino CLI boards now report whether their upload path starts
 from a USB serial bridge, native USB bootloader port, or external serial
 adapter before delegating reset/programmer behavior to the board package.
 
+The Arduino CLI upload-options tranche exposes those adapter details as a typed
+Rust language-core resolver. Frontends can ask Rust for the platform, FQBN,
+port-selection step, native USB versus USB-serial bridge versus external
+adapter classification, and board-package reset delegation without duplicating
+the Arduino target matrix.
+
 The Arduino wireless metadata tranche records physical Wi-Fi and Bluetooth LE
 radios for non-Uno boards such as MKR WiFi 1010, Nano 33 IoT, Nano 33 BLE Rev2,
 Nano RP2040 Connect, Nano ESP32, GIGA R1 WiFi, Portenta H7 Lite Connected,

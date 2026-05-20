@@ -28,6 +28,9 @@ metadata instead of maintaining language-local board tables. The upload
 descriptor also records whether the board appears through a USB serial bridge,
 native USB bootloader, or external serial adapter, which keeps Pro Mini-style
 boards from being treated like onboard-USB Arduinos.
+`board-vm-language-core` turns those descriptors into typed Arduino CLI upload
+options, including the port-selection step and board-package reset delegation,
+so language frontends do not need their own Arduino upload adapter matrix.
 
 The shared target registry also records physical wireless radios for the
 Arduino-family boards that have Wi-Fi or BLE hardware, including MKR/Nano

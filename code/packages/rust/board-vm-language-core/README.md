@@ -29,9 +29,12 @@ frontends may own ergonomic transport discovery in the short term, but the bytes
 they send and decode should come from this Rust core.
 
 Firmware flashing follows the same rule: frontends can present native options,
-but they should query `upload_plan_for_target` to learn the artifact kind,
+but they should query Rust-owned upload helpers to learn the artifact kind,
 transport requirements, reset behavior, port hint, adapter steps, and Arduino
-CLI platform/FQBN metadata for each board family.
+CLI platform/FQBN metadata for each board family. Generic clients can use
+`upload_plan_for_target`; Arduino CLI-specific clients can use
+`arduino_cli_upload_options_for_target` so native USB, USB-serial bridge, and
+external-adapter port selection stay in Rust instead of language-local tables.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
