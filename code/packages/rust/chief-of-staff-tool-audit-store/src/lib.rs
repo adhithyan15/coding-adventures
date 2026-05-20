@@ -937,6 +937,8 @@ impl ToolAuditSupervisorDrainRunReport {
             drained_follow_up_records: self.drain.follow_up_record_count(),
             record_count_delta: self.record_count_delta(),
             follow_up_record_count_delta: self.follow_up_record_count_delta(),
+            has_record_count_drift: self.has_record_count_drift(),
+            has_follow_up_record_count_drift: self.has_follow_up_record_count_drift(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
             reached_end_of_log: self.reached_end_of_log(),
@@ -968,6 +970,21 @@ impl ToolAuditSupervisorDrainRunReport {
             self.drain.follow_up_record_count(),
             self.plan.follow_up_record_count(),
         )
+    }
+
+    /// Return whether row count drift was observed.
+    pub fn has_record_count_drift(&self) -> bool {
+        self.record_count_delta() != 0
+    }
+
+    /// Return whether follow-up pressure count drift was observed.
+    pub fn has_follow_up_record_count_drift(&self) -> bool {
+        self.follow_up_record_count_delta() != 0
+    }
+
+    /// Return whether any planned-vs-actual count drift was observed.
+    pub fn has_count_drift(&self) -> bool {
+        self.has_record_count_drift() || self.has_follow_up_record_count_drift()
     }
 
     /// Return whether the actual run replayed at least one row.
@@ -1035,6 +1052,10 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub record_count_delta: i128,
     /// Replayed-minus-planned follow-up pressure count delta.
     pub follow_up_record_count_delta: i128,
+    /// Whether row count drift was observed.
+    pub has_record_count_drift: bool,
+    /// Whether follow-up pressure count drift was observed.
+    pub has_follow_up_record_count_drift: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether the actual run preserved the planned follow-up pressure count.
@@ -1080,6 +1101,11 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether planned and replayed follow-up pressure counts match.
     pub fn matches_follow_up_pressure(&self) -> bool {
         self.matches_planned_follow_up_record_count
+    }
+
+    /// Return whether any planned-vs-actual count drift was observed.
+    pub fn has_count_drift(&self) -> bool {
+        self.has_record_count_drift || self.has_follow_up_record_count_drift
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -2742,6 +2768,9 @@ mod tests {
         assert!(report.matches_planned_follow_up_record_count());
         assert_eq!(report.record_count_delta(), 0);
         assert_eq!(report.follow_up_record_count_delta(), 0);
+        assert!(!report.has_record_count_drift());
+        assert!(!report.has_follow_up_record_count_drift());
+        assert!(!report.has_count_drift());
         assert!(report.requires_follow_up());
         assert!(report.reached_end_of_log());
         assert!(!report.exhausted_tick_budget());
@@ -2761,6 +2790,9 @@ mod tests {
         assert!(summary.matches_follow_up_pressure());
         assert_eq!(summary.record_count_delta, 0);
         assert_eq!(summary.follow_up_record_count_delta, 0);
+        assert!(!summary.has_record_count_drift);
+        assert!(!summary.has_follow_up_record_count_drift);
+        assert!(!summary.has_count_drift());
         assert!(!summary.replayed_extra_records());
         assert!(!summary.missed_planned_records());
         assert!(!summary.replayed_extra_follow_up_records());
@@ -3038,6 +3070,9 @@ mod tests {
         assert_eq!(summary.drained_follow_up_records, 0);
         assert_eq!(summary.record_count_delta, 0);
         assert_eq!(summary.follow_up_record_count_delta, 0);
+        assert!(!summary.has_record_count_drift);
+        assert!(!summary.has_follow_up_record_count_drift);
+        assert!(!summary.has_count_drift());
         assert!(summary.matches_planned_record_count);
         assert!(summary.matches_planned_follow_up_record_count);
         assert!(summary.matches_follow_up_pressure());
@@ -3077,7 +3112,13 @@ mod tests {
         assert_eq!(summary.scheduler_action_label(), "investigate_plan_drift");
         assert!(!summary.matches_planned_record_count);
         assert_eq!(report.record_count_delta(), 1);
+        assert!(report.has_record_count_drift());
+        assert!(!report.has_follow_up_record_count_drift());
+        assert!(report.has_count_drift());
         assert_eq!(summary.record_count_delta, 1);
+        assert!(summary.has_record_count_drift);
+        assert!(!summary.has_follow_up_record_count_drift);
+        assert!(summary.has_count_drift());
         assert!(summary.replayed_extra_records());
         assert!(!summary.missed_planned_records());
         assert!(summary.requires_scheduler_action());
@@ -3102,7 +3143,13 @@ mod tests {
 
         assert!(!report.matches_planned_record_count());
         assert_eq!(report.record_count_delta(), -1);
+        assert!(report.has_record_count_drift());
+        assert!(!report.has_follow_up_record_count_drift());
+        assert!(report.has_count_drift());
         assert_eq!(summary.record_count_delta, -1);
+        assert!(summary.has_record_count_drift);
+        assert!(!summary.has_follow_up_record_count_drift);
+        assert!(summary.has_count_drift());
         assert!(!summary.replayed_extra_records());
         assert!(summary.missed_planned_records());
         assert_eq!(
@@ -3131,8 +3178,14 @@ mod tests {
         assert_eq!(summary.drained_follow_up_records, 0);
         assert_eq!(report.record_count_delta(), 0);
         assert_eq!(report.follow_up_record_count_delta(), -1);
+        assert!(!report.has_record_count_drift());
+        assert!(report.has_follow_up_record_count_drift());
+        assert!(report.has_count_drift());
         assert_eq!(summary.record_count_delta, 0);
         assert_eq!(summary.follow_up_record_count_delta, -1);
+        assert!(!summary.has_record_count_drift);
+        assert!(summary.has_follow_up_record_count_drift);
+        assert!(summary.has_count_drift());
         assert!(summary.matches_planned_record_count);
         assert!(!summary.matches_planned_follow_up_record_count);
         assert!(!summary.matches_follow_up_pressure());
