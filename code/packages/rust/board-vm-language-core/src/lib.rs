@@ -4078,7 +4078,23 @@ mod tests {
             && !interface.command_transport
             && !interface.ota_update));
         assert!(!nano_iot.capabilities.contains(&"transport.wifi".to_owned()));
-        assert!(nano_iot.network_interfaces.is_empty());
+        assert_eq!(nano_iot.network_interfaces.len(), 1);
+        let nano_iot_network = &nano_iot.network_interfaces[0];
+        assert_eq!(nano_iot_network.name, "WiFiNINA");
+        assert_eq!(nano_iot_network.transport, LanguageWirelessTransport::Wifi);
+        assert_eq!(nano_iot_network.chip, "u-blox NINA-W102");
+        assert_eq!(
+            nano_iot_network.protocols,
+            [
+                LanguageNetworkProtocol::Ipv4,
+                LanguageNetworkProtocol::Tcp,
+                LanguageNetworkProtocol::Udp,
+                LanguageNetworkProtocol::Dns,
+            ]
+        );
+        assert_eq!(nano_iot_network.max_sockets, 0);
+        assert!(nano_iot_network.notes.contains("metadata only"));
+        assert!(!nano_iot.capabilities.contains(&"network.ipv4".to_owned()));
         assert!(nano_ble.wireless.iter().any(|interface| interface.transport
             == LanguageWirelessTransport::BluetoothLe
             && interface.chip == "nRF52840"
@@ -4104,7 +4120,9 @@ mod tests {
             && interface.chip == "Arduino onboard WiFi/BLE module"
             && !interface.command_transport
             && !interface.ota_update));
-        assert!(giga.network_interfaces.is_empty());
+        assert_eq!(giga.network_interfaces.len(), 1);
+        assert_eq!(giga.network_interfaces[0].name, "Onboard WiFi");
+        assert_eq!(giga.network_interfaces[0].max_sockets, 0);
         assert!(portenta_c33
             .wireless
             .iter()
@@ -4114,6 +4132,9 @@ mod tests {
                     && !interface.command_transport
                     && !interface.ota_update
             ));
+        assert_eq!(portenta_c33.network_interfaces.len(), 1);
+        assert_eq!(portenta_c33.network_interfaces[0].name, "ESP32-C3 WiFi");
+        assert_eq!(portenta_c33.network_interfaces[0].max_sockets, 0);
         assert!(nicla_vision
             .wireless
             .iter()
@@ -4123,6 +4144,9 @@ mod tests {
                     && !interface.command_transport
                     && !interface.ota_update
             ));
+        assert_eq!(nicla_vision.network_interfaces.len(), 1);
+        assert_eq!(nicla_vision.network_interfaces[0].name, "Onboard WiFi");
+        assert_eq!(nicla_vision.network_interfaces[0].max_sockets, 0);
         assert!(opta_wifi
             .wireless
             .iter()
@@ -4132,7 +4156,10 @@ mod tests {
                     && !interface.command_transport
                     && !interface.ota_update
             ));
-        assert!(opta_wifi.network_interfaces.is_empty());
+        assert_eq!(opta_wifi.network_interfaces.len(), 1);
+        assert_eq!(opta_wifi.network_interfaces[0].name, "Onboard WiFi");
+        assert_eq!(opta_wifi.network_interfaces[0].max_sockets, 0);
+        assert!(!opta_wifi.capabilities.contains(&"network.ipv4".to_owned()));
         assert_eq!(
             uno.led_matrix,
             Some(LanguageLedMatrix {
