@@ -964,10 +964,55 @@ impl ToolAuditSupervisorDrainRunReport {
         self.host_investigation_kind().requires_investigation()
     }
 
+    /// Return the reader or supervisor checkpoint name drained by this run.
+    pub fn checkpoint_name(&self) -> &str {
+        &self.plan.checkpoint_name
+    }
+
+    /// Return the maximum rows each drain tick was allowed to replay.
+    pub fn max_records_per_tick(&self) -> usize {
+        self.plan.max_records_per_tick
+    }
+
+    /// Return the maximum drain ticks requested for this run.
+    pub fn max_ticks(&self) -> usize {
+        self.plan.max_ticks
+    }
+
+    /// Return the number of pages discovered by the preflight plan.
+    pub fn planned_pages(&self) -> usize {
+        self.plan.page_count()
+    }
+
+    /// Return the number of drain ticks that actually ran.
+    pub fn drain_ticks(&self) -> usize {
+        self.drain.tick_count()
+    }
+
+    /// Return the total rows the preflight plan expected to replay.
+    pub fn planned_records(&self) -> usize {
+        self.plan.planned_records
+    }
+
+    /// Return the total rows actually replayed into the sink.
+    pub fn drained_records(&self) -> usize {
+        self.drain.drained_records
+    }
+
+    /// Return planned rows with follow-up pressure.
+    pub fn planned_follow_up_records(&self) -> usize {
+        self.plan.follow_up_record_count()
+    }
+
+    /// Return replayed rows with follow-up pressure.
+    pub fn drained_follow_up_records(&self) -> usize {
+        self.drain.follow_up_record_count()
+    }
+
     /// Return a payload-free, flattened summary for host logs and schedulers.
     pub fn summary(&self) -> ToolAuditSupervisorDrainRunSummary {
         ToolAuditSupervisorDrainRunSummary {
-            checkpoint_name: self.plan.checkpoint_name.clone(),
+            checkpoint_name: self.checkpoint_name().to_owned(),
             outcome: self.outcome(),
             outcome_label: self.outcome_label(),
             scheduler_action: self.scheduler_action(),
@@ -976,14 +1021,14 @@ impl ToolAuditSupervisorDrainRunReport {
             requires_scheduler_action: self.requires_scheduler_action(),
             requests_continuation: self.requests_continuation(),
             routes_follow_up: self.routes_follow_up(),
-            max_records_per_tick: self.plan.max_records_per_tick,
-            max_ticks: self.plan.max_ticks,
-            planned_pages: self.plan.page_count(),
-            drain_ticks: self.drain.tick_count(),
-            planned_records: self.plan.planned_records,
-            drained_records: self.drain.drained_records,
-            planned_follow_up_records: self.plan.follow_up_record_count(),
-            drained_follow_up_records: self.drain.follow_up_record_count(),
+            max_records_per_tick: self.max_records_per_tick(),
+            max_ticks: self.max_ticks(),
+            planned_pages: self.planned_pages(),
+            drain_ticks: self.drain_ticks(),
+            planned_records: self.planned_records(),
+            drained_records: self.drained_records(),
+            planned_follow_up_records: self.planned_follow_up_records(),
+            drained_follow_up_records: self.drained_follow_up_records(),
             record_count_delta: self.record_count_delta(),
             follow_up_record_count_delta: self.follow_up_record_count_delta(),
             has_record_count_drift: self.has_record_count_drift(),
@@ -3129,11 +3174,20 @@ mod tests {
             .unwrap();
 
         assert_eq!(report.plan.max_records_per_tick, 2);
+        assert_eq!(report.max_records_per_tick(), 2);
         assert_eq!(report.plan.max_ticks, 2);
+        assert_eq!(report.max_ticks(), 2);
         assert_eq!(report.plan.page_count(), 2);
+        assert_eq!(report.planned_pages(), 2);
         assert_eq!(report.plan.planned_records, 4);
+        assert_eq!(report.planned_records(), 4);
         assert_eq!(report.drain.tick_count(), 2);
+        assert_eq!(report.drain_ticks(), 2);
         assert_eq!(report.drain.drained_records, 4);
+        assert_eq!(report.drained_records(), 4);
+        assert_eq!(report.checkpoint_name(), "supervisor");
+        assert_eq!(report.planned_follow_up_records(), 0);
+        assert_eq!(report.drained_follow_up_records(), 0);
         assert!(report.matches_planned_record_count());
         assert!(report.made_progress());
         assert!(report.advanced_checkpoint());
@@ -3178,7 +3232,9 @@ mod tests {
         assert_eq!(report.plan.planned_records, 3);
         assert_eq!(report.drain.drained_records, 3);
         assert_eq!(report.plan.follow_up_record_count(), 1);
+        assert_eq!(report.planned_follow_up_records(), 1);
         assert_eq!(report.drain.follow_up_record_count(), 1);
+        assert_eq!(report.drained_follow_up_records(), 1);
         assert!(report.matches_planned_record_count());
         assert!(report.matches_record_count());
         assert!(report.matches_planned_follow_up_record_count());
