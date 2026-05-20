@@ -130,3 +130,14 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_document_s
 python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_document_shell_audit_fixture.py \
   --check
 ```
+
+`whatwg-select-list-audit.json` is a generated index over tree-construction
+cases that stress select shells, adjacent option implied-end recovery, optgroup
+boundaries, select-in-table handling, select fragment contexts, and stray
+select/list end tags:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_select_list_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_select_list_audit_fixture.py \
+  --check
+```

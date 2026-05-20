@@ -33,10 +33,13 @@ documented in this file.
 - Generated WHATWG document-shell audit fixture over html5lib doctype, comment,
   html/head/body synthesis, frameset-boundary, and shell fragment-context
   cases, with a dedicated parser regression test.
+- Generated WHATWG select/list audit fixture over html5lib select shell,
+  option implied-end, optgroup-boundary, select-in-table, fragment-context, and
+  stray select/list end-tag cases, with a dedicated parser regression test.
 - Shared html5lib tree-construction test helpers keep smoke and focused
   tree-insertion, frameset, table, form/interactive, text-control, and
-  foreign-content, formatting, and document-shell audit checks on the same
-  parser and DOM dump path.
+  foreign-content, formatting, document-shell, and select/list audit checks on
+  the same parser and DOM dump path.
 - The html5lib source-coverage audit now has a checked JSON report plus
   `--write-report` and `--check-report` modes for parser/tokenizer fixture
   drift detection.
