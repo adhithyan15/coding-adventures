@@ -124,6 +124,13 @@ def default_checks() -> list[FixtureCheck]:
                 "--check",
             ),
         ),
+        FixtureCheck(
+            "whatwg-table-audit",
+            (
+                str(PARSER_FIXTURE_DIR / "generate_whatwg_table_audit_fixture.py"),
+                "--check",
+            ),
+        ),
     ]
 
 

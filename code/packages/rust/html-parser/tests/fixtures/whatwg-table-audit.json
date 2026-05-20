@@ -1,0 +1,2747 @@
+{
+  "case_count": 455,
+  "cases": [
+    {
+      "axis": "foster-parenting",
+      "id": "adoption01-dat-6",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "adoption01.dat:6"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "adoption01-dat-11",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "adoption01.dat:11"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "adoption01-dat-12",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "adoption01.dat:12"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "adoption01-dat-13",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "adoption01.dat:13"
+    },
+    {
+      "axis": "table-shell",
+      "id": "domjs-unsafe-dat-152",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "domjs-unsafe.dat:152"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "domjs-unsafe-dat-154",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "domjs-unsafe.dat:154"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "domjs-unsafe-dat-155",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "domjs-unsafe.dat:155"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "domjs-unsafe-dat-156",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "domjs-unsafe.dat:156"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "domjs-unsafe-dat-157",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "domjs-unsafe.dat:157"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "html5test-com-dat-290",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "html5test-com.dat:290"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "namespace-sensitivity-dat-326",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "namespace-sensitivity.dat:326"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "pending-spec-changes-plain-text-unsafe-dat-345",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "pending-spec-changes-plain-text-unsafe.dat:345"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "pending-spec-changes-dat-347",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "pending-spec-changes.dat:347"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "pending-spec-changes-dat-348",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "pending-spec-changes.dat:348"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "plain-text-unsafe-dat-375",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "plain-text-unsafe.dat:375"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "plain-text-unsafe-dat-376",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "plain-text-unsafe.dat:376"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "quirks01-dat-382",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "quirks01.dat:382"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "quirks01-dat-383",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "quirks01.dat:383"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "quirks01-dat-384",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "quirks01.dat:384"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "quirks01-dat-385",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "quirks01.dat:385"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tables01-dat-436",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tables01.dat:436"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tables01-dat-437",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tables01.dat:437"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tables01-dat-438",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tables01.dat:438"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tables01-dat-439",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tables01.dat:439"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tables01-dat-440",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tables01.dat:440"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tables01-dat-441",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tables01.dat:441"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tables01-dat-442",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tables01.dat:442"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tables01-dat-443",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tables01.dat:443"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tables01-dat-444",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tables01.dat:444"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tables01-dat-445",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tables01.dat:445"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tables01-dat-446",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tables01.dat:446"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tables01-dat-447",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tables01.dat:447"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tables01-dat-448",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tables01.dat:448"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tables01-dat-449",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tables01.dat:449"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tables01-dat-450",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tables01.dat:450"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tables01-dat-451",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tables01.dat:451"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tables01-dat-452",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tables01.dat:452"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tables01-dat-453",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tables01.dat:453"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tables01-dat-454",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tables01.dat:454"
+    },
+    {
+      "axis": "table-shell",
+      "id": "template-dat-463",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "template.dat:463"
+    },
+    {
+      "axis": "table-shell",
+      "id": "template-dat-464",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "template.dat:464"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "template-dat-465",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "template.dat:465"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "template-dat-466",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "template.dat:466"
+    },
+    {
+      "axis": "table-shell",
+      "id": "template-dat-467",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "template.dat:467"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-468",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:468"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-469",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:469"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-470",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:470"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-471",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:471"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-472",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:472"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-481",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:481"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-482",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:482"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-483",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:483"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-484",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:484"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-485",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:485"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-486",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:486"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-487",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:487"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-488",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:488"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-489",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:489"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-490",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:490"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-491",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:491"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-492",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:492"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-493",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:493"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-498",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:498"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-499",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:499"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-500",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:500"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-501",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:501"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-502",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:502"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-503",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:503"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-504",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:504"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-505",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:505"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-506",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:506"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-507",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:507"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-508",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:508"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-509",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:509"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-510",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:510"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-511",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:511"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-514",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:514"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-515",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:515"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-516",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:516"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-517",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:517"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-520",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:520"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-522",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:522"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-523",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:523"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-525",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:525"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-526",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:526"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-527",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:527"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-528",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:528"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-529",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:529"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-530",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:530"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-532",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:532"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-533",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:533"
+    },
+    {
+      "axis": "table-shell",
+      "id": "template-dat-534",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "template.dat:534"
+    },
+    {
+      "axis": "table-shell",
+      "id": "template-dat-538",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "template.dat:538"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-539",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:539"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "template-dat-540",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "template.dat:540"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-541",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:541"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-542",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:542"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-543",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:543"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "template-dat-544",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "template.dat:544"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "template-dat-545",
+      "reason": "select handling while table insertion modes are active",
+      "source": "template.dat:545"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "template-dat-546",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "template.dat:546"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "template-dat-550",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "template.dat:550"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-551",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:551"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "template-dat-556",
+      "reason": "select handling while table insertion modes are active",
+      "source": "template.dat:556"
+    },
+    {
+      "axis": "table-shell",
+      "id": "template-dat-561",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "template.dat:561"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "template-dat-562",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "template.dat:562"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-563",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:563"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-564",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:564"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-565",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:565"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-585",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:585"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-586",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:586"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-596",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:596"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-598",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:598"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests1-dat-621",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests1.dat:621"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-643",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:643"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-644",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:644"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-645",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:645"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-652",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:652"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests1-dat-656",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests1.dat:656"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-659",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:659"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-667",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:667"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-671",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:671"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests1-dat-672",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests1.dat:672"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests1-dat-673",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests1.dat:673"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests1-dat-674",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests1.dat:674"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests1-dat-675",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests1.dat:675"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests1-dat-676",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests1.dat:676"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests10-dat-683",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests10.dat:683"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests10-dat-684",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests10.dat:684"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests10-dat-685",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests10.dat:685"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests10-dat-686",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests10.dat:686"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests10-dat-687",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests10.dat:687"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests10-dat-688",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests10.dat:688"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests10-dat-689",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests10.dat:689"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests10-dat-690",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests10.dat:690"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests10-dat-691",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests10.dat:691"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests10-dat-692",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests10.dat:692"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests10-dat-693",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests10.dat:693"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests10-dat-694",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests10.dat:694"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests10-dat-695",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests10.dat:695"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests10-dat-718",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests10.dat:718"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests12-dat-745",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests12.dat:745"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests12-dat-746",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests12.dat:746"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests15-dat-760",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests15.dat:760"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests15-dat-761",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests15.dat:761"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests15-dat-762",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests15.dat:762"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests15-dat-763",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests15.dat:763"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests15-dat-764",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests15.dat:764"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests15-dat-765",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests15.dat:765"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests16-dat-962",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests16.dat:962"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests16-dat-963",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests16.dat:963"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests16-dat-964",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests16.dat:964"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-965",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:965"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-966",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:966"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-967",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:967"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-968",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:968"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-969",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:969"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-970",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:970"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-971",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:971"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-972",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:972"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-973",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:973"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-974",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:974"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-975",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:975"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-976",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:976"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests17-dat-977",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests17.dat:977"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests18-dat-985",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests18.dat:985"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests18-dat-986",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests18.dat:986"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests18-dat-987",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests18.dat:987"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests18-dat-988",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests18.dat:988"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests18-dat-989",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests18.dat:989"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests18-dat-990",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests18.dat:990"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests18-dat-992",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests18.dat:992"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests18-dat-1001",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests18.dat:1001"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests18-dat-1002",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests18.dat:1002"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests18-dat-1003",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests18.dat:1003"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests18-dat-1004",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests18.dat:1004"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests18-dat-1006",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests18.dat:1006"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests18-dat-1007",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests18.dat:1007"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests18-dat-1012",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests18.dat:1012"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests18-dat-1013",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests18.dat:1013"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests19-dat-1038",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests19.dat:1038"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests19-dat-1039",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests19.dat:1039"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests19-dat-1040",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests19.dat:1040"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests19-dat-1071",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests19.dat:1071"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests19-dat-1103",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests19.dat:1103"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests19-dat-1104",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests19.dat:1104"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests19-dat-1106",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests19.dat:1106"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests19-dat-1107",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests19.dat:1107"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests19-dat-1108",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests19.dat:1108"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests20-dat-1152",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests20.dat:1152"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests20-dat-1158",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests20.dat:1158"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests20-dat-1162",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests20.dat:1162"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests20-dat-1163",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests20.dat:1163"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests20-dat-1164",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests20.dat:1164"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests25-dat-1228",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests25.dat:1228"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests26-dat-1250",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests26.dat:1250"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests26-dat-1251",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests26.dat:1251"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests26-dat-1259",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests26.dat:1259"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests26-dat-1261",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests26.dat:1261"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests2-dat-3",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests2.dat:3"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests2-dat-4",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests2.dat:4"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests2-dat-13",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests2.dat:13"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests2-dat-15",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests2.dat:15"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests2-dat-36",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests2.dat:36"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests8-dat-5",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests8.dat:5"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests9-dat-7",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests9.dat:7"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests9-dat-8",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests9.dat:8"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests9-dat-9",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests9.dat:9"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests9-dat-10",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests9.dat:10"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests9-dat-11",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests9.dat:11"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests9-dat-12",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests9.dat:12"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests9-dat-13",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests9.dat:13"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests9-dat-14",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests9.dat:14"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests9-dat-15",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests9.dat:15"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests9-dat-16",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests9.dat:16"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests9-dat-17",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests9.dat:17"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests9-dat-18",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests9.dat:18"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests9-dat-19",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests9.dat:19"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests2-dat-61",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests2.dat:61"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests3-dat-23",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests3.dat:23"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests3-dat-24",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests3.dat:24"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests6-dat-15",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests6.dat:15"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests6-dat-16",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests6.dat:16"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests6-dat-17",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests6.dat:17"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests6-dat-19",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests6.dat:19"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests6-dat-20",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests6.dat:20"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests6-dat-22",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests6.dat:22"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests6-dat-23",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests6.dat:23"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests6-dat-24",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests6.dat:24"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests6-dat-26",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests6.dat:26"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests6-dat-28",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests6.dat:28"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests6-dat-33",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests6.dat:33"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests6-dat-36",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests6.dat:36"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests6-dat-38",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests6.dat:38"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests6-dat-40",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests6.dat:40"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests6-dat-41",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests6.dat:41"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests6-dat-42",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests6.dat:42"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests6-dat-43",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests6.dat:43"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests7-dat-2",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests7.dat:2"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests7-dat-8",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests7.dat:8"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests7-dat-9",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests7.dat:9"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests7-dat-12",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests7.dat:12"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests7-dat-13",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests7.dat:13"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests7-dat-19",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests7.dat:19"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests7-dat-20",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests7.dat:20"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests7-dat-21",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests7.dat:21"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests7-dat-22",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests7.dat:22"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests7-dat-23",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests7.dat:23"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests7-dat-24",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests7.dat:24"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests7-dat-30",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests7.dat:30"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests7-dat-31",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests7.dat:31"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests7-dat-32",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests7.dat:32"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests7-dat-33",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests7.dat:33"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests8-dat-6",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests8.dat:6"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests8-dat-7",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests8.dat:7"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests8-dat-8",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests8.dat:8"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests6-dat-18",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests6.dat:18"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests6-dat-21",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests6.dat:21"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests6-dat-25",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests6.dat:25"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests6-dat-27",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests6.dat:27"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests6-dat-34",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests6.dat:34"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests6-dat-35",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests6.dat:35"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests6-dat-37",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests6.dat:37"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests6-dat-39",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests6.dat:39"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests6-dat-44",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests6.dat:44"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-9",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:9"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-10",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:10"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-11",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:11"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-12",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:12"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-13",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:13"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-14",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:14"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-15",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:15"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-16",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:16"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-17",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:17"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-18",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:18"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-19",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:19"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-20",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:20"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-21",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:21"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-22",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:22"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-23",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:23"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-24",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:24"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-25",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:25"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-26",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:26"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-27",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:27"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-28",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:28"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-29",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:29"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-30",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:30"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-31",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:31"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-32",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:32"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-33",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:33"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-34",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:34"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-35",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:35"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-36",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:36"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-37",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:37"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-38",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:38"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-39",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:39"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-40",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:40"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-41",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:41"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-42",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:42"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-43",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:43"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-44",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:44"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-45",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:45"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-46",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:46"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-48",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:48"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-50",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:50"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-51",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:51"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-52",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:52"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-53",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:53"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-54",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:54"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-55",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:55"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-56",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:56"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-57",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:57"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-58",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:58"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-59",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:59"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-60",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:60"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-61",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:61"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-62",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:62"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-63",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:63"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-64",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:64"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-65",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:65"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-66",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:66"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-67",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:67"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-68",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:68"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-69",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:69"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-70",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:70"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-71",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:71"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-72",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:72"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-73",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:73"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-47",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:47"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-49",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:49"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "tests-innerhtml-1-dat-74",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "tests_innerHTML_1.dat:74"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-20",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:20"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-21",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:21"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-31",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:31"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-33",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:33"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests1-dat-56",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests1.dat:56"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-78",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:78"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-79",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:79"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-80",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:80"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-87",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:87"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests1-dat-91",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests1.dat:91"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-94",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:94"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-102",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:102"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests1-dat-106",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests1.dat:106"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests1-dat-107",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests1.dat:107"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests1-dat-108",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests1.dat:108"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests1-dat-109",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests1.dat:109"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests1-dat-110",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests1.dat:110"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests1-dat-111",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests1.dat:111"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests10-dat-6",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests10.dat:6"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests10-dat-7",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests10.dat:7"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests10-dat-8",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests10.dat:8"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests10-dat-9",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests10.dat:9"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests10-dat-10",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests10.dat:10"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests10-dat-11",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests10.dat:11"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests10-dat-12",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests10.dat:12"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests10-dat-13",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests10.dat:13"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests10-dat-14",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests10.dat:14"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests10-dat-15",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests10.dat:15"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests10-dat-16",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests10.dat:16"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests10-dat-17",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests10.dat:17"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests10-dat-18",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests10.dat:18"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests10-dat-41",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests10.dat:41"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests12-dat-1",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests12.dat:1"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests12-dat-2",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests12.dat:2"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests15-dat-7",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests15.dat:7"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests15-dat-8",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests15.dat:8"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests15-dat-9",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests15.dat:9"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests15-dat-10",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests15.dat:10"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests15-dat-11",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests15.dat:11"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests15-dat-12",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests15.dat:12"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests16-dat-195",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests16.dat:195"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests16-dat-196",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests16.dat:196"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests16-dat-197",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests16.dat:197"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-1",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:1"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-2",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:2"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-3",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:3"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-4",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:4"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-5",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:5"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-6",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:6"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-7",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:7"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-8",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:8"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-9",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:9"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-10",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:10"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-11",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:11"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-12",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:12"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests17-dat-13",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests17.dat:13"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests18-dat-8",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests18.dat:8"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests18-dat-9",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests18.dat:9"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests18-dat-10",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests18.dat:10"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests18-dat-11",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests18.dat:11"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests18-dat-12",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests18.dat:12"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests18-dat-13",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests18.dat:13"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests18-dat-15",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests18.dat:15"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests18-dat-24",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests18.dat:24"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests18-dat-25",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests18.dat:25"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests18-dat-26",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests18.dat:26"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests18-dat-27",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests18.dat:27"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests18-dat-29",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests18.dat:29"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests18-dat-30",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests18.dat:30"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests18-dat-35",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests18.dat:35"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests18-dat-36",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests18.dat:36"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests19-dat-25",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests19.dat:25"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests19-dat-26",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests19.dat:26"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests19-dat-27",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests19.dat:27"
+    },
+    {
+      "axis": "table-shell",
+      "id": "tests19-dat-58",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "tests19.dat:58"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests19-dat-90",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests19.dat:90"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests19-dat-91",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests19.dat:91"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests19-dat-93",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests19.dat:93"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tests19-dat-94",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tests19.dat:94"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests19-dat-95",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests19.dat:95"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests20-dat-36",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests20.dat:36"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests20-dat-42",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests20.dat:42"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests20-dat-46",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests20.dat:46"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests20-dat-47",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests20.dat:47"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests20-dat-48",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests20.dat:48"
+    },
+    {
+      "axis": "caption-colgroup",
+      "id": "tests25-dat-7",
+      "reason": "caption, colgroup, and col insertion-mode boundary recovery",
+      "source": "tests25.dat:7"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "tests26-dat-3",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "tests26.dat:3"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests26-dat-4",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests26.dat:4"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests26-dat-12",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests26.dat:12"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tests26-dat-14",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tests26.dat:14"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "math-dat-1",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "math.dat:1"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "math-dat-2",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "math.dat:2"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "math-dat-3",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "math.dat:3"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "math-dat-4",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "math.dat:4"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "math-dat-5",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "math.dat:5"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "math-dat-6",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "math.dat:6"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "math-dat-7",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "math.dat:7"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "math-dat-8",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "math.dat:8"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "svg-dat-1",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "svg.dat:1"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "svg-dat-2",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "svg.dat:2"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "svg-dat-3",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "svg.dat:3"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "svg-dat-4",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "svg.dat:4"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "svg-dat-5",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "svg.dat:5"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "svg-dat-6",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "svg.dat:6"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "svg-dat-7",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "svg.dat:7"
+    },
+    {
+      "axis": "table-fragment-context",
+      "id": "svg-dat-8",
+      "reason": "fragment parsing under table, row, cell, caption, and colgroup contexts",
+      "source": "svg.dat:8"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "template-dat-112",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "template.dat:112"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tricky01-dat-6",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tricky01.dat:6"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "tricky01-dat-7",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "tricky01.dat:7"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "tricky01-dat-8",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "tricky01.dat:8"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit01-dat-37",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit01.dat:37"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit01-dat-38",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit01.dat:38"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "webkit01-dat-48",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "webkit01.dat:48"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "webkit01-dat-49",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "webkit01.dat:49"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "webkit02-dat-6",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "webkit02.dat:6"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "webkit02-dat-7",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "webkit02.dat:7"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "webkit02-dat-8",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "webkit02.dat:8"
+    },
+    {
+      "axis": "cell-boundary",
+      "id": "webkit02-dat-9",
+      "reason": "td/th insertion, implied rows, and cell closure recovery",
+      "source": "webkit02.dat:9"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "webkit02-dat-11",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "webkit02.dat:11"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit02-dat-31",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit02.dat:31"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit02-dat-32",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit02.dat:32"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit02-dat-33",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit02.dat:33"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit02-dat-34",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit02.dat:34"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit02-dat-35",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit02.dat:35"
+    }
+  ],
+  "counts_by_axis": {
+    "caption-colgroup": 69,
+    "cell-boundary": 103,
+    "foster-parenting": 58,
+    "row-group-boundary": 54,
+    "select-in-table": 51,
+    "table-fragment-context": 91,
+    "table-shell": 29
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress table insertion modes, foster parenting, and table fragments.",
+  "format": "whatwg-html-table-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

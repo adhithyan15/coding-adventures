@@ -119,7 +119,17 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_frameset_a
   --check
 ```
 
-Both the broad smoke test and the focused audit fixtures use the shared
+The generated `tests/fixtures/whatwg-table-audit.json` fixture splits the
+table-construction coverage into table shells, row groups, cells,
+captions/colgroups, foster-parenting, select-in-table recovery, and table
+fragment contexts:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_table_audit_fixture.py \
+  --check
+```
+
+The broad smoke test and the focused audit fixtures use the shared
 `tests/common` html5lib parser and DOM dump helpers, so new parser conformance
 fixtures exercise the same normalization path.
 
