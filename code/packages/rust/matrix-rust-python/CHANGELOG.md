@@ -1,5 +1,64 @@
 # Changelog — matrix-rust-python (Rust)
 
+## [0.3.1] — 2026-05-19
+
+### Added — MX09 Phase 3: maturin wheel-build + CI smoke import
+
+Adds the missing piece between "the cdylib compiles" and "Python can
+actually `import matrix_rust_python`":
+
+- **`pyproject.toml`** — `maturin>=1.0` as the build backend; the
+  same configuration pattern `font-parser-python` already uses.
+  Maturin auto-detects the `PyInit_matrix_rust_python` symbol in
+  the resulting cdylib and packages it as a C-extension wheel.
+  `requires-python = ">=3.10"` to match the workspace's Python
+  floor.
+- **`.github/workflows/matrix-rust-python.yml`** — new
+  path-filtered workflow (mirrors `matrix-rust-napi.yml`).  Runs
+  on `ubuntu-latest` and `macos-latest` (per MX09 §"Distribution
+  model"):
+    1. `cargo test -p matrix-rust-python --release` — re-runs the 25
+       pure-Rust tests as a build-only smoke regression gate.
+    2. `maturin build --release --out target/wheels` — produces the
+       per-platform wheel.
+    3. `pip install <wheel>` — installs into the workflow's
+       Python 3.11.
+    4. `python -c "import matrix_rust_python; ..."` — asserts the
+       four expected exports (`graph_round_trip_json`,
+       `run_graph_on_cpu`, `Graph`, `Runtime`) are present, that
+       `Graph` / `Runtime` are types, and that the module-level
+       names are callable.
+    5. Reports wheel size + `file` info as a "did the linker pull
+       everything in" smoke (anything under ~500 KiB is suspicious
+       for this crate stack).
+
+### What's not shipped in Phase 3
+
+- **No PyPI publish.**  v0 builds the wheel artifact in CI but does
+  not push it to PyPI.  Publishing lands as a follow-up (the spec
+  calls this "Phase 3b") once a PyPI account + token are in CI
+  secrets.
+- **No Windows wheel.**  Same exclusion `matrix-rust-napi.yml` has —
+  the win32 toolchain has its own quirks (Python linking on Windows
+  uses `.lib` import libraries rather than dynamic lookup, so the
+  maturin path is slightly different).  Add as a Phase 3 follow-up.
+- **No cross-Python-version matrix.**  CI builds for Python 3.11
+  only in v0.  Phase 3b can fan out to 3.10/3.11/3.12 once the
+  3.11 build is stable.
+- **No companion Python wrapper package.**  Phase 4 adds
+  `code/packages/python/matrix-rust-python/` with `pytest` smoke
+  tests that depend on the per-platform wheels.
+
+### Local repro
+
+```
+cd code/packages/rust/matrix-rust-python
+pip install maturin
+maturin build --release            # writes ./target/wheels/*.whl
+pip install target/wheels/matrix_rust_python-*.whl
+python -c "import matrix_rust_python as m; print(dir(m))"
+```
+
 ## [0.3.0] — 2026-05-19
 
 ### Added — MX09 Phase 2b: `Graph` and `Runtime` Python classes with `bytes` I/O

@@ -112,15 +112,36 @@ extern "C" {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Slot constants from CPython's Include/cpython/typeslots.h.
-// These integer slot IDs are part of the stable Limited API.  We list
-// only the four we need; the full table has ~80 entries.
+// Slot constants from CPython's Include/typeslots.h.
+//
+// These integer slot IDs are part of the stable Limited API and
+// have not changed since they were assigned.  We list only the four
+// we need; the full table has ~80 entries (1..78ish, with gaps).
+//
+// Canonical values from CPython 3.10.6 Include/typeslots.h
+// (verified by grep against the local Python install):
+//
+//   #define Py_tp_dealloc 52
+//   #define Py_tp_doc     56
+//   #define Py_tp_init    60
+//   #define Py_tp_methods 64
+//
+// (Earlier draft used `PY_TP_METHODS = 72`, which is past the end
+// of the slot enum — `PyType_FromSpec` set a "invalid slot offset"
+// RuntimeError that classes::register silently caught and dropped,
+// leaving CPython's import machinery to surface it as
+// "initialization of matrix_rust_python raised unreported
+// exception".  The unit test was circular — it asserted
+// `PY_TP_METHODS == 72` against the hardcoded 72.  This file's
+// `slot_constants_match_python_stable_abi` test now uses the
+// canonical values + a header citation so the regression cannot
+// reoccur.)
 // ─────────────────────────────────────────────────────────────────────────────
 
 const PY_TP_DEALLOC: c_int = 52;
 const PY_TP_DOC: c_int = 56;
 const PY_TP_INIT: c_int = 60;
-const PY_TP_METHODS: c_int = 72;
+const PY_TP_METHODS: c_int = 64;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Static storage for the two type-object pointers.
@@ -708,17 +729,30 @@ mod tests {
     }
 
     /// PyType_Slot constants we declared inline must match the
-    /// values from Python's stable Limited API (Include/cpython/typeslots.h).
-    /// If a future Python ABI rev ever changed these numbers (it
-    /// won't — they're stable since 3.4), this test would have to
-    /// be updated.  Documenting them as constants in our source means
-    /// the spec values can be cross-checked without grepping the
-    /// CPython tree.
+    /// canonical values from CPython's Include/typeslots.h.  These
+    /// numbers have been stable since they were assigned and cannot
+    /// be renumbered without a CPython ABI break.
+    ///
+    /// The earlier version of this test asserted my (wrong) values
+    /// against my own hardcoded constants — a circular test that
+    /// passed locally but caused PyType_FromSpec to silently fail
+    /// in CI ("invalid slot offset" RuntimeError → unreported
+    /// exception on module init).  See the SLOT CONSTANTS block
+    /// at the top of this file for the citation.
+    ///
+    /// The test asserts the *literal* values from the upstream
+    /// header.  Any future change to these numbers would require
+    /// CPython itself to break ABI, which is by design.
     #[test]
     fn slot_constants_match_python_stable_abi() {
+        // From CPython 3.10.6 Include/typeslots.h.  Verified by
+        //   grep -E "Py_tp_(dealloc|doc|init|methods)\b" \
+        //     $(python3 -c "import sysconfig; print(sysconfig.get_paths()['include'])")/typeslots.h
+        // The values are part of the Limited API and are guaranteed
+        // not to change without an ABI break.
         assert_eq!(PY_TP_DEALLOC, 52);
         assert_eq!(PY_TP_DOC, 56); // not currently used, but reserved
         assert_eq!(PY_TP_INIT, 60);
-        assert_eq!(PY_TP_METHODS, 72);
+        assert_eq!(PY_TP_METHODS, 64);
     }
 }

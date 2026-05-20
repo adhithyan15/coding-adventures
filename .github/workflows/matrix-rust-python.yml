@@ -1,0 +1,223 @@
+# ================================================================
+# matrix-rust-python — Build + smoke-import the Python C extension
+# ================================================================
+#
+# MX09 Phase 3.  Builds the `matrix_rust_python` cdylib via
+# `cargo build --release`, copies it to a Python-importable name,
+# and asserts the four expected exports are importable from real
+# Python:
+#
+#   - graph_round_trip_json   (Phase 1 module-level fn)
+#   - run_graph_on_cpu        (Phase 2 module-level fn)
+#   - Graph                   (Phase 2b class)
+#   - Runtime                 (Phase 2b class)
+#
+# This is a build-only smoke — no pytest suite runs here.
+# End-to-end pytest exercises land in MX09 Phase 4 via the wrapper
+# package at code/packages/python/matrix-rust-python/.
+#
+# Mirrors the matrix-rust-napi.yml shape (path filter, OS matrix,
+# cargo cache, build-only smoke) — the Python toolchain replaces
+# Node, and the cdylib's import-via-import shape replaces the
+# `require()` pattern.
+#
+# ## Why cargo + cp instead of `maturin build` for v0?
+#
+# `maturin build` for a non-pyo3 cdylib defaults to
+# `bindings = "cffi"` which generates a Python cffi wrapper instead
+# of packaging the cdylib as a native CPython extension that
+# `import` loads via dlopen + `PyInit_<modname>`.  Our extension
+# uses python-bridge (a workspace zero-dep wrapper) not pyo3 or
+# cffi, so maturin's auto-detection lands on the wrong mode.
+#
+# The pyproject.toml is still present (for the eventual Phase 3b
+# wheel build once we wire maturin up correctly, e.g. via a
+# bindings-detection shim).  For v0, the simpler "cargo build then
+# copy the artifact" pattern proves the same property — the cdylib
+# links cleanly and CPython can load it — without depending on
+# maturin's auto-detection behaviour.
+#
+# The Phase 3b follow-up will configure maturin properly (likely
+# via `[tool.maturin] python-source` + a shim that tells maturin
+# to skip cffi codegen and just pack the cdylib).  Until then, the
+# smoke import here is the canonical Phase 3 acceptance gate.
+#
+# Target platforms (per MX09 §"Distribution model"):
+#   * darwin-arm64   (macos-latest = M-series runners since 2024)
+#   * linux-x64-gnu  (ubuntu-latest)
+#
+# Windows is intentionally out of scope for v0 — adding it is a
+# Phase 3b follow-up once macOS + Linux smoke is stable.  Matches
+# matrix-rust-napi's v0 platform list.
+
+name: matrix-rust-python (build smoke)
+
+on:
+  push:
+    branches: ['**']
+    paths:
+      - 'code/packages/rust/matrix-rust-python/**'
+      - 'code/packages/rust/python-bridge/**'
+      - 'code/packages/rust/matrix-ir/**'
+      - 'code/packages/rust/matrix-ir-json/**'
+      - 'code/packages/rust/matrix-runtime/**'
+      - 'code/packages/rust/matrix-cpu/**'
+      - 'code/packages/rust/compute-ir/**'
+      - 'code/packages/rust/executor-protocol/**'
+      - '.github/workflows/matrix-rust-python.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'code/packages/rust/matrix-rust-python/**'
+      - 'code/packages/rust/python-bridge/**'
+      - 'code/packages/rust/matrix-ir/**'
+      - 'code/packages/rust/matrix-ir-json/**'
+      - 'code/packages/rust/matrix-runtime/**'
+      - 'code/packages/rust/matrix-cpu/**'
+      - 'code/packages/rust/compute-ir/**'
+      - 'code/packages/rust/executor-protocol/**'
+      - '.github/workflows/matrix-rust-python.yml'
+
+# Cancel in-progress runs for the same branch — the smoke is
+# stateless and we always want the latest commit's result.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-smoke:
+    name: build + import smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            cdylib_ext: so
+          - os: macos-latest
+            cdylib_ext: dylib
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain (stable)
+        # No special components needed — the extension is plain Rust
+        # (no fmt/clippy gates in this workflow; those run via the
+        # main CI job).  Cache via the workspace target directory.
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry + git + target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            code/packages/rust/target
+          key: ${{ runner.os }}-cargo-matrix-rust-python-${{ hashFiles('code/packages/rust/matrix-rust-python/Cargo.toml', 'code/packages/rust/python-bridge/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-matrix-rust-python-
+            ${{ runner.os }}-cargo-
+
+      - name: Install Python 3.11
+        # Pin a specific Python for reproducibility.  pyproject.toml
+        # advertises 3.10+; CI runs against one of the supported
+        # versions.  Phase 3b can fan out to a 3.10/3.11/3.12 matrix
+        # once the build is stable on one.
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run cargo test (pure-Rust unit tests)
+        # 25 tests covering JSON wire format, end-to-end
+        # plan+execute, DoS-cap defence, envelope helper, class
+        # layout invariants.  Fast (~3s after cache hit).  Same
+        # tests the workspace BUILD file runs on every PR; we run
+        # them here too so a path-filter-triggered workflow never
+        # falsely reports green on a broken build.
+        working-directory: code/packages/rust
+        run: cargo test -p matrix-rust-python --release
+
+      - name: Build the cdylib (release)
+        # The build.rs in this crate emits the macOS
+        # `-undefined dynamic_lookup` linker flag so the cdylib can
+        # reference Python C API symbols that get resolved at
+        # `import` time by the loading CPython interpreter.  On
+        # Linux ELF shared libraries permit undefined symbols by
+        # default — no extra config needed.
+        working-directory: code/packages/rust
+        run: cargo build -p matrix-rust-python --release
+
+      - name: Stage the cdylib as a Python-importable .so
+        # Python's import machinery looks for `matrix_rust_python.so`
+        # (POSIX) on sys.path.  Copy the cargo-built library to that
+        # exact name in a fresh staging dir, then add that dir to
+        # PYTHONPATH for the smoke step.
+        #
+        # The cdylib's name on disk is `libmatrix_rust_python.{so,dylib}`
+        # (cargo prefixes "lib" by convention).  Strip the prefix
+        # and use a `.so` suffix on both platforms — CPython on
+        # macOS accepts `.so` as well as `.dylib` for extension
+        # modules.
+        working-directory: code/packages/rust
+        run: |
+          set -eu
+          mkdir -p target/python-import
+          src="target/release/libmatrix_rust_python.${{ matrix.cdylib_ext }}"
+          dst="target/python-import/matrix_rust_python.so"
+          if [ ! -f "$src" ]; then
+            echo "ERROR: cargo built no cdylib at $src" >&2
+            ls -la target/release/ | head -30 >&2
+            exit 1
+          fi
+          cp "$src" "$dst"
+          echo "Staged $src -> $dst"
+          ls -lah "$dst"
+
+      - name: Smoke-import the four expected exports
+        # The headline Phase 3 acceptance test: `import` works, and
+        # the four names the MX09 spec promised are present.  Any
+        # failure here means the extension was built but CPython
+        # can't load it (libpython link mismatch, missing PyInit
+        # symbol, ABI tag mismatch, etc.).
+        working-directory: code/packages/rust
+        run: |
+          set -eu
+          export PYTHONPATH="$PWD/target/python-import:${PYTHONPATH:-}"
+          python - <<'PY'
+          import matrix_rust_python as m
+
+          expected = ["graph_round_trip_json", "run_graph_on_cpu", "Graph", "Runtime"]
+          missing = [name for name in expected if not hasattr(m, name)]
+          if missing:
+              print(f"FAIL: missing exports: {missing}")
+              print(f"  have: {sorted(n for n in dir(m) if not n.startswith('_'))}")
+              raise SystemExit(1)
+
+          # Sanity: confirm the classes actually behave as types.
+          assert isinstance(m.Graph, type), f"Graph is not a type: {type(m.Graph)}"
+          assert isinstance(m.Runtime, type), f"Runtime is not a type: {type(m.Runtime)}"
+
+          # Sanity: confirm the module-level functions are callable.
+          assert callable(m.graph_round_trip_json)
+          assert callable(m.run_graph_on_cpu)
+
+          print("matrix_rust_python imported OK")
+          print(f"  exports: {sorted(n for n in dir(m) if not n.startswith('_'))}")
+          PY
+
+      - name: Report artifact info
+        # Quick visibility — the cdylib's size is a stable smoke for
+        # "did the linker pull everything in?"  Anything under
+        # ~500 KiB is suspicious for a release build of this crate
+        # stack (matrix-ir + matrix-runtime + matrix-cpu + ...).
+        if: success()
+        working-directory: code/packages/rust
+        run: |
+          echo "matrix-rust-python cdylib built on ${{ matrix.os }}:"
+          ls -lah target/release/libmatrix_rust_python.*
+          if command -v file >/dev/null 2>&1; then
+            file target/release/libmatrix_rust_python.${{ matrix.cdylib_ext }}
+          fi

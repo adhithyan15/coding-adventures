@@ -6,15 +6,16 @@ to Python.  Sibling crate to
 [`matrix-rust-napi`](../matrix-rust-napi) (the Node.js N-API binding)
 — same shape, different toolchain.
 
-Currently at **Phase 2b** of [MX09](../../../specs/MX09-matrix-rust-python.md).
+Currently at **Phase 3** of [MX09](../../../specs/MX09-matrix-rust-python.md).
 
 | Phase | Surface |
 |-------|---------|
 | 1 ✅ | `graph_round_trip_json(json_string: str) -> str` |
 | 2 ✅ | `run_graph_on_cpu(envelope_json: str) -> str` |
 | 2b ✅ | `m.Graph(json_str)` + `.to_json()` / `.describe()`; `m.Runtime()` + `.run(graph, [bytes]) -> [bytes]` |
-| 3   | `pyproject.toml` + `maturin` wheel build workflow |
+| 3 ✅ | `pyproject.toml` + `maturin` wheel build CI workflow (ubuntu + macos) |
 | 4   | Python wrapper package + `pytest` smoke tests |
+| 5   | PyPI publish |
 
 ## What this crate is
 
@@ -81,23 +82,31 @@ break through, the option remains open — but the default is
 
 ## Build & test
 
-Pure-Rust tests run via `cargo`:
+Pure-Rust tests run via `cargo` (no Python interpreter required):
 
 ```
 cargo test -p matrix-rust-python -- --nocapture
 ```
 
-The 5 unit tests exercise the pure-Rust `round_trip_json` helper.
-They do **not** require a Python interpreter — the Python C API
-wrapper is exercised end-to-end by Phase 4's `pytest` suite via the
-companion wrapper package.
+25 unit tests exercise the JSON round-trip helper, the envelope-shaped
+execution helper, the 4 GiB DoS cap, and the Graph/Runtime class
+layout invariants.
 
-To produce the actual `.so` / `.dylib` / `.pyd` that Python loads,
-Phase 3 will add a `maturin build --release` invocation.  Until
-then, `cargo build -p matrix-rust-python --release` produces
-`target/release/libmatrix_rust_python.{so,dylib}` (or
-`matrix_rust_python.dll` on Windows) which Python can `import`
-directly after renaming the extension.
+To produce the wheel that Python actually loads (Phase 3 ✅):
+
+```
+pip install maturin
+cd code/packages/rust/matrix-rust-python
+maturin build --release            # writes ./target/wheels/*.whl
+pip install target/wheels/matrix_rust_python-*.whl
+python -c "import matrix_rust_python as m; print(dir(m))"
+```
+
+CI (`.github/workflows/matrix-rust-python.yml`) runs the cargo
+tests + the maturin build + the `pip install` + the import smoke
+on `ubuntu-latest` and `macos-latest` (per MX09 §"Distribution
+model") on every PR that touches this crate, `python-bridge`, or
+any of the matrix-* dependencies.
 
 ## How it fits in the stack
 

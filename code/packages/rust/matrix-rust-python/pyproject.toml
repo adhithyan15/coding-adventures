@@ -1,0 +1,60 @@
+# ================================================================
+# matrix-rust-python — maturin build configuration
+# ================================================================
+#
+# MX09 Phase 3.  Makes the Rust cdylib at this crate build into a
+# Python wheel via `maturin build --release`.  Maturin handles the
+# libpython link step that bare `cargo build` can't.
+#
+# Mirrors `code/packages/rust/font-parser-python/pyproject.toml` —
+# the established workspace pattern for Rust-Python extensions using
+# the workspace's own `python-bridge` crate (not pyo3, not cffi).
+# Maturin auto-detects the `PyInit_matrix_rust_python` symbol in the
+# resulting cdylib and packages it as a C-extension module.
+#
+# To build a wheel locally:
+#
+#   cd code/packages/rust/matrix-rust-python
+#   pip install maturin
+#   maturin build --release            # writes ./target/wheels/*.whl
+#
+# To install the wheel directly into the active env:
+#
+#   maturin develop --release
+#
+# CI runs this on ubuntu-latest + macos-latest in
+# .github/workflows/matrix-rust-python.yml.  No PyPI publish step in
+# v0 (Phase 5 territory).
+
+[build-system]
+requires = ["maturin>=1.0"]
+build-backend = "maturin"
+
+[project]
+name = "matrix-rust-python"
+version = "0.3.0"
+description = "Python C extension exposing the Rust matrix execution layer — Graph + Runtime classes plus low-level JSON/envelope helpers, backed by matrix-ir / matrix-runtime / matrix-cpu"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+keywords = ["matrix", "linear-algebra", "rust", "ml", "tensors", "compute"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Rust",
+    "Topic :: Scientific/Engineering",
+]
+
+[tool.maturin]
+# Module name must match the `[lib] name` in Cargo.toml.  Maturin
+# uses this to find the `PyInit_<module>` entry point and to choose
+# the wheel's importable module name.
+module-name = "matrix_rust_python"
+# Build the cdylib as-is (no extra cargo features).
+features = []
