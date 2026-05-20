@@ -1,5 +1,85 @@
 # Changelog
 
+## 0.63.0 — 2026-05-20
+
+**Phase 38 — Weierstrass closed forms lifted to linear trig arguments
+`sin(α·x + β)` and `cos(α·x + β)`.**
+
+The previous Phases 34–37 closed Weierstrass for `∫ c / (a + b·trig(x)) dx`
+in all discriminant regimes (`a² > b²` arctan, `a² = b²` degenerate,
+`a² < b²` log) but only when the trig argument was the bare variable
+`x`.  Phase 38 generalises every branch to accept any linear-in-`x`
+rational argument `α·x + β` (with `α, β ∈ Q`, `α ≠ 0`).
+
+The mathematics is a single inner change of variable: with `u = α·x + β`
+we have `du = α · dx`, so
+
+    ∫ c/(a + b·sin(α·x + β)) dx
+        =  (1/α) · ∫ c/(a + b·sin u) du   (Phase 34/36/37 closed form in `u`)
+
+The closed form is the existing one with `tan((α·x + β)/2)` substituted
+for `tan(x/2)` and the outer constant scaled by `1/α`.  When `α = 1` and
+`β = 0`, the new code path is bit-for-bit identical to the old Phases
+34–37 — full backwards compatibility.
+
+### Added
+
+- **`_parse_linear_in_x(node, x)`** in `integrate.py` — parses a node
+  into a `(α, β)` rational pair when it represents `α·x + β`.  Handles
+  bare `x`, scalar multiples, ADD/SUB with any operand ordering, and
+  leading `Neg` wrappers.  Rejects nonlinear (`x²`) and pure-constant
+  shapes by returning `None`.  `α = 0` is filtered out so callers may
+  rely on `α ≠ 0` throughout.
+- **`_build_linear_arg_ir(α, β, x)`** — converts the parsed `(α, β)`
+  back into IR, collapsing trivial cases (`α=1, β=0 → x`, etc.) so the
+  emitted `tan(arg/2)` carries the simplest equivalent argument.
+- **`_parse_const_times_trig_linear(node, x)`** — supersedes the
+  Phase 34 bare-`x` predecessor.  Returns `(c, head, α, β)` for any
+  shape matching `c·sin(α·x+β)` or `c·cos(α·x+β)` (plus all the
+  scalar / Neg / order variants the old code handled).
+
+### Changed
+
+- **`_parse_a_plus_b_sincos`** — now returns `(a, b, head, α, β)`
+  instead of `(a, b, head)`.  All four signs/orderings of the parent
+  ADD/SUB pattern continue to work; the extra `α, β` carry the inner
+  trig argument's linear coefficients through to the dispatcher.
+- **`_try_weierstrass_degenerate`, `_try_weierstrass_log_form`,
+  `_try_weierstrass_one_over_linear_trig`** — accept an `arg_node`
+  IR parameter representing `α·x + β` and substitute it into the
+  `tan(arg/2)` construction.  The outer `c ← c/α` scaling is applied
+  once at the dispatcher entry, so each branch's closed form is
+  otherwise unchanged.
+
+### Added — tests
+
+`tests/test_phase34_weierstrass.py` (10 new cases, including one
+promoted from the prior fallthrough):
+
+- `test_phase38_sin_two_x_closes` — `∫ 1/(2 + sin(2x)) dx` closes; the
+  derivative numerically matches `1/(2 + sin 2x)` on `(−π/2, π/2)`.
+- `test_phase38_cos_three_x` — `α = 3` cos variant.
+- `test_phase38_sin_x_plus_constant_phase` — `α = 1, β = 1` isolates
+  the phase shift.
+- `test_phase38_sin_two_x_plus_phase` — full `α = 2, β = 1` general case.
+- `test_phase38_rational_alpha` — `α = 1/2` rational coefficient.
+- `test_phase38_negative_alpha` — `α = −2` sign-flipped case.
+- `test_phase38_degenerate_branch_under_substitution` — `∫ 1/(1+cos 2x) dx`
+  exercises the Phase 35 degenerate path with α=2.
+- `test_phase38_log_form_under_substitution` — `∫ 1/(1+2·sin 2x) dx`
+  exercises the Phase 36 log path with α=2.
+- `test_phase38_fallthrough_nonlinear_argument` — `sin(x²)` is correctly
+  left unevaluated.
+- `test_phase38_fallthrough_symbolic_alpha` — `sin(α·x)` with symbolic
+  α defers gracefully.
+
+### Still deferred
+
+- Symbolic coefficients (`a`, `b`, `α`, or `β` non-numeric) — needs an
+  assumption context to decide discriminant sign.
+- Trig argument involving `x²` or other nonlinear forms — out of scope
+  for Weierstrass; a future substitution phase would compose with these.
+
 ## 0.62.0 — 2026-05-20
 
 **Phase 37 — Weierstrass log form extended to `b < −|a|` cos branch.**
