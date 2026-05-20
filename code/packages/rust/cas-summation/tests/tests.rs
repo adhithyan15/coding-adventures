@@ -200,3 +200,109 @@ fn unknown_sum_falls_back_to_sum_node() {
     let out = evaluate_sum(f, k, int(1), sym("n"), eval);
     assert!(matches!(out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ---------------------------------------------------------------------------
+// Phase 39: Telescoping sums.
+//
+// ∑_{k=lo}^{hi} [g(k+1) − g(k)] = g(hi+1) − g(lo)
+// ∑_{k=lo}^{hi} [g(k) − g(k+1)] = g(lo) − g(hi+1)
+//
+// Detection is purely structural: substitute k → k+1 in one half of the SUB
+// shape and compare to the other half after eval normalisation.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase39_standard_telescope_concrete_bounds() {
+    // ∑_{k=1}^{4} [(k+1)² − k²] = 5² − 1² = 24.
+    let k = sym("k");
+    let k_plus_one_sq = apply(
+        sym(POW),
+        vec![apply(sym(ADD), vec![k.clone(), int(1)]), int(2)],
+    );
+    let k_sq = apply(sym(POW), vec![k.clone(), int(2)]);
+    let f = apply(sym(SUB), vec![k_plus_one_sq, k_sq]);
+    assert_eq!(evaluate_sum(f, k, int(1), int(4), eval), int(24));
+}
+
+#[test]
+fn phase39_antisymmetric_telescope() {
+    // ∑_{k=1}^{3} [k² − (k+1)²] = 1² − 4² = −15.
+    let k = sym("k");
+    let k_sq = apply(sym(POW), vec![k.clone(), int(2)]);
+    let k_plus_one_sq = apply(
+        sym(POW),
+        vec![apply(sym(ADD), vec![k.clone(), int(1)]), int(2)],
+    );
+    let f = apply(sym(SUB), vec![k_sq, k_plus_one_sq]);
+    assert_eq!(evaluate_sum(f, k, int(1), int(3), eval), int(-15));
+}
+
+#[test]
+fn phase39_linear_g_counts_terms() {
+    // ∑_{k=1}^{10} [(k+1) − k] = g(11) − g(1) = 11 − 1 = 10.
+    let k = sym("k");
+    let f = apply(
+        sym(SUB),
+        vec![apply(sym(ADD), vec![k.clone(), int(1)]), k.clone()],
+    );
+    assert_eq!(evaluate_sum(f, k, int(1), int(10), eval), int(10));
+}
+
+#[test]
+fn phase39_constant_offset_in_g() {
+    // ∑_{k=1}^{5} [(k + 6) − (k + 5)] = g(6) − g(1) = 11 − 6 = 5.
+    let k = sym("k");
+    let g_at_k_plus_1 = apply(
+        sym(ADD),
+        vec![apply(sym(ADD), vec![k.clone(), int(1)]), int(5)],
+    );
+    let g_at_k = apply(sym(ADD), vec![k.clone(), int(5)]);
+    let f = apply(sym(SUB), vec![g_at_k_plus_1, g_at_k]);
+    assert_eq!(evaluate_sum(f, k, int(1), int(5), eval), int(5));
+}
+
+#[test]
+fn phase39_non_telescoping_falls_through() {
+    // ∑_{k=1}^{3} [k² − k] = (1−1)+(4−2)+(9−3) = 8 (numeric fallback).
+    let k = sym("k");
+    let f = apply(
+        sym(SUB),
+        vec![apply(sym(POW), vec![k.clone(), int(2)]), k.clone()],
+    );
+    assert_eq!(evaluate_sum(f, k, int(1), int(3), eval), int(8));
+}
+
+#[test]
+fn phase39_constant_difference_routes_through_constant_rule() {
+    // ∑_{k=1}^{10} [5 − 3] = ∑ 2 = 20 (step 1 fires first; telescope never runs).
+    let k = sym("k");
+    let f = apply(sym(SUB), vec![int(5), int(3)]);
+    assert_eq!(evaluate_sum(f, k, int(1), int(10), eval), int(20));
+}
+
+#[test]
+fn phase39_symbolic_upper_bound_non_unevaluated() {
+    let k = sym("k");
+    let n = sym("n");
+    let f = apply(
+        sym(SUB),
+        vec![apply(sym(ADD), vec![k.clone(), int(1)]), k.clone()],
+    );
+    let out = evaluate_sum(f, k, int(1), n, eval);
+    // Must not stay as a SUM(...) node.
+    assert!(
+        !matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)),
+        "expected non-unevaluated form, got {out:?}"
+    );
+}
+
+#[test]
+fn phase39_infinite_upper_falls_through() {
+    let k = sym("k");
+    let f = apply(
+        sym(SUB),
+        vec![apply(sym(ADD), vec![k.clone(), int(1)]), k.clone()],
+    );
+    let out = evaluate_sum(f, k, int(0), sym("%inf"), eval);
+    assert!(matches!(out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
