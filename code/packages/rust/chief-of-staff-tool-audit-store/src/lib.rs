@@ -827,6 +827,21 @@ impl ToolAuditSupervisorDrainLoopSummary {
         self.ticks.len()
     }
 
+    /// Return how many requested drain ticks did not run.
+    pub fn remaining_tick_budget(&self) -> usize {
+        self.max_ticks.saturating_sub(self.tick_count())
+    }
+
+    /// Return whether the run consumed every requested drain tick.
+    pub fn used_all_ticks(&self) -> bool {
+        self.remaining_tick_budget() == 0
+    }
+
+    /// Return whether more ticks were available when the run stopped.
+    pub fn has_remaining_tick_budget(&self) -> bool {
+        self.remaining_tick_budget() > 0
+    }
+
     /// Return whether no audit rows were replayed.
     pub fn is_idle(&self) -> bool {
         self.drained_records == 0
@@ -989,6 +1004,21 @@ impl ToolAuditSupervisorDrainRunReport {
         self.drain.tick_count()
     }
 
+    /// Return how many requested drain ticks did not run.
+    pub fn remaining_tick_budget(&self) -> usize {
+        self.max_ticks().saturating_sub(self.drain_ticks())
+    }
+
+    /// Return whether the run consumed every requested drain tick.
+    pub fn used_all_ticks(&self) -> bool {
+        self.remaining_tick_budget() == 0
+    }
+
+    /// Return whether more ticks were available when the run stopped.
+    pub fn has_remaining_tick_budget(&self) -> bool {
+        self.remaining_tick_budget() > 0
+    }
+
     /// Return the total rows the preflight plan expected to replay.
     pub fn planned_records(&self) -> usize {
         self.plan.planned_records
@@ -1025,6 +1055,9 @@ impl ToolAuditSupervisorDrainRunReport {
             max_ticks: self.max_ticks(),
             planned_pages: self.planned_pages(),
             drain_ticks: self.drain_ticks(),
+            remaining_tick_budget: self.remaining_tick_budget(),
+            used_all_ticks: self.used_all_ticks(),
+            has_remaining_tick_budget: self.has_remaining_tick_budget(),
             planned_records: self.planned_records(),
             drained_records: self.drained_records(),
             planned_follow_up_records: self.planned_follow_up_records(),
@@ -1228,6 +1261,12 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub planned_pages: usize,
     /// Number of drain ticks that actually ran.
     pub drain_ticks: usize,
+    /// Requested drain ticks that did not run.
+    pub remaining_tick_budget: usize,
+    /// Whether the run consumed every requested drain tick.
+    pub used_all_ticks: bool,
+    /// Whether more ticks were available when the run stopped.
+    pub has_remaining_tick_budget: bool,
     /// Total rows the preflight plan expected to replay.
     pub planned_records: usize,
     /// Total rows actually replayed into the sink.
@@ -1348,6 +1387,21 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return the number of drain ticks that actually ran.
     pub fn drain_ticks(&self) -> usize {
         self.drain_ticks
+    }
+
+    /// Return how many requested drain ticks did not run.
+    pub fn remaining_tick_budget(&self) -> usize {
+        self.remaining_tick_budget
+    }
+
+    /// Return whether the run consumed every requested drain tick.
+    pub fn used_all_ticks(&self) -> bool {
+        self.used_all_ticks
+    }
+
+    /// Return whether more ticks were available when the run stopped.
+    pub fn has_remaining_tick_budget(&self) -> bool {
+        self.has_remaining_tick_budget
     }
 
     /// Return the total rows the preflight plan expected to replay.
@@ -3141,6 +3195,9 @@ mod tests {
         assert_eq!(summary.max_records_per_tick, 2);
         assert_eq!(summary.max_ticks, 3);
         assert_eq!(summary.tick_count(), 2);
+        assert_eq!(summary.remaining_tick_budget(), 1);
+        assert!(!summary.used_all_ticks());
+        assert!(summary.has_remaining_tick_budget());
         assert_eq!(summary.drained_records, 3);
         assert!(summary.made_progress());
         assert!(summary.advanced_checkpoint());
@@ -3179,6 +3236,9 @@ mod tests {
             .unwrap();
 
         assert_eq!(summary.tick_count(), 3);
+        assert_eq!(summary.remaining_tick_budget(), 0);
+        assert!(summary.used_all_ticks());
+        assert!(!summary.has_remaining_tick_budget());
         assert_eq!(summary.drained_records, 4);
         assert!(summary.reached_end_of_log());
         assert!(!summary.exhausted_tick_budget());
@@ -3209,6 +3269,9 @@ mod tests {
             .unwrap();
 
         assert_eq!(summary.tick_count(), 2);
+        assert_eq!(summary.remaining_tick_budget(), 0);
+        assert!(summary.used_all_ticks());
+        assert!(!summary.has_remaining_tick_budget());
         assert_eq!(summary.drained_records, 4);
         assert!(!summary.reached_end_of_log());
         assert!(summary.exhausted_tick_budget());
@@ -3454,6 +3517,9 @@ mod tests {
         assert!(report.reached_end_of_log());
         assert!(!report.requires_follow_up());
         assert!(!report.should_continue());
+        assert_eq!(report.remaining_tick_budget(), 1);
+        assert!(!report.used_all_ticks());
+        assert!(report.has_remaining_tick_budget());
         assert_eq!(
             report.outcome(),
             ToolAuditSupervisorDrainRunOutcome::CaughtUp
@@ -3826,6 +3892,12 @@ mod tests {
         assert_eq!(summary.planned_pages(), 1);
         assert_eq!(summary.drain_ticks, 1);
         assert_eq!(summary.drain_ticks(), 1);
+        assert_eq!(summary.remaining_tick_budget, 0);
+        assert_eq!(summary.remaining_tick_budget(), 0);
+        assert!(summary.used_all_ticks);
+        assert!(summary.used_all_ticks());
+        assert!(!summary.has_remaining_tick_budget);
+        assert!(!summary.has_remaining_tick_budget());
         assert_eq!(summary.planned_records, 2);
         assert_eq!(summary.planned_records(), 2);
         assert_eq!(summary.drained_records, 2);
