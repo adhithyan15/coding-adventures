@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.68.0] - 2026-05-20
+
+### Fixed
+
+- **``strftime('%f', …)`` and ``strftime('%W', …)`` now match SQLite
+  byte-for-byte** (via ``sql-vm 1.42.0``):
+
+  * ``%f`` (millisecond fraction) was always emitting ``.000``
+    because ``_parse_timevalue`` truncated the input before the
+    fractional-seconds branch could run.
+  * ``%W`` (week of year) was off by one: ``strftime('%W',
+    '2024-01-15')`` returned ``'02'`` instead of ``'03'``.
+
+  15 oracle tests in ``test_tier3_strftime_fixes.py``.
+
 ## [1.67.0] - 2026-05-20
 
 ### Fixed
