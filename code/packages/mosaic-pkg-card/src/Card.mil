@@ -1,0 +1,30 @@
+// Card.mil — interface for a simple, display-only Card component.
+//
+// A Card is the simplest possible composite UI element: a titled,
+// captioned panel.  It has three text slots (title / body / footer) and
+// zero emits — Cards don't fire events, the host handles any wrapping
+// click/keyboard interaction itself by placing the Card inside an
+// actionable container.
+//
+// Why three slots and not one?
+// ----------------------------
+// A single `content: text` slot would force the host to embed visual
+// hierarchy in the string (e.g. via Markdown), which then has to be
+// parsed by every backend.  Splitting into title / body / footer lets
+// the .mll lay them out with backend-native semantics (font weight,
+// padding, color) and lets the .msl theme each region independently —
+// which is the entire point of the part system.
+//
+// Why no emits?
+// -------------
+// Cards are display surfaces.  Wrapping interaction (click to open a
+// detail view, etc.) belongs to the host's parent component, not the
+// Card itself — the same way an HTML <article> doesn't have an onClick
+// in the spec.  This keeps Card the simplest possible proof of the
+// userland-package shape.
+
+component Card {
+  slot title  : text ;
+  slot body   : text ;
+  slot footer : text ;
+}

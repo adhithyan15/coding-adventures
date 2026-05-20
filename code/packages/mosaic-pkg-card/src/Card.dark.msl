@@ -1,0 +1,49 @@
+// Card.dark.msl — dark-theme stylesheet for the Card component.
+//
+// Targets the four parts declared by Card.mll:
+//
+//   card-root    the outer Column wrapper — owns the surface fill,
+//                border, and padding around the whole card
+//   card-title   bold, brighter, larger — the visual anchor of the card
+//   card-body    body copy — softer, comfortable reading colour
+//   card-footer  muted caption-style metadata — quietest part of the card
+//
+// Palette
+// -------
+//   #2d2d30  surface fill, matches VS Code's elevated dark surface
+//   #3f3f46  hairline border, the same edge VS Code uses on panels
+//   #ffffff  primary title text — maximum contrast against #2d2d30
+//   #cccccc  body text — comfortable for paragraphs without being harsh
+//   #9d9d9d  caption / footer — clearly subordinate to body copy
+//
+// All units are explicit px values.  The Mosaic style grammar requires a
+// unit suffix on length values; bare numbers are reserved for unitless
+// properties (line-height, flex, etc.).
+
+style Card {
+  part card-root {
+    background:   #2d2d30 ;
+    border-width: 1px ;
+    border-style: solid ;
+    border-color: #3f3f46 ;
+    padding:      12px ;
+  }
+
+  part card-title {
+    color:          #ffffff ;
+    font-weight:    bold ;
+    font-size:      16px ;
+    padding-bottom: 8px ;
+  }
+
+  part card-body {
+    color:          #cccccc ;
+    font-size:      13px ;
+    padding-bottom: 8px ;
+  }
+
+  part card-footer {
+    color:     #9d9d9d ;
+    font-size: 11px ;
+  }
+}
