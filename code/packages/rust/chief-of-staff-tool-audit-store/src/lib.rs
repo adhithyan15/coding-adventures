@@ -965,6 +965,9 @@ impl ToolAuditSupervisorDrainRunReport {
             checkpoint_name: self.plan.checkpoint_name.clone(),
             outcome: self.outcome(),
             scheduler_action: self.scheduler_action(),
+            requires_scheduler_action: self.requires_scheduler_action(),
+            requests_continuation: self.requests_continuation(),
+            routes_follow_up: self.routes_follow_up(),
             max_records_per_tick: self.plan.max_records_per_tick,
             max_ticks: self.plan.max_ticks,
             planned_pages: self.plan.page_count(),
@@ -1093,6 +1096,12 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub outcome: ToolAuditSupervisorDrainRunOutcome,
     /// Recommended host scheduler action for this run.
     pub scheduler_action: ToolAuditSupervisorDrainSchedulerAction,
+    /// Whether this run asks the scheduler to take action.
+    pub requires_scheduler_action: bool,
+    /// Whether the scheduler should run another drain pass.
+    pub requests_continuation: bool,
+    /// Whether follow-up pressure should be routed to the host.
+    pub routes_follow_up: bool,
     /// Maximum rows each drain tick may replay.
     pub max_records_per_tick: usize,
     /// Maximum drain ticks requested for this run.
@@ -1151,17 +1160,17 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether this run outcome asks the scheduler to take action.
     pub fn requires_scheduler_action(&self) -> bool {
-        self.scheduler_action.requires_scheduler_action()
+        self.requires_scheduler_action
     }
 
     /// Return whether the scheduler should run another drain pass.
     pub fn requests_continuation(&self) -> bool {
-        self.scheduler_action.requests_continuation()
+        self.requests_continuation
     }
 
     /// Return whether follow-up pressure should be routed to the host.
     pub fn routes_follow_up(&self) -> bool {
-        self.scheduler_action.routes_follow_up()
+        self.routes_follow_up
     }
 
     /// Return whether the host should investigate preflight/drain drift.
@@ -3040,8 +3049,11 @@ mod tests {
             ToolAuditSupervisorDrainRunOutcome::NeedsFollowUp
         );
         let summary = report.summary();
+        assert!(summary.requires_scheduler_action);
         assert!(summary.requires_scheduler_action());
+        assert!(!summary.requests_continuation);
         assert!(!summary.requests_continuation());
+        assert!(summary.routes_follow_up);
         assert!(summary.routes_follow_up());
         assert!(!summary.requires_plan_drift_investigation);
         assert!(!summary.requires_plan_drift_investigation());
@@ -3468,8 +3480,11 @@ mod tests {
             ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation
         );
         assert_eq!(summary.scheduler_action_label(), "schedule_continuation");
+        assert!(summary.requires_scheduler_action);
         assert!(summary.requires_scheduler_action());
+        assert!(summary.requests_continuation);
         assert!(summary.requests_continuation());
+        assert!(!summary.routes_follow_up);
         assert!(!summary.routes_follow_up());
         assert!(!summary.requires_plan_drift_investigation);
         assert!(!summary.requires_plan_drift_investigation());
@@ -3575,8 +3590,11 @@ mod tests {
         assert!(summary.requires_host_investigation());
         assert!(summary.replayed_extra_records());
         assert!(!summary.missed_planned_records());
+        assert!(summary.requires_scheduler_action);
         assert!(summary.requires_scheduler_action());
+        assert!(!summary.requests_continuation);
         assert!(!summary.requests_continuation());
+        assert!(!summary.routes_follow_up);
         assert!(!summary.routes_follow_up());
         assert!(summary.requires_plan_drift_investigation);
         assert!(summary.requires_plan_drift_investigation());
