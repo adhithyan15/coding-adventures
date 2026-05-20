@@ -521,6 +521,8 @@ pub struct LanguageUploadOptions {
     pub transport: String,
     pub reset_method: String,
     pub command: String,
+    pub platform_id: Option<String>,
+    pub fqbn: Option<String>,
     pub notes: String,
 }
 
@@ -532,6 +534,8 @@ pub struct LanguageUploadPlan {
     pub transport: String,
     pub reset_method: String,
     pub command: String,
+    pub platform_id: Option<String>,
+    pub fqbn: Option<String>,
     pub artifact_kind: String,
     pub artifact_extension: Option<String>,
     pub requires_serial_port: bool,
@@ -1340,6 +1344,8 @@ fn language_upload_options(board_id: &str, upload: TargetUploadInfo) -> Language
         transport: upload_transport_name(upload.transport).to_owned(),
         reset_method: upload_reset_method_name(upload.reset_method).to_owned(),
         command: upload.command.to_owned(),
+        platform_id: upload.platform_id.map(str::to_owned),
+        fqbn: upload.fqbn.map(str::to_owned),
         notes: upload.notes.to_owned(),
     }
 }
@@ -1354,6 +1360,8 @@ fn language_upload_plan(board_id: &str, upload: TargetUploadInfo) -> LanguageUpl
             transport: options.transport,
             reset_method: options.reset_method,
             command: options.command,
+            platform_id: options.platform_id,
+            fqbn: options.fqbn,
             artifact_kind: "arduino_cli_build_output".to_owned(),
             artifact_extension: None,
             requires_serial_port: true,
@@ -1375,6 +1383,8 @@ fn language_upload_plan(board_id: &str, upload: TargetUploadInfo) -> LanguageUpl
             transport: options.transport,
             reset_method: options.reset_method,
             command: options.command,
+            platform_id: options.platform_id,
+            fqbn: options.fqbn,
             artifact_kind: "esp_flash_image".to_owned(),
             artifact_extension: Some(".bin".to_owned()),
             requires_serial_port: true,
@@ -1396,6 +1406,8 @@ fn language_upload_plan(board_id: &str, upload: TargetUploadInfo) -> LanguageUpl
             transport: options.transport,
             reset_method: options.reset_method,
             command: options.command,
+            platform_id: options.platform_id,
+            fqbn: options.fqbn,
             artifact_kind: "uf2_file".to_owned(),
             artifact_extension: Some(".uf2".to_owned()),
             requires_serial_port: false,
@@ -4778,12 +4790,16 @@ mod tests {
         assert_eq!(opta.transport, "serial");
         assert_eq!(opta.reset_method, "arduino_board_package");
         assert_eq!(opta.command, "arduino-cli upload");
+        assert_eq!(opta.platform_id.as_deref(), Some("arduino:mbed_opta"));
+        assert_eq!(opta.fqbn.as_deref(), Some("arduino:mbed_opta:opta"));
 
         let esp32 = upload_options_for_target("esp32").unwrap();
         assert_eq!(esp32.board_id, "esp32-devkit-v1");
         assert_eq!(esp32.adapter, "esp_rom_serial");
         assert_eq!(esp32.image_format, "esp_flash_image");
         assert_eq!(esp32.reset_method, "esp_rom_boot_pins");
+        assert_eq!(esp32.platform_id, None);
+        assert_eq!(esp32.fqbn, None);
 
         let pico = upload_options_for_target("pico").unwrap();
         assert_eq!(pico.adapter, "pico_uf2_mass_storage");
@@ -4800,6 +4816,8 @@ mod tests {
         assert_eq!(opta.board_id, "arduino-opta-wifi");
         assert_eq!(opta.adapter, "arduino_cli");
         assert_eq!(opta.artifact_kind, "arduino_cli_build_output");
+        assert_eq!(opta.platform_id.as_deref(), Some("arduino:mbed_opta"));
+        assert_eq!(opta.fqbn.as_deref(), Some("arduino:mbed_opta:opta"));
         assert_eq!(opta.artifact_extension, None);
         assert!(opta.requires_serial_port);
         assert!(!opta.requires_mount_path);
@@ -4818,6 +4836,8 @@ mod tests {
         let esp32 = upload_plan_for_target("esp32").unwrap();
         assert_eq!(esp32.adapter, "esp_rom_serial");
         assert_eq!(esp32.artifact_kind, "esp_flash_image");
+        assert_eq!(esp32.platform_id, None);
+        assert_eq!(esp32.fqbn, None);
         assert_eq!(esp32.artifact_extension.as_deref(), Some(".bin"));
         assert!(esp32.requires_serial_port);
         assert!(!esp32.requires_mount_path);

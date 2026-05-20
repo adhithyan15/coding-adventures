@@ -30,4 +30,5 @@ they send and decode should come from this Rust core.
 
 Firmware flashing follows the same rule: frontends can present native options,
 but they should query `upload_plan_for_target` to learn the artifact kind,
-transport requirements, reset behavior, and adapter steps for each board family.
+transport requirements, reset behavior, adapter steps, and Arduino CLI
+platform/FQBN metadata for each board family.
