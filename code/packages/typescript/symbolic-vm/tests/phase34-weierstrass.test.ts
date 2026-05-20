@@ -186,11 +186,17 @@ describe("Phase 34: operand-order robustness", () => {
 // ---------------------------------------------------------------------------
 
 describe("Phase 34: deferred discriminant cases", () => {
-  it("a² < b² (∫ 1/(1 + 2·sin x) dx) — log form deferred", () => {
+  it("Phase 36: a² < b² (∫ 1/(1 + 2·sin x) dx) now closes via the log form", () => {
     const vm = makeVM();
     const integrand = app(DIV, [int(1), app(ADD, [int(1), app(MUL, [int(2), app(SIN, [X])])])]);
-    const result = vm.eval(integrate(integrand));
-    expect(isUnevaluatedIntegrate(result)).toBe(true);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    // 1+2 sin x has poles at sin x = -1/2.  Sample x in (-π/4, π/4).
+    for (const xVal of [-0.7, -0.2, 0.0, 0.2, 0.7]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1.0 / (1.0 + 2.0 * Math.sin(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
   });
 
   it("Phase 35: a² = b² (∫ 1/(1 + sin x) dx) now closes via the degenerate form", () => {
@@ -314,5 +320,69 @@ describe("Phase 35: degenerate a² = b² cases", () => {
       const expected = 1 / (1.5 + 1.5 * Math.cos(xVal));
       expect(Math.abs(got - expected)).toBeLessThan(1e-3);
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 36: log form for a² < b²
+// ---------------------------------------------------------------------------
+
+describe("Phase 36: log form for a² < b²", () => {
+  it("∫ 1/(1 + 2·cos x) dx — cos branch with b > |a|", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [int(1), app(ADD, [int(1), app(MUL, [int(2), app(COS, [X])])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    // 1+2 cos x zeros at x = ±2π/3.  Sample x in (-π/2, π/2).
+    for (const xVal of [-1.2, -0.5, 0.0, 0.5, 1.2]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1 / (1 + 2 * Math.cos(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
+  });
+
+  it("∫ 1/(−1 + 2·sin x) dx — sin branch with a < 0 still works", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [int(1), app(ADD, [int(-1), app(MUL, [int(2), app(SIN, [X])])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    for (const xVal of [1.0, 1.5, 2.0]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1 / (-1 + 2 * Math.sin(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
+  });
+
+  it("numerator coefficient (∫ 3/(1 + 2·sin x) dx) scales correctly", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [int(3), app(ADD, [int(1), app(MUL, [int(2), app(SIN, [X])])])]);
+    const phi = vm.eval(integrate(integrand));
+    for (const xVal of [-0.7, -0.2, 0.0, 0.2, 0.7]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 3 / (1 + 2 * Math.sin(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
+  });
+
+  it("perfect-square |disc| (∫ 1/(3 + 5·sin x) dx) folds Sqrt away", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [int(1), app(ADD, [int(3), app(MUL, [int(5), app(SIN, [X])])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(containsHead(phi, SQRT)).toBe(false);
+    // 3+5 sin x zero at sin x = -3/5.  Sample safely.
+    for (const xVal of [-0.3, 0.0, 0.3, 0.5]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1 / (3 + 5 * Math.sin(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
+  });
+
+  it("cos branch with b < |a| still defers (1 − 2·cos x)", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [int(1), app(SUB, [int(1), app(MUL, [int(2), app(COS, [X])])])]);
+    const result = vm.eval(integrate(integrand));
+    // The b = -2 < |a| = 1 branch is deferred — log argument has the
+    // opposite sign pattern.
+    expect(isUnevaluatedIntegrate(result)).toBe(true);
   });
 });
