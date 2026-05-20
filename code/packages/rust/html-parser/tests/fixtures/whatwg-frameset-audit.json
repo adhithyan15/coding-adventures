@@ -1,0 +1,1108 @@
+{
+  "case_count": 182,
+  "cases": [
+    {
+      "axis": "frameset-shell",
+      "id": "domjs-unsafe-dat-160",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "domjs-unsafe.dat:160"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "domjs-unsafe-dat-161",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "domjs-unsafe.dat:161"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "domjs-unsafe-dat-162",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "domjs-unsafe.dat:162"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "noscript01-dat-336",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "noscript01.dat:336"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "pending-spec-changes-dat-346",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "pending-spec-changes.dat:346"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "plain-text-unsafe-dat-350",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "plain-text-unsafe.dat:350"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "plain-text-unsafe-dat-351",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "plain-text-unsafe.dat:351"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "plain-text-unsafe-dat-352",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "plain-text-unsafe.dat:352"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "plain-text-unsafe-dat-353",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "plain-text-unsafe.dat:353"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "plain-text-unsafe-dat-354",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "plain-text-unsafe.dat:354"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "plain-text-unsafe-dat-364",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "plain-text-unsafe.dat:364"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "plain-text-unsafe-dat-365",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "plain-text-unsafe.dat:365"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "plain-text-unsafe-dat-366",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "plain-text-unsafe.dat:366"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "plain-text-unsafe-dat-367",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "plain-text-unsafe.dat:367"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "plain-text-unsafe-dat-368",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "plain-text-unsafe.dat:368"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "plain-text-unsafe-dat-369",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "plain-text-unsafe.dat:369"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "plain-text-unsafe-dat-370",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "plain-text-unsafe.dat:370"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "plain-text-unsafe-dat-371",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "plain-text-unsafe.dat:371"
+    },
+    {
+      "axis": "template-boundary",
+      "id": "template-dat-494",
+      "reason": "frameset and frame handling inside template insertion contexts",
+      "source": "template.dat:494"
+    },
+    {
+      "axis": "template-boundary",
+      "id": "template-dat-495",
+      "reason": "frameset and frame handling inside template insertion contexts",
+      "source": "template.dat:495"
+    },
+    {
+      "axis": "template-boundary",
+      "id": "template-dat-496",
+      "reason": "frameset and frame handling inside template insertion contexts",
+      "source": "template.dat:496"
+    },
+    {
+      "axis": "template-boundary",
+      "id": "template-dat-497",
+      "reason": "frameset and frame handling inside template insertion contexts",
+      "source": "template.dat:497"
+    },
+    {
+      "axis": "template-boundary",
+      "id": "template-dat-521",
+      "reason": "frameset and frame handling inside template insertion contexts",
+      "source": "template.dat:521"
+    },
+    {
+      "axis": "template-boundary",
+      "id": "template-dat-547",
+      "reason": "frameset and frame handling inside template insertion contexts",
+      "source": "template.dat:547"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests1-dat-670",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests1.dat:670"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests1-dat-675",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests1.dat:675"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests1-dat-676",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests1.dat:676"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests1-dat-677",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests1.dat:677"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests10-dat-698",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests10.dat:698"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests10-dat-699",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests10.dat:699"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests15-dat-766",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests15.dat:766"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests16-dat-857",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests16.dat:857"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests16-dat-858",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests16.dat:858"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests16-dat-954",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests16.dat:954"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests16-dat-955",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests16.dat:955"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests18-dat-995",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests18.dat:995"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests18-dat-996",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests18.dat:996"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests18-dat-998",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests18.dat:998"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests18-dat-1008",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests18.dat:1008"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests18-dat-1009",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests18.dat:1009"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests18-dat-1010",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests18.dat:1010"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests18-dat-1011",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests18.dat:1011"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests19-dat-1049",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests19.dat:1049"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1051",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1051"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1052",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1052"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1053",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1053"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1054",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1054"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1055",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1055"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1056",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1056"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1057",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1057"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1058",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1058"
+    },
+    {
+      "axis": "frame-element",
+      "id": "tests19-dat-1059",
+      "reason": "frame element insertion, void behavior, and frameset nesting",
+      "source": "tests19.dat:1059"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1060",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1060"
+    },
+    {
+      "axis": "frame-element",
+      "id": "tests19-dat-1061",
+      "reason": "frame element insertion, void behavior, and frameset nesting",
+      "source": "tests19.dat:1061"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1062",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1062"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1063",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1063"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1064",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1064"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1065",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1065"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1066",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1066"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1067",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1067"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1068",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1068"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1069",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1069"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1070",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1070"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1071",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1071"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1072",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1072"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1073",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1073"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1074",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1074"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1075",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1075"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1076",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1076"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1077",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1077"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1078",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1078"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1079",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1079"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1080",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1080"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1081",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1081"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1082",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1082"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1083",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1083"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1084",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1084"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1085",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1085"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests19-dat-1086",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests19.dat:1086"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests19-dat-1087",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests19.dat:1087"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests19-dat-1088",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests19.dat:1088"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests19-dat-1089",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests19.dat:1089"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests19-dat-1090",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests19.dat:1090"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1091",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1091"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-1092",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:1092"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1093",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1093"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-1094",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:1094"
+    },
+    {
+      "axis": "frame-element",
+      "id": "tests25-dat-1231",
+      "reason": "frame element insertion, void behavior, and frameset nesting",
+      "source": "tests25.dat:1231"
+    },
+    {
+      "axis": "frame-element",
+      "id": "tests2-dat-5",
+      "reason": "frame element insertion, void behavior, and frameset nesting",
+      "source": "tests2.dat:5"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests2-dat-6",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests2.dat:6"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests2-dat-7",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests2.dat:7"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests2-dat-8",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests2.dat:8"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests2-dat-9",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests2.dat:9"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests9-dat-22",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests9.dat:22"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests9-dat-23",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests9.dat:23"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests6-dat-8",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests6.dat:8"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests6-dat-9",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests6.dat:9"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests6-dat-10",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests6.dat:10"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests6-dat-11",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests6.dat:11"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests6-dat-12",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests6.dat:12"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests6-dat-29",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests6.dat:29"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests6-dat-31",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests6.dat:31"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests6-dat-46",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests6.dat:46"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests6-dat-48",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests6.dat:48"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests6-dat-49",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests6.dat:49"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests6-dat-50",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests6.dat:50"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests6-dat-51",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests6.dat:51"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests6-dat-52",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests6.dat:52"
+    },
+    {
+      "axis": "frame-element",
+      "id": "tests6-dat-30",
+      "reason": "frame element insertion, void behavior, and frameset nesting",
+      "source": "tests6.dat:30"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests-innerhtml-1-dat-5",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests_innerHTML_1.dat:5"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests-innerhtml-1-dat-6",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests_innerHTML_1.dat:6"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests-innerhtml-1-dat-7",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests_innerHTML_1.dat:7"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests-innerhtml-1-dat-8",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests_innerHTML_1.dat:8"
+    },
+    {
+      "axis": "frame-element",
+      "id": "tests-innerhtml-1-dat-80",
+      "reason": "frame element insertion, void behavior, and frameset nesting",
+      "source": "tests_innerHTML_1.dat:80"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests1-dat-105",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests1.dat:105"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests1-dat-110",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests1.dat:110"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests1-dat-111",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests1.dat:111"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests1-dat-112",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests1.dat:112"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests10-dat-21",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests10.dat:21"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests10-dat-22",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests10.dat:22"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests15-dat-13",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests15.dat:13"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests16-dat-90",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests16.dat:90"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests16-dat-91",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests16.dat:91"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests16-dat-187",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests16.dat:187"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests16-dat-188",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests16.dat:188"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests18-dat-18",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests18.dat:18"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests18-dat-19",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests18.dat:19"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests18-dat-21",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests18.dat:21"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests18-dat-31",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests18.dat:31"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests18-dat-32",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests18.dat:32"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests18-dat-33",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests18.dat:33"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests18-dat-34",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests18.dat:34"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "tests19-dat-36",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "tests19.dat:36"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-38",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:38"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-39",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:39"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-40",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:40"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-41",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:41"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-42",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:42"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-43",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:43"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-44",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:44"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-45",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:45"
+    },
+    {
+      "axis": "frame-element",
+      "id": "tests19-dat-46",
+      "reason": "frame element insertion, void behavior, and frameset nesting",
+      "source": "tests19.dat:46"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-47",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:47"
+    },
+    {
+      "axis": "frame-element",
+      "id": "tests19-dat-48",
+      "reason": "frame element insertion, void behavior, and frameset nesting",
+      "source": "tests19.dat:48"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-49",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:49"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-50",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:50"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-51",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:51"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-52",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:52"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-53",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:53"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-54",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:54"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-55",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:55"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-56",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:56"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-57",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:57"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-58",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:58"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-59",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:59"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-60",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:60"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-61",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:61"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-62",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:62"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-63",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:63"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-64",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:64"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-65",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:65"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-66",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:66"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-67",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:67"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-68",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:68"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-69",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:69"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-70",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:70"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-71",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:71"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-72",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:72"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests19-dat-73",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests19.dat:73"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests19-dat-74",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests19.dat:74"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests19-dat-75",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests19.dat:75"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests19-dat-76",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests19.dat:76"
+    },
+    {
+      "axis": "foreign-boundary",
+      "id": "tests19-dat-77",
+      "reason": "frameset recovery around SVG/MathML foreign-content boundaries",
+      "source": "tests19.dat:77"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-78",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:78"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "tests19-dat-79",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "tests19.dat:79"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-80",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:80"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "tests19-dat-81",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "tests19.dat:81"
+    },
+    {
+      "axis": "frame-element",
+      "id": "tests25-dat-10",
+      "reason": "frame element insertion, void behavior, and frameset nesting",
+      "source": "tests25.dat:10"
+    },
+    {
+      "axis": "frameset-shell",
+      "id": "foreign-fragment-dat-52",
+      "reason": "top-level frameset shell creation and trailing boundary recovery",
+      "source": "foreign-fragment.dat:52"
+    },
+    {
+      "axis": "noframes-content",
+      "id": "webkit01-dat-31",
+      "reason": "noframes RAWTEXT handoff and post-frameset recovery",
+      "source": "webkit01.dat:31"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "webkit01-dat-51",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "webkit01.dat:51"
+    },
+    {
+      "axis": "body-compatibility",
+      "id": "webkit01-dat-52",
+      "reason": "frameset acceptance or rejection after body-compatible content",
+      "source": "webkit01.dat:52"
+    }
+  ],
+  "counts_by_axis": {
+    "body-compatibility": 35,
+    "foreign-boundary": 24,
+    "frame-element": 9,
+    "frameset-shell": 79,
+    "noframes-content": 29,
+    "template-boundary": 6
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress frameset, frame, and noframes recovery.",
+  "format": "whatwg-html-frameset-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

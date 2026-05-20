@@ -26,6 +26,8 @@ documented in this file.
   upstream-only html5lib and WHATWG entity sources.
 - A fixture manifest unit test keeps every self-contained WHATWG fixture
   generator covered by that umbrella stale check.
+- The generated fixture manifest now includes the parser frameset audit
+  generator alongside the tree-insertion audit.
 - Parser-facing seeded RCDATA/RAWTEXT/script end-tag continuation contexts,
   including end-tag-name, whitespace, attributes, and self-closing substates
   with current-end-tag and temporary-buffer seeding.

@@ -32,9 +32,16 @@ class GeneratedHtmlFixtureManifestTest(unittest.TestCase):
 
     def test_default_manifest_keeps_parser_and_html5lib_checks_visible(self) -> None:
         checked_scripts = scripts_in(manifest.default_checks())
+        parser_generators = {
+            path.name
+            for path in manifest.PARSER_FIXTURE_DIR.glob("generate_whatwg_*_fixture.py")
+        }
 
         self.assertIn("normalize_html5lib_fixtures.py", checked_scripts)
-        self.assertIn("generate_whatwg_tree_insertion_audit_fixture.py", checked_scripts)
+        self.assertEqual(
+            checked_scripts & parser_generators,
+            parser_generators,
+        )
 
     def test_default_manifest_check_names_are_unique_and_use_check_mode(self) -> None:
         checks = manifest.default_checks()
