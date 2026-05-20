@@ -175,6 +175,17 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_list_item_
   --check
 ```
 
+`whatwg-paragraph-audit.json` is a generated index over tree-construction
+cases that stress paragraph implied-end tags, formatting reconstruction,
+table/foster-parenting boundaries, form controls, text modes, headings,
+special end-tag recovery, and fragment contexts:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_paragraph_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_paragraph_audit_fixture.py \
+  --check
+```
+
 `whatwg-document-shell-audit.json` is a generated index over tree-construction
 cases that stress doctypes, comments, `html`/`head`/`body` synthesis, frameset
 boundaries, and shell fragment contexts:
