@@ -1785,6 +1785,15 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
                 f"{upper}: expected 1 or 2 arguments "
                 "(column [, separator_literal])"
             )
+        # SQLite forbids ``DISTINCT`` on the two-argument form: a DISTINCT
+        # aggregate must take exactly one argument.  The reference engine
+        # raises ``OperationalError: DISTINCT aggregates must have
+        # exactly one argument``; we surface the same message so callers
+        # can rely on text-matching tests against either implementation.
+        if distinct and len(args) > 1:
+            raise ProgrammingError(
+                "DISTINCT aggregates must have exactly one argument"
+            )
         separator: str | None = None
         if len(args) == 2:
             sep_expr = args[1].value
@@ -1812,6 +1821,14 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             raise ProgrammingError(
                 "JSON_GROUP_OBJECT: expected exactly 2 arguments (key, value), "
                 f"got {len(args)}"
+            )
+        # As with GROUP_CONCAT(DISTINCT col, sep), SQLite forbids DISTINCT
+        # on multi-argument aggregates: there is no well-defined notion of
+        # "distinct (key, value) pair" in the engine, so the parser rejects
+        # the combination outright with the same diagnostic.
+        if distinct:
+            raise ProgrammingError(
+                "DISTINCT aggregates must have exactly one argument"
             )
         return AggregateExpr(
             func=AggFunc.JSON_GROUP_OBJECT,
