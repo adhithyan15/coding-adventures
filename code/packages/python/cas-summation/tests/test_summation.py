@@ -231,3 +231,123 @@ class TestEvaluateProduct:
         f = IRApply(POW, (_k, IRInteger(3)))
         result = evaluate_product(f, _k, IRInteger(1), _n, _VM)
         assert isinstance(result, IRApply) and result.head == PRODUCT
+
+
+# ---------------------------------------------------------------------------
+# Phase 39: Telescoping sums — ``∑_{k=lo}^{hi} [g(k+1) − g(k)] = g(hi+1) − g(lo)``
+#
+# The dispatcher detects the structural ``f = g(k+1) − g(k)`` shape (and
+# its antisymmetric ``g(k) − g(k+1)`` form) by substituting ``k → k+1`` in
+# one half of the SUB and comparing against the other half after VM
+# normalisation.  Tests below cover concrete numeric bounds (where the
+# stub VM can fully evaluate the closed form) plus the symbolic case
+# (where the result is a SUB tree of substituted expressions).
+# ---------------------------------------------------------------------------
+
+
+class TestEvaluateSumTelescoping:
+    def test_standard_telescope_concrete_bounds(self):
+        """∑_{k=1}^{4} [(k+1)² − k²] = 5² − 1² = 24.
+
+        The two halves ``(k+1)²`` and ``k²`` differ by the standard
+        ``k → k+1`` shift, so the dispatcher must recognise this as
+        telescoping (not just evaluate it by Faulhaber after expansion).
+        """
+        from symbolic_ir import SUB
+
+        k_plus_one_sq = IRApply(
+            POW, (IRApply(ADD, (_k, IRInteger(1))), IRInteger(2))
+        )
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        f = IRApply(SUB, (k_plus_one_sq, k_sq))
+        result = evaluate_sum(f, _k, IRInteger(1), IRInteger(4), _VM)
+        assert isinstance(result, IRInteger) and result.value == 24
+
+    def test_antisymmetric_telescope_concrete_bounds(self):
+        """∑_{k=1}^{3} [k² − (k+1)²] = 1² − 4² = −15.
+
+        The flipped orientation: ``f = g(k) − g(k+1)`` yields
+        ``g(lo) − g(hi+1)``.  ``g(k) = k²`` → result is ``1 − 16 = −15``.
+        """
+        from symbolic_ir import SUB
+
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        k_plus_one_sq = IRApply(
+            POW, (IRApply(ADD, (_k, IRInteger(1))), IRInteger(2))
+        )
+        f = IRApply(SUB, (k_sq, k_plus_one_sq))
+        result = evaluate_sum(f, _k, IRInteger(1), IRInteger(3), _VM)
+        assert isinstance(result, IRInteger) and result.value == -15
+
+    def test_telescope_linear_g(self):
+        """∑_{k=1}^{10} [(k+1) − k] = 10 (each term equals 1)."""
+        from symbolic_ir import SUB
+
+        f = IRApply(SUB, (IRApply(ADD, (_k, IRInteger(1))), _k))
+        result = evaluate_sum(f, _k, IRInteger(1), IRInteger(10), _VM)
+        # g(k) = k; closed form = g(11) − g(1) = 11 − 1 = 10.
+        assert isinstance(result, IRInteger) and result.value == 10
+
+    def test_telescope_with_constant_offset_in_g(self):
+        """``g(k) = k + 5`` → telescope still recognises ``g(k+1) − g(k) = 1``.
+
+        Result: ``∑_{k=1}^{5} [(k + 6) − (k + 5)] = 5``.
+        """
+        from symbolic_ir import SUB
+
+        g_at_k_plus_1 = IRApply(
+            ADD,
+            (IRApply(ADD, (_k, IRInteger(1))), IRInteger(5)),
+        )
+        g_at_k = IRApply(ADD, (_k, IRInteger(5)))
+        f = IRApply(SUB, (g_at_k_plus_1, g_at_k))
+        result = evaluate_sum(f, _k, IRInteger(1), IRInteger(5), _VM)
+        assert isinstance(result, IRInteger) and result.value == 5
+
+    def test_telescope_falls_through_when_shift_doesnt_match(self):
+        """``∑ [k² − k]`` is NOT telescoping (``k² ≠ g(k+1)`` for any choice
+        of ``g(k) = k``).  The stub VM falls back to Faulhaber/numeric.
+
+        For ``k=1..3``: ``(1−1)+(4−2)+(9−3) = 0+2+6 = 8``.
+        """
+        from symbolic_ir import SUB
+
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        f = IRApply(SUB, (k_sq, _k))
+        result = evaluate_sum(f, _k, IRInteger(1), IRInteger(3), _VM)
+        # Numeric small-range path computes the answer:
+        assert isinstance(result, IRInteger) and result.value == 8
+
+    def test_telescope_does_not_fire_on_constant_difference(self):
+        """``∑ [5 − 3] = ∑ 2`` is *constant*, so step 1 (constant summand)
+        fires first and the telescope rule never runs.  Result: 2 · 10.
+        """
+        from symbolic_ir import SUB
+
+        f = IRApply(SUB, (IRInteger(5), IRInteger(3)))
+        result = evaluate_sum(f, _k, IRInteger(1), IRInteger(10), _VM)
+        assert isinstance(result, IRInteger) and result.value == 20
+
+    def test_telescope_with_symbolic_upper_bound(self):
+        """``∑_{k=1}^{n} [(k+1) − k]`` symbolic n → result is ``(n+1) − 1``
+        (or an equivalent simplified IR shape).  Must not be unevaluated."""
+        from symbolic_ir import SUB
+
+        f = IRApply(SUB, (IRApply(ADD, (_k, IRInteger(1))), _k))
+        result = evaluate_sum(f, _k, IRInteger(1), _n, _VM)
+        # The stub VM doesn't fully simplify symbolic SUB chains; we just
+        # require it isn't the unevaluated SUM node.
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_telescope_does_not_fire_for_infinite_upper(self):
+        """``∑_{k=0}^{∞} [g(k+1) − g(k)]`` requires a limit argument we
+        don't yet implement; must fall through to the unevaluated form
+        (the classic-infinite recogniser does not pattern-match this
+        shape either).
+        """
+        from symbolic_ir import SUB
+
+        f = IRApply(SUB, (IRApply(ADD, (_k, IRInteger(1))), _k))
+        result = evaluate_sum(f, _k, IRInteger(0), IRSymbol("%inf"), _VM)
+        # Stays unevaluated (or numeric fallback fails on infinite range).
+        assert isinstance(result, IRApply) and result.head == SUM
