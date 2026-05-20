@@ -51,6 +51,8 @@ The crate keeps the boundary narrow:
   extra or missed replayed work and follow-up pressure
 - supervisor drain reports expose status aliases for idle runs and matched
   follow-up pressure
+- supervisor drain reports and summaries expose row-count match helpers for
+  host scheduler checks
 - supervisor drain run summaries expose count-drift presence flags beside
   signed deltas for host logs
 - supervisor drain run summaries expose stable count-drift classifications so

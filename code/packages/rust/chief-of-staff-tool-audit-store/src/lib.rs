@@ -1008,6 +1008,11 @@ impl ToolAuditSupervisorDrainRunReport {
         self.plan.planned_records == self.drain.drained_records
     }
 
+    /// Return whether planned and replayed row counts match.
+    pub fn matches_record_count(&self) -> bool {
+        self.matches_planned_record_count()
+    }
+
     /// Return whether the actual run preserved the planned follow-up pressure count.
     pub fn matches_planned_follow_up_record_count(&self) -> bool {
         self.plan.follow_up_record_count() == self.drain.follow_up_record_count()
@@ -1235,6 +1240,11 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the host should investigate preflight/drain drift.
     pub fn requires_plan_drift_investigation(&self) -> bool {
         self.requires_plan_drift_investigation
+    }
+
+    /// Return whether planned and replayed row counts match.
+    pub fn matches_record_count(&self) -> bool {
+        self.matches_planned_record_count
     }
 
     /// Return whether planned and replayed follow-up pressure counts match.
@@ -3090,6 +3100,7 @@ mod tests {
         assert_eq!(report.plan.follow_up_record_count(), 1);
         assert_eq!(report.drain.follow_up_record_count(), 1);
         assert!(report.matches_planned_record_count());
+        assert!(report.matches_record_count());
         assert!(report.matches_planned_follow_up_record_count());
         assert!(report.matches_follow_up_pressure());
         assert_eq!(report.record_count_delta(), 0);
@@ -3628,6 +3639,7 @@ mod tests {
         assert!(!summary.requires_host_investigation);
         assert!(!summary.requires_host_investigation());
         assert!(summary.matches_planned_record_count);
+        assert!(summary.matches_record_count());
         assert!(summary.matches_planned_follow_up_record_count);
         assert!(summary.matches_follow_up_pressure());
         assert!(!summary.reached_end_of_log);
@@ -3733,6 +3745,7 @@ mod tests {
         let summary = report.summary();
 
         assert!(!report.matches_planned_record_count());
+        assert!(!report.matches_record_count());
         assert_eq!(report.record_count_delta(), -1);
         assert!(report.has_record_count_drift());
         assert!(!report.has_follow_up_record_count_drift());
@@ -3751,6 +3764,7 @@ mod tests {
         assert_eq!(report.host_investigation_label(), "plan_and_count_drift");
         assert!(report.requires_host_investigation());
         assert_eq!(summary.record_count_delta, -1);
+        assert!(!summary.matches_record_count());
         assert!(summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
         assert!(summary.has_count_drift());
