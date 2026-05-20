@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.57.0] - 2026-05-19
+
+### Added
+
+Three SQLite 3.44+ string-family scalar functions now available (via
+``sql-vm 1.35.0``):
+
+- **``concat(...)``** — variadic concat; NULL args treated as empty.
+- **``concat_ws(sep, ...)``** — concat with separator; NULL sep
+  returns NULL but NULL values are skipped.
+- **``octet_length(x)``** — byte length of UTF-8-encoded text or BLOB.
+
+Application SQL relying on these (especially common in modern SQLite
+code) previously raised ``InternalError: unknown scalar function``.
+
+22 new oracle tests in ``test_tier3_concat_octet_length.py``:
+two-/three-arg concat, NULL-as-empty semantics, numeric coercion,
+single-arg form, in-WHERE-clause usage, concat_ws NULL-skipping vs
+NULL-separator-propagation, multi-char separators, empty separator,
+all-NULL inputs, ASCII vs non-ASCII byte counts, length vs
+octet_length distinction for unicode, integer/negative coercion.
+
 ## [1.56.0] - 2026-05-19
 
 ### Fixed

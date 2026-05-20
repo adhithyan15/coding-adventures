@@ -777,6 +777,101 @@ def _length(x: SqlValue) -> SqlValue:
     return len(str(x))
 
 
+@register("octet_length")
+def _octet_length(x: SqlValue) -> SqlValue:
+    """Return the number of **bytes** in a string (UTF-8) or BLOB.
+
+    Differs from ``length()`` for non-ASCII text:
+
+        LENGTH('café')        → 4       (4 characters)
+        OCTET_LENGTH('café')  → 5       ('é' is 2 bytes in UTF-8)
+
+    For ASCII strings, ``length()`` and ``octet_length()`` agree.
+
+    Numeric inputs are coerced via decimal string representation, so
+    ``OCTET_LENGTH(123)`` is ``3`` (the byte-length of ``"123"``).
+
+    NULL input propagates as NULL.
+    """
+    if x is None:
+        return None
+    if isinstance(x, str):
+        return len(x.encode("utf-8"))
+    if isinstance(x, (bytes, bytearray)):
+        return len(x)
+    # Numeric — convert to string first (matches LENGTH semantics).
+    return len(str(x).encode("utf-8"))
+
+
+@register("concat")
+def _concat(*args: SqlValue) -> SqlValue:
+    """Concatenate one or more arguments into a single TEXT string.
+
+    SQLite 3.44+ built-in.  NULL arguments are treated as empty strings
+    (do NOT propagate to a NULL result — that's ``concat_ws``'s job for
+    the separator).  At least one argument is required; calling with
+    zero arguments matches SQLite's error.
+
+    Non-string arguments are coerced via ``str()`` (their SQL text
+    representation), so ``CONCAT(1, '+', 2) → '1+2'``.
+
+    Examples::
+
+        CONCAT('a', 'b', 'c')   → 'abc'
+        CONCAT('a', NULL, 'c')  → 'ac'
+        CONCAT('id=', 42)       → 'id=42'
+    """
+    # Variadic with minimum 1.  ``_arity`` only supports a fixed set of
+    # accepted counts; for "≥ 1" we do the check inline.
+    if len(args) < 1:
+        raise WrongNumberOfArguments(name="concat", expected="≥ 1", got=len(args))
+    parts: list[str] = []
+    for a in args:
+        if a is None:
+            continue
+        # Preserve already-string inputs; coerce others via str().
+        parts.append(a if isinstance(a, str) else str(a))
+    return "".join(parts)
+
+
+@register("concat_ws")
+def _concat_ws(*args: SqlValue) -> SqlValue:
+    """Concatenate arguments with a separator (``concat_ws`` = "with separator").
+
+    SQLite 3.44+ built-in.  The first argument is the separator; the
+    remaining arguments are values to concatenate.
+
+    Distinct NULL semantics:
+
+    - **Separator is NULL** → result is NULL.
+    - **A value is NULL**   → skip it (does NOT terminate the result).
+
+    Examples::
+
+        CONCAT_WS('-', 'a', 'b', 'c')   → 'a-b-c'
+        CONCAT_WS('-', 'a', NULL, 'c')  → 'a-c'      (NULL skipped)
+        CONCAT_WS(NULL, 'a', 'b')       → NULL        (NULL sep)
+        CONCAT_WS(',', 1, 2, 3)         → '1,2,3'
+
+    A minimum of two arguments (separator + one value) is required to
+    match SQLite's documented signature, though SQLite is permissive and
+    accepts just the separator (returning the empty string); we mirror
+    that.
+    """
+    if len(args) < 1:
+        raise WrongNumberOfArguments(name="concat_ws", expected="≥ 1", got=len(args))
+    sep = args[0]
+    if sep is None:
+        return None
+    sep_str = sep if isinstance(sep, str) else str(sep)
+    parts: list[str] = []
+    for a in args[1:]:
+        if a is None:
+            continue
+        parts.append(a if isinstance(a, str) else str(a))
+    return sep_str.join(parts)
+
+
 @register("trim")
 def _trim(*args: SqlValue) -> SqlValue:
     """Strip leading and trailing characters from *x*.

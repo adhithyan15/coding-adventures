@@ -1727,3 +1727,107 @@ class TestStrftimeLowerCaseAmPm:
         assert (
             fn("strftime", "%I:%M %P", "2024-03-15 14:30:00") == "02:30 pm"
         )
+
+
+# ---------------------------------------------------------------------------
+# concat / concat_ws / octet_length (SQLite 3.44+ string family additions)
+# ---------------------------------------------------------------------------
+
+
+class TestConcat:
+    """``CONCAT(...)`` — variadic, NULLs treated as empty string."""
+
+    def test_two_strings(self) -> None:
+        assert fn("concat", "a", "b") == "ab"
+
+    def test_three_strings(self) -> None:
+        assert fn("concat", "a", "b", "c") == "abc"
+
+    def test_null_skipped(self) -> None:
+        # NULLs are treated as empty strings — NOT as NULL-propagation.
+        assert fn("concat", "a", None, "c") == "ac"
+
+    def test_all_nulls_returns_empty(self) -> None:
+        assert fn("concat", None, None, None) == ""
+
+    def test_numeric_coerced(self) -> None:
+        # SQLite coerces non-strings via their text representation.
+        assert fn("concat", "id=", 42) == "id=42"
+
+    def test_float_coerced(self) -> None:
+        assert fn("concat", "v=", 3.14) == "v=3.14"
+
+    def test_single_arg(self) -> None:
+        # Minimum 1 arg — single-arg form is just identity-via-str.
+        assert fn("concat", "hello") == "hello"
+
+    def test_zero_args_raises(self) -> None:
+        from sql_vm.errors import WrongNumberOfArguments
+
+        try:
+            fn("concat")
+            raise AssertionError("expected WrongNumberOfArguments")
+        except WrongNumberOfArguments:
+            pass
+
+
+class TestConcatWs:
+    """``CONCAT_WS(sep, ...)`` — separator-aware concatenation."""
+
+    def test_basic(self) -> None:
+        assert fn("concat_ws", "-", "a", "b", "c") == "a-b-c"
+
+    def test_null_arg_skipped(self) -> None:
+        # Distinct from concat: NULL values are SKIPPED, separator not doubled.
+        assert fn("concat_ws", "-", "a", None, "c") == "a-c"
+
+    def test_null_separator_returns_null(self) -> None:
+        # Unlike CONCAT, a NULL separator propagates — the whole result is NULL.
+        assert fn("concat_ws", None, "a", "b") is None
+
+    def test_multi_char_separator(self) -> None:
+        assert fn("concat_ws", " | ", "a", "b", "c") == "a | b | c"
+
+    def test_empty_separator(self) -> None:
+        # Empty-string sep behaves like concat.
+        assert fn("concat_ws", "", "a", "b", "c") == "abc"
+
+    def test_numeric_args_coerced(self) -> None:
+        assert fn("concat_ws", ",", 1, 2, 3) == "1,2,3"
+
+    def test_only_separator(self) -> None:
+        # SQLite accepts just the sep and returns an empty string.
+        assert fn("concat_ws", "-") == ""
+
+
+class TestOctetLength:
+    """``OCTET_LENGTH(s)`` — byte length of UTF-8-encoded text."""
+
+    def test_ascii(self) -> None:
+        # ASCII: bytes = chars.
+        assert fn("octet_length", "hello") == 5
+
+    def test_empty_string(self) -> None:
+        assert fn("octet_length", "") == 0
+
+    def test_non_ascii_utf8(self) -> None:
+        # 'café' is 4 chars but 5 bytes ('é' = 2 bytes in UTF-8).
+        assert fn("octet_length", "café") == 5
+
+    def test_emoji_4_bytes(self) -> None:
+        # '🦀' is 1 char but 4 bytes in UTF-8.
+        assert fn("octet_length", "🦀") == 4
+
+    def test_null_propagates(self) -> None:
+        assert fn("octet_length", None) is None
+
+    def test_blob(self) -> None:
+        assert fn("octet_length", b"\x01\x02\x03\xff") == 4
+
+    def test_integer_uses_decimal_string(self) -> None:
+        # SQLite: OCTET_LENGTH(123) → 3 (the byte length of "123")
+        assert fn("octet_length", 123) == 3
+
+    def test_negative_integer(self) -> None:
+        # OCTET_LENGTH(-42) → 3 (chars '-', '4', '2')
+        assert fn("octet_length", -42) == 3

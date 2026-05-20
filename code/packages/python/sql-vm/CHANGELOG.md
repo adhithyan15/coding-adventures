@@ -1,5 +1,40 @@
 # Changelog
 
+## 1.35.0 — 2026-05-19
+
+### Added
+
+Three SQLite 3.44+ string-family scalar functions
+(``scalar_functions.py``):
+
+- **``concat(...)``** — variadic, NULL args treated as empty string
+  (NOT NULL-propagating).  Non-string args coerced via ``str()``.
+  Requires ≥ 1 argument.  Example::
+
+      CONCAT('a', NULL, 'b', 42)  → 'ab42'
+
+- **``concat_ws(sep, ...)``** — concatenate with a separator.  Distinct
+  NULL semantics from ``concat``:
+
+  - NULL **separator** → NULL result (propagates).
+  - NULL **value** → skipped (separator NOT doubled).
+
+  Example::
+
+      CONCAT_WS('-', 'a', NULL, 'b')   → 'a-b'
+      CONCAT_WS(NULL, 'a', 'b')        → NULL
+
+- **``octet_length(x)``** — byte length of a UTF-8-encoded string or
+  BLOB.  Differs from ``length()`` for non-ASCII text::
+
+      LENGTH('café')        → 4   (4 characters)
+      OCTET_LENGTH('café')  → 5   ('é' = 2 bytes)
+      LENGTH('🦀')          → 1   (1 character)
+      OCTET_LENGTH('🦀')    → 4   (4-byte emoji)
+
+  Numeric inputs coerced via decimal string representation
+  (``OCTET_LENGTH(123) → 3``).
+
 ## 1.34.0 — 2026-05-19
 
 ### Fixed
