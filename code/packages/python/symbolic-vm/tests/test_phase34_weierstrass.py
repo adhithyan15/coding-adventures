@@ -335,22 +335,64 @@ def test_phase36_perfect_square_discriminant(vm: VM) -> None:
         assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
 
 
-def test_phase36_cos_negative_b_still_defers(vm: VM) -> None:
-    """``∫ 1/(1 − 2·cos x) dx`` — cos branch with b·cos coefficient < 0
-    (here written as (a−|b|cos) with effective b = −2).  Phase 36's cos
-    formula requires ``b > |a|`` strictly; this case has b = −2, |a| = 1,
-    so b < 0 fails the guard and we defer.
+def test_phase37_cos_negative_b_now_closes(vm: VM) -> None:
+    """``∫ 1/(1 − 2·cos x) dx`` — cos branch with effective b = −2 < |a| = 1.
+
+    Phase 37 (this release) extends Phase 36's cos branch to cover the
+    symmetric ``b < −|a|`` case.  The closed form is the same
+    ``log|(D + (b−a)·tan(x/2))/(D − (b−a)·tan(x/2))|`` formula — the
+    Abs wrapping handles the sign flip automatically.
     """
     one_minus_two_cos = IRApply(
         SUB,
         (IRInteger(1), IRApply(MUL, (IRInteger(2), IRApply(COS, (X,))))),
     )
     integrand = IRApply(DIV, (IRInteger(1), one_minus_two_cos))
-    result = vm.eval(_integrate(integrand))
-    # The deferred branch leaves the integral unevaluated.
-    assert isinstance(result, IRApply) and result.head == INTEGRATE, (
-        f"b<0 cos branch is deferred; got {result!r}"
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE), (
+        f"Phase 37 should close ∫ 1/(1−2·cos x) dx; got {phi!r}"
     )
+    # 1 − 2 cos x has zeros at cos x = 1/2 (x = ±π/3).  Sample on
+    # (π/3, π) where the integrand is real and finite.
+    for x_val in (1.2, 1.6, 2.0, 2.5):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (1.0 - 2.0 * math.cos(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3), (
+            f"At x={x_val}: got={got}, expected={expected}"
+        )
+
+
+def test_phase37_cos_negative_b_with_negative_a(vm: VM) -> None:
+    """``∫ 1/(−1 − 3·cos x) dx`` — both a and b negative.  ``b = −3 < −|a| = −1``.
+
+    Closed form derived from same formula; the Abs wrapping handles signs.
+    """
+    neg_one_minus_three_cos = IRApply(
+        SUB,
+        (IRInteger(-1), IRApply(MUL, (IRInteger(3), IRApply(COS, (X,))))),
+    )
+    integrand = IRApply(DIV, (IRInteger(1), neg_one_minus_three_cos))
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE)
+    # −1 − 3 cos x has zeros at cos x = −1/3.  Sample safely.
+    for x_val in (0.5, 1.0, 1.5):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (-1.0 - 3.0 * math.cos(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
+
+
+def test_phase37_cos_negative_b_with_numerator_coefficient(vm: VM) -> None:
+    """``∫ 5/(1 − 2·cos x) dx`` — numerator c=5 scales the closed form."""
+    one_minus_two_cos = IRApply(
+        SUB,
+        (IRInteger(1), IRApply(MUL, (IRInteger(2), IRApply(COS, (X,))))),
+    )
+    integrand = IRApply(DIV, (IRInteger(5), one_minus_two_cos))
+    phi = vm.eval(_integrate(integrand))
+    for x_val in (1.2, 1.6, 2.0, 2.5):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 5.0 / (1.0 - 2.0 * math.cos(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
 
 
 def test_phase35_a_equals_b_now_closes(vm: VM) -> None:
