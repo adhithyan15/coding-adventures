@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.7.0] - 2026-05-20
+
+### Added (Phase 4a — 15-era version dispatch)
+- `ERA_VERSIONS: &[&str]` constant listing every era version modelled by [code/specs/ruby-version-evolution.md](../../../specs/ruby-version-evolution.md): `"1.0"`, `"1.6"`, `"1.8"`, `"1.9.1"`, `"1.9.3"`, `"2.0"`, `"2.1"`, `"2.3"`, `"2.5"`, `"2.6"`, `"2.7"`, `"3.0"`, `"3.1"`, `"3.2"`, `"3.3"` (chronological order).  Re-exported from the crate root.
+- `tokenize_ruby_for_version(source, version)` convenience entry point.  Validates `version` against `ERA_VERSIONS` and returns a `Result<Vec<Token>, String>`; the existing `RubyLexer::new(version)` constructor accepts the same set of strings.
+- `definition_for_version` now accepts any era string (was: only `"1.8"`) and tags the returned `StateMachineDefinition`'s `name` field with the requested era (e.g. `ruby-2.3-lexer`) so downstream tooling can identify which grammar produced the tokens.
+- Error message on unknown versions now points callers at the spec (`see code/specs/ruby-version-evolution.md`) so they know where the canonical era list lives.
+
+### Notes
+- v0 inheritance model: every era currently shares the **1.8 baseline TOML** — only the machine name differs.  This is deliberate: physically duplicating ~1100 lines of TOML 14 times would be massive churn for zero behaviour change in this PR.  Phase 4b+ will fork the era TOMLs as real syntactic deltas land (lambda `->` in 1.9.1, `%i[]` in 2.0, `&.` and `<<~` in 2.3, endless ranges in 2.6, numbered block params in 2.7, …).
+- The version-string surface is the load-bearing piece of this phase: callers that need version-gated tooling can already plumb the era string through; the underlying grammar will diverge incrementally as later phases land.
+
+### Tests (+5 new, total 82)
+- All 15 era versions parse cleanly and produce a uniquely-named `StateMachineDefinition`.
+- `ERA_VERSIONS` has no duplicates and is chronological (1.8 present, 3.3 last).
+- `tokenize_ruby_for_version` produces the expected token stream for the baseline source `"x = 1 + 2\n"` under every era.
+- Unknown version strings produce a helpful error pointing at the spec.
+
 ## [0.6.0] - 2026-05-20
 
 ### Added (Phase 3c — heredocs `<<TAG`)

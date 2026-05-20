@@ -39,6 +39,7 @@ mod machine;
 mod oracle;
 
 pub use lex_state::LexState;
+pub use machine::ERA_VERSIONS;
 pub use oracle::{NoLocals, ParserOracle, StaticLocals};
 
 /// Non-fatal diagnostic produced by the lexer.  Stray bytes /
@@ -799,6 +800,24 @@ fn is_ruby_keyword(s: &str) -> bool {
 /// call [`tokenize_ruby_diag`] to inspect them.
 pub fn tokenize_ruby(source: &str) -> Vec<Token> {
     tokenize_ruby_diag(source).0
+}
+
+/// Phase 4 — tokenize against a specific Ruby era.  `version` must
+/// be one of the strings in [`ERA_VERSIONS`] (or `""` for the
+/// default 1.8 baseline).  Returns an error if the version is not
+/// recognized; on success the behaviour matches [`tokenize_ruby`]
+/// for that era.
+///
+/// v0 caveat: all 15 eras currently share the 1.8 token grammar —
+/// only the underlying state-machine `name` differs.  Era-specific
+/// deltas (e.g. lambda `->` in 1.9.1, safe-nav `&.` in 2.3) arrive
+/// in subsequent phases.  Callers that need version gating today
+/// can already plumb the era string through to downstream tooling.
+pub fn tokenize_ruby_for_version(source: &str, version: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = RubyLexer::new(version)?;
+    lexer.push(source)?;
+    lexer.finish()?;
+    Ok(lexer.drain_tokens())
 }
 
 /// Tokenize with a custom [`ParserOracle`].  Use this when the
@@ -1611,6 +1630,58 @@ mod tests {
             .map(|t| t.value.as_str())
             .collect();
         assert_eq!(strings, vec!["<<EOF\nbody\nEOF"]);
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 4 — multi-era version dispatch.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn tokenize_ruby_for_version_accepts_all_eras() {
+        // The same baseline source lexes identically under every
+        // era version in v0 — the only difference is the
+        // state-machine identifier carried by the definition (see
+        // `machine::tests::all_15_era_versions_are_accepted`).  When
+        // Phase 4b+ forks individual era transitions, the token
+        // stream will start diverging here.
+        let src = "x = 1 + 2\n";
+        for &v in ERA_VERSIONS {
+            let toks = tokenize_ruby_for_version(src, v)
+                .unwrap_or_else(|e| panic!("version {v} failed: {e}"));
+            let kinds: Vec<TokenType> = toks
+                .iter()
+                .filter(|t| t.type_ != TokenType::Eof)
+                .map(|t| t.type_)
+                .collect();
+            assert_eq!(
+                kinds,
+                vec![
+                    TokenType::Name,
+                    TokenType::Equals,
+                    TokenType::Number,
+                    TokenType::Plus,
+                    TokenType::Number,
+                    TokenType::Newline,
+                ],
+                "version {v} produced unexpected token stream",
+            );
+        }
+    }
+
+    #[test]
+    fn tokenize_ruby_for_version_rejects_unknown() {
+        let err = tokenize_ruby_for_version("x\n", "5.0").unwrap_err();
+        assert!(err.contains("not a recognized Ruby era"));
+    }
+
+    #[test]
+    fn era_versions_includes_1_0_through_3_3() {
+        // Spot-check that the public re-export from `machine` is
+        // wired through and contains the expected end-points.
+        assert!(ERA_VERSIONS.contains(&"1.0"));
+        assert!(ERA_VERSIONS.contains(&"1.8"));
+        assert!(ERA_VERSIONS.contains(&"3.3"));
+        assert_eq!(ERA_VERSIONS.len(), 15);
     }
 
     #[test]
