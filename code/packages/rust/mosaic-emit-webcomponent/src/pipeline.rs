@@ -583,6 +583,15 @@ fn build_text_content(node: &LayoutNode) -> Option<String> {
         LayoutPropValue::Keyword(k) => escape_html_text(k),
         LayoutPropValue::Number(n) => format!("{n}"),
         LayoutPropValue::EmitRef(_) => String::new(),
+        // U29-G3 expression (`LayoutPropValue::Expr`). The webcomponent
+        // backend doesn't yet lower expressions — that needs UI29 §3.4
+        // scope analysis to know how to map names onto host-state
+        // template-literal interpolations. For now surface as empty text,
+        // matching the conservative no-op the Qt backend uses; React
+        // emits a `/* expr: ... */` comment for the same case. A
+        // follow-up PR will route Expr through a typed AST and produce
+        // a proper `${...}` template-literal interpolation.
+        LayoutPropValue::Expr(_) => String::new(),
     })
 }
 

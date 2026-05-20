@@ -726,6 +726,10 @@ fn build_value_attribute(node: &LayoutNode) -> Option<String> {
         LayoutPropValue::Keyword(k) => format!("text: \"{k}\""),
         LayoutPropValue::Number(n) => format!("text: \"{n}\""),
         LayoutPropValue::EmitRef(_) => "text: \"\"".to_string(),
+        // U29-G3 expression. Surface as an empty text — Qt/QML emission for
+        // bound expressions needs UI29 §3.4 scope analysis to know how to
+        // map names to QML property bindings.
+        LayoutPropValue::Expr(_) => "text: \"\"".to_string(),
     })
 }
 
@@ -768,6 +772,8 @@ fn build_label_attribute(node: &LayoutNode) -> Option<String> {
         LayoutPropValue::Keyword(k) => format!("text: \"{k}\""),
         LayoutPropValue::Number(n) => format!("text: \"{n}\""),
         LayoutPropValue::EmitRef(_) => "text: \"\"".to_string(),
+        // U29-G3 expression — same treatment as build_value_attribute.
+        LayoutPropValue::Expr(_) => "text: \"\"".to_string(),
     })
 }
 
