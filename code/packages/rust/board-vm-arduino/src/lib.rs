@@ -78,10 +78,26 @@ pub struct ArduinoTargetDescriptor {
 pub struct ArduinoCliUploadDescriptor {
     pub platform_id: &'static str,
     pub fqbn: &'static str,
+    pub port_hint: ArduinoCliPortHint,
 }
 
-const fn arduino_cli(platform_id: &'static str, fqbn: &'static str) -> ArduinoCliUploadDescriptor {
-    ArduinoCliUploadDescriptor { platform_id, fqbn }
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ArduinoCliPortHint {
+    UsbSerialBridge,
+    NativeUsb,
+    ExternalSerialAdapter,
+}
+
+const fn arduino_cli(
+    platform_id: &'static str,
+    fqbn: &'static str,
+    port_hint: ArduinoCliPortHint,
+) -> ArduinoCliUploadDescriptor {
+    ArduinoCliUploadDescriptor {
+        platform_id,
+        fqbn,
+        port_hint,
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -494,7 +510,11 @@ pub const ARDUINO_UNO_R3: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
     board_id: "arduino-uno-r3",
     display_name: "Arduino UNO R3",
     family: ArduinoFamily::ClassicAvr,
-    arduino_cli: arduino_cli("arduino:avr", "arduino:avr:uno"),
+    arduino_cli: arduino_cli(
+        "arduino:avr",
+        "arduino:avr:uno",
+        ArduinoCliPortHint::UsbSerialBridge,
+    ),
     runtime_profile: RuntimeProfile::Tiny,
     mcu: "ATmega328P",
     core: "8-bit AVR",
@@ -514,7 +534,11 @@ pub const ARDUINO_NANO_CLASSIC: ArduinoTargetDescriptor = ArduinoTargetDescripto
     board_id: "arduino-nano-classic",
     display_name: "Arduino Nano",
     family: ArduinoFamily::ClassicAvr,
-    arduino_cli: arduino_cli("arduino:avr", "arduino:avr:nano:cpu=atmega328"),
+    arduino_cli: arduino_cli(
+        "arduino:avr",
+        "arduino:avr:nano:cpu=atmega328",
+        ArduinoCliPortHint::UsbSerialBridge,
+    ),
     runtime_profile: RuntimeProfile::Tiny,
     mcu: "ATmega328P",
     core: "8-bit AVR",
@@ -534,7 +558,11 @@ pub const ARDUINO_PRO_MINI: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
     board_id: "arduino-pro-mini",
     display_name: "Arduino Pro Mini",
     family: ArduinoFamily::ClassicAvr,
-    arduino_cli: arduino_cli("arduino:avr", "arduino:avr:pro:cpu=16MHzatmega328"),
+    arduino_cli: arduino_cli(
+        "arduino:avr",
+        "arduino:avr:pro:cpu=16MHzatmega328",
+        ArduinoCliPortHint::ExternalSerialAdapter,
+    ),
     runtime_profile: RuntimeProfile::Tiny,
     mcu: "ATmega328P",
     core: "8-bit AVR",
@@ -554,7 +582,11 @@ pub const ARDUINO_MEGA_2560: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
     board_id: "arduino-mega-2560",
     display_name: "Arduino Mega 2560 Rev3",
     family: ArduinoFamily::ClassicAvr,
-    arduino_cli: arduino_cli("arduino:avr", "arduino:avr:mega:cpu=atmega2560"),
+    arduino_cli: arduino_cli(
+        "arduino:avr",
+        "arduino:avr:mega:cpu=atmega2560",
+        ArduinoCliPortHint::UsbSerialBridge,
+    ),
     runtime_profile: RuntimeProfile::Tiny,
     mcu: "ATmega2560",
     core: "8-bit AVR",
@@ -574,7 +606,11 @@ pub const ARDUINO_LEONARDO: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
     board_id: "arduino-leonardo",
     display_name: "Arduino Leonardo",
     family: ArduinoFamily::ClassicAvr,
-    arduino_cli: arduino_cli("arduino:avr", "arduino:avr:leonardo"),
+    arduino_cli: arduino_cli(
+        "arduino:avr",
+        "arduino:avr:leonardo",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Tiny,
     mcu: "ATmega32U4",
     core: "8-bit AVR with USB",
@@ -594,7 +630,11 @@ pub const ARDUINO_MICRO: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
     board_id: "arduino-micro",
     display_name: "Arduino Micro",
     family: ArduinoFamily::ClassicAvr,
-    arduino_cli: arduino_cli("arduino:avr", "arduino:avr:micro"),
+    arduino_cli: arduino_cli(
+        "arduino:avr",
+        "arduino:avr:micro",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Tiny,
     mcu: "ATmega32U4",
     core: "8-bit AVR with USB",
@@ -614,7 +654,11 @@ pub const ARDUINO_DUE: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
     board_id: "arduino-due",
     display_name: "Arduino Due",
     family: ArduinoFamily::Sam,
-    arduino_cli: arduino_cli("arduino:sam", "arduino:sam:arduino_due_x"),
+    arduino_cli: arduino_cli(
+        "arduino:sam",
+        "arduino:sam:arduino_due_x",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Full,
     mcu: "SAM3X8E",
     core: "Arm Cortex-M3",
@@ -634,7 +678,11 @@ pub const ARDUINO_ZERO: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
     board_id: "arduino-zero",
     display_name: "Arduino Zero",
     family: ArduinoFamily::Samd,
-    arduino_cli: arduino_cli("arduino:samd", "arduino:samd:arduino_zero_native"),
+    arduino_cli: arduino_cli(
+        "arduino:samd",
+        "arduino:samd:arduino_zero_native",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Small,
     mcu: "SAMD21G18",
     core: "Arm Cortex-M0+",
@@ -654,7 +702,11 @@ pub const ARDUINO_MKR_WIFI_1010: ArduinoTargetDescriptor = ArduinoTargetDescript
     board_id: "arduino-mkr-wifi-1010",
     display_name: "Arduino MKR WiFi 1010",
     family: ArduinoFamily::Samd,
-    arduino_cli: arduino_cli("arduino:samd", "arduino:samd:mkrwifi1010"),
+    arduino_cli: arduino_cli(
+        "arduino:samd",
+        "arduino:samd:mkrwifi1010",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Small,
     mcu: "SAMD21G18",
     core: "Arm Cortex-M0+ with u-blox NINA-W102",
@@ -674,7 +726,11 @@ pub const ARDUINO_NANO_EVERY: ArduinoTargetDescriptor = ArduinoTargetDescriptor 
     board_id: "arduino-nano-every",
     display_name: "Arduino Nano Every",
     family: ArduinoFamily::MegaAvr,
-    arduino_cli: arduino_cli("arduino:megaavr", "arduino:megaavr:nona4809:mode=off"),
+    arduino_cli: arduino_cli(
+        "arduino:megaavr",
+        "arduino:megaavr:nona4809:mode=off",
+        ArduinoCliPortHint::UsbSerialBridge,
+    ),
     runtime_profile: RuntimeProfile::Tiny,
     mcu: "ATmega4809",
     core: "8-bit megaAVR 0-series",
@@ -694,7 +750,11 @@ pub const ARDUINO_NANO_R4: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
     board_id: "arduino-nano-r4",
     display_name: "Arduino Nano R4",
     family: ArduinoFamily::RenesasRa,
-    arduino_cli: arduino_cli("arduino:renesas_uno", "arduino:renesas_uno:nanor4"),
+    arduino_cli: arduino_cli(
+        "arduino:renesas_uno",
+        "arduino:renesas_uno:nanor4",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Full,
     mcu: "RA4M1",
     core: "Arm Cortex-M4F",
@@ -714,7 +774,11 @@ pub const ARDUINO_NANO_33_IOT: ArduinoTargetDescriptor = ArduinoTargetDescriptor
     board_id: "arduino-nano-33-iot",
     display_name: "Arduino Nano 33 IoT",
     family: ArduinoFamily::Samd,
-    arduino_cli: arduino_cli("arduino:samd", "arduino:samd:nano_33_iot"),
+    arduino_cli: arduino_cli(
+        "arduino:samd",
+        "arduino:samd:nano_33_iot",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Small,
     mcu: "SAMD21G18",
     core: "Arm Cortex-M0+ with u-blox NINA-W102",
@@ -734,7 +798,11 @@ pub const ARDUINO_NANO_33_BLE_REV2: ArduinoTargetDescriptor = ArduinoTargetDescr
     board_id: "arduino-nano-33-ble-rev2",
     display_name: "Arduino Nano 33 BLE Rev2",
     family: ArduinoFamily::Nordic,
-    arduino_cli: arduino_cli("arduino:mbed_nano", "arduino:mbed_nano:nano33ble"),
+    arduino_cli: arduino_cli(
+        "arduino:mbed_nano",
+        "arduino:mbed_nano:nano33ble",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Full,
     mcu: "nRF52840",
     core: "Arm Cortex-M4F with Bluetooth LE",
@@ -757,6 +825,7 @@ pub const ARDUINO_NANO_RP2040_CONNECT: ArduinoTargetDescriptor = ArduinoTargetDe
     arduino_cli: arduino_cli(
         "arduino:mbed_nano",
         "arduino:mbed_nano:nanorp2040connect",
+        ArduinoCliPortHint::NativeUsb,
     ),
     runtime_profile: RuntimeProfile::Full,
     mcu: "RP2040",
@@ -777,7 +846,11 @@ pub const ARDUINO_NANO_ESP32: ArduinoTargetDescriptor = ArduinoTargetDescriptor 
     board_id: "arduino-nano-esp32",
     display_name: "Arduino Nano ESP32",
     family: ArduinoFamily::Esp32,
-    arduino_cli: arduino_cli("arduino:esp32", "arduino:esp32:nano_nora"),
+    arduino_cli: arduino_cli(
+        "arduino:esp32",
+        "arduino:esp32:nano_nora",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Full,
     mcu: "ESP32-S3",
     core: "Xtensa LX7",
@@ -797,7 +870,11 @@ pub const ARDUINO_GIGA_R1_WIFI: ArduinoTargetDescriptor = ArduinoTargetDescripto
     board_id: "arduino-giga-r1-wifi",
     display_name: "Arduino GIGA R1 WiFi",
     family: ArduinoFamily::Stm32,
-    arduino_cli: arduino_cli("arduino:mbed_giga", "arduino:mbed_giga:giga"),
+    arduino_cli: arduino_cli(
+        "arduino:mbed_giga",
+        "arduino:mbed_giga:giga",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Full,
     mcu: "STM32H747XI",
     core: "dual Arm Cortex-M7/M4",
@@ -817,7 +894,11 @@ pub const ARDUINO_PORTENTA_H7: ArduinoTargetDescriptor = ArduinoTargetDescriptor
     board_id: "arduino-portenta-h7",
     display_name: "Arduino Portenta H7",
     family: ArduinoFamily::Mbed,
-    arduino_cli: arduino_cli("arduino:mbed_portenta", "arduino:mbed_portenta:envie_m7"),
+    arduino_cli: arduino_cli(
+        "arduino:mbed_portenta",
+        "arduino:mbed_portenta:envie_m7",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Full,
     mcu: "STM32H747XI",
     core: "dual Arm Cortex-M7/M4",
@@ -837,7 +918,11 @@ pub const ARDUINO_PORTENTA_H7_LITE: ArduinoTargetDescriptor = ArduinoTargetDescr
     board_id: "arduino-portenta-h7-lite",
     display_name: "Arduino Portenta H7 Lite",
     family: ArduinoFamily::Mbed,
-    arduino_cli: arduino_cli("arduino:mbed_portenta", "arduino:mbed_portenta:envie_m7"),
+    arduino_cli: arduino_cli(
+        "arduino:mbed_portenta",
+        "arduino:mbed_portenta:envie_m7",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Full,
     mcu: "STM32H747XI",
     core: "dual Arm Cortex-M7/M4",
@@ -858,7 +943,11 @@ pub const ARDUINO_PORTENTA_H7_LITE_CONNECTED: ArduinoTargetDescriptor =
         board_id: "arduino-portenta-h7-lite-connected",
         display_name: "Arduino Portenta H7 Lite Connected",
         family: ArduinoFamily::Mbed,
-        arduino_cli: arduino_cli("arduino:mbed_portenta", "arduino:mbed_portenta:envie_m7"),
+        arduino_cli: arduino_cli(
+            "arduino:mbed_portenta",
+            "arduino:mbed_portenta:envie_m7",
+            ArduinoCliPortHint::NativeUsb,
+        ),
         runtime_profile: RuntimeProfile::Full,
         mcu: "STM32H747XI",
         core: "dual Arm Cortex-M7/M4 with WiFi/BLE module",
@@ -881,6 +970,7 @@ pub const ARDUINO_PORTENTA_C33: ArduinoTargetDescriptor = ArduinoTargetDescripto
     arduino_cli: arduino_cli(
         "arduino:renesas_portenta",
         "arduino:renesas_portenta:portenta_c33",
+        ArduinoCliPortHint::NativeUsb,
     ),
     runtime_profile: RuntimeProfile::Full,
     mcu: "R7FA6M5BH2CBG",
@@ -901,7 +991,11 @@ pub const ARDUINO_NICLA_VISION: ArduinoTargetDescriptor = ArduinoTargetDescripto
     board_id: "arduino-nicla-vision",
     display_name: "Arduino Nicla Vision",
     family: ArduinoFamily::Mbed,
-    arduino_cli: arduino_cli("arduino:mbed_nicla", "arduino:mbed_nicla:nicla_vision"),
+    arduino_cli: arduino_cli(
+        "arduino:mbed_nicla",
+        "arduino:mbed_nicla:nicla_vision",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Full,
     mcu: "STM32H747AII6",
     core: "dual Arm Cortex-M7/M4 with camera and WiFi/BLE module",
@@ -921,7 +1015,11 @@ pub const ARDUINO_NICLA_SENSE_ME: ArduinoTargetDescriptor = ArduinoTargetDescrip
     board_id: "arduino-nicla-sense-me",
     display_name: "Arduino Nicla Sense ME",
     family: ArduinoFamily::Nordic,
-    arduino_cli: arduino_cli("arduino:mbed_nicla", "arduino:mbed_nicla:nicla_sense"),
+    arduino_cli: arduino_cli(
+        "arduino:mbed_nicla",
+        "arduino:mbed_nicla:nicla_sense",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Small,
     mcu: "nRF52832",
     core: "Arm Cortex-M4F with Bosch smart sensor hub",
@@ -941,7 +1039,11 @@ pub const ARDUINO_NICLA_VOICE: ArduinoTargetDescriptor = ArduinoTargetDescriptor
     board_id: "arduino-nicla-voice",
     display_name: "Arduino Nicla Voice",
     family: ArduinoFamily::Nordic,
-    arduino_cli: arduino_cli("arduino:mbed_nicla", "arduino:mbed_nicla:nicla_voice"),
+    arduino_cli: arduino_cli(
+        "arduino:mbed_nicla",
+        "arduino:mbed_nicla:nicla_voice",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Small,
     mcu: "nRF52832",
     core: "Arm Cortex-M4F with Syntiant NDP120",
@@ -961,7 +1063,11 @@ pub const ARDUINO_OPTA_LITE: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
     board_id: "arduino-opta-lite",
     display_name: "Arduino Opta Lite",
     family: ArduinoFamily::Stm32,
-    arduino_cli: arduino_cli("arduino:mbed_opta", "arduino:mbed_opta:opta"),
+    arduino_cli: arduino_cli(
+        "arduino:mbed_opta",
+        "arduino:mbed_opta:opta",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Full,
     mcu: "STM32H747XI",
     core: "dual Arm Cortex-M7/M4 with Ethernet",
@@ -981,7 +1087,11 @@ pub const ARDUINO_OPTA_RS485: ArduinoTargetDescriptor = ArduinoTargetDescriptor 
     board_id: "arduino-opta-rs485",
     display_name: "Arduino Opta RS485",
     family: ArduinoFamily::Stm32,
-    arduino_cli: arduino_cli("arduino:mbed_opta", "arduino:mbed_opta:opta"),
+    arduino_cli: arduino_cli(
+        "arduino:mbed_opta",
+        "arduino:mbed_opta:opta",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Full,
     mcu: "STM32H747XI",
     core: "dual Arm Cortex-M7/M4 with Ethernet and RS-485",
@@ -1001,7 +1111,11 @@ pub const ARDUINO_OPTA_WIFI: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
     board_id: "arduino-opta-wifi",
     display_name: "Arduino Opta WiFi",
     family: ArduinoFamily::Stm32,
-    arduino_cli: arduino_cli("arduino:mbed_opta", "arduino:mbed_opta:opta"),
+    arduino_cli: arduino_cli(
+        "arduino:mbed_opta",
+        "arduino:mbed_opta:opta",
+        ArduinoCliPortHint::NativeUsb,
+    ),
     runtime_profile: RuntimeProfile::Full,
     mcu: "STM32H747XI",
     core: "dual Arm Cortex-M7/M4 with Ethernet, RS-485, and WiFi/BLE",
@@ -1145,6 +1259,26 @@ mod tests {
         assert!(ARDUINO_TARGETS
             .iter()
             .all(|target| target.digital_pins.iter().any(|pin| pin.supports_output)));
+    }
+
+    #[test]
+    fn arduino_cli_descriptors_carry_board_specific_port_hints() {
+        assert_eq!(
+            ARDUINO_UNO_R3.arduino_cli.port_hint,
+            ArduinoCliPortHint::UsbSerialBridge
+        );
+        assert_eq!(
+            ARDUINO_LEONARDO.arduino_cli.port_hint,
+            ArduinoCliPortHint::NativeUsb
+        );
+        assert_eq!(
+            ARDUINO_PRO_MINI.arduino_cli.port_hint,
+            ArduinoCliPortHint::ExternalSerialAdapter
+        );
+        assert_eq!(
+            ARDUINO_NANO_R4.arduino_cli.port_hint,
+            ArduinoCliPortHint::NativeUsb
+        );
     }
 
     #[test]

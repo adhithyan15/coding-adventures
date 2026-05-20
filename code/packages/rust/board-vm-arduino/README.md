@@ -24,7 +24,10 @@ Each target currently proves the shared GPIO/time backend path. Board-specific
 firmware/upload crates can extend the same descriptor with richer peripherals
 without falling back to Uno R4 assumptions. The descriptors also carry the
 Arduino CLI platform/FQBN for each board so host SDKs can ask Rust for upload
-metadata instead of maintaining language-local board tables.
+metadata instead of maintaining language-local board tables. The upload
+descriptor also records whether the board appears through a USB serial bridge,
+native USB bootloader, or external serial adapter, which keeps Pro Mini-style
+boards from being treated like onboard-USB Arduinos.
 
 Opta terminals are modeled as board-local input and relay-output pins instead
 of pretending the PLC has Uno-style headers. Nicla sensor/audio/vision hardware

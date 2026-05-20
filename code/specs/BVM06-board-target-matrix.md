@@ -129,6 +129,11 @@ platform/FQBN strings back to Board VM board targets. Unique FQBNs can resolve
 directly to one target; shared package identities return every matching board
 so language frontends do not guess between variants.
 
+The Arduino upload adapter details tranche adds Rust-owned port hints to the
+same descriptors. Arduino CLI boards now report whether their upload path starts
+from a USB serial bridge, native USB bootloader port, or external serial
+adapter before delegating reset/programmer behavior to the board package.
+
 The next tranches should deepen board-specific firmware/upload adapters and
 richer peripheral tables for each family without moving generic Arduino
 discovery into `board-vm-uno-r4`.

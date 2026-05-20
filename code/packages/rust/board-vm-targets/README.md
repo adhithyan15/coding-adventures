@@ -34,6 +34,9 @@ builder:
 - Arduino-family targets use an Arduino CLI profile so the board package owns
   bootloader reset, programmer selection, firmware artifact layout, and the
   selected platform/FQBN string for each concrete board descriptor.
+  Board-specific port hints distinguish USB-serial bridge boards, native-USB
+  bootloaders, and external serial adapter boards before a frontend calls the
+  shared Arduino CLI adapter.
 - ESP32 DevKit targets use an ESP ROM serial profile so image layout and boot
   pin reset remain Rust-owned.
 - Raspberry Pi Pico targets use a Pico UF2 mass-storage profile so BOOTSEL mount

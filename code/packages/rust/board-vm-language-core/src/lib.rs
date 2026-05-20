@@ -79,8 +79,9 @@ use board_vm_targets::{
     NetworkProtocol as TargetNetworkProtocol, OnboardLed as TargetOnboardLed,
     SpiBusInfo as TargetSpiBus, UartBusInfo as TargetUartBus, UploadAdapter as TargetUploadAdapter,
     UploadImageFormat as TargetUploadImageFormat, UploadInfo as TargetUploadInfo,
-    UploadResetMethod as TargetUploadResetMethod, UploadTransport as TargetUploadTransport,
-    WirelessInterfaceInfo as TargetWirelessInterface, WirelessTransport as TargetWirelessTransport,
+    UploadPortHint as TargetUploadPortHint, UploadResetMethod as TargetUploadResetMethod,
+    UploadTransport as TargetUploadTransport, WirelessInterfaceInfo as TargetWirelessInterface,
+    WirelessTransport as TargetWirelessTransport,
 };
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
@@ -520,6 +521,7 @@ pub struct LanguageUploadOptions {
     pub image_format: String,
     pub transport: String,
     pub reset_method: String,
+    pub port_hint: Option<String>,
     pub command: String,
     pub platform_id: Option<String>,
     pub fqbn: Option<String>,
@@ -533,6 +535,7 @@ pub struct LanguageUploadPlan {
     pub image_format: String,
     pub transport: String,
     pub reset_method: String,
+    pub port_hint: Option<String>,
     pub command: String,
     pub platform_id: Option<String>,
     pub fqbn: Option<String>,
@@ -728,6 +731,16 @@ pub const fn upload_transport_name(transport: TargetUploadTransport) -> &'static
     match transport {
         TargetUploadTransport::Serial => "serial",
         TargetUploadTransport::MassStorage => "mass_storage",
+    }
+}
+
+pub const fn upload_port_hint_name(hint: TargetUploadPortHint) -> &'static str {
+    match hint {
+        TargetUploadPortHint::UsbSerialBridge => "usb_serial_bridge",
+        TargetUploadPortHint::NativeUsb => "native_usb",
+        TargetUploadPortHint::ExternalSerialAdapter => "external_serial_adapter",
+        TargetUploadPortHint::EspRomSerial => "esp_rom_serial",
+        TargetUploadPortHint::MassStorageBootloader => "mass_storage_bootloader",
     }
 }
 
@@ -1386,10 +1399,23 @@ fn language_upload_options(board_id: &str, upload: TargetUploadInfo) -> Language
         image_format: upload_image_format_name(upload.image_format).to_owned(),
         transport: upload_transport_name(upload.transport).to_owned(),
         reset_method: upload_reset_method_name(upload.reset_method).to_owned(),
+        port_hint: upload
+            .port_hint
+            .map(upload_port_hint_name)
+            .map(str::to_owned),
         command: upload.command.to_owned(),
         platform_id: upload.platform_id.map(str::to_owned),
         fqbn: upload.fqbn.map(str::to_owned),
         notes: upload.notes.to_owned(),
+    }
+}
+
+fn arduino_cli_port_selection_step(hint: Option<TargetUploadPortHint>) -> &'static str {
+    match hint {
+        Some(TargetUploadPortHint::UsbSerialBridge) => "select_usb_serial_port",
+        Some(TargetUploadPortHint::NativeUsb) => "select_native_usb_port",
+        Some(TargetUploadPortHint::ExternalSerialAdapter) => "select_external_serial_adapter",
+        _ => "select_serial_port",
     }
 }
 
@@ -1402,6 +1428,7 @@ fn language_upload_plan(board_id: &str, upload: TargetUploadInfo) -> LanguageUpl
             image_format: options.image_format,
             transport: options.transport,
             reset_method: options.reset_method,
+            port_hint: options.port_hint,
             command: options.command,
             platform_id: options.platform_id,
             fqbn: options.fqbn,
@@ -1413,7 +1440,7 @@ fn language_upload_plan(board_id: &str, upload: TargetUploadInfo) -> LanguageUpl
             steps: vec![
                 "resolve_arduino_board_package".to_owned(),
                 "build_firmware_artifact".to_owned(),
-                "select_serial_port".to_owned(),
+                arduino_cli_port_selection_step(upload.port_hint).to_owned(),
                 "delegate_reset_to_board_package".to_owned(),
                 "upload_with_arduino_cli".to_owned(),
             ],
@@ -1425,6 +1452,7 @@ fn language_upload_plan(board_id: &str, upload: TargetUploadInfo) -> LanguageUpl
             image_format: options.image_format,
             transport: options.transport,
             reset_method: options.reset_method,
+            port_hint: options.port_hint,
             command: options.command,
             platform_id: options.platform_id,
             fqbn: options.fqbn,
@@ -1448,6 +1476,7 @@ fn language_upload_plan(board_id: &str, upload: TargetUploadInfo) -> LanguageUpl
             image_format: options.image_format,
             transport: options.transport,
             reset_method: options.reset_method,
+            port_hint: options.port_hint,
             command: options.command,
             platform_id: options.platform_id,
             fqbn: options.fqbn,
@@ -4869,6 +4898,7 @@ mod tests {
         assert_eq!(opta.image_format, "arduino_cli_build_output");
         assert_eq!(opta.transport, "serial");
         assert_eq!(opta.reset_method, "arduino_board_package");
+        assert_eq!(opta.port_hint.as_deref(), Some("native_usb"));
         assert_eq!(opta.command, "arduino-cli upload");
         assert_eq!(opta.platform_id.as_deref(), Some("arduino:mbed_opta"));
         assert_eq!(opta.fqbn.as_deref(), Some("arduino:mbed_opta:opta"));
@@ -4876,12 +4906,20 @@ mod tests {
         let nano_r4 = upload_options_for_target("arduino:renesas_uno:nanor4").unwrap();
         assert_eq!(nano_r4.board_id, "arduino-nano-r4");
         assert_eq!(nano_r4.fqbn.as_deref(), Some("arduino:renesas_uno:nanor4"));
+        assert_eq!(nano_r4.port_hint.as_deref(), Some("native_usb"));
+
+        let pro_mini = upload_options_for_target("arduino-pro-mini").unwrap();
+        assert_eq!(
+            pro_mini.port_hint.as_deref(),
+            Some("external_serial_adapter")
+        );
 
         let esp32 = upload_options_for_target("esp32").unwrap();
         assert_eq!(esp32.board_id, "esp32-devkit-v1");
         assert_eq!(esp32.adapter, "esp_rom_serial");
         assert_eq!(esp32.image_format, "esp_flash_image");
         assert_eq!(esp32.reset_method, "esp_rom_boot_pins");
+        assert_eq!(esp32.port_hint.as_deref(), Some("esp_rom_serial"));
         assert_eq!(esp32.platform_id, None);
         assert_eq!(esp32.fqbn, None);
 
@@ -4890,6 +4928,7 @@ mod tests {
         assert_eq!(pico.image_format, "uf2");
         assert_eq!(pico.transport, "mass_storage");
         assert_eq!(pico.reset_method, "pico_bootsel");
+        assert_eq!(pico.port_hint.as_deref(), Some("mass_storage_bootloader"));
 
         assert!(upload_options_for_target("not-a-board").is_none());
     }
@@ -4902,6 +4941,7 @@ mod tests {
         assert_eq!(opta.artifact_kind, "arduino_cli_build_output");
         assert_eq!(opta.platform_id.as_deref(), Some("arduino:mbed_opta"));
         assert_eq!(opta.fqbn.as_deref(), Some("arduino:mbed_opta:opta"));
+        assert_eq!(opta.port_hint.as_deref(), Some("native_usb"));
         assert_eq!(opta.artifact_extension, None);
         assert!(opta.requires_serial_port);
         assert!(!opta.requires_mount_path);
@@ -4911,7 +4951,7 @@ mod tests {
             vec![
                 "resolve_arduino_board_package",
                 "build_firmware_artifact",
-                "select_serial_port",
+                "select_native_usb_port",
                 "delegate_reset_to_board_package",
                 "upload_with_arduino_cli",
             ]
@@ -4923,10 +4963,22 @@ mod tests {
             mega.fqbn.as_deref(),
             Some("arduino:avr:mega:cpu=atmega2560")
         );
+        assert_eq!(mega.port_hint.as_deref(), Some("usb_serial_bridge"));
+        assert!(mega.steps.contains(&"select_usb_serial_port".to_owned()));
+
+        let pro_mini = upload_plan_for_target("arduino-pro-mini").unwrap();
+        assert_eq!(
+            pro_mini.port_hint.as_deref(),
+            Some("external_serial_adapter")
+        );
+        assert!(pro_mini
+            .steps
+            .contains(&"select_external_serial_adapter".to_owned()));
 
         let esp32 = upload_plan_for_target("esp32").unwrap();
         assert_eq!(esp32.adapter, "esp_rom_serial");
         assert_eq!(esp32.artifact_kind, "esp_flash_image");
+        assert_eq!(esp32.port_hint.as_deref(), Some("esp_rom_serial"));
         assert_eq!(esp32.platform_id, None);
         assert_eq!(esp32.fqbn, None);
         assert_eq!(esp32.artifact_extension.as_deref(), Some(".bin"));
@@ -4938,6 +4990,7 @@ mod tests {
         assert_eq!(pico.board_id, "raspberry-pi-pico-w");
         assert_eq!(pico.adapter, "pico_uf2_mass_storage");
         assert_eq!(pico.artifact_kind, "uf2_file");
+        assert_eq!(pico.port_hint.as_deref(), Some("mass_storage_bootloader"));
         assert_eq!(pico.artifact_extension.as_deref(), Some(".uf2"));
         assert!(!pico.requires_serial_port);
         assert!(pico.requires_mount_path);

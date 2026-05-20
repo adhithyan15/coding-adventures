@@ -200,8 +200,11 @@ ergonomics, but they should not hard-code whether a board flashes through
 Arduino CLI, ESP ROM serial upload, UF2 mass storage, or another adapter.
 SDKs should ask the Rust language core for the upload plan so artifact kind,
 serial or mount-path requirements, bootloader reset behavior, Arduino CLI
-platform/FQBN metadata, and transfer steps remain shared across Ruby, Python,
-Lua, Java, JS, and future CLIs.
+platform/FQBN metadata, board-specific port hints, and transfer steps remain
+shared across Ruby, Python, Lua, Java, JS, and future CLIs. Arduino CLI plans
+must preserve whether the board expects an onboard USB serial bridge, a native
+USB bootloader port, or an external serial adapter so frontends do not infer
+that from board names.
 
 Selector handling follows the same ownership boundary. If a frontend receives
 an Arduino CLI FQBN such as `arduino:renesas_uno:nanor4`, it should ask the Rust
