@@ -1617,6 +1617,65 @@ fn try_weierstrass_degenerate(
     None
 }
 
+/// Phase 36: Weierstrass log form for `a² < b²`.  Returns the closed
+/// form with `log|·|` instead of `arctan(·)`.  Sin branch handles any
+/// nonzero `a`; cos branch requires `b > |a|` strictly (the symmetric
+/// `b < −|a|` case has the opposite sign pattern and is deferred).
+fn try_weierstrass_log_form(
+    c: RatC,
+    a: RatC,
+    b: RatC,
+    trig_head: &'static str,
+    x: &str,
+) -> Option<IRNode> {
+    // disc_sq = b² − a² > 0 (caller passed disc = a² − b² < 0).
+    let b_sq = rc_mul(b, b)?;
+    let a_sq = rc_mul(a, a)?;
+    let disc_sq = rc_sub(b_sq, a_sq)?;
+    if disc_sq.0 <= 0 {
+        return None;
+    }
+    let sqrt_disc_ir = weierstrass_sqrt_fraction_ir(disc_sq);
+    let tan_half = apply_node(
+        TAN,
+        vec![apply_node(
+            DIV,
+            vec![IRNode::Symbol(x.to_string()), IRNode::Integer(2)],
+        )],
+    );
+    if trig_head == SIN {
+        if a.0 == 0 {
+            // 1/(b·sin x) — defer to the elementary table.
+            return None;
+        }
+        // log|(a·tan(x/2) + b − D) / (a·tan(x/2) + b + D)|
+        let a_tan = apply_node(MUL, vec![rc_to_ir(a)?, tan_half]);
+        let a_tan_plus_b = apply_node(ADD, vec![a_tan, rc_to_ir(b)?]);
+        let numer = apply_node(SUB, vec![a_tan_plus_b.clone(), sqrt_disc_ir.clone()]);
+        let denom = apply_node(ADD, vec![a_tan_plus_b, sqrt_disc_ir.clone()]);
+        let log_arg = apply_node("Abs", vec![apply_node(DIV, vec![numer, denom])]);
+        let coef_ir = apply_node(DIV, vec![rc_to_ir(c)?, sqrt_disc_ir]);
+        return Some(apply_node(MUL, vec![coef_ir, apply_node(LOG, vec![log_arg])]));
+    }
+    // COS branch: require b > |a| strictly.
+    let abs_a = (a.0.abs(), a.1);
+    let b_minus_abs_a = rc_sub(b, abs_a)?;
+    if b_minus_abs_a.0 <= 0 {
+        return None;
+    }
+    let b_minus_a = rc_sub(b, a)?;
+    if b_minus_a.0 <= 0 {
+        return None;
+    }
+    // log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|
+    let bma_tan = apply_node(MUL, vec![rc_to_ir(b_minus_a)?, tan_half]);
+    let numer = apply_node(ADD, vec![sqrt_disc_ir.clone(), bma_tan.clone()]);
+    let denom = apply_node(SUB, vec![sqrt_disc_ir.clone(), bma_tan]);
+    let log_arg = apply_node("Abs", vec![apply_node(DIV, vec![numer, denom])]);
+    let coef_ir = apply_node(DIV, vec![rc_to_ir(c)?, sqrt_disc_ir]);
+    Some(apply_node(MUL, vec![coef_ir, apply_node(LOG, vec![log_arg])]))
+}
+
 /// Phase 34 entry point.  Returns the closed form when the integrand is
 /// `c / (a + b·sin/cos(x))` with rational c, a, b and a² > b² (a > 0 for cos),
 /// or `None` otherwise.
@@ -1638,7 +1697,9 @@ fn try_weierstrass_one_over_linear_trig(
         return try_weierstrass_degenerate(c_rc, a_rc, b_rc, trig_head, x);
     }
     if disc.0 < 0 {
-        return None;
+        // Phase 36: a² < b² → log form via partial fractions on the two
+        // distinct real roots of the quadratic in tan(x/2).
+        return try_weierstrass_log_form(c_rc, a_rc, b_rc, trig_head, x);
     }
     let sqrt_disc_ir = weierstrass_sqrt_fraction_ir(disc);
     let tan_half = apply_node(
