@@ -2172,9 +2172,19 @@ def _apply_modifier(dt: datetime, modifier: str) -> datetime | None:
                 return dt.replace(year=year, month=month, day=last_day) + timedelta(days=overflow)
         if unit in ("year", "years"):
             year = dt.year + n
-            # Clamp Feb 29 → Feb 28 in non-leap years.
-            day = min(dt.day, calendar.monthrange(year, dt.month)[1])
-            return dt.replace(year=year, day=day)
+            # SQLite does NOT clamp Feb 29 → Feb 28 — it lets the day roll
+            # into March.  ``date('2024-02-29', '+1 year')`` becomes
+            # ``'2025-03-01'`` (Feb 29 → Feb 28 + 1 overflow day), not
+            # ``'2025-02-28'``.  Mirror the month-rollover algorithm above:
+            # try the literal date first, then on ValueError add the
+            # overflow as extra days from the last valid day of the target
+            # month.
+            try:
+                return dt.replace(year=year, day=dt.day)
+            except ValueError:
+                last_day = calendar.monthrange(year, dt.month)[1]
+                overflow = dt.day - last_day
+                return dt.replace(year=year, day=last_day) + timedelta(days=overflow)
 
     return None  # unrecognised modifier → NULL propagation
 

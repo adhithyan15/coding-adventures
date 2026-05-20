@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.69.0] - 2026-05-20
+
+### Fixed
+
+- **``date(..., '+N year')`` Feb 29 rollover matches SQLite**
+  (via ``sql-vm 1.43.0``).  Previously
+  ``date('2024-02-29', '+1 year')`` returned ``'2025-02-28'`` (clamp);
+  SQLite rolls forward to ``'2025-03-01'``.  The fix ports the
+  existing month-rollover algorithm to the year branch.
+
+  14 oracle tests in ``test_tier3_year_rollover.py`` covering forward/
+  backward rollover, leap-to-leap preservation, and ordinary
+  non-Feb-29 dates as regression guards.
+
 ## [1.68.0] - 2026-05-20
 
 ### Fixed
