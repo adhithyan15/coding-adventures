@@ -179,8 +179,12 @@ runtime.
 The Nano R4 Qwiic metadata tranche records connector-local `Wire1` metadata for
 the Qwiic/STEMMA QT connector and RA4M1 IIC0 controller without folding it into
 the A4/A5 `Wire` header descriptor. `i2c.*` capabilities stay disabled for the
-shared Arduino runtime; native USB and bytecode behavior remain follow-up
-adapter metadata.
+shared Arduino runtime.
+
+The Nano R4 native USB metadata tranche records the native CDC serial/upload
+endpoint separately from D0/D1 `Serial1`. The descriptor keeps native USB in
+Rust-owned target/upload metadata rather than GPIO UART tables; deeper USB
+firmware behavior remains follow-up adapter metadata.
 
 The next tranches should deepen board-specific firmware/upload adapters and
 richer peripheral tables for each family without moving generic Arduino

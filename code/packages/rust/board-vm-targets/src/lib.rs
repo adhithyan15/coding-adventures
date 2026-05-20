@@ -97,6 +97,18 @@ pub struct UartBusInfo {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UsbInterfaceInfo {
+    pub interface: u8,
+    pub name: &'static str,
+    pub controller: &'static str,
+    pub class: &'static str,
+    pub native: bool,
+    pub upload: bool,
+    pub command_transport: bool,
+    pub notes: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct CanBusInfo {
     pub bus: u8,
     pub name: &'static str,
@@ -236,6 +248,7 @@ pub struct BoardTargetInfo {
     pub i2c_connectors: &'static [I2cConnectorInfo],
     pub spi_buses: &'static [SpiBusInfo],
     pub uart_buses: &'static [UartBusInfo],
+    pub usb_interfaces: &'static [UsbInterfaceInfo],
     pub can_buses: &'static [CanBusInfo],
     pub rtc: Option<RtcInfo>,
     pub watchdog: Option<WatchdogInfo>,
@@ -916,6 +929,17 @@ pub const ARDUINO_NANO_R4_UART_BUSES: [UartBusInfo; 1] = [UartBusInfo {
     notes: "Arduino Nano R4 D1/D0 serial metadata only; native USB remains upload/transport metadata, not a separate GPIO UART.",
 }];
 
+pub const ARDUINO_NANO_R4_USB_INTERFACES: [UsbInterfaceInfo; 1] = [UsbInterfaceInfo {
+    interface: 0,
+    name: "Native USB",
+    controller: "RA4M1 native USB",
+    class: "CDC serial",
+    native: true,
+    upload: true,
+    command_transport: true,
+    notes: "Arduino Nano R4 native USB serial/upload metadata only; this endpoint is not a GPIO UART and board-specific firmware adapters still own deeper USB behavior.",
+}];
+
 pub const ARDUINO_NANO_R4_CAN_BUSES: [CanBusInfo; 1] = [CanBusInfo {
     bus: 0,
     name: "CAN0",
@@ -1272,6 +1296,7 @@ const fn arduino_board_target_with_buses_and_can(
         &[],
         spi_buses,
         uart_buses,
+        &[],
         can_buses,
         None,
         wireless,
@@ -1286,6 +1311,7 @@ const fn arduino_board_target_with_buses_can_and_rtc(
     i2c_connectors: &'static [I2cConnectorInfo],
     spi_buses: &'static [SpiBusInfo],
     uart_buses: &'static [UartBusInfo],
+    usb_interfaces: &'static [UsbInterfaceInfo],
     can_buses: &'static [CanBusInfo],
     rtc: Option<RtcInfo>,
     wireless: &'static [WirelessInterfaceInfo],
@@ -1312,6 +1338,7 @@ const fn arduino_board_target_with_buses_can_and_rtc(
         i2c_connectors,
         spi_buses,
         uart_buses,
+        usb_interfaces,
         can_buses,
         rtc,
         watchdog: None,
@@ -1348,6 +1375,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         i2c_connectors: &[],
         spi_buses: &UNO_R4_SPI_BUSES,
         uart_buses: &UNO_R4_MINIMA_UART_BUSES,
+        usb_interfaces: &[],
         can_buses: &UNO_R4_CAN_BUSES,
         rtc: Some(UNO_R4_RTC),
         watchdog: Some(UNO_R4_WATCHDOG),
@@ -1381,6 +1409,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         i2c_connectors: &[],
         spi_buses: &UNO_R4_SPI_BUSES,
         uart_buses: &UNO_R4_WIFI_UART_BUSES,
+        usb_interfaces: &[],
         can_buses: &UNO_R4_CAN_BUSES,
         rtc: Some(UNO_R4_RTC),
         watchdog: Some(UNO_R4_WATCHDOG),
@@ -1478,6 +1507,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         &ARDUINO_NANO_R4_I2C_CONNECTORS,
         &ARDUINO_NANO_R4_SPI_BUSES,
         &ARDUINO_NANO_R4_UART_BUSES,
+        &ARDUINO_NANO_R4_USB_INTERFACES,
         &ARDUINO_NANO_R4_CAN_BUSES,
         Some(ARDUINO_NANO_R4_RTC),
         &[],
@@ -1594,6 +1624,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         i2c_connectors: &[],
         spi_buses: &[],
         uart_buses: &[],
+        usb_interfaces: &[],
         can_buses: &[],
         rtc: None,
         watchdog: None,
@@ -1627,6 +1658,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         i2c_connectors: &[],
         spi_buses: &[],
         uart_buses: &[],
+        usb_interfaces: &[],
         can_buses: &[],
         rtc: None,
         watchdog: None,
@@ -1660,6 +1692,7 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         i2c_connectors: &[],
         spi_buses: &[],
         uart_buses: &[],
+        usb_interfaces: &[],
         can_buses: &[],
         rtc: None,
         watchdog: None,
@@ -1939,6 +1972,26 @@ mod tests {
         }
 
         assert!(find_target("esp32-devkit-v1").unwrap().i2c_buses.is_empty());
+    }
+
+    #[test]
+    fn registry_exposes_usb_interface_metadata() {
+        let nano_r4 = find_target("arduino-nano-r4").unwrap();
+        assert_eq!(nano_r4.usb_interfaces, &ARDUINO_NANO_R4_USB_INTERFACES);
+        assert_eq!(nano_r4.usb_interfaces[0].name, "Native USB");
+        assert_eq!(nano_r4.usb_interfaces[0].controller, "RA4M1 native USB");
+        assert_eq!(nano_r4.usb_interfaces[0].class, "CDC serial");
+        assert!(nano_r4.usb_interfaces[0].native);
+        assert!(nano_r4.usb_interfaces[0].upload);
+        assert!(nano_r4.usb_interfaces[0].command_transport);
+        assert!(nano_r4.usb_interfaces[0].notes.contains("not a GPIO UART"));
+
+        let nano_every = find_target("arduino-nano-every").unwrap();
+        assert!(nano_every.usb_interfaces.is_empty());
+        assert_eq!(
+            nano_every.upload.unwrap().port_hint,
+            Some(UploadPortHint::UsbSerialBridge)
+        );
     }
 
     #[test]

@@ -59,8 +59,10 @@ Nano R4 mirrors that header-pin metadata for the Renesas RA4M1 Nano form
 factor: A4/A5 `Wire`, D11/D12/D13 SPI with D10 chip select, and D0/D1
 `Serial1`. It also records D4/D5 CAN metadata with the external transceiver
 requirement, passive RA4M1 RTC metadata, and connector-local Qwiic `Wire1`
-metadata. Native USB, Qwiic bytecode behavior, and RTC bytecode behavior remain
-owned by later board-specific adapter tranches.
+metadata. Its native USB CDC serial/upload endpoint is target metadata rather
+than a GPIO UART, while Qwiic bytecode behavior, RTC bytecode behavior, and
+deeper USB firmware behavior remain owned by later board-specific adapter
+tranches.
 
 Opta terminals are modeled as board-local input and relay-output pins instead
 of pretending the PLC has Uno-style headers. Nicla sensor/audio/vision hardware
