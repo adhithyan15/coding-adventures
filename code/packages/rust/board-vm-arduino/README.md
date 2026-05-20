@@ -57,8 +57,9 @@ A4/A5 Wire, D11/D12/D13 SPI with D10 as the default chip-select pin, and D0/D1
 
 Nano R4 mirrors that header-pin metadata for the Renesas RA4M1 Nano form
 factor: A4/A5 `Wire`, D11/D12/D13 SPI with D10 chip select, and D0/D1
-`Serial1`. Native USB, Qwiic `Wire1`, CAN, and RTC behavior remain owned by
-later board-specific adapter tranches.
+`Serial1`. It also records D4/D5 CAN metadata with the external transceiver
+requirement. Native USB, Qwiic `Wire1`, and RTC behavior remain owned by later
+board-specific adapter tranches.
 
 Opta terminals are modeled as board-local input and relay-output pins instead
 of pretending the PLC has Uno-style headers. Nicla sensor/audio/vision hardware

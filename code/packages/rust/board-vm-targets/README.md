@@ -91,6 +91,11 @@ form factor: A4/A5 `Wire`, D11/D12/D13 SPI with D10 chip select, and D0/D1
 `Serial1`. The native USB path remains upload/transport metadata, and the
 separate Qwiic `Wire1` connector stays out of this header-pin tranche.
 
+Nano R4 also exposes passive CAN metadata for its D4/D5 header pins. The
+descriptor records the RA4M1 CAN0 controller and external transceiver
+requirement, while `can.*` bytecode capabilities remain disabled for the shared
+Arduino runtime.
+
 Host-side validation:
 
 ```sh

@@ -74,14 +74,14 @@ use board_vm_protocol::{
     CAP_FLAG_PROTOCOL_FEATURE, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
 };
 use board_vm_targets::{
-    all_targets, BoardFamily, BoardTargetInfo, DigitalPinInfo as TargetDigitalPin,
-    I2cBusInfo as TargetI2cBus, NetworkInterfaceInfo as TargetNetworkInterface,
-    NetworkProtocol as TargetNetworkProtocol, OnboardLed as TargetOnboardLed,
-    SpiBusInfo as TargetSpiBus, UartBusInfo as TargetUartBus, UploadAdapter as TargetUploadAdapter,
-    UploadImageFormat as TargetUploadImageFormat, UploadInfo as TargetUploadInfo,
-    UploadPortHint as TargetUploadPortHint, UploadResetMethod as TargetUploadResetMethod,
-    UploadTransport as TargetUploadTransport, WirelessInterfaceInfo as TargetWirelessInterface,
-    WirelessTransport as TargetWirelessTransport,
+    all_targets, BoardFamily, BoardTargetInfo, CanBusInfo as TargetCanBus,
+    DigitalPinInfo as TargetDigitalPin, I2cBusInfo as TargetI2cBus,
+    NetworkInterfaceInfo as TargetNetworkInterface, NetworkProtocol as TargetNetworkProtocol,
+    OnboardLed as TargetOnboardLed, SpiBusInfo as TargetSpiBus, UartBusInfo as TargetUartBus,
+    UploadAdapter as TargetUploadAdapter, UploadImageFormat as TargetUploadImageFormat,
+    UploadInfo as TargetUploadInfo, UploadPortHint as TargetUploadPortHint,
+    UploadResetMethod as TargetUploadResetMethod, UploadTransport as TargetUploadTransport,
+    WirelessInterfaceInfo as TargetWirelessInterface, WirelessTransport as TargetWirelessTransport,
 };
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
@@ -430,6 +430,7 @@ pub struct LanguageTargetInfo {
     pub i2c_buses: Vec<LanguageI2cBus>,
     pub spi_buses: Vec<LanguageSpiBus>,
     pub uart_buses: Vec<LanguageUartBus>,
+    pub can_buses: Vec<LanguageCanBus>,
     pub wireless: Vec<LanguageWirelessInterface>,
     pub network_interfaces: Vec<LanguageNetworkInterface>,
     pub connection_options: Vec<LanguageConnectionOption>,
@@ -466,6 +467,16 @@ pub struct LanguageUartBus {
     pub rx_pin: u8,
     pub arduino_uart: u8,
     pub internal: bool,
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageCanBus {
+    pub bus: u8,
+    pub name: String,
+    pub tx_pin: u8,
+    pub rx_pin: u8,
+    pub controller: String,
     pub notes: String,
 }
 
@@ -1292,6 +1303,7 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
         i2c_buses: target.i2c_buses.iter().map(language_i2c_bus).collect(),
         spi_buses: target.spi_buses.iter().map(language_spi_bus).collect(),
         uart_buses: target.uart_buses.iter().map(language_uart_bus).collect(),
+        can_buses: target.can_buses.iter().map(language_can_bus).collect(),
         wireless: target
             .wireless
             .iter()
@@ -1363,6 +1375,17 @@ fn language_uart_bus(bus: &TargetUartBus) -> LanguageUartBus {
         rx_pin: bus.rx_pin,
         arduino_uart: bus.arduino_uart,
         internal: bus.internal,
+        notes: bus.notes.to_owned(),
+    }
+}
+
+fn language_can_bus(bus: &TargetCanBus) -> LanguageCanBus {
+    LanguageCanBus {
+        bus: bus.bus,
+        name: bus.name.to_owned(),
+        tx_pin: bus.tx_pin,
+        rx_pin: bus.rx_pin,
+        controller: bus.controller.to_owned(),
         notes: bus.notes.to_owned(),
     }
 }
@@ -4123,9 +4146,18 @@ mod tests {
         assert_eq!(nano_r4.uart_buses[0].tx_pin, 1);
         assert_eq!(nano_r4.uart_buses[0].rx_pin, 0);
         assert!(nano_r4.uart_buses[0].notes.contains("native USB"));
+        assert_eq!(nano_r4.can_buses.len(), 1);
+        assert_eq!(nano_r4.can_buses[0].name, "CAN0");
+        assert_eq!(nano_r4.can_buses[0].tx_pin, 4);
+        assert_eq!(nano_r4.can_buses[0].rx_pin, 5);
+        assert_eq!(nano_r4.can_buses[0].controller, "RA4M1 CAN0");
+        assert!(nano_r4.can_buses[0].notes.contains("external transceiver"));
         assert!(!nano_r4.capabilities.contains(&"i2c.open".to_owned()));
         assert!(!nano_r4.capabilities.contains(&"spi.open".to_owned()));
         assert!(!nano_r4.capabilities.contains(&"uart.open".to_owned()));
+        assert!(!nano_r4.capabilities.contains(&"can.open".to_owned()));
+        assert!(!nano_r4.capabilities.contains(&"can.write".to_owned()));
+        assert!(!nano_r4.capabilities.contains(&"can.read".to_owned()));
         assert_eq!(nano_iot.family, LanguageBoardFamily::Arduino);
         assert_eq!(nano_iot.mcu, "SAMD21G18");
         assert_eq!(nano_ble.family, LanguageBoardFamily::Arduino);
