@@ -410,6 +410,18 @@ class PssNewtonIterationResult:
 
 
 @dataclass
+class PssNewtonSolveResult:
+    """Bounded PSS shooting-Newton solve over accepted iterations."""
+
+    iterations: list[PssNewtonIterationResult]
+    final_circuit: Circuit
+    final_state_vector: list[PssStateEntry]
+    final_residual: PssResidualResult
+    converged: bool
+    iteration_count: int
+
+
+@dataclass
 class AcPoint:
     """Phasor voltages at a single frequency point.
 
@@ -2761,6 +2773,53 @@ def pss_newton_iteration(
         next_state_vector=next_state_vector,
         next_residual=next_residual,
         converged=next_residual.within_tolerance,
+    )
+
+
+def pss_newton_solve(
+    circuit: Circuit,
+    *,
+    steps_per_period: int = 64,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    residual_tol: float = 1e-6,
+    perturbation: float = 1e-6,
+    max_newton_iterations: int = 8,
+) -> PssNewtonSolveResult | None:
+    """Run accepted PSS Newton iterations until convergence or no improvement."""
+    if max_newton_iterations <= 0:
+        raise ValueError("max_newton_iterations must be positive")
+
+    current_circuit = circuit
+    iterations: list[PssNewtonIterationResult] = []
+    for _ in range(max_newton_iterations):
+        iteration = pss_newton_iteration(
+            current_circuit,
+            steps_per_period=steps_per_period,
+            method=method,
+            max_iterations=max_iterations,
+            tol=tol,
+            residual_tol=residual_tol,
+            perturbation=perturbation,
+        )
+        if iteration is None:
+            return None
+
+        iterations.append(iteration)
+        current_circuit = iteration.next_circuit
+        if iteration.converged or not iteration.accepted:
+            break
+
+    final_iteration = iterations[-1]
+    final_residual = final_iteration.next_residual
+    return PssNewtonSolveResult(
+        iterations=iterations,
+        final_circuit=final_iteration.next_circuit,
+        final_state_vector=final_iteration.next_state_vector,
+        final_residual=final_residual,
+        converged=final_residual.within_tolerance,
+        iteration_count=len(iterations),
     )
 
 

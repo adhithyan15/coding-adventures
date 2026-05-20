@@ -4,6 +4,10 @@
 
 ### Added
 
+- **PSS Newton solve foothold** — `pss_newton_solve` now runs bounded accepted
+  Newton iterations until residual convergence, no improvement, or the
+  iteration cap.
+
 - **PSS Newton iteration foothold** — `pss_newton_iteration` now runs one
   candidate update, accepts it only when the residual L2 norm does not
   increase, and reports the retained circuit/state for the next shooting step.
