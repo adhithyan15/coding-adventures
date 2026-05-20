@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.10.0] — 2026-05-20
+
+### Changed — Phase 37: Weierstrass log form cos branch covers `b < −|a|`
+
+Mirrors Python `symbolic-vm` 0.62.0 (PR #3683).
+
+Phase 36 (0.9.0) emitted the log-form closed solution for `a² < b²`
+but explicitly deferred the cos branch with `b < −|a|`.  A closer
+derivation shows the same formula
+
+    (c/D) · log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|
+
+already handles both sign regimes correctly when wrapped in `Abs`.
+
+`tryWeierstrassLogForm` cos branch: removed the
+`subNumeric(b, absNumeric(a))` and `subNumeric(b, a)` positivity guards.
+The remaining caller-side guarantee (`disc < 0`, i.e. `b² > a²`) is
+sufficient.  `absNumeric` is retained (still referenced) for any future
+symmetric guards.
+
+Tests: 3 new in `tests/phase34-weierstrass.test.ts`:
+- Promoted: `∫ 1/(1 − 2·cos x) dx` (formerly deferred)
+- `∫ 1/(−1 − 3·cos x) dx` (negative a, negative b)
+- `∫ 5/(1 − 2·cos x) dx` (numerator scaling)
+
+Full suite: **145 tests pass** (143 prior + 3 new − 1 promoted).
+
 ## [0.9.0] — 2026-05-20
 
 ### Added — Phase 36: Weierstrass log form for `a² < b²`
