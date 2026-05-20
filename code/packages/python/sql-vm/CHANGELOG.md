@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.44.0 — 2026-05-20
+
+### Added
+
+- **``TIMEDIFF(A, B)`` scalar function** — SQLite 3.43+.  Returns the
+  calendar-aware difference ``A − B`` as a string of the form
+  ``±YYYY-MM-DD HH:MM:SS.sss``.  When ``A < B`` the sign is ``-`` and
+  the magnitude is the time from ``A`` to ``B``.
+
+  Implementation walks the seven fields (microseconds, seconds,
+  minutes, hours, days, months, years) from low to high, borrowing
+  from the next higher field whenever the current one is negative.
+  The day-borrow step uses ``calendar.monthrange(…)`` of the month
+  *preceding* ``A``'s month — that's what makes
+  ``TIMEDIFF('2024-03-15', '2024-01-20')`` produce
+  ``'+0000-01-24 …'`` (24 days because Feb 2024 has 29 days, hence
+  ``15 + 29 − 20 = 24``).
+
+  Microseconds are truncated to milliseconds (3 decimal places) to
+  match SQLite's output precision.  NULL or unparseable inputs
+  propagate NULL.
+
 ## 1.43.0 — 2026-05-20
 
 ### Fixed
