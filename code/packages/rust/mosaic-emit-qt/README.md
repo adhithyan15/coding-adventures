@@ -161,10 +161,14 @@ lowerCamelCase. The emitter converts:
 
 Several Mosaic features are accepted but not yet emitted:
 
-- **No `If`, `For`, or `HostTable` lowering.** The remaining three
-  primitives in UI29's kernel wait on grammar PRs (U29-G1..U29-G3) and
-  a `TableView` spec. Today a layout node with `tag = "If"`, `"For"`,
-  or `"HostTable"` returns `UnknownPrimitive`.
+- **No `If` or `For` lowering.** Two primitives in UI29's kernel still
+  wait on grammar PRs (U29-G1, U29-G2). Today a layout node with `tag
+  = "If"` or `"For"` returns `UnknownPrimitive`.
+- **`HostTable` lowers structurally, not as a true `TableView`.** This
+  PR adds `HostTable` + `HostTableHead`/`Body`/`Foot`/`ColGroup` as a
+  `ColumnLayout` of `RowLayout` rows — header cells get `font.bold:
+  true` and a `Rectangle` separates head from body. A full `TableView`
+  + `QAbstractTableModel` integration is a follow-up gated on `For`.
 - **No `Cell` / data-`Column` / `Grid v3` lowering.** UI28 §2 introduces
   a richer Grid model. UI28 §4.5 sketches a Qt mapping in C++
   (`QStyledItemDelegate` / `QAbstractTableModel` / `QTableView`); the
@@ -192,7 +196,7 @@ Each deferred item is intentionally a focused, additive PR.
 
 ## Tests
 
-26 unit tests cover:
+34 unit tests cover:
 
 - Empty layout produces valid QML skeleton.
 - Slots lower to `property` declarations.
@@ -219,7 +223,17 @@ Each deferred item is intentionally a focused, additive PR.
   `onClicked`.
 - `HostScroll` lowers to `ScrollView { ... children ... }`.
 - `QtQuick.Controls 2.15` import is added only when needed.
-- `If`, `For`, `HostTable` still return `UnknownPrimitive` (deferred).
+- `If` and `For` still return `UnknownPrimitive` (deferred).
+- `HostTable` lowers to an empty `ColumnLayout { spacing: 0 }` when
+  bare.
+- `HostTableHead` rows emit `RowLayout`s with `font.bold: true` cells.
+- `HostTableBody` rows emit plain `RowLayout`s (no bolding).
+- `HostTableFoot` is preceded by a 1-pixel `Rectangle` divider.
+- Head + Body sections emit in order head → divider → body.
+- `HostTableColGroup` emits a comment and does not break sibling rows.
+- An orphan `HostTableHead` (outside a `HostTable`) emits a comment
+  instead of erroring.
+- `part_name` on `HostTable` does not break emission.
 
 ```bash
 cargo test -p mosaic-emit-qt
