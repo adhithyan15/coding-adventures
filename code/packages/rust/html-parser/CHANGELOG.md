@@ -43,6 +43,10 @@ documented in this file.
   stray void end tags, table/select contexts, fragment contexts, foreign
   boundaries, and legacy void-like element cases, with a dedicated parser
   regression test.
+- Generated WHATWG list-item audit fixture over html5lib `li`, `dt`, and `dd`
+  implied-end-tag recovery, nested list boundaries, paragraph/list
+  interactions, formatting reconstruction, and list-in-table recovery cases,
+  with a dedicated parser regression test.
 - Generated WHATWG document-shell audit fixture over html5lib doctype, comment,
   html/head/body synthesis, frameset-boundary, and shell fragment-context
   cases, with a dedicated parser regression test.
@@ -56,8 +60,8 @@ documented in this file.
 - Shared html5lib tree-construction test helpers keep smoke and focused
   tree-insertion, frameset, table, form/interactive, text-control,
   foreign-content, formatting, ruby, noscript, head/body, document-shell,
-  void-element, template, and select/list audit checks on the same parser and
-  DOM dump path.
+  void-element, list-item, template, and select/list audit checks on the same
+  parser and DOM dump path.
 - The html5lib source-coverage audit now has a checked JSON report plus
   `--write-report` and `--check-report` modes for parser/tokenizer fixture
   drift detection.

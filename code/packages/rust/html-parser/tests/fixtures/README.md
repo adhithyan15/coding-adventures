@@ -164,6 +164,17 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_void_eleme
   --check
 ```
 
+`whatwg-list-item-audit.json` is a generated index over tree-construction
+cases that stress `li`, `dt`, and `dd` implied-end-tag recovery, nested list
+boundaries, paragraph/list interactions, formatting reconstruction, and
+list-in-table recovery:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_list_item_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_list_item_audit_fixture.py \
+  --check
+```
+
 `whatwg-document-shell-audit.json` is a generated index over tree-construction
 cases that stress doctypes, comments, `html`/`head`/`body` synthesis, frameset
 boundaries, and shell fragment contexts:

@@ -204,6 +204,16 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_void_eleme
   --check
 ```
 
+The generated `tests/fixtures/whatwg-list-item-audit.json` fixture indexes
+`li`, `dt`, and `dd` implied-end-tag recovery, nested list boundaries,
+paragraph/list interactions, formatting reconstruction, and list-in-table
+recovery:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_list_item_audit_fixture.py \
+  --check
+```
+
 The generated `tests/fixtures/whatwg-document-shell-audit.json` fixture indexes
 doctypes, comments, `html`/`head`/`body` synthesis, frameset boundaries, and
 shell fragment contexts:
