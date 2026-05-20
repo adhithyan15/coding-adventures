@@ -4,6 +4,45 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — U29-K-qt — `For` / `If` / `Else` meta-primitive lowering
+
+Completes the Qt/QML kernel surface for the UI29 §3 meta-primitives.
+
+- **`For (each: <expr>, as: <NAME>, index: <NAME>?) { ... }`** lowers
+  to a `Repeater { model: <coll>; delegate: Item { ... } }`. The
+  delegate is always an `Item` carrying `property var <as>: modelData`
+  and (when bound) `property int <index>: index`, so descendants reach
+  the per-iteration values through QML's normal scope rules.
+  `each: slot: foo` → `model: foo` (camelCased bare identifier);
+  `each: <expr>` → `model: <expr>` (passed verbatim).
+- **`If (when: <expr>) { ... } Else { ... }`** lowers to one or two
+  `Loader { active: <cond>; sourceComponent: Component { ... } }`
+  blocks. With no `Else`, only the then-branch Loader is emitted;
+  with an `Else`, a second Loader carries `active: !<cond>` (with
+  parenthesisation for compound expressions so the negation binds the
+  whole predicate).
+- **`If`+`Else` sibling pairing** is done by a shared
+  `emit_qml_children` walker so that the rule "Else must immediately
+  follow If" matches the UI29 §3.2 grammar. An `Else` that doesn't
+  immediately follow an `If` — or appears at the root — emits a
+  `// orphan Else (no preceding If)` self-documenting comment instead
+  of erroring.
+- **Branch-body wrapping.** A `Component { ... }` accepts exactly one
+  top-level element; multi-child branches are wrapped in an inner
+  `Item { ... }` so the `Component` stays well-formed. Single-child
+  branches emit the child inline to keep output clean.
+- **11 new unit tests** in `pipeline.rs` cover: Repeater with
+  camelCased model from a slot ref; both `as:` + `index:` delegate
+  properties when bound; expression-valued `each:` passed verbatim;
+  body referencing the as-bound name; single-Loader If; If+Else with
+  inverted `active:`; expression-valued `when:` plus parenthesised
+  negation; orphan-Else comment at root; non-immediate-sibling Else
+  orphan path; nested Repeaters share the children walker; multi-child
+  If body wraps in `Item`.
+- Replaces the previous "If/For still error as UnknownPrimitive"
+  regression test with a generic `unknown_primitive_still_errors` test
+  that pins the failure path for *genuinely* unknown tags.
+
 ### Added — U29-K-qt — `HostTable` lowering (structural first cut)
 
 Brings `HostTable` and its four sub-tags into the Qt backend. The
