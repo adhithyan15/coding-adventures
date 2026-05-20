@@ -1971,7 +1971,24 @@ def _parse_timevalue(tv: SqlValue) -> datetime | None:
         s = tv.strip()
         if s.lower() == "now":
             return datetime.now(tz=UTC).replace(microsecond=0)
-        # ISO-8601 date only: YYYY-MM-DD
+        # Fractional-seconds form first: YYYY-MM-DD HH:MM:SS.sss[sss]
+        # We try this *before* the fixed-format strptime loop because the
+        # loop uses ``s[:len(fmt) + 2]`` to permit trailing garbage, which
+        # would silently truncate the fraction and discard the microsecond
+        # information.  Preserving microseconds is required for
+        # ``strftime('%f', …)`` to round-trip the input.
+        m = re.match(
+            r"^(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2}:\d{2})\.(\d+)$", s
+        )
+        if m:
+            try:
+                dt = datetime.strptime(f"{m.group(1)} {m.group(2)}", "%Y-%m-%d %H:%M:%S")
+                # Pad/truncate the fraction to 6 digits (microseconds).
+                frac = (m.group(3) + "000000")[:6]
+                return dt.replace(microsecond=int(frac), tzinfo=UTC)
+            except ValueError:
+                pass
+        # ISO-8601 date only: YYYY-MM-DD (and variations without fractions)
         for fmt in (
             "%Y-%m-%d %H:%M:%S",
             "%Y-%m-%d %H:%M",
@@ -1984,28 +2001,25 @@ def _parse_timevalue(tv: SqlValue) -> datetime | None:
                 return dt.replace(tzinfo=UTC)
             except ValueError:
                 pass
-        # Allow fractional seconds: YYYY-MM-DD HH:MM:SS.sss
-        m = re.match(
-            r"^(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2}:\d{2})\.\d+$", s
-        )
-        if m:
-            try:
-                dt = datetime.strptime(f"{m.group(1)} {m.group(2)}", "%Y-%m-%d %H:%M:%S")
-                return dt.replace(tzinfo=UTC)
-            except ValueError:
-                pass
         # SQLite also accepts time-only strings: 'HH:MM', 'HH:MM:SS', 'HH:MM:SS.sss'.
         # These represent the time of day on year 2000-01-01 in SQLite's internal
         # epoch, but for our purposes the date part is irrelevant — we anchor it
         # to 2000-01-01 so the time() function and strftime('%H:%M:%S', ...) work.
         # See https://www.sqlite.org/lang_datefunc.html#tmval — "time" rule.
-        m = re.match(r"^(\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?$", s)
+        # The optional fractional-seconds portion is captured and converted
+        # to microseconds (same reasoning as above).
+        m = re.match(r"^(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d+))?)?$", s)
         if m:
             hour = int(m.group(1))
             minute = int(m.group(2))
             second = int(m.group(3)) if m.group(3) else 0
+            microsecond = (
+                int((m.group(4) + "000000")[:6]) if m.group(4) else 0
+            )
             try:
-                return datetime(2000, 1, 1, hour, minute, second, tzinfo=UTC)
+                return datetime(
+                    2000, 1, 1, hour, minute, second, microsecond, tzinfo=UTC
+                )
             except ValueError:
                 pass
         return None
@@ -2350,8 +2364,14 @@ def _unixepoch(*args: SqlValue) -> SqlValue:
 
 
 # Pre-compiled substitution map for STRFTIME's SQLite-specific specifiers.
-# Python's strftime does not support %f (SQLite = SS.SSS) or %s (epoch) or %J.
-_STRFTIME_PREPROCESS = re.compile(r"%[fJjsWP]")
+# Python's strftime does not support %f (SQLite = SS.SSS), %s (epoch),
+# %J (Julian day), or %P (lowercase am/pm on macOS libc).  We intercept
+# those and pre-substitute concrete strings, then let Python format
+# everything else.  ``%W`` (week-of-year, Monday-based, 00–53) used to be
+# intercepted here because of a misreading of the spec — Python's
+# strftime(%W) already produces SQLite-compatible output, so it's now
+# routed through the default path.
+_STRFTIME_PREPROCESS = re.compile(r"%[fJjsP]")
 
 
 def _sqlite_strftime(fmt: str, dt: datetime) -> str:
@@ -2376,9 +2396,6 @@ def _sqlite_strftime(fmt: str, dt: datetime) -> str:
             return str(2440587.5 + unix_ts / 86400.0)
         if spec == "%j":
             return f"{dt.timetuple().tm_yday:03d}"
-        if spec == "%W":
-            # Week number (Monday as first day, 00–53)
-            return f"{dt.isocalendar()[1] - 1:02d}"
         if spec == "%P":
             # Lowercase am/pm — Python's macOS libc doesn't support %P so we
             # synthesise it from %p (uppercase) and lowercase the result.

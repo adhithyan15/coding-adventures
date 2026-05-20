@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.42.0 — 2026-05-20
+
+### Fixed
+
+- **``strftime('%f', …)`` preserves the millisecond fraction**.  The
+  ISO-8601 datetime parser in ``_parse_timevalue`` had a fast path that
+  truncated the input via slice arithmetic to fit the bare
+  ``%Y-%m-%d %H:%M:%S`` strptime format, silently discarding the
+  fractional-seconds suffix *before* the dedicated fractional-seconds
+  branch could capture it.  Fix: try the fractional-seconds regex
+  first, then fall through to the fixed-width formats only when the
+  input has no fraction.  Result: ``strftime('%f', '2024-01-15
+  12:30:45.123')`` now returns ``'45.123'`` (was ``'45.000'``).
+
+- **``strftime('%W', …)`` matches SQLite byte-for-byte.**  The custom
+  ``%W`` substitution used ``isocalendar()[1] - 1``, which produces
+  ISO-week numbering shifted by one — different from POSIX week-of-
+  year.  Python's own ``strftime('%W')`` already produces
+  SQLite-compatible output, so the fix is to remove ``%W`` from the
+  preprocessor and route it through the default Python path.
+
 ## 1.41.0 — 2026-05-20
 
 ### Fixed
