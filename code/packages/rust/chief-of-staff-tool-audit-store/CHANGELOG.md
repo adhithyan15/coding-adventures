@@ -34,6 +34,8 @@ All notable changes to this package will be documented in this file.
 - Workload accessors for supervisor drain run summaries.
 - Last-checkpoint scalar accessors for supervisor drain run reports and
   summaries.
+- Flattened last-checkpoint timestamp and call-id fields in supervisor drain
+  run summaries.
 - Flattened planned and replayed follow-up row counts in supervisor drain run
   summaries.
 - Follow-up pressure drift flags in supervisor drain run reports and summaries.

@@ -1047,6 +1047,8 @@ impl ToolAuditSupervisorDrainRunReport {
             requires_follow_up: self.requires_follow_up(),
             advanced_checkpoint: self.advanced_checkpoint(),
             last_checkpoint: self.last_checkpoint().cloned(),
+            last_checkpoint_timestamp_ms: self.last_checkpoint_timestamp_ms(),
+            last_checkpoint_call_id: self.last_checkpoint_call_id().map(str::to_owned),
         }
     }
 
@@ -1267,6 +1269,10 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub advanced_checkpoint: bool,
     /// Last replay checkpoint observed by the actual run.
     pub last_checkpoint: Option<ToolAuditReadCheckpoint>,
+    /// Timestamp for the last replay checkpoint observed by the actual run.
+    pub last_checkpoint_timestamp_ms: Option<u64>,
+    /// Call id for the last replay checkpoint observed by the actual run.
+    pub last_checkpoint_call_id: Option<String>,
 }
 
 impl ToolAuditSupervisorDrainRunSummary {
@@ -1502,14 +1508,12 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return the timestamp for the last replay checkpoint observed by the actual run.
     pub fn last_checkpoint_timestamp_ms(&self) -> Option<u64> {
-        self.last_checkpoint()
-            .map(|checkpoint| checkpoint.timestamp_ms)
+        self.last_checkpoint_timestamp_ms
     }
 
     /// Return the call id for the last replay checkpoint observed by the actual run.
     pub fn last_checkpoint_call_id(&self) -> Option<&str> {
-        self.last_checkpoint()
-            .map(|checkpoint| checkpoint.call_id.as_str())
+        self.last_checkpoint_call_id.as_deref()
     }
 }
 
@@ -3868,6 +3872,8 @@ mod tests {
         assert!(summary.advanced_checkpoint());
         assert_eq!(summary.last_checkpoint, report.last_checkpoint().cloned());
         assert_eq!(summary.last_checkpoint(), report.last_checkpoint());
+        assert_eq!(summary.last_checkpoint_timestamp_ms, Some(120));
+        assert_eq!(summary.last_checkpoint_call_id.as_deref(), Some("call_2"));
         assert!(summary.has_last_checkpoint());
         assert_eq!(summary.last_checkpoint_timestamp_ms(), Some(120));
         assert_eq!(summary.last_checkpoint_call_id(), Some("call_2"));
