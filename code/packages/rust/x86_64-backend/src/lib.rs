@@ -249,6 +249,58 @@ impl RegAlloc {
 }
 
 // ===========================================================================
+// LANG75 — runtime-helper signature table
+// ===========================================================================
+//
+// `call_builtin "<name>", <args>` looks `name` up in this table.  Every
+// V1 helper has a fixed signature (arg count + returns-a-value bit);
+// the backend rejects mismatched call sites with `MalformedInstr`.
+//
+// Linker symbols are always prefixed `__twig_` — see runtime/twig_runtime.c.
+//
+// | Mnemonic       | C signature                                   | Returns |
+// |---------------|-----------------------------------------------|---------|
+// | `print_i64`   | `void __twig_print_i64(int64_t)`              | no      |
+// | `putchar`     | `void __twig_putchar(int32_t c)`              | no      |
+// | `getchar`     | `int32_t __twig_getchar(void)`                | yes     |
+// | `print_string`| `void __twig_print_string(const char*, int64_t)` | no      |
+// | `input_i64`   | `int64_t __twig_input_i64(void)`              | yes     |
+// | `exit`        | `void __twig_exit(int32_t)` (noreturn)        | no      |
+
+#[derive(Debug, Clone, Copy)]
+struct BuiltinSig {
+    /// The bare helper name (e.g. `"putchar"`).  The backend prepends
+    /// `__twig_` when emitting the linker symbol.
+    name: &'static str,
+    /// Number of CIR arguments the helper expects (the `name` Var in
+    /// srcs[0] is not counted here).
+    n_args: usize,
+    /// `true` if the helper writes a return value into RAX/X0 that the
+    /// backend should store into the dest slot.
+    returns: bool,
+}
+
+/// V1 helper table shared by every backend.  Order is the documentation
+/// order from the spec; lookup is `O(n)` against six entries which is
+/// faster than a `HashMap` at this scale.
+const V1_BUILTINS: &[BuiltinSig] = &[
+    BuiltinSig { name: "print_i64",    n_args: 1, returns: false },
+    BuiltinSig { name: "putchar",      n_args: 1, returns: false },
+    BuiltinSig { name: "getchar",      n_args: 0, returns: true  },
+    BuiltinSig { name: "print_string", n_args: 2, returns: false },
+    BuiltinSig { name: "input_i64",    n_args: 0, returns: true  },
+    BuiltinSig { name: "exit",         n_args: 1, returns: false },
+];
+
+fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
+    V1_BUILTINS.iter().copied().find(|s| s.name == name)
+}
+
+fn v1_builtin_names() -> Vec<&'static str> {
+    V1_BUILTINS.iter().map(|s| s.name).collect()
+}
+
+// ===========================================================================
 // Errors (internal)
 // ===========================================================================
 
@@ -650,6 +702,84 @@ fn emit_instr(
         let arg0_reg = abi.arg_regs()[0];
         load_operand(asm, alloc, arg0_reg, val_src);
         asm.call_rel32("__twig_print_i64", ExternalRelocKind::PltRel32);
+        return Ok(());
+    }
+
+    // --- call_builtin "<name>", <args>  (LANG75) ---
+    //
+    // Generic dispatch to runtime helpers.  Looks `name` up in the V1
+    // helper table (see `lookup_builtin`), validates arg count, marshals
+    // each arg into the ABI's i-th argument register (RDI/RSI/… on SysV,
+    // RCX/RDX/… on MS x64), then emits `call rel32` against the symbol
+    // `__twig_<name>` with a `PltRel32` external relocation.  If the
+    // helper returns a value, the dest slot receives RAX after the call.
+    //
+    // `io_out v` is sugar for `call_builtin "print_i64", v` and stays in
+    // the dispatch above for backwards compatibility with existing
+    // frontends and tests.
+    //
+    // Unknown helper names → `BackendError::MalformedInstr` (the spec's
+    // "BackendRefused" — a soft refusal rather than a hard panic).
+    if op == "call_builtin" {
+        // srcs[0] must be Var(name) — the helper name without the
+        // `__twig_` prefix.
+        let name = match instr.srcs.first() {
+            Some(CIROperand::Var(s)) => s.as_str(),
+            _ => return Err(BackendError::MalformedInstr(
+                "call_builtin: srcs[0] must be Var(helper_name)".into(),
+            )),
+        };
+        let sig = lookup_builtin(name).ok_or_else(|| {
+            BackendError::MalformedInstr(format!(
+                "call_builtin: unknown helper '{name}' (V1 table: {})",
+                v1_builtin_names().join(", "),
+            ))
+        })?;
+        let arg_srcs = &instr.srcs[1..];
+        if arg_srcs.len() != sig.n_args {
+            return Err(BackendError::MalformedInstr(format!(
+                "call_builtin '{name}': expected {} arg(s), got {}",
+                sig.n_args, arg_srcs.len(),
+            )));
+        }
+        if sig.returns && instr.dest.is_none() {
+            return Err(BackendError::MalformedInstr(format!(
+                "call_builtin '{name}': returns a value but dest is None",
+            )));
+        }
+        if !sig.returns && instr.dest.is_some() {
+            return Err(BackendError::MalformedInstr(format!(
+                "call_builtin '{name}': returns void but dest is Some",
+            )));
+        }
+        if sig.n_args > abi.max_args() {
+            return Err(BackendError::TooManyParams {
+                abi: match abi { X86_64Abi::SysV => "SysV", X86_64Abi::MsX64 => "MsX64" },
+                got: sig.n_args,
+                max: abi.max_args(),
+            });
+        }
+
+        // Marshal arguments into the ABI's argument registers in order.
+        // Stack-spill allocation guarantees no aliasing between sources.
+        let arg_regs = abi.arg_regs();
+        for (i, src) in arg_srcs.iter().enumerate() {
+            load_operand(asm, alloc, arg_regs[i], src);
+        }
+
+        // Emit `call rel32` to the `__twig_<name>` symbol.  Both Linux
+        // (PLT32 → relaxed to PC32 by the linker for local resolution)
+        // and Windows (REL32) treat this the same way.
+        let symbol = format!("__twig_{name}");
+        asm.call_rel32(&symbol, ExternalRelocKind::PltRel32);
+
+        // If the helper returns, store RAX into the dest slot.
+        if sig.returns {
+            if let Some(dest) = &instr.dest {
+                let slot = alloc.slot_of(dest);
+                asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+            }
+        }
         return Ok(());
     }
 
@@ -1579,5 +1709,164 @@ mod tests {
         let backend = X86_64Backend::with_abi(X86_64Abi::SysV);
         let bytes = backend.compile_function(&ctx, &[]).unwrap();
         assert!(bytes.starts_with(&[0x55, 0x48, 0x89, 0xE5])); // push rbp; mov rbp, rsp
+    }
+
+    // ── LANG75 — call_builtin lowering ────────────────────────────────────────
+
+    #[test]
+    fn call_builtin_putchar_sysv_uses_rdi_and_records_reloc() {
+        // CIR: const_i32 v0 = 65; call_builtin "putchar", v0; ret_void
+        let ctx = fn_ctx("emit_A", &[], "void");
+        let ir = vec![
+            instr("const_i32", Some("v0"), vec![Op::Int(65)]),
+            instr("call_builtin", None,
+                  vec![Op::Var("putchar".into()), Op::Var("v0".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // System V arg 0 → RDI.  `mov rdi, [rbp+disp32]` = 48 8B BD …
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "expected `mov rdi, [rbp+disp]` for putchar arg on SysV");
+        // Then `call __twig_putchar` (E8) with one PltRel32 reloc.
+        let plt: Vec<_> = relocs.iter()
+            .filter(|r| r.kind == ExternalRelocKind::PltRel32
+                     && r.symbol == "__twig_putchar")
+            .collect();
+        assert_eq!(plt.len(), 1, "expected exactly one __twig_putchar reloc");
+    }
+
+    #[test]
+    fn call_builtin_putchar_msx64_uses_rcx() {
+        let ctx = fn_ctx("emit_A", &[], "void");
+        let ir = vec![
+            instr("const_i32", Some("v0"), vec![Op::Int(65)]),
+            instr("call_builtin", None,
+                  vec![Op::Var("putchar".into()), Op::Var("v0".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::MsX64).unwrap();
+        // MS x64 arg 0 → RCX.  `mov rcx, [rbp+disp32]` = 48 8B 8D ..
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0x8D]),
+                "expected `mov rcx, [rbp+disp]` for putchar arg on MS x64");
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "should NOT emit `mov rdi, ...` on MS x64");
+    }
+
+    #[test]
+    fn call_builtin_getchar_stores_rax_into_dest() {
+        // CIR: call_builtin "getchar" → r; ret_i32 r
+        let ctx = fn_ctx("read_one", &[], "i32");
+        let ir = vec![
+            instr("call_builtin", Some("r"),
+                  vec![Op::Var("getchar".into())]),
+            instr("ret_i32", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // After CALL, store RAX into the dest slot.  `mov [rbp+disp], rax`
+        // = 48 89 85 .. .. .. .. (REX.W + 89 /0 ModR/M with RAX as src).
+        assert!(body_contains(&bytes, &[0x48, 0x89, 0x85]),
+                "expected `mov [rbp+disp], rax` after getchar call");
+        let plt: Vec<_> = relocs.iter()
+            .filter(|r| r.symbol == "__twig_getchar")
+            .collect();
+        assert_eq!(plt.len(), 1, "expected exactly one __twig_getchar reloc");
+    }
+
+    #[test]
+    fn call_builtin_print_string_marshals_two_args_sysv() {
+        // CIR: const_i64 p=0; const_i64 n=0; call_builtin "print_string", p, n
+        let ctx = fn_ctx("emit_str", &[], "void");
+        let ir = vec![
+            instr("const_i64", Some("p"), vec![Op::Int(0)]),
+            instr("const_i64", Some("n"), vec![Op::Int(0)]),
+            instr("call_builtin", None,
+                  vec![Op::Var("print_string".into()),
+                       Op::Var("p".into()),
+                       Op::Var("n".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // arg 0 → RDI (48 8B BD), arg 1 → RSI (48 8B B5).
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "expected `mov rdi, [rbp+disp]` for print_string arg 0");
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xB5]),
+                "expected `mov rsi, [rbp+disp]` for print_string arg 1");
+        let plt: Vec<_> = relocs.iter()
+            .filter(|r| r.symbol == "__twig_print_string")
+            .collect();
+        assert_eq!(plt.len(), 1);
+    }
+
+    #[test]
+    fn call_builtin_unknown_name_refuses() {
+        // Unknown helper → MalformedInstr, not panic.
+        let ctx = fn_ctx("bad", &[], "void");
+        let ir = vec![
+            instr("call_builtin", None,
+                  vec![Op::Var("frobnicate".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let result = compile_function(&ctx, &ir, X86_64Abi::SysV);
+        assert!(result.is_err(), "expected error for unknown builtin");
+    }
+
+    #[test]
+    fn call_builtin_wrong_arg_count_refuses() {
+        // putchar expects exactly 1 arg; passing 0 must be rejected.
+        let ctx = fn_ctx("bad_arity", &[], "void");
+        let ir = vec![
+            instr("call_builtin", None,
+                  vec![Op::Var("putchar".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let result = compile_function(&ctx, &ir, X86_64Abi::SysV);
+        assert!(result.is_err(), "expected error for putchar with 0 args");
+    }
+
+    #[test]
+    fn call_builtin_void_with_dest_refuses() {
+        // putchar returns void; supplying a dest is a malformed call site.
+        let ctx = fn_ctx("bad_dest", &[], "void");
+        let ir = vec![
+            instr("const_i32", Some("c"), vec![Op::Int(65)]),
+            instr("call_builtin", Some("r"),
+                  vec![Op::Var("putchar".into()), Op::Var("c".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let result = compile_function(&ctx, &ir, X86_64Abi::SysV);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn call_builtin_returning_without_dest_refuses() {
+        // getchar must have a dest.
+        let ctx = fn_ctx("bad_no_dest", &[], "void");
+        let ir = vec![
+            instr("call_builtin", None,
+                  vec![Op::Var("getchar".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let result = compile_function(&ctx, &ir, X86_64Abi::SysV);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn call_builtin_print_i64_matches_io_out() {
+        // call_builtin "print_i64", v0 should produce the same shape as
+        // io_out v0 — same arg marshalling and same `__twig_print_i64` reloc.
+        let ctx = fn_ctx("print_via_builtin", &[], "void");
+        let ir = vec![
+            instr("const_i64", Some("v0"), vec![Op::Int(99)]),
+            instr("call_builtin", None,
+                  vec![Op::Var("print_i64".into()), Op::Var("v0".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "expected `mov rdi, [rbp+disp]` for print_i64 arg");
+        let plt: Vec<_> = relocs.iter()
+            .filter(|r| r.symbol == "__twig_print_i64")
+            .collect();
+        assert_eq!(plt.len(), 1);
     }
 }

@@ -157,6 +157,49 @@ impl RegAlloc {
 }
 
 // ===========================================================================
+// LANG75 — runtime-helper signature table
+// ===========================================================================
+//
+// `call_builtin "<name>", <args>` looks `name` up in this table.  Every
+// V1 helper has a fixed signature (arg count + returns-a-value bit);
+// the backend rejects mismatched call sites with `MalformedInstr`.
+//
+// Linker symbols are always prefixed `__twig_` — see runtime/twig_runtime.c.
+//
+// | Mnemonic       | C signature                                   | Returns |
+// |---------------|-----------------------------------------------|---------|
+// | `print_i64`   | `void __twig_print_i64(int64_t)`              | no      |
+// | `putchar`     | `void __twig_putchar(int32_t c)`              | no      |
+// | `getchar`     | `int32_t __twig_getchar(void)`                | yes     |
+// | `print_string`| `void __twig_print_string(const char*, int64_t)` | no      |
+// | `input_i64`   | `int64_t __twig_input_i64(void)`              | yes     |
+// | `exit`        | `void __twig_exit(int32_t)` (noreturn)        | no      |
+
+#[derive(Debug, Clone, Copy)]
+struct BuiltinSig {
+    name: &'static str,
+    n_args: usize,
+    returns: bool,
+}
+
+const V1_BUILTINS: &[BuiltinSig] = &[
+    BuiltinSig { name: "print_i64",    n_args: 1, returns: false },
+    BuiltinSig { name: "putchar",      n_args: 1, returns: false },
+    BuiltinSig { name: "getchar",      n_args: 0, returns: true  },
+    BuiltinSig { name: "print_string", n_args: 2, returns: false },
+    BuiltinSig { name: "input_i64",    n_args: 0, returns: true  },
+    BuiltinSig { name: "exit",         n_args: 1, returns: false },
+];
+
+fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
+    V1_BUILTINS.iter().copied().find(|s| s.name == name)
+}
+
+fn v1_builtin_names() -> Vec<&'static str> {
+    V1_BUILTINS.iter().map(|s| s.name).collect()
+}
+
+// ===========================================================================
 // Compile error — all variants encoder-internal so callers see only Option
 // ===========================================================================
 
@@ -771,6 +814,68 @@ fn emit_instr(
         load_operand(asm, alloc, Reg::X0, &instr.srcs[0])?;
         // Emit a placeholder BL that the AOT linker resolves to the helper.
         asm.bl_external("__twig_print_i64");
+        return Ok(());
+    }
+
+    // ── LANG75 — call_builtin "<name>", <args> ─────────────────────────────────
+    //
+    // Generic dispatch to runtime helpers.  Look `name` up in the V1
+    // helper table, validate arg count, marshal args into x0..x7 per
+    // AAPCS64, emit `BL __twig_<name>` (placeholder; linker patches).
+    // If the helper returns, store x0 into the dest slot.
+    //
+    // `io_out v` is sugar for `call_builtin "print_i64", v` and stays
+    // in the dispatch above for backwards compatibility with frontends
+    // and existing tests that emit `io_out` directly.
+    //
+    // Unknown helper names → `BackendError::MalformedInstr` — the spec's
+    // "BackendRefused" (soft refusal, not a panic).
+    if op == "call_builtin" {
+        let name = match instr.srcs.first() {
+            Some(CIROperand::Var(s)) => s.as_str(),
+            _ => return Err(BackendError::MalformedInstr(
+                "call_builtin: srcs[0] must be Var(helper_name)".into(),
+            )),
+        };
+        let sig = lookup_builtin(name).ok_or_else(|| {
+            BackendError::MalformedInstr(format!(
+                "call_builtin: unknown helper '{name}' (V1 table: {})",
+                v1_builtin_names().join(", "),
+            ))
+        })?;
+        let arg_srcs = &instr.srcs[1..];
+        if arg_srcs.len() != sig.n_args {
+            return Err(BackendError::MalformedInstr(format!(
+                "call_builtin '{name}': expected {} arg(s), got {}",
+                sig.n_args, arg_srcs.len(),
+            )));
+        }
+        if sig.returns && instr.dest.is_none() {
+            return Err(BackendError::MalformedInstr(format!(
+                "call_builtin '{name}': returns a value but dest is None",
+            )));
+        }
+        if !sig.returns && instr.dest.is_some() {
+            return Err(BackendError::MalformedInstr(format!(
+                "call_builtin '{name}': returns void but dest is Some",
+            )));
+        }
+        // AAPCS64 supplies 8 GPR arg slots — all V1 helpers fit in ≤ 2.
+        const ARG_REGS: [Reg; 8] = [
+            Reg::X0, Reg::X1, Reg::X2, Reg::X3,
+            Reg::X4, Reg::X5, Reg::X6, Reg::X7,
+        ];
+        for (i, src) in arg_srcs.iter().enumerate() {
+            load_operand(asm, alloc, ARG_REGS[i], src)?;
+        }
+        let symbol = format!("__twig_{name}");
+        asm.bl_external(&symbol);
+        if sig.returns {
+            if let Some(dest) = &instr.dest {
+                let slot = alloc.slot_of(dest);
+                asm.str_(Reg::X0, Reg::Sp, slot)?;
+            }
+        }
         return Ok(());
     }
 
@@ -1465,4 +1570,125 @@ mod tests {
         assert!(result.is_err(), "io_out with no srcs should error");
     }
 
+    // ── LANG75 — call_builtin lowering ────────────────────────────────────────
+
+    #[test]
+    fn call_builtin_putchar_emits_bl_reloc() {
+        // CIR:
+        //   const_i32 v0 = 65
+        //   call_builtin "putchar", v0
+        //   ret_void
+        let cir = vec![
+            CIRInstr { op: "const_i32".into(), dest: Some("v0".into()),
+                       srcs: vec![CIROperand::Int(65)],
+                       ty: "i32".into(), deopt_to: None },
+            CIRInstr { op: "call_builtin".into(), dest: None,
+                       srcs: vec![CIROperand::Var("putchar".into()),
+                                  CIROperand::Var("v0".into())],
+                       ty: "void".into(), deopt_to: None },
+            CIRInstr { op: "ret_void".into(), dest: None,
+                       srcs: vec![], ty: "void".into(), deopt_to: None },
+        ];
+        let (_bytes, ext_relocs, _) = compile_with_globals(
+            &ctx("emit_A", &[], "void"), &cir, &HashMap::new()
+        ).expect("call_builtin should compile");
+        // Exactly one BL placeholder to __twig_putchar.
+        let putc_relocs: Vec<_> = ext_relocs.iter()
+            .filter(|r| r.symbol == "__twig_putchar").collect();
+        assert_eq!(putc_relocs.len(), 1,
+                   "expected exactly one __twig_putchar BL placeholder");
+    }
+
+    #[test]
+    fn call_builtin_getchar_stores_x0_to_dest() {
+        // CIR: call_builtin "getchar" → r; ret_i32 r
+        let cir = vec![
+            CIRInstr { op: "call_builtin".into(), dest: Some("r".into()),
+                       srcs: vec![CIROperand::Var("getchar".into())],
+                       ty: "i32".into(), deopt_to: None },
+            CIRInstr { op: "ret_i32".into(), dest: None,
+                       srcs: vec![CIROperand::Var("r".into())],
+                       ty: "i32".into(), deopt_to: None },
+        ];
+        let (_bytes, ext_relocs, _) = compile_with_globals(
+            &ctx("read_one", &[], "i32"), &cir, &HashMap::new()
+        ).expect("call_builtin should compile");
+        // One BL placeholder to __twig_getchar.
+        assert_eq!(ext_relocs.iter().filter(|r| r.symbol == "__twig_getchar").count(), 1);
+    }
+
+    #[test]
+    fn call_builtin_print_string_records_two_arg_loads() {
+        // CIR: const_i64 p=0; const_i64 n=0; call_builtin "print_string", p, n
+        let cir = vec![
+            CIRInstr { op: "const_i64".into(), dest: Some("p".into()),
+                       srcs: vec![CIROperand::Int(0)],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "const_i64".into(), dest: Some("n".into()),
+                       srcs: vec![CIROperand::Int(0)],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "call_builtin".into(), dest: None,
+                       srcs: vec![CIROperand::Var("print_string".into()),
+                                  CIROperand::Var("p".into()),
+                                  CIROperand::Var("n".into())],
+                       ty: "void".into(), deopt_to: None },
+            CIRInstr { op: "ret_void".into(), dest: None,
+                       srcs: vec![], ty: "void".into(), deopt_to: None },
+        ];
+        let (_bytes, ext_relocs, _) = compile_with_globals(
+            &ctx("emit_str", &[], "void"), &cir, &HashMap::new()
+        ).expect("call_builtin should compile");
+        assert_eq!(ext_relocs.iter().filter(|r| r.symbol == "__twig_print_string").count(), 1);
+    }
+
+    #[test]
+    fn call_builtin_unknown_name_refuses() {
+        let cir = vec![
+            CIRInstr { op: "call_builtin".into(), dest: None,
+                       srcs: vec![CIROperand::Var("frobnicate".into())],
+                       ty: "void".into(), deopt_to: None },
+            CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![],
+                       ty: "void".into(), deopt_to: None },
+        ];
+        let result = compile_with_globals(
+            &ctx("bad_name", &[], "void"), &cir, &HashMap::new()
+        );
+        assert!(result.is_err(), "unknown builtin name should error");
+    }
+
+    #[test]
+    fn call_builtin_wrong_arity_refuses() {
+        // putchar expects 1 arg; supplying 0 should be rejected.
+        let cir = vec![
+            CIRInstr { op: "call_builtin".into(), dest: None,
+                       srcs: vec![CIROperand::Var("putchar".into())],
+                       ty: "void".into(), deopt_to: None },
+            CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![],
+                       ty: "void".into(), deopt_to: None },
+        ];
+        let result = compile_with_globals(
+            &ctx("bad_arity", &[], "void"), &cir, &HashMap::new()
+        );
+        assert!(result.is_err(), "wrong arity should error");
+    }
+
+    #[test]
+    fn call_builtin_print_i64_matches_io_out() {
+        // call_builtin "print_i64", v should produce the same BL target.
+        let cir = vec![
+            CIRInstr { op: "const_i64".into(), dest: Some("v0".into()),
+                       srcs: vec![CIROperand::Int(42)],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "call_builtin".into(), dest: None,
+                       srcs: vec![CIROperand::Var("print_i64".into()),
+                                  CIROperand::Var("v0".into())],
+                       ty: "void".into(), deopt_to: None },
+            CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![],
+                       ty: "void".into(), deopt_to: None },
+        ];
+        let (_bytes, ext_relocs, _) = compile_with_globals(
+            &ctx("p", &[], "void"), &cir, &HashMap::new()
+        ).expect("call_builtin should compile");
+        assert_eq!(ext_relocs.iter().filter(|r| r.symbol == "__twig_print_i64").count(), 1);
+    }
 }

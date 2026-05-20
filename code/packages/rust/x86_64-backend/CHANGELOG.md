@@ -1,5 +1,45 @@
 # Changelog — `x86_64-backend`
 
+## 0.5.0 — 2026-05-20 (LANG75 — generic `call_builtin` dispatch)
+
+Adds a single CIR opcode `call_builtin "<name>", <args>` that dispatches
+to runtime helpers via the V1 helper table.  Closes the per-helper
+hard-coding pattern established by `io_out` (which is now sugar for
+`call_builtin "print_i64"`).
+
+**New CIR opcode:**
+
+- `call_builtin "<name>", <arg0>, <arg1>, …` — looks `name` up in the
+  V1 helper table, marshals args into the ABI's argument registers,
+  emits `call rel32` against `__twig_<name>` with a `PltRel32`
+  external relocation, and (if the helper returns) stores `RAX` into
+  the dest slot.
+
+**V1 helper table (shared with `aarch64-backend`):**
+
+| Name           | Args     | Returns |
+|----------------|----------|---------|
+| `print_i64`    | `[i64]`  | no      |
+| `putchar`      | `[i32]`  | no      |
+| `getchar`      | `[]`     | yes     |
+| `print_string` | `[ptr,i64]` | no   |
+| `input_i64`    | `[]`     | yes     |
+| `exit`         | `[i32]`  | no      |
+
+**Error handling.**  Unknown helper names, wrong arity, and dest/void
+mismatches all produce `BackendError::MalformedInstr` (the spec's
+"BackendRefused" — a soft refusal, not a panic).
+
+**Behaviour preserved.**  The existing `io_out` dispatch is unchanged
+and still emits the same bytes; `call_builtin "print_i64", v` produces
+the same `call __twig_print_i64` it always did.
+
+**Tests added (9):** marshal arg into RDI / RCX (SysV / MS x64),
+`getchar` stores RAX to dest, `print_string` marshals two args,
+unknown name refuses, wrong arity refuses, void-with-dest refuses,
+returning-without-dest refuses, `print_i64`-via-builtin matches
+`io_out`.
+
 ## 0.4.0 — 2026-05-14 (LANG43 phase 6 — globals + io_out)
 
 Adds the last CIR opcodes needed to match `aarch64-backend`'s
