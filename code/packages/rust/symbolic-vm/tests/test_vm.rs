@@ -2788,8 +2788,9 @@ fn phase36_perfect_square_discriminant() {
 }
 
 #[test]
-fn phase36_cos_negative_b_still_defers() {
-    // ∫ 1/(1 − 2·cos x) dx — effective b=-2 < |a|=1; cos branch defers.
+fn phase37_cos_negative_b_now_closes() {
+    // ∫ 1/(1 − 2·cos x) dx — Phase 37 (cos b<−|a|) now closes via the
+    // same log formula as Phase 36; Abs wrapping handles the sign flip.
     let integrand = apply(
         sym(DIV),
         vec![
@@ -2800,6 +2801,51 @@ fn phase36_cos_negative_b_still_defers() {
             ),
         ],
     );
-    let result = integrate(integrand);
-    assert!(is_unevaluated_integrate(&result));
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    // 1 − 2 cos x zeros at cos x = 1/2 (x = ±π/3 ≈ ±1.047).
+    // Sample on (π/3, π).
+    for &x_val in &[1.2_f64, 1.6, 2.0, 2.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (1.0 - 2.0 * x_val.cos());
+        assert!((got - expected).abs() < 1e-3);
+    }
+}
+
+#[test]
+fn phase37_cos_negative_b_with_negative_a() {
+    // ∫ 1/(−1 − 3·cos x) dx — both a and b negative.
+    let neg_one_minus_three_cos = apply(
+        sym(SUB),
+        vec![int(-1), apply(sym(MUL), vec![int(3), apply(sym(COS), vec![sym("x")])])],
+    );
+    let integrand = apply(sym(DIV), vec![int(1), neg_one_minus_three_cos]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    for &x_val in &[0.5_f64, 1.0, 1.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (-1.0 - 3.0 * x_val.cos());
+        assert!((got - expected).abs() < 1e-3);
+    }
+}
+
+#[test]
+fn phase37_cos_negative_b_with_numerator_coefficient() {
+    // ∫ 5/(1 − 2·cos x) dx — numerator c=5 scales.
+    let integrand = apply(
+        sym(DIV),
+        vec![
+            int(5),
+            apply(
+                sym(SUB),
+                vec![int(1), apply(sym(MUL), vec![int(2), apply(sym(COS), vec![sym("x")])])],
+            ),
+        ],
+    );
+    let phi = integrate(integrand);
+    for &x_val in &[1.2_f64, 1.6, 2.0, 2.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 5.0 / (1.0 - 2.0 * x_val.cos());
+        assert!((got - expected).abs() < 1e-3);
+    }
 }
