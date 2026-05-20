@@ -1,5 +1,86 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — PR-3 — HostInput / HostButton / HostScroll
+
+### Added — `HostInput` lowering (spec §4.1)
+
+- `HostInput` lowers to `<TextBox>` with the spec's attribute mapping:
+  - `value: slot: V` → `Text="{x:Bind V, Mode=TwoWay}"`
+  - `value: "..."` → `Text="..."` literal
+  - `read-only: slot: R` → `IsReadOnly="{x:Bind R}"`
+  - `read-only: true` / `false` keyword → literal `IsReadOnly="True"` / `False`
+  - `placeholder: "..."` → `PlaceholderText="..."`
+  - `max-length: N` → `MaxLength="N"` (integer-cast from the f64 prop)
+  - `multiline: true` → adds `AcceptsReturn="True" TextWrapping="Wrap"`
+- Event wiring lands as private code-behind handlers:
+  - `onChange: emit: X` → `TextChanged` handler dispatching
+    `XEvent.{X}(textbox.Text)` (payload-carrying)
+  - `onCommit: emit: X` + `onCancel: emit: Y` → merged `KeyDown`
+    handler keyed on `VirtualKey.Enter` / `VirtualKey.Escape`
+  - `onFocus: emit: X` → `GotFocus` handler
+
+### Added — `HostButton` lowering (spec §4.2)
+
+- `HostButton` lowers to `<Button>` with:
+  - `label: slot: L` → `Content="{x:Bind L}"`
+  - `label: "..."` → `Content="..."` literal
+  - `disabled: slot: D` → `IsEnabled="{x:Bind Not(D)}"` plus a generated
+    `private bool Not(bool b) => !b;` helper added once per component
+  - `disabled: true` / `false` keyword → literal `IsEnabled="False"` / `True`
+  - `onClick: emit: X` → `Click` handler dispatching `XEvent.{X}()`
+
+### Added — `HostScroll` lowering (spec §4.3)
+
+- `HostScroll` lowers to `<ScrollViewer>` wrapping its children.
+  Direction keyword maps to scroll-bar visibility:
+  - default (vertical): `VerticalScrollBarVisibility="Auto"` + `HorizontalScrollBarVisibility="Disabled"`
+  - `direction: horizontal`: H=Auto, V=Disabled
+  - `direction: both`: both Auto
+
+### Added — `x:Name` allocation for Host* primitives
+
+- When the node has a `part_name`, the `x:Name` is the part name
+  PascalCased (`formula-field` → `FormulaField`). Matches the spec's
+  examples and the convention React/SwiftUI use for code-behind refs.
+- When the node lacks a `part_name`, the emitter allocates a
+  monotonically-increasing per-component counter (`HostInput_1`,
+  `HostInput_2`, ...). Stable across rebuilds.
+
+### Added — `HostHandler` registration on `EmitContext`
+
+- The Host* event handlers are accumulated on `EmitContext::host_handlers`
+  during the walk and emitted inline in the code-behind partial class
+  after the PR-2 helper methods. The dedup is by handler name, mirroring
+  the helper-dedup pattern.
+
+### Tests
+
+- 19 new tests covering: each Host* primitive's attribute mappings;
+  event-handler emission (TextChanged with payload, merged KeyDown for
+  Commit+Cancel, Click); `x:Name` allocation with and without
+  `part_name`; the `Not(bool)` helper generation for disabled
+  polarity flip; multi-counter assignment across multiple unnamed
+  HostInputs.
+- Two PR-1 tests
+  (`host_input_errors_with_unsupported_primitive`) updated to verify
+  the new successful lowering shape instead of the previous error.
+- Total: 81 tests (was 62 in PR-2, +19).
+
+### Known limitations carried forward to later PRs
+
+- **`HostTable`** + section sub-tags still `UnsupportedPrimitive`
+  pending PR-4.
+- **Component references** still `UnsupportedPrimitive` pending PR-5.
+- **`BoolToVisibilityConverter` C# class** still references-only;
+  hosts need to ship one. A follow-up emits the converter alongside
+  the rest.
+- **HostInput event payload** captures the *raw* `tb.Text` of the
+  `TextBox` at dispatch time. A future PR may switch to two-way
+  bindings for the slot in addition to the dispatch (mirroring
+  the React emitter's `e.target.value` pattern).
+- **HostButton accelerator-key wiring** (e.g. `accelerator: "Ctrl+S"`
+  → `KeyboardAccelerator`) is out of scope for PR-3.
+
 ## [Unreleased] — PR-2 — If / Else / For + ExprLowerer
 
 ### Added — `For` lowering (spec §6.1)
