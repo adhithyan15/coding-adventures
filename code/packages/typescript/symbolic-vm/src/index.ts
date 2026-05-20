@@ -1727,11 +1727,13 @@ function tryWeierstrassOneOverLinearTrig(
   // Three-way dispatch on the discriminant:
   //   disc > 0  → Phase 34 arctan form (below)
   //   disc == 0 → Phase 35 degenerate form (four sign combinations)
-  //   disc < 0  → log form (still deferred)
+  //   disc < 0  → Phase 36 log form (this release)
   if (isZeroNumeric(disc)) {
     return tryWeierstrassDegenerate(c, a, b, trigHead, x);
   }
-  if (!isPositiveNumeric(disc)) return undefined;
+  if (!isPositiveNumeric(disc)) {
+    return tryWeierstrassLogForm(c, a, b, trigHead, x);
+  }
   const sqrtDiscIR = weierstrassSqrtFractionIR(disc);
   const tanHalf = app(TAN, [app(DIV, [x, int(2)])]);
   let atanArg: IRNode;
@@ -1832,6 +1834,60 @@ function tryWeierstrassDegenerate(
     return app(DIV, [fromNumeric(negC), denom]);
   }
   return undefined;
+}
+
+/** Numeric absolute value (Int/Rat only — float passes through). */
+function absNumeric(v: Numeric): Numeric {
+  if (v.kind === "int") return { kind: "int", value: v.value < 0n ? -v.value : v.value };
+  if (v.kind === "rat") return { kind: "rat", numer: v.numer < 0n ? -v.numer : v.numer, denom: v.denom };
+  return { kind: "float", value: Math.abs(v.value) };
+}
+
+/**
+ * Phase 36: Weierstrass log form for ``a² < b²``.
+ *
+ *   ∫ c/(a + b·sin x) dx  =  (c/D)·log|(a·tan(x/2)+b−D)/(a·tan(x/2)+b+D)| + C
+ *   ∫ c/(a + b·cos x) dx  =  (c/D)·log|(D+(b−a)·tan(x/2))/(D−(b−a)·tan(x/2))| + C
+ *
+ * with ``D = √(b²−a²) > 0``.  Sin branch handles any nonzero ``a``;
+ * cos branch requires ``b > |a|`` strictly (the symmetric ``b < −|a|``
+ * case has a different sign pattern and is deferred).
+ */
+function tryWeierstrassLogForm(
+  c: Numeric,
+  a: Numeric,
+  b: Numeric,
+  trigHead: IRNode,
+  x: IRNode
+): IRNode | undefined {
+  // discSq = b² − a²; caller passes disc = a² − b² < 0, so discSq > 0.
+  const discSq = subNumeric(mulNumeric(b, b), mulNumeric(a, a));
+  if (!isPositiveNumeric(discSq)) return undefined;
+  const sqrtDiscIR = weierstrassSqrtFractionIR(discSq);
+  const tanHalf = app(TAN, [app(DIV, [x, int(2)])]);
+  const absHead = sym("Abs");
+  if (equals(trigHead, SIN)) {
+    if (isZeroNumeric(a)) return undefined; // 1/(b·sin x) deferred
+    // log|(a·tan(x/2) + b − D) / (a·tan(x/2) + b + D)|
+    const aTan = app(MUL, [fromNumeric(a), tanHalf]);
+    const aTanPlusB = app(ADD, [aTan, fromNumeric(b)]);
+    const numer = app(SUB, [aTanPlusB, sqrtDiscIR]);
+    const denom = app(ADD, [aTanPlusB, sqrtDiscIR]);
+    const logArg = app(absHead, [app(DIV, [numer, denom])]);
+    const coefIR = app(DIV, [fromNumeric(c), sqrtDiscIR]);
+    return app(MUL, [coefIR, app(LOG, [logArg])]);
+  }
+  // COS branch: require b > |a| strictly.
+  if (!isPositiveNumeric(subNumeric(b, absNumeric(a)))) return undefined;
+  const bMinusA = subNumeric(b, a);
+  if (!isPositiveNumeric(bMinusA)) return undefined;
+  // log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|
+  const bmaTan = app(MUL, [fromNumeric(bMinusA), tanHalf]);
+  const numer = app(ADD, [sqrtDiscIR, bmaTan]);
+  const denom = app(SUB, [sqrtDiscIR, bmaTan]);
+  const logArg = app(absHead, [app(DIV, [numer, denom])]);
+  const coefIR = app(DIV, [fromNumeric(c), sqrtDiscIR]);
+  return app(MUL, [coefIR, app(LOG, [logArg])]);
 }
 
 function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {

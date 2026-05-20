@@ -1,5 +1,48 @@
 # Changelog
 
+## [0.9.0] — 2026-05-20
+
+### Added — Phase 36: Weierstrass log form for `a² < b²`
+
+Ports Python `symbolic-vm` 0.61.0 (PR #3672) Phase 36 to TypeScript.
+Closes the deferred `a² < b²` branch of Phase 34 by emitting the
+explicit log-form closed solution.
+
+After the substitution `u = tan(x/2)` the quadratic in `u` has two
+distinct real roots; partial fractions give:
+
+    ∫ c/(a + b·sin x) dx = (c/D)·log|(a·tan(x/2)+b−D)/(a·tan(x/2)+b+D)| + C
+    ∫ c/(a + b·cos x) dx = (c/D)·log|(D+(b−a)·tan(x/2))/(D−(b−a)·tan(x/2))| + C
+
+where `D = √(b²−a²) > 0`. The sin formula is valid for any nonzero
+rational `a`. The cos formula requires `b > |a|` strictly; the
+symmetric `b < −|a|` case is deferred.
+
+The log argument is wrapped in `Abs()` (`sym("Abs")`) because the inner
+rational changes sign across the integrand's singularities; this lets
+the closed form be evaluated numerically across the full domain.
+
+#### Added
+
+- **`tryWeierstrassLogForm(c, a, b, trigHead, x)`** — Phase 36 helper.
+  Plumbed into the existing Phase 34 dispatcher in place of the prior
+  `disc < 0 → undefined` arm.
+- **`absNumeric(v)`** — numeric absolute value helper for Int/Rat/Float.
+
+#### Tests
+
+5 new `it()` cases in `tests/phase34-weierstrass.test.ts` + 1 promoted
+from fallthrough:
+
+- ∫ 1/(1 + 2·sin x) dx — sin branch closes
+- ∫ 1/(1 + 2·cos x) dx — cos branch with `b > |a|`
+- ∫ 1/(−1 + 2·sin x) dx — sin with `a < 0`
+- ∫ 3/(1 + 2·sin x) dx — numerator scaling
+- ∫ 1/(3 + 5·sin x) dx — perfect-square `|disc|=16` folds Sqrt away
+- ∫ 1/(1 − 2·cos x) dx — `b < |a|` cos branch still deferred
+
+Full suite: **143 tests pass** (138 prior + 5 net new).
+
 ## [0.8.0] — 2026-05-18
 
 ### Added — Phase 35: degenerate `a² = b²` Weierstrass cases
