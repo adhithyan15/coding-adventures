@@ -16,10 +16,19 @@ The first matrix covers representative Arduino families:
   Rev2 for SAM/SAMD/megaAVR/Renesas/Nordic coverage
 - Nano RP2040 Connect, Nano ESP32, GIGA R1 WiFi, and Portenta H7 for modern
   maker/pro Arduino boards
+- Portenta H7 Lite, Portenta H7 Lite Connected, Portenta C33, Nicla Vision,
+  Nicla Sense ME, Nicla Voice, and the Opta Lite/RS485/WiFi variants for
+  Pro, Nicla, and industrial PLC-style Arduino coverage
 
 Each target currently proves the shared GPIO/time backend path. Board-specific
 firmware/upload crates can extend the same descriptor with richer peripherals
 without falling back to Uno R4 assumptions.
+
+Opta terminals are modeled as board-local input and relay-output pins instead
+of pretending the PLC has Uno-style headers. Nicla sensor/audio/vision hardware
+is similarly registered as its own target family so follow-up capability work
+can add the real sensor, camera, microphone, and wireless paths without changing
+language frontends.
 
 Host-side validation:
 
