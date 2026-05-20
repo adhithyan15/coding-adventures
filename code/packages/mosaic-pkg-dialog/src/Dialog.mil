@@ -1,0 +1,33 @@
+// Dialog.mil — interface for the Dialog component.
+//
+// A Dialog is the simplest "real" userland component the Mosaic framework
+// can host: a styled container that shows a title, a body message, and a
+// single button to dismiss itself.  It is deliberately minimal so it can
+// compile cleanly against every backend on main today (React, SwiftUI, Qt,
+// WebComponent, HTML, XAML) — the cross-backend smoke test for the kernel.
+//
+// Slot vocabulary
+// ---------------
+//   title         the heading line shown at the top of the dialog
+//   message       the body text shown between the title and the actions
+//   close-label   the label shown on the close button (e.g. "OK", "Close")
+//
+// Emit vocabulary
+// ---------------
+//   onClose       fired when the close button is activated; the host is
+//                 responsible for tearing the Dialog down (the v0.1.0
+//                 Dialog does not gate its own visibility — see README).
+//
+// v0.2.0 will add a `visible: bool` slot plus an `If (when: ...)` gate
+// once the `If` primitive is available across every backend (today only
+// HTML, WebComponent, and XAML have it; React/SwiftUI/Qt are still
+// landing it in parallel PRs).  Until then, the host decides whether to
+// render Dialog at all by mounting/unmounting it externally.
+
+component Dialog {
+  slot title       : text ;
+  slot message     : text ;
+  slot close-label : text ;
+
+  emit onClose ;
+}

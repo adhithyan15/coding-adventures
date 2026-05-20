@@ -1,0 +1,41 @@
+// Dialog.dark.msl — dark theme styles for the Dialog component.
+//
+// Targets the four named parts declared in Dialog.mll:
+//
+//   dialog-root      outer frame: background, border, padding, default text colour
+//   dialog-title     heading: larger font, bolder, white-on-dark
+//   dialog-message   body text: regular weight, slightly smaller, inherits colour
+//   dialog-actions   action row: deliberately empty in v0.1.0 — host can
+//                    override alignment via composition (mosstyle cascade
+//                    rules let a host-level .msl tighten this without
+//                    forking the package)
+//
+// Colour palette: VS Code Dark+ derived.
+//   #2d2d30   panel background (matches Code's editor side panel)
+//   #3f3f46   subtle border between dialog and content beneath it
+//   #cccccc   default text colour for the dialog body
+//   #ffffff   pure white for the title to give it visual weight
+
+style Dialog {
+  part dialog-root {
+    background:   #2d2d30 ;
+    border-width: 1px ;
+    border-style: solid ;
+    border-color: #3f3f46 ;
+    padding:      16px ;
+    color:        #cccccc ;
+  }
+  part dialog-title {
+    font-size:      16px ;
+    font-weight:    bold ;
+    color:          #ffffff ;
+    padding-bottom: 8px ;
+  }
+  part dialog-message {
+    font-size:      13px ;
+    padding-bottom: 16px ;
+  }
+  part dialog-actions {
+    /* host can override alignment via composition */
+  }
+}
