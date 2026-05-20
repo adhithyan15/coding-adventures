@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.13.0] - 2026-05-20
+
+### Fixed
+
+- **``ConstantFolding`` simplification of ``AND``/``OR`` now coerces
+  numeric literals to truth values** instead of identity-checking
+  against the Python ``True``/``False`` singletons.  The previous
+  ``is True`` / ``is False`` tests treated ``Literal(1)`` and
+  ``Literal(0)`` as neither-true-nor-false and folded them to NULL —
+  so the optimizer was turning ``SELECT 1 AND 0`` into ``SELECT NULL``
+  *before* the VM ever ran.  A new ``_truthy`` helper returns
+  ``True``/``False`` for any non-NULL numeric and ``None`` for strings/
+  other types so unfoldable operands fall through to the runtime.
+
 ## [0.12.0] - 2026-05-17
 
 ### Changed

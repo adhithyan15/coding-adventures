@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.71.0] - 2026-05-20
+
+### Fixed
+
+- **``SELECT 1 AND 0`` and similar integer-literal boolean expressions
+  now return the correct value** (via ``sql-optimizer 0.13.0`` and
+  ``sql-vm 1.45.0``).  Previously the optimizer folded every literal
+  combination that wasn't already a Python ``bool`` to ``NULL``,
+  including ``1 AND 0`` (should be ``0``), ``1 OR 0`` (should be ``1``),
+  and ``NULL AND 0`` (should be ``0`` — FALSE dominates).
+
+  Column-driven AND/OR (e.g. ``WHERE a AND b`` where both columns are
+  ``INTEGER``) was also broken at the VM level because
+  ``apply_binary(AND, 1, 0)`` raised ``TypeMismatch``.  Both code paths
+  now use SQLite's numeric truthiness rule: zero is FALSE, any other
+  numeric is TRUE, NULL is unknown.
+
+  23 oracle tests in ``test_tier3_and_or_truthiness.py`` covering
+  integer literals, 3-valued logic with NULL, negative / large /
+  float numerics, column-driven AND/OR, and a regression guard for
+  the boolean-comparison path that previously worked by accident.
+
 ## [1.70.0] - 2026-05-20
 
 ### Added

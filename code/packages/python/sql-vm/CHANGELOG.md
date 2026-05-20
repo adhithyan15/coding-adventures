@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.45.0 — 2026-05-20
+
+### Fixed
+
+- **``apply_binary(AND, …)`` and ``apply_binary(OR, …)`` now coerce
+  numeric operands to truth values** instead of demanding Python
+  ``bool``.  ``apply_binary(AND, 1, 0)`` used to raise ``TypeMismatch``
+  because ``1`` isn't ``True`` (under ``is``).  SQLite has no separate
+  BOOLEAN storage class — integers and floats double as booleans, with
+  zero meaning FALSE and any other value meaning TRUE.
+
+  A new ``_truthiness`` helper returns ``True``/``False`` for any
+  non-NULL numeric, ``None`` for NULL, and (deliberately) ``None`` for
+  strings.  The latter still raises TypeMismatch to keep ill-typed
+  comparisons loud at runtime.
+
 ## 1.44.0 — 2026-05-20
 
 ### Added
