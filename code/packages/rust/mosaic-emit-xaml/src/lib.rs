@@ -85,7 +85,8 @@
 pub mod pipeline;
 
 pub use pipeline::{
-    from_pipeline, EmitOptions, EmittedFile, PipelineEmitError, ProjectFiles, XamlEmitResult,
+    from_pipeline, ComponentRef, ComponentRegistry, EmitOptions, EmittedFile, PipelineEmitError,
+    ProjectFiles, XamlEmitResult,
 };
 
 /// Crate version string. Kept in sync with `Cargo.toml`'s `[package]`

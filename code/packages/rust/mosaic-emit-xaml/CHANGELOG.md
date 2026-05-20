@@ -1,5 +1,93 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — PR-5 — Component reference resolution
+
+### Added — `ComponentRegistry` public type
+
+- New `ComponentRegistry` + `ComponentRef` types re-exported from
+  the crate root. The registry maps PascalCase tag names →
+  `(xmlns_prefix, xmlns_value, package_name)` and is the input the
+  emitter consumes when resolving a non-kernel tag.
+- The CLI (mosaic-compile) is responsible for populating the
+  registry from parsed dependency manifests; the emitter takes the
+  already-resolved data and emits the XAML reference.
+- Tests use the registry directly — `ComponentRegistry::new()` +
+  `.register("Grid", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid")`.
+
+### Changed — `from_pipeline` signature
+
+The fourth argument changed from `manifest: Option<&()>` (a stub from
+PR-1) to `registry: Option<&ComponentRegistry>`. Callers that don't
+need component references continue to pass `None`; the behaviour for
+them is identical to PR-4.
+
+### Added — Non-kernel tag → `<{prefix}:{Tag} ... />` reference
+
+When a layout node's tag isn't in the UI29 kernel:
+
+- **With a registry** AND the tag is registered → emits
+  `<{prefix}:{Tag} ... />` with the registered xmlns prefix. The
+  matching `xmlns:{prefix}="{value}"` declaration lands on the
+  `<UserControl>` root tag.
+- **With a registry** AND the tag is NOT registered →
+  `PipelineEmitError::UnknownComponent(tag)` (the spec's intended
+  error for missing manifest dependency).
+- **Without a registry** → `PipelineEmitError::UnsupportedPrimitive(tag)`
+  (preserves pre-PR-5 behaviour for callers that don't use packages).
+
+Kernel primitives ALWAYS win over registry entries — if a registry
+happens to define an entry for `Box` / `Text` / etc., the kernel
+emitter is used and the registry entry is ignored. This protects
+against accidental shadowing.
+
+### Added — Component-reference prop resolution
+
+The emitter walks the component-reference's `props` and produces
+XAML attribute fragments:
+
+- `slot ref` → `Attribute="{x:Bind Path}"` (PascalCased)
+- `string literal` → `Attribute="literal"` (XAML-escaped)
+- `number` → `Attribute="N"`
+- `keyword (for-bound name)` → `Attribute="{x:Bind Name}"` (treated
+  as a bound name when in scope)
+- `keyword (other)` → `Attribute="literal"` (passes through)
+- `expr` → routed through the PR-2 ExprLowerer (bindable path or
+  helper call)
+- `emit ref` → DEFERRED — surfaced as a XAML comment listing the
+  skipped props so the gap is visible in diffs. Host-side handler-stub
+  generation is PR-5+ work and lands in a follow-up.
+
+### Added — xmlns deduplication
+
+Two references to the same package produce ONE `xmlns:prefix="..."`
+declaration on the `<UserControl>` root. The internal map is keyed
+by xmlns prefix; `BTreeMap` storage gives deterministic alphabetical
+output ordering.
+
+### Tests
+
+- 12 new tests cover: registry register/lookup round-trip, registry
+  empty-lookup misses, no-registry → UnsupportedPrimitive, empty
+  registry → UnknownComponent, prefixed XAML tag emission, xmlns
+  declaration injection, slot-ref / string-literal / emit-ref prop
+  mapping, multi-package xmlns emission, xmlns dedup for repeated
+  package use, kernel-primitive shadowing protection.
+- Total: 104 tests (was 92 in PR-4, +12).
+
+### Known limitations carried to PR-6
+
+- **CLI integration** (`mosaic-compile --backend xaml --package-mode`)
+  still pending. The CLI needs to read each dependency's
+  `mosaic-package.toml`, parse it via `mosaic-package-manifest`, and
+  populate the `ComponentRegistry` before invoking `from_pipeline`.
+  Same status as the swiftui/qt backends.
+- **Emit-ref props on component references** are surfaced as a
+  comment but not wired. The host-side handler stubs and the
+  package's own `Dispatch` event subscription are PR-5+ work that
+  lands either at the tail end of the xaml series or in a generic
+  cross-backend PR.
+- **`--use-community-datagrid` flag** still inert (PR-4 carryover).
+
 ## [Unreleased] — PR-4 — HostTable + section sub-tags
 
 ### Added — `HostTable` lowering (spec §5)
