@@ -176,6 +176,16 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_document_s
   --check
 ```
 
+The generated `tests/fixtures/whatwg-template-audit.json` fixture indexes
+template insertion modes, nested template stacks, EOF recovery,
+table/select/frameset interactions, document-shell placement, text-mode
+content, foreign content, and template fragment contexts:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_template_audit_fixture.py \
+  --check
+```
+
 The generated `tests/fixtures/whatwg-select-list-audit.json` fixture indexes
 select shells, option implied-end recovery, optgroup boundaries,
 select-in-table handling, select fragment contexts, and stray select/list end

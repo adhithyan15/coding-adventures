@@ -1,0 +1,710 @@
+{
+  "case_count": 115,
+  "cases": [
+    {
+      "axis": "head-body-template",
+      "id": "template-dat-455",
+      "reason": "template placement around html, head, body, and late shell tags",
+      "source": "template.dat:455"
+    },
+    {
+      "axis": "template-shell",
+      "id": "template-dat-456",
+      "reason": "ordinary template start/end tags and content model boundaries",
+      "source": "template.dat:456"
+    },
+    {
+      "axis": "template-shell",
+      "id": "template-dat-457",
+      "reason": "ordinary template start/end tags and content model boundaries",
+      "source": "template.dat:457"
+    },
+    {
+      "axis": "head-body-template",
+      "id": "template-dat-458",
+      "reason": "template placement around html, head, body, and late shell tags",
+      "source": "template.dat:458"
+    },
+    {
+      "axis": "head-body-template",
+      "id": "template-dat-459",
+      "reason": "template placement around html, head, body, and late shell tags",
+      "source": "template.dat:459"
+    },
+    {
+      "axis": "template-shell",
+      "id": "template-dat-460",
+      "reason": "ordinary template start/end tags and content model boundaries",
+      "source": "template.dat:460"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-461",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:461"
+    },
+    {
+      "axis": "template-shell",
+      "id": "template-dat-462",
+      "reason": "ordinary template start/end tags and content model boundaries",
+      "source": "template.dat:462"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-463",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:463"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-464",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:464"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-465",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:465"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-466",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:466"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-467",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:467"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-468",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:468"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-469",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:469"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-470",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:470"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-471",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:471"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-472",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:472"
+    },
+    {
+      "axis": "select-template",
+      "id": "template-dat-473",
+      "reason": "template insertion inside select, option, and optgroup contexts",
+      "source": "template.dat:473"
+    },
+    {
+      "axis": "select-template",
+      "id": "template-dat-474",
+      "reason": "template insertion inside select, option, and optgroup contexts",
+      "source": "template.dat:474"
+    },
+    {
+      "axis": "select-template",
+      "id": "template-dat-475",
+      "reason": "template insertion inside select, option, and optgroup contexts",
+      "source": "template.dat:475"
+    },
+    {
+      "axis": "select-template",
+      "id": "template-dat-476",
+      "reason": "template insertion inside select, option, and optgroup contexts",
+      "source": "template.dat:476"
+    },
+    {
+      "axis": "select-template",
+      "id": "template-dat-477",
+      "reason": "template insertion inside select, option, and optgroup contexts",
+      "source": "template.dat:477"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-478",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:478"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-479",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:479"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-480",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:480"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-481",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:481"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-482",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:482"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-483",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:483"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-484",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:484"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-485",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:485"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-486",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:486"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-487",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:487"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-488",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:488"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-489",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:489"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-490",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:490"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-491",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:491"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-492",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:492"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-493",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:493"
+    },
+    {
+      "axis": "frameset-template",
+      "id": "template-dat-494",
+      "reason": "template insertion around frameset and frame recovery",
+      "source": "template.dat:494"
+    },
+    {
+      "axis": "frameset-template",
+      "id": "template-dat-495",
+      "reason": "template insertion around frameset and frame recovery",
+      "source": "template.dat:495"
+    },
+    {
+      "axis": "frameset-template",
+      "id": "template-dat-496",
+      "reason": "template insertion around frameset and frame recovery",
+      "source": "template.dat:496"
+    },
+    {
+      "axis": "frameset-template",
+      "id": "template-dat-497",
+      "reason": "template insertion around frameset and frame recovery",
+      "source": "template.dat:497"
+    },
+    {
+      "axis": "rawtext-template",
+      "id": "template-dat-498",
+      "reason": "script, style, plaintext, and other text-mode content in templates",
+      "source": "template.dat:498"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-499",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:499"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-500",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:500"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-501",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:501"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-502",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:502"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-503",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:503"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-504",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:504"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-505",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:505"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-506",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:506"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-507",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:507"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-508",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:508"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-509",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:509"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-510",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:510"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-511",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:511"
+    },
+    {
+      "axis": "head-body-template",
+      "id": "template-dat-512",
+      "reason": "template placement around html, head, body, and late shell tags",
+      "source": "template.dat:512"
+    },
+    {
+      "axis": "head-body-template",
+      "id": "template-dat-513",
+      "reason": "template placement around html, head, body, and late shell tags",
+      "source": "template.dat:513"
+    },
+    {
+      "axis": "rawtext-template",
+      "id": "template-dat-514",
+      "reason": "script, style, plaintext, and other text-mode content in templates",
+      "source": "template.dat:514"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-515",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:515"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-516",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:516"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-517",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:517"
+    },
+    {
+      "axis": "head-body-template",
+      "id": "template-dat-518",
+      "reason": "template placement around html, head, body, and late shell tags",
+      "source": "template.dat:518"
+    },
+    {
+      "axis": "head-body-template",
+      "id": "template-dat-519",
+      "reason": "template placement around html, head, body, and late shell tags",
+      "source": "template.dat:519"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-520",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:520"
+    },
+    {
+      "axis": "frameset-template",
+      "id": "template-dat-521",
+      "reason": "template insertion around frameset and frame recovery",
+      "source": "template.dat:521"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-522",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:522"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-523",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:523"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-524",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:524"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-525",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:525"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-526",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:526"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-527",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:527"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-528",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:528"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-529",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:529"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-530",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:530"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-531",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:531"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-532",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:532"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-533",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:533"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-534",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:534"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-535",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:535"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-536",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:536"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-537",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:537"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-538",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:538"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-539",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:539"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-540",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:540"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-541",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:541"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-542",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:542"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-543",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:543"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-544",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:544"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-545",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:545"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-546",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:546"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-547",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:547"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-548",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:548"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-549",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:549"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-550",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:550"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-551",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:551"
+    },
+    {
+      "axis": "head-body-template",
+      "id": "template-dat-552",
+      "reason": "template placement around html, head, body, and late shell tags",
+      "source": "template.dat:552"
+    },
+    {
+      "axis": "foreign-content-template",
+      "id": "template-dat-553",
+      "reason": "template-like markup inside SVG, MathML, and integration points",
+      "source": "template.dat:553"
+    },
+    {
+      "axis": "foreign-content-template",
+      "id": "template-dat-554",
+      "reason": "template-like markup inside SVG, MathML, and integration points",
+      "source": "template.dat:554"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-555",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:555"
+    },
+    {
+      "axis": "select-template",
+      "id": "template-dat-556",
+      "reason": "template insertion inside select, option, and optgroup contexts",
+      "source": "template.dat:556"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-557",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:557"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-558",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:558"
+    },
+    {
+      "axis": "head-body-template",
+      "id": "template-dat-559",
+      "reason": "template placement around html, head, body, and late shell tags",
+      "source": "template.dat:559"
+    },
+    {
+      "axis": "head-body-template",
+      "id": "template-dat-560",
+      "reason": "template placement around html, head, body, and late shell tags",
+      "source": "template.dat:560"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-561",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:561"
+    },
+    {
+      "axis": "eof-template",
+      "id": "template-dat-562",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "template.dat:562"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-563",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:563"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-564",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:564"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-565",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:565"
+    },
+    {
+      "axis": "rawtext-template",
+      "id": "tests18-dat-993",
+      "reason": "script, style, plaintext, and other text-mode content in templates",
+      "source": "tests18.dat:993"
+    },
+    {
+      "axis": "rawtext-template",
+      "id": "tests18-dat-16",
+      "reason": "script, style, plaintext, and other text-mode content in templates",
+      "source": "tests18.dat:16"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-112",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:112"
+    },
+    {
+      "axis": "template-fragment-context",
+      "id": "template-dat-109",
+      "reason": "fragment parsing with template as the context element",
+      "source": "template.dat:109"
+    }
+  ],
+  "counts_by_axis": {
+    "eof-template": 18,
+    "foreign-content-template": 2,
+    "frameset-template": 5,
+    "head-body-template": 10,
+    "nested-template": 22,
+    "rawtext-template": 4,
+    "select-template": 6,
+    "table-template": 43,
+    "template-fragment-context": 1,
+    "template-shell": 4
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress template insertion modes, nested template stacks, EOF recovery, and template interactions with tables, selects, framesets, document shells, text modes, foreign content, and fragment contexts.",
+  "format": "whatwg-html-template-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}
