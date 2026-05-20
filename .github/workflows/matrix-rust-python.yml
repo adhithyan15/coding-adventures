@@ -2,9 +2,10 @@
 # matrix-rust-python — Build + smoke-import the Python C extension
 # ================================================================
 #
-# MX09 Phase 3.  Builds the `matrix_rust_python` wheel via
-# `maturin build --release`, installs it, and asserts the four
-# expected exports are importable from real Python:
+# MX09 Phase 3.  Builds the `matrix_rust_python` cdylib via
+# `cargo build --release`, copies it to a Python-importable name,
+# and asserts the four expected exports are importable from real
+# Python:
 #
 #   - graph_round_trip_json   (Phase 1 module-level fn)
 #   - run_graph_on_cpu        (Phase 2 module-level fn)
@@ -12,19 +13,41 @@
 #   - Runtime                 (Phase 2b class)
 #
 # This is a build-only smoke — no pytest suite runs here.
-# End-to-end pytest exercises land in MX09 Phase 4 once the
-# Python wrapper package at code/packages/python/matrix-rust-python/
-# exists to drive them.
+# End-to-end pytest exercises land in MX09 Phase 4 via the wrapper
+# package at code/packages/python/matrix-rust-python/.
 #
 # Mirrors the matrix-rust-napi.yml shape (path filter, OS matrix,
-# cargo cache, build-only smoke) — Python toolchain replaces Node.
+# cargo cache, build-only smoke) — the Python toolchain replaces
+# Node, and the cdylib's import-via-import shape replaces the
+# `require()` pattern.
+#
+# ## Why cargo + cp instead of `maturin build` for v0?
+#
+# `maturin build` for a non-pyo3 cdylib defaults to
+# `bindings = "cffi"` which generates a Python cffi wrapper instead
+# of packaging the cdylib as a native CPython extension that
+# `import` loads via dlopen + `PyInit_<modname>`.  Our extension
+# uses python-bridge (a workspace zero-dep wrapper) not pyo3 or
+# cffi, so maturin's auto-detection lands on the wrong mode.
+#
+# The pyproject.toml is still present (for the eventual Phase 3b
+# wheel build once we wire maturin up correctly, e.g. via a
+# bindings-detection shim).  For v0, the simpler "cargo build then
+# copy the artifact" pattern proves the same property — the cdylib
+# links cleanly and CPython can load it — without depending on
+# maturin's auto-detection behaviour.
+#
+# The Phase 3b follow-up will configure maturin properly (likely
+# via `[tool.maturin] python-source` + a shim that tells maturin
+# to skip cffi codegen and just pack the cdylib).  Until then, the
+# smoke import here is the canonical Phase 3 acceptance gate.
 #
 # Target platforms (per MX09 §"Distribution model"):
 #   * darwin-arm64   (macos-latest = M-series runners since 2024)
 #   * linux-x64-gnu  (ubuntu-latest)
 #
 # Windows is intentionally out of scope for v0 — adding it is a
-# Phase 3 follow-up once macOS + Linux smoke is stable.  Matches
+# Phase 3b follow-up once macOS + Linux smoke is stable.  Matches
 # matrix-rust-napi's v0 platform list.
 
 name: matrix-rust-python (build smoke)
@@ -71,9 +94,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest    # linux-x64-gnu
-          - macos-latest     # darwin-arm64 (M-series since 2024)
+        include:
+          - os: ubuntu-latest
+            cdylib_ext: so
+          - os: macos-latest
+            cdylib_ext: dylib
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -105,9 +130,6 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install maturin
-        run: pip install --upgrade pip maturin
-
       - name: Run cargo test (pure-Rust unit tests)
         # 25 tests covering JSON wire format, end-to-end
         # plan+execute, DoS-cap defence, envelope helper, class
@@ -118,41 +140,52 @@ jobs:
         working-directory: code/packages/rust
         run: cargo test -p matrix-rust-python --release
 
-      - name: Build wheel via maturin
-        # `maturin build --release` produces a per-platform wheel
-        # under `target/wheels/`.  The wheel's tagged with the
-        # current Python version + OS + arch — pip will pick the
-        # matching one at install time.
-        working-directory: code/packages/rust/matrix-rust-python
-        run: maturin build --release --out target/wheels
+      - name: Build the cdylib (release)
+        # The build.rs in this crate emits the macOS
+        # `-undefined dynamic_lookup` linker flag so the cdylib can
+        # reference Python C API symbols that get resolved at
+        # `import` time by the loading CPython interpreter.  On
+        # Linux ELF shared libraries permit undefined symbols by
+        # default — no extra config needed.
+        working-directory: code/packages/rust
+        run: cargo build -p matrix-rust-python --release
 
-      - name: Install wheel into the active Python
-        # The wheel name varies by platform/version so we glob.
-        # Maturin only produces one wheel per build invocation, so
-        # the glob is unambiguous.
-        working-directory: code/packages/rust/matrix-rust-python
+      - name: Stage the cdylib as a Python-importable .so
+        # Python's import machinery looks for `matrix_rust_python.so`
+        # (POSIX) on sys.path.  Copy the cargo-built library to that
+        # exact name in a fresh staging dir, then add that dir to
+        # PYTHONPATH for the smoke step.
+        #
+        # The cdylib's name on disk is `libmatrix_rust_python.{so,dylib}`
+        # (cargo prefixes "lib" by convention).  Strip the prefix
+        # and use a `.so` suffix on both platforms — CPython on
+        # macOS accepts `.so` as well as `.dylib` for extension
+        # modules.
+        working-directory: code/packages/rust
         run: |
           set -eu
-          wheel=$(ls target/wheels/matrix_rust_python-*.whl | head -n1)
-          if [ -z "$wheel" ]; then
-            echo "ERROR: maturin produced no wheel" >&2
-            ls -la target/wheels/ || true
+          mkdir -p target/python-import
+          src="target/release/libmatrix_rust_python.${{ matrix.cdylib_ext }}"
+          dst="target/python-import/matrix_rust_python.so"
+          if [ ! -f "$src" ]; then
+            echo "ERROR: cargo built no cdylib at $src" >&2
+            ls -la target/release/ | head -30 >&2
             exit 1
           fi
-          echo "Installing: $wheel"
-          # --no-deps: matrix-rust-python has no Python deps (pure C
-          # extension); blocking pip from going to the public index
-          # makes the no-network intent explicit and future-proofs
-          # against silent dep creep that could enable a typosquat.
-          pip install --no-deps "$wheel"
+          cp "$src" "$dst"
+          echo "Staged $src -> $dst"
+          ls -lah "$dst"
 
       - name: Smoke-import the four expected exports
-        # The headline Phase 3 acceptance test: `import` works,
-        # and the four names the MX09 spec promised are present.
-        # Any failure here means the extension was built but
-        # CPython can't load it (libpython link mismatch, missing
-        # PyInit symbol, ABI tag mismatch, etc.).
+        # The headline Phase 3 acceptance test: `import` works, and
+        # the four names the MX09 spec promised are present.  Any
+        # failure here means the extension was built but CPython
+        # can't load it (libpython link mismatch, missing PyInit
+        # symbol, ABI tag mismatch, etc.).
+        working-directory: code/packages/rust
         run: |
+          set -eu
+          export PYTHONPATH="$PWD/target/python-import:${PYTHONPATH:-}"
           python - <<'PY'
           import matrix_rust_python as m
 
@@ -176,18 +209,15 @@ jobs:
           PY
 
       - name: Report artifact info
-        # Quick visibility — the wheel's size is a stable smoke for
+        # Quick visibility — the cdylib's size is a stable smoke for
         # "did the linker pull everything in?"  Anything under
         # ~500 KiB is suspicious for a release build of this crate
         # stack (matrix-ir + matrix-runtime + matrix-cpu + ...).
         if: success()
-        working-directory: code/packages/rust/matrix-rust-python
+        working-directory: code/packages/rust
         run: |
-          echo "matrix-rust-python wheel built on ${{ matrix.os }}:"
-          ls -lah target/wheels/
+          echo "matrix-rust-python cdylib built on ${{ matrix.os }}:"
+          ls -lah target/release/libmatrix_rust_python.*
           if command -v file >/dev/null 2>&1; then
-            for whl in target/wheels/*.whl; do
-              echo "--- $whl ---"
-              file "$whl"
-            done
+            file target/release/libmatrix_rust_python.${{ matrix.cdylib_ext }}
           fi
