@@ -1,0 +1,1362 @@
+{
+  "case_count": 192,
+  "cases": [
+    {
+      "axis": "fragment-basic-context",
+      "context": "div",
+      "id": "tests4-dat-1",
+      "reason": "fragment parser context with ordinary phrasing and element boundaries",
+      "source": "tests4.dat:1"
+    },
+    {
+      "axis": "fragment-text-mode-context",
+      "context": "textarea",
+      "id": "tests4-dat-2",
+      "reason": "fragment parser context for RCDATA, RAWTEXT, PLAINTEXT, and legacy text modes",
+      "source": "tests4.dat:2"
+    },
+    {
+      "axis": "fragment-text-mode-context",
+      "context": "textarea",
+      "id": "tests4-dat-3",
+      "reason": "fragment parser context for RCDATA, RAWTEXT, PLAINTEXT, and legacy text modes",
+      "source": "tests4.dat:3"
+    },
+    {
+      "axis": "fragment-text-mode-context",
+      "context": "style",
+      "id": "tests4-dat-4",
+      "reason": "fragment parser context for RCDATA, RAWTEXT, PLAINTEXT, and legacy text modes",
+      "source": "tests4.dat:4"
+    },
+    {
+      "axis": "fragment-text-mode-context",
+      "context": "plaintext",
+      "id": "tests4-dat-5",
+      "reason": "fragment parser context for RCDATA, RAWTEXT, PLAINTEXT, and legacy text modes",
+      "source": "tests4.dat:5"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "html",
+      "id": "tests4-dat-6",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests4.dat:6"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "head",
+      "id": "tests4-dat-7",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests4.dat:7"
+    },
+    {
+      "axis": "fragment-text-mode-context",
+      "context": "title",
+      "id": "tests4-dat-8",
+      "reason": "fragment parser context for RCDATA, RAWTEXT, PLAINTEXT, and legacy text modes",
+      "source": "tests4.dat:8"
+    },
+    {
+      "axis": "fragment-block-context",
+      "context": "div",
+      "id": "tests6-dat-7",
+      "reason": "fragment parser context around block and implied-end-tag boundaries",
+      "source": "tests6.dat:7"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests6-dat-18",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests6.dat:18"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests6-dat-21",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests6.dat:21"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests6-dat-25",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests6.dat:25"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "colgroup",
+      "id": "tests6-dat-27",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests6.dat:27"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "frameset",
+      "id": "tests6-dat-30",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests6.dat:30"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "body",
+      "id": "tests6-dat-32",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests6.dat:32"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "tests6-dat-34",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests6.dat:34"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "tests6-dat-35",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests6.dat:35"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "tests6-dat-37",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests6.dat:37"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "tests6-dat-39",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests6.dat:39"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "table",
+      "id": "tests6-dat-44",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests6.dat:44"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "html",
+      "id": "tests6-dat-45",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests6.dat:45"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "html",
+      "id": "tests7-dat-28",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests7.dat:28"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "body",
+      "id": "tests-innerhtml-1-dat-1",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests_innerHTML_1.dat:1"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "body",
+      "id": "tests-innerhtml-1-dat-2",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests_innerHTML_1.dat:2"
+    },
+    {
+      "axis": "fragment-basic-context",
+      "context": "div",
+      "id": "tests-innerhtml-1-dat-3",
+      "reason": "fragment parser context with ordinary phrasing and element boundaries",
+      "source": "tests_innerHTML_1.dat:3"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "html",
+      "id": "tests-innerhtml-1-dat-4",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests_innerHTML_1.dat:4"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "body",
+      "id": "tests-innerhtml-1-dat-5",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests_innerHTML_1.dat:5"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "body",
+      "id": "tests-innerhtml-1-dat-6",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests_innerHTML_1.dat:6"
+    },
+    {
+      "axis": "fragment-basic-context",
+      "context": "div",
+      "id": "tests-innerhtml-1-dat-7",
+      "reason": "fragment parser context with ordinary phrasing and element boundaries",
+      "source": "tests_innerHTML_1.dat:7"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "html",
+      "id": "tests-innerhtml-1-dat-8",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests_innerHTML_1.dat:8"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "table",
+      "id": "tests-innerhtml-1-dat-9",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:9"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "table",
+      "id": "tests-innerhtml-1-dat-10",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:10"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "table",
+      "id": "tests-innerhtml-1-dat-11",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:11"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "table",
+      "id": "tests-innerhtml-1-dat-12",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:12"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "table",
+      "id": "tests-innerhtml-1-dat-13",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:13"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "table",
+      "id": "tests-innerhtml-1-dat-14",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:14"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "table",
+      "id": "tests-innerhtml-1-dat-15",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:15"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "table",
+      "id": "tests-innerhtml-1-dat-16",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:16"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "table",
+      "id": "tests-innerhtml-1-dat-17",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:17"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "table",
+      "id": "tests-innerhtml-1-dat-18",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:18"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "table",
+      "id": "tests-innerhtml-1-dat-19",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:19"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-20",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:20"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-21",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:21"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-22",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:22"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-23",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:23"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-24",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:24"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-25",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:25"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-26",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:26"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-27",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:27"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-28",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:28"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-29",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:29"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-30",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:30"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-31",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:31"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-32",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:32"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-33",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:33"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-34",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:34"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "caption",
+      "id": "tests-innerhtml-1-dat-35",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:35"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "colgroup",
+      "id": "tests-innerhtml-1-dat-36",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:36"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "colgroup",
+      "id": "tests-innerhtml-1-dat-37",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:37"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "tests-innerhtml-1-dat-38",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:38"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "tests-innerhtml-1-dat-39",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:39"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "tests-innerhtml-1-dat-40",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:40"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "tests-innerhtml-1-dat-41",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:41"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "tests-innerhtml-1-dat-42",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:42"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "tests-innerhtml-1-dat-43",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:43"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "tests-innerhtml-1-dat-44",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:44"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "tests-innerhtml-1-dat-45",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:45"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "tests-innerhtml-1-dat-46",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:46"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "tests-innerhtml-1-dat-48",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:48"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "tests-innerhtml-1-dat-50",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:50"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "tests-innerhtml-1-dat-51",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:51"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "tests-innerhtml-1-dat-52",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:52"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "tests-innerhtml-1-dat-53",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:53"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "tests-innerhtml-1-dat-54",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:54"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "tests-innerhtml-1-dat-55",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:55"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "tests-innerhtml-1-dat-56",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:56"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "tests-innerhtml-1-dat-57",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:57"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "tests-innerhtml-1-dat-58",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:58"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-59",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:59"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-60",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:60"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-61",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:61"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-62",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:62"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-63",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:63"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-64",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:64"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-65",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:65"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-66",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:66"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-67",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:67"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-68",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:68"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-69",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:69"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-70",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:70"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-71",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:71"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-72",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:72"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-73",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:73"
+    },
+    {
+      "axis": "fragment-select-context",
+      "context": "select",
+      "id": "tests-innerhtml-1-dat-75",
+      "reason": "fragment parser context in select, option, and optgroup insertion modes",
+      "source": "tests_innerHTML_1.dat:75"
+    },
+    {
+      "axis": "fragment-select-context",
+      "context": "select",
+      "id": "tests-innerhtml-1-dat-77",
+      "reason": "fragment parser context in select, option, and optgroup insertion modes",
+      "source": "tests_innerHTML_1.dat:77"
+    },
+    {
+      "axis": "fragment-select-context",
+      "context": "select",
+      "id": "tests-innerhtml-1-dat-78",
+      "reason": "fragment parser context in select, option, and optgroup insertion modes",
+      "source": "tests_innerHTML_1.dat:78"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "html",
+      "id": "tests-innerhtml-1-dat-79",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests_innerHTML_1.dat:79"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "frameset",
+      "id": "tests-innerhtml-1-dat-80",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests_innerHTML_1.dat:80"
+    },
+    {
+      "axis": "fragment-shell-context",
+      "context": "html",
+      "id": "tests-innerhtml-1-dat-81",
+      "reason": "fragment parser context seeded from html, head, body, and frameset elements",
+      "source": "tests_innerHTML_1.dat:81"
+    },
+    {
+      "axis": "fragment-text-mode-context",
+      "context": "script",
+      "id": "tests4-dat-9",
+      "reason": "fragment parser context for RCDATA, RAWTEXT, PLAINTEXT, and legacy text modes",
+      "source": "tests4.dat:9"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "tests-innerhtml-1-dat-47",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:47"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "tests-innerhtml-1-dat-49",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:49"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "tests-innerhtml-1-dat-74",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "tests_innerHTML_1.dat:74"
+    },
+    {
+      "axis": "fragment-block-context",
+      "context": "div",
+      "id": "adoption01-dat-18",
+      "reason": "fragment parser context around block and implied-end-tag boundaries",
+      "source": "adoption01.dat:18"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg path",
+      "id": "foreign-fragment-dat-1",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:1"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg path",
+      "id": "foreign-fragment-dat-2",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:2"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg path",
+      "id": "foreign-fragment-dat-3",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:3"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg path",
+      "id": "foreign-fragment-dat-4",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:4"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg path",
+      "id": "foreign-fragment-dat-5",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:5"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg foreignObject",
+      "id": "foreign-fragment-dat-6",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:6"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg desc",
+      "id": "foreign-fragment-dat-7",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:7"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg title",
+      "id": "foreign-fragment-dat-8",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:8"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg svg",
+      "id": "foreign-fragment-dat-9",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:9"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mfenced",
+      "id": "foreign-fragment-dat-10",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:10"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math malignmark",
+      "id": "foreign-fragment-dat-11",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:11"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math math",
+      "id": "foreign-fragment-dat-12",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:12"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math annotation-xml",
+      "id": "foreign-fragment-dat-13",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:13"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mtext",
+      "id": "foreign-fragment-dat-14",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:14"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mi",
+      "id": "foreign-fragment-dat-15",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:15"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mo",
+      "id": "foreign-fragment-dat-16",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:16"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mn",
+      "id": "foreign-fragment-dat-17",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:17"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math ms",
+      "id": "foreign-fragment-dat-18",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:18"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math ms",
+      "id": "foreign-fragment-dat-19",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:19"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math ms",
+      "id": "foreign-fragment-dat-20",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:20"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math ms",
+      "id": "foreign-fragment-dat-21",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:21"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math ms",
+      "id": "foreign-fragment-dat-22",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:22"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mn",
+      "id": "foreign-fragment-dat-23",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:23"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mn",
+      "id": "foreign-fragment-dat-24",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:24"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mn",
+      "id": "foreign-fragment-dat-25",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:25"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mn",
+      "id": "foreign-fragment-dat-26",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:26"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mo",
+      "id": "foreign-fragment-dat-27",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:27"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mo",
+      "id": "foreign-fragment-dat-28",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:28"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mo",
+      "id": "foreign-fragment-dat-29",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:29"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mo",
+      "id": "foreign-fragment-dat-30",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:30"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mi",
+      "id": "foreign-fragment-dat-31",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:31"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mi",
+      "id": "foreign-fragment-dat-32",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:32"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mi",
+      "id": "foreign-fragment-dat-33",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:33"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mi",
+      "id": "foreign-fragment-dat-34",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:34"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mtext",
+      "id": "foreign-fragment-dat-35",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:35"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mtext",
+      "id": "foreign-fragment-dat-36",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:36"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mtext",
+      "id": "foreign-fragment-dat-37",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:37"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math mtext",
+      "id": "foreign-fragment-dat-38",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:38"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math annotation-xml",
+      "id": "foreign-fragment-dat-39",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:39"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math annotation-xml",
+      "id": "foreign-fragment-dat-40",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:40"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math math",
+      "id": "foreign-fragment-dat-41",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:41"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "math math",
+      "id": "foreign-fragment-dat-42",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:42"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg foreignObject",
+      "id": "foreign-fragment-dat-43",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:43"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg foreignObject",
+      "id": "foreign-fragment-dat-44",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:44"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg title",
+      "id": "foreign-fragment-dat-45",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:45"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg title",
+      "id": "foreign-fragment-dat-46",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:46"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg desc",
+      "id": "foreign-fragment-dat-47",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:47"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg svg",
+      "id": "foreign-fragment-dat-48",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:48"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg svg",
+      "id": "foreign-fragment-dat-49",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:49"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg desc",
+      "id": "foreign-fragment-dat-50",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:50"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg desc",
+      "id": "foreign-fragment-dat-51",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:51"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg desc",
+      "id": "foreign-fragment-dat-52",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:52"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg desc",
+      "id": "foreign-fragment-dat-53",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:53"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg desc",
+      "id": "foreign-fragment-dat-54",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:54"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg desc",
+      "id": "foreign-fragment-dat-55",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:55"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg desc",
+      "id": "foreign-fragment-dat-56",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:56"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg desc",
+      "id": "foreign-fragment-dat-57",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:57"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "div",
+      "id": "foreign-fragment-dat-58",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:58"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg svg",
+      "id": "foreign-fragment-dat-59",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:59"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "div",
+      "id": "foreign-fragment-dat-60",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:60"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "div",
+      "id": "foreign-fragment-dat-61",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:61"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg svg",
+      "id": "foreign-fragment-dat-62",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:62"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg svg",
+      "id": "foreign-fragment-dat-63",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:63"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg svg",
+      "id": "foreign-fragment-dat-64",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:64"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg svg",
+      "id": "foreign-fragment-dat-65",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:65"
+    },
+    {
+      "axis": "fragment-foreign-context",
+      "context": "svg svg",
+      "id": "foreign-fragment-dat-66",
+      "reason": "fragment parser context in SVG and MathML integration modes",
+      "source": "foreign-fragment.dat:66"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "math-dat-1",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "math.dat:1"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "math-dat-2",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "math.dat:2"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "thead",
+      "id": "math-dat-3",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "math.dat:3"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tfoot",
+      "id": "math-dat-4",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "math.dat:4"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "math-dat-5",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "math.dat:5"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "math-dat-6",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "math.dat:6"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "math-dat-7",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "math.dat:7"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "math-dat-8",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "math.dat:8"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "td",
+      "id": "svg-dat-1",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "svg.dat:1"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tr",
+      "id": "svg-dat-2",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "svg.dat:2"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "thead",
+      "id": "svg-dat-3",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "svg.dat:3"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tfoot",
+      "id": "svg-dat-4",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "svg.dat:4"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "svg-dat-5",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "svg.dat:5"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "svg-dat-6",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "svg.dat:6"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "svg-dat-7",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "svg.dat:7"
+    },
+    {
+      "axis": "fragment-table-context",
+      "context": "tbody",
+      "id": "svg-dat-8",
+      "reason": "fragment parser context inside table, row, column, caption, and cell modes",
+      "source": "svg.dat:8"
+    },
+    {
+      "axis": "fragment-block-context",
+      "context": "div",
+      "id": "webkit02-dat-12",
+      "reason": "fragment parser context around block and implied-end-tag boundaries",
+      "source": "webkit02.dat:12"
+    },
+    {
+      "axis": "fragment-block-context",
+      "context": "div",
+      "id": "webkit02-dat-17",
+      "reason": "fragment parser context around block and implied-end-tag boundaries",
+      "source": "webkit02.dat:17"
+    },
+    {
+      "axis": "fragment-block-context",
+      "context": "div",
+      "id": "webkit02-dat-18",
+      "reason": "fragment parser context around block and implied-end-tag boundaries",
+      "source": "webkit02.dat:18"
+    },
+    {
+      "axis": "fragment-select-context",
+      "context": "select",
+      "id": "webkit02-dat-19",
+      "reason": "fragment parser context in select, option, and optgroup insertion modes",
+      "source": "webkit02.dat:19"
+    },
+    {
+      "axis": "fragment-template-context",
+      "context": "template",
+      "id": "template-dat-109",
+      "reason": "fragment parser context seeded from template insertion modes",
+      "source": "template.dat:109"
+    },
+    {
+      "axis": "fragment-select-context",
+      "context": "select",
+      "id": "tests-innerhtml-1-dat-76",
+      "reason": "fragment parser context in select, option, and optgroup insertion modes",
+      "source": "tests_innerHTML_1.dat:76"
+    }
+  ],
+  "counts_by_axis": {
+    "fragment-basic-context": 3,
+    "fragment-block-context": 5,
+    "fragment-foreign-context": 66,
+    "fragment-select-context": 5,
+    "fragment-shell-context": 15,
+    "fragment-table-context": 91,
+    "fragment-template-context": 1,
+    "fragment-text-mode-context": 6
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress fragment parsing contexts across table, shell, block, foreign-content, text-mode, select/list, template, and ordinary phrasing modes.",
+  "format": "whatwg-html-fragment-context-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

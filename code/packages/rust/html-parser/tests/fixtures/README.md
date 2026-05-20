@@ -197,6 +197,16 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_block_boun
   --check
 ```
 
+`whatwg-fragment-context-audit.json` is a generated index over
+tree-construction cases that stress table, shell, block, foreign-content,
+text-mode, select/list, template, and ordinary fragment parsing contexts:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_fragment_context_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_fragment_context_audit_fixture.py \
+  --check
+```
+
 `whatwg-document-shell-audit.json` is a generated index over tree-construction
 cases that stress doctypes, comments, `html`/`head`/`body` synthesis, frameset
 boundaries, and shell fragment contexts:
