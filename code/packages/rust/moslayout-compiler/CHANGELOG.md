@@ -2,6 +2,33 @@
 
 ## [Unreleased]
 
+### Added — U29-G3: `expr` non-terminal in prop values
+
+- Ten new tokens in `moslayout.tokens` for the expression grammar:
+  `==`, `!=`, `<`, `<=`, `>`, `>=`, `&&`, `||`, `!`, `.`.
+  Maximal-munch ordering lists each two-character operator before any
+  single-character prefix it shares (e.g. `<=` before `<`).
+- Seven new productions in `moslayout.grammar`:
+  `expr`, `or_expr`, `and_expr`, `eq_expr`, `rel_expr`, `unary`,
+  `postfix`, `primary`. Operator precedence (low→high):
+  `||`, `&&`, `== !=`, `< <= > >=`, prefix `!`, postfix `.`/`[]`.
+- `prop_value` is now an alias for `expr`. `primary` still includes the
+  four legacy forms (slot ref, NAME, NUMBER, STRING) so the chain-rule
+  descent collapses cleanly for the no-operator case.
+- New `LayoutPropValue::Expr(String)` variant carrying the reconstructed
+  source substring (tokens joined with spaces). Backends parse it
+  themselves until a future PR lowers it to a typed expression AST.
+- `validate_for_node` and `validate_if_node` now accept `SlotRef` OR
+  `Expr` for their `each:` / `when:` props. Error messages updated to
+  document both shapes.
+- Twelve new tests cover comparison, logical-AND, NOT, field access,
+  index access, parenthesised, and nested expressions plus regression
+  guards that `slot: x`, bare NAME, NUMBER, and STRING values still
+  come back in their legacy variants — never as `Expr`.
+- Per UI29 §3.3, arithmetic (`+`/`-`/`*`/`/`), string concatenation,
+  ternary, and function/method calls are deliberately excluded.
+- Grammar version stays at `1`.
+
 ### Added — STRING token + string-literal prop values
 
 - New `STRING` token in `moslayout.tokens`: a double-quoted string

@@ -76,3 +76,34 @@ LBRACKET = "["
 RBRACKET = "]"
 COLON    = ":"
 COMMA    = ","
+
+# ============================================================================
+# Expression operators (UI29 §3.3 — U29-G3)
+# ============================================================================
+# These tokens carry the expression non-terminal used by For `each:`, If
+# `when:`, and any future expression-valued prop. The grammar deliberately
+# stops at comparison + logical + member/index access — no arithmetic, no
+# string concatenation, no ternary, no function calls.
+#
+# Two-character operators (EQ, NEQ, LE, GE, AND, OR) must be listed BEFORE
+# any single-character prefix they share so the maximal-munch lexer prefers
+# the longer match. Specifically:
+#
+#   • EQ  (==) before any future `=` token
+#   • NEQ (!=) before NOT (!)
+#   • LE  (<=) before LT  (<)
+#   • GE  (>=) before GT  (>)
+#
+# AND (&&) and OR (||) have no single-character variants in the language so
+# their relative order doesn't matter.
+
+EQ       = "=="
+NEQ      = "!="
+LE       = "<="
+GE       = ">="
+LT       = "<"
+GT       = ">"
+AND      = "&&"
+OR       = "||"
+NOT      = "!"
+DOT      = "."

@@ -405,6 +405,12 @@ fn swift_text_expression(node: &LayoutNode) -> String {
                     // Emit refs are not valid for Text content; fall through
                     // to the empty placeholder.
                 }
+                LayoutPropValue::Expr(_) => {
+                    // U29-G3 expression-valued content. SwiftUI emission for
+                    // bound expressions requires UI29 §3.4 scope analysis;
+                    // for now fall through to the empty placeholder rather
+                    // than emit a Swift compile error.
+                }
             }
         }
     }

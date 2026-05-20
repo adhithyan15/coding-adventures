@@ -124,7 +124,45 @@ prop_list = prop { COMMA prop } ;
 prop = NAME    COLON prop_value
      | KEYWORD COLON NAME ;
 
-prop_value = KEYWORD COLON NAME
-           | NAME
-           | NUMBER
-           | STRING ;
+# ============================================================================
+# Expressions (UI29 §3.3 — U29-G3)
+# ============================================================================
+# `prop_value` is an expression. Expressions cover:
+#   • The four legacy prop-value forms (slot ref, NAME, NUMBER, STRING)
+#     because every one of them is a valid `primary`.
+#   • Comparison and logical combinations for For `each:` and If `when:`
+#     (e.g. `r == editRow`, `editing && !readonly`, `cols.visible`).
+#   • Field access (`row.cells`) and index access (`row[c]`).
+#
+# Deliberately excluded by UI29 §3.3 (do not add without a spec amendment):
+#   • Arithmetic (`+ - * /`)
+#   • String concatenation
+#   • Ternary (`? :`)
+#   • Function / method calls
+#
+# Operator precedence (low → high):
+#   or_expr   ||
+#   and_expr  &&
+#   eq_expr   == !=
+#   rel_expr  <  <=  >  >=
+#   unary     !
+#   postfix   . []
+#   primary   slot ref | NAME | NUMBER | STRING | ( expr )
+#
+# The grammar is LL(1) because each level's first-token set is disjoint
+# from the operator token that starts the next-higher level.
+
+prop_value = expr ;
+
+expr     = or_expr ;
+or_expr  = and_expr { OR  and_expr } ;
+and_expr = eq_expr  { AND eq_expr  } ;
+eq_expr  = rel_expr [ ( EQ | NEQ ) rel_expr ] ;
+rel_expr = unary    [ ( LT | LE | GT | GE ) unary ] ;
+unary    = NOT unary | postfix ;
+postfix  = primary { DOT NAME | LBRACKET expr RBRACKET } ;
+primary  = KEYWORD COLON NAME
+         | NAME
+         | NUMBER
+         | STRING
+         | LPAREN expr RPAREN ;

@@ -25,8 +25,7 @@ pub fn token_grammar() -> TokenGrammar {
         definitions: vec![
             TokenDefinition {
                 name: r#"STRING"#.to_string(),
-                pattern: r#""([^"\\
-]|\\.)*""#.to_string(),
+                pattern: r#""([^"\\\n]|\\.)*""#.to_string(),
                 is_regex: true,
                 line_number: 36,
                 alias: None,
@@ -42,63 +41,133 @@ pub fn token_grammar() -> TokenGrammar {
                 name: r#"NAME"#.to_string(),
                 pattern: r#"[a-zA-Z][a-zA-Z0-9]*(-[a-zA-Z][a-zA-Z0-9]*)*"#.to_string(),
                 is_regex: true,
-                line_number: 55,
+                line_number: 65,
                 alias: None,
             },
             TokenDefinition {
                 name: r#"LBRACE"#.to_string(),
                 pattern: r#"{"#.to_string(),
                 is_regex: false,
-                line_number: 61,
+                line_number: 71,
                 alias: None,
             },
             TokenDefinition {
                 name: r#"RBRACE"#.to_string(),
                 pattern: r#"}"#.to_string(),
                 is_regex: false,
-                line_number: 62,
+                line_number: 72,
                 alias: None,
             },
             TokenDefinition {
                 name: r#"LPAREN"#.to_string(),
                 pattern: r#"("#.to_string(),
                 is_regex: false,
-                line_number: 63,
+                line_number: 73,
                 alias: None,
             },
             TokenDefinition {
                 name: r#"RPAREN"#.to_string(),
                 pattern: r#")"#.to_string(),
                 is_regex: false,
-                line_number: 64,
+                line_number: 74,
                 alias: None,
             },
             TokenDefinition {
                 name: r#"LBRACKET"#.to_string(),
                 pattern: r#"["#.to_string(),
                 is_regex: false,
-                line_number: 65,
+                line_number: 75,
                 alias: None,
             },
             TokenDefinition {
                 name: r#"RBRACKET"#.to_string(),
                 pattern: r#"]"#.to_string(),
                 is_regex: false,
-                line_number: 66,
+                line_number: 76,
                 alias: None,
             },
             TokenDefinition {
                 name: r#"COLON"#.to_string(),
                 pattern: r#":"#.to_string(),
                 is_regex: false,
-                line_number: 67,
+                line_number: 77,
                 alias: None,
             },
             TokenDefinition {
                 name: r#"COMMA"#.to_string(),
                 pattern: r#","#.to_string(),
                 is_regex: false,
-                line_number: 68,
+                line_number: 78,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"EQ"#.to_string(),
+                pattern: r#"=="#.to_string(),
+                is_regex: false,
+                line_number: 100,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"NEQ"#.to_string(),
+                pattern: r#"!="#.to_string(),
+                is_regex: false,
+                line_number: 101,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"LE"#.to_string(),
+                pattern: r#"<="#.to_string(),
+                is_regex: false,
+                line_number: 102,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"GE"#.to_string(),
+                pattern: r#">="#.to_string(),
+                is_regex: false,
+                line_number: 103,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"LT"#.to_string(),
+                pattern: r#"<"#.to_string(),
+                is_regex: false,
+                line_number: 104,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"GT"#.to_string(),
+                pattern: r#">"#.to_string(),
+                is_regex: false,
+                line_number: 105,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"AND"#.to_string(),
+                pattern: r#"&&"#.to_string(),
+                is_regex: false,
+                line_number: 106,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"OR"#.to_string(),
+                pattern: r#"||"#.to_string(),
+                is_regex: false,
+                line_number: 107,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"NOT"#.to_string(),
+                pattern: r#"!"#.to_string(),
+                is_regex: false,
+                line_number: 108,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"DOT"#.to_string(),
+                pattern: r#"."#.to_string(),
+                is_regex: false,
+                line_number: 109,
                 alias: None,
             },
         ],
@@ -107,8 +176,7 @@ pub fn token_grammar() -> TokenGrammar {
         skip_definitions: vec![
             TokenDefinition {
                 name: r#"LINE_COMMENT"#.to_string(),
-                pattern: r#"\/\/[^
-]*"#.to_string(),
+                pattern: r#"\/\/[^\n]*"#.to_string(),
                 is_regex: true,
                 line_number: 20,
                 alias: None,
@@ -122,8 +190,7 @@ pub fn token_grammar() -> TokenGrammar {
             },
             TokenDefinition {
                 name: r#"WHITESPACE"#.to_string(),
-                pattern: r#"[ 	
-]+"#.to_string(),
+                pattern: r#"[ \t\r\n]+"#.to_string(),
                 is_regex: true,
                 line_number: 22,
                 alias: None,
@@ -201,7 +268,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::RuleReference { name: r#"prop"#.to_string() },
                     ] }) },
             ] },
-            line_number: 106,
+            line_number: 110,
         },
         GrammarRule {
             name: r#"prop"#.to_string(),
@@ -217,10 +284,101 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                 ] },
             ] },
-            line_number: 120,
+            line_number: 124,
         },
         GrammarRule {
             name: r#"prop_value"#.to_string(),
+            body: GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+            line_number: 155,
+        },
+        GrammarRule {
+            name: r#"expr"#.to_string(),
+            body: GrammarElement::RuleReference { name: r#"or_expr"#.to_string() },
+            line_number: 157,
+        },
+        GrammarRule {
+            name: r#"or_expr"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::RuleReference { name: r#"and_expr"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::TokenReference { name: r#"OR"#.to_string() },
+                        GrammarElement::RuleReference { name: r#"and_expr"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 158,
+        },
+        GrammarRule {
+            name: r#"and_expr"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::RuleReference { name: r#"eq_expr"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::TokenReference { name: r#"AND"#.to_string() },
+                        GrammarElement::RuleReference { name: r#"eq_expr"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 159,
+        },
+        GrammarRule {
+            name: r#"eq_expr"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::RuleReference { name: r#"rel_expr"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
+                                GrammarElement::TokenReference { name: r#"EQ"#.to_string() },
+                                GrammarElement::TokenReference { name: r#"NEQ"#.to_string() },
+                            ] }) },
+                        GrammarElement::RuleReference { name: r#"rel_expr"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 160,
+        },
+        GrammarRule {
+            name: r#"rel_expr"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::RuleReference { name: r#"unary"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
+                                GrammarElement::TokenReference { name: r#"LT"#.to_string() },
+                                GrammarElement::TokenReference { name: r#"LE"#.to_string() },
+                                GrammarElement::TokenReference { name: r#"GT"#.to_string() },
+                                GrammarElement::TokenReference { name: r#"GE"#.to_string() },
+                            ] }) },
+                        GrammarElement::RuleReference { name: r#"unary"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 161,
+        },
+        GrammarRule {
+            name: r#"unary"#.to_string(),
+            body: GrammarElement::Alternation { choices: vec![
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::TokenReference { name: r#"NOT"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"unary"#.to_string() },
+                ] },
+                GrammarElement::RuleReference { name: r#"postfix"#.to_string() },
+            ] },
+            line_number: 162,
+        },
+        GrammarRule {
+            name: r#"postfix"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::RuleReference { name: r#"primary"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Alternation { choices: vec![
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::TokenReference { name: r#"DOT"#.to_string() },
+                            GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::TokenReference { name: r#"LBRACKET"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                            GrammarElement::TokenReference { name: r#"RBRACKET"#.to_string() },
+                        ] },
+                    ] }) },
+            ] },
+            line_number: 163,
+        },
+        GrammarRule {
+            name: r#"primary"#.to_string(),
             body: GrammarElement::Alternation { choices: vec![
                 GrammarElement::Sequence { elements: vec![
                     GrammarElement::TokenReference { name: r#"KEYWORD"#.to_string() },
@@ -230,8 +388,13 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                 GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                    GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
+                ] },
             ] },
-            line_number: 127,
+            line_number: 164,
         },
     ],
         version: 1,

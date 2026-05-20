@@ -1464,6 +1464,14 @@ where
         }),
         LayoutPropValue::String(s) => Some(format!("\"{}\"", escape_for_jsx_double_quoted(s))),
         LayoutPropValue::EmitRef(_) => None,
+        // U29-G3: expression-valued props (`each: cols.visible`, `when: r == editRow`).
+        // The React emitter doesn't yet know how to lower these into a JSX
+        // expression — that requires the bound-name scope analysis from
+        // UI29 §3.4. For now we surface the raw source text so the test
+        // suite (and downstream code that already special-cases For/If
+        // outside this function) can see the value, and so the match stays
+        // exhaustive without silently dropping the expression.
+        LayoutPropValue::Expr(text) => Some(format!("/* expr: {text} */")),
     }
 }
 
