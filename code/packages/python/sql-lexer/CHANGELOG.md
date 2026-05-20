@@ -2,6 +2,18 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.22.0] - 2026-05-19
+
+### Added
+
+- **``NULLS`` keyword** for the SQLite 3.30+ ``ORDER BY ... NULLS
+  FIRST | NULLS LAST`` clause (``sql.tokens``, ``_grammar.py``).
+
+  ``FIRST`` and ``LAST`` are intentionally NOT added as keywords —
+  they would conflict with common column names like ``first_name``
+  and ``last``.  The grammar uses ``"NULLS" NAME`` and the adapter
+  validates that the NAME is FIRST or LAST.
+
 ## [0.21.0] - 2026-05-19
 
 ### Added

@@ -630,10 +630,41 @@ def _order_clause(
 
 
 def _order_item(node: ASTNode, state: _PlaceholderCounter) -> SortKey:
-    # order_item = expr [ "ASC" | "DESC" ]
+    # order_item = expr [ "ASC" | "DESC" ] [ "NULLS" NAME ]
+    #
+    # Direction defaults to ASC when no keyword is given.  NULL placement
+    # defaults to ``None`` on SortKey, meaning "use SQLite default" (NULLs
+    # first for ASC, NULLs last for DESC).  Explicit NULLS FIRST sets
+    # ``nulls_first=True``; NULLS LAST sets ``nulls_first=False``.
+    #
+    # The NAME after NULLS must be either ``FIRST`` or ``LAST``
+    # (case-insensitive).  We accept any NAME at the grammar level — it is
+    # validated here — because making FIRST/LAST hard keywords would
+    # forbid them as column names, which is impractical (``first_name``,
+    # ``last`` are common identifiers).
     expr = _expr(_child_node(node, "expr"), state)
     descending = _has_keyword_child(node, "DESC")
-    return SortKey(expr=expr, descending=descending)
+    nulls_first: bool | None = None
+    if _has_keyword_child(node, "NULLS"):
+        # Find the NAME token that follows the NULLS keyword.
+        seen_nulls = False
+        for c in node.children:
+            if _is_keyword(c, "NULLS"):
+                seen_nulls = True
+                continue
+            if seen_nulls and isinstance(c, Token) and _token_type(c) == "NAME":
+                placement = c.value.upper()
+                if placement == "FIRST":
+                    nulls_first = True
+                elif placement == "LAST":
+                    nulls_first = False
+                else:
+                    raise ProgrammingError(
+                        f"expected FIRST or LAST after NULLS in ORDER BY, "
+                        f"got {c.value!r}"
+                    )
+                break
+    return SortKey(expr=expr, descending=descending, nulls_first=nulls_first)
 
 
 def _limit_clause(node: ASTNode | None) -> Limit | None:

@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.58.0] - 2026-05-19
+
+### Added
+
+- **``ORDER BY ... NULLS FIRST | NULLS LAST``** (via ``sql-lexer
+  0.22.0``, ``sql-parser 0.29.0``).  SQLite 3.30+ explicit NULL
+  placement::
+
+      SELECT * FROM t ORDER BY val NULLS LAST;
+      SELECT * FROM t ORDER BY val ASC NULLS FIRST;
+      SELECT * FROM t ORDER BY val DESC NULLS LAST;
+      SELECT * FROM t ORDER BY a NULLS LAST, b DESC NULLS FIRST;
+
+  When omitted, mini-sqlite continues to use SQLite's defaults
+  (NULLs first for ASC, NULLs last for DESC).
+
+### Changed
+
+- ``test_tier16_json_total.py::test_total_all_null`` renamed its
+  internal ``nulls`` table to ``all_nulls`` because ``NULLS`` is now
+  a keyword and can no longer appear as a bare identifier.  Use
+  quoted identifiers (``"nulls"``) for legacy schemas that need the
+  exact name, or pick a different name.  ``FIRST`` and ``LAST``
+  remain valid identifiers (not keywords).
+
+12 new oracle tests in ``test_tier3_order_by_nulls_first_last.py``
+covering each direction × placement combination, multi-key ORDER BY
+with per-key placement, positional ORDER BY + NULLS placement,
+text-column null placement, and the default-placement regression
+guards.
+
 ## [1.57.0] - 2026-05-19
 
 ### Added
