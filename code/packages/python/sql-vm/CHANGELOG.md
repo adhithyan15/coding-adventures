@@ -1,5 +1,33 @@
 # Changelog
 
+## 1.39.0 — 2026-05-20
+
+### Fixed
+
+- **``REPLACE(x, "", y)`` is now a no-op** matching SQLite.  Python's
+  ``str.replace("", X)`` inserts ``X`` between every character (so
+  ``"hello".replace("", "X")`` becomes ``"XhXeXlXlXoX"``).  SQLite
+  defines an empty needle as "match nothing" and returns the input
+  unchanged.  Fix: short-circuit on empty ``old`` before delegating to
+  Python's ``str.replace``.
+
+- **``printf("%#o", val)`` now uses C's classic ``0`` octal prefix**
+  instead of Python's modern ``0o`` prefix.  Mini-sqlite was emitting
+  ``"0o10"`` for ``printf("%#o", 8)`` where SQLite emits ``"010"``.
+
+  Subtleties also handled:
+  * When ``val == 0`` the prefix is **omitted** entirely (the digit is
+    already a zero; ``"00"`` would be wrong).  ``printf("%#o", 0) → "0"``.
+  * With a width flag, the ``0`` prefix sits *after* leading spaces:
+    ``printf("%#5o", 8) → "  010"``, not ``"   010"``.
+  * Zero-padded widths grow by the prefix length:
+    ``printf("%#05o", 8) → "000010"``.
+
+  Implementation: strip ``#`` from the Python format, let Python compute
+  the width/padding, then prepend ``0`` into the correct column.
+
+  20 unit tests in ``test_replace_empty_and_octal.py``.
+
 ## 1.38.0 — 2026-05-20
 
 ### Fixed
