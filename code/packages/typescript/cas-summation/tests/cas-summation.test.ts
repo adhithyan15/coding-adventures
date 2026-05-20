@@ -177,3 +177,80 @@ describe("summation", () => {
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 39: Telescoping sums.
+//
+// ∑_{k=lo}^{hi} [g(k+1) − g(k)] = g(hi+1) − g(lo)
+// ∑_{k=lo}^{hi} [g(k) − g(k+1)] = g(lo) − g(hi+1)
+//
+// Detection is purely structural: substitute k → k+1 in one half of the SUB
+// shape and compare to the other half after evalNode normalisation.
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 39 telescoping", () => {
+  it("standard (k+1)² − k² telescope at concrete bounds", () => {
+    const k = sym("k");
+    // ∑_{k=1}^{4} [(k+1)² − k²] = 5² − 1² = 24
+    const kPlusOneSq = app(POW, [app(ADD, [k, int(1)]), int(2)]);
+    const kSq = app(POW, [k, int(2)]);
+    const f = app(SUB, [kPlusOneSq, kSq]);
+    expect(evaluateSum(f, k, int(1), int(4), evalNode)).toEqual(int(24));
+  });
+
+  it("antisymmetric k² − (k+1)² orientation", () => {
+    const k = sym("k");
+    // ∑_{k=1}^{3} [k² − (k+1)²] = 1² − 4² = −15
+    const kSq = app(POW, [k, int(2)]);
+    const kPlusOneSq = app(POW, [app(ADD, [k, int(1)]), int(2)]);
+    const f = app(SUB, [kSq, kPlusOneSq]);
+    expect(evaluateSum(f, k, int(1), int(3), evalNode)).toEqual(int(-15));
+  });
+
+  it("linear g(k) = k telescope (f ≡ 1 counts terms)", () => {
+    const k = sym("k");
+    // ∑_{k=1}^{10} [(k+1) − k] = g(11) − g(1) = 11 − 1 = 10
+    const f = app(SUB, [app(ADD, [k, int(1)]), k]);
+    expect(evaluateSum(f, k, int(1), int(10), evalNode)).toEqual(int(10));
+  });
+
+  it("g(k) = k + 5 (constant offset is preserved through substitution)", () => {
+    const k = sym("k");
+    // ∑_{k=1}^{5} [(k + 6) − (k + 5)] = g(6) − g(1) = 11 − 6 = 5
+    const gAtKPlus1 = app(ADD, [app(ADD, [k, int(1)]), int(5)]);
+    const gAtK = app(ADD, [k, int(5)]);
+    const f = app(SUB, [gAtKPlus1, gAtK]);
+    expect(evaluateSum(f, k, int(1), int(5), evalNode)).toEqual(int(5));
+  });
+
+  it("non-telescoping k² − k falls through to numeric/Faulhaber", () => {
+    const k = sym("k");
+    // ∑_{k=1}^{3} [k² − k] = (1−1)+(4−2)+(9−3) = 0+2+6 = 8
+    const f = app(SUB, [app(POW, [k, int(2)]), k]);
+    expect(evaluateSum(f, k, int(1), int(3), evalNode)).toEqual(int(8));
+  });
+
+  it("constant-difference summand routes through step 1 (constant)", () => {
+    const k = sym("k");
+    // ∑_{k=1}^{10} [5 − 3] = ∑ 2 = 20
+    const f = app(SUB, [int(5), int(3)]);
+    expect(evaluateSum(f, k, int(1), int(10), evalNode)).toEqual(int(20));
+  });
+
+  it("symbolic upper bound: result is non-unevaluated", () => {
+    const k = sym("k");
+    const n = sym("n");
+    const f = app(SUB, [app(ADD, [k, int(1)]), k]);
+    const out = evaluateSum(f, k, int(1), n, evalNode);
+    // Should not stay as a Sum(...) node.
+    expect(out.kind === "apply" && out.head === SUM).toBe(false);
+  });
+
+  it("infinite upper bound falls through (no limit-aware telescope yet)", () => {
+    const k = sym("k");
+    const f = app(SUB, [app(ADD, [k, int(1)]), k]);
+    const out = evaluateSum(f, k, int(0), sym("%inf"), evalNode);
+    expect(out.kind).toBe("apply");
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});
