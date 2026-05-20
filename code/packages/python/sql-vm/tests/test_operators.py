@@ -95,15 +95,30 @@ class TestThreeValuedLogic:
         assert apply_binary(BinaryOpCode.OR, True, None) is True
         assert apply_binary(BinaryOpCode.OR, None, None) is None
 
-    def test_and_rejects_non_boolean(self) -> None:
-        # With no FALSE short-circuit, AND must validate the input types.
-        with pytest.raises(TypeMismatch):
-            apply_binary(BinaryOpCode.AND, 1, True)
+    def test_and_coerces_integer_to_truth(self) -> None:
+        # SQLite's AND coerces numeric values to truth: 1 is TRUE, 0 is
+        # FALSE.  The previous behaviour rejected ``apply_binary(AND, 1,
+        # True)`` with TypeMismatch — that was the bug that allowed
+        # ``SELECT 1 AND 0`` to fold to NULL in the optimizer; this test
+        # now pins the correct semantics.
+        assert apply_binary(BinaryOpCode.AND, 1, True) is True
+        assert apply_binary(BinaryOpCode.AND, 1, 0) is False
+        assert apply_binary(BinaryOpCode.AND, 1, 1) is True
+        assert apply_binary(BinaryOpCode.AND, 0, 1) is False
 
-    def test_or_rejects_non_boolean(self) -> None:
-        # With no TRUE short-circuit, OR must validate the input types.
+    def test_or_coerces_integer_to_truth(self) -> None:
+        # See ``test_and_coerces_integer_to_truth`` for the rationale.
+        assert apply_binary(BinaryOpCode.OR, 1, False) is True
+        assert apply_binary(BinaryOpCode.OR, 0, 0) is False
+        assert apply_binary(BinaryOpCode.OR, 0, 1) is True
+
+    def test_and_or_reject_strings(self) -> None:
+        # Strings have no defined SQL truth value here — they should still
+        # raise TypeMismatch.  Only numeric/boolean operands are coerced.
         with pytest.raises(TypeMismatch):
-            apply_binary(BinaryOpCode.OR, 1, False)
+            apply_binary(BinaryOpCode.AND, "abc", True)
+        with pytest.raises(TypeMismatch):
+            apply_binary(BinaryOpCode.OR, "abc", False)
 
 
 class TestConcat:

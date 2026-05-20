@@ -360,6 +360,28 @@ def _apply_binary(op: BinaryOp, lv: object, rv: object) -> object:
             raise AssertionError("unreachable")
 
 
+def _truthy(value: object) -> bool | None:
+    """SQL boolean coercion: None → None; numeric zero → False; else True.
+
+    SQLite treats any non-NULL numeric value as a boolean: ``0`` and
+    ``0.0`` are FALSE, everything else (including bools, non-zero ints
+    and floats) is TRUE.  Strings have no defined truth value for ``AND``
+    /``OR`` short-circuit folding — we return ``None`` to signal "leave
+    this as a runtime expression" so the VM can apply its own rules.
+
+    Returning ``None`` for unknown truthiness is what prevents this
+    helper from over-folding: the caller treats ``None`` as "I can't
+    tell, don't simplify on this side".
+    """
+    if value is None:
+        return None
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)):
+        return bool(value)  # 0/0.0 → False; anything else → True
+    return None
+
+
 def _simplify_and(left: Expr, right: Expr) -> Expr | None:
     """SQL three-valued AND:
 
@@ -370,17 +392,26 @@ def _simplify_and(left: Expr, right: Expr) -> Expr | None:
     FALSE     FALSE  FALSE  FALSE
     NULL      NULL   FALSE  NULL
     ========  =====  =====  =====
+
+    Integer-literal coercion: SQLite (and we) treat any non-zero numeric
+    value as TRUE and zero as FALSE.  Without this, ``SELECT 1 AND 0``
+    used to fall through the ``is True`` / ``is False`` identity tests
+    and end up folding to NULL (which is exactly the bug this docstring
+    is preventing from coming back).
     """
-    if isinstance(left, Literal) and left.value is False:
+    lt = _truthy(left.value) if isinstance(left, Literal) else None
+    rt = _truthy(right.value) if isinstance(right, Literal) else None
+    # Truth-value rules — FALSE dominates, then short-circuit on TRUE.
+    if lt is False or rt is False:
         return Literal(value=False)
-    if isinstance(right, Literal) and right.value is False:
-        return Literal(value=False)
-    if isinstance(left, Literal) and left.value is True:
+    if lt is True and rt is True:
+        return Literal(value=True)
+    if lt is True:
         return right
-    if isinstance(right, Literal) and right.value is True:
+    if rt is True:
         return left
+    # Both literals but neither TRUE/FALSE — at least one is NULL → NULL.
     if isinstance(left, Literal) and isinstance(right, Literal):
-        # Both are literals but neither is TRUE/FALSE — one is NULL.
         return Literal(value=None)
     return None
 
@@ -395,14 +426,19 @@ def _simplify_or(left: Expr, right: Expr) -> Expr | None:
     FALSE     TRUE   FALSE  NULL
     NULL      TRUE   NULL   NULL
     ========  =====  =====  =====
+
+    Same integer-literal coercion as ``_simplify_and`` — see that
+    docstring for the rationale.
     """
-    if isinstance(left, Literal) and left.value is True:
+    lt = _truthy(left.value) if isinstance(left, Literal) else None
+    rt = _truthy(right.value) if isinstance(right, Literal) else None
+    if lt is True or rt is True:
         return Literal(value=True)
-    if isinstance(right, Literal) and right.value is True:
-        return Literal(value=True)
-    if isinstance(left, Literal) and left.value is False:
+    if lt is False and rt is False:
+        return Literal(value=False)
+    if lt is False:
         return right
-    if isinstance(right, Literal) and right.value is False:
+    if rt is False:
         return left
     if isinstance(left, Literal) and isinstance(right, Literal):
         return Literal(value=None)

@@ -206,33 +206,67 @@ def _concat(left: SqlValue, right: SqlValue) -> SqlValue:
     return left + right
 
 
+def _truthiness(v: SqlValue) -> bool | None:
+    """Coerce a SqlValue to a SQL truth value.
+
+    SQLite has no separate BOOLEAN type at the storage level: integers
+    and floats double as booleans, with zero meaning FALSE and every
+    other numeric value (including negative numbers and floats) meaning
+    TRUE.  Python ``bool`` is a subtype of ``int`` and round-trips
+    naturally.  NULL coerces to ``None``.
+
+    Strings are deliberately ambiguous here — SQL would coerce ``'1'``
+    via NUMERIC affinity to TRUE, but the AND/OR operator never sees a
+    raw string in well-typed code, so we conservatively return ``None``
+    and let the caller raise a TypeMismatch.
+    """
+    if v is None:
+        return None
+    if isinstance(v, bool):
+        return v
+    if isinstance(v, (int, float)):
+        return bool(v)
+    return None
+
+
 def _and(left: SqlValue, right: SqlValue) -> SqlValue:
     # Three-valued AND: FALSE dominates; NULL only if no FALSE seen.
-    if left is False or right is False:
+    # Operands are coerced via SQLite's numeric truth rule — ``1 AND 0``
+    # must yield ``0`` (FALSE), not raise TypeMismatch and definitely
+    # not silently produce NULL (the bug that lived here until now).
+    lt = _truthiness(left)
+    rt = _truthiness(right)
+    if lt is False or rt is False:
         return False
-    if left is None or right is None:
+    if lt is None or rt is None:
+        # Either NULL or non-coercible — see _truthiness for the string case.
+        if not (isinstance(left, (bool, int, float)) or left is None) \
+                or not (isinstance(right, (bool, int, float)) or right is None):
+            raise TypeMismatch(
+                expected="boolean",
+                got=f"{sql_type_name(left)}, {sql_type_name(right)}",
+                context="BinaryOp(AND)",
+            )
         return None
-    if not (_is_bool(left) and _is_bool(right)):
-        raise TypeMismatch(
-            expected="boolean",
-            got=f"{sql_type_name(left)}, {sql_type_name(right)}",
-            context="BinaryOp(AND)",
-        )
     return True
 
 
 def _or(left: SqlValue, right: SqlValue) -> SqlValue:
     # Three-valued OR: TRUE dominates; NULL only if no TRUE seen.
-    if left is True or right is True:
+    # See ``_and`` for the numeric-truthiness rationale.
+    lt = _truthiness(left)
+    rt = _truthiness(right)
+    if lt is True or rt is True:
         return True
-    if left is None or right is None:
+    if lt is None or rt is None:
+        if not (isinstance(left, (bool, int, float)) or left is None) \
+                or not (isinstance(right, (bool, int, float)) or right is None):
+            raise TypeMismatch(
+                expected="boolean",
+                got=f"{sql_type_name(left)}, {sql_type_name(right)}",
+                context="BinaryOp(OR)",
+            )
         return None
-    if not (_is_bool(left) and _is_bool(right)):
-        raise TypeMismatch(
-            expected="boolean",
-            got=f"{sql_type_name(left)}, {sql_type_name(right)}",
-            context="BinaryOp(OR)",
-        )
     return False
 
 
