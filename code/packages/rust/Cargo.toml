@@ -340,6 +340,8 @@ members = [
     "dartmouth-basic-ir-compiler",
     "dartmouth-basic-iir-compiler",
     "dartmouth-basic-ge225-compiler",
+    "oct-lexer",
+    "oct-parser",
     "affine2d",
     "algol-lexer",
     "algol-parser",

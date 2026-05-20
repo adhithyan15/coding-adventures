@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-oct-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Oct parser — parses Oct source text into a grammar AST (OCT02 phase 1)."
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-oct-lexer = { path = "../oct-lexer" }
