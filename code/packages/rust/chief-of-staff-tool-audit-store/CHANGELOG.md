@@ -39,6 +39,7 @@ All notable changes to this package will be documented in this file.
   summaries.
 - Count-drift investigation flags for supervisor drain run reports and
   summaries.
+- Host-investigation flags for supervisor drain run reports and summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Typed scheduler action intent helpers for continuation, follow-up routing, and
