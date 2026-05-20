@@ -70,8 +70,8 @@ The crate keeps the boundary narrow:
   the typed recommendation
 - supervisor drain run summaries flatten stable outcome labels beside the typed
   run outcome
-- supervisor drain run summaries flatten no-action scheduler flags for terminal
-  host log entries
+- supervisor drain reports and summaries expose no-action scheduler helpers for
+  terminal host log entries
 
 ## Development
 

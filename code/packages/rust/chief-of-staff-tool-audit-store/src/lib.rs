@@ -916,6 +916,11 @@ impl ToolAuditSupervisorDrainRunReport {
         self.outcome().requires_scheduler_action()
     }
 
+    /// Return whether this run intentionally leaves the scheduler idle.
+    pub fn is_no_scheduler_action(&self) -> bool {
+        self.scheduler_action().is_no_action()
+    }
+
     /// Return the recommended scheduler action for this drain run.
     pub fn scheduler_action(&self) -> ToolAuditSupervisorDrainSchedulerAction {
         self.outcome().scheduler_action()
@@ -3136,6 +3141,8 @@ mod tests {
         assert!(report.reached_end_of_log());
         assert!(!report.should_continue());
         assert_eq!(report.outcome(), ToolAuditSupervisorDrainRunOutcome::Idle);
+        assert!(report.is_no_scheduler_action());
+        assert!(!report.requires_scheduler_action());
         let summary = report.summary();
         assert_eq!(summary.scheduler_action_label, "no_action");
         assert!(summary.is_no_scheduler_action);
@@ -3462,6 +3469,7 @@ mod tests {
         );
         assert_eq!(report.outcome_label(), "needs_continuation");
         assert!(report.requires_scheduler_action());
+        assert!(!report.is_no_scheduler_action());
         assert!(report.requests_continuation());
         assert!(!report.routes_follow_up());
         assert!(!report.requires_plan_drift_investigation());
