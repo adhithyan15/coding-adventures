@@ -368,6 +368,7 @@ members = [
     "mosaic-emit-react",
     "mosaic-emit-swiftui",
     "mosaic-emit-webcomponent",
+    "mosaic-emit-xaml",
     "mosaic-lexer",
     "mosaic-package-artifact-builder",
     "mosaic-package-manifest",
