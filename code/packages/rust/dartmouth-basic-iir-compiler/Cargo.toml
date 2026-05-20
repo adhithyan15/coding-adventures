@@ -1,0 +1,10 @@
+[package]
+name = "dartmouth-basic-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule (i64 integer programs only in V1)."
+
+[dependencies]
+coding-adventures-dartmouth-basic-parser = { path = "../dartmouth-basic-parser" }
+parser           = { path = "../parser" }
+interpreter-ir   = { path = "../interpreter-ir" }

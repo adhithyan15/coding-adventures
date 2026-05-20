@@ -234,3 +234,96 @@ fn end_to_end_brainfuck_prints_a_via_lang_aot() {
         out.status.code(),
     );
 }
+
+// ── PL05: Dartmouth BASIC end-to-end via lang-aot ────────────────────────────
+
+/// Shortest BASIC program that exercises LET + PRINT + END.  Asserts
+/// stdout is exactly `"42\n"` after compiling through `lang-aot`.
+const BASIC_PRINT_42: &str = "10 PRINT 42\n20 END\n";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_basic_print_42_via_lang_aot() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("p.bas");
+    let exe = dir.path().join("p.exe");
+    std::fs::write(&src, BASIC_PRINT_42).unwrap();
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::DartmouthBasic)
+        .unwrap_or_else(|e| panic!("BASIC compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"42\n",
+        "expected stdout '42\\n', got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_basic_print_42_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("p.bas");
+    let exe = dir.path().join("p");
+    std::fs::write(&src, BASIC_PRINT_42).unwrap();
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::DartmouthBasic)
+        .unwrap_or_else(|e| panic!("BASIC compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"42\n",
+        "expected stdout '42\\n', got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+/// BASIC FOR/NEXT loop with PRINT: prints integers 1..=3 each on a
+/// separate line.  Asserts the exact stdout sequence.
+const BASIC_FOR_PRINT: &str = "10 FOR I = 1 TO 3\n\
+                               20 PRINT I\n\
+                               30 NEXT I\n\
+                               40 END\n";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_basic_for_loop_prints_1_2_3() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("loop.bas");
+    let exe = dir.path().join("loop.exe");
+    std::fs::write(&src, BASIC_FOR_PRINT).unwrap();
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::DartmouthBasic)
+        .unwrap_or_else(|e| panic!("BASIC compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"1\n2\n3\n",
+        "expected stdout '1\\n2\\n3\\n', got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_basic_for_loop_prints_1_2_3() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("loop.bas");
+    let exe = dir.path().join("loop");
+    std::fs::write(&src, BASIC_FOR_PRINT).unwrap();
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::DartmouthBasic)
+        .unwrap_or_else(|e| panic!("BASIC compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"1\n2\n3\n",
+        "expected stdout '1\\n2\\n3\\n', got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}

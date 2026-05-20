@@ -21,7 +21,7 @@
 //! | Twig            | full | `twig-ir-compiler` |
 //! | Nib             | full | `nib-iir-compiler` |
 //! | Brainfuck       | full | `brainfuck-iir-compiler` |
-//! | Dartmouth BASIC | **TODO** — needs a `dartmouth-basic-iir-compiler` crate (the existing `-ir-compiler` emits `compiler_ir::IrProgram`, not `interpreter_ir::IIRModule`) |
+//! | Dartmouth BASIC | full (integer subset) | `dartmouth-basic-iir-compiler` |
 //! | Oct             | **TODO** — Python-only frontend; needs a Rust port or a bridge |
 //!
 //! ## How to add a language
@@ -156,11 +156,10 @@ impl From<std::io::Error> for LangAotError {
 /// identifier; pick something descriptive (usually the input file's
 /// stem).
 ///
-/// Returns [`LangAotError::UnsupportedLanguage`] for `DartmouthBasic`
-/// and `Oct` — those frontends exist elsewhere (Python for Oct, and a
-/// non-IIR Rust crate for BASIC) but haven't been ported to the shared
-/// IIR shape yet.  The error carries a one-line guidance string
-/// pointing at the work needed.
+/// Returns [`LangAotError::UnsupportedLanguage`] for `Oct` — that
+/// frontend exists in Python but hasn't been ported to the shared IIR
+/// shape yet (tracked by OCT02).  The error carries a one-line
+/// guidance string pointing at the work needed.
 pub fn compile_source_to_iir(
     language: Language,
     source: &str,
@@ -190,13 +189,13 @@ pub fn compile_source_to_iir(
             lower_brainfuck_for_aot(&mut module);
             Ok(module)
         }
-        Language::DartmouthBasic => Err(LangAotError::UnsupportedLanguage {
-            language,
-            guidance: "create code/packages/rust/dartmouth-basic-iir-compiler \
-                       that emits `interpreter_ir::IIRModule` (the existing \
-                       dartmouth-basic-ir-compiler emits a different IR shape \
-                       and is not pluggable into the LANG VM AOT chain)",
-        }),
+        Language::DartmouthBasic => {
+            dartmouth_basic_iir_compiler::compile_source(source, module_name)
+                .map_err(|e| LangAotError::FrontendError {
+                    language,
+                    message: format!("{e}"),
+                })
+        }
         Language::Oct => Err(LangAotError::UnsupportedLanguage {
             language,
             guidance: "port the Python `oct-ir-compiler` to Rust (or bridge \
@@ -465,17 +464,17 @@ mod tests {
         assert!(!iir.functions.is_empty());
     }
 
+    /// PL05 — Dartmouth BASIC now compiles to IIR.  Previously this
+    /// returned `UnsupportedLanguage`; with the new
+    /// `dartmouth-basic-iir-compiler` crate we get a real module back.
     #[test]
-    fn dartmouth_basic_returns_clean_unsupported_error() {
-        let err = compile_source_to_iir(
-            Language::DartmouthBasic, "10 PRINT 42", "basic"
-        ).unwrap_err();
-        match err {
-            LangAotError::UnsupportedLanguage { language, .. } => {
-                assert_eq!(language, Language::DartmouthBasic);
-            }
-            other => panic!("expected UnsupportedLanguage, got {other:?}"),
-        }
+    fn dartmouth_basic_compiles_to_iir() {
+        let iir = compile_source_to_iir(
+            Language::DartmouthBasic, "10 PRINT 42\n20 END\n", "basic"
+        ).expect("dartmouth-basic must compile");
+        assert!(!iir.functions.is_empty(),
+                "BASIC module must have at least main");
+        assert_eq!(iir.functions[0].name, "main");
     }
 
     #[test]
