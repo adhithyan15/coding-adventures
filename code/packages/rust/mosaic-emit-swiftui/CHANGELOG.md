@@ -2,6 +2,43 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.4.0] - 2026-05-20
+
+### Added — UI29 `For` / `If` / `Else` meta-primitives (U29-K-swiftui)
+
+The two UI29 meta-primitives now have SwiftUI lowerings, completing
+the kernel surface for this backend.
+
+`For (each: <slot-or-expr>, as: <name>, index: <name>?) { ... }` lowers
+to SwiftUI's `ForEach`. The id keypath switches based on whether
+`index:` is bound:
+
+- `as:` only           → `ForEach(<coll>, id: \.self) { <as> in <body> }`
+- `as:` + `index:`     → `ForEach(Array(<coll>.enumerated()), id: \.offset) { (<idx>, <as>) in <body> }`
+
+`If (when: <slot-or-expr>) { <then> } Else { <else>? }` lowers to a
+Swift view-builder `if`/`else`. The `Else` is paired with its
+preceding `If` sibling in a peek-and-consume walk inside container
+bodies, so `If`+`Else` always emit as a single `if cond { ... } else
+{ ... }` block rather than two stray nodes.
+
+For both primitives, `SlotRef` props are camelCased into Swift
+identifiers and `Expr` props pass through verbatim (the moslayout
+parser hands them in as the reconstructed source substring).
+
+Orphan `Else` (an `Else` not preceded by an `If`) is rejected by the
+moslayout analyzer; the emitter is defensive and renders a Swift
+comment `// orphan Else — ignored` so any escapee still produces a
+compilable file.
+
+### Added — tests
+
+12 new tests cover the For/If/Else surface: SlotRef vs Expr each, the
+index-on/off id-keypath switch, body-uses-as-binding, nested For,
+if-only, if/else paired, expr-condition, orphan-Else comment, the
+combined expr+pair case, two adjacent If-without-Else siblings, and a
+For body whose children include an If/Else pair.
+
 ## [0.3.0] - 2026-05-19
 
 ### Added — UI29 `HostTable` kernel primitive

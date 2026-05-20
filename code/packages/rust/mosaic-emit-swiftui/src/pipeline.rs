@@ -60,13 +60,11 @@
 //!   and `HostButton` landed in v0.2.0 (UI29 kernel partial); the
 //!   remaining primitives get dedicated emitters in follow-ups.
 //!
-//! ## UI29 kernel partial (v0.2.0 / v0.3.0)
+//! ## UI29 kernel partial (v0.2.0 / v0.3.0 / v0.4.0)
 //!
-//! Five of UI29's kernel primitives lower in this revision. The remaining
-//! two — `If`, `For` — wait on the moslayout grammar additions (U29-G3)
-//! and are intentionally still routed through the `UnknownPrimitive` arm
-//! so authors who reach for them get a clear "not yet supported"
-//! diagnostic.
+//! All UI29 kernel primitives now have a SwiftUI lowering. The two
+//! meta-primitives (`For`, `If`/`Else`) land in v0.4.0 (U29-K-swiftui)
+//! via [`emit_for_swift`] and [`emit_if_swift`].
 //!
 //! | UI29 primitive | SwiftUI lowering                                |
 //! |----------------|-------------------------------------------------|
@@ -75,6 +73,8 @@
 //! | `HostInput`    | `TextField(placeholder, text: .constant(value))` |
 //! | `HostButton`   | `Button(action:) { Text(label) }`               |
 //! | `HostTable`    | `VStack { HStack { ... } }` (see [`emit_host_table`]) |
+//! | `For`          | `ForEach(...) { ... }` (see [`emit_for_swift`]) |
+//! | `If` / `Else`  | `if cond { ... } else { ... }` (see [`emit_if_swift`]) |
 //!
 //! ### `HostInput` binding choice
 //!
@@ -417,12 +417,32 @@ fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
         // path handled above) cannot appear here because `Row` is matched
         // earlier in this `match`. Sub-tag `Row` is only reached via
         // [`emit_host_table`]'s explicit recursion, not via this walker.
+
+        // UI29 §3.1 / §3.2 — meta-primitives. `For` always lowers
+        // standalone; `If` may pair with a following `Else` sibling, but
+        // when reached through this single-node walker the sibling is
+        // not visible — we lower as an if-only. The sibling-aware
+        // pairing happens in [`emit_children`], which container-shaped
+        // parents call instead of looping `emit_view_tree` directly.
+        "For" => emit_for_swift(node, indent),
+        "If" => emit_if_swift(node, None, indent),
+        // An orphan `Else` (Else not preceded by If) is rejected by the
+        // moslayout analyzer, but the emitter is defensive: rather than
+        // erroring at the Swift level we emit a self-documenting Swift
+        // comment so the generated file still type-checks.
+        "Else" => Ok(format!("{}// orphan Else — ignored\n", " ".repeat(indent))),
+
         other => Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     }
 }
 
 /// Emit a SwiftUI container (`Group`, `HStack`, `VStack`) wrapping `node`'s
 /// children.
+///
+/// Children are walked via [`emit_children`], which is sibling-aware so an
+/// `If` immediately followed by an `Else` is paired into a single
+/// `if/else` block rather than two stray nodes. All other primitives go
+/// through `emit_view_tree` unchanged.
 fn container(
     swiftui_view: &str,
     node: &LayoutNode,
@@ -435,10 +455,52 @@ fn container(
         return Ok(format!("{pad}{swiftui_view} {{ }}\n"));
     }
     let mut out = format!("{pad}{swiftui_view} {{\n");
-    for child in &node.children {
-        out.push_str(&emit_view_tree(child, indent + 4)?);
-    }
+    out.push_str(&emit_children(&node.children, indent + 4)?);
     out.push_str(&format!("{pad}}}\n"));
+    Ok(out)
+}
+
+/// Walk a flat list of sibling layout nodes at `indent`, with two
+/// pieces of sibling-aware behaviour:
+///
+/// 1. An `If` node followed immediately by an `Else` is consumed as a
+///    pair and lowered to a single `if cond { ... } else { ... }`
+///    block (see [`emit_if_swift`]). The `Else` is then skipped on the
+///    next iteration step.
+/// 2. An `Else` that does *not* immediately follow an `If` is an
+///    orphan; the moslayout analyzer rejects this, but we render a
+///    Swift comment so the generated file still compiles.
+///
+/// Everything else delegates to [`emit_view_tree`].
+fn emit_children(
+    children: &[LayoutNode],
+    indent: usize,
+) -> Result<String, PipelineEmitError> {
+    let mut out = String::new();
+    let mut i = 0;
+    while i < children.len() {
+        let child = &children[i];
+        if child.tag == "If" {
+            // Peek: if the next sibling is `Else`, consume both into a
+            // paired emission and advance past the Else.
+            let else_node = children.get(i + 1).filter(|n| n.tag == "Else");
+            out.push_str(&emit_if_swift(child, else_node, indent)?);
+            i += if else_node.is_some() { 2 } else { 1 };
+            continue;
+        }
+        if child.tag == "Else" {
+            // Reached only when an `Else` did NOT immediately follow an
+            // `If`; emit a documenting comment instead of crashing.
+            out.push_str(&format!(
+                "{}// orphan Else — ignored\n",
+                " ".repeat(indent)
+            ));
+            i += 1;
+            continue;
+        }
+        out.push_str(&emit_view_tree(child, indent)?);
+        i += 1;
+    }
     Ok(out)
 }
 
@@ -865,6 +927,157 @@ fn emit_table_section_rows(
 }
 
 // =====================================================================
+// UI29 §3.1 / §3.2 — `For` / `If` meta-primitive emitters
+// =====================================================================
+
+/// Lower a UI29 `For` meta-primitive (§3.1) to SwiftUI's `ForEach`.
+///
+/// ## Lowering by shape
+///
+/// `For` accepts three structural props (validated upstream in
+/// `moslayout-compiler::validate_for_node`):
+///
+/// - `each:`  a `SlotRef` or `Expr` evaluating to a list. SwiftUI's
+///   `ForEach` needs an `id:` keypath so every element has a stable
+///   identity across re-renders — we use `\.self` when only `as:` is
+///   bound, and `\.offset` when `index:` is also bound (since we then
+///   iterate `Array(<coll>.enumerated())`).
+/// - `as:`    the per-element binding NAME visible inside the body.
+/// - `index:` (optional) a second NAME bound to the integer index.
+///
+/// Two emission shapes, mirroring UI29 §3.1's example:
+///
+/// | shape              | SwiftUI                                                                 |
+/// |--------------------|-------------------------------------------------------------------------|
+/// | `as:` only         | `ForEach(<coll>, id: \.self) { <as> in <children> }`                    |
+/// | `as:` + `index:`   | `ForEach(Array(<coll>.enumerated()), id: \.offset) { (<idx>, <as>) in <children> }` |
+///
+/// `<coll>` is either a camelCased Swift identifier (for `SlotRef`) or
+/// the expression's source text verbatim (for `Expr`). The body is
+/// recursed through [`emit_children`] so nested `If`/`Else` pairing
+/// still works one level down.
+fn emit_for_swift(
+    node: &LayoutNode,
+    indent: usize,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // `each:` — required. `validate_for_node` guarantees SlotRef or Expr,
+    // but the emitter is defensive: if neither, fall back to an empty
+    // array literal so the generated file still type-checks.
+    let coll_expr = match node.props.iter().find(|p| p.name == "each") {
+        Some(p) => match &p.value {
+            LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
+            LayoutPropValue::Expr(text) => text.clone(),
+            _ => "[]".to_string(),
+        },
+        None => "[]".to_string(),
+    };
+
+    // `as:` — required, always a Keyword per UI29 §3.1 / `validate_for_node`.
+    let as_name = find_keyword_prop(node, "as")
+        .map(to_camel_case_first_lower)
+        .unwrap_or_else(|| "item".to_string());
+
+    // `index:` — optional, always a Keyword when present.
+    let index_name = find_keyword_prop(node, "index").map(to_camel_case_first_lower);
+
+    let (header, body_indent) = match &index_name {
+        Some(idx) => (
+            // With index: iterate over enumerated tuples and id on the
+            // offset slot of `EnumeratedSequence.Element`.
+            format!(
+                "{pad}ForEach(Array({coll}.enumerated()), id: \\.offset) {{ ({idx}, {asn}) in\n",
+                coll = coll_expr,
+                idx = idx,
+                asn = as_name,
+            ),
+            indent + 4,
+        ),
+        None => (
+            // Without index: iterate the collection directly, id on
+            // self. `\.self` requires elements be `Hashable` — for
+            // primitive Swift types this holds; for richer rows the
+            // user is expected to switch to the indexed form.
+            format!(
+                "{pad}ForEach({coll}, id: \\.self) {{ {asn} in\n",
+                coll = coll_expr,
+                asn = as_name,
+            ),
+            indent + 4,
+        ),
+    };
+
+    let mut out = header;
+    if node.children.is_empty() {
+        // Empty body — SwiftUI's view builder requires *something* in
+        // the closure. `EmptyView()` is the canonical no-op.
+        out.push_str(&format!("{}EmptyView()\n", " ".repeat(body_indent)));
+    } else {
+        out.push_str(&emit_children(&node.children, body_indent)?);
+    }
+    out.push_str(&format!("{pad}}}\n"));
+    Ok(out)
+}
+
+/// Lower a UI29 `If` (§3.2) — optionally paired with a following
+/// `Else` sibling — to a Swift view-builder `if`/`else`.
+///
+/// SwiftUI's `ViewBuilder` supports `if cond { ... } else { ... }`
+/// natively as long as the branches are themselves views; we lean on
+/// that and emit Swift's control-flow form directly inside the
+/// surrounding view block.
+///
+/// | shape                   | SwiftUI                                |
+/// |-------------------------|----------------------------------------|
+/// | `If { then }`           | `if cond { <then> }`                   |
+/// | `If { then } Else { e }`| `if cond { <then> } else { <else> }`   |
+///
+/// `cond` is the camelCased name for a `SlotRef`, or the expression
+/// source text verbatim for an `Expr`. The branches are recursed
+/// through [`emit_children`] so nested `If`/`Else` still pairs.
+fn emit_if_swift(
+    if_node: &LayoutNode,
+    else_node: Option<&LayoutNode>,
+    indent: usize,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // `when:` — required. `validate_if_node` guarantees SlotRef or Expr,
+    // but again be defensive: a missing `when:` becomes `false` so the
+    // file still compiles (the body is unreachable but well-typed).
+    let cond_expr = match if_node.props.iter().find(|p| p.name == "when") {
+        Some(p) => match &p.value {
+            LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
+            LayoutPropValue::Expr(text) => text.clone(),
+            _ => "false".to_string(),
+        },
+        None => "false".to_string(),
+    };
+
+    let mut out = format!("{pad}if {cond} {{\n", cond = cond_expr);
+    if if_node.children.is_empty() {
+        out.push_str(&format!("{}EmptyView()\n", " ".repeat(indent + 4)));
+    } else {
+        out.push_str(&emit_children(&if_node.children, indent + 4)?);
+    }
+
+    if let Some(en) = else_node {
+        out.push_str(&format!("{pad}}} else {{\n"));
+        if en.children.is_empty() {
+            out.push_str(&format!("{}EmptyView()\n", " ".repeat(indent + 4)));
+        } else {
+            out.push_str(&emit_children(&en.children, indent + 4)?);
+        }
+        out.push_str(&format!("{pad}}}\n"));
+    } else {
+        out.push_str(&format!("{pad}}}\n"));
+    }
+
+    Ok(out)
+}
+
+// =====================================================================
 // Type mapping (mosmodel SlotType -> Swift type)
 // =====================================================================
 
@@ -1187,6 +1400,26 @@ mod tests {
         LayoutProp {
             name: name.to_string(),
             value: LayoutPropValue::Keyword(keyword.to_string()),
+        }
+    }
+
+    fn prop_expr(name: &str, text: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::Expr(text.to_string()),
+        }
+    }
+
+    fn node_with_props(
+        tag: &str,
+        props: Vec<LayoutProp>,
+        children: Vec<LayoutNode>,
+    ) -> LayoutNode {
+        LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props,
+            children,
         }
     }
 
@@ -1560,13 +1793,13 @@ mod tests {
     }
 
     // ---------------------------------------------------------------------
-    // Test 13 — version pin: the crate version is 0.2.0. Catches accidental
+    // Test 13 — version pin: the crate version is 0.4.0. Catches accidental
     // version bumps before they merge.
     // ---------------------------------------------------------------------
 
     #[test]
-    fn version_is_0_3_0() {
-        assert_eq!(env!("CARGO_PKG_VERSION"), "0.3.0");
+    fn version_is_0_4_0() {
+        assert_eq!(env!("CARGO_PKG_VERSION"), "0.4.0");
     }
 
     // ---------------------------------------------------------------------
@@ -1864,16 +2097,19 @@ mod tests {
 
     // ---------------------------------------------------------------------
     // Test 21 — the UI29 kernel primitives recognised through this PR
-    // (Stack, HostScroll, HostInput, HostButton, HostTable) must NOT fire
-    // `UnknownPrimitive`. `If` and `For` still wait on the moslayout
-    // grammar additions (U29-G3) and trip the `UnknownPrimitive` arm so
-    // authors who reach for them get a clear "not yet supported"
-    // diagnostic.
+    // (Stack, HostScroll, HostInput, HostButton, HostTable, For, If, Else)
+    // must NOT fire `UnknownPrimitive`. With U29-K-swiftui (this PR) the
+    // For/If/Else meta-primitives now have lowerings too, so the
+    // "deferred set" is empty. We still assert the recognised set so a
+    // regression that drops a kernel tag is caught.
     // ---------------------------------------------------------------------
 
     #[test]
     fn ui29_kernel_recognised_set_and_deferred_set() {
-        // Recognised — must NOT return UnknownPrimitive.
+        // Recognised leaf-shaped primitives — must NOT return
+        // UnknownPrimitive. (For/If/Else require props to lower
+        // cleanly, so they are exercised in their dedicated tests
+        // above; here we just confirm the leaf-shaped kernel.)
         for tag in ["Stack", "HostScroll", "HostInput", "HostButton", "HostTable"] {
             let layout = layout_with(
                 "X",
@@ -1890,21 +2126,24 @@ mod tests {
             );
         }
 
-        // Deferred — must still fire UnknownPrimitive.
-        for tag in ["If", "For"] {
+        // For/If/Else are now recognised; they no longer fire
+        // UnknownPrimitive. We confirm propless For/If still lower
+        // (defensively — `validate_for_node`/`validate_if_node` would
+        // have flagged them upstream) and that orphan Else emits a
+        // documenting comment instead of erroring.
+        for tag in ["For", "If", "Else"] {
             let layout = layout_with(
                 "X",
                 container_node("Box", vec![leaf(tag, vec![])]),
             );
-            let err = from_pipeline(
+            let r = from_pipeline(
                 &component("X", vec![], vec![]),
                 &layout,
                 &empty_style("X"),
-            )
-            .expect_err(&format!("{tag} should still be unknown"));
+            );
             assert!(
-                matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t == tag),
-                "expected UnknownPrimitive({tag}), got: {err:?}"
+                r.is_ok(),
+                "expected meta-primitive {tag} to lower (defensively) without error, got: {r:?}"
             );
         }
     }
@@ -2237,6 +2476,469 @@ mod tests {
         assert!(
             part_pos < vstack_pos,
             "expected // part comment to precede VStack, got:\n{out}"
+        );
+    }
+
+    // =================================================================
+    // UI29 §3.1 — `For` meta-primitive tests
+    // =================================================================
+
+    // -----------------------------------------------------------------
+    // Test 30 — `For (each: slot: rows, as: row) { Text "x" }` lowers
+    // to `ForEach(rows, id: \.self) { row in Text("x") }`. The id
+    // keypath is `\.self` (not `.offset`) because no `index:` is bound.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn for_with_slot_each_emits_foreach_id_self() {
+        let for_node = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "rows"),
+                prop_keyword("as", "row"),
+            ],
+            vec![leaf("Text", vec![prop_string("content", "x")])],
+        );
+        let layout = layout_with("C", container_node("Box", vec![for_node]));
+        let out = from_pipeline(
+            &component("C", vec![], vec![]),
+            &layout,
+            &empty_style("C"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("ForEach(rows, id: \\.self) { row in"),
+            "expected ForEach with \\.self id, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(\"x\")"),
+            "expected body Text, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 31 — Adding `index: r` switches the lowering to
+    // `ForEach(Array(rows.enumerated()), id: \.offset) { (r, row) in
+    // ... }`. The enumerated form is the only way to get an integer
+    // index out of SwiftUI's ForEach without a separate Range.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn for_with_index_emits_enumerated_array() {
+        let for_node = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "rows"),
+                prop_keyword("as", "row"),
+                prop_keyword("index", "r"),
+            ],
+            vec![leaf("Text", vec![prop_string("content", "x")])],
+        );
+        let layout = layout_with("C", container_node("Box", vec![for_node]));
+        let out = from_pipeline(
+            &component("C", vec![], vec![]),
+            &layout,
+            &empty_style("C"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("ForEach(Array(rows.enumerated()), id: \\.offset) { (r, row) in"),
+            "expected enumerated ForEach with \\.offset id, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 32 — `each: <expr>` passes the expression source text
+    // through verbatim. UI29 §3.3 stores Expr-valued props as the
+    // reconstructed source substring; the backend cannot interpret
+    // them, only embed them.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn for_with_expr_each_emits_verbatim() {
+        let for_node = node_with_props(
+            "For",
+            vec![
+                prop_expr("each", "cols.visible"),
+                prop_keyword("as", "col"),
+            ],
+            vec![leaf("Text", vec![prop_string("content", "x")])],
+        );
+        let layout = layout_with("C", container_node("Box", vec![for_node]));
+        let out = from_pipeline(
+            &component("C", vec![], vec![]),
+            &layout,
+            &empty_style("C"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("ForEach(cols.visible, id: \\.self) { col in"),
+            "expected expr passed verbatim into ForEach, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 33 — A body that references the `as`-bound name (here as a
+    // `Text content: slot: row` placeholder, where the slot name
+    // happens to match) emits the camelCased identifier. The point of
+    // this test is to confirm the binding name `row` appears in the
+    // generated closure header and is therefore usable from the body.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn for_body_uses_as_bound_name_as_identifier() {
+        let for_node = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "rows"),
+                prop_keyword("as", "row-item"),
+            ],
+            vec![leaf("Text", vec![prop_slot_ref("content", "row-item")])],
+        );
+        let layout = layout_with("C", container_node("Box", vec![for_node]));
+        let out = from_pipeline(
+            &component("C", vec![], vec![]),
+            &layout,
+            &empty_style("C"),
+        )
+        .unwrap()
+        .output;
+        // `row-item` camelCases to `rowItem` for both the closure
+        // parameter and the body reference.
+        assert!(
+            out.contains("{ rowItem in"),
+            "expected camelCased as-binding in closure header, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(rowItem)"),
+            "expected camelCased as-binding referenced in body, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 34 — Nested `For`s. The outer loop's body contains an inner
+    // For, and both should appear in the generated source with proper
+    // nesting and distinct bindings.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn nested_for_loops_compose() {
+        let inner_for = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "cols"),
+                prop_keyword("as", "col"),
+            ],
+            vec![leaf("Text", vec![prop_string("content", "c")])],
+        );
+        let outer_for = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "rows"),
+                prop_keyword("as", "row"),
+            ],
+            vec![inner_for],
+        );
+        let layout = layout_with("C", container_node("Box", vec![outer_for]));
+        let out = from_pipeline(
+            &component("C", vec![], vec![]),
+            &layout,
+            &empty_style("C"),
+        )
+        .unwrap()
+        .output;
+        let outer = out
+            .find("ForEach(rows, id: \\.self) { row in")
+            .expect("outer ForEach present");
+        let inner = out
+            .find("ForEach(cols, id: \\.self) { col in")
+            .expect("inner ForEach present");
+        assert!(
+            outer < inner,
+            "expected outer ForEach to precede inner, got:\n{out}"
+        );
+    }
+
+    // =================================================================
+    // UI29 §3.2 — `If` / `Else` meta-primitive tests
+    // =================================================================
+
+    // -----------------------------------------------------------------
+    // Test 35 — `If (when: slot: editing) { Text "x" }` with no Else
+    // sibling lowers to a single `if cond { ... }` block.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn if_without_else_emits_if_only() {
+        let if_node = node_with_props(
+            "If",
+            vec![prop_slot_ref("when", "editing")],
+            vec![leaf("Text", vec![prop_string("content", "x")])],
+        );
+        let layout = layout_with("C", container_node("Box", vec![if_node]));
+        let out = from_pipeline(
+            &component("C", vec![], vec![]),
+            &layout,
+            &empty_style("C"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("if editing {"),
+            "expected `if editing {{` header, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(\"x\")"),
+            "expected then-branch Text, got:\n{out}"
+        );
+        assert!(
+            !out.contains("} else {"),
+            "expected no else clause, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 36 — `If { then } Else { else }` siblings are paired by
+    // `emit_children` into a single `if cond { ... } else { ... }`
+    // block. The Else is consumed when the If is processed; the
+    // `emit_view_tree` walker never sees it as a standalone node.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn if_with_else_emits_paired_block() {
+        let if_node = node_with_props(
+            "If",
+            vec![prop_slot_ref("when", "editing")],
+            vec![leaf("Text", vec![prop_string("content", "edit")])],
+        );
+        let else_node = node_with_props(
+            "Else",
+            vec![],
+            vec![leaf("Text", vec![prop_string("content", "view")])],
+        );
+        let layout = layout_with(
+            "C",
+            container_node("Box", vec![if_node, else_node]),
+        );
+        let out = from_pipeline(
+            &component("C", vec![], vec![]),
+            &layout,
+            &empty_style("C"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("if editing {"),
+            "expected if header, got:\n{out}"
+        );
+        assert!(
+            out.contains("} else {"),
+            "expected else clause, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(\"edit\")"),
+            "expected then-branch Text, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(\"view\")"),
+            "expected else-branch Text, got:\n{out}"
+        );
+        // No "orphan Else" comment should appear — the Else was
+        // consumed by its If sibling.
+        assert!(
+            !out.contains("orphan Else"),
+            "expected no orphan-Else comment, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 37 — `If (when: <expr>) { ... }` emits the expression
+    // source text verbatim as the Swift condition. This mirrors
+    // For's Expr passthrough (Test 32).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn if_with_expr_when_emits_verbatim() {
+        let if_node = node_with_props(
+            "If",
+            vec![prop_expr("when", "editing && row == 0")],
+            vec![leaf("Text", vec![prop_string("content", "x")])],
+        );
+        let layout = layout_with("C", container_node("Box", vec![if_node]));
+        let out = from_pipeline(
+            &component("C", vec![], vec![]),
+            &layout,
+            &empty_style("C"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("if editing && row == 0 {"),
+            "expected expr passed verbatim into if header, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 38 — Orphan `Else` (Else not preceded by an If sibling)
+    // is normally rejected by the moslayout analyzer, but if it
+    // reaches the emitter we render a documenting Swift comment so
+    // the generated file still compiles.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn orphan_else_emits_swift_comment() {
+        let else_node = node_with_props(
+            "Else",
+            vec![],
+            vec![leaf("Text", vec![prop_string("content", "x")])],
+        );
+        let layout = layout_with("C", container_node("Box", vec![else_node]));
+        let out = from_pipeline(
+            &component("C", vec![], vec![]),
+            &layout,
+            &empty_style("C"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("// orphan Else — ignored"),
+            "expected orphan-Else comment, got:\n{out}"
+        );
+        // The orphan Else's body must NOT be emitted as Swift code,
+        // since there is no surrounding if-block.
+        assert!(
+            !out.contains("Text(\"x\")"),
+            "expected orphan Else body to be dropped, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 39 — An `If` whose Else sibling carries an Expr-valued
+    // `when:` on the If (combined check that pairing + Expr both
+    // work together, not redundant with 36 or 37).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn if_else_pair_keeps_expr_condition() {
+        let if_node = node_with_props(
+            "If",
+            vec![prop_expr("when", "r == 0")],
+            vec![leaf("Text", vec![prop_string("content", "hdr")])],
+        );
+        let else_node = node_with_props(
+            "Else",
+            vec![],
+            vec![leaf("Text", vec![prop_string("content", "body")])],
+        );
+        let layout = layout_with(
+            "C",
+            container_node("Box", vec![if_node, else_node]),
+        );
+        let out = from_pipeline(
+            &component("C", vec![], vec![]),
+            &layout,
+            &empty_style("C"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("if r == 0 {"),
+            "expected expr condition, got:\n{out}"
+        );
+        assert!(
+            out.contains("} else {"),
+            "expected paired else, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(\"hdr\")") && out.contains("Text(\"body\")"),
+            "expected both branches present, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 40 — Two consecutive If-without-Else siblings each emit
+    // their own standalone `if` block. The walker must NOT
+    // accidentally pair the second If's "Else-or-nothing" against
+    // the first If's "Else-or-nothing".
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn two_consecutive_ifs_each_emit_separate_blocks() {
+        let if1 = node_with_props(
+            "If",
+            vec![prop_slot_ref("when", "a")],
+            vec![leaf("Text", vec![prop_string("content", "1")])],
+        );
+        let if2 = node_with_props(
+            "If",
+            vec![prop_slot_ref("when", "b")],
+            vec![leaf("Text", vec![prop_string("content", "2")])],
+        );
+        let layout = layout_with("C", container_node("Box", vec![if1, if2]));
+        let out = from_pipeline(
+            &component("C", vec![], vec![]),
+            &layout,
+            &empty_style("C"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("if a {"),
+            "expected first if, got:\n{out}"
+        );
+        assert!(
+            out.contains("if b {"),
+            "expected second if, got:\n{out}"
+        );
+        assert!(
+            !out.contains("} else {"),
+            "expected no else clauses, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 41 — `For` body containing an `If`/`Else` pair. The
+    // pairing must work one level down inside the For closure.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn for_body_pairs_inner_if_else() {
+        let if_node = node_with_props(
+            "If",
+            vec![prop_slot_ref("when", "editing")],
+            vec![leaf("Text", vec![prop_string("content", "edit")])],
+        );
+        let else_node = node_with_props(
+            "Else",
+            vec![],
+            vec![leaf("Text", vec![prop_string("content", "view")])],
+        );
+        let for_node = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "rows"),
+                prop_keyword("as", "row"),
+            ],
+            vec![if_node, else_node],
+        );
+        let layout = layout_with("C", container_node("Box", vec![for_node]));
+        let out = from_pipeline(
+            &component("C", vec![], vec![]),
+            &layout,
+            &empty_style("C"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("ForEach(rows, id: \\.self) { row in"),
+            "expected ForEach header, got:\n{out}"
+        );
+        assert!(
+            out.contains("if editing {") && out.contains("} else {"),
+            "expected paired if/else inside For body, got:\n{out}"
         );
     }
 }
