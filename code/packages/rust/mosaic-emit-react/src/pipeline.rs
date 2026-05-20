@@ -406,6 +406,29 @@ fn emit_jsx_tree(
         return emit_input_jsx(node, indent, part_styles);
     }
 
+    // UI29 §2.1 — `HostInput` is the kernel-canonical text-entry primitive.
+    // It is intentionally a *sibling* of the legacy `Input` emitter (which is
+    // slated for retirement under U29-X1), not a re-use: HostInput has no
+    // `multiline` keyword (a userland `MultilineInput` component owns the
+    // `<textarea>` shape) and no `max-length` numeric prop, so the surface
+    // area is strictly smaller. The value/readOnly/placeholder/onChange/
+    // onCommit/onCancel patterns are kept identical so existing host wiring
+    // continues to work bit-for-bit.
+    if node.tag == "HostInput" {
+        return emit_host_input_jsx(node, indent, part_styles);
+    }
+
+    // UI29 §2.1 — `HostButton` is the kernel-canonical clickable. It lowers
+    // to a `<button>` with an `onClick` dispatch handler and an optional
+    // `disabled` slot/keyword binding. The `label` prop accepts either a
+    // string literal (used as children verbatim) or a slot ref (rendered as
+    // `{slot}` children). The general primitive flow can't express the
+    // string-OR-slot label or the `onClick`-from-`onTap` rename, so HostButton
+    // gets its own emitter.
+    if node.tag == "HostButton" {
+        return emit_host_button_jsx(node, indent, part_styles);
+    }
+
     // UI28 §2.1 — standalone `Cell` primitive. Lowers to a `<div>` with an
     // optional inline `<input>` editor depending on `editable` and
     // `is-editing` slots. Routed BEFORE Grid so a Cell that ends up at
@@ -615,6 +638,201 @@ fn emit_input_jsx(
     }
 
     Ok(format!("{pad}<{tag_name}{attrs} />\n"))
+}
+
+// =====================================================================
+// HostInput primitive (UI29 §2.1)
+// =====================================================================
+
+/// Lower a moslayout `HostInput` node to an `<input type="text" />` JSX line.
+///
+/// `HostInput` is the kernel-canonical text-entry primitive introduced in
+/// UI29.  It is intentionally a *narrower* sibling of [`emit_input_jsx`]
+/// (UI25's `Input`, slated for retirement under U29-X1):
+///
+/// | Concern         | `Input` (UI25)                  | `HostInput` (UI29)         |
+/// |---|---|---|
+/// | `multiline`     | toggles `<textarea>`            | **not supported** — userland `MultilineInput` owns this |
+/// | `max-length`    | emits `maxLength={N}`           | **not supported** — userland clamping component owns this |
+/// | `value` slot    | `value={x}`                     | `value={x}` (same)          |
+/// | `read-only`     | `readOnly={x}` / literal        | `readOnly={x}` / literal (same) |
+/// | `placeholder`   | `placeholder="..."`             | `placeholder="..."` (same)  |
+/// | `onChange`      | `onChange={e => dispatch(...)}` | identical                   |
+/// | `onCommit`      | merged into `onKeyDown` Enter   | identical                   |
+/// | `onCancel`      | merged into `onKeyDown` Escape  | identical                   |
+///
+/// Keeping the same value/readOnly/placeholder/event wiring means a host
+/// component authored against `Input` can be migrated to `HostInput` by
+/// just renaming the primitive and (if it relied on `multiline` /
+/// `max-length`) swapping to the userland component.
+fn emit_host_input_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // HostInput is always a single-line `<input type="text">`.  No
+    // textarea fallback — that lives in userland.
+    let mut attrs = String::from(" type=\"text\"");
+
+    // Style attr (same part-name lookup as the rest of the tree).
+    let part_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    if !part_style_str.is_empty() {
+        attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
+    }
+
+    // value={slotName}
+    if let Some(slot) = find_slot_ref_prop(node, "value") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" value={{{camel}}}"));
+    }
+
+    // readOnly={slotName} OR readOnly={true|false} when given as a keyword.
+    if let Some(slot) = find_slot_ref_prop(node, "read-only") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" readOnly={{{camel}}}"));
+    } else if let Some(kw) = find_keyword_prop(node, "read-only") {
+        if kw == "true" || kw == "false" {
+            attrs.push_str(&format!(" readOnly={{{kw}}}"));
+        }
+    }
+
+    // placeholder="text" — string-literal moslayout prop.
+    if let Some(s) = find_string_prop(node, "placeholder") {
+        attrs.push_str(&format!(
+            " placeholder=\"{}\"",
+            escape_for_jsx_double_quoted(s)
+        ));
+    }
+
+    // onChange={e => dispatch({ type: "...", value: e.target.value })}
+    if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&type_field)?;
+        attrs.push_str(&format!(
+            " onChange={{e => dispatch({{ type: \"{type_field}\", value: e.target.value }})}}"
+        ));
+    }
+
+    // onCommit + onCancel are merged into a single onKeyDown handler,
+    // exactly as the legacy `emit_input_jsx` does.
+    let commit_emit = find_emit_ref_prop(node, "onCommit");
+    let cancel_emit = find_emit_ref_prop(node, "onCancel");
+    if commit_emit.is_some() || cancel_emit.is_some() {
+        let mut h = String::from(" onKeyDown={e => {");
+        if let Some(emit) = commit_emit {
+            let t = to_camel_case_first_lower(&strip_on_prefix(emit));
+            validate_emit_name(&t)?;
+            h.push_str(&format!(
+                " if (e.key === \"Enter\") dispatch({{ type: \"{t}\" }});"
+            ));
+        }
+        if let Some(emit) = cancel_emit {
+            let t = to_camel_case_first_lower(&strip_on_prefix(emit));
+            validate_emit_name(&t)?;
+            h.push_str(&format!(
+                " if (e.key === \"Escape\") dispatch({{ type: \"{t}\" }});"
+            ));
+        }
+        h.push_str(" }}");
+        attrs.push_str(&h);
+    }
+
+    Ok(format!("{pad}<input{attrs} />\n"))
+}
+
+// =====================================================================
+// HostButton primitive (UI29 §2.1)
+// =====================================================================
+
+/// Lower a moslayout `HostButton` node to a `<button>` JSX block.
+///
+/// ## Property handling
+///
+/// | Moslayout prop      | JSX                                                       |
+/// |---|---|
+/// | `label: "..."`      | string literal becomes the button's text child            |
+/// | `label: slot: x`    | `{x}` (camelCased) becomes the button's expression child  |
+/// | `disabled: slot: x` | `disabled={x}` (camelCased)                               |
+/// | `disabled: true`/`false` | `disabled={true}` / `disabled={false}` literal       |
+/// | `onTap: emit: onE`  | `onClick={() => dispatch({ type: "e" })}` (renamed from onTap to onClick because that is the DOM event name) |
+///
+/// ## Why a dedicated emitter
+///
+/// The general primitive flow can't express:
+/// 1. *string-OR-slot* label (children come from a prop, not a child node);
+/// 2. the `onTap` → `onClick` rename (the moslayout prop name and the JSX
+///    attribute name differ — kernel uses platform-neutral `onTap`, React
+///    uses DOM-native `onClick`).
+fn emit_host_button_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    let mut attrs = String::new();
+
+    // Style attr (same part-name lookup as the rest of the tree).
+    let part_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    if !part_style_str.is_empty() {
+        attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
+    }
+
+    // disabled={slotName} OR disabled={true|false} literal.
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" disabled={{{camel}}}"));
+    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
+        if kw == "true" || kw == "false" {
+            attrs.push_str(&format!(" disabled={{{kw}}}"));
+        }
+    }
+
+    // onClick={() => dispatch({ type: "..." })} — the moslayout author
+    // writes this as `onTap: emit: onSomething`; we rename to the
+    // DOM-native `onClick` here because that's what React expects on a
+    // `<button>`.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onTap") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&type_field)?;
+        attrs.push_str(&format!(
+            " onClick={{() => dispatch({{ type: \"{type_field}\" }})}}"
+        ));
+    }
+
+    // Body: `label` may be a string literal (verbatim text) or a slot ref
+    // (rendered as a JSX expression).  If neither is present, render an
+    // empty `<button></button>` — host may still set children via CSS
+    // generated content or simply use the button as an icon target.
+    let body = if let Some(s) = find_string_prop(node, "label") {
+        // String labels are inlined as JSX text. Brace any literal `{`
+        // or `}` characters so they don't terminate the JSX expression
+        // context (rare, but possible if the host wants Unicode).  We
+        // reuse the double-quoted escaper for `\` and `"`, then wrap the
+        // result as a string expression so HTML entities don't escape us.
+        format!("{{\"{}\"}}", escape_for_jsx_double_quoted(s))
+    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        format!("{{{camel}}}")
+    } else {
+        String::new()
+    };
+
+    Ok(format!("{pad}<button{attrs}>{body}</button>\n"))
 }
 
 // =====================================================================
@@ -2000,6 +2218,13 @@ fn primitive_to_jsx_tag(tag: &str) -> Result<JsxTag, PipelineEmitError> {
         "Image" => ("<img", "", "", "", true),
         "Spacer" => ("<div", "flex: 1", "", "</div>", false),
         "Scroll" => ("<div", "overflow: \"auto\"", "", "</div>", false),
+        // UI29 §2.1 — `HostScroll` is the kernel-canonical name for what
+        // UI21 called `Scroll`. The lowering is identical; both arms exist
+        // for backwards compat. Once the userland migration to the new
+        // kernel names lands, the `Scroll` arm becomes a deprecation alias
+        // (tracked under U29-X1; do not delete in this PR — existing demos
+        // and tests still author `Scroll`).
+        "HostScroll" => ("<div", "overflow: \"auto\"", "", "</div>", false),
         "Divider" => ("<hr", "", "", "", true),
         "Stack" => (
             "<div",
@@ -4914,6 +5139,277 @@ mod tests {
         assert!(
             !out.contains("const columns = ["),
             "v2 path must not emit the v3 columns const"
+        );
+    }
+
+    // =================================================================
+    // UI29 — kernel host primitives (HostInput / HostButton / HostScroll)
+    // =================================================================
+
+    /// Helper: a one-component layout def rooted at a `HostInput`.
+    fn host_input_layout(props: Vec<LayoutProp>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: None,
+                props,
+                children: Vec::new(),
+            },
+        }
+    }
+
+    /// Helper: a one-component layout def rooted at a `HostButton`.
+    fn host_button_layout(props: Vec<LayoutProp>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: None,
+                props,
+                children: Vec::new(),
+            },
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // HostInput (UI29)
+    // -----------------------------------------------------------------
+
+    /// UI29 §2.1 test 1 — bare `HostInput` lowers to `<input type="text" />`
+    /// and, when given a `value` slot ref, binds the camelCased name into
+    /// the `value={x}` attribute.
+    #[test]
+    fn host_input_value_slot_lowers_to_input_type_text() {
+        let m = component(
+            "X",
+            vec![slot("formula-text", SlotType::Text, true)],
+            vec![],
+        );
+        let l = host_input_layout(vec![LayoutProp {
+            name: "value".to_string(),
+            value: LayoutPropValue::SlotRef("formula-text".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<input type=\"text\" value={formulaText} />"),
+            "expected `<input type=\"text\" value={{formulaText}} />`, got:\n{out}"
+        );
+    }
+
+    /// UI29 §2.1 test 2 — `read-only` as a slot ref binds to the camelCased
+    /// `readOnly={x}` attribute. Mirrors the legacy Input wiring exactly.
+    #[test]
+    fn host_input_read_only_slot_ref_binds_to_read_only_attr() {
+        let m = component("X", vec![slot("is-locked", SlotType::Bool, true)], vec![]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "read-only".to_string(),
+            value: LayoutPropValue::SlotRef("is-locked".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("readOnly={isLocked}"),
+            "expected readOnly={{isLocked}}, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29 §2.1 test 3 — string-literal `placeholder` flows through as
+    /// `placeholder="..."`, JSX double-quoted attribute form.
+    #[test]
+    fn host_input_placeholder_string_literal_binds_to_placeholder_attr() {
+        let m = component("X", vec![], vec![]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "placeholder".to_string(),
+            value: LayoutPropValue::String("Type a formula".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("placeholder=\"Type a formula\""),
+            "expected placeholder attr, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29 §2.1 test 4 — `onCommit: emit: onSave` emits a `onKeyDown`
+    /// handler with an `e.key === "Enter"` branch dispatching the stripped/
+    /// camelCased emit name.
+    #[test]
+    fn host_input_on_commit_emits_enter_key_handler() {
+        let m = component("X", vec![], vec![emit("onSave", vec![])]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "onCommit".to_string(),
+            value: LayoutPropValue::EmitRef("onSave".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("onKeyDown={e => {"),
+            "expected onKeyDown handler, got:\n{out}"
+        );
+        assert!(
+            out.contains("if (e.key === \"Enter\") dispatch({ type: \"save\" });"),
+            "expected Enter branch dispatching `save`, got:\n{out}"
+        );
+    }
+
+    /// UI29 §2.1 test 5 — `onCancel: emit: onAbort` emits an
+    /// `e.key === "Escape"` branch on the merged `onKeyDown` handler.
+    #[test]
+    fn host_input_on_cancel_emits_escape_key_handler() {
+        let m = component("X", vec![], vec![emit("onAbort", vec![])]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "onCancel".to_string(),
+            value: LayoutPropValue::EmitRef("onAbort".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("if (e.key === \"Escape\") dispatch({ type: \"abort\" });"),
+            "expected Escape branch dispatching `abort`, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // HostButton (UI29)
+    // -----------------------------------------------------------------
+
+    /// UI29 §2.1 test 6 — string label + onTap dispatches: emits
+    /// `<button onClick={() => dispatch({ type: "..." })}>"Click me"</button>`.
+    /// Note the `onTap` → `onClick` rename: kernel prop is platform-neutral,
+    /// DOM attribute is `onClick`.
+    #[test]
+    fn host_button_string_label_and_on_tap_emits_dispatch_button() {
+        let m = component("X", vec![], vec![emit("onClick", vec![])]);
+        let l = host_button_layout(vec![
+            LayoutProp {
+                name: "label".to_string(),
+                value: LayoutPropValue::String("Click me".to_string()),
+            },
+            LayoutProp {
+                name: "onTap".to_string(),
+                value: LayoutPropValue::EmitRef("onClick".to_string()),
+            },
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<button onClick={() => dispatch({ type: \"click\" })}>"),
+            "expected `<button onClick=...>`, got:\n{out}"
+        );
+        assert!(
+            out.contains("{\"Click me\"}</button>"),
+            "expected string label as children before closing button, got:\n{out}"
+        );
+    }
+
+    /// UI29 §2.1 test 7 — `disabled` slot ref camelCases to
+    /// `disabled={isDisabled}`.
+    #[test]
+    fn host_button_disabled_slot_ref_binds_to_disabled_attr() {
+        let m = component(
+            "X",
+            vec![slot("is-disabled", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = host_button_layout(vec![
+            LayoutProp {
+                name: "label".to_string(),
+                value: LayoutPropValue::String("Save".to_string()),
+            },
+            LayoutProp {
+                name: "disabled".to_string(),
+                value: LayoutPropValue::SlotRef("is-disabled".to_string()),
+            },
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("disabled={isDisabled}"),
+            "expected `disabled={{isDisabled}}`, got:\n{}",
+            result.output
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // HostScroll (UI29) — kernel-canonical alias of Scroll
+    // -----------------------------------------------------------------
+
+    /// UI29 §2.1 test 8 — `HostScroll` with children renders as a
+    /// `<div style={{ overflow: "auto" }}>...</div>` wrapper. The lowering
+    /// matches the legacy `Scroll` arm; both names remain accepted while
+    /// the userland migration completes (tracked under U29-X1).
+    #[test]
+    fn host_scroll_with_children_emits_overflow_auto_div() {
+        let m = component(
+            "X",
+            vec![slot("body", SlotType::Text, true)],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostScroll".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::SlotRef("body".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        // The wrapper carries the overflow: "auto" style.
+        assert!(
+            out.contains("overflow: \"auto\""),
+            "expected overflow: \"auto\" on HostScroll wrapper, got:\n{out}"
+        );
+        // The child Text node renders inside the wrapper.
+        assert!(
+            out.contains("<span>{body}</span>"),
+            "expected child <span>{{body}}</span> rendered inside, got:\n{out}"
+        );
+        // The wrapper is a <div>...<span>...</span>...</div> sequence.
+        let div_open = out.find("<div").expect("div open present");
+        let span_pos = out.find("<span>").expect("span present");
+        let div_close = out.find("</div>").expect("div close present");
+        assert!(
+            div_open < span_pos && span_pos < div_close,
+            "expected <div>...<span>...</span></div> nesting, got:\n{out}"
+        );
+    }
+
+    /// Backwards compat sanity check: the legacy `Scroll` primitive still
+    /// lowers to the same overflow-auto wrapper. Once U29-X1 lands, this
+    /// arm becomes a deprecation alias, but the JSX shape must keep working
+    /// until then.
+    #[test]
+    fn legacy_scroll_still_emits_overflow_auto_div() {
+        let m = component(
+            "X",
+            vec![],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Scroll".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("overflow: \"auto\""),
+            "expected legacy Scroll to still emit overflow: \"auto\", got:\n{}",
+            result.output
         );
     }
 }
