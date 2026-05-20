@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `pss_newton_iteration`, which runs one candidate update, accepts it only
+  when the residual L2 norm does not increase, and reports the retained
+  circuit/state for the next shooting step.
 - Add `pss_newton_candidate`, which applies one least-squares Newton update to
   reactive initial conditions and reports the candidate circuit plus its
   refreshed one-period residual.

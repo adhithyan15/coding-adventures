@@ -107,6 +107,7 @@ from spice_engine import (
     NoisePoint,
     NoiseResult,
     PssNewtonCandidateResult,
+    PssNewtonIterationResult,
     PssNewtonUpdateResult,
     PssResidualJacobianResult,
     PssResidualResult,
@@ -132,6 +133,7 @@ from spice_engine import (
     mc_dc,
     noise_ac,
     pss_newton_candidate,
+    pss_newton_iteration,
     pss_newton_update,
     pss_residual_jacobian,
     pss_residual,
@@ -345,6 +347,39 @@ def test_pss_newton_candidate_applies_reactive_state_update() -> None:
         result.update.jacobian.residual.period
     )
     assert math.isfinite(result.candidate_residual.residual_l2_norm)
+
+
+def test_pss_newton_iteration_accepts_improving_candidate() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(frequency=1_000.0),
+        )
+    )
+    c.add(Resistor("R1", "in", "out", 1_000.0))
+    c.add(Capacitor("C1", "out", "0", 1.0e-6, initial_voltage=0.1))
+
+    result = pss_newton_iteration(c, steps_per_period=32, perturbation=1.0e-5)
+
+    assert isinstance(result, PssNewtonIterationResult)
+    base_residual = result.candidate.update.jacobian.residual
+    candidate_residual = result.candidate.candidate_residual
+    assert result.accepted is True
+    assert result.next_circuit is result.candidate.candidate_circuit
+    assert result.next_state_vector == result.candidate.candidate_state_vector
+    assert result.next_residual is candidate_residual
+    assert result.converged == candidate_residual.within_tolerance
+    assert candidate_residual.residual_l2_norm < base_residual.residual_l2_norm
+    assert result.residual_l2_reduction == pytest.approx(
+        base_residual.residual_l2_norm - candidate_residual.residual_l2_norm
+    )
+    assert result.residual_l2_ratio == pytest.approx(
+        candidate_residual.residual_l2_norm / base_residual.residual_l2_norm
+    )
 
 
 def test_pss_residual_requires_periodic_sources() -> None:

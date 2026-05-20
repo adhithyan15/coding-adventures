@@ -1726,6 +1726,18 @@ pub struct PssNewtonCandidateResult {
     pub candidate_residual: PssResidualResult,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct PssNewtonIterationResult {
+    pub candidate: PssNewtonCandidateResult,
+    pub accepted: bool,
+    pub residual_l2_reduction: f64,
+    pub residual_l2_ratio: f64,
+    pub next_circuit: Circuit,
+    pub next_state_vector: Vec<PssStateEntry>,
+    pub next_residual: PssResidualResult,
+    pub converged: bool,
+}
+
 impl DcResult {
     pub fn voltage(&self, node: &str) -> Option<f64> {
         if is_ground(node) {
@@ -3113,6 +3125,67 @@ pub fn pss_newton_candidate_with_tolerance(
         candidate_circuit,
         candidate_state_vector,
         candidate_residual,
+    }))
+}
+
+pub fn pss_newton_iteration(
+    circuit: &Circuit,
+    steps_per_period: usize,
+) -> Result<Option<PssNewtonIterationResult>, SpiceError> {
+    pss_newton_iteration_with_tolerance(circuit, steps_per_period, 1.0e-6, 1.0e-6)
+}
+
+pub fn pss_newton_iteration_with_tolerance(
+    circuit: &Circuit,
+    steps_per_period: usize,
+    residual_tolerance: f64,
+    perturbation: f64,
+) -> Result<Option<PssNewtonIterationResult>, SpiceError> {
+    let Some(candidate) = pss_newton_candidate_with_tolerance(
+        circuit,
+        steps_per_period,
+        residual_tolerance,
+        perturbation,
+    )?
+    else {
+        return Ok(None);
+    };
+
+    let base_residual = &candidate.update.jacobian.residual;
+    let candidate_residual = &candidate.candidate_residual;
+    let base_norm = base_residual.residual_l2_norm;
+    let candidate_norm = candidate_residual.residual_l2_norm;
+    let accepted = candidate_norm <= base_norm;
+    let next_circuit = if accepted {
+        candidate.candidate_circuit.clone()
+    } else {
+        circuit.clone()
+    };
+    let next_state_vector = if accepted {
+        candidate.candidate_state_vector.clone()
+    } else {
+        candidate.update.jacobian.state_vector.clone()
+    };
+    let next_residual = if accepted {
+        candidate.candidate_residual.clone()
+    } else {
+        candidate.update.jacobian.residual.clone()
+    };
+    let residual_l2_ratio = if base_norm > 0.0 {
+        candidate_norm / base_norm
+    } else {
+        0.0
+    };
+
+    Ok(Some(PssNewtonIterationResult {
+        candidate,
+        accepted,
+        residual_l2_reduction: base_norm - candidate_norm,
+        residual_l2_ratio,
+        next_circuit,
+        next_state_vector,
+        converged: next_residual.within_tolerance,
+        next_residual,
     }))
 }
 

@@ -15,6 +15,7 @@ import {
   inductor,
   inductorWithInitialCurrent,
   pssNewtonCandidate,
+  pssNewtonIteration,
   pssNewtonUpdate,
   pssResidualJacobian,
   pssResidual,
@@ -241,6 +242,41 @@ describe("transient", () => {
       result!.update.jacobian.residual.periodSeconds,
     );
     expect(Number.isFinite(result!.candidateResidual.residualL2Norm)).toBe(true);
+  });
+
+  it("accepts improving PSS Newton iteration candidates", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+    circuit.add(capacitorWithInitialVoltage("C1", "out", "0", 1.0e-6, 0.1));
+
+    const result = pssNewtonIteration(circuit, 32, 1.0e-6, 1.0e-5);
+
+    expect(result).not.toBeUndefined();
+    const baseResidual = result!.candidate.update.jacobian.residual;
+    const candidateResidual = result!.candidate.candidateResidual;
+    expect(result!.accepted).toBe(true);
+    expect(result!.nextCircuit).toBe(result!.candidate.candidateCircuit);
+    expect(result!.nextStateVector).toEqual(result!.candidate.candidateStateVector);
+    expect(result!.nextResidual).toBe(candidateResidual);
+    expect(result!.converged).toBe(candidateResidual.withinTolerance);
+    expect(candidateResidual.residualL2Norm).toBeLessThan(baseResidual.residualL2Norm);
+    expectClose(
+      result!.residualL2Reduction,
+      baseResidual.residualL2Norm - candidateResidual.residualL2Norm,
+    );
+    expectClose(
+      result!.residualL2Ratio,
+      candidateResidual.residualL2Norm / baseResidual.residualL2Norm,
+    );
   });
 
   it("does not report a PSS residual without a periodic source period", () => {
