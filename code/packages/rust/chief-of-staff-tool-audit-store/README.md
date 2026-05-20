@@ -49,6 +49,8 @@ The crate keeps the boundary narrow:
   follow-up pressure deltas for host logs
 - supervisor drain reports and summaries expose delta-direction helpers for
   extra or missed replayed work and follow-up pressure
+- supervisor drain reports expose status aliases for idle runs and matched
+  follow-up pressure
 - supervisor drain run summaries expose count-drift presence flags beside
   signed deltas for host logs
 - supervisor drain run summaries expose stable count-drift classifications so
