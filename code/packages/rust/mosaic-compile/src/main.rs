@@ -33,6 +33,7 @@ use mosaic_emit_html::HtmlRenderer;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
 use mosaic_emit_paint;
+use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
 use mosaic_vm::MosaicVM;
 
 // ===========================================================================
@@ -128,6 +129,18 @@ fn main() {
 
 /// Execute the compilation after cli-builder has parsed and validated argv.
 fn run(result: cli_builder::types::ParseResult) {
+    // ---- Subcommand dispatch ------------------------------------------------
+    //
+    // cli-builder reports the resolved command path as
+    // `["mosaic-compile"]` for the root invocation and
+    // `["mosaic-compile", "pkg"]` (etc.) for subcommands. We branch up front
+    // because the package-build flow shares no logic with the single-file
+    // compile path — different inputs, different outputs, different errors.
+    if result.command_path.iter().any(|c| c == "pkg") {
+        run_pkg(&result);
+        return;
+    }
+
     let flags = &result.flags;
     let args = &result.arguments;
 
@@ -410,6 +423,92 @@ fn run_pipeline(
         .unwrap_or_else(|| format!("{}.tsx", result.component_name));
     write_file_or_die(&out, &result.output);
     eprintln!("Written: {out}");
+}
+
+// ===========================================================================
+// `pkg` subcommand — package-artifact build (UI29 §4.3)
+// ===========================================================================
+
+/// Drive `mosaic_package_artifact_builder::build_package` from the CLI.
+///
+/// Spec (mosaic-compile.json):
+///
+/// ```text
+/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|swiftui|qt> --output <DIR>
+/// ```
+///
+/// Required: `package_root` positional, `--backend`, `--output`. cli-builder
+/// already enforces presence; we re-check defensively and produce friendly
+/// messages because cli-builder's errors are formatted before this function
+/// is called.
+fn run_pkg(result: &cli_builder::types::ParseResult) {
+    let flags = &result.flags;
+    let args = &result.arguments;
+
+    let package_root = args
+        .get("package_root")
+        .and_then(|v| v.as_str())
+        .unwrap_or_else(|| {
+            eprintln!("mosaic-compile pkg: PACKAGE_ROOT is required");
+            process::exit(1);
+        });
+
+    let backend_str = flags
+        .get("backend")
+        .and_then(|v| v.as_str())
+        .unwrap_or_else(|| {
+            eprintln!("mosaic-compile pkg: --backend is required");
+            process::exit(1);
+        });
+
+    let output = flags
+        .get("output")
+        .and_then(|v| v.as_str())
+        .unwrap_or_else(|| {
+            eprintln!("mosaic-compile pkg: --output is required");
+            process::exit(1);
+        });
+
+    // Map the string to the typed `Backend`. The artifact builder accepts
+    // the un-wired variants too (so callers can type the API surface
+    // uniformly) but they return `UnsupportedBackend` immediately; we
+    // forward that as-is below.
+    let backend = match backend_str {
+        "react" => Backend::React,
+        "swiftui" => Backend::SwiftUI,
+        "qt" => Backend::Qt,
+        "webcomponent" => Backend::WebComponent,
+        "html" => Backend::Html,
+        other => {
+            eprintln!(
+                "mosaic-compile pkg: --backend must be one of \
+                 react|swiftui|qt|webcomponent|html, got '{other}'"
+            );
+            process::exit(1);
+        }
+    };
+
+    let opts = BuildOptions {
+        package_root: PathBuf::from(package_root),
+        output_root: PathBuf::from(output),
+        backend,
+    };
+
+    match build_package(&opts) {
+        Ok(result) => {
+            for path in &result.artifacts {
+                eprintln!("Written: {}", path.display());
+            }
+            eprintln!(
+                "mosaic-compile pkg: built {} component(s)",
+                result.components_built.len()
+            );
+        }
+        Err(e) => {
+            eprintln!("mosaic-compile pkg: {e}");
+            process::exit(1);
+        }
+    }
 }
 
 // ===========================================================================

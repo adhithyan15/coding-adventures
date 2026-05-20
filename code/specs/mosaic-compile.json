@@ -2,7 +2,7 @@
   "cli_builder_spec_version": "1.0",
   "name": "mosaic-compile",
   "display_name": "Mosaic Compile",
-  "description": "Compile a .mosaic component file to a target output format.\n\nReads the unified .mosaic file format (interface + layout + style in one file)\nand emits to the specified backend.",
+  "description": "Compile a .mosaic component file to a target output format.\n\nReads the unified .mosaic file format (interface + layout + style in one file)\nand emits to the specified backend.\n\nAlso supports a `pkg` subcommand for compiling an entire Mosaic component\npackage (a directory with mosaic-package.toml + src/) per UI29 §4.3.",
   "version": "0.1.0",
   "parsing_mode": "gnu",
   "builtin_flags": {
@@ -16,7 +16,7 @@
       "short": "b",
       "description": "Output backend: 'webcomponent' (Custom Element JS) or 'html' (static HTML file)",
       "type": "string",
-      "required": true
+      "required": false
     },
     {
       "id": "output",
@@ -68,9 +68,43 @@
     {
       "id": "source",
       "name": "SOURCE",
-      "description": "Path to the .mosaic source file to compile (legacy single-file mode). Omit when using --interface/--layout/--style.",
+      "description": "Path to the .mosaic source file to compile (legacy single-file mode). Omit when using --interface/--layout/--style or the `pkg` subcommand.",
       "type": "string",
       "required": false
+    }
+  ],
+  "commands": [
+    {
+      "id": "pkg",
+      "name": "pkg",
+      "description": "Compile every component in a Mosaic package to a per-backend artifact tree (UI29 §4.3).",
+      "flags": [
+        {
+          "id": "backend",
+          "long": "backend",
+          "short": "b",
+          "description": "Backend to compile for: 'react', 'swiftui', 'qt' (webcomponent / html return UnsupportedBackend)",
+          "type": "string",
+          "required": true
+        },
+        {
+          "id": "output",
+          "long": "output",
+          "short": "o",
+          "description": "Directory under which <backend>/ is created (mkdir -p applied)",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "arguments": [
+        {
+          "id": "package_root",
+          "name": "PACKAGE_ROOT",
+          "description": "Path to the package directory (must contain mosaic-package.toml)",
+          "type": "string",
+          "required": true
+        }
+      ]
     }
   ]
 }

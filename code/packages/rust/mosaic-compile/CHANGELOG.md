@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+### Added — `pkg` subcommand (UI29 §4.3 / U29-R3)
+
+`mosaic-compile pkg <PACKAGE_ROOT> --backend <name> --output <DIR>` compiles
+every component in a Mosaic package to backend-specific source files via
+the three-language pipeline (manifest → moslayout + mosmodel + mosstyle →
+emitter). The implementation lives in the new
+`mosaic-package-artifact-builder` crate; this CLI is a thin shell that
+maps argv to a `BuildOptions` and prints the resulting artifact paths.
+
+Wired backends: React (`.tsx`), SwiftUI (`.swift`), Qt (`.qml`).
+`webcomponent` and `html` return `UnsupportedBackend` pending their
+respective kernel-completion PRs.
+
+The root-level `--backend` flag is now `required: false` at the spec
+level so the new subcommand can declare its own scoped `--backend`. The
+root-mode runtime check still enforces presence, so existing
+`mosaic-compile --backend X SOURCE.mosaic` invocations are unchanged.
+
 ### Added — three-file pipeline mode (UI23 / UI24)
 
 The CLI now supports two mutually exclusive modes:
