@@ -1,5 +1,78 @@
 # Changelog — matrix-rust-python (Rust)
 
+## [0.3.2] — 2026-05-20
+
+### Added — MX09 Phase 3b: Windows wheel + cross-Python CI matrix
+
+Extends the Phase 3 build-smoke workflow from `{ubuntu, macos} ×
+{py 3.11}` (2 cells) to `{ubuntu, macos, windows} × {py 3.10, 3.11,
+3.12}` (9 cells, all run in parallel with `fail-fast: false`).
+
+#### `build.rs` — Windows linker support
+
+Added an `emit_windows_link_flags()` path that:
+
+1. **Probes for Python** via the standard `python` / `python3`
+   command on PATH (or `PYO3_PYTHON` / `PYTHON_SYS_EXECUTABLE`
+   env-var overrides — same convention as pyo3 / maturin so the
+   same environment setup works in both ecosystems).
+2. **Queries `sysconfig`** to locate `<install>/libs/`, where
+   CPython on Windows ships `python3.lib` (Limited API import
+   library, ABI-stable across all Python 3.x — see
+   <https://docs.python.org/3/c-api/stable.html>).
+3. **Emits `cargo:rustc-link-search=native=...` + `rustc-link-lib=python3`**
+   so the cdylib resolves every Python C API symbol at link time
+   (Windows linkers don't have a `-undefined dynamic_lookup`
+   equivalent).
+
+All the symbols `python-bridge` declares are part of the Limited
+API since 3.2 (PEP 384), so linking against `python3` (not the
+version-specific `python3X`) yields one `.pyd` that loads under
+every Python 3.x install on Windows.
+
+#### CI workflow — 3 × 3 matrix
+
+`name: build + import smoke (${{ matrix.os }}, py ${{ matrix.python-version }})`
+
+| OS / Python | 3.10 | 3.11 | 3.12 |
+|-------------|:----:|:----:|:----:|
+| ubuntu-latest | ✅ | ✅ | ✅ |
+| macos-latest | ✅ | ✅ | ✅ |
+| windows-latest | ✅ | ✅ | ✅ |
+
+Cache key now includes `python-version` so each cell has its own
+slot (build.rs probes Python at build time on Windows, so the
+linked artifact is version-sensitive).
+
+Per-OS cdylib name mapping + per-OS Python-importable name mapping
+(`.so` vs `.pyd`) live in the matrix `include:` table so the bash
+in the staging step stays simple and identical across all 9 cells.
+`defaults.run.shell: bash` selects Git-Bash on the Windows runners
+so the same script runs everywhere.
+
+`sys.path.insert` from inside the smoke-import heredoc replaces
+shell-level `PYTHONPATH=...` so the path separator (`:` on POSIX,
+`;` on Windows) and path style (`/c/foo` vs `C:\foo`) are handled
+by Python via `cygpath -w` on Windows.
+
+#### What's still **not** in Phase 3b
+
+- **No maturin shim.**  The Phase 3 PR documented that maturin
+  auto-detects our raw-C-extension cdylib as `bindings = "cffi"`
+  mode (which generates a cffi wrapper instead of packaging the
+  cdylib as a CPython extension).  Maturin's `Binding` enum
+  has no "raw" / "no-binding" variant in current releases —
+  workarounds either require fake pyo3 deps (hacky) or a custom
+  cffi stub (defeats the purpose).  **Deferred to a future
+  Phase 3c** which will either patch maturin upstream, switch
+  to setuptools-rust, or hand-roll a minimal wheel-packaging
+  script (cargo build → zip into wheel format).  The current
+  cargo+cp+smoke workflow proves the same Phase 3 acceptance
+  property (cdylib links and CPython can `import` it) without
+  needing a wheel artifact.
+
+- **No PyPI publish** (Phase 5).
+
 ## [0.3.1] — 2026-05-19
 
 ### Added — MX09 Phase 3: maturin wheel-build + CI smoke import
