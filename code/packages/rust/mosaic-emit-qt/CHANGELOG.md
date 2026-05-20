@@ -2,6 +2,49 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added — U29-K-qt — `HostTable` lowering (structural first cut)
+
+Brings `HostTable` and its four sub-tags into the Qt backend. The
+first cut uses layout primitives (`ColumnLayout` of `RowLayout` rows)
+rather than QtQuick's data-driven `TableView`+`QAbstractTableModel` —
+that integration is a follow-up once `For` and a row-model source are
+specified.
+
+- **`HostTable` → `ColumnLayout { spacing: 0; ... }`.** Sub-tags are
+  walked in order:
+  - `HostTableHead { Row { Text ... } }` → `RowLayout { Text { ...;
+    font.bold: true } }`, followed by a 1-pixel `Rectangle` divider.
+  - `HostTableBody { Row { Text ... } }` → `RowLayout { Text { ... } }`
+    (no bolding, no divider).
+  - `HostTableFoot { Row { Text ... } }` → 1-pixel `Rectangle` divider
+    followed by a `RowLayout` (visually separates foot from body).
+  - `HostTableColGroup` → ignored with a `// HostTableColGroup (no
+    QML analog)` comment.
+- **Orphan sub-tag handling.** A `HostTableHead`/`Body`/`Foot`/
+  `ColGroup` used outside a `HostTable` parent emits a self-documenting
+  `// orphan HostTableX (outside HostTable)` comment rather than
+  erroring. Keeps the emitter resilient.
+- **`part_name` on `HostTable`** is accepted but not yet consumed —
+  styling integration for table parts is a follow-up. A regression
+  test pins the don't-break behaviour.
+- **8 new unit tests** in `pipeline.rs` cover: empty table skeleton;
+  bold head cells; plain body rows; foot-preceded-by-divider;
+  head→divider→body ordering; ColGroup-as-comment; orphan tolerance;
+  `part_name` resilience.
+- Removed `HostTable` from the `UnknownPrimitive` deferred-error test
+  (kept `If` and `For`, which remain deferred to U29-G1/U29-G2).
+
+### Spec divergence
+
+`HostTable` is specified to lower to QML `TableView { ... }`. This PR
+deliberately ships a `ColumnLayout`+`RowLayout` shape instead: real
+`TableView` requires a `QAbstractTableModel` (or `Qt.labs.qmlmodels
+.TableModel`) and per-column delegates, neither of which exist in this
+pipeline until `For` lands. The divergence is documented in
+`emit_host_table_qml`'s rustdoc and the module-level lowering table.
+
 ## [0.2.0] - 2026-05-19
 
 ### Added — U29-K-qt (partial) — UI29 kernel primitives: Stack, HostInput, HostButton, HostScroll

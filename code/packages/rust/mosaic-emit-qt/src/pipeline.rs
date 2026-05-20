@@ -41,6 +41,7 @@
 //! | `HostInput`   | `TextInput { text: ...; readOnly: ...; onAccepted/Keys.onEscapePressed }`   |
 //! | `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (Controls 2.15)        |
 //! | `HostScroll`  | `ScrollView { ... children ... }`                                           |
+//! | `HostTable`   | `ColumnLayout { ... }` of `RowLayout` rows (first-cut shape — see `emit_host_table_qml` for the deferred true-`TableView` lowering) |
 //!
 //! ## What this emitter does NOT yet do
 //!
@@ -48,7 +49,9 @@
 //! Cell/data-Column/Grid v3 primitives (UI28 §2); `connects` wiring from
 //! `EmitRef` props to `signal` emissions inside the tree; and mosstyle
 //! inlining into element attributes. The remaining UI29 kernel primitives
-//! (`If`, `For`, `HostTable`) wait on the U29-G1..U29-G3 grammar work.
+//! `If` and `For` wait on the U29-G1..U29-G2 grammar work; `HostTable`
+//! lowers to a structural `ColumnLayout`+`RowLayout` shape today (true
+//! `TableView` + `QAbstractTableModel` integration is a follow-up).
 //!
 //! ## Why the root is always `Item`
 //!
@@ -290,6 +293,15 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
     match node.tag.as_str() {
         "HostInput" => return emit_host_input_qml(node, depth),
         "HostButton" => return emit_host_button_qml(node, depth),
+        "HostTable" => return emit_host_table_qml(node, depth),
+        // Orphan sub-tags: `HostTableHead`/`HostTableBody`/`HostTableFoot`/
+        // `HostTableColGroup` outside a `HostTable` parent have no semantic
+        // home in QML. Emit a self-documenting comment rather than erroring
+        // — keeps the emitter resilient to malformed input.
+        "HostTableHead" | "HostTableBody" | "HostTableFoot" | "HostTableColGroup" => {
+            let pad = "    ".repeat(depth);
+            return Ok(format!("{pad}// orphan {} (outside HostTable)\n", node.tag));
+        }
         _ => {}
     }
 
@@ -708,6 +720,161 @@ fn emit_host_button_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipel
 fn tree_needs_controls_import(node: &LayoutNode) -> bool {
     matches!(node.tag.as_str(), "HostButton" | "HostScroll")
         || node.children.iter().any(tree_needs_controls_import)
+}
+
+/// Lower a `HostTable` node to a QML `ColumnLayout` of `RowLayout` rows.
+///
+/// ## Lowering strategy (first cut)
+///
+/// QtQuick has a real, data-driven `TableView` element backed by a
+/// `QAbstractTableModel` (or the lighter `Qt.labs.qmlmodels.TableModel`).
+/// That is the *correct* long-term lowering for `HostTable`, but it
+/// requires:
+///
+/// 1. A model object exposed from the host side (or a QML
+///    `TableModel { TableModelColumn { ... } ... }` declaration).
+/// 2. A `DelegateChooser` or per-column delegate to render each cell.
+/// 3. Pluming `For`/slot data through that model.
+///
+/// None of those exist yet in this backend — `For` itself is still
+/// deferred to U29-G2. So for this first cut we lower `HostTable` to a
+/// structural shape made of layout primitives only:
+///
+/// ```qml
+/// ColumnLayout {
+///   spacing: 0
+///   // HostTableHead — each Row becomes a RowLayout of bold Texts
+///   RowLayout { Text { text: "A"; font.bold: true } }
+///   Rectangle { Layout.fillWidth: true; height: 1; color: "#888" }
+///   // HostTableBody — Rows become plain RowLayouts
+///   RowLayout { Text { text: "1" } Text { text: "2" } }
+///   // HostTableFoot — same shape as body, preceded by a divider
+/// }
+/// ```
+///
+/// The TODO/follow-up: emit a real `TableView` + `TableModel` once the
+/// pipeline can synthesise the model from a `For`-bound slot.
+///
+/// ## Sub-tag handling
+///
+/// | sub-tag             | output                                                       |
+/// |---|---|
+/// | `HostTableHead`     | RowLayout(s); descendant `Text` nodes get `font.bold: true`  |
+/// | `HostTableBody`     | RowLayout(s) per `Row` child                                 |
+/// | `HostTableFoot`     | RowLayout(s) preceded by a divider Rectangle                 |
+/// | `HostTableColGroup` | Ignored — no QML analog. Emitted as a `// ColGroup …` comment |
+/// | (any other child)   | Walked normally (so a stray `Text` inside `HostTable` works) |
+///
+/// `part_name` on the `HostTable` itself is *currently* not consumed —
+/// styling integration for table parts is a follow-up. Tests assert
+/// that its presence does not break emission.
+fn emit_host_table_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner_pad = "    ".repeat(depth + 1);
+    let mut out = String::new();
+
+    writeln!(out, "{pad}ColumnLayout {{").unwrap();
+    writeln!(out, "{inner_pad}spacing: 0").unwrap();
+
+    // Track whether we've already emitted the head→body divider. The
+    // divider sits between head and the first non-head section (body or
+    // foot); we also emit one before `HostTableFoot` so foot is visually
+    // separated from body. The simple rule that matches the spec sketch:
+    //   - emit a divider after a head section finishes;
+    //   - emit a divider before each foot section.
+    for child in &node.children {
+        match child.tag.as_str() {
+            "HostTableHead" => {
+                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ true)?;
+                // Divider after the head: a 1px Rectangle.
+                writeln!(out, "{inner_pad}Rectangle {{").unwrap();
+                writeln!(out, "{inner_pad}    Layout.fillWidth: true").unwrap();
+                writeln!(out, "{inner_pad}    height: 1").unwrap();
+                writeln!(out, "{inner_pad}    color: \"#888\"").unwrap();
+                writeln!(out, "{inner_pad}}}").unwrap();
+            }
+            "HostTableBody" => {
+                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false)?;
+            }
+            "HostTableFoot" => {
+                // Foot is preceded by a divider so it visually separates
+                // from the body. Mirrors a typical `<tfoot>` border.
+                writeln!(out, "{inner_pad}Rectangle {{").unwrap();
+                writeln!(out, "{inner_pad}    Layout.fillWidth: true").unwrap();
+                writeln!(out, "{inner_pad}    height: 1").unwrap();
+                writeln!(out, "{inner_pad}    color: \"#888\"").unwrap();
+                writeln!(out, "{inner_pad}}}").unwrap();
+                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false)?;
+            }
+            "HostTableColGroup" => {
+                // No QML analog. Emit a self-documenting comment so the
+                // output is still readable but the construct is visible.
+                writeln!(out, "{inner_pad}// HostTableColGroup (no QML analog)").unwrap();
+            }
+            _ => {
+                // Anything else inside `HostTable` is walked as a normal
+                // layout child. This preserves the door for future
+                // additions (a `For` row, a stray `Text` caption, etc.).
+                out.push_str(&emit_qml_tree(child, depth + 1)?);
+            }
+        }
+    }
+
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Emit one section (head / body / foot) of a `HostTable`. Walks the
+/// section's `Row` children, emitting each as a `RowLayout { ... }`. Any
+/// non-`Row` child inside the section falls back to normal walking; in
+/// practice the grammar will constrain sections to `Row` children only.
+///
+/// When `bold` is true, every descendant `Text` inside an emitted
+/// `RowLayout` carries a `font.bold: true` line. The bolding is applied
+/// inline here — we generate `RowLayout`s and their `Text` cells
+/// directly rather than recursing through `emit_qml_tree` — because the
+/// bold flag is a property of the *section*, not of the cell. Cells are
+/// shallow leaves in practice (one prop each), so the explicit code is
+/// short and clear.
+fn emit_table_section_rows(
+    out: &mut String,
+    section: &LayoutNode,
+    depth: usize,
+    bold: bool,
+) -> Result<(), PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let cell_pad = "    ".repeat(depth + 1);
+
+    for row in &section.children {
+        if row.tag != "Row" {
+            // Non-Row child inside a section — walk it normally and let
+            // the general emitter handle it. The grammar should prevent
+            // this in real input, but be permissive on the output side.
+            out.push_str(&emit_qml_tree(row, depth)?);
+            continue;
+        }
+
+        writeln!(out, "{pad}RowLayout {{").unwrap();
+        for cell in &row.children {
+            if cell.tag == "Text" {
+                writeln!(out, "{cell_pad}Text {{").unwrap();
+                if let Some(line) = build_text_attribute(cell) {
+                    writeln!(out, "{cell_pad}    {line}").unwrap();
+                }
+                if bold {
+                    writeln!(out, "{cell_pad}    font.bold: true").unwrap();
+                }
+                writeln!(out, "{cell_pad}}}").unwrap();
+            } else {
+                // Non-Text cell: recurse through the general walker. Bold
+                // doesn't propagate here — only `Text` cells get the
+                // header treatment in this first cut.
+                out.push_str(&emit_qml_tree(cell, depth + 1)?);
+            }
+        }
+        writeln!(out, "{pad}}}").unwrap();
+    }
+    Ok(())
 }
 
 /// Build the `text: ...` attribute for a `HostInput` from its `value` prop.
@@ -1513,10 +1680,10 @@ mod tests {
     }
 
     // =================================================================
-    // UI29 primitive kernel (U29-K-qt partial): Stack, HostInput,
-    // HostButton, HostScroll. The remaining three primitives — `If`,
-    // `For`, `HostTable` — wait on the U29-G1..U29-G3 grammar work and
-    // are not covered here.
+    // UI29 primitive kernel (U29-K-qt): Stack, HostInput, HostButton,
+    // HostScroll, HostTable. The remaining two primitives — `If` and
+    // `For` — wait on the U29-G1..U29-G2 grammar work and are not
+    // covered here.
     // =================================================================
 
     // -------- Test 18: Stack lowers to Item with child anchors --------
@@ -1841,15 +2008,339 @@ mod tests {
         );
     }
 
+    // -------- HostTable tests (U29-K-qt §HostTable) --------
+
+    /// Build a `HostTable` layout with the given children. Used as the
+    /// test fixture for the HostTable suite.
+    fn host_table(children: Vec<LayoutNode>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children,
+            },
+        }
+    }
+
+    /// Build a `Text` cell with a literal string content. Saves typing.
+    fn text_cell(s: &str) -> LayoutNode {
+        LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::String(s.to_string()),
+            }],
+            children: Vec::new(),
+        }
+    }
+
+    /// Build a `Row` of `Text` cells. The HostTable sub-tag grammar
+    /// expects rows inside sections.
+    fn row_of(cells: Vec<&str>) -> LayoutNode {
+        LayoutNode {
+            tag: "Row".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: cells.into_iter().map(text_cell).collect(),
+        }
+    }
+
+    /// Build a section sub-tag (HostTableHead/Body/Foot) wrapping rows.
+    fn section(tag: &str, rows: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: rows,
+        }
+    }
+
+    /// Count substring occurrences (helper for "exactly N divider Rectangles"
+    /// style assertions).
+    fn count_occurrences(s: &str, needle: &str) -> usize {
+        s.matches(needle).count()
+    }
+
+    // -------- Test 27: empty HostTable emits ColumnLayout skeleton --------
+
+    /// An empty `HostTable` (no sections) lowers to a bare
+    /// `ColumnLayout { spacing: 0 }`. No rows, no divider — but the
+    /// container is present so downstream styling can still target it.
+    #[test]
+    fn empty_host_table_emits_column_layout_skeleton() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table(vec![]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("ColumnLayout {"),
+            "missing ColumnLayout in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("spacing: 0"),
+            "missing spacing: 0 in:\n{}",
+            result.output
+        );
+        assert!(
+            !result.output.contains("RowLayout {"),
+            "unexpected RowLayout in empty HostTable:\n{}",
+            result.output
+        );
+        // No divider Rectangle for an empty table.
+        assert!(
+            !result.output.contains("height: 1"),
+            "unexpected divider in empty HostTable:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 28: HostTableHead emits bold RowLayout cells --------
+
+    /// `HostTableHead` rows lower to `RowLayout`s whose `Text` children
+    /// each carry `font.bold: true`. Verifies both presence of the
+    /// `RowLayout` and the bold attribute on the text cells.
+    #[test]
+    fn host_table_head_emits_bold_row_layout() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table(vec![section(
+            "HostTableHead",
+            vec![row_of(vec!["A", "B"])],
+        )]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("RowLayout {"),
+            "missing RowLayout in head:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("text: \"A\""),
+            "missing first header cell text:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("text: \"B\""),
+            "missing second header cell text:\n{}",
+            result.output
+        );
+        // Both header cells must be bold — expect exactly 2 occurrences.
+        assert_eq!(
+            count_occurrences(&result.output, "font.bold: true"),
+            2,
+            "expected 2 font.bold lines in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 29: HostTableBody emits plain RowLayouts --------
+
+    /// `HostTableBody` rows lower to `RowLayout { Text {...} ... }`
+    /// without the bold flag. With no head, no divider should appear.
+    #[test]
+    fn host_table_body_emits_plain_row_layout() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table(vec![section(
+            "HostTableBody",
+            vec![row_of(vec!["1", "2"]), row_of(vec!["3", "4"])],
+        )]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        // Two body rows → two RowLayouts.
+        assert_eq!(
+            count_occurrences(&result.output, "RowLayout {"),
+            2,
+            "expected 2 RowLayouts in:\n{}",
+            result.output
+        );
+        // No bolding outside head sections.
+        assert!(
+            !result.output.contains("font.bold: true"),
+            "unexpected bold cell in body-only table:\n{}",
+            result.output
+        );
+        // No divider Rectangle without a head/foot section.
+        assert!(
+            !result.output.contains("height: 1"),
+            "unexpected divider with body-only table:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 30: HostTableFoot is preceded by a divider --------
+
+    /// `HostTableFoot` lowers to a `RowLayout` *preceded by* a 1px
+    /// `Rectangle` divider. Verifies the divider appears literally
+    /// before the foot's RowLayout in the output.
+    #[test]
+    fn host_table_foot_is_preceded_by_divider() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table(vec![section(
+            "HostTableFoot",
+            vec![row_of(vec!["total", "100"])],
+        )]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        // Find positions of divider and the foot's RowLayout. Divider
+        // (height: 1 line) must come before the RowLayout opening.
+        let divider_pos = result
+            .output
+            .find("height: 1")
+            .expect("divider not found");
+        let row_pos = result
+            .output
+            .find("RowLayout {")
+            .expect("foot RowLayout not found");
+        assert!(
+            divider_pos < row_pos,
+            "divider must precede foot's RowLayout in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 31: Head + Body emit head, divider, then body --------
+
+    /// With both a head and a body, the output order is:
+    ///   head's RowLayout → divider Rectangle → body's RowLayout.
+    /// Asserts the three structural positions in the output.
+    #[test]
+    fn host_table_head_then_body_emits_in_order() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table(vec![
+            section("HostTableHead", vec![row_of(vec!["A", "B"])]),
+            section("HostTableBody", vec![row_of(vec!["1", "2"])]),
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let head_pos = result
+            .output
+            .find("text: \"A\"")
+            .expect("head cell not found");
+        let divider_pos = result
+            .output
+            .find("height: 1")
+            .expect("divider not found");
+        let body_pos = result
+            .output
+            .find("text: \"1\"")
+            .expect("body cell not found");
+        assert!(
+            head_pos < divider_pos && divider_pos < body_pos,
+            "expected head < divider < body in:\n{}",
+            result.output
+        );
+        // Exactly one divider between head and body.
+        assert_eq!(
+            count_occurrences(&result.output, "height: 1"),
+            1,
+            "expected exactly 1 divider in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 32: HostTableColGroup is ignored with a comment --------
+
+    /// `HostTableColGroup` has no QML analog. It must not break
+    /// emission; instead a self-documenting comment is emitted.
+    #[test]
+    fn host_table_col_group_emits_comment_and_does_not_break() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table(vec![
+            LayoutNode {
+                tag: "HostTableColGroup".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+            section("HostTableBody", vec![row_of(vec!["1"])]),
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("// HostTableColGroup"),
+            "missing ColGroup comment in:\n{}",
+            result.output
+        );
+        // The body still renders normally.
+        assert!(
+            result.output.contains("text: \"1\""),
+            "body row missing after ColGroup in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 33: orphan HostTableHead outside HostTable --------
+
+    /// A `HostTableHead` (or any sub-tag) used as a top-level root
+    /// outside a `HostTable` parent emits a self-documenting QML
+    /// comment rather than erroring. Defensive — the grammar should
+    /// prevent this, but the emitter should not crash on malformed
+    /// trees.
+    #[test]
+    fn orphan_host_table_head_emits_comment_no_error() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTableHead".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("// orphan HostTableHead"),
+            "missing orphan comment in:\n{}",
+            result.output
+        );
+        // Critically — no RowLayout or Rectangle escaping from an orphan.
+        assert!(
+            !result.output.contains("RowLayout {"),
+            "orphan must not emit RowLayout in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 34: part_name on HostTable does not break --------
+
+    /// Until styling integration lands for tables, a `part_name` on the
+    /// `HostTable` itself is accepted silently — the emitter must not
+    /// reject the node. Verifies the output still contains the
+    /// `ColumnLayout` skeleton.
+    #[test]
+    fn host_table_part_name_does_not_break_emission() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: Some("data-grid".to_string()),
+                props: Vec::new(),
+                children: vec![section("HostTableBody", vec![row_of(vec!["x"])])],
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("ColumnLayout {"),
+            "missing ColumnLayout when part_name present:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("RowLayout {"),
+            "missing body RowLayout when part_name present:\n{}",
+            result.output
+        );
+    }
+
     // -------- Test 26: For/If still produce UnknownPrimitive errors --------
 
     /// The remaining UI29 kernel primitives `If` and `For` are
     /// out-of-scope for this PR (they wait on grammar PRs). Verify the
     /// existing error path still works: a layout node with these tags
     /// produces `UnknownPrimitive` rather than silently being accepted.
+    /// (`HostTable` is no longer in this list — it lowers via
+    /// `emit_host_table_qml` as of U29-K-qt.)
     #[test]
     fn deferred_if_for_and_host_table_still_error_as_unknown() {
-        for tag in ["If", "For", "HostTable"] {
+        for tag in ["If", "For"] {
             let m = component("X", vec![], vec![]);
             let l = LayoutDef {
                 component_name: "X".to_string(),
