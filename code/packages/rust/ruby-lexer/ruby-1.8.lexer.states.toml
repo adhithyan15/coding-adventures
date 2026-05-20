@@ -1,0 +1,842 @@
+# Ruby 1.8 lexer — Phase 1 paren-required baseline.
+#
+# This file is authored by hand and is the source of truth for the
+# Ruby-1.8 token-shape state machine.  See
+# code/specs/ruby-parser.md and code/specs/ruby-lexer-state-machine.md
+# for the design.
+#
+# Scope of Phase 1 (this file):
+# - identifiers (keywords distinguished by the lexer)
+# - integers (decimal only — no 0x / 0b / 0o yet)
+# - simple double-quoted and single-quoted strings (no interpolation)
+# - line comments (`# ...`)
+# - operators: + - * / % == != < > <= >= = ! && ||
+# - punctuation: ( ) [ ] { } , ; : :: . => newline
+# - whitespace skipped (newlines emit a NEWLINE token)
+#
+# Out of Phase 1 (added by later phases per ruby-parser.md):
+# - heredocs, %w[] / %q{} / %r{} percent literals
+# - string interpolation `#{}`
+# - regex `/.../` (needs lex-state feedback)
+# - parser-driven `f /x/` disambiguation
+# - hash shorthand, lambdas, etc. (later eras)
+
+format = "state-machine/v1"
+profile = "lexer/v1"
+name = "ruby-1.8-lexer"
+kind = "transducer"
+version = "0.1.0"
+runtime_min = "ruby-lexer-runtime/0.1"
+initial = "data"
+done = "done"
+includes = []
+
+# Alphabet: every character the machine matches as a literal must
+# appear here.  Range / one_of matchers are "broad" and don't need
+# alphabet entries (the engine permits any code point on a broad
+# transition).
+alphabet = [
+  # whitespace
+  "\n", " ", "\t", "\r",
+  # punctuation
+  "(", ")", "[", "]", "{", "}",
+  ",", ";", ":", ".", "?",
+  # operators
+  "+", "-", "*", "/", "%",
+  "=", "!", "<", ">", "&", "|", "^", "~",
+  # delimiters
+  "\"", "'", "#", "\\",
+  # string-escape letters (n, t, r) — referenced as `literal` matchers
+  # inside string_d_escape.  range matchers don't need alphabet entries
+  # but literal matchers do.
+  "n", "t", "r",
+  # underscore — ident starter / digit separator (referenced as `literal`
+  # in `data` and `ident_body` / `int_body`)
+  "_",
+]
+
+# ── Token vocabulary ──────────────────────────────────────────────
+# Each token carries a `value` field (the source lexeme).  The
+# action interpreter populates it from the active text buffer when
+# `emit(<name>)` fires.
+
+[[tokens]]
+name = "Name"          # identifier; parser distinguishes keywords + constants
+fields = ["value"]
+
+[[tokens]]
+name = "Int"
+fields = ["value"]
+
+[[tokens]]
+name = "String"        # quoted string literal (escapes resolved by runtime)
+fields = ["value", "quote"]
+
+[[tokens]]
+name = "Op"            # generic operator token, parser disambiguates further
+fields = ["value"]
+
+[[tokens]]
+name = "LParen"
+fields = []
+
+[[tokens]]
+name = "RParen"
+fields = []
+
+[[tokens]]
+name = "LBracket"
+fields = []
+
+[[tokens]]
+name = "RBracket"
+fields = []
+
+[[tokens]]
+name = "LBrace"
+fields = []
+
+[[tokens]]
+name = "RBrace"
+fields = []
+
+[[tokens]]
+name = "Comma"
+fields = []
+
+[[tokens]]
+name = "Semi"
+fields = []
+
+[[tokens]]
+name = "Colon"
+fields = []
+
+[[tokens]]
+name = "ColonColon"
+fields = []
+
+[[tokens]]
+name = "Dot"
+fields = []
+
+[[tokens]]
+name = "Newline"
+fields = []
+
+[[tokens]]
+name = "Eof"
+fields = []
+
+# ── Registers ────────────────────────────────────────────────────
+# Only the text buffer is needed for Phase 1.  Heredoc / interp
+# state arrives in Phase 3.
+
+[[registers]]
+id = "text_buffer"
+type = "string"
+
+# ── States ───────────────────────────────────────────────────────
+# `data` is the start state.  Identifier / integer / string / comment
+# states are sub-machines reached on a class match from `data` and
+# return to `data` on terminator.
+
+[[states]]
+id = "data"
+initial = true
+
+[[states]]
+id = "ident_body"
+
+[[states]]
+id = "int_body"
+
+[[states]]
+id = "string_d_body"     # inside "..."
+[[states]]
+id = "string_d_escape"   # inside "..." after a backslash
+
+[[states]]
+id = "string_s_body"     # inside '...'
+[[states]]
+id = "string_s_escape"
+
+[[states]]
+id = "comment_body"      # # to end-of-line
+
+[[states]]
+id = "after_eq"          # saw `=`, peeking for `==`, `=>`, `===`
+[[states]]
+id = "after_eq_eq"       # saw `==`, peeking for `===`
+[[states]]
+id = "after_bang"        # saw `!`, peeking for `!=`
+[[states]]
+id = "after_lt"          # saw `<`, peeking for `<=` (no `<<` yet — Phase 3 heredocs)
+[[states]]
+id = "after_gt"          # saw `>`, peeking for `>=`
+[[states]]
+id = "after_amp"         # saw `&`, peeking for `&&`
+[[states]]
+id = "after_pipe"        # saw `|`, peeking for `||`
+[[states]]
+id = "after_colon"       # saw `:`, peeking for `::` or a symbol body
+[[states]]
+id = "after_star"        # saw `*`, peeking for `**`
+
+[[states]]
+id = "done"
+final = true
+
+# ─────────────────────────────────────────────────────────────────
+# Transitions from `data` (the dispatcher)
+# Order matters: first matching transition wins.
+# ─────────────────────────────────────────────────────────────────
+
+# EOF flushes any pending state and terminates.
+[[transitions]]
+from = "data"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Eof)"]
+
+# Whitespace (space, tab, \r) is skipped silently.  `\n` is emitted
+# as a Newline token — Ruby uses newlines as statement terminators.
+[[transitions]]
+from = "data"
+matcher = { literal = "\n" }
+to = "data"
+actions = ["emit(Newline)"]
+
+[[transitions]]
+from = "data"
+matcher = { one_of = " \t\r" }
+to = "data"
+
+# Comment: `#` runs to end-of-line.
+[[transitions]]
+from = "data"
+matcher = { literal = "#" }
+to = "comment_body"
+
+# Identifier starters: `_`, `a-z`, `A-Z`.  We accumulate into the
+# text buffer and let `emit(Name)` decide whether the lexeme
+# is a keyword (the action interpreter handles keyword recognition).
+[[transitions]]
+from = "data"
+matcher = { literal = "_" }
+to = "ident_body"
+actions = ["clear_text", "append_text(current)"]
+
+[[transitions]]
+from = "data"
+matcher = { range = ["a", "z"] }
+to = "ident_body"
+actions = ["clear_text", "append_text(current)"]
+
+[[transitions]]
+from = "data"
+matcher = { range = ["A", "Z"] }
+to = "ident_body"
+actions = ["clear_text", "append_text(current)"]
+
+# Integer.
+[[transitions]]
+from = "data"
+matcher = { range = ["0", "9"] }
+to = "int_body"
+actions = ["clear_text", "append_text(current)"]
+
+# Strings.
+[[transitions]]
+from = "data"
+matcher = { literal = "\"" }
+to = "string_d_body"
+actions = ["clear_text"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "'" }
+to = "string_s_body"
+actions = ["clear_text"]
+
+# Punctuation that emits immediately.
+[[transitions]]
+from = "data"
+matcher = { literal = "(" }
+to = "data"
+actions = ["emit(LParen)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = ")" }
+to = "data"
+actions = ["emit(RParen)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "[" }
+to = "data"
+actions = ["emit(LBracket)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "]" }
+to = "data"
+actions = ["emit(RBracket)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "{" }
+to = "data"
+actions = ["emit(LBrace)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "}" }
+to = "data"
+actions = ["emit(RBrace)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "," }
+to = "data"
+actions = ["emit(Comma)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = ";" }
+to = "data"
+actions = ["emit(Semi)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "." }
+to = "data"
+actions = ["emit(Dot)"]
+
+# Single-character operators that have no multi-character cousin
+# at this state.  Multi-character cousins drop into peek states.
+[[transitions]]
+from = "data"
+matcher = { literal = "+" }
+to = "data"
+actions = ["set_text(+)", "emit(Op)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "-" }
+to = "data"
+actions = ["set_text(-)", "emit(Op)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "/" }
+to = "data"
+actions = ["set_text(/)", "emit(Op)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "%" }
+to = "data"
+actions = ["set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "~" }
+to = "data"
+actions = ["set_text(~)", "emit(Op)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "^" }
+to = "data"
+actions = ["set_text(^)", "emit(Op)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "?" }
+to = "data"
+actions = ["set_text(?)", "emit(Op)"]
+
+# Multi-character operator entry points.
+[[transitions]]
+from = "data"
+matcher = { literal = "=" }
+to = "after_eq"
+
+[[transitions]]
+from = "data"
+matcher = { literal = "!" }
+to = "after_bang"
+
+[[transitions]]
+from = "data"
+matcher = { literal = "<" }
+to = "after_lt"
+
+[[transitions]]
+from = "data"
+matcher = { literal = ">" }
+to = "after_gt"
+
+[[transitions]]
+from = "data"
+matcher = { literal = "&" }
+to = "after_amp"
+
+[[transitions]]
+from = "data"
+matcher = { literal = "|" }
+to = "after_pipe"
+
+[[transitions]]
+from = "data"
+matcher = { literal = ":" }
+to = "after_colon"
+
+[[transitions]]
+from = "data"
+matcher = { literal = "*" }
+to = "after_star"
+
+# Catch-all for unknown characters: emit a diagnostic and stay in
+# `data`.  Avoids the engine "no transition" error blowing up the
+# tokenizer on stray bytes.
+[[transitions]]
+from = "data"
+matcher = { anything = true }
+to = "data"
+actions = ["parse_error(unexpected_character)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Identifier body
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "ident_body"
+matcher = { literal = "_" }
+to = "ident_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ident_body"
+matcher = { range = ["a", "z"] }
+to = "ident_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ident_body"
+matcher = { range = ["A", "Z"] }
+to = "ident_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ident_body"
+matcher = { range = ["0", "9"] }
+to = "ident_body"
+actions = ["append_text(current)"]
+
+# Trailing `?` and `!` are part of the method-name identifier
+# (`foo?`, `foo!`).
+[[transitions]]
+from = "ident_body"
+matcher = { literal = "?" }
+to = "ident_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ident_body"
+matcher = { literal = "!" }
+to = "ident_body"
+actions = ["append_text(current)"]
+
+# Any other character ends the identifier.  Re-dispatch by going
+# back to `data` *without consuming* the terminator.
+[[transitions]]
+from = "ident_body"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Name)"]
+
+[[transitions]]
+from = "ident_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Name)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Integer body
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "int_body"
+matcher = { range = ["0", "9"] }
+to = "int_body"
+actions = ["append_text(current)"]
+
+# Ruby allows `_` as a digit separator: `1_000_000`.
+[[transitions]]
+from = "int_body"
+matcher = { literal = "_" }
+to = "int_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "int_body"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Int)"]
+
+[[transitions]]
+from = "int_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Int)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Double-quoted string body (no interpolation in Phase 1)
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "string_d_body"
+matcher = { literal = "\\" }
+to = "string_d_escape"
+
+[[transitions]]
+from = "string_d_body"
+matcher = { literal = "\"" }
+to = "data"
+actions = ["emit(String)"]
+
+[[transitions]]
+from = "string_d_body"
+matcher = { literal = "\n" }
+to = "string_d_body"
+actions = ["append_text(current)"]   # multi-line strings legal in 1.8
+
+[[transitions]]
+from = "string_d_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_string)", "emit(Eof)"]
+
+[[transitions]]
+from = "string_d_body"
+matcher = { anything = true }
+to = "string_d_body"
+actions = ["append_text(current)"]
+
+# Escape handling — minimal: \n, \t, \r, \\, \", literal otherwise.
+[[transitions]]
+from = "string_d_escape"
+matcher = { literal = "n" }
+to = "string_d_body"
+actions = ["append_text(\\n)"]
+
+[[transitions]]
+from = "string_d_escape"
+matcher = { literal = "t" }
+to = "string_d_body"
+actions = ["append_text(\\t)"]
+
+[[transitions]]
+from = "string_d_escape"
+matcher = { literal = "r" }
+to = "string_d_body"
+actions = ["append_text(\\r)"]
+
+[[transitions]]
+from = "string_d_escape"
+matcher = { literal = "\\" }
+to = "string_d_body"
+actions = ["append_text(\\\\)"]
+
+[[transitions]]
+from = "string_d_escape"
+matcher = { literal = "\"" }
+to = "string_d_body"
+actions = ["append_text(\")"]
+
+[[transitions]]
+from = "string_d_escape"
+matcher = { anything = true }
+to = "string_d_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "string_d_escape"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_string)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Single-quoted string — fewer escapes (only \' and \\).
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "string_s_body"
+matcher = { literal = "\\" }
+to = "string_s_escape"
+
+[[transitions]]
+from = "string_s_body"
+matcher = { literal = "'" }
+to = "data"
+actions = ["emit(String)"]
+
+[[transitions]]
+from = "string_s_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_string)", "emit(Eof)"]
+
+[[transitions]]
+from = "string_s_body"
+matcher = { anything = true }
+to = "string_s_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "string_s_escape"
+matcher = { literal = "'" }
+to = "string_s_body"
+actions = ["append_text(')"]
+
+[[transitions]]
+from = "string_s_escape"
+matcher = { literal = "\\" }
+to = "string_s_body"
+actions = ["append_text(\\\\)"]
+
+# Any other escaped char in '...' keeps the backslash literally.
+[[transitions]]
+from = "string_s_escape"
+matcher = { anything = true }
+to = "string_s_body"
+actions = ["append_text(\\\\)", "append_text(current)"]
+
+[[transitions]]
+from = "string_s_escape"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_string)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Line comment
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "comment_body"
+matcher = { literal = "\n" }
+to = "data"
+consume = false   # leave the newline for `data`'s Newline emit rule
+
+[[transitions]]
+from = "comment_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Eof)"]
+
+[[transitions]]
+from = "comment_body"
+matcher = { anything = true }
+to = "comment_body"
+
+# ─────────────────────────────────────────────────────────────────
+# Multi-character operator peek states
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "after_eq"
+matcher = { literal = "=" }
+to = "after_eq_eq"
+
+[[transitions]]
+from = "after_eq"
+matcher = { literal = ">" }
+to = "data"
+actions = ["set_text(=>)", "emit(Op)"]
+
+[[transitions]]
+from = "after_eq"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(=)", "emit(Op)"]
+
+[[transitions]]
+from = "after_eq"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(=)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_eq_eq"
+matcher = { literal = "=" }
+to = "data"
+actions = ["set_text(===)", "emit(Op)"]
+
+[[transitions]]
+from = "after_eq_eq"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(==)", "emit(Op)"]
+
+[[transitions]]
+from = "after_eq_eq"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(==)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_bang"
+matcher = { literal = "=" }
+to = "data"
+actions = ["set_text(!=)", "emit(Op)"]
+
+[[transitions]]
+from = "after_bang"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(!)", "emit(Op)"]
+
+[[transitions]]
+from = "after_bang"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(!)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_lt"
+matcher = { literal = "=" }
+to = "data"
+actions = ["set_text(<=)", "emit(Op)"]
+
+[[transitions]]
+from = "after_lt"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(<)", "emit(Op)"]
+
+[[transitions]]
+from = "after_lt"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(<)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_gt"
+matcher = { literal = "=" }
+to = "data"
+actions = ["set_text(>=)", "emit(Op)"]
+
+[[transitions]]
+from = "after_gt"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(>)", "emit(Op)"]
+
+[[transitions]]
+from = "after_gt"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(>)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_amp"
+matcher = { literal = "&" }
+to = "data"
+actions = ["set_text(&&)", "emit(Op)"]
+
+[[transitions]]
+from = "after_amp"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(&)", "emit(Op)"]
+
+[[transitions]]
+from = "after_amp"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(&)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_pipe"
+matcher = { literal = "|" }
+to = "data"
+actions = ["set_text(||)", "emit(Op)"]
+
+[[transitions]]
+from = "after_pipe"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(|)", "emit(Op)"]
+
+[[transitions]]
+from = "after_pipe"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(|)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_colon"
+matcher = { literal = ":" }
+to = "data"
+actions = ["emit(ColonColon)"]
+
+[[transitions]]
+from = "after_colon"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Colon)"]
+
+[[transitions]]
+from = "after_colon"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Colon)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_star"
+matcher = { literal = "*" }
+to = "data"
+actions = ["set_text(**)", "emit(Op)"]
+
+[[transitions]]
+from = "after_star"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(*)", "emit(Op)"]
+
+[[transitions]]
+from = "after_star"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(*)", "emit(Op)", "emit(Eof)"]
