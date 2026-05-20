@@ -47,6 +47,8 @@ The crate keeps the boundary narrow:
   pressure counts diverge
 - supervisor drain run summaries expose signed replayed-minus-planned row and
   follow-up pressure deltas for host logs
+- supervisor drain reports and summaries expose delta-direction helpers for
+  extra or missed replayed work and follow-up pressure
 - supervisor drain run summaries expose count-drift presence flags beside
   signed deltas for host logs
 - supervisor drain run summaries expose stable count-drift classifications so

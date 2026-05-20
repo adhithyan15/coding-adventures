@@ -35,6 +35,7 @@ All notable changes to this package will be documented in this file.
 - Follow-up pressure drift flags in supervisor drain run reports and summaries.
 - Signed replayed-minus-planned row and follow-up pressure deltas in supervisor
   drain run summaries.
+- Delta-direction helpers for supervisor drain run reports.
 - Count-drift presence flags for supervisor drain run reports and summaries.
 - Stable count-drift classifications for supervisor drain run reports and
   summaries.

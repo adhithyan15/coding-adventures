@@ -1026,6 +1026,26 @@ impl ToolAuditSupervisorDrainRunReport {
         )
     }
 
+    /// Return whether the actual run replayed more rows than planned.
+    pub fn replayed_extra_records(&self) -> bool {
+        self.record_count_delta() > 0
+    }
+
+    /// Return whether the actual run replayed fewer rows than planned.
+    pub fn missed_planned_records(&self) -> bool {
+        self.record_count_delta() < 0
+    }
+
+    /// Return whether the actual run replayed more follow-up pressure than planned.
+    pub fn replayed_extra_follow_up_records(&self) -> bool {
+        self.follow_up_record_count_delta() > 0
+    }
+
+    /// Return whether the actual run replayed less follow-up pressure than planned.
+    pub fn missed_planned_follow_up_records(&self) -> bool {
+        self.follow_up_record_count_delta() < 0
+    }
+
     /// Return whether row count drift was observed.
     pub fn has_record_count_drift(&self) -> bool {
         self.record_count_delta() != 0
@@ -3063,6 +3083,10 @@ mod tests {
         assert!(report.matches_planned_follow_up_record_count());
         assert_eq!(report.record_count_delta(), 0);
         assert_eq!(report.follow_up_record_count_delta(), 0);
+        assert!(!report.replayed_extra_records());
+        assert!(!report.missed_planned_records());
+        assert!(!report.replayed_extra_follow_up_records());
+        assert!(!report.missed_planned_follow_up_records());
         assert!(!report.has_record_count_drift());
         assert!(!report.has_follow_up_record_count_drift());
         assert!(!report.has_count_drift());
@@ -3646,6 +3670,8 @@ mod tests {
         );
         assert_eq!(report.host_investigation_label(), "plan_and_count_drift");
         assert!(report.requires_host_investigation());
+        assert!(report.replayed_extra_records());
+        assert!(!report.missed_planned_records());
         assert_eq!(summary.record_count_delta, 1);
         assert!(summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
@@ -3702,6 +3728,8 @@ mod tests {
             ToolAuditSupervisorDrainCountDriftKind::RecordCountDrift
         );
         assert!(report.requires_count_drift_investigation());
+        assert!(!report.replayed_extra_records());
+        assert!(report.missed_planned_records());
         assert_eq!(
             report.host_investigation_kind(),
             ToolAuditSupervisorDrainHostInvestigationKind::PlanAndCountDrift
@@ -3753,6 +3781,8 @@ mod tests {
         assert_eq!(summary.drained_follow_up_records, 0);
         assert_eq!(report.record_count_delta(), 0);
         assert_eq!(report.follow_up_record_count_delta(), -1);
+        assert!(!report.replayed_extra_follow_up_records());
+        assert!(report.missed_planned_follow_up_records());
         assert!(!report.has_record_count_drift());
         assert!(report.has_follow_up_record_count_drift());
         assert!(report.has_count_drift());
@@ -3795,6 +3825,24 @@ mod tests {
         assert!(!summary.matches_follow_up_pressure());
         assert!(!summary.replayed_extra_follow_up_records());
         assert!(summary.missed_planned_follow_up_records());
+    }
+
+    #[test]
+    fn supervisor_drain_report_detects_extra_follow_up_delta() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![failed_record("call_1"), sample_record("call_2")])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let mut report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut sink)
+            .unwrap();
+        report.drain.ticks[0].replay.inventory.follow_up_records = 2;
+
+        assert_eq!(report.follow_up_record_count_delta(), 1);
+        assert!(report.replayed_extra_follow_up_records());
+        assert!(!report.missed_planned_follow_up_records());
     }
 
     #[test]
