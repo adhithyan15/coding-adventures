@@ -211,13 +211,9 @@ describe("Phase 34: deferred discriminant cases", () => {
     }
   });
 
-  it("non-bare argument (∫ 1/(2 + sin 2x) dx) — Phase 34 doesn't compose with subs", () => {
-    const vm = makeVM();
-    const twoX = app(MUL, [int(2), X]);
-    const integrand = app(DIV, [int(1), app(ADD, [int(2), app(SIN, [twoX])])]);
-    const result = vm.eval(integrate(integrand));
-    expect(isUnevaluatedIntegrate(result)).toBe(true);
-  });
+  // (The non-bare-argument deferral previously asserted here has been
+  // promoted to a Phase 38 success test in the dedicated Phase 38 block
+  // below — Phase 38 closes those integrals via linear substitution.)
 
   it("symbolic coefficient (∫ 1/(a + sin x) dx) — discriminant sign undecidable", () => {
     const vm = makeVM();
@@ -418,5 +414,145 @@ describe("Phase 37: cos branch with b < −|a|", () => {
       const expected = 5.0 / (1.0 - 2.0 * Math.cos(xVal));
       expect(Math.abs(got - expected)).toBeLessThan(1e-3);
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 38: linear substitution lifts Weierstrass to ``trig(α·x + β)``.
+//
+// With ``u = α·x + β`` (``du = α·dx``), every Phase 34/35/36/37 closed form
+// applies unchanged with ``tan((α·x+β)/2)`` in place of ``tan(x/2)`` and the
+// outer coefficient scaled by ``1/α``.  Each case is verified by central
+// differencing the closed form against the original integrand at sample
+// points avoiding the integrand's singularities.
+// ---------------------------------------------------------------------------
+
+describe("Phase 38: linear-argument substitution lifts Weierstrass", () => {
+  it("∫ 1/(2 + sin 2x) dx closes (promoted from Phase 34 deferral)", () => {
+    const vm = makeVM();
+    const twoX = app(MUL, [int(2), X]);
+    const integrand = app(DIV, [int(1), app(ADD, [int(2), app(SIN, [twoX])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    expect(containsHead(phi, ATAN)).toBe(true);
+    for (const xVal of [-1.0, -0.3, 0.0, 0.3, 1.0]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1.0 / (2.0 + Math.sin(2.0 * xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-4);
+    }
+  });
+
+  it("∫ 1/(2 + cos 3x) dx — α = 3 cos variant", () => {
+    const vm = makeVM();
+    const threeX = app(MUL, [int(3), X]);
+    const integrand = app(DIV, [int(1), app(ADD, [int(2), app(COS, [threeX])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    for (const xVal of [-0.5, -0.2, 0.0, 0.2, 0.5]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1.0 / (2.0 + Math.cos(3.0 * xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-4);
+    }
+  });
+
+  it("∫ 1/(2 + sin(x + 1)) dx — pure phase shift α = 1, β = 1", () => {
+    const vm = makeVM();
+    const xPlusOne = app(ADD, [X, int(1)]);
+    const integrand = app(DIV, [int(1), app(ADD, [int(2), app(SIN, [xPlusOne])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    for (const xVal of [-2.0, -1.0, 0.0, 1.0, 2.0]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1.0 / (2.0 + Math.sin(xVal + 1.0));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-4);
+    }
+  });
+
+  it("∫ 1/(2 + sin(2x + 1)) dx — full α = 2, β = 1 case", () => {
+    const vm = makeVM();
+    const twoXPlusOne = app(ADD, [app(MUL, [int(2), X]), int(1)]);
+    const integrand = app(DIV, [int(1), app(ADD, [int(2), app(SIN, [twoXPlusOne])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    for (const xVal of [-0.8, -0.3, 0.0, 0.3, 0.8]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1.0 / (2.0 + Math.sin(2.0 * xVal + 1.0));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-4);
+    }
+  });
+
+  it("∫ 1/(2 + sin(x/2)) dx — rational α = 1/2", () => {
+    const vm = makeVM();
+    const halfX = app(MUL, [rational(1, 2), X]);
+    const integrand = app(DIV, [int(1), app(ADD, [int(2), app(SIN, [halfX])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    for (const xVal of [-2.0, -1.0, 0.5, 1.5]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1.0 / (2.0 + Math.sin(0.5 * xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-4);
+    }
+  });
+
+  it("∫ 1/(2 + sin(−2x)) dx — negative α = −2", () => {
+    const vm = makeVM();
+    const negTwoX = app(MUL, [int(-2), X]);
+    const integrand = app(DIV, [int(1), app(ADD, [int(2), app(SIN, [negTwoX])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    for (const xVal of [-1.0, -0.3, 0.0, 0.3, 1.0]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1.0 / (2.0 + Math.sin(-2.0 * xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-4);
+    }
+  });
+
+  it("∫ 1/(1 + cos 2x) dx — degenerate Phase 35 branch under α = 2", () => {
+    const vm = makeVM();
+    const twoX = app(MUL, [int(2), X]);
+    const integrand = app(DIV, [int(1), app(ADD, [int(1), app(COS, [twoX])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    // 1 + cos 2x = 2 cos²(x); singularities at x = ±π/2 ≈ ±1.57.
+    for (const xVal of [-1.0, -0.3, 0.3, 1.0]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1.0 / (1.0 + Math.cos(2.0 * xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
+  });
+
+  it("∫ 1/(1 + 2·sin 2x) dx — log-form Phase 36 branch under α = 2", () => {
+    const vm = makeVM();
+    const twoX = app(MUL, [int(2), X]);
+    const integrand = app(DIV, [
+      int(1),
+      app(ADD, [int(1), app(MUL, [int(2), app(SIN, [twoX])])]),
+    ]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    // 1 + 2·sin 2x zeros at sin 2x = −1/2, so 2x ∈ {−π/6, 7π/6,...}; staying
+    // clear of x ≈ ±π/12 ≈ ±0.26 by sampling outside that window.
+    for (const xVal of [-1.0, -0.5, 0.0, 0.5, 1.0]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1.0 / (1.0 + 2.0 * Math.sin(2.0 * xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
+  });
+
+  it("∫ 1/(2 + sin(x²)) dx falls through — argument is not linear in x", () => {
+    const vm = makeVM();
+    const xSq = app(MUL, [X, X]);
+    const integrand = app(DIV, [int(1), app(ADD, [int(2), app(SIN, [xSq])])]);
+    const result = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(result)).toBe(true);
+  });
+
+  it("∫ 1/(2 + sin(α·x)) dx falls through — symbolic α", () => {
+    const vm = makeVM();
+    const alpha = sym("alpha");
+    const alphaX = app(MUL, [alpha, X]);
+    const integrand = app(DIV, [int(1), app(ADD, [int(2), app(SIN, [alphaX])])]);
+    const result = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(result)).toBe(true);
   });
 });

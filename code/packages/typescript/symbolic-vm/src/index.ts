@@ -1624,15 +1624,139 @@ function weierstrassSqrtFractionIR(f: Numeric): IRNode {
   return app(SQRT, [fromNumeric(f)]);
 }
 
-/** Match `c·sin(x)`, `c·cos(x)`, `sin(x)`, `cos(x)`, or their Neg-wrappings.
- *  Returns ``{ c, head }`` (head is SIN or COS) or undefined. */
-function weierstrassParseConstTimesTrigX(
+/**
+ * Phase 38: Parse a linear-in-``x`` rational expression ``α·x + β`` and
+ * return ``{ alpha, beta }`` with ``α, β`` exact Numeric (Int/Rat) and
+ * ``α ≠ 0``.  Recognised shapes:
+ *
+ *   x              → (1, 0)
+ *   α·x            → (α, 0)
+ *   α·x + β        → (α, β)
+ *   β + α·x        → (α, β)
+ *   α·x − β        → (α, −β)
+ *   β − α·x        → (−α, β)
+ *   −(α·x + β)     → (−α, −β)
+ *
+ * Returns ``undefined`` when the expression is not linear in ``x`` (e.g.
+ * ``x²``, ``sin(x)``, pure constants free of x, or a nested nonlinear
+ * form).  ``α = 0`` is filtered out so callers may rely on ``α ≠ 0``.
+ */
+function weierstrassParseLinearInX(
   node: IRNode,
   x: IRNode
-): { readonly c: Numeric; readonly head: IRNode } | undefined {
-  if (node.kind === "apply" && (equals(node.head, SIN) || equals(node.head, COS))) {
-    if (node.args.length === 1 && equals(node.args[0], x)) {
-      return { c: { kind: "int", value: 1n }, head: node.head };
+): { readonly alpha: Numeric; readonly beta: Numeric } | undefined {
+  if (equals(node, x)) {
+    return { alpha: { kind: "int", value: 1n }, beta: { kind: "int", value: 0n } };
+  }
+  if (!dependsOn(node, x)) {
+    return undefined; // pure constant — no x term
+  }
+  if (node.kind === "apply" && equals(node.head, MUL) && node.args.length === 2) {
+    const [left, right] = node.args;
+    const cLeft = toNumeric(left);
+    if (cLeft !== undefined && cLeft.kind !== "float" && equals(right, x) && !isZeroNumeric(cLeft)) {
+      return { alpha: cLeft, beta: { kind: "int", value: 0n } };
+    }
+    const cRight = toNumeric(right);
+    if (cRight !== undefined && cRight.kind !== "float" && equals(left, x) && !isZeroNumeric(cRight)) {
+      return { alpha: cRight, beta: { kind: "int", value: 0n } };
+    }
+    return undefined;
+  }
+  if (node.kind === "apply" && equals(node.head, NEG) && node.args.length === 1) {
+    const inner = weierstrassParseLinearInX(node.args[0], x);
+    if (inner === undefined) return undefined;
+    return { alpha: negNumeric(inner.alpha), beta: negNumeric(inner.beta) };
+  }
+  if (node.kind === "apply" && equals(node.head, ADD) && node.args.length === 2) {
+    const [left, right] = node.args;
+    for (const [constSide, linSide] of [
+      [left, right],
+      [right, left],
+    ] as const) {
+      const c = toNumeric(constSide);
+      if (c === undefined || c.kind === "float") continue;
+      const lin = weierstrassParseLinearInX(linSide, x);
+      if (lin === undefined) continue;
+      return { alpha: lin.alpha, beta: addNumeric(lin.beta, c) };
+    }
+    return undefined;
+  }
+  if (node.kind === "apply" && equals(node.head, SUB) && node.args.length === 2) {
+    const [left, right] = node.args;
+    // Case A: linear − constant → (α, β − c)
+    const cRight = toNumeric(right);
+    if (cRight !== undefined && cRight.kind !== "float") {
+      const lin = weierstrassParseLinearInX(left, x);
+      if (lin !== undefined) {
+        return { alpha: lin.alpha, beta: subNumeric(lin.beta, cRight) };
+      }
+    }
+    // Case B: constant − linear → (−α, c − β)
+    const cLeft = toNumeric(left);
+    if (cLeft !== undefined && cLeft.kind !== "float") {
+      const lin = weierstrassParseLinearInX(right, x);
+      if (lin !== undefined) {
+        return {
+          alpha: negNumeric(lin.alpha),
+          beta: subNumeric(cLeft, lin.beta),
+        };
+      }
+    }
+    return undefined;
+  }
+  return undefined;
+}
+
+/**
+ * Phase 38: Build the IR node for ``α·x + β`` collapsing trivial cases so the
+ * downstream ``tan(arg/2)`` constructions emit the simplest equivalent form.
+ *   α=1, β=0 → x          (the historical bare-x path; bit-for-bit identical)
+ *   α=1, β≠0 → x + β
+ *   β=0, α≠1 → α·x
+ *   otherwise → α·x + β
+ */
+function weierstrassBuildLinearArgIR(
+  alpha: Numeric,
+  beta: Numeric,
+  x: IRNode
+): IRNode {
+  const alphaIsOne =
+    (alpha.kind === "int" && alpha.value === 1n) ||
+    (alpha.kind === "rat" && alpha.numer === 1n && alpha.denom === 1n);
+  const betaIsZero = isZeroNumeric(beta);
+  if (alphaIsOne && betaIsZero) return x;
+  if (betaIsZero) return app(MUL, [fromNumeric(alpha), x]);
+  if (alphaIsOne) return app(ADD, [x, fromNumeric(beta)]);
+  return app(ADD, [app(MUL, [fromNumeric(alpha), x]), fromNumeric(beta)]);
+}
+
+/** Phase 38: match ``c·sin(α·x+β)`` / ``c·cos(α·x+β)`` (and the c=1 / α=1 /
+ *  β=0 degenerate variants) and return ``{ c, head, alpha, beta }``.
+ *
+ *  Accepts both argument orders within ``Mul`` and unwraps a leading
+ *  ``Neg``.  The trig argument must be linear in ``x`` per
+ *  :func:`weierstrassParseLinearInX`.  Supersedes the Phase 34 bare-``x``
+ *  predecessor `weierstrassParseConstTimesTrigX`. */
+function weierstrassParseConstTimesTrigLinear(
+  node: IRNode,
+  x: IRNode
+):
+  | { readonly c: Numeric; readonly head: IRNode; readonly alpha: Numeric; readonly beta: Numeric }
+  | undefined {
+  if (
+    node.kind === "apply" &&
+    (equals(node.head, SIN) || equals(node.head, COS)) &&
+    node.args.length === 1
+  ) {
+    const lin = weierstrassParseLinearInX(node.args[0], x);
+    if (lin !== undefined) {
+      return {
+        c: { kind: "int", value: 1n },
+        head: node.head,
+        alpha: lin.alpha,
+        beta: lin.beta,
+      };
     }
   }
   if (node.kind === "apply" && equals(node.head, MUL) && node.args.length === 2) {
@@ -1646,28 +1770,44 @@ function weierstrassParseConstTimesTrigX(
       if (
         trigSide.kind === "apply" &&
         (equals(trigSide.head, SIN) || equals(trigSide.head, COS)) &&
-        trigSide.args.length === 1 &&
-        equals(trigSide.args[0], x)
+        trigSide.args.length === 1
       ) {
-        return { c, head: trigSide.head };
+        const lin = weierstrassParseLinearInX(trigSide.args[0], x);
+        if (lin !== undefined) {
+          return { c, head: trigSide.head, alpha: lin.alpha, beta: lin.beta };
+        }
       }
     }
   }
   if (node.kind === "apply" && equals(node.head, NEG) && node.args.length === 1) {
-    const inner = weierstrassParseConstTimesTrigX(node.args[0], x);
+    const inner = weierstrassParseConstTimesTrigLinear(node.args[0], x);
     if (inner !== undefined) {
-      return { c: negNumeric(inner.c), head: inner.head };
+      return {
+        c: negNumeric(inner.c),
+        head: inner.head,
+        alpha: inner.alpha,
+        beta: inner.beta,
+      };
     }
   }
   return undefined;
 }
 
-/** Parse ``a + b·sin(x)`` or ``a + b·cos(x)`` (any operand ordering, plus the
- *  SUB head variant).  Returns ``{ a, b, trigHead }`` or undefined. */
+/** Parse ``a + b·sin(α·x+β)`` or ``a + b·cos(α·x+β)`` (any operand ordering,
+ *  plus the SUB head variant).  Returns ``{ a, b, trigHead, alpha, beta }``
+ *  or undefined.  Phase 38 generalises the Phase 34 bare-``x`` predecessor. */
 function weierstrassParseAPlusBSincos(
   node: IRNode,
   x: IRNode
-): { readonly a: Numeric; readonly b: Numeric; readonly trigHead: IRNode } | undefined {
+):
+  | {
+      readonly a: Numeric;
+      readonly b: Numeric;
+      readonly trigHead: IRNode;
+      readonly alpha: Numeric;
+      readonly beta: Numeric;
+    }
+  | undefined {
   if (node.kind !== "apply" || node.args.length !== 2) return undefined;
   if (equals(node.head, ADD)) {
     const [left, right] = node.args;
@@ -1677,29 +1817,43 @@ function weierstrassParseAPlusBSincos(
     ] as const) {
       const a = toNumeric(constSide);
       if (a === undefined || a.kind === "float") continue;
-      const trigParse = weierstrassParseConstTimesTrigX(trigSide, x);
+      const trigParse = weierstrassParseConstTimesTrigLinear(trigSide, x);
       if (trigParse === undefined) continue;
-      return { a, b: trigParse.c, trigHead: trigParse.head };
+      return {
+        a,
+        b: trigParse.c,
+        trigHead: trigParse.head,
+        alpha: trigParse.alpha,
+        beta: trigParse.beta,
+      };
     }
     return undefined;
   }
   if (equals(node.head, SUB)) {
-    // `a − b·trig(x)` = `a + (−b)·trig(x)` and the symmetric reversal.
+    // `a − b·trig(...)` = `a + (−b)·trig(...)` and the symmetric reversal.
     const [left, right] = node.args;
     const aLeft = toNumeric(left);
     if (aLeft !== undefined && aLeft.kind !== "float") {
-      const trigParse = weierstrassParseConstTimesTrigX(right, x);
+      const trigParse = weierstrassParseConstTimesTrigLinear(right, x);
       if (trigParse !== undefined) {
-        return { a: aLeft, b: negNumeric(trigParse.c), trigHead: trigParse.head };
+        return {
+          a: aLeft,
+          b: negNumeric(trigParse.c),
+          trigHead: trigParse.head,
+          alpha: trigParse.alpha,
+          beta: trigParse.beta,
+        };
       }
     }
-    const bTrigLeft = weierstrassParseConstTimesTrigX(left, x);
+    const bTrigLeft = weierstrassParseConstTimesTrigLinear(left, x);
     const aRight = toNumeric(right);
     if (bTrigLeft !== undefined && aRight !== undefined && aRight.kind !== "float") {
       return {
         a: negNumeric(aRight),
         b: bTrigLeft.c,
         trigHead: bTrigLeft.head,
+        alpha: bTrigLeft.alpha,
+        beta: bTrigLeft.beta,
       };
     }
     return undefined;
@@ -1707,8 +1861,11 @@ function weierstrassParseAPlusBSincos(
   return undefined;
 }
 
-/** Phase 34 entry point. Returns the closed form, or undefined when the
- *  shape doesn't match or the discriminant fails the a² > b² / a > 0 guards. */
+/** Phase 34 + 38 entry point.  Returns the closed form for
+ *  ``∫ c / (a + b·trig(α·x + β)) dx`` (with `a, b, α, β ∈ ℚ`, `α ≠ 0`), or
+ *  undefined when the shape doesn't match or the discriminant fails the
+ *  branch-specific guards.  When `α = 1, β = 0` this is bit-for-bit
+ *  identical to the original Phase 34/35/36/37 behaviour. */
 function tryWeierstrassOneOverLinearTrig(
   integrand: IRNode,
   x: IRNode
@@ -1717,28 +1874,34 @@ function tryWeierstrassOneOverLinearTrig(
   if (integrand.args.length !== 2) return undefined;
   const [num, den] = integrand.args;
   if (dependsOn(num, x)) return undefined;
-  const c = toNumeric(num);
-  if (c === undefined || c.kind === "float") return undefined;
+  const cIn = toNumeric(num);
+  if (cIn === undefined || cIn.kind === "float") return undefined;
   const parsed = weierstrassParseAPlusBSincos(den, x);
   if (parsed === undefined) return undefined;
-  const { a, b, trigHead } = parsed;
+  const { a, b, trigHead, alpha, beta } = parsed;
+  // Phase 38: fold the inner substitution u = α·x + β (du = α·dx) into
+  // the numerator constant once at entry: c ← c/α.  Every branch below
+  // can then use the original closed-form formulas with `tan(arg/2)`
+  // in place of `tan(x/2)`.  α=0 is excluded by `parseLinearInX`.
+  const c = divNumeric(cIn, alpha);
+  const argNode = weierstrassBuildLinearArgIR(alpha, beta, x);
   // disc = a² − b² (exact Numeric arithmetic — both a, b are Int/Rat).
   const disc = subNumeric(mulNumeric(a, a), mulNumeric(b, b));
   // Three-way dispatch on the discriminant:
   //   disc > 0  → Phase 34 arctan form (below)
   //   disc == 0 → Phase 35 degenerate form (four sign combinations)
-  //   disc < 0  → Phase 36 log form (this release)
+  //   disc < 0  → Phase 36/37 log form
   if (isZeroNumeric(disc)) {
-    return tryWeierstrassDegenerate(c, a, b, trigHead, x);
+    return tryWeierstrassDegenerate(c, a, b, trigHead, argNode);
   }
   if (!isPositiveNumeric(disc)) {
-    return tryWeierstrassLogForm(c, a, b, trigHead, x);
+    return tryWeierstrassLogForm(c, a, b, trigHead, argNode);
   }
   const sqrtDiscIR = weierstrassSqrtFractionIR(disc);
-  const tanHalf = app(TAN, [app(DIV, [x, int(2)])]);
+  const tanHalf = app(TAN, [app(DIV, [argNode, int(2)])]);
   let atanArg: IRNode;
   if (equals(trigHead, SIN)) {
-    // (a·tan(x/2) + b) / √(a²−b²)
+    // (a·tan(arg/2) + b) / √(a²−b²)
     const top = app(ADD, [app(MUL, [fromNumeric(a), tanHalf]), fromNumeric(b)]);
     atanArg = app(DIV, [top, sqrtDiscIR]);
   } else {
@@ -1801,10 +1964,12 @@ function tryWeierstrassDegenerate(
   a: Numeric,
   b: Numeric,
   trigHead: IRNode,
-  x: IRNode
+  argNode: IRNode
 ): IRNode | undefined {
   if (isZeroNumeric(a)) return undefined;
-  const tanHalf = app(TAN, [app(DIV, [x, int(2)])]);
+  // Phase 38 generalisation: `argNode` is the IR for ``α·x + β``; the
+  // inner factor ``α`` has been pre-absorbed into ``c`` by the caller.
+  const tanHalf = app(TAN, [app(DIV, [argNode, int(2)])]);
   const negA = negNumeric(a);
   if (equals(trigHead, SIN)) {
     if (eqNumeric(b, a)) {
@@ -1858,13 +2023,15 @@ function tryWeierstrassLogForm(
   a: Numeric,
   b: Numeric,
   trigHead: IRNode,
-  x: IRNode
+  argNode: IRNode
 ): IRNode | undefined {
+  // Phase 38 generalisation: `argNode` is the IR for ``α·x + β``; the
+  // inner factor ``α`` has been pre-absorbed into ``c`` by the caller.
   // discSq = b² − a²; caller passes disc = a² − b² < 0, so discSq > 0.
   const discSq = subNumeric(mulNumeric(b, b), mulNumeric(a, a));
   if (!isPositiveNumeric(discSq)) return undefined;
   const sqrtDiscIR = weierstrassSqrtFractionIR(discSq);
-  const tanHalf = app(TAN, [app(DIV, [x, int(2)])]);
+  const tanHalf = app(TAN, [app(DIV, [argNode, int(2)])]);
   const absHead = sym("Abs");
   if (equals(trigHead, SIN)) {
     if (isZeroNumeric(a)) return undefined; // 1/(b·sin x) deferred
