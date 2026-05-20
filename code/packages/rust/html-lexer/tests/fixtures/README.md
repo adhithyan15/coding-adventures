@@ -101,6 +101,9 @@ binary while production code continues to link only static Rust source.
   exercise the normalization path toward broader upstream corpora
 - `normalize_html5lib_fixtures.py`: importer that lowers supported raw
   html5lib-style tokenizer cases into Venture's portable fixture schema
+- `check_generated_html_fixtures.py`: manifest check that runs every
+  self-contained generated lexer/parser fixture stale check from checked-in
+  inputs, with optional flags for upstream-only source inputs
 - the parser fixture audit can pin the current html5lib tokenizer counts with
   `--expect-tokenizer-upstream-cases 6806`,
   `--expect-tokenizer-local-raw-cases 7015`,
@@ -280,6 +283,17 @@ skipped runtime gaps.
 The same audit can verify the checked
 `html-parser/tests/fixtures/html5lib-coverage-audit.json` report with
 `--check-report`, so fixture-count and missing-source drift stays visible in CI.
+
+For a single local stale check over all checked-in generated HTML fixtures that
+do not require fresh upstream downloads, run:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/check_generated_html_fixtures.py
+```
+
+Pass `--html5lib-tests /path/to/html5lib-tests` to include the parser coverage
+audit report and pinned-count checks, or `--entities-json /path/to/entities.json`
+to include the generated WHATWG named-character-reference table.
 
 ## WPT Path
 

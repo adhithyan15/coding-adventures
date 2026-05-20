@@ -114,6 +114,16 @@ Both the broad smoke test and the focused tree-insertion audit use the shared
 `tests/common` html5lib parser and DOM dump helpers, so new parser conformance
 fixtures exercise the same normalization path.
 
+The lexer fixture directory also provides one umbrella stale check for all
+self-contained generated HTML lexer/parser fixtures:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/check_generated_html_fixtures.py
+```
+
+Pass `--html5lib-tests /path/to/html5lib-tests` to fold the checked coverage
+audit report and pinned-count checks into the same local guard.
+
 ## Usage
 
 ```rust
