@@ -390,6 +390,19 @@ struct HelperMethod {
     body: String,
 }
 
+/// A WinUI 3 event-handler method generated for a Host* primitive's
+/// bound emits. Same lifecycle as `HelperMethod` — registered during
+/// the walk, emitted inline into the code-behind partial class.
+#[derive(Debug, Clone)]
+struct HostHandler {
+    /// Fully-qualified method name (also the XAML attribute value).
+    name: String,
+    /// Full C# source for the method, including signature and body.
+    /// Multi-line and self-contained — emitted verbatim into the
+    /// `partial class`.
+    source: String,
+}
+
 /// A generated `RowVm` C# record — the typed `DataContext` for a
 /// `<DataTemplate>` inside a `For` block.
 #[derive(Debug, Clone)]
@@ -433,6 +446,14 @@ struct EmitContext<'a> {
     /// One `RowVm` per `For` block in the component. Becomes
     /// `XamlEmitResult::for_view_models`.
     row_vms: Vec<RowVm>,
+    /// Host* event-handler method bodies registered during the walk.
+    /// Each `HostInput` / `HostButton` with bound emits adds one or
+    /// more entries; the assembly step emits them inline in the
+    /// code-behind partial class.
+    host_handlers: Vec<HostHandler>,
+    /// Counter used to disambiguate Host* `x:Name`s when the node has
+    /// no `part_name`. Incremented per emitted Host* primitive.
+    host_counter: u32,
 }
 
 impl<'a> EmitContext<'a> {
@@ -449,6 +470,23 @@ impl<'a> EmitContext<'a> {
             helpers: Vec::new(),
             needs_bool_to_vis: false,
             row_vms: Vec::new(),
+            host_handlers: Vec::new(),
+            host_counter: 0,
+        }
+    }
+
+    /// Allocate a unique counter for a Host* element that lacks a
+    /// `part_name`. Always returns a fresh value.
+    fn next_host_counter(&mut self) -> u32 {
+        self.host_counter += 1;
+        self.host_counter
+    }
+
+    /// Register an event-handler method. Same dedup pattern as
+    /// helpers — two handlers with the same name share the same body.
+    fn add_host_handler(&mut self, h: HostHandler) {
+        if !self.host_handlers.iter().any(|x| x.name == h.name) {
+            self.host_handlers.push(h);
         }
     }
 
@@ -679,9 +717,14 @@ fn emit_xaml_node(
             "Else without preceding If".to_string(),
         )),
 
-        // PR-3..PR-5 territory. Recognised by name so the error message is
+        // PR-3: Host* primitives (single-element host-native controls).
+        "HostInput" => emit_host_input(node, indent, part_styles, ctx),
+        "HostButton" => emit_host_button(node, indent, part_styles, ctx),
+        "HostScroll" => emit_host_scroll(node, indent, part_styles, ctx),
+
+        // PR-4 / PR-5 territory. Recognised by name so the error message is
         // self-documenting ("not yet supported", not "unknown tag").
-        "HostInput" | "HostButton" | "HostScroll" | "HostTable"
+        "HostTable"
         | "HostTableColGroup" | "HostTableHead" | "HostTableBody" | "HostTableFoot" => {
             Err(PipelineEmitError::UnsupportedPrimitive(node.tag.clone()))
         }
@@ -1032,6 +1075,14 @@ fn emit_code_behind(
             helper.body
         )
         .unwrap();
+    }
+
+    // PR-3: event-handler methods registered by Host* primitives. These
+    // are multi-line method bodies (full signature + braces + body) so
+    // we write them verbatim with a leading blank line for readability.
+    for h in &ctx.host_handlers {
+        writeln!(out).unwrap();
+        writeln!(out, "{}", h.source).unwrap();
     }
 
     writeln!(out, "}}").unwrap();
@@ -2059,6 +2110,275 @@ fn find_prop_keyword<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a st
 }
 
 // =====================================================================
+// PR-3: HostInput / HostButton / HostScroll
+// =====================================================================
+//
+// These three primitives lower to native WinUI 3 controls:
+//
+// - HostInput  → <TextBox>     (spec §4.1)
+// - HostButton → <Button>      (spec §4.2)
+// - HostScroll → <ScrollViewer> (spec §4.3)
+//
+// Wiring an emit (e.g. `onChange: emit: onFormulaChange`) requires a
+// code-behind handler method. We register them on EmitContext and emit
+// them as private methods on the partial class alongside the helper
+// methods PR-2 introduced.
+
+/// Pick a deterministic XAML `x:Name` for a Host* primitive. Uses the
+/// node's `part_name` PascalCased when present (idiomatic per the
+/// spec's examples like `FormulaField`); otherwise allocates a
+/// per-component counter so the `x:Name` is stable across rebuilds.
+fn host_x_name(node: &LayoutNode, tag: &str, ctx: &mut EmitContext<'_>) -> String {
+    if let Some(p) = node.part_name.as_deref() {
+        let pascal = kebab_to_pascal_case(p);
+        if is_safe_identifier(&pascal) {
+            return pascal;
+        }
+    }
+    let n = ctx.next_host_counter();
+    format!("{tag}_{n}")
+}
+
+/// `HostInput` → `<TextBox>` per spec §4.1.
+fn emit_host_input(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let style = part_style_attr(node, part_styles);
+    let x_name = host_x_name(node, "HostInput", ctx);
+
+    // -- Build the attribute set --
+    let mut attrs = String::new();
+
+    // value: slot/string/expr → Text binding
+    match find_prop_value(node, "value") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            attrs.push_str(&format!(
+                " Text=\"{{x:Bind {pascal}, Mode=TwoWay}}\""
+            ));
+        }
+        Some(LayoutPropValue::String(s)) => {
+            attrs.push_str(&format!(" Text=\"{}\"", escape_xaml_attr(s)));
+        }
+        _ => {}
+    }
+
+    // read-only: slot/keyword
+    match find_prop_value(node, "read-only") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            attrs.push_str(&format!(" IsReadOnly=\"{{x:Bind {pascal}}}\""));
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            attrs.push_str(" IsReadOnly=\"True\"");
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {
+            attrs.push_str(" IsReadOnly=\"False\"");
+        }
+        _ => {}
+    }
+
+    // placeholder: literal
+    if let Some(LayoutPropValue::String(s)) = find_prop_value(node, "placeholder") {
+        attrs.push_str(&format!(
+            " PlaceholderText=\"{}\"",
+            escape_xaml_attr(s)
+        ));
+    }
+
+    // max-length: number
+    if let Some(LayoutPropValue::Number(n)) = find_prop_value(node, "max-length") {
+        let i = *n as i64;
+        attrs.push_str(&format!(" MaxLength=\"{i}\""));
+    }
+
+    // multiline: true → AcceptsReturn + TextWrapping
+    if find_prop_keyword(node, "multiline") == Some("true") {
+        attrs.push_str(" AcceptsReturn=\"True\" TextWrapping=\"Wrap\"");
+    }
+
+    // -- Event wiring --
+    // onChange handler dispatches with the new text payload.
+    if let Some(LayoutPropValue::EmitRef(emit_name)) =
+        find_prop_value(node, "onChange")
+    {
+        let handler = format!("{x_name}_TextChanged");
+        let emit_case = strip_on_prefix(emit_name);
+        let case_pascal = kebab_to_pascal_case(&emit_case);
+        let component = ctx.component_name;
+        let body = format!(
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.Controls.TextChangedEventArgs e)\n    {{\n        if (sender is Microsoft.UI.Xaml.Controls.TextBox tb)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case_pascal}(tb.Text));\n        }}\n    }}"
+        );
+        ctx.add_host_handler(HostHandler {
+            name: handler.clone(),
+            source: body,
+        });
+        attrs.push_str(&format!(" TextChanged=\"{handler}\""));
+    }
+
+    // onCommit / onCancel → merged KeyDown handler keyed on Enter / Escape.
+    let commit = match find_prop_value(node, "onCommit") {
+        Some(LayoutPropValue::EmitRef(e)) => Some(e.clone()),
+        _ => None,
+    };
+    let cancel = match find_prop_value(node, "onCancel") {
+        Some(LayoutPropValue::EmitRef(e)) => Some(e.clone()),
+        _ => None,
+    };
+    if commit.is_some() || cancel.is_some() {
+        let handler = format!("{x_name}_KeyDown");
+        let mut body = String::new();
+        body.push_str(&format!(
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)\n    {{\n"
+        ));
+        let component = ctx.component_name;
+        if let Some(emit) = &commit {
+            let case = kebab_to_pascal_case(&strip_on_prefix(emit));
+            body.push_str(&format!(
+                "        if (e.Key == Windows.System.VirtualKey.Enter)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case}());\n        }}\n"
+            ));
+        }
+        if let Some(emit) = &cancel {
+            let case = kebab_to_pascal_case(&strip_on_prefix(emit));
+            body.push_str(&format!(
+                "        if (e.Key == Windows.System.VirtualKey.Escape)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case}());\n        }}\n"
+            ));
+        }
+        body.push_str("    }");
+        ctx.add_host_handler(HostHandler {
+            name: handler.clone(),
+            source: body,
+        });
+        attrs.push_str(&format!(" KeyDown=\"{handler}\""));
+    }
+
+    // onFocus → GotFocus
+    if let Some(LayoutPropValue::EmitRef(emit_name)) =
+        find_prop_value(node, "onFocus")
+    {
+        let handler = format!("{x_name}_GotFocus");
+        let emit_case = strip_on_prefix(emit_name);
+        let case_pascal = kebab_to_pascal_case(&emit_case);
+        let component = ctx.component_name;
+        let body = format!(
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}());\n    }}"
+        );
+        ctx.add_host_handler(HostHandler {
+            name: handler.clone(),
+            source: body,
+        });
+        attrs.push_str(&format!(" GotFocus=\"{handler}\""));
+    }
+
+    Ok(format!(
+        "{pad}<TextBox x:Name=\"{x_name}\"{attrs}{style}/>\n"
+    ))
+}
+
+/// `HostButton` → `<Button>` per spec §4.2.
+fn emit_host_button(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let style = part_style_attr(node, part_styles);
+    let x_name = host_x_name(node, "HostButton", ctx);
+
+    let mut attrs = String::new();
+
+    // label: slot/string
+    match find_prop_value(node, "label") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
+        }
+        Some(LayoutPropValue::String(s)) => {
+            attrs.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(s)));
+        }
+        Some(LayoutPropValue::Keyword(k)) => {
+            attrs.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(k)));
+        }
+        _ => {}
+    }
+
+    // disabled: slot/keyword. Polarity flip handled via a generated
+    // `Not(bool)` helper on the partial class.
+    match find_prop_value(node, "disabled") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            // Register the shared Not(bool) helper.
+            ctx.add_helper(HelperMethod {
+                name: "Not".to_string(),
+                parameters: vec![("b".to_string(), "bool".to_string())],
+                return_type: "bool".to_string(),
+                body: "!b".to_string(),
+            });
+            attrs.push_str(&format!(
+                " IsEnabled=\"{{x:Bind Not({pascal})}}\""
+            ));
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            attrs.push_str(" IsEnabled=\"False\"");
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {
+            attrs.push_str(" IsEnabled=\"True\"");
+        }
+        _ => {}
+    }
+
+    // onClick → Click handler
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onClick") {
+        let handler = format!("{x_name}_Click");
+        let emit_case = strip_on_prefix(emit_name);
+        let case_pascal = kebab_to_pascal_case(&emit_case);
+        let component = ctx.component_name;
+        let body = format!(
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}());\n    }}"
+        );
+        ctx.add_host_handler(HostHandler {
+            name: handler.clone(),
+            source: body,
+        });
+        attrs.push_str(&format!(" Click=\"{handler}\""));
+    }
+
+    Ok(format!(
+        "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}/>\n"
+    ))
+}
+
+/// `HostScroll` → `<ScrollViewer>` per spec §4.3.
+fn emit_host_scroll(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let style = part_style_attr(node, part_styles);
+
+    // direction: vertical (default) / horizontal / both
+    let (v_vis, h_vis) = match find_prop_keyword(node, "direction") {
+        Some("horizontal") => ("Disabled", "Auto"),
+        Some("both") => ("Auto", "Auto"),
+        _ => ("Auto", "Disabled"), // default: vertical
+    };
+
+    let mut out = format!(
+        "{pad}<ScrollViewer VerticalScrollBarVisibility=\"{v_vis}\" HorizontalScrollBarVisibility=\"{h_vis}\"{style}>\n"
+    );
+    out.push_str(&emit_xaml_children(&node.children, indent + 4, part_styles, ctx)?);
+    write!(out, "{pad}</ScrollViewer>\n").unwrap();
+    Ok(out)
+}
+
+// =====================================================================
 // Tests
 // =====================================================================
 
@@ -2655,8 +2975,11 @@ mod tests {
 
     // ── unsupported primitives surface clearly ──
 
+    /// PR-3 lowers HostInput. The PR-1 version of this test expected
+    /// an `UnsupportedPrimitive` error; we now verify the actual
+    /// `<TextBox>` emission instead.
     #[test]
-    fn host_input_errors_with_unsupported_primitive() {
+    fn host_input_lowers_to_textbox_in_pr3() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root(
             "Foo",
@@ -2667,12 +2990,8 @@ mod tests {
                 children: Vec::new(),
             },
         );
-        let s = empty_style("Foo");
-        let err = from_pipeline(&c, &l, &s, None, &opts()).unwrap_err();
-        assert!(
-            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t == "HostInput"),
-            "got: {err:?}"
-        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<TextBox x:Name=\"HostInput_1\""), "got:\n{}", r.xaml);
     }
 
     #[test]
@@ -2709,6 +3028,484 @@ mod tests {
         let s = empty_style("Foo");
         let err = from_pipeline(&c, &l, &s, None, &opts()).unwrap_err();
         assert!(matches!(err, PipelineEmitError::UnsupportedPrimitive(_)));
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // PR-3: HostInput / HostButton / HostScroll tests
+    // ─────────────────────────────────────────────────────────────────
+
+    fn host_input_node(part: Option<&str>, props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: part.map(String::from),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    fn host_button_node(part: Option<&str>, props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: "HostButton".to_string(),
+            part_name: part.map(String::from),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    fn host_scroll_node(direction: Option<&str>, children: Vec<LayoutNode>) -> LayoutNode {
+        let props = match direction {
+            Some(d) => vec![LayoutProp {
+                name: "direction".to_string(),
+                value: LayoutPropValue::Keyword(d.to_string()),
+            }],
+            None => Vec::new(),
+        };
+        LayoutNode {
+            tag: "HostScroll".to_string(),
+            part_name: None,
+            props,
+            children,
+        }
+    }
+
+    // ── HostInput ──
+
+    #[test]
+    fn host_input_with_part_name_uses_pascal_case_as_xname() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_input_node(Some("formula-field"), Vec::new()),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("<TextBox x:Name=\"FormulaField\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_input_with_value_slot_emits_twoway_text_binding() {
+        let c = component("Foo", vec![slot("formula", SlotType::Text, true)], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_input_node(
+                None,
+                vec![LayoutProp {
+                    name: "value".to_string(),
+                    value: LayoutPropValue::SlotRef("formula".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("Text=\"{x:Bind Formula, Mode=TwoWay}\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_input_with_placeholder_string_emits_placeholdertext() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_input_node(
+                None,
+                vec![LayoutProp {
+                    name: "placeholder".to_string(),
+                    value: LayoutPropValue::String("Enter formula".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("PlaceholderText=\"Enter formula\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_input_with_max_length_emits_int_attribute() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_input_node(
+                None,
+                vec![LayoutProp {
+                    name: "max-length".to_string(),
+                    value: LayoutPropValue::Number(100.0),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("MaxLength=\"100\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_input_with_readonly_true_emits_literal_attribute() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_input_node(
+                None,
+                vec![LayoutProp {
+                    name: "read-only".to_string(),
+                    value: LayoutPropValue::Keyword("true".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("IsReadOnly=\"True\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_input_with_multiline_keyword_emits_accepts_return_and_wrap() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_input_node(
+                None,
+                vec![LayoutProp {
+                    name: "multiline".to_string(),
+                    value: LayoutPropValue::Keyword("true".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml
+                .contains("AcceptsReturn=\"True\" TextWrapping=\"Wrap\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_input_on_change_emits_handler_with_text_payload() {
+        let c = component(
+            "Foo",
+            vec![],
+            vec![emit(
+                "onFormulaChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout_with_root(
+            "Foo",
+            host_input_node(
+                Some("formula-field"),
+                vec![LayoutProp {
+                    name: "onChange".to_string(),
+                    value: LayoutPropValue::EmitRef("onFormulaChange".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // XAML wires TextChanged to the per-element handler.
+        assert!(
+            r.xaml.contains("TextChanged=\"FormulaField_TextChanged\""),
+            "got:\n{}",
+            r.xaml
+        );
+        // Code-behind has the handler implementation.
+        assert!(
+            r.code_behind.contains("private void FormulaField_TextChanged"),
+            "got:\n{}",
+            r.code_behind
+        );
+        // Handler dispatches FormulaChange(tb.Text).
+        assert!(r.code_behind.contains("FooEvent.FormulaChange(tb.Text)"));
+    }
+
+    #[test]
+    fn host_input_commit_and_cancel_emit_merged_keydown_handler() {
+        let c = component(
+            "Foo",
+            vec![],
+            vec![
+                emit("onCommit", vec![]),
+                emit("onCancel", vec![]),
+            ],
+        );
+        let l = layout_with_root(
+            "Foo",
+            host_input_node(
+                Some("formula-field"),
+                vec![
+                    LayoutProp {
+                        name: "onCommit".to_string(),
+                        value: LayoutPropValue::EmitRef("onCommit".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onCancel".to_string(),
+                        value: LayoutPropValue::EmitRef("onCancel".to_string()),
+                    },
+                ],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // One KeyDown handler that branches on Enter / Escape.
+        assert!(
+            r.xaml.contains("KeyDown=\"FormulaField_KeyDown\""),
+            "got:\n{}",
+            r.xaml
+        );
+        let cb = &r.code_behind;
+        assert!(cb.contains("VirtualKey.Enter"));
+        assert!(cb.contains("VirtualKey.Escape"));
+        assert!(cb.contains("FooEvent.Commit()"));
+        assert!(cb.contains("FooEvent.Cancel()"));
+    }
+
+    // ── HostButton ──
+
+    #[test]
+    fn host_button_lowers_to_button_with_xname() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_button_node(Some("submit"), Vec::new()),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("<Button x:Name=\"Submit\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_button_with_label_slot_emits_content_binding() {
+        let c = component(
+            "Foo",
+            vec![slot("button-label", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            host_button_node(
+                None,
+                vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::SlotRef("button-label".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("Content=\"{x:Bind ButtonLabel}\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_button_with_label_string_emits_literal_content() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_button_node(
+                None,
+                vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::String("Submit".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("Content=\"Submit\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_button_disabled_slot_uses_not_helper() {
+        let c = component(
+            "Foo",
+            vec![slot("is-busy", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            host_button_node(
+                None,
+                vec![LayoutProp {
+                    name: "disabled".to_string(),
+                    value: LayoutPropValue::SlotRef("is-busy".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("IsEnabled=\"{x:Bind Not(IsBusy)}\""),
+            "got:\n{}",
+            r.xaml
+        );
+        // The Not(bool) helper should be in the code-behind.
+        assert!(
+            r.code_behind.contains("private bool Not(bool b) => !b;"),
+            "got:\n{}",
+            r.code_behind
+        );
+    }
+
+    #[test]
+    fn host_button_disabled_literal_true_flips_to_isenabled_false() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_button_node(
+                None,
+                vec![LayoutProp {
+                    name: "disabled".to_string(),
+                    value: LayoutPropValue::Keyword("true".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("IsEnabled=\"False\""));
+    }
+
+    #[test]
+    fn host_button_on_click_emits_dispatch_handler() {
+        let c = component(
+            "Foo",
+            vec![],
+            vec![emit("onSubmit", vec![])],
+        );
+        let l = layout_with_root(
+            "Foo",
+            host_button_node(
+                Some("submit"),
+                vec![LayoutProp {
+                    name: "onClick".to_string(),
+                    value: LayoutPropValue::EmitRef("onSubmit".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("Click=\"Submit_Click\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind.contains("private void Submit_Click"),
+            "got:\n{}",
+            r.code_behind
+        );
+        assert!(r.code_behind.contains("FooEvent.Submit()"));
+    }
+
+    // ── HostScroll ──
+
+    #[test]
+    fn host_scroll_default_direction_is_vertical() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", host_scroll_node(None, Vec::new()));
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // V=Auto, H=Disabled is the vertical default.
+        assert!(
+            r.xaml
+                .contains("VerticalScrollBarVisibility=\"Auto\" HorizontalScrollBarVisibility=\"Disabled\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_scroll_horizontal_swaps_visibilities() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_scroll_node(Some("horizontal"), Vec::new()),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml
+                .contains("VerticalScrollBarVisibility=\"Disabled\" HorizontalScrollBarVisibility=\"Auto\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_scroll_both_directions_both_auto() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_scroll_node(Some("both"), Vec::new()),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml
+                .contains("VerticalScrollBarVisibility=\"Auto\" HorizontalScrollBarVisibility=\"Auto\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_scroll_wraps_children_inside_scrollviewer() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_scroll_node(
+                None,
+                vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("inside".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // The Text should sit inside the ScrollViewer.
+        let sv = r.xaml.find("<ScrollViewer").unwrap();
+        let txt = r.xaml.find("<TextBlock").unwrap();
+        let svc = r.xaml.find("</ScrollViewer>").unwrap();
+        assert!(sv < txt && txt < svc, "got:\n{}", r.xaml);
+    }
+
+    // ── Multi-Host counter ──
+
+    #[test]
+    fn multiple_unnamed_host_inputs_get_distinct_counters() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    host_input_node(None, Vec::new()),
+                    host_input_node(None, Vec::new()),
+                    host_input_node(None, Vec::new()),
+                ],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("x:Name=\"HostInput_1\""));
+        assert!(r.xaml.contains("x:Name=\"HostInput_2\""));
+        assert!(r.xaml.contains("x:Name=\"HostInput_3\""));
     }
 
     #[test]
