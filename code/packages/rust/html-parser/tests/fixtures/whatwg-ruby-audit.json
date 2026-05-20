@@ -1,0 +1,274 @@
+{
+  "case_count": 43,
+  "cases": [
+    {
+      "axis": "rb-boundary",
+      "id": "ruby-dat-386",
+      "reason": "rb implied end tags before following ruby annotation groups",
+      "source": "ruby.dat:386"
+    },
+    {
+      "axis": "rt-boundary",
+      "id": "ruby-dat-387",
+      "reason": "rt implied end tags before sibling ruby annotations",
+      "source": "ruby.dat:387"
+    },
+    {
+      "axis": "rtc-boundary",
+      "id": "ruby-dat-388",
+      "reason": "rtc scope handling around nested rt, rb, rp, and rtc boundaries",
+      "source": "ruby.dat:388"
+    },
+    {
+      "axis": "rp-boundary",
+      "id": "ruby-dat-389",
+      "reason": "rp implied end tags before sibling ruby annotations",
+      "source": "ruby.dat:389"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "ruby-dat-390",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "ruby.dat:390"
+    },
+    {
+      "axis": "rt-boundary",
+      "id": "ruby-dat-391",
+      "reason": "rt implied end tags before sibling ruby annotations",
+      "source": "ruby.dat:391"
+    },
+    {
+      "axis": "rt-boundary",
+      "id": "ruby-dat-392",
+      "reason": "rt implied end tags before sibling ruby annotations",
+      "source": "ruby.dat:392"
+    },
+    {
+      "axis": "rtc-boundary",
+      "id": "ruby-dat-393",
+      "reason": "rtc scope handling around nested rt, rb, rp, and rtc boundaries",
+      "source": "ruby.dat:393"
+    },
+    {
+      "axis": "rp-boundary",
+      "id": "ruby-dat-394",
+      "reason": "rp implied end tags before sibling ruby annotations",
+      "source": "ruby.dat:394"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "ruby-dat-395",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "ruby.dat:395"
+    },
+    {
+      "axis": "rtc-boundary",
+      "id": "ruby-dat-396",
+      "reason": "rtc scope handling around nested rt, rb, rp, and rtc boundaries",
+      "source": "ruby.dat:396"
+    },
+    {
+      "axis": "rtc-boundary",
+      "id": "ruby-dat-397",
+      "reason": "rtc scope handling around nested rt, rb, rp, and rtc boundaries",
+      "source": "ruby.dat:397"
+    },
+    {
+      "axis": "rtc-boundary",
+      "id": "ruby-dat-398",
+      "reason": "rtc scope handling around nested rt, rb, rp, and rtc boundaries",
+      "source": "ruby.dat:398"
+    },
+    {
+      "axis": "rtc-boundary",
+      "id": "ruby-dat-399",
+      "reason": "rtc scope handling around nested rt, rb, rp, and rtc boundaries",
+      "source": "ruby.dat:399"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "ruby-dat-400",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "ruby.dat:400"
+    },
+    {
+      "axis": "rp-boundary",
+      "id": "ruby-dat-401",
+      "reason": "rp implied end tags before sibling ruby annotations",
+      "source": "ruby.dat:401"
+    },
+    {
+      "axis": "rp-boundary",
+      "id": "ruby-dat-402",
+      "reason": "rp implied end tags before sibling ruby annotations",
+      "source": "ruby.dat:402"
+    },
+    {
+      "axis": "rtc-boundary",
+      "id": "ruby-dat-403",
+      "reason": "rtc scope handling around nested rt, rb, rp, and rtc boundaries",
+      "source": "ruby.dat:403"
+    },
+    {
+      "axis": "rp-boundary",
+      "id": "ruby-dat-404",
+      "reason": "rp implied end tags before sibling ruby annotations",
+      "source": "ruby.dat:404"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "ruby-dat-405",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "ruby.dat:405"
+    },
+    {
+      "axis": "nested-ruby",
+      "id": "ruby-dat-406",
+      "reason": "nested ruby containers inside rtc and ruby descendants",
+      "source": "ruby.dat:406"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "tests19-dat-1022",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "tests19.dat:1022"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "tests19-dat-1023",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "tests19.dat:1023"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "tests19-dat-1024",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "tests19.dat:1024"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "tests19-dat-1025",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "tests19.dat:1025"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "tests19-dat-1026",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "tests19.dat:1026"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "tests19-dat-1027",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "tests19.dat:1027"
+    },
+    {
+      "axis": "rt-boundary",
+      "id": "tests19-dat-1028",
+      "reason": "rt implied end tags before sibling ruby annotations",
+      "source": "tests19.dat:1028"
+    },
+    {
+      "axis": "rp-boundary",
+      "id": "tests19-dat-1029",
+      "reason": "rp implied end tags before sibling ruby annotations",
+      "source": "tests19.dat:1029"
+    },
+    {
+      "axis": "rt-boundary",
+      "id": "tests19-dat-1030",
+      "reason": "rt implied end tags before sibling ruby annotations",
+      "source": "tests19.dat:1030"
+    },
+    {
+      "axis": "rtc-boundary",
+      "id": "tests19-dat-1031",
+      "reason": "rtc scope handling around nested rt, rb, rp, and rtc boundaries",
+      "source": "tests19.dat:1031"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "tests19-dat-9",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "tests19.dat:9"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "tests19-dat-10",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "tests19.dat:10"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "tests19-dat-11",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "tests19.dat:11"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "tests19-dat-12",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "tests19.dat:12"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "tests19-dat-13",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "tests19.dat:13"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "tests19-dat-14",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "tests19.dat:14"
+    },
+    {
+      "axis": "rt-boundary",
+      "id": "tests19-dat-15",
+      "reason": "rt implied end tags before sibling ruby annotations",
+      "source": "tests19.dat:15"
+    },
+    {
+      "axis": "rp-boundary",
+      "id": "tests19-dat-16",
+      "reason": "rp implied end tags before sibling ruby annotations",
+      "source": "tests19.dat:16"
+    },
+    {
+      "axis": "rt-boundary",
+      "id": "tests19-dat-17",
+      "reason": "rt implied end tags before sibling ruby annotations",
+      "source": "tests19.dat:17"
+    },
+    {
+      "axis": "rtc-boundary",
+      "id": "tests19-dat-18",
+      "reason": "rtc scope handling around nested rt, rb, rp, and rtc boundaries",
+      "source": "tests19.dat:18"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "webkit01-dat-29",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "webkit01.dat:29"
+    },
+    {
+      "axis": "block-in-ruby",
+      "id": "webkit01-dat-30",
+      "reason": "ruby annotation recovery around block and phrasing descendants",
+      "source": "webkit01.dat:30"
+    }
+  ],
+  "counts_by_axis": {
+    "block-in-ruby": 18,
+    "nested-ruby": 1,
+    "rb-boundary": 1,
+    "rp-boundary": 7,
+    "rt-boundary": 7,
+    "rtc-boundary": 9
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress ruby, rb, rt, rtc, and rp implied-end-tag recovery, including nested ruby and block-descendant boundaries.",
+  "format": "whatwg-html-ruby-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

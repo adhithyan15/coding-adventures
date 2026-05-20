@@ -38,6 +38,8 @@ documented in this file.
   generator alongside the other parser audit fixture generators.
 - The generated fixture manifest now includes the parser formatting audit
   generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser ruby audit generator
+  alongside the other parser audit fixture generators.
 - The generated fixture manifest now includes the parser document-shell audit
   generator alongside the other parser audit fixture generators.
 - The generated fixture manifest now includes the parser template audit

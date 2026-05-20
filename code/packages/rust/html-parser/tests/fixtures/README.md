@@ -121,6 +121,16 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_formatting
   --check
 ```
 
+`whatwg-ruby-audit.json` is a generated index over tree-construction cases
+that stress `ruby`, `rb`, `rt`, `rtc`, and `rp` implied-end-tag recovery,
+including block descendants and nested ruby containers:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_ruby_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_ruby_audit_fixture.py \
+  --check
+```
+
 `whatwg-document-shell-audit.json` is a generated index over tree-construction
 cases that stress doctypes, comments, `html`/`head`/`body` synthesis, frameset
 boundaries, and shell fragment contexts:
