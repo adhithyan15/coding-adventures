@@ -1,0 +1,2477 @@
+{
+  "case_count": 410,
+  "cases": [
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption01-dat-1",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption01.dat:1"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption01-dat-2",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption01.dat:2"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "adoption01-dat-3",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "adoption01.dat:3"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption01-dat-4",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption01.dat:4"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption01-dat-5",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption01.dat:5"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption01-dat-6",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption01.dat:6"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption01-dat-7",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption01.dat:7"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption01-dat-8",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption01.dat:8"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption01-dat-9",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption01.dat:9"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption01-dat-11",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption01.dat:11"
+    },
+    {
+      "axis": "form-control",
+      "id": "adoption01-dat-13",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "adoption01.dat:13"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption01-dat-14",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption01.dat:14"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption01-dat-15",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption01.dat:15"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption02-dat-19",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption02.dat:19"
+    },
+    {
+      "axis": "form-control",
+      "id": "blocks-dat-40",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "blocks.dat:40"
+    },
+    {
+      "axis": "form-control",
+      "id": "blocks-dat-41",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "blocks.dat:41"
+    },
+    {
+      "axis": "select-option",
+      "id": "domjs-unsafe-dat-153",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "domjs-unsafe.dat:153"
+    },
+    {
+      "axis": "select-option",
+      "id": "domjs-unsafe-dat-158",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "domjs-unsafe.dat:158"
+    },
+    {
+      "axis": "select-option",
+      "id": "domjs-unsafe-dat-159",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "domjs-unsafe.dat:159"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "html5test-com-dat-275",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "html5test-com.dat:275"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "html5test-com-dat-285",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "html5test-com.dat:285"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "html5test-com-dat-286",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "html5test-com.dat:286"
+    },
+    {
+      "axis": "form-control",
+      "id": "html5test-com-dat-290",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "html5test-com.dat:290"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "inbody01-dat-295",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "inbody01.dat:295"
+    },
+    {
+      "axis": "form-control",
+      "id": "isindex-dat-301",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "isindex.dat:301"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "main-element-dat-305",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "main-element.dat:305"
+    },
+    {
+      "axis": "select-option",
+      "id": "menuitem-element-dat-319",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "menuitem-element.dat:319"
+    },
+    {
+      "axis": "select-option",
+      "id": "menuitem-element-dat-320",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "menuitem-element.dat:320"
+    },
+    {
+      "axis": "select-option",
+      "id": "menuitem-element-dat-321",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "menuitem-element.dat:321"
+    },
+    {
+      "axis": "form-control",
+      "id": "pending-spec-changes-dat-346",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "pending-spec-changes.dat:346"
+    },
+    {
+      "axis": "select-option",
+      "id": "plain-text-unsafe-dat-355",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "plain-text-unsafe.dat:355"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "search-element-dat-435",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "search-element.dat:435"
+    },
+    {
+      "axis": "select-option",
+      "id": "tables01-dat-442",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tables01.dat:442"
+    },
+    {
+      "axis": "select-option",
+      "id": "tables01-dat-443",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tables01.dat:443"
+    },
+    {
+      "axis": "select-option",
+      "id": "tables01-dat-444",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tables01.dat:444"
+    },
+    {
+      "axis": "select-option",
+      "id": "tables01-dat-445",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tables01.dat:445"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tables01-dat-451",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tables01.dat:451"
+    },
+    {
+      "axis": "select-option",
+      "id": "tables01-dat-453",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tables01.dat:453"
+    },
+    {
+      "axis": "select-option",
+      "id": "template-dat-473",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "template.dat:473"
+    },
+    {
+      "axis": "select-option",
+      "id": "template-dat-474",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "template.dat:474"
+    },
+    {
+      "axis": "select-option",
+      "id": "template-dat-475",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "template.dat:475"
+    },
+    {
+      "axis": "select-option",
+      "id": "template-dat-476",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "template.dat:476"
+    },
+    {
+      "axis": "select-option",
+      "id": "template-dat-477",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "template.dat:477"
+    },
+    {
+      "axis": "select-option",
+      "id": "template-dat-478",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "template.dat:478"
+    },
+    {
+      "axis": "select-option",
+      "id": "template-dat-479",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "template.dat:479"
+    },
+    {
+      "axis": "select-option",
+      "id": "template-dat-480",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "template.dat:480"
+    },
+    {
+      "axis": "select-option",
+      "id": "template-dat-545",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "template.dat:545"
+    },
+    {
+      "axis": "select-option",
+      "id": "template-dat-556",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "template.dat:556"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "template-dat-562",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "template.dat:562"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-588",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:588"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests1-dat-589",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests1.dat:589"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests1-dat-590",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests1.dat:590"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests1-dat-595",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests1.dat:595"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-596",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:596"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-597",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:597"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests1-dat-600",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests1.dat:600"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-643",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:643"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-644",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:644"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-645",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:645"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-646",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:646"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests1-dat-654",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests1.dat:654"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-656",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:656"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-661",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:661"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests1-dat-662",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests1.dat:662"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests1-dat-665",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests1.dat:665"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-667",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:667"
+    },
+    {
+      "axis": "stray-interactive-end-tags",
+      "id": "tests1-dat-675",
+      "reason": "stray form/interactive end-tag recovery around ordinary and table content",
+      "source": "tests1.dat:675"
+    },
+    {
+      "axis": "stray-interactive-end-tags",
+      "id": "tests1-dat-676",
+      "reason": "stray form/interactive end-tag recovery around ordinary and table content",
+      "source": "tests1.dat:676"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests10-dat-681",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests10.dat:681"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests10-dat-682",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests10.dat:682"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests10-dat-694",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests10.dat:694"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests10-dat-695",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests10.dat:695"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests15-dat-765",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests15.dat:765"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests16-dat-859",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests16.dat:859"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests16-dat-860",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests16.dat:860"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests16-dat-861",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests16.dat:861"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests16-dat-862",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests16.dat:862"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests16-dat-956",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests16.dat:956"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests16-dat-957",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests16.dat:957"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests16-dat-964",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests16.dat:964"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-965",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:965"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-966",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:966"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-967",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:967"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-968",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:968"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-969",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:969"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-970",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:970"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-971",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:971"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-972",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:972"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-973",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:973"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-974",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:974"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-975",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:975"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-976",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:976"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests18-dat-991",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests18.dat:991"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests18-dat-992",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests18.dat:992"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests18-dat-1005",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests18.dat:1005"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests18-dat-1006",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests18.dat:1006"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests18-dat-1007",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests18.dat:1007"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests19-dat-1041",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests19.dat:1041"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests19-dat-1042",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests19.dat:1042"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests19-dat-1043",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests19.dat:1043"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests19-dat-1067",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests19.dat:1067"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests19-dat-1078",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests19.dat:1078"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests19-dat-1082",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests19.dat:1082"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests19-dat-1085",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests19.dat:1085"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests19-dat-1104",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests19.dat:1104"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests19-dat-1105",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests19.dat:1105"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests19-dat-1111",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests19.dat:1111"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests19-dat-1112",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests19.dat:1112"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests19-dat-1115",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests19.dat:1115"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests19-dat-1116",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests19.dat:1116"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1117",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1117"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1118",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1118"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1119",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1119"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1120",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1120"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1121",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1121"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1122",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1122"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1123",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1123"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1124",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1124"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1125",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1125"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1126",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1126"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1127",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1127"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1128",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1128"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1129",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1129"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1130",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1130"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1131",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1131"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1132",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1132"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1133",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1133"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1134",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1134"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1135",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1135"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1136",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1136"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1137",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1137"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1138",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1138"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1139",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1139"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1140",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1140"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1141",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1141"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1142",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1142"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1143",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1143"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1144",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1144"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1145",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1145"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1146",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1146"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1147",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1147"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1148",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1148"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1149",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1149"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1150",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1150"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1151",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1151"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1152",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1152"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1153",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1153"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1154",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1154"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1155",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1155"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1156",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1156"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1157",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1157"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests20-dat-1162",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests20.dat:1162"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests20-dat-1163",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests20.dat:1163"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests20-dat-1164",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests20.dat:1164"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests20-dat-1167",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests20.dat:1167"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests20-dat-1168",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests20.dat:1168"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests22-dat-1204",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests22.dat:1204"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests22-dat-1205",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests22.dat:1205"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests22-dat-1206",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests22.dat:1206"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests22-dat-1207",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests22.dat:1207"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests25-dat-1234",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests25.dat:1234"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-1248",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:1248"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-1249",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:1249"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-1250",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:1250"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-1251",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:1251"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-1252",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:1252"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-1253",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:1253"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-1254",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:1254"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-1255",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:1255"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-1256",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:1256"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests26-dat-1263",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests26.dat:1263"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests2-dat-2",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests2.dat:2"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests2-dat-29",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests2.dat:29"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests2-dat-37",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests2.dat:37"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests2-dat-38",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests2.dat:38"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests2-dat-39",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests2.dat:39"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests2-dat-40",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests2.dat:40"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests2-dat-41",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests2.dat:41"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests2-dat-49",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests2.dat:49"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests5-dat-9",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests5.dat:9"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests9-dat-5",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests9.dat:5"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests9-dat-6",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests9.dat:6"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests9-dat-18",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests9.dat:18"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests9-dat-19",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests9.dat:19"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests2-dat-63",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests2.dat:63"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests3-dat-15",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests3.dat:15"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests3-dat-17",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests3.dat:17"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests3-dat-18",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests3.dat:18"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests3-dat-19",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests3.dat:19"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests3-dat-21",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests3.dat:21"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests3-dat-22",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests3.dat:22"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests6-dat-2",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests6.dat:2"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests6-dat-13",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests6.dat:13"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests6-dat-14",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests6.dat:14"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests7-dat-17",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests7.dat:17"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests7-dat-18",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests7.dat:18"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests7-dat-19",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests7.dat:19"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests7-dat-20",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests7.dat:20"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests7-dat-21",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests7.dat:21"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests7-dat-22",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests7.dat:22"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests7-dat-23",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests7.dat:23"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests7-dat-24",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests7.dat:24"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests7-dat-25",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests7.dat:25"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests7-dat-34",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests7.dat:34"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests8-dat-10",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests8.dat:10"
+    },
+    {
+      "axis": "fragment-context",
+      "id": "tests4-dat-2",
+      "reason": "fragment parsing in form and interactive element contexts",
+      "source": "tests4.dat:2"
+    },
+    {
+      "axis": "fragment-context",
+      "id": "tests4-dat-3",
+      "reason": "fragment parsing in form and interactive element contexts",
+      "source": "tests4.dat:3"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-11",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:11"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-12",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:12"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-13",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:13"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-14",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:14"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-15",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:15"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-16",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:16"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-17",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:17"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-18",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:18"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-19",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:19"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-37",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:37"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-38",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:38"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-39",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:39"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-40",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:40"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-41",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:41"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-42",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:42"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-43",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:43"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-44",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:44"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-45",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:45"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-46",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:46"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-59",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:59"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-60",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:60"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-61",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:61"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-62",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:62"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-63",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:63"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-64",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:64"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-65",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:65"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-66",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:66"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-67",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:67"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-68",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:68"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-69",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:69"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-70",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:70"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-71",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:71"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-72",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:72"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-73",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:73"
+    },
+    {
+      "axis": "fragment-context",
+      "id": "tests-innerhtml-1-dat-75",
+      "reason": "fragment parsing in form and interactive element contexts",
+      "source": "tests_innerHTML_1.dat:75"
+    },
+    {
+      "axis": "fragment-context",
+      "id": "tests-innerhtml-1-dat-77",
+      "reason": "fragment parsing in form and interactive element contexts",
+      "source": "tests_innerHTML_1.dat:77"
+    },
+    {
+      "axis": "fragment-context",
+      "id": "tests-innerhtml-1-dat-78",
+      "reason": "fragment parsing in form and interactive element contexts",
+      "source": "tests_innerHTML_1.dat:78"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-47",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:47"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests-innerhtml-1-dat-49",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests_innerHTML_1.dat:49"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-23",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:23"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests1-dat-24",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests1.dat:24"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests1-dat-25",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests1.dat:25"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests1-dat-30",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests1.dat:30"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-31",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:31"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-32",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:32"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests1-dat-35",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests1.dat:35"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-78",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:78"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-79",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:79"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-80",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:80"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-81",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:81"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests1-dat-89",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests1.dat:89"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-91",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:91"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-96",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:96"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests1-dat-97",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests1.dat:97"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests1-dat-100",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests1.dat:100"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests1-dat-102",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests1.dat:102"
+    },
+    {
+      "axis": "stray-interactive-end-tags",
+      "id": "tests1-dat-110",
+      "reason": "stray form/interactive end-tag recovery around ordinary and table content",
+      "source": "tests1.dat:110"
+    },
+    {
+      "axis": "stray-interactive-end-tags",
+      "id": "tests1-dat-111",
+      "reason": "stray form/interactive end-tag recovery around ordinary and table content",
+      "source": "tests1.dat:111"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests10-dat-4",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests10.dat:4"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests10-dat-5",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests10.dat:5"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests10-dat-17",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests10.dat:17"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests10-dat-18",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests10.dat:18"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests15-dat-12",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests15.dat:12"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests16-dat-92",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests16.dat:92"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests16-dat-93",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests16.dat:93"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests16-dat-94",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests16.dat:94"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests16-dat-95",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests16.dat:95"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests16-dat-189",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests16.dat:189"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests16-dat-190",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests16.dat:190"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests16-dat-197",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests16.dat:197"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-1",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:1"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-2",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:2"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-3",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:3"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-4",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:4"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-5",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:5"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-6",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:6"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-7",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:7"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-8",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:8"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-9",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:9"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-10",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:10"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-11",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:11"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests17-dat-12",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests17.dat:12"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests18-dat-14",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests18.dat:14"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests18-dat-15",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests18.dat:15"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests18-dat-28",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests18.dat:28"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests18-dat-29",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests18.dat:29"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests18-dat-30",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests18.dat:30"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests19-dat-28",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests19.dat:28"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests19-dat-29",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests19.dat:29"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests19-dat-30",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests19.dat:30"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests19-dat-54",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests19.dat:54"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests19-dat-65",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests19.dat:65"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "tests19-dat-69",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "tests19.dat:69"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests19-dat-72",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests19.dat:72"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests19-dat-91",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests19.dat:91"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests19-dat-92",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests19.dat:92"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests19-dat-98",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests19.dat:98"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests19-dat-99",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests19.dat:99"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests19-dat-102",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests19.dat:102"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests19-dat-103",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests19.dat:103"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-1",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:1"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-2",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:2"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-3",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:3"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-4",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:4"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-5",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:5"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-6",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:6"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-7",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:7"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-8",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:8"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-9",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:9"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-10",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:10"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-11",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:11"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-12",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:12"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-13",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:13"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-14",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:14"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-15",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:15"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-16",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:16"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-17",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:17"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-18",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:18"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-19",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:19"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-20",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:20"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-21",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:21"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-22",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:22"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-23",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:23"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-24",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:24"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-25",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:25"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-26",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:26"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-27",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:27"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-28",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:28"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-29",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:29"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-30",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:30"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-31",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:31"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-32",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:32"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-33",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:33"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-34",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:34"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-35",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:35"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-36",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:36"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-37",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:37"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-38",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:38"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-39",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:39"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-40",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:40"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests20-dat-41",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests20.dat:41"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests20-dat-46",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests20.dat:46"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests20-dat-47",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests20.dat:47"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests20-dat-48",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests20.dat:48"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests20-dat-51",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests20.dat:51"
+    },
+    {
+      "axis": "select-option",
+      "id": "tests20-dat-52",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "tests20.dat:52"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests22-dat-1",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests22.dat:1"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests22-dat-2",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests22.dat:2"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests22-dat-3",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests22.dat:3"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests22-dat-4",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests22.dat:4"
+    },
+    {
+      "axis": "form-control",
+      "id": "tests25-dat-13",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tests25.dat:13"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-1",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:1"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-2",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:2"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-3",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:3"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-4",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:4"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-5",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:5"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-6",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:6"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-7",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:7"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-8",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:8"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tests26-dat-9",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tests26.dat:9"
+    },
+    {
+      "axis": "button-boundary",
+      "id": "tests26-dat-16",
+      "reason": "button scoping, repeated button starts, and button boundary recovery",
+      "source": "tests26.dat:16"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "foreign-fragment-dat-1",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "foreign-fragment.dat:1"
+    },
+    {
+      "axis": "form-control",
+      "id": "tricky01-dat-5",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "tricky01.dat:5"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tricky01-dat-7",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tricky01.dat:7"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tricky01-dat-8",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tricky01.dat:8"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "tricky01-dat-9",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "tricky01.dat:9"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "webkit01-dat-15",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "webkit01.dat:15"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit01-dat-32",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit01.dat:32"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "webkit01-dat-34",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "webkit01.dat:34"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit01-dat-37",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit01.dat:37"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit01-dat-38",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit01.dat:38"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "webkit01-dat-39",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "webkit01.dat:39"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "webkit01-dat-41",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "webkit01.dat:41"
+    },
+    {
+      "axis": "form-control",
+      "id": "webkit01-dat-51",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "webkit01.dat:51"
+    },
+    {
+      "axis": "form-control",
+      "id": "webkit01-dat-52",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "webkit01.dat:52"
+    },
+    {
+      "axis": "form-control",
+      "id": "webkit02-dat-11",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "webkit02.dat:11"
+    },
+    {
+      "axis": "fragment-context",
+      "id": "webkit02-dat-19",
+      "reason": "fragment parsing in form and interactive element contexts",
+      "source": "webkit02.dat:19"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-26",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:26"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-27",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:27"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-28",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:28"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-29",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:29"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-30",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:30"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-31",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:31"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-32",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:32"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-33",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:33"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-34",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:34"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-35",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:35"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-36",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:36"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-37",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:37"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-38",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:38"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-39",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:39"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-40",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:40"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-41",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:41"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-42",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:42"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-43",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:43"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-44",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:44"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-45",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:45"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-46",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:46"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-47",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:47"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-48",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:48"
+    },
+    {
+      "axis": "select-option",
+      "id": "webkit02-dat-49",
+      "reason": "select, option, and optgroup insertion and implied-end recovery",
+      "source": "webkit02.dat:49"
+    },
+    {
+      "axis": "form-control",
+      "id": "template-dat-109",
+      "reason": "form, input, label, and fieldset insertion recovery",
+      "source": "template.dat:109"
+    },
+    {
+      "axis": "fragment-context",
+      "id": "tests-innerhtml-1-dat-76",
+      "reason": "fragment parsing in form and interactive element contexts",
+      "source": "tests_innerHTML_1.dat:76"
+    }
+  ],
+  "counts_by_axis": {
+    "button-boundary": 96,
+    "form-control": 33,
+    "fragment-context": 7,
+    "interactive-formatting": 123,
+    "select-option": 123,
+    "stray-interactive-end-tags": 4,
+    "textarea-rawtext": 24
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress form-associated controls and interactive-element recovery.",
+  "format": "whatwg-html-form-interactive-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

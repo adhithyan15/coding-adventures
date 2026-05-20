@@ -77,3 +77,14 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_table_audi
 python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_table_audit_fixture.py \
   --check
 ```
+
+`whatwg-form-interactive-audit.json` is a generated index over
+tree-construction cases that stress anchor/nobr recovery, button boundaries,
+form-associated controls, select/option handling, textarea RCDATA handoff,
+interactive fragment contexts, and stray interactive end tags:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_form_interactive_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_form_interactive_audit_fixture.py \
+  --check
+```

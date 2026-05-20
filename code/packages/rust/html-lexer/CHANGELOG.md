@@ -30,6 +30,8 @@ documented in this file.
   generator alongside the tree-insertion audit.
 - The generated fixture manifest now includes the parser table audit generator
   alongside the tree-insertion and frameset audits.
+- The generated fixture manifest now includes the parser form/interactive audit
+  generator alongside the other parser audit fixture generators.
 - Parser-facing seeded RCDATA/RAWTEXT/script end-tag continuation contexts,
   including end-tag-name, whitespace, attributes, and self-closing substates
   with current-end-tag and temporary-buffer seeding.
