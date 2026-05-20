@@ -160,6 +160,13 @@ def default_checks() -> list[FixtureCheck]:
             ),
         ),
         FixtureCheck(
+            "whatwg-ruby-audit",
+            (
+                str(PARSER_FIXTURE_DIR / "generate_whatwg_ruby_audit_fixture.py"),
+                "--check",
+            ),
+        ),
+        FixtureCheck(
             "whatwg-document-shell-audit",
             (
                 str(PARSER_FIXTURE_DIR / "generate_whatwg_document_shell_audit_fixture.py"),

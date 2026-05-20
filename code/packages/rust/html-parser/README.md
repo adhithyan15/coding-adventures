@@ -167,6 +167,15 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_formatting
   --check
 ```
 
+The generated `tests/fixtures/whatwg-ruby-audit.json` fixture indexes `ruby`,
+`rb`, `rt`, `rtc`, and `rp` implied-end-tag recovery, including block
+descendants and nested ruby containers:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_ruby_audit_fixture.py \
+  --check
+```
+
 The generated `tests/fixtures/whatwg-document-shell-audit.json` fixture indexes
 doctypes, comments, `html`/`head`/`body` synthesis, frameset boundaries, and
 shell fragment contexts:
