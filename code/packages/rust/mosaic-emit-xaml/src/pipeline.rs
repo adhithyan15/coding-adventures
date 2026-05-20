@@ -722,11 +722,19 @@ fn emit_xaml_node(
         "HostButton" => emit_host_button(node, indent, part_styles, ctx),
         "HostScroll" => emit_host_scroll(node, indent, part_styles, ctx),
 
-        // PR-4 / PR-5 territory. Recognised by name so the error message is
-        // self-documenting ("not yet supported", not "unknown tag").
-        "HostTable"
-        | "HostTableColGroup" | "HostTableHead" | "HostTableBody" | "HostTableFoot" => {
-            Err(PipelineEmitError::UnsupportedPrimitive(node.tag.clone()))
+        // PR-4: HostTable.
+        "HostTable" => emit_host_table(node, indent, part_styles, ctx),
+
+        // The four section sub-tags are recognised only as children of
+        // HostTable. Encountering them as direct nodes here means the
+        // author wrote them at the wrong level (outside a HostTable);
+        // surface as a clear UnsupportedPrimitive with the offending
+        // tag name.
+        "HostTableColGroup" | "HostTableHead" | "HostTableBody" | "HostTableFoot" => {
+            Err(PipelineEmitError::UnsupportedPrimitive(format!(
+                "{} outside HostTable",
+                node.tag
+            )))
         }
 
         // Anything else is a component reference; will route through the
@@ -2379,6 +2387,262 @@ fn emit_host_scroll(
 }
 
 // =====================================================================
+// PR-4: HostTable + section sub-tags
+// =====================================================================
+//
+// `HostTable` is the only kernel primitive WinUI 3 has no idiomatic
+// native control for. Per spec §5, the lowering is a hand-rolled
+// `<Grid>` (XAML's primitive!) with `Grid.RowDefinitions` driven by
+// the present section sub-tags and each section's `Row` children
+// becoming a `<StackPanel Orientation="Horizontal">`.
+//
+// Four section sub-tags are recognised:
+//   - HostTableColGroup — UI29 §2.1 (deferred to a later PR — see §5.2
+//                         caveat about column-widths layout)
+//   - HostTableHead     — header row(s), Grid.Row="0"
+//   - HostTableBody     — data row(s), wrapped in ScrollViewer for
+//                         vertical overflow, Grid.Row="<head?1:0>"
+//   - HostTableFoot     — footer row(s), Grid.Row="<...>"
+//
+// Each section appears at most once per HostTable; a duplicate is a
+// `DuplicateTableSection` error (the spec's debug_assert pattern lifted
+// to a fatal error here — XAML doesn't have a defensible fallback for
+// an extra `<Grid.RowDefinitions>` row).
+
+/// `HostTable [name] { section sub-tags... }` per spec §5.
+fn emit_host_table(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let pad2 = " ".repeat(indent + 4);
+    let style = part_style_attr(node, part_styles);
+
+    // -- 1. Find each section sub-tag at most once. --
+    let mut colgroup: Option<&LayoutNode> = None;
+    let mut head: Option<&LayoutNode> = None;
+    let mut body: Option<&LayoutNode> = None;
+    let mut foot: Option<&LayoutNode> = None;
+
+    for child in &node.children {
+        match child.tag.as_str() {
+            "HostTableColGroup" => {
+                if colgroup.is_some() {
+                    return Err(PipelineEmitError::DuplicateTableSection(
+                        "HostTableColGroup".to_string(),
+                    ));
+                }
+                colgroup = Some(child);
+            }
+            "HostTableHead" => {
+                if head.is_some() {
+                    return Err(PipelineEmitError::DuplicateTableSection(
+                        "HostTableHead".to_string(),
+                    ));
+                }
+                head = Some(child);
+            }
+            "HostTableBody" => {
+                if body.is_some() {
+                    return Err(PipelineEmitError::DuplicateTableSection(
+                        "HostTableBody".to_string(),
+                    ));
+                }
+                body = Some(child);
+            }
+            "HostTableFoot" => {
+                if foot.is_some() {
+                    return Err(PipelineEmitError::DuplicateTableSection(
+                        "HostTableFoot".to_string(),
+                    ));
+                }
+                foot = Some(child);
+            }
+            other => {
+                return Err(PipelineEmitError::UnsupportedPrimitive(format!(
+                    "{other} is not a HostTable section sub-tag"
+                )));
+            }
+        }
+    }
+
+    // colgroup is recognised but not yet rendered — the column-widths
+    // story needs more design (§5.2 caveat). PR-4 silently ignores it.
+    let _ = colgroup;
+
+    // -- 2. Empty HostTable → empty `<Grid/>`. Preserves part style. --
+    if head.is_none() && body.is_none() && foot.is_none() {
+        return Ok(format!("{pad}<Grid{style}></Grid>\n"));
+    }
+
+    // -- 3. Build RowDefinitions list. Each present section gets one
+    //       row; head and foot are Auto-sized, body is `*` (fills). --
+    let mut row_defs: Vec<&'static str> = Vec::with_capacity(3);
+    if head.is_some() {
+        row_defs.push("Auto");
+    }
+    if body.is_some() {
+        row_defs.push("*");
+    }
+    if foot.is_some() {
+        row_defs.push("Auto");
+    }
+
+    // -- 4. Assemble the XAML. --
+    let mut out = String::new();
+    writeln!(out, "{pad}<Grid{style}>").unwrap();
+    writeln!(out, "{pad2}<Grid.RowDefinitions>").unwrap();
+    for r in &row_defs {
+        writeln!(
+            out,
+            "{pad2}    <RowDefinition Height=\"{r}\"/>"
+        )
+        .unwrap();
+    }
+    writeln!(out, "{pad2}</Grid.RowDefinitions>").unwrap();
+
+    // -- 5. Per-section content. Assign Grid.Row indices in source order. --
+    let mut row_index = 0u32;
+    if let Some(h) = head {
+        out.push_str(&emit_host_table_section(
+            h,
+            row_index,
+            indent + 4,
+            part_styles,
+            ctx,
+            false, // header doesn't wrap in ScrollViewer
+        )?);
+        row_index += 1;
+    }
+    if let Some(b) = body {
+        out.push_str(&emit_host_table_section(
+            b,
+            row_index,
+            indent + 4,
+            part_styles,
+            ctx,
+            true, // body wraps in ScrollViewer for vertical overflow
+        )?);
+        row_index += 1;
+    }
+    if let Some(f) = foot {
+        out.push_str(&emit_host_table_section(
+            f,
+            row_index,
+            indent + 4,
+            part_styles,
+            ctx,
+            false, // footer doesn't wrap
+        )?);
+    }
+
+    writeln!(out, "{pad}</Grid>").unwrap();
+    Ok(out)
+}
+
+/// Emit one section (Head / Body / Foot) of a HostTable. The section's
+/// `Row` children become `<StackPanel Orientation="Horizontal">` of
+/// cell children; the section itself becomes a
+/// `<StackPanel Orientation="Vertical">` (wrapped in a `<ScrollViewer>`
+/// when `scrollable` is `true` — used for the body section).
+fn emit_host_table_section(
+    section: &LayoutNode,
+    grid_row: u32,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+    scrollable: bool,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let pad2 = " ".repeat(indent + 4);
+
+    // The section's own part_name applies to the outer wrapper.
+    let style = part_style_attr(section, part_styles);
+
+    let mut out = String::new();
+
+    if scrollable {
+        writeln!(
+            out,
+            "{pad}<ScrollViewer Grid.Row=\"{grid_row}\" VerticalScrollBarVisibility=\"Auto\" HorizontalScrollBarVisibility=\"Disabled\">"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "{pad2}<StackPanel Orientation=\"Vertical\"{style}>"
+        )
+        .unwrap();
+        out.push_str(&emit_host_table_rows(
+            &section.children,
+            indent + 8,
+            part_styles,
+            ctx,
+        )?);
+        writeln!(out, "{pad2}</StackPanel>").unwrap();
+        writeln!(out, "{pad}</ScrollViewer>").unwrap();
+    } else {
+        writeln!(
+            out,
+            "{pad}<StackPanel Grid.Row=\"{grid_row}\" Orientation=\"Vertical\"{style}>"
+        )
+        .unwrap();
+        out.push_str(&emit_host_table_rows(
+            &section.children,
+            indent + 4,
+            part_styles,
+            ctx,
+        )?);
+        writeln!(out, "{pad}</StackPanel>").unwrap();
+    }
+
+    Ok(out)
+}
+
+/// Emit the rows of one section. Only `Row` is permitted as a direct
+/// child of a section per UI29 §2.1; any other tag is an
+/// `UnsupportedPrimitive`. Each `Row` lowers as if it were a moslayout
+/// `Row` primitive (a `<StackPanel Orientation="Horizontal">`).
+fn emit_host_table_rows(
+    rows: &[LayoutNode],
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let mut out = String::new();
+    for row in rows {
+        match row.tag.as_str() {
+            "Row" => {
+                out.push_str(&emit_stack_panel(
+                    row,
+                    indent,
+                    part_styles,
+                    "Horizontal",
+                    ctx,
+                )?);
+            }
+            "For" => {
+                // Allow a `For` inside a section so authors can iterate
+                // over data rows: `HostTableBody { For (each: slot: rows, as: r) { Row { ... } } }`.
+                out.push_str(&emit_for(row, indent, part_styles, ctx)?);
+            }
+            "If" => {
+                // Allow conditional rows (e.g. show a row only when an
+                // option is enabled).
+                out.push_str(&emit_if(row, None, indent, part_styles, ctx)?);
+            }
+            other => {
+                return Err(PipelineEmitError::UnsupportedPrimitive(format!(
+                    "{other} as a direct child of a HostTable section — only Row, For, If permitted"
+                )));
+            }
+        }
+    }
+    Ok(out)
+}
+
+// =====================================================================
 // Tests
 // =====================================================================
 
@@ -2994,8 +3258,12 @@ mod tests {
         assert!(r.xaml.contains("<TextBox x:Name=\"HostInput_1\""), "got:\n{}", r.xaml);
     }
 
+    /// PR-4 lowers HostTable. An empty HostTable (no section sub-tags)
+    /// emits an empty `<Grid/>`. The PR-1 version of this test expected
+    /// an `UnsupportedPrimitive` error; we now verify the empty-Grid
+    /// lowering instead.
     #[test]
-    fn host_table_errors_with_unsupported_primitive() {
+    fn host_table_empty_lowers_to_empty_grid_in_pr4() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root(
             "Foo",
@@ -3006,10 +3274,323 @@ mod tests {
                 children: Vec::new(),
             },
         );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<Grid></Grid>"), "got:\n{}", r.xaml);
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // PR-4: HostTable + section sub-tags tests
+    // ─────────────────────────────────────────────────────────────────
+
+    fn host_table_node(part: Option<&str>, sections: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "HostTable".to_string(),
+            part_name: part.map(String::from),
+            props: Vec::new(),
+            children: sections,
+        }
+    }
+
+    fn section_node(tag: &str, rows: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: rows,
+        }
+    }
+
+    fn row_with_text_cells(parts: &[&str]) -> LayoutNode {
+        LayoutNode {
+            tag: "Row".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: parts
+                .iter()
+                .map(|s| LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String(s.to_string()),
+                    }],
+                    children: Vec::new(),
+                })
+                .collect(),
+        }
+    }
+
+    #[test]
+    fn host_table_head_only_emits_grid_with_auto_row_for_head() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_table_node(
+                None,
+                vec![section_node(
+                    "HostTableHead",
+                    vec![row_with_text_cells(&["A", "B"])],
+                )],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<Grid>"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("<Grid.RowDefinitions>"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("<RowDefinition Height=\"Auto\"/>"));
+        // Head section is a StackPanel at Grid.Row="0"
+        assert!(
+            r.xaml.contains("<StackPanel Grid.Row=\"0\" Orientation=\"Vertical\""),
+            "got:\n{}",
+            r.xaml
+        );
+        // Both header cells appear.
+        assert!(r.xaml.contains("Text=\"A\""));
+        assert!(r.xaml.contains("Text=\"B\""));
+    }
+
+    #[test]
+    fn host_table_head_plus_body_emits_two_row_definitions_auto_and_star() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_table_node(
+                None,
+                vec![
+                    section_node("HostTableHead", vec![row_with_text_cells(&["H1"])]),
+                    section_node("HostTableBody", vec![row_with_text_cells(&["B1"])]),
+                ],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // Two RowDefinitions: Auto + *.
+        assert!(r.xaml.contains("<RowDefinition Height=\"Auto\"/>"));
+        assert!(r.xaml.contains("<RowDefinition Height=\"*\"/>"));
+    }
+
+    #[test]
+    fn host_table_body_wraps_in_scrollviewer() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_table_node(
+                None,
+                vec![section_node(
+                    "HostTableBody",
+                    vec![row_with_text_cells(&["X"])],
+                )],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml
+                .contains("<ScrollViewer Grid.Row=\"0\" VerticalScrollBarVisibility=\"Auto\""),
+            "got:\n{}",
+            r.xaml
+        );
+        // Body StackPanel goes inside the ScrollViewer.
+        assert!(r.xaml.contains("<StackPanel Orientation=\"Vertical\""));
+        // The body's row contains its cells.
+        assert!(r.xaml.contains("Text=\"X\""));
+    }
+
+    #[test]
+    fn host_table_foot_emits_auto_row_no_scrollviewer() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_table_node(
+                None,
+                vec![section_node(
+                    "HostTableFoot",
+                    vec![row_with_text_cells(&["F"])],
+                )],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<RowDefinition Height=\"Auto\"/>"));
+        // Foot section: StackPanel directly at Grid.Row="0" (no ScrollViewer wrapper).
+        assert!(
+            r.xaml.contains("<StackPanel Grid.Row=\"0\" Orientation=\"Vertical\""),
+            "got:\n{}",
+            r.xaml
+        );
+        // No ScrollViewer for the foot section.
+        assert!(!r.xaml.contains("<ScrollViewer"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn host_table_full_quad_assigns_grid_rows_in_source_order() {
+        // ColGroup is recognised but silently ignored in PR-4. The
+        // Head, Body, Foot get Grid.Row 0, 1, 2.
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_table_node(
+                None,
+                vec![
+                    section_node("HostTableColGroup", vec![]),
+                    section_node("HostTableHead", vec![row_with_text_cells(&["H"])]),
+                    section_node("HostTableBody", vec![row_with_text_cells(&["B"])]),
+                    section_node("HostTableFoot", vec![row_with_text_cells(&["F"])]),
+                ],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // Three RowDefinitions: Auto, *, Auto.
+        let auto_count = r.xaml.matches("<RowDefinition Height=\"Auto\"/>").count();
+        let star_count = r.xaml.matches("<RowDefinition Height=\"*\"/>").count();
+        assert_eq!(auto_count, 2);
+        assert_eq!(star_count, 1);
+        // Grid.Row assignments.
+        assert!(
+            r.xaml
+                .contains("<StackPanel Grid.Row=\"0\" Orientation=\"Vertical\"")
+        );
+        assert!(
+            r.xaml
+                .contains("<ScrollViewer Grid.Row=\"1\" VerticalScrollBarVisibility")
+        );
+        assert!(
+            r.xaml
+                .contains("<StackPanel Grid.Row=\"2\" Orientation=\"Vertical\"")
+        );
+    }
+
+    #[test]
+    fn host_table_duplicate_section_errors() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_table_node(
+                None,
+                vec![
+                    section_node("HostTableBody", vec![]),
+                    section_node("HostTableBody", vec![]),
+                ],
+            ),
+        );
         let s = empty_style("Foo");
         let err = from_pipeline(&c, &l, &s, None, &opts()).unwrap_err();
         assert!(
-            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t == "HostTable")
+            matches!(err, PipelineEmitError::DuplicateTableSection(ref t) if t == "HostTableBody"),
+            "got: {err:?}"
+        );
+    }
+
+    #[test]
+    fn host_table_section_unknown_child_errors() {
+        // A non-section child as a direct child of HostTable should
+        // produce a clear UnsupportedPrimitive.
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_table_node(
+                None,
+                vec![LayoutNode {
+                    tag: "Box".to_string(),
+                    part_name: None,
+                    props: Vec::new(),
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let s = empty_style("Foo");
+        let err = from_pipeline(&c, &l, &s, None, &opts()).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsupportedPrimitive(_)));
+    }
+
+    #[test]
+    fn host_table_section_with_non_row_child_errors() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_table_node(
+                None,
+                vec![section_node(
+                    "HostTableBody",
+                    vec![LayoutNode {
+                        tag: "Box".to_string(),
+                        part_name: None,
+                        props: Vec::new(),
+                        children: Vec::new(),
+                    }],
+                )],
+            ),
+        );
+        let s = empty_style("Foo");
+        let err = from_pipeline(&c, &l, &s, None, &opts()).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsupportedPrimitive(_)));
+    }
+
+    #[test]
+    fn host_table_section_accepts_for_iterating_rows() {
+        // A `For` directly inside a section is allowed so authors can
+        // iterate over data rows from a slot.
+        let c = component(
+            "Grid",
+            vec![slot("rows", SlotType::List(Box::new(ListInnerType::Text)), true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Grid",
+            host_table_node(
+                None,
+                vec![section_node(
+                    "HostTableBody",
+                    vec![for_node(
+                        LayoutPropValue::SlotRef("rows".to_string()),
+                        "row",
+                        None,
+                        vec![row_with_text_cells(&["x"])],
+                    )],
+                )],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Grid"));
+        assert!(r.xaml.contains("<ItemsRepeater ItemsSource=\"{x:Bind Rows}\""));
+        // The For-generated RowVm should be in for_view_models.
+        assert!(!r.for_view_models.is_empty());
+    }
+
+    #[test]
+    fn host_table_section_orphan_at_top_level_errors() {
+        // A `HostTableHead` outside a HostTable is wrong nesting.
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", section_node("HostTableHead", vec![]));
+        let s = empty_style("Foo");
+        let err = from_pipeline(&c, &l, &s, None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("outside HostTable")),
+            "got: {err:?}"
+        );
+    }
+
+    #[test]
+    fn host_table_with_part_name_applies_style() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_table_node(
+                Some("sheet"),
+                vec![section_node("HostTableHead", vec![row_with_text_cells(&["H"])])],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "Foo".to_string(),
+            parts: vec![PartStyle {
+                name: "sheet".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#1e1e1e".to_string(),
+                }],
+                states: Vec::new(),
+            }],
+        };
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("<Grid Background=\"#1e1e1e\""),
+            "got:\n{}",
+            r.xaml
         );
     }
 

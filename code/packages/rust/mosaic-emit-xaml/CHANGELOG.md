@@ -1,5 +1,68 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — PR-4 — HostTable + section sub-tags
+
+### Added — `HostTable` lowering (spec §5)
+
+- `HostTable [name] { section sub-tags... }` lowers to a hand-rolled
+  `<Grid>` with `Grid.RowDefinitions` driven by the present section
+  sub-tags. Each section appears at most once per HostTable; duplicates
+  produce a `DuplicateTableSection` error.
+
+### Added — Section sub-tag handling
+
+- **`HostTableColGroup`** — recognised but ignored in PR-4 (the
+  column-widths layout question per spec §5.2 needs more design).
+- **`HostTableHead`** — emits as `<StackPanel Grid.Row="N" Orientation="Vertical">`
+  containing the header row(s). Auto-sized row.
+- **`HostTableBody`** — emits inside `<ScrollViewer Grid.Row="N" VerticalScrollBarVisibility="Auto">`
+  for vertical overflow. `*`-sized row (fills remaining space).
+- **`HostTableFoot`** — same shape as Head but at the last Grid.Row.
+  Auto-sized.
+
+Each section's `Row` children become `<StackPanel Orientation="Horizontal">` (via the existing `emit_stack_panel` reused from PR-1).
+Sections also accept `For` and `If` children so authors can iterate /
+conditionally include rows. Any other child of a section is an
+`UnsupportedPrimitive` error.
+
+### Added — Empty HostTable case
+
+An empty HostTable (no section sub-tags) lowers to a single `<Grid/>`
+self-closing element, preserving any part-style attributes.
+
+### Added — Section sub-tags as direct nodes error
+
+`HostTableHead` / `HostTableBody` / `HostTableFoot` / `HostTableColGroup`
+appearing outside a HostTable (i.e. as direct children of a non-table
+container) surface as `UnsupportedPrimitive("HostTable<X> outside HostTable")`.
+
+### Tests
+
+- 11 new tests covering: head-only Grid shape; head+body two-row Grid;
+  body-only ScrollViewer wrap; foot-only no-ScrollViewer; full quad
+  ColGroup+Head+Body+Foot Grid.Row assignment; empty HostTable; duplicate-section
+  error; unknown-child-of-HostTable error; non-Row-child-of-section
+  error; `For` inside a section iterating over rows; orphan section
+  sub-tag at top level; part-style application on the outer `<Grid>`.
+- One PR-1 test (`host_table_errors_with_unsupported_primitive`)
+  updated to verify the empty-Grid lowering.
+- Total: 92 tests (was 81 in PR-3, +11).
+
+### Known limitations carried to later PRs
+
+- **HostTableColGroup column-widths layout** — the spec §5.2 caveat
+  about WinUI 3's lack of a native semantic-table control means
+  column widths need either explicit `Grid.ColumnDefinitions` or
+  per-cell `Width` settings. PR-4 emits the StackPanel-per-row
+  structure but doesn't yet propagate column widths; the
+  ColGroup sub-tag is recognised and ignored. A follow-up tackles
+  this together with the `--use-community-datagrid` flag.
+- **`--use-community-datagrid` flag** — exists on `EmitOptions` but
+  not yet acted on. When set, future PR will switch the lowering to
+  `<controls:DataGrid>` from CommunityToolkit.WinUI for full UIA
+  fidelity (spec §5.3 caveat).
+- **Component references** still `UnsupportedPrimitive` pending PR-5.
+
 ## [Unreleased] — PR-3 — HostInput / HostButton / HostScroll
 
 ### Added — `HostInput` lowering (spec §4.1)
