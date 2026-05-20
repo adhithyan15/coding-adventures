@@ -153,9 +153,14 @@ fn run(result: cli_builder::types::ParseResult) {
             process::exit(1);
         });
 
-    if backend != "webcomponent" && backend != "html" && backend != "react" && backend != "paint" {
+    if backend != "webcomponent"
+        && backend != "html"
+        && backend != "react"
+        && backend != "paint"
+        && backend != "xaml"
+    {
         eprintln!(
-            "mosaic-compile: --backend must be 'webcomponent', 'html', 'react', or 'paint', got '{backend}'"
+            "mosaic-compile: --backend must be 'webcomponent', 'html', 'react', 'paint', or 'xaml', got '{backend}'"
         );
         process::exit(1);
     }
@@ -344,8 +349,8 @@ fn require_pipeline_flag<'a>(name: &str, value: Option<&'a str>) -> &'a str {
 /// Run the three-file pipeline path: compile `.mil`, `.mll`, `.msl` to a
 /// single output file using the new pipeline-aware backend emitter.
 ///
-/// Currently only `--backend react` is wired here; the other backends will
-/// follow when they gain their own pipeline entry points. The legacy
+/// Currently `--backend react` and `--backend xaml` are wired here; the
+/// other backends (swiftui, qt) will follow when they're added. The legacy
 /// `--backend X SOURCE.mosaic` path continues to work unchanged for any of
 /// the four backends.
 fn run_pipeline(
@@ -355,10 +360,10 @@ fn run_pipeline(
     style_path: &str,
     output_path: Option<&str>,
 ) {
-    if backend != "react" {
+    if backend != "react" && backend != "xaml" {
         eprintln!(
             "mosaic-compile: pipeline mode (--interface/--layout/--style) \
-             currently supports only --backend react (got '{backend}'). \
+             currently supports --backend react or --backend xaml (got '{backend}'). \
              Use legacy SOURCE mode for other backends."
         );
         process::exit(1);
@@ -406,23 +411,79 @@ fn run_pipeline(
             process::exit(1);
         });
 
-    // -- 4. Lower the triple to a React TSX file ----------------------------
-    let result = mosaic_emit_react::pipeline::from_pipeline(
-        &mosmodel_out.component,
-        &layout_out.def,
-        &style_out.def,
-    )
-    .unwrap_or_else(|e| {
-        eprintln!("mosaic-compile: react pipeline emit error: {e}");
-        process::exit(1);
-    });
+    // -- 4. Branch on backend. React emits one .tsx file; XAML emits a
+    // triple (.xaml, .xaml.cs, .Event.cs) plus zero-or-more RowVm .cs
+    // files (one per `For` block).
+    match backend {
+        "react" => {
+            let result = mosaic_emit_react::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+            )
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: react pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.tsx", result.component_name));
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
+        }
+        "xaml" => {
+            let result = mosaic_emit_xaml::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                None,
+                &mosaic_emit_xaml::EmitOptions::default(),
+            )
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: xaml pipeline emit error: {e}");
+                process::exit(1);
+            });
+            // `output_path` is treated as a *base* for the three (or
+            // more) generated files. Default base = the component name.
+            let base = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| result.component_name.clone());
+            // Strip a trailing `.xaml` if the user passed e.g. `Grid.xaml`
+            // so the C# files don't end up as `Grid.xaml.xaml.cs`.
+            let base = base
+                .strip_suffix(".xaml")
+                .map(str::to_string)
+                .unwrap_or(base);
 
-    // -- 5. Write the output ------------------------------------------------
-    let out = output_path
-        .map(str::to_string)
-        .unwrap_or_else(|| format!("{}.tsx", result.component_name));
-    write_file_or_die(&out, &result.output);
-    eprintln!("Written: {out}");
+            let xaml_path = format!("{base}.xaml");
+            let cs_path = format!("{base}.xaml.cs");
+            let evt_path = format!("{base}.Event.cs");
+            write_file_or_die(&xaml_path, &result.xaml);
+            write_file_or_die(&cs_path, &result.code_behind);
+            write_file_or_die(&evt_path, &result.events);
+            eprintln!("Written: {xaml_path}");
+            eprintln!("Written: {cs_path}");
+            eprintln!("Written: {evt_path}");
+            // Per-For RowVm files (PR-2). One side-file per For block.
+            for vm in &result.for_view_models {
+                // The base path's parent directory is where the RowVm
+                // lands; treat `base` as a path-like value and split
+                // on the last separator so the RowVm sits next to the
+                // matching XAML file.
+                let rv_path = match base.rfind(|c| c == '/' || c == '\\') {
+                    Some(idx) => format!("{}/{}", &base[..idx], vm.filename),
+                    None => vm.filename.clone(),
+                };
+                write_file_or_die(&rv_path, &vm.source);
+                eprintln!("Written: {rv_path}");
+            }
+        }
+        _ => {
+            // Already validated above; defensive.
+            eprintln!("mosaic-compile: unsupported pipeline backend '{backend}'");
+            process::exit(1);
+        }
+    }
 }
 
 // ===========================================================================
