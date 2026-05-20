@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.38.0 — 2026-05-20
+
+### Fixed
+
+- **``SUBSTR(x, y[, z])`` edge cases now match SQLite byte-for-byte.**
+  The previous implementation accumulated per-branch fixups for
+  negative ``y``, negative ``z``, and ``y = 0`` — and got several
+  combinations wrong:
+
+  * ``substr('hello', 0, 3)`` returned ``'hel'`` (wrong); SQLite
+    returns ``'he'`` because ``y = 0`` means "one position before the
+    string" so the span ``0, 1, 2`` intersects the string at
+    positions ``1, 2``.
+  * ``substr('hello', 2, -1)`` returned ``''`` (wrong); SQLite
+    returns ``'h'`` — negative ``z`` asks for ``|z|`` characters
+    *preceding* position ``y``.
+  * ``substr('hello', -100, 5)`` returned ``'hello'`` (wrong); SQLite
+    returns ``''`` because the resolved start (``-94``) plus length 5
+    is still entirely to the left of position 1.
+
+  The new algorithm models the requested character range as a closed
+  1-indexed interval ``[lo, hi]``, clips to ``[1, N]``, and converts
+  back to a Python slice — uniform handling that doesn't accumulate
+  per-branch fixups.  Blob inputs use the same algorithm on bytes.
+
+  33 unit tests in ``test_substr_edge_cases.py`` cover the full grid:
+  positive/negative/zero ``y``, positive/negative ``z``, far-negative
+  ``y``, empty strings, NULL, blob inputs, and the ``substring`` alias.
+
 ## 1.37.0 — 2026-05-20
 
 ### Fixed
