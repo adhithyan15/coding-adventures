@@ -486,6 +486,37 @@ fn emit_jsx_tree(
         ));
     }
 
+    // UI29 §3.1 — `For` is a control-flow meta-primitive that lowers to a
+    // `.map(...)` JSX expression. Routed before the generic primitive flow
+    // because `For` is not a visual element.
+    if node.tag == "For" {
+        return emit_for_jsx(node, indent, part_styles);
+    }
+
+    // UI29 §3.2 — `If` is a control-flow meta-primitive. When reached via
+    // `emit_jsx_tree` directly (e.g. as the root, or recursed into from a
+    // section emitter that does not handle If/Else pairing), there is no
+    // sibling context to consult, so we emit the `{cond && <then>}` form.
+    // The paired `{cond ? <then> : <else>}` form is produced by
+    // `emit_children_jsx_with_control_flow` when an `If` is followed by an
+    // `Else` sibling.
+    if node.tag == "If" {
+        return emit_if_jsx(node, None, indent, part_styles);
+    }
+
+    // UI29 §3.2 — a standalone `Else` (no preceding `If` in the same
+    // sibling list) is meaningless. Emit a JSX comment so the generated
+    // .tsx still parses and the author sees that the node was dropped on
+    // purpose. The paired case is handled by
+    // `emit_children_jsx_with_control_flow`, which consumes the Else
+    // together with its preceding If and never recurses into it here.
+    if node.tag == "Else" {
+        let pad = " ".repeat(indent);
+        return Ok(format!(
+            "{pad}{{/* Else with no preceding If — ignored */}}\n"
+        ));
+    }
+
     // Decompose the primitive into its element name, built-in style (e.g.
     // flexbox for Row/Column), close tag, and self-closing flag.
     let JsxTag {
@@ -533,10 +564,265 @@ fn emit_jsx_tree(
 
     // Container with children — emit opening tag, recurse, emit closing tag.
     let mut out = format!("{pad}{open}>\n");
-    for child in &node.children {
-        out.push_str(&emit_jsx_tree(child, indent + 2, part_styles)?);
-    }
+    out.push_str(&emit_children_jsx_with_control_flow(
+        &node.children,
+        indent + 2,
+        part_styles,
+    )?);
     out.push_str(&format!("{pad}{close}\n"));
+    Ok(out)
+}
+
+// =====================================================================
+// UI29 §3.1 / §3.2 — `For` / `If` / `Else` control-flow meta-primitives.
+// =====================================================================
+
+/// Walk a list of sibling layout nodes, emitting each via `emit_jsx_tree`
+/// but with one piece of cross-sibling state: when an `If` node is followed
+/// immediately by an `Else` sibling, the two are emitted together as a
+/// single JSX ternary expression and the `Else` is *consumed* (skipped on
+/// the next iteration). Without an `Else` sibling, an `If` emits the
+/// short-circuit `{cond && <then>}` form via `emit_if_jsx`.
+///
+/// This is the only place in the emitter that needs sibling lookahead, and
+/// it is the seam every container ultimately walks its children through.
+/// Keeping it in one helper means a tag like `Box`, `Row`, `Column`, or any
+/// future container gets correct If/Else pairing for free — there is no
+/// per-container plumbing.
+fn emit_children_jsx_with_control_flow(
+    children: &[LayoutNode],
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let mut out = String::new();
+    let mut i = 0;
+    while i < children.len() {
+        let child = &children[i];
+        // If this child is an `If` and the next sibling is an `Else`, pair
+        // them and emit a ternary.
+        if child.tag == "If" {
+            let else_node = children.get(i + 1).filter(|n| n.tag == "Else");
+            out.push_str(&emit_if_jsx(child, else_node, indent, part_styles)?);
+            // Skip the Else we just consumed, if any.
+            i += if else_node.is_some() { 2 } else { 1 };
+            continue;
+        }
+        out.push_str(&emit_jsx_tree(child, indent, part_styles)?);
+        i += 1;
+    }
+    Ok(out)
+}
+
+/// Lower a `For (each: <e>, as: <name>, index: <name>?)` block to a JSX
+/// `.map(...)` expression.
+///
+/// ## Lowering rules
+///
+/// - `each: slot: rows`     → `{rows.map((<as>, <index>?) => <body-jsx>)}`
+/// - `each: <expr>`         → `{<expr>.map((<as>, <index>?) => <body-jsx>)}`
+///
+/// The `as:` binding becomes the first callback parameter. When `index:`
+/// is present it becomes the second. When `index:` is omitted, the
+/// callback declares only the one parameter (and React's reconciler will
+/// warn the host about a missing `key={...}` — that warning belongs in a
+/// follow-up keying PR, which also needs UI29 expression support to plumb
+/// a stable id out of the iterated element).
+///
+/// The body is the For node's children, recursively emitted by the
+/// standard tree walker. This means a `Text (content: slot: <as>)` child
+/// inside the For body camelCases to `{<as>}` exactly — slot refs and
+/// `as:`-bound names share the same identifier space at the JSX level
+/// (UI29 §3.4 defers strict scoping to a future pass; today the only
+/// place an `as:`-bound name surfaces is in the body, so this collision
+/// is benign).
+fn emit_for_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // Resolve `each:` — slot ref camelCases to an identifier; an Expr
+    // passes through verbatim. Either way, we drop a `.map(...)` after it.
+    let each_prop = node
+        .props
+        .iter()
+        .find(|p| p.name == "each")
+        .ok_or_else(|| {
+            PipelineEmitError::UnsafeSlotName(
+                "For: missing required prop `each:`".to_string(),
+            )
+        })?;
+    let collection_expr: String = match &each_prop.value {
+        LayoutPropValue::SlotRef(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            camel
+        }
+        LayoutPropValue::Expr(text) => text.clone(),
+        _ => {
+            // The moslayout validator already rejects non-SlotRef/non-Expr
+            // values for `each:`. If we somehow reach this emitter with a
+            // bad shape, fail loudly so the bug is found in tests.
+            return Err(PipelineEmitError::UnsafeSlotName(
+                "For prop `each:` must be a slot ref or expression".to_string(),
+            ));
+        }
+    };
+
+    // Resolve `as:` — a NAME (parsed as Keyword). camelCase it (most names
+    // are already a single identifier, but `as: my-row` should reach the
+    // body as `myRow`).
+    let as_name = find_keyword_prop(node, "as").ok_or_else(|| {
+        PipelineEmitError::UnsafeSlotName("For: missing required prop `as:`".to_string())
+    })?;
+    let as_ident = to_camel_case_first_lower(as_name);
+    if !is_safe_js_identifier(&as_ident) {
+        return Err(PipelineEmitError::UnsafeSlotName(as_ident));
+    }
+
+    // Resolve optional `index:` — same shape as `as:`.
+    let index_ident: Option<String> = match find_keyword_prop(node, "index") {
+        Some(idx) => {
+            let camel = to_camel_case_first_lower(idx);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            Some(camel)
+        }
+        None => None,
+    };
+
+    // Build the callback param list: `(row)` or `(row, r)`.
+    let params = match &index_ident {
+        Some(idx) => format!("({as_ident}, {idx})"),
+        None => format!("({as_ident})"),
+    };
+
+    // Emit the body. Multiple children render as a JSX fragment so the
+    // .map callback returns a single element per iteration. A single
+    // child returns directly without wrapping.
+    let body_indent = indent + 2;
+    let body_jsx = emit_children_jsx_with_control_flow(
+        &node.children,
+        body_indent + 2,
+        part_styles,
+    )?;
+    let body_trimmed = body_jsx.trim_end_matches('\n');
+
+    let wrap_fragment = node.children.len() != 1;
+    let body_pad = " ".repeat(body_indent);
+
+    let mut out = format!("{pad}{{{collection_expr}.map({params} => (\n");
+    if wrap_fragment {
+        out.push_str(&format!("{body_pad}<>\n"));
+        out.push_str(body_trimmed);
+        out.push('\n');
+        out.push_str(&format!("{body_pad}</>\n"));
+    } else {
+        out.push_str(body_trimmed);
+        out.push('\n');
+    }
+    out.push_str(&format!("{pad}))}}\n"));
+    Ok(out)
+}
+
+/// Lower an `If (when: <e>) { <then> }` plus an optional `Else { <else> }`
+/// sibling.
+///
+/// ## Lowering rules
+///
+/// - `If` alone               → `{<cond> && (<then-jsx>)}`
+/// - `If` + `Else`            → `{<cond> ? (<then-jsx>) : (<else-jsx>)}`
+///
+/// The `when:` value follows the same rules as `For each:`: a SlotRef
+/// camelCases to an identifier; an Expr passes through verbatim.
+///
+/// Both branches render their children through
+/// `emit_children_jsx_with_control_flow`, which means a nested If/Else
+/// pair, a nested For, or any normal container all work uniformly.
+fn emit_if_jsx(
+    if_node: &LayoutNode,
+    else_node: Option<&LayoutNode>,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    let when_prop = if_node
+        .props
+        .iter()
+        .find(|p| p.name == "when")
+        .ok_or_else(|| {
+            PipelineEmitError::UnsafeSlotName(
+                "If: missing required prop `when:`".to_string(),
+            )
+        })?;
+    let cond_expr: String = match &when_prop.value {
+        LayoutPropValue::SlotRef(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            camel
+        }
+        LayoutPropValue::Expr(text) => text.clone(),
+        _ => {
+            return Err(PipelineEmitError::UnsafeSlotName(
+                "If prop `when:` must be a slot ref or expression".to_string(),
+            ));
+        }
+    };
+
+    let branch_indent = indent + 2;
+    let branch_pad = " ".repeat(branch_indent);
+
+    let then_jsx = emit_branch_jsx(&if_node.children, branch_indent + 2, part_styles)?;
+
+    match else_node {
+        Some(en) => {
+            let else_jsx =
+                emit_branch_jsx(&en.children, branch_indent + 2, part_styles)?;
+            let mut out = format!("{pad}{{{cond_expr} ? (\n");
+            out.push_str(&then_jsx);
+            out.push_str(&format!("{branch_pad}) : (\n"));
+            out.push_str(&else_jsx);
+            out.push_str(&format!("{branch_pad})}}\n"));
+            Ok(out)
+        }
+        None => {
+            let mut out = format!("{pad}{{{cond_expr} && (\n");
+            out.push_str(&then_jsx);
+            out.push_str(&format!("{branch_pad})}}\n"));
+            Ok(out)
+        }
+    }
+}
+
+/// Render the body of one If/Else branch.
+///
+/// A branch with exactly one child emits that child directly (no fragment
+/// wrapper); a branch with zero or multiple children is wrapped in a JSX
+/// fragment `<>...</>` so the surrounding ternary / && expression
+/// evaluates to a single JSX value as required by the React reconciler.
+fn emit_branch_jsx(
+    children: &[LayoutNode],
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    if children.len() == 1 {
+        return emit_jsx_tree(&children[0], indent, part_styles);
+    }
+    let mut out = format!("{pad}<>\n");
+    out.push_str(&emit_children_jsx_with_control_flow(
+        children,
+        indent + 2,
+        part_styles,
+    )?);
+    out.push_str(&format!("{pad}</>\n"));
     Ok(out)
 }
 
@@ -6133,6 +6419,465 @@ mod tests {
             result.output.contains("overflow: \"auto\""),
             "expected legacy Scroll to still emit overflow: \"auto\", got:\n{}",
             result.output
+        );
+    }
+
+    // =====================================================================
+    // UI29 §3.1 / §3.2 — `For` / `If` / `Else` meta-primitives
+    // =====================================================================
+
+    /// Helper: build a layout def whose root is a `Box` wrapping the given
+    /// children. The `Box` exists so we exercise the container-children
+    /// loop (which is where If/Else pairing happens) rather than the
+    /// root-level fast path.
+    fn box_wrapping(component: &str, children: Vec<LayoutNode>) -> LayoutDef {
+        LayoutDef {
+            component_name: component.to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children,
+            },
+        }
+    }
+
+    /// Helper: a `Text (content: slot: <name>)` leaf.
+    fn text_leaf(slot_name: &str) -> LayoutNode {
+        LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::SlotRef(slot_name.to_string()),
+            }],
+            children: Vec::new(),
+        }
+    }
+
+    /// UI29 §3.1 — `For each: slot: rows, as: row` lowers to
+    /// `rows.map((row) => ...)`.
+    #[test]
+    fn for_with_slot_each_lowers_to_map_with_single_param() {
+        let for_node = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+            ],
+            children: vec![text_leaf("row")],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![for_node]);
+        let s = empty_style("X");
+        let result = from_pipeline(&m, &l, &s).expect("emit ok");
+        assert!(
+            result.output.contains("{rows.map((row) => ("),
+            "expected `{{rows.map((row) => (` in output, got:\n{}",
+            result.output
+        );
+        // The body references `row` (the as-binding) — Text's content slot
+        // ref camelCases to `{row}`, which conveniently matches the
+        // callback parameter.
+        assert!(
+            result.output.contains("{row}"),
+            "expected body to reference {{row}}, got:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("))}"),
+            "expected closing `))}}`, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29 §3.1 — `For each: slot: rows, as: row, index: r` emits the
+    /// second callback param.
+    #[test]
+    fn for_with_index_emits_two_callback_params() {
+        let for_node = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+                LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword("r".to_string()),
+                },
+            ],
+            children: vec![text_leaf("row")],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![for_node]);
+        let s = empty_style("X");
+        let result = from_pipeline(&m, &l, &s).expect("emit ok");
+        assert!(
+            result.output.contains("{rows.map((row, r) => ("),
+            "expected two-param map callback `(row, r)`, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29 §3.1 — `For each: <expr>, as: x` passes the expression text
+    /// through verbatim.
+    #[test]
+    fn for_with_expr_each_passes_through_verbatim() {
+        let for_node = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::Expr("cols.visible".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("col".to_string()),
+                },
+            ],
+            children: vec![text_leaf("col")],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![for_node]);
+        let s = empty_style("X");
+        let result = from_pipeline(&m, &l, &s).expect("emit ok");
+        assert!(
+            result.output.contains("{cols.visible.map((col) => ("),
+            "expected verbatim expr `cols.visible.map(...)`, got:\n{}",
+            result.output
+        );
+    }
+
+    /// The body of a `For` references the `as:`-bound name through
+    /// the regular slot-content path. The emitter already camelCases
+    /// slot refs to identifiers, so the body's `{<as>}` matches the
+    /// callback parameter name byte-for-byte. This test pins that
+    /// happy coincidence as the intended behaviour.
+    #[test]
+    fn for_body_resolves_as_binding_via_text_content() {
+        // A more interesting body: a Row wrapping the Text leaf, to make
+        // sure the as-binding is reachable through one level of nesting.
+        let row_with_text = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![text_leaf("item")],
+        };
+        let for_node = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("items".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("item".to_string()),
+                },
+            ],
+            children: vec![row_with_text],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![for_node]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        // The map declares `(item)` as its parameter and the body's
+        // <span>{item}</span> closes over it.
+        assert!(
+            result.output.contains("{items.map((item) => ("),
+            "expected `items.map((item) => (`, got:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("{item}"),
+            "expected body to reference {{item}}, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29 §3.2 — a standalone `If` (no Else sibling) lowers to the
+    /// `{cond && (...)}` short-circuit form.
+    #[test]
+    fn if_without_else_lowers_to_logical_and() {
+        let if_node = LayoutNode {
+            tag: "If".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "when".to_string(),
+                value: LayoutPropValue::SlotRef("editing".to_string()),
+            }],
+            children: vec![text_leaf("label")],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![if_node]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        assert!(
+            result.output.contains("{editing && ("),
+            "expected `{{editing && (`, got:\n{}",
+            result.output
+        );
+        assert!(
+            !result.output.contains(" ? ("),
+            "should NOT use ternary form without an Else, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29 §3.2 — `If` followed by `Else` lowers to a JSX ternary.
+    #[test]
+    fn if_with_else_sibling_lowers_to_ternary() {
+        let if_node = LayoutNode {
+            tag: "If".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "when".to_string(),
+                value: LayoutPropValue::SlotRef("editing".to_string()),
+            }],
+            children: vec![text_leaf("editBuf")],
+        };
+        let else_node = LayoutNode {
+            tag: "Else".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![text_leaf("label")],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![if_node, else_node]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        assert!(
+            result.output.contains("{editing ? ("),
+            "expected ternary `{{editing ? (`, got:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains(") : ("),
+            "expected ternary separator `) : (`, got:\n{}",
+            result.output
+        );
+        // The Else's body should be reachable.
+        assert!(
+            result.output.contains("{label}"),
+            "expected else branch to render `{{label}}`, got:\n{}",
+            result.output
+        );
+        // No orphan-Else comment should be emitted because the Else was
+        // consumed by its paired If.
+        assert!(
+            !result.output.contains("Else with no preceding If"),
+            "Else was paired with If, no orphan comment expected, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29 §3.2 — `If when: <expr>` passes the expression text through
+    /// verbatim into the condition slot.
+    #[test]
+    fn if_with_expr_when_passes_through_verbatim() {
+        let if_node = LayoutNode {
+            tag: "If".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "when".to_string(),
+                value: LayoutPropValue::Expr("r == editRow && c == editCol".to_string()),
+            }],
+            children: vec![text_leaf("label")],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![if_node]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        assert!(
+            result.output.contains("{r == editRow && c == editCol && ("),
+            "expected verbatim expr in If condition, got:\n{}",
+            result.output
+        );
+    }
+
+    /// An `Else` with no preceding `If` is meaningless — the emitter
+    /// drops it and leaves a JSX comment in its place so the generated
+    /// .tsx still parses.
+    #[test]
+    fn orphan_else_emits_jsx_comment() {
+        let else_node = LayoutNode {
+            tag: "Else".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![text_leaf("label")],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![else_node]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        assert!(
+            result
+                .output
+                .contains("{/* Else with no preceding If — ignored */}"),
+            "expected orphan-Else comment, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29 §3.1 — nested `For` loops both lower to `.map(...)` and the
+    /// inner callback parameters are scoped inside the outer one.
+    #[test]
+    fn nested_for_loops_compose_correctly() {
+        let inner = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("cols".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("col".to_string()),
+                },
+                LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword("c".to_string()),
+                },
+            ],
+            children: vec![text_leaf("col")],
+        };
+        let row_wrapper = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![inner],
+        };
+        let outer = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+                LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword("r".to_string()),
+                },
+            ],
+            children: vec![row_wrapper],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![outer]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        assert!(
+            result.output.contains("{rows.map((row, r) => ("),
+            "expected outer .map((row, r) => (), got:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("{cols.map((col, c) => ("),
+            "expected inner .map((col, c) => (), got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29 §3.1 + §3.2 — a `For` whose body contains an `If`/`Else` pair
+    /// produces a `.map(...)` whose callback returns a ternary.
+    #[test]
+    fn for_containing_if_else_lowers_correctly() {
+        let if_node = LayoutNode {
+            tag: "If".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "when".to_string(),
+                value: LayoutPropValue::SlotRef("editing".to_string()),
+            }],
+            children: vec![text_leaf("editBuf")],
+        };
+        let else_node = LayoutNode {
+            tag: "Else".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![text_leaf("row")],
+        };
+        // For body: two children (If + Else) — pairing turns them into a
+        // single ternary, so the body collapses to one JSX value (no
+        // fragment wrapper needed). We deliberately put them inside a Row
+        // so the For body has one structural child, exercising the
+        // single-child no-fragment path.
+        let row = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![if_node, else_node],
+        };
+        let for_node = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+            ],
+            children: vec![row],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![for_node]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        assert!(
+            result.output.contains("{rows.map((row) => ("),
+            "expected outer For .map, got:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("{editing ? ("),
+            "expected paired If/Else ternary inside For body, got:\n{}",
+            result.output
+        );
+    }
+
+    /// Sanity check that the new control-flow plumbing does not regress
+    /// the existing single-child container path: a `Box` wrapping a
+    /// `Text` still lowers exactly as before.
+    #[test]
+    fn existing_box_with_text_child_still_emits_unchanged() {
+        let l = box_wrapping("X", vec![text_leaf("label")]);
+        let m = component("X", vec![], vec![]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        assert!(
+            result.output.contains("<div>"),
+            "expected `<div>` for Box, got:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("{label}"),
+            "expected `{{label}}` for Text content, got:\n{}",
+            result.output
+        );
+        // No control-flow constructs should leak into a plain container.
+        assert!(
+            !result.output.contains(".map("),
+            "no .map should appear in a plain Box/Text tree"
+        );
+        assert!(
+            !result.output.contains(" ? ("),
+            "no ternary should appear in a plain Box/Text tree"
         );
     }
 }
