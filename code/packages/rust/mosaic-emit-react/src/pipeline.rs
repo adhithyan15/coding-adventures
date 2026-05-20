@@ -454,6 +454,38 @@ fn emit_jsx_tree(
         return emit_grid_jsx(node, indent, part_styles);
     }
 
+    // UI29 §2.1 — `HostTable` is the kernel-canonical semantic data table.
+    // It is intentionally *lower-level* than `Grid`: HostTable is the host's
+    // `<table>` element exposed structurally, with named child slots for the
+    // standard HTML sub-elements (`<colgroup>` / `<thead>` / `<tbody>` /
+    // `<tfoot>`). Userland Grid-style components compose into it rather than
+    // vice-versa. The general primitive flow can't express the section-tag
+    // → HTML-sub-element mapping, so HostTable gets its own dedicated
+    // emitter.
+    if node.tag == "HostTable" {
+        return emit_host_table_jsx(node, indent, part_styles);
+    }
+
+    // UI29 §2.1 — `HostTable*` structural sub-tags (`HostTableColGroup`,
+    // `HostTableHead`, `HostTableBody`, `HostTableFoot`) and bare `Col`
+    // are only meaningful as immediate children of a `HostTable` node. If
+    // they appear at any other position in the tree the emitter degrades
+    // gracefully to a JSX comment rather than failing the whole emit — this
+    // lets userland conditionally build a HostTable subtree without having
+    // to gate every code path on the `HostTable` parent's presence. The
+    // sub-tag emitter walks these directly when they ARE inside a HostTable,
+    // so reaching this fallback means "orphan use".
+    if matches!(
+        node.tag.as_str(),
+        "HostTableColGroup" | "HostTableHead" | "HostTableBody" | "HostTableFoot" | "Col"
+    ) {
+        let pad = " ".repeat(indent);
+        return Ok(format!(
+            "{pad}{{/* {tag} is only valid inside HostTable */}}\n",
+            tag = node.tag
+        ));
+    }
+
     // Decompose the primitive into its element name, built-in style (e.g.
     // flexbox for Row/Column), close tag, and self-closing flag.
     let JsxTag {
@@ -833,6 +865,273 @@ fn emit_host_button_jsx(
     };
 
     Ok(format!("{pad}<button{attrs}>{body}</button>\n"))
+}
+
+// =====================================================================
+// HostTable primitive (UI29 §2.1)
+// =====================================================================
+
+/// Lower a moslayout `HostTable` node to a semantically-correct `<table>`
+/// JSX block.
+///
+/// ## Section layout
+///
+/// `HostTable` accepts up to four immediate children, each a structural
+/// section marker:
+///
+/// | Section tag           | Lowers to                                   |
+/// |---|---|
+/// | `HostTableColGroup`   | `<colgroup>` wrapping `<col />` children    |
+/// | `HostTableHead`       | `<thead>` wrapping `<tr><th>...</th></tr>`  |
+/// | `HostTableBody`       | `<tbody>` wrapping `<tr><td>...</td></tr>`  |
+/// | `HostTableFoot`       | `<tfoot>` wrapping `<tr><td>...</td></tr>`  |
+///
+/// Sections are emitted in the canonical HTML order — `colgroup`, `thead`,
+/// `tbody`, `tfoot` — regardless of the order they appear in the source.
+/// All sections are optional; an empty `HostTable {}` emits `<table></table>`.
+///
+/// ## Row mapping
+///
+/// Inside `HostTableHead`/`HostTableBody`/`HostTableFoot`, each immediate
+/// child node tagged `Row` becomes a `<tr>`. The `Row`'s own children become
+/// `<th>` cells in a head section and `<td>` cells in body/foot sections.
+/// The cell *contents* are emitted by recursing into the existing JSX tree
+/// emitter, so a `Text` leaf with a slot-ref `content` prop lowers to
+/// `<span>{slot}</span>` exactly as it would anywhere else.
+///
+/// ## Col mapping
+///
+/// Inside `HostTableColGroup`, each immediate child node becomes a `<col />`
+/// element. A `width: <number>` prop on a `Col` lowers to
+/// `<col style={{ width: "<N>px" }} />`.
+///
+/// ## Why a dedicated emitter
+///
+/// The general primitive flow can't express the section-tag → HTML-element
+/// mapping (`HostTableHead` → `<thead>`, not `<HostTableHead>`), nor the
+/// header-vs-body `<th>` / `<td>` distinction that depends on which section
+/// a `Row` sits in. Those rules are localized here.
+///
+/// ## What is NOT in this first cut
+///
+/// - **`For` inside a section.** The For-emitter is a sibling PR; once it
+///   lands, `For (each: slot: rows, as: row) { Row { ... } }` inside a
+///   `HostTableBody` will lower to `{rows.map((row, r) => <tr>...</tr>)}`.
+///   For now the section walker just recurses into whatever children are
+///   present, so static `Row` children work end-to-end.
+/// - **`scope=` / `headers=` accessibility attributes.** A future revision
+///   will let authors annotate header relationships; the current cut emits
+///   plain `<th>` and `<td>`.
+fn emit_host_table_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // Style attr (same part-name lookup as the rest of the tree).
+    let part_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    let style_attr = if part_style_str.is_empty() {
+        String::new()
+    } else {
+        format!(" style={{{{ {part_style_str} }}}}")
+    };
+
+    // Locate each section by tag. Per spec, each section appears at most
+    // once. If an author writes two `HostTableBody {}` blocks we take the
+    // first and silently drop the rest — defensive rather than fatal so a
+    // malformed source still produces *some* JSX a host can inspect. The
+    // assertion below is encoded as a debug_assert! so release builds stay
+    // permissive but tests catch the misuse.
+    let colgroup = find_section_child(node, "HostTableColGroup");
+    let thead = find_section_child(node, "HostTableHead");
+    let tbody = find_section_child(node, "HostTableBody");
+    let tfoot = find_section_child(node, "HostTableFoot");
+
+    debug_assert!(
+        count_section_children(node, "HostTableColGroup") <= 1
+            && count_section_children(node, "HostTableHead") <= 1
+            && count_section_children(node, "HostTableBody") <= 1
+            && count_section_children(node, "HostTableFoot") <= 1,
+        "HostTable may have at most one of each section sub-tag"
+    );
+
+    // Empty table — no sections present. Emit a single-line
+    // `<table></table>` (still respecting any part-style attribute).
+    if colgroup.is_none() && thead.is_none() && tbody.is_none() && tfoot.is_none() {
+        return Ok(format!("{pad}<table{style_attr}></table>\n"));
+    }
+
+    let mut out = format!("{pad}<table{style_attr}>\n");
+
+    if let Some(cg) = colgroup {
+        out.push_str(&emit_host_table_colgroup_jsx(cg, indent + 2, part_styles)?);
+    }
+    if let Some(h) = thead {
+        out.push_str(&emit_host_table_section_jsx(
+            h,
+            "thead",
+            "th",
+            indent + 2,
+            part_styles,
+        )?);
+    }
+    if let Some(b) = tbody {
+        out.push_str(&emit_host_table_section_jsx(
+            b,
+            "tbody",
+            "td",
+            indent + 2,
+            part_styles,
+        )?);
+    }
+    if let Some(f) = tfoot {
+        out.push_str(&emit_host_table_section_jsx(
+            f,
+            "tfoot",
+            "td",
+            indent + 2,
+            part_styles,
+        )?);
+    }
+
+    out.push_str(&format!("{pad}</table>\n"));
+    Ok(out)
+}
+
+/// Lower one of the row-bearing section sub-tags
+/// (`HostTableHead` / `HostTableBody` / `HostTableFoot`) to its HTML element.
+///
+/// `html_tag` is the element name (`"thead"` / `"tbody"` / `"tfoot"`) and
+/// `cell_tag` is the per-cell element name (`"th"` for head, `"td"` for
+/// body and foot). Each immediate child of the section that is tagged
+/// `Row` produces a `<tr>...</tr>` block. Non-`Row` children are recursed
+/// through `emit_jsx_tree` so a future `For` emitter (a sibling PR) lands
+/// naturally — its output becomes a `{rows.map(...)}` expression inside the
+/// section.
+fn emit_host_table_section_jsx(
+    section_node: &LayoutNode,
+    html_tag: &str,
+    cell_tag: &str,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let row_pad = " ".repeat(indent + 2);
+    let cell_pad = " ".repeat(indent + 4);
+
+    // An empty section still emits its wrapper so the table structure is
+    // recognisable — `<thead></thead>` is valid HTML and helps screen
+    // readers understand the row that follows is a header even when no
+    // rows were authored yet.
+    if section_node.children.is_empty() {
+        return Ok(format!("{pad}<{html_tag}></{html_tag}>\n"));
+    }
+
+    let mut out = format!("{pad}<{html_tag}>\n");
+    for child in &section_node.children {
+        if child.tag == "Row" {
+            out.push_str(&format!("{row_pad}<tr>\n"));
+            for cell in &child.children {
+                // Wrap each Row child in <th>/<td>. The cell body is
+                // produced by the general JSX emitter — that gives us
+                // Text-leaf → `<span>{slot}</span>` for free and keeps
+                // composition open (a Row of HostButtons works the same).
+                let inner = emit_jsx_tree(cell, indent + 6, part_styles)?;
+                // Strip the trailing newline emit_jsx_tree adds so the
+                // cell content stays on the same line as its <th>/<td>
+                // when it's a single line, but keeps its own indentation
+                // when it's multi-line.
+                let inner_trimmed = inner.trim_end_matches('\n');
+                if inner_trimmed.contains('\n') {
+                    out.push_str(&format!("{cell_pad}<{cell_tag}>\n"));
+                    out.push_str(inner_trimmed);
+                    out.push('\n');
+                    out.push_str(&format!("{cell_pad}</{cell_tag}>\n"));
+                } else {
+                    // Single-line cell content — collapse to
+                    // `<th>...content...</th>` with the inner indent
+                    // stripped, matching the inline-leaf style the rest
+                    // of the emitter uses.
+                    let single = inner_trimmed.trim_start();
+                    out.push_str(&format!("{cell_pad}<{cell_tag}>{single}</{cell_tag}>\n"));
+                }
+            }
+            out.push_str(&format!("{row_pad}</tr>\n"));
+        } else {
+            // Non-Row child — recurse through the standard emitter.
+            // This is the seam the For-emitter sibling PR plugs into.
+            out.push_str(&emit_jsx_tree(child, indent + 2, part_styles)?);
+        }
+    }
+    out.push_str(&format!("{pad}</{html_tag}>\n"));
+    Ok(out)
+}
+
+/// Lower a `HostTableColGroup` to `<colgroup>...<col />...</colgroup>`.
+///
+/// Each immediate child of the colgroup becomes a `<col />` self-closing
+/// element. A `width: <number>` prop on the child lowers to
+/// `<col style={{ width: "<N>px" }} />`. Children whose tags aren't `Col`
+/// are still emitted as `<col />` — the spec calls the children "Col
+/// children", but at the emitter level we don't gate on the tag name so a
+/// future width-aware sibling primitive can slot in without an emitter
+/// change.
+fn emit_host_table_colgroup_jsx(
+    cg_node: &LayoutNode,
+    indent: usize,
+    _part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let col_pad = " ".repeat(indent + 2);
+
+    if cg_node.children.is_empty() {
+        return Ok(format!("{pad}<colgroup></colgroup>\n"));
+    }
+
+    let mut out = format!("{pad}<colgroup>\n");
+    for child in &cg_node.children {
+        // A `width: <number>` prop on the col lowers to a CSS pixel width.
+        // Authors who want a more elaborate style can drop down to a part
+        // name + mosstyle rule in a follow-up; for the first cut just the
+        // bare numeric width is plenty for the spreadsheet host's needs.
+        if let Some(w) = find_number_prop(child, "width") {
+            // Render `100` as `100` (no `.0`) and `12.5` as `12.5`. We
+            // format the width as `<N>px` per CSS convention.
+            let width_str = if w.fract() == 0.0 {
+                format!("{}", w as i64)
+            } else {
+                format!("{w}")
+            };
+            out.push_str(&format!(
+                "{col_pad}<col style={{{{ width: \"{width_str}px\" }}}} />\n"
+            ));
+        } else {
+            out.push_str(&format!("{col_pad}<col />\n"));
+        }
+    }
+    out.push_str(&format!("{pad}</colgroup>\n"));
+    Ok(out)
+}
+
+/// Find the *first* immediate child of `node` whose tag matches
+/// `section_tag`. Returns `None` if no such child exists.
+fn find_section_child<'a>(node: &'a LayoutNode, section_tag: &str) -> Option<&'a LayoutNode> {
+    node.children.iter().find(|c| c.tag == section_tag)
+}
+
+/// Count immediate children of `node` whose tag matches `section_tag`.
+/// Used only by the `debug_assert!` in [`emit_host_table_jsx`] that guards
+/// the at-most-one-per-section rule.
+fn count_section_children(node: &LayoutNode, section_tag: &str) -> usize {
+    node.children
+        .iter()
+        .filter(|c| c.tag == section_tag)
+        .count()
 }
 
 // =====================================================================
@@ -5382,6 +5681,430 @@ mod tests {
         assert!(
             div_open < span_pos && span_pos < div_close,
             "expected <div>...<span>...</span></div> nesting, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // HostTable (UI29) — semantic data table with structural sub-tags
+    // -----------------------------------------------------------------
+
+    /// Helper: a single-root `HostTable` layout with the given children.
+    /// The HostTable itself has no props/part_name unless an explicit
+    /// `part_name` is set after construction by the test.
+    fn host_table_layout(children: Vec<LayoutNode>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children,
+            },
+        }
+    }
+
+    /// Helper: a structural section node (HostTableHead/Body/Foot/ColGroup)
+    /// with the given children. Sections never carry their own props.
+    fn section_node(tag: &str, children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children,
+        }
+    }
+
+    /// Helper: a `Row` node whose children are the cell content nodes.
+    fn row_node(children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "Row".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children,
+        }
+    }
+
+    /// Helper: a `Text` leaf with a `content: slot: <slot>` prop. Lowers
+    /// to `<span>{slotName}</span>` via the existing Text-leaf rule.
+    fn text_slot_node(slot: &str) -> LayoutNode {
+        LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::SlotRef(slot.to_string()),
+            }],
+            children: Vec::new(),
+        }
+    }
+
+    /// Helper: a bare `Col` node with an optional numeric `width`.
+    fn col_node(width: Option<f64>) -> LayoutNode {
+        let props = match width {
+            Some(w) => vec![LayoutProp {
+                name: "width".to_string(),
+                value: LayoutPropValue::Number(w),
+            }],
+            None => Vec::new(),
+        };
+        LayoutNode {
+            tag: "Col".to_string(),
+            part_name: None,
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    /// UI29 §2.1 HostTable test 1 — an empty `HostTable {}` lowers to a
+    /// single-line `<table></table>`. No `<thead>` / `<tbody>` is emitted
+    /// because the spec says all sections are optional.
+    #[test]
+    fn host_table_empty_emits_bare_table() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table_layout(vec![]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<table></table>"),
+            "expected `<table></table>` for empty HostTable, got:\n{out}"
+        );
+        // Defensive — no spurious thead/tbody/tfoot/colgroup.
+        assert!(!out.contains("<thead"), "empty HostTable must not emit <thead>");
+        assert!(!out.contains("<tbody"), "empty HostTable must not emit <tbody>");
+        assert!(!out.contains("<tfoot"), "empty HostTable must not emit <tfoot>");
+        assert!(
+            !out.contains("<colgroup"),
+            "empty HostTable must not emit <colgroup>"
+        );
+    }
+
+    /// UI29 §2.1 HostTable test 2 — a `HostTableHead` with one `Row` of
+    /// two `Text` cells lowers to `<thead><tr><th>...</th><th>...</th></tr></thead>`.
+    /// Cells in the head section MUST be `<th>` (not `<td>`).
+    #[test]
+    fn host_table_head_emits_thead_with_th_cells() {
+        let m = component(
+            "X",
+            vec![
+                slot("a-header", SlotType::Text, true),
+                slot("b-header", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let l = host_table_layout(vec![section_node(
+            "HostTableHead",
+            vec![row_node(vec![
+                text_slot_node("a-header"),
+                text_slot_node("b-header"),
+            ])],
+        )]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(out.contains("<thead>"), "expected <thead> open, got:\n{out}");
+        assert!(out.contains("</thead>"), "expected </thead> close, got:\n{out}");
+        assert!(out.contains("<tr>"), "expected <tr>, got:\n{out}");
+        // Both cells use <th>, not <td>, because they are inside head.
+        assert!(
+            out.contains("<th><span>{aHeader}</span></th>"),
+            "expected first <th> with slot, got:\n{out}"
+        );
+        assert!(
+            out.contains("<th><span>{bHeader}</span></th>"),
+            "expected second <th> with slot, got:\n{out}"
+        );
+        assert!(
+            !out.contains("<td>"),
+            "head section must not emit <td>, got:\n{out}"
+        );
+    }
+
+    /// UI29 §2.1 HostTable test 3 — a `HostTableBody` with one `Row` of
+    /// two `Text` cells lowers to `<tbody><tr><td>...</td><td>...</td></tr></tbody>`.
+    /// Cells in the body section MUST be `<td>` (not `<th>`).
+    #[test]
+    fn host_table_body_emits_tbody_with_td_cells() {
+        let m = component(
+            "X",
+            vec![
+                slot("cell-a", SlotType::Text, true),
+                slot("cell-b", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let l = host_table_layout(vec![section_node(
+            "HostTableBody",
+            vec![row_node(vec![
+                text_slot_node("cell-a"),
+                text_slot_node("cell-b"),
+            ])],
+        )]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(out.contains("<tbody>"), "expected <tbody> open, got:\n{out}");
+        assert!(out.contains("</tbody>"), "expected </tbody> close, got:\n{out}");
+        assert!(
+            out.contains("<td><span>{cellA}</span></td>"),
+            "expected first <td>, got:\n{out}"
+        );
+        assert!(
+            out.contains("<td><span>{cellB}</span></td>"),
+            "expected second <td>, got:\n{out}"
+        );
+        assert!(
+            !out.contains("<th>"),
+            "body section must not emit <th>, got:\n{out}"
+        );
+    }
+
+    /// UI29 §2.1 HostTable test 4 — a `HostTableColGroup` with one bare
+    /// `Col` (no width) lowers to `<colgroup><col /></colgroup>`. The
+    /// self-closing `<col />` keeps the table well-formed HTML.
+    #[test]
+    fn host_table_colgroup_with_bare_col_emits_self_closing_col() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table_layout(vec![section_node(
+            "HostTableColGroup",
+            vec![col_node(None)],
+        )]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<colgroup>"),
+            "expected <colgroup> open, got:\n{out}"
+        );
+        assert!(
+            out.contains("</colgroup>"),
+            "expected </colgroup> close, got:\n{out}"
+        );
+        assert!(
+            out.contains("<col />"),
+            "expected self-closing <col />, got:\n{out}"
+        );
+    }
+
+    /// UI29 §2.1 HostTable test 5 — all four sections present in source
+    /// emit in the canonical HTML order: `colgroup`, `thead`, `tbody`,
+    /// `tfoot`. The emitter must reorder regardless of source order so
+    /// browsers and screen readers see the documented sequence.
+    #[test]
+    fn host_table_all_four_sections_emit_in_canonical_order() {
+        let m = component("X", vec![slot("c", SlotType::Text, true)], vec![]);
+        // Intentionally feed sections in *reverse* order to prove the
+        // emitter reorders them.
+        let l = host_table_layout(vec![
+            section_node(
+                "HostTableFoot",
+                vec![row_node(vec![text_slot_node("c")])],
+            ),
+            section_node(
+                "HostTableBody",
+                vec![row_node(vec![text_slot_node("c")])],
+            ),
+            section_node(
+                "HostTableHead",
+                vec![row_node(vec![text_slot_node("c")])],
+            ),
+            section_node("HostTableColGroup", vec![col_node(None)]),
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        let cg = out.find("<colgroup>").expect("colgroup present");
+        let th = out.find("<thead>").expect("thead present");
+        let tb = out.find("<tbody>").expect("tbody present");
+        let tf = out.find("<tfoot>").expect("tfoot present");
+        assert!(
+            cg < th && th < tb && tb < tf,
+            "expected colgroup<thead<tbody<tfoot, got positions \
+            cg={cg} th={th} tb={tb} tf={tf}\nfull output:\n{out}"
+        );
+    }
+
+    /// UI29 §2.1 HostTable test 6 — `Col (width: 100)` lowers to
+    /// `<col style={{ width: "100px" }} />`. Integer widths render
+    /// without a trailing `.0`.
+    #[test]
+    fn host_table_col_with_width_emits_inline_pixel_style() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table_layout(vec![section_node(
+            "HostTableColGroup",
+            vec![col_node(Some(100.0))],
+        )]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<col style={{ width: \"100px\" }} />"),
+            "expected width:100px col style, got:\n{out}"
+        );
+    }
+
+    /// UI29 §2.1 HostTable test 7 — multiple `Row` children in the head
+    /// section each become a `<tr>` with all cells rendered as `<th>`.
+    /// Useful for two-level column headers (group label row + leaf row).
+    #[test]
+    fn host_table_head_multiple_rows_each_become_tr_with_th_cells() {
+        let m = component(
+            "X",
+            vec![
+                slot("group-a", SlotType::Text, true),
+                slot("leaf-a", SlotType::Text, true),
+                slot("leaf-b", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let l = host_table_layout(vec![section_node(
+            "HostTableHead",
+            vec![
+                row_node(vec![text_slot_node("group-a")]),
+                row_node(vec![text_slot_node("leaf-a"), text_slot_node("leaf-b")]),
+            ],
+        )]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        // Two distinct <tr> openings (the easiest robust assertion).
+        let tr_count = out.matches("<tr>").count();
+        assert_eq!(
+            tr_count, 2,
+            "expected 2 <tr> rows in head, got {tr_count}\nfull output:\n{out}"
+        );
+        // All three cells are <th>.
+        assert!(out.contains("<th><span>{groupA}</span></th>"));
+        assert!(out.contains("<th><span>{leafA}</span></th>"));
+        assert!(out.contains("<th><span>{leafB}</span></th>"));
+    }
+
+    /// UI29 §2.1 HostTable test 8 — multiple `Row` children in the body
+    /// section each become a `<tr>` with all cells rendered as `<td>`.
+    /// Confirms static (non-`For`) row authoring works end-to-end.
+    #[test]
+    fn host_table_body_multiple_rows_each_become_tr_with_td_cells() {
+        let m = component(
+            "X",
+            vec![
+                slot("row-one-a", SlotType::Text, true),
+                slot("row-one-b", SlotType::Text, true),
+                slot("row-two-a", SlotType::Text, true),
+                slot("row-two-b", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let l = host_table_layout(vec![section_node(
+            "HostTableBody",
+            vec![
+                row_node(vec![
+                    text_slot_node("row-one-a"),
+                    text_slot_node("row-one-b"),
+                ]),
+                row_node(vec![
+                    text_slot_node("row-two-a"),
+                    text_slot_node("row-two-b"),
+                ]),
+            ],
+        )]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        let tr_count = out.matches("<tr>").count();
+        assert_eq!(
+            tr_count, 2,
+            "expected 2 <tr> rows in body, got {tr_count}\nfull output:\n{out}"
+        );
+        // Spot-check all four cells render as <td>. Kebab-case slot names
+        // camelCase to `rowOneA`, etc., per the standard slot-ref rule.
+        assert!(out.contains("<td><span>{rowOneA}</span></td>"));
+        assert!(out.contains("<td><span>{rowOneB}</span></td>"));
+        assert!(out.contains("<td><span>{rowTwoA}</span></td>"));
+        assert!(out.contains("<td><span>{rowTwoB}</span></td>"));
+    }
+
+    /// UI29 §2.1 HostTable test 9 — a `part_name` on the HostTable applies
+    /// the mosstyle-resolved style to the `<table>` element, not to any
+    /// sub-element. (Sub-sections currently don't take a part_name; that
+    /// is a follow-up.)
+    #[test]
+    fn host_table_part_name_applies_style_to_table_element() {
+        let m = component("X", vec![], vec![]);
+        // Construct a minimal mosstyle StyleDef with a single part that
+        // sets `background: "blue"`. We bypass the higher-level builders
+        // here so the test stays tight on the HostTable code path.
+        let style = mosstyle_compiler::StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![mosstyle_compiler::PartStyle {
+                name: "sheet".to_string(),
+                base: vec![mosstyle_compiler::StyleProp {
+                    name: "background".to_string(),
+                    value: "blue".to_string(),
+                }],
+                states: Vec::new(),
+            }],
+        };
+
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: Some("sheet".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+
+        let result = from_pipeline(&m, &l, &style).unwrap();
+        let out = &result.output;
+        // The style attribute must appear on `<table`, before the closing
+        // `>` of the opening tag.
+        assert!(
+            out.contains("<table style={{ background: \"blue\" }}"),
+            "expected style on <table>, got:\n{out}"
+        );
+    }
+
+    /// UI29 §2.1 HostTable test 10 — an orphan section sub-tag (here
+    /// `HostTableHead` appearing at top-level, NOT inside a `HostTable`)
+    /// degrades to a JSX comment instead of an emit error. This lets
+    /// userland build a HostTable subtree conditionally without crashing
+    /// the emit when the parent is absent.
+    #[test]
+    fn host_table_orphan_section_sub_tag_emits_jsx_comment() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTableHead".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X"))
+            .expect("orphan sub-tag must not error the emit");
+        let out = &result.output;
+        assert!(
+            out.contains("{/* HostTableHead is only valid inside HostTable */}"),
+            "expected JSX comment for orphan HostTableHead, got:\n{out}"
+        );
+    }
+
+    /// Bonus — orphan `Col` outside a `HostTable` also degrades to a
+    /// JSX comment, mirroring the section-tag fallback.
+    #[test]
+    fn host_table_orphan_col_emits_jsx_comment() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Col".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X"))
+            .expect("orphan Col must not error the emit");
+        assert!(
+            result
+                .output
+                .contains("{/* Col is only valid inside HostTable */}"),
+            "expected JSX comment for orphan Col, got:\n{}",
+            result.output
         );
     }
 
