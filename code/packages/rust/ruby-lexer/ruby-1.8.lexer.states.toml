@@ -73,6 +73,10 @@ name = "String"        # quoted string literal (escapes resolved by runtime)
 fields = ["value", "quote"]
 
 [[tokens]]
+name = "Regex"         # /.../  literal — Phase 2 (no flags yet)
+fields = ["value"]
+
+[[tokens]]
 name = "Op"            # generic operator token, parser disambiguates further
 fields = ["value"]
 
@@ -160,6 +164,16 @@ id = "string_d_escape"   # inside "..." after a backslash
 id = "string_s_body"     # inside '...'
 [[states]]
 id = "string_s_escape"
+
+[[states]]
+id = "regex_body"        # inside /.../ — entered manually from `data`
+                         # by the action interpreter once it has
+                         # decided (based on lex-state + oracle) that
+                         # the `/` opens a regex literal rather than
+                         # a division operator.  See SIR-style
+                         # `set_current_state` call in src/lib.rs.
+[[states]]
+id = "regex_escape"      # inside /.../ after `\\`
 
 [[states]]
 id = "comment_body"      # # to end-of-line
@@ -629,6 +643,59 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = ["parse_error(unterminated_string)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Regex body  (Phase 2)
+#
+# The action interpreter (src/lib.rs) decides when `/` in `data`
+# state opens a regex literal vs binary division.  When it picks
+# "regex", it calls `set_current_state("regex_body")` on the
+# engine, clears the text buffer, and skips re-feeding the `/`.
+# This sub-machine then accumulates chars until the closing `/`.
+#
+# Phase 2 does NOT yet parse regex flags (`i`, `m`, `x`, `o`).
+# Those land in Phase 3 alongside heredoc / interpolation work.
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "regex_body"
+matcher = { literal = "\\" }
+to = "regex_escape"
+
+[[transitions]]
+from = "regex_body"
+matcher = { literal = "/" }
+to = "data"
+actions = ["emit(Regex)"]
+
+[[transitions]]
+from = "regex_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_regex)", "emit(Eof)"]
+
+[[transitions]]
+from = "regex_body"
+matcher = { anything = true }
+to = "regex_body"
+actions = ["append_text(current)"]
+
+# Regex escape: any `\X` keeps both the backslash and X verbatim,
+# matching how MRI tokenises regex bodies (interpretation happens
+# in the regex engine, not the lexer).
+[[transitions]]
+from = "regex_escape"
+matcher = { anything = true }
+to = "regex_body"
+actions = ["append_text(\\\\)", "append_text(current)"]
+
+[[transitions]]
+from = "regex_escape"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_regex)", "emit(Eof)"]
 
 # ─────────────────────────────────────────────────────────────────
 # Line comment
