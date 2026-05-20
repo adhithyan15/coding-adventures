@@ -53,6 +53,8 @@ The crate keeps the boundary narrow:
   investigation flags for host schedulers
 - supervisor drain reports and summaries expose host-investigation flags that
   combine plan-drift and count-drift signals
+- supervisor drain reports and summaries expose stable host-investigation
+  classifications for plan drift, count drift, or combined drift
 - supervisor drain summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
