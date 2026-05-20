@@ -207,6 +207,17 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_fragment_c
   --check
 ```
 
+`whatwg-character-reference-audit.json` is a generated index over
+tree-construction cases that stress named references, numeric references,
+ambiguous ampersands, attribute references, parser-driven RCDATA references,
+and fragment-context character-reference handling:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_character_reference_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_character_reference_audit_fixture.py \
+  --check
+```
+
 `whatwg-document-shell-audit.json` is a generated index over tree-construction
 cases that stress doctypes, comments, `html`/`head`/`body` synthesis, frameset
 boundaries, and shell fragment contexts:
