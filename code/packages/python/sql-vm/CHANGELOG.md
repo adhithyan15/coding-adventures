@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.37.0 — 2026-05-20
+
+### Fixed
+
+- **``printf('%q', x)``** no longer wraps the result in single quotes.
+  The ``%q`` conversion is the **escape-only** form — it doubles
+  internal single quotes for safe interpolation inside a string
+  literal the *caller* is writing.  Mini-sqlite was emitting
+  ``'it''s'`` when SQLite emits ``it''s``; the caller had no way to
+  embed the result in a larger literal.
+
+- **``printf('%q', NULL)``** now returns the literal text ``"(NULL)"``
+  (was empty string) — matches SQLite, which uses ``(NULL)`` so the
+  caller cannot silently lose a NULL inside a generated SQL string.
+
+### Added
+
+- **``printf('%w', x)``** — new SQL identifier escape conversion.
+  Doubles internal double quotes (the SQL identifier-quoting
+  character).  NULL → ``"(NULL)"`` like ``%q``.  Designed for
+  interpolation inside a ``"…"`` quoted identifier:
+  ``printf('SELECT "%w" FROM t', col)``.
+
+  36 unit tests in ``test_printf_q_w_correct.py`` cover the full
+  ``%q``/``%Q``/``%w`` grid with parametric inputs, NULL handling,
+  and composition with other conversions.  The single legacy
+  ``test_sql_escape_q`` assertion in ``test_scalar_functions.py`` was
+  updated — it had pinned the wrong (legacy) behaviour.
+
 ## 1.36.0 — 2026-05-20
 
 ### Fixed

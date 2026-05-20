@@ -752,8 +752,12 @@ class TestPrintf:
         assert fn("printf", "%.2f", 3.14159) == "3.14"
 
     def test_sql_escape_q(self) -> None:
-        # %q wraps in single quotes and doubles internal quotes.
-        assert fn("printf", "%q", "it's") == "'it''s'"
+        # %q doubles internal single quotes and emits NO surrounding
+        # quotes (the caller wraps).  This matches SQLite's reference
+        # behaviour; the previous assertion was wrong and matched what
+        # %Q does instead.  See test_printf_q_w_correct.py for the full
+        # %q / %Q / %w grid.
+        assert fn("printf", "%q", "it's") == "it''s"
 
     def test_sql_escape_Q_null(self) -> None:
         # %Q with NULL → the literal string "NULL".
