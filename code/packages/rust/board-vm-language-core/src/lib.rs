@@ -525,6 +525,23 @@ pub struct LanguageUploadOptions {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageUploadPlan {
+    pub board_id: String,
+    pub adapter: String,
+    pub image_format: String,
+    pub transport: String,
+    pub reset_method: String,
+    pub command: String,
+    pub artifact_kind: String,
+    pub artifact_extension: Option<String>,
+    pub requires_serial_port: bool,
+    pub requires_mount_path: bool,
+    pub auto_detect_mount: bool,
+    pub steps: Vec<String>,
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageHostDevice {
     pub id: String,
     pub port: String,
@@ -737,13 +754,20 @@ pub fn known_targets() -> Vec<LanguageTargetInfo> {
 }
 
 pub fn known_target(board_id: &str) -> Option<LanguageTargetInfo> {
-    all_targets()
-        .iter()
-        .find(|target| target.board_id == board_id)
-        .map(language_target_info)
+    known_board_target(board_id).map(language_target_info)
 }
 
 pub fn detect_target(selector: &str) -> Option<LanguageTargetInfo> {
+    detect_board_target(selector).map(language_target_info)
+}
+
+fn known_board_target(board_id: &str) -> Option<&'static BoardTargetInfo> {
+    all_targets()
+        .iter()
+        .find(|target| target.board_id == board_id)
+}
+
+fn detect_board_target(selector: &str) -> Option<&'static BoardTargetInfo> {
     let normalized = normalize_target_selector(selector);
     if normalized.is_empty() {
         return None;
@@ -753,7 +777,7 @@ pub fn detect_target(selector: &str) -> Option<LanguageTargetInfo> {
         if normalize_target_selector(target.board_id) == normalized
             || normalize_target_selector(target.display_name) == normalized
         {
-            return Some(language_target_info(target));
+            return Some(target);
         }
     }
 
@@ -776,7 +800,7 @@ pub fn detect_target(selector: &str) -> Option<LanguageTargetInfo> {
         | "raspberry_pi_pico_w" => "raspberry-pi-pico-w",
         _ => return None,
     };
-    known_target(board_id)
+    known_board_target(board_id)
 }
 
 pub fn esp_upload_options_for_target(selector: &str) -> Option<LanguageEspUploadOptions> {
@@ -814,7 +838,15 @@ pub fn pico_uf2_upload_options_for_target(selector: &str) -> Option<LanguagePico
 }
 
 pub fn upload_options_for_target(selector: &str) -> Option<LanguageUploadOptions> {
-    detect_target(selector)?.upload
+    let target = detect_board_target(selector)?;
+    target
+        .upload
+        .map(|upload| language_upload_options(target.board_id, upload))
+}
+
+pub fn upload_plan_for_target(selector: &str) -> Option<LanguageUploadPlan> {
+    let target = detect_board_target(selector)?;
+    Some(language_upload_plan(target.board_id, target.upload?))
 }
 
 pub fn connection_options_for_target(selector: &str) -> Option<Vec<LanguageConnectionOption>> {
@@ -1309,6 +1341,74 @@ fn language_upload_options(board_id: &str, upload: TargetUploadInfo) -> Language
         reset_method: upload_reset_method_name(upload.reset_method).to_owned(),
         command: upload.command.to_owned(),
         notes: upload.notes.to_owned(),
+    }
+}
+
+fn language_upload_plan(board_id: &str, upload: TargetUploadInfo) -> LanguageUploadPlan {
+    let options = language_upload_options(board_id, upload);
+    match upload.adapter {
+        TargetUploadAdapter::ArduinoCli => LanguageUploadPlan {
+            board_id: options.board_id,
+            adapter: options.adapter,
+            image_format: options.image_format,
+            transport: options.transport,
+            reset_method: options.reset_method,
+            command: options.command,
+            artifact_kind: "arduino_cli_build_output".to_owned(),
+            artifact_extension: None,
+            requires_serial_port: true,
+            requires_mount_path: false,
+            auto_detect_mount: false,
+            steps: vec![
+                "resolve_arduino_board_package".to_owned(),
+                "build_firmware_artifact".to_owned(),
+                "select_serial_port".to_owned(),
+                "delegate_reset_to_board_package".to_owned(),
+                "upload_with_arduino_cli".to_owned(),
+            ],
+            notes: options.notes,
+        },
+        TargetUploadAdapter::EspRomSerial => LanguageUploadPlan {
+            board_id: options.board_id,
+            adapter: options.adapter,
+            image_format: options.image_format,
+            transport: options.transport,
+            reset_method: options.reset_method,
+            command: options.command,
+            artifact_kind: "esp_flash_image".to_owned(),
+            artifact_extension: Some(".bin".to_owned()),
+            requires_serial_port: true,
+            requires_mount_path: false,
+            auto_detect_mount: false,
+            steps: vec![
+                "select_serial_port".to_owned(),
+                "reset_into_rom_bootloader".to_owned(),
+                "write_flash_image".to_owned(),
+                "verify_md5".to_owned(),
+                "reset_into_runtime".to_owned(),
+            ],
+            notes: options.notes,
+        },
+        TargetUploadAdapter::PicoUf2MassStorage => LanguageUploadPlan {
+            board_id: options.board_id,
+            adapter: options.adapter,
+            image_format: options.image_format,
+            transport: options.transport,
+            reset_method: options.reset_method,
+            command: options.command,
+            artifact_kind: "uf2_file".to_owned(),
+            artifact_extension: Some(".uf2".to_owned()),
+            requires_serial_port: false,
+            requires_mount_path: true,
+            auto_detect_mount: true,
+            steps: vec![
+                "enter_bootsel".to_owned(),
+                "discover_bootsel_mount".to_owned(),
+                "copy_uf2_to_mount".to_owned(),
+                "wait_for_runtime_rediscovery".to_owned(),
+            ],
+            notes: options.notes,
+        },
     }
 }
 
@@ -4692,6 +4792,48 @@ mod tests {
         assert_eq!(pico.reset_method, "pico_bootsel");
 
         assert!(upload_options_for_target("not-a-board").is_none());
+    }
+
+    #[test]
+    fn upload_plans_are_owned_by_rust_language_core() {
+        let opta = upload_plan_for_target("arduino-opta-wifi").unwrap();
+        assert_eq!(opta.board_id, "arduino-opta-wifi");
+        assert_eq!(opta.adapter, "arduino_cli");
+        assert_eq!(opta.artifact_kind, "arduino_cli_build_output");
+        assert_eq!(opta.artifact_extension, None);
+        assert!(opta.requires_serial_port);
+        assert!(!opta.requires_mount_path);
+        assert!(!opta.auto_detect_mount);
+        assert_eq!(
+            opta.steps,
+            vec![
+                "resolve_arduino_board_package",
+                "build_firmware_artifact",
+                "select_serial_port",
+                "delegate_reset_to_board_package",
+                "upload_with_arduino_cli",
+            ]
+        );
+
+        let esp32 = upload_plan_for_target("esp32").unwrap();
+        assert_eq!(esp32.adapter, "esp_rom_serial");
+        assert_eq!(esp32.artifact_kind, "esp_flash_image");
+        assert_eq!(esp32.artifact_extension.as_deref(), Some(".bin"));
+        assert!(esp32.requires_serial_port);
+        assert!(!esp32.requires_mount_path);
+        assert!(esp32.steps.contains(&"verify_md5".to_owned()));
+
+        let pico = upload_plan_for_target("pico-w").unwrap();
+        assert_eq!(pico.board_id, "raspberry-pi-pico-w");
+        assert_eq!(pico.adapter, "pico_uf2_mass_storage");
+        assert_eq!(pico.artifact_kind, "uf2_file");
+        assert_eq!(pico.artifact_extension.as_deref(), Some(".uf2"));
+        assert!(!pico.requires_serial_port);
+        assert!(pico.requires_mount_path);
+        assert!(pico.auto_detect_mount);
+        assert!(pico.steps.contains(&"copy_uf2_to_mount".to_owned()));
+
+        assert!(upload_plan_for_target("not-a-board").is_none());
     }
 
     #[test]

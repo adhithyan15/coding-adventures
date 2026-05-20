@@ -119,6 +119,11 @@ ESP32 uses an ESP ROM serial profile, and Pico/Pico W use a UF2 mass-storage
 profile. Language frontends should consume these profiles instead of branching
 on board names.
 
+The upload plan tranche turns those descriptors into declarative host actions:
+artifact kind, artifact extension when one exists, serial or mount-path
+requirements, reset method, and adapter steps are emitted by Rust language core
+for each supported upload profile.
+
 The next tranches should deepen board-specific firmware/upload adapters and
 richer peripheral tables for each family without moving generic Arduino
 discovery into `board-vm-uno-r4`.
