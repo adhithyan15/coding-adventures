@@ -57,3 +57,13 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_tree_inser
 python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_tree_insertion_audit_fixture.py \
   --check
 ```
+
+`whatwg-frameset-audit.json` is a generated index over tree-construction cases
+that stress frameset, frame, noframes, body-compatibility, foreign-content, and
+template-boundary recovery:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_frameset_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_frameset_audit_fixture.py \
+  --check
+```

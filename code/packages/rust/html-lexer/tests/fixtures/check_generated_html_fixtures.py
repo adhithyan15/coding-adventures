@@ -117,6 +117,13 @@ def default_checks() -> list[FixtureCheck]:
                 "--check",
             ),
         ),
+        FixtureCheck(
+            "whatwg-frameset-audit",
+            (
+                str(PARSER_FIXTURE_DIR / "generate_whatwg_frameset_audit_fixture.py"),
+                "--check",
+            ),
+        ),
     ]
 
 
