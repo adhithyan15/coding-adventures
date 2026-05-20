@@ -297,10 +297,31 @@ pub fn from_pipeline(
     //    UserControl.Resources cascade land in later PRs.
     let part_styles = build_part_style_map(style);
 
-    // 3. Emit each of the three files.
-    let xaml = emit_xaml(name, &layout.root, &part_styles, options)?;
-    let code_behind = emit_code_behind(name, &interface.slots, &interface.emits, options)?;
+    // 3. Construct the emission context — threaded through the XAML
+    //    walker so `For`/`If` can register helpers, RowVms, and the
+    //    converter requirement (PR-2).
+    let mut ctx = EmitContext::new(name, &interface.slots);
+
+    // 4. Emit each of the three files.
+    let xaml = emit_xaml(name, &layout.root, &part_styles, options, &mut ctx)?;
+    let code_behind =
+        emit_code_behind(name, &interface.slots, &interface.emits, options, &ctx)?;
     let events = emit_events(name, &interface.emits, options)?;
+
+    // 5. Assemble the result. RowVms become entries in `for_view_models`;
+    //    the `if_helpers` field remains empty because the emitter inlines
+    //    helper methods into the code-behind's partial class (one file
+    //    per component is cleaner than scattering helper-bodies across
+    //    siblings — the spec calls for separate files but PR-2 keeps
+    //    them inline; see CHANGELOG for the deviation rationale).
+    let for_view_models = ctx
+        .row_vms
+        .iter()
+        .map(|vm| EmittedFile {
+            filename: format!("{}.cs", vm.class_name),
+            source: emit_row_vm_source(name, vm, options),
+        })
+        .collect();
 
     Ok(XamlEmitResult {
         xaml,
@@ -308,9 +329,150 @@ pub fn from_pipeline(
         events,
         component_name: name.clone(),
         project: None,             // PR-5
-        for_view_models: Vec::new(), // PR-2
-        if_helpers: Vec::new(),    // PR-2
+        for_view_models,
+        if_helpers: Vec::new(),    // helpers live inline in code_behind
     })
+}
+
+// =====================================================================
+// EmitContext — state threaded through the XAML walker (PR-2)
+// =====================================================================
+//
+// `If`/`Else`/`For` lowering needs information that doesn't live on any
+// single node:
+//
+// - `For` introduces a binding into scope; nested `For`s can see outer
+//   bindings; `{x:Bind}` paths need to know whether a name is a slot
+//   (resolves on `this`) or a for-bound name (resolves on the
+//   `DataContext` of the enclosing `<DataTemplate>`).
+// - `If`/`Else` may need to generate helper methods for expressions that
+//   aren't directly `{x:Bind}`-able. The helpers go into the
+//   code-behind partial class.
+// - `If` overall requires a `BoolToVisibilityConverter` resource added
+//   exactly once per UserControl.
+// - `For` requires a `RowVm` C# record per block, declared as a separate
+//   file in `for_view_models`.
+//
+// `EmitContext` carries this state through the recursive walk and is
+// consumed by `from_pipeline` when assembling the final result.
+
+/// A single `For`-bound name in scope at the current emission point.
+#[derive(Debug, Clone)]
+struct ForBinding {
+    /// The `as:` binding name, kebab-cased as written (e.g. `row`).
+    as_name: String,
+    /// The `index:` binding name when present (e.g. `r`).
+    index_name: Option<String>,
+    /// The C# type of the element. Derived from the iterated slot's type:
+    /// `list<text>` → `string`, `list<number>` → `double`, etc.
+    element_type: String,
+    /// The generated RowVm class name: `{Component}_{AsName}Vm`.
+    /// Stored on the binding even though the per-element binding code
+    /// resolves the same value off `RowVm` — used by nested-For helper
+    /// transliteration in a follow-up PR and by debug introspection.
+    #[allow(dead_code)]
+    vm_class: String,
+}
+
+/// A C# helper method that the emitter generates into the code-behind.
+/// Used for expressions that `{x:Bind}` cannot evaluate directly
+/// (indexer, comparison, logical, negation).
+#[derive(Debug, Clone)]
+struct HelperMethod {
+    /// PascalCase method name (deterministic from the expression).
+    name: String,
+    /// `(parameter_name, parameter_csharp_type)` pairs.
+    parameters: Vec<(String, String)>,
+    /// C# return type — `bool` for predicates, `string` for indexed
+    /// element accessors, `double` for numeric, etc.
+    return_type: String,
+    /// The C# expression body (no trailing semicolon).
+    body: String,
+}
+
+/// A generated `RowVm` C# record — the typed `DataContext` for a
+/// `<DataTemplate>` inside a `For` block.
+#[derive(Debug, Clone)]
+struct RowVm {
+    /// `{Component}_{AsName}Vm` — must match the `x:DataType` reference
+    /// in the matching `<DataTemplate>`.
+    class_name: String,
+    /// The PascalCase property name that holds the element value (e.g.
+    /// `Row`, `Cell`). Derived from the `as:` binding.
+    element_property: String,
+    /// The C# type of the element value.
+    element_type: String,
+    /// `true` iff the matching `For` declared an `index:` binding.
+    has_index: bool,
+}
+
+/// Mutable state threaded through the recursive XAML emission.
+///
+/// PR-1's emit_xaml didn't need any of this — all primitive emitters
+/// were stateless. PR-2's `For`/`If` lowering does, so we collect every
+/// stateful effect into one struct that the assembly step in
+/// `from_pipeline` consumes.
+struct EmitContext<'a> {
+    /// The component name — used to namespace generated types.
+    component_name: &'a str,
+    /// Slot name (kebab-case) → C# type. For looking up the element
+    /// type of a `For (each: slot: foo)` from `foo`'s declared type.
+    slot_types: std::collections::HashMap<String, String>,
+    /// `For` bindings currently in scope, innermost last. When a name
+    /// resolves at expression-lowering time we walk from the back of
+    /// the stack to find the closest binding.
+    for_scope: Vec<ForBinding>,
+    /// Helper methods to emit into the code-behind. Deduplicated by
+    /// method name so two identical expressions in the same component
+    /// produce only one helper.
+    helpers: Vec<HelperMethod>,
+    /// Tracks whether any `If` has been emitted. When `true`, the
+    /// emitter writes a `BoolToVisibilityConverter` resource into the
+    /// `<UserControl.Resources>` block.
+    needs_bool_to_vis: bool,
+    /// One `RowVm` per `For` block in the component. Becomes
+    /// `XamlEmitResult::for_view_models`.
+    row_vms: Vec<RowVm>,
+}
+
+impl<'a> EmitContext<'a> {
+    fn new(name: &'a str, slots: &[SlotDecl]) -> Self {
+        let mut slot_types = std::collections::HashMap::new();
+        for slot in slots {
+            let cs = slot_type_to_csharp(&slot.r#type).unwrap_or_else(|_| "object".to_string());
+            slot_types.insert(slot.name.clone(), cs);
+        }
+        Self {
+            component_name: name,
+            slot_types,
+            for_scope: Vec::new(),
+            helpers: Vec::new(),
+            needs_bool_to_vis: false,
+            row_vms: Vec::new(),
+        }
+    }
+
+    /// Find a `For` binding by `as:` name, searching innermost-first.
+    fn lookup_for_binding(&self, as_name: &str) -> Option<&ForBinding> {
+        self.for_scope.iter().rev().find(|b| b.as_name == as_name)
+    }
+
+    /// Find a `For` binding's index by name.
+    fn lookup_for_index(&self, index_name: &str) -> Option<&ForBinding> {
+        self.for_scope
+            .iter()
+            .rev()
+            .find(|b| b.index_name.as_deref() == Some(index_name))
+    }
+
+    /// Add a helper method (or skip if a method by the same name already
+    /// exists — assumed to be identical because helper names are a
+    /// deterministic function of the expression they came from).
+    fn add_helper(&mut self, helper: HelperMethod) {
+        if !self.helpers.iter().any(|h| h.name == helper.name) {
+            self.helpers.push(helper);
+        }
+    }
 }
 
 // =====================================================================
@@ -424,11 +586,15 @@ fn is_safe_identifier(s: &str) -> bool {
 
 /// Emit `{Component}.xaml` — the markup file. Wraps the lowered
 /// moslayout tree in a `<UserControl>` root.
+///
+/// `ctx` is mutated during the walk: `For` pushes/pops bindings, `If`
+/// adds helper methods, both may flip `needs_bool_to_vis`.
 fn emit_xaml(
     name: &str,
     root: &LayoutNode,
     part_styles: &PartStyleMap,
     options: &EmitOptions,
+    ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let ns = &options.namespace;
@@ -443,8 +609,27 @@ fn emit_xaml(
     writeln!(out, "    xmlns:local=\"using:{ns}\">").unwrap();
     writeln!(out).unwrap();
 
-    let body = emit_xaml_node(root, 4, part_styles)?;
+    // Walk the root node — at the moslayout level a component has
+    // exactly one root, but we still pass through the children iterator
+    // because `If`/`Else` pairing happens there.
+    let body = emit_xaml_node(root, 4, part_styles, ctx)?;
     out.push_str(&body);
+
+    // After walking, if any `If` was emitted we must declare the
+    // converter resource. We splice it in after the open `<UserControl>`
+    // by rebuilding — small enough cost given a typical component has
+    // a few hundred bytes of XAML.
+    if ctx.needs_bool_to_vis {
+        let resources = emit_bool_to_vis_resource_block(4);
+        // Insert after the `<UserControl ... >` opening tag (find the
+        // `>\n` that closes the open tag).
+        let split_at = out
+            .find(">\n")
+            .map(|p| p + 2)
+            .unwrap_or(out.len());
+        let (head, tail) = out.split_at(split_at);
+        out = format!("{head}{resources}{tail}");
+    }
 
     writeln!(out).unwrap();
     writeln!(out, "</UserControl>").unwrap();
@@ -452,28 +637,51 @@ fn emit_xaml(
 }
 
 /// Lower one moslayout node and its descendants to XAML, indented by
-/// `indent` spaces. PR-1 handles the nine simple kernel primitives;
-/// everything else surfaces as a clear `UnsupportedPrimitive` error.
+/// `indent` spaces.
+///
+/// PR-1 added the nine simple kernel primitives; PR-2 adds `For`. `If`
+/// and `Else` are NOT handled here — they're consumed by
+/// [`emit_xaml_children`] which pairs an `If` with the following `Else`
+/// sibling. A bare `If` or `Else` reaching this function is an error
+/// (they should always come through `emit_xaml_children`).
 fn emit_xaml_node(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     match node.tag.as_str() {
-        "Box" => emit_box(node, indent, part_styles),
-        "Row" => emit_stack_panel(node, indent, part_styles, "Horizontal"),
-        "Column" => emit_stack_panel(node, indent, part_styles, "Vertical"),
-        "Stack" => emit_stack(node, indent, part_styles),
-        "Text" => emit_text(node, indent, part_styles),
-        "Image" => emit_image(node, indent, part_styles),
+        "Box" => emit_box(node, indent, part_styles, ctx),
+        "Row" => emit_stack_panel(node, indent, part_styles, "Horizontal", ctx),
+        "Column" => emit_stack_panel(node, indent, part_styles, "Vertical", ctx),
+        "Stack" => emit_stack(node, indent, part_styles, ctx),
+        "Text" => emit_text(node, indent, part_styles, ctx),
+        "Image" => emit_image(node, indent, part_styles, ctx),
         "Spacer" => emit_spacer(node, indent, part_styles),
         "Divider" => emit_divider(node, indent, part_styles),
-        "Icon" => emit_icon(node, indent, part_styles),
+        "Icon" => emit_icon(node, indent, part_styles, ctx),
 
-        // PR-2..PR-5 territory. Recognised by name so the error message is
+        // PR-2: For lowering.
+        "For" => emit_for(node, indent, part_styles, ctx),
+
+        // `If` and `Else` are paired by the children iterator. Seeing a
+        // bare one here means the author wrote `If` as the root of the
+        // component (no preceding sibling) — emit it as a top-level
+        // conditional. The look-ahead for `Else` happens in the
+        // children iterator, so the standalone case here means no
+        // `Else` was paired.
+        "If" => emit_if(node, None, indent, part_styles, ctx),
+        // A standalone `Else` (no preceding `If`) is a moslayout-level
+        // validation error per UI29 §3.2; we treat it as
+        // UnsupportedPrimitive here for the second line of defence in
+        // case validation was bypassed.
+        "Else" => Err(PipelineEmitError::UnsupportedPrimitive(
+            "Else without preceding If".to_string(),
+        )),
+
+        // PR-3..PR-5 territory. Recognised by name so the error message is
         // self-documenting ("not yet supported", not "unknown tag").
-        "If" | "Else" | "For"
-        | "HostInput" | "HostButton" | "HostScroll" | "HostTable"
+        "HostInput" | "HostButton" | "HostScroll" | "HostTable"
         | "HostTableColGroup" | "HostTableHead" | "HostTableBody" | "HostTableFoot" => {
             Err(PipelineEmitError::UnsupportedPrimitive(node.tag.clone()))
         }
@@ -482,6 +690,49 @@ fn emit_xaml_node(
         // manifest resolver in PR-5. PR-1 simply errors.
         other => Err(PipelineEmitError::UnsupportedPrimitive(other.to_string())),
     }
+}
+
+/// Walk a slice of children, emitting each in order. Pairs an `If` with
+/// a following `Else` sibling (UI29 §3.2) — that pairing is the only
+/// reason this exists rather than every container directly calling
+/// `emit_xaml_node` per child.
+fn emit_xaml_children(
+    children: &[LayoutNode],
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let mut out = String::new();
+    let mut i = 0;
+    while i < children.len() {
+        let child = &children[i];
+        if child.tag == "If" {
+            // Look ahead one position for an `Else` sibling.
+            let else_node = if let Some(next) = children.get(i + 1) {
+                if next.tag == "Else" {
+                    Some(next)
+                } else {
+                    None
+                }
+            } else {
+                None
+            };
+            out.push_str(&emit_if(child, else_node, indent, part_styles, ctx)?);
+            // Skip past the consumed `Else` if we paired one.
+            i += if else_node.is_some() { 2 } else { 1 };
+        } else if child.tag == "Else" {
+            // Should have been consumed by the preceding `If`'s look-
+            // ahead; reaching here means the author wrote a standalone
+            // `Else` (moslayout validation failure).
+            return Err(PipelineEmitError::UnsupportedPrimitive(
+                "Else without preceding If".to_string(),
+            ));
+        } else {
+            out.push_str(&emit_xaml_node(child, indent, part_styles, ctx)?);
+            i += 1;
+        }
+    }
+    Ok(out)
 }
 
 /// Build the optional `Style="..."` attribute fragment from a part name.
@@ -512,8 +763,9 @@ fn emit_box(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
-    emit_container(node, indent, part_styles, "Border")
+    emit_container(node, indent, part_styles, "Border", ctx)
 }
 
 fn emit_stack_panel(
@@ -521,15 +773,14 @@ fn emit_stack_panel(
     indent: usize,
     part_styles: &PartStyleMap,
     orientation: &str,
+    ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
     let mut out = format!(
         "{pad}<StackPanel Orientation=\"{orientation}\"{style}>\n"
     );
-    for child in &node.children {
-        out.push_str(&emit_xaml_node(child, indent + 4, part_styles)?);
-    }
+    out.push_str(&emit_xaml_children(&node.children, indent + 4, part_styles, ctx)?);
     write!(out, "{pad}</StackPanel>\n").unwrap();
     Ok(out)
 }
@@ -543,8 +794,9 @@ fn emit_stack(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
-    emit_container(node, indent, part_styles, "Grid")
+    emit_container(node, indent, part_styles, "Grid", ctx)
 }
 
 fn emit_container(
@@ -552,23 +804,25 @@ fn emit_container(
     indent: usize,
     part_styles: &PartStyleMap,
     element: &str,
+    ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
     let mut out = format!("{pad}<{element}{style}>\n");
-    for child in &node.children {
-        out.push_str(&emit_xaml_node(child, indent + 4, part_styles)?);
-    }
+    out.push_str(&emit_xaml_children(&node.children, indent + 4, part_styles, ctx)?);
     write!(out, "{pad}</{element}>\n").unwrap();
     Ok(out)
 }
 
 /// `Text [name] (content: slot: foo)` → `<TextBlock Text="{x:Bind Foo}"/>`.
 /// `Text [name] (content: "literal")` → `<TextBlock Text="literal"/>`.
+/// `Text [name] (content: row.value)` → `<TextBlock Text="{x:Bind Row.Value}"/>`
+/// when `row` is a `For`-bound name (PR-2).
 fn emit_text(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
@@ -586,16 +840,30 @@ fn emit_text(
             format!(" Text=\"{escaped}\"")
         }
         Some(LayoutPropValue::Keyword(k)) => {
-            // A `content: <NAME>` form — treat as literal text. Matches
-            // how the React backend handles bare-name content.
-            let escaped = escape_xaml_attr(k);
-            format!(" Text=\"{escaped}\"")
+            // A `content: <NAME>` form. PR-2: if `k` is a for-bound
+            // name, treat as `{x:Bind ForName}`; otherwise as literal
+            // text (matches the React backend's behaviour pre-PR-2).
+            if ctx.lookup_for_binding(k).is_some() {
+                let pascal = kebab_to_pascal_case(k);
+                format!(" Text=\"{{x:Bind {pascal}}}\"")
+            } else if ctx.lookup_for_index(k).is_some() {
+                let pascal = kebab_to_pascal_case(k);
+                format!(" Text=\"{{x:Bind {pascal}}}\"")
+            } else {
+                let escaped = escape_xaml_attr(k);
+                format!(" Text=\"{escaped}\"")
+            }
         }
         Some(LayoutPropValue::Number(n)) => format!(" Text=\"{n}\""),
-        Some(LayoutPropValue::Expr(_)) => {
-            return Err(PipelineEmitError::UnsupportedExpression(
-                "Text content expression (PR-2)".to_string(),
-            ));
+        Some(LayoutPropValue::Expr(src)) => {
+            // PR-2: route through ExprLowerer.
+            match lower_expr_for_xbind(src, ctx) {
+                ExprLowering::Bindable(path) => format!(" Text=\"{{x:Bind {path}}}\""),
+                ExprLowering::Helper(call) => format!(" Text=\"{{x:Bind {call}}}\""),
+                ExprLowering::Unsupported(reason) => {
+                    return Err(PipelineEmitError::UnsupportedExpression(reason));
+                }
+            }
         }
         Some(LayoutPropValue::EmitRef(_)) | None => String::new(),
     };
@@ -608,6 +876,7 @@ fn emit_image(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    _ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
@@ -664,6 +933,7 @@ fn emit_icon(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    _ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
@@ -684,12 +954,14 @@ fn emit_icon(
 // =====================================================================
 
 /// Emit `{Component}.xaml.cs` — the partial class with DPs, the
-/// Dispatch event, and constructor boilerplate.
+/// Dispatch event, constructor boilerplate, and any helper methods the
+/// expression lowerer registered during the XAML walk (PR-2).
 fn emit_code_behind(
     name: &str,
     slots: &[SlotDecl],
     emits: &[EmitDecl],
     options: &EmitOptions,
+    ctx: &EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let ns = &options.namespace;
     let mut out = String::new();
@@ -739,6 +1011,27 @@ fn emit_code_behind(
         writeln!(out, "    {{").unwrap();
         writeln!(out, "        Dispatch?.Invoke(this, ev);").unwrap();
         writeln!(out, "    }}").unwrap();
+        writeln!(out).unwrap();
+    }
+
+    // PR-2: helper methods registered by the ExprLowerer for expressions
+    // that {x:Bind} cannot evaluate directly (indexer / comparison /
+    // logical). Each helper is a private method on the partial class.
+    for helper in &ctx.helpers {
+        let params: Vec<String> = helper
+            .parameters
+            .iter()
+            .map(|(n, t)| format!("{t} {n}"))
+            .collect();
+        writeln!(
+            out,
+            "    private {} {}({}) => {};",
+            helper.return_type,
+            helper.name,
+            params.join(", "),
+            helper.body
+        )
+        .unwrap();
     }
 
     writeln!(out, "}}").unwrap();
@@ -924,6 +1217,845 @@ fn escape_xaml_attr(s: &str) -> String {
         }
     }
     out
+}
+
+// =====================================================================
+// PR-2: For / If / Else lowering + ExprLowerer
+// =====================================================================
+
+/// `For (each: <expr>, as: <name>, index: <name>?) { <children> }` →
+/// `<ItemsRepeater>` with a generated `<DataTemplate>` whose
+/// `x:DataType` is the generated RowVm record.
+fn emit_for(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    // -- 1. Extract and validate the For-required props --
+    let as_name = find_prop_keyword(node, "as").ok_or_else(|| {
+        PipelineEmitError::UnsupportedPrimitive(
+            "For block missing required prop 'as:'".to_string(),
+        )
+    })?;
+    let index_name = find_prop_keyword(node, "index");
+
+    // -- 2. Resolve the `each:` source to a {x:Bind} path and an
+    //    element type --
+    let (items_path, element_type) = match find_prop_value(node, "each") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            if !is_safe_identifier(&pascal) {
+                return Err(PipelineEmitError::UnsafeSlotName(pascal));
+            }
+            // Look up the slot's declared C# type to derive the element
+            // type. Slots are typed as `IReadOnlyList<X>` → element is X.
+            let csharp_type =
+                ctx.slot_types.get(slot.as_str()).cloned().unwrap_or_else(|| "object".to_string());
+            let elem_type = inner_type_of_list(&csharp_type);
+            (pascal, elem_type)
+        }
+        Some(LayoutPropValue::Expr(expr_src)) => {
+            // Could be a for-bound name's member access, e.g.
+            // `row.cells`. Lower it through ExprLowerer.
+            match lower_expr_for_xbind(expr_src, ctx) {
+                ExprLowering::Bindable(path) => {
+                    // Without further type info we can't determine the
+                    // element type; default to `object` (the host's C#
+                    // compiler will catch any real mismatch).
+                    (path, "object".to_string())
+                }
+                ExprLowering::Helper(_) | ExprLowering::Unsupported(_) => {
+                    return Err(PipelineEmitError::UnsupportedExpression(format!(
+                        "For each: expression {expr_src:?} cannot be lowered to a binding path"
+                    )));
+                }
+            }
+        }
+        _ => {
+            return Err(PipelineEmitError::UnsupportedPrimitive(
+                "For block must bind `each:` to a slot ref or expression".to_string(),
+            ));
+        }
+    };
+
+    // -- 3. Generate / register the RowVm --
+    let vm_class = format!(
+        "{}_{}Vm",
+        ctx.component_name,
+        kebab_to_pascal_case(as_name)
+    );
+    let element_property = kebab_to_pascal_case(as_name);
+    let has_index = index_name.is_some();
+
+    let vm = RowVm {
+        class_name: vm_class.clone(),
+        element_property: element_property.clone(),
+        element_type: element_type.clone(),
+        has_index,
+    };
+    if !ctx.row_vms.iter().any(|v| v.class_name == vm.class_name) {
+        ctx.row_vms.push(vm);
+    }
+
+    // -- 4. Push the binding into scope, walk the body, pop. --
+    ctx.for_scope.push(ForBinding {
+        as_name: as_name.to_string(),
+        index_name: index_name.map(String::from),
+        element_type,
+        vm_class: vm_class.clone(),
+    });
+    let body =
+        emit_xaml_children(&node.children, indent + 12, part_styles, ctx)?;
+    ctx.for_scope.pop();
+
+    // -- 5. Assemble the XAML --
+    let pad = " ".repeat(indent);
+    let pad2 = " ".repeat(indent + 4);
+    let pad3 = " ".repeat(indent + 8);
+    let style = part_style_attr(node, part_styles);
+    let mut out = String::new();
+    writeln!(out, "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_path}}}\"{style}>")
+        .unwrap();
+    writeln!(out, "{pad2}<ItemsRepeater.ItemTemplate>").unwrap();
+    writeln!(
+        out,
+        "{pad3}<DataTemplate x:DataType=\"local:{vm_class}\">"
+    )
+    .unwrap();
+    out.push_str(&body);
+    writeln!(out, "{pad3}</DataTemplate>").unwrap();
+    writeln!(out, "{pad2}</ItemsRepeater.ItemTemplate>").unwrap();
+    writeln!(out, "{pad}</ItemsRepeater>").unwrap();
+    Ok(out)
+}
+
+/// `If (when: <expr>) { <then> } [Else { <else> }]` → twin
+/// `<ContentControl>`s whose `Visibility` is bound to the expression
+/// and its negation.
+fn emit_if(
+    if_node: &LayoutNode,
+    else_node: Option<&LayoutNode>,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    // -- 1. Lower the `when:` expression --
+    let when_path = match find_prop_value(if_node, "when") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            if !is_safe_identifier(&pascal) {
+                return Err(PipelineEmitError::UnsafeSlotName(pascal));
+            }
+            pascal
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => "True".to_string(),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => "False".to_string(),
+        Some(LayoutPropValue::Keyword(k)) => {
+            // Treat bare keywords like for-bound names so authors can
+            // write `If (when: editable) { ... }` when `editable` is
+            // a `For`-bound name in scope.
+            if ctx.lookup_for_binding(k).is_some() {
+                kebab_to_pascal_case(k)
+            } else {
+                return Err(PipelineEmitError::UnsupportedExpression(format!(
+                    "If when: bare name {k:?} is not a slot or for-bound name"
+                )));
+            }
+        }
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => path,
+            ExprLowering::Helper(call) => call,
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        _ => {
+            return Err(PipelineEmitError::UnsupportedPrimitive(
+                "If block missing required `when:` expression".to_string(),
+            ));
+        }
+    };
+
+    // -- 2. Flag the converter requirement (one per UserControl) --
+    ctx.needs_bool_to_vis = true;
+
+    // -- 3. Emit the then-branch wrapper. The lowered body lives
+    //    inside a single `<ContentControl>` with bound Visibility. --
+    let pad = " ".repeat(indent);
+    let pad2 = " ".repeat(indent + 4);
+    let then_body = emit_xaml_children(&if_node.children, indent + 4, part_styles, ctx)?;
+
+    let mut out = String::new();
+    writeln!(
+        out,
+        "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}}}\">"
+    )
+    .unwrap();
+    out.push_str(&then_body);
+    writeln!(out, "{pad}</ContentControl>").unwrap();
+
+    // -- 4. Emit the else-branch wrapper, when paired. Visibility is
+    //    bound to the same expression with `ConverterParameter=invert`
+    //    so the converter inverts the boolean. --
+    if let Some(else_node) = else_node {
+        let else_body =
+            emit_xaml_children(&else_node.children, indent + 4, part_styles, ctx)?;
+        writeln!(
+            out,
+            "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, ConverterParameter=invert}}\">"
+        )
+        .unwrap();
+        out.push_str(&else_body);
+        writeln!(out, "{pad}</ContentControl>").unwrap();
+        let _ = pad2; // silence unused if no Else
+    } else {
+        let _ = pad2;
+    }
+    Ok(out)
+}
+
+/// The `<UserControl.Resources>` block carrying the
+/// `BoolToVisibilityConverter` resource. Added exactly once per
+/// UserControl when any `If` is emitted.
+fn emit_bool_to_vis_resource_block(indent: usize) -> String {
+    let pad = " ".repeat(indent);
+    let pad2 = " ".repeat(indent + 4);
+    let mut out = String::new();
+    writeln!(out, "{pad}<UserControl.Resources>").unwrap();
+    writeln!(
+        out,
+        "{pad2}<local:BoolToVisibilityConverter x:Key=\"BoolToVisibilityConverter\"/>"
+    )
+    .unwrap();
+    writeln!(out, "{pad}</UserControl.Resources>").unwrap();
+    out
+}
+
+/// Generate the C# source for one RowVm record. Each `For` block
+/// produces one of these, written into `XamlEmitResult::for_view_models`
+/// as a separate `.cs` file the host project compiles alongside the
+/// UserControl.
+fn emit_row_vm_source(_component: &str, vm: &RowVm, options: &EmitOptions) -> String {
+    let ns = &options.namespace;
+    let element_type = &vm.element_type;
+    let element_property = &vm.element_property;
+    let class_name = &vm.class_name;
+    let index_field = if vm.has_index {
+        ", int Index"
+    } else {
+        ""
+    };
+    let mut out = String::new();
+    writeln!(out, "// Auto-generated by mosaic-emit-xaml. Do not edit.").unwrap();
+    writeln!(out, "namespace {ns};").unwrap();
+    writeln!(out).unwrap();
+    writeln!(
+        out,
+        "/// <summary>DataTemplate context for a `For` block iterating one row.</summary>"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "public sealed record {class_name}({element_type} {element_property}{index_field});"
+    )
+    .unwrap();
+    out
+}
+
+/// Reduce a C# type like `IReadOnlyList<string>` to its inner element
+/// type (`string`). For non-generic types or unmatchable strings, fall
+/// back to `object`.
+fn inner_type_of_list(t: &str) -> String {
+    if let Some(open) = t.find('<') {
+        if let Some(close) = t.rfind('>') {
+            if close > open {
+                return t[open + 1..close].to_string();
+            }
+        }
+    }
+    "object".to_string()
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// ExprLowerer — UI29 §3.3 expression source → {x:Bind} path or helper
+// ─────────────────────────────────────────────────────────────────────
+//
+// The moslayout-compiler stores `Expr` as the source-text substring
+// (tokens joined with spaces). It can be:
+//
+//   - bare name              `row`                                → Bindable("Row")
+//   - bare slot ref          `slot: editable`                     → Bindable("Editable")
+//   - boolean literal        `true` / `false`                     → Bindable("True"/"False")
+//   - dotted access          `row.value` / `slot: theme.dark`     → Bindable("Row.Value" / "Theme.Dark")
+//   - indexer                `row[c]` / `slot: rows[r][c]`        → Helper("GetXxx(...)")
+//   - comparisons            `r == slot: edit-row`                → Helper("IsXxx(...)")
+//   - logical &&/||/!        `a && b`                             → Helper("Combined(...)")
+//
+// The PR-2 lowerer supports the first four directly and the last three
+// via generated helpers. Anything else returns `Unsupported` with a
+// human-readable reason.
+
+/// Result of lowering one moslayout `Expr` to its WinUI 3 binding form.
+#[derive(Debug)]
+enum ExprLowering {
+    /// Direct `{x:Bind X}` path (the inner part of the markup
+    /// extension, without the `{x:Bind ...}` wrapper).
+    Bindable(String),
+    /// A helper-method call expression in C# form — `{x:Bind GetCell(R, C)}`
+    /// is the consumer; the helper itself has been registered with the
+    /// EmitContext.
+    Helper(String),
+    /// The expression couldn't be lowered. Carries a human-readable
+    /// reason for the diagnostic.
+    Unsupported(String),
+}
+
+/// Lower a raw expression source string to its WinUI 3 binding form.
+///
+/// This is a small recursive-descent parser over the UI29 §3.3 grammar
+/// (or-expr → and-expr → eq-expr → rel-expr → unary → postfix → primary).
+/// We do NOT pull in a separate parser dependency; the grammar is tiny
+/// and the source has already been validated by moslayout-compiler. We
+/// re-tokenise here only to figure out which branch of the lowering
+/// table we're in.
+fn lower_expr_for_xbind(src: &str, ctx: &mut EmitContext<'_>) -> ExprLowering {
+    let trimmed = src.trim();
+    let tokens = match tokenise_expr(trimmed) {
+        Ok(t) => t,
+        Err(e) => return ExprLowering::Unsupported(e),
+    };
+
+    // Walk the token stream once with a recursive-descent parser whose
+    // output is the lowered form. The parser is split into helper
+    // functions; see below.
+    let mut p = ExprParser::new(&tokens, ctx, src);
+    match p.parse_or() {
+        Ok(lowering) => {
+            if p.is_done() {
+                lowering
+            } else {
+                ExprLowering::Unsupported(format!(
+                    "expression {src:?} has trailing tokens"
+                ))
+            }
+        }
+        Err(e) => ExprLowering::Unsupported(e),
+    }
+}
+
+/// Tokens emitted by the tiny expression lexer.
+#[derive(Debug, Clone, PartialEq)]
+enum ExprTok {
+    Name(String),
+    SlotPrefix,  // `slot:` (yes the colon is part of the prefix as seen by the lexer)
+    Number(String),
+    String(String),
+    True,
+    False,
+    EqEq,
+    NotEq,
+    Lt,
+    Le,
+    Gt,
+    Ge,
+    AndAnd,
+    OrOr,
+    Not,
+    Dot,
+    LBracket,
+    RBracket,
+    LParen,
+    RParen,
+}
+
+/// Tokenise an expression source string. The grammar is small enough
+/// that we don't need a generated lexer — a hand-rolled one fits in a
+/// few dozen lines.
+fn tokenise_expr(src: &str) -> Result<Vec<ExprTok>, String> {
+    let mut out = Vec::new();
+    let bytes = src.as_bytes();
+    let mut i = 0;
+    while i < bytes.len() {
+        let c = bytes[i];
+        match c {
+            b' ' | b'\t' | b'\n' | b'\r' => {
+                i += 1;
+            }
+            b'=' if i + 1 < bytes.len() && bytes[i + 1] == b'=' => {
+                out.push(ExprTok::EqEq);
+                i += 2;
+            }
+            b'!' if i + 1 < bytes.len() && bytes[i + 1] == b'=' => {
+                out.push(ExprTok::NotEq);
+                i += 2;
+            }
+            b'<' if i + 1 < bytes.len() && bytes[i + 1] == b'=' => {
+                out.push(ExprTok::Le);
+                i += 2;
+            }
+            b'>' if i + 1 < bytes.len() && bytes[i + 1] == b'=' => {
+                out.push(ExprTok::Ge);
+                i += 2;
+            }
+            b'<' => {
+                out.push(ExprTok::Lt);
+                i += 1;
+            }
+            b'>' => {
+                out.push(ExprTok::Gt);
+                i += 1;
+            }
+            b'&' if i + 1 < bytes.len() && bytes[i + 1] == b'&' => {
+                out.push(ExprTok::AndAnd);
+                i += 2;
+            }
+            b'|' if i + 1 < bytes.len() && bytes[i + 1] == b'|' => {
+                out.push(ExprTok::OrOr);
+                i += 2;
+            }
+            b'!' => {
+                out.push(ExprTok::Not);
+                i += 1;
+            }
+            b'.' => {
+                out.push(ExprTok::Dot);
+                i += 1;
+            }
+            b'[' => {
+                out.push(ExprTok::LBracket);
+                i += 1;
+            }
+            b']' => {
+                out.push(ExprTok::RBracket);
+                i += 1;
+            }
+            b'(' => {
+                out.push(ExprTok::LParen);
+                i += 1;
+            }
+            b')' => {
+                out.push(ExprTok::RParen);
+                i += 1;
+            }
+            b'"' => {
+                // String literal — collect until the closing quote,
+                // honouring `\"` and `\\` escapes.
+                let start = i + 1;
+                i += 1;
+                while i < bytes.len() && bytes[i] != b'"' {
+                    if bytes[i] == b'\\' && i + 1 < bytes.len() {
+                        i += 2;
+                    } else {
+                        i += 1;
+                    }
+                }
+                if i >= bytes.len() {
+                    return Err(format!(
+                        "unterminated string literal in expression {src:?}"
+                    ));
+                }
+                let lit = src[start..i].to_string();
+                out.push(ExprTok::String(lit));
+                i += 1; // skip closing "
+            }
+            c if c.is_ascii_digit() => {
+                let start = i;
+                while i < bytes.len()
+                    && (bytes[i].is_ascii_digit() || bytes[i] == b'.')
+                {
+                    i += 1;
+                }
+                out.push(ExprTok::Number(src[start..i].to_string()));
+            }
+            c if c.is_ascii_alphabetic() || c == b'_' => {
+                let start = i;
+                while i < bytes.len()
+                    && (bytes[i].is_ascii_alphanumeric()
+                        || bytes[i] == b'_'
+                        || bytes[i] == b'-')
+                {
+                    i += 1;
+                }
+                let word = &src[start..i];
+                // `slot:` is two-token at the lexer level (`slot` + `:`)
+                // but we collapse it to a single `SlotPrefix` token so
+                // the parser doesn't have to special-case the keyword.
+                if word == "slot" && i < bytes.len() && bytes[i] == b':' {
+                    out.push(ExprTok::SlotPrefix);
+                    i += 1; // consume the colon
+                } else if word == "true" {
+                    out.push(ExprTok::True);
+                } else if word == "false" {
+                    out.push(ExprTok::False);
+                } else {
+                    out.push(ExprTok::Name(word.to_string()));
+                }
+            }
+            other => {
+                return Err(format!(
+                    "unexpected character {:?} in expression {:?}",
+                    other as char, src
+                ));
+            }
+        }
+    }
+    Ok(out)
+}
+
+/// The recursive-descent parser walking the lexed expression.
+///
+/// Lifetime: parser holds shared borrows of tokens + ctx for the
+/// duration of one expression lowering. The result string is owned.
+struct ExprParser<'a, 'b> {
+    tokens: &'a [ExprTok],
+    pos: usize,
+    ctx: &'a mut EmitContext<'b>,
+    /// The original source string — used in error messages and helper
+    /// name hashing.
+    src: &'a str,
+}
+
+impl<'a, 'b> ExprParser<'a, 'b> {
+    fn new(tokens: &'a [ExprTok], ctx: &'a mut EmitContext<'b>, src: &'a str) -> Self {
+        Self {
+            tokens,
+            pos: 0,
+            ctx,
+            src,
+        }
+    }
+
+    fn peek(&self) -> Option<&ExprTok> {
+        self.tokens.get(self.pos)
+    }
+
+    fn consume(&mut self, expected: &ExprTok) -> bool {
+        if self.peek() == Some(expected) {
+            self.pos += 1;
+            true
+        } else {
+            false
+        }
+    }
+
+    fn is_done(&self) -> bool {
+        self.pos >= self.tokens.len()
+    }
+
+    /// Parse the entire expression — only the recursive-descent entry
+    /// point a caller invokes. Returns the lowered form for the whole
+    /// expression.
+    fn parse_or(&mut self) -> Result<ExprLowering, String> {
+        // For PR-2 the parser is simplified: we look for the *shape* of
+        // the expression and decide on a lowering strategy in one pass.
+        //
+        // - If every token after the first primary is `.NAME`, we have
+        //   a pure member-access path → Bindable.
+        // - If there's an indexer / comparison / logical / unary-not,
+        //   we register a helper method and return Helper(call).
+        // - The fallback is Unsupported with a clear reason.
+
+        if self.contains_logical_or_comparison() || self.contains_indexer() || self.starts_with_not() {
+            // Register a helper that evaluates the whole expression.
+            let helper = self.build_predicate_helper()?;
+            let call = helper_call_expression(&helper);
+            self.ctx.add_helper(helper);
+            // Consume all tokens (we've handled the whole expression).
+            self.pos = self.tokens.len();
+            return Ok(ExprLowering::Helper(call));
+        }
+
+        // Otherwise we expect a Bindable path: primary (. NAME)*
+        let mut path = self.parse_primary_bindable()?;
+        while self.consume(&ExprTok::Dot) {
+            match self.peek().cloned() {
+                Some(ExprTok::Name(n)) => {
+                    path.push('.');
+                    path.push_str(&kebab_to_pascal_case(&n));
+                    self.pos += 1;
+                }
+                _ => {
+                    return Err(format!(
+                        "expression {:?} has '.' not followed by a name",
+                        self.src
+                    ));
+                }
+            }
+        }
+
+        Ok(ExprLowering::Bindable(path))
+    }
+
+    fn parse_primary_bindable(&mut self) -> Result<String, String> {
+        let tok = self
+            .peek()
+            .cloned()
+            .ok_or_else(|| format!("expression {:?} is empty", self.src))?;
+        match tok {
+            ExprTok::SlotPrefix => {
+                self.pos += 1;
+                let name = self.expect_name()?;
+                Ok(kebab_to_pascal_case(&name))
+            }
+            ExprTok::Name(n) => {
+                self.pos += 1;
+                Ok(kebab_to_pascal_case(&n))
+            }
+            ExprTok::True => {
+                self.pos += 1;
+                Ok("True".to_string())
+            }
+            ExprTok::False => {
+                self.pos += 1;
+                Ok("False".to_string())
+            }
+            other => Err(format!(
+                "expression {:?} has unsupported primary token {other:?}",
+                self.src
+            )),
+        }
+    }
+
+    fn expect_name(&mut self) -> Result<String, String> {
+        match self.peek().cloned() {
+            Some(ExprTok::Name(n)) => {
+                self.pos += 1;
+                Ok(n)
+            }
+            other => Err(format!(
+                "expression {:?} expected a name, got {other:?}",
+                self.src
+            )),
+        }
+    }
+
+    fn contains_logical_or_comparison(&self) -> bool {
+        self.tokens.iter().any(|t| {
+            matches!(
+                t,
+                ExprTok::EqEq
+                    | ExprTok::NotEq
+                    | ExprTok::Lt
+                    | ExprTok::Le
+                    | ExprTok::Gt
+                    | ExprTok::Ge
+                    | ExprTok::AndAnd
+                    | ExprTok::OrOr
+            )
+        })
+    }
+
+    fn contains_indexer(&self) -> bool {
+        self.tokens.iter().any(|t| t == &ExprTok::LBracket)
+    }
+
+    fn starts_with_not(&self) -> bool {
+        matches!(self.tokens.first(), Some(ExprTok::Not))
+    }
+
+    /// Build a helper method whose body evaluates the whole expression.
+    /// PR-2's strategy: hash the source to produce a deterministic name,
+    /// scan the expression for referenced bindings to assemble the
+    /// parameter list, then transliterate the expression into C# syntax.
+    fn build_predicate_helper(&self) -> Result<HelperMethod, String> {
+        // Collect parameters: any `slot: X` becomes a `this.X` reference
+        // (no parameter needed); any bare `X` that matches a for-bound
+        // name becomes a parameter (since helpers are invoked from
+        // inside a DataTemplate where the for-bound names ARE the
+        // parameters); any bare `X` matching a for index also becomes a
+        // parameter.
+        let mut params: Vec<(String, String)> = Vec::new();
+        let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+        for tok in self.tokens {
+            if let ExprTok::Name(n) = tok {
+                if let Some(b) = self.ctx.lookup_for_binding(n) {
+                    let pname = kebab_to_pascal_case(n);
+                    if seen.insert(pname.clone()) {
+                        params.push((pname, b.element_type.clone()));
+                    }
+                } else if let Some(b) = self.ctx.lookup_for_index(n) {
+                    let _ = b;
+                    let pname = kebab_to_pascal_case(n);
+                    if seen.insert(pname.clone()) {
+                        params.push((pname, "int".to_string()));
+                    }
+                }
+                // Otherwise: a name with no binding — leave it for
+                // transliteration to surface as `this.<name>` if it's a
+                // slot, or as a literal if it's something else.
+            }
+        }
+
+        // Determine the return type. PR-2 supports two shapes:
+        //   - logical / comparison → bool
+        //   - indexer (X[idx])     → string (default; downstream type
+        //                            inference is out of scope for PR-2)
+        let return_type = if self.contains_logical_or_comparison() || self.starts_with_not() {
+            "bool".to_string()
+        } else {
+            "string".to_string()
+        };
+
+        // Transliterate the source. Simple substitutions are enough
+        // because the moslayout expression grammar is a subset of C#
+        // operators (==/!=/<=/>=/<>/&&/||/!) and member/indexer access.
+        let body = transliterate_to_csharp(self.tokens, self.ctx);
+
+        let name = format!("Expr_{:x}", hash_expr(self.src));
+        Ok(HelperMethod {
+            name,
+            parameters: params,
+            return_type,
+            body,
+        })
+    }
+}
+
+/// Form the C# call expression `Method(P1, P2)` for a helper.
+fn helper_call_expression(helper: &HelperMethod) -> String {
+    if helper.parameters.is_empty() {
+        format!("{}()", helper.name)
+    } else {
+        let args: Vec<String> = helper.parameters.iter().map(|(n, _)| n.clone()).collect();
+        format!("{}({})", helper.name, args.join(", "))
+    }
+}
+
+/// Walk the lexed tokens and emit equivalent C# source. Names get
+/// PascalCased, slot refs become `this.Foo`, for-bound names stay as
+/// PascalCased (they're the helper's parameters), `[` / `]` /
+/// `&&` / `||` / `==` / `!=` etc. pass through identically since C#
+/// uses the same syntax.
+fn transliterate_to_csharp(tokens: &[ExprTok], ctx: &EmitContext<'_>) -> String {
+    let mut out = String::new();
+    let mut i = 0;
+    while i < tokens.len() {
+        match &tokens[i] {
+            ExprTok::SlotPrefix => {
+                i += 1;
+                if let Some(ExprTok::Name(n)) = tokens.get(i) {
+                    out.push_str("this.");
+                    out.push_str(&kebab_to_pascal_case(n));
+                    i += 1;
+                }
+            }
+            ExprTok::Name(n) => {
+                let pascal = kebab_to_pascal_case(n);
+                // If it's a for-bound name or index, leave it bare —
+                // the helper's parameter has this exact PascalCased name.
+                if ctx.lookup_for_binding(n).is_some() || ctx.lookup_for_index(n).is_some() {
+                    out.push_str(&pascal);
+                } else {
+                    // Otherwise treat as a slot reference.
+                    out.push_str("this.");
+                    out.push_str(&pascal);
+                }
+                i += 1;
+            }
+            ExprTok::Number(n) => {
+                out.push_str(n);
+                i += 1;
+            }
+            ExprTok::String(s) => {
+                out.push('"');
+                out.push_str(s);
+                out.push('"');
+                i += 1;
+            }
+            ExprTok::True => {
+                out.push_str("true");
+                i += 1;
+            }
+            ExprTok::False => {
+                out.push_str("false");
+                i += 1;
+            }
+            ExprTok::EqEq => {
+                out.push_str(" == ");
+                i += 1;
+            }
+            ExprTok::NotEq => {
+                out.push_str(" != ");
+                i += 1;
+            }
+            ExprTok::Lt => {
+                out.push_str(" < ");
+                i += 1;
+            }
+            ExprTok::Le => {
+                out.push_str(" <= ");
+                i += 1;
+            }
+            ExprTok::Gt => {
+                out.push_str(" > ");
+                i += 1;
+            }
+            ExprTok::Ge => {
+                out.push_str(" >= ");
+                i += 1;
+            }
+            ExprTok::AndAnd => {
+                out.push_str(" && ");
+                i += 1;
+            }
+            ExprTok::OrOr => {
+                out.push_str(" || ");
+                i += 1;
+            }
+            ExprTok::Not => {
+                out.push('!');
+                i += 1;
+            }
+            ExprTok::Dot => {
+                out.push('.');
+                i += 1;
+            }
+            ExprTok::LBracket => {
+                out.push('[');
+                i += 1;
+            }
+            ExprTok::RBracket => {
+                out.push(']');
+                i += 1;
+            }
+            ExprTok::LParen => {
+                out.push('(');
+                i += 1;
+            }
+            ExprTok::RParen => {
+                out.push(')');
+                i += 1;
+            }
+        }
+    }
+    out
+}
+
+/// Simple deterministic hash of an expression source for naming
+/// helpers. We use a 32-bit FNV-1a hash because it's tiny and the
+/// collision probability across a handful of expressions in one
+/// component is negligible.
+fn hash_expr(s: &str) -> u32 {
+    let mut h: u32 = 0x811C9DC5;
+    for b in s.bytes() {
+        h ^= b as u32;
+        h = h.wrapping_mul(0x01000193);
+    }
+    h
+}
+
+/// Find a prop whose value is a `Keyword`, returning the keyword text.
+/// Used by `For`'s `as:` / `index:` and `If`'s bare-keyword `when:`.
+fn find_prop_keyword<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::Keyword(s) = &p.value {
+                return Some(s.as_str());
+            }
+        }
+        None
+    })
 }
 
 // =====================================================================
@@ -1405,8 +2537,14 @@ mod tests {
         );
     }
 
+    /// PR-2 enables `Expr` handling. An expression containing an
+    /// indexer (`row[c]`) now lowers to a helper-method `{x:Bind ...}`
+    /// rather than erroring.
+    ///
+    /// The PR-1 version of this test expected an error; PR-2 replaces
+    /// that expectation with the new lowering path.
     #[test]
-    fn text_with_expr_content_errors_with_unsupported_expression() {
+    fn text_with_expr_content_lowers_to_helper_call_in_pr2() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root(
             "Foo",
@@ -1420,9 +2558,19 @@ mod tests {
                 children: Vec::new(),
             },
         );
-        let s = empty_style("Foo");
-        let err = from_pipeline(&c, &l, &s, None, &opts()).unwrap_err();
-        assert!(matches!(err, PipelineEmitError::UnsupportedExpression(_)));
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // The Text binding should reference a helper call.
+        assert!(
+            r.xaml.contains("Text=\"{x:Bind Expr_"),
+            "expected helper-call binding, got:\n{}",
+            r.xaml
+        );
+        // The helper should be inlined into the code-behind.
+        assert!(
+            r.code_behind.contains("private string Expr_"),
+            "expected helper method in code-behind, got:\n{}",
+            r.code_behind
+        );
     }
 
     #[test]
@@ -1582,6 +2730,515 @@ mod tests {
         assert!(
             matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t == "WhateverComponent")
         );
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // PR-2: For / If / Else / ExprLowerer tests
+    // ─────────────────────────────────────────────────────────────────
+
+    fn for_node(each: LayoutPropValue, as_name: &str, index: Option<&str>, children: Vec<LayoutNode>) -> LayoutNode {
+        let mut props = vec![
+            LayoutProp { name: "each".to_string(), value: each },
+            LayoutProp {
+                name: "as".to_string(),
+                value: LayoutPropValue::Keyword(as_name.to_string()),
+            },
+        ];
+        if let Some(idx) = index {
+            props.push(LayoutProp {
+                name: "index".to_string(),
+                value: LayoutPropValue::Keyword(idx.to_string()),
+            });
+        }
+        LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props,
+            children,
+        }
+    }
+
+    fn if_node(when: LayoutPropValue, children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "If".to_string(),
+            part_name: None,
+            props: vec![LayoutProp { name: "when".to_string(), value: when }],
+            children,
+        }
+    }
+
+    fn else_node(children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "Else".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children,
+        }
+    }
+
+    // ── For lowering ──
+
+    #[test]
+    fn for_with_slot_ref_lowers_to_items_repeater_with_data_template() {
+        let c = component(
+            "Grid",
+            vec![slot("rows", SlotType::List(Box::new(ListInnerType::Text)), true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Grid",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                None,
+                vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::Keyword("row".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Grid"));
+        // ItemsRepeater bound to the slot.
+        assert!(
+            r.xaml.contains("<ItemsRepeater ItemsSource=\"{x:Bind Rows}\""),
+            "got:\n{}",
+            r.xaml
+        );
+        // DataTemplate with the generated RowVm typed DataContext.
+        assert!(
+            r.xaml.contains("<DataTemplate x:DataType=\"local:Grid_RowVm\">"),
+            "got:\n{}",
+            r.xaml
+        );
+        // Inner Text binds to the for-bound name.
+        assert!(
+            r.xaml.contains("Text=\"{x:Bind Row}\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn for_generates_row_vm_record() {
+        let c = component(
+            "Grid",
+            vec![slot("rows", SlotType::List(Box::new(ListInnerType::Text)), true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Grid",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                None,
+                vec![],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Grid"));
+        // One entry in for_view_models.
+        assert_eq!(r.for_view_models.len(), 1, "expected one RowVm");
+        let vm = &r.for_view_models[0];
+        assert_eq!(vm.filename, "Grid_RowVm.cs");
+        assert!(vm.source.contains("public sealed record Grid_RowVm(string Row);"));
+    }
+
+    #[test]
+    fn for_with_index_adds_index_field_to_row_vm() {
+        let c = component(
+            "Grid",
+            vec![slot("rows", SlotType::List(Box::new(ListInnerType::Text)), true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Grid",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                Some("r"),
+                vec![],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Grid"));
+        let vm = &r.for_view_models[0];
+        assert!(
+            vm.source.contains("public sealed record Grid_RowVm(string Row, int Index);"),
+            "got:\n{}",
+            vm.source
+        );
+    }
+
+    #[test]
+    fn for_with_numeric_list_uses_double_element_type() {
+        let c = component(
+            "Stats",
+            vec![slot("values", SlotType::List(Box::new(ListInnerType::Number)), true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Stats",
+            for_node(
+                LayoutPropValue::SlotRef("values".to_string()),
+                "v",
+                None,
+                vec![],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Stats"));
+        assert!(
+            r.for_view_models[0]
+                .source
+                .contains("public sealed record Stats_VVm(double V);"),
+            "got:\n{}",
+            r.for_view_models[0].source
+        );
+    }
+
+    #[test]
+    fn for_dedupes_row_vms_within_one_component() {
+        // Two For blocks binding the same `as:` produce the same VM
+        // class. The emitter must register only one — the assembly step
+        // in from_pipeline depends on uniqueness.
+        let c = component(
+            "Grid",
+            vec![slot("rows", SlotType::List(Box::new(ListInnerType::Text)), true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Grid",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    for_node(
+                        LayoutPropValue::SlotRef("rows".to_string()),
+                        "row",
+                        None,
+                        vec![],
+                    ),
+                    for_node(
+                        LayoutPropValue::SlotRef("rows".to_string()),
+                        "row",
+                        None,
+                        vec![],
+                    ),
+                ],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Grid"));
+        assert_eq!(r.for_view_models.len(), 1, "expected dedup to one RowVm");
+    }
+
+    #[test]
+    fn standalone_else_errors_with_unsupported_primitive() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![else_node(vec![])],
+            },
+        );
+        let s = empty_style("Foo");
+        let err = from_pipeline(&c, &l, &s, None, &opts()).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsupportedPrimitive(_)));
+    }
+
+    // ── If / Else lowering ──
+
+    #[test]
+    fn if_with_slot_ref_lowers_to_contentcontrol_with_visibility() {
+        let c = component(
+            "Foo",
+            vec![slot("editable", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![if_node(
+                    LayoutPropValue::SlotRef("editable".to_string()),
+                    vec![LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("editable!".to_string()),
+                        }],
+                        children: Vec::new(),
+                    }],
+                )],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml
+                .contains("<ContentControl Visibility=\"{x:Bind Editable, Converter={StaticResource BoolToVisibilityConverter}}\">"),
+            "got:\n{}",
+            r.xaml
+        );
+        // Then-branch content lives inside.
+        assert!(r.xaml.contains("Text=\"editable!\""));
+    }
+
+    #[test]
+    fn if_emits_bool_to_visibility_converter_resource_once() {
+        let c = component(
+            "Foo",
+            vec![slot("editable", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            if_node(
+                LayoutPropValue::SlotRef("editable".to_string()),
+                vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("hi".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("<UserControl.Resources>"),
+            "expected resources block, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<local:BoolToVisibilityConverter x:Key=\"BoolToVisibilityConverter\"/>"
+            )
+        );
+        // Only one occurrence — converter is shared.
+        let count = r.xaml.matches("BoolToVisibilityConverter x:Key").count();
+        assert_eq!(count, 1, "expected exactly one converter resource entry");
+    }
+
+    #[test]
+    fn if_without_else_does_not_emit_else_wrapper() {
+        let c = component(
+            "Foo",
+            vec![slot("editable", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            if_node(LayoutPropValue::SlotRef("editable".to_string()), vec![]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // Only one ContentControl in the output.
+        assert_eq!(r.xaml.matches("<ContentControl").count(), 1);
+    }
+
+    #[test]
+    fn if_with_else_emits_paired_contentcontrols() {
+        let c = component(
+            "Foo",
+            vec![slot("editable", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    if_node(LayoutPropValue::SlotRef("editable".to_string()), vec![]),
+                    else_node(vec![]),
+                ],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // Two ContentControls.
+        assert_eq!(r.xaml.matches("<ContentControl").count(), 2);
+        // Else uses ConverterParameter=invert.
+        assert!(
+            r.xaml.contains("ConverterParameter=invert"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn if_when_true_keyword_uses_true_constant() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            if_node(LayoutPropValue::Keyword("true".to_string()), vec![]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("Visibility=\"{x:Bind True, Converter="),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    // ── ExprLowerer ──
+
+    #[test]
+    fn expr_lowerer_bare_slot_ref_is_bindable() {
+        let mut ctx = EmitContext::new("Foo", &[]);
+        let r = lower_expr_for_xbind("slot: editable", &mut ctx);
+        assert!(matches!(r, ExprLowering::Bindable(ref p) if p == "Editable"));
+    }
+
+    #[test]
+    fn expr_lowerer_dotted_member_access_is_bindable() {
+        let mut ctx = EmitContext::new("Foo", &[]);
+        let r = lower_expr_for_xbind("slot: theme.dark.bg", &mut ctx);
+        assert!(
+            matches!(r, ExprLowering::Bindable(ref p) if p == "Theme.Dark.Bg"),
+            "got: bindable shape mismatch"
+        );
+    }
+
+    #[test]
+    fn expr_lowerer_boolean_literal_is_bindable() {
+        let mut ctx = EmitContext::new("Foo", &[]);
+        let r = lower_expr_for_xbind("true", &mut ctx);
+        assert!(matches!(r, ExprLowering::Bindable(ref p) if p == "True"));
+    }
+
+    #[test]
+    fn expr_lowerer_indexer_becomes_helper_call() {
+        let mut ctx = EmitContext::new("Foo", &[]);
+        let r = lower_expr_for_xbind("slot: rows[r]", &mut ctx);
+        match r {
+            ExprLowering::Helper(call) => {
+                assert!(call.starts_with("Expr_"));
+                assert_eq!(ctx.helpers.len(), 1);
+            }
+            other => panic!("expected Helper, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn expr_lowerer_equality_comparison_becomes_helper() {
+        let mut ctx = EmitContext::new("Foo", &[]);
+        let r = lower_expr_for_xbind("slot: edit-row == 0", &mut ctx);
+        assert!(matches!(r, ExprLowering::Helper(_)));
+        assert_eq!(ctx.helpers.len(), 1);
+        assert_eq!(ctx.helpers[0].return_type, "bool");
+    }
+
+    #[test]
+    fn expr_lowerer_logical_and_becomes_helper() {
+        let mut ctx = EmitContext::new("Foo", &[]);
+        let r = lower_expr_for_xbind("slot: a && slot: b", &mut ctx);
+        assert!(matches!(r, ExprLowering::Helper(_)));
+        assert_eq!(ctx.helpers[0].return_type, "bool");
+        assert!(ctx.helpers[0].body.contains(" && "));
+    }
+
+    #[test]
+    fn expr_lowerer_unary_not_becomes_helper() {
+        let mut ctx = EmitContext::new("Foo", &[]);
+        let r = lower_expr_for_xbind("!slot: editable", &mut ctx);
+        assert!(matches!(r, ExprLowering::Helper(_)));
+        assert_eq!(ctx.helpers[0].return_type, "bool");
+    }
+
+    #[test]
+    fn expr_lowerer_identical_expressions_dedupe_to_one_helper() {
+        let mut ctx = EmitContext::new("Foo", &[]);
+        let _ = lower_expr_for_xbind("slot: a && slot: b", &mut ctx);
+        let _ = lower_expr_for_xbind("slot: a && slot: b", &mut ctx);
+        assert_eq!(ctx.helpers.len(), 1, "expected dedup");
+    }
+
+    #[test]
+    fn expr_lowerer_for_bound_name_lowers_as_parameter() {
+        let mut ctx = EmitContext::new("Foo", &[]);
+        // Simulate a For binding being in scope.
+        ctx.for_scope.push(ForBinding {
+            as_name: "row".to_string(),
+            index_name: Some("r".to_string()),
+            element_type: "string".to_string(),
+            vm_class: "Foo_RowVm".to_string(),
+        });
+        let r = lower_expr_for_xbind("row == \"hello\"", &mut ctx);
+        match r {
+            ExprLowering::Helper(_) => {
+                assert_eq!(ctx.helpers.len(), 1);
+                // Helper should accept a `string Row` parameter.
+                let h = &ctx.helpers[0];
+                assert!(
+                    h.parameters
+                        .iter()
+                        .any(|(n, t)| n == "Row" && t == "string"),
+                    "expected (Row, string) parameter, got: {:?}",
+                    h.parameters
+                );
+            }
+            other => panic!("expected Helper, got {other:?}"),
+        }
+    }
+
+    // ── End-to-end: For + If together ──
+
+    #[test]
+    fn for_body_can_contain_if_with_for_bound_name_via_expr() {
+        // For (each: rows, as: row) { If (when: row.editable) { Text(...) } Else { Text(...) } }
+        let c = component(
+            "Grid",
+            vec![slot("rows", SlotType::List(Box::new(ListInnerType::Text)), true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Grid",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                None,
+                vec![
+                    if_node(
+                        LayoutPropValue::Expr("row".to_string()),
+                        vec![LayoutNode {
+                            tag: "Text".to_string(),
+                            part_name: None,
+                            props: vec![LayoutProp {
+                                name: "content".to_string(),
+                                value: LayoutPropValue::String("yes".to_string()),
+                            }],
+                            children: Vec::new(),
+                        }],
+                    ),
+                    else_node(vec![LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("no".to_string()),
+                        }],
+                        children: Vec::new(),
+                    }]),
+                ],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Grid"));
+        // ItemsRepeater wraps the conditional.
+        assert!(r.xaml.contains("<ItemsRepeater"));
+        // Two ContentControls inside the DataTemplate.
+        assert_eq!(r.xaml.matches("<ContentControl").count(), 2);
+        // RowVm generated.
+        assert_eq!(r.for_view_models.len(), 1);
     }
 
     // ── part-style application ──
