@@ -11,6 +11,7 @@ binary protocol details stay in Rust:
 - COBS stream framing and CRC handling
 - program upload/run frame construction
 - raw response frame decoding and payload offset reporting
+- target upload plans for Arduino CLI, ESP ROM serial, and Pico UF2 adapters
 
 This crate exports a normal Rust API for the repo's language bridge packages.
 Ruby bindings should be built on `ruby-bridge`, Python bindings on
@@ -26,3 +27,7 @@ Python, or any other supported language.
 The crate deliberately does not open serial ports or USB devices yet. Language
 frontends may own ergonomic transport discovery in the short term, but the bytes
 they send and decode should come from this Rust core.
+
+Firmware flashing follows the same rule: frontends can present native options,
+but they should query `upload_plan_for_target` to learn the artifact kind,
+transport requirements, reset behavior, and adapter steps for each board family.

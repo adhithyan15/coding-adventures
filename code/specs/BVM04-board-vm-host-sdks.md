@@ -198,6 +198,9 @@ Firmware upload and artifact handoff must use the Rust-owned target upload
 profile for the selected board. Language SDKs can wrap that profile in native
 ergonomics, but they should not hard-code whether a board flashes through
 Arduino CLI, ESP ROM serial upload, UF2 mass storage, or another adapter.
+SDKs should ask the Rust language core for the upload plan so artifact kind,
+serial or mount-path requirements, bootloader reset behavior, and transfer
+steps remain shared across Ruby, Python, Lua, Java, JS, and future CLIs.
 
 ## Error Handling
 
