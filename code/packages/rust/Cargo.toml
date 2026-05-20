@@ -33,6 +33,7 @@ members = [
     "rope",
     "blas-library",
     "bootloader",
+    "board-vm-arduino",
     "board-vm-eject",
     "board-vm-protocol",
     "board-vm-host",

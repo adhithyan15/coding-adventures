@@ -292,6 +292,7 @@ pub struct LanguageBoardDescriptor {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageBoardFamily {
+    Arduino,
     ArduinoUnoR4,
     Esp32,
     RaspberryPiPico,
@@ -621,6 +622,7 @@ pub const fn capability_board_metadata(flags: u16) -> bool {
 
 pub const fn board_family_name(family: LanguageBoardFamily) -> &'static str {
     match family {
+        LanguageBoardFamily::Arduino => "arduino",
         LanguageBoardFamily::ArduinoUnoR4 => "arduino_uno_r4",
         LanguageBoardFamily::Esp32 => "esp32",
         LanguageBoardFamily::RaspberryPiPico => "raspberry_pi_pico",
@@ -1354,6 +1356,7 @@ fn bluetooth_endpoint_scheme(endpoint: &str) -> &str {
 
 fn language_family(family: BoardFamily) -> LanguageBoardFamily {
     match family {
+        BoardFamily::Arduino => LanguageBoardFamily::Arduino,
         BoardFamily::ArduinoUnoR4 => LanguageBoardFamily::ArduinoUnoR4,
         BoardFamily::Esp32 => LanguageBoardFamily::Esp32,
         BoardFamily::RaspberryPiPico => LanguageBoardFamily::RaspberryPiPico,
@@ -3764,15 +3767,38 @@ mod tests {
         let targets = known_targets();
         let esp32 = known_target("esp32-devkit-v1").unwrap();
         let uno = known_target("arduino-uno-r4-wifi").unwrap();
+        let mega = known_target("arduino-mega-2560").unwrap();
+        let nano_r4 = known_target("arduino-nano-r4").unwrap();
+        let nano_ble = known_target("arduino-nano-33-ble-rev2").unwrap();
+        let nano_esp32 = known_target("arduino-nano-esp32").unwrap();
+        let giga = known_target("arduino-giga-r1-wifi").unwrap();
         let pico_w = known_target("raspberry-pi-pico-w").unwrap();
 
         assert!(targets
             .iter()
             .any(|target| target.board_id == esp32.board_id));
+        assert!(targets
+            .iter()
+            .any(|target| target.board_id == mega.board_id));
         assert_eq!(esp32.family, LanguageBoardFamily::Esp32);
         assert_eq!(board_family_name(esp32.family), "esp32");
         assert_eq!(esp32.runtime_id, "board-vm-esp32");
         assert_eq!(esp32.onboard_led, Some(LanguageOnboardLed::Gpio(2)));
+        assert_eq!(mega.family, LanguageBoardFamily::Arduino);
+        assert_eq!(board_family_name(mega.family), "arduino");
+        assert_eq!(mega.runtime_id, "board-vm-arduino");
+        assert_eq!(mega.digital_pin_count, 70);
+        assert!(mega.capabilities.contains(&"transport.serial".to_owned()));
+        assert!(mega.capabilities.contains(&"gpio.open".to_owned()));
+        assert!(mega.capabilities.contains(&"program.ram_exec".to_owned()));
+        assert_eq!(nano_r4.family, LanguageBoardFamily::Arduino);
+        assert_eq!(nano_r4.mcu, "RA4M1");
+        assert_eq!(nano_ble.family, LanguageBoardFamily::Arduino);
+        assert_eq!(nano_ble.mcu, "nRF52840");
+        assert_eq!(nano_esp32.family, LanguageBoardFamily::Arduino);
+        assert_eq!(nano_esp32.mcu, "ESP32-S3");
+        assert_eq!(giga.family, LanguageBoardFamily::Arduino);
+        assert_eq!(giga.mcu, "STM32H747XI");
         assert_eq!(
             uno.led_matrix,
             Some(LanguageLedMatrix {

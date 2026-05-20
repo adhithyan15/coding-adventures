@@ -5,6 +5,7 @@ edition = "2021"
 description = "Host-side Board VM target registry for supported boards"
 
 [dependencies]
+board-vm-arduino = { path = "../board-vm-arduino" }
 board-vm-esp32 = { path = "../board-vm-esp32" }
 board-vm-pico = { path = "../board-vm-pico" }
 board-vm-uno-r4 = { path = "../board-vm-uno-r4" }
