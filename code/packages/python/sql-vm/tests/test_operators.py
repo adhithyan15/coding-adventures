@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 from sql_codegen import BinaryOpCode, UnaryOpCode
 
-from sql_vm.errors import DivisionByZero, TypeMismatch
+from sql_vm.errors import TypeMismatch
 from sql_vm.operators import apply_binary, apply_unary, like_match
 
 
@@ -30,14 +30,28 @@ class TestArithmetic:
         result = apply_binary(BinaryOpCode.DIV, 5.0, 2)
         assert result == 2.5
 
-    def test_div_by_zero(self) -> None:
-        with pytest.raises(DivisionByZero):
-            apply_binary(BinaryOpCode.DIV, 5, 0)
+    def test_div_by_zero_returns_null(self) -> None:
+        # SQLite returns NULL for x / 0 rather than raising.  Mini-sqlite
+        # used to raise DivisionByZero (surfaced as OperationalError), so
+        # any application that expected SQLite's NULL-on-error policy was
+        # crashing.  Now both DIV and MOD by zero produce NULL.
+        assert apply_binary(BinaryOpCode.DIV, 5, 0) is None
+        assert apply_binary(BinaryOpCode.DIV, 5.0, 0) is None
+        assert apply_binary(BinaryOpCode.DIV, 5, 0.0) is None
 
     def test_mod_by_zero(self) -> None:
-        # SQLite returns NULL for x % 0, unlike DIV which raises ZeroDivisionError.
-        # Our VM follows SQLite's behaviour here.
+        # Both DIV and MOD return NULL for division by zero.
         assert apply_binary(BinaryOpCode.MOD, 5, 0) is None
+
+    def test_mod_sign_follows_dividend(self) -> None:
+        # SQLite's % is C-style fmod: result sign matches the *dividend*.
+        # Python's % follows the divisor, which gives the wrong answer
+        # for negative operands (e.g. ``-7 % 3 == 2`` in Python but SQLite
+        # produces -1).  Pin the corrected C-style behaviour.
+        assert apply_binary(BinaryOpCode.MOD, -7, 3) == -1
+        assert apply_binary(BinaryOpCode.MOD, 7, -3) == 1
+        assert apply_binary(BinaryOpCode.MOD, -7, -3) == -1
+        assert apply_binary(BinaryOpCode.MOD, 7, 3) == 1
 
     def test_arithmetic_with_non_numeric_raises(self) -> None:
         with pytest.raises(TypeMismatch):

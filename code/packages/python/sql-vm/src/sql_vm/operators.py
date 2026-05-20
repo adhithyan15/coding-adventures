@@ -27,7 +27,7 @@ from __future__ import annotations
 from sql_backend.values import SqlValue, sql_type_name
 from sql_codegen import BinaryOpCode, UnaryOpCode
 
-from .errors import DivisionByZero, TypeMismatch
+from .errors import TypeMismatch
 
 
 def _is_bool(v: SqlValue) -> bool:
@@ -140,8 +140,11 @@ def _arithmetic(op: BinaryOpCode, left: SqlValue, right: SqlValue) -> SqlValue:
     if op is BinaryOpCode.MUL:
         return a * b
     if op is BinaryOpCode.DIV:
+        # SQLite returns NULL for ``x / 0`` rather than raising — matches its
+        # philosophy that arithmetic errors yield NULL.  Previously we raised
+        # DivisionByZero, which mini-sqlite surfaced as OperationalError.
         if b == 0:
-            raise DivisionByZero()
+            return None
         # Integer division when both operands are ints; truncate toward zero
         # as C / most SQL dialects do, not Python's floor-divide semantics.
         if isinstance(a, int) and isinstance(b, int):
@@ -151,11 +154,27 @@ def _arithmetic(op: BinaryOpCode, left: SqlValue, right: SqlValue) -> SqlValue:
     if op is BinaryOpCode.MOD:
         if b == 0:
             # SQLite returns NULL for x % 0 rather than raising an error.
-            # Python raises ZeroDivisionError; we match the SQLite behaviour here
-            # so that queries like `SELECT 5 % 0` silently yield NULL instead of
-            # crashing the VM.
             return None
-        return a % b
+        # SQLite's ``%`` is C-style ``fmod`` *with an integer cast first*:
+        # if either operand is float, both are truncated toward zero and
+        # the result is the integer modulo cast back to float.  This is
+        # different from the ``mod()`` scalar function (which uses true
+        # fmod).  Examples:
+        #
+        #     7   %  3   → 1
+        #    -7   %  3   → -1   (sign follows dividend, not Python's 2)
+        #     7   % -3   → 1
+        #     7.5 %  2.0 → 1.0  (truncate to 7 % 2, then cast back)
+        #    15.5 %  4.5 → 3.0  (truncate to 15 % 4)
+        is_float = isinstance(a, float) or isinstance(b, float)
+        ia, ib = int(a), int(b)
+        if ib == 0:
+            # Both operands truncate to 0-modulus (e.g. ``1.5 % 0.5`` →
+            # ``int(0.5) = 0``).  Mirror SQLite's NULL-on-error policy.
+            return None
+        magnitude = abs(ia) % abs(ib)
+        result = -magnitude if ia < 0 else magnitude
+        return float(result) if is_float else result
     raise TypeMismatch(expected="arithmetic op", got=op.name, context="BinaryOp")
 
 

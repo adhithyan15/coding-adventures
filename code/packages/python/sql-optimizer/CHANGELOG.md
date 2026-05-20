@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.14.0] - 2026-05-20
+
+### Fixed
+
+- **Constant folding of ``/`` and ``%`` now matches SQLite semantics.**
+  Previously the folder used Python's ``//`` and ``%`` directly, which
+  diverges from SQLite for negative integers (Python's floor-vs-trunc,
+  and Python's divisor-sign vs SQLite's dividend-sign modulo).  Folds
+  now mirror the runtime behaviour: ``-7 / 2 → -3``, ``-7 % 3 → -1``,
+  ``7.5 % 2.0 → 1.0``.  Divisions by zero raise inside the folder
+  (caught by the existing try/except and left for the VM to evaluate
+  at runtime, where they correctly produce NULL).
+
 ## [0.13.0] - 2026-05-20
 
 ### Fixed

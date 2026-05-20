@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.73.0] - 2026-05-20
+
+### Fixed
+
+- **Arithmetic edge cases match SQLite byte-for-byte** (via
+  ``sql-vm 1.47.0`` and ``sql-optimizer 0.14.0``):
+
+  * ``x / 0`` returns NULL (was raising ``OperationalError``).
+  * ``-7 % 3`` returns ``-1`` (was ``2`` — Python's divisor-sign mod).
+  * ``7.5 % 2.0`` returns ``1.0`` (SQLite's ``%`` truncates floats to
+    int first; was ``1.5`` from true fmod).
+  * ``-7 / 2`` returns ``-3`` (was Python's ``-4`` floor-divide).
+
+  21 oracle tests in ``test_tier3_arithmetic_edge_cases.py`` cover
+  divide-by-zero / negative-dividend / negative-divisor / mixed
+  int+float / column-driven arithmetic.  The ``mod()`` scalar function
+  is also pinned (different from ``%`` — keeps true ``fmod``).
+
 ## [1.72.0] - 2026-05-20
 
 ### Fixed
