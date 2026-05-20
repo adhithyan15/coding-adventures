@@ -1877,10 +1877,19 @@ function tryWeierstrassLogForm(
     const coefIR = app(DIV, [fromNumeric(c), sqrtDiscIR]);
     return app(MUL, [coefIR, app(LOG, [logArg])]);
   }
-  // COS branch: require b > |a| strictly.
-  if (!isPositiveNumeric(subNumeric(b, absNumeric(a)))) return undefined;
+  // COS branch — handles both b > |a| and b < −|a| (Phase 37 extension).
+  //
+  // The same expression log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|
+  // is valid for both sign regimes because the inner rational is wrapped
+  // in Abs: when (b−a) flips sign, the numerator and denominator of the
+  // log argument swap (D − k·u and D + k·u), but |N/D'| = |D'/N| so the
+  // absolute value collapses them to the same value.  The antiderivative
+  // is continuous across both sides of b = ±|a|.
+  //
+  // Caller already ensures b² > a² (disc < 0 entry); the only additional
+  // precondition is a + b ≠ 0, which is automatic because b² > a² rules
+  // out b = −a.
   const bMinusA = subNumeric(b, a);
-  if (!isPositiveNumeric(bMinusA)) return undefined;
   // log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|
   const bmaTan = app(MUL, [fromNumeric(bMinusA), tanHalf]);
   const numer = app(ADD, [sqrtDiscIR, bmaTan]);

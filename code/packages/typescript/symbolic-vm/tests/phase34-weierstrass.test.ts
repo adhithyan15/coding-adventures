@@ -377,12 +377,46 @@ describe("Phase 36: log form for a² < b²", () => {
     }
   });
 
-  it("cos branch with b < |a| still defers (1 − 2·cos x)", () => {
+  it("Phase 37: cos branch with b < −|a| (∫ 1/(1 − 2·cos x) dx) now closes", () => {
     const vm = makeVM();
     const integrand = app(DIV, [int(1), app(SUB, [int(1), app(MUL, [int(2), app(COS, [X])])])]);
-    const result = vm.eval(integrate(integrand));
-    // The b = -2 < |a| = 1 branch is deferred — log argument has the
-    // opposite sign pattern.
-    expect(isUnevaluatedIntegrate(result)).toBe(true);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    // 1 − 2 cos x zeros at cos x = 1/2 (x = ±π/3 ≈ ±1.047).
+    // Sample on (π/3, π) where the integrand is real and finite.
+    for (const xVal of [1.2, 1.6, 2.0, 2.5]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1.0 / (1.0 - 2.0 * Math.cos(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
+  });
+});
+
+describe("Phase 37: cos branch with b < −|a|", () => {
+  it("∫ 1/(−1 − 3·cos x) dx — both a and b negative", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [
+      int(1),
+      app(SUB, [int(-1), app(MUL, [int(3), app(COS, [X])])]),
+    ]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    // −1 − 3 cos x zeros at cos x = −1/3.  Sample safely.
+    for (const xVal of [0.5, 1.0, 1.5]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1.0 / (-1.0 - 3.0 * Math.cos(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
+  });
+
+  it("∫ 5/(1 − 2·cos x) dx — numerator scales", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [int(5), app(SUB, [int(1), app(MUL, [int(2), app(COS, [X])])])]);
+    const phi = vm.eval(integrate(integrand));
+    for (const xVal of [1.2, 1.6, 2.0, 2.5]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 5.0 / (1.0 - 2.0 * Math.cos(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
   });
 });
