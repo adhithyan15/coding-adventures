@@ -1,5 +1,37 @@
 # Changelog
 
+## 1.40.0 — 2026-05-20
+
+### Fixed
+
+- **``CAST(text AS REAL/INTEGER)`` uses SQLite's longest-prefix rule
+  instead of Python's ``int()``/``float()`` semantics.**  Python rejects
+  any string with trailing non-numeric characters; SQLite greedily
+  takes the longest valid numeric prefix and discards the rest.
+
+  Two specific bug classes fixed:
+
+  * ``CAST('inf' AS REAL)`` (and ``'Inf'``, ``'infinity'``, ``'-inf'``,
+    ``'nan'``, ``'NaN'``) used to surface Python's ``float('inf')`` /
+    ``float('nan')`` to callers.  SQLite has no special-case for those
+    keywords — they have no leading digit so the numeric prefix is
+    empty, hence ``0.0``.
+
+  * ``CAST('1.5abc' AS REAL)`` and ``CAST('123abc' AS INTEGER)`` used to
+    return ``0.0`` / ``0`` because Python's ``float`` / ``int``
+    rejected the whole string.  SQLite returns ``1.5`` / ``123`` —
+    the valid prefix.
+
+  Subtlety: ``CAST(string AS INTEGER)`` extracts only the *integer*
+  prefix, not the float prefix.  So ``CAST('1.5abc' AS INTEGER)`` is
+  ``1``, not ``1`` from truncating ``1.5`` (it never sees the decimal).
+  ``CAST('1e5' AS INTEGER)`` is also ``1`` — the cast stops at the
+  exponent marker.
+
+  Two new helpers (``_sqlite_str_to_int``, ``_sqlite_str_to_real``)
+  encode the rule via regex prefix matching.  48 unit tests in
+  ``test_cast_numeric_prefix.py``.
+
 ## 1.39.0 — 2026-05-20
 
 ### Fixed
