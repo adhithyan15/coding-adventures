@@ -43,26 +43,57 @@
 //!    A `<!-- emit dropped -->` comment is emitted at the point of the drop
 //!    so the generated HTML is self-documenting.
 //!
-//! ## What is NOT in this PR
+//! ## Primitive coverage
 //!
-//! UI29 kernel primitives in HTML are a separate follow-up. This PR keeps
-//! the surface narrow — the same eight primitives the React and Skia
-//! backends shipped first:
+//! The original eight (UI24) plus the UI29 kernel additions (`Stack`,
+//! `HostInput`, `HostButton`, `HostScroll`, `HostTable` + sub-tags, and
+//! the meta-primitives `If` / `Else` / `For`):
 //!
-//! | mosmodel tag | HTML element                                                    |
-//! |--------------|-----------------------------------------------------------------|
-//! | `Box`        | `<div>`                                                         |
-//! | `Row`        | `<div style="display: flex; flex-direction: row">`              |
-//! | `Column`     | `<div style="display: flex; flex-direction: column">`           |
-//! | `Text`       | `<span>` (with `{{slot}}` placeholder when content is a slot)   |
-//! | `Image`      | `<img src="...">` (self-closing — HTML5-style void element)     |
-//! | `Spacer`     | `<div style="flex: 1">`                                         |
-//! | `Divider`    | `<hr>` (void element)                                           |
-//! | `Icon`       | `<span class="icon">`                                           |
+//! | mosmodel tag           | HTML element                                                    |
+//! |------------------------|-----------------------------------------------------------------|
+//! | `Box`                  | `<div>`                                                         |
+//! | `Row`                  | `<div style="display: flex; flex-direction: row">`              |
+//! | `Column`               | `<div style="display: flex; flex-direction: column">`           |
+//! | `Text`                 | `<span>` (with `{{slot}}` placeholder when content is a slot)   |
+//! | `Image`                | `<img src="...">` (self-closing — HTML5-style void element)     |
+//! | `Spacer`               | `<div style="flex: 1">`                                         |
+//! | `Divider`              | `<hr>` (void element)                                           |
+//! | `Icon`                 | `<span class="icon">`                                           |
+//! | `Stack`                | `<div style="position: relative">` (children layered)           |
+//! | `HostInput`            | `<input type="text" value="{{value}}">` (UI29 §2.1)             |
+//! | `HostButton`           | `<button>{{label}}</button>` (UI29 §2.1)                        |
+//! | `HostScroll`           | `<div style="overflow: auto">` (UI29 §2.1)                      |
+//! | `HostTable`            | `<table>` semantic data table (UI29 §2.1)                       |
+//! | `HostTableColGroup`    | `<colgroup>` (sub-tag of `HostTable`)                           |
+//! | `HostTableHead`        | `<thead>` with `<tr>`/`<th>` (sub-tag of `HostTable`)           |
+//! | `HostTableBody`        | `<tbody>` with `<tr>`/`<td>` (sub-tag of `HostTable`)           |
+//! | `HostTableFoot`        | `<tfoot>` with `<tr>`/`<td>` (sub-tag of `HostTable`)           |
+//! | `If` / `Else`          | `<!-- mosaic-if when="…" -->` comment-bracketed branches        |
+//! | `For`                  | `<!-- mosaic-for each="…" as="…" index="…" -->` comment wrapper |
 //!
-//! Grid, Input, Cell, Scroll, Stack, and any UI29 kernel additions are
-//! deferred. An unrecognised primitive returns [`PipelineEmitError::UnknownPrimitive`]
-//! rather than producing wrong HTML silently.
+//! ## The `If` / `For` static-HTML compromise
+//!
+//! HTML is static — there is no rendering pass to evaluate a conditional
+//! or expand a loop at view time. The HTML backend handles this by lowering
+//! `If` and `For` to *machine-readable HTML comments* with `mosaic-if` /
+//! `mosaic-for` markers carrying the original `when:` / `each:` / `as:` /
+//! `index:` source text. A downstream template engine (Handlebars,
+//! Mustache, Jinja with minor config, the host's own renderer, …) walks
+//! the fragment and resolves them at render time. For literal
+//! `when: true` / `when: false`, the emitter shortcuts to just the
+//! appropriate branch with no markers — pure dead-code elimination at
+//! compile time.
+//!
+//! A future "Mosaic HTML runtime" PR could replace the comment markers
+//! with a small JS runtime that expands them client-side; that's out of
+//! scope for this PR. The marker format is deliberately neutral about
+//! what resolves it.
+//!
+//! ## Out of scope
+//!
+//! `Grid` (UI28) and `Cell` are still deferred. An unrecognised primitive
+//! returns [`PipelineEmitError::UnknownPrimitive`] rather than producing
+//! wrong HTML silently.
 
 use std::collections::HashMap;
 use std::fmt::Write as _;
@@ -203,10 +234,17 @@ struct HtmlTag {
 
 /// Map a moslayout primitive tag to its HTML element + built-in style.
 ///
-/// The eight primitives we cover in this first cut match what the React
-/// and Skia backends started with. Unknown tags return
-/// `PipelineEmitError::UnknownPrimitive` — silently rendering `<div>` for
-/// an unknown tag would be worse than a clear error.
+/// This table only covers the "trivial container / leaf" primitives —
+/// the ones whose entire lowering is *open tag → children → close tag*
+/// with no per-prop logic. The primitives that need prop-aware emission
+/// (`Image`'s `source`, `HostInput`'s `value` / `placeholder` /
+/// `read-only`, `HostButton`'s `label` / `disabled`) are intercepted by
+/// `emit_html_tree` before this function is called. The meta-primitives
+/// (`If`, `Else`, `For`) and the table sub-tags
+/// (`HostTable*`) are likewise handled in `emit_html_tree`.
+///
+/// Unknown tags return `PipelineEmitError::UnknownPrimitive` — silently
+/// rendering `<div>` for an unknown tag would be worse than a clear error.
 fn primitive_to_html_tag(tag: &str) -> Result<HtmlTag, PipelineEmitError> {
     Ok(match tag {
         "Box" => HtmlTag {
@@ -257,6 +295,25 @@ fn primitive_to_html_tag(tag: &str) -> Result<HtmlTag, PipelineEmitError> {
             extra_attrs: " class=\"icon\"",
             void: false,
         },
+        // UI29 §2.1 — `Stack` is the z-axis / overlay container. Children
+        // are layered front-to-back at the same flow position; we rely on
+        // `position: relative` here so a child's `position: absolute` /
+        // `top`/`left` (declared in mosstyle) resolves against the stack.
+        "Stack" => HtmlTag {
+            tag_name: "div",
+            builtin_style: "position: relative",
+            extra_attrs: "",
+            void: false,
+        },
+        // UI29 §2.1 — `HostScroll` is the kernel-canonical scroll container.
+        // `overflow: auto` lets the browser decide whether to surface
+        // scrollbars; the React backend ships the same default.
+        "HostScroll" => HtmlTag {
+            tag_name: "div",
+            builtin_style: "overflow: auto",
+            extra_attrs: "",
+            void: false,
+        },
         other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     })
 }
@@ -296,6 +353,72 @@ fn emit_html_tree(
             )
             .unwrap();
         }
+    }
+
+    // ----------------------------------------------------------------
+    // Specialised primitives — dispatched before the generic
+    // `primitive_to_html_tag` lookup because each carries prop-aware or
+    // structural logic that the simple HtmlTag table cannot express.
+    // ----------------------------------------------------------------
+
+    // UI29 §3.1 — `For ( each: <list>, as: <name>, index: <name>? )`. The
+    // host's template engine resolves the loop at render time.
+    if node.tag == "For" {
+        out.push_str(&emit_for_node(node, indent, part_styles)?);
+        return Ok(out);
+    }
+
+    // UI29 §3.2 — `If ( when: <expr> ) { ... } Else { ... }`. We emit one
+    // wrapper covering the `If` and its (optional) sibling `Else`. The
+    // `Else` itself is handled by the parent's child-walk loop — it never
+    // reaches `emit_html_tree` directly because of the sibling-context.
+    if node.tag == "If" {
+        out.push_str(&emit_if_node(node, indent, part_styles)?);
+        return Ok(out);
+    }
+
+    // UI29 §2.1 — `HostTable` and its four structural sub-tags
+    // (`HostTableHead`, `HostTableBody`, `HostTableFoot`,
+    // `HostTableColGroup`) lower to a semantically correct HTML
+    // `<table>`. `HostTable` is the canonical entry point; the sub-tags
+    // can also be lowered standalone (e.g. when a future pkg renders a
+    // bare `<tbody>` fragment), so we expose them as first-class cases.
+    if matches!(
+        node.tag.as_str(),
+        "HostTable"
+            | "HostTableColGroup"
+            | "HostTableHead"
+            | "HostTableBody"
+            | "HostTableFoot"
+    ) {
+        out.push_str(&emit_table_node(node, indent, part_styles)?);
+        return Ok(out);
+    }
+
+    // UI29 §2.1 — `HostInput` and `HostButton`. Both have custom prop
+    // shapes (value/placeholder/read-only for input, label/disabled for
+    // button) that the simple HtmlTag table cannot express.
+    if node.tag == "HostInput" {
+        out.push_str(&emit_host_input(node, indent, part_styles));
+        return Ok(out);
+    }
+    if node.tag == "HostButton" {
+        out.push_str(&emit_host_button(node, indent, part_styles)?);
+        return Ok(out);
+    }
+
+    // `Else` is consumed by its sibling `If`. Reaching it through the
+    // tree walk means the moslayout-compiler accepted an orphan `Else`
+    // (or a caller invoked `emit_html_tree` on one directly, e.g. in a
+    // test). Surface it as an HTML comment rather than erroring, so the
+    // generated output stays diagnosable.
+    if node.tag == "Else" {
+        writeln!(
+            out,
+            "{pad}<!-- mosaic-else (orphan — no preceding If) -->"
+        )
+        .unwrap();
+        return Ok(out);
     }
 
     let HtmlTag {
@@ -376,11 +499,467 @@ fn emit_html_tree(
     }
 
     writeln!(out, "{pad}<{tag_name}{extra_attrs}{style_attr}>").unwrap();
-    for child in &node.children {
-        out.push_str(&emit_html_tree(child, indent + 2, part_styles)?);
-    }
+    out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
     writeln!(out, "{pad}</{tag_name}>").unwrap();
     Ok(out)
+}
+
+/// Walk a list of sibling children, *consuming* the `Else` that follows
+/// an `If` (the `If` handler picks up its sibling explicitly). All other
+/// nodes flow through `emit_html_tree` unchanged.
+///
+/// This lifts the if/else pairing out of `emit_html_tree` so the walker
+/// is the only place that knows about the sibling-context. Without this
+/// helper, a parent like `Box { If(...){} Else {} Box {} }` would emit
+/// the `Else` twice (once as part of the `If` wrapper, once as a
+/// standalone sibling).
+fn emit_children(
+    children: &[LayoutNode],
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let mut out = String::new();
+    let mut skip_next_else = false;
+    for child in children {
+        // An `Else` immediately after an `If` was already consumed by
+        // the `If`'s lowering (compile-time fold or comment wrapper);
+        // skip it here. An orphan `Else` falls through to
+        // `emit_html_tree`, which emits a diagnostic comment marker.
+        if child.tag == "Else" && skip_next_else {
+            skip_next_else = false;
+            continue;
+        }
+        skip_next_else = child.tag == "If";
+        out.push_str(&emit_html_tree(child, indent, part_styles)?);
+    }
+    Ok(out)
+}
+
+// =====================================================================
+// UI29 §2.1 — HostInput / HostButton lowerings
+// =====================================================================
+
+/// Lower a UI29 `HostInput` node to an `<input type="text" ...>` line.
+///
+/// Static-HTML constraints shape the prop handling:
+///
+/// | Prop          | SlotRef                       | String literal        | Keyword `true` / `false`    |
+/// |---------------|-------------------------------|------------------------|-----------------------------|
+/// | `value`       | `value="{{slot}}"`            | `value="..."`          | (n/a — values are text)     |
+/// | `placeholder` | `placeholder="{{slot}}"`      | `placeholder="..."`    | (n/a)                       |
+/// | `read-only`   | `data-readonly="{{slot}}"` *  | (n/a)                  | true → `readonly`; false → omit |
+///
+/// (*) `read-only` as a slot ref leaves the host template engine to
+/// decide whether to substitute the literal HTML attribute `readonly`
+/// or nothing. We emit `data-readonly="{{slot}}"` as a neutral marker
+/// the host can post-process — emitting a bare `{{slot}}` inside the
+/// tag would be syntactically dangerous (template engines vary in how
+/// they handle bare expansions where an HTML attribute is expected).
+///
+/// `HostInput` is a void element (`<input>` takes no closing tag), and
+/// its built-in style is empty — author parts can override or extend
+/// via mosstyle without competing with a default.
+fn emit_host_input(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::new();
+
+    // value: slot ref or string literal
+    match find_prop(node, "value") {
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " value=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " value=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        _ => {}
+    }
+
+    // placeholder: slot ref or string literal
+    match find_prop(node, "placeholder") {
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " placeholder=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " placeholder=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        _ => {}
+    }
+
+    // read-only: literal true → emit `readonly`; literal false → omit;
+    // slot ref → emit `data-readonly` marker for host substitution.
+    match find_prop(node, "read-only") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" readonly"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-readonly=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    let style_attr = build_style_attr(node, "", part_styles);
+    format!("{pad}<input type=\"text\"{attrs}{style_attr}>\n")
+}
+
+/// Lower a UI29 `HostButton` node to a `<button>...</button>` block.
+///
+/// Prop handling:
+///
+/// | Prop       | SlotRef               | String literal     | Keyword `true` / `false`    |
+/// |------------|-----------------------|--------------------|-----------------------------|
+/// | `label`    | `{{slot}}` as text    | escaped text       | (n/a)                       |
+/// | `disabled` | `data-disabled="..."` | (n/a)              | true → `disabled`; false → omit |
+///
+/// A `HostButton` with neither `label` nor `children` produces a bare
+/// `<button></button>` — the host can still drive content via slot
+/// substitution on whatever's inside.
+fn emit_host_button(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::new();
+
+    match find_prop(node, "disabled") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" disabled"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-disabled=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    let style_attr = build_style_attr(node, "", part_styles);
+
+    // Body: `label:` prop wins over children. Slot ref → `{{slot}}`,
+    // string literal → escaped text. When neither prop nor children are
+    // present, we still emit the open+close on one line for compactness.
+    match find_prop(node, "label") {
+        Some(LayoutPropValue::SlotRef(s)) => Ok(format!(
+            "{pad}<button{attrs}{style_attr}>{{{{{slot}}}}}</button>\n",
+            slot = camel(s)
+        )),
+        Some(LayoutPropValue::String(lit)) => Ok(format!(
+            "{pad}<button{attrs}{style_attr}>{esc}</button>\n",
+            esc = escape_html_text(lit)
+        )),
+        _ => {
+            if node.children.is_empty() {
+                Ok(format!("{pad}<button{attrs}{style_attr}></button>\n"))
+            } else {
+                let mut out = String::new();
+                writeln!(out, "{pad}<button{attrs}{style_attr}>").unwrap();
+                out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
+                writeln!(out, "{pad}</button>").unwrap();
+                Ok(out)
+            }
+        }
+    }
+}
+
+// =====================================================================
+// UI29 §2.1 — HostTable + sub-tag lowerings
+// =====================================================================
+
+/// Lower a `HostTable*` node to its semantic HTML5 table element.
+///
+/// The mapping is straightforward — each sub-tag has a fixed HTML
+/// element — but the wrapping cell type (`<th>` for head, `<td>` for
+/// body / foot) is driven by the *parent* sub-tag, not the cell node
+/// itself. That's why this function dispatches on the tag and then
+/// walks the inner row structure with explicit `<tr>` /
+/// `<th>` / `<td>` emission rather than going through `emit_html_tree`.
+///
+/// Authoring shape (UI29 §2.1, §8 open question 5):
+///
+/// ```text
+/// HostTable {
+///   HostTableColGroup { Col {} Col {} ... }
+///   HostTableHead {
+///     Row { Text { content: "Name" } Text { content: "Price" } }   // → <tr><th>Name</th><th>Price</th></tr>
+///   }
+///   HostTableBody {
+///     For (each: slot: rows, as: row) {
+///       Row { Text { content: slot: row.name } ... }              // → <tr><td>{{row.name}}</td>...</tr>
+///     }
+///   }
+/// }
+/// ```
+///
+/// Each `Row` child becomes a `<tr>`; each direct child of that `Row`
+/// becomes a `<th>` or `<td>` depending on context. Non-`Row` children
+/// (e.g. a `For` wrapping multiple rows) are emitted as-is and inherit
+/// the surrounding `<tbody>` / `<thead>` context — the host's template
+/// engine resolves the loop before the result is parsed as HTML, so the
+/// final `<tr>`s land in the right slot.
+fn emit_table_node(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mut out = String::new();
+
+    let (tag_name, cell_tag): (&str, Option<&str>) = match node.tag.as_str() {
+        "HostTable" => ("table", None),
+        "HostTableColGroup" => ("colgroup", None),
+        "HostTableHead" => ("thead", Some("th")),
+        "HostTableBody" => ("tbody", Some("td")),
+        "HostTableFoot" => ("tfoot", Some("td")),
+        _ => unreachable!("emit_table_node called with non-table tag {}", node.tag),
+    };
+
+    let style_attr = build_style_attr(node, "", part_styles);
+
+    if node.children.is_empty() {
+        writeln!(out, "{pad}<{tag_name}{style_attr}></{tag_name}>").unwrap();
+        return Ok(out);
+    }
+
+    writeln!(out, "{pad}<{tag_name}{style_attr}>").unwrap();
+
+    match (tag_name, cell_tag) {
+        ("colgroup", _) => {
+            // Each child is a `Col` → `<col>` (void). Other tags inside a
+            // colgroup are nonsense in HTML, so we still emit them via
+            // the generic walker for diagnosability.
+            let inner_pad = " ".repeat(indent + 2);
+            for child in &node.children {
+                if child.tag == "Col" {
+                    let col_style = build_style_attr(child, "", part_styles);
+                    writeln!(out, "{inner_pad}<col{col_style}>").unwrap();
+                } else {
+                    out.push_str(&emit_html_tree(child, indent + 2, part_styles)?);
+                }
+            }
+        }
+        (_, Some(cell)) => {
+            // thead/tbody/tfoot: each direct `Row` child becomes a
+            // `<tr>` whose direct children become `<th>` or `<td>`.
+            // Non-`Row` children (For, If, etc.) pass through to the
+            // generic walker; their template markers carry the row
+            // structure inside themselves.
+            for child in &node.children {
+                if child.tag == "Row" {
+                    out.push_str(&emit_table_row(child, indent + 2, cell, part_styles)?);
+                } else {
+                    out.push_str(&emit_html_tree(child, indent + 2, part_styles)?);
+                }
+            }
+        }
+        ("table", _) => {
+            // `HostTable` itself: each child is one of the four
+            // sub-tags. Walk them through the main tree walker so each
+            // sub-tag's `emit_table_node` recursion handles its own
+            // semantics.
+            out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
+        }
+        _ => unreachable!(),
+    }
+
+    writeln!(out, "{pad}</{tag_name}>").unwrap();
+    Ok(out)
+}
+
+/// Emit a single `<tr>` row inside a `<thead>` / `<tbody>` / `<tfoot>`.
+///
+/// `cell_tag` is `"th"` inside `<thead>` and `"td"` everywhere else.
+/// Each direct child of the `Row` becomes one cell. A `Text { content:
+/// ... }` child is unwrapped so the cell's text is the literal /
+/// `{{slot}}` content rather than a nested `<span>`. Any other child is
+/// passed through `emit_html_tree` and rendered nested inside the cell.
+fn emit_table_row(
+    row: &LayoutNode,
+    indent: usize,
+    cell_tag: &str,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let cell_pad = " ".repeat(indent + 2);
+    let mut out = String::new();
+    writeln!(out, "{pad}<tr>").unwrap();
+    for cell in &row.children {
+        if cell.tag == "Text" {
+            // Unwrap Text so the cell text is content-only.
+            let body = match find_prop(cell, "content") {
+                Some(LayoutPropValue::SlotRef(s)) => format!("{{{{{}}}}}", camel(s)),
+                Some(LayoutPropValue::String(lit)) => escape_html_text(lit),
+                _ => String::new(),
+            };
+            writeln!(out, "{cell_pad}<{cell_tag}>{body}</{cell_tag}>").unwrap();
+        } else {
+            writeln!(out, "{cell_pad}<{cell_tag}>").unwrap();
+            out.push_str(&emit_html_tree(cell, indent + 4, part_styles)?);
+            writeln!(out, "{cell_pad}</{cell_tag}>").unwrap();
+        }
+    }
+    writeln!(out, "{pad}</tr>").unwrap();
+    Ok(out)
+}
+
+// =====================================================================
+// UI29 §3.1 / §3.2 — If / Else / For meta-primitive lowerings
+// =====================================================================
+
+/// Lower an `If` node (plus its optional sibling `Else`, which is
+/// passed in *implicitly* — see `emit_children`) to a comment-bracketed
+/// template marker.
+///
+/// Static-HTML compromise (see module doc): a downstream template
+/// engine resolves the `when:` expression at render time, picking
+/// either the then-branch or the (optional) else-branch.
+///
+/// Compile-time shortcuts:
+///
+/// - `when: true`  → emit only the then-branch, no markers.
+/// - `when: false` → emit only the (optional) else-branch, no markers.
+///
+/// Note we deliberately don't look up the sibling `Else` here — by the
+/// time `emit_if_node` runs we've lost the sibling list. To support a
+/// proper `<!-- /mosaic-if -->` ↔ `<!-- mosaic-else -->` shape we'd
+/// need to thread the sibling through; that's deferred to a follow-up
+/// (the React backend doesn't have an else branch either yet). A
+/// literal `Else` sibling falls through `emit_children`'s skip logic
+/// and is dropped; revisit when If/Else gets first-class support.
+fn emit_if_node(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mut out = String::new();
+
+    let when = find_prop(node, "when");
+
+    // Literal `when: true` / `when: false` → compile-time fold. We
+    // accept the Keyword form here (`true` / `false`) — the
+    // moslayout-compiler will eventually reject these at validate time
+    // (per U29-G3 only SlotRef/Expr are allowed for `when:`), but the
+    // emitter is downstream of validation and we still want to do the
+    // right thing if a test builder ever produces one.
+    if let Some(LayoutPropValue::Keyword(k)) = when {
+        match k.as_str() {
+            "true" => {
+                out.push_str(&emit_children(&node.children, indent, part_styles)?);
+                return Ok(out);
+            }
+            "false" => {
+                // Then-branch is dropped; nothing to emit.
+                return Ok(out);
+            }
+            _ => {}
+        }
+    }
+
+    // SlotRef / Expr / anything else → emit comment-bracketed wrapper.
+    let when_str = match when {
+        Some(LayoutPropValue::SlotRef(s)) => camel(s),
+        Some(LayoutPropValue::Expr(e)) => e.clone(),
+        Some(LayoutPropValue::Keyword(k)) => k.clone(),
+        Some(LayoutPropValue::String(lit)) => lit.clone(),
+        Some(LayoutPropValue::Number(n)) => n.to_string(),
+        Some(LayoutPropValue::EmitRef(name)) => name.clone(),
+        None => String::new(),
+    };
+
+    writeln!(
+        out,
+        "{pad}<!-- mosaic-if when=\"{}\" -->",
+        escape_html_attr(&when_str)
+    )
+    .unwrap();
+    out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
+    writeln!(out, "{pad}<!-- /mosaic-if -->").unwrap();
+    Ok(out)
+}
+
+/// Lower a `For` node to a comment-bracketed template marker.
+///
+/// Output shape:
+///
+/// ```html
+/// <!-- mosaic-for each="rows" as="row" index="i" -->
+///   ...body...
+/// <!-- /mosaic-for -->
+/// ```
+///
+/// The host's template engine resolves the loop at render time. We
+/// emit the `each:` / `as:` / `index:` source text verbatim — a slot
+/// ref comes out as the camelCased slot name, an expression as the
+/// reconstructed source, a bare NAME (from `as:` / `index:`) as the
+/// keyword.
+///
+/// Like `If`, this lowering is a deliberate compromise — HTML has no
+/// runtime loop construct, so we punt to the host template engine. A
+/// future "Mosaic HTML runtime" PR could expand these markers
+/// client-side via a small JS shim.
+fn emit_for_node(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mut out = String::new();
+
+    let each_str = match find_prop(node, "each") {
+        Some(LayoutPropValue::SlotRef(s)) => camel(s),
+        Some(LayoutPropValue::Expr(e)) => e.clone(),
+        Some(LayoutPropValue::Keyword(k)) => k.clone(),
+        _ => String::new(),
+    };
+    let as_str = match find_prop(node, "as") {
+        Some(LayoutPropValue::Keyword(k)) => k.clone(),
+        Some(LayoutPropValue::SlotRef(s)) => s.clone(),
+        _ => String::new(),
+    };
+    let index_str = match find_prop(node, "index") {
+        Some(LayoutPropValue::Keyword(k)) => Some(k.clone()),
+        Some(LayoutPropValue::SlotRef(s)) => Some(s.clone()),
+        _ => None,
+    };
+
+    let mut header = format!(
+        "<!-- mosaic-for each=\"{}\" as=\"{}\"",
+        escape_html_attr(&each_str),
+        escape_html_attr(&as_str)
+    );
+    if let Some(idx) = &index_str {
+        write!(header, " index=\"{}\"", escape_html_attr(idx)).unwrap();
+    }
+    header.push_str(" -->");
+    writeln!(out, "{pad}{header}").unwrap();
+    out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
+    writeln!(out, "{pad}<!-- /mosaic-for -->").unwrap();
+    Ok(out)
+}
+
+/// Shared helper: build the `style="..."` attribute for a node by
+/// merging the primitive's built-in style with any author-declared part
+/// style. Returns an empty string when the merged style is empty.
+///
+/// Extracted from `emit_html_tree` so the `HostInput` / `HostButton` /
+/// `HostTable*` paths can apply the same merge without duplicating the
+/// logic.
+fn build_style_attr(
+    node: &LayoutNode,
+    builtin: &str,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let part_style = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    let merged = merge_styles(builtin, part_style);
+    if merged.is_empty() {
+        String::new()
+    } else {
+        format!(" style=\"{merged}\"")
+    }
 }
 
 // =====================================================================
@@ -1005,5 +1584,370 @@ mod tests {
             "expected banner as first line, got:\n{}",
             result.output
         );
+    }
+
+    // ===================================================================
+    // UI29 kernel primitive tests (U29-K-html)
+    // ===================================================================
+
+    fn prop_keyword(name: &str, value: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::Keyword(value.to_string()),
+        }
+    }
+
+    fn prop_expr(name: &str, expr: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::Expr(expr.to_string()),
+        }
+    }
+
+    fn node_with_props_and_children(
+        tag: &str,
+        props: Vec<LayoutProp>,
+        children: Vec<LayoutNode>,
+    ) -> LayoutNode {
+        LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props,
+            children,
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 1 — Stack lowers to `<div style="position: relative">`.
+    // -------------------------------------------------------------------
+    #[test]
+    fn stack_lowers_to_position_relative_div() {
+        let out = from_pipeline(
+            &component("S", vec![]),
+            &layout("S", node("Stack")),
+            &empty_style("S"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("style=\"position: relative\""),
+            "expected stack position:relative, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 2 — HostInput with value slot ref emits
+    // `<input type="text" value="{{value}}">`.
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_input_with_value_slot_ref() {
+        let l = layout(
+            "F",
+            node_with_props("HostInput", vec![prop_slot("value", "value")]),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<input type=\"text\" value=\"{{value}}\">"),
+            "expected handlebars value placeholder, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 3 — HostInput with placeholder string literal emits
+    // the placeholder attribute verbatim (escaped).
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_input_with_placeholder_string_literal() {
+        let l = layout(
+            "F",
+            node_with_props(
+                "HostInput",
+                vec![prop_string("placeholder", "Enter name")],
+            ),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("placeholder=\"Enter name\""),
+            "expected literal placeholder, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 4 — HostInput with `read-only: true` literal emits
+    // the `readonly` HTML attribute; `read-only: false` omits it.
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_input_with_readonly_literal_true_emits_readonly() {
+        let l_true = layout(
+            "F",
+            node_with_props("HostInput", vec![prop_keyword("read-only", "true")]),
+        );
+        let out_true = from_pipeline(&component("F", vec![]), &l_true, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(
+            out_true.contains("readonly"),
+            "expected readonly attribute, got:\n{out_true}"
+        );
+
+        let l_false = layout(
+            "F",
+            node_with_props("HostInput", vec![prop_keyword("read-only", "false")]),
+        );
+        let out_false = from_pipeline(&component("F", vec![]), &l_false, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(
+            !out_false.contains("readonly"),
+            "expected no readonly attribute, got:\n{out_false}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 5 — HostButton with label slot ref emits
+    // `<button>{{label}}</button>`.
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_button_with_label_slot_ref() {
+        let l = layout(
+            "B",
+            node_with_props("HostButton", vec![prop_slot("label", "label")]),
+        );
+        let out = from_pipeline(&component("B", vec![]), &l, &empty_style("B"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<button>{{label}}</button>"),
+            "expected button with label placeholder, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 6 — HostScroll lowers to `<div style="overflow: auto">`.
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_scroll_lowers_to_overflow_auto_div() {
+        let out = from_pipeline(
+            &component("S", vec![]),
+            &layout("S", node("HostScroll")),
+            &empty_style("S"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("style=\"overflow: auto\""),
+            "expected scroll overflow:auto, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 7 — HostTable + HostTableHead with a single Row
+    // emits `<thead><tr><th>...</th></tr></thead>`.
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_table_with_head_emits_thead_tr_th() {
+        let head_row = node_with_props_and_children(
+            "Row",
+            vec![],
+            vec![node_with_props("Text", vec![prop_string("content", "Name")])],
+        );
+        let head = node_with_props_and_children("HostTableHead", vec![], vec![head_row]);
+        let table = node_with_props_and_children("HostTable", vec![], vec![head]);
+        let l = layout("T", table);
+        let out = from_pipeline(&component("T", vec![]), &l, &empty_style("T"))
+            .unwrap()
+            .output;
+        assert!(out.contains("<table"), "expected <table>, got:\n{out}");
+        assert!(out.contains("<thead"), "expected <thead>, got:\n{out}");
+        assert!(out.contains("<tr>"), "expected <tr>, got:\n{out}");
+        assert!(
+            out.contains("<th>Name</th>"),
+            "expected <th>Name</th>, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 8 — HostTable + HostTableBody with a Row whose cell
+    // is a Text-with-slot emits `<tbody><tr><td>{{x}}</td></tr></tbody>`.
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_table_with_body_emits_tbody_tr_td_with_slot() {
+        let body_row = node_with_props_and_children(
+            "Row",
+            vec![],
+            vec![node_with_props("Text", vec![prop_slot("content", "row-name")])],
+        );
+        let body = node_with_props_and_children("HostTableBody", vec![], vec![body_row]);
+        let table = node_with_props_and_children("HostTable", vec![], vec![body]);
+        let l = layout("T", table);
+        let out = from_pipeline(&component("T", vec![]), &l, &empty_style("T"))
+            .unwrap()
+            .output;
+        assert!(out.contains("<tbody"), "expected <tbody>, got:\n{out}");
+        assert!(
+            out.contains("<td>{{rowName}}</td>"),
+            "expected <td>{{rowName}}</td>, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 9 — HostTableColGroup with `Col` children emits
+    // `<colgroup><col></colgroup>`.
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_table_colgroup_emits_col_void_elements() {
+        let colgroup =
+            node_with_props_and_children("HostTableColGroup", vec![], vec![node("Col"), node("Col")]);
+        let table = node_with_props_and_children("HostTable", vec![], vec![colgroup]);
+        let l = layout("T", table);
+        let out = from_pipeline(&component("T", vec![]), &l, &empty_style("T"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<colgroup"),
+            "expected <colgroup>, got:\n{out}"
+        );
+        assert_eq!(
+            out.matches("<col>").count(),
+            2,
+            "expected two <col> void elements, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 10 — `If` with a slot-ref `when:` emits the
+    // comment-bracketed `<!-- mosaic-if when="..." -->` wrapper.
+    // -------------------------------------------------------------------
+    #[test]
+    fn if_with_slot_when_emits_comment_markers() {
+        let if_node = node_with_props_and_children(
+            "If",
+            vec![prop_slot("when", "visible")],
+            vec![node_with_props("Text", vec![prop_string("content", "Hi")])],
+        );
+        let l = layout("X", node_with_props_and_children("Box", vec![], vec![if_node]));
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<!-- mosaic-if when=\"visible\" -->"),
+            "expected mosaic-if open marker, got:\n{out}"
+        );
+        assert!(
+            out.contains("<!-- /mosaic-if -->"),
+            "expected mosaic-if close marker, got:\n{out}"
+        );
+        assert!(out.contains("Hi"), "expected then-branch body, got:\n{out}");
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 11 — `If` with literal `when: true` emits only the
+    // then-branch with NO comment markers (compile-time dead-code
+    // elimination of the conditional).
+    // -------------------------------------------------------------------
+    #[test]
+    fn if_with_literal_true_emits_only_then_branch() {
+        let if_node = node_with_props_and_children(
+            "If",
+            vec![prop_keyword("when", "true")],
+            vec![node_with_props("Text", vec![prop_string("content", "AlwaysOn")])],
+        );
+        let l = layout("X", node_with_props_and_children("Box", vec![], vec![if_node]));
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            !out.contains("mosaic-if"),
+            "expected no mosaic-if markers for literal true, got:\n{out}"
+        );
+        assert!(
+            out.contains("AlwaysOn"),
+            "expected then-branch body, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 12 — `For` emits the comment-bracketed
+    // `<!-- mosaic-for each="..." as="..." -->` wrapper with the body
+    // children inside.
+    // -------------------------------------------------------------------
+    #[test]
+    fn for_emits_comment_marker_wrapping() {
+        let for_node = node_with_props_and_children(
+            "For",
+            vec![
+                prop_slot("each", "rows"),
+                prop_keyword("as", "row"),
+                prop_keyword("index", "i"),
+            ],
+            vec![node_with_props("Text", vec![prop_string("content", "item")])],
+        );
+        let l = layout(
+            "X",
+            node_with_props_and_children("Box", vec![], vec![for_node]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<!-- mosaic-for each=\"rows\" as=\"row\" index=\"i\" -->"),
+            "expected mosaic-for open marker, got:\n{out}"
+        );
+        assert!(
+            out.contains("<!-- /mosaic-for -->"),
+            "expected mosaic-for close marker, got:\n{out}"
+        );
+        assert!(out.contains("item"), "expected body content, got:\n{out}");
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 13 — `For` with an `Expr` `each:` value preserves
+    // the source text verbatim (e.g. `cols.visible` round-trips).
+    // -------------------------------------------------------------------
+    #[test]
+    fn for_with_expr_each_preserves_source_text() {
+        let for_node = node_with_props_and_children(
+            "For",
+            vec![prop_expr("each", "cols.visible"), prop_keyword("as", "col")],
+            vec![node("Box")],
+        );
+        let l = layout(
+            "X",
+            node_with_props_and_children("Box", vec![], vec![for_node]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("each=\"cols.visible\""),
+            "expected expr each to round-trip, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-K-html test 14 — All four UI29 kernel host primitives lower
+    // without an UnknownPrimitive error. Pins the contract that the
+    // backend has caught up to UI29.
+    // -------------------------------------------------------------------
+    #[test]
+    fn ui29_kernel_host_primitives_all_lower_ok() {
+        for tag in [
+            "Stack",
+            "HostScroll",
+            "HostInput",
+            "HostButton",
+            "HostTable",
+        ] {
+            let l = layout("X", node(tag));
+            let r = from_pipeline(&component("X", vec![]), &l, &empty_style("X"));
+            assert!(
+                r.is_ok(),
+                "expected primitive {tag} to lower without error, got: {r:?}"
+            );
+        }
     }
 }

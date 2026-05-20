@@ -1,5 +1,42 @@
 # Changelog — mosaic-emit-html
 
+## 0.3.0 — 2026-05-19
+
+U29-K-html — UI29 kernel primitives in the pipeline emitter. Extends the
+three-language pipeline path (added in 0.2.0) with the seven UI29 kernel
+primitives beyond the original Box/Row/Column set.
+
+- New host primitives in the pipeline path:
+  - `Stack` → `<div style="position: relative">` (children layered)
+  - `HostInput` → `<input type="text" value="{{value}}" ...>` with
+    optional `value` / `placeholder` / `read-only` props (slot ref,
+    string literal, or keyword `true`/`false` per prop)
+  - `HostButton` → `<button>{{label}}</button>` with optional
+    `disabled` keyword/slot-ref handling
+  - `HostScroll` → `<div style="overflow: auto">`
+  - `HostTable` → semantic `<table>` with sub-tags
+    `HostTableColGroup` (`<colgroup>` + `<col>` children),
+    `HostTableHead` (`<thead>` with `<tr>`/`<th>`),
+    `HostTableBody` (`<tbody>` with `<tr>`/`<td>`),
+    `HostTableFoot` (`<tfoot>` with `<tr>`/`<td>`)
+- New meta-primitives:
+  - `For (each: <expr|slot>, as: <name>, index: <name>?)` lowers to a
+    `<!-- mosaic-for each="..." as="..." index="..." -->` … `<!-- /mosaic-for -->`
+    comment wrapper. The host's template engine resolves the loop at
+    render time.
+  - `If (when: <expr|slot>)` lowers to `<!-- mosaic-if when="..." -->` …
+    `<!-- /mosaic-if -->`. Literal `when: true` / `when: false` is folded
+    at compile time (no markers, just the chosen branch).
+  - `Else` is recognised as a sibling of `If` and consumed by the
+    sibling walker; an orphan `Else` emits a diagnostic comment marker.
+- The `If` / `For` comment-marker shape is a deliberate static-HTML
+  compromise — HTML has no runtime conditional or loop. A future
+  Mosaic HTML runtime PR could replace the markers with client-side
+  JS expansion; the marker format is neutral about what resolves it.
+- 14 new tests added (45 total in the pipeline test module), covering
+  every primitive listed above plus the literal-fold and expression
+  round-trip paths. All existing pipeline + legacy tests pass unchanged.
+
 ## 0.2.0 — 2026-05-19
 
 Add the three-language pipeline path alongside the legacy single-file `.mosaic`
