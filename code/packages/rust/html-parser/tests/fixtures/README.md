@@ -99,3 +99,13 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_text_contr
 python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_text_control_audit_fixture.py \
   --check
 ```
+
+`whatwg-foreign-audit.json` is a generated index over tree-construction cases
+that stress SVG, MathML, foreign-content fragments, HTML integration points,
+and table/foreign-content boundaries:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_foreign_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_foreign_audit_fixture.py \
+  --check
+```

@@ -24,9 +24,12 @@ documented in this file.
   title/textarea RCDATA, RAWTEXT elements, noscript, PLAINTEXT, pre/listing,
   fragment-context, and stray text-control end-tag cases, with a dedicated
   parser regression test.
+- Generated WHATWG foreign-content audit fixture over html5lib SVG, MathML,
+  foreign fragment, HTML integration point, and table/foreign-boundary cases,
+  with a dedicated parser regression test.
 - Shared html5lib tree-construction test helpers keep smoke and focused
-  tree-insertion, frameset, table, form/interactive, and text-control audit
-  checks on the same parser and DOM dump path.
+  tree-insertion, frameset, table, form/interactive, text-control, and
+  foreign-content audit checks on the same parser and DOM dump path.
 - The html5lib source-coverage audit now has a checked JSON report plus
   `--write-report` and `--check-report` modes for parser/tokenizer fixture
   drift detection.
