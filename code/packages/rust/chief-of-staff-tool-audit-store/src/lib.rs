@@ -716,6 +716,21 @@ impl ToolAuditSupervisorDrainPlanSummary {
         self.pages.len()
     }
 
+    /// Return how many requested planning ticks were not needed.
+    pub fn remaining_tick_budget(&self) -> usize {
+        self.max_ticks.saturating_sub(self.page_count())
+    }
+
+    /// Return whether the plan consumed every requested planning tick.
+    pub fn used_all_ticks(&self) -> bool {
+        self.remaining_tick_budget() == 0
+    }
+
+    /// Return whether more planning ticks were available when planning stopped.
+    pub fn has_remaining_tick_budget(&self) -> bool {
+        self.remaining_tick_budget() > 0
+    }
+
     /// Return whether no rows are waiting in the planned run.
     pub fn is_idle(&self) -> bool {
         self.planned_records == 0
@@ -2992,6 +3007,9 @@ mod tests {
         assert_eq!(plan.max_records_per_tick, 2);
         assert_eq!(plan.max_ticks, 2);
         assert_eq!(plan.page_count(), 2);
+        assert_eq!(plan.remaining_tick_budget(), 0);
+        assert!(plan.used_all_ticks());
+        assert!(!plan.has_remaining_tick_budget());
         assert_eq!(plan.planned_records, 4);
         assert_eq!(plan.inventory.total_records, 4);
         assert_eq!(plan.inventory.failed_records, 1);
@@ -3044,6 +3062,9 @@ mod tests {
             .unwrap();
 
         assert_eq!(plan.page_count(), 3);
+        assert_eq!(plan.remaining_tick_budget(), 0);
+        assert!(plan.used_all_ticks());
+        assert!(!plan.has_remaining_tick_budget());
         assert_eq!(plan.planned_records, 4);
         assert!(plan.reached_end_of_log());
         assert!(!plan.exhausted_tick_budget());
@@ -3065,6 +3086,9 @@ mod tests {
             .unwrap();
 
         assert_eq!(plan.page_count(), 1);
+        assert_eq!(plan.remaining_tick_budget(), 2);
+        assert!(!plan.used_all_ticks());
+        assert!(plan.has_remaining_tick_budget());
         assert_eq!(plan.planned_records, 0);
         assert!(plan.is_idle());
         assert!(!plan.has_pending_records());
