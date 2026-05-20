@@ -13,6 +13,7 @@ readme = "README.md"
 keywords = ["cas", "summation", "series", "symbolic", "education"]
 dependencies = [
     "coding-adventures-symbolic-ir>=0.12.0",
+    "coding-adventures-cas-substitution>=0.1.0",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
