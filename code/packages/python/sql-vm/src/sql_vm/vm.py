@@ -315,6 +315,15 @@ class _VmState:
     # sets the top to True; JoinIfMatched pops and conditionally jumps.
     # The stack depth equals the number of currently-open outer-join levels.
     join_match_stack: list[bool] = field(default_factory=list)
+    # Cursor column schema cache.  Populated at OpenScan time when the
+    # backend exposes a ``columns()`` method, and lazily by ``_do_advance``
+    # the first time a cursor produces a row (covering subquery / derived-
+    # table cursors that don't go through OpenScan).  Used by
+    # ``_do_scan_all_columns`` to NULL-pad ``SELECT *`` when the cursor has
+    # no current row (e.g. the unmatched-row path of a LEFT JOIN), so the
+    # output row width matches what real SQLite would produce instead of
+    # silently truncating to the matched columns only.
+    cursor_schema: dict[int, list[str]] = field(default_factory=dict)
     # INSERT … RETURNING support — the most recently inserted row is saved here
     # by ``_do_insert`` so that ``LoadLastInsertedColumn`` can read it back.
     # Keyed by column name; empty dict when no INSERT has been executed yet.
@@ -1177,6 +1186,18 @@ def _do_open(ins: OpenScan, st: _VmState) -> None:
     # Record the first scan's table for QueryEvent telemetry.
     if not st.scan_table:
         st.scan_table = ins.table
+    # Cache the cursor's column schema for ``SELECT *`` NULL-padding.
+    # Used by ``_do_scan_all_columns`` when the cursor has no current row
+    # (e.g. the unmatched-row path of a LEFT JOIN).  We probe ``columns()``
+    # defensively because some backends may not implement it; the lazy
+    # cache in ``_do_advance`` covers the gap.
+    try:
+        col_defs = st.backend.columns(ins.table)
+        st.cursor_schema[ins.cursor_id] = [
+            cd.name for cd in col_defs if not cd.name.startswith("\x00")
+        ]
+    except (AttributeError, be.BackendError, NotImplementedError):
+        pass
 
 
 def _do_advance(ins: AdvanceCursor, st: _VmState) -> None:
@@ -1190,6 +1211,15 @@ def _do_advance(ins: AdvanceCursor, st: _VmState) -> None:
     else:
         st.current_row[ins.cursor_id] = row
         st.rows_scanned += 1
+        # Lazy schema cache for cursors that didn't go through OpenScan
+        # (subquery results, working-set scans, derived tables).  Snapshot
+        # the visible column names the first time we see a row so that the
+        # NULL-padding path in ``_do_scan_all_columns`` has something to
+        # work with even after the cursor exhausts.
+        if ins.cursor_id not in st.cursor_schema:
+            st.cursor_schema[ins.cursor_id] = [
+                k for k in row if not k.startswith("\x00")
+            ]
 
 
 def _do_close(ins: CloseScan, st: _VmState) -> None:
@@ -1197,6 +1227,12 @@ def _do_close(ins: CloseScan, st: _VmState) -> None:
     if cursor is not None:
         cursor.close()
     st.current_row.pop(ins.cursor_id, None)
+    # Keep cursor_schema around — for a LEFT JOIN the right-side cursor is
+    # closed at the end of the inner loop, but the outer body's
+    # ``ScanAllColumns`` for the null-padded path may still reference the
+    # cursor's column count.  The mapping is small and freshly overwritten
+    # on the next OpenScan with the same cursor_id, so leaving stale
+    # entries is safe.
 
 
 def _do_scan_all_columns(ins: ScanAllColumns, st: _VmState) -> None:
@@ -1212,9 +1248,29 @@ def _do_scan_all_columns(ins: ScanAllColumns, st: _VmState) -> None:
     never leaks into query results.  ``SELECT *`` does not include implicit
     rowid columns — this matches real SQLite behaviour; ``SELECT rowid, *``
     adds it explicitly via a ``RowIdRef`` in the projection.
+
+    Null-padding for missing rows
+    -----------------------------
+    When the cursor has no current row (e.g. the unmatched-row path of a
+    LEFT OUTER JOIN, where the right cursor never produced a value for
+    this iteration), we still need to emit one column per known schema
+    entry so that ``SELECT *`` output has a consistent width.  The schema
+    is cached on ``st.cursor_schema`` at OpenScan time (and lazily when
+    the cursor first produces a row), so we can NULL-pad without knowing
+    the table layout here.  If the schema is unavailable (e.g. backend
+    has no ``columns()`` and the cursor never produced a row), we leave
+    the row buffer untouched — matching the pre-fix behaviour.
     """
     row = st.current_row.get(ins.cursor_id)
     if row is None:
+        # Null-pad using the cached schema if we have one.
+        schema = st.cursor_schema.get(ins.cursor_id)
+        if not schema:
+            return
+        for _ in schema:
+            st.row_buffer.append(None)
+        if not st.result.columns:
+            st.result.columns = tuple(schema)
         return
     visible = [(k, v) for k, v in row.items() if not k.startswith("\x00")]
     for _col, value in visible:

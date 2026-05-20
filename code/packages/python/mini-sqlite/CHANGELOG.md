@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.54.0] - 2026-05-19
+
+### Fixed
+
+- **LEFT JOIN + ``SELECT *`` now NULL-pads unmatched rows correctly**
+  (via ``sql-vm 1.34.0``).  Follow-up to PR #3605 which fixed the
+  matched-row column count but left unmatched rows truncated.
+
+  Before::
+
+      SELECT * FROM a LEFT JOIN b ON a.id = b.id
+      -- mini-sqlite (matched row):   (1, 'x', 1, 100)   ✓
+      -- mini-sqlite (unmatched row): (2, 'y')           ✗ missing right cols
+      -- real SQLite:                 (2, 'y', None, None)
+
+  Now mini-sqlite returns the same NULL-padded row width as SQLite for
+  every LEFT JOIN form: matched rows, unmatched rows, derived-table
+  right sides, CTE right sides, and the cross-join + LEFT JOIN
+  composition.
+
+  Implementation: the VM now keeps a per-cursor column schema (cached
+  at OpenScan time when the backend exposes ``columns()``, and lazily
+  on first row otherwise).  When ``ScanAllColumns`` encounters a
+  cursor with no current row, it emits ``None`` per cached column
+  instead of bailing out.
+
+  7 new oracle tests in ``test_tier3_left_join_null_pad.py`` cover
+  partial matches, all-unmatched, wider right schemas, derived-table
+  right sides, CTE right sides, and the cross-join composition.
+
 ## [1.53.0] - 2026-05-19
 
 ### Fixed

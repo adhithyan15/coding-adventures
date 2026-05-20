@@ -1,5 +1,36 @@
 # Changelog
 
+## 1.34.0 — 2026-05-19
+
+### Fixed
+
+- **``SELECT *`` now NULL-pads on LEFT JOIN unmatched rows**.  The
+  previous behaviour of ``_do_scan_all_columns`` was to silently skip
+  the cursor when it had no current row, which truncated the output
+  row to fewer columns than real SQLite would produce.  Follow-up to
+  the SELECT-star-cross-join fix in ``sql-codegen 1.31.0``.
+
+  Wire-up:
+
+  - ``_VmState.cursor_schema: dict[int, list[str]]`` — new cache
+    holding the visible column names per open cursor.
+  - ``_do_open`` (OpenScan handler) probes ``backend.columns(table)``
+    and caches the resulting names at OpenScan time.  Backends that
+    don't expose ``columns()`` fall back to the lazy path.
+  - ``_do_advance`` lazily snapshots ``row.keys()`` the first time
+    a cursor yields a row, covering subquery / derived-table /
+    working-set cursors that bypass ``OpenScan``.
+  - ``_do_scan_all_columns`` consults the cache when
+    ``current_row[cursor_id]`` is missing and appends ``None`` per
+    cached column name — matching SQLite's NULL-padded LEFT JOIN
+    output.
+
+  Example::
+
+      Before:  SELECT * FROM a LEFT JOIN b ON … (no right match)
+               → (a.id, a.name)                  -- wrong width
+      Now:     → (a.id, a.name, None, None)     -- matches sqlite3
+
 ## 1.33.0 — 2026-05-19
 
 ### Added

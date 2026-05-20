@@ -176,14 +176,12 @@ class TestSelectStarExplicitJoinNoRegression:
         )
 
     def test_left_join_on_matched_rows(self) -> None:
-        """LEFT JOIN where every left row finds a right match — fully fixed.
+        """LEFT JOIN where every left row finds a right match.
 
-        The remaining ``LEFT JOIN + SELECT * + unmatched left row`` case is
-        a deeper latent bug: the VM's ``_do_scan_all_columns`` opcode
-        bails out when the right cursor has no current row, instead of
-        NULL-padding for every column the cursor *would have* produced.
-        Fixing that requires threading the cursor's schema into VM state
-        at OpenScan time — left as a follow-up PR.
+        The unmatched-row case is covered by
+        ``test_tier3_left_join_null_pad.py`` (the cursor-schema cache
+        follow-up); this test guards the matched-row path against
+        regression.
         """
         _check(
             [
