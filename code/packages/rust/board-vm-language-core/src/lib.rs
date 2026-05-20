@@ -76,9 +76,9 @@ use board_vm_protocol::{
 use board_vm_targets::{
     all_targets, BoardFamily, BoardTargetInfo, CanBusInfo as TargetCanBus,
     DigitalPinInfo as TargetDigitalPin, I2cBusInfo as TargetI2cBus,
-    NetworkInterfaceInfo as TargetNetworkInterface, NetworkProtocol as TargetNetworkProtocol,
-    OnboardLed as TargetOnboardLed, RtcInfo as TargetRtc, SpiBusInfo as TargetSpiBus,
-    UartBusInfo as TargetUartBus, UploadAdapter as TargetUploadAdapter,
+    I2cConnectorInfo as TargetI2cConnector, NetworkInterfaceInfo as TargetNetworkInterface,
+    NetworkProtocol as TargetNetworkProtocol, OnboardLed as TargetOnboardLed, RtcInfo as TargetRtc,
+    SpiBusInfo as TargetSpiBus, UartBusInfo as TargetUartBus, UploadAdapter as TargetUploadAdapter,
     UploadImageFormat as TargetUploadImageFormat, UploadInfo as TargetUploadInfo,
     UploadPortHint as TargetUploadPortHint, UploadResetMethod as TargetUploadResetMethod,
     UploadTransport as TargetUploadTransport, WirelessInterfaceInfo as TargetWirelessInterface,
@@ -429,6 +429,7 @@ pub struct LanguageTargetInfo {
     pub digital_pin_count: usize,
     pub digital_pins: Vec<LanguageDigitalPin>,
     pub i2c_buses: Vec<LanguageI2cBus>,
+    pub i2c_connectors: Vec<LanguageI2cConnector>,
     pub spi_buses: Vec<LanguageSpiBus>,
     pub uart_buses: Vec<LanguageUartBus>,
     pub can_buses: Vec<LanguageCanBus>,
@@ -447,6 +448,16 @@ pub struct LanguageI2cBus {
     pub sda_pin: u8,
     pub scl_pin: u8,
     pub qwiic: bool,
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageI2cConnector {
+    pub bus: u8,
+    pub name: String,
+    pub connector: String,
+    pub arduino_object: String,
+    pub controller: String,
     pub notes: String,
 }
 
@@ -1311,6 +1322,11 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
             .map(language_digital_pin)
             .collect(),
         i2c_buses: target.i2c_buses.iter().map(language_i2c_bus).collect(),
+        i2c_connectors: target
+            .i2c_connectors
+            .iter()
+            .map(language_i2c_connector)
+            .collect(),
         spi_buses: target.spi_buses.iter().map(language_spi_bus).collect(),
         uart_buses: target.uart_buses.iter().map(language_uart_bus).collect(),
         can_buses: target.can_buses.iter().map(language_can_bus).collect(),
@@ -1363,6 +1379,17 @@ fn language_i2c_bus(bus: &TargetI2cBus) -> LanguageI2cBus {
         scl_pin: bus.scl_pin,
         qwiic: bus.qwiic,
         notes: bus.notes.to_owned(),
+    }
+}
+
+fn language_i2c_connector(connector: &TargetI2cConnector) -> LanguageI2cConnector {
+    LanguageI2cConnector {
+        bus: connector.bus,
+        name: connector.name.to_owned(),
+        connector: connector.connector.to_owned(),
+        arduino_object: connector.arduino_object.to_owned(),
+        controller: connector.controller.to_owned(),
+        notes: connector.notes.to_owned(),
     }
 }
 
@@ -4161,6 +4188,12 @@ mod tests {
         assert_eq!(nano_r4.i2c_buses[0].sda_pin, 18);
         assert_eq!(nano_r4.i2c_buses[0].scl_pin, 19);
         assert!(nano_r4.i2c_buses[0].notes.contains("Qwiic Wire1"));
+        assert_eq!(nano_r4.i2c_connectors.len(), 1);
+        assert_eq!(nano_r4.i2c_connectors[0].name, "Wire1");
+        assert_eq!(nano_r4.i2c_connectors[0].connector, "Qwiic/STEMMA QT");
+        assert_eq!(nano_r4.i2c_connectors[0].arduino_object, "Wire1");
+        assert_eq!(nano_r4.i2c_connectors[0].controller, "RA4M1 IIC0");
+        assert!(nano_r4.i2c_connectors[0].notes.contains("connector-local"));
         assert_eq!(nano_r4.spi_buses.len(), 1);
         assert_eq!(nano_r4.spi_buses[0].copi_pin, 11);
         assert_eq!(nano_r4.spi_buses[0].cipo_pin, 12);

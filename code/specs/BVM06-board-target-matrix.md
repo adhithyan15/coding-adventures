@@ -174,7 +174,13 @@ for the shared Arduino runtime.
 
 The Nano R4 RTC metadata tranche records the RA4M1 real-time clock as passive
 target metadata and keeps `rtc.*` capabilities disabled for the shared Arduino
-runtime. Native USB and Qwiic `Wire1` details remain follow-up adapter metadata.
+runtime.
+
+The Nano R4 Qwiic metadata tranche records connector-local `Wire1` metadata for
+the Qwiic/STEMMA QT connector and RA4M1 IIC0 controller without folding it into
+the A4/A5 `Wire` header descriptor. `i2c.*` capabilities stay disabled for the
+shared Arduino runtime; native USB and bytecode behavior remain follow-up
+adapter metadata.
 
 The next tranches should deepen board-specific firmware/upload adapters and
 richer peripheral tables for each family without moving generic Arduino
