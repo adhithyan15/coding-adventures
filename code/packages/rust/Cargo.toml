@@ -362,6 +362,7 @@ members = [
     "mosaic-compile",
     "mosaic-emit-html",
     "mosaic-emit-paint",
+    "mosaic-emit-qt",
     "mosaic-emit-react",
     "mosaic-emit-swiftui",
     "mosaic-emit-webcomponent",
