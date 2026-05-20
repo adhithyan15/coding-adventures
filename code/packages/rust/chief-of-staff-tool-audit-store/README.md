@@ -65,6 +65,8 @@ The crate keeps the boundary narrow:
   continuation, follow-up, checkpoint, and budget decisions
 - supervisor drain plans, reports, and summaries expose remaining tick-budget
   helpers for host scheduler budget logs
+- supervisor drain plan pages expose per-page drain, continuation, and
+  checkpoint-advance helpers for host preflight scheduling
 - supervisor drain run summaries flatten idle, progress, and continuation flags
   for host log entries
 - supervisor drain run summaries expose count-drift presence flags beside

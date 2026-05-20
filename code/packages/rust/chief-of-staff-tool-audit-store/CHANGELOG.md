@@ -49,6 +49,8 @@ All notable changes to this package will be documented in this file.
 - Run-status accessors for supervisor drain run summaries.
 - Remaining tick-budget helpers for supervisor drain plans, reports, and
   summaries.
+- Per-page drain, continuation, and checkpoint-advance helpers for supervisor
+  drain plans.
 - Flattened idle, progress, and continuation flags in supervisor drain run
   summaries.
 - Count-drift presence flags for supervisor drain run reports and summaries.
