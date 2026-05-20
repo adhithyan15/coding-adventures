@@ -1088,12 +1088,24 @@ def _replace(x: SqlValue, old: SqlValue, new: SqlValue) -> SqlValue:
 
     Returns NULL if any argument is NULL (handled by ``null_propagating``).
 
+    **Empty needle ⇒ no-op.**  Python's ``str.replace("", X)`` inserts ``X``
+    between every character (and at both ends), so ``"hello".replace("", "X")``
+    becomes ``"XhXeXlXlXoX"``.  SQLite explicitly treats an empty search
+    string as "match nothing" and returns the input unchanged.  We honour
+    SQLite's behaviour because callers building a SQL pipeline would not
+    expect a no-op edit to suddenly multiply their string length.
+
     Examples::
 
         REPLACE("hello world", "world", "SQL")  → "hello SQL"
         REPLACE("aaa", "a", "bb")               → "bbbbbb"
+        REPLACE("hello", "", "X")               → "hello"   (no-op)
     """
     if isinstance(x, str) and isinstance(old, str) and isinstance(new, str):
+        if old == "":
+            # Match SQLite: empty needle is a no-op rather than Python's
+            # "insert between every character" behaviour.
+            return x
         return x.replace(old, new)
     return x
 
@@ -1398,6 +1410,39 @@ def _printf_format(template: str, args: list[SqlValue]) -> str:  # noqa: C901
         width = int(width_s) if width_s else 0
         if conv in "diouxX":
             val = 0 if arg is None else (int(arg) if not isinstance(arg, bool) else int(arg))
+            # Python's ``%#o`` formats with the modern ``0o`` prefix; SQLite
+            # (following C printf) uses the classic single ``0`` prefix and,
+            # critically, **omits the prefix entirely when the value is 0**
+            # (because the digit itself is already a zero, so adding ``0``
+            # would just produce ``00``).  Also: when both ``#`` and a
+            # width/zero-pad are present, SQLite places the ``0`` prefix
+            # *after* the leading spaces (e.g. ``%#5o`` of 8 → ``"  010"``),
+            # so we strip ``#`` from the Python format, let Python compute
+            # the padding, then prepend ``0`` into the right column.
+            if conv == "o" and "#" in flags:
+                py_flags = flags.replace("#", "")
+                spec = f"%{py_flags}{width_s}"
+                if prec_s:
+                    spec += f".{prec_s}"
+                spec += conv
+                try:
+                    s = spec % val
+                except TypeError:
+                    s = str(val)
+                if val != 0:
+                    # Replace one space with '0' if we right-aligned with
+                    # spaces; otherwise simply prepend.  Zero-padded width
+                    # produces a string already starting with '0', so the
+                    # natural "prepend" branch is correct there too.
+                    stripped = s.lstrip(" ")
+                    spaces = len(s) - len(stripped)
+                    s = (
+                        " " * (spaces - 1) + "0" + stripped
+                        if spaces > 0
+                        else "0" + s
+                    )
+                result.append(s)
+                continue
             spec = f"%{flags}{width_s}"
             if prec_s:
                 spec += f".{prec_s}"

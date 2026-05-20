@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.65.0] - 2026-05-20
+
+### Fixed
+
+- **``REPLACE(x, "", y)`` no-op and ``printf('%#o', …)`` C-style octal
+  prefix** (via ``sql-vm 1.39.0``).  Both were Python-vs-SQLite
+  divergences uncovered by a scalar function gap audit:
+
+  * ``replace('hello', '', 'X')`` returned ``'XhXeXlXlXoX'`` (Python
+    behaviour); SQLite returns ``'hello'`` unchanged.
+  * ``printf('%#o', 8)`` returned ``'0o10'`` (Python's modern octal
+    prefix); SQLite returns ``'010'``.  Width/zero-pad interactions
+    also fixed to match SQLite's column rules.
+
+  9 oracle tests in ``test_tier3_replace_empty_and_octal.py``.
+
 ## [1.64.0] - 2026-05-20
 
 ### Fixed
