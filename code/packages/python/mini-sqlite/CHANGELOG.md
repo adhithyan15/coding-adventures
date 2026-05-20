@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.63.0] - 2026-05-20
+
+### Fixed
+
+- **``printf('%q', x)`` no longer wraps in single quotes** (via
+  ``sql-vm 1.37.0``).  Mini-sqlite was conflating ``%q`` with ``%Q``
+  — both wrapped in single quotes.  In SQLite ``%q`` is the
+  escape-only form (single quotes doubled, no wrapping); ``%Q`` is
+  the complete-literal form (wrapped + NULL → ``"NULL"``).  The
+  conflation made it impossible to interpolate the result into a
+  larger string literal the caller was building.
+
+  Also: ``printf('%q', NULL)`` now returns the literal text
+  ``"(NULL)"`` instead of the empty string.
+
+### Added
+
+- **``printf('%w', x)``** — new SQL identifier escape (via
+  ``sql-vm 1.37.0``).  Doubles internal double quotes.  Designed for
+  building ``"…"`` quoted identifiers:
+  ``printf('SELECT "%w" FROM t', col_name)``.
+
+  15 oracle tests in ``test_tier3_printf_q_w.py`` compare every
+  ``%q``/``%Q``/``%w`` case against reference ``sqlite3``
+  byte-for-byte.
+
 ## [1.62.0] - 2026-05-20
 
 ### Fixed

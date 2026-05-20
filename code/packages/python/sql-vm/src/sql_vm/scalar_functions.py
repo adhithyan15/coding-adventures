@@ -43,8 +43,11 @@ SQLite compat notes
 - ``HEX(x)`` converts a blob or text to its hex representation.
 - ``SOUNDEX`` is the standard Russell soundex algorithm.
 - ``PRINTF`` / ``FORMAT`` implement the SQLite subset of C-style printf:
-  ``%d``, ``%i``, ``%u``, ``%f``, ``%e``, ``%g``, ``%s``, ``%q``
-  (SQL-escaped), ``%Q`` (SQL-escaped or NULL), ``%%``.
+  ``%d``, ``%i``, ``%u``, ``%f``, ``%e``, ``%g``, ``%s``, ``%q`` (SQL
+  string-literal escape, no surrounding quotes), ``%Q`` (like ``%q`` but
+  wraps in single quotes, or emits the literal ``NULL``), ``%w`` (SQL
+  identifier escape — double quotes doubled, no surrounding quotes),
+  ``%%``.
 """
 
 from __future__ import annotations
@@ -1328,7 +1331,7 @@ def _soundex(x: SqlValue) -> SqlValue:
 # ---------------------------------------------------------------------------
 
 _PRINTF_FMT = re.compile(
-    r"%(?P<flags>[-+ #0]*)(?P<width>\d*)(?:\.(?P<prec>\d+))?(?P<conv>[diouxXeEfgGsqQ%])"
+    r"%(?P<flags>[-+ #0]*)(?P<width>\d*)(?:\.(?P<prec>\d+))?(?P<conv>[diouxXeEfgGsqQw%])"
 )
 
 
@@ -1340,11 +1343,22 @@ def _printf_format(template: str, args: list[SqlValue]) -> str:  # noqa: C901
     - ``%d``, ``%i``, ``%o``, ``%u``, ``%x``, ``%X`` — integer formatting
     - ``%f``, ``%e``, ``%E``, ``%g``, ``%G`` — float formatting
     - ``%s`` — string (None → "")
-    - ``%q`` — SQL-escaped string (single-quotes doubled, wrapped in '')
-    - ``%Q`` — like ``%q`` but NULL → "NULL"
+    - ``%q`` — SQL string-literal escape: single quotes doubled, **no
+      surrounding quotes**.  NULL → ``"(NULL)"``.  Designed for
+      interpolation *inside* a single-quoted SQL string literal — the
+      caller supplies the wrapping quotes.
+    - ``%Q`` — single-quoted SQL literal: like ``%q`` but **with**
+      surrounding single quotes, and NULL → the literal ``"NULL"`` (no
+      quotes).  Use ``%Q`` to build a complete inline literal.
+    - ``%w`` — SQL identifier escape: double quotes doubled, **no
+      surrounding quotes**.  NULL → ``"(NULL)"``.  Designed for
+      interpolation inside a ``"…"`` quoted identifier (table/column
+      name).
     - ``%%`` — literal ``%``
 
-    ``%w`` (table/column quoting) is not implemented.
+    The ``%q``/``%Q``/``%w`` rules match SQLite's reference
+    implementation (``sqlite3_mprintf`` in ``src/printf.c``): see the
+    SQLite docs at https://sqlite.org/printf.html.
     """
     arg_iter = iter(args)
     result: list[str] = []
@@ -1394,18 +1408,31 @@ def _printf_format(template: str, args: list[SqlValue]) -> str:  # noqa: C901
                 s = (s + pad) if left else (pad + s)
             result.append(s)
         elif conv == "q":
+            # SQL string-literal escape — single quotes doubled, *no*
+            # surrounding quotes.  NULL becomes the literal "(NULL)" so
+            # downstream code that wraps the result in '...' doesn't
+            # silently turn a NULL into an empty string.
             if arg is None:
-                s = ""
+                result.append("(NULL)")
             else:
-                s = str(arg).replace("'", "''")
-                s = f"'{s}'"
-            result.append(s)
+                result.append(str(arg).replace("'", "''"))
         elif conv == "Q":
+            # SQL string literal — like %q but wrapped in single quotes,
+            # except NULL emits the literal "NULL" (no quotes) so the
+            # output is a syntactically valid SQL expression.
             if arg is None:
                 result.append("NULL")
             else:
                 s = str(arg).replace("'", "''")
                 result.append(f"'{s}'")
+        elif conv == "w":
+            # SQL identifier escape — double quotes doubled, *no*
+            # surrounding quotes.  Mirrors %q for the identifier
+            # namespace: the caller supplies the wrapping "...".
+            if arg is None:
+                result.append("(NULL)")
+            else:
+                result.append(str(arg).replace('"', '""'))
     result.append(template[pos:])
     return "".join(result)
 
@@ -1423,7 +1450,9 @@ def _printf(*args: SqlValue) -> SqlValue:
         PRINTF("Hello %s!", "world")         → "Hello world!"
         PRINTF("%d + %d = %d", 1, 2, 1+2)   → "1 + 2 = 3"
         PRINTF("%.2f", 3.14159)              → "3.14"
-        PRINTF("%q", "it's")                 → "'it''s'"
+        PRINTF("%q", "it's")                 → "it''s"  (no outer quotes)
+        PRINTF("%Q", "it's")                 → "'it''s'"
+        PRINTF("%w", 'col"name')             → 'col""name'
     """
     if not args:
         raise WrongNumberOfArguments(name="printf", expected="at least 1", got=0)
