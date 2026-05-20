@@ -792,6 +792,16 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         });
     }
 
+    // Generic lexer text-buffer verbs.  Any lexer profile that
+    // accumulates a current-token lexeme uses these; they are
+    // orthogonal to the HTML-specific tokenisation verbs above.
+    if action == "clear_text" {
+        return Ok(());
+    }
+    if action.starts_with("set_text(") && action.ends_with(')') {
+        return Ok(());
+    }
+
     Err(StateMachineMarkupError::UnknownAction {
         action: action.to_string(),
     })
