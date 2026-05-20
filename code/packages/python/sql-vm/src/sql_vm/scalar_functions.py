@@ -1557,6 +1557,26 @@ def _printf_format(template: str, args: list[SqlValue]) -> str:  # noqa: C901
                 result.append(str(val))
         elif conv in "feEgG":
             val_f = 0.0 if arg is None else float(arg)  # type: ignore[arg-type]
+            # Python's ``%f`` uses banker's rounding (round half to
+            # even); SQLite's printf rounds half away from zero, matching
+            # the school-arithmetic convention and the ``round()`` scalar.
+            # Pre-round the value here so the subsequent format string
+            # call doesn't apply the wrong rule on the rounding boundary.
+            #
+            # Only ``%f``/``%F`` (fixed-point) needs this rewrite — ``%e``
+            # and ``%g`` use significant-digit rounding which already
+            # produces matching output under both rules for almost every
+            # input we care about (and SQLite's own implementation uses
+            # the C library here, which already matches Python for those
+            # cases on every platform we test).
+            if conv in "fF" and prec_s:
+                from decimal import Decimal, ROUND_HALF_UP, localcontext
+                with localcontext() as ctx:
+                    ctx.prec = 80  # bigger than any reasonable precision
+                    quant = Decimal(10) ** -int(prec_s)
+                    val_f = float(
+                        Decimal(val_f).quantize(quant, rounding=ROUND_HALF_UP)
+                    )
             spec = f"%{flags}{width_s}"
             if prec_s:
                 spec += f".{prec_s}"

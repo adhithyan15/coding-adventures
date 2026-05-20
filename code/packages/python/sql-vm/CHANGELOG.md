@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.49.0 — 2026-05-20
+
+### Fixed
+
+- **``printf('%.Nf', x)`` rounds half away from zero** matching SQLite.
+  Python's ``'%f'`` formatting uses banker's rounding so
+  ``printf('%.0f', 4.5)`` was returning ``'4'``; SQLite returns ``'5'``.
+  Pre-quantize the value via ``Decimal.quantize(..., ROUND_HALF_UP)``
+  before handing to Python's formatter — same trick used by the
+  ``round()`` scalar in 1.36.0.
+
+  Only ``%f`` / ``%F`` (fixed-point) needs the pre-quantize; ``%e``
+  and ``%g`` continue to use Python's formatter directly.
+
 ## 1.48.0 — 2026-05-20
 
 ### Fixed

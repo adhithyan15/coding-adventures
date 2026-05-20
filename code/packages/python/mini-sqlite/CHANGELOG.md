@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.75.0] - 2026-05-20
+
+### Fixed
+
+- **``printf('%.Nf', x)`` rounds half away from zero** matching SQLite
+  (via ``sql-vm 1.49.0``).  Was using Python's banker's rounding —
+  ``printf('%.0f', 4.5)`` returned ``'4'`` instead of ``'5'``.
+  9 oracle tests in ``test_tier3_printf_rounding.py``.
+
 ## [1.74.0] - 2026-05-20
 
 ### Fixed
