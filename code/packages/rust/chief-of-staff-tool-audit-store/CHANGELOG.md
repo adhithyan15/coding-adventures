@@ -32,6 +32,8 @@ All notable changes to this package will be documented in this file.
 - Flattened planned and replayed follow-up row counts in supervisor drain run
   summaries.
 - Follow-up pressure drift flags in supervisor drain run reports and summaries.
+- Signed replayed-minus-planned row and follow-up pressure deltas in supervisor
+  drain run summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Typed scheduler action intent helpers for continuation, follow-up routing, and
