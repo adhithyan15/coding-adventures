@@ -467,6 +467,24 @@ pub const ARDUINO_GIGA_R1_WIFI_DIGITAL_PINS: [DigitalPinInfo; 76] =
     map_arduino_digital_pins(board_vm_arduino::ARDUINO_GIGA_R1_DIGITAL_PINS);
 pub const ARDUINO_PORTENTA_H7_DIGITAL_PINS: [DigitalPinInfo; 80] =
     map_arduino_digital_pins(board_vm_arduino::ARDUINO_PORTENTA_H7_DIGITAL_PINS);
+pub const ARDUINO_PORTENTA_H7_LITE_DIGITAL_PINS: [DigitalPinInfo; 80] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_PORTENTA_H7_DIGITAL_PINS);
+pub const ARDUINO_PORTENTA_H7_LITE_CONNECTED_DIGITAL_PINS: [DigitalPinInfo; 80] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_PORTENTA_H7_DIGITAL_PINS);
+pub const ARDUINO_PORTENTA_C33_DIGITAL_PINS: [DigitalPinInfo; 7] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_PORTENTA_C33_DIGITAL_PINS);
+pub const ARDUINO_NICLA_VISION_DIGITAL_PINS: [DigitalPinInfo; 12] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_NICLA_DIGITAL_PINS);
+pub const ARDUINO_NICLA_SENSE_ME_DIGITAL_PINS: [DigitalPinInfo; 12] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_NICLA_DIGITAL_PINS);
+pub const ARDUINO_NICLA_VOICE_DIGITAL_PINS: [DigitalPinInfo; 12] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_NICLA_DIGITAL_PINS);
+pub const ARDUINO_OPTA_LITE_DIGITAL_PINS: [DigitalPinInfo; 12] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_OPTA_TERMINAL_PINS);
+pub const ARDUINO_OPTA_RS485_DIGITAL_PINS: [DigitalPinInfo; 12] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_OPTA_TERMINAL_PINS);
+pub const ARDUINO_OPTA_WIFI_DIGITAL_PINS: [DigitalPinInfo; 12] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_OPTA_TERMINAL_PINS);
 
 const fn map_arduino_digital_pins<const N: usize>(
     source: [board_vm_arduino::DigitalPinDescriptor; N],
@@ -777,7 +795,7 @@ const fn arduino_board_target(
     }
 }
 
-pub const BOARD_TARGETS: [BoardTargetInfo; 22] = [
+pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
     BoardTargetInfo {
         board_id: board_vm_uno_r4::UNO_R4_MINIMA.board_id,
         display_name: board_vm_uno_r4::UNO_R4_MINIMA.display_name,
@@ -894,6 +912,42 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 22] = [
     arduino_board_target(
         board_vm_arduino::ARDUINO_PORTENTA_H7,
         &ARDUINO_PORTENTA_H7_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_PORTENTA_H7_LITE,
+        &ARDUINO_PORTENTA_H7_LITE_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_PORTENTA_H7_LITE_CONNECTED,
+        &ARDUINO_PORTENTA_H7_LITE_CONNECTED_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_PORTENTA_C33,
+        &ARDUINO_PORTENTA_C33_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_NICLA_VISION,
+        &ARDUINO_NICLA_VISION_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_NICLA_SENSE_ME,
+        &ARDUINO_NICLA_SENSE_ME_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_NICLA_VOICE,
+        &ARDUINO_NICLA_VOICE_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_OPTA_LITE,
+        &ARDUINO_OPTA_LITE_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_OPTA_RS485,
+        &ARDUINO_OPTA_RS485_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_OPTA_WIFI,
+        &ARDUINO_OPTA_WIFI_DIGITAL_PINS,
     ),
     BoardTargetInfo {
         board_id: board_vm_esp32::ESP32_DEVKIT_V1.board_id,
@@ -1013,6 +1067,13 @@ mod tests {
         assert!(find_target("arduino-nano-esp32").is_some());
         assert!(find_target("arduino-giga-r1-wifi").is_some());
         assert!(find_target("arduino-portenta-h7").is_some());
+        assert!(find_target("arduino-portenta-c33").is_some());
+        assert!(find_target("arduino-nicla-vision").is_some());
+        assert!(find_target("arduino-nicla-sense-me").is_some());
+        assert!(find_target("arduino-nicla-voice").is_some());
+        assert!(find_target("arduino-opta-lite").is_some());
+        assert!(find_target("arduino-opta-rs485").is_some());
+        assert!(find_target("arduino-opta-wifi").is_some());
         assert!(find_target("esp32-devkit-v1").is_some());
         assert!(find_target("raspberry-pi-pico").is_some());
         assert!(find_target("raspberry-pi-pico-w").is_some());
@@ -1056,6 +1117,32 @@ mod tests {
             find_target("arduino-giga-r1-wifi").unwrap().mcu,
             "STM32H747XI"
         );
+        assert_eq!(
+            find_target("arduino-portenta-c33").unwrap().mcu,
+            "R7FA6M5BH2CBG"
+        );
+        assert_eq!(
+            find_target("arduino-portenta-c33")
+                .unwrap()
+                .digital_pin_count,
+            7
+        );
+        assert_eq!(
+            find_target("arduino-nicla-vision").unwrap().mcu,
+            "STM32H747AII6"
+        );
+        assert_eq!(find_target("arduino-nicla-voice").unwrap().mcu, "nRF52832");
+        assert_eq!(find_target("arduino-opta-wifi").unwrap().mcu, "STM32H747XI");
+        assert_eq!(
+            find_target("arduino-opta-wifi").unwrap().digital_pins[0].label,
+            "I1"
+        );
+        assert_eq!(
+            find_target("arduino-opta-wifi").unwrap().digital_pins[11].label,
+            "O4"
+        );
+        assert!(!find_target("arduino-opta-wifi").unwrap().digital_pins[0].supports_output);
+        assert!(find_target("arduino-opta-wifi").unwrap().digital_pins[11].supports_output);
     }
 
     #[test]

@@ -99,6 +99,20 @@ contract for representative Arduino families:
 - maker/pro 32-bit boards: Nano RP2040 Connect, Nano ESP32, GIGA R1 WiFi,
   Portenta H7.
 
+The second descriptor tranche adds the next Pro/Nicla/Opta families:
+
+- Portenta H7 Lite, Portenta H7 Lite Connected, and Portenta C33,
+- Nicla Vision, Nicla Sense ME, and Nicla Voice,
+- Opta Lite, Opta RS485, and Opta WiFi.
+
+Opta targets use industrial terminal and relay-output descriptors rather than
+pretending they have Uno-style GPIO headers. Nicla and Portenta targets stay
+distinct from their MCU cousins so later camera, microphone, sensor-fusion,
+wireless, Ethernet, RS-485, and upload adapters can attach to the correct board
+identity. Companion/sensor boards whose microcontrollers are not directly
+user-programmable, such as Nicla Sense Env, should be modeled as board
+peripherals or carrier-managed adapters instead of fake firmware runtimes.
+
 The next tranches should add board-specific firmware/upload adapters and richer
 peripheral tables for each family without moving generic Arduino discovery into
 `board-vm-uno-r4`.

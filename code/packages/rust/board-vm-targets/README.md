@@ -15,7 +15,15 @@ Arduino coverage is deliberately split in two:
 - `board-vm-arduino` registers the broader Arduino-family backend contract for
   non-Uno-R4 boards such as Uno R3, Nano, Mega 2560, Leonardo/Micro, Due, Zero,
   MKR WiFi 1010, Nano Every, Nano R4, Nano 33 IoT, Nano 33 BLE Rev2, Nano RP2040
-  Connect, Nano ESP32, GIGA R1 WiFi, and Portenta H7.
+  Connect, Nano ESP32, GIGA R1 WiFi, Portenta H7, Portenta H7 Lite, Portenta H7
+  Lite Connected, Portenta C33, Nicla Vision, Nicla Sense ME, Nicla Voice, and
+  Opta Lite/RS485/WiFi.
+
+Opta targets expose industrial terminal inputs and relay outputs through the
+same target registry shape, but they do not pretend to share Uno header pins.
+Nicla and Portenta targets likewise carry their own MCU/runtime descriptors so
+the next board-specific firmware and upload adapters can attach without adding
+special cases to Ruby, Python, Lua, or other language frontends.
 
 Wireless metadata separates physical support from the generic front-end sugar:
 

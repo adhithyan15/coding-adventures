@@ -3772,6 +3772,9 @@ mod tests {
         let nano_ble = known_target("arduino-nano-33-ble-rev2").unwrap();
         let nano_esp32 = known_target("arduino-nano-esp32").unwrap();
         let giga = known_target("arduino-giga-r1-wifi").unwrap();
+        let portenta_c33 = known_target("arduino-portenta-c33").unwrap();
+        let nicla_vision = known_target("arduino-nicla-vision").unwrap();
+        let opta_wifi = known_target("arduino-opta-wifi").unwrap();
         let pico_w = known_target("raspberry-pi-pico-w").unwrap();
 
         assert!(targets
@@ -3799,6 +3802,19 @@ mod tests {
         assert_eq!(nano_esp32.mcu, "ESP32-S3");
         assert_eq!(giga.family, LanguageBoardFamily::Arduino);
         assert_eq!(giga.mcu, "STM32H747XI");
+        assert_eq!(portenta_c33.family, LanguageBoardFamily::Arduino);
+        assert_eq!(portenta_c33.mcu, "R7FA6M5BH2CBG");
+        assert_eq!(portenta_c33.rust_target, "thumbv8m.main-none-eabihf");
+        assert_eq!(portenta_c33.digital_pin_count, 7);
+        assert_eq!(nicla_vision.family, LanguageBoardFamily::Arduino);
+        assert_eq!(nicla_vision.mcu, "STM32H747AII6");
+        assert_eq!(opta_wifi.family, LanguageBoardFamily::Arduino);
+        assert_eq!(opta_wifi.mcu, "STM32H747XI");
+        assert_eq!(opta_wifi.digital_pin_count, 12);
+        assert_eq!(opta_wifi.digital_pins[0].label, "I1");
+        assert!(!opta_wifi.digital_pins[0].supports_output);
+        assert_eq!(opta_wifi.digital_pins[11].label, "O4");
+        assert!(opta_wifi.digital_pins[11].supports_output);
         assert_eq!(
             uno.led_matrix,
             Some(LanguageLedMatrix {

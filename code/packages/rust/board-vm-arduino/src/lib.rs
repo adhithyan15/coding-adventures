@@ -334,6 +334,150 @@ pub const ARDUINO_NANO_ESP32_DIGITAL_PINS: [DigitalPinDescriptor; 22] = generate
 pub const ARDUINO_GIGA_R1_DIGITAL_PINS: [DigitalPinDescriptor; 76] = generated_pins::<76>(54, 12);
 pub const ARDUINO_PORTENTA_H7_DIGITAL_PINS: [DigitalPinDescriptor; 80] =
     generated_pins::<80>(54, 12);
+pub const ARDUINO_PORTENTA_C33_DIGITAL_PINS: [DigitalPinDescriptor; 7] = generated_pins::<7>(7, 0);
+pub const ARDUINO_NICLA_DIGITAL_PINS: [DigitalPinDescriptor; 12] = generated_pins::<12>(10, 2);
+pub const ARDUINO_OPTA_TERMINAL_PINS: [DigitalPinDescriptor; 12] = [
+    DigitalPinDescriptor {
+        pin: 0,
+        label: "I1",
+        supports_input: true,
+        supports_output: false,
+        supports_pullup: false,
+        supports_pulldown: false,
+        supports_adc: true,
+        supports_pwm: false,
+        notes:
+            "Opta industrial analog/digital input terminal; backend owns terminal voltage mapping",
+    },
+    DigitalPinDescriptor {
+        pin: 1,
+        label: "I2",
+        supports_input: true,
+        supports_output: false,
+        supports_pullup: false,
+        supports_pulldown: false,
+        supports_adc: true,
+        supports_pwm: false,
+        notes:
+            "Opta industrial analog/digital input terminal; backend owns terminal voltage mapping",
+    },
+    DigitalPinDescriptor {
+        pin: 2,
+        label: "I3",
+        supports_input: true,
+        supports_output: false,
+        supports_pullup: false,
+        supports_pulldown: false,
+        supports_adc: true,
+        supports_pwm: false,
+        notes:
+            "Opta industrial analog/digital input terminal; backend owns terminal voltage mapping",
+    },
+    DigitalPinDescriptor {
+        pin: 3,
+        label: "I4",
+        supports_input: true,
+        supports_output: false,
+        supports_pullup: false,
+        supports_pulldown: false,
+        supports_adc: true,
+        supports_pwm: false,
+        notes:
+            "Opta industrial analog/digital input terminal; backend owns terminal voltage mapping",
+    },
+    DigitalPinDescriptor {
+        pin: 4,
+        label: "I5",
+        supports_input: true,
+        supports_output: false,
+        supports_pullup: false,
+        supports_pulldown: false,
+        supports_adc: true,
+        supports_pwm: false,
+        notes:
+            "Opta industrial analog/digital input terminal; backend owns terminal voltage mapping",
+    },
+    DigitalPinDescriptor {
+        pin: 5,
+        label: "I6",
+        supports_input: true,
+        supports_output: false,
+        supports_pullup: false,
+        supports_pulldown: false,
+        supports_adc: true,
+        supports_pwm: false,
+        notes:
+            "Opta industrial analog/digital input terminal; backend owns terminal voltage mapping",
+    },
+    DigitalPinDescriptor {
+        pin: 6,
+        label: "I7",
+        supports_input: true,
+        supports_output: false,
+        supports_pullup: false,
+        supports_pulldown: false,
+        supports_adc: true,
+        supports_pwm: false,
+        notes:
+            "Opta industrial analog/digital input terminal; backend owns terminal voltage mapping",
+    },
+    DigitalPinDescriptor {
+        pin: 7,
+        label: "I8",
+        supports_input: true,
+        supports_output: false,
+        supports_pullup: false,
+        supports_pulldown: false,
+        supports_adc: true,
+        supports_pwm: false,
+        notes:
+            "Opta industrial analog/digital input terminal; backend owns terminal voltage mapping",
+    },
+    DigitalPinDescriptor {
+        pin: 8,
+        label: "O1",
+        supports_input: false,
+        supports_output: true,
+        supports_pullup: false,
+        supports_pulldown: false,
+        supports_adc: false,
+        supports_pwm: false,
+        notes: "Opta relay output terminal; backend owns relay actuation mapping",
+    },
+    DigitalPinDescriptor {
+        pin: 9,
+        label: "O2",
+        supports_input: false,
+        supports_output: true,
+        supports_pullup: false,
+        supports_pulldown: false,
+        supports_adc: false,
+        supports_pwm: false,
+        notes: "Opta relay output terminal; backend owns relay actuation mapping",
+    },
+    DigitalPinDescriptor {
+        pin: 10,
+        label: "O3",
+        supports_input: false,
+        supports_output: true,
+        supports_pullup: false,
+        supports_pulldown: false,
+        supports_adc: false,
+        supports_pwm: false,
+        notes: "Opta relay output terminal; backend owns relay actuation mapping",
+    },
+    DigitalPinDescriptor {
+        pin: 11,
+        label: "O4",
+        supports_input: false,
+        supports_output: true,
+        supports_pullup: false,
+        supports_pulldown: false,
+        supports_adc: false,
+        supports_pwm: false,
+        notes: "Opta relay output terminal; backend owns relay actuation mapping",
+    },
+];
 
 pub const ARDUINO_UNO_R3: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
     board_id: "arduino-uno-r3",
@@ -658,7 +802,179 @@ pub const ARDUINO_PORTENTA_H7: ArduinoTargetDescriptor = ArduinoTargetDescriptor
     notes: "Portenta H7 backend contract keeps high-end Arduino Pro hardware in the target matrix.",
 };
 
-pub const ARDUINO_TARGETS: [ArduinoTargetDescriptor; 17] = [
+pub const ARDUINO_PORTENTA_H7_LITE: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
+    board_id: "arduino-portenta-h7-lite",
+    display_name: "Arduino Portenta H7 Lite",
+    family: ArduinoFamily::Mbed,
+    runtime_profile: RuntimeProfile::Full,
+    mcu: "STM32H747XI",
+    core: "dual Arm Cortex-M7/M4",
+    isa: "armv7e-m",
+    rust_target: RustTargetStatus::Stable("thumbv7em-none-eabihf"),
+    clock_hz: 480_000_000,
+    flash_bytes: 2 * 1024 * 1024,
+    sram_bytes: 1024 * 1024,
+    operating_voltage_mv: 3300,
+    onboard_led_pin: Some(66),
+    capabilities: blink_capabilities(),
+    digital_pins: &ARDUINO_PORTENTA_H7_DIGITAL_PINS,
+    notes: "Portenta H7 Lite descriptor keeps lower-cost H7 modules visible without routing them through the base Portenta H7 board id.",
+};
+
+pub const ARDUINO_PORTENTA_H7_LITE_CONNECTED: ArduinoTargetDescriptor =
+    ArduinoTargetDescriptor {
+        board_id: "arduino-portenta-h7-lite-connected",
+        display_name: "Arduino Portenta H7 Lite Connected",
+        family: ArduinoFamily::Mbed,
+        runtime_profile: RuntimeProfile::Full,
+        mcu: "STM32H747XI",
+        core: "dual Arm Cortex-M7/M4 with WiFi/BLE module",
+        isa: "armv7e-m",
+        rust_target: RustTargetStatus::Stable("thumbv7em-none-eabihf"),
+        clock_hz: 480_000_000,
+        flash_bytes: 2 * 1024 * 1024,
+        sram_bytes: 1024 * 1024,
+        operating_voltage_mv: 3300,
+        onboard_led_pin: Some(66),
+        capabilities: blink_capabilities(),
+        digital_pins: &ARDUINO_PORTENTA_H7_DIGITAL_PINS,
+        notes: "Portenta H7 Lite Connected keeps wireless-capable H7 modules discoverable; network capabilities are a later descriptor tranche.",
+    };
+
+pub const ARDUINO_PORTENTA_C33: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
+    board_id: "arduino-portenta-c33",
+    display_name: "Arduino Portenta C33",
+    family: ArduinoFamily::RenesasRa,
+    runtime_profile: RuntimeProfile::Full,
+    mcu: "R7FA6M5BH2CBG",
+    core: "Arm Cortex-M33 with ESP32-C3 WiFi/BLE module",
+    isa: "armv8-m.main",
+    rust_target: RustTargetStatus::Stable("thumbv8m.main-none-eabihf"),
+    clock_hz: 200_000_000,
+    flash_bytes: 2 * 1024 * 1024,
+    sram_bytes: 512 * 1024,
+    operating_voltage_mv: 3300,
+    onboard_led_pin: None,
+    capabilities: blink_capabilities(),
+    digital_pins: &ARDUINO_PORTENTA_C33_DIGITAL_PINS,
+    notes: "Renesas RA6M5 Pro-family descriptor; firmware/upload support should be implemented as a Portenta C33 adapter, not through Uno R4.",
+};
+
+pub const ARDUINO_NICLA_VISION: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
+    board_id: "arduino-nicla-vision",
+    display_name: "Arduino Nicla Vision",
+    family: ArduinoFamily::Mbed,
+    runtime_profile: RuntimeProfile::Full,
+    mcu: "STM32H747AII6",
+    core: "dual Arm Cortex-M7/M4 with camera and WiFi/BLE module",
+    isa: "armv7e-m",
+    rust_target: RustTargetStatus::Stable("thumbv7em-none-eabihf"),
+    clock_hz: 480_000_000,
+    flash_bytes: 2 * 1024 * 1024,
+    sram_bytes: 1024 * 1024,
+    operating_voltage_mv: 3300,
+    onboard_led_pin: None,
+    capabilities: blink_capabilities(),
+    digital_pins: &ARDUINO_NICLA_DIGITAL_PINS,
+    notes: "Nicla Vision descriptor keeps vision-class Arduino hardware in the shared backend matrix; camera, microphone, and wireless capabilities are later tranches.",
+};
+
+pub const ARDUINO_NICLA_SENSE_ME: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
+    board_id: "arduino-nicla-sense-me",
+    display_name: "Arduino Nicla Sense ME",
+    family: ArduinoFamily::Nordic,
+    runtime_profile: RuntimeProfile::Small,
+    mcu: "nRF52832",
+    core: "Arm Cortex-M4F with Bosch smart sensor hub",
+    isa: "armv7e-m",
+    rust_target: RustTargetStatus::Stable("thumbv7em-none-eabihf"),
+    clock_hz: 64_000_000,
+    flash_bytes: 512 * 1024,
+    sram_bytes: 64 * 1024,
+    operating_voltage_mv: 1800,
+    onboard_led_pin: None,
+    capabilities: blink_capabilities(),
+    digital_pins: &ARDUINO_NICLA_DIGITAL_PINS,
+    notes: "Nicla Sense ME descriptor tracks the nRF52832 Arduino core separately from Nano BLE and leaves Bosch sensor fusion as a later backend capability.",
+};
+
+pub const ARDUINO_NICLA_VOICE: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
+    board_id: "arduino-nicla-voice",
+    display_name: "Arduino Nicla Voice",
+    family: ArduinoFamily::Nordic,
+    runtime_profile: RuntimeProfile::Small,
+    mcu: "nRF52832",
+    core: "Arm Cortex-M4F with Syntiant NDP120",
+    isa: "armv7e-m",
+    rust_target: RustTargetStatus::Stable("thumbv7em-none-eabihf"),
+    clock_hz: 64_000_000,
+    flash_bytes: 512 * 1024,
+    sram_bytes: 64 * 1024,
+    operating_voltage_mv: 1800,
+    onboard_led_pin: None,
+    capabilities: blink_capabilities(),
+    digital_pins: &ARDUINO_NICLA_DIGITAL_PINS,
+    notes: "Nicla Voice descriptor keeps voice/ML Arduino hardware discoverable; NDP120 and microphone paths are later capability tranches.",
+};
+
+pub const ARDUINO_OPTA_LITE: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
+    board_id: "arduino-opta-lite",
+    display_name: "Arduino Opta Lite",
+    family: ArduinoFamily::Stm32,
+    runtime_profile: RuntimeProfile::Full,
+    mcu: "STM32H747XI",
+    core: "dual Arm Cortex-M7/M4 with Ethernet",
+    isa: "armv7e-m",
+    rust_target: RustTargetStatus::Stable("thumbv7em-none-eabihf"),
+    clock_hz: 480_000_000,
+    flash_bytes: 2 * 1024 * 1024,
+    sram_bytes: 1024 * 1024,
+    operating_voltage_mv: 24_000,
+    onboard_led_pin: None,
+    capabilities: blink_capabilities(),
+    digital_pins: &ARDUINO_OPTA_TERMINAL_PINS,
+    notes: "Industrial Opta Lite descriptor models terminal inputs and relays as board-local GPIO abstractions; Ethernet and PLC metadata are later tranches.",
+};
+
+pub const ARDUINO_OPTA_RS485: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
+    board_id: "arduino-opta-rs485",
+    display_name: "Arduino Opta RS485",
+    family: ArduinoFamily::Stm32,
+    runtime_profile: RuntimeProfile::Full,
+    mcu: "STM32H747XI",
+    core: "dual Arm Cortex-M7/M4 with Ethernet and RS-485",
+    isa: "armv7e-m",
+    rust_target: RustTargetStatus::Stable("thumbv7em-none-eabihf"),
+    clock_hz: 480_000_000,
+    flash_bytes: 2 * 1024 * 1024,
+    sram_bytes: 1024 * 1024,
+    operating_voltage_mv: 24_000,
+    onboard_led_pin: None,
+    capabilities: blink_capabilities(),
+    digital_pins: &ARDUINO_OPTA_TERMINAL_PINS,
+    notes: "Opta RS485 descriptor keeps industrial serial hardware distinct from generic STM32 and Uno R4 adapters.",
+};
+
+pub const ARDUINO_OPTA_WIFI: ArduinoTargetDescriptor = ArduinoTargetDescriptor {
+    board_id: "arduino-opta-wifi",
+    display_name: "Arduino Opta WiFi",
+    family: ArduinoFamily::Stm32,
+    runtime_profile: RuntimeProfile::Full,
+    mcu: "STM32H747XI",
+    core: "dual Arm Cortex-M7/M4 with Ethernet, RS-485, and WiFi/BLE",
+    isa: "armv7e-m",
+    rust_target: RustTargetStatus::Stable("thumbv7em-none-eabihf"),
+    clock_hz: 480_000_000,
+    flash_bytes: 2 * 1024 * 1024,
+    sram_bytes: 1024 * 1024,
+    operating_voltage_mv: 24_000,
+    onboard_led_pin: None,
+    capabilities: blink_capabilities(),
+    digital_pins: &ARDUINO_OPTA_TERMINAL_PINS,
+    notes: "Opta WiFi descriptor keeps PLC wireless hardware discoverable; Ethernet, RS-485, WiFi, and BLE capabilities are later tranches.",
+};
+
+pub const ARDUINO_TARGETS: [ArduinoTargetDescriptor; 26] = [
     ARDUINO_UNO_R3,
     ARDUINO_NANO_CLASSIC,
     ARDUINO_PRO_MINI,
@@ -676,6 +992,15 @@ pub const ARDUINO_TARGETS: [ArduinoTargetDescriptor; 17] = [
     ARDUINO_NANO_ESP32,
     ARDUINO_GIGA_R1_WIFI,
     ARDUINO_PORTENTA_H7,
+    ARDUINO_PORTENTA_H7_LITE,
+    ARDUINO_PORTENTA_H7_LITE_CONNECTED,
+    ARDUINO_PORTENTA_C33,
+    ARDUINO_NICLA_VISION,
+    ARDUINO_NICLA_SENSE_ME,
+    ARDUINO_NICLA_VOICE,
+    ARDUINO_OPTA_LITE,
+    ARDUINO_OPTA_RS485,
+    ARDUINO_OPTA_WIFI,
 ];
 
 pub fn arduino_device_descriptor(
@@ -771,12 +1096,25 @@ mod tests {
         assert!(ARDUINO_TARGETS
             .iter()
             .any(|target| target.family == ArduinoFamily::Stm32));
+        assert!(ARDUINO_TARGETS
+            .iter()
+            .any(|target| target.family == ArduinoFamily::Mbed));
+        assert!(ARDUINO_TARGETS
+            .iter()
+            .all(|target| target.digital_pins.iter().any(|pin| pin.supports_output)));
     }
 
     #[test]
     fn every_arduino_target_runs_blink_through_shared_backend() {
         for target in ARDUINO_TARGETS.iter() {
-            let pin = target.onboard_led_pin.unwrap_or(target.digital_pins[0].pin);
+            let pin = target.onboard_led_pin.unwrap_or_else(|| {
+                target
+                    .digital_pins
+                    .iter()
+                    .find(|pin| pin.supports_output)
+                    .unwrap()
+                    .pin
+            });
             let board = ArduinoBoard::new(target, FakeBackend::new());
             let mut runtime: Runtime<_, 8, 4> = Runtime::new(board);
             let mut module = [0u8; BLINK_MODULE_LEN];
