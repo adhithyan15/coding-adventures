@@ -4017,6 +4017,7 @@ mod tests {
         let uno = known_target("arduino-uno-r4-wifi").unwrap();
         let mega = known_target("arduino-mega-2560").unwrap();
         let nano_r4 = known_target("arduino-nano-r4").unwrap();
+        let nano_iot = known_target("arduino-nano-33-iot").unwrap();
         let nano_ble = known_target("arduino-nano-33-ble-rev2").unwrap();
         let nano_esp32 = known_target("arduino-nano-esp32").unwrap();
         let giga = known_target("arduino-giga-r1-wifi").unwrap();
@@ -4044,6 +4045,8 @@ mod tests {
         assert!(mega.capabilities.contains(&"program.ram_exec".to_owned()));
         assert_eq!(nano_r4.family, LanguageBoardFamily::Arduino);
         assert_eq!(nano_r4.mcu, "RA4M1");
+        assert_eq!(nano_iot.family, LanguageBoardFamily::Arduino);
+        assert_eq!(nano_iot.mcu, "SAMD21G18");
         assert_eq!(nano_ble.family, LanguageBoardFamily::Arduino);
         assert_eq!(nano_ble.mcu, "nRF52840");
         assert_eq!(nano_esp32.family, LanguageBoardFamily::Arduino);
@@ -4064,6 +4067,72 @@ mod tests {
         assert_eq!(opta_wifi.digital_pins[11].label, "O4");
         assert!(opta_wifi.digital_pins[11].supports_output);
         assert_eq!(opta_wifi.upload.as_ref().unwrap().adapter, "arduino_cli");
+        assert!(nano_iot.wireless.iter().any(|interface| interface.transport
+            == LanguageWirelessTransport::Wifi
+            && interface.chip == "u-blox NINA-W102"
+            && !interface.command_transport
+            && !interface.ota_update));
+        assert!(nano_iot.wireless.iter().any(|interface| interface.transport
+            == LanguageWirelessTransport::BluetoothLe
+            && interface.chip == "u-blox NINA-W102"
+            && !interface.command_transport
+            && !interface.ota_update));
+        assert!(!nano_iot.capabilities.contains(&"transport.wifi".to_owned()));
+        assert!(nano_iot.network_interfaces.is_empty());
+        assert!(nano_ble.wireless.iter().any(|interface| interface.transport
+            == LanguageWirelessTransport::BluetoothLe
+            && interface.chip == "nRF52840"
+            && !interface.command_transport
+            && !interface.ota_update));
+        assert!(!nano_ble
+            .capabilities
+            .contains(&"transport.bluetooth_le".to_owned()));
+        assert!(nano_esp32
+            .wireless
+            .iter()
+            .any(
+                |interface| interface.transport == LanguageWirelessTransport::Wifi
+                    && interface.chip == "ESP32-S3"
+                    && !interface.command_transport
+                    && !interface.ota_update
+            ));
+        assert!(!nano_esp32
+            .capabilities
+            .contains(&"transport.wifi".to_owned()));
+        assert!(giga.wireless.iter().any(|interface| interface.transport
+            == LanguageWirelessTransport::Wifi
+            && interface.chip == "Arduino onboard WiFi/BLE module"
+            && !interface.command_transport
+            && !interface.ota_update));
+        assert!(giga.network_interfaces.is_empty());
+        assert!(portenta_c33
+            .wireless
+            .iter()
+            .any(
+                |interface| interface.transport == LanguageWirelessTransport::Wifi
+                    && interface.chip == "ESP32-C3 module"
+                    && !interface.command_transport
+                    && !interface.ota_update
+            ));
+        assert!(nicla_vision
+            .wireless
+            .iter()
+            .any(
+                |interface| interface.transport == LanguageWirelessTransport::BluetoothLe
+                    && interface.chip == "Arduino onboard WiFi/BLE module"
+                    && !interface.command_transport
+                    && !interface.ota_update
+            ));
+        assert!(opta_wifi
+            .wireless
+            .iter()
+            .any(
+                |interface| interface.transport == LanguageWirelessTransport::Wifi
+                    && interface.chip == "Arduino onboard WiFi/BLE module"
+                    && !interface.command_transport
+                    && !interface.ota_update
+            ));
+        assert!(opta_wifi.network_interfaces.is_empty());
         assert_eq!(
             uno.led_matrix,
             Some(LanguageLedMatrix {

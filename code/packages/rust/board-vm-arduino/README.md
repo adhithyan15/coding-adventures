@@ -29,6 +29,13 @@ descriptor also records whether the board appears through a USB serial bridge,
 native USB bootloader, or external serial adapter, which keeps Pro Mini-style
 boards from being treated like onboard-USB Arduinos.
 
+The shared target registry also records physical wireless radios for the
+Arduino-family boards that have Wi-Fi or BLE hardware, including MKR/Nano
+NINA-based boards, Nano ESP32, GIGA, connected Portenta/Nicla variants, and Opta
+WiFi. Those descriptors do not add command or OTA capabilities by themselves;
+board-specific firmware and upload adapters still own the actual transport
+behavior.
+
 Opta terminals are modeled as board-local input and relay-output pins instead
 of pretending the PLC has Uno-style headers. Nicla sensor/audio/vision hardware
 is similarly registered as its own target family so follow-up capability work
