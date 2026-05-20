@@ -290,6 +290,8 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "print_string", n_args: 2, returns: false },
     BuiltinSig { name: "input_i64",    n_args: 0, returns: true  },
     BuiltinSig { name: "exit",         n_args: 1, returns: false },
+    // LANG76 — heap allocator.  Returns a pointer (treated as i64).
+    BuiltinSig { name: "alloc_bytes",  n_args: 1, returns: true  },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -780,6 +782,86 @@ fn emit_instr(
                 asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
             }
         }
+        return Ok(());
+    }
+
+    // ── LANG76 — byte memory ops + heap allocation ────────────────────────────
+
+    // `alloc_bytes <n> -> <dest>` — sugar for `call_builtin "alloc_bytes", n`.
+    //
+    // The spec exposes a separate CIR mnemonic so frontends don't have to
+    // think about V1_BUILTINS arity validation.  Internally we just emit
+    // the same CALL sequence the `call_builtin` arm above would produce,
+    // sharing the `__twig_alloc_bytes` runtime symbol and PltRel32 reloc.
+    if op == "alloc_bytes" {
+        let dest = require_dest(instr)?;
+        let n_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("alloc_bytes: needs srcs[0]=byte_count".into())
+        })?;
+        let arg0_reg = abi.arg_regs()[0];
+        load_operand(asm, alloc, arg0_reg, n_src);
+        asm.call_rel32("__twig_alloc_bytes", ExternalRelocKind::PltRel32);
+        // Return pointer in RAX → dest slot.
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // `load_byte <ptr>, <offset> -> <dest>` — read one byte from
+    // `[ptr + offset]`, zero-extend to 64 bits, store into `dest`.
+    //
+    // Sequence (uses RAX + RCX scratch; both reserved by RegAlloc):
+    //   mov  rax, [rbp + ptr_slot]      ; pointer
+    //   mov  rcx, [rbp + offset_slot]   ; offset
+    //   add  rax, rcx                    ; rax = ptr + offset
+    //   movzx rax, byte ptr [rax]        ; zero-extend load
+    //   mov  [rbp + dest_slot], rax
+    if op == "load_byte" {
+        let dest = require_dest(instr)?;
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("load_byte: needs srcs[0]=ptr".into())
+        })?;
+        let off_src = instr.srcs.get(1).ok_or_else(|| {
+            BackendError::MalformedInstr("load_byte: needs srcs[1]=offset".into())
+        })?;
+        load_operand(asm, alloc, Reg::Rax, ptr_src);
+        load_operand(asm, alloc, Reg::Rcx, off_src);
+        asm.add(Reg::Rax, Reg::Rcx);
+        asm.movzx_r64_byte_at(Reg::Rax, Reg::Rax);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // `store_byte <ptr>, <offset>, <value>` — write the low 8 bits of
+    // `value` to `[ptr + offset]`.  No dest.
+    //
+    // Sequence:
+    //   mov  rax, [rbp + ptr_slot]
+    //   mov  rcx, [rbp + offset_slot]
+    //   add  rax, rcx
+    //   mov  rdx, [rbp + value_slot]
+    //   mov  byte ptr [rax], dl          ; store low 8 bits
+    if op == "store_byte" {
+        if instr.dest.is_some() {
+            return Err(BackendError::MalformedInstr(
+                "store_byte: must not have a dest".into(),
+            ));
+        }
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("store_byte: needs srcs[0]=ptr".into())
+        })?;
+        let off_src = instr.srcs.get(1).ok_or_else(|| {
+            BackendError::MalformedInstr("store_byte: needs srcs[1]=offset".into())
+        })?;
+        let val_src = instr.srcs.get(2).ok_or_else(|| {
+            BackendError::MalformedInstr("store_byte: needs srcs[2]=value".into())
+        })?;
+        load_operand(asm, alloc, Reg::Rax, ptr_src);
+        load_operand(asm, alloc, Reg::Rcx, off_src);
+        asm.add(Reg::Rax, Reg::Rcx);
+        load_operand(asm, alloc, Reg::Rdx, val_src);
+        asm.mov_byte_at_r8(Reg::Rax, Reg::Rdx);
         return Ok(());
     }
 
@@ -1848,6 +1930,105 @@ mod tests {
         ];
         let result = compile_function(&ctx, &ir, X86_64Abi::SysV);
         assert!(result.is_err());
+    }
+
+    // ── LANG76 — byte memory ops + heap allocation ────────────────────────────
+
+    #[test]
+    fn alloc_bytes_calls_runtime_helper_and_stores_rax() {
+        // alloc_bytes 16 -> buf
+        let ctx = fn_ctx("a", &[], "i64");
+        let ir = vec![
+            instr("const_i64", Some("n"), vec![Op::Int(16)]),
+            instr("alloc_bytes", Some("buf"),
+                  vec![Op::Var("n".into())]),
+            instr("ret_i64", None, vec![Op::Var("buf".into())]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // Arg goes into RDI (SysV).
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "expected `mov rdi, [rbp+disp]` for n");
+        // CALL E8 followed by 4 zero placeholder bytes.
+        assert!(body_contains(&bytes, &[0xE8]),
+                "expected CALL opcode E8");
+        // Store RAX to dest slot: 48 89 85 ...
+        assert!(body_contains(&bytes, &[0x48, 0x89, 0x85]),
+                "expected `mov [rbp+disp], rax` for buf");
+        let plt: Vec<_> = relocs.iter()
+            .filter(|r| r.symbol == "__twig_alloc_bytes").collect();
+        assert_eq!(plt.len(), 1);
+    }
+
+    #[test]
+    fn load_byte_emits_add_then_movzx() {
+        // load_byte ptr, off -> dest
+        let params = vec![("ptr".into(), "i64".into()),
+                          ("off".into(), "i64".into())];
+        let ctx = fn_ctx("lb", &params, "i64");
+        let ir = vec![
+            instr("load_byte", Some("v"),
+                  vec![Op::Var("ptr".into()), Op::Var("off".into())]),
+            instr("ret_i64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // `add rax, rcx` = 48 01 C8
+        assert!(body_contains(&bytes, &[0x48, 0x01, 0xC8]),
+                "expected `add rax, rcx` to combine ptr + offset");
+        // `movzx rax, byte ptr [rax]` = 48 0F B6 00
+        assert!(body_contains(&bytes, &[0x48, 0x0F, 0xB6, 0x00]),
+                "expected `movzx rax, byte [rax]`");
+    }
+
+    #[test]
+    fn store_byte_emits_mov_byte_at_dl() {
+        // store_byte ptr, off, val
+        let params = vec![("ptr".into(), "i64".into()),
+                          ("off".into(), "i64".into()),
+                          ("val".into(), "i64".into())];
+        let ctx = fn_ctx("sb", &params, "void");
+        let ir = vec![
+            instr("store_byte", None,
+                  vec![Op::Var("ptr".into()),
+                       Op::Var("off".into()),
+                       Op::Var("val".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // After `add rax, rcx` (48 01 C8), load val into rdx, then `mov [rax], dl`
+        // which with forced REX prefix is `40 88 10` (REX with all bits 0, opcode 88,
+        // ModRM mod=00 reg=010(DL) rm=000(RAX)).
+        assert!(body_contains(&bytes, &[0x48, 0x01, 0xC8]),
+                "expected `add rax, rcx`");
+        assert!(body_contains(&bytes, &[0x40, 0x88, 0x10]),
+                "expected `mov byte ptr [rax], dl` with empty REX prefix");
+    }
+
+    #[test]
+    fn load_byte_missing_offset_refuses() {
+        let params = vec![("ptr".into(), "i64".into())];
+        let ctx = fn_ctx("bad", &params, "i64");
+        let ir = vec![
+            instr("load_byte", Some("v"),
+                  vec![Op::Var("ptr".into())]),
+            instr("ret_i64", None, vec![Op::Var("v".into())]),
+        ];
+        assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_err());
+    }
+
+    #[test]
+    fn store_byte_with_dest_refuses() {
+        let ctx = fn_ctx("bad", &[], "void");
+        let ir = vec![
+            instr("const_i64", Some("p"), vec![Op::Int(0)]),
+            instr("const_i64", Some("o"), vec![Op::Int(0)]),
+            instr("const_i64", Some("v"), vec![Op::Int(0)]),
+            instr("store_byte", Some("r"),  // illegal!
+                  vec![Op::Var("p".into()),
+                       Op::Var("o".into()),
+                       Op::Var("v".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_err());
     }
 
     #[test]

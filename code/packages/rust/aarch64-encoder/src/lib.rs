@@ -788,6 +788,53 @@ impl Assembler {
         Ok(())
     }
 
+    /// `LDRB Wt, [Xn, #imm]` — load one byte, zero-extend to 32 bits (LANG76).
+    ///
+    /// `imm` is a 12-bit unsigned immediate in the range `[0, 4095]` (the
+    /// byte form is **not** scaled — unlike `LDR Xt` which scales by 8 or
+    /// `LDR Wt` which scales by 4).  Wt is treated as a W-register
+    /// (32-bit) by the hardware so the upper 32 bits of Xt are zeroed
+    /// automatically — exactly the zero-extend semantics LANG76 wants.
+    ///
+    /// Encoding (LDRB unsigned offset):
+    ///
+    /// ```text
+    /// 00 111 0 01 01 imm12 Rn Rt
+    /// 0x39400000 | (imm12 << 10) | (Rn << 5) | Rt
+    /// ```
+    pub fn ldrb(&mut self, rt: Reg, rn: Reg, imm: u32) -> Result<(), EncodeError> {
+        if imm > 0xFFF {
+            return Err(EncodeError::ImmediateOutOfRange { op: "ldrb", bits: 12, value: imm as i64 });
+        }
+        let word = 0x39400000
+            | (imm << 10)
+            | (rn.idx() << 5)
+            | rt.idx();
+        self.emit(word);
+        Ok(())
+    }
+
+    /// `STRB Wt, [Xn, #imm]` — store the low byte of Wt to `[Xn + imm]`
+    /// (LANG76).  Same `imm` constraints as [`ldrb`].
+    ///
+    /// Encoding (STRB unsigned offset):
+    ///
+    /// ```text
+    /// 00 111 0 01 00 imm12 Rn Rt
+    /// 0x39000000 | (imm12 << 10) | (Rn << 5) | Rt
+    /// ```
+    pub fn strb(&mut self, rt: Reg, rn: Reg, imm: u32) -> Result<(), EncodeError> {
+        if imm > 0xFFF {
+            return Err(EncodeError::ImmediateOutOfRange { op: "strb", bits: 12, value: imm as i64 });
+        }
+        let word = 0x39000000
+            | (imm << 10)
+            | (rn.idx() << 5)
+            | rt.idx();
+        self.emit(word);
+        Ok(())
+    }
+
     /// `STRB Wt, [Xn, #-1]!` — pre-indexed byte store, always decrements Rn by 1.
     ///
     /// This is the ARM64 idiom for a "push byte" onto a downward-growing buffer:

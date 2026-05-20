@@ -1,5 +1,22 @@
 # Changelog — `x86_64-encoder`
 
+## 0.3.0 — 2026-05-20 (LANG76 — byte memory primitives)
+
+Two new instruction emitters for `load_byte` / `store_byte` lowering
+in `x86_64-backend`:
+
+- `movzx_r64_byte_at(dst, base)` — `MOVZX r64, BYTE PTR [base]` (4
+  bytes: `REX.W 0F B6 ModRM`).  Loads one byte from `[base]`,
+  zero-extends to 64 bits, writes into `dst`.
+- `mov_byte_at_r8(base, src)` — `MOV BYTE PTR [base], src.low8` (3
+  bytes: `REX 88 ModRM`).  Always emits a REX prefix (even when
+  empty) so the byte-register encoding is unambiguous for any GPR.
+
+Both helpers assert `base.low3() ∉ {4, 5}` (no RSP/R12 SIB; no
+RBP/R13 RIP-relative).  Callers always pre-compute the effective
+address into RAX/RCX/RDX before invoking these helpers, matching the
+LANG76 spec.
+
 ## 0.2.0 — 2026-05-14 (LANG43 phase 5 — calls)
 
 Added `call_label(LabelId)` — `CALL rel32` to an internal label,

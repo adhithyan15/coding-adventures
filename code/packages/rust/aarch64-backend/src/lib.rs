@@ -189,6 +189,8 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "print_string", n_args: 2, returns: false },
     BuiltinSig { name: "input_i64",    n_args: 0, returns: true  },
     BuiltinSig { name: "exit",         n_args: 1, returns: false },
+    // LANG76 — heap allocator.  Returns a pointer (treated as i64).
+    BuiltinSig { name: "alloc_bytes",  n_args: 1, returns: true  },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -876,6 +878,79 @@ fn emit_instr(
                 asm.str_(Reg::X0, Reg::Sp, slot)?;
             }
         }
+        return Ok(());
+    }
+
+    // ── LANG76 — byte memory ops + heap allocation ─────────────────────────────
+
+    // `alloc_bytes <n> -> <dest>` — sugar for `call_builtin "alloc_bytes", n`.
+    if op == "alloc_bytes" {
+        let dest = require_dest(instr)?;
+        let n_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("alloc_bytes: needs srcs[0]=byte_count".into())
+        })?;
+        load_operand(asm, alloc, Reg::X0, n_src)?;
+        asm.bl_external("__twig_alloc_bytes");
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
+    // `load_byte <ptr>, <offset> -> <dest>` — read one byte from
+    // `[ptr + offset]`, zero-extend, store into `dest`.
+    //
+    // ARM64 sequence (X0/X1 are the standard scratch pair):
+    //   ldr  x0, [sp, ptr_slot]
+    //   ldr  x1, [sp, offset_slot]
+    //   add  x0, x0, x1                  ; x0 = ptr + offset
+    //   ldrb w0, [x0]                    ; load byte, zero-extend to w0
+    //   str  x0, [sp, dest_slot]         ; LDRB zeros upper 32 bits of x0
+    if op == "load_byte" {
+        let dest = require_dest(instr)?;
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("load_byte: needs srcs[0]=ptr".into())
+        })?;
+        let off_src = instr.srcs.get(1).ok_or_else(|| {
+            BackendError::MalformedInstr("load_byte: needs srcs[1]=offset".into())
+        })?;
+        load_operand(asm, alloc, Reg::X0, ptr_src)?;
+        load_operand(asm, alloc, Reg::X1, off_src)?;
+        asm.add(Reg::X0, Reg::X0, Reg::X1);
+        asm.ldrb(Reg::X0, Reg::X0, 0)?;
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
+    // `store_byte <ptr>, <offset>, <value>` — write the low 8 bits of
+    // `value` to `[ptr + offset]`.  No dest.
+    //
+    // Sequence:
+    //   ldr  x0, [sp, ptr_slot]
+    //   ldr  x1, [sp, offset_slot]
+    //   add  x0, x0, x1
+    //   ldr  x2, [sp, value_slot]
+    //   strb w2, [x0]                    ; strb writes only the low byte
+    if op == "store_byte" {
+        if instr.dest.is_some() {
+            return Err(BackendError::MalformedInstr(
+                "store_byte: must not have a dest".into(),
+            ));
+        }
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("store_byte: needs srcs[0]=ptr".into())
+        })?;
+        let off_src = instr.srcs.get(1).ok_or_else(|| {
+            BackendError::MalformedInstr("store_byte: needs srcs[1]=offset".into())
+        })?;
+        let val_src = instr.srcs.get(2).ok_or_else(|| {
+            BackendError::MalformedInstr("store_byte: needs srcs[2]=value".into())
+        })?;
+        load_operand(asm, alloc, Reg::X0, ptr_src)?;
+        load_operand(asm, alloc, Reg::X1, off_src)?;
+        asm.add(Reg::X0, Reg::X0, Reg::X1);
+        load_operand(asm, alloc, Reg::X2, val_src)?;
+        asm.strb(Reg::X2, Reg::X0, 0)?;
         return Ok(());
     }
 
@@ -1670,6 +1745,111 @@ mod tests {
             &ctx("bad_arity", &[], "void"), &cir, &HashMap::new()
         );
         assert!(result.is_err(), "wrong arity should error");
+    }
+
+    // ── LANG76 — byte memory ops + heap allocation ────────────────────────────
+
+    #[test]
+    fn alloc_bytes_emits_bl_to_runtime() {
+        let cir = vec![
+            CIRInstr { op: "const_i64".into(), dest: Some("n".into()),
+                       srcs: vec![CIROperand::Int(16)],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "alloc_bytes".into(), dest: Some("buf".into()),
+                       srcs: vec![CIROperand::Var("n".into())],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "ret_i64".into(), dest: None,
+                       srcs: vec![CIROperand::Var("buf".into())],
+                       ty: "i64".into(), deopt_to: None },
+        ];
+        let (_bytes, ext_relocs, _) = compile_with_globals(
+            &ctx("a", &[], "i64"), &cir, &HashMap::new()
+        ).expect("alloc_bytes should compile");
+        assert_eq!(ext_relocs.iter().filter(|r| r.symbol == "__twig_alloc_bytes").count(), 1);
+    }
+
+    #[test]
+    fn load_byte_compiles() {
+        // CIR: load_byte ptr, off -> v; ret_i64 v
+        let params = vec![("ptr".into(), "i64".into()),
+                          ("off".into(), "i64".into())];
+        let cir = vec![
+            CIRInstr { op: "load_byte".into(), dest: Some("v".into()),
+                       srcs: vec![CIROperand::Var("ptr".into()),
+                                  CIROperand::Var("off".into())],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "ret_i64".into(), dest: None,
+                       srcs: vec![CIROperand::Var("v".into())],
+                       ty: "i64".into(), deopt_to: None },
+        ];
+        let bytes = compile(&ctx("lb", &params, "i64"), &cir).expect("compile ok");
+        // LDRB W0, [X0]: 0x39400000 (Rt=0, Rn=0, imm12=0).
+        let words: Vec<u32> = bytes.chunks(4)
+            .map(|c| u32::from_le_bytes([c[0], c[1], c[2], c[3]]))
+            .collect();
+        assert!(words.contains(&0x39400000),
+                "expected LDRB W0, [X0] (0x39400000) in {words:08X?}");
+    }
+
+    #[test]
+    fn store_byte_compiles() {
+        // CIR: store_byte ptr, off, val
+        let params = vec![("ptr".into(), "i64".into()),
+                          ("off".into(), "i64".into()),
+                          ("val".into(), "i64".into())];
+        let cir = vec![
+            CIRInstr { op: "store_byte".into(), dest: None,
+                       srcs: vec![CIROperand::Var("ptr".into()),
+                                  CIROperand::Var("off".into()),
+                                  CIROperand::Var("val".into())],
+                       ty: "void".into(), deopt_to: None },
+            CIRInstr { op: "ret_void".into(), dest: None,
+                       srcs: vec![], ty: "void".into(), deopt_to: None },
+        ];
+        let bytes = compile(&ctx("sb", &params, "void"), &cir).expect("compile ok");
+        // STRB W2, [X0]: 0x39000002 (Rt=2, Rn=0, imm12=0).
+        let words: Vec<u32> = bytes.chunks(4)
+            .map(|c| u32::from_le_bytes([c[0], c[1], c[2], c[3]]))
+            .collect();
+        assert!(words.contains(&0x39000002),
+                "expected STRB W2, [X0] (0x39000002) in {words:08X?}");
+    }
+
+    #[test]
+    fn load_byte_missing_offset_refuses() {
+        let params = vec![("ptr".into(), "i64".into())];
+        let cir = vec![
+            CIRInstr { op: "load_byte".into(), dest: Some("v".into()),
+                       srcs: vec![CIROperand::Var("ptr".into())],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "ret_i64".into(), dest: None,
+                       srcs: vec![CIROperand::Var("v".into())],
+                       ty: "i64".into(), deopt_to: None },
+        ];
+        assert!(compile(&ctx("bad", &params, "i64"), &cir).is_err());
+    }
+
+    #[test]
+    fn store_byte_with_dest_refuses() {
+        let cir = vec![
+            CIRInstr { op: "const_i64".into(), dest: Some("p".into()),
+                       srcs: vec![CIROperand::Int(0)],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "const_i64".into(), dest: Some("o".into()),
+                       srcs: vec![CIROperand::Int(0)],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "const_i64".into(), dest: Some("v".into()),
+                       srcs: vec![CIROperand::Int(0)],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "store_byte".into(), dest: Some("r".into()),  // illegal!
+                       srcs: vec![CIROperand::Var("p".into()),
+                                  CIROperand::Var("o".into()),
+                                  CIROperand::Var("v".into())],
+                       ty: "void".into(), deopt_to: None },
+            CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![],
+                       ty: "void".into(), deopt_to: None },
+        ];
+        assert!(compile(&ctx("bad", &[], "void"), &cir).is_err());
     }
 
     #[test]

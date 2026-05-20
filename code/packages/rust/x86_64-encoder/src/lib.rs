@@ -654,6 +654,46 @@ impl Assembler {
         self.emit_u8(modrm(0b11, dst.low3(), src.low3()));
     }
 
+    /// `MOVZX r64, byte ptr [base]` — load one byte from `[base]`, zero-extend
+    /// to 64 bits, store into `dst` (LANG76).
+    ///
+    /// Opcode `REX.W 0F B6 /r ModRM(mod=00, reg=dst, rm=base)`, 4 bytes.
+    ///
+    /// **Constraints on `base`:** must not be `RSP`/`R12` (low3 == 4, which
+    /// would require an SIB byte) and must not be `RBP`/`R13` (low3 == 5,
+    /// which `mod=00` reinterprets as RIP-relative addressing).  Callers
+    /// should always pre-compute the effective address into `RAX` / `RCX`
+    /// / `RDX` (low3 ∈ {0, 1, 2}) before invoking this helper.  Violating
+    /// this contract is a programmer error and the function panics.
+    pub fn movzx_r64_byte_at(&mut self, dst: Reg, base: Reg) {
+        assert_ne!(base.low3(), 4, "movzx_r64_byte_at: RSP/R12 needs SIB — use a different base register");
+        assert_ne!(base.low3(), 5, "movzx_r64_byte_at: RBP/R13 with mod=00 means RIP-relative — use a different base register");
+        self.emit_u8(rex(true, dst.high1(), false, base.high1()));
+        self.emit_u8(0x0F);
+        self.emit_u8(0xB6);
+        self.emit_u8(modrm(0b00, dst.low3(), base.low3()));
+    }
+
+    /// `MOV byte ptr [base], r8` — store the low 8 bits of `src` to `[base]`
+    /// (LANG76).
+    ///
+    /// Opcode `REX 88 /r ModRM(mod=00, reg=src, rm=base)`, 3 bytes.  An
+    /// "empty" REX prefix (`0x40`) is always emitted so the byte-register
+    /// encoding is unambiguous for *any* `src` (without REX the
+    /// `src.low3 ∈ {4,5,6,7}` slots map to legacy `AH`/`CH`/`DH`/`BH`
+    /// instead of `SPL`/`BPL`/`SIL`/`DIL`, which we don't want).
+    ///
+    /// **Constraints on `base`:** same as [`movzx_r64_byte_at`] — must not
+    /// be RSP/R12 (SIB) or RBP/R13 (RIP-relative).
+    pub fn mov_byte_at_r8(&mut self, base: Reg, src: Reg) {
+        assert_ne!(base.low3(), 4, "mov_byte_at_r8: RSP/R12 needs SIB — use a different base register");
+        assert_ne!(base.low3(), 5, "mov_byte_at_r8: RBP/R13 with mod=00 means RIP-relative — use a different base register");
+        // Force REX prefix so byte-reg encoding is unambiguous.
+        self.emit_u8(rex(false, src.high1(), false, base.high1()));
+        self.emit_u8(0x88);
+        self.emit_u8(modrm(0b00, src.low3(), base.low3()));
+    }
+
     // -----------------------------------------------------------------------
     // Stack
     // -----------------------------------------------------------------------
