@@ -154,9 +154,22 @@ class TestUnary:
     def test_not_null(self) -> None:
         assert apply_unary(UnaryOpCode.NOT, None) is None
 
-    def test_not_int_raises(self) -> None:
+    def test_not_int_coerces_to_truth(self) -> None:
+        # SQLite has no separate BOOLEAN class; ``NOT 0`` is ``1`` and
+        # ``NOT 5`` is ``0``.  The previous behaviour raised
+        # TypeMismatch for any non-bool input — same family of bug as the
+        # AND/OR integer-truthiness fix.
+        assert apply_unary(UnaryOpCode.NOT, 1) is False
+        assert apply_unary(UnaryOpCode.NOT, 0) is True
+        assert apply_unary(UnaryOpCode.NOT, 5) is False
+        assert apply_unary(UnaryOpCode.NOT, -1) is False
+        assert apply_unary(UnaryOpCode.NOT, 1.5) is False
+        assert apply_unary(UnaryOpCode.NOT, 0.0) is True
+
+    def test_not_string_still_raises(self) -> None:
+        # Strings have no defined truth value here — keep the TypeMismatch.
         with pytest.raises(TypeMismatch):
-            apply_unary(UnaryOpCode.NOT, 1)
+            apply_unary(UnaryOpCode.NOT, "abc")
 
 
 class TestLike:

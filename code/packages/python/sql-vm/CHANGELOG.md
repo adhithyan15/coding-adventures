@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.46.0 — 2026-05-20
+
+### Fixed
+
+- **``apply_unary(NOT, …)`` now coerces numeric operands to truth**
+  via the same ``_truthiness`` helper used by ``AND``/``OR`` in 1.45.0.
+  ``NOT 0`` was raising ``TypeMismatch`` (expected boolean, got
+  INTEGER) and SQLite expects ``1``; same for ``NOT 5``, ``NOT 1.5``,
+  etc.  Strings still raise TypeMismatch as before.
+
 ## 1.45.0 — 2026-05-20
 
 ### Fixed
