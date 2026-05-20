@@ -1,0 +1,94 @@
+# ================================================================
+# coding-adventures-matrix-rust-python — Python wrapper package
+# ================================================================
+#
+# MX09 Phase 4.  Pure-Python wrapper that re-exports the symbols
+# from the `matrix_rust_python` C extension (built by the Rust
+# crate at code/packages/rust/matrix-rust-python/) with proper
+# type hints.
+#
+# Why a separate package?  Two reasons:
+#
+# 1. **Stable import path for consumers.**  Future ml-framework-*
+#    Python packages do `import coding_adventures_matrix_rust_python
+#    as m` and get a stable namespace.  If we ever rename the
+#    underlying C extension or switch its build tooling, this
+#    wrapper absorbs the change.
+#
+# 2. **Type hints.**  C extensions don't carry inline type
+#    annotations; the `.pyi` stub here gives IDEs and `mypy` the
+#    signatures of `Graph`, `Runtime`, `graph_round_trip_json`,
+#    `run_graph_on_cpu`.
+#
+# The underlying `matrix_rust_python` C extension is **not yet
+# published to PyPI** (that's MX09 Phase 5 / 3b).  Until then,
+# consumers install it manually:
+#
+#     cd code/packages/rust/matrix-rust-python
+#     cargo build --release
+#     cp target/release/libmatrix_rust_python.{so,dylib} \
+#        ~/.local/lib/python<X.Y>/site-packages/matrix_rust_python.so
+#
+# Then `pip install -e .` for this package, and
+# `import coding_adventures_matrix_rust_python` will work.  The
+# pytest smoke test in tests/test_smoke.py skips cleanly if the C
+# extension isn't installed (so this package is import-safe even
+# without the extension built).
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-matrix-rust-python"
+version = "0.1.0"
+description = "Python wrapper for the Rust matrix execution layer — Graph + Runtime classes with bytes I/O, backed by matrix-ir / matrix-runtime / matrix-cpu via the matrix_rust_python C extension"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+readme = "README.md"
+keywords = ["matrix", "linear-algebra", "rust", "ml", "tensors", "compute"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Rust",
+    "Topic :: Scientific/Engineering",
+]
+
+# IMPORTANT: matrix_rust_python is not a PyPI package today (it's
+# built locally from the Rust crate).  If/when MX09 Phase 5 lands a
+# PyPI publish workflow, add it back here as:
+#
+#     dependencies = ["matrix-rust-python >= 0.3.1"]
+#
+# Until then, install the C extension manually before importing
+# this package.  The runtime check in __init__.py raises a precise
+# ImportError if it's missing.
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.4", "mypy>=1.10"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/coding_adventures_matrix_rust_python"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.lint]
+# Keep this conservative — the wrapper is ~50 LOC of re-exports.
+select = ["E", "W", "F", "I", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# No coverage gate in Phase 4 — the wrapper is a thin re-export
+# layer; coverage would be misleading (every line is "covered" if
+# the extension imports at all, regardless of whether the smoke
+# test actually exercises every export).
+addopts = "-v"
