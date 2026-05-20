@@ -1797,6 +1797,7 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
         return AggregateExpr(
             func=AggFunc.GROUP_CONCAT,
             arg=args[0],
+            distinct=distinct,
             separator=separator,
             filter_expr=filter_expr_val,
         )
