@@ -158,6 +158,15 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_foreign_au
   --check
 ```
 
+The generated `tests/fixtures/whatwg-formatting-audit.json` fixture indexes
+active formatting elements, adoption-agency recovery, paragraph/list implied
+end tags, ruby scopes, headings, and formatting reconstruction:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_formatting_audit_fixture.py \
+  --check
+```
+
 The broad smoke test and the focused audit fixtures use the shared
 `tests/common` html5lib parser and DOM dump helpers, so new parser conformance
 fixtures exercise the same normalization path.

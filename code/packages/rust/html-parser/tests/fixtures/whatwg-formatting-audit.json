@@ -1,0 +1,3845 @@
+{
+  "case_count": 638,
+  "cases": [
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-1",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:1"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-2",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:2"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-3",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:3"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-4",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:4"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-5",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:5"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-6",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:6"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-7",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:7"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-8",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:8"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-9",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:9"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "adoption01-dat-10",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "adoption01.dat:10"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-11",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:11"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-13",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:13"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-14",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:14"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-15",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:15"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "adoption01-dat-16",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "adoption01.dat:16"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "adoption01-dat-17",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "adoption01.dat:17"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "adoption02-dat-18",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "adoption02.dat:18"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption02-dat-19",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption02.dat:19"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "blocks-dat-20",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "blocks.dat:20"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "blocks-dat-21",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "blocks.dat:21"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "blocks-dat-22",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "blocks.dat:22"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "blocks-dat-23",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "blocks.dat:23"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "blocks-dat-24",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "blocks.dat:24"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "blocks-dat-25",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "blocks.dat:25"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-26",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:26"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-27",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:27"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-28",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:28"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-29",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:29"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-30",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:30"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-31",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:31"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-32",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:32"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-33",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:33"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-34",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:34"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-35",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:35"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-36",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:36"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-37",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:37"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "blocks-dat-38",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "blocks.dat:38"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "blocks-dat-39",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "blocks.dat:39"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-40",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:40"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-41",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:41"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-42",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:42"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-43",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:43"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-44",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:44"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-45",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:45"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-46",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:46"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-47",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:47"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-48",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:48"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-49",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:49"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-50",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:50"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-51",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:51"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-52",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:52"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-53",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:53"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-54",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:54"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-55",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:55"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-56",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:56"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-57",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:57"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "blocks-dat-58",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "blocks.dat:58"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "blocks-dat-59",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "blocks.dat:59"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-60",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:60"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-61",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:61"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-62",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:62"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-63",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:63"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-64",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:64"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "blocks-dat-65",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "blocks.dat:65"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "blocks-dat-66",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "blocks.dat:66"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "blocks-dat-67",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "blocks.dat:67"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "doctype01-dat-116",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "doctype01.dat:116"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "domjs-unsafe-dat-133",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "domjs-unsafe.dat:133"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "domjs-unsafe-dat-165",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "domjs-unsafe.dat:165"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "domjs-unsafe-dat-166",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "domjs-unsafe.dat:166"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "domjs-unsafe-dat-167",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "domjs-unsafe.dat:167"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "domjs-unsafe-dat-168",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "domjs-unsafe.dat:168"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "domjs-unsafe-dat-169",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "domjs-unsafe.dat:169"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "html5test-com-dat-275",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "html5test-com.dat:275"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "html5test-com-dat-289",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "html5test-com.dat:289"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "html5test-com-dat-291",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "html5test-com.dat:291"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "inbody01-dat-296",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "inbody01.dat:296"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "inbody01-dat-297",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "inbody01.dat:297"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "inbody01-dat-298",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "inbody01.dat:298"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "main-element-dat-303",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "main-element.dat:303"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "main-element-dat-304",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "main-element.dat:304"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "main-element-dat-305",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "main-element.dat:305"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "menuitem-element-dat-312",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "menuitem-element.dat:312"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "menuitem-element-dat-313",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "menuitem-element.dat:313"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "menuitem-element-dat-314",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "menuitem-element.dat:314"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "menuitem-element-dat-324",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "menuitem-element.dat:324"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "menuitem-element-dat-325",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "menuitem-element.dat:325"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "noscript01-dat-341",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "noscript01.dat:341"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "noscript01-dat-342",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "noscript01.dat:342"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "plain-text-unsafe-dat-371",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "plain-text-unsafe.dat:371"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "quirks01-dat-382",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "quirks01.dat:382"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "quirks01-dat-383",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "quirks01.dat:383"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "quirks01-dat-384",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "quirks01.dat:384"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "quirks01-dat-385",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "quirks01.dat:385"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-386",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:386"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-387",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:387"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-388",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:388"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-389",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:389"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-390",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:390"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-391",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:391"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-392",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:392"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-393",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:393"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-394",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:394"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-395",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:395"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-396",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:396"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-397",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:397"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-398",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:398"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-399",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:399"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-400",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:400"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-401",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:401"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-402",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:402"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-403",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:403"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-404",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:404"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-405",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:405"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "ruby-dat-406",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "ruby.dat:406"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "search-element-dat-433",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "search-element.dat:433"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "search-element-dat-434",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "search-element.dat:434"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "search-element-dat-435",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "search-element.dat:435"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tables01-dat-440",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tables01.dat:440"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tables01-dat-453",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tables01.dat:453"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "template-dat-460",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "template.dat:460"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "template-dat-512",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "template.dat:512"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "template-dat-524",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "template.dat:524"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "template-dat-531",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "template.dat:531"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "template-dat-562",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "template.dat:562"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-567",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:567"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-585",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:585"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-586",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:586"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests1-dat-587",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests1.dat:587"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-588",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:588"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests1-dat-589",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests1.dat:589"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-591",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:591"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-592",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:592"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-594",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:594"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests1-dat-595",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests1.dat:595"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-596",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:596"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-597",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:597"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-598",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:598"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests1-dat-599",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests1.dat:599"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-617",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:617"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-618",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:618"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-619",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:619"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-620",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:620"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-621",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:621"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-622",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:622"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests1-dat-623",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests1.dat:623"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-624",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:624"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-625",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:625"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-626",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:626"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-630",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:630"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-631",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:631"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-632",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:632"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-633",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:633"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-634",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:634"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-635",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:635"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-636",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:636"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-637",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:637"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-638",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:638"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-639",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:639"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-640",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:640"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-641",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:641"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-643",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:643"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-644",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:644"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-645",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:645"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-646",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:646"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests1-dat-647",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests1.dat:647"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-653",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:653"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-654",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:654"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-655",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:655"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-656",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:656"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-657",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:657"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-658",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:658"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-659",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:659"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests1-dat-660",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests1.dat:660"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-661",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:661"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests1-dat-662",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests1.dat:662"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-663",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:663"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-664",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:664"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests1-dat-665",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests1.dat:665"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-667",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:667"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests1-dat-668",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests1.dat:668"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests1-dat-669",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests1.dat:669"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests1-dat-671",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests1.dat:671"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests1-dat-675",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests1.dat:675"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests1-dat-676",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests1.dat:676"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-689",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:689"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-690",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:690"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-691",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:691"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-692",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:692"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-693",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:693"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-694",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:694"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-695",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:695"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-696",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:696"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-697",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:697"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-698",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:698"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-699",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:699"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-709",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:709"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests10-dat-710",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests10.dat:710"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests10-dat-711",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests10.dat:711"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-712",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:712"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-713",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:713"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-714",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:714"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests12-dat-745",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests12.dat:745"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests12-dat-746",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests12.dat:746"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests15-dat-754",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests15.dat:754"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests15-dat-755",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests15.dat:755"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests15-dat-765",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests15.dat:765"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests16-dat-963",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests16.dat:963"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-1015",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:1015"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-1016",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:1016"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-1017",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:1017"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-1018",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:1018"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-1019",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:1019"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-1020",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:1020"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-1022",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:1022"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-1023",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:1023"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-1024",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:1024"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-1025",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:1025"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-1026",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:1026"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-1027",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:1027"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-1028",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:1028"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-1029",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:1029"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-1030",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:1030"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-1031",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:1031"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-1035",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:1035"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-1036",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:1036"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests19-dat-1037",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests19.dat:1037"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests19-dat-1043",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests19.dat:1043"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-1044",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:1044"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-1045",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:1045"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-1046",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:1046"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-1047",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:1047"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-1048",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:1048"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-1055",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:1055"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-1056",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:1056"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-1059",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:1059"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-1060",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:1060"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-1061",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:1061"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests19-dat-1064",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests19.dat:1064"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests19-dat-1065",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests19.dat:1065"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests19-dat-1066",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests19.dat:1066"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-1095",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:1095"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-1096",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:1096"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests19-dat-1103",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests19.dat:1103"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests19-dat-1104",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests19.dat:1104"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests19-dat-1105",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests19.dat:1105"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests19-dat-1106",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests19.dat:1106"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests19-dat-1107",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests19.dat:1107"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests19-dat-1108",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests19.dat:1108"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests19-dat-1111",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests19.dat:1111"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests19-dat-1112",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests19.dat:1112"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests19-dat-1115",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests19.dat:1115"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests19-dat-1116",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests19.dat:1116"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1117",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1117"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests20-dat-1118",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests20.dat:1118"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests20-dat-1119",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests20.dat:1119"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests20-dat-1120",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests20.dat:1120"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1121",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1121"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1122",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1122"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1123",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1123"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1124",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1124"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1125",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1125"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1126",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1126"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests20-dat-1127",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests20.dat:1127"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1128",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1128"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1129",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1129"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1130",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1130"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1131",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1131"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1132",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1132"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1133",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1133"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1134",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1134"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1135",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1135"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1136",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1136"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests20-dat-1137",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests20.dat:1137"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1138",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1138"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1139",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1139"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1140",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1140"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1141",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1141"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests20-dat-1142",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests20.dat:1142"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests20-dat-1143",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests20.dat:1143"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests20-dat-1144",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests20.dat:1144"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1145",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1145"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1146",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1146"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1147",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1147"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests20-dat-1148",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests20.dat:1148"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests20-dat-1149",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests20.dat:1149"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests20-dat-1150",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests20.dat:1150"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1151",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1151"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1152",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1152"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1153",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1153"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1154",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1154"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1155",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1155"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1156",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1156"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1158",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1158"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1160",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1160"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1161",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1161"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1165",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1165"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests22-dat-1204",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests22.dat:1204"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests22-dat-1205",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests22.dat:1205"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests22-dat-1206",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests22.dat:1206"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests22-dat-1207",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests22.dat:1207"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests22-dat-1208",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests22.dat:1208"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests23-dat-1209",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests23.dat:1209"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests23-dat-1210",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests23.dat:1210"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests23-dat-1211",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests23.dat:1211"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests23-dat-1212",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests23.dat:1212"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests23-dat-1213",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests23.dat:1213"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-1248",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:1248"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-1249",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:1249"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-1250",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:1250"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-1251",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:1251"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-1252",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:1252"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-1253",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:1253"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-1254",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:1254"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-1255",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:1255"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-1256",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:1256"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests26-dat-1257",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests26.dat:1257"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests26-dat-1258",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests26.dat:1258"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests26-dat-1259",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests26.dat:1259"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests26-dat-1260",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests26.dat:1260"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests26-dat-1261",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests26.dat:1261"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests26-dat-1263",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests26.dat:1263"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests26-dat-1264",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests26.dat:1264"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests26-dat-1266",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests26.dat:1266"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests2-dat-10",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests2.dat:10"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests2-dat-11",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests2.dat:11"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests2-dat-17",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests2.dat:17"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests2-dat-18",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests2.dat:18"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests2-dat-26",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests2.dat:26"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests2-dat-27",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests2.dat:27"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests2-dat-28",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests2.dat:28"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests2-dat-29",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests2.dat:29"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests2-dat-30",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests2.dat:30"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests2-dat-41",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests2.dat:41"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests2-dat-58",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests2.dat:58"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests2-dat-59",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests2.dat:59"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests5-dat-11",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests5.dat:11"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests9-dat-4",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests9.dat:4"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests9-dat-13",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests9.dat:13"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests9-dat-14",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests9.dat:14"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests9-dat-15",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests9.dat:15"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests9-dat-16",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests9.dat:16"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests9-dat-17",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests9.dat:17"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests9-dat-18",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests9.dat:18"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests9-dat-19",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests9.dat:19"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests9-dat-20",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests9.dat:20"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests9-dat-21",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests9.dat:21"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests9-dat-22",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests9.dat:22"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests9-dat-23",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests9.dat:23"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests2-dat-61",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests2.dat:61"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests3-dat-15",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests3.dat:15"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests3-dat-16",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests3.dat:16"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests3-dat-20",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests3.dat:20"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests3-dat-21",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests3.dat:21"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests3-dat-22",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests3.dat:22"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests3-dat-23",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests3.dat:23"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests3-dat-24",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests3.dat:24"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests7-dat-14",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests7.dat:14"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests7-dat-15",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests7.dat:15"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests7-dat-29",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests7.dat:29"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests7-dat-30",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests7.dat:30"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests7-dat-31",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests7.dat:31"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests7-dat-33",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests7.dat:33"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests8-dat-6",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests8.dat:6"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests8-dat-9",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests8.dat:9"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests8-dat-10",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests8.dat:10"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests4-dat-3",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests4.dat:3"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-11",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:11"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-12",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:12"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-13",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:13"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-14",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:14"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-15",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:15"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-16",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:16"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-17",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:17"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-18",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:18"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-19",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:19"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-37",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:37"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-38",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:38"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-39",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:39"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-40",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:40"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-41",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:41"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-42",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:42"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-43",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:43"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-44",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:44"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-45",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:45"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-46",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:46"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-59",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:59"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-60",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:60"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-61",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:61"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-62",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:62"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-63",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:63"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-64",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:64"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-65",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:65"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-66",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:66"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-67",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:67"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-68",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:68"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-69",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:69"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-70",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:70"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-71",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:71"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-72",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:72"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-73",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:73"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-47",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:47"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests-innerhtml-1-dat-49",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests_innerHTML_1.dat:49"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-2",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:2"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-20",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:20"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-21",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:21"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests1-dat-22",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests1.dat:22"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-23",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:23"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests1-dat-24",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests1.dat:24"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-26",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:26"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-27",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:27"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-29",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:29"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests1-dat-30",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests1.dat:30"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-31",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:31"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-32",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:32"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-33",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:33"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests1-dat-34",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests1.dat:34"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-52",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:52"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-53",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:53"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-54",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:54"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-55",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:55"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-56",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:56"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-57",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:57"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests1-dat-58",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests1.dat:58"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-59",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:59"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-60",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:60"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-61",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:61"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-65",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:65"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-66",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:66"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-67",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:67"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-68",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:68"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-69",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:69"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-70",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:70"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-71",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:71"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-72",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:72"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-73",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:73"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-74",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:74"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-75",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:75"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-76",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:76"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-78",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:78"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-79",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:79"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-80",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:80"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-81",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:81"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests1-dat-82",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests1.dat:82"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-88",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:88"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-89",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:89"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-90",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:90"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-91",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:91"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-92",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:92"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-93",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:93"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-94",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:94"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests1-dat-95",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests1.dat:95"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-96",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:96"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests1-dat-97",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests1.dat:97"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests1-dat-98",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests1.dat:98"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests1-dat-99",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests1.dat:99"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "tests1-dat-100",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "tests1.dat:100"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests1-dat-102",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests1.dat:102"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests1-dat-103",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests1.dat:103"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests1-dat-104",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests1.dat:104"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests1-dat-106",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests1.dat:106"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests1-dat-110",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests1.dat:110"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests1-dat-111",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests1.dat:111"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-12",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:12"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-13",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:13"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-14",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:14"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-15",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:15"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-16",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:16"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-17",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:17"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-18",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:18"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-19",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:19"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-20",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:20"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-21",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:21"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-22",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:22"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-32",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:32"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests10-dat-33",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests10.dat:33"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests10-dat-34",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests10.dat:34"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-35",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:35"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-36",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:36"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests10-dat-37",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests10.dat:37"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests12-dat-1",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests12.dat:1"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests12-dat-2",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests12.dat:2"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests15-dat-1",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests15.dat:1"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests15-dat-2",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests15.dat:2"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests15-dat-12",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests15.dat:12"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests16-dat-196",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests16.dat:196"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-2",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:2"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-3",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:3"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-4",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:4"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-5",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:5"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-6",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:6"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-7",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:7"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-9",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:9"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-10",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:10"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-11",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:11"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-12",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:12"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-13",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:13"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-14",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:14"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-15",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:15"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-16",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:16"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-17",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:17"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "tests19-dat-18",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "tests19.dat:18"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-22",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:22"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-23",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:23"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests19-dat-24",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests19.dat:24"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests19-dat-30",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests19.dat:30"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-31",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:31"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-32",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:32"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-33",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:33"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-34",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:34"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests19-dat-35",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests19.dat:35"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-42",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:42"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-43",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:43"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-46",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:46"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-47",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:47"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-48",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:48"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests19-dat-51",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests19.dat:51"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests19-dat-52",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests19.dat:52"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests19-dat-53",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests19.dat:53"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-82",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:82"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests19-dat-83",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests19.dat:83"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests19-dat-90",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests19.dat:90"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests19-dat-91",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests19.dat:91"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests19-dat-92",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests19.dat:92"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests19-dat-93",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests19.dat:93"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests19-dat-94",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests19.dat:94"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests19-dat-95",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests19.dat:95"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests19-dat-98",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests19.dat:98"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests19-dat-99",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests19.dat:99"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests19-dat-102",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests19.dat:102"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests19-dat-103",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests19.dat:103"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-1",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:1"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests20-dat-2",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests20.dat:2"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests20-dat-3",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests20.dat:3"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests20-dat-4",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests20.dat:4"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-5",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:5"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-6",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:6"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-7",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:7"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-8",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:8"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-9",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:9"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-10",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:10"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests20-dat-11",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests20.dat:11"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-12",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:12"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-13",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:13"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-14",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:14"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-15",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:15"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-16",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:16"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-17",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:17"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-18",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:18"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-19",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:19"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-20",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:20"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests20-dat-21",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests20.dat:21"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-22",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:22"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-23",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:23"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-24",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:24"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-25",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:25"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests20-dat-26",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests20.dat:26"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests20-dat-27",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests20.dat:27"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "tests20-dat-28",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "tests20.dat:28"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-29",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:29"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-30",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:30"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-31",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:31"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests20-dat-32",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests20.dat:32"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests20-dat-33",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests20.dat:33"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tests20-dat-34",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tests20.dat:34"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-35",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:35"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-36",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:36"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-37",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:37"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-38",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:38"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-39",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:39"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-40",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:40"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-42",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:42"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-44",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:44"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-45",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:45"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests20-dat-49",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests20.dat:49"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests22-dat-1",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests22.dat:1"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests22-dat-2",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests22.dat:2"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests22-dat-3",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests22.dat:3"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests22-dat-4",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests22.dat:4"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests22-dat-5",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests22.dat:5"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests23-dat-1",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests23.dat:1"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests23-dat-2",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests23.dat:2"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests23-dat-3",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests23.dat:3"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests23-dat-4",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests23.dat:4"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests23-dat-5",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests23.dat:5"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-1",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:1"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-2",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:2"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-3",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:3"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-4",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:4"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-5",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:5"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-6",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:6"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-7",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:7"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-8",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:8"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tests26-dat-9",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tests26.dat:9"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests26-dat-10",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests26.dat:10"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests26-dat-11",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests26.dat:11"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests26-dat-12",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests26.dat:12"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests26-dat-13",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests26.dat:13"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tests26-dat-14",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tests26.dat:14"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests26-dat-16",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests26.dat:16"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests26-dat-17",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests26.dat:17"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "tests26-dat-19",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "tests26.dat:19"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption01-dat-18",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption01.dat:18"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "scripted-adoption01-dat-1",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "scripted/adoption01.dat:1"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "scripted-ark-dat-1",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "scripted/ark.dat:1"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tricky01-dat-1",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tricky01.dat:1"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tricky01-dat-2",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tricky01.dat:2"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tricky01-dat-3",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tricky01.dat:3"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "tricky01-dat-4",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "tricky01.dat:4"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tricky01-dat-5",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tricky01.dat:5"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "tricky01-dat-6",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "tricky01.dat:6"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tricky01-dat-7",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tricky01.dat:7"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tricky01-dat-8",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tricky01.dat:8"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "tricky01-dat-9",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "tricky01.dat:9"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "webkit01-dat-13",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "webkit01.dat:13"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "webkit01-dat-15",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "webkit01.dat:15"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "webkit01-dat-29",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "webkit01.dat:29"
+    },
+    {
+      "axis": "ruby-implied-end-tags",
+      "id": "webkit01-dat-30",
+      "reason": "ruby rb, rt, rp, and rtc implied end-tag scopes",
+      "source": "webkit01.dat:30"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "webkit01-dat-33",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "webkit01.dat:33"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "webkit01-dat-34",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "webkit01.dat:34"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "webkit01-dat-39",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "webkit01.dat:39"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "webkit01-dat-40",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "webkit01.dat:40"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "webkit01-dat-41",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "webkit01.dat:41"
+    },
+    {
+      "axis": "list-definition-boundary",
+      "id": "webkit01-dat-46",
+      "reason": "li, dd, and dt implied end tags around list and definition boundaries",
+      "source": "webkit01.dat:46"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "webkit01-dat-47",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "webkit01.dat:47"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "webkit02-dat-2",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "webkit02.dat:2"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "webkit02-dat-3",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "webkit02.dat:3"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "webkit02-dat-12",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "webkit02.dat:12"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "webkit02-dat-13",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "webkit02.dat:13"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "webkit02-dat-14",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "webkit02.dat:14"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "webkit02-dat-15",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "webkit02.dat:15"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "webkit02-dat-16",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "webkit02.dat:16"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "webkit02-dat-17",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "webkit02.dat:17"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "webkit02-dat-18",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "webkit02.dat:18"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "webkit02-dat-36",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "webkit02.dat:36"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "webkit02-dat-37",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "webkit02.dat:37"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "webkit02-dat-46",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "webkit02.dat:46"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "webkit02-dat-49",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "webkit02.dat:49"
+    }
+  ],
+  "counts_by_axis": {
+    "adoption-agency-formatting": 114,
+    "formatting-reconstruction": 30,
+    "heading-boundary": 26,
+    "interactive-formatting-boundary": 150,
+    "list-definition-boundary": 57,
+    "paragraph-boundary": 218,
+    "ruby-implied-end-tags": 43
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress active formatting elements, implied end tags, ruby scopes, headings, and paragraph/list boundaries.",
+  "format": "whatwg-html-formatting-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

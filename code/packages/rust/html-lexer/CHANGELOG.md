@@ -36,6 +36,8 @@ documented in this file.
   generator alongside the other parser audit fixture generators.
 - The generated fixture manifest now includes the parser foreign-content audit
   generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser formatting audit
+  generator alongside the other parser audit fixture generators.
 - Parser-facing seeded RCDATA/RAWTEXT/script end-tag continuation contexts,
   including end-tag-name, whitespace, attributes, and self-closing substates
   with current-end-tag and temporary-buffer seeding.
