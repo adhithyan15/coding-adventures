@@ -96,19 +96,40 @@ Slots absent from the fixture render as `[slot: name]` placeholders.
 
 ## Primitive → HTML mapping
 
-| Mosaic    | HTML element              |
-|-----------|---------------------------|
-| Box       | `<div>`                   |
-| Column    | `<div style="display:flex;flex-direction:column">` |
-| Row       | `<div style="display:flex;flex-direction:row">` |
-| Text      | `<span>text content</span>` |
-| Image     | `<img src="…" alt="…">`  |
-| Spacer    | `<div style="flex:1">`    |
-| Scroll    | `<div style="overflow:auto">` |
-| Divider   | `<hr>`                    |
-| Stack     | `<div style="position:relative">` |
-| Icon      | `<span class="icon">`     |
-| Grid      | `<table>` with fixture-driven `<thead>`/`<tbody>` |
+| Mosaic               | HTML element                                          |
+|----------------------|-------------------------------------------------------|
+| Box                  | `<div>`                                               |
+| Column               | `<div style="display:flex;flex-direction:column">`    |
+| Row                  | `<div style="display:flex;flex-direction:row">`       |
+| Text                 | `<span>text content</span>`                           |
+| Image                | `<img src="…" alt="…">`                              |
+| Spacer               | `<div style="flex:1">`                                |
+| Scroll               | `<div style="overflow:auto">`                         |
+| Divider              | `<hr>`                                                |
+| Stack                | `<div style="position:relative">`                     |
+| Icon                 | `<span class="icon">`                                 |
+| Grid                 | `<table>` with fixture-driven `<thead>`/`<tbody>`     |
+| HostInput (UI29)     | `<input type="text" value="{{value}}">`               |
+| HostButton (UI29)    | `<button>{{label}}</button>`                          |
+| HostScroll (UI29)    | `<div style="overflow:auto">`                         |
+| HostTable (UI29)     | `<table>` with `<colgroup>`/`<thead>`/`<tbody>`/`<tfoot>` |
+| If / Else (UI29)     | `<!-- mosaic-if when="..." -->` comment markers       |
+| For (UI29)           | `<!-- mosaic-for each="..." as="..." -->` comment markers |
+
+### The `If` / `For` static-HTML compromise
+
+HTML has no runtime conditional or loop construct. The pipeline emitter
+lowers `If` and `For` to **machine-readable HTML comment markers**
+carrying the original `when:` / `each:` / `as:` / `index:` source text
+verbatim. A downstream template engine (Handlebars, Mustache, Jinja
+with minor config, the host's own renderer, …) walks the fragment and
+resolves them at render time.
+
+For literal `when: true` / `when: false`, the emitter folds the
+conditional at compile time: just the chosen branch lands in the
+output, no markers. A future "Mosaic HTML runtime" PR could replace
+the marker format with a small JS shim that expands them client-side;
+the marker format is neutral about what resolves it.
 
 ## Use cases
 
