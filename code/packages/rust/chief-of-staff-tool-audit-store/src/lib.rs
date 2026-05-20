@@ -1326,6 +1326,31 @@ impl ToolAuditSupervisorDrainRunSummary {
     pub fn should_continue(&self) -> bool {
         !self.reached_end_of_log
     }
+
+    /// Return whether the actual run reached the current end of the audit log.
+    pub fn reached_end_of_log(&self) -> bool {
+        self.reached_end_of_log
+    }
+
+    /// Return whether the actual run consumed the configured tick budget.
+    pub fn exhausted_tick_budget(&self) -> bool {
+        self.exhausted_tick_budget
+    }
+
+    /// Return whether the planned or replayed rows contain follow-up pressure.
+    pub fn requires_follow_up(&self) -> bool {
+        self.requires_follow_up
+    }
+
+    /// Return whether the actual run advanced the durable checkpoint.
+    pub fn advanced_checkpoint(&self) -> bool {
+        self.advanced_checkpoint
+    }
+
+    /// Return the last replay checkpoint observed by the actual run.
+    pub fn last_checkpoint(&self) -> Option<&ToolAuditReadCheckpoint> {
+        self.last_checkpoint.as_ref()
+    }
 }
 
 /// Scheduler-facing classification for a bounded supervisor drain run.
@@ -3643,10 +3668,15 @@ mod tests {
         assert!(summary.matches_planned_follow_up_record_count);
         assert!(summary.matches_follow_up_pressure());
         assert!(!summary.reached_end_of_log);
+        assert!(!summary.reached_end_of_log());
         assert!(summary.exhausted_tick_budget);
+        assert!(summary.exhausted_tick_budget());
         assert!(!summary.requires_follow_up);
+        assert!(!summary.requires_follow_up());
         assert!(summary.advanced_checkpoint);
+        assert!(summary.advanced_checkpoint());
         assert_eq!(summary.last_checkpoint, report.last_checkpoint().cloned());
+        assert_eq!(summary.last_checkpoint(), report.last_checkpoint());
         assert!(!summary.is_idle());
         assert!(summary.made_progress());
         assert!(summary.should_continue());
