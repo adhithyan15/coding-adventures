@@ -21,6 +21,9 @@ documented in this file.
   same stable `--check` path.
 - The html5lib tokenizer normalizer shares the same checked fixture IO path,
   including `--check` stale detection for `html5lib-smoke.json`.
+- A generated HTML fixture manifest check runs the self-contained lexer and
+  parser fixture stale checks from one command, with optional inputs for
+  upstream-only html5lib and WHATWG entity sources.
 - Parser-facing seeded RCDATA/RAWTEXT/script end-tag continuation contexts,
   including end-tag-name, whitespace, attributes, and self-closing substates
   with current-end-tag and temporary-buffer seeding.

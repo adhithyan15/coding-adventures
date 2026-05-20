@@ -19,6 +19,9 @@ documented in this file.
 - A parser integration test verifies that the checked coverage-audit report
   still matches the checked tree-construction, raw tokenizer, and normalized
   tokenizer fixture corpora.
+- The shared generated HTML fixture manifest check can include parser coverage
+  report and pinned-count checks alongside the self-contained lexer/parser
+  fixture stale checks.
 - Stack-of-open-elements tree construction seed with void element handling,
   adjacent text merging, simple implied end tags, and unmatched end-tag
   diagnostics.
