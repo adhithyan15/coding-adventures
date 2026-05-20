@@ -207,14 +207,75 @@ def _typeof(x: SqlValue) -> SqlValue:
 # ---------------------------------------------------------------------------
 
 
+# ---------------------------------------------------------------------------
+# SQLite-compatible numeric-prefix parsers
+# ---------------------------------------------------------------------------
+#
+# SQLite's string-to-number coercion does NOT use Python's ``int()``/
+# ``float()`` semantics — instead it takes the **longest valid numeric
+# prefix** and ignores any trailing garbage.  So ``CAST('1.5abc' AS REAL)``
+# returns 1.5 (the float prefix), and ``CAST('123abc' AS INTEGER)`` returns
+# 123 (just the int prefix; SQLite's INTEGER cast specifically rejects the
+# decimal point and exponent).
+#
+# Python's ``float('inf')`` produces an infinity but SQLite rejects the
+# literal text "inf"/"nan"/"infinity" — there is no leading digit so the
+# numeric prefix is empty, hence 0.0.  Same for "abc".  These regexes
+# capture the SQLite rule directly: optional whitespace, optional sign,
+# then either digits or digits-with-decimals-and-exponent.
+
+_INT_PREFIX = re.compile(r"^\s*[+-]?\d+")
+_REAL_PREFIX = re.compile(
+    r"^\s*[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?"
+)
+
+
+def _sqlite_str_to_int(s: str) -> int:
+    """Take the longest leading integer prefix of *s*; 0 if none."""
+    m = _INT_PREFIX.match(s)
+    if not m:
+        return 0
+    try:
+        return int(m.group().strip())
+    except (ValueError, OverflowError):
+        return 0
+
+
+def _sqlite_str_to_real(s: str) -> float:
+    """Take the longest leading float prefix of *s*; 0.0 if none.
+
+    Matches SQLite's behaviour of rejecting non-numeric prefixes (so
+    ``'inf'`` → 0.0, not Python's ``float('inf')``).
+    """
+    m = _REAL_PREFIX.match(s)
+    if not m:
+        return 0.0
+    prefix = m.group().strip()
+    # A bare sign or empty match isn't a valid float — bail to 0.0.
+    if prefix in ("", "+", "-", "."):
+        return 0.0
+    try:
+        return float(prefix)
+    except (ValueError, OverflowError):
+        return 0.0
+
+
 @register("cast")
 def _cast_fn(x: SqlValue, target_type: SqlValue) -> SqlValue:
     """Cast *x* to the SQL type named by *target_type* (a TEXT string).
 
     Follows SQLite's type affinity rules:
 
-    - ``"integer"`` / ``"int"`` → Python ``int`` (truncate if float)
-    - ``"real"`` / ``"float"`` / ``"double"`` / ``"numeric"`` → Python ``float``
+    - ``"integer"`` / ``"int"`` → Python ``int`` (longest leading int
+      prefix; truncate floats toward zero).  Crucially, the *string*
+      INTEGER cast in SQLite extracts only the digit prefix — so
+      ``CAST('1.5abc' AS INTEGER)`` is ``1`` (just ``1``, not ``1.5``
+      truncated), and ``CAST('1e5' AS INTEGER)`` is also ``1``.
+    - ``"real"`` / ``"float"`` / ``"double"`` / ``"numeric"`` → Python
+      ``float`` (longest leading float prefix, including optional sign,
+      decimal point, and ``e``/``E`` exponent).  Non-numeric strings —
+      including the literal text ``"inf"`` and ``"nan"`` — coerce to
+      ``0.0`` because SQLite has no special-case for those keywords.
     - ``"text"`` / ``"varchar"`` / ``"char"`` → Python ``str``
     - ``"blob"`` / ``"none"`` → Python ``bytes``
     - ``"boolean"`` → Python ``bool`` (True if truthy)
@@ -229,18 +290,15 @@ def _cast_fn(x: SqlValue, target_type: SqlValue) -> SqlValue:
     try:
         if t in ("integer", "int", "int2", "int8", "tinyint", "smallint",
                  "mediumint", "bigint", "unsigned big int"):
+            if isinstance(x, bool):
+                return int(x)
             if isinstance(x, float):
                 return int(x)
             if isinstance(x, str):
-                # Try integer first, then float-to-int.
-                try:
-                    return int(x)
-                except ValueError:
-                    try:
-                        return int(float(x))
-                    except ValueError:
-                        return 0
-            return int(bool(x)) if isinstance(x, bool) else int(x)
+                return _sqlite_str_to_int(x)
+            if isinstance(x, bytes):
+                return _sqlite_str_to_int(x.decode("utf-8", errors="replace"))
+            return int(x)
         if t in ("real", "float", "double", "double precision",
                  "numeric", "decimal"):
             if isinstance(x, bool):
@@ -248,11 +306,8 @@ def _cast_fn(x: SqlValue, target_type: SqlValue) -> SqlValue:
             if isinstance(x, (int, float)):
                 return float(x)
             if isinstance(x, str):
-                try:
-                    return float(x)
-                except ValueError:
-                    return 0.0
-            return float(len(x))  # blob → length as float
+                return _sqlite_str_to_real(x)
+            return float(len(x))  # blob → length as float (legacy quirk)
         if t in ("text", "varchar", "nvarchar", "character", "char",
                  "varying character", "nchar", "native character",
                  "clob"):

@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.66.0] - 2026-05-20
+
+### Fixed
+
+- **``CAST(text AS REAL/INTEGER)`` now matches SQLite byte-for-byte**
+  (via ``sql-vm 1.40.0``).  Python's ``int()`` / ``float()`` reject
+  any string with trailing non-numeric characters; SQLite takes the
+  longest valid numeric prefix.  Two bug classes fixed:
+
+  * ``CAST('inf' AS REAL)`` surfaced Python's infinity; SQLite returns
+    ``0.0`` because the literal keyword has no numeric prefix.  Same
+    for ``'nan'``, ``'infinity'``, etc.
+  * ``CAST('1.5abc' AS REAL)`` returned ``0.0``; SQLite returns ``1.5``.
+    ``CAST('123abc' AS INTEGER)`` returned ``0``; SQLite returns ``123``.
+
+  Subtlety: the INTEGER cast extracts only the *integer* prefix, not
+  the float prefix.  ``CAST('1.5abc' AS INTEGER)`` is ``1``, and
+  ``CAST('1e5' AS INTEGER)`` is also ``1``.
+
+  12 oracle tests in ``test_tier3_cast_numeric_prefix.py``.
+
 ## [1.65.0] - 2026-05-20
 
 ### Fixed
