@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.64.0] - 2026-05-20
+
+### Fixed
+
+- **``SUBSTR(x, y[, z])`` edge cases now match SQLite byte-for-byte**
+  (via ``sql-vm 1.38.0``).  The previous implementation got three
+  classes of inputs wrong:
+
+  * ``y = 0`` — was treated as a sentinel for "start of string"; SQLite
+    treats it as one position *before* the first character.
+  * Negative ``z`` — was always returning empty; SQLite reads it as
+    "``|z|`` characters preceding position ``y``".
+  * Far-negative ``y`` (e.g. ``y = -100`` on a 5-char string) —
+    arithmetic overflow returned bogus partial strings.
+
+  21 oracle tests in ``test_tier3_substr_edge_cases.py`` compare each
+  interesting combination against the reference ``sqlite3`` module.
+
 ## [1.63.0] - 2026-05-20
 
 ### Fixed

@@ -999,68 +999,86 @@ def _rtrim(*args: SqlValue) -> SqlValue:
 
 @register("substr", "substring")
 def _substr(*args: SqlValue) -> SqlValue:
-    """Extract a substring.
+    """Extract a substring — full SQLite semantics, edge cases included.
 
-    ``SUBSTR(x, start)``         → from position *start* to end.
-    ``SUBSTR(x, start, length)`` → *length* characters starting at *start*.
+    ``SUBSTR(x, y)``       → from 1-indexed position *y* to end of string.
+    ``SUBSTR(x, y, z)``    → *z* characters starting at position *y*.
 
-    *start* is **1-indexed** (first character = position 1), matching SQLite.
-    Negative *start* counts from the end (position −1 = last character).
-    A *length* of 0 or negative returns an empty string.
+    The arithmetic is **1-indexed**, with three subtleties that catch
+    most implementations off-guard:
+
+    1. **Negative ``y``** counts back from the end: ``y = -1`` is the
+       last character, ``y = -2`` is the second-to-last, …, ``y = -N``
+       is the first character of an ``N``-length string.  Concretely,
+       a negative ``y`` is resolved to ``N + 1 + y``.
+
+    2. **``y = 0``** is *one position to the left* of the first
+       character — neither a valid index nor a sentinel for "beginning".
+       Combined with ``z = 3`` on ``"hello"`` (length 5), the requested
+       span is positions ``0, 1, 2`` but only positions ``1, 2`` are
+       inside the string, so the result is ``"he"`` (not ``"hel"``).
+
+    3. **Negative ``z``** means "the ``|z|`` characters *preceding*
+       position ``y``".  So ``SUBSTR("hello", 3, -2)`` asks for two
+       characters ending at position 2: positions ``1, 2`` → ``"he"``.
+
+    The implementation models the requested character range as a
+    closed 1-indexed interval ``[lo, hi]``, clips it to the string's
+    valid range ``[1, N]``, and converts back to a Python slice.  This
+    handles every overflow/underflow case uniformly — including
+    ``y = -100`` on a 5-char string (where ``y`` resolves to ``-94``
+    and the entire requested span lies to the left of the string).
+
+    Blob inputs use the same algorithm, operating on bytes.
 
     Returns NULL if *x* is NULL.
 
     Examples::
 
-        SUBSTR("hello", 2)       → "ello"
-        SUBSTR("hello", 2, 3)    → "ell"
-        SUBSTR("hello", -3)      → "llo"
-        SUBSTR("hello", 2, 0)    → ""
+        SUBSTR("hello",  2)       → "ello"
+        SUBSTR("hello",  2, 3)    → "ell"
+        SUBSTR("hello", -3)       → "llo"     ( y = 6 + (-3) = 3 )
+        SUBSTR("hello",  0, 3)    → "he"      ( positions 0,1,2 ∩ 1..5 )
+        SUBSTR("hello",  3, -2)   → "he"      ( two chars before pos 3 )
+        SUBSTR("hello", -100, 5)  → ""        ( span entirely left of string )
+        SUBSTR("hello", -100, 102)→ "hello"   ( span covers whole string )
     """
     _arity("substr", list(args), 2, 3)
     x = args[0]
     if x is None:
         return None
-    if not isinstance(x, str):
-        if isinstance(x, (bytes, bytearray)):
-            # Blob substr — operate on bytes.
-            s = bytes(x)
-            start = int(args[1]) if args[1] is not None else 1  # type: ignore[arg-type]
-            if start > 0:
-                start -= 1  # Convert to 0-indexed.
-            # negative start: count from end
-            idx = start if start < 0 else start
-            if len(args) == 3 and args[2] is not None:
-                length = int(args[2])  # type: ignore[arg-type]
-                if length <= 0:
-                    return b""
-                return s[idx: idx + length]
-            return s[idx:]
+    is_blob = isinstance(x, (bytes, bytearray))
+    if not is_blob and not isinstance(x, str):
         return x
-    start = int(args[1]) if args[1] is not None else 1  # type: ignore[arg-type]
-    if start > 0:
-        start -= 1  # Convert to 0-indexed.
-    # Negative start: SQLite counts from end (−1 = last char).
+    s: bytes | str = bytes(x) if is_blob else x
+    empty: bytes | str = b"" if is_blob else ""
+    n = len(s)
+    y_raw = args[1]
+    y = int(y_raw) if y_raw is not None else 1  # type: ignore[arg-type]
+    # Resolve 1-indexed start position.  Negative y counts from the end;
+    # y == 0 stays as 0 (one position before the first character — a
+    # legitimate SQLite-ism that callers occasionally rely on).
+    if y < 0:
+        y = n + 1 + y
+    # Determine the requested closed interval [lo, hi] in 1-indexed
+    # positions.  Both bounds may be outside [1, n] before clipping.
     if len(args) == 3 and args[2] is not None:
-        length = int(args[2])  # type: ignore[arg-type]
-        if length <= 0:
-            return ""
-        if start < 0:
-            end = start + length
-            if end <= 0:
-                # Entire span is before the start of the string.
-                start_pos = len(x) + start
-                if start_pos < 0:
-                    start_pos = 0
-                return x[start_pos: start_pos + length]
-            if end < 0:
-                return x[start:end]
-            stop = None if start + length > len(x) else start + length
-            return x[start:stop]
-        return x[start: start + length]
-    if start < 0:
-        return x[start:]
-    return x[start:]
+        z = int(args[2])  # type: ignore[arg-type]
+        if z >= 0:
+            lo, hi = y, y + z - 1
+        else:
+            # Negative length: |z| characters *preceding* position y.
+            lo, hi = y + z, y - 1
+    else:
+        lo, hi = y, n
+    # Clip to the valid range; if the clipped interval is empty, return
+    # the empty string/blob without going through the slice (which would
+    # do the right thing anyway, but we want a clean unified exit).
+    lo = max(lo, 1)
+    hi = min(hi, n)
+    if lo > hi:
+        return empty
+    return s[lo - 1: hi]
 
 
 @register("replace")
