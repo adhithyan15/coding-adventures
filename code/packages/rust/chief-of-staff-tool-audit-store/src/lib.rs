@@ -921,6 +921,11 @@ impl ToolAuditSupervisorDrainRunReport {
         self.outcome().scheduler_action()
     }
 
+    /// Return the stable scheduler-action label for this drain run.
+    pub fn scheduler_action_label(&self) -> &'static str {
+        self.scheduler_action().as_str()
+    }
+
     /// Return whether the host should investigate preflight/drain drift.
     pub fn requires_plan_drift_investigation(&self) -> bool {
         self.scheduler_action().requires_plan_drift_investigation()
@@ -3420,6 +3425,7 @@ mod tests {
             report.scheduler_action(),
             ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation
         );
+        assert_eq!(report.scheduler_action_label(), "schedule_continuation");
     }
 
     #[test]
