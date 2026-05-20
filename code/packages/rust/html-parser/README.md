@@ -234,6 +234,15 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_block_boun
   --check
 ```
 
+The generated `tests/fixtures/whatwg-fragment-context-audit.json` fixture
+indexes table, shell, block, foreign-content, text-mode, select/list, template,
+and ordinary fragment parsing contexts:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_fragment_context_audit_fixture.py \
+  --check
+```
+
 The generated `tests/fixtures/whatwg-document-shell-audit.json` fixture indexes
 doctypes, comments, `html`/`head`/`body` synthesis, frameset boundaries, and
 shell fragment contexts:
