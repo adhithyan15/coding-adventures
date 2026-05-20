@@ -42,6 +42,8 @@
 //! | `Spacer`| no        | optional `grow: <number>`                   |
 //! | `Grid`  | no        | `headers: slot: <name>`, `rows: slot: <name>`, … |
 //! | `For`   | yes       | `each: slot: <name>, as: <NAME>, index: <NAME>?` (UI29 §3.1) |
+//! | `If`    | yes       | `when: slot: <name>` (boolean slot for now; full `expr` lands in U29-G3) |
+//! | `Else`  | yes       | no props; must follow an `If` sibling (UI29 §3.2) |
 //!
 //! # Quick start
 //!
@@ -92,6 +94,12 @@ const PRIMITIVES: &[&str] = &[
     // U29-G1 — control-flow meta-primitive. See `validate_for_node` for the
     // prop contract (`each:`, `as:`, optional `index:`).
     "For",
+    // U29-G2 — conditional meta-primitives. `If` carries the `when:` prop;
+    // an `Else` sibling (no props) immediately following an `If` declares
+    // the negative branch. Pairing into a single IR node is a follow-up
+    // (currently both nodes coexist as siblings in `children`).
+    "If",
+    "Else",
 ];
 
 fn is_primitive(tag: &str) -> bool {
@@ -365,16 +373,25 @@ fn validate_node(
     part_names: &mut HashSet<String>,
     errors: &mut Vec<CompileError>,
 ) {
-    // U29-G1 — kernel meta-primitive structural validation.
+    // U29-G1 / U29-G2 — kernel meta-primitive structural validation.
     //
-    // `For` carries control-flow semantics, not visual ones; its prop set is
-    // fixed and its part_name is meaningless. Validation runs first because
-    // a malformed For should report `InvalidPrimitiveUsage` before the rest
-    // of the prop-walking surfaces `UnknownSlot` for `each:`-referenced
-    // slots that the user already mistyped.
-    if node.tag == "For" {
-        validate_for_node(node, errors);
+    // `For`, `If`, `Else` carry control-flow semantics, not visual ones;
+    // their prop sets are fixed and they have no part_name. Validation runs
+    // first because a malformed control-flow node should report
+    // `InvalidPrimitiveUsage` before the rest of the prop-walking surfaces
+    // `UnknownSlot` for `each:` / `when:`-referenced slots the user already
+    // mistyped.
+    match node.tag.as_str() {
+        "For" => validate_for_node(node, errors),
+        "If" => validate_if_node(node, errors),
+        "Else" => validate_else_node(node, errors),
+        _ => {}
     }
+
+    // U29-G2 — `Else` orphan check. An Else node must immediately follow an
+    // If sibling. Children are walked in order below, but the orphan check
+    // needs the surrounding sibling list, so we run it once per parent (see
+    // the post-loop hook at the end of this function for the child walk).
 
     // Collect part name.
     if let Some(part) = &node.part_name {
@@ -419,6 +436,23 @@ fn validate_node(
             }
             _ => {}
         }
+    }
+
+    // U29-G2 — sibling-context check for `Else`. We walk the children list
+    // with a windowed view so each `Else` is verified to immediately follow
+    // an `If`. Doing this here (not inside `validate_else_node`) is the
+    // simplest way to access the previous sibling without restructuring the
+    // IR. A later pass can collapse the If+Else pair into a single typed
+    // node; for now they coexist as siblings.
+    let mut prev_tag: Option<&str> = None;
+    for child in &node.children {
+        if child.tag == "Else" && prev_tag != Some("If") {
+            errors.push(CompileError {
+                kind: ErrorKind::InvalidPrimitiveUsage,
+                message: "`Else` must immediately follow an `If` sibling".to_string(),
+            });
+        }
+        prev_tag = Some(child.tag.as_str());
     }
 
     // Recurse into children.
@@ -539,6 +573,103 @@ fn validate_for_node(node: &LayoutNode, errors: &mut Vec<CompileError>) {
     }
     // `index:` is optional — no missing check.
     let _ = saw_index;
+}
+
+// ===========================================================================
+// U29-G2 — `If` / `Else` meta-primitive validation
+// ===========================================================================
+//
+// Per UI29 §3.2:
+//
+//   If ( when: <expr> ) { ...then-children... }
+//   Else { ...else-children... }            // optional, must follow an If
+//
+// Until U29-G3 lands, `when:` accepts a single SlotRef (a boolean-typed
+// slot). Once `expr` arrives, `when: <expr>` will accept the full
+// boolean-expression grammar; the existing tests will still pass because
+// a single `slot: x` reference is a valid trivial `expr`.
+//
+// `Else` exists as a separate primitive (rather than nested syntax under
+// If) so the grammar didn't have to grow a new production. The orphan
+// check — Else must immediately follow an If — runs in the parent's
+// child-walk loop because the prev-sibling relation is needed.
+//
+// Neither `If` nor `Else` may carry a part_name; like `For`, they have no
+// visual surface of their own.
+fn validate_if_node(node: &LayoutNode, errors: &mut Vec<CompileError>) {
+    if let Some(part) = &node.part_name {
+        errors.push(CompileError {
+            kind: ErrorKind::InvalidPrimitiveUsage,
+            message: format!(
+                "`If` is a control-flow primitive and cannot declare a part name (got '{}'); \
+                 style its children instead",
+                part
+            ),
+        });
+    }
+
+    let mut saw_when = false;
+    for prop in &node.props {
+        match prop.name.as_str() {
+            "when" => {
+                saw_when = true;
+                // Pre-U29-G3 we accept only a SlotRef (a boolean-typed slot).
+                // When `expr` lands, this match arm will accept any expr.
+                if !matches!(prop.value, LayoutPropValue::SlotRef(_)) {
+                    errors.push(CompileError {
+                        kind: ErrorKind::InvalidPrimitiveUsage,
+                        message:
+                            "`If` prop `when:` must currently be a slot reference \
+                             (e.g. `when: slot: editing`); richer expressions arrive \
+                             with U29-G3"
+                                .to_string(),
+                    });
+                }
+            }
+            other => {
+                errors.push(CompileError {
+                    kind: ErrorKind::InvalidPrimitiveUsage,
+                    message: format!(
+                        "`If` does not accept prop `{}`; allowed props are `when:` only",
+                        other
+                    ),
+                });
+            }
+        }
+    }
+
+    if !saw_when {
+        errors.push(CompileError {
+            kind: ErrorKind::InvalidPrimitiveUsage,
+            message:
+                "`If` is missing required prop `when:` (the boolean slot to branch on)"
+                    .to_string(),
+        });
+    }
+}
+
+fn validate_else_node(node: &LayoutNode, errors: &mut Vec<CompileError>) {
+    if let Some(part) = &node.part_name {
+        errors.push(CompileError {
+            kind: ErrorKind::InvalidPrimitiveUsage,
+            message: format!(
+                "`Else` is a control-flow primitive and cannot declare a part name (got '{}')",
+                part
+            ),
+        });
+    }
+    if !node.props.is_empty() {
+        errors.push(CompileError {
+            kind: ErrorKind::InvalidPrimitiveUsage,
+            message: format!(
+                "`Else` does not accept any props (got {})",
+                node.props.len()
+            ),
+        });
+    }
+    // Orphan check (Else must follow an If sibling) runs in the parent's
+    // child-walk loop in `validate_node` because that's where the prev-
+    // sibling relation is observable.
 }
 
 // ===========================================================================
@@ -1614,6 +1745,220 @@ mod tests {
         assert_eq!(inner_row.tag, "Row");
         let inner_for = &inner_row.children[0];
         assert_eq!(inner_for.tag, "For");
+    }
+
+    // =====================================================================
+    // U29-G2 — `If` / `Else` meta-primitive validation tests
+    // =====================================================================
+
+    #[test]
+    fn if_with_when_compiles_clean() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: slot: editing ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        let result = compile(src, None).expect("well-formed If should compile");
+        let if_node = &result.def.root.children[0];
+        assert_eq!(if_node.tag, "If");
+        assert_eq!(if_node.props.len(), 1);
+        assert_eq!(if_node.children.len(), 1);
+    }
+
+    #[test]
+    fn if_with_else_sibling_compiles_clean() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: slot: editing ) {
+                Text ( slot: edit-buf )
+              }
+              Else {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        let result =
+            compile(src, None).expect("If followed by Else should compile clean");
+        let children = &result.def.root.children;
+        assert_eq!(children.len(), 2);
+        assert_eq!(children[0].tag, "If");
+        assert_eq!(children[1].tag, "Else");
+        assert_eq!(children[1].children.len(), 1);
+    }
+
+    #[test]
+    fn if_missing_when_errors() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        let errors = compile(src, None).expect_err("missing when: should reject");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "missing required prop `when:`",
+        );
+    }
+
+    #[test]
+    fn if_when_must_be_slot_ref_pre_g3() {
+        // Until U29-G3 lands, `when:` must be a slot ref. A NAME-keyword
+        // (`when: true`) would be a richer expression we don't yet accept.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: true ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        let errors = compile(src, None).expect_err("non-slot when: rejected pre-G3");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "must currently be a slot reference",
+        );
+    }
+
+    #[test]
+    fn if_extra_prop_rejected() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: slot: editing, mode: row ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        let errors = compile(src, None).expect_err("If only accepts when:");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "does not accept prop `mode`",
+        );
+    }
+
+    #[test]
+    fn if_part_name_rejected() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If [ cond ] ( when: slot: editing ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        let errors = compile(src, None).expect_err("If has no visual surface");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "cannot declare a part name",
+        );
+    }
+
+    #[test]
+    fn orphan_else_rejected() {
+        // Else without a preceding If sibling.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              Text ( slot: label )
+              Else {
+                Text ( slot: alt )
+              }
+            }
+          }
+        "#;
+        let errors = compile(src, None).expect_err("orphan Else rejected");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "must immediately follow an `If` sibling",
+        );
+    }
+
+    #[test]
+    fn else_first_child_rejected() {
+        // Else as the very first child has no possible If sibling.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              Else {
+                Text ( slot: alt )
+              }
+            }
+          }
+        "#;
+        let errors = compile(src, None).expect_err("first-child Else rejected");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "must immediately follow an `If` sibling",
+        );
+    }
+
+    #[test]
+    fn else_with_props_rejected() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: slot: editing ) {
+                Text ( slot: label )
+              }
+              Else ( mode: row ) {
+                Text ( slot: alt )
+              }
+            }
+          }
+        "#;
+        let errors = compile(src, None).expect_err("Else takes no props");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "Else` does not accept any props",
+        );
+    }
+
+    #[test]
+    fn else_part_name_rejected() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: slot: editing ) {
+                Text ( slot: label )
+              }
+              Else [ neg ] {
+                Text ( slot: alt )
+              }
+            }
+          }
+        "#;
+        let errors = compile(src, None).expect_err("Else has no visual surface");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "Else` is a control-flow primitive and cannot declare a part name",
+        );
+    }
+
+    #[test]
+    fn if_and_else_are_in_primitives() {
+        assert!(PRIMITIVES.contains(&"If"));
+        assert!(PRIMITIVES.contains(&"Else"));
     }
 
     #[test]
