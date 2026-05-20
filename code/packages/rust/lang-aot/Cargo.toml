@@ -1,6 +1,6 @@
 [package]
 name = "lang-aot"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck (and eventually Dartmouth BASIC, Oct) to native executables through the shared IIR pipeline."
 
@@ -9,6 +9,7 @@ twig-aot              = { path = "../twig-aot" }
 twig-ir-compiler      = { path = "../twig-ir-compiler" }
 nib-iir-compiler      = { path = "../nib-iir-compiler" }
 brainfuck-iir-compiler = { path = "../brainfuck-iir-compiler" }
+dartmouth-basic-iir-compiler = { path = "../dartmouth-basic-iir-compiler" }
 interpreter-ir        = { path = "../interpreter-ir" }
 cli-builder           = { path = "../cli-builder" }
 

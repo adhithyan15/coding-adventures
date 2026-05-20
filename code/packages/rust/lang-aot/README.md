@@ -36,7 +36,7 @@ lang-aot <FILE> [-o <OUT>] [--lang <LANG>]
 | Twig            | `.twig`         | `twig-ir-compiler`       | full |
 | Nib             | `.nib`          | `nib-iir-compiler`       | full |
 | Brainfuck       | `.bf`, `.b`    | `brainfuck-iir-compiler` + BF07 lowering pass | full — `lang-aot foo.bf` compiles end-to-end (cells live in a 30000-byte `alloc_bytes` tape; `load_mem`/`store_mem` are rewritten to `load_byte`/`store_byte` per LANG76) |
-| Dartmouth BASIC | `.bas`, `.basic` | **TODO**               | needs a new `dartmouth-basic-iir-compiler` crate (existing `-ir-compiler` emits a different IR shape) |
+| Dartmouth BASIC | `.bas`, `.basic` | `dartmouth-basic-iir-compiler` | full — integer programs with LET / PRINT / INPUT / IF / GOTO / FOR / NEXT / END / REM compile end-to-end (PL05).  GOSUB / arrays / strings / DEF deferred to V2 |
 | Oct             | `.oct`          | **TODO**               | only Python frontend exists; needs a Rust port or a bridge |
 
 If `--lang` is omitted the language is inferred from the file
