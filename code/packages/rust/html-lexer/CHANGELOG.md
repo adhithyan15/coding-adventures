@@ -24,6 +24,8 @@ documented in this file.
 - A generated HTML fixture manifest check runs the self-contained lexer and
   parser fixture stale checks from one command, with optional inputs for
   upstream-only html5lib and WHATWG entity sources.
+- A fixture manifest unit test keeps every self-contained WHATWG fixture
+  generator covered by that umbrella stale check.
 - Parser-facing seeded RCDATA/RAWTEXT/script end-tag continuation contexts,
   including end-tag-name, whitespace, attributes, and self-closing substates
   with current-end-tag and temporary-buffer seeding.

@@ -104,6 +104,9 @@ binary while production code continues to link only static Rust source.
 - `check_generated_html_fixtures.py`: manifest check that runs every
   self-contained generated lexer/parser fixture stale check from checked-in
   inputs, with optional flags for upstream-only source inputs
+- `test_generated_html_fixture_manifest.py`: regression test that keeps the
+  stale-check manifest aligned with the self-contained WHATWG fixture
+  generators in this directory
 - the parser fixture audit can pin the current html5lib tokenizer counts with
   `--expect-tokenizer-upstream-cases 6806`,
   `--expect-tokenizer-local-raw-cases 7015`,
@@ -294,6 +297,13 @@ python3 code/packages/rust/html-lexer/tests/fixtures/check_generated_html_fixtur
 Pass `--html5lib-tests /path/to/html5lib-tests` to include the parser coverage
 audit report and pinned-count checks, or `--entities-json /path/to/entities.json`
 to include the generated WHATWG named-character-reference table.
+
+To verify that new self-contained WHATWG fixture generators are added to the
+manifest, run:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/test_generated_html_fixture_manifest.py
+```
 
 ## WPT Path
 
