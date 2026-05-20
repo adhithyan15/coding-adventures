@@ -1,5 +1,71 @@
 # Changelog
 
+## 0.61.0 — 2026-05-20
+
+**Phase 36 integration — Weierstrass log form for `a² < b²` denominators.**
+
+Closes the deferred `a² < b²` branch of Phase 34 (PR #3472) by emitting
+the explicit log-form closed solution.  After the substitution
+`u = tan(x/2)` the quadratic in `u` has two distinct real roots; partial
+fractions integrate to
+
+    ∫ c/(a + b·sin x) dx
+        =  (c/D) · log|(a·tan(x/2) + b − D) / (a·tan(x/2) + b + D)|  +  C
+
+    ∫ c/(a + b·cos x) dx
+        =  (c/D) · log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|   +  C
+
+where `D = √(b² − a²) > 0`.  The sin formula is valid for any nonzero
+rational `a`.  The cos formula requires `b > |a|` strictly (and hence
+`b > 0`, `b − a > 0`) — the symmetric `b < −|a|` cos case is deferred
+because it has the opposite sign pattern and needs a separate
+branch in the log.
+
+The log argument is emitted as `Log(Abs(ratio))` because the
+inner rational changes sign as `x` moves through the singularities of
+the integrand; the absolute value lets the closed form be evaluated
+numerically across the full domain.
+
+### Added
+
+- **`_try_weierstrass_log_form(c, a, b, trig_head, x)`** — Phase 36
+  helper called from `_try_weierstrass_one_over_linear_trig` when
+  `disc = a² − b² < 0`.  Returns the closed form for sin (any nonzero
+  `a`) and for cos when `b > |a|`; returns `None` for the remaining
+  symmetric cos case and for `a = 0` in the sin branch.
+
+- The Phase 34 dispatcher's `disc < 0` arm now calls
+  `_try_weierstrass_log_form` and falls back to `None` only when the
+  log-form helper itself defers.
+
+### Tests
+
+`tests/test_phase34_weierstrass.py` (6 new cases — one promoted from
+the prior fallthrough):
+
+- `test_phase36_a_less_than_b_sin_now_closes` — ∫ 1/(1+2 sin x) dx
+  closes; numerical derivative matches on a sample stride avoiding
+  the integrand's singularities.
+- `test_phase36_a_less_than_b_cos_now_closes` — ∫ 1/(1+2 cos x) dx
+  closes; numerical match.
+- `test_phase36_negative_a_sin` — ∫ 1/(−1 + 2 sin x) dx with a < 0
+  closes (the sin formula has no sign restriction).
+- `test_phase36_with_numerator_coefficient` — ∫ 3/(1+2 sin x) dx
+  scales correctly.
+- `test_phase36_perfect_square_discriminant` — ∫ 1/(3 + 5 sin x) dx
+  with |disc| = 16 (perfect square) emits a `Sqrt`-free coefficient.
+- `test_phase36_cos_negative_b_still_defers` — ∫ 1/(1 − 2 cos x) dx
+  (effective `b = −2 < |a| = 1`) stays unevaluated.
+
+Full suite: **1684 passed, 85 skipped, 81.45% coverage.**
+
+### Still deferred
+
+- Cos branch with `b < −|a|` (sign-flipped log form).
+- Non-bare trig arguments such as `sin(αx + β)` — composition with a
+  later linear-substitution phase will lift this.
+- Symbolic `a` or `b`.
+
 ## 0.60.0 — 2026-05-18
 
 **Phase 35 integration — degenerate `a² = b²` Weierstrass cases.**

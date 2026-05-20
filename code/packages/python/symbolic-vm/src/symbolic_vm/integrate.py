@@ -1004,6 +1004,103 @@ def _try_weierstrass_degenerate(
     return None
 
 
+def _try_weierstrass_log_form(
+    c: Fraction,
+    a: Fraction,
+    b: Fraction,
+    trig_head: IRSymbol,
+    x: IRSymbol,
+) -> IRNode | None:
+    """Phase 36: ``∫ c / (a + b·sin(x)) dx`` and ``∫ c / (a + b·cos(x)) dx``
+    when ``a² < b²`` (the quadratic in u = tan(x/2) has two distinct real
+    roots).
+
+    Derivation for the sin branch
+    -----------------------------
+    With ``u = tan(x/2)`` the integrand reduces to ``∫ 2/(a·u² + 2b·u + a) du``.
+    When ``a ≠ 0`` and ``b² > a²`` the quadratic has roots
+    ``u₁,₂ = (−b ± √(b²−a²))/a`` so
+
+        a·u² + 2b·u + a = a·(u − u₁)·(u − u₂)
+
+    Partial fractions give
+
+        ∫ 2/(a·(u−u₁)(u−u₂)) du
+          =  (1/D) · log| (a·u + b − D) / (a·u + b + D) | + C
+
+    where ``D = √(b² − a²) > 0``.  Substituting back ``u = tan(x/2)`` and
+    scaling by the numerator constant ``c``:
+
+        ∫ c/(a + b·sin x) dx
+            =  (c/D) · log( (a·tan(x/2) + b − D) / (a·tan(x/2) + b + D) ) + C
+
+    The absolute-value bars are dropped — the CAS emits the unsigned log
+    that any downstream pretty-printer can wrap in ``|·|`` if desired.
+
+    Derivation for the cos branch
+    -----------------------------
+    With ``u = tan(x/2)`` the integrand reduces to
+    ``∫ 2/((a−b)·u² + (a+b)) du``.  When ``b² > a²`` the linear-in-u² term
+    has positive coefficient on one side and negative on the other.
+    Specifically:
+
+        (a−b)·u² + (a+b)  =  −(b−a)·(u² − (a+b)/(b−a))
+                          =  −(b−a)·(u − r)·(u + r)
+
+    where ``r = √((a+b)/(b−a))`` is real because ``b² > a²`` forces
+    ``(a+b)`` and ``(b−a)`` to share the sign of ``a + b`` and of
+    ``b − a`` respectively.  This decomposition is valid when ``a + b > 0``
+    and ``b − a > 0`` (equivalently ``b > |a|``).  The negation of the
+    leading coefficient and the partial-fraction integration give
+
+        ∫ c/(a + b·cos x) dx
+            =  (c / (D)) · log( (D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2)) ) + C
+
+    where ``D = √(b² − a²)``.  The opposite sign convention (``b < −|a|``)
+    needs an extra ``−`` sign and is deferred — the rule guards
+    ``b > |a|`` strictly.
+
+    Returns ``None`` when the matched shape doesn't satisfy the
+    above sign preconditions (``a ≠ 0`` for sin; ``b > |a|`` for cos).
+    """
+    # b² − a² > 0 must hold (caller passes disc = a² − b² < 0).
+    disc_sq = b * b - a * a
+    if disc_sq <= 0:
+        return None
+    sqrt_disc_ir = _sqrt_fraction_ir(disc_sq)
+    tan_half = IRApply(TAN, (IRApply(DIV, (x, TWO)),))
+    abs_head = IRSymbol("Abs")
+    if trig_head == SIN:
+        if a == 0:
+            # Integrand reduces to c/(b·sin x); special-cased elsewhere or
+            # left for the elementary table.  Defer.
+            return None
+        # log|(a·tan(x/2) + b − D) / (a·tan(x/2) + b + D)|
+        a_tan = IRApply(MUL, (_frac_ir(a), tan_half))
+        a_tan_plus_b = IRApply(ADD, (a_tan, _frac_ir(b)))
+        numer = IRApply(SUB, (a_tan_plus_b, sqrt_disc_ir))
+        denom = IRApply(ADD, (a_tan_plus_b, sqrt_disc_ir))
+        log_arg = IRApply(abs_head, (IRApply(DIV, (numer, denom)),))
+        coef_ir = IRApply(DIV, (_frac_ir(c), sqrt_disc_ir))
+        return IRApply(MUL, (coef_ir, IRApply(LOG, (log_arg,))))
+    # COS branch
+    if b <= abs(a):
+        # Sign preconditions don't hold; defer the (b < -|a|) flipped case.
+        return None
+    # b > |a| > 0 case (forces b > 0 and either a ≥ 0 or a < 0 with b > -a).
+    # (b - a) > 0 always here.
+    b_minus_a = b - a
+    if b_minus_a <= 0:
+        return None
+    # log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|
+    bma_tan = IRApply(MUL, (_frac_ir(b_minus_a), tan_half))
+    numer = IRApply(ADD, (sqrt_disc_ir, bma_tan))
+    denom = IRApply(SUB, (sqrt_disc_ir, bma_tan))
+    log_arg = IRApply(abs_head, (IRApply(DIV, (numer, denom)),))
+    coef_ir = IRApply(DIV, (_frac_ir(c), sqrt_disc_ir))
+    return IRApply(MUL, (coef_ir, IRApply(LOG, (log_arg,))))
+
+
 def _try_weierstrass_one_over_linear_trig(
     integrand: IRNode, x: IRSymbol
 ) -> IRNode | None:
@@ -1041,7 +1138,11 @@ def _try_weierstrass_one_over_linear_trig(
         # Defensive: if degenerate matcher can't close it, leave unevaluated.
         return None
     if disc < 0:
-        # a² < b² → log form (deferred — sign analysis required).
+        # Phase 36: a² < b² → log form on the partial-fraction decomposition
+        # of the resulting quadratic in tan(x/2) with two distinct real roots.
+        log_form = _try_weierstrass_log_form(c, a, b, trig_head, x)
+        if log_form is not None:
+            return log_form
         return None
     sqrt_disc_ir = _sqrt_fraction_ir(disc)
     tan_half = IRApply(TAN, (IRApply(DIV, (x, TWO)),))
