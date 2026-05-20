@@ -66,6 +66,8 @@ The crate keeps the boundary narrow:
   without parsing labels
 - supervisor drain run summaries flatten scheduler-action intent flags for
   host logs and scheduling dashboards
+- supervisor drain run summaries flatten stable scheduler-action labels beside
+  the typed recommendation
 
 ## Development
 

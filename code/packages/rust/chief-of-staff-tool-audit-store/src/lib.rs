@@ -965,6 +965,7 @@ impl ToolAuditSupervisorDrainRunReport {
             checkpoint_name: self.plan.checkpoint_name.clone(),
             outcome: self.outcome(),
             scheduler_action: self.scheduler_action(),
+            scheduler_action_label: self.scheduler_action_label(),
             requires_scheduler_action: self.requires_scheduler_action(),
             requests_continuation: self.requests_continuation(),
             routes_follow_up: self.routes_follow_up(),
@@ -1096,6 +1097,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub outcome: ToolAuditSupervisorDrainRunOutcome,
     /// Recommended host scheduler action for this run.
     pub scheduler_action: ToolAuditSupervisorDrainSchedulerAction,
+    /// Stable scheduler action label for host logs.
+    pub scheduler_action_label: &'static str,
     /// Whether this run asks the scheduler to take action.
     pub requires_scheduler_action: bool,
     /// Whether the scheduler should run another drain pass.
@@ -1230,7 +1233,7 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return the stable scheduler-action label for host logs.
     pub fn scheduler_action_label(&self) -> &'static str {
-        self.scheduler_action.as_str()
+        self.scheduler_action_label
     }
 
     /// Return whether no audit rows were replayed.
@@ -3049,6 +3052,8 @@ mod tests {
             ToolAuditSupervisorDrainRunOutcome::NeedsFollowUp
         );
         let summary = report.summary();
+        assert_eq!(summary.scheduler_action_label, "route_follow_up");
+        assert_eq!(summary.scheduler_action_label(), "route_follow_up");
         assert!(summary.requires_scheduler_action);
         assert!(summary.requires_scheduler_action());
         assert!(!summary.requests_continuation);
@@ -3479,6 +3484,7 @@ mod tests {
             summary.scheduler_action,
             ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation
         );
+        assert_eq!(summary.scheduler_action_label, "schedule_continuation");
         assert_eq!(summary.scheduler_action_label(), "schedule_continuation");
         assert!(summary.requires_scheduler_action);
         assert!(summary.requires_scheduler_action());
@@ -3551,6 +3557,7 @@ mod tests {
             summary.scheduler_action,
             ToolAuditSupervisorDrainSchedulerAction::InvestigatePlanDrift
         );
+        assert_eq!(summary.scheduler_action_label, "investigate_plan_drift");
         assert_eq!(summary.scheduler_action_label(), "investigate_plan_drift");
         assert!(!summary.matches_planned_record_count);
         assert_eq!(report.record_count_delta(), 1);
