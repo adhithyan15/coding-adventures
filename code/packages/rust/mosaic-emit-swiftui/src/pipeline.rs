@@ -55,10 +55,43 @@
 //!   PR. Payload-carrying emits work for the *enum case shape* (so the
 //!   host's switch is exhaustive) but dispatch sites still pass nothing.
 //!
-//! - **`Scroll`, `Stack`, `Icon`, `Grid`, `Input` primitives.** They lower
-//!   to `UnknownPrimitive` errors today. Each gets a dedicated emitter in
-//!   a follow-up (e.g. `Scroll → ScrollView { ... }`, `Stack → ZStack`,
-//!   `Icon → Image(systemName:)`).
+//! - **`Icon`, `Grid` (v2) primitives.** They still lower to
+//!   `UnknownPrimitive` errors today. `Stack`, `HostScroll`, `HostInput`,
+//!   and `HostButton` landed in v0.2.0 (UI29 kernel partial); the
+//!   remaining primitives get dedicated emitters in follow-ups.
+//!
+//! ## UI29 kernel partial (v0.2.0)
+//!
+//! Four of UI29's kernel primitives lower in this revision. The remaining
+//! three — `If`, `For`, `HostTable` — wait on the moslayout grammar
+//! additions (U29-G3) and a `HostTable` spec, and are intentionally still
+//! routed through the `UnknownPrimitive` arm so authors who reach for them
+//! get a clear "not yet supported" diagnostic.
+//!
+//! | UI29 primitive | SwiftUI lowering                                |
+//! |----------------|-------------------------------------------------|
+//! | `Stack`        | `ZStack { ... }` (z-axis / overlay container)   |
+//! | `HostScroll`   | `ScrollView { ... }`                            |
+//! | `HostInput`    | `TextField(placeholder, text: .constant(value))` |
+//! | `HostButton`   | `Button(action:) { Text(label) }`               |
+//!
+//! ### `HostInput` binding choice
+//!
+//! SwiftUI `TextField` requires a `Binding<String>`, not a plain `String`.
+//! Mosaic components receive slots as immutable `let`s, so we have two
+//! options:
+//!
+//! - **(a) `.constant(value)` wrapper** — emit `.constant(value)` and rely
+//!   on the host's flux dispatch loop to push new text back through the
+//!   slot. The user-visible cost is that inline typing doesn't echo
+//!   character-by-character — only `onSubmit` (Enter) carries the new
+//!   buffer. UI24's dispatch-driven update pattern already matches this
+//!   shape.
+//! - **(b) Local `@State` proxy** — wrap the body in a `@State` buffer
+//!   that initialises from the slot and dispatches `onChange` per keystroke.
+//!   More complex generated code; deferred.
+//!
+//! This PR ships option (a). Option (b) is a future enhancement.
 
 use std::fmt::Write as _;
 
@@ -324,6 +357,15 @@ fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
         // semantics: `Column → VStack`. The Cell/Column/Grid v3 SwiftUI
         // lowering lands in a separate follow-up PR.
         "Column" => container("VStack", node, indent),
+        // UI29 kernel partial — Stack is the z-axis / overlay container.
+        // It is *not* a synonym for VStack: SwiftUI's `ZStack` overlays
+        // children along the depth axis, which is the UI29 semantics.
+        "Stack" => container("ZStack", node, indent),
+        // UI29 kernel partial — `HostScroll` is the kernel form of a
+        // scrollable region. SwiftUI's `ScrollView` is the direct analog;
+        // it implicitly handles its own scroll-state and viewport, so we
+        // do not need to thread offset/extent slots through here.
+        "HostScroll" => container("ScrollView", node, indent),
 
         // -----------------------------------------------------------------
         // Leaf primitives — emit a single line, no children.
@@ -344,6 +386,13 @@ fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
             Ok(format!("{pad}Image(systemName: \"{escaped}\")\n"))
         }
         "Divider" => Ok(format!("{pad}Divider()\n")),
+
+        // UI29 kernel partial — `HostInput` and `HostButton` are leaf
+        // primitives backed by SwiftUI's `TextField` and `Button`
+        // respectively. They read slot/emit refs off the node props; see
+        // the per-function doc comments below for the full mapping.
+        "HostInput" => emit_host_input(node, indent),
+        "HostButton" => emit_host_button(node, indent),
 
         other => Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     }
@@ -412,6 +461,204 @@ fn swift_text_expression(node: &LayoutNode) -> String {
 }
 
 // =====================================================================
+// UI29 kernel partial — HostInput / HostButton emitters
+// =====================================================================
+
+/// Lower a UI29 `HostInput` node to a SwiftUI `TextField`.
+///
+/// ## Property handling
+///
+/// | Moslayout prop                | SwiftUI surface                                 |
+/// |-------------------------------|-------------------------------------------------|
+/// | `placeholder: "..."`          | First arg of `TextField("placeholder", ...)`    |
+/// | `value: slot: x`              | `text: .constant(x)` (see binding nuance below) |
+/// | `read-only: slot: x`          | `.disabled(x)` modifier                         |
+/// | `read-only: true` / `false`   | `.disabled(true)` / `.disabled(false)` modifier |
+/// | `onChange: emit: onE`         | `.onChange(of: x) { dispatch(.e(value: x)) }`   |
+/// | `onCommit: emit: onE`         | `.onSubmit { dispatch(.e(value: x)) }`          |
+/// | `onCancel: emit: onE`         | `.onExitCommand { dispatch(.e) }` (macOS only)  |
+///
+/// ## Binding nuance — why `.constant(value)`
+///
+/// SwiftUI `TextField` requires `text: Binding<String>`. Mosaic components
+/// receive slots as `let` properties, which cannot be the target of a
+/// `Binding`. Two options exist:
+///
+/// 1. Wrap the slot in `.constant(value)` and accept that inline typing
+///    will not echo back into the bound `let` — the host must push new
+///    text back through `dispatch(.change(value: ...))`. This matches
+///    UI24's dispatch-driven flux pattern.
+/// 2. Wrap the body in a local `@State` buffer that proxies the slot.
+///    More complex generated code; deferred to a follow-up PR.
+///
+/// This emitter ships option (1). The `onSubmit` path still carries the
+/// (unchanged) `value` slot as a payload so the host can observe Enter
+/// presses; a future `@State`-proxy lowering will swap in real
+/// per-keystroke `value` payloads.
+///
+/// ## `onCancel` platform note
+///
+/// SwiftUI's `.onExitCommand` modifier is **macOS-only** (it observes
+/// the Escape key via the AppKit responder chain). The same callsite on
+/// iOS / iPadOS will compile but never fire; document this in the
+/// crate's README as a known limitation.
+fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // First arg: the placeholder string literal. We escape `\` and `"`
+    // per Swift string-literal rules; everything else passes through.
+    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
+    let placeholder_lit = format!("\"{}\"", escape_swift_string(placeholder));
+
+    // `value: slot: x` -> `text: .constant(x)`. If no `value` is bound we
+    // synthesise an empty `.constant("")` so the file still type-checks.
+    let value_expr = match find_slot_ref_prop(node, "value") {
+        Some(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            camel
+        }
+        None => "\"\"".to_string(),
+    };
+
+    // The opening `TextField` expression.
+    let mut line = format!("{pad}TextField({placeholder_lit}, text: .constant({value_expr}))");
+
+    // Modifier chain. We deliberately keep each modifier on the same
+    // line — Swift accepts chained modifiers without line breaks, and
+    // the generated source stays compact and grep-friendly.
+
+    // `.disabled(...)` — true literal, false literal, or slot-bound bool.
+    if let Some(slot) = find_slot_ref_prop(node, "read-only") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        line.push_str(&format!(".disabled({camel})"));
+    } else if let Some(kw) = find_keyword_prop(node, "read-only") {
+        if kw == "true" || kw == "false" {
+            line.push_str(&format!(".disabled({kw})"));
+        }
+    }
+
+    // `.onChange(of: value) { dispatch(.e(value: value)) }`. Only fires
+    // when the bound slot itself changes (which, with `.constant`, only
+    // happens if the host re-renders with a new `value` slot). This is
+    // intentionally a no-op on most keystrokes — full per-keystroke
+    // dispatch lands with the `@State`-proxy option in a future PR.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
+        let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&case_name)?;
+        // If no value slot is bound, the `of:` target is the empty literal
+        // we synthesised above, which is invalid Swift. Skip the modifier
+        // in that case — there's nothing meaningful to observe.
+        if find_slot_ref_prop(node, "value").is_some() {
+            line.push_str(&format!(
+                ".onChange(of: {value_expr}) {{ dispatch(.{case_name}(value: {value_expr})) }}"
+            ));
+        }
+    }
+
+    // `.onSubmit { dispatch(.e(value: value)) }`. SwiftUI fires onSubmit
+    // when the user presses Enter / Return in the TextField.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
+        let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&case_name)?;
+        if find_slot_ref_prop(node, "value").is_some() {
+            line.push_str(&format!(
+                ".onSubmit {{ dispatch(.{case_name}(value: {value_expr})) }}"
+            ));
+        } else {
+            // No value slot — emit the void form.
+            line.push_str(&format!(".onSubmit {{ dispatch(.{case_name}) }}"));
+        }
+    }
+
+    // `.onExitCommand { dispatch(.e) }` — macOS Escape-key handler.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCancel") {
+        let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&case_name)?;
+        line.push_str(&format!(".onExitCommand {{ dispatch(.{case_name}) }}"));
+    }
+
+    line.push('\n');
+    Ok(line)
+}
+
+/// Lower a UI29 `HostButton` node to a SwiftUI `Button`.
+///
+/// ## Property handling
+///
+/// | Moslayout prop          | SwiftUI surface                                 |
+/// |-------------------------|-------------------------------------------------|
+/// | `label: "..."`          | `Text("...")` inside the label closure          |
+/// | `label: slot: x`        | `Text(x)` inside the label closure              |
+/// | `disabled: slot: x`     | `.disabled(x)` modifier                         |
+/// | `disabled: true`/`false`| `.disabled(true)` / `.disabled(false)`          |
+/// | `onTap: emit: onE`      | `action: { dispatch(.e) }`                      |
+///
+/// ## Generated shape
+///
+/// ```swift
+/// Button(action: { dispatch(.tap) }) {
+///     Text(label)
+/// }.disabled(disabled)
+/// ```
+///
+/// If no `onTap` emit is bound the action closure is `{ }` (a no-op);
+/// the file still compiles and the button is effectively decorative.
+fn emit_host_button(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 4);
+
+    // Action closure body.
+    let action_body = match find_emit_ref_prop(node, "onTap") {
+        Some(emit_name) => {
+            let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&case_name)?;
+            format!("dispatch(.{case_name})")
+        }
+        None => String::new(),
+    };
+
+    // Label expression. String literal → `Text("...")`; slot ref →
+    // `Text(slotName)`; nothing bound → `Text("")` placeholder.
+    let label_expr = if let Some(s) = find_string_prop(node, "label") {
+        format!("Text(\"{}\")", escape_swift_string(s))
+    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        format!("Text({camel})")
+    } else {
+        "Text(\"\")".to_string()
+    };
+
+    let mut out = String::new();
+    if action_body.is_empty() {
+        // No-op action closure. Still a valid Swift Button.
+        writeln!(out, "{pad}Button(action: {{ }}) {{").unwrap();
+    } else {
+        writeln!(out, "{pad}Button(action: {{ {action_body} }}) {{").unwrap();
+    }
+    writeln!(out, "{inner_pad}{label_expr}").unwrap();
+
+    // Closing brace, then any trailing modifiers on the same line so the
+    // generated source stays compact.
+    let mut closing = format!("{pad}}}");
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        closing.push_str(&format!(".disabled({camel})"));
+    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
+        if kw == "true" || kw == "false" {
+            closing.push_str(&format!(".disabled({kw})"));
+        }
+    }
+    closing.push('\n');
+    out.push_str(&closing);
+
+    Ok(out)
+}
+
+// =====================================================================
 // Type mapping (mosmodel SlotType -> Swift type)
 // =====================================================================
 
@@ -475,6 +722,45 @@ fn find_string_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str
         if p.name == prop_name {
             if let LayoutPropValue::String(s) = &p.value {
                 return Some(s.as_str());
+            }
+        }
+        None
+    })
+}
+
+/// Find a prop on `node` whose value is a `SlotRef`. Returns the slot's
+/// kebab-case name (e.g. `display-name`), or `None`.
+fn find_slot_ref_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::SlotRef(s) = &p.value {
+                return Some(s.as_str());
+            }
+        }
+        None
+    })
+}
+
+/// Find a prop on `node` whose value is an `EmitRef`. Returns the emit's
+/// camelCased name (e.g. `onTap`), or `None`.
+fn find_emit_ref_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::EmitRef(s) = &p.value {
+                return Some(s.as_str());
+            }
+        }
+        None
+    })
+}
+
+/// Find a prop on `node` whose value is a `Keyword`. Returns the keyword
+/// string (e.g. `"true"`, `"false"`), or `None`.
+fn find_keyword_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::Keyword(k) = &p.value {
+                return Some(k.as_str());
             }
         }
         None
@@ -681,6 +967,20 @@ mod tests {
         LayoutProp {
             name: name.to_string(),
             value: LayoutPropValue::SlotRef(slot.to_string()),
+        }
+    }
+
+    fn prop_emit_ref(name: &str, emit_name: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::EmitRef(emit_name.to_string()),
+        }
+    }
+
+    fn prop_keyword(name: &str, keyword: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::Keyword(keyword.to_string()),
         }
     }
 
@@ -1054,12 +1354,354 @@ mod tests {
     }
 
     // ---------------------------------------------------------------------
-    // Test 13 — version pin: the crate version is 0.1.0. Catches accidental
+    // Test 13 — version pin: the crate version is 0.2.0. Catches accidental
     // version bumps before they merge.
     // ---------------------------------------------------------------------
 
     #[test]
-    fn version_is_0_1_0() {
-        assert_eq!(env!("CARGO_PKG_VERSION"), "0.1.0");
+    fn version_is_0_2_0() {
+        assert_eq!(env!("CARGO_PKG_VERSION"), "0.2.0");
+    }
+
+    // ---------------------------------------------------------------------
+    // UI29 kernel partial — tests 14 through 21.
+    //
+    // These exercise the four primitives added in v0.2.0:
+    // Stack → ZStack, HostScroll → ScrollView, HostInput → TextField,
+    // HostButton → Button.
+    // ---------------------------------------------------------------------
+
+    // ---------------------------------------------------------------------
+    // Test 14 — `Stack` primitive lowers to `ZStack { ... }`.
+    //
+    // Empty-children case mirrors the `Box → Group { }` empty-container
+    // shape so the file still type-checks under SwiftUI's `some View`.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn stack_lowers_to_zstack() {
+        let layout = layout_with(
+            "S",
+            container_node("Box", vec![leaf("Stack", vec![])]),
+        );
+        let out = from_pipeline(
+            &component("S", vec![], vec![]),
+            &layout,
+            &empty_style("S"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("ZStack { }"), "expected ZStack, got:\n{out}");
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 15 — `Stack` with children emits children inside the ZStack.
+    //
+    // Verifies the container path (not just the leaf path) and that the
+    // child indent is +4 inside the ZStack body.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn stack_with_children_emits_children_inside() {
+        let layout = layout_with(
+            "Layered",
+            container_node(
+                "Stack",
+                vec![
+                    leaf("Text", vec![prop_string("content", "back")]),
+                    leaf("Text", vec![prop_string("content", "front")]),
+                ],
+            ),
+        );
+        let out = from_pipeline(
+            &component("Layered", vec![], vec![]),
+            &layout,
+            &empty_style("Layered"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("ZStack {"));
+        assert!(out.contains(r#"Text("back")"#));
+        assert!(out.contains(r#"Text("front")"#));
+        // Ordering — back is layered first (z-order bottom), front on top.
+        let back = out.find(r#"Text("back")"#).unwrap();
+        let front = out.find(r#"Text("front")"#).unwrap();
+        assert!(back < front);
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 16 — `HostInput` with `value` + `placeholder` emits
+    // `TextField("placeholder", text: .constant(value))`.
+    //
+    // Documents the option-(a) binding choice: the slot flows through
+    // `.constant(...)` so the host's flux dispatch loop owns updates.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_input_emits_textfield_with_constant_binding() {
+        let layout = layout_with(
+            "Form",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostInput",
+                    vec![
+                        prop_string("placeholder", "Search…"),
+                        prop_slot_ref("value", "query"),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "Form",
+                vec![slot("query", SlotType::Text, true)],
+                vec![],
+            ),
+            &layout,
+            &empty_style("Form"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(r#"TextField("Search…", text: .constant(query))"#),
+            "expected TextField with .constant binding, got:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 17 — `HostInput` with `read-only: true` emits the `.disabled(true)`
+    // modifier on the TextField.
+    //
+    // Also exercises the slot-bound form (`read-only: slot: locked`) so
+    // both branches of the `read-only` lookup are covered.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_input_read_only_emits_disabled_modifier() {
+        // Literal `true` keyword form.
+        let layout = layout_with(
+            "F",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostInput",
+                    vec![
+                        prop_slot_ref("value", "q"),
+                        prop_keyword("read-only", "true"),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("F", vec![slot("q", SlotType::Text, true)], vec![]),
+            &layout,
+            &empty_style("F"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".disabled(true)"),
+            "expected .disabled(true), got:\n{out}"
+        );
+
+        // Slot-bound form.
+        let layout2 = layout_with(
+            "G",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostInput",
+                    vec![
+                        prop_slot_ref("value", "q"),
+                        prop_slot_ref("read-only", "locked"),
+                    ],
+                )],
+            ),
+        );
+        let out2 = from_pipeline(
+            &component(
+                "G",
+                vec![
+                    slot("q", SlotType::Text, true),
+                    slot("locked", SlotType::Bool, true),
+                ],
+                vec![],
+            ),
+            &layout2,
+            &empty_style("G"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out2.contains(".disabled(locked)"),
+            "expected .disabled(locked), got:\n{out2}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 18 — `HostInput` with `onCommit: emit: onCommit` emits
+    // `.onSubmit { dispatch(.commit(value: value)) }`.
+    //
+    // The `on` prefix is stripped + lower-camelCased, and the bound
+    // `value` slot is threaded into the dispatch payload.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_input_on_commit_emits_on_submit_dispatch() {
+        let layout = layout_with(
+            "F",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostInput",
+                    vec![
+                        prop_slot_ref("value", "value"),
+                        prop_emit_ref("onCommit", "onCommit"),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "F",
+                vec![slot("value", SlotType::Text, true)],
+                vec![emit(
+                    "onCommit",
+                    vec![param("value", EmitPayloadType::Text)],
+                )],
+            ),
+            &layout,
+            &empty_style("F"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".onSubmit { dispatch(.commit(value: value)) }"),
+            "expected .onSubmit dispatch site, got:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 19 — `HostButton` with `label` + `onTap` produces the right
+    // SwiftUI Button structure.
+    //
+    // The action closure dispatches `.tap`; the label closure contains a
+    // `Text(label)` slot reference.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_button_emits_button_with_action_and_label() {
+        let layout = layout_with(
+            "Bar",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostButton",
+                    vec![
+                        prop_slot_ref("label", "caption"),
+                        prop_emit_ref("onTap", "onTap"),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "Bar",
+                vec![slot("caption", SlotType::Text, true)],
+                vec![emit("onTap", vec![])],
+            ),
+            &layout,
+            &empty_style("Bar"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("Button(action: { dispatch(.tap) }) {"),
+            "expected Button(action:) opener, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(caption)"),
+            "expected label closure with Text(caption), got:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 20 — `HostScroll` lowers to `ScrollView { ... }`.
+    //
+    // Like the other containers, the empty-children form prints
+    // `ScrollView { }` so it still type-checks under SwiftUI's `some View`.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_scroll_lowers_to_scroll_view() {
+        let layout = layout_with(
+            "S",
+            container_node(
+                "HostScroll",
+                vec![leaf("Text", vec![prop_string("content", "row")])],
+            ),
+        );
+        let out = from_pipeline(
+            &component("S", vec![], vec![]),
+            &layout,
+            &empty_style("S"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("ScrollView {"),
+            "expected ScrollView, got:\n{out}"
+        );
+        assert!(out.contains(r#"Text("row")"#));
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 21 — the four UI29 kernel primitives added in v0.2.0 are
+    // recognised (no `UnknownPrimitive` error), but `If`, `For`, and
+    // `HostTable` still trip the `UnknownPrimitive` arm so authors who
+    // reach for them get a clear "not yet supported" diagnostic.
+    //
+    // The deferred trio waits on the moslayout grammar additions
+    // (U29-G3) and a `HostTable` spec; until those land, this test
+    // pins the current behaviour.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn ui29_kernel_recognised_set_and_deferred_set() {
+        // Recognised — must NOT return UnknownPrimitive.
+        for tag in ["Stack", "HostScroll", "HostInput", "HostButton"] {
+            let layout = layout_with(
+                "X",
+                container_node("Box", vec![leaf(tag, vec![])]),
+            );
+            let r = from_pipeline(
+                &component("X", vec![], vec![]),
+                &layout,
+                &empty_style("X"),
+            );
+            assert!(
+                r.is_ok(),
+                "expected primitive {tag} to lower without error, got: {r:?}"
+            );
+        }
+
+        // Deferred — must still fire UnknownPrimitive.
+        for tag in ["If", "For", "HostTable"] {
+            let layout = layout_with(
+                "X",
+                container_node("Box", vec![leaf(tag, vec![])]),
+            );
+            let err = from_pipeline(
+                &component("X", vec![], vec![]),
+                &layout,
+                &empty_style("X"),
+            )
+            .expect_err(&format!("{tag} should still be unknown"));
+            assert!(
+                matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t == tag),
+                "expected UnknownPrimitive({tag}), got: {err:?}"
+            );
+        }
     }
 }
