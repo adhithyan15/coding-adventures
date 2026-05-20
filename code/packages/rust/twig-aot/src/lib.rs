@@ -484,27 +484,58 @@ pub fn compile_file_macos_arm64(
     src_path: &Path,
     out_path: &Path,
 ) -> Result<(), AotError> {
-    use std::os::unix::fs::PermissionsExt;
     let source = std::fs::read_to_string(src_path)?;
     let stem = src_path.file_stem()
         .and_then(|s| s.to_str())
         .unwrap_or("twig");
     let object_bytes = compile_macos_arm64_object(&source, stem)?;
+    link_macos_arm64_executable(&object_bytes, stem, out_path)
+}
 
-    // Object files go to a secure temp file (O_EXCL + random name) so that
-    // concurrent `twig-aot` invocations don't collide and symlink attacks
-    // against a predictable path are not possible.  `NamedTempFile` deletes
-    // the file automatically when it drops.
-    {
-        use std::io::Write as _;
-        let mut tmp_obj = tempfile::Builder::new()
-            .prefix(&format!("twig-aot-{stem}-"))
-            .suffix(".o")
-            .tempfile()?;
-        tmp_obj.write_all(&object_bytes)?;
-        invoke_ld(tmp_obj.path(), out_path)?;
-        // tmp_obj drops here — temp file deleted by NamedTempFile destructor.
-    }
+/// Compile a pre-built `IIRModule` to a macOS ARM64 Mach-O executable.
+///
+/// Frontend-agnostic counterpart to `compile_file_macos_arm64`.  Lets
+/// non-Twig frontends (Nib, Brainfuck, …) reuse twig-aot's macOS path.
+#[cfg(unix)]
+pub fn compile_module_to_macos_executable(
+    module: &IIRModule,
+    out_path: &Path,
+) -> Result<(), AotError> {
+    let object_bytes = compile_module_macos_arm64_object(module)?;
+    let stem = out_path.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    link_macos_arm64_executable(&object_bytes, stem, out_path)
+}
+
+/// Stub for non-Unix hosts.
+#[cfg(not(unix))]
+pub fn compile_module_to_macos_executable(
+    _module: &IIRModule,
+    _out_path: &Path,
+) -> Result<(), AotError> {
+    Err(AotError::Linker {
+        status: None,
+        stderr: "twig-aot: native macOS compilation requires a Unix host".into(),
+    })
+}
+
+/// Link a macOS ARM64 Mach-O object file (produced by any frontend)
+/// into a runnable executable via the system `ld`.
+#[cfg(unix)]
+pub fn link_macos_arm64_executable(
+    obj_bytes: &[u8],
+    stem: &str,
+    out_path: &Path,
+) -> Result<(), AotError> {
+    use std::io::Write as _;
+    use std::os::unix::fs::PermissionsExt;
+
+    let mut tmp_obj = tempfile::Builder::new()
+        .prefix(&format!("twig-aot-{stem}-"))
+        .suffix(".o")
+        .tempfile()?;
+    tmp_obj.write_all(obj_bytes)?;
+    invoke_ld(tmp_obj.path(), out_path)?;
+    drop(tmp_obj);
 
     let mut perms = std::fs::metadata(out_path)?.permissions();
     perms.set_mode(0o755);
@@ -955,6 +986,39 @@ fn with_extension(base: &Path, ext: &str) -> PathBuf {
 /// that wasn't done on Linux.
 #[cfg(target_os = "linux")]
 pub fn compile_file_linux_x86_64(src: &Path, out: &Path) -> Result<(), AotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("twig");
+    let obj_bytes = compile_linux_x86_64_object(&source, stem)?;
+    link_linux_x86_64_executable(&obj_bytes, stem, out)
+}
+
+/// Compile a pre-built `IIRModule` to a Linux x86-64 ELF executable.
+///
+/// Same backend pipeline as `compile_file_linux_x86_64` but accepts an
+/// already-parsed `IIRModule` instead of a source file.  This is the
+/// hook the `lang-aot` driver uses to share twig-aot's AOT pipeline
+/// across language frontends (Nib, Brainfuck, …) — each frontend
+/// produces an `IIRModule`, hands it here, and the rest of the chain
+/// runs unchanged.
+#[cfg(target_os = "linux")]
+pub fn compile_module_to_linux_executable(
+    module: &IIRModule,
+    out: &Path,
+) -> Result<(), AotError> {
+    let obj_bytes = compile_module_linux_x86_64_object(module)?;
+    let stem = out.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    link_linux_x86_64_executable(&obj_bytes, stem, out)
+}
+
+/// Link a Linux x86-64 ELF object file (produced by any frontend) into
+/// a runnable executable via the system C compiler (`cc`).  Embeds the
+/// twig-aot runtime archive for `__twig_print_i64` and friends.
+#[cfg(target_os = "linux")]
+pub fn link_linux_x86_64_executable(
+    obj_bytes: &[u8],
+    stem: &str,
+    out: &Path,
+) -> Result<(), AotError> {
     use std::io::Write as _;
     use std::os::unix::fs::PermissionsExt;
 
@@ -966,15 +1030,11 @@ pub fn compile_file_linux_x86_64(src: &Path, out: &Path) -> Result<(), AotError>
         });
     }
 
-    let source = std::fs::read_to_string(src)?;
-    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("twig");
-    let obj_bytes = compile_linux_x86_64_object(&source, stem)?;
-
     let mut obj_tmp = tempfile::Builder::new()
         .prefix(&format!("twig-aot-{stem}-"))
         .suffix(".o")
         .tempfile()?;
-    obj_tmp.write_all(&obj_bytes)?;
+    obj_tmp.write_all(obj_bytes)?;
 
     let mut rt_tmp = tempfile::Builder::new()
         .prefix("twig_aot_runtime_")
@@ -1019,6 +1079,35 @@ pub fn compile_file_linux_x86_64(src: &Path, out: &Path) -> Result<(), AotError>
 /// message if none is available.
 #[cfg(target_os = "windows")]
 pub fn compile_file_windows_x86_64(src: &Path, out: &Path) -> Result<(), AotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("twig");
+    let obj_bytes = compile_windows_x86_64_object(&source, stem)?;
+    link_windows_x86_64_executable(&obj_bytes, stem, out)
+}
+
+/// Compile a pre-built `IIRModule` to a Windows x86-64 PE executable.
+///
+/// Frontend-agnostic counterpart to `compile_file_windows_x86_64` — see
+/// `compile_module_to_linux_executable` for the design rationale.
+#[cfg(target_os = "windows")]
+pub fn compile_module_to_windows_executable(
+    module: &IIRModule,
+    out: &Path,
+) -> Result<(), AotError> {
+    let obj_bytes = compile_module_windows_x86_64_object(module)?;
+    let stem = out.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    link_windows_x86_64_executable(&obj_bytes, stem, out)
+}
+
+/// Link a Windows x86-64 PE/COFF object file into a runnable `.exe` via
+/// the first system linker found on `PATH` (`link.exe` → `lld-link.exe`
+/// → `gcc.exe`).  Embeds the twig-aot runtime archive.
+#[cfg(target_os = "windows")]
+pub fn link_windows_x86_64_executable(
+    obj_bytes: &[u8],
+    stem: &str,
+    out: &Path,
+) -> Result<(), AotError> {
     use std::io::Write as _;
 
     if RUNTIME_WINDOWS_X86_64.len() <= 4 {
@@ -1029,15 +1118,11 @@ pub fn compile_file_windows_x86_64(src: &Path, out: &Path) -> Result<(), AotErro
         });
     }
 
-    let source = std::fs::read_to_string(src)?;
-    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("twig");
-    let obj_bytes = compile_windows_x86_64_object(&source, stem)?;
-
     let mut obj_tmp = tempfile::Builder::new()
         .prefix(&format!("twig-aot-{stem}-"))
         .suffix(".obj")
         .tempfile()?;
-    obj_tmp.write_all(&obj_bytes)?;
+    obj_tmp.write_all(obj_bytes)?;
 
     let mut rt_tmp = tempfile::Builder::new()
         .prefix("twig_aot_runtime_")
