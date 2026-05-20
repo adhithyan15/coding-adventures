@@ -1,5 +1,63 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — PR-6 — mosaic-pkg-grid through xaml + CLI wiring
+
+### Added — `mosaic-compile --backend xaml` CLI wiring
+
+- `mosaic-compile --interface X.mil --layout X.mll --style X.msl
+  --backend xaml [-o BASE]` now compiles a three-file Mosaic
+  pipeline triple to a WinUI 3 component triple.
+- The `--backend` validation list grew `xaml`.
+- `run_pipeline` branches on backend: `react` emits one `.tsx`
+  file (unchanged from before); `xaml` emits the triple
+  (`{base}.xaml`, `{base}.xaml.cs`, `{base}.Event.cs`) plus
+  zero-or-more RowVm `.cs` files. `BASE` is treated as a file-name
+  prefix; the default is the component name. A trailing `.xaml` in
+  `BASE` is stripped so `Grid.xaml` produces three sensibly-named
+  files instead of `Grid.xaml.xaml.cs` etc.
+- Three new prints (`Written: ...`) per invocation in xaml mode.
+- `mosaic-compile`'s `Cargo.toml` now depends on `mosaic-emit-xaml`.
+
+### Added — End-to-end integration test against `mosaic-pkg-grid`
+
+- New `tests/pkg_grid_compiles_to_xaml.rs` integration test.
+- Resolves `mosaic-pkg-grid`'s source root relative to
+  `CARGO_MANIFEST_DIR` (steps up four directory levels), then
+  compiles each component (`Grid`, `Cell`, `Column`) through the
+  three IR compilers and the XAML emitter.
+- 5 tests cover: package source resolution; each component lowers
+  through `from_pipeline` without error; Grid (the complex
+  component using HostTable + For + Cell component reference)
+  produces the expected XAML structure (UserControl root,
+  ItemsRepeater for For, `<grid:Cell/>` reference, xmlns:grid
+  declaration); Grid produces RowVm side-files.
+- This is the spec §17 PR-6 capstone — the XAML emitter is
+  "done" in the spec sense when `mosaic-pkg-grid` compiles cleanly
+  end-to-end, which it now does.
+
+### What's NOT in this PR (deferred to PR-7)
+
+- **VisiCalc Windows demo** (`demo/visicalc/windows/xaml/`) — the
+  full end-to-end app that consumes the compiled `mosaic-pkg-grid`
+  package and a hand-written `FormulaBar` component. PR-7 lands
+  this directory, the `windows/build.ps1` driver, and the
+  hand-written C# host code (`State.cs` mirroring
+  `src/app/state.ts`).
+- **`dotnet build` smoke test** on Windows CI. Requires the
+  Microsoft .NET SDK + Windows App SDK; will land alongside the
+  demo so we have a real consumer to validate against.
+- **Manifest-driven CLI** (`mosaic-compile pkg <path> --backend xaml`)
+  that walks `mosaic-package.toml`, parses dependency manifests,
+  and constructs the `ComponentRegistry`. The single-component
+  invocation works today; the multi-component package invocation
+  needs the resolver wired into `run_pkg`.
+
+### Tests
+
+- 5 new integration tests in `tests/pkg_grid_compiles_to_xaml.rs`.
+- Unit tests unchanged: 104 still pass.
+- Total across unit + integration: 109.
+
 ## [Unreleased] — PR-5 — Component reference resolution
 
 ### Added — `ComponentRegistry` public type
