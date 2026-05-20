@@ -314,6 +314,19 @@ def _plan_select(
                 # record the 0-based column index for the codegen.
                 k_expr = resolved_items[ordinal - 1].expr
                 positional_index = ordinal - 1
+            elif ordinal >= 1 and any(
+                isinstance(it.expr, Wildcard) for it in resolved_items
+            ):
+                # ``SELECT * ORDER BY N`` with N > the unexpanded item count:
+                # the wildcard expands at runtime to one column per source
+                # column, so the "real" select-list length is only known
+                # later.  Trust the user's positional index — the codegen
+                # emits ``column_idx=N-1`` directly and the VM does a
+                # positional ``row[N-1]`` lookup without consulting the
+                # column-name schema.  Out-of-range indices error out at
+                # runtime (matching SQLite's behaviour for invalid ORDER BY
+                # positions in this corner case).
+                positional_index = ordinal - 1
         elif (
             isinstance(k_expr, Column)
             and k_expr.table is None
