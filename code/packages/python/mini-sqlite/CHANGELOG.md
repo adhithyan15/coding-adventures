@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.72.0] - 2026-05-20
+
+### Fixed
+
+- **``NOT integer_expr`` now coerces to truth** (via ``sql-vm 1.46.0``).
+  Follow-up to 1.71.0: ``NOT 0`` was still raising ``DataError`` because
+  the unary ``NOT`` operator had the same Python-bool-only check that
+  ``AND`` / ``OR`` did before being fixed.  Now ``NOT 0 → 1``,
+  ``NOT 5 → 0``, ``NOT NULL → NULL``, and ``WHERE NOT b`` filters
+  integer columns correctly.
+
+  14 oracle tests in ``test_tier3_not_truthiness.py`` covering integer/
+  float literals, NULL handling, column refs, WHERE clauses, and
+  compound expressions like ``NOT (1 AND 0)`` / ``NOT NOT NULL``.
+
 ## [1.71.0] - 2026-05-20
 
 ### Fixed

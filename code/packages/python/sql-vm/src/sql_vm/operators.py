@@ -286,11 +286,17 @@ def apply_unary(op: UnaryOpCode, value: SqlValue) -> SqlValue:
             )
         return -_to_number(value)
     if op is UnaryOpCode.NOT:
-        if not _is_bool(value):
+        # Same coercion rule as the binary AND/OR path: any non-NULL numeric
+        # is a valid truth operand for NOT.  SQLite has no separate BOOLEAN
+        # storage class, so ``NOT 0`` must give ``1`` and ``NOT 5`` must
+        # give ``0``.  Strings (which have no defined truth value in this
+        # registry) still raise TypeMismatch.
+        truth = _truthiness(value)
+        if truth is None:
             raise TypeMismatch(
                 expected="boolean", got=sql_type_name(value), context="UnaryOp(NOT)"
             )
-        return not value
+        return not truth
     raise TypeMismatch(expected="unary op", got=str(op), context="UnaryOp")
 
 
