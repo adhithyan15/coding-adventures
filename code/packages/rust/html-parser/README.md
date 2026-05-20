@@ -195,6 +195,15 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_head_body_
   --check
 ```
 
+The generated `tests/fixtures/whatwg-void-element-audit.json` fixture indexes
+void element insertion, stray void end tags, table/select contexts, fragment
+contexts, foreign-content boundaries, and legacy void-like elements:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_void_element_audit_fixture.py \
+  --check
+```
+
 The generated `tests/fixtures/whatwg-document-shell-audit.json` fixture indexes
 doctypes, comments, `html`/`head`/`body` synthesis, frameset boundaries, and
 shell fragment contexts:
