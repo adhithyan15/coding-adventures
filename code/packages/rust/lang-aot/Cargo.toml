@@ -1,6 +1,6 @@
 [package]
 name = "lang-aot"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck (and eventually Dartmouth BASIC, Oct) to native executables through the shared IIR pipeline."
 

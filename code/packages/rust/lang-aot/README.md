@@ -35,7 +35,7 @@ lang-aot <FILE> [-o <OUT>] [--lang <LANG>]
 |---|---|---|---|
 | Twig            | `.twig`         | `twig-ir-compiler`       | full |
 | Nib             | `.nib`          | `nib-iir-compiler`       | full |
-| Brainfuck       | `.bf`, `.b`    | `brainfuck-iir-compiler` | frontend wired; AOT backend doesn't lower BF's `load_mem`/`putchar` ops yet (use the dedicated `bf-aarch64-native` or `bf-aot-wasm` pipelines for now) |
+| Brainfuck       | `.bf`, `.b`    | `brainfuck-iir-compiler` + BF07 lowering pass | full — `lang-aot foo.bf` compiles end-to-end (cells live in a 30000-byte `alloc_bytes` tape; `load_mem`/`store_mem` are rewritten to `load_byte`/`store_byte` per LANG76) |
 | Dartmouth BASIC | `.bas`, `.basic` | **TODO**               | needs a new `dartmouth-basic-iir-compiler` crate (existing `-ir-compiler` emits a different IR shape) |
 | Oct             | `.oct`          | **TODO**               | only Python frontend exists; needs a Rust port or a bridge |
 
