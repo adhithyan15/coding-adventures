@@ -81,9 +81,27 @@ descriptor for its actual limits and compiles accordingly.
 | Board family | First boards | Core / ISA | Profile | Notes |
 |---|---|---|---|---|
 | Arduino Uno R4 | Uno R4 Minima, Uno R4 WiFi | Renesas RA4M1, Arm Cortex-M4F, Armv7E-M | `full` | First implementation target. Good modern Arduino baseline. |
+| Arduino Nano R4 | Nano R4 | Renesas RA4M1, Arm Cortex-M4F, Armv7E-M | `full` | Same MCU class as Uno R4, but Nano form factor; must not be hidden inside the Uno R4 crate. |
+| Arduino Portenta C33 | Portenta C33 | Renesas RA6M5, Arm Cortex-M33 | `full` | Later Pro-family Renesas target; shares Board VM runtime shape but needs its own descriptor and upload metadata. |
 
 Uno R4 is the first target because it is the hardware in hand and has enough
-memory for a comfortable runtime.
+memory for a comfortable runtime. It is not the only Arduino target. Generic
+Arduino-family support lives in a separate backend contract so Nano, MKR, Mega,
+Due, GIGA, Portenta, Nicla, Opta, and future Arduino boards do not get squeezed
+through Uno R4 assumptions.
+
+The first concrete `board-vm-arduino` slice registers a GPIO/time backend
+contract for representative Arduino families:
+
+- classic AVR: Uno R3, Nano classic, Pro Mini, Mega 2560, Leonardo, Micro,
+- SAM/SAMD/megaAVR/Renesas/Nordic: Due, Zero, MKR WiFi 1010, Nano Every,
+  Nano R4, Nano 33 IoT, Nano 33 BLE Rev2,
+- maker/pro 32-bit boards: Nano RP2040 Connect, Nano ESP32, GIGA R1 WiFi,
+  Portenta H7.
+
+The next tranches should add board-specific firmware/upload adapters and richer
+peripheral tables for each family without moving generic Arduino discovery into
+`board-vm-uno-r4`.
 
 ### Raspberry Pi Pico
 

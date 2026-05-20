@@ -2,6 +2,7 @@
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BoardFamily {
+    Arduino,
     ArduinoUnoR4,
     Esp32,
     RaspberryPiPico,
@@ -432,6 +433,71 @@ pub const ESP32_DIGITAL_PINS: [DigitalPinInfo; 30] =
 pub const PICO_DIGITAL_PINS: [DigitalPinInfo; 29] =
     map_pico_digital_pins(board_vm_pico::PICO_DIGITAL_PINS);
 
+pub const ARDUINO_UNO_R3_DIGITAL_PINS: [DigitalPinInfo; 20] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_STANDARD_DIGITAL_PINS);
+pub const ARDUINO_NANO_CLASSIC_DIGITAL_PINS: [DigitalPinInfo; 20] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_STANDARD_DIGITAL_PINS);
+pub const ARDUINO_PRO_MINI_DIGITAL_PINS: [DigitalPinInfo; 20] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_STANDARD_DIGITAL_PINS);
+pub const ARDUINO_MEGA_2560_DIGITAL_PINS: [DigitalPinInfo; 70] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_MEGA_2560_DIGITAL_PINS);
+pub const ARDUINO_LEONARDO_DIGITAL_PINS: [DigitalPinInfo; 24] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_LEONARDO_DIGITAL_PINS);
+pub const ARDUINO_MICRO_DIGITAL_PINS: [DigitalPinInfo; 24] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_LEONARDO_DIGITAL_PINS);
+pub const ARDUINO_DUE_DIGITAL_PINS: [DigitalPinInfo; 76] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_DUE_DIGITAL_PINS);
+pub const ARDUINO_ZERO_DIGITAL_PINS: [DigitalPinInfo; 20] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_STANDARD_DIGITAL_PINS);
+pub const ARDUINO_MKR_WIFI_1010_DIGITAL_PINS: [DigitalPinInfo; 20] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_STANDARD_DIGITAL_PINS);
+pub const ARDUINO_NANO_EVERY_DIGITAL_PINS: [DigitalPinInfo; 22] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_NANO_EVERY_DIGITAL_PINS);
+pub const ARDUINO_NANO_R4_DIGITAL_PINS: [DigitalPinInfo; 22] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_NANO_R4_DIGITAL_PINS);
+pub const ARDUINO_NANO_33_IOT_DIGITAL_PINS: [DigitalPinInfo; 20] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_STANDARD_DIGITAL_PINS);
+pub const ARDUINO_NANO_33_BLE_REV2_DIGITAL_PINS: [DigitalPinInfo; 22] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_NANO_33_BLE_DIGITAL_PINS);
+pub const ARDUINO_NANO_RP2040_CONNECT_DIGITAL_PINS: [DigitalPinInfo; 22] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_NANO_RP2040_DIGITAL_PINS);
+pub const ARDUINO_NANO_ESP32_DIGITAL_PINS: [DigitalPinInfo; 22] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_NANO_ESP32_DIGITAL_PINS);
+pub const ARDUINO_GIGA_R1_WIFI_DIGITAL_PINS: [DigitalPinInfo; 76] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_GIGA_R1_DIGITAL_PINS);
+pub const ARDUINO_PORTENTA_H7_DIGITAL_PINS: [DigitalPinInfo; 80] =
+    map_arduino_digital_pins(board_vm_arduino::ARDUINO_PORTENTA_H7_DIGITAL_PINS);
+
+const fn map_arduino_digital_pins<const N: usize>(
+    source: [board_vm_arduino::DigitalPinDescriptor; N],
+) -> [DigitalPinInfo; N] {
+    let mut pins = [DigitalPinInfo::placeholder(); N];
+    let mut index = 0;
+    while index < N {
+        pins[index] = arduino_digital_pin(source[index]);
+        index += 1;
+    }
+    pins
+}
+
+const fn arduino_digital_pin(pin: board_vm_arduino::DigitalPinDescriptor) -> DigitalPinInfo {
+    DigitalPinInfo {
+        pin: pin.pin,
+        label: pin.label,
+        supports_input: pin.supports_input,
+        supports_output: pin.supports_output,
+        supports_pullup: pin.supports_pullup,
+        supports_pulldown: pin.supports_pulldown,
+        supports_adc: pin.supports_adc,
+        supports_pwm: pin.supports_pwm,
+        supports_dac: false,
+        supports_touch: false,
+        supports_interrupt: pin.supports_input,
+        boot_strap: false,
+        notes: pin.notes,
+    }
+}
+
 const fn map_uno_r4_digital_pins<const N: usize>(
     source: [board_vm_uno_r4::DigitalPinDescriptor; N],
 ) -> [DigitalPinInfo; N] {
@@ -677,7 +743,41 @@ const fn pico_digital_pin(pin: board_vm_pico::DigitalPinDescriptor) -> DigitalPi
     }
 }
 
-pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
+const fn arduino_board_target(
+    target: board_vm_arduino::ArduinoTargetDescriptor,
+    digital_pins: &'static [DigitalPinInfo],
+) -> BoardTargetInfo {
+    BoardTargetInfo {
+        board_id: target.board_id,
+        display_name: target.display_name,
+        family: BoardFamily::Arduino,
+        runtime_id: board_vm_arduino::ARDUINO_VM_RUNTIME_ID,
+        mcu: target.mcu,
+        core: target.core,
+        rust_target: target.rust_target.name(),
+        clock_hz: target.clock_hz,
+        operating_voltage_mv: target.operating_voltage_mv,
+        onboard_led: match target.onboard_led_pin {
+            Some(pin) => Some(OnboardLed::Gpio(pin)),
+            None => None,
+        },
+        led_matrix: None,
+        digital_pin_count: digital_pins.len(),
+        digital_pins,
+        i2c_buses: &[],
+        spi_buses: &[],
+        uart_buses: &[],
+        can_buses: &[],
+        rtc: None,
+        watchdog: None,
+        storage_regions: &[],
+        wireless: &[],
+        network_interfaces: &[],
+        capabilities: &BLINK_MVP_CAPABILITIES,
+    }
+}
+
+pub const BOARD_TARGETS: [BoardTargetInfo; 22] = [
     BoardTargetInfo {
         board_id: board_vm_uno_r4::UNO_R4_MINIMA.board_id,
         display_name: board_vm_uno_r4::UNO_R4_MINIMA.display_name,
@@ -736,6 +836,65 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 5] = [
         network_interfaces: &UNO_R4_WIFI_NETWORK_INTERFACES,
         capabilities: &UNO_R4_WIFI_CAPABILITIES,
     },
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_UNO_R3,
+        &ARDUINO_UNO_R3_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_NANO_CLASSIC,
+        &ARDUINO_NANO_CLASSIC_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_PRO_MINI,
+        &ARDUINO_PRO_MINI_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_MEGA_2560,
+        &ARDUINO_MEGA_2560_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_LEONARDO,
+        &ARDUINO_LEONARDO_DIGITAL_PINS,
+    ),
+    arduino_board_target(board_vm_arduino::ARDUINO_MICRO, &ARDUINO_MICRO_DIGITAL_PINS),
+    arduino_board_target(board_vm_arduino::ARDUINO_DUE, &ARDUINO_DUE_DIGITAL_PINS),
+    arduino_board_target(board_vm_arduino::ARDUINO_ZERO, &ARDUINO_ZERO_DIGITAL_PINS),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_MKR_WIFI_1010,
+        &ARDUINO_MKR_WIFI_1010_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_NANO_EVERY,
+        &ARDUINO_NANO_EVERY_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_NANO_R4,
+        &ARDUINO_NANO_R4_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_NANO_33_IOT,
+        &ARDUINO_NANO_33_IOT_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_NANO_33_BLE_REV2,
+        &ARDUINO_NANO_33_BLE_REV2_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_NANO_RP2040_CONNECT,
+        &ARDUINO_NANO_RP2040_CONNECT_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_NANO_ESP32,
+        &ARDUINO_NANO_ESP32_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_GIGA_R1_WIFI,
+        &ARDUINO_GIGA_R1_WIFI_DIGITAL_PINS,
+    ),
+    arduino_board_target(
+        board_vm_arduino::ARDUINO_PORTENTA_H7,
+        &ARDUINO_PORTENTA_H7_DIGITAL_PINS,
+    ),
     BoardTargetInfo {
         board_id: board_vm_esp32::ESP32_DEVKIT_V1.board_id,
         display_name: board_vm_esp32::ESP32_DEVKIT_V1.display_name,
@@ -845,9 +1004,58 @@ mod tests {
     #[test]
     fn registry_lists_current_board_families() {
         assert!(find_target("arduino-uno-r4-wifi").is_some());
+        assert!(find_target("arduino-uno-r3").is_some());
+        assert!(find_target("arduino-mega-2560").is_some());
+        assert!(find_target("arduino-due").is_some());
+        assert!(find_target("arduino-nano-r4").is_some());
+        assert!(find_target("arduino-nano-33-ble-rev2").is_some());
+        assert!(find_target("arduino-nano-rp2040-connect").is_some());
+        assert!(find_target("arduino-nano-esp32").is_some());
+        assert!(find_target("arduino-giga-r1-wifi").is_some());
+        assert!(find_target("arduino-portenta-h7").is_some());
         assert!(find_target("esp32-devkit-v1").is_some());
         assert!(find_target("raspberry-pi-pico").is_some());
         assert!(find_target("raspberry-pi-pico-w").is_some());
+    }
+
+    #[test]
+    fn registry_imports_every_shared_arduino_target() {
+        for arduino_target in board_vm_arduino::ARDUINO_TARGETS.iter() {
+            let target = find_target(arduino_target.board_id).unwrap();
+            assert_eq!(target.display_name, arduino_target.display_name);
+            assert_eq!(target.family, BoardFamily::Arduino);
+            assert_eq!(target.runtime_id, board_vm_arduino::ARDUINO_VM_RUNTIME_ID);
+            assert_eq!(target.mcu, arduino_target.mcu);
+            assert_eq!(target.rust_target, arduino_target.rust_target.name());
+            assert_eq!(target.digital_pin_count, arduino_target.digital_pins.len());
+            assert!(target.capabilities.contains(&"transport.serial"));
+            assert!(target.capabilities.contains(&"gpio.open"));
+            assert!(target.capabilities.contains(&"gpio.write"));
+            assert!(target.capabilities.contains(&"time.sleep_ms"));
+            assert!(target.capabilities.contains(&"program.ram_exec"));
+        }
+    }
+
+    #[test]
+    fn shared_arduino_targets_cover_more_than_uno_r4() {
+        let arduino_targets = BOARD_TARGETS
+            .iter()
+            .filter(|target| target.family == BoardFamily::Arduino)
+            .count();
+        assert_eq!(arduino_targets, board_vm_arduino::ARDUINO_TARGETS.len());
+        assert!(find_target("arduino-uno-r3").unwrap().digital_pin_count >= 20);
+        assert!(find_target("arduino-mega-2560").unwrap().digital_pin_count >= 70);
+        assert!(find_target("arduino-due").unwrap().digital_pin_count >= 76);
+        assert_eq!(find_target("arduino-nano-r4").unwrap().mcu, "RA4M1");
+        assert_eq!(
+            find_target("arduino-nano-33-ble-rev2").unwrap().mcu,
+            "nRF52840"
+        );
+        assert_eq!(find_target("arduino-nano-esp32").unwrap().mcu, "ESP32-S3");
+        assert_eq!(
+            find_target("arduino-giga-r1-wifi").unwrap().mcu,
+            "STM32H747XI"
+        );
     }
 
     #[test]

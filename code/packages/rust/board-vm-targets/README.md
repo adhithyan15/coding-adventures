@@ -8,6 +8,15 @@ compile for, where their onboard LED lives, and which host transports are
 available. Board-specific runtime crates remain responsible for HAL behavior,
 pin validation, wireless stack integration, and upload mechanics.
 
+Arduino coverage is deliberately split in two:
+
+- `board-vm-uno-r4` remains the rich, board-specific Renesas RA4M1 target for
+  Uno R4 Minima and Uno R4 WiFi.
+- `board-vm-arduino` registers the broader Arduino-family backend contract for
+  non-Uno-R4 boards such as Uno R3, Nano, Mega 2560, Leonardo/Micro, Due, Zero,
+  MKR WiFi 1010, Nano Every, Nano R4, Nano 33 IoT, Nano 33 BLE Rev2, Nano RP2040
+  Connect, Nano ESP32, GIGA R1 WiFi, and Portenta H7.
+
 Wireless metadata separates physical support from the generic front-end sugar:
 
 - every current target exposes `transport.serial`
