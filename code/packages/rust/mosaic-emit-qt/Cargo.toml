@@ -1,6 +1,6 @@
 [package]
 name = "mosaic-emit-qt"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Qt backend: emits QML source from the Mosaic three-language pipeline"
 
