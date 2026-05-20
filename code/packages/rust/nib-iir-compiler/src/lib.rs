@@ -367,7 +367,7 @@ impl Compiler {
         env: &mut HashMap<String, String>,
         out: &mut Vec<IIRInstr>,
     ) -> Result<String, CompileError> {
-        // primary is one of: INT_LIT | HEX_LIT | NAME | "(" expr ")" | …
+        // primary is one of: INT_LIT | HEX_LIT | NAME | call_expr | "(" expr ")" | …
         if let Some(value) = parse_literal(node) {
             let v = self.fresh_var();
             let ty = lookup_node_type(node, types).map(nib_ty_str).unwrap_or("u8");
@@ -378,6 +378,16 @@ impl Compiler {
                 ty,
             ));
             return Ok(v);
+        }
+
+        // NIB04: detect a call_expr child *before* falling back to
+        // `lookup_name` (which would otherwise recursively pick up the
+        // callee's NAME token and treat the call as a bare variable
+        // reference, silently dropping all arguments).
+        if let Some(call) = child_nodes(node).into_iter()
+            .find(|c| c.rule_name == "call_expr")
+        {
+            return self.compile_call_expr(call, types, env, out);
         }
 
         if let Some(name) = lookup_name(node) {
@@ -391,6 +401,100 @@ impl Compiler {
         }
 
         Err(CompileError::Unsupported(format!("primary: {}", node.rule_name)))
+    }
+
+    /// NIB04 — compile a `call_expr` node.
+    ///
+    /// Three cases:
+    ///
+    /// 1. **`print(x)`** — lowers to `call_builtin "print_i64", x`.  The
+    ///    runtime helper `__twig_print_i64` already exists from LANG75.
+    ///    `print` always takes exactly one integer argument; passing zero
+    ///    or more than one is an `Unsupported` error.  The result slot
+    ///    is a synthetic void marker (`_void_N`); callers that use
+    ///    `print(x)` in expression position (which Nib doesn't generate
+    ///    today, but the grammar permits) just ignore it.
+    ///
+    /// 2. **User-defined function call** — `f(a, b, c)` lowers to
+    ///    `call f, a, b, c -> dest`.  The IIR `call` opcode is already
+    ///    handled by the x86_64-backend (cross-function relocations
+    ///    landed in PR #3331 / #3332).  The dest slot's IIR type is
+    ///    inferred from the call-expression's `lookup_node_type` if
+    ///    the type-checker annotated it, falling back to `"any"`.
+    ///
+    /// 3. **Zero-arg call `f()`** — same as case 2 with an empty arg
+    ///    list.
+    fn compile_call_expr(
+        &mut self,
+        node: &GrammarASTNode,
+        types: &HashMap<usize, NibType>,
+        env: &mut HashMap<String, String>,
+        out: &mut Vec<IIRInstr>,
+    ) -> Result<String, CompileError> {
+        let fn_name = first_name(node)
+            .ok_or_else(|| CompileError::Unsupported(
+                "call_expr missing function name".into(),
+            ))?;
+
+        // Compile each argument expression in order.  The grammar shape
+        // is `call_expr = NAME LPAREN [arg_list] RPAREN` where
+        // `arg_list = expr { COMMA expr }`.  So `call_expr.children`
+        // contains an optional `arg_list` sub-node whose non-token
+        // children are the argument expressions.
+        let mut arg_slots: Vec<String> = Vec::new();
+        if let Some(args_node) = child_nodes(node).into_iter()
+            .find(|c| c.rule_name == "arg_list")
+        {
+            for arg in child_nodes(args_node) {
+                if is_expr_rule(&arg.rule_name) {
+                    let v = self.compile_expr(arg, types, env, out)?;
+                    arg_slots.push(v);
+                }
+            }
+        }
+
+        // Case 1: `print(x)` → `call_builtin "print_i64", x`.
+        if fn_name == "print" {
+            if arg_slots.len() != 1 {
+                return Err(CompileError::Unsupported(format!(
+                    "print() takes exactly 1 argument, got {}",
+                    arg_slots.len(),
+                )));
+            }
+            out.push(IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![
+                    Operand::Var("print_i64".into()),
+                    Operand::Var(arg_slots.into_iter().next().unwrap()),
+                ],
+                "void",
+            ));
+            // print returns no value; emit a synthetic name so callers
+            // that use print in expression position (rare) don't blow up.
+            return Ok(self.fresh_var());
+        }
+
+        // Case 2/3: user-defined function call.
+        //
+        // CIR srcs convention: srcs[0] = callee_name (as Var), srcs[1..] =
+        // arguments.  The x86_64 / aarch64 backends already implement this
+        // for cross-function `call` (see LANG43 PR #3331).
+        let dest = self.fresh_var();
+        let result_ty = lookup_node_type(node, types).map(nib_ty_str)
+            .unwrap_or("any").to_string();
+        let mut srcs = Vec::with_capacity(arg_slots.len() + 1);
+        srcs.push(Operand::Var(fn_name));
+        for a in arg_slots {
+            srcs.push(Operand::Var(a));
+        }
+        out.push(IIRInstr::new(
+            "call",
+            Some(dest.clone()),
+            srcs,
+            &result_ty,
+        ));
+        Ok(dest)
     }
 
     /// Compile a left-associative binary chain like `a + b + c` by walking
@@ -723,4 +827,72 @@ mod tests {
         let err = compile_source("fn main(", "test").unwrap_err();
         assert!(matches!(err, CompileError::Parse(_)));
     }
+
+    // ── NIB04 — print + cross-function calls ──────────────────────────────────
+
+    /// `print(x)` lowers to `call_builtin "print_i64", x` (LANG75).
+    #[test]
+    fn compiles_print_call() {
+        let src = "fn main() -> u8 { print(42); return 0; }";
+        let m = compile_source(src, "test").expect("ok");
+        let body = &m.functions[0].instructions;
+        let print_call = body.iter().find(|i|
+            i.op == "call_builtin" && i.srcs.first().and_then(|s| match s {
+                Operand::Var(n) => Some(n.as_str()),
+                _ => None,
+            }) == Some("print_i64")
+        );
+        assert!(print_call.is_some(),
+                "expected `call_builtin print_i64` in {body:?}");
+        let pc = print_call.unwrap();
+        assert_eq!(pc.dest, None, "print_i64 returns void; dest must be None");
+        // Two srcs: the helper name + the value.
+        assert_eq!(pc.srcs.len(), 2);
+    }
+
+    /// `double(21)` from main lowers to a `call` IIR with srcs[0] =
+    /// callee name and srcs[1..] = arguments.
+    #[test]
+    fn compiles_cross_function_call() {
+        let src = "fn double(x: u8) -> u8 { return x + x; } \
+                   fn main() -> u8 { return double(21); }";
+        let m = compile_source(src, "test").expect("ok");
+        let main_fn = m.functions.iter().find(|f| f.name == "main").expect("main fn");
+        let body = &main_fn.instructions;
+        let call_instr = body.iter().find(|i| i.op == "call");
+        assert!(call_instr.is_some(), "expected `call` in {body:?}");
+        let call = call_instr.unwrap();
+        // srcs[0] = "double", srcs[1] = the constant slot holding 21.
+        assert!(call.dest.is_some(), "call must have a dest");
+        assert!(matches!(call.srcs.first(), Some(Operand::Var(n)) if n == "double"),
+                "call srcs[0] must be Var(\"double\"); got {:?}", call.srcs);
+        assert_eq!(call.srcs.len(), 2, "call should have callee + 1 arg");
+    }
+
+    /// Zero-argument call: `f()` → `call f -> dest`.
+    #[test]
+    fn compiles_zero_arg_call() {
+        let src = "fn forty_two() -> u8 { return 42; } \
+                   fn main() -> u8 { return forty_two(); }";
+        let m = compile_source(src, "test").expect("ok");
+        let main_fn = m.functions.iter().find(|f| f.name == "main").expect("main fn");
+        let call = main_fn.instructions.iter().find(|i| i.op == "call")
+            .expect("expected `call`");
+        assert_eq!(call.srcs.len(), 1, "zero-arg call has only the callee in srcs");
+        assert!(matches!(call.srcs.first(), Some(Operand::Var(n)) if n == "forty_two"));
+    }
+
+    /// `print()` with zero or two arguments is rejected — V1 print
+    /// expects exactly one i64 arg.
+    #[test]
+    fn rejects_print_with_wrong_arity() {
+        // V1 print() takes exactly one arg.
+        let err = compile_source("fn main() -> u8 { print(); return 0; }", "t")
+            .unwrap_err();
+        match err {
+            CompileError::Unsupported(_) => {}
+            other => panic!("expected Unsupported for print() with 0 args, got {other:?}"),
+        }
+    }
 }
+
