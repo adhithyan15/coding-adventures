@@ -896,6 +896,15 @@ pub const ARDUINO_NANO_R4_UART_BUSES: [UartBusInfo; 1] = [UartBusInfo {
     notes: "Arduino Nano R4 D1/D0 serial metadata only; native USB remains upload/transport metadata, not a separate GPIO UART.",
 }];
 
+pub const ARDUINO_NANO_R4_CAN_BUSES: [CanBusInfo; 1] = [CanBusInfo {
+    bus: 0,
+    name: "CAN0",
+    tx_pin: 4,
+    rx_pin: 5,
+    controller: "RA4M1 CAN0",
+    notes: "Arduino Nano R4 D4/D5 CAN metadata only; external transceiver required and shared Arduino runtime does not enable can.* bytecode adapters yet.",
+}];
+
 const fn map_arduino_digital_pins<const N: usize>(
     source: [board_vm_arduino::DigitalPinDescriptor; N],
 ) -> [DigitalPinInfo; N] {
@@ -1207,6 +1216,28 @@ const fn arduino_board_target_with_buses(
     wireless: &'static [WirelessInterfaceInfo],
     network_interfaces: &'static [NetworkInterfaceInfo],
 ) -> BoardTargetInfo {
+    arduino_board_target_with_buses_and_can(
+        target,
+        digital_pins,
+        i2c_buses,
+        spi_buses,
+        uart_buses,
+        &[],
+        wireless,
+        network_interfaces,
+    )
+}
+
+const fn arduino_board_target_with_buses_and_can(
+    target: board_vm_arduino::ArduinoTargetDescriptor,
+    digital_pins: &'static [DigitalPinInfo],
+    i2c_buses: &'static [I2cBusInfo],
+    spi_buses: &'static [SpiBusInfo],
+    uart_buses: &'static [UartBusInfo],
+    can_buses: &'static [CanBusInfo],
+    wireless: &'static [WirelessInterfaceInfo],
+    network_interfaces: &'static [NetworkInterfaceInfo],
+) -> BoardTargetInfo {
     BoardTargetInfo {
         board_id: target.board_id,
         display_name: target.display_name,
@@ -1227,7 +1258,7 @@ const fn arduino_board_target_with_buses(
         i2c_buses,
         spi_buses,
         uart_buses,
-        can_buses: &[],
+        can_buses,
         rtc: None,
         watchdog: None,
         storage_regions: &[],
@@ -1384,12 +1415,13 @@ pub const BOARD_TARGETS: [BoardTargetInfo; 31] = [
         &[],
         &[],
     ),
-    arduino_board_target_with_buses(
+    arduino_board_target_with_buses_and_can(
         board_vm_arduino::ARDUINO_NANO_R4,
         &ARDUINO_NANO_R4_DIGITAL_PINS,
         &ARDUINO_NANO_R4_I2C_BUSES,
         &ARDUINO_NANO_R4_SPI_BUSES,
         &ARDUINO_NANO_R4_UART_BUSES,
+        &ARDUINO_NANO_R4_CAN_BUSES,
         &[],
         &[],
     ),
@@ -1978,6 +2010,18 @@ mod tests {
         let wifi = find_target("arduino-uno-r4-wifi").unwrap();
         assert_eq!(wifi.can_buses, minima.can_buses);
         assert!(wifi.can_buses[0].notes.contains("SPI"));
+
+        let nano_r4 = find_target("arduino-nano-r4").unwrap();
+        assert_eq!(nano_r4.can_buses, &ARDUINO_NANO_R4_CAN_BUSES);
+        assert_eq!(nano_r4.can_buses[0].name, "CAN0");
+        assert_eq!(nano_r4.can_buses[0].tx_pin, 4);
+        assert_eq!(nano_r4.can_buses[0].rx_pin, 5);
+        assert_eq!(nano_r4.can_buses[0].controller, "RA4M1 CAN0");
+        assert!(nano_r4.can_buses[0].notes.contains("external transceiver"));
+        assert!(nano_r4.can_buses[0].notes.contains("metadata only"));
+        assert!(!nano_r4.capabilities.contains(&"can.open"));
+        assert!(!nano_r4.capabilities.contains(&"can.write"));
+        assert!(!nano_r4.capabilities.contains(&"can.read"));
 
         assert!(find_target("esp32-devkit-v1").unwrap().can_buses.is_empty());
         assert!(find_target("raspberry-pi-pico")

@@ -166,8 +166,12 @@ modeled as upload/transport metadata.
 
 The Nano R4 bus metadata tranche applies that same header-pin descriptor shape
 to the RA4M1 Nano target. It reports A4/A5 `Wire`, D11/D12/D13 SPI with D10 as
-chip select, and D0/D1 `Serial1`; native USB, Qwiic `Wire1`, CAN, and RTC
-details remain follow-up adapter metadata.
+chip select, and D0/D1 `Serial1`.
+
+The Nano R4 CAN metadata tranche adds the D4/D5 CAN0 descriptor and records the
+external transceiver requirement, while leaving `can.*` capabilities disabled
+for the shared Arduino runtime. Native USB, Qwiic `Wire1`, and RTC details
+remain follow-up adapter metadata.
 
 The next tranches should deepen board-specific firmware/upload adapters and
 richer peripheral tables for each family without moving generic Arduino
