@@ -194,6 +194,10 @@ The eject manifest:
 ```
 
 SDKs must validate the program against the board descriptor before ejecting.
+Firmware upload and artifact handoff must use the Rust-owned target upload
+profile for the selected board. Language SDKs can wrap that profile in native
+ergonomics, but they should not hard-code whether a board flashes through
+Arduino CLI, ESP ROM serial upload, UF2 mass storage, or another adapter.
 
 ## Error Handling
 

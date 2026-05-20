@@ -77,7 +77,9 @@ use board_vm_targets::{
     all_targets, BoardFamily, BoardTargetInfo, DigitalPinInfo as TargetDigitalPin,
     I2cBusInfo as TargetI2cBus, NetworkInterfaceInfo as TargetNetworkInterface,
     NetworkProtocol as TargetNetworkProtocol, OnboardLed as TargetOnboardLed,
-    SpiBusInfo as TargetSpiBus, UartBusInfo as TargetUartBus,
+    SpiBusInfo as TargetSpiBus, UartBusInfo as TargetUartBus, UploadAdapter as TargetUploadAdapter,
+    UploadImageFormat as TargetUploadImageFormat, UploadInfo as TargetUploadInfo,
+    UploadResetMethod as TargetUploadResetMethod, UploadTransport as TargetUploadTransport,
     WirelessInterfaceInfo as TargetWirelessInterface, WirelessTransport as TargetWirelessTransport,
 };
 
@@ -430,6 +432,7 @@ pub struct LanguageTargetInfo {
     pub wireless: Vec<LanguageWirelessInterface>,
     pub network_interfaces: Vec<LanguageNetworkInterface>,
     pub connection_options: Vec<LanguageConnectionOption>,
+    pub upload: Option<LanguageUploadOptions>,
     pub capabilities: Vec<String>,
 }
 
@@ -508,6 +511,17 @@ pub struct LanguagePicoUf2UploadOptions {
     pub volume_label: String,
     pub image_extension: String,
     pub auto_detect_mount: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageUploadOptions {
+    pub board_id: String,
+    pub adapter: String,
+    pub image_format: String,
+    pub transport: String,
+    pub reset_method: String,
+    pub command: String,
+    pub notes: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -673,6 +687,37 @@ pub const fn host_endpoint_transport_name(
     }
 }
 
+pub const fn upload_adapter_name(adapter: TargetUploadAdapter) -> &'static str {
+    match adapter {
+        TargetUploadAdapter::ArduinoCli => "arduino_cli",
+        TargetUploadAdapter::EspRomSerial => "esp_rom_serial",
+        TargetUploadAdapter::PicoUf2MassStorage => "pico_uf2_mass_storage",
+    }
+}
+
+pub const fn upload_image_format_name(format: TargetUploadImageFormat) -> &'static str {
+    match format {
+        TargetUploadImageFormat::ArduinoCliBuildOutput => "arduino_cli_build_output",
+        TargetUploadImageFormat::EspFlashImage => "esp_flash_image",
+        TargetUploadImageFormat::Uf2 => "uf2",
+    }
+}
+
+pub const fn upload_transport_name(transport: TargetUploadTransport) -> &'static str {
+    match transport {
+        TargetUploadTransport::Serial => "serial",
+        TargetUploadTransport::MassStorage => "mass_storage",
+    }
+}
+
+pub const fn upload_reset_method_name(method: TargetUploadResetMethod) -> &'static str {
+    match method {
+        TargetUploadResetMethod::ArduinoBoardPackage => "arduino_board_package",
+        TargetUploadResetMethod::EspRomBootPins => "esp_rom_boot_pins",
+        TargetUploadResetMethod::PicoBootsel => "pico_bootsel",
+    }
+}
+
 pub fn capability_flag_names(flags: u16, out: &mut [&'static str]) -> usize {
     let mut count = 0;
     if capability_bytecode_callable(flags) {
@@ -766,6 +811,10 @@ pub fn pico_uf2_upload_options_for_target(selector: &str) -> Option<LanguagePico
         image_extension: ".uf2".to_owned(),
         auto_detect_mount: true,
     })
+}
+
+pub fn upload_options_for_target(selector: &str) -> Option<LanguageUploadOptions> {
+    detect_target(selector)?.upload
 }
 
 pub fn connection_options_for_target(selector: &str) -> Option<Vec<LanguageConnectionOption>> {
@@ -1162,6 +1211,9 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
             .map(language_network_interface)
             .collect(),
         connection_options: language_connection_options(target),
+        upload: target
+            .upload
+            .map(|upload| language_upload_options(target.board_id, upload)),
         capabilities: target
             .capabilities
             .iter()
@@ -1245,6 +1297,18 @@ fn language_network_interface(interface: &TargetNetworkInterface) -> LanguageNet
             .collect(),
         max_sockets: interface.max_sockets,
         notes: interface.notes.to_owned(),
+    }
+}
+
+fn language_upload_options(board_id: &str, upload: TargetUploadInfo) -> LanguageUploadOptions {
+    LanguageUploadOptions {
+        board_id: board_id.to_owned(),
+        adapter: upload_adapter_name(upload.adapter).to_owned(),
+        image_format: upload_image_format_name(upload.image_format).to_owned(),
+        transport: upload_transport_name(upload.transport).to_owned(),
+        reset_method: upload_reset_method_name(upload.reset_method).to_owned(),
+        command: upload.command.to_owned(),
+        notes: upload.notes.to_owned(),
     }
 }
 
@@ -3815,6 +3879,7 @@ mod tests {
         assert!(!opta_wifi.digital_pins[0].supports_output);
         assert_eq!(opta_wifi.digital_pins[11].label, "O4");
         assert!(opta_wifi.digital_pins[11].supports_output);
+        assert_eq!(opta_wifi.upload.as_ref().unwrap().adapter, "arduino_cli");
         assert_eq!(
             uno.led_matrix,
             Some(LanguageLedMatrix {
@@ -4602,6 +4667,31 @@ mod tests {
         assert!(options.auto_detect_mount);
         assert!(pico_uf2_upload_options_for_target("pico-w").is_some());
         assert!(pico_uf2_upload_options_for_target("esp32").is_none());
+    }
+
+    #[test]
+    fn generic_upload_options_are_owned_by_rust_language_core() {
+        let opta = upload_options_for_target("arduino-opta-wifi").unwrap();
+        assert_eq!(opta.board_id, "arduino-opta-wifi");
+        assert_eq!(opta.adapter, "arduino_cli");
+        assert_eq!(opta.image_format, "arduino_cli_build_output");
+        assert_eq!(opta.transport, "serial");
+        assert_eq!(opta.reset_method, "arduino_board_package");
+        assert_eq!(opta.command, "arduino-cli upload");
+
+        let esp32 = upload_options_for_target("esp32").unwrap();
+        assert_eq!(esp32.board_id, "esp32-devkit-v1");
+        assert_eq!(esp32.adapter, "esp_rom_serial");
+        assert_eq!(esp32.image_format, "esp_flash_image");
+        assert_eq!(esp32.reset_method, "esp_rom_boot_pins");
+
+        let pico = upload_options_for_target("pico").unwrap();
+        assert_eq!(pico.adapter, "pico_uf2_mass_storage");
+        assert_eq!(pico.image_format, "uf2");
+        assert_eq!(pico.transport, "mass_storage");
+        assert_eq!(pico.reset_method, "pico_bootsel");
+
+        assert!(upload_options_for_target("not-a-board").is_none());
     }
 
     #[test]
