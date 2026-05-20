@@ -967,6 +967,7 @@ impl ToolAuditSupervisorDrainRunReport {
             outcome_label: self.outcome_label(),
             scheduler_action: self.scheduler_action(),
             scheduler_action_label: self.scheduler_action_label(),
+            is_no_scheduler_action: self.scheduler_action().is_no_action(),
             requires_scheduler_action: self.requires_scheduler_action(),
             requests_continuation: self.requests_continuation(),
             routes_follow_up: self.routes_follow_up(),
@@ -1102,6 +1103,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub scheduler_action: ToolAuditSupervisorDrainSchedulerAction,
     /// Stable scheduler action label for host logs.
     pub scheduler_action_label: &'static str,
+    /// Whether this run intentionally leaves the scheduler idle.
+    pub is_no_scheduler_action: bool,
     /// Whether this run asks the scheduler to take action.
     pub requires_scheduler_action: bool,
     /// Whether the scheduler should run another drain pass.
@@ -1167,6 +1170,11 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether this run outcome asks the scheduler to take action.
     pub fn requires_scheduler_action(&self) -> bool {
         self.requires_scheduler_action
+    }
+
+    /// Return whether this run intentionally leaves the scheduler idle.
+    pub fn is_no_scheduler_action(&self) -> bool {
+        self.is_no_scheduler_action
     }
 
     /// Return whether the scheduler should run another drain pass.
@@ -3059,6 +3067,8 @@ mod tests {
         assert_eq!(summary.outcome_label(), "needs_follow_up");
         assert_eq!(summary.scheduler_action_label, "route_follow_up");
         assert_eq!(summary.scheduler_action_label(), "route_follow_up");
+        assert!(!summary.is_no_scheduler_action);
+        assert!(!summary.is_no_scheduler_action());
         assert!(summary.requires_scheduler_action);
         assert!(summary.requires_scheduler_action());
         assert!(!summary.requests_continuation);
@@ -3126,6 +3136,12 @@ mod tests {
         assert!(report.reached_end_of_log());
         assert!(!report.should_continue());
         assert_eq!(report.outcome(), ToolAuditSupervisorDrainRunOutcome::Idle);
+        let summary = report.summary();
+        assert_eq!(summary.scheduler_action_label, "no_action");
+        assert!(summary.is_no_scheduler_action);
+        assert!(summary.is_no_scheduler_action());
+        assert!(!summary.requires_scheduler_action);
+        assert!(!summary.requires_scheduler_action());
         assert!(report.last_checkpoint().is_some());
         assert!(sink.records().is_empty());
         assert!(store.fetch_checkpoint("supervisor").unwrap().is_none());
@@ -3492,6 +3508,8 @@ mod tests {
         );
         assert_eq!(summary.scheduler_action_label, "schedule_continuation");
         assert_eq!(summary.scheduler_action_label(), "schedule_continuation");
+        assert!(!summary.is_no_scheduler_action);
+        assert!(!summary.is_no_scheduler_action());
         assert!(summary.requires_scheduler_action);
         assert!(summary.requires_scheduler_action());
         assert!(summary.requests_continuation);
@@ -3604,6 +3622,8 @@ mod tests {
         assert!(summary.requires_host_investigation());
         assert!(summary.replayed_extra_records());
         assert!(!summary.missed_planned_records());
+        assert!(!summary.is_no_scheduler_action);
+        assert!(!summary.is_no_scheduler_action());
         assert!(summary.requires_scheduler_action);
         assert!(summary.requires_scheduler_action());
         assert!(!summary.requests_continuation);
