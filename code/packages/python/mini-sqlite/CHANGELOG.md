@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.56.0] - 2026-05-19
+
+### Fixed
+
+- **``SELECT * ORDER BY N`` for N > 1** (via ``sql-planner 0.33.0``).
+  Previously ``SELECT * FROM t ORDER BY 2`` raised
+  ``InternalError: ValueError: tuple.index(x): x not in tuple``
+  because the planner's positional-index validator treated the
+  Wildcard as a single SELECT item.  Now the planner accepts any
+  ordinal ≥ 1 when a wildcard is present and sets the position-
+  based index directly.
+
+  12 new oracle tests in
+  ``test_tier3_order_by_positional_select_star.py`` cover the fix
+  across single-table SELECT *, cross-joins, inner joins, multiple
+  sort keys, mixed direction, and the regression-guard case of
+  explicit projections.
+
 ## [1.55.0] - 2026-05-19
 
 ### Fixed

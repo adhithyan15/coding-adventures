@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.33.0] - 2026-05-19
+
+### Fixed
+
+- **``SELECT * ORDER BY N`` now accepts N greater than the number of
+  *unexpanded* SELECT items** (``planner._resolve_order_key``).
+  Previously the validator compared the ordinal against
+  ``len(resolved_items)``, which counted a Wildcard as a single item.
+  So ``SELECT * ORDER BY 2`` fell through to the column-name
+  resolution path, set ``column=""``, and the VM blew up with
+  ``ValueError: tuple.index(x): x not in tuple``.
+
+  The resolver now accepts any ``ordinal ≥ 1`` when at least one
+  SELECT item is a Wildcard, sets ``positional_index = ordinal - 1``
+  directly, and lets the VM use position-based ``row[N-1]`` lookup.
+  Out-of-range indices error out at runtime, matching SQLite.
+
 ## [0.32.0] - 2026-05-19
 
 ### Added
