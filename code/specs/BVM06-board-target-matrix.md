@@ -159,6 +159,11 @@ Micro. Those ATmega32U4 boards report D2/D3 Wire, ICSP SPI, and D0/D1
 `Serial1`; native USB remains upload/transport metadata rather than a GPIO UART
 surface.
 
+The Nano Every bus metadata tranche brings the megaAVR Nano target onto the same
+passive descriptor path. It reports A4/A5 Wire, D11/D12/D13 SPI with D10 as the
+default chip-select pin, and D0/D1 `Serial1`, while the USB serial bridge stays
+modeled as upload/transport metadata.
+
 The next tranches should deepen board-specific firmware/upload adapters and
 richer peripheral tables for each family without moving generic Arduino
 discovery into `board-vm-uno-r4`.

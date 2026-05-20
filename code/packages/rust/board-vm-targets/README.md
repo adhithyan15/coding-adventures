@@ -81,6 +81,11 @@ Micro report ATmega32U4 Wire pins on D2/D3, ICSP SPI pins, and the D0/D1
 `Serial1` hardware UART, while native USB Serial remains upload/transport
 metadata instead of being modeled as a GPIO UART.
 
+The Nano Every megaAVR tranche keeps the Nano form factor on the same metadata
+path by reporting A4/A5 Wire, D11/D12/D13 SPI with D10 as the default chip
+select, and D0/D1 `Serial1`. Its USB serial bridge remains upload/transport
+metadata rather than a second GPIO UART.
+
 Host-side validation:
 
 ```sh
