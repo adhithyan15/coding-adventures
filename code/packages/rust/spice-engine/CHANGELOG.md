@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `pss_newton_solve`, which runs bounded accepted Newton iterations until
+  residual convergence, no improvement, or the iteration cap.
 - Add `pss_newton_iteration`, which runs one candidate update, accepts it only
   when the residual L2 norm does not increase, and reports the retained
   circuit/state for the next shooting step.

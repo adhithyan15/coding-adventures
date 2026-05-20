@@ -1738,6 +1738,16 @@ pub struct PssNewtonIterationResult {
     pub converged: bool,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct PssNewtonSolveResult {
+    pub iterations: Vec<PssNewtonIterationResult>,
+    pub final_circuit: Circuit,
+    pub final_state_vector: Vec<PssStateEntry>,
+    pub final_residual: PssResidualResult,
+    pub converged: bool,
+    pub iteration_count: usize,
+}
+
 impl DcResult {
     pub fn voltage(&self, node: &str) -> Option<f64> {
         if is_ground(node) {
@@ -3186,6 +3196,60 @@ pub fn pss_newton_iteration_with_tolerance(
         next_state_vector,
         converged: next_residual.within_tolerance,
         next_residual,
+    }))
+}
+
+pub fn pss_newton_solve(
+    circuit: &Circuit,
+    steps_per_period: usize,
+) -> Result<Option<PssNewtonSolveResult>, SpiceError> {
+    pss_newton_solve_with_tolerance(circuit, steps_per_period, 1.0e-6, 1.0e-6, 8)
+}
+
+pub fn pss_newton_solve_with_tolerance(
+    circuit: &Circuit,
+    steps_per_period: usize,
+    residual_tolerance: f64,
+    perturbation: f64,
+    max_newton_iterations: usize,
+) -> Result<Option<PssNewtonSolveResult>, SpiceError> {
+    if max_newton_iterations == 0 {
+        return Err(SpiceError::InvalidElement {
+            name: "pss_newton_solve".to_string(),
+            reason: "max Newton iterations must be positive".to_string(),
+        });
+    }
+
+    let mut current_circuit = circuit.clone();
+    let mut iterations = Vec::new();
+    for _ in 0..max_newton_iterations {
+        let Some(iteration) = pss_newton_iteration_with_tolerance(
+            &current_circuit,
+            steps_per_period,
+            residual_tolerance,
+            perturbation,
+        )?
+        else {
+            return Ok(None);
+        };
+
+        current_circuit = iteration.next_circuit.clone();
+        let should_stop = iteration.converged || !iteration.accepted;
+        iterations.push(iteration);
+        if should_stop {
+            break;
+        }
+    }
+
+    let final_iteration = iterations.last().expect("at least one iteration").clone();
+    let final_residual = final_iteration.next_residual.clone();
+    Ok(Some(PssNewtonSolveResult {
+        final_circuit: final_iteration.next_circuit,
+        final_state_vector: final_iteration.next_state_vector,
+        converged: final_residual.within_tolerance,
+        iteration_count: iterations.len(),
+        iterations,
+        final_residual,
     }))
 }
 

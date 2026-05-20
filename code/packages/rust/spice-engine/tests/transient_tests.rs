@@ -1,10 +1,11 @@
 use spice_engine::{
     estimate_period, pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
-    pss_newton_update, pss_newton_update_with_tolerance, pss_residual,
-    pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance, transient, Capacitor, Cccs,
-    Ccvs, Circuit, CurrentSource, Element, ExpWaveform, Inductor, PssNewtonCandidateResult,
-    PssNewtonIterationResult, PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult,
-    PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, VoltageSource, Waveform,
+    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
+    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance, transient,
+    Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element, ExpWaveform, Inductor,
+    PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
+    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -315,6 +316,45 @@ fn pss_newton_iteration_accepts_improving_candidate() {
         result.residual_l2_ratio,
         candidate_residual.residual_l2_norm / base_residual.residual_l2_norm,
     );
+}
+
+#[test]
+fn pss_newton_solve_runs_accepted_iterations_to_convergence() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, 1_000.0)),
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "out", 1_000.0)));
+    circuit.add(Element::Capacitor(Capacitor::with_initial_voltage(
+        "C1", "out", "0", 1.0e-6, 0.1,
+    )));
+
+    let result = pss_newton_solve_with_tolerance(&circuit, 32, 1.0e-3, 1.0e-5, 4)
+        .unwrap()
+        .unwrap();
+
+    let _: PssNewtonSolveResult = result.clone();
+    assert_eq!(result.iteration_count, result.iterations.len());
+    assert!((1..=4).contains(&result.iteration_count));
+    assert!(result.iterations.iter().all(|iteration| iteration.accepted));
+    assert!(result.converged);
+    assert!(result.final_residual.within_tolerance);
+    assert!(
+        result.final_residual.residual_l2_norm
+            < result.iterations[0]
+                .candidate
+                .update
+                .jacobian
+                .residual
+                .residual_l2_norm
+    );
+    let last_iteration = result.iterations.last().unwrap();
+    assert_eq!(result.final_circuit, last_iteration.next_circuit);
+    assert_eq!(result.final_state_vector, last_iteration.next_state_vector);
 }
 
 #[test]

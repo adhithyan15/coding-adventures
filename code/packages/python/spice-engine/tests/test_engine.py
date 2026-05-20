@@ -108,6 +108,7 @@ from spice_engine import (
     NoiseResult,
     PssNewtonCandidateResult,
     PssNewtonIterationResult,
+    PssNewtonSolveResult,
     PssNewtonUpdateResult,
     PssResidualJacobianResult,
     PssResidualResult,
@@ -134,6 +135,7 @@ from spice_engine import (
     noise_ac,
     pss_newton_candidate,
     pss_newton_iteration,
+    pss_newton_solve,
     pss_newton_update,
     pss_residual_jacobian,
     pss_residual,
@@ -380,6 +382,41 @@ def test_pss_newton_iteration_accepts_improving_candidate() -> None:
     assert result.residual_l2_ratio == pytest.approx(
         candidate_residual.residual_l2_norm / base_residual.residual_l2_norm
     )
+
+
+def test_pss_newton_solve_runs_accepted_iterations_to_convergence() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(frequency=1_000.0),
+        )
+    )
+    c.add(Resistor("R1", "in", "out", 1_000.0))
+    c.add(Capacitor("C1", "out", "0", 1.0e-6, initial_voltage=0.1))
+
+    result = pss_newton_solve(
+        c,
+        steps_per_period=32,
+        residual_tol=1.0e-3,
+        perturbation=1.0e-5,
+        max_newton_iterations=4,
+    )
+
+    assert isinstance(result, PssNewtonSolveResult)
+    assert result.iteration_count == len(result.iterations)
+    assert 1 <= result.iteration_count <= 4
+    assert all(iteration.accepted for iteration in result.iterations)
+    assert result.converged is True
+    assert result.final_residual.within_tolerance is True
+    assert result.final_residual.residual_l2_norm < (
+        result.iterations[0].candidate.update.jacobian.residual.residual_l2_norm
+    )
+    assert result.final_circuit is result.iterations[-1].next_circuit
+    assert result.final_state_vector == result.iterations[-1].next_state_vector
 
 
 def test_pss_residual_requires_periodic_sources() -> None:

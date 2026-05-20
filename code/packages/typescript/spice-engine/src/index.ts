@@ -656,6 +656,15 @@ export interface PssNewtonIterationResult {
   readonly converged: boolean;
 }
 
+export interface PssNewtonSolveResult {
+  readonly iterations: readonly PssNewtonIterationResult[];
+  readonly finalCircuit: Circuit;
+  readonly finalStateVector: readonly PssStateEntry[];
+  readonly finalResidual: PssResidualResult;
+  readonly converged: boolean;
+  readonly iterationCount: number;
+}
+
 export class SpiceError extends Error {
   constructor(
     message: string,
@@ -2118,6 +2127,51 @@ export function pssNewtonIteration(
       : candidate.update.jacobian.stateVector,
     nextResidual,
     converged: nextResidual.withinTolerance,
+  };
+}
+
+export function pssNewtonSolve(
+  circuit: Circuit,
+  stepsPerPeriod = 64,
+  residualTolerance = 1.0e-6,
+  perturbation = 1.0e-6,
+  maxNewtonIterations = 8,
+): PssNewtonSolveResult | undefined {
+  if (!Number.isInteger(maxNewtonIterations) || maxNewtonIterations <= 0) {
+    throw invalidElement(
+      "pssNewtonSolve",
+      "max Newton iterations must be a positive integer",
+    );
+  }
+
+  let currentCircuit = circuit;
+  const iterations: PssNewtonIterationResult[] = [];
+  for (let index = 0; index < maxNewtonIterations; index++) {
+    const iteration = pssNewtonIteration(
+      currentCircuit,
+      stepsPerPeriod,
+      residualTolerance,
+      perturbation,
+    );
+    if (iteration === undefined) {
+      return undefined;
+    }
+
+    iterations.push(iteration);
+    currentCircuit = iteration.nextCircuit;
+    if (iteration.converged || !iteration.accepted) {
+      break;
+    }
+  }
+
+  const finalIteration = iterations[iterations.length - 1];
+  return {
+    iterations,
+    finalCircuit: finalIteration.nextCircuit,
+    finalStateVector: finalIteration.nextStateVector,
+    finalResidual: finalIteration.nextResidual,
+    converged: finalIteration.nextResidual.withinTolerance,
+    iterationCount: iterations.length,
   };
 }
 
