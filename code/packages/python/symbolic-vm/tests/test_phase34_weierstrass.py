@@ -223,8 +223,12 @@ def test_sin_operand_order_swapped(vm: VM) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_fallthrough_a_less_than_b(vm: VM) -> None:
-    """``∫ 1/(1 + 2·sin(x)) dx`` — a²−b² = −3 < 0; log form not implemented."""
+def test_phase36_a_less_than_b_sin_now_closes(vm: VM) -> None:
+    """``∫ 1/(1 + 2·sin(x)) dx`` — a²−b² = −3 < 0.
+
+    Phase 36 (this release) closes the log form that Phase 34 deferred.
+    Closed form: ``(1/√3) · log((tan(x/2)+2−√3)/(tan(x/2)+2+√3))``.
+    """
     integrand = IRApply(
         DIV,
         (
@@ -232,9 +236,120 @@ def test_fallthrough_a_less_than_b(vm: VM) -> None:
             IRApply(ADD, (IRInteger(1), IRApply(MUL, (IRInteger(2), IRApply(SIN, (X,)))))),
         ),
     )
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE), (
+        f"Phase 36 should close ∫ 1/(1+2·sin x) dx; got {phi!r}"
+    )
+    # log argument crosses zero at u = -2±√3 (~ -0.27, -3.73) and the
+    # integrand 1/(1+2 sin x) has poles where 1+2 sin x = 0
+    # (x ≈ ±0.524π).  Sample x in (-π/4, π/4) where neither happens.
+    for x_val in (-0.7, -0.2, 0.0, 0.2, 0.7):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (1.0 + 2.0 * math.sin(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-4, rel_tol=1e-4), (
+            f"At x={x_val}: got={got}, expected={expected}"
+        )
+
+
+def test_phase36_a_less_than_b_cos_now_closes(vm: VM) -> None:
+    """``∫ 1/(1 + 2·cos(x)) dx`` — a²−b² = −3, cos branch.
+
+    Closed form: ``(1/√3) · log((√3 + tan(x/2)) / (√3 − tan(x/2)))``.
+    """
+    integrand = IRApply(
+        DIV,
+        (
+            IRInteger(1),
+            IRApply(ADD, (IRInteger(1), IRApply(MUL, (IRInteger(2), IRApply(COS, (X,)))))),
+        ),
+    )
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE), (
+        f"Phase 36 should close ∫ 1/(1+2·cos x) dx; got {phi!r}"
+    )
+    # 1+2 cos x has zeros at x = ±2π/3.  Sample in (-π/2, π/2).
+    for x_val in (-1.2, -0.5, 0.0, 0.5, 1.2):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (1.0 + 2.0 * math.cos(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3), (
+            f"At x={x_val}: got={got}, expected={expected}"
+        )
+
+
+def test_phase36_negative_a_sin(vm: VM) -> None:
+    """``∫ 1/(−1 + 2·sin(x)) dx`` — sin branch with a < 0 still works.
+
+    The sin formula handles any nonzero ``a`` (no sign restriction); only
+    the cos branch is asymmetric.
+    """
+    neg_one_plus_two_sin = IRApply(
+        ADD,
+        (IRInteger(-1), IRApply(MUL, (IRInteger(2), IRApply(SIN, (X,))))),
+    )
+    integrand = IRApply(DIV, (IRInteger(1), neg_one_plus_two_sin))
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE)
+    # 1+2 sin x denominator-equivalent; pick samples away from zeros.
+    for x_val in (1.0, 1.5, 2.0):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (-1.0 + 2.0 * math.sin(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
+
+
+def test_phase36_with_numerator_coefficient(vm: VM) -> None:
+    """``∫ 3/(1 + 2·sin x) dx`` — numerator c scales the closed form."""
+    integrand = IRApply(
+        DIV,
+        (
+            IRInteger(3),
+            IRApply(ADD, (IRInteger(1), IRApply(MUL, (IRInteger(2), IRApply(SIN, (X,)))))),
+        ),
+    )
+    phi = vm.eval(_integrate(integrand))
+    for x_val in (-0.7, -0.2, 0.0, 0.2, 0.7):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 3.0 / (1.0 + 2.0 * math.sin(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
+
+
+def test_phase36_perfect_square_discriminant(vm: VM) -> None:
+    """``∫ 1/(3 + 5·sin x) dx`` — disc=−16, perfect-square magnitude.
+
+    √(b²−a²) = √16 = 4 should fold without leaving a Sqrt node.
+    """
+    integrand = IRApply(
+        DIV,
+        (
+            IRInteger(1),
+            IRApply(ADD, (IRInteger(3), IRApply(MUL, (IRInteger(5), IRApply(SIN, (X,)))))),
+        ),
+    )
+    phi = vm.eval(_integrate(integrand))
+    assert not _contains_head(phi, SQRT), (
+        f"Perfect-square |disc|=16 should fold; got {phi!r}"
+    )
+    # 3+5 sin x zero at sin x = -3/5; pick samples in safe stride
+    for x_val in (-0.3, 0.0, 0.3, 0.5):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (3.0 + 5.0 * math.sin(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
+
+
+def test_phase36_cos_negative_b_still_defers(vm: VM) -> None:
+    """``∫ 1/(1 − 2·cos x) dx`` — cos branch with b·cos coefficient < 0
+    (here written as (a−|b|cos) with effective b = −2).  Phase 36's cos
+    formula requires ``b > |a|`` strictly; this case has b = −2, |a| = 1,
+    so b < 0 fails the guard and we defer.
+    """
+    one_minus_two_cos = IRApply(
+        SUB,
+        (IRInteger(1), IRApply(MUL, (IRInteger(2), IRApply(COS, (X,))))),
+    )
+    integrand = IRApply(DIV, (IRInteger(1), one_minus_two_cos))
     result = vm.eval(_integrate(integrand))
+    # The deferred branch leaves the integral unevaluated.
     assert isinstance(result, IRApply) and result.head == INTEGRATE, (
-        f"a²<b² log form is deferred; expected unevaluated, got {result!r}"
+        f"b<0 cos branch is deferred; got {result!r}"
     )
 
 
