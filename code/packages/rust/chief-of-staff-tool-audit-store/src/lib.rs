@@ -683,9 +683,24 @@ impl ToolAuditSupervisorDrainPlanPage {
         !self.is_idle()
     }
 
+    /// Return whether a supervisor should run the matching drain tick.
+    pub fn should_drain(&self) -> bool {
+        self.has_pending_records()
+    }
+
+    /// Return whether more rows may remain beyond this planned page.
+    pub fn should_continue_after_page(&self) -> bool {
+        !self.reached_end_of_log
+    }
+
     /// Return whether any inspected row needs follow-up.
     pub fn requires_follow_up(&self) -> bool {
         self.inventory.requires_follow_up()
+    }
+
+    /// Return whether the matching drain tick would advance the durable checkpoint.
+    pub fn would_advance_checkpoint(&self) -> bool {
+        self.has_pending_records()
     }
 }
 
@@ -3029,13 +3044,20 @@ mod tests {
             Some(&ToolAuditReadCheckpoint::new(151, "call_5"))
         );
         assert_eq!(plan.pages[0].pending_records, 2);
+        assert!(plan.pages[0].has_pending_records());
+        assert!(plan.pages[0].should_drain());
+        assert!(plan.pages[0].should_continue_after_page());
+        assert!(plan.pages[0].would_advance_checkpoint());
         assert_eq!(
             plan.pages[0].next_checkpoint,
             ToolAuditReadCheckpoint::new(120, "call_3")
         );
         assert_eq!(plan.pages[1].pending_records, 2);
         assert_eq!(plan.pages[1].inventory.follow_up_records, 1);
+        assert!(plan.pages[1].should_drain());
+        assert!(plan.pages[1].should_continue_after_page());
         assert!(plan.pages[1].requires_follow_up());
+        assert!(plan.pages[1].would_advance_checkpoint());
         assert_eq!(
             store
                 .fetch_checkpoint("supervisor")
@@ -3070,6 +3092,9 @@ mod tests {
         assert!(!plan.exhausted_tick_budget());
         assert!(!plan.should_continue());
         assert!(!plan.pages[2].has_pending_records());
+        assert!(!plan.pages[2].should_drain());
+        assert!(!plan.pages[2].should_continue_after_page());
+        assert!(!plan.pages[2].would_advance_checkpoint());
         assert_eq!(
             plan.last_checkpoint(),
             Some(&ToolAuditReadCheckpoint::new(120, "call_4"))
@@ -3092,7 +3117,10 @@ mod tests {
         assert_eq!(plan.planned_records, 0);
         assert!(plan.is_idle());
         assert!(!plan.has_pending_records());
+        assert!(!plan.pages[0].should_drain());
+        assert!(!plan.pages[0].should_continue_after_page());
         assert!(!plan.requires_follow_up());
+        assert!(!plan.pages[0].would_advance_checkpoint());
         assert!(!plan.would_advance_checkpoint());
         assert!(plan.reached_end_of_log());
         assert!(!plan.exhausted_tick_budget());
