@@ -145,6 +145,13 @@ metadata. Native USB boards expose the 1200-baud bootloader touch convention and
 runtime port rediscovery expectation, while USB-serial bridge and external
 serial adapter boards keep their selected adapter port behavior Rust-owned.
 
+The Arduino CLI upload invocation tranche records the command shape after port
+selection. Rust language core now emits the `arduino-cli upload` executable,
+subcommand, FQBN flag, port flag, input-file/input-directory flags,
+upload-property flag, verify flag, and placeholder argument template so
+frontends fill concrete port and firmware-image paths without re-creating an
+Arduino CLI flag table.
+
 The Arduino wireless metadata tranche records physical Wi-Fi and Bluetooth LE
 radios for non-Uno boards such as MKR WiFi 1010, Nano 33 IoT, Nano 33 BLE Rev2,
 Nano RP2040 Connect, Nano ESP32, GIGA R1 WiFi, Portenta H7 Lite Connected,

@@ -38,7 +38,10 @@ external-adapter port selection stay in Rust instead of language-local tables.
 `arduino_cli_port_discovery_for_target` adds the matching discovery/reset
 metadata, including the 1200-baud native USB bootloader touch convention and
 runtime port rediscovery expectation for boards whose Arduino package owns that
-reset path.
+reset path. `arduino_cli_upload_invocation_for_target` keeps the final
+`arduino-cli upload` flag template Rust-owned too, including the FQBN, port,
+input-file, input-directory, upload-property, and verify flags language
+frontends should fill with concrete paths.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves

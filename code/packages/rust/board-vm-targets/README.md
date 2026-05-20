@@ -49,6 +49,10 @@ should call that helper instead of reconstructing Arduino upload tables.
 It also exposes Arduino CLI port discovery metadata so native-USB boards can
 declare their 1200-baud bootloader touch and runtime rediscovery behavior while
 USB-serial bridge and external-adapter boards keep their simpler port paths.
+The final Arduino CLI invocation template is likewise emitted from
+`board-vm-language-core`, so frontends fill concrete port and firmware-image
+paths into Rust-owned `arduino-cli upload` flags instead of rebuilding the
+command shape.
 
 Wireless metadata separates physical support from the generic front-end sugar:
 
