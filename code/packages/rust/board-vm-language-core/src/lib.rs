@@ -97,6 +97,7 @@ pub const LANGUAGE_RUN_FLAG_BACKGROUND_RUN: u8 = board_vm_protocol::RUN_FLAG_BAC
 pub const LANGUAGE_ESP_DEFAULT_FLASH_OFFSET: u32 = 0x1000;
 pub const LANGUAGE_ESP_DEFAULT_FLASH_SIZE: u32 = 4 * 1024 * 1024;
 pub const LANGUAGE_BOARD_VM_WIRE_PROTOCOL: &str = "board_vm_cobs_crc";
+pub const ARDUINO_CLI_NATIVE_USB_BOOTLOADER_TOUCH_BAUD: u32 = 1_200;
 
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -578,6 +579,20 @@ pub struct LanguageArduinoCliUploadOptions {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageArduinoCliPortDiscovery {
+    pub board_id: String,
+    pub port_hint: String,
+    pub port_selection_step: String,
+    pub requires_serial_port: bool,
+    pub bootloader_touch_baud: Option<u32>,
+    pub expects_port_reenumeration: bool,
+    pub wait_for_runtime_rediscovery: bool,
+    pub serial_adapter_required: bool,
+    pub reset_delegated_to_board_package: bool,
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageUploadOptions {
     pub board_id: String,
     pub adapter: String,
@@ -986,6 +1001,31 @@ pub fn arduino_cli_upload_options_for_target(
         requires_serial_port: upload.transport == TargetUploadTransport::Serial,
         delegate_reset_to_board_package: upload.reset_method
             == TargetUploadResetMethod::ArduinoBoardPackage,
+    })
+}
+
+pub fn arduino_cli_port_discovery_for_target(
+    selector: &str,
+) -> Option<LanguageArduinoCliPortDiscovery> {
+    let target = detect_board_target(selector)?;
+    let upload = target.upload?;
+    if upload.adapter != TargetUploadAdapter::ArduinoCli {
+        return None;
+    }
+
+    let port_hint = upload.port_hint?;
+    Some(LanguageArduinoCliPortDiscovery {
+        board_id: target.board_id.to_owned(),
+        port_hint: upload_port_hint_name(port_hint).to_owned(),
+        port_selection_step: arduino_cli_port_selection_step(Some(port_hint)).to_owned(),
+        requires_serial_port: upload.transport == TargetUploadTransport::Serial,
+        bootloader_touch_baud: arduino_cli_bootloader_touch_baud(Some(port_hint)),
+        expects_port_reenumeration: arduino_cli_expects_port_reenumeration(Some(port_hint)),
+        wait_for_runtime_rediscovery: arduino_cli_waits_for_runtime_rediscovery(Some(port_hint)),
+        serial_adapter_required: port_hint == TargetUploadPortHint::ExternalSerialAdapter,
+        reset_delegated_to_board_package: upload.reset_method
+            == TargetUploadResetMethod::ArduinoBoardPackage,
+        notes: arduino_cli_port_discovery_notes(Some(port_hint)).to_owned(),
     })
 }
 
@@ -1564,6 +1604,36 @@ fn arduino_cli_port_selection_step(hint: Option<TargetUploadPortHint>) -> &'stat
         Some(TargetUploadPortHint::NativeUsb) => "select_native_usb_port",
         Some(TargetUploadPortHint::ExternalSerialAdapter) => "select_external_serial_adapter",
         _ => "select_serial_port",
+    }
+}
+
+fn arduino_cli_bootloader_touch_baud(hint: Option<TargetUploadPortHint>) -> Option<u32> {
+    match hint {
+        Some(TargetUploadPortHint::NativeUsb) => Some(ARDUINO_CLI_NATIVE_USB_BOOTLOADER_TOUCH_BAUD),
+        _ => None,
+    }
+}
+
+fn arduino_cli_expects_port_reenumeration(hint: Option<TargetUploadPortHint>) -> bool {
+    matches!(hint, Some(TargetUploadPortHint::NativeUsb))
+}
+
+fn arduino_cli_waits_for_runtime_rediscovery(hint: Option<TargetUploadPortHint>) -> bool {
+    matches!(hint, Some(TargetUploadPortHint::NativeUsb))
+}
+
+fn arduino_cli_port_discovery_notes(hint: Option<TargetUploadPortHint>) -> &'static str {
+    match hint {
+        Some(TargetUploadPortHint::NativeUsb) => {
+            "Native USB Arduino CLI uploads select the runtime CDC port, then the board package owns reset into the bootloader and runtime port rediscovery."
+        }
+        Some(TargetUploadPortHint::UsbSerialBridge) => {
+            "USB serial bridge Arduino CLI uploads keep the adapter path as the selected serial port while the board package owns reset and programmer behavior."
+        }
+        Some(TargetUploadPortHint::ExternalSerialAdapter) => {
+            "External serial adapter Arduino CLI uploads require the caller to provide the adapter port before the board package handles reset and programmer behavior."
+        }
+        _ => "Arduino CLI upload port discovery is delegated to the board package.",
     }
 }
 
@@ -5291,6 +5361,50 @@ mod tests {
         assert!(arduino_cli_upload_options_for_target("esp32").is_none());
         assert!(arduino_cli_upload_options_for_target("pico").is_none());
         assert!(arduino_cli_upload_options_for_target("not-a-board").is_none());
+    }
+
+    #[test]
+    fn arduino_cli_port_discovery_is_owned_by_rust_language_core() {
+        let nano_r4 = arduino_cli_port_discovery_for_target("arduino:renesas_uno:nanor4").unwrap();
+        assert_eq!(nano_r4.board_id, "arduino-nano-r4");
+        assert_eq!(nano_r4.port_hint, "native_usb");
+        assert_eq!(nano_r4.port_selection_step, "select_native_usb_port");
+        assert!(nano_r4.requires_serial_port);
+        assert_eq!(
+            nano_r4.bootloader_touch_baud,
+            Some(ARDUINO_CLI_NATIVE_USB_BOOTLOADER_TOUCH_BAUD)
+        );
+        assert!(nano_r4.expects_port_reenumeration);
+        assert!(nano_r4.wait_for_runtime_rediscovery);
+        assert!(!nano_r4.serial_adapter_required);
+        assert!(nano_r4.reset_delegated_to_board_package);
+        assert!(nano_r4.notes.contains("runtime CDC port"));
+        assert!(nano_r4.notes.contains("rediscovery"));
+
+        let mega =
+            arduino_cli_port_discovery_for_target("arduino:avr:mega:cpu=atmega2560").unwrap();
+        assert_eq!(mega.board_id, "arduino-mega-2560");
+        assert_eq!(mega.port_hint, "usb_serial_bridge");
+        assert_eq!(mega.port_selection_step, "select_usb_serial_port");
+        assert_eq!(mega.bootloader_touch_baud, None);
+        assert!(!mega.expects_port_reenumeration);
+        assert!(!mega.wait_for_runtime_rediscovery);
+        assert!(!mega.serial_adapter_required);
+        assert!(mega.notes.contains("adapter path"));
+
+        let pro_mini = arduino_cli_port_discovery_for_target("arduino-pro-mini").unwrap();
+        assert_eq!(pro_mini.port_hint, "external_serial_adapter");
+        assert_eq!(
+            pro_mini.port_selection_step,
+            "select_external_serial_adapter"
+        );
+        assert!(pro_mini.serial_adapter_required);
+        assert!(pro_mini.notes.contains("External serial adapter"));
+        assert!(pro_mini.notes.contains("provide the adapter port"));
+
+        assert!(arduino_cli_port_discovery_for_target("esp32").is_none());
+        assert!(arduino_cli_port_discovery_for_target("pico").is_none());
+        assert!(arduino_cli_port_discovery_for_target("not-a-board").is_none());
     }
 
     #[test]

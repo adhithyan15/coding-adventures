@@ -46,6 +46,9 @@ builder:
 profiles, including platform/FQBN, port-selection step, native USB versus
 USB-serial bridge hints, and board-package reset delegation. Language frontends
 should call that helper instead of reconstructing Arduino upload tables.
+It also exposes Arduino CLI port discovery metadata so native-USB boards can
+declare their 1200-baud bootloader touch and runtime rediscovery behavior while
+USB-serial bridge and external-adapter boards keep their simpler port paths.
 
 Wireless metadata separates physical support from the generic front-end sugar:
 
