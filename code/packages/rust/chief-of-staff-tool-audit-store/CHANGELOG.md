@@ -35,6 +35,8 @@ All notable changes to this package will be documented in this file.
 - Signed replayed-minus-planned row and follow-up pressure deltas in supervisor
   drain run summaries.
 - Count-drift presence flags for supervisor drain run reports and summaries.
+- Stable count-drift classifications for supervisor drain run reports and
+  summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Typed scheduler action intent helpers for continuation, follow-up routing, and

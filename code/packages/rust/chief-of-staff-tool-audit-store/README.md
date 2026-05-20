@@ -47,6 +47,8 @@ The crate keeps the boundary narrow:
   follow-up pressure deltas for host logs
 - supervisor drain run summaries expose count-drift presence flags beside
   signed deltas for host logs
+- supervisor drain run summaries expose stable count-drift classifications so
+  hosts can distinguish row, follow-up pressure, and combined drift
 - supervisor drain summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation

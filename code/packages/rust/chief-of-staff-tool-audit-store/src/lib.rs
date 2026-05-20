@@ -939,6 +939,7 @@ impl ToolAuditSupervisorDrainRunReport {
             follow_up_record_count_delta: self.follow_up_record_count_delta(),
             has_record_count_drift: self.has_record_count_drift(),
             has_follow_up_record_count_drift: self.has_follow_up_record_count_drift(),
+            count_drift_kind: self.count_drift_kind(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
             reached_end_of_log: self.reached_end_of_log(),
@@ -985,6 +986,19 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return whether any planned-vs-actual count drift was observed.
     pub fn has_count_drift(&self) -> bool {
         self.has_record_count_drift() || self.has_follow_up_record_count_drift()
+    }
+
+    /// Classify the observed planned-vs-actual count drift.
+    pub fn count_drift_kind(&self) -> ToolAuditSupervisorDrainCountDriftKind {
+        ToolAuditSupervisorDrainCountDriftKind::from_drift_flags(
+            self.has_record_count_drift(),
+            self.has_follow_up_record_count_drift(),
+        )
+    }
+
+    /// Return the stable count-drift classification label.
+    pub fn count_drift_label(&self) -> &'static str {
+        self.count_drift_kind().as_str()
     }
 
     /// Return whether the actual run replayed at least one row.
@@ -1056,6 +1070,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub has_record_count_drift: bool,
     /// Whether follow-up pressure count drift was observed.
     pub has_follow_up_record_count_drift: bool,
+    /// Stable classification of observed planned-vs-actual count drift.
+    pub count_drift_kind: ToolAuditSupervisorDrainCountDriftKind,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether the actual run preserved the planned follow-up pressure count.
@@ -1106,6 +1122,11 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether any planned-vs-actual count drift was observed.
     pub fn has_count_drift(&self) -> bool {
         self.has_record_count_drift || self.has_follow_up_record_count_drift
+    }
+
+    /// Return the stable count-drift classification label.
+    pub fn count_drift_label(&self) -> &'static str {
+        self.count_drift_kind.as_str()
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -1274,6 +1295,84 @@ impl ToolAuditSupervisorDrainSchedulerAction {
 }
 
 impl Display for ToolAuditSupervisorDrainSchedulerAction {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable classification of planned-vs-actual count drift in a drain run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainCountDriftKind {
+    /// Planned and replayed counts match.
+    NoDrift,
+    /// Row counts drifted while follow-up pressure counts matched.
+    RecordCountDrift,
+    /// Follow-up pressure counts drifted while row counts matched.
+    FollowUpRecordCountDrift,
+    /// Both row counts and follow-up pressure counts drifted.
+    RecordAndFollowUpRecordCountDrift,
+}
+
+impl ToolAuditSupervisorDrainCountDriftKind {
+    /// Classify drift from row-count and follow-up pressure drift flags.
+    pub fn from_drift_flags(
+        has_record_count_drift: bool,
+        has_follow_up_record_count_drift: bool,
+    ) -> Self {
+        match (has_record_count_drift, has_follow_up_record_count_drift) {
+            (false, false) => Self::NoDrift,
+            (true, false) => Self::RecordCountDrift,
+            (false, true) => Self::FollowUpRecordCountDrift,
+            (true, true) => Self::RecordAndFollowUpRecordCountDrift,
+        }
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoDrift => "no_count_drift",
+            Self::RecordCountDrift => "record_count_drift",
+            Self::FollowUpRecordCountDrift => "follow_up_record_count_drift",
+            Self::RecordAndFollowUpRecordCountDrift => "record_and_follow_up_record_count_drift",
+        }
+    }
+
+    /// Parse a stable snake_case count-drift label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_count_drift" => Some(Self::NoDrift),
+            "record_count_drift" => Some(Self::RecordCountDrift),
+            "follow_up_record_count_drift" => Some(Self::FollowUpRecordCountDrift),
+            "record_and_follow_up_record_count_drift" => {
+                Some(Self::RecordAndFollowUpRecordCountDrift)
+            }
+            _ => None,
+        }
+    }
+
+    /// Return whether row count drift was observed.
+    pub fn has_record_count_drift(self) -> bool {
+        matches!(
+            self,
+            Self::RecordCountDrift | Self::RecordAndFollowUpRecordCountDrift
+        )
+    }
+
+    /// Return whether follow-up pressure count drift was observed.
+    pub fn has_follow_up_record_count_drift(self) -> bool {
+        matches!(
+            self,
+            Self::FollowUpRecordCountDrift | Self::RecordAndFollowUpRecordCountDrift
+        )
+    }
+
+    /// Return whether any planned-vs-actual count drift was observed.
+    pub fn has_count_drift(self) -> bool {
+        !matches!(self, Self::NoDrift)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainCountDriftKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -2771,6 +2870,11 @@ mod tests {
         assert!(!report.has_record_count_drift());
         assert!(!report.has_follow_up_record_count_drift());
         assert!(!report.has_count_drift());
+        assert_eq!(
+            report.count_drift_kind(),
+            ToolAuditSupervisorDrainCountDriftKind::NoDrift
+        );
+        assert_eq!(report.count_drift_label(), "no_count_drift");
         assert!(report.requires_follow_up());
         assert!(report.reached_end_of_log());
         assert!(!report.exhausted_tick_budget());
@@ -2793,6 +2897,11 @@ mod tests {
         assert!(!summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
         assert!(!summary.has_count_drift());
+        assert_eq!(
+            summary.count_drift_kind,
+            ToolAuditSupervisorDrainCountDriftKind::NoDrift
+        );
+        assert_eq!(summary.count_drift_label(), "no_count_drift");
         assert!(!summary.replayed_extra_records());
         assert!(!summary.missed_planned_records());
         assert!(!summary.replayed_extra_follow_up_records());
@@ -3001,6 +3110,65 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_count_drift_kind_labels_are_stable_for_hosts() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainCountDriftKind::NoDrift,
+                "no_count_drift",
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainCountDriftKind::RecordCountDrift,
+                "record_count_drift",
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainCountDriftKind::FollowUpRecordCountDrift,
+                "follow_up_record_count_drift",
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainCountDriftKind::RecordAndFollowUpRecordCountDrift,
+                "record_and_follow_up_record_count_drift",
+                true,
+                true,
+            ),
+        ];
+
+        for (kind, label, has_record_count_drift, has_follow_up_record_count_drift) in cases {
+            assert_eq!(kind.as_str(), label);
+            assert_eq!(kind.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainCountDriftKind::from_label(label),
+                Some(kind)
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainCountDriftKind::from_drift_flags(
+                    has_record_count_drift,
+                    has_follow_up_record_count_drift
+                ),
+                kind
+            );
+            assert_eq!(kind.has_record_count_drift(), has_record_count_drift);
+            assert_eq!(
+                kind.has_follow_up_record_count_drift(),
+                has_follow_up_record_count_drift
+            );
+            assert_eq!(
+                kind.has_count_drift(),
+                has_record_count_drift || has_follow_up_record_count_drift
+            );
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainCountDriftKind::from_label("driftish"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_report_exposes_outcome_label_and_action_flag() {
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(store
@@ -3073,6 +3241,11 @@ mod tests {
         assert!(!summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
         assert!(!summary.has_count_drift());
+        assert_eq!(
+            summary.count_drift_kind,
+            ToolAuditSupervisorDrainCountDriftKind::NoDrift
+        );
+        assert_eq!(summary.count_drift_label(), "no_count_drift");
         assert!(summary.matches_planned_record_count);
         assert!(summary.matches_planned_follow_up_record_count);
         assert!(summary.matches_follow_up_pressure());
@@ -3115,10 +3288,20 @@ mod tests {
         assert!(report.has_record_count_drift());
         assert!(!report.has_follow_up_record_count_drift());
         assert!(report.has_count_drift());
+        assert_eq!(
+            report.count_drift_kind(),
+            ToolAuditSupervisorDrainCountDriftKind::RecordCountDrift
+        );
+        assert_eq!(report.count_drift_label(), "record_count_drift");
         assert_eq!(summary.record_count_delta, 1);
         assert!(summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
         assert!(summary.has_count_drift());
+        assert_eq!(
+            summary.count_drift_kind,
+            ToolAuditSupervisorDrainCountDriftKind::RecordCountDrift
+        );
+        assert_eq!(summary.count_drift_label(), "record_count_drift");
         assert!(summary.replayed_extra_records());
         assert!(!summary.missed_planned_records());
         assert!(summary.requires_scheduler_action());
@@ -3146,10 +3329,18 @@ mod tests {
         assert!(report.has_record_count_drift());
         assert!(!report.has_follow_up_record_count_drift());
         assert!(report.has_count_drift());
+        assert_eq!(
+            report.count_drift_kind(),
+            ToolAuditSupervisorDrainCountDriftKind::RecordCountDrift
+        );
         assert_eq!(summary.record_count_delta, -1);
         assert!(summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
         assert!(summary.has_count_drift());
+        assert_eq!(
+            summary.count_drift_kind,
+            ToolAuditSupervisorDrainCountDriftKind::RecordCountDrift
+        );
         assert!(!summary.replayed_extra_records());
         assert!(summary.missed_planned_records());
         assert_eq!(
@@ -3181,11 +3372,21 @@ mod tests {
         assert!(!report.has_record_count_drift());
         assert!(report.has_follow_up_record_count_drift());
         assert!(report.has_count_drift());
+        assert_eq!(
+            report.count_drift_kind(),
+            ToolAuditSupervisorDrainCountDriftKind::FollowUpRecordCountDrift
+        );
+        assert_eq!(report.count_drift_label(), "follow_up_record_count_drift");
         assert_eq!(summary.record_count_delta, 0);
         assert_eq!(summary.follow_up_record_count_delta, -1);
         assert!(!summary.has_record_count_drift);
         assert!(summary.has_follow_up_record_count_drift);
         assert!(summary.has_count_drift());
+        assert_eq!(
+            summary.count_drift_kind,
+            ToolAuditSupervisorDrainCountDriftKind::FollowUpRecordCountDrift
+        );
+        assert_eq!(summary.count_drift_label(), "follow_up_record_count_drift");
         assert!(summary.matches_planned_record_count);
         assert!(!summary.matches_planned_follow_up_record_count);
         assert!(!summary.matches_follow_up_pressure());
