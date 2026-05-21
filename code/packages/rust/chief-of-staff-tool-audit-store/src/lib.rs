@@ -1741,6 +1741,31 @@ impl ToolAuditSupervisorDrainRunOutcome {
         }
     }
 
+    /// Return whether no rows were waiting and the checkpoint stayed untouched.
+    pub fn is_idle(self) -> bool {
+        matches!(self, Self::Idle)
+    }
+
+    /// Return whether rows were replayed and the run reached the current log end.
+    pub fn is_caught_up(self) -> bool {
+        matches!(self, Self::CaughtUp)
+    }
+
+    /// Return whether this outcome stopped before reaching the current log end.
+    pub fn needs_continuation(self) -> bool {
+        matches!(self, Self::NeedsContinuation)
+    }
+
+    /// Return whether this outcome contains follow-up pressure.
+    pub fn needs_follow_up(self) -> bool {
+        matches!(self, Self::NeedsFollowUp)
+    }
+
+    /// Return whether the preflight plan and actual drain counts diverged.
+    pub fn plan_diverged(self) -> bool {
+        matches!(self, Self::PlanDiverged)
+    }
+
     /// Return whether the scheduler should take action for this outcome.
     pub fn requires_scheduler_action(self) -> bool {
         self.scheduler_action().requires_scheduler_action()
@@ -3784,6 +3809,11 @@ mod tests {
             (
                 ToolAuditSupervisorDrainRunOutcome::Idle,
                 "idle",
+                true,
+                false,
+                false,
+                false,
+                false,
                 ToolAuditSupervisorDrainSchedulerAction::NoAction,
                 "no_action",
                 false,
@@ -3795,6 +3825,11 @@ mod tests {
             (
                 ToolAuditSupervisorDrainRunOutcome::CaughtUp,
                 "caught_up",
+                false,
+                true,
+                false,
+                false,
+                false,
                 ToolAuditSupervisorDrainSchedulerAction::NoAction,
                 "no_action",
                 false,
@@ -3806,6 +3841,11 @@ mod tests {
             (
                 ToolAuditSupervisorDrainRunOutcome::NeedsContinuation,
                 "needs_continuation",
+                false,
+                false,
+                true,
+                false,
+                false,
                 ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation,
                 "schedule_continuation",
                 true,
@@ -3817,6 +3857,11 @@ mod tests {
             (
                 ToolAuditSupervisorDrainRunOutcome::NeedsFollowUp,
                 "needs_follow_up",
+                false,
+                false,
+                false,
+                true,
+                false,
                 ToolAuditSupervisorDrainSchedulerAction::RouteFollowUp,
                 "route_follow_up",
                 true,
@@ -3828,6 +3873,11 @@ mod tests {
             (
                 ToolAuditSupervisorDrainRunOutcome::PlanDiverged,
                 "plan_diverged",
+                false,
+                false,
+                false,
+                false,
+                true,
                 ToolAuditSupervisorDrainSchedulerAction::InvestigatePlanDrift,
                 "investigate_plan_drift",
                 true,
@@ -3841,6 +3891,11 @@ mod tests {
         for (
             outcome,
             label,
+            is_idle,
+            is_caught_up,
+            needs_continuation,
+            needs_follow_up,
+            plan_diverged,
             scheduler_action,
             scheduler_action_label,
             requires_action,
@@ -3856,6 +3911,11 @@ mod tests {
                 ToolAuditSupervisorDrainRunOutcome::from_label(label),
                 Some(outcome)
             );
+            assert_eq!(outcome.is_idle(), is_idle);
+            assert_eq!(outcome.is_caught_up(), is_caught_up);
+            assert_eq!(outcome.needs_continuation(), needs_continuation);
+            assert_eq!(outcome.needs_follow_up(), needs_follow_up);
+            assert_eq!(outcome.plan_diverged(), plan_diverged);
             assert_eq!(outcome.scheduler_action(), scheduler_action);
             assert_eq!(outcome.scheduler_action_label(), scheduler_action_label);
             assert_eq!(outcome.requires_scheduler_action(), requires_action);
