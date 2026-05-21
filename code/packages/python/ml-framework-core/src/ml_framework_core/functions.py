@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import math
 
+from ._rust_backend import matmul_via_rust, should_use_rust_for_matmul
 from .autograd import Function
 from .tensor import Tensor, _compute_strides, _numel
 
@@ -245,7 +246,17 @@ class MatMulFunction(Function):
             )
         m, k = a.shape
         _, n = b.shape
-        # Naive matmul (BLAS sgemm dispatch could be added here)
+        # MX10 Phase 1 — optional fast path through matrix-rust-python.
+        # The predicate fires only when (a) the C extension is
+        # installed AND (b) M*K*N is large enough that the FFI
+        # round-trip is cheaper than the pure-Python triple loop.
+        # See _rust_backend.py for the full rationale.
+        if should_use_rust_for_matmul(m, k, n):
+            return matmul_via_rust(a, b)
+        # ── Pure-Python fallback (unchanged from pre-MX10) ────────
+        # Used when the C extension isn't installed OR when the
+        # matmul is too small for the FFI overhead to amortise.
+        # Naive matmul (BLAS sgemm dispatch could be added here).
         data = [0.0] * (m * n)
         for i in range(m):
             for j in range(n):
@@ -889,9 +900,21 @@ class SoftmaxFunction(Function):
 
 
 def _matmul_2d(a: Tensor, b: Tensor) -> Tensor:
-    """Simple 2-D matrix multiply without autograd tracking."""
+    """Simple 2-D matrix multiply without autograd tracking.
+
+    Used by ``MatMulFunction.backward`` to compute ``grad @ B.T`` and
+    ``A.T @ grad``.  Picks up the same Rust fast path as the forward
+    pass so backward dispatch is automatic — important because
+    backward is typically run many times per training step.
+    """
     m, k = a.shape
     _, n = b.shape
+    # MX10 Phase 1 — same dispatch as MatMulFunction.forward.
+    # The backward pass for matmul is itself a matmul (twice), so
+    # routing through the same predicate gives the backward path
+    # the same FFI-vs-pure-Python tradeoff.
+    if should_use_rust_for_matmul(m, k, n):
+        return matmul_via_rust(a, b)
     data = [0.0] * (m * n)
     for i in range(m):
         for j in range(n):
