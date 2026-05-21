@@ -159,6 +159,7 @@ members = [
     "jit-profiling-insights",
     "ldp-format",
     "itf",
+    "javascript-ast",
     "javascript-lexer",
     "javascript-parser",
     "javascript-tokens",
