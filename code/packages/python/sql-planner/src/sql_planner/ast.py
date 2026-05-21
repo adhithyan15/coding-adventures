@@ -82,11 +82,16 @@ class TableRef:
 
 @dataclass(frozen=True, slots=True)
 class DerivedTableRef:
-    """A subquery used as a table source — ``(SELECT ...) AS alias``.
+    """A subquery used as a table source — ``(query) AS alias``.
 
-    The ``select`` is the inner query statement (already a typed SelectStmt,
-    not a raw parse node).  The ``alias`` is mandatory — SQL requires an
-    alias for every derived table.
+    The ``select`` is the inner query statement (already a typed statement
+    node, not a raw parse node).  It may be a plain ``SelectStmt`` or any
+    of the set-operation wrappers — SQLite allows derived tables to wrap a
+    compound query such as ``(SELECT … UNION SELECT …)`` and exposes its
+    output columns to the outer scope just like a plain SELECT would.
+
+    The ``alias`` is mandatory in our implementation (SQLite makes it
+    optional; that relaxation is a separate change).
 
     Example::
 
@@ -97,9 +102,18 @@ class DerivedTableRef:
                               from_=TableRef('orders')),
             alias='dt',
         )
+
+    UNION example::
+
+        SELECT * FROM (SELECT 1 UNION SELECT 2) AS u
+        ↓
+        DerivedTableRef(
+            select=UnionStmt(left=SelectStmt(...), right=SelectStmt(...)),
+            alias='u',
+        )
     """
 
-    select: SelectStmt
+    select: SelectStmt | UnionStmt | IntersectStmt | ExceptStmt
     alias: str
 
 

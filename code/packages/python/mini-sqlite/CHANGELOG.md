@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.75.0] - 2026-05-21
+
+### Added
+
+- **Compound queries as derived tables** (via ``sql-planner 0.34.0``).
+  ``SELECT * FROM (SELECT 1 UNION SELECT 2) AS t``, INTERSECT, EXCEPT,
+  and chained variants are now accepted both in FROM and JOIN positions.
+  Previously the adapter raised ``derived table must be a plain SELECT,
+  not a set operation``.  Alias is still required (optional-alias is a
+  separate change).
+
+  16 oracle tests in ``test_tier3_union_in_derived.py`` cover UNION /
+  UNION ALL / INTERSECT / EXCEPT in derived tables, set-op chaining,
+  JOIN with compound right sides, real-tables-providing-rows pipelines,
+  and a regression guard for plain SELECT.
+
 ## [1.74.0] - 2026-05-20
 
 ### Fixed
