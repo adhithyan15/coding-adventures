@@ -106,7 +106,7 @@ from sql_planner import (
 )
 from sql_planner.expr import Expr
 
-from .errors import ProgrammingError
+from .errors import OperationalError, ProgrammingError
 
 # --------------------------------------------------------------------------
 # Placeholder sentinel. Retained inside Literal nodes until the binding
@@ -682,12 +682,18 @@ def _limit_clause(node: ASTNode | None) -> Limit | None:
     if node is None:
         return None
     # limit_clause = "LIMIT" NUMBER [ "OFFSET" NUMBER ]
+    # NUMBER tokens carry the raw source text; hex literals (``0x1F``)
+    # reach us as the original ``0x1F`` string, so we route through
+    # ``_parse_number`` which handles both decimal and hex spellings.
+    # (Floats in LIMIT/OFFSET are rejected by SQLite at runtime, but the
+    # parser allows them through; we coerce to int and let the engine
+    # raise the same error sqlite3 would.)
     numbers: list[int] = []
     has_offset_keyword = False
     for c in node.children:
         if isinstance(c, Token):
             if _token_type(c) == "NUMBER":
-                numbers.append(int(c.value))
+                numbers.append(int(_parse_number(c.value)))
             elif _token_type(c) == "KEYWORD" and c.value.upper() == "OFFSET":
                 has_offset_keyword = True
     count = numbers[0] if numbers else None
@@ -1983,7 +1989,8 @@ def _frame_clause(node: ASTNode) -> WinFrame | None:
                 return None
 
             num_tok = _find_number(expr_node)
-            offset = int(float(num_tok.value)) if num_tok else 0
+            # _parse_number handles decimal, scientific, and 0x hex forms.
+            offset = int(_parse_number(num_tok.value)) if num_tok else 0
             if "FOLLOWING" in kw_vals:
                 return FrameBound(kind="FOLLOWING", offset=offset)
             return FrameBound(kind="PRECEDING", offset=offset)
@@ -2498,6 +2505,44 @@ def _first_token(node: ASTNode, *, kind: str) -> Token | None:
 
 
 def _parse_number(s: str) -> int | float:
+    """Parse a NUMBER token value into an int or float.
+
+    SQLite recognises three numeric literal forms:
+
+    * Decimal integer   ``123``       → ``int``
+    * Decimal float     ``1.5``, ``1e3``, ``1.5E-2``  → ``float``
+    * Hex integer       ``0x1F``      → ``int`` (always)
+
+    The lexer maps ``HEX_INT`` to ``NUMBER`` so this single helper handles
+    both spellings transparently.  Hex literals are always integers in
+    SQLite — there's no ``0x1.8p3`` IEEE-754 hex-float syntax to worry
+    about — and they cannot be negative (the ``-`` becomes a unary
+    operator at parse time).
+
+    Two SQLite-faithful quirks for hex literals:
+
+    1. **Length cap of 16 hex digits.**  SQLite stores integers in a
+       64-bit signed slot, so a literal with more than 16 hex digits
+       (i.e. > 64 bits) is rejected at parse time with the same
+       ``hex literal too big`` error sqlite3 raises.  This also caps
+       the cost of ``int(s, 16)`` (which is O(N²) in the digit count
+       and is *not* covered by Python's PYTHONINTMAXSTRDIGITS guard,
+       since that guard only applies to base-10 conversions) so a
+       megabyte-sized hex literal can't pin a parser thread.
+    2. **64-bit two's-complement reinterpretation.**  ``0xFFFFFFFFFFFFFFFF``
+       (16 set bits) evaluates to ``-1``, not ``+18446744073709551615``,
+       matching SQLite's INTEGER affinity.
+    """
+    if s.startswith(("0x", "0X")):
+        digits = s[2:]
+        # 16 hex digits = 64 bits, the upper bound of SQLite INTEGER.
+        if len(digits) > 16:
+            raise OperationalError(f"hex literal too big: {s}")
+        value = int(digits, 16) if digits else 0
+        # Top bit set → reinterpret as signed (two's-complement wrap).
+        if value & (1 << 63):
+            value -= 1 << 64
+        return value
     if "." in s or "e" in s or "E" in s:
         return float(s)
     return int(s)

@@ -2,6 +2,16 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.32.0] - 2026-05-21
+
+### Added
+
+- Regenerated `_tokens.py` to include the `HEX_INT` token from sql-lexer
+  0.24.  No grammar-rule changes were needed: `HEX_INT` aliases to
+  `NUMBER`, so every existing `NUMBER` reference in the .grammar file
+  (LIMIT/OFFSET, frame offsets, primary expressions, etc.) accepts
+  `0x1F` and `0XDEADBEEF` literals transparently.
+
 ## [0.31.0] - 2026-05-21
 
 ### Added
