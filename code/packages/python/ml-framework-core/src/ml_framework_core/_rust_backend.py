@@ -101,6 +101,14 @@ except ImportError:
 # Tuned more precisely in MX10 Phase 1.1 if needed.
 _MATMUL_RUST_THRESHOLD = 4096
 
+# Elementwise ops (Add/Sub/Mul/Div/Neg/Abs) have lower per-cell
+# cost than matmul (one multiply-add per cell vs K multiply-adds),
+# so the FFI round-trip needs more cells to amortise.  100K cells
+# is the rough break-even — below that the pure-Python list
+# comprehension wins.  Same per-op constant for all 6 ops in the
+# Phase 2 set since they share the per-cell cost profile.
+_ELEMENTWISE_RUST_THRESHOLD = 100_000
+
 
 # ──────────────────────────────────────────────────────────────────
 # MatMul fast path
@@ -224,3 +232,208 @@ def matmul_via_rust(a: Tensor, b: Tensor) -> Tensor:
     out_floats = list(struct.unpack(f"<{m * n}f", out_bytes))
 
     return Tensor(out_floats, (m, n), device=a.device)
+
+
+# ──────────────────────────────────────────────────────────────────
+# Elementwise fast paths (MX10 Phase 2)
+#
+# All six elementwise ops (Add, Sub, Mul, Div binary + Neg, Abs
+# unary) share the same predicate and the same envelope-building
+# shape; only the ``kind`` field and the input arity differ.  We
+# factor that out into two small private helpers (one for binary,
+# one for unary) and expose six tiny public wrappers so each op's
+# call-site reads as ``add_via_rust(a, b)`` etc.
+# ──────────────────────────────────────────────────────────────────
+
+
+def should_use_rust_for_elementwise(numel: int) -> bool:
+    """Decide whether to dispatch an elementwise op of ``numel``
+    cells to Rust.
+
+    Returns ``True`` iff:
+
+    * the C extension imported successfully at module load, AND
+    * ``numel`` is at or above ``_ELEMENTWISE_RUST_THRESHOLD``
+      (100K cells).
+
+    Same shape as :func:`should_use_rust_for_matmul`; just a different
+    threshold appropriate to the lower per-cell cost of elementwise.
+    """
+    if not _RUST_AVAILABLE:
+        return False
+    return numel >= _ELEMENTWISE_RUST_THRESHOLD
+
+
+def _elementwise_binary_via_rust(
+    a: Tensor,
+    b: Tensor,
+    op_kind: str,
+) -> Tensor:
+    """Compute a binary elementwise op (Add/Sub/Mul/Div) for two
+    same-shape Tensors via the Rust executor.
+
+    Caller's responsibility (same as :func:`matmul_via_rust`):
+
+    * Pre-validate shapes (``a.shape == b.shape``).
+    * Confirm ``should_use_rust_for_elementwise(a.numel)`` was True
+      first.  We re-check ``_RUST_AVAILABLE`` here as defence in
+      depth.
+
+    Returns a fresh Tensor of shape ``a.shape`` with device inherited
+    from ``a``.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            f"{op_kind.lower()}_via_rust called but Rust backend is not available; "
+            f"callers must check should_use_rust_for_elementwise() first"
+        )
+
+    # Local import to break the functions <-> tensor <-> _rust_backend
+    # circular import dance at module load time.
+    from .tensor import Tensor as _Tensor
+
+    numel = len(a.data)
+    shape_list = list(a.shape)
+
+    # Pack as little-endian f32 bytes.  struct.pack with a count
+    # prefix is one C-level call into _struct, much faster than
+    # one .pack() per cell.
+    a_bytes = struct.pack(f"<{numel}f", *a.data)
+    b_bytes = struct.pack(f"<{numel}f", *b.data)
+
+    # Build the matrix-ir-json envelope.  For binary elementwise:
+    # 3 tensors (input A, input B, output C), 1 op.
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    {"id": 0, "dtype": "f32", "shape": shape_list},
+                    {"id": 1, "dtype": "f32", "shape": shape_list},
+                    {"id": 2, "dtype": "f32", "shape": shape_list},
+                ],
+                "inputs": [0, 1],
+                "outputs": [2],
+                "ops": [
+                    {"kind": op_kind, "lhs": 0, "rhs": 1, "output": 2}
+                ],
+                "constants": [],
+            },
+            "inputs": [a_bytes.hex(), b_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_hex = result["outputs"][0]
+    out_bytes = bytes.fromhex(out_hex)
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"{op_kind.lower()}_via_rust: expected {expected_bytes} "
+            f"output bytes ({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+
+    return _Tensor(out_floats, a.shape, device=a.device)
+
+
+def _elementwise_unary_via_rust(a: Tensor, op_kind: str) -> Tensor:
+    """Compute a unary elementwise op (Neg/Abs) for one Tensor via
+    the Rust executor.
+
+    Same contract + caller responsibilities as
+    :func:`_elementwise_binary_via_rust`.
+
+    Returns a fresh Tensor of shape ``a.shape`` with device
+    inherited from ``a``.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            f"{op_kind.lower()}_via_rust called but Rust backend is not available; "
+            f"callers must check should_use_rust_for_elementwise() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(a.data)
+    shape_list = list(a.shape)
+
+    a_bytes = struct.pack(f"<{numel}f", *a.data)
+
+    # Unary envelope: 2 tensors (input, output), 1 op with
+    # input/output (not lhs/rhs).
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    {"id": 0, "dtype": "f32", "shape": shape_list},
+                    {"id": 1, "dtype": "f32", "shape": shape_list},
+                ],
+                "inputs": [0],
+                "outputs": [1],
+                "ops": [
+                    {"kind": op_kind, "input": 0, "output": 1}
+                ],
+                "constants": [],
+            },
+            "inputs": [a_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_hex = result["outputs"][0]
+    out_bytes = bytes.fromhex(out_hex)
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"{op_kind.lower()}_via_rust: expected {expected_bytes} "
+            f"output bytes ({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+
+    return _Tensor(out_floats, a.shape, device=a.device)
+
+
+# Tiny public wrappers so call sites in functions.py read clean.
+# (One per op rather than one variadic helper because each op's
+# kind string is fixed at compile time, so we avoid the indirection.)
+
+
+def add_via_rust(a: Tensor, b: Tensor) -> Tensor:
+    return _elementwise_binary_via_rust(a, b, "Add")
+
+
+def sub_via_rust(a: Tensor, b: Tensor) -> Tensor:
+    return _elementwise_binary_via_rust(a, b, "Sub")
+
+
+def mul_via_rust(a: Tensor, b: Tensor) -> Tensor:
+    return _elementwise_binary_via_rust(a, b, "Mul")
+
+
+def div_via_rust(a: Tensor, b: Tensor) -> Tensor:
+    return _elementwise_binary_via_rust(a, b, "Div")
+
+
+def neg_via_rust(a: Tensor) -> Tensor:
+    return _elementwise_unary_via_rust(a, "Neg")
+
+
+def abs_via_rust(a: Tensor) -> Tensor:
+    return _elementwise_unary_via_rust(a, "Abs")
+
+
+# NOTE: PowFunction takes a scalar exponent, not a tensor.  The
+# matrix-ir-json schema's Pow op takes two TENSOR inputs (lhs/rhs).
+# To route Pow through Rust we'd need to broadcast the scalar to a
+# tensor of shape ``a.shape``, which costs 4*numel bytes just to
+# carry one value.  Below the threshold that's net-loss; above it,
+# it's still wasteful enough that the pure-Python ``x**n`` is
+# competitive (Python's float pow is C-implemented and tight).
+# Deferred until matrix-cpu adds a scalar-exponent variant of Pow,
+# or until profiling shows it's worth the broadcast cost.

@@ -172,5 +172,82 @@ class FallbackImportTimeBehaviorTests(unittest.TestCase):
         importlib.reload(_rust_backend)
 
 
+# ──────────────────────────────────────────────────────────────────
+# MX10 Phase 2 — elementwise fallback tests
+#
+# Same pattern as the matmul fallback: monkey-patch
+# ``_RUST_AVAILABLE = False`` and confirm the pure-Python kernel
+# still produces correct results.  These always run, regardless of
+# whether the C extension is installed.
+# ──────────────────────────────────────────────────────────────────
+
+
+class ElementwiseFallbackTests(unittest.TestCase):
+    """Confirm each elementwise op still works when the Rust path is disabled."""
+
+    def setUp(self) -> None:
+        self._saved_available = _rust_backend._RUST_AVAILABLE
+        _rust_backend._RUST_AVAILABLE = False
+
+    def tearDown(self) -> None:
+        _rust_backend._RUST_AVAILABLE = self._saved_available
+
+    def test_predicate_returns_false_for_elementwise_when_unavailable(self) -> None:
+        """Even a giant tensor must fall back when the extension is missing."""
+        self.assertFalse(
+            _rust_backend.should_use_rust_for_elementwise(10_000_000)
+        )
+
+    def test_add_via_rust_raises_when_unavailable(self) -> None:
+        """``add_via_rust`` must raise rather than silently produce wrong data."""
+        a = Tensor([1.0, 2.0, 3.0], (3,))
+        b = Tensor([10.0, 20.0, 30.0], (3,))
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.add_via_rust(a, b)
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_neg_via_rust_raises_when_unavailable(self) -> None:
+        """``neg_via_rust`` must raise (unary version of the above)."""
+        a = Tensor([1.0, 2.0, 3.0], (3,))
+        with self.assertRaises(RuntimeError):
+            _rust_backend.neg_via_rust(a)
+
+    def test_add_correct_via_fallback(self) -> None:
+        """``a + b`` falls back cleanly to pure-Python with the correct result."""
+        a = Tensor([1.0, 2.0, 3.0, 4.0], (2, 2))
+        b = Tensor([10.0, 20.0, 30.0, 40.0], (2, 2))
+        result = a + b
+        self.assertEqual(result.shape, (2, 2))
+        self.assertEqual(result.data, [11.0, 22.0, 33.0, 44.0])
+
+    def test_sub_correct_via_fallback(self) -> None:
+        a = Tensor([10.0, 20.0, 30.0], (3,))
+        b = Tensor([1.0, 2.0, 3.0], (3,))
+        result = a - b
+        self.assertEqual(result.data, [9.0, 18.0, 27.0])
+
+    def test_mul_correct_via_fallback(self) -> None:
+        a = Tensor([1.0, 2.0, 3.0], (3,))
+        b = Tensor([4.0, 5.0, 6.0], (3,))
+        result = a * b
+        self.assertEqual(result.data, [4.0, 10.0, 18.0])
+
+    def test_div_correct_via_fallback(self) -> None:
+        a = Tensor([10.0, 20.0, 30.0], (3,))
+        b = Tensor([2.0, 4.0, 5.0], (3,))
+        result = a / b
+        self.assertEqual(result.data, [5.0, 5.0, 6.0])
+
+    def test_neg_correct_via_fallback(self) -> None:
+        a = Tensor([1.0, -2.0, 3.0], (3,))
+        result = -a
+        self.assertEqual(result.data, [-1.0, 2.0, -3.0])
+
+    def test_abs_correct_via_fallback(self) -> None:
+        a = Tensor([1.0, -2.0, 3.0, -4.0], (4,))
+        result = a.abs()
+        self.assertEqual(result.data, [1.0, 2.0, 3.0, 4.0])
+
+
 if __name__ == "__main__":
     unittest.main()
