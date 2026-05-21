@@ -445,8 +445,17 @@ def _table_ref(
     q = _maybe_child(node, "query_stmt")
     if q is not None:
         inner_stmt = _query_stmt(q, ctes=ctes, view_defs=view_defs)
-        if not isinstance(inner_stmt, SelectStmt):
-            raise ProgrammingError("derived table must be a plain SELECT, not a set operation")
+        # SQLite allows the inner query of a derived table to be a compound
+        # query (UNION / INTERSECT / EXCEPT), not just a plain SELECT.  The
+        # planner's :func:`_plan_derived_inner` dispatches on the statement
+        # type, so we can pass through any of the four typed forms.  We
+        # still reject anything else (INSERT, UPDATE, DDL, etc.) because the
+        # surrounding ``FROM`` context only makes sense for query-producing
+        # statements.
+        if not isinstance(inner_stmt, SelectStmt | UnionStmt | IntersectStmt | ExceptStmt):
+            raise ProgrammingError(
+                "derived table inner query must be a SELECT or set operation"
+            )
         # The alias is the first NAME token AFTER the closing parenthesis,
         # optionally preceded by an AS keyword.  Walk the children and grab
         # the NAME once we're past the ")" token.

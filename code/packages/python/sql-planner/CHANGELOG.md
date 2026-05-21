@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.34.0] - 2026-05-21
+
+### Added
+
+- **Compound queries (UNION / INTERSECT / EXCEPT) as derived tables.**
+  ``DerivedTableRef.select`` is widened from ``SelectStmt`` to
+  ``SelectStmt | UnionStmt | IntersectStmt | ExceptStmt`` and a new
+  ``_plan_derived_inner`` helper dispatches by statement type so the
+  inner of a ``(query) AS alias`` source can be any of the four
+  query-producing statement forms — matching SQLite.
+  ``_output_columns`` and ``_source_columns`` learn to descend through
+  ``Union`` / ``Intersect`` / ``Except`` nodes, inheriting column
+  names from the left side per SQLite's documented rule.
+
 ## [0.33.0] - 2026-05-19
 
 ### Fixed

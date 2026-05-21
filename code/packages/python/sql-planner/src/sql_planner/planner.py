@@ -270,7 +270,7 @@ def _plan_select(
         having_raw = _substitute_aliases(having_raw, select_aliases)
     having = _resolve(having_raw, scope, schema, outer_scope) if having_raw is not None else None
 
-    def _resolve_order_key(k: "AstSortKey") -> "P.SortKey":
+    def _resolve_order_key(k: AstSortKey) -> P.SortKey:
         """Resolve an ORDER BY sort key to a planner ``SortKey``.
 
         SQL (and SQLite) allow ORDER BY to reference output columns in two
@@ -480,6 +480,34 @@ def _win_spec_columns(spec: P.WindowFuncSpec) -> list[Column]:
     return cols
 
 
+def _plan_derived_inner(
+    stmt: SelectStmt | UnionStmt | IntersectStmt | ExceptStmt,
+    schema: SchemaProvider,
+) -> P.LogicalPlan:
+    """Plan the inner query of a derived table.
+
+    SQLite allows derived tables to wrap any compound query, not just a
+    plain SELECT — ``(SELECT 1 UNION SELECT 2) AS u`` is legal and the
+    outer scope sees the unioned column.  Dispatch on the statement
+    type the same way the top-level :func:`plan` does.
+
+    Centralising this dispatch avoids duplicating the four-way ``match``
+    at both the FROM-root site and the join-right site in
+    :func:`_build_from_tree`.
+    """
+    if isinstance(stmt, SelectStmt):
+        return _plan_select(stmt, schema)
+    if isinstance(stmt, UnionStmt):
+        return _plan_union(stmt, schema)
+    if isinstance(stmt, IntersectStmt):
+        return _plan_intersect(stmt, schema)
+    if isinstance(stmt, ExceptStmt):
+        return _plan_except(stmt, schema)
+    raise TypeError(
+        f"unexpected derived-table inner statement type: {type(stmt).__name__}"
+    )
+
+
 def _build_from_tree(
     root: TableRef | DerivedTableRef | RecursiveCTERef,
     joins: tuple[JoinClause, ...],
@@ -512,7 +540,7 @@ def _build_from_tree(
             union_all=root.union_all,
         )
     elif isinstance(root, DerivedTableRef):
-        inner_plan = _plan_select(root.select, schema)
+        inner_plan = _plan_derived_inner(root.select, schema)
         cols = _output_columns(inner_plan, schema)
         _add_to_scope(scope, root.alias, list(cols))
         tree = P.DerivedTable(
@@ -531,7 +559,7 @@ def _build_from_tree(
 
     for j in joins:
         if isinstance(j.right, DerivedTableRef):
-            inner_plan = _plan_select(j.right.select, schema)
+            inner_plan = _plan_derived_inner(j.right.select, schema)
             cols = _output_columns(inner_plan, schema)
             _add_to_scope(scope, j.right.alias, list(cols))
             right_node: P.LogicalPlan = P.DerivedTable(
@@ -717,6 +745,15 @@ def _output_columns(
     while isinstance(node, (P.Sort, P.Limit, P.Distinct, P.Having)):
         node = node.input  # type: ignore[union-attr]
 
+    # Set-operation nodes (Union / Intersect / Except) inherit the column
+    # names of their *left* side — this matches SQLite's documented rule
+    # and is required for derived tables that wrap a compound query
+    # (``(SELECT a UNION SELECT b) AS t``).  Without this branch, the
+    # ``_output_columns`` walker would hit the final ``raise`` and emit a
+    # confusing "SELECT * in derived table" error.
+    if isinstance(node, (P.Union, P.Intersect, P.Except)):
+        return _output_columns(node.left, schema)
+
     if isinstance(node, P.Project):
         cols: list[str] = []
         for i, item in enumerate(node.items, start=1):
@@ -792,10 +829,15 @@ def _source_columns(
     if isinstance(node, P.Project):
         return list(_output_columns(node, schema))
 
-    # Aggregate, Union, Intersect, Except, IndexScan, etc. — fall through to
-    # the same logic that _output_columns uses for non-Project top-levels.
-    # These should not normally be the direct input of another Project without
-    # an intervening explicit column list.
+    if isinstance(node, (P.Union, P.Intersect, P.Except)):
+        # Set-operation output schema follows the left side — same rule as
+        # :func:`_output_columns`.  Needed when a derived table wraps a
+        # compound query and the outer SELECT then says ``SELECT * FROM …``.
+        return list(_output_columns(node, schema))
+
+    # Aggregate, IndexScan, etc. — fall through.  These should not normally
+    # be the direct input of another Project without an intervening explicit
+    # column list.
     raise UnsupportedStatement(
         kind=f"SELECT * over {type(node).__name__} in derived table"
     )
