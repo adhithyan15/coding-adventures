@@ -1,5 +1,82 @@
 # Changelog — @coding-adventures/forme-doc-frontmatter
 
+## 0.2.0 — 2026-05-21
+
+### Changed (breaking under the hood, but no public API change)
+
+- **Replaced the in-house TOML parser with the repo's full TOML
+  1.0 parser plus an AST walker.**  `src/toml.ts` no longer
+  re-implements TOML — it imports `parseTOML` from
+  `@coding-adventures/toml-parser`, walks the resulting
+  `ASTNode` tree, and enforces the docs-frontmatter subset
+  (rejecting table headers, array-of-tables, dotted keys,
+  quoted keys, inline tables, and arrays-of-arrays).
+
+  **Why:** the repo already shipped a full-fidelity TOML 1.0
+  parser.  Having a second tiny TOML parser here was duplicated
+  code with subtly different behaviour (the in-house version
+  didn't handle multi-line strings, all four datetime forms,
+  underscore separators in numbers, hex/oct/bin integers,
+  `inf`/`nan`, or the full basic-string escape set).  Walking
+  the real AST gives us all of that for free.
+
+  **Capability impact:** `required_capabilities.json` stays at
+  `[]`.  This depends on `@coding-adventures/toml-parser` v0.1.1
+  (where the grammar was precompiled into `_grammar.ts` so the
+  parser is itself pure-transform — see toml-parser's 0.1.1
+  changelog).  If you bump toml-parser to an earlier version
+  that reads the grammar at runtime, this package's capabilities
+  would cascade to `[fs:read]`.
+
+  **Public API:** unchanged.  `parseToml(source)` still returns
+  `Record<string, unknown>`; `extractFrontmatter` still returns
+  the same `FrontmatterResult`.  All existing positive-path
+  test cases pass with no modifications.
+
+  **Error messages changed:** surface-syntax errors (malformed
+  TOML the lexer/parser rejects before the walker ever runs)
+  now carry the upstream parser's messages with `line:col`
+  rather than our hand-rolled "TOML line N is not a 'key =
+  value' pair" wording.  Subset-violation errors (table
+  headers, inline tables, etc.) are still our own
+  `forme-doc-frontmatter:` messages.
+
+### Added
+
+- **TOML coverage broadened to full lexer-supported scalars:**
+  multi-line basic + literal strings, hex/oct/bin integers with
+  underscore separators, scientific-notation floats, `+inf` /
+  `-inf` / `inf` / `nan`, `\b` / `\f` / `\/` / `\uXXXX` /
+  `\UXXXXXXXX` escapes, all four datetime tokens.
+- **Subset-rejection tests** for every newly-relevant construct
+  the upstream parser accepts but the docs subset doesn't:
+  dotted keys, quoted keys (basic + literal), inline tables,
+  array-of-inline-tables, arrays-of-arrays, hyphen-leading
+  bare keys, 300-char bare keys.
+
+### Dependencies
+
+- Added `@coding-adventures/toml-parser` + its full transitive
+  `file:` chain (`toml-lexer`, `parser`, `grammar-tools`,
+  `lexer`, `directed-graph`, `cli-builder`, `state-machine`)
+  as runtime deps.  `BUILD` chain-installs them leaf-to-root
+  before running `npm install` here.
+
+### Tests
+
+135 tests across 3 files (was 100).  Coverage **98.88% line /
+97.85% branch** (was 96.12% line).  The remaining uncovered
+lines in `toml.ts` are defensive throws marked
+`/* v8 ignore start */ … /* v8 ignore stop */` because the
+upstream grammar's structural guarantees make them
+genuinely unreachable.
+
+### Version
+
+`0.1.0` → `0.2.0` (minor bump: no public API break, but
+behaviour widens significantly because the underlying parser
+is now full TOML 1.0).
+
 ## 0.1.0 — 2026-05-20
 
 Initial release.  First concrete DOC00 v0 package — strip YAML

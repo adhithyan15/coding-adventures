@@ -3,8 +3,12 @@
 > First DOC00 v0 package — strip YAML or TOML frontmatter from a
 > markdown source string. Returns `{ body, frontmatter, format }`.
 
-Pure transform. Capabilities: `[]`. Tiny in-house YAML and TOML
-parsers (no `eval`, no `new Function`, no prototype pollution).
+Pure transform. Capabilities: `[]`. YAML uses a tiny in-house
+subset parser; TOML delegates to the repo's full
+`@coding-adventures/toml-parser` (lexer + grammar-driven parser
+covering TOML 1.0) and walks the resulting AST to enforce the
+docs-frontmatter subset. No `eval`, no `new Function`, no
+prototype pollution.
 
 ## What it does
 
@@ -36,8 +40,8 @@ draft flag, etc.).
 
 | Format | Opening delim | Closing delim | Parser |
 |--------|---------------|---------------|--------|
-| YAML   | `---`         | `---`         | tiny in-house |
-| TOML   | `+++`         | `+++`         | tiny in-house |
+| YAML   | `---`         | `---`         | tiny in-house subset parser |
+| TOML   | `+++`         | `+++`         | `@coding-adventures/toml-parser` + AST walker |
 | none   | —             | —             | (passthrough)  |
 
 Both delimiters must be on their own line. CRLF line endings
@@ -50,27 +54,54 @@ the function throws `TypeError`. No partial output.
 
 ## Supported YAML / TOML subset
 
-This is **not a general-purpose YAML or TOML parser.** It covers
-exactly what documentation frontmatter uses in practice:
+For YAML this is **not a general-purpose parser** — it covers
+the subset documentation frontmatter actually uses.  For TOML
+the underlying parser IS general-purpose (full TOML 1.0), but
+the AST walker rejects anything outside the docs subset before
+returning a value.
+
+**Supported, both formats:**
 
 - Flat key/value maps (no nested tables / no inline tables).
 - Scalar values: integers, floats, booleans, null (YAML only),
   strings (quoted or bare), RFC 3339 dates as strings.
-- Arrays of scalars: inline `[a, b, c]` or YAML multi-line
-  `- item` / `- item`.
-- YAML quoted strings: single or double, escapes `\\` and the
-  matching quote.
-- TOML basic strings (`"..."` with `\n`/`\t`/`\r`/`\"`/`\\` escapes)
-  and literal strings (`'...'`, no escapes).
-- TOML inline comments (`# ...` after a value).
+- Arrays of scalars: inline `[a, b, c]` (both formats), or
+  multi-line `- item` lists (YAML), or multi-line `[\n…\n]`
+  with optional trailing comma (TOML).
 
-**Anything beyond this throws.** No nested tables, no anchors,
-no custom tags, no multi-line strings, no array-of-tables, no
-inline tables.
+**TOML-only details:**
+
+- All four TOML string forms (`"…"`, `"""…"""`, `'…'`, `'''…'''`).
+- All TOML integer bases (decimal, `0x…`, `0o…`, `0b…`) with
+  underscore separators (`1_000_000`).
+- All TOML float forms including `inf`, `nan`, scientific
+  notation, and underscores.
+- All four date/time tokens (returned as their RFC 3339 string
+  — we never construct a `Date`).
+- Inline `# comments` after values.
+- Basic-string escapes: `\\`, `\"`, `\n`, `\t`, `\r`, `\b`,
+  `\f`, `\/`, `\uXXXX`, `\UXXXXXXXX`.
+
+**YAML-only details:**
+
+- Single- and double-quoted strings with escapes `\\` and the
+  matching quote.
+
+**Rejected (throws `TypeError`):**
+
+- Nested tables (`[server]` / `[a.b]`).
+- Array-of-tables (`[[products]]`).
+- Dotted keys (`a.b.c = 1`).
+- Quoted keys (`"127.0.0.1" = 1`).
+- Inline tables (`{x = 1, y = 2}`).
+- Arrays-of-arrays / arrays-of-inline-tables.
+- YAML anchors / aliases / custom tags.
 
 Full YAML is a security hazard (the spec includes tag
-resolution that some implementations turn into code execution).
-This subset is deliberately the minimal viable surface.
+resolution that some implementations turn into code execution),
+so the YAML side stays tiny on purpose.  Full TOML is safe but
+nested structures are out of scope for the v0 docs pipeline —
+when DOC0X needs them we'll widen the subset.
 
 ## Security posture
 
@@ -99,22 +130,34 @@ Six concerns explicitly addressed:
 
 ## Tests
 
-93 tests across three files:
-- `yaml.test.ts` — scalar types, inline + multi-line arrays,
-  multiple keys, comments, every security defence, every error
-  path including escape handling and unterminated strings.
-- `toml.test.ts` — same coverage shape for TOML.
-- `extract.test.ts` — end-to-end: no frontmatter, YAML, TOML,
-  CRLF, BOM, missing closing delim, input-type validation,
-  determinism + no input mutation, real-world Hugo / Jekyll
-  examples.
+135 tests across three files:
+- `yaml.test.ts` (45) — scalar types, inline + multi-line
+  arrays, multiple keys, comments, every security defence,
+  every error path including escape handling and unterminated
+  strings.
+- `toml.test.ts` (71) — every supported scalar token (all four
+  string forms, all four integer bases with underscores, every
+  float form including `inf` / `nan`, every datetime token),
+  single- and multi-line arrays, security defences, subset
+  rejections (table headers, array-of-tables, dotted keys,
+  quoted keys, inline tables, arrays-of-arrays, long bare
+  keys), and surface-syntax errors that propagate from
+  `@coding-adventures/toml-parser`.
+- `extract.test.ts` (19) — end-to-end: no frontmatter, YAML,
+  TOML, CRLF, BOM, missing closing delim, input-type
+  validation, determinism + no input mutation, real-world Hugo
+  / Jekyll examples.
 
-Coverage: **96.12% line / 96.15% branch** on all source files
+Coverage: **98.88% line / 97.85% branch** on all source files
 with logic.
 
 ## Capabilities
 
-`[]` — pure transform.
+`[]` — pure transform.  `@coding-adventures/toml-parser` v0.1.1+
+is pure-transform too (its grammar is precompiled at build time
+into a TypeScript object literal, so no `fs:read` happens at
+parse time), which keeps every downstream consumer's
+capabilities at `[]`.
 
 ## How it fits in the stack
 
