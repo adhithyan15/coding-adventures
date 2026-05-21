@@ -79,6 +79,10 @@ documented in this file.
   malformed tag opens, plain text and whitespace shells, duplicate doctypes,
   unknown/custom elements, and legacy compatibility cases, with a dedicated
   parser regression test.
+- The miscellaneous recovery audit now covers the residual `tests1`,
+  `tests19`, and `tests25` source-marker variants, and a focused audit
+  coverage check verifies that every checked tree-construction smoke case is
+  indexed by at least one `whatwg-*-audit.json` parser fixture.
 - Shared html5lib tree-construction test helpers keep smoke and focused
   tree-insertion, frameset, table, form/interactive, text-control,
   foreign-content, formatting, ruby, noscript, head/body, document-shell,

@@ -295,6 +295,15 @@ The broad smoke test and the focused audit fixtures use the shared
 `tests/common` html5lib parser and DOM dump helpers, so new parser conformance
 fixtures exercise the same normalization path.
 
+The focused parser audit coverage guard verifies that every source marker in
+the checked tree-construction smoke fixture is indexed by at least one
+`whatwg-*-audit.json` fixture:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/check_whatwg_audit_coverage.py \
+  --check
+```
+
 The lexer fixture directory also provides one umbrella stale check for all
 self-contained generated HTML lexer/parser fixtures:
 
