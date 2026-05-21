@@ -161,6 +161,7 @@ members = [
     "itf",
     "javascript-lexer",
     "javascript-parser",
+    "javascript-tokens",
     "java-lexer",
     "java-parser",
     "jit-compiler",
