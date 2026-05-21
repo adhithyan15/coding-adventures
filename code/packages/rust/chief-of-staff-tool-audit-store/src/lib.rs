@@ -596,6 +596,26 @@ impl ToolAuditCheckpointReplaySummary {
         self.replayed_records == 0
     }
 
+    /// Return the starting checkpoint timestamp for host replay logs.
+    pub fn starting_checkpoint_timestamp_ms(&self) -> u64 {
+        self.starting_checkpoint.timestamp_ms
+    }
+
+    /// Return the starting checkpoint call id for host replay logs.
+    pub fn starting_checkpoint_call_id(&self) -> &str {
+        &self.starting_checkpoint.call_id
+    }
+
+    /// Return the checkpoint timestamp saved after this replay page.
+    pub fn next_checkpoint_timestamp_ms(&self) -> u64 {
+        self.next_checkpoint.timestamp_ms
+    }
+
+    /// Return the checkpoint call id saved after this replay page.
+    pub fn next_checkpoint_call_id(&self) -> &str {
+        &self.next_checkpoint.call_id
+    }
+
     /// Return whether any replayed row needs follow-up.
     pub fn requires_follow_up(&self) -> bool {
         self.inventory.requires_follow_up()
@@ -2892,6 +2912,10 @@ mod tests {
             first.next_checkpoint,
             ToolAuditReadCheckpoint::new(120, "call_3")
         );
+        assert_eq!(first.starting_checkpoint_timestamp_ms(), 0);
+        assert_eq!(first.starting_checkpoint_call_id(), "");
+        assert_eq!(first.next_checkpoint_timestamp_ms(), 120);
+        assert_eq!(first.next_checkpoint_call_id(), "call_3");
         assert_eq!(
             first
                 .stored_checkpoint
@@ -2918,6 +2942,10 @@ mod tests {
             second.next_checkpoint,
             ToolAuditReadCheckpoint::new(151, "call_2")
         );
+        assert_eq!(second.starting_checkpoint_timestamp_ms(), 120);
+        assert_eq!(second.starting_checkpoint_call_id(), "call_3");
+        assert_eq!(second.next_checkpoint_timestamp_ms(), 151);
+        assert_eq!(second.next_checkpoint_call_id(), "call_2");
         assert_eq!(second.replayed_records, 1);
         assert!(second.requires_follow_up());
         assert_eq!(
@@ -2944,6 +2972,10 @@ mod tests {
             ToolAuditReadCheckpoint::beginning()
         );
         assert_eq!(empty.next_checkpoint, ToolAuditReadCheckpoint::beginning());
+        assert_eq!(empty.starting_checkpoint_timestamp_ms(), 0);
+        assert_eq!(empty.starting_checkpoint_call_id(), "");
+        assert_eq!(empty.next_checkpoint_timestamp_ms(), 0);
+        assert_eq!(empty.next_checkpoint_call_id(), "");
         assert_eq!(empty.stored_checkpoint, None);
         assert!(sink.records().is_empty());
         assert!(store.fetch_checkpoint("supervisor").unwrap().is_none());
