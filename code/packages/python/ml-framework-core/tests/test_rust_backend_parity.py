@@ -376,5 +376,99 @@ class ElementwiseParityTests(unittest.TestCase):
         self._unary_parity_check("Abs", lambda a: a.abs(), seed=13)
 
 
+# ──────────────────────────────────────────────────────────────────
+# MX10 Phase 3 — reduction (Sum / Mean) parity tests
+#
+# Reduce-all over a 100_000-cell tensor with dim=None.  Output is
+# a scalar (Tensor of shape (1,)).  Same f32-vs-double tolerance as
+# matmul + elementwise.
+# ──────────────────────────────────────────────────────────────────
+
+
+@unittest.skipUnless(
+    EXTENSION_AVAILABLE,
+    "matrix_rust_python C extension not installed; see parity-tests skip-reason.",
+)
+class ReductionParityTests(unittest.TestCase):
+    """Compare each reduce-all op's Rust and pure-Python kernels."""
+
+    SHAPE = (500, 200)  # 100_000 cells
+
+    def _make_tensor(self, seed: int):
+        import random
+
+        from ml_framework_core import Tensor
+
+        rng = random.Random(seed)
+        data = [rng.uniform(-1.0, 1.0) for _ in range(500 * 200)]
+        return Tensor(data, self.SHAPE)
+
+    def _assert_close_scalar(
+        self,
+        actual: float,
+        expected: float,
+        rtol: float = 1e-3,
+        atol: float = 1e-4,
+    ) -> None:
+        """Tolerance same as matmul/elementwise — covers f32 vs double
+        quantization noise from summing 100_000 cells in f32."""
+        denom = max(abs(actual), abs(expected), atol)
+        err = abs(actual - expected) / denom
+        self.assertLess(
+            err,
+            rtol,
+            f"rust={actual!r}, python={expected!r}, relative error {err:.2e}",
+        )
+
+    def test_reduction_dispatch_predicate_fires_at_threshold(self) -> None:
+        """``should_use_rust_for_reduction(100_000)`` returns True."""
+        from ml_framework_core._rust_backend import should_use_rust_for_reduction
+
+        self.assertTrue(
+            should_use_rust_for_reduction(500 * 200),
+            "MX10 Phase 3 threshold should let 100_000 cells use Rust",
+        )
+
+    def test_sum_parity(self) -> None:
+        """``a.sum()`` (reduce-all) produces same scalar via Rust and pure-Python."""
+        from ml_framework_core import _rust_backend
+
+        a = self._make_tensor(seed=42)
+
+        rust_result = a.sum()
+        self.assertEqual(
+            rust_result.shape, (1,), "sum() reduce-all should return shape (1,)"
+        )
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = a.sum()
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close_scalar(rust_result.data[0], python_result.data[0])
+
+    def test_mean_parity(self) -> None:
+        """``a.mean()`` (reduce-all) produces same scalar via Rust and pure-Python."""
+        from ml_framework_core import _rust_backend
+
+        a = self._make_tensor(seed=7)
+
+        rust_result = a.mean()
+        self.assertEqual(
+            rust_result.shape, (1,), "mean() reduce-all should return shape (1,)"
+        )
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = a.mean()
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close_scalar(rust_result.data[0], python_result.data[0])
+
+
 if __name__ == "__main__":
     unittest.main()
