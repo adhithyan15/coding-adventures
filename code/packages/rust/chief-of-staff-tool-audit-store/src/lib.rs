@@ -1048,6 +1048,26 @@ impl ToolAuditSupervisorDrainRunReport {
         self.outcome().as_str()
     }
 
+    /// Return whether rows were replayed and this run reached the current log end.
+    pub fn is_caught_up(&self) -> bool {
+        self.outcome().is_caught_up()
+    }
+
+    /// Return whether this run needs another drain pass.
+    pub fn needs_continuation(&self) -> bool {
+        self.outcome().needs_continuation()
+    }
+
+    /// Return whether this run outcome routes follow-up pressure to the host.
+    pub fn needs_follow_up(&self) -> bool {
+        self.outcome().needs_follow_up()
+    }
+
+    /// Return whether this run diverged from its preflight plan.
+    pub fn plan_diverged(&self) -> bool {
+        self.outcome().plan_diverged()
+    }
+
     /// Return whether this run outcome asks the scheduler to take action.
     pub fn requires_scheduler_action(&self) -> bool {
         self.outcome().requires_scheduler_action()
@@ -1459,6 +1479,26 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return the stable scheduler-facing label for this run outcome.
     pub fn outcome_label(&self) -> &'static str {
         self.outcome_label
+    }
+
+    /// Return whether rows were replayed and this run reached the current log end.
+    pub fn is_caught_up(&self) -> bool {
+        self.outcome.is_caught_up()
+    }
+
+    /// Return whether this run needs another drain pass.
+    pub fn needs_continuation(&self) -> bool {
+        self.outcome.needs_continuation()
+    }
+
+    /// Return whether this run outcome routes follow-up pressure to the host.
+    pub fn needs_follow_up(&self) -> bool {
+        self.outcome.needs_follow_up()
+    }
+
+    /// Return whether this run diverged from its preflight plan.
+    pub fn plan_diverged(&self) -> bool {
+        self.outcome.plan_diverged()
     }
 
     /// Return the recommended scheduler action for this run.
@@ -3667,9 +3707,17 @@ mod tests {
             report.outcome(),
             ToolAuditSupervisorDrainRunOutcome::NeedsFollowUp
         );
+        assert!(!report.is_caught_up());
+        assert!(!report.needs_continuation());
+        assert!(report.needs_follow_up());
+        assert!(!report.plan_diverged());
         let summary = report.summary();
         assert_eq!(summary.outcome_label, "needs_follow_up");
         assert_eq!(summary.outcome_label(), "needs_follow_up");
+        assert!(!summary.is_caught_up());
+        assert!(!summary.needs_continuation());
+        assert!(summary.needs_follow_up());
+        assert!(!summary.plan_diverged());
         assert_eq!(summary.scheduler_action_label, "route_follow_up");
         assert_eq!(summary.scheduler_action_label(), "route_follow_up");
         assert!(!summary.is_no_scheduler_action);
@@ -3744,10 +3792,18 @@ mod tests {
         assert!(report.reached_end_of_log());
         assert!(!report.should_continue());
         assert_eq!(report.outcome(), ToolAuditSupervisorDrainRunOutcome::Idle);
+        assert!(!report.is_caught_up());
+        assert!(!report.needs_continuation());
+        assert!(!report.needs_follow_up());
+        assert!(!report.plan_diverged());
         assert!(report.is_no_scheduler_action());
         assert!(!report.requires_scheduler_action());
         let summary = report.summary();
         assert_eq!(summary.scheduler_action_label, "no_action");
+        assert!(!summary.is_caught_up());
+        assert!(!summary.needs_continuation());
+        assert!(!summary.needs_follow_up());
+        assert!(!summary.plan_diverged());
         assert!(summary.is_no_scheduler_action);
         assert!(summary.is_no_scheduler_action());
         assert!(!summary.requires_scheduler_action);
@@ -3781,6 +3837,10 @@ mod tests {
             report.outcome(),
             ToolAuditSupervisorDrainRunOutcome::CaughtUp
         );
+        assert!(report.is_caught_up());
+        assert!(!report.needs_continuation());
+        assert!(!report.needs_follow_up());
+        assert!(!report.plan_diverged());
     }
 
     #[test]
@@ -4153,6 +4213,10 @@ mod tests {
             ToolAuditSupervisorDrainRunOutcome::NeedsContinuation
         );
         assert_eq!(report.outcome_label(), "needs_continuation");
+        assert!(!report.is_caught_up());
+        assert!(report.needs_continuation());
+        assert!(!report.needs_follow_up());
+        assert!(!report.plan_diverged());
         assert!(report.requires_scheduler_action());
         assert!(!report.is_no_scheduler_action());
         assert!(report.requests_continuation());
@@ -4200,6 +4264,10 @@ mod tests {
         );
         assert_eq!(summary.outcome_label, "needs_continuation");
         assert_eq!(summary.outcome_label(), "needs_continuation");
+        assert!(!summary.is_caught_up());
+        assert!(summary.needs_continuation());
+        assert!(!summary.needs_follow_up());
+        assert!(!summary.plan_diverged());
         assert_eq!(
             summary.scheduler_action,
             ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation
@@ -4322,6 +4390,14 @@ mod tests {
         );
         assert_eq!(summary.outcome_label, "plan_diverged");
         assert_eq!(summary.outcome_label(), "plan_diverged");
+        assert!(report.plan_diverged());
+        assert!(!report.is_caught_up());
+        assert!(!report.needs_continuation());
+        assert!(!report.needs_follow_up());
+        assert!(summary.plan_diverged());
+        assert!(!summary.is_caught_up());
+        assert!(!summary.needs_continuation());
+        assert!(!summary.needs_follow_up());
         assert_eq!(
             summary.scheduler_action,
             ToolAuditSupervisorDrainSchedulerAction::InvestigatePlanDrift

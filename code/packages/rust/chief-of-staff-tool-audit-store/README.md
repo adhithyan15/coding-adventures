@@ -50,6 +50,8 @@ The crate keeps the boundary narrow:
 - supervisor drain outcomes expose typed status helpers for host branching
 - supervisor drain outcomes expose scheduler-action labels and typed intent
   helpers for host scheduling decisions
+- supervisor drain reports and summaries expose outcome status helpers for host
+  branching
 - supervisor drain reports can emit flattened payload-free run summaries for
   host logs, schedulers, and continuation decisions
 - supervisor drain run summaries expose typed classifier accessors for host
