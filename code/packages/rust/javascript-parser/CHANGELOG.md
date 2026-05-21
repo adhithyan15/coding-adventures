@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.5.0] - 2026-05-21
+
+### Added
+- New dependencies on `coding_adventures_correlation_vector` (for `CVLog`, `Origin`) and `serde_json` (for contribution `meta` JSON values).
+- `pub struct ProgramWithCv { pub ast: GrammarASTNode, pub cv: String }` — packages a parsed AST with its program-root CV identifier.
+- `parse_javascript_with_cv(source, source_file, EsVersion, &mut CVLog) -> Result<ProgramWithCv, String>` — full CV-plumbed parse per CLOC03 §"Stage 2 — Parser" (v1: root-only). Behavior:
+  - Tokenizes via `tokenize_javascript_with_cv` so every token gets its own CV ID.
+  - Runs the underlying `GrammarParser` on the unwrapped tokens.
+  - Mints the program-root CV via `cv.merge(all_token_cv_ids, Origin{source: source_file, location: "0:0", …})` so the program CV has every token as an ancestor.
+  - Appends `Contribution { source: "parser", tag: "constructed", meta: { rule: <root rule name>, version: <es version> } }` per CLOC03.
+- Module docs added a "Correlation-vector plumbing" section linking to CLOC03 and noting that v1 is root-only.
+- 5 new tests:
+  - `parse_with_cv_assigns_a_program_id`
+  - `parse_with_cv_program_id_resolves_in_log` — `cv.get(id)` returns an entry whose `Origin.source = source_file` and `Origin.location = "0:0"`.
+  - `parse_with_cv_appends_constructed_contribution` — `cv.history(id)` contains a `(source="parser", tag="constructed")` entry whose meta carries the correct `rule` and `version`.
+  - `parse_with_cv_program_has_token_ancestors` — `cv.ancestors(id)` is non-empty (the merge step worked).
+  - `parse_with_cv_disabled_log_still_returns_ast` — `CVLog::new(false)` keeps the API shape; the parser does not panic and still returns a valid AST.
+
+### Notes
+- All existing APIs (string-based, typed, no-CV) are untouched. This PR is purely additive.
+- v1 is **root-only**: per-AST-node CV propagation requires deeper plumbing into `GrammarParser` (which today produces a generic `GrammarASTNode` tree, not the typed `javascript-ast::Program`). That work happens in a follow-up PR alongside the AST-typed parser output.
+- The merge approach (program CV inherits from all tokens) gives source-map generators a reasonable starting point even with root-only plumbing: every output byte that comes from the program node resolves to the leftmost token's `Origin`.
+
 ## [0.4.0] - 2026-05-21
 
 ### Added
