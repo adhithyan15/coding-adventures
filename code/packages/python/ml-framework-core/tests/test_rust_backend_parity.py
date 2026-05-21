@@ -204,5 +204,177 @@ class MatMulParityTests(unittest.TestCase):
         self._assert_close(rust_result.data, python_result.data)
 
 
+# ──────────────────────────────────────────────────────────────────
+# MX10 Phase 2 — elementwise op parity tests
+#
+# Same shape as the matmul tests: build a tensor large enough that
+# ``should_use_rust_for_elementwise`` fires (numel >= 100_000), run
+# the op via the public Tensor API (so the dispatch runs the same
+# code path real consumers see), then re-run with `_RUST_AVAILABLE
+# = False` and assert the two paths agree within f32 tolerance.
+# ──────────────────────────────────────────────────────────────────
+
+
+@unittest.skipUnless(
+    EXTENSION_AVAILABLE,
+    "matrix_rust_python C extension not installed; see parity-tests skip-reason.",
+)
+class ElementwiseParityTests(unittest.TestCase):
+    """Compare each elementwise op's Rust and pure-Python kernels head-to-head."""
+
+    # 100_000 cells exactly hits the threshold; pick a 2-D shape so
+    # the per-tensor shape round-trip stays interesting.
+    SHAPE = (500, 200)  # 100_000 cells
+
+    def _make_tensor(self, seed: int) -> "object":
+        """Build a deterministic random Tensor of self.SHAPE."""
+        import random
+
+        from ml_framework_core import Tensor
+
+        rng = random.Random(seed)
+        data = [rng.uniform(-1.0, 1.0) for _ in range(500 * 200)]
+        return Tensor(data, self.SHAPE)
+
+    def _assert_close(
+        self,
+        actual: list[float],
+        expected: list[float],
+        rtol: float = 1e-3,
+        atol: float = 1e-4,
+    ) -> None:
+        """Same f32-vs-double tolerance as the matmul tests.
+
+        Elementwise has less accumulation than matmul (1 op per cell
+        vs K), so the *absolute* error per cell is smaller.  But the
+        *relative* error formula divides by the result magnitude;
+        when the result lands on a small value (heavy cancellation
+        in a-b, or unbalanced inputs in a/b, or just unlucky random
+        zero-crossings) the denominator shrinks faster than the
+        numerator and the relative error spikes.
+
+        Empirically the largest relative errors are O(1e-4) for our
+        random-uniform inputs.  ``rtol=1e-3, atol=1e-4`` gives a
+        ~10x safety margin while still catching any real bug by
+        orders of magnitude."""
+        self.assertEqual(len(actual), len(expected))
+        for i, (a, e) in enumerate(zip(actual, expected, strict=False)):
+            denom = max(abs(a), abs(e), atol)
+            err = abs(a - e) / denom
+            self.assertLess(
+                err,
+                rtol,
+                f"index {i}: rust={a!r}, python={e!r}, relative error {err:.2e}",
+            )
+
+    def _binary_parity_check(self, op_name: str, op_fn, seed_a: int, seed_b: int) -> None:
+        """Helper: run a binary elementwise op through both paths and assert.
+
+        ``op_fn`` is a lambda that takes two Tensors and returns a Tensor
+        (e.g. ``lambda x, y: x + y``).
+        """
+        from ml_framework_core import _rust_backend
+
+        a = self._make_tensor(seed_a)
+        b = self._make_tensor(seed_b)
+
+        rust_result = op_fn(a, b)
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = op_fn(a, b)
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self.assertEqual(
+            rust_result.shape, self.SHAPE, f"{op_name}: rust output shape wrong"
+        )
+        self.assertEqual(
+            python_result.shape, self.SHAPE, f"{op_name}: python output shape wrong"
+        )
+        self._assert_close(rust_result.data, python_result.data)
+
+    def _unary_parity_check(self, op_name: str, op_fn, seed: int) -> None:
+        """Helper: run a unary elementwise op through both paths and assert."""
+        from ml_framework_core import _rust_backend
+
+        a = self._make_tensor(seed)
+
+        rust_result = op_fn(a)
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = op_fn(a)
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self.assertEqual(
+            rust_result.shape, self.SHAPE, f"{op_name}: rust output shape wrong"
+        )
+        self.assertEqual(
+            python_result.shape, self.SHAPE, f"{op_name}: python output shape wrong"
+        )
+        self._assert_close(rust_result.data, python_result.data)
+
+    def test_elementwise_dispatch_predicate_fires_at_threshold(self) -> None:
+        """The 100_000-cell threshold lets self.SHAPE use Rust."""
+        from ml_framework_core._rust_backend import should_use_rust_for_elementwise
+
+        self.assertTrue(
+            should_use_rust_for_elementwise(500 * 200),
+            "MX10 Phase 2 threshold should let 100_000 cells use Rust",
+        )
+
+    def test_add_parity(self) -> None:
+        """``a + b`` produces same result via Rust and pure-Python."""
+        self._binary_parity_check("Add", lambda a, b: a + b, seed_a=1, seed_b=2)
+
+    def test_sub_parity(self) -> None:
+        """``a - b`` produces same result via Rust and pure-Python."""
+        self._binary_parity_check("Sub", lambda a, b: a - b, seed_a=3, seed_b=4)
+
+    def test_mul_parity(self) -> None:
+        """``a * b`` produces same result via Rust and pure-Python."""
+        self._binary_parity_check("Mul", lambda a, b: a * b, seed_a=5, seed_b=6)
+
+    def test_div_parity(self) -> None:
+        """``a / b`` produces same result via Rust and pure-Python.
+
+        Use seeds that avoid producing values near zero in ``b`` so the
+        division stays well-conditioned and f32 quantization doesn't
+        blow up beyond our tolerance."""
+        # Build b separately so we can shift it away from zero.
+        import random
+
+        from ml_framework_core import Tensor, _rust_backend
+
+        rng = random.Random(7)
+        a_data = [rng.uniform(-1.0, 1.0) for _ in range(500 * 200)]
+        b_data = [rng.uniform(0.5, 1.5) for _ in range(500 * 200)]  # in [0.5, 1.5]
+        a = Tensor(a_data, self.SHAPE)
+        b = Tensor(b_data, self.SHAPE)
+
+        rust_result = a / b
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = a / b
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close(rust_result.data, python_result.data)
+
+    def test_neg_parity(self) -> None:
+        """``-a`` produces same result via Rust and pure-Python."""
+        self._unary_parity_check("Neg", lambda a: -a, seed=11)
+
+    def test_abs_parity(self) -> None:
+        """``a.abs()`` produces same result via Rust and pure-Python."""
+        # Tensor has an .abs() method that calls AbsFunction.
+        self._unary_parity_check("Abs", lambda a: a.abs(), seed=13)
+
+
 if __name__ == "__main__":
     unittest.main()

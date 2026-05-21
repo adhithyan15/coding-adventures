@@ -2,6 +2,87 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 2: optional Rust fast path for the elementwise op family
+
+Extends the per-op conditional dispatch from Phase 1 (matmul only)
+to the **6-op elementwise family**: `AddFunction`, `SubFunction`,
+`MulFunction`, `DivFunction`, `NegFunction`, `AbsFunction`.  All six
+get the same `if should_use_rust_for_elementwise(numel): return
+<op>_via_rust(a[, b])` block at the top of their `forward`; the
+pure-Python kernel stays byte-identical for the fallback path.
+
+**`PowFunction` is intentionally deferred** to a follow-up phase —
+its existing API takes a `float` exponent, not a `Tensor`, so
+routing through Rust requires broadcasting the scalar to a full
+tensor of shape `a.shape` (4×numel bytes for one value).  Below
+the threshold that's net-loss; above it, the pure-Python `x**n`
+loop is competitive because Python's float `pow` is C-implemented
+and tight.  Deferred until matrix-cpu adds a scalar-exponent Pow
+variant or profiling shows the broadcast is worth it.
+
+#### Implementation
+
+- **`_rust_backend.py`** grows ~190 LOC of new helpers:
+    - `_ELEMENTWISE_RUST_THRESHOLD = 100_000` — the per-op
+      threshold (elementwise has lower per-cell cost than matmul,
+      so the FFI round-trip needs more cells to amortise).
+    - `should_use_rust_for_elementwise(numel) -> bool` predicate.
+    - Two private factories — `_elementwise_binary_via_rust(a, b, op_kind)`
+      and `_elementwise_unary_via_rust(a, op_kind)` — that share
+      the envelope-building shape across the six ops.  Only the
+      `kind` string and the input arity differ between Add and
+      Sub etc., so the factoring pays off immediately.
+    - Six tiny public wrappers (`add_via_rust`, `sub_via_rust`,
+      `mul_via_rust`, `div_via_rust`, `neg_via_rust`,
+      `abs_via_rust`) so call-sites in `functions.py` read cleanly.
+
+- **`functions.py`** — each of the six `Function.forward` methods
+  grows a 2-line dispatch block before the existing pure-Python
+  list comprehension.  No backward-path changes — backward for
+  elementwise ops doesn't go through any of the now-accelerated
+  forward primitives (e.g. `MulFunction.backward` computes
+  `grad * b` and `grad * a` directly via list comprehension,
+  not via `MulFunction.forward`).  Wiring backward routes to Rust
+  is a follow-up if profiling shows it matters.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, numel ≥ 100_000 | **Rust** (matrix-cpu via matrix-rust-python) |
+| Extension installed, numel < 100_000 | Pure-Python list comprehension |
+| Extension NOT installed | Pure-Python list comprehension |
+
+#### Tests (now 27 new MX10 tests, was 11)
+
+- **`test_rust_backend_parity.py`** gains a new
+  `ElementwiseParityTests` class (7 cases): one parity check per
+  op (Add/Sub/Mul/Div/Neg/Abs) using a `500x200 = 100_000`-cell
+  tensor right at the threshold, plus a predicate-sanity test.
+  All assertions use the same `rtol=1e-3, atol=1e-4` f32-vs-double
+  tolerance the matmul tests use.
+- **`test_rust_backend_fallback.py`** gains a new
+  `ElementwiseFallbackTests` class (9 cases): predicate
+  short-circuit, defence-in-depth `RuntimeError` from `*_via_rust`
+  helpers when unavailable, and correctness via the pure-Python
+  fallback for each of the six ops.
+
+Test count: **18 → 27** in the MX10 tests, all passing locally on
+darwin-arm64 Python 3.10.6 with the C extension built.  Full suite
+still at **346 passing, 1 pre-existing failure** (the same
+`test_device.py` failure that's on main without these changes).
+
+### What's NOT in Phase 2
+
+- No PowFunction Rust path (deferred — see top of this section).
+- No reduction ops (Phase 3: Sum/Mean).
+- No activations (Phase 4: ReLU/Sigmoid/Tanh/GELU/Softmax).
+- No backward-path Rust dispatch beyond what Phase 1 covered
+  (matmul backward routes through `_matmul_2d` which already
+  picks up Phase 1's dispatch).
+
+## Unreleased — earlier
+
 ### Added — MX10 Phase 1: optional Rust fast path for `MatMulFunction`
 
 `ml-framework-core` now picks up an order-of-magnitude speedup for

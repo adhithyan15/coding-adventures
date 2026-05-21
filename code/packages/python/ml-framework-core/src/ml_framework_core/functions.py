@@ -43,7 +43,17 @@ from __future__ import annotations
 
 import math
 
-from ._rust_backend import matmul_via_rust, should_use_rust_for_matmul
+from ._rust_backend import (
+    abs_via_rust,
+    add_via_rust,
+    div_via_rust,
+    matmul_via_rust,
+    mul_via_rust,
+    neg_via_rust,
+    should_use_rust_for_elementwise,
+    should_use_rust_for_matmul,
+    sub_via_rust,
+)
 from .autograd import Function
 from .tensor import Tensor, _compute_strides, _numel
 
@@ -61,6 +71,9 @@ class AddFunction(Function):
 
     def forward(self, a: Tensor, b: Tensor) -> Tensor:
         self.save_for_backward(a, b)
+        # MX10 Phase 2 — optional Rust fast path (elementwise).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return add_via_rust(a, b)
         data = [x + y for x, y in zip(a.data, b.data, strict=False)]
         return Tensor(data, a.shape, device=a.device)
 
@@ -79,6 +92,9 @@ class SubFunction(Function):
 
     def forward(self, a: Tensor, b: Tensor) -> Tensor:
         self.save_for_backward(a, b)
+        # MX10 Phase 2 — optional Rust fast path (elementwise).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return sub_via_rust(a, b)
         data = [x - y for x, y in zip(a.data, b.data, strict=False)]
         return Tensor(data, a.shape, device=a.device)
 
@@ -102,6 +118,9 @@ class MulFunction(Function):
 
     def forward(self, a: Tensor, b: Tensor) -> Tensor:
         self.save_for_backward(a, b)
+        # MX10 Phase 2 — optional Rust fast path (elementwise).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return mul_via_rust(a, b)
         data = [x * y for x, y in zip(a.data, b.data, strict=False)]
         return Tensor(data, a.shape, device=a.device)
 
@@ -137,6 +156,9 @@ class DivFunction(Function):
 
     def forward(self, a: Tensor, b: Tensor) -> Tensor:
         self.save_for_backward(a, b)
+        # MX10 Phase 2 — optional Rust fast path (elementwise).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return div_via_rust(a, b)
         data = [x / y for x, y in zip(a.data, b.data, strict=False)]
         return Tensor(data, a.shape, device=a.device)
 
@@ -174,6 +196,9 @@ class NegFunction(Function):
 
     def forward(self, a: Tensor) -> Tensor:
         self.save_for_backward(a)
+        # MX10 Phase 2 — optional Rust fast path (unary elementwise).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return neg_via_rust(a)
         data = [-x for x in a.data]
         return Tensor(data, a.shape, device=a.device)
 
@@ -597,6 +622,9 @@ class AbsFunction(Function):
 
     def forward(self, a: Tensor) -> Tensor:
         self.save_for_backward(a)
+        # MX10 Phase 2 — optional Rust fast path (unary elementwise).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return abs_via_rust(a)
         data = [abs(x) for x in a.data]
         return Tensor(data, a.shape, device=a.device)
 
