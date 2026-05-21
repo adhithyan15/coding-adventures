@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.77.0] - 2026-05-21
+
+### Added
+
+- End-to-end support for the five SQLite bitwise operators
+  (`&`, `|`, `<<`, `>>`, `~`).  All five thread through every layer of
+  the pipeline (lexer → parser → adapter → planner → optimizer →
+  codegen → VM) with byte-identical results vs. stdlib `sqlite3`:
+  - 64-bit two's-complement wrap (`1 << 63` → `-9223372036854775808`).
+  - Shift saturation at ±64 bits.
+  - Negative shift counts flip direction (`a << -k` ≡ `a >> k`).
+  - Float operands truncate toward zero before the op runs.
+  - NULL propagation through all five operators.
+- 46 oracle tests in `tests/test_tier3_bitwise_operators.py` covering
+  literal folding, column references, precedence (`& | << >>` bind
+  looser than arithmetic, tighter than comparison), float coercion,
+  NULL propagation, and use in WHERE clauses.
+
+### Changed
+
+- The `_comparison` adapter helper now descends through `bitwise` nodes
+  rather than `additive` ones, matching the new grammar precedence
+  layer.  Five call sites updated (cmp_op, BETWEEN, LIKE/ESCAPE, GLOB,
+  IS DISTINCT FROM).
+- `_unary` learned the `~` prefix, producing `UnaryExpr(BIT_NOT, ...)`
+  at the same precedence as unary `-`.
+
 ## [1.76.0] - 2026-05-21
 
 ### Added

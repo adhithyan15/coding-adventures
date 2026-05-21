@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.36.0] - 2026-05-21
+
+### Added
+
+- Five new bitwise operator variants in the expression AST so plans can
+  represent SQLite's bitwise operators end-to-end:
+  - `BinaryOp.BIT_AND` (`&`), `BinaryOp.BIT_OR` (`|`),
+    `BinaryOp.BIT_SHL` (`<<`), `BinaryOp.BIT_SHR` (`>>`).
+  - `UnaryOp.BIT_NOT` (`~`).
+
+  Plans built by upstream code continue to compare/hash identically;
+  callers that pattern-match on `BinaryOp`/`UnaryOp` should add cases
+  for the new variants (the match is non-exhaustive otherwise).
+
 ## [0.35.0] - 2026-05-21
 
 ### Changed

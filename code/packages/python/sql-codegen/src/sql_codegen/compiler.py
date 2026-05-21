@@ -1793,6 +1793,10 @@ _BINOP_MAP = {
     AstBinaryOp.CONCAT: BinaryOpCode.CONCAT,  # SQL || string concatenation
     AstBinaryOp.IS_DISTINCT_FROM: BinaryOpCode.IS_DISTINCT_FROM,
     AstBinaryOp.IS_NOT_DISTINCT_FROM: BinaryOpCode.IS_NOT_DISTINCT_FROM,
+    AstBinaryOp.BIT_AND: BinaryOpCode.BIT_AND,
+    AstBinaryOp.BIT_OR: BinaryOpCode.BIT_OR,
+    AstBinaryOp.BIT_SHL: BinaryOpCode.BIT_SHL,
+    AstBinaryOp.BIT_SHR: BinaryOpCode.BIT_SHR,
 }
 
 
@@ -1803,6 +1807,8 @@ def _binop_to_ir(op: AstBinaryOp) -> BinaryOpCode:
 def _unop_to_ir(op: AstUnaryOp) -> UnaryOpCode:
     if op is AstUnaryOp.NEG:
         return UnaryOpCode.NEG
+    if op is AstUnaryOp.BIT_NOT:
+        return UnaryOpCode.BIT_NOT
     return UnaryOpCode.NOT
 
 

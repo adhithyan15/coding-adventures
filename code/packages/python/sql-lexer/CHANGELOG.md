@@ -2,6 +2,18 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.23.0] - 2026-05-21
+
+### Added
+
+- Five new bitwise operator tokens matching SQLite syntax:
+  - `BIT_AND_OP` (`&`), `BIT_OR_OP` (`|`), `BIT_NOT_OP` (`~`) — single-character.
+  - `SHIFT_LEFT` (`<<`), `SHIFT_RIGHT` (`>>`) — declared *before* the
+    single-character `<` and `>` so the longest-match rule picks them up
+    instead of producing two adjacent comparison tokens.
+- Regenerated `_grammar.py` table so downstream consumers see the new
+  token kinds without rebuilding grammar-tools.
+
 ## [0.22.0] - 2026-05-19
 
 ### Added

@@ -68,6 +68,13 @@ class BinaryOp(Enum):
     # are equal or both NULL.
     IS_DISTINCT_FROM = "IS DISTINCT FROM"
     IS_NOT_DISTINCT_FROM = "IS NOT DISTINCT FROM"
+    # Bitwise operators — match SQLite's operator names.  Operate on
+    # integers (floats truncate toward zero first); NULL on either side
+    # yields NULL.
+    BIT_AND = "&"
+    BIT_OR = "|"
+    BIT_SHL = "<<"
+    BIT_SHR = ">>"
 
 
 class UnaryOp(Enum):
@@ -75,6 +82,7 @@ class UnaryOp(Enum):
 
     NOT = "NOT"
     NEG = "-"
+    BIT_NOT = "~"  # Bitwise NOT (~); inverts bits, NULL → NULL.
 
 
 class AggFunc(Enum):

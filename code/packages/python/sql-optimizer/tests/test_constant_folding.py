@@ -201,3 +201,103 @@ class TestFoldsAcrossPlanNodes:
         )
         out = ConstantFolding()(p)
         assert out.items[0].expr == Literal(2)
+
+
+# ---------------------------------------------------------------------------
+# Bitwise operators — &, |, <<, >>, ~.  See sql_vm.operators for the
+# matching VM semantics; the folder must agree byte-for-byte on every
+# literal input so query plans don't drift between code paths.
+# ---------------------------------------------------------------------------
+
+
+class TestBitwiseFolding:
+    def test_and(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_AND, left=Literal(5), right=Literal(3))
+        assert fold_expr(e) == Literal(1)
+
+    def test_or(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_OR, left=Literal(5), right=Literal(3))
+        assert fold_expr(e) == Literal(7)
+
+    def test_shl_basic(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_SHL, left=Literal(1), right=Literal(4))
+        assert fold_expr(e) == Literal(16)
+
+    def test_shl_wraps_at_64(self) -> None:
+        # 1 << 63 wraps to -2**63 in 64-bit signed two's complement.
+        e = BinaryExpr(op=BinaryOp.BIT_SHL, left=Literal(1), right=Literal(63))
+        assert fold_expr(e) == Literal(-(2**63))
+
+    def test_shl_saturates(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_SHL, left=Literal(1), right=Literal(64))
+        assert fold_expr(e) == Literal(0)
+
+    def test_shl_negative_count(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_SHL, left=Literal(16), right=Literal(-2))
+        assert fold_expr(e) == Literal(4)
+
+    def test_shl_far_negative(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_SHL, left=Literal(16), right=Literal(-100))
+        assert fold_expr(e) == Literal(0)
+        e2 = BinaryExpr(op=BinaryOp.BIT_SHL, left=Literal(-1), right=Literal(-100))
+        assert fold_expr(e2) == Literal(-1)
+
+    def test_shr_basic(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_SHR, left=Literal(16), right=Literal(2))
+        assert fold_expr(e) == Literal(4)
+
+    def test_shr_arithmetic(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_SHR, left=Literal(-8), right=Literal(1))
+        assert fold_expr(e) == Literal(-4)
+
+    def test_shr_saturates_positive(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_SHR, left=Literal(123), right=Literal(64))
+        assert fold_expr(e) == Literal(0)
+
+    def test_shr_saturates_negative(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_SHR, left=Literal(-1), right=Literal(64))
+        assert fold_expr(e) == Literal(-1)
+
+    def test_shr_negative_count(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_SHR, left=Literal(4), right=Literal(-2))
+        assert fold_expr(e) == Literal(16)
+
+    def test_shr_far_negative_count(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_SHR, left=Literal(4), right=Literal(-100))
+        assert fold_expr(e) == Literal(0)
+
+    def test_not_unary(self) -> None:
+        e = UnaryExpr(op=UnaryOp.BIT_NOT, operand=Literal(5))
+        assert fold_expr(e) == Literal(-6)
+
+    def test_not_neg_one(self) -> None:
+        e = UnaryExpr(op=UnaryOp.BIT_NOT, operand=Literal(-1))
+        assert fold_expr(e) == Literal(0)
+
+    def test_not_float_truncates(self) -> None:
+        e = UnaryExpr(op=UnaryOp.BIT_NOT, operand=Literal(5.9))
+        assert fold_expr(e) == Literal(-6)
+
+    def test_not_null_propagates(self) -> None:
+        e = UnaryExpr(op=UnaryOp.BIT_NOT, operand=Literal(None))
+        assert fold_expr(e) == Literal(None)
+
+    def test_not_with_bool_not_folded(self) -> None:
+        # bool ~ is implementation-defined — folder leaves it for the VM.
+        e = UnaryExpr(op=UnaryOp.BIT_NOT, operand=Literal(True))
+        assert fold_expr(e) == e
+
+    def test_null_propagation_binary(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_AND, left=Literal(None), right=Literal(3))
+        assert fold_expr(e) == Literal(None)
+
+    def test_column_not_folded(self) -> None:
+        e = BinaryExpr(op=BinaryOp.BIT_AND, left=Column("t", "x"), right=Literal(3))
+        assert fold_expr(e) == e
+
+    def test_string_operand_not_folded(self) -> None:
+        # _apply_binary raises TypeError for string operands, so the
+        # folder catches it and leaves the expression intact for the VM
+        # to report at runtime.
+        e = BinaryExpr(op=BinaryOp.BIT_AND, left=Literal("foo"), right=Literal(3))
+        assert fold_expr(e) == e

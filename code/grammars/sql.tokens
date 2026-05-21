@@ -37,6 +37,11 @@ NOT_EQUALS     = "!="
 NEQ_ANSI       = "<>" -> NOT_EQUALS
 CONCAT_OP      = "||"
 
+# Bitwise shift operators — must be matched before the single-character
+# ``<`` and ``>`` for longest-match semantics.
+SHIFT_LEFT     = "<<"
+SHIFT_RIGHT    = ">>"
+
 # JSON path-shortcut operators (SQLite 3.38+).  ->> must be matched before
 # -> for longest-match.  Both are binary operators with their own precedence
 # (between PRIMARY and the unary minus, per SQLite).
@@ -53,6 +58,12 @@ MINUS         = "-"
 STAR          = "*"
 SLASH         = "/"
 PERCENT       = "%"
+
+# Bitwise operators — &, |, ~ (binary AND/OR and unary NOT).  All three are
+# single-character tokens; no longest-match conflict to worry about.
+BIT_AND_OP    = "&"
+BIT_OR_OP     = "|"
+BIT_NOT_OP    = "~"
 
 LPAREN        = "("
 RPAREN        = ")"
