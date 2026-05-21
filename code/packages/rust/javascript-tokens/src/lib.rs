@@ -27,10 +27,11 @@
 //! - [`Span`] — a `{ start, end }` byte-offset range. Used by the lexer to
 //!   record where each token came from in the source, and by the AST and
 //!   correlation-vector layers to anchor everything back to bytes.
-//!
-//! A full `TokenKind` enum (covering every token kind from `NAME` through
-//! `OPTIONAL_CHAIN` and the template-literal groups) is a follow-up PR; it
-//! will share the same crate.
+//! - [`TokenKind`] — the broad cross-version classification of every JS
+//!   token (`Name`, `Number`, `String`, `Regex`, `Template*`, `BigInt`,
+//!   `PrivateName`, `Keyword`, `Operator`, `Punctuation`, trivia, …). Use
+//!   the `Other(String)` variant when a consumer needs the exact
+//!   grammar-driven name (e.g. `"OPTIONAL_CHAIN"`).
 
 use std::fmt;
 use std::str::FromStr;
@@ -226,6 +227,94 @@ impl Span {
     }
 }
 
+/// The broad classification of a JavaScript / TypeScript token.
+///
+/// This enum names the **categories** common to every ES edition under
+/// `code/grammars/ecmascript/` — `Name`, `Number`, `String`, etc. — plus
+/// a few that only appear from a specific edition onward (`Regex` from
+/// ES3, `Template*` from ES2015, `BigInt` from ES2020, `PrivateName`
+/// from ES2022, `Hashbang` from ES2023). It is intentionally **not** an
+/// exhaustive list of every operator and punctuation lexeme; per-version
+/// token names (e.g. `OPTIONAL_CHAIN`, `STAR_STAR_EQUALS`) live in the
+/// individual `.tokens` grammar files and can be carried via
+/// [`TokenKind::Other`] when a consumer needs the exact name.
+///
+/// Per [CLOC02](../../specs/CLOC02-javascript-ast.md), this type belongs
+/// here in `javascript-tokens` so that every downstream consumer — the
+/// lexer, parser, AST, future V8 clone, IDE tooling — can talk about
+/// token kinds without depending on any particular layer above.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum TokenKind {
+    /// An identifier (`foo`, `_bar`, `$baz`).
+    Name,
+    /// A numeric literal (`42`, `3.14`, `0xFF`, `1_000`).
+    Number,
+    /// A string literal (single- or double-quoted).
+    String,
+    /// A regular-expression literal (ES3+).
+    Regex,
+    /// A complete template literal with no substitutions: `` `hello` ``
+    /// (ES2015+).
+    TemplateNoSub,
+    /// The opening chunk of a template with substitutions: `` `hello${ ``
+    /// (ES2015+).
+    TemplateHead,
+    /// A middle chunk between substitutions: `` }middle${ `` (ES2015+).
+    TemplateMiddle,
+    /// The closing chunk of a template: `` }end` `` (ES2015+).
+    TemplateTail,
+    /// A `BigInt` literal: `42n`, `0xFFn` (ES2020+).
+    BigInt,
+    /// A private class member name: `#count` (ES2022+).
+    PrivateName,
+    /// A reserved keyword (`var`, `let`, `class`, `async`, …).
+    Keyword,
+    /// An operator (`+`, `=>`, `?.`, `||=`, …). Use [`TokenKind::Other`]
+    /// when the specific operator name from the grammar matters.
+    Operator,
+    /// A punctuation symbol (`(`, `)`, `{`, `}`, `[`, `]`, `,`, `;`, `:`).
+    Punctuation,
+    /// A line or block comment. Treated as trivia by [`TokenKind::is_trivia`].
+    Comment,
+    /// A run of inter-token whitespace. Trivia.
+    Whitespace,
+    /// A line terminator. Trivia. Carried as its own variant (separately
+    /// from `Whitespace`) because ASI cares about newlines.
+    Newline,
+    /// A `#!` shebang at the very start of a module (ES2023+).
+    Hashbang,
+    /// A lexer error token (e.g. unterminated string).
+    Error,
+    /// The end-of-input sentinel.
+    Eof,
+    /// Catch-all for grammar-driven tokens whose specific name doesn't
+    /// fit any of the variants above. The wrapped `String` is the token
+    /// name from the `.tokens` file (e.g. `"OPTIONAL_CHAIN"`,
+    /// `"STAR_STAR_EQUALS"`).
+    Other(std::string::String),
+}
+
+impl TokenKind {
+    /// Returns `true` for token kinds that the parser typically skips:
+    /// [`Comment`](TokenKind::Comment), [`Whitespace`](TokenKind::Whitespace),
+    /// and [`Newline`](TokenKind::Newline).
+    ///
+    /// Note that `Newline` is sometimes *not* skipped — ASI implementations
+    /// need to observe newlines to decide whether to insert a semicolon.
+    /// The "trivia" classification here is a hint, not a hard rule.
+    pub fn is_trivia(&self) -> bool {
+        matches!(
+            self,
+            TokenKind::Comment | TokenKind::Whitespace | TokenKind::Newline
+        )
+    }
+
+    /// Returns `true` for the end-of-input sentinel.
+    pub fn is_eof(&self) -> bool {
+        matches!(self, TokenKind::Eof)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -351,5 +440,88 @@ mod tests {
         assert!(Span::new(0, 5) < Span::new(0, 6));
         assert!(Span::new(0, 5) < Span::new(1, 2));
         assert!(Span::new(5, 10) > Span::new(5, 5));
+    }
+
+    // ----- TokenKind tests -----
+
+    /// Every variant must be classified explicitly here. If a future PR
+    /// adds a new variant, the compiler will force this match to be
+    /// updated (because we use the exhaustive form), which in turn forces
+    /// a conscious decision about whether the new kind is trivia.
+    #[test]
+    fn token_kind_is_trivia_exhaustive() {
+        // Match every variant explicitly so adding a new one breaks
+        // compilation and forces an update here.
+        let cases: &[(TokenKind, bool)] = &[
+            (TokenKind::Name, false),
+            (TokenKind::Number, false),
+            (TokenKind::String, false),
+            (TokenKind::Regex, false),
+            (TokenKind::TemplateNoSub, false),
+            (TokenKind::TemplateHead, false),
+            (TokenKind::TemplateMiddle, false),
+            (TokenKind::TemplateTail, false),
+            (TokenKind::BigInt, false),
+            (TokenKind::PrivateName, false),
+            (TokenKind::Keyword, false),
+            (TokenKind::Operator, false),
+            (TokenKind::Punctuation, false),
+            (TokenKind::Comment, true),
+            (TokenKind::Whitespace, true),
+            (TokenKind::Newline, true),
+            (TokenKind::Hashbang, false),
+            (TokenKind::Error, false),
+            (TokenKind::Eof, false),
+            (TokenKind::Other("anything".to_string()), false),
+        ];
+        for (kind, expected) in cases {
+            assert_eq!(
+                kind.is_trivia(),
+                *expected,
+                "is_trivia disagrees for {:?}",
+                kind
+            );
+        }
+    }
+
+    #[test]
+    fn token_kind_is_eof_only_for_eof() {
+        assert!(TokenKind::Eof.is_eof());
+        assert!(!TokenKind::Name.is_eof());
+        assert!(!TokenKind::Newline.is_eof());
+        assert!(!TokenKind::Other("EOF".to_string()).is_eof());
+    }
+
+    #[test]
+    fn token_kind_equality() {
+        assert_eq!(TokenKind::Name, TokenKind::Name);
+        assert_ne!(TokenKind::Name, TokenKind::Number);
+        assert_eq!(
+            TokenKind::Other("X".to_string()),
+            TokenKind::Other("X".to_string())
+        );
+        assert_ne!(
+            TokenKind::Other("X".to_string()),
+            TokenKind::Other("Y".to_string())
+        );
+    }
+
+    #[test]
+    fn token_kind_usable_as_hashmap_key() {
+        use std::collections::HashMap;
+        let mut counts: HashMap<TokenKind, u32> = HashMap::new();
+        *counts.entry(TokenKind::Name).or_insert(0) += 1;
+        *counts.entry(TokenKind::Name).or_insert(0) += 1;
+        *counts.entry(TokenKind::Number).or_insert(0) += 1;
+        *counts
+            .entry(TokenKind::Other("FOO".to_string()))
+            .or_insert(0) += 5;
+        assert_eq!(counts.get(&TokenKind::Name), Some(&2));
+        assert_eq!(counts.get(&TokenKind::Number), Some(&1));
+        assert_eq!(
+            counts.get(&TokenKind::Other("FOO".to_string())),
+            Some(&5)
+        );
+        assert_eq!(counts.get(&TokenKind::Other("BAR".to_string())), None);
     }
 }
