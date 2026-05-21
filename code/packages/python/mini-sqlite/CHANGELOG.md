@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.76.0] - 2026-05-21
+
+### Added
+
+- **Optional alias for derived tables** (via ``sql-parser 0.30.0`` +
+  ``sql-planner 0.35.0``).  ``SELECT * FROM (SELECT 1 AS x)`` and
+  similar bare-derived-table forms are now accepted; the previous
+  ``derived table requires an alias`` adapter error is gone.  Combined
+  with PR #3817 (compound queries in derived tables), the
+  derived-table feature now fully matches SQLite's syntax and
+  semantics.
+
+  14 oracle tests in ``test_tier3_derived_optional_alias.py`` covering:
+  - No-alias variants with SELECT * / unqualified column / ORDER BY /
+    outer aggregate / outer filter / compound inner query.
+  - Aliased forms still work (with/without AS, qualified column refs).
+  - JOIN positions with aliased sides and compound inner queries.
+  - Real tables providing rows through an unaliased derived table.
+
 ## [1.75.0] - 2026-05-21
 
 ### Added

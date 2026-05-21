@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.35.0] - 2026-05-21
+
+### Changed
+
+- **``DerivedTableRef.alias`` is now ``str | None``** — SQLite allows
+  unaliased derived tables (``SELECT * FROM (SELECT 1)``) and the
+  planner now accepts the absent alias.  When ``alias is None`` the
+  planner synthesises a unique sentinel name of the form
+  ``<derived #hex>`` for scope/cursor registration.  The sentinel
+  starts with ``<`` so it can never collide with a user-supplied
+  identifier (which must be ASCII alphanumerics + underscore).
+
 ## [0.34.0] - 2026-05-21
 
 ### Added

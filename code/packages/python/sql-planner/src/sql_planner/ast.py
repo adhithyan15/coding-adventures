@@ -114,7 +114,7 @@ class DerivedTableRef:
     """
 
     select: SelectStmt | UnionStmt | IntersectStmt | ExceptStmt
-    alias: str
+    alias: str | None
 
 
 @dataclass(frozen=True, slots=True)

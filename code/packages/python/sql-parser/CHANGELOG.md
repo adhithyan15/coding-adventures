@@ -2,6 +2,16 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.30.0] - 2026-05-21
+
+### Changed
+
+- **Derived-table alias is now optional** in ``table_ref``.  The
+  grammar rule changes from ``"(" query_stmt ")" [ "AS" ] NAME`` to
+  ``"(" query_stmt ")" [ [ "AS" ] NAME ]`` so SQLite-style bare
+  derived tables such as ``SELECT * FROM (SELECT 1 AS x)`` parse
+  successfully.  Regenerated ``_grammar.py``.
+
 ## [0.29.0] - 2026-05-19
 
 ### Added
