@@ -286,6 +286,13 @@ def default_checks() -> list[FixtureCheck]:
             ),
         ),
         FixtureCheck(
+            "whatwg-parser-audit-rust-tests",
+            (
+                str(PARSER_FIXTURE_DIR / "check_whatwg_audit_rust_tests.py"),
+                "--check",
+            ),
+        ),
+        FixtureCheck(
             "whatwg-parser-audit-manifest",
             (
                 str(PARSER_FIXTURE_DIR / "check_whatwg_audit_manifest.py"),

@@ -16,6 +16,14 @@ python3 code/packages/rust/html-parser/tests/fixtures/check_html5lib_tree_constr
   --check
 ```
 
+Validate that every focused WHATWG parser audit fixture has a matching Rust
+test that parses the fixture and replays the cases through the DOM-dump harness:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/check_whatwg_audit_rust_tests.py \
+  --check
+```
+
 `audit_html5lib_coverage.py` compares this fixture and the sibling lexer
 html5lib fixtures against an upstream html5lib-tests checkout by source
 signature:
