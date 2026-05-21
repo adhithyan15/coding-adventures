@@ -23,8 +23,8 @@ use board_vm_host::{
 };
 use board_vm_language_core::{
     bluetooth_transact_wire_frame, parse_bluetooth_endpoint as parse_language_bluetooth_endpoint,
-    serial_runtime_open_plan_for_target, LanguageSerialRuntimeOpenPlan,
-    LANGUAGE_SERIAL_OPEN_SETTLE_MS,
+    parse_serial_endpoint as parse_language_serial_endpoint, serial_runtime_open_plan_for_target,
+    LanguageSerialRuntimeOpenPlan, LANGUAGE_SERIAL_OPEN_SETTLE_MS,
 };
 use board_vm_language_core::{detect_target, discover_devices, LanguageHostDevice};
 use board_vm_protocol::{
@@ -1548,7 +1548,11 @@ where
 #[cfg(test)]
 fn repl_connection_label(options: &ReplOptions) -> String {
     if let Some(endpoint) = options.endpoint.as_deref() {
-        return format!("endpoint={endpoint}");
+        return endpoint_connection_label(
+            endpoint,
+            endpoint_transport(endpoint).expect("test repl endpoint should be valid"),
+            options.baud_rate,
+        );
     }
     match options.port.as_deref() {
         Some(port) => format!("port={port} baud={}", options.baud_rate),
@@ -1569,7 +1573,11 @@ fn smoke_connection_transport(options: &SmokeOptions) -> SmokeConnectionTranspor
 #[cfg(test)]
 fn smoke_connection_label(options: &SmokeOptions) -> String {
     if let Some(endpoint) = options.endpoint.as_deref() {
-        return format!("endpoint={endpoint}");
+        return endpoint_connection_label(
+            endpoint,
+            endpoint_transport(endpoint).expect("test smoke endpoint should be valid"),
+            options.baud_rate,
+        );
     }
     match options.port.as_deref() {
         Some(port) => format!("port={port} baud={}", options.baud_rate),
@@ -1592,7 +1600,11 @@ fn bootloader_reboot_connection_transport(
 #[cfg(test)]
 fn bootloader_reboot_connection_label(options: &BootloaderRebootOptions) -> String {
     if let Some(endpoint) = options.endpoint.as_deref() {
-        return format!("endpoint={endpoint}");
+        return endpoint_connection_label(
+            endpoint,
+            endpoint_transport(endpoint).expect("test bootloader endpoint should be valid"),
+            options.baud_rate,
+        );
     }
     match options.port.as_deref() {
         Some(port) => format!("port={port} baud={}", options.baud_rate),
@@ -1605,11 +1617,19 @@ fn open_smoke_transport(
 ) -> Result<(SmokeConnectionTransport, String, SessionTransport), CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
-        let connection_transport = SmokeConnectionTransport::from(endpoint_transport(endpoint)?);
-        let transport = open_endpoint_transport(endpoint, &options.tcp_config(endpoint))?;
+        let endpoint_transport = endpoint_transport(endpoint)?;
+        let connection_transport = SmokeConnectionTransport::from(endpoint_transport);
+        let transport = open_endpoint_transport(
+            endpoint,
+            endpoint_transport,
+            &options.board,
+            options.baud_rate,
+            options.timeout_ms,
+            &options.tcp_config(endpoint),
+        )?;
         return Ok((
             connection_transport,
-            format!("endpoint={endpoint}"),
+            endpoint_connection_label(endpoint, endpoint_transport, options.baud_rate),
             transport,
         ));
     }
@@ -1632,11 +1652,19 @@ fn open_bootloader_reboot_transport(
 ) -> Result<(SmokeConnectionTransport, String, SessionTransport), CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
-        let connection_transport = SmokeConnectionTransport::from(endpoint_transport(endpoint)?);
-        let transport = open_endpoint_transport(endpoint, &options.tcp_config(endpoint))?;
+        let endpoint_transport = endpoint_transport(endpoint)?;
+        let connection_transport = SmokeConnectionTransport::from(endpoint_transport);
+        let transport = open_endpoint_transport(
+            endpoint,
+            endpoint_transport,
+            &options.board,
+            options.baud_rate,
+            options.timeout_ms,
+            &options.tcp_config(endpoint),
+        )?;
         return Ok((
             connection_transport,
-            format!("endpoint={endpoint}"),
+            endpoint_connection_label(endpoint, endpoint_transport, options.baud_rate),
             transport,
         ));
     }
@@ -1657,8 +1685,19 @@ fn open_bootloader_reboot_transport(
 fn open_repl_transport(options: &ReplOptions) -> Result<(String, SessionTransport), CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
-        let transport = open_endpoint_transport(endpoint, &options.tcp_config(endpoint))?;
-        return Ok((format!("endpoint={endpoint}"), transport));
+        let endpoint_transport = endpoint_transport(endpoint)?;
+        let transport = open_endpoint_transport(
+            endpoint,
+            endpoint_transport,
+            &options.board,
+            options.baud_rate,
+            options.timeout_ms,
+            &options.tcp_config(endpoint),
+        )?;
+        return Ok((
+            endpoint_connection_label(endpoint, endpoint_transport, options.baud_rate),
+            transport,
+        ));
     }
 
     open_serial_session_transport(
@@ -1700,9 +1739,25 @@ fn ensure_endpoint_not_mixed_with_port(port: Option<&str>) -> Result<(), CliErro
 
 fn open_endpoint_transport(
     endpoint: &str,
+    endpoint_transport: SessionEndpointTransport,
+    board: &str,
+    baud_rate: u32,
+    timeout_ms: u64,
     tcp_config: &TcpConfig,
 ) -> Result<SessionTransport, CliError> {
-    match endpoint_transport(endpoint)? {
+    match endpoint_transport {
+        SessionEndpointTransport::Serial => {
+            let serial_endpoint = parse_language_serial_endpoint(endpoint).ok_or_else(|| {
+                CliError::DeviceSelection(format!("invalid Board VM serial endpoint: {endpoint}"))
+            })?;
+            let (_, transport) = open_serial_session_transport(
+                Some(&serial_endpoint.port),
+                board,
+                baud_rate,
+                timeout_ms,
+            )?;
+            Ok(transport)
+        }
         SessionEndpointTransport::Tcp => Ok(SessionTransport::Tcp(
             BoardTcpTransport::<_, 1024>::connect(tcp_config)?,
         )),
@@ -1715,6 +1770,7 @@ fn open_endpoint_transport(
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum SessionEndpointTransport {
+    Serial,
     Tcp,
     BluetoothLeGatt,
     BluetoothClassicRfcomm,
@@ -1723,6 +1779,7 @@ enum SessionEndpointTransport {
 impl From<SessionEndpointTransport> for SmokeConnectionTransport {
     fn from(value: SessionEndpointTransport) -> Self {
         match value {
+            SessionEndpointTransport::Serial => Self::SerialPort,
             SessionEndpointTransport::Tcp => Self::TcpSocket,
             SessionEndpointTransport::BluetoothLeGatt => Self::BluetoothLeGatt,
             SessionEndpointTransport::BluetoothClassicRfcomm => Self::BluetoothClassicRfcomm,
@@ -1730,9 +1787,31 @@ impl From<SessionEndpointTransport> for SmokeConnectionTransport {
     }
 }
 
+fn endpoint_connection_label(
+    endpoint: &str,
+    endpoint_transport: SessionEndpointTransport,
+    baud_rate: u32,
+) -> String {
+    match endpoint_transport {
+        SessionEndpointTransport::Serial => format!("endpoint={endpoint} baud={baud_rate}"),
+        SessionEndpointTransport::Tcp
+        | SessionEndpointTransport::BluetoothLeGatt
+        | SessionEndpointTransport::BluetoothClassicRfcomm => format!("endpoint={endpoint}"),
+    }
+}
+
 fn endpoint_transport(endpoint: &str) -> Result<SessionEndpointTransport, CliError> {
     match endpoint.split_once("://").map(|(scheme, _)| scheme) {
         None | Some("tcp") => Ok(SessionEndpointTransport::Tcp),
+        Some("serial") => {
+            if parse_language_serial_endpoint(endpoint).is_some() {
+                Ok(SessionEndpointTransport::Serial)
+            } else {
+                Err(CliError::DeviceSelection(format!(
+                    "invalid Board VM serial endpoint: {endpoint}"
+                )))
+            }
+        }
         Some("ble") => {
             if parse_language_bluetooth_endpoint(endpoint).is_some() {
                 Ok(SessionEndpointTransport::BluetoothLeGatt)
@@ -2108,7 +2187,7 @@ pub fn format_onboard_led(led: Option<OnboardLed>) -> String {
 }
 
 pub fn usage() -> &'static str {
-    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm pico-uf2 --image <path.uf2> [--mount <RPI-RP2 mount>]\n  board-vm pico-uf2 --list\n  board-vm smoke [--port <path>|--endpoint tcp://host:port|ble://device?...|btspp://device:channel] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl [--port <path>|--endpoint tcp://host:port|ble://device?...|btspp://device:channel] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm bootloader-reboot [--port <path>|--endpoint tcp://host:port|ble://device?...|btspp://device:channel] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
+    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm pico-uf2 --image <path.uf2> [--mount <RPI-RP2 mount>]\n  board-vm pico-uf2 --list\n  board-vm smoke [--port <path>|--endpoint serial://path|tcp://host:port|ble://device?...|btspp://device:channel] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl [--port <path>|--endpoint serial://path|tcp://host:port|ble://device?...|btspp://device:channel] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm bootloader-reboot [--port <path>|--endpoint serial://path|tcp://host:port|ble://device?...|btspp://device:channel] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
 }
 
 #[cfg(test)]
@@ -2763,6 +2842,35 @@ mod tests {
     }
 
     #[test]
+    fn parses_smoke_serial_endpoint() {
+        let endpoint = "serial:///dev/cu.usbmodem-test";
+        let command =
+            parse_args(["smoke", "--endpoint", endpoint, "--board", "uno-r4-wifi"]).unwrap();
+
+        assert_eq!(
+            command,
+            CliCommand::Smoke(SmokeOptions {
+                port: None,
+                endpoint: Some(endpoint.to_owned()),
+                board: "uno-r4-wifi".to_owned(),
+                baud_rate: DEFAULT_BAUD_RATE,
+                timeout_ms: DEFAULT_TIMEOUT_MS,
+                program_id: DEFAULT_PROGRAM_ID,
+                instruction_budget: DEFAULT_INSTRUCTION_BUDGET,
+                host_nonce: DEFAULT_HOST_NONCE,
+            })
+        );
+        assert_eq!(
+            endpoint_transport(endpoint).unwrap(),
+            SessionEndpointTransport::Serial
+        );
+        assert_eq!(
+            endpoint_connection_label(endpoint, SessionEndpointTransport::Serial, 57_600),
+            "endpoint=serial:///dev/cu.usbmodem-test baud=57600"
+        );
+    }
+
+    #[test]
     fn parses_repl_rfcomm_endpoint() {
         let command = parse_args(["repl", "--endpoint", "btspp://uno-r4-wifi:1"]).unwrap();
 
@@ -2794,6 +2902,16 @@ mod tests {
             CliError::DeviceSelection(
                 "invalid Board VM Bluetooth endpoint: ble://AA:BB:CC:DD:EE:FF".to_owned()
             )
+        );
+    }
+
+    #[test]
+    fn rejects_malformed_serial_endpoint() {
+        let error = endpoint_transport("serial://").unwrap_err();
+
+        assert_eq!(
+            error,
+            CliError::DeviceSelection("invalid Board VM serial endpoint: serial://".to_owned())
         );
     }
 
@@ -3042,6 +3160,34 @@ mod tests {
         assert!(report.run.instructions_executed > 0);
         assert_eq!(report.run.open_handles, 1);
         assert!(report.run.returns.is_empty());
+    }
+
+    #[test]
+    fn smoke_serial_endpoint_reports_serial_transport_metadata() {
+        let endpoint = "serial:///dev/cu.usbmodem-test";
+        let options = SmokeOptions {
+            port: None,
+            endpoint: Some(endpoint.to_owned()),
+            board: "uno-r4-wifi".to_owned(),
+            baud_rate: 57_600,
+            timeout_ms: 250,
+            program_id: 7,
+            instruction_budget: 200,
+            host_nonce: 0x1234_5678,
+        };
+
+        let report = run_smoke_with_transport(&options, LoopbackSmokeTransport::new()).unwrap();
+
+        assert_eq!(
+            report.connection.transport,
+            SmokeConnectionTransport::SerialPort
+        );
+        assert_eq!(
+            report.connection.label,
+            "endpoint=serial:///dev/cu.usbmodem-test baud=57600"
+        );
+        assert_eq!(report.connection.timeout_ms, 250);
+        assert_eq!(report.hello.host_nonce, 0x1234_5678);
     }
 
     #[test]

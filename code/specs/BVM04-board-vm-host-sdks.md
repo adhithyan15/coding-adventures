@@ -224,6 +224,10 @@ before touching the OS port. That plan keeps baud rate, timeout, stale-byte
 clearing, DTR/open-settle behavior, endpoint scheme, and Board VM wire protocol
 shared across CLI, Ruby, Python, Lua, Java, JS, and future frontends while the
 language adapter still performs the platform-specific open/read/write call.
+When a frontend receives a `serial://...` endpoint string from that plan or from
+a user-facing CLI surface, it should parse the endpoint through the Rust-owned
+serial endpoint helper and then apply the same serial open plan instead of
+maintaining a parallel endpoint scheme table.
 
 Selector handling follows the same ownership boundary. If a frontend receives
 an Arduino CLI FQBN such as `arduino:renesas_uno:nanor4`, it should ask the Rust
