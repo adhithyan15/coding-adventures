@@ -25,8 +25,11 @@ from __future__ import annotations
 import unittest
 from unittest import mock
 
+import math
+
 from ml_framework_core import Tensor
 from ml_framework_core import _rust_backend
+from ml_framework_core.functions import ReLUFunction, TanhFunction
 
 
 class MatMulFallbackTests(unittest.TestCase):
@@ -313,6 +316,93 @@ class ReductionFallbackTests(unittest.TestCase):
         result = a.sum(dim=0)
         # Column sums: [1+4, 2+5, 3+6] = [5, 7, 9]
         self.assertEqual(result.data, [5.0, 7.0, 9.0])
+
+
+# ──────────────────────────────────────────────────────────────────
+# MX10 Phase 4 — activation fallback tests
+#
+# Same pattern as elementwise/reduction: monkey-patch
+# ``_RUST_AVAILABLE = False`` and confirm the pure-Python kernel
+# still produces correct results for the two Phase 4 activations
+# (Tanh, ReLU).  Sigmoid/GELU/Softmax are deferred to Phase 4b and
+# never reach the dispatch path in Phase 4, so they are not tested
+# here.
+# ──────────────────────────────────────────────────────────────────
+
+
+class ActivationFallbackTests(unittest.TestCase):
+    """Confirm Tanh + ReLU still work when the Rust path is disabled."""
+
+    def setUp(self) -> None:
+        self._saved_available = _rust_backend._RUST_AVAILABLE
+        _rust_backend._RUST_AVAILABLE = False
+
+    def tearDown(self) -> None:
+        _rust_backend._RUST_AVAILABLE = self._saved_available
+
+    def test_predicate_returns_false_for_activation_when_unavailable(self) -> None:
+        """Even a giant tensor must fall back when the extension is missing."""
+        self.assertFalse(
+            _rust_backend.should_use_rust_for_activation(10_000_000)
+        )
+
+    def test_tanh_via_rust_raises_when_unavailable(self) -> None:
+        """``tanh_via_rust`` must raise rather than silently produce wrong data."""
+        a = Tensor([0.0, 1.0, -1.0], (3,))
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.tanh_via_rust(a)
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_relu_via_rust_raises_when_unavailable(self) -> None:
+        """``relu_via_rust`` must raise (defence-in-depth for ungated callers)."""
+        a = Tensor([-1.0, 0.0, 1.0], (3,))
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.relu_via_rust(a)
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_tanh_correct_via_fallback(self) -> None:
+        """``TanhFunction.apply(a)`` falls back to ``math.tanh`` per element.
+
+        Hand-computed: tanh(0) = 0; tanh(1) ≈ 0.7615941559;
+        tanh(-1) ≈ -0.7615941559.  Using ``assertAlmostEqual`` with
+        ``places=12`` because the pure-Python path uses double-precision
+        math.tanh — the result must be bit-equivalent to ``math.tanh``.
+        """
+        a = Tensor([0.0, 1.0, -1.0], (3,))
+        result = TanhFunction.apply(a)
+        self.assertEqual(result.shape, (3,))
+        self.assertAlmostEqual(result.data[0], 0.0, places=12)
+        self.assertAlmostEqual(result.data[1], math.tanh(1.0), places=12)
+        self.assertAlmostEqual(result.data[2], math.tanh(-1.0), places=12)
+
+    def test_relu_correct_via_fallback(self) -> None:
+        """``ReLUFunction.apply(a)`` falls back to ``max(0, x)`` per element.
+
+        Hand-computed: ReLU([-2,-1,0,1,2]) = [0,0,0,1,2].
+        """
+        a = Tensor([-2.0, -1.0, 0.0, 1.0, 2.0], (5,))
+        result = ReLUFunction.apply(a)
+        self.assertEqual(result.shape, (5,))
+        self.assertEqual(result.data, [0.0, 0.0, 0.0, 1.0, 2.0])
+
+    def test_tanh_saved_metadata_populated_via_fallback(self) -> None:
+        """The pure-Python ``TanhFunction.forward`` saves the output in
+        ``saved_metadata["output"]`` so that backward can reuse it.
+        Confirm this contract still holds when the Rust path is disabled
+        (the dispatch block also saves output via the same key, so both
+        paths must be observationally identical from backward's POV).
+        """
+        a = Tensor([0.5, -0.5], (2,), requires_grad=True)
+        result = TanhFunction.apply(a)
+        # Backward should succeed without raising; this exercises the
+        # saved_metadata["output"] handshake end-to-end.
+        result.backward(Tensor([1.0, 1.0], (2,)))
+        self.assertIsNotNone(a.grad)
+        # d/dx tanh(x) = 1 - tanh(x)^2
+        expected_grad_0 = 1.0 - math.tanh(0.5) ** 2
+        expected_grad_1 = 1.0 - math.tanh(-0.5) ** 2
+        self.assertAlmostEqual(a.grad.data[0], expected_grad_0, places=10)
+        self.assertAlmostEqual(a.grad.data[1], expected_grad_1, places=10)
 
 
 if __name__ == "__main__":

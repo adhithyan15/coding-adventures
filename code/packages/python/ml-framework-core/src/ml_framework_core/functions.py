@@ -51,11 +51,14 @@ from ._rust_backend import (
     mean_via_rust,
     mul_via_rust,
     neg_via_rust,
+    relu_via_rust,
+    should_use_rust_for_activation,
     should_use_rust_for_elementwise,
     should_use_rust_for_matmul,
     should_use_rust_for_reduction,
     sub_via_rust,
     sum_via_rust,
+    tanh_via_rust,
 )
 from .autograd import Function
 from .tensor import Tensor, _compute_strides, _numel
@@ -704,6 +707,11 @@ class ReLUFunction(Function):
 
     def forward(self, a: Tensor) -> Tensor:
         self.save_for_backward(a)
+        # MX10 Phase 4 — optional Rust fast path.  ReLU is composed
+        # as max(x, 0) via matrix-cpu's Max op with a zero-constant
+        # tensor of the same shape.
+        if should_use_rust_for_activation(len(a.data)):
+            return relu_via_rust(a)
         data = [max(0.0, x) for x in a.data]
         return Tensor(data, a.shape, device=a.device)
 
@@ -761,6 +769,13 @@ class TanhFunction(Function):
 
     def forward(self, a: Tensor) -> Tensor:
         self.save_for_backward(a)
+        # MX10 Phase 4 — optional Rust fast path (direct unary Tanh).
+        # The output is saved into saved_metadata for backward; we
+        # extract it from the returned Tensor either way.
+        if should_use_rust_for_activation(len(a.data)):
+            result = tanh_via_rust(a)
+            self.saved_metadata["output"] = result.data
+            return result
         data = [math.tanh(x) for x in a.data]
         self.saved_metadata["output"] = data
         return Tensor(data, a.shape, device=a.device)

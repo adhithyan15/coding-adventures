@@ -2,6 +2,97 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 4: optional Rust fast path for `TanhFunction` + `ReLUFunction` activations
+
+Extends the per-op conditional dispatch to two members of the
+**activation op family**: `TanhFunction` and `ReLUFunction`.  The
+remaining three activations (`SigmoidFunction`, `GELUFunction`,
+`SoftmaxFunction`) are intentionally deferred — see "What's NOT in
+Phase 4" below.
+
+#### Scope rationale
+
+| Activation | Phase 4 status | Why |
+|-----------|---------------|-----|
+| **Tanh** | **Shipped** | matrix-ir-json has a direct unary `Tanh` op — single-op graph, reuses the same `_elementwise_unary_via_rust` factory as Neg/Abs. |
+| **ReLU** | **Shipped** | Composed as `max(x, 0)` via the existing binary `Max` op + a zero-constant tensor of shape `a.shape`.  First time the dispatch helpers use matrix-ir-json's `constants[]` array (same pattern matrix-cpu uses for MatMul weights/biases). |
+| Sigmoid | Deferred (Phase 4b) | Needs a 4-op composition: `Neg → Exp → Add(scalar 1) → Recip`.  Each intermediate tensor adds a graph node; the round-trip cost makes the threshold non-obvious. |
+| GELU | Deferred (Phase 4b) | The standard tanh-approximation form needs `Mul, Pow(3), Add, Mul, Tanh, Add, Mul, Mul` — 8 ops plus a scalar Pow (Pow itself is still deferred from Phase 2 — see the Phase 2 "What's NOT" section). |
+| Softmax | Deferred (Phase 4b) | Per-axis broadcast + numerical-stability max-subtract make this not a pure elementwise composition.  Wants its own dispatch design. |
+
+#### Implementation
+
+- **`_rust_backend.py`** — adds:
+    - `should_use_rust_for_activation(numel)` predicate.  Reuses the
+      same threshold (`_ELEMENTWISE_RUST_THRESHOLD = 100_000`) as
+      elementwise/reduction — activations have roughly the same
+      per-cell cost (one transcendental or one compare per cell).
+    - `tanh_via_rust(a)` — thin wrapper that calls the existing
+      `_elementwise_unary_via_rust` factory with `op_kind="Tanh"`.
+      No new graph-building code needed — Tanh is a direct unary op
+      in matrix-ir-json.
+    - `relu_via_rust(a)` — the only genuinely new helper.  Builds a
+      3-tensor graph (input + zero-constant + output), with a single
+      `Max` op that compares each input cell to the corresponding
+      zero-constant cell.  The zero-constant tensor is shipped in
+      the `constants[]` array of the graph definition (as
+      `bytes_hex = "00" * numel * 4`), not as a runtime input.  This
+      pattern matches how matrix-cpu MatMul tests ship weights.
+
+- **`functions.py`**:
+    - Imports: `relu_via_rust`, `should_use_rust_for_activation`,
+      `tanh_via_rust`.
+    - `ReLUFunction.forward` gains the standard 2-line dispatch
+      block before the existing `[max(0.0, x) for x in a.data]`
+      list comprehension.
+    - `TanhFunction.forward` gains a slightly longer 4-line dispatch
+      because it must populate `self.saved_metadata["output"] =
+      result.data` for backward (which uses `d/dx tanh = 1 -
+      tanh(x)^2`).  Both paths populate the same key so backward
+      is path-agnostic.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, numel ≥ 100_000 | **Rust** (matrix-cpu via matrix-rust-python) |
+| Extension installed, numel < 100_000 | Pure-Python kernel |
+| Extension NOT installed | Pure-Python kernel |
+| Activation outside the {Tanh, ReLU} set | Pure-Python (always) |
+
+#### Tests (45 total MX10 tests, was 36)
+
+- **`ActivationParityTests`** (3 cases, skip if extension missing):
+  predicate sanity + Tanh parity (range [-3, 3] so the function
+  saturates at both tails) + ReLU parity at the `(500, 200) =
+  100_000`-cell threshold.  Tolerance: same `rtol=1e-3, atol=1e-4`
+  as matmul/elementwise/reduction (f32 vs double).
+- **`ActivationFallbackTests`** (6 cases, always run): predicate
+  short-circuit, direct-call `RuntimeError` for both helpers,
+  ReLU correctness via fallback (`[-2,-1,0,1,2] → [0,0,0,1,2]`),
+  Tanh correctness via fallback (compared to `math.tanh`), plus a
+  `saved_metadata["output"]` handshake test that verifies the
+  fallback path still populates the key backward needs (gradient
+  of tanh via `1 - tanh(x)^2`).
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite at
+**347 passed + 17 skipped (parity-tests that need the extension)**;
+the same `test_device.py` failure that's on main without these
+changes is unrelated.
+
+### What's NOT in Phase 4
+
+- Sigmoid, GELU, Softmax (deferred to Phase 4b — see scope table).
+- Backward-path Rust dispatch for ReLU/Tanh.  ReLU's backward
+  is `grad * (x > 0)` and Tanh's is `grad * (1 - output^2)`,
+  both implemented as pure-Python list comprehensions.  Routing
+  these to Rust would need a Mul + Max/Comparison composition;
+  deferred pending profiling demand.
+- PowFunction Rust path (still deferred from Phase 2 — needs
+  scalar-exponent variant in matrix-cpu).
+- Axis-specific reductions (still deferred from Phase 3 to
+  Phase 3b).
+
 ### Added — MX10 Phase 3: optional Rust fast path for reduce-all `SumFunction` / `MeanFunction`
 
 Extends the per-op conditional dispatch to the **reduce-all path
