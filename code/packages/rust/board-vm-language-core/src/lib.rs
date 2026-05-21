@@ -97,6 +97,9 @@ pub const LANGUAGE_RUN_FLAG_BACKGROUND_RUN: u8 = board_vm_protocol::RUN_FLAG_BAC
 pub const LANGUAGE_ESP_DEFAULT_FLASH_OFFSET: u32 = 0x1000;
 pub const LANGUAGE_ESP_DEFAULT_FLASH_SIZE: u32 = 4 * 1024 * 1024;
 pub const LANGUAGE_BOARD_VM_WIRE_PROTOCOL: &str = "board_vm_cobs_crc";
+pub const LANGUAGE_SERIAL_DEFAULT_BAUD_RATE: u32 = 115_200;
+pub const LANGUAGE_SERIAL_DEFAULT_TIMEOUT_MS: u64 = 1_000;
+pub const LANGUAGE_SERIAL_OPEN_SETTLE_MS: u64 = 250;
 pub const ARDUINO_CLI_NATIVE_USB_BOOTLOADER_TOUCH_BAUD: u32 = 1_200;
 pub const ARDUINO_CLI_UPLOAD_PORT_PLACEHOLDER: &str = "<port>";
 pub const ARDUINO_CLI_UPLOAD_INPUT_FILE_PLACEHOLDER: &str = "<firmware-image>";
@@ -417,6 +420,30 @@ pub struct LanguageBluetoothBackendOpenPlan {
     pub stream_path: Option<String>,
     pub native_transport: bool,
     pub message: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageSerialRuntimeOpenPlan {
+    pub board_id: String,
+    pub port: String,
+    pub port_source: String,
+    pub endpoint: String,
+    pub transport: LanguageConnectionTransport,
+    pub endpoint_transport: LanguageHostEndpointTransport,
+    pub endpoint_scheme: String,
+    pub wire_protocol: String,
+    pub baud_rate: u32,
+    pub timeout_ms: u64,
+    pub data_bits: u8,
+    pub parity: String,
+    pub stop_bits: u8,
+    pub flow_control: String,
+    pub dtr_on_open: bool,
+    pub clear_on_open: bool,
+    pub settle_on_open_ms: u64,
+    pub hello_after_open: bool,
+    pub upload_port_hint: Option<String>,
+    pub notes: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1468,6 +1495,21 @@ pub fn connection_options_for_target(selector: &str) -> Option<Vec<LanguageConne
     Some(target.connection_options)
 }
 
+pub fn serial_runtime_open_plan_for_target(
+    selector: &str,
+    runtime_port: &str,
+) -> Option<LanguageSerialRuntimeOpenPlan> {
+    let target = detect_target(selector)?;
+    language_serial_runtime_open_plan(&target, runtime_port, "explicit_runtime_port")
+}
+
+pub fn serial_runtime_open_plan_from_upload_handoff(
+    handoff: &LanguageArduinoCliUploadRuntimeHandoff,
+) -> Option<LanguageSerialRuntimeOpenPlan> {
+    let target = known_target(&handoff.board_id)?;
+    language_serial_runtime_open_plan(&target, &handoff.runtime_port, &handoff.runtime_port_source)
+}
+
 pub fn parse_bluetooth_endpoint(endpoint: &str) -> Option<LanguageBluetoothEndpoint> {
     language_bluetooth_endpoint(parse_board_vm_bluetooth_endpoint(endpoint).ok()?)
 }
@@ -2504,6 +2546,73 @@ fn language_connection_options(target: &BoardTargetInfo) -> Vec<LanguageConnecti
     }
 
     options
+}
+
+fn language_serial_runtime_open_plan(
+    target: &LanguageTargetInfo,
+    runtime_port: &str,
+    port_source: &str,
+) -> Option<LanguageSerialRuntimeOpenPlan> {
+    let runtime_port = runtime_port.trim();
+    if runtime_port.is_empty()
+        || !target
+            .connection_options
+            .iter()
+            .any(|option| option.transport == LanguageConnectionTransport::Serial)
+    {
+        return None;
+    }
+
+    let upload_port_hint = target
+        .upload
+        .as_ref()
+        .and_then(|upload| upload.port_hint.clone());
+    Some(LanguageSerialRuntimeOpenPlan {
+        board_id: target.board_id.clone(),
+        port: runtime_port.to_owned(),
+        port_source: port_source.to_owned(),
+        endpoint: serial_runtime_endpoint(runtime_port),
+        transport: LanguageConnectionTransport::Serial,
+        endpoint_transport: LanguageHostEndpointTransport::SerialPort,
+        endpoint_scheme: "serial".to_owned(),
+        wire_protocol: LANGUAGE_BOARD_VM_WIRE_PROTOCOL.to_owned(),
+        baud_rate: LANGUAGE_SERIAL_DEFAULT_BAUD_RATE,
+        timeout_ms: LANGUAGE_SERIAL_DEFAULT_TIMEOUT_MS,
+        data_bits: 8,
+        parity: "none".to_owned(),
+        stop_bits: 1,
+        flow_control: "none".to_owned(),
+        dtr_on_open: true,
+        clear_on_open: true,
+        settle_on_open_ms: LANGUAGE_SERIAL_OPEN_SETTLE_MS,
+        hello_after_open: true,
+        notes: serial_runtime_open_notes(upload_port_hint.as_deref()).to_owned(),
+        upload_port_hint,
+    })
+}
+
+fn serial_runtime_endpoint(port: &str) -> String {
+    format!("serial://{port}")
+}
+
+fn serial_runtime_open_notes(upload_port_hint: Option<&str>) -> &'static str {
+    match upload_port_hint {
+        Some("native_usb") => {
+            "Open the runtime CDC serial port after native USB rediscovery, clear stale bytes, then send Board VM HELLO."
+        }
+        Some("usb_serial_bridge") => {
+            "Open the selected USB serial bridge port, clear stale bytes, then send Board VM HELLO."
+        }
+        Some("external_serial_adapter") => {
+            "Open the caller-selected external serial adapter, clear stale bytes, then send Board VM HELLO."
+        }
+        Some("esp_rom_serial") => {
+            "Open the ESP runtime serial port after ROM upload reset, clear stale bytes, then send Board VM HELLO."
+        }
+        _ => {
+            "Open the selected runtime serial port, clear stale bytes, then send Board VM HELLO."
+        }
+    }
 }
 
 fn language_connection_transport(
@@ -5453,6 +5562,62 @@ mod tests {
             "bluetooth_classic_rfcomm"
         );
         assert!(connection_options_for_target("not-a-board").is_none());
+    }
+
+    #[test]
+    fn serial_runtime_open_plans_are_owned_by_rust_language_core() {
+        let plan =
+            serial_runtime_open_plan_for_target("uno-r4-wifi", "/dev/cu.usbmodem1101").unwrap();
+        assert_eq!(plan.board_id, "arduino-uno-r4-wifi");
+        assert_eq!(plan.port, "/dev/cu.usbmodem1101");
+        assert_eq!(plan.port_source, "explicit_runtime_port");
+        assert_eq!(plan.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(plan.transport, LanguageConnectionTransport::Serial);
+        assert_eq!(
+            plan.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(plan.endpoint_scheme, "serial");
+        assert_eq!(plan.wire_protocol, LANGUAGE_BOARD_VM_WIRE_PROTOCOL);
+        assert_eq!(plan.baud_rate, LANGUAGE_SERIAL_DEFAULT_BAUD_RATE);
+        assert_eq!(plan.timeout_ms, LANGUAGE_SERIAL_DEFAULT_TIMEOUT_MS);
+        assert_eq!(plan.data_bits, 8);
+        assert_eq!(plan.parity, "none");
+        assert_eq!(plan.stop_bits, 1);
+        assert_eq!(plan.flow_control, "none");
+        assert!(plan.dtr_on_open);
+        assert!(plan.clear_on_open);
+        assert_eq!(plan.settle_on_open_ms, LANGUAGE_SERIAL_OPEN_SETTLE_MS);
+        assert!(plan.hello_after_open);
+        assert_eq!(plan.upload_port_hint.as_deref(), Some("native_usb"));
+        assert!(plan.notes.contains("runtime CDC serial port"));
+
+        let handoff = arduino_cli_upload_runtime_handoff_for_execution_plan(
+            &arduino_cli_upload_execution_plan_for_target(
+                "arduino-nano-r4",
+                "/dev/cu.usbmodem9070692469E42",
+                "/tmp/board-vm-nano-r4.bin",
+            )
+            .unwrap(),
+            0,
+            "Resetting board...\nNew upload port: /dev/cu.usbmodem1101 (serial)\n",
+            "",
+        )
+        .unwrap();
+        let handoff_plan = serial_runtime_open_plan_from_upload_handoff(&handoff).unwrap();
+        assert_eq!(handoff_plan.board_id, "arduino-nano-r4");
+        assert_eq!(handoff_plan.port, "/dev/cu.usbmodem1101");
+        assert_eq!(handoff_plan.port_source, "arduino_cli_new_upload_port");
+        assert_eq!(handoff_plan.upload_port_hint.as_deref(), Some("native_usb"));
+
+        let esp =
+            serial_runtime_open_plan_for_target("esp32", "/dev/tty.usbserial-CP2102").unwrap();
+        assert_eq!(esp.board_id, "esp32-devkit-v1");
+        assert_eq!(esp.upload_port_hint.as_deref(), Some("esp_rom_serial"));
+        assert!(esp.notes.contains("ESP runtime serial port"));
+
+        assert!(serial_runtime_open_plan_for_target("uno-r4-wifi", "   ").is_none());
+        assert!(serial_runtime_open_plan_for_target("not-a-board", "COM7").is_none());
     }
 
     #[test]

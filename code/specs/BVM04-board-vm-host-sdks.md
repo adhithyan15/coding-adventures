@@ -219,6 +219,11 @@ runtime handoff port. Native USB targets should use Arduino CLI's reported
 `New upload port:` value when present and otherwise keep the Rust-owned
 rediscovery hint with the selected upload port; USB serial bridge and external
 adapter targets should reuse the selected port.
+For runtime serial connections, SDKs should ask Rust for the serial open plan
+before touching the OS port. That plan keeps baud rate, timeout, stale-byte
+clearing, DTR/open-settle behavior, endpoint scheme, and Board VM wire protocol
+shared across CLI, Ruby, Python, Lua, Java, JS, and future frontends while the
+language adapter still performs the platform-specific open/read/write call.
 
 Selector handling follows the same ownership boundary. If a frontend receives
 an Arduino CLI FQBN such as `arduino:renesas_uno:nanor4`, it should ask the Rust
