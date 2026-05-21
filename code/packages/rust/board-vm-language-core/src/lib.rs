@@ -398,6 +398,14 @@ pub struct LanguageTcpEndpoint {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageHostEndpointSummary {
+    pub endpoint: String,
+    pub transport: LanguageConnectionTransport,
+    pub endpoint_transport: LanguageHostEndpointTransport,
+    pub endpoint_scheme: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageBluetoothEndpoint {
     pub endpoint: String,
     pub transport: LanguageConnectionTransport,
@@ -1567,6 +1575,32 @@ pub fn parse_tcp_endpoint(endpoint: &str) -> Option<LanguageTcpEndpoint> {
 
 pub fn parse_bluetooth_endpoint(endpoint: &str) -> Option<LanguageBluetoothEndpoint> {
     language_bluetooth_endpoint(parse_board_vm_bluetooth_endpoint(endpoint).ok()?)
+}
+
+pub fn parse_host_endpoint(endpoint: &str) -> Option<LanguageHostEndpointSummary> {
+    if let Some(endpoint) = parse_serial_endpoint(endpoint) {
+        return Some(LanguageHostEndpointSummary {
+            endpoint: endpoint.endpoint,
+            transport: endpoint.transport,
+            endpoint_transport: endpoint.endpoint_transport,
+            endpoint_scheme: endpoint.endpoint_scheme,
+        });
+    }
+    if let Some(endpoint) = parse_tcp_endpoint(endpoint) {
+        return Some(LanguageHostEndpointSummary {
+            endpoint: endpoint.endpoint,
+            transport: endpoint.transport,
+            endpoint_transport: endpoint.endpoint_transport,
+            endpoint_scheme: endpoint.endpoint_scheme,
+        });
+    }
+    let endpoint = parse_bluetooth_endpoint(endpoint)?;
+    Some(LanguageHostEndpointSummary {
+        endpoint: endpoint.endpoint,
+        transport: endpoint.transport,
+        endpoint_transport: endpoint.endpoint_transport,
+        endpoint_scheme: endpoint.endpoint_scheme,
+    })
 }
 
 pub fn bluetooth_endpoint_candidates_from_devices(
@@ -5736,6 +5770,50 @@ mod tests {
         assert_eq!(rfcomm.device, "ESP32-BoardVM");
         assert_eq!(rfcomm.channel, Some(3));
         assert!(parse_bluetooth_endpoint("tcp://board-vm.local:4170").is_none());
+    }
+
+    #[test]
+    fn host_endpoint_summary_classifies_all_supported_transports() {
+        let serial = parse_host_endpoint("serial:///dev/cu.usbmodem1101").unwrap();
+        let tcp = parse_host_endpoint("127.0.0.1:4170").unwrap();
+        let ble = parse_host_endpoint("ble://uno-r4-wifi/180f/2a19/2a1a").unwrap();
+        let rfcomm = parse_host_endpoint("rfcomm://ESP32-BoardVM:3").unwrap();
+
+        assert_eq!(serial.transport, LanguageConnectionTransport::Serial);
+        assert_eq!(
+            serial.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(serial.endpoint_scheme, "serial");
+
+        assert_eq!(tcp.transport, LanguageConnectionTransport::Wifi);
+        assert_eq!(
+            tcp.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(tcp.endpoint_scheme, "tcp");
+
+        assert_eq!(ble.transport, LanguageConnectionTransport::BluetoothLe);
+        assert_eq!(
+            ble.endpoint_transport,
+            LanguageHostEndpointTransport::BluetoothLeGatt
+        );
+        assert_eq!(ble.endpoint_scheme, "ble");
+
+        assert_eq!(
+            rfcomm.transport,
+            LanguageConnectionTransport::BluetoothClassic
+        );
+        assert_eq!(
+            rfcomm.endpoint_transport,
+            LanguageHostEndpointTransport::BluetoothClassicRfcomm
+        );
+        assert_eq!(rfcomm.endpoint_scheme, "rfcomm");
+
+        assert!(parse_host_endpoint("serial://   ").is_none());
+        assert!(parse_host_endpoint("tcp://   ").is_none());
+        assert!(parse_host_endpoint("ble://").is_none());
+        assert!(parse_host_endpoint("ws://board-vm.local:4170").is_none());
     }
 
     #[test]

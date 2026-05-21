@@ -59,8 +59,10 @@ protocol ownership in the Rust target layer while this crate performs the
 platform-specific open/read/write call. The endpoint path accepts Rust-owned
 serial endpoint metadata (`serial://...`), TCP endpoint metadata (`tcp://...` or
 bare `host:port`), and Board VM Bluetooth endpoints (`ble://`, `btspp://`, or
-`rfcomm://`) through the Rust-owned transport adapters. The smoke report starts
-with a stable
+`rfcomm://`) through the Rust-owned transport adapters. Endpoint transport
+classification comes from the shared `board-vm-language-core`
+`parse_host_endpoint` summary, so the CLI does not maintain its own endpoint
+scheme table. The smoke report starts with a stable
 `connection transport=...` field so hardware logs can distinguish serial, TCP
 socket, BLE GATT, and RFCOMM runs without parsing endpoint strings. The default
 run budget is intentionally small because the current firmware executes
