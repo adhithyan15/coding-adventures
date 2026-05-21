@@ -639,6 +639,26 @@ impl ToolAuditSupervisorCheckpointStatus {
         self.has_pending_records()
     }
 
+    /// Return the starting checkpoint timestamp for host status logs.
+    pub fn starting_checkpoint_timestamp_ms(&self) -> u64 {
+        self.starting_checkpoint.timestamp_ms
+    }
+
+    /// Return the starting checkpoint call id for host status logs.
+    pub fn starting_checkpoint_call_id(&self) -> &str {
+        &self.starting_checkpoint.call_id
+    }
+
+    /// Return the checkpoint timestamp the next drain page would advance to.
+    pub fn next_checkpoint_timestamp_ms(&self) -> u64 {
+        self.next_checkpoint.timestamp_ms
+    }
+
+    /// Return the checkpoint call id the next drain page would advance to.
+    pub fn next_checkpoint_call_id(&self) -> &str {
+        &self.next_checkpoint.call_id
+    }
+
     /// Return whether more rows may remain beyond the inspected page.
     pub fn should_continue_after_page(&self) -> bool {
         !self.reached_end_of_log
@@ -2963,6 +2983,10 @@ mod tests {
         assert!(status.should_continue_after_page());
         assert!(status.requires_follow_up());
         assert!(status.would_advance_checkpoint());
+        assert_eq!(status.starting_checkpoint_timestamp_ms(), 120);
+        assert_eq!(status.starting_checkpoint_call_id(), "call_1");
+        assert_eq!(status.next_checkpoint_timestamp_ms(), 151);
+        assert_eq!(status.next_checkpoint_call_id(), "call_3");
         assert_eq!(status.inventory.total_records, 2);
         assert_eq!(
             status
@@ -3002,6 +3026,10 @@ mod tests {
         assert!(!status.should_continue_after_page());
         assert!(!status.requires_follow_up());
         assert!(!status.would_advance_checkpoint());
+        assert_eq!(status.starting_checkpoint_timestamp_ms(), 0);
+        assert_eq!(status.starting_checkpoint_call_id(), "");
+        assert_eq!(status.next_checkpoint_timestamp_ms(), 0);
+        assert_eq!(status.next_checkpoint_call_id(), "");
         assert_eq!(status.stored_checkpoint, None);
         assert!(store.fetch_checkpoint("supervisor").unwrap().is_none());
     }

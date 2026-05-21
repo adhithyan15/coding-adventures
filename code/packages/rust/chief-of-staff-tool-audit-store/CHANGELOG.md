@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
 - Checkpointed replay helpers that deliver bounded pages into audit sinks and
   advance durable named checkpoints.
 - Read-only supervisor checkpoint status inspection before draining.
+- Starting and next checkpoint scalar accessors for supervisor checkpoint
+  status.
 - Read-only bounded supervisor drain plans that preview pages and follow-up
   pressure without advancing durable checkpoints.
 - Payload-free follow-up row counts in audit inventory summaries for host
