@@ -74,6 +74,9 @@ external-adapter targets reuse the selected port.
 transport open contract for language adapters: baud rate, timeout, stale-byte
 clearing, open-settle delay, endpoint scheme, and Board VM wire protocol. The
 actual OS serial open still belongs to the frontend adapter or CLI.
+`parse_serial_endpoint`, `parse_tcp_endpoint`, and `parse_bluetooth_endpoint`
+keep endpoint scheme and transport metadata in the same Rust-owned boundary so
+frontends do not need parallel endpoint tables.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves

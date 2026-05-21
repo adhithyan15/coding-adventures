@@ -23,7 +23,8 @@ use board_vm_host::{
 };
 use board_vm_language_core::{
     bluetooth_transact_wire_frame, parse_bluetooth_endpoint as parse_language_bluetooth_endpoint,
-    parse_serial_endpoint as parse_language_serial_endpoint, serial_runtime_open_plan_for_target,
+    parse_serial_endpoint as parse_language_serial_endpoint,
+    parse_tcp_endpoint as parse_language_tcp_endpoint, serial_runtime_open_plan_for_target,
     LanguageSerialRuntimeOpenPlan, LANGUAGE_SERIAL_OPEN_SETTLE_MS,
 };
 use board_vm_language_core::{detect_target, discover_devices, LanguageHostDevice};
@@ -1802,7 +1803,15 @@ fn endpoint_connection_label(
 
 fn endpoint_transport(endpoint: &str) -> Result<SessionEndpointTransport, CliError> {
     match endpoint.split_once("://").map(|(scheme, _)| scheme) {
-        None | Some("tcp") => Ok(SessionEndpointTransport::Tcp),
+        None | Some("tcp") => {
+            if parse_language_tcp_endpoint(endpoint).is_some() {
+                Ok(SessionEndpointTransport::Tcp)
+            } else {
+                Err(CliError::DeviceSelection(format!(
+                    "invalid Board VM TCP endpoint: {endpoint}"
+                )))
+            }
+        }
         Some("serial") => {
             if parse_language_serial_endpoint(endpoint).is_some() {
                 Ok(SessionEndpointTransport::Serial)
@@ -2767,6 +2776,10 @@ mod tests {
                 host_nonce: DEFAULT_HOST_NONCE,
             })
         );
+        assert_eq!(
+            endpoint_transport("tcp://board-vm.local:4170").unwrap(),
+            SessionEndpointTransport::Tcp
+        );
     }
 
     #[test]
@@ -2785,6 +2798,10 @@ mod tests {
                 instruction_budget: DEFAULT_INSTRUCTION_BUDGET,
                 host_nonce: DEFAULT_HOST_NONCE,
             })
+        );
+        assert_eq!(
+            endpoint_transport("127.0.0.1:4170").unwrap(),
+            SessionEndpointTransport::Tcp
         );
     }
 
@@ -2912,6 +2929,16 @@ mod tests {
         assert_eq!(
             error,
             CliError::DeviceSelection("invalid Board VM serial endpoint: serial://".to_owned())
+        );
+    }
+
+    #[test]
+    fn rejects_malformed_tcp_endpoint() {
+        let error = endpoint_transport("tcp://   ").unwrap_err();
+
+        assert_eq!(
+            error,
+            CliError::DeviceSelection("invalid Board VM TCP endpoint: tcp://   ".to_owned())
         );
     }
 
