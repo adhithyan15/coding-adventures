@@ -218,6 +218,17 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_character_
   --check
 ```
 
+`whatwg-legacy-element-audit.json` is a generated index over
+tree-construction cases that stress `isindex`, obsolete `menuitem`,
+`main`/`search`, pending-spec, tricky recovery, and namespace-sensitivity
+cases:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_legacy_element_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_legacy_element_audit_fixture.py \
+  --check
+```
+
 `whatwg-document-shell-audit.json` is a generated index over tree-construction
 cases that stress doctypes, comments, `html`/`head`/`body` synthesis, frameset
 boundaries, and shell fragment contexts:

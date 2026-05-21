@@ -253,6 +253,15 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_character_
   --check
 ```
 
+The generated `tests/fixtures/whatwg-legacy-element-audit.json` fixture
+indexes `isindex`, obsolete `menuitem`, `main`/`search`, pending-spec, tricky
+recovery, and namespace-sensitivity cases:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_legacy_element_audit_fixture.py \
+  --check
+```
+
 The generated `tests/fixtures/whatwg-document-shell-audit.json` fixture indexes
 doctypes, comments, `html`/`head`/`body` synthesis, frameset boundaries, and
 shell fragment contexts:
