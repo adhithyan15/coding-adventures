@@ -1748,6 +1748,15 @@ pub struct PssNewtonSolveResult {
     pub iteration_count: usize,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct PssResult {
+    pub solve: PssNewtonSolveResult,
+    pub steady_state: Vec<TransientPoint>,
+    pub period_seconds: f64,
+    pub time_step_seconds: f64,
+    pub converged: bool,
+}
+
 impl DcResult {
     pub fn voltage(&self, node: &str) -> Option<f64> {
         if is_ground(node) {
@@ -3250,6 +3259,42 @@ pub fn pss_newton_solve_with_tolerance(
         iteration_count: iterations.len(),
         iterations,
         final_residual,
+    }))
+}
+
+pub fn pss(circuit: &Circuit, steps_per_period: usize) -> Result<Option<PssResult>, SpiceError> {
+    pss_with_tolerance(circuit, steps_per_period, 1.0e-6, 1.0e-6, 8)
+}
+
+pub fn pss_with_tolerance(
+    circuit: &Circuit,
+    steps_per_period: usize,
+    residual_tolerance: f64,
+    perturbation: f64,
+    max_newton_iterations: usize,
+) -> Result<Option<PssResult>, SpiceError> {
+    let Some(solve) = pss_newton_solve_with_tolerance(
+        circuit,
+        steps_per_period,
+        residual_tolerance,
+        perturbation,
+        max_newton_iterations,
+    )?
+    else {
+        return Ok(None);
+    };
+
+    let steady_state = transient(
+        &solve.final_circuit,
+        solve.final_residual.time_step_seconds,
+        solve.final_residual.period_seconds,
+    )?;
+    Ok(Some(PssResult {
+        period_seconds: solve.final_residual.period_seconds,
+        time_step_seconds: solve.final_residual.time_step_seconds,
+        converged: solve.converged,
+        solve,
+        steady_state,
     }))
 }
 

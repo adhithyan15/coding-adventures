@@ -422,6 +422,17 @@ class PssNewtonSolveResult:
 
 
 @dataclass
+class PssResult:
+    """Periodic steady-state analysis result over one solved source period."""
+
+    solve: PssNewtonSolveResult
+    steady_state: TransientResult
+    period: float
+    time_step: float
+    converged: bool
+
+
+@dataclass
 class AcPoint:
     """Phasor voltages at a single frequency point.
 
@@ -2820,6 +2831,48 @@ def pss_newton_solve(
         final_residual=final_residual,
         converged=final_residual.within_tolerance,
         iteration_count=len(iterations),
+    )
+
+
+def pss(
+    circuit: Circuit,
+    *,
+    steps_per_period: int = 64,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    residual_tol: float = 1e-6,
+    perturbation: float = 1e-6,
+    max_newton_iterations: int = 8,
+) -> PssResult | None:
+    """Solve PSS and return one steady-state period from the solved circuit."""
+    solve = pss_newton_solve(
+        circuit,
+        steps_per_period=steps_per_period,
+        method=method,
+        max_iterations=max_iterations,
+        tol=tol,
+        residual_tol=residual_tol,
+        perturbation=perturbation,
+        max_newton_iterations=max_newton_iterations,
+    )
+    if solve is None:
+        return None
+
+    steady_state = transient(
+        solve.final_circuit,
+        t_stop=solve.final_residual.period,
+        t_step=solve.final_residual.time_step,
+        method=method,
+        max_iterations=max_iterations,
+        tol=tol,
+    )
+    return PssResult(
+        solve=solve,
+        steady_state=steady_state,
+        period=solve.final_residual.period,
+        time_step=solve.final_residual.time_step,
+        converged=solve.converged and steady_state.converged,
     )
 
 

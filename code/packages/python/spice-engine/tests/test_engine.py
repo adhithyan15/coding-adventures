@@ -110,6 +110,7 @@ from spice_engine import (
     PssNewtonIterationResult,
     PssNewtonSolveResult,
     PssNewtonUpdateResult,
+    PssResult,
     PssResidualJacobianResult,
     PssResidualResult,
     PulseWaveform,
@@ -133,6 +134,7 @@ from spice_engine import (
     estimate_period,
     mc_dc,
     noise_ac,
+    pss,
     pss_newton_candidate,
     pss_newton_iteration,
     pss_newton_solve,
@@ -417,6 +419,41 @@ def test_pss_newton_solve_runs_accepted_iterations_to_convergence() -> None:
     )
     assert result.final_circuit is result.iterations[-1].next_circuit
     assert result.final_state_vector == result.iterations[-1].next_state_vector
+
+
+def test_pss_returns_solved_steady_state_period() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(frequency=1_000.0),
+        )
+    )
+    c.add(Resistor("R1", "in", "out", 1_000.0))
+    c.add(Capacitor("C1", "out", "0", 1.0e-6, initial_voltage=0.1))
+
+    result = pss(
+        c,
+        steps_per_period=32,
+        residual_tol=1.0e-3,
+        perturbation=1.0e-5,
+        max_newton_iterations=4,
+    )
+
+    assert isinstance(result, PssResult)
+    assert result.converged is True
+    assert result.solve.converged is True
+    assert result.period == result.solve.final_residual.period
+    assert result.time_step == result.solve.final_residual.time_step
+    assert result.steady_state.converged is True
+    assert result.steady_state.points
+    assert result.steady_state.points[-1].time == pytest.approx(result.period)
+    assert result.steady_state.points[0].node_voltages["out"] == pytest.approx(
+        result.solve.final_state_vector[0].value
+    )
 
 
 def test_pss_residual_requires_periodic_sources() -> None:

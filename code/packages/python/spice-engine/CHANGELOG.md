@@ -4,6 +4,9 @@
 
 ### Added
 
+- **PSS analysis foothold** — `pss` now runs the bounded shooting-Newton solve
+  and returns one steady-state transient period from the solved circuit.
+
 - **PSS Newton solve foothold** — `pss_newton_solve` now runs bounded accepted
   Newton iterations until residual convergence, no improvement, or the
   iteration cap.
