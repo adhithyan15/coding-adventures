@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-doc-frontmatter",
+  "capabilities": [],
+  "justification": "Pure transform: markdown string → { body: string, frontmatter: object }.  Tiny in-house YAML/TOML parsers (no eval, no Function, no JSON.parse).  No I/O, no network, no env, no shell, no fs."
+}
