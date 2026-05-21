@@ -17,12 +17,16 @@
 //! Both backends consume the same parser AST, which in turn references the
 //! types here.
 //!
-//! # What's in v1
+//! # What's here
 //!
-//! Just [`EsVersion`] — the enum naming every ECMAScript edition that has a
-//! grammar file under `code/grammars/ecmascript/`. The lexer and parser
-//! today take version strings like `"es2025"`; this enum is the typed
-//! replacement that downstream crates will migrate to.
+//! - [`EsVersion`] — the enum naming every ECMAScript edition that has a
+//!   grammar file under `code/grammars/ecmascript/`. The lexer and parser
+//!   today still take version strings, but typed APIs that consume
+//!   `EsVersion` directly are also available (see `javascript-lexer` and
+//!   `javascript-parser` v0.4.0+).
+//! - [`Span`] — a `{ start, end }` byte-offset range. Used by the lexer to
+//!   record where each token came from in the source, and by the AST and
+//!   correlation-vector layers to anchor everything back to bytes.
 //!
 //! A full `TokenKind` enum (covering every token kind from `NAME` through
 //! `OPTIONAL_CHAIN` and the template-literal groups) is a follow-up PR; it
@@ -176,6 +180,52 @@ impl fmt::Display for UnknownEsVersion {
 
 impl std::error::Error for UnknownEsVersion {}
 
+/// A byte range within a single source file.
+///
+/// `start` and `end` are **byte offsets**, not character or column counts.
+/// They follow the half-open `[start, end)` convention — `end` is exclusive,
+/// so an empty span at position `n` is `Span { start: n, end: n }`.
+///
+/// `u32` is wide enough to address any practical JavaScript source file
+/// (4 GiB cap) and half the size of `usize` on 64-bit targets — important
+/// because every token and every AST node will carry one or more spans.
+///
+/// Per [CLOC02](../../specs/CLOC02-javascript-ast.md), AST nodes themselves
+/// do *not* hold spans directly — spans live in correlation-vector
+/// [`Origin`] records, keyed by `CvId`. The AST holds only the `CvId`. This
+/// type is what producers of those `Origin` records embed.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct Span {
+    /// Byte offset of the first byte in this range (inclusive).
+    pub start: u32,
+    /// Byte offset one past the last byte in this range (exclusive).
+    pub end: u32,
+}
+
+impl Span {
+    /// Construct a span from a half-open `[start, end)` byte range.
+    ///
+    /// Callers are expected to maintain `start <= end`. This invariant is
+    /// not enforced at construction time — making it a runtime check would
+    /// force every call site into `Result` territory for what is, in
+    /// practice, a static guarantee from the lexer. Debug builds may add
+    /// an assertion in a future revision.
+    pub const fn new(start: u32, end: u32) -> Self {
+        Self { start, end }
+    }
+
+    /// The number of bytes in this span. Always returns `end - start` as
+    /// a `u32`; callers responsible for the `start <= end` invariant.
+    pub const fn len(self) -> u32 {
+        self.end - self.start
+    }
+
+    /// Whether this span covers zero bytes.
+    pub const fn is_empty(self) -> bool {
+        self.start == self.end
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -244,5 +294,62 @@ mod tests {
         assert!(EsVersion::Es1 < EsVersion::Es3);
         assert!(EsVersion::Es5 < EsVersion::Es2015);
         assert!(EsVersion::Es2015 < EsVersion::Es2025);
+    }
+
+    // ----- Span tests -----
+
+    #[test]
+    fn span_constructs_from_byte_range() {
+        let s = Span::new(10, 20);
+        assert_eq!(s.start, 10);
+        assert_eq!(s.end, 20);
+    }
+
+    #[test]
+    fn span_len_is_end_minus_start() {
+        assert_eq!(Span::new(10, 20).len(), 10);
+        assert_eq!(Span::new(0, 1).len(), 1);
+        assert_eq!(Span::new(42, 42).len(), 0);
+    }
+
+    #[test]
+    fn span_is_empty_when_start_equals_end() {
+        assert!(Span::new(0, 0).is_empty());
+        assert!(Span::new(99, 99).is_empty());
+        assert!(!Span::new(0, 1).is_empty());
+        assert!(!Span::new(10, 20).is_empty());
+    }
+
+    #[test]
+    fn span_is_copy_and_eq() {
+        // Compile-time assertion that Span is Copy.
+        fn assert_copy<T: Copy>() {}
+        assert_copy::<Span>();
+
+        // PartialEq + Eq work over both fields.
+        let a = Span::new(3, 7);
+        let b = Span::new(3, 7);
+        let c = Span::new(3, 8);
+        assert_eq!(a, b);
+        assert_ne!(a, c);
+    }
+
+    #[test]
+    fn span_supports_const_construction() {
+        // `new`, `len`, `is_empty` are all `const fn`, so a Span can live
+        // in const context — useful for compile-time fixtures.
+        const S: Span = Span::new(2, 5);
+        const LEN: u32 = S.len();
+        const EMPTY: bool = S.is_empty();
+        assert_eq!(LEN, 3);
+        assert!(!EMPTY);
+    }
+
+    #[test]
+    fn span_ord_is_lexicographic() {
+        // PartialOrd/Ord compares start first, then end.
+        assert!(Span::new(0, 5) < Span::new(0, 6));
+        assert!(Span::new(0, 5) < Span::new(1, 2));
+        assert!(Span::new(5, 10) > Span::new(5, 5));
     }
 }
