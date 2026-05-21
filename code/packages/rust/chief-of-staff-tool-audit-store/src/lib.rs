@@ -688,6 +688,26 @@ impl ToolAuditSupervisorDrainPlanPage {
         self.has_pending_records()
     }
 
+    /// Return the starting checkpoint timestamp for host preflight logs.
+    pub fn starting_checkpoint_timestamp_ms(&self) -> u64 {
+        self.starting_checkpoint.timestamp_ms
+    }
+
+    /// Return the starting checkpoint call id for host preflight logs.
+    pub fn starting_checkpoint_call_id(&self) -> &str {
+        &self.starting_checkpoint.call_id
+    }
+
+    /// Return the checkpoint timestamp a matching drain tick would advance to.
+    pub fn next_checkpoint_timestamp_ms(&self) -> u64 {
+        self.next_checkpoint.timestamp_ms
+    }
+
+    /// Return the checkpoint call id a matching drain tick would advance to.
+    pub fn next_checkpoint_call_id(&self) -> &str {
+        &self.next_checkpoint.call_id
+    }
+
     /// Return whether more rows may remain beyond this planned page.
     pub fn should_continue_after_page(&self) -> bool {
         !self.reached_end_of_log
@@ -3048,6 +3068,10 @@ mod tests {
         assert!(plan.pages[0].should_drain());
         assert!(plan.pages[0].should_continue_after_page());
         assert!(plan.pages[0].would_advance_checkpoint());
+        assert_eq!(plan.pages[0].starting_checkpoint_timestamp_ms(), 120);
+        assert_eq!(plan.pages[0].starting_checkpoint_call_id(), "call_1");
+        assert_eq!(plan.pages[0].next_checkpoint_timestamp_ms(), 120);
+        assert_eq!(plan.pages[0].next_checkpoint_call_id(), "call_3");
         assert_eq!(
             plan.pages[0].next_checkpoint,
             ToolAuditReadCheckpoint::new(120, "call_3")
@@ -3058,6 +3082,10 @@ mod tests {
         assert!(plan.pages[1].should_continue_after_page());
         assert!(plan.pages[1].requires_follow_up());
         assert!(plan.pages[1].would_advance_checkpoint());
+        assert_eq!(plan.pages[1].starting_checkpoint_timestamp_ms(), 120);
+        assert_eq!(plan.pages[1].starting_checkpoint_call_id(), "call_3");
+        assert_eq!(plan.pages[1].next_checkpoint_timestamp_ms(), 151);
+        assert_eq!(plan.pages[1].next_checkpoint_call_id(), "call_5");
         assert_eq!(
             store
                 .fetch_checkpoint("supervisor")
@@ -3095,6 +3123,10 @@ mod tests {
         assert!(!plan.pages[2].should_drain());
         assert!(!plan.pages[2].should_continue_after_page());
         assert!(!plan.pages[2].would_advance_checkpoint());
+        assert_eq!(plan.pages[2].starting_checkpoint_timestamp_ms(), 120);
+        assert_eq!(plan.pages[2].starting_checkpoint_call_id(), "call_4");
+        assert_eq!(plan.pages[2].next_checkpoint_timestamp_ms(), 120);
+        assert_eq!(plan.pages[2].next_checkpoint_call_id(), "call_4");
         assert_eq!(
             plan.last_checkpoint(),
             Some(&ToolAuditReadCheckpoint::new(120, "call_4"))
@@ -3119,6 +3151,10 @@ mod tests {
         assert!(!plan.has_pending_records());
         assert!(!plan.pages[0].should_drain());
         assert!(!plan.pages[0].should_continue_after_page());
+        assert_eq!(plan.pages[0].starting_checkpoint_timestamp_ms(), 0);
+        assert_eq!(plan.pages[0].starting_checkpoint_call_id(), "");
+        assert_eq!(plan.pages[0].next_checkpoint_timestamp_ms(), 0);
+        assert_eq!(plan.pages[0].next_checkpoint_call_id(), "");
         assert!(!plan.requires_follow_up());
         assert!(!plan.pages[0].would_advance_checkpoint());
         assert!(!plan.would_advance_checkpoint());
