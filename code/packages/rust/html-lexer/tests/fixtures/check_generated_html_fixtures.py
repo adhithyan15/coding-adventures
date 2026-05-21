@@ -250,6 +250,13 @@ def default_checks() -> list[FixtureCheck]:
                 "--check",
             ),
         ),
+        FixtureCheck(
+            "whatwg-misc-recovery-audit",
+            (
+                str(PARSER_FIXTURE_DIR / "generate_whatwg_misc_recovery_audit_fixture.py"),
+                "--check",
+            ),
+        ),
     ]
 
 
