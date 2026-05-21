@@ -165,6 +165,12 @@ metadata, while USB-serial bridge and external-adapter boards explicitly reuse
 the selected serial port after the board package handles reset/programmer
 behavior.
 
+The Arduino CLI upload result tranche classifies the process exit code and
+stdout/stderr diagnostics after a frontend runs the Rust-owned execution plan.
+Rust language core reports success, failure kind, retryability, port-selection,
+board-package install, firmware-artifact, and runtime rediscovery hints so
+language frontends do not grow their own Arduino CLI error tables.
+
 The Arduino wireless metadata tranche records physical Wi-Fi and Bluetooth LE
 radios for non-Uno boards such as MKR WiFi 1010, Nano 33 IoT, Nano 33 BLE Rev2,
 Nano RP2040 Connect, Nano ESP32, GIGA R1 WiFi, Portenta H7 Lite Connected,

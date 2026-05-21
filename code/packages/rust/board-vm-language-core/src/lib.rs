@@ -657,6 +657,23 @@ pub struct LanguageArduinoCliUploadExecutionPlan {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageArduinoCliUploadResult {
+    pub board_id: String,
+    pub exit_code: i32,
+    pub success: bool,
+    pub status: String,
+    pub failure_kind: Option<String>,
+    pub retryable: bool,
+    pub needs_port_selection: bool,
+    pub needs_board_package_install: bool,
+    pub needs_firmware_artifact: bool,
+    pub wait_for_runtime_rediscovery: bool,
+    pub port_hint: String,
+    pub message: String,
+    pub diagnostic: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageUploadOptions {
     pub board_id: String,
     pub adapter: String,
@@ -1247,6 +1264,40 @@ pub fn arduino_cli_upload_execution_plan_with_options_for_target(
         success_exit_codes: vec![0],
         notes: arduino_cli_upload_execution_notes(port_hint).to_owned(),
     })
+}
+
+pub fn arduino_cli_upload_result_for_target(
+    selector: &str,
+    exit_code: i32,
+    stdout: &str,
+    stderr: &str,
+) -> Option<LanguageArduinoCliUploadResult> {
+    let options = arduino_cli_upload_options_for_target(selector)?;
+    let discovery = arduino_cli_port_discovery_for_target(selector)?;
+    Some(arduino_cli_upload_result(
+        options.board_id,
+        discovery.port_hint,
+        discovery.wait_for_runtime_rediscovery,
+        exit_code,
+        stdout,
+        stderr,
+    ))
+}
+
+pub fn arduino_cli_upload_result_for_execution_plan(
+    plan: &LanguageArduinoCliUploadExecutionPlan,
+    exit_code: i32,
+    stdout: &str,
+    stderr: &str,
+) -> LanguageArduinoCliUploadResult {
+    arduino_cli_upload_result(
+        plan.board_id.clone(),
+        plan.port_hint.clone(),
+        plan.wait_for_runtime_rediscovery,
+        exit_code,
+        stdout,
+        stderr,
+    )
 }
 
 pub fn upload_options_for_target(selector: &str) -> Option<LanguageUploadOptions> {
@@ -1939,6 +1990,134 @@ fn arduino_cli_upload_execution_notes(port_hint: TargetUploadPortHint) -> &'stat
         }
         _ => "Rust-owned Arduino CLI execution plan for running the generated upload command.",
     }
+}
+
+fn arduino_cli_upload_result(
+    board_id: String,
+    port_hint: String,
+    wait_for_runtime_rediscovery: bool,
+    exit_code: i32,
+    stdout: &str,
+    stderr: &str,
+) -> LanguageArduinoCliUploadResult {
+    let failure_kind = arduino_cli_upload_failure_kind(exit_code, stdout, stderr);
+    let success = failure_kind.is_none();
+    let failure_kind_string = failure_kind.map(str::to_owned);
+
+    LanguageArduinoCliUploadResult {
+        board_id,
+        exit_code,
+        success,
+        status: if success { "success" } else { "failed" }.to_owned(),
+        failure_kind: failure_kind_string,
+        retryable: failure_kind.is_some_and(arduino_cli_upload_failure_retryable),
+        needs_port_selection: failure_kind == Some("port_not_found"),
+        needs_board_package_install: failure_kind == Some("board_package_missing"),
+        needs_firmware_artifact: failure_kind == Some("missing_input_file"),
+        wait_for_runtime_rediscovery: success && wait_for_runtime_rediscovery,
+        port_hint,
+        message: arduino_cli_upload_result_message(failure_kind).to_owned(),
+        diagnostic: arduino_cli_upload_diagnostic(stdout, stderr),
+    }
+}
+
+fn arduino_cli_upload_failure_kind(
+    exit_code: i32,
+    stdout: &str,
+    stderr: &str,
+) -> Option<&'static str> {
+    if exit_code == 0 {
+        return None;
+    }
+
+    let output = format!("{stderr}\n{stdout}").to_ascii_lowercase();
+    if output.contains("permission denied") || output.contains("access is denied") {
+        return Some("port_permission_denied");
+    }
+    if output.contains("no such file or directory")
+        || output.contains("file does not exist")
+        || (output.contains("input file")
+            && (output.contains("not found") || output.contains("does not exist")))
+    {
+        return Some("missing_input_file");
+    }
+    if output.contains("platform not installed")
+        || output.contains("core is not installed")
+        || output.contains("is not installed")
+        || output.contains("no fqbn provided")
+        || (output.contains("fqbn") && output.contains("not found"))
+    {
+        return Some("board_package_missing");
+    }
+    if output.contains("no upload port provided")
+        || output.contains("port not found")
+        || output.contains("serial port not found")
+        || output.contains("no device found")
+        || output.contains("couldn't find a board on the selected port")
+    {
+        return Some("port_not_found");
+    }
+    if output.contains("verification failed")
+        || output.contains("verify failed")
+        || output.contains("checksum")
+    {
+        return Some("verification_failed");
+    }
+    if output.contains("not in sync")
+        || output.contains("programmer is not responding")
+        || output.contains("timed out")
+        || output.contains("timeout")
+        || output.contains("resource busy")
+    {
+        return Some("upload_transport_error");
+    }
+
+    Some("command_failed")
+}
+
+fn arduino_cli_upload_failure_retryable(kind: &str) -> bool {
+    matches!(
+        kind,
+        "port_not_found"
+            | "port_permission_denied"
+            | "verification_failed"
+            | "upload_transport_error"
+            | "command_failed"
+    )
+}
+
+fn arduino_cli_upload_result_message(failure_kind: Option<&str>) -> &'static str {
+    match failure_kind {
+        None => "Arduino CLI upload completed successfully.",
+        Some("port_not_found") => {
+            "Arduino CLI could not find the selected upload port; select a fresh port before retrying."
+        }
+        Some("port_permission_denied") => {
+            "Arduino CLI could not access the selected upload port; check permissions or close other serial users."
+        }
+        Some("missing_input_file") => {
+            "Arduino CLI could not read the firmware image; rebuild or select the artifact before retrying."
+        }
+        Some("board_package_missing") => {
+            "Arduino CLI is missing the board package or FQBN needed for this target."
+        }
+        Some("verification_failed") => {
+            "Arduino CLI reported upload verification failure; retry after checking the board connection."
+        }
+        Some("upload_transport_error") => {
+            "Arduino CLI reported a transport or programmer error while talking to the board."
+        }
+        _ => "Arduino CLI upload failed with an unclassified command error.",
+    }
+}
+
+fn arduino_cli_upload_diagnostic(stdout: &str, stderr: &str) -> String {
+    let stderr = stderr.trim();
+    if !stderr.is_empty() {
+        return stderr.to_owned();
+    }
+
+    stdout.trim().to_owned()
 }
 
 fn language_upload_plan(board_id: &str, upload: TargetUploadInfo) -> LanguageUploadPlan {
@@ -5961,6 +6140,88 @@ mod tests {
             "/tmp/esp32.bin"
         )
         .is_none());
+    }
+
+    #[test]
+    fn arduino_cli_upload_results_are_owned_by_rust_language_core() {
+        let plan = arduino_cli_upload_execution_plan_for_target(
+            "arduino:renesas_uno:nanor4",
+            "/dev/cu.usbmodem101",
+            "/tmp/board-vm-nano-r4.bin",
+        )
+        .unwrap();
+        let result =
+            arduino_cli_upload_result_for_execution_plan(&plan, 0, "Done uploading.\n", "");
+        assert_eq!(result.board_id, "arduino-nano-r4");
+        assert_eq!(result.exit_code, 0);
+        assert!(result.success);
+        assert_eq!(result.status, "success");
+        assert_eq!(result.failure_kind, None);
+        assert!(!result.retryable);
+        assert!(!result.needs_port_selection);
+        assert!(!result.needs_board_package_install);
+        assert!(!result.needs_firmware_artifact);
+        assert!(result.wait_for_runtime_rediscovery);
+        assert_eq!(result.port_hint, "native_usb");
+        assert_eq!(result.message, "Arduino CLI upload completed successfully.");
+        assert_eq!(result.diagnostic, "Done uploading.");
+
+        let result = arduino_cli_upload_result_for_target(
+            "arduino-mega-2560",
+            1,
+            "",
+            "Error: serial port not found: COM7",
+        )
+        .unwrap();
+        assert_eq!(result.board_id, "arduino-mega-2560");
+        assert!(!result.success);
+        assert_eq!(result.status, "failed");
+        assert_eq!(result.failure_kind.as_deref(), Some("port_not_found"));
+        assert!(result.retryable);
+        assert!(result.needs_port_selection);
+        assert!(!result.needs_board_package_install);
+        assert!(!result.needs_firmware_artifact);
+        assert!(!result.wait_for_runtime_rediscovery);
+        assert_eq!(result.port_hint, "usb_serial_bridge");
+        assert_eq!(result.diagnostic, "Error: serial port not found: COM7");
+
+        let result = arduino_cli_upload_result_for_target(
+            "arduino-pro-mini",
+            1,
+            "",
+            "Error: open /tmp/pro-mini.hex: no such file or directory",
+        )
+        .unwrap();
+        assert_eq!(result.failure_kind.as_deref(), Some("missing_input_file"));
+        assert!(!result.retryable);
+        assert!(result.needs_firmware_artifact);
+        assert_eq!(result.port_hint, "external_serial_adapter");
+
+        let result = arduino_cli_upload_result_for_target(
+            "arduino:renesas_uno:nanor4",
+            1,
+            "",
+            "Error: platform not installed: arduino:renesas_uno",
+        )
+        .unwrap();
+        assert_eq!(
+            result.failure_kind.as_deref(),
+            Some("board_package_missing")
+        );
+        assert!(!result.retryable);
+        assert!(result.needs_board_package_install);
+
+        let result = arduino_cli_upload_result_for_target(
+            "arduino-mega-2560",
+            1,
+            "",
+            "Error: verification failed",
+        )
+        .unwrap();
+        assert_eq!(result.failure_kind.as_deref(), Some("verification_failed"));
+        assert!(result.retryable);
+
+        assert!(arduino_cli_upload_result_for_target("esp32", 1, "", "Error").is_none());
     }
 
     #[test]
