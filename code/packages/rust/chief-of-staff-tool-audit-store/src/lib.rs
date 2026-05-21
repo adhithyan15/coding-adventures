@@ -1232,6 +1232,7 @@ impl ToolAuditSupervisorDrainRunReport {
             host_investigation_kind: self.host_investigation_kind(),
             host_investigation_label: self.host_investigation_label(),
             requires_host_investigation: self.requires_host_investigation(),
+            is_no_host_investigation: self.is_no_host_investigation(),
             requires_host_plan_drift_investigation: self.requires_host_plan_drift_investigation(),
             requires_host_count_drift_investigation: self.requires_host_count_drift_investigation(),
             matches_planned_record_count: self.matches_planned_record_count(),
@@ -1463,6 +1464,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_investigation_label: &'static str,
     /// Whether the host should investigate any run divergence.
     pub requires_host_investigation: bool,
+    /// Whether the host can skip drain-run investigation.
+    pub is_no_host_investigation: bool,
     /// Whether the host investigation includes plan drift.
     pub requires_host_plan_drift_investigation: bool,
     /// Whether the host investigation includes count drift.
@@ -1706,7 +1709,7 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether the host can skip drain-run investigation.
     pub fn is_no_host_investigation(&self) -> bool {
-        self.host_investigation_kind().is_no_investigation()
+        self.is_no_host_investigation
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -3815,6 +3818,8 @@ mod tests {
         assert_eq!(summary.host_investigation_label(), "no_investigation");
         assert!(!summary.requires_host_investigation);
         assert!(!summary.requires_host_investigation());
+        assert!(summary.is_no_host_investigation);
+        assert!(summary.is_no_host_investigation());
         assert!(!summary.requires_host_plan_drift_investigation);
         assert!(!summary.requires_host_plan_drift_investigation());
         assert!(!summary.requires_host_count_drift_investigation);
@@ -4420,6 +4425,7 @@ mod tests {
         assert!(!summary.requires_host_plan_drift_investigation());
         assert!(!summary.requires_host_count_drift_investigation);
         assert!(!summary.requires_host_count_drift_investigation());
+        assert!(summary.is_no_host_investigation);
         assert!(summary.is_no_host_investigation());
         assert!(summary.matches_planned_record_count);
         assert!(summary.matches_planned_record_count());
@@ -4535,6 +4541,7 @@ mod tests {
         assert!(summary.requires_host_plan_drift_investigation());
         assert!(summary.requires_host_count_drift_investigation);
         assert!(summary.requires_host_count_drift_investigation());
+        assert!(!summary.is_no_host_investigation);
         assert!(!summary.is_no_host_investigation());
         assert!(summary.replayed_extra_records());
         assert!(!summary.missed_planned_records());
@@ -4612,6 +4619,7 @@ mod tests {
         assert!(summary.requires_host_plan_drift_investigation());
         assert!(summary.requires_host_count_drift_investigation);
         assert!(summary.requires_host_count_drift_investigation());
+        assert!(!summary.is_no_host_investigation);
         assert!(!summary.is_no_host_investigation());
         assert!(!summary.replayed_extra_records());
         assert!(summary.missed_planned_records());
@@ -4693,6 +4701,7 @@ mod tests {
         assert!(!summary.requires_host_plan_drift_investigation());
         assert!(summary.requires_host_count_drift_investigation);
         assert!(summary.requires_host_count_drift_investigation());
+        assert!(!summary.is_no_host_investigation);
         assert!(!summary.is_no_host_investigation());
         assert!(summary.matches_planned_record_count);
         assert!(summary.matches_planned_record_count());
