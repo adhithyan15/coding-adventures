@@ -69,6 +69,11 @@ transport port to open after a successful upload. Native USB boards prefer the
 `New upload port:` value reported by Arduino CLI and otherwise carry the
 rediscovery requirement with the selected upload port; USB serial bridge and
 external-adapter targets reuse the selected port.
+`serial_runtime_open_plan_for_target` and
+`serial_runtime_open_plan_from_upload_handoff` describe the runtime serial
+transport open contract for language adapters: baud rate, timeout, stale-byte
+clearing, open-settle delay, endpoint scheme, and Board VM wire protocol. The
+actual OS serial open still belongs to the frontend adapter or CLI.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
