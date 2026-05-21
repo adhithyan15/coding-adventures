@@ -47,6 +47,7 @@ The crate keeps the boundary narrow:
   needing continuation, needing follow-up, or diverged from preflight
 - supervisor drain outcomes expose stable, parseable snake_case labels and
   action flags for host logs and scheduling decisions
+- supervisor drain outcomes expose typed status helpers for host branching
 - supervisor drain outcomes expose scheduler-action labels and typed intent
   helpers for host scheduling decisions
 - supervisor drain reports can emit flattened payload-free run summaries for
