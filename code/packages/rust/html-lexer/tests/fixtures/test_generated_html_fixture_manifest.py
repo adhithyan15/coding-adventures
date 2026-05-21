@@ -39,6 +39,7 @@ class GeneratedHtmlFixtureManifestTest(unittest.TestCase):
 
         self.assertIn("normalize_html5lib_fixtures.py", checked_scripts)
         self.assertIn("check_html5lib_tokenizer_coverage.py", checked_scripts)
+        self.assertIn("check_whatwg_lexer_fixture_metadata.py", checked_scripts)
         self.assertIn("check_whatwg_audit_manifest.py", checked_scripts)
         self.assertEqual(
             checked_scripts & parser_generators,
