@@ -104,6 +104,9 @@ binary while production code continues to link only static Rust source.
 - `check_html5lib_tokenizer_coverage.py`: checker that proves every raw local
   html5lib tokenizer smoke case maps to the expected normalized fixture case
   or skipped-case marker, with no stale or duplicate normalized IDs
+- `check_whatwg_lexer_fixture_metadata.py`: checker that keeps the generated
+  WHATWG lexer fixture files, generator pairs, metadata formats, and
+  stale-check manifest wiring aligned
 - `check_generated_html_fixtures.py`: manifest check that runs every
   self-contained generated lexer/parser fixture stale check from checked-in
   inputs, with optional flags for upstream-only source inputs
@@ -170,6 +173,13 @@ Verify local html5lib tokenizer normalization coverage with:
 
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/check_html5lib_tokenizer_coverage.py \
+  --check
+```
+
+Verify local WHATWG lexer fixture metadata and manifest coverage with:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/check_whatwg_lexer_fixture_metadata.py \
   --check
 ```
 
