@@ -22,8 +22,10 @@ use board_vm_host::{
     GpioReadProgram, TimeNowProgram, BLINK_MODULE_LEN, GPIO_READ_MODULE_LEN, TIME_NOW_MODULE_LEN,
 };
 use board_vm_language_core::{
-    bluetooth_transact_wire_frame, parse_host_endpoint as parse_language_host_endpoint,
+    bluetooth_transact_wire_frame,
+    parse_host_endpoint_with_error as parse_language_host_endpoint_with_error,
     parse_serial_endpoint as parse_language_serial_endpoint, serial_runtime_open_plan_for_target,
+    LanguageHostEndpointParseError, LanguageHostEndpointParseErrorKind,
     LanguageHostEndpointTransport, LanguageSerialRuntimeOpenPlan, LANGUAGE_SERIAL_OPEN_SETTLE_MS,
 };
 use board_vm_language_core::{detect_target, discover_devices, LanguageHostDevice};
@@ -1812,24 +1814,27 @@ fn endpoint_connection_label(
 }
 
 fn endpoint_transport(endpoint: &str) -> Result<SessionEndpointTransport, CliError> {
-    parse_language_host_endpoint(endpoint)
+    parse_language_host_endpoint_with_error(endpoint)
         .map(|endpoint| endpoint.endpoint_transport.into())
-        .ok_or_else(|| endpoint_parse_error(endpoint))
+        .map_err(endpoint_parse_error)
 }
 
-fn endpoint_parse_error(endpoint: &str) -> CliError {
-    match endpoint.split_once("://").map(|(scheme, _)| scheme) {
-        Some("serial") => {
-            CliError::DeviceSelection(format!("invalid Board VM serial endpoint: {endpoint}"))
+fn endpoint_parse_error(error: LanguageHostEndpointParseError) -> CliError {
+    match error.kind {
+        LanguageHostEndpointParseErrorKind::InvalidSerialEndpoint => CliError::DeviceSelection(
+            format!("invalid Board VM serial endpoint: {}", error.endpoint),
+        ),
+        LanguageHostEndpointParseErrorKind::InvalidTcpEndpoint => {
+            CliError::DeviceSelection(format!("invalid Board VM TCP endpoint: {}", error.endpoint))
         }
-        None | Some("tcp") => {
-            CliError::DeviceSelection(format!("invalid Board VM TCP endpoint: {endpoint}"))
-        }
-        Some("ble") | Some("btspp") | Some("rfcomm") => {
-            CliError::DeviceSelection(format!("invalid Board VM Bluetooth endpoint: {endpoint}"))
-        }
-        Some(scheme) => {
-            CliError::DeviceSelection(format!("unsupported --endpoint scheme: {scheme}"))
+        LanguageHostEndpointParseErrorKind::InvalidBluetoothEndpoint => CliError::DeviceSelection(
+            format!("invalid Board VM Bluetooth endpoint: {}", error.endpoint),
+        ),
+        LanguageHostEndpointParseErrorKind::UnsupportedScheme => {
+            CliError::DeviceSelection(format!(
+                "unsupported --endpoint scheme: {}",
+                error.scheme.as_deref().unwrap_or("")
+            ))
         }
     }
 }

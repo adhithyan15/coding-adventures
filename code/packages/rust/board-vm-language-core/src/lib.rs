@@ -405,6 +405,21 @@ pub struct LanguageHostEndpointSummary {
     pub endpoint_scheme: String,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageHostEndpointParseErrorKind {
+    InvalidSerialEndpoint,
+    InvalidTcpEndpoint,
+    InvalidBluetoothEndpoint,
+    UnsupportedScheme,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageHostEndpointParseError {
+    pub endpoint: String,
+    pub kind: LanguageHostEndpointParseErrorKind,
+    pub scheme: Option<String>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageBluetoothEndpoint {
     pub endpoint: String,
@@ -1601,6 +1616,29 @@ pub fn parse_host_endpoint(endpoint: &str) -> Option<LanguageHostEndpointSummary
         endpoint_transport: endpoint.endpoint_transport,
         endpoint_scheme: endpoint.endpoint_scheme,
     })
+}
+
+pub fn parse_host_endpoint_with_error(
+    endpoint: &str,
+) -> Result<LanguageHostEndpointSummary, LanguageHostEndpointParseError> {
+    parse_host_endpoint(endpoint).ok_or_else(|| host_endpoint_parse_error(endpoint))
+}
+
+pub fn host_endpoint_parse_error(endpoint: &str) -> LanguageHostEndpointParseError {
+    let scheme = endpoint.split_once("://").map(|(scheme, _)| scheme);
+    let kind = match scheme {
+        Some("serial") => LanguageHostEndpointParseErrorKind::InvalidSerialEndpoint,
+        None | Some("tcp") => LanguageHostEndpointParseErrorKind::InvalidTcpEndpoint,
+        Some("ble") | Some("btspp") | Some("rfcomm") => {
+            LanguageHostEndpointParseErrorKind::InvalidBluetoothEndpoint
+        }
+        Some(_) => LanguageHostEndpointParseErrorKind::UnsupportedScheme,
+    };
+    LanguageHostEndpointParseError {
+        endpoint: endpoint.to_owned(),
+        kind,
+        scheme: scheme.map(str::to_owned),
+    }
 }
 
 pub fn bluetooth_endpoint_candidates_from_devices(
@@ -5814,6 +5852,48 @@ mod tests {
         assert!(parse_host_endpoint("tcp://   ").is_none());
         assert!(parse_host_endpoint("ble://").is_none());
         assert!(parse_host_endpoint("ws://board-vm.local:4170").is_none());
+
+        assert_eq!(
+            parse_host_endpoint_with_error("tcp://board-vm.local:4170")
+                .unwrap()
+                .endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+    }
+
+    #[test]
+    fn host_endpoint_parse_errors_are_classified_by_rust_language_core() {
+        let serial = parse_host_endpoint_with_error("serial://   ").unwrap_err();
+        let tcp = parse_host_endpoint_with_error("tcp://   ").unwrap_err();
+        let bare_tcp = parse_host_endpoint_with_error("").unwrap_err();
+        let bluetooth = parse_host_endpoint_with_error("ble://").unwrap_err();
+        let unsupported = parse_host_endpoint_with_error("ws://board-vm.local:4170").unwrap_err();
+
+        assert_eq!(
+            serial.kind,
+            LanguageHostEndpointParseErrorKind::InvalidSerialEndpoint
+        );
+        assert_eq!(serial.scheme.as_deref(), Some("serial"));
+        assert_eq!(
+            tcp.kind,
+            LanguageHostEndpointParseErrorKind::InvalidTcpEndpoint
+        );
+        assert_eq!(tcp.scheme.as_deref(), Some("tcp"));
+        assert_eq!(
+            bare_tcp.kind,
+            LanguageHostEndpointParseErrorKind::InvalidTcpEndpoint
+        );
+        assert_eq!(bare_tcp.scheme, None);
+        assert_eq!(
+            bluetooth.kind,
+            LanguageHostEndpointParseErrorKind::InvalidBluetoothEndpoint
+        );
+        assert_eq!(bluetooth.scheme.as_deref(), Some("ble"));
+        assert_eq!(
+            unsupported.kind,
+            LanguageHostEndpointParseErrorKind::UnsupportedScheme
+        );
+        assert_eq!(unsupported.scheme.as_deref(), Some("ws"));
     }
 
     #[test]

@@ -79,7 +79,10 @@ keep endpoint scheme and transport metadata in the same Rust-owned boundary so
 frontends do not need parallel endpoint tables. `parse_host_endpoint` provides
 the transport-classification summary over all supported endpoint forms, letting
 CLI consumers and language adapters route serial, TCP, BLE GATT, and RFCOMM
-without duplicating scheme dispatch.
+without duplicating scheme dispatch. `parse_host_endpoint_with_error` returns
+the same summary with a Rust-owned parse error kind for malformed endpoint
+input, so frontends can present native messages without inventing their own
+endpoint failure taxonomy.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
