@@ -50,11 +50,19 @@ image, optional upload properties, and verify flag.
 metadata onto that concrete argv, so language frontends can execute the command
 while still asking Rust whether the selected port is native USB, a USB serial
 bridge, or an external adapter and whether runtime rediscovery is expected.
+`arduino_cli_upload_process_for_target` and
+`arduino_cli_upload_process_for_execution_plan` turn that plan into a typed
+process-launch contract with executable, argv, stdio capture modes, success
+exit codes, and rediscovery hints, leaving only the OS spawn call in the
+frontend adapter.
 `arduino_cli_upload_result_for_target` and
 `arduino_cli_upload_result_for_execution_plan` normalize the `arduino-cli`
 process exit code plus stdout/stderr into success, failure kind, retry, port
 selection, board-package install, firmware-artifact, and rediscovery hints so
 language frontends do not parse CLI diagnostics themselves.
+`arduino_cli_upload_result_for_process_output` performs the same classification
+directly from the process-launch contract after the frontend captures
+stdout/stderr.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves

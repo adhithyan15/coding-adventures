@@ -58,6 +58,9 @@ Arduino CLI upload properties and verify mode.
 The execution-plan helper composes that argv with reset and rediscovery steps,
 preserving native-USB bootloader behavior and serial-adapter expectations
 without making the target registry open devices or spawn `arduino-cli`.
+The process-launch helper packages that plan as a typed executable/argv/stdout
+and stderr capture contract, so language frontends perform only the OS spawn
+while Rust still owns the upload lifecycle metadata.
 The matching upload-result helper classifies Arduino CLI exit status and
 stdout/stderr diagnostics into Rust-owned success, retry, port-selection,
 board-package, firmware-artifact, and rediscovery hints for language

@@ -208,10 +208,12 @@ that from board names.
 For Arduino CLI targets, SDKs should use the Rust-owned execution plan after
 port and firmware-image selection so argv construction, reset delegation, and
 runtime rediscovery expectations stay shared even when the language layer owns
-the final process launch. SDKs should feed the resulting Arduino CLI exit code,
-stdout, and stderr back into Rust language core so upload status, retryability,
-port-selection, board-package install, firmware-artifact, and rediscovery hints
-stay shared too.
+the final process launch. SDKs should ask Rust for the process-launch contract
+derived from that plan so executable, argv, stdio capture modes, success exit
+codes, and rediscovery hints stay uniform across language adapters. SDKs should
+feed the resulting Arduino CLI exit code, stdout, and stderr back into Rust
+language core so upload status, retryability, port-selection, board-package
+install, firmware-artifact, and rediscovery hints stay shared too.
 
 Selector handling follows the same ownership boundary. If a frontend receives
 an Arduino CLI FQBN such as `arduino:renesas_uno:nanor4`, it should ask the Rust
