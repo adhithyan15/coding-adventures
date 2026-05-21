@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.33.0] - 2026-05-21
+
+### Added
+
+- New IR opcodes for the bitwise operators introduced in sql-planner
+  0.36 and sql-vm 1.49:
+  - `BinaryOpCode.BIT_AND`, `BinaryOpCode.BIT_OR`,
+    `BinaryOpCode.BIT_SHL`, `BinaryOpCode.BIT_SHR`.
+  - `UnaryOpCode.BIT_NOT`.
+- Compiler mappings from `BinaryOp.BIT_*` and `UnaryOp.BIT_NOT` (planner
+  AST) to the matching IR opcodes, so codegen produces the right VM
+  instructions for `a & b`, `a | b`, `a << b`, `a >> b`, and `~a` with
+  no plan-level changes required by callers.
+
 ## [1.32.0] - 2026-05-19
 
 ### Fixed

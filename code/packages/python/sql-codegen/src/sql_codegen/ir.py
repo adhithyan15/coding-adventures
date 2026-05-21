@@ -114,11 +114,21 @@ class BinaryOpCode(Enum):
     # IS_NOT_DISTINCT_FROM: True when both are equal or both are NULL (i.e., NOT DISTINCT).
     IS_DISTINCT_FROM = "IS_DISTINCT_FROM"
     IS_NOT_DISTINCT_FROM = "IS_NOT_DISTINCT_FROM"
+    # Bitwise operators — operate on integer operands only.  NULL on either
+    # side yields NULL (same NULL-propagation as arithmetic).  Float
+    # operands are truncated toward zero before the bitwise op, matching
+    # SQLite's documented coercion.
+    BIT_AND = "BIT_AND"        # a & b
+    BIT_OR = "BIT_OR"          # a | b
+    BIT_SHL = "BIT_SHL"        # a << b
+    BIT_SHR = "BIT_SHR"        # a >> b
 
 
 class UnaryOpCode(Enum):
     NEG = "NEG"
     NOT = "NOT"
+    # Bitwise NOT (~) — invert all bits of an integer operand.  NULL → NULL.
+    BIT_NOT = "BIT_NOT"
 
 
 class AggFunc(Enum):

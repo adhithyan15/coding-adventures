@@ -1437,16 +1437,16 @@ def _not_expr(node: ASTNode, state: _PlaceholderCounter) -> Expr:
 
 
 def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
-    """Comparison covers: bare additive, cmp_op, BETWEEN, IN, LIKE, IS NULL.
+    """Comparison covers: bare bitwise, cmp_op, BETWEEN, IN, LIKE, IS NULL.
 
-    Grammar: ``comparison = additive [cmp_op additive | "BETWEEN" ... | ...]``.
-    If the only child is an ``additive``, we pass it through. Otherwise we
+    Grammar: ``comparison = bitwise [cmp_op bitwise | "BETWEEN" ... | ...]``.
+    If the only child is a ``bitwise``, we pass it through. Otherwise we
     inspect the following children to pick the right expression shape.
     """
-    additives = [c for c in node.children if isinstance(c, ASTNode) and c.rule_name == "additive"]
-    left = _additive(additives[0], state)
+    additives = [c for c in node.children if isinstance(c, ASTNode) and c.rule_name == "bitwise"]
+    left = _bitwise(additives[0], state)
 
-    # Bare additive → nothing to combine.
+    # Bare bitwise → nothing to combine.
     if len(additives) == 1 and not any(
         isinstance(c, ASTNode) and c.rule_name == "cmp_op" for c in node.children
     ) and not _has_keyword_child(node, "BETWEEN") and not _has_keyword_child(node, "IN") \
@@ -1458,14 +1458,14 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     cmp = _maybe_child(node, "cmp_op")
     if cmp is not None:
         op = _cmp_op_to_binop(cmp)
-        right = _additive(additives[1], state)
+        right = _bitwise(additives[1], state)
         return BinaryExpr(op=op, left=left, right=right)
 
     # BETWEEN / NOT BETWEEN.
     if _has_keyword_child(node, "BETWEEN"):
         negated = _has_keyword_child(node, "NOT")
-        low = _additive(additives[1], state)
-        high = _additive(additives[2], state)
+        low = _bitwise(additives[1], state)
+        high = _bitwise(additives[2], state)
         expr: Expr = Between(operand=left, low=low, high=high)
         return UnaryExpr(op=UnaryOp.NOT, operand=expr) if negated else expr
 
@@ -1507,18 +1507,18 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     # disables wildcard meaning for the following character in the pattern.
     if _has_keyword_child(node, "LIKE"):
         negated = _has_keyword_child(node, "NOT")
-        pat_expr = _additive(additives[1], state)
+        pat_expr = _bitwise(additives[1], state)
         # NULL pattern: LIKE NULL always yields NULL (no rows satisfy WHERE).
         if isinstance(pat_expr, Literal) and pat_expr.value is None:
             return Literal(value=None)
         if not isinstance(pat_expr, Literal) or not isinstance(pat_expr.value, str):
             raise ProgrammingError("LIKE pattern must be a string literal")
-        # ESCAPE 'c' — third additive is the escape character.  It must be a
+        # ESCAPE 'c' — third bitwise is the escape character.  It must be a
         # single-character string literal; SQLite raises "ESCAPE expression
         # must be a single character" otherwise.
         escape_char: str | None = None
         if _has_keyword_child(node, "ESCAPE") and len(additives) >= 3:
-            esc_expr = _additive(additives[2], state)
+            esc_expr = _bitwise(additives[2], state)
             if not isinstance(esc_expr, Literal) or not isinstance(esc_expr.value, str):
                 raise ProgrammingError("ESCAPE expression must be a string literal")
             if len(esc_expr.value) != 1:
@@ -1540,7 +1540,7 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     #      as the pattern.  This is consistent with SQLite's behaviour.
     if _has_keyword_child(node, "GLOB"):
         negated = _has_keyword_child(node, "NOT")
-        pat_expr = _additive(additives[1], state)
+        pat_expr = _bitwise(additives[1], state)
         glob_call: Expr = FunctionCall(
             name="glob",
             args=(FuncArg(value=pat_expr), FuncArg(value=left)),
@@ -1562,10 +1562,10 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     #   x IS NOT DISTINCT FROM y  ≡  (x = y) OR (x IS NULL AND y IS NULL)
     if _has_keyword_child(node, "IS"):
         if _has_keyword_child(node, "DISTINCT"):
-            # "IS [NOT] DISTINCT FROM additive"
-            # The comparison node has two additive children: left (index 0,
+            # "IS [NOT] DISTINCT FROM bitwise"
+            # The comparison node has two bitwise children: left (index 0,
             # already parsed above as ``left``) and right (index 1).
-            right = _additive(additives[1], state)
+            right = _bitwise(additives[1], state)
             if _has_keyword_child(node, "NOT"):
                 return BinaryExpr(op=BinaryOp.IS_NOT_DISTINCT_FROM, left=left, right=right)
             return BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, left=left, right=right)
@@ -1574,6 +1574,34 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
         return IsNull(operand=left)
 
     return left
+
+
+def _bitwise(node: ASTNode, state: _PlaceholderCounter) -> Expr:
+    """Handle the ``bitwise`` grammar rule.
+
+    Grammar::
+
+        bitwise = additive { ( "&" | "|" | "<<" | ">>" ) additive }
+
+    SQLite defines four binary bitwise operators (``&``, ``|``, ``<<``,
+    ``>>``) at a single precedence level sitting *between* additive and
+    comparison.  All four are left-associative.  Operands are coerced to
+    64-bit signed integers (per SQLite's CAST-to-INTEGER rules) before the
+    bitwise operation is applied; the actual coercion lives in the VM —
+    here we just build the typed expression tree.
+    """
+    return _left_assoc_punct(
+        node,
+        "additive",
+        _additive,
+        {
+            "BIT_AND_OP": BinaryOp.BIT_AND,
+            "BIT_OR_OP": BinaryOp.BIT_OR,
+            "SHIFT_LEFT": BinaryOp.BIT_SHL,
+            "SHIFT_RIGHT": BinaryOp.BIT_SHR,
+        },
+        state,
+    )
 
 
 def _additive(node: ASTNode, state: _PlaceholderCounter) -> Expr:
@@ -1643,10 +1671,18 @@ def _multiplicative(node: ASTNode, state: _PlaceholderCounter) -> Expr:
 
 
 def _unary(node: ASTNode, state: _PlaceholderCounter) -> Expr:
-    # unary = "-" unary | primary
+    # unary = ( "-" | "~" ) unary | primary
+    #
+    # SQLite supports two unary prefix operators at the same precedence level:
+    #   -x   arithmetic negation
+    #   ~x   bitwise NOT (coerces x to a 64-bit signed integer, then flips
+    #        every bit — equivalent to ``-(x + 1)`` for integers).
     if any(_is_token(c, type_="MINUS") for c in node.children):
         inner = _child_node(node, "unary")
         return UnaryExpr(op=UnaryOp.NEG, operand=_unary(inner, state))
+    if any(_is_token(c, type_="BIT_NOT_OP") for c in node.children):
+        inner = _child_node(node, "unary")
+        return UnaryExpr(op=UnaryOp.BIT_NOT, operand=_unary(inner, state))
     return _primary(_child_node(node, "primary"), state)
 
 

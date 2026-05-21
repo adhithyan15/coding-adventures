@@ -2,6 +2,28 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.31.0] - 2026-05-21
+
+### Added
+
+- New `bitwise` precedence layer between `additive` and `comparison`:
+
+      bitwise = additive { ( "&" | "|" | "<<" | ">>" ) additive } ;
+
+  This matches SQLite's grammar where all four binary bitwise operators
+  sit at one precedence level, looser than arithmetic but tighter than
+  any comparison.  `comparison` now consumes `bitwise` instead of
+  `additive` so expressions like `5 & 3 = 1` parse as `(5 & 3) = 1`.
+- `unary` now accepts the bitwise-NOT prefix `~`:
+
+      unary = ( "-" | "~" ) unary | primary ;
+
+  `~` binds at the same precedence as unary `-`, right-associatively, so
+  `-~5` parses as `-(~5)` = 6 and `~~5` parses as `~(~5)` = 5.
+- Regenerated `_grammar.py` and `_tokens.py` to include the new rule
+  and the `SHIFT_LEFT`/`SHIFT_RIGHT`/`BIT_AND_OP`/`BIT_OR_OP`/`BIT_NOT_OP`
+  tokens.
+
 ## [0.30.0] - 2026-05-21
 
 ### Changed

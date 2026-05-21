@@ -103,6 +103,8 @@ def apply_binary(op: BinaryOpCode, left: SqlValue, right: SqlValue) -> SqlValue:
         return _comparison(op, left, right)
     if op is BinaryOpCode.CONCAT:
         return _concat(left, right)
+    if op in _BITWISE:
+        return _bitwise(op, left, right)
 
     raise TypeMismatch(expected="known op", got=str(op), context="BinaryOp")
 
@@ -121,6 +123,12 @@ _COMPARISON = {
     BinaryOpCode.LTE,
     BinaryOpCode.GT,
     BinaryOpCode.GTE,
+}
+_BITWISE = {
+    BinaryOpCode.BIT_AND,
+    BinaryOpCode.BIT_OR,
+    BinaryOpCode.BIT_SHL,
+    BinaryOpCode.BIT_SHR,
 }
 
 
@@ -225,6 +233,90 @@ def _concat(left: SqlValue, right: SqlValue) -> SqlValue:
     return left + right
 
 
+def _to_bitwise_int(v: SqlValue, op: BinaryOpCode | UnaryOpCode) -> int:
+    """Coerce *v* to an int for the bitwise operators.
+
+    SQLite truncates floats toward zero before applying any bitwise
+    operator (``1.5 & 1`` evaluates as ``1 & 1 = 1``).  Non-numeric
+    operands raise TypeMismatch — bitwise ops on strings are
+    syntactically valid SQL but produce NULL in SQLite due to its
+    type-affinity rules; we surface this loudly here so callers
+    catch the bug early rather than silently propagating NULLs.
+    """
+    if isinstance(v, bool):
+        return int(v)
+    if isinstance(v, int):
+        return v
+    if isinstance(v, float):
+        # Match the % operator's "truncate floats to int first" rule
+        # (and SQLite's bitwise coercion).
+        return int(v)
+    raise TypeMismatch(
+        expected="integer",
+        got=sql_type_name(v),
+        context=f"BinaryOp({op.name})" if isinstance(op, BinaryOpCode)
+                else f"UnaryOp({op.name})",
+    )
+
+
+_I64_MASK = (1 << 64) - 1
+_I64_SIGN = 1 << 63
+
+
+def _to_i64(x: int) -> int:
+    """Reinterpret a Python int as a 64-bit two's-complement signed integer.
+
+    SQLite stores integers in a 64-bit signed slot, so a left shift like
+    ``1 << 63`` wraps to ``-9223372036854775808`` rather than producing
+    the arbitrarily-large Python int ``9223372036854775808``.  We mask
+    every bitwise result to 64 bits and reinterpret the top bit as the
+    sign — the same dance every CPU does on overflow.
+    """
+    x &= _I64_MASK
+    return x - (1 << 64) if x & _I64_SIGN else x
+
+
+def _bitwise(op: BinaryOpCode, left: SqlValue, right: SqlValue) -> SqlValue:
+    """Evaluate a bitwise binary operator with SQLite-matching wrap-around.
+
+    Operands are coerced via ``_to_bitwise_int`` (truncates floats toward
+    zero, rejects non-numeric values).  Results are masked to 64 bits and
+    reinterpreted as signed — this matters most for left shifts where
+    the high bits would otherwise leak past 2**63.
+
+    Shift counts ≥ 64 in SQLite produce 0 (for SHL or SHR of a
+    non-negative value) or -1 (for SHR of a negative value, since the
+    sign bit propagates).  Negative shift counts flip the direction —
+    ``x << -k`` is ``x >> k`` and vice versa.  We special-case both
+    extremes here rather than relying on Python's ``<<`` (which would
+    happily allocate gigabytes for ``1 << 1000``).
+    """
+    a = _to_bitwise_int(left, op)
+    b = _to_bitwise_int(right, op)
+    if op is BinaryOpCode.BIT_AND:
+        return _to_i64(a & b)
+    if op is BinaryOpCode.BIT_OR:
+        return _to_i64(a | b)
+    if op is BinaryOpCode.BIT_SHL:
+        if b < 0:
+            # Equivalent to shifting right by |b|.
+            if -b >= 64:
+                return 0 if a >= 0 else -1
+            return _to_i64(a >> (-b))
+        if b >= 64:
+            return 0
+        return _to_i64(a << b)
+    if op is BinaryOpCode.BIT_SHR:
+        if b < 0:
+            if -b >= 64:
+                return 0
+            return _to_i64(a << (-b))
+        if b >= 64:
+            return 0 if a >= 0 else -1
+        return a >> b
+    raise TypeMismatch(expected="bitwise op", got=op.name, context="BinaryOp")
+
+
 def _truthiness(v: SqlValue) -> bool | None:
     """Coerce a SqlValue to a SQL truth value.
 
@@ -316,6 +408,11 @@ def apply_unary(op: UnaryOpCode, value: SqlValue) -> SqlValue:
                 expected="boolean", got=sql_type_name(value), context="UnaryOp(NOT)"
             )
         return not truth
+    if op is UnaryOpCode.BIT_NOT:
+        # Bitwise NOT — invert all bits of an integer operand.  Float
+        # operands truncate toward zero first (matches the binary
+        # bitwise path); strings raise TypeMismatch.
+        return ~_to_bitwise_int(value, op)
     raise TypeMismatch(expected="unary op", got=str(op), context="UnaryOp")
 
 

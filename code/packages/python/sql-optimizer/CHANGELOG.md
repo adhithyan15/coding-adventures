@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.15.0] - 2026-05-21
+
+### Added
+
+- Constant folding for SQLite bitwise operators:
+  - Binary: `BinaryOp.BIT_AND`, `BIT_OR`, `BIT_SHL`, `BIT_SHR`.
+  - Unary:  `UnaryOp.BIT_NOT`.
+
+  The folder applies the *same* 64-bit two's-complement wrap-around
+  that sql-vm uses at runtime, so literal-only expressions like
+  `SELECT 1 << 63` are folded to `-9223372036854775808` rather than
+  the unbounded Python int.  Without this, the constant-folded result
+  would silently disagree with what the VM computes for column-bearing
+  expressions — a subtle byte-incompat bug.
+- Bool operands are *not* folded for `~`; the result is left for the
+  VM to evaluate, matching SQLite's implementation-defined behaviour.
+- String operands raise `TypeError` inside `_apply_binary` and the
+  outer try/except leaves the expression intact for the VM to report
+  at runtime with full source position.
+
 ## [0.14.0] - 2026-05-20
 
 ### Fixed

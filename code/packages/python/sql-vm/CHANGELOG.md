@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.49.0 — 2026-05-21
+
+### Added
+
+- Runtime support for SQLite's bitwise operators (`&`, `|`, `<<`, `>>`,
+  `~`).  All operate on 64-bit two's-complement signed integers, so
+  results wrap exactly the way SQLite does:
+  - `1 << 63` evaluates to `-9223372036854775808`, not the unbounded
+    Python int `+9223372036854775808`.
+  - Shift counts `≥ 64` saturate to `0` (or `-1` for arithmetic
+    right-shift of a negative value, where the sign bit propagates).
+  - Negative shift counts flip direction: `a << -k` ≡ `a >> k` and
+    vice versa, matching SQLite's reinterpretation.
+- Operand coercion follows the existing `_to_bitwise_int` helper:
+  booleans become 0/1, floats truncate toward zero, strings raise
+  `TypeMismatch` loudly so propagation bugs don't silently produce
+  NULLs.
+- `apply_unary` learned `UnaryOpCode.BIT_NOT`, with NULL propagation
+  preserved (`~NULL` → NULL).
+
+### Internal
+
+- New `_to_i64` helper masks bitwise results to 64 bits and
+  reinterprets the top bit as the sign — the same dance every CPU
+  does on integer overflow.  Adding it in one place keeps the wrap-
+  around behaviour consistent across all four binary bitwise ops.
+
 ## 1.48.0 — 2026-05-20
 
 ### Fixed

@@ -377,6 +377,47 @@ def _apply_binary(op: BinaryOp, lv: object, rv: object) -> object:
             # system guarantees this; if they aren't, fall through to TypeError
             # and let the VM raise a proper TypeMismatch at runtime).
             return str(lv) + str(rv)  # type: ignore[operator]
+        case BinaryOp.BIT_AND | BinaryOp.BIT_OR | BinaryOp.BIT_SHL | BinaryOp.BIT_SHR:
+            # SQLite bitwise operators coerce both operands to 64-bit signed
+            # integers (CAST-to-INTEGER semantics: TRUE→1, FALSE→0, floats
+            # truncate toward zero, strings parse via the same rule as
+            # ``CAST(x AS INTEGER)``).  We only fold when both literals are
+            # numeric — anything trickier (string parsing, bool coercion) we
+            # defer to the VM so it can raise consistent error messages.
+            if not (isinstance(lv, (int, float)) and isinstance(rv, (int, float))):
+                raise TypeError("bitwise operands must be numeric for folding")
+            a = int(lv) if not isinstance(lv, bool) else int(lv)
+            b = int(rv) if not isinstance(rv, bool) else int(rv)
+            # 64-bit wrap-around: SQLite's bitwise ops operate on 64-bit
+            # signed integers, so e.g. ``1 << 63`` becomes a large negative
+            # number rather than overflowing.  We emulate by masking to 64
+            # bits and reinterpreting the top bit as the sign.
+            mask = (1 << 64) - 1
+            sign_bit = 1 << 63
+
+            def s64(x: int) -> int:
+                x &= mask
+                return x - (1 << 64) if x & sign_bit else x
+
+            if op is BinaryOp.BIT_AND:
+                return s64(a & b)
+            if op is BinaryOp.BIT_OR:
+                return s64(a | b)
+            if op is BinaryOp.BIT_SHL:
+                # Negative shift counts flip the direction (matches SQLite).
+                if b < 0:
+                    return s64(a >> (-b)) if -b < 64 else (0 if a >= 0 else -1)
+                if b >= 64:
+                    return 0
+                return s64(a << b)
+            # BIT_SHR
+            if b < 0:
+                if -b >= 64:
+                    return 0
+                return s64(a << (-b))
+            if b >= 64:
+                return 0 if a >= 0 else -1
+            return a >> b
         case BinaryOp.AND | BinaryOp.OR:
             # Unreachable — handled by _simplify_and / _simplify_or above.
             raise AssertionError("unreachable")
@@ -477,4 +518,14 @@ def _fold_unary(op: UnaryOp, operand: Expr) -> Expr:
         return Literal(value=not v)
     if op is UnaryOp.NEG:
         return Literal(value=-v)  # type: ignore[operator]
+    if op is UnaryOp.BIT_NOT:
+        # ``~x`` flips every bit of the 64-bit signed integer
+        # representation of ``x``.  For integers this is exactly
+        # ``-(x+1)``; we go via the int conversion so floats and bools
+        # follow SQLite's CAST-to-INTEGER coercion.
+        if not isinstance(v, (int, float)) or isinstance(v, bool):
+            # bool ~ is implementation-defined in SQLite; defer to VM.
+            return UnaryExpr(op=op, operand=operand)
+        iv = int(v)
+        return Literal(value=~iv)
     return UnaryExpr(op=op, operand=operand)  # pragma: no cover

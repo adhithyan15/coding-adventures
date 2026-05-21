@@ -261,28 +261,42 @@ expr              = or_expr ;
 or_expr           = and_expr { "OR" and_expr } ;
 and_expr          = not_expr { "AND" not_expr } ;
 not_expr          = "NOT" not_expr | comparison ;
-comparison        = additive [ cmp_op additive
-                  | "BETWEEN" additive "AND" additive
-                  | "NOT" "BETWEEN" additive "AND" additive
+comparison        = bitwise [ cmp_op bitwise
+                  | "BETWEEN" bitwise "AND" bitwise
+                  | "NOT" "BETWEEN" bitwise "AND" bitwise
                   | "IN" "(" [ in_expr ] ")"
                   | "NOT" "IN" "(" [ in_expr ] ")"
-                  | "LIKE" additive [ "ESCAPE" additive ]
-                  | "NOT" "LIKE" additive [ "ESCAPE" additive ]
-                  | "GLOB" additive
-                  | "NOT" "GLOB" additive
+                  | "LIKE" bitwise [ "ESCAPE" bitwise ]
+                  | "NOT" "LIKE" bitwise [ "ESCAPE" bitwise ]
+                  | "GLOB" bitwise
+                  | "NOT" "GLOB" bitwise
                   | "IS" "NULL"
                   | "IS" "NOT" "NULL"
-                  | "IS" "DISTINCT" "FROM" additive
-                  | "IS" "NOT" "DISTINCT" "FROM" additive ] ;
+                  | "IS" "DISTINCT" "FROM" bitwise
+                  | "IS" "NOT" "DISTINCT" "FROM" bitwise ] ;
 
 # in_expr: a subquery takes priority (starts with SELECT); otherwise a
 # comma-separated value list is used.
 in_expr           = query_stmt | value_list ;
 
 cmp_op            = "=" | NOT_EQUALS | "<" | ">" | "<=" | ">=" ;
+# SQLite operator-precedence ladder (lowest to highest as you read down):
+#
+#   OR
+#   AND
+#   NOT
+#   comparison / IN / LIKE / IS …    ← consumes the ``bitwise`` group below
+#   bitwise:   & | << >>             ← new layer, between additive and cmp
+#   additive:  + - || -> ->>
+#   multiplicative: * / %
+#   unary:     - ~
+#   primary
+#
+# (Reference: https://sqlite.org/lang_expr.html#operators )
+bitwise           = additive { ( "&" | "|" | "<<" | ">>" ) additive } ;
 additive          = multiplicative { ( "+" | "-" | "||" | JSON_ARROW | JSON_ARROW_TEXT ) multiplicative } ;
 multiplicative    = unary { ( STAR | "/" | "%" ) unary } ;
-unary             = "-" unary | primary ;
+unary             = ( "-" | "~" ) unary | primary ;
 
 # primary: order matters for PEG backtracking.
 #   1. Simple literals
