@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## [0.5.0] - 2026-05-21
+
+### Added
+- New dependency on `coding_adventures_correlation_vector` for `CVLog` and `Origin` types.
+- `pub struct TokenWithCv { pub token: Token, pub cv: String }` — token paired with its CV identifier.
+- `tokenize_javascript_with_cv(source, source_file, EsVersion, &mut CVLog) -> Result<Vec<TokenWithCv>, String>` — tokenize and assign a CV ID per token per CLOC03 §"Stage 1 — Lexer".
+- Per-token `Origin` records: `source = source_file`, `location = "line:col"` from `Token.line` and `Token.column`. No `Contribution` appended (lexing is creation, not modification — per CLOC03).
+- Module docs added a CV plumbing section linking to CLOC03.
+- 4 new tests:
+  - `tokenize_with_cv_assigns_an_id_per_token` — every token gets a non-empty CV.
+  - `tokenize_with_cv_ids_are_unique` — uniqueness across the full token stream.
+  - `tokenize_with_cv_entries_resolvable_in_log` — `cv.get(id)` returns an entry whose `Origin.source` matches the requested `source_file` and whose `location` is `"line:col"`.
+  - `tokenize_with_cv_disabled_log_still_returns_tokens` — `CVLog::new(false)` keeps the API shape but skips storage (per CLOC03's production fast path).
+
+### Notes
+- The string-based and typed APIs from prior versions remain untouched; this PR is purely additive.
+- The `cv` field on `TokenWithCv` is `String` because `correlation-vector` represents IDs as `String` today.
+- This is the first concrete CLOC03 plumbing — the parser will consume `TokenWithCv` and inherit CV IDs onto AST nodes in a follow-up PR.
+
 ## [0.4.0] - 2026-05-21
 
 ### Added
