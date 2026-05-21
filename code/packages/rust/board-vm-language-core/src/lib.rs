@@ -380,6 +380,15 @@ pub struct LanguageConnectionOption {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageSerialEndpoint {
+    pub endpoint: String,
+    pub transport: LanguageConnectionTransport,
+    pub endpoint_transport: LanguageHostEndpointTransport,
+    pub endpoint_scheme: String,
+    pub port: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageBluetoothEndpoint {
     pub endpoint: String,
     pub transport: LanguageConnectionTransport,
@@ -1508,6 +1517,24 @@ pub fn serial_runtime_open_plan_from_upload_handoff(
 ) -> Option<LanguageSerialRuntimeOpenPlan> {
     let target = known_target(&handoff.board_id)?;
     language_serial_runtime_open_plan(&target, &handoff.runtime_port, &handoff.runtime_port_source)
+}
+
+pub fn parse_serial_endpoint(endpoint: &str) -> Option<LanguageSerialEndpoint> {
+    let (scheme, port) = endpoint.split_once("://")?;
+    if scheme != "serial" {
+        return None;
+    }
+    let port = port.trim();
+    if port.is_empty() {
+        return None;
+    }
+    Some(LanguageSerialEndpoint {
+        endpoint: endpoint.to_owned(),
+        transport: LanguageConnectionTransport::Serial,
+        endpoint_transport: LanguageHostEndpointTransport::SerialPort,
+        endpoint_scheme: scheme.to_owned(),
+        port: port.to_owned(),
+    })
 }
 
 pub fn parse_bluetooth_endpoint(endpoint: &str) -> Option<LanguageBluetoothEndpoint> {
@@ -5592,6 +5619,15 @@ mod tests {
         assert_eq!(plan.upload_port_hint.as_deref(), Some("native_usb"));
         assert!(plan.notes.contains("runtime CDC serial port"));
 
+        let endpoint = parse_serial_endpoint(&plan.endpoint).unwrap();
+        assert_eq!(endpoint.transport, LanguageConnectionTransport::Serial);
+        assert_eq!(
+            endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(endpoint.endpoint_scheme, "serial");
+        assert_eq!(endpoint.port, "/dev/cu.usbmodem1101");
+
         let handoff = arduino_cli_upload_runtime_handoff_for_execution_plan(
             &arduino_cli_upload_execution_plan_for_target(
                 "arduino-nano-r4",
@@ -5616,6 +5652,8 @@ mod tests {
         assert_eq!(esp.upload_port_hint.as_deref(), Some("esp_rom_serial"));
         assert!(esp.notes.contains("ESP runtime serial port"));
 
+        assert!(parse_serial_endpoint("tcp://board-vm.local:4170").is_none());
+        assert!(parse_serial_endpoint("serial://   ").is_none());
         assert!(serial_runtime_open_plan_for_target("uno-r4-wifi", "   ").is_none());
         assert!(serial_runtime_open_plan_for_target("not-a-board", "COM7").is_none());
     }
