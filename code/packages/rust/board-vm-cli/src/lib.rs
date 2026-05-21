@@ -22,10 +22,9 @@ use board_vm_host::{
     GpioReadProgram, TimeNowProgram, BLINK_MODULE_LEN, GPIO_READ_MODULE_LEN, TIME_NOW_MODULE_LEN,
 };
 use board_vm_language_core::{
-    bluetooth_transact_wire_frame, parse_bluetooth_endpoint as parse_language_bluetooth_endpoint,
-    parse_serial_endpoint as parse_language_serial_endpoint,
-    parse_tcp_endpoint as parse_language_tcp_endpoint, serial_runtime_open_plan_for_target,
-    LanguageSerialRuntimeOpenPlan, LANGUAGE_SERIAL_OPEN_SETTLE_MS,
+    bluetooth_transact_wire_frame, parse_host_endpoint as parse_language_host_endpoint,
+    parse_serial_endpoint as parse_language_serial_endpoint, serial_runtime_open_plan_for_target,
+    LanguageHostEndpointTransport, LanguageSerialRuntimeOpenPlan, LANGUAGE_SERIAL_OPEN_SETTLE_MS,
 };
 use board_vm_language_core::{detect_target, discover_devices, LanguageHostDevice};
 use board_vm_protocol::{
@@ -1777,6 +1776,17 @@ enum SessionEndpointTransport {
     BluetoothClassicRfcomm,
 }
 
+impl From<LanguageHostEndpointTransport> for SessionEndpointTransport {
+    fn from(value: LanguageHostEndpointTransport) -> Self {
+        match value {
+            LanguageHostEndpointTransport::SerialPort => Self::Serial,
+            LanguageHostEndpointTransport::TcpSocket => Self::Tcp,
+            LanguageHostEndpointTransport::BluetoothLeGatt => Self::BluetoothLeGatt,
+            LanguageHostEndpointTransport::BluetoothClassicRfcomm => Self::BluetoothClassicRfcomm,
+        }
+    }
+}
+
 impl From<SessionEndpointTransport> for SmokeConnectionTransport {
     fn from(value: SessionEndpointTransport) -> Self {
         match value {
@@ -1802,46 +1812,25 @@ fn endpoint_connection_label(
 }
 
 fn endpoint_transport(endpoint: &str) -> Result<SessionEndpointTransport, CliError> {
+    parse_language_host_endpoint(endpoint)
+        .map(|endpoint| endpoint.endpoint_transport.into())
+        .ok_or_else(|| endpoint_parse_error(endpoint))
+}
+
+fn endpoint_parse_error(endpoint: &str) -> CliError {
     match endpoint.split_once("://").map(|(scheme, _)| scheme) {
-        None | Some("tcp") => {
-            if parse_language_tcp_endpoint(endpoint).is_some() {
-                Ok(SessionEndpointTransport::Tcp)
-            } else {
-                Err(CliError::DeviceSelection(format!(
-                    "invalid Board VM TCP endpoint: {endpoint}"
-                )))
-            }
-        }
         Some("serial") => {
-            if parse_language_serial_endpoint(endpoint).is_some() {
-                Ok(SessionEndpointTransport::Serial)
-            } else {
-                Err(CliError::DeviceSelection(format!(
-                    "invalid Board VM serial endpoint: {endpoint}"
-                )))
-            }
+            CliError::DeviceSelection(format!("invalid Board VM serial endpoint: {endpoint}"))
         }
-        Some("ble") => {
-            if parse_language_bluetooth_endpoint(endpoint).is_some() {
-                Ok(SessionEndpointTransport::BluetoothLeGatt)
-            } else {
-                Err(CliError::DeviceSelection(format!(
-                    "invalid Board VM Bluetooth endpoint: {endpoint}"
-                )))
-            }
+        None | Some("tcp") => {
+            CliError::DeviceSelection(format!("invalid Board VM TCP endpoint: {endpoint}"))
         }
-        Some("btspp") | Some("rfcomm") => {
-            if parse_language_bluetooth_endpoint(endpoint).is_some() {
-                Ok(SessionEndpointTransport::BluetoothClassicRfcomm)
-            } else {
-                Err(CliError::DeviceSelection(format!(
-                    "invalid Board VM Bluetooth endpoint: {endpoint}"
-                )))
-            }
+        Some("ble") | Some("btspp") | Some("rfcomm") => {
+            CliError::DeviceSelection(format!("invalid Board VM Bluetooth endpoint: {endpoint}"))
         }
-        Some(scheme) => Err(CliError::DeviceSelection(format!(
-            "unsupported --endpoint scheme: {scheme}"
-        ))),
+        Some(scheme) => {
+            CliError::DeviceSelection(format!("unsupported --endpoint scheme: {scheme}"))
+        }
     }
 }
 

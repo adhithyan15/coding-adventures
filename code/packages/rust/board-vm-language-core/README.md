@@ -76,7 +76,10 @@ clearing, open-settle delay, endpoint scheme, and Board VM wire protocol. The
 actual OS serial open still belongs to the frontend adapter or CLI.
 `parse_serial_endpoint`, `parse_tcp_endpoint`, and `parse_bluetooth_endpoint`
 keep endpoint scheme and transport metadata in the same Rust-owned boundary so
-frontends do not need parallel endpoint tables.
+frontends do not need parallel endpoint tables. `parse_host_endpoint` provides
+the transport-classification summary over all supported endpoint forms, letting
+CLI consumers and language adapters route serial, TCP, BLE GATT, and RFCOMM
+without duplicating scheme dispatch.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
