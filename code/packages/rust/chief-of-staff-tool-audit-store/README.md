@@ -94,12 +94,16 @@ The crate keeps the boundary narrow:
   host-investigation labels beside their typed classifications
 - supervisor drain reports and summaries expose explicit count-drift
   investigation flags for host schedulers
+- supervisor drain reports and summaries expose no-count-drift helpers for
+  aligned planned-vs-replayed counts
 - supervisor drain summaries flatten plan-drift investigation flags beside
   count- and host-investigation flags
 - supervisor drain reports and summaries expose host-investigation flags that
   combine plan-drift and count-drift signals
 - supervisor drain reports and summaries expose stable host-investigation
   classifications for plan drift, count drift, or combined drift
+- supervisor drain reports and summaries expose no-host-investigation helpers
+  for terminal log branches
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation

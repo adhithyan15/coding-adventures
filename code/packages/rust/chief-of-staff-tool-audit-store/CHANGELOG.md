@@ -70,10 +70,12 @@ All notable changes to this package will be documented in this file.
   summaries.
 - Count-drift investigation flags for supervisor drain run reports and
   summaries.
+- No-count-drift helpers for supervisor drain run reports and summaries.
 - Flattened plan-drift investigation flags for supervisor drain run summaries.
 - Host-investigation flags for supervisor drain run reports and summaries.
 - Stable host-investigation classifications for supervisor drain run reports
   and summaries.
+- No-host-investigation helpers for supervisor drain run reports and summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Report-level scheduler action labels for supervisor drain runs.
