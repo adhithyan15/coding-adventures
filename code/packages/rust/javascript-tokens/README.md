@@ -1,7 +1,7 @@
 # coding-adventures-javascript-tokens
 
 Backend-agnostic shared types for the JavaScript pipeline: ES version enum,
-byte-range span, and (in a follow-up PR) the cross-crate `TokenKind` enum.
+byte-range span, and the cross-crate `TokenKind` enum.
 
 This crate sits at the **bottom** of the JS-pipeline dependency graph. It has
 no dependencies (not even `serde`) so anything downstream — `javascript-lexer`,
@@ -18,13 +18,13 @@ future V8-in-Rust clone — can pull it in without creating cycles.
   `const fn` constructors and accessors. Used by the lexer to record where
   tokens came from in the source, and by `correlation-vector` `Origin`
   records to anchor everything back to bytes.
-
-## What's coming
-
-Per [CLOC02](../../../specs/CLOC02-javascript-ast.md):
-
-- `TokenKind` — the union enum across every ES version's `.tokens` file.
-  Ships in its own PR (it's large enough on its own).
+- `TokenKind` — broad cross-version classification: `Name`, `Number`,
+  `String`, `Regex`, `TemplateNoSub`/`Head`/`Middle`/`Tail`, `BigInt`,
+  `PrivateName`, `Keyword`, `Operator`, `Punctuation`, `Comment`,
+  `Whitespace`, `Newline`, `Hashbang`, `Error`, `Eof`, plus
+  `Other(String)` for grammar-driven token names that need to round-trip
+  (e.g. `"OPTIONAL_CHAIN"`, `"STAR_STAR_EQUALS"`). Methods: `is_trivia()`,
+  `is_eof()`.
 
 ## Why this is a separate crate
 

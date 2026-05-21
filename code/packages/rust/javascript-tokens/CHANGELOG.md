@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-javascript-tokens` crate will be documented in this file.
 
+## [0.3.0] - 2026-05-21
+
+### Added
+- `TokenKind` enum: broad cross-version classification of JS/TS tokens per CLOC02. Variants: `Name`, `Number`, `String`, `Regex`, `TemplateNoSub`, `TemplateHead`, `TemplateMiddle`, `TemplateTail`, `BigInt`, `PrivateName`, `Keyword`, `Operator`, `Punctuation`, `Comment`, `Whitespace`, `Newline`, `Hashbang`, `Error`, `Eof`, plus `Other(String)` as the catch-all for grammar-driven names (e.g. `"OPTIONAL_CHAIN"`, `"STAR_STAR_EQUALS"`).
+- Derives: `Debug, Clone, PartialEq, Eq, Hash` — `Hash` lets `TokenKind` serve as a `HashMap` key for per-kind statistics.
+- `TokenKind::is_trivia() -> bool` — `true` for `Comment`, `Whitespace`, `Newline`. Documented as a hint (ASI may need to observe newlines).
+- `TokenKind::is_eof() -> bool` — `true` for `Eof` only.
+- Module-level docs and README updated to introduce `TokenKind`.
+- 4 new tests covering the type:
+  - `token_kind_is_trivia_exhaustive` — every variant has an explicit row in the table; adding a new variant in a future PR forces this test to be updated (compile-time enforcement via exhaustive listing).
+  - `token_kind_is_eof_only_for_eof`.
+  - `token_kind_equality` — including `Other` variants compare by inner string.
+  - `token_kind_usable_as_hashmap_key`.
+
+### Notes
+- Still zero runtime dependencies.
+- This is deliberately **not** the full per-version token enum (no `PlusEquals`, `OptionalChain`, etc. as named variants). Per-version names round-trip through `Other(String)` until the day a consumer needs strongly-typed operator categories — that's a follow-up.
+
 ## [0.2.0] - 2026-05-21
 
 ### Added
