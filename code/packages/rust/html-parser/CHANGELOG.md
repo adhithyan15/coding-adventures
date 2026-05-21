@@ -74,6 +74,11 @@ documented in this file.
 - Generated WHATWG select/list audit fixture over html5lib select shell,
   option implied-end, optgroup-boundary, select-in-table, fragment-context, and
   stray select/list end-tag cases, with a dedicated parser regression test.
+- Generated WHATWG miscellaneous recovery audit fixture over html5lib
+  XML/processing-instruction-looking markup, bogus comments, CDATA-as-text,
+  malformed tag opens, plain text and whitespace shells, duplicate doctypes,
+  unknown/custom elements, and legacy compatibility cases, with a dedicated
+  parser regression test.
 - Shared html5lib tree-construction test helpers keep smoke and focused
   tree-insertion, frameset, table, form/interactive, text-control,
   foreign-content, formatting, ruby, noscript, head/body, document-shell,

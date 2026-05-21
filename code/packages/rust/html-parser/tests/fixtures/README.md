@@ -260,3 +260,14 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_select_lis
 python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_select_list_audit_fixture.py \
   --check
 ```
+
+`whatwg-misc-recovery-audit.json` is a generated index over tree-construction
+cases that stress XML/processing-instruction-looking markup, bogus comments,
+CDATA-as-text, malformed tag opens, plain text and whitespace shells, duplicate
+doctypes, unknown elements, and legacy compatibility elements:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_misc_recovery_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_misc_recovery_audit_fixture.py \
+  --check
+```
