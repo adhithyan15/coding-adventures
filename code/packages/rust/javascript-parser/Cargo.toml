@@ -1,8 +1,8 @@
 [package]
 name = "coding-adventures-javascript-parser"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
-description = "JavaScript parser — parses JavaScript source code against any ECMAScript edition (es1 through es2025) using the grammar-driven parser."
+description = "JavaScript parser — parses JavaScript source code against any ECMAScript edition (es1 through es2025) using the grammar-driven parser. Includes correlation-vector plumbing per CLOC03."
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }
@@ -10,3 +10,5 @@ lexer = { path = "../lexer" }
 parser = { path = "../parser" }
 coding-adventures-javascript-lexer = { path = "../javascript-lexer" }
 coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
+coding_adventures_correlation_vector = { path = "../correlation-vector" }
+serde_json = "1"
