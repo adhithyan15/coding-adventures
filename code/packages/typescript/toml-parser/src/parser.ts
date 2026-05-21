@@ -78,34 +78,29 @@
  *     src/ -> toml-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarParser } from "@coding-adventures/parser";
 import type { ASTNode } from "@coding-adventures/parser";
 import { tokenizeTOML } from "@coding-adventures/toml-lexer";
 
-/**
- * Resolve __dirname for ESM modules.
- * See the toml-lexer tokenizer.ts for a detailed explanation.
- */
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { PARSER_GRAMMAR } from "./_grammar.js";
 
 /**
- * Navigate from src/ up to the grammars/ directory.
+ * The TOML grammar, embedded as a TypeScript object literal at build time.
  *
- * The path traversal:
- *   __dirname  = .../toml-parser/src/
- *   ..          = .../toml-parser/
- *   ../..       = .../typescript/
- *   ../../..    = .../packages/
- *   ../../../.. = .../code/
- *   + grammars  = .../code/grammars/
+ * `_grammar.ts` is auto-generated from `code/grammars/toml.grammar` via:
+ *
+ *     grammar-tools compile-grammar code/grammars/toml.grammar \
+ *         --out code/packages/typescript/toml-parser/src/_grammar.ts
+ *
+ * Importing the precompiled grammar (instead of `readFileSync`-ing the
+ * `.grammar` file at parse time) keeps this package's runtime capabilities
+ * to `[]` — no `fs:read` required.  That matters for every downstream
+ * consumer (e.g. `forme-doc-frontmatter`) that wants to stay
+ * pure-transform.
+ *
+ * If you change `toml.grammar`, regenerate `_grammar.ts` and ship the
+ * regenerated file as part of the same commit.
  */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const TOML_GRAMMAR_PATH = join(GRAMMARS_DIR, "toml.grammar");
 
 /**
  * Parse TOML text and return an AST.
@@ -142,21 +137,14 @@ export function parseTOML(source: string): ASTNode {
   const tokens = tokenizeTOML(source);
 
   /**
-   * Step 2: Load the grammar.
-   * The grammar file defines the syntax rules in EBNF-like notation.
-   * parseParserGrammar converts the text into a structured object that
-   * the GrammarParser can use for recursive descent.
+   * Step 2: Parse.
+   * The grammar is already structured (precompiled at build time) — no
+   * file I/O or grammar-text parsing happens here.  GrammarParser takes
+   * the token array and rules, then performs recursive descent with
+   * backtracking to produce an AST.  The starting rule is "document"
+   * (the first rule in toml.grammar), which expects a sequence of
+   * expressions separated by newlines.
    */
-  const grammarText = readFileSync(TOML_GRAMMAR_PATH, "utf-8");
-  const grammar = parseParserGrammar(grammarText);
-
-  /**
-   * Step 3: Parse.
-   * The GrammarParser takes the token array and grammar rules, then
-   * performs recursive descent with backtracking to produce an AST.
-   * The starting rule is "document" (the first rule in toml.grammar),
-   * which expects a sequence of expressions separated by newlines.
-   */
-  const parser = new GrammarParser(tokens, grammar);
+  const parser = new GrammarParser(tokens, PARSER_GRAMMAR);
   return parser.parse();
 }
