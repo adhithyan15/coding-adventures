@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-javascript-ast"
+version = "0.1.0"
+edition = "2021"
+description = "Backend-agnostic JavaScript AST — every node carries a CV ID per CLOC02; reusable by the Closure-Compiler-clone and the future V8-in-Rust clone."
+
+[dependencies]
+coding_adventures_correlation_vector = { path = "../correlation-vector" }
+coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
