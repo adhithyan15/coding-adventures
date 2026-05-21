@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.4.0] - 2026-05-21
+
+### Added
+- New dependency on `coding-adventures-javascript-tokens` for the shared `EsVersion` enum.
+- `create_javascript_parser_typed(source, EsVersion) -> Result<GrammarParser, String>` — typed constructor; no unknown-version error path.
+- `parse_javascript_typed(source, EsVersion) -> Result<GrammarASTNode, String>` — typed parser.
+- `pub const DEFAULT_ES_VERSION: EsVersion = EsVersion::Es2025;` — typed default.
+- New tests covering the typed APIs: `parse_typed_es2015`, `default_es_version_constant_is_es2025`, `all_typed_versions_load`, `create_parser_typed`.
+
+### Notes
+- The existing `&str`-based APIs are kept for backwards compatibility. Typed APIs are the preferred surface going forward.
+- The typed parser delegates to `javascript-lexer`'s `tokenize_javascript_typed`, so token/grammar versions are guaranteed to come from the same ECMAScript edition.
+
 ## [0.3.0] - 2026-05-20
 
 ### Removed
