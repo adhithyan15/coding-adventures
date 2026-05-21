@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-javascript-parser"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "JavaScript parser — parses JavaScript source code against any ECMAScript edition (es1 through es2025) using the grammar-driven parser."
 
@@ -9,3 +9,4 @@ grammar-tools = { path = "../grammar-tools" }
 lexer = { path = "../lexer" }
 parser = { path = "../parser" }
 coding-adventures-javascript-lexer = { path = "../javascript-lexer" }
+coding-adventures-javascript-tokens = { path = "../javascript-tokens" }

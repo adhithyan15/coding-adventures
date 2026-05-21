@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## [0.4.0] - 2026-05-21
+
+### Added
+- New dependency on `coding-adventures-javascript-tokens` for the shared `EsVersion` enum.
+- `create_javascript_lexer_typed(source, EsVersion) -> GrammarLexer` — infallible typed constructor; no unknown-version error path.
+- `tokenize_javascript_typed(source, EsVersion) -> Result<Vec<Token>, String>` — typed tokenizer; only error is tokenization itself.
+- `pub const DEFAULT_ES_VERSION: EsVersion = EsVersion::Es2025;` — typed default. New code should prefer this over the string `DEFAULT_VERSION`.
+- New tests covering the typed APIs: `tokenize_typed_es2015`, `default_es_version_constant_is_es2025`, `all_typed_versions_load`, `create_lexer_typed_returns_grammar_lexer`.
+
+### Notes
+- The existing `&str`-based APIs (`create_javascript_lexer`, `tokenize_javascript`, `DEFAULT_VERSION`) are kept for backwards compatibility. The typed APIs are the preferred surface going forward.
+- This PR is part of CLOC02 Phase 1 — see CLOC01/CLOC02 in `code/specs/` for the broader rollout.
+
 ## [0.3.0] - 2026-05-20
 
 ### Removed
