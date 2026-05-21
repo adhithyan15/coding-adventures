@@ -34,12 +34,12 @@ fn whatwg_misc_recovery_audit_fixture_parses() {
     assert_eq!(suite.source_fixture, "html5lib-tree-construction-smoke.dat");
     assert!(!suite.description.is_empty());
     assert_eq!(suite.case_count, suite.cases.len());
-    assert!(suite.case_count >= 51);
-    assert_axis_count(&suite, "xml-pi-looking-markup", 8);
-    assert_axis_count(&suite, "bogus-comment-and-cdata", 14);
-    assert_axis_count(&suite, "text-whitespace-shell", 8);
-    assert_axis_count(&suite, "malformed-tag-open", 9);
-    assert_axis_count(&suite, "legacy-compat-elements", 7);
+    assert!(suite.case_count >= 74);
+    assert_axis_count(&suite, "xml-pi-looking-markup", 12);
+    assert_axis_count(&suite, "bogus-comment-and-cdata", 20);
+    assert_axis_count(&suite, "text-whitespace-shell", 10);
+    assert_axis_count(&suite, "malformed-tag-open", 14);
+    assert_axis_count(&suite, "legacy-compat-elements", 13);
     assert_axis_count(&suite, "custom-element-recovery", 3);
     assert_axis_count(&suite, "duplicate-doctype-recovery", 2);
 }

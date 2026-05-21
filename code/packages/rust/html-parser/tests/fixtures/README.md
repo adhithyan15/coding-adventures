@@ -271,3 +271,13 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_misc_recov
 python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_misc_recovery_audit_fixture.py \
   --check
 ```
+
+`check_whatwg_audit_coverage.py` verifies that every source marker in
+`html5lib-tree-construction-smoke.dat` is indexed by at least one focused
+`whatwg-*-audit.json` parser fixture, and that those audit fixtures do not
+contain stale or duplicate source references:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/check_whatwg_audit_coverage.py \
+  --check
+```
