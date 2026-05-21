@@ -634,6 +634,29 @@ pub struct LanguageArduinoCliUploadCommand {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageArduinoCliUploadExecutionPlan {
+    pub board_id: String,
+    pub executable: String,
+    pub args: Vec<String>,
+    pub fqbn: String,
+    pub port: String,
+    pub input_file: String,
+    pub upload_properties: Vec<String>,
+    pub verify: bool,
+    pub port_hint: String,
+    pub port_selection_step: String,
+    pub reset_method: String,
+    pub reset_delegated_to_board_package: bool,
+    pub bootloader_touch_baud: Option<u32>,
+    pub expects_port_reenumeration: bool,
+    pub wait_for_runtime_rediscovery: bool,
+    pub serial_adapter_required: bool,
+    pub steps: Vec<String>,
+    pub success_exit_codes: Vec<i32>,
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageUploadOptions {
     pub board_id: String,
     pub adapter: String,
@@ -1163,6 +1186,66 @@ pub fn arduino_cli_upload_command_with_options_for_target(
         port_hint: invocation.port_hint,
         port_selection_step: invocation.port_selection_step,
         notes: arduino_cli_upload_command_notes().to_owned(),
+    })
+}
+
+pub fn arduino_cli_upload_execution_plan_for_target(
+    selector: &str,
+    port: &str,
+    input_file: &str,
+) -> Option<LanguageArduinoCliUploadExecutionPlan> {
+    arduino_cli_upload_execution_plan_with_options_for_target(
+        selector,
+        port,
+        input_file,
+        &[],
+        false,
+    )
+}
+
+pub fn arduino_cli_upload_execution_plan_with_options_for_target(
+    selector: &str,
+    port: &str,
+    input_file: &str,
+    upload_properties: &[&str],
+    verify: bool,
+) -> Option<LanguageArduinoCliUploadExecutionPlan> {
+    let command = arduino_cli_upload_command_with_options_for_target(
+        selector,
+        port,
+        input_file,
+        upload_properties,
+        verify,
+    )?;
+    let target = detect_board_target(selector)?;
+    let upload = target.upload?;
+    if upload.adapter != TargetUploadAdapter::ArduinoCli {
+        return None;
+    }
+    let port_hint = upload.port_hint?;
+    let options = arduino_cli_upload_options_for_target(selector)?;
+    let discovery = arduino_cli_port_discovery_for_target(selector)?;
+
+    Some(LanguageArduinoCliUploadExecutionPlan {
+        board_id: command.board_id,
+        executable: command.executable,
+        args: command.args,
+        fqbn: command.fqbn,
+        port: command.port,
+        input_file: command.input_file,
+        upload_properties: command.upload_properties,
+        verify: command.verify,
+        port_hint: command.port_hint,
+        port_selection_step: command.port_selection_step,
+        reset_method: options.reset_method,
+        reset_delegated_to_board_package: discovery.reset_delegated_to_board_package,
+        bootloader_touch_baud: discovery.bootloader_touch_baud,
+        expects_port_reenumeration: discovery.expects_port_reenumeration,
+        wait_for_runtime_rediscovery: discovery.wait_for_runtime_rediscovery,
+        serial_adapter_required: discovery.serial_adapter_required,
+        steps: arduino_cli_upload_execution_steps(port_hint),
+        success_exit_codes: vec![0],
+        notes: arduino_cli_upload_execution_notes(port_hint).to_owned(),
     })
 }
 
@@ -1813,6 +1896,49 @@ fn arduino_cli_upload_invocation_notes(hint: TargetUploadPortHint) -> &'static s
 
 fn arduino_cli_upload_command_notes() -> &'static str {
     "Concrete Arduino CLI argv built by Rust after target resolution, port selection, and firmware artifact selection."
+}
+
+fn arduino_cli_upload_execution_steps(port_hint: TargetUploadPortHint) -> Vec<String> {
+    match port_hint {
+        TargetUploadPortHint::NativeUsb => vec![
+            "use_selected_native_usb_port".to_owned(),
+            "delegate_reset_to_board_package".to_owned(),
+            "run_arduino_cli_upload".to_owned(),
+            "wait_for_runtime_port_rediscovery".to_owned(),
+        ],
+        TargetUploadPortHint::UsbSerialBridge => vec![
+            "use_selected_usb_serial_bridge".to_owned(),
+            "delegate_reset_to_board_package".to_owned(),
+            "run_arduino_cli_upload".to_owned(),
+            "reuse_selected_serial_port".to_owned(),
+        ],
+        TargetUploadPortHint::ExternalSerialAdapter => vec![
+            "use_selected_external_serial_adapter".to_owned(),
+            "delegate_reset_to_board_package".to_owned(),
+            "run_arduino_cli_upload".to_owned(),
+            "reuse_selected_serial_port".to_owned(),
+        ],
+        _ => vec![
+            "use_selected_serial_port".to_owned(),
+            "delegate_reset_to_board_package".to_owned(),
+            "run_arduino_cli_upload".to_owned(),
+        ],
+    }
+}
+
+fn arduino_cli_upload_execution_notes(port_hint: TargetUploadPortHint) -> &'static str {
+    match port_hint {
+        TargetUploadPortHint::NativeUsb => {
+            "Rust-owned Arduino CLI execution plan delegates native USB bootloader reset to the board package and expects runtime CDC rediscovery after upload."
+        }
+        TargetUploadPortHint::UsbSerialBridge => {
+            "Rust-owned Arduino CLI execution plan keeps the selected USB serial bridge port stable while the board package handles reset and programmer behavior."
+        }
+        TargetUploadPortHint::ExternalSerialAdapter => {
+            "Rust-owned Arduino CLI execution plan requires the caller-provided external serial adapter port and delegates reset/programmer behavior to the board package."
+        }
+        _ => "Rust-owned Arduino CLI execution plan for running the generated upload command.",
+    }
 }
 
 fn language_upload_plan(board_id: &str, upload: TargetUploadInfo) -> LanguageUploadPlan {
@@ -5723,6 +5849,113 @@ mod tests {
         )
         .is_none());
         assert!(arduino_cli_upload_command_for_target(
+            "esp32",
+            "/dev/cu.usbserial-esp32",
+            "/tmp/esp32.bin"
+        )
+        .is_none());
+    }
+
+    #[test]
+    fn arduino_cli_upload_execution_plan_is_owned_by_rust_language_core() {
+        let plan = arduino_cli_upload_execution_plan_for_target(
+            "arduino:renesas_uno:nanor4",
+            "/dev/cu.usbmodem101",
+            "/tmp/board-vm-nano-r4.bin",
+        )
+        .unwrap();
+        assert_eq!(plan.board_id, "arduino-nano-r4");
+        assert_eq!(plan.executable, "arduino-cli");
+        assert_eq!(plan.fqbn, "arduino:renesas_uno:nanor4");
+        assert_eq!(plan.port, "/dev/cu.usbmodem101");
+        assert_eq!(plan.input_file, "/tmp/board-vm-nano-r4.bin");
+        assert_eq!(plan.port_hint, "native_usb");
+        assert_eq!(plan.port_selection_step, "select_native_usb_port");
+        assert_eq!(plan.reset_method, "arduino_board_package");
+        assert!(plan.reset_delegated_to_board_package);
+        assert_eq!(
+            plan.bootloader_touch_baud,
+            Some(ARDUINO_CLI_NATIVE_USB_BOOTLOADER_TOUCH_BAUD)
+        );
+        assert!(plan.expects_port_reenumeration);
+        assert!(plan.wait_for_runtime_rediscovery);
+        assert!(!plan.serial_adapter_required);
+        assert_eq!(
+            plan.steps,
+            vec![
+                "use_selected_native_usb_port",
+                "delegate_reset_to_board_package",
+                "run_arduino_cli_upload",
+                "wait_for_runtime_port_rediscovery",
+            ]
+        );
+        assert_eq!(plan.success_exit_codes, vec![0]);
+        assert!(plan.notes.contains("native USB bootloader reset"));
+        assert_eq!(
+            plan.args,
+            vec![
+                "upload",
+                "-p",
+                "/dev/cu.usbmodem101",
+                "-b",
+                "arduino:renesas_uno:nanor4",
+                "-i",
+                "/tmp/board-vm-nano-r4.bin",
+            ]
+        );
+
+        let plan = arduino_cli_upload_execution_plan_with_options_for_target(
+            "arduino-mega-2560",
+            "COM7",
+            "C:/tmp/mega.hex",
+            &["upload.speed=115200"],
+            true,
+        )
+        .unwrap();
+        assert_eq!(plan.board_id, "arduino-mega-2560");
+        assert_eq!(plan.port_hint, "usb_serial_bridge");
+        assert_eq!(plan.bootloader_touch_baud, None);
+        assert!(!plan.expects_port_reenumeration);
+        assert!(!plan.wait_for_runtime_rediscovery);
+        assert!(!plan.serial_adapter_required);
+        assert!(plan.verify);
+        assert_eq!(plan.upload_properties, vec!["upload.speed=115200"]);
+        assert_eq!(
+            plan.steps,
+            vec![
+                "use_selected_usb_serial_bridge",
+                "delegate_reset_to_board_package",
+                "run_arduino_cli_upload",
+                "reuse_selected_serial_port",
+            ]
+        );
+        assert!(plan.notes.contains("USB serial bridge port"));
+
+        let plan = arduino_cli_upload_execution_plan_for_target(
+            "arduino-pro-mini",
+            "/dev/cu.usbserial-1420",
+            "/tmp/pro-mini.hex",
+        )
+        .unwrap();
+        assert_eq!(plan.port_hint, "external_serial_adapter");
+        assert!(plan.serial_adapter_required);
+        assert_eq!(
+            plan.steps,
+            vec![
+                "use_selected_external_serial_adapter",
+                "delegate_reset_to_board_package",
+                "run_arduino_cli_upload",
+                "reuse_selected_serial_port",
+            ]
+        );
+
+        assert!(arduino_cli_upload_execution_plan_for_target(
+            "arduino-pro-mini",
+            "",
+            "/tmp/pro-mini.hex"
+        )
+        .is_none());
+        assert!(arduino_cli_upload_execution_plan_for_target(
             "esp32",
             "/dev/cu.usbserial-esp32",
             "/tmp/esp32.bin"
