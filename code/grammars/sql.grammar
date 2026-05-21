@@ -59,10 +59,12 @@ select_item       = expr [ "AS" NAME ] ;
 # table_ref: try derived-table form first (starts with "(") then plain name.
 # PEG backtracking ensures "(SELECT ...)" matches the first branch and
 # "users" or "users AS u" or "users u" (alias without AS) matches the
-# second branch.  The alias alternatives are ordered: "AS" NAME first so that
-# "AS" is consumed when present; bare NAME second for the no-AS form.
+# second branch.  The derived-table alias is optional in SQLite (matching
+# standard SQL): both ``(SELECT …) AS t``, ``(SELECT …) t``, and bare
+# ``(SELECT …)`` are accepted.  When no alias is given, the outer query
+# may still reference columns by their unqualified names.
 # NAME never matches SQL keywords, so WHERE, JOIN, ON etc. are never eaten.
-table_ref         = "(" query_stmt ")" [ "AS" ] NAME | table_name [ "AS" NAME | NAME ] ;
+table_ref         = "(" query_stmt ")" [ [ "AS" ] NAME ] | table_name [ "AS" NAME | NAME ] ;
 table_name        = NAME [ "." NAME ] ;
 
 # join_clause covers two forms:

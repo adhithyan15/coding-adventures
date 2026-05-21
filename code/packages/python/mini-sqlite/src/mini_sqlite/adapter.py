@@ -458,7 +458,11 @@ def _table_ref(
             )
         # The alias is the first NAME token AFTER the closing parenthesis,
         # optionally preceded by an AS keyword.  Walk the children and grab
-        # the NAME once we're past the ")" token.
+        # the NAME once we're past the ")" token.  SQLite allows the alias
+        # to be omitted entirely (matching standard SQL), so we no longer
+        # raise when the NAME is absent — the planner accepts ``alias=None``
+        # and falls back to the inner query's unqualified column names for
+        # scope resolution.
         alias: str | None = None
         past_close_paren = False
         for c in node.children:
@@ -468,8 +472,6 @@ def _table_ref(
             if past_close_paren and isinstance(c, Token) and _token_type(c) == "NAME":
                 alias = c.value
                 break
-        if alias is None:
-            raise ProgrammingError("derived table requires an alias (AS <name>)")
         return DerivedTableRef(select=inner_stmt, alias=alias)
 
     # Plain table form: table_name [ "AS" NAME | NAME ]

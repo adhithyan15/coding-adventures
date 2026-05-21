@@ -542,9 +542,18 @@ def _build_from_tree(
     elif isinstance(root, DerivedTableRef):
         inner_plan = _plan_derived_inner(root.select, schema)
         cols = _output_columns(inner_plan, schema)
-        _add_to_scope(scope, root.alias, list(cols))
+        # SQLite accepts an unaliased derived table — ``SELECT * FROM
+        # (SELECT 1 AS x)`` is legal, with the outer scope seeing ``x``
+        # as an unqualified column.  Our scope/cursor layers want a
+        # string key/name everywhere, so synthesise a unique sentinel
+        # name when the user omitted the alias.  The sentinel is not
+        # syntactically reachable from SQL (it starts with ``<``), so
+        # ``t.col`` style qualified references can never collide with
+        # it; only bare ``col`` lookups will resolve through it.
+        effective_alias = root.alias if root.alias is not None else f"<derived #{id(root):x}>"
+        _add_to_scope(scope, effective_alias, list(cols))
         tree = P.DerivedTable(
-            query=inner_plan, alias=root.alias, columns=cols
+            query=inner_plan, alias=effective_alias, columns=cols
         )
     else:
         # Plain TableRef — check if it's a working-set self-reference first.
@@ -561,9 +570,16 @@ def _build_from_tree(
         if isinstance(j.right, DerivedTableRef):
             inner_plan = _plan_derived_inner(j.right.select, schema)
             cols = _output_columns(inner_plan, schema)
-            _add_to_scope(scope, j.right.alias, list(cols))
+            # See the FROM-root case above for the synthetic-alias rationale
+            # when ``j.right.alias`` is None (SQLite allows unaliased
+            # derived tables in JOIN positions too).
+            effective_alias = (
+                j.right.alias if j.right.alias is not None
+                else f"<derived #{id(j.right):x}>"
+            )
+            _add_to_scope(scope, effective_alias, list(cols))
             right_node: P.LogicalPlan = P.DerivedTable(
-                query=inner_plan, alias=j.right.alias, columns=cols
+                query=inner_plan, alias=effective_alias, columns=cols
             )
             right_cols_list: list[str] = list(cols)
         elif isinstance(j.right, TableRef) and (
