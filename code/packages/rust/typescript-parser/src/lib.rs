@@ -1,4 +1,4 @@
-//! TypeScript parser backed by compiled generic and versioned parser grammars.
+//! TypeScript parser backed by compiled versioned parser grammars (ts1.0 through ts5.8).
 
 use coding_adventures_typescript_lexer::tokenize_typescript;
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
@@ -40,8 +40,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parses_generic_typescript() {
-        let ast = parse_typescript("let x = 1;", "").unwrap();
+    fn parses_ts1_0_typescript() {
+        let ast = parse_typescript("var x = 1;", "ts1.0").unwrap();
         assert_eq!(ast.rule_name, "program");
     }
 

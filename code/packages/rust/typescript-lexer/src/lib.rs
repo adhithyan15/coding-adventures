@@ -1,4 +1,4 @@
-//! TypeScript lexer backed by compiled generic and versioned token grammars.
+//! TypeScript lexer backed by compiled versioned token grammars (ts1.0 through ts5.8).
 
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
@@ -6,7 +6,7 @@ use lexer::token::Token;
 mod _grammar;
 
 pub const SUPPORTED_VERSIONS: &[&str] = _grammar::SUPPORTED_VERSIONS;
-pub const DEFAULT_VERSION: &str = "";
+pub const DEFAULT_VERSION: &str = "ts5.8";
 
 fn validate_version(version: &str) -> Result<&str, String> {
     if SUPPORTED_VERSIONS.contains(&version) {
@@ -49,15 +49,22 @@ mod tests {
     use lexer::token::TokenType;
 
     #[test]
-    fn tokenizes_generic_typescript() {
-        let tokens = tokenize_typescript("let x: number = 1;", "").unwrap();
+    fn tokenizes_ts1_0_typescript() {
+        let tokens = tokenize_typescript("var x: number = 1;", "ts1.0").unwrap();
         assert_eq!(tokens[0].type_, TokenType::Keyword);
-        assert_eq!(tokens[0].value, "let");
+        assert_eq!(tokens[0].value, "var");
     }
 
     #[test]
     fn tokenizes_versioned_typescript() {
         let tokens = tokenize_typescript("let x: number = 1;", "ts5.8").unwrap();
+        assert_eq!(tokens[0].type_, TokenType::Keyword);
+        assert_eq!(tokens[0].value, "let");
+    }
+
+    #[test]
+    fn default_version_resolves_to_ts5_8() {
+        let tokens = tokenize_typescript("let x: number = 1;", DEFAULT_VERSION).unwrap();
         assert_eq!(tokens[0].type_, TokenType::Keyword);
         assert_eq!(tokens[0].value, "let");
     }
