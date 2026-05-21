@@ -533,6 +533,16 @@ impl ToolAuditReadCheckpoint {
         }
     }
 
+    /// Return this checkpoint's timestamp for host checkpoint logs.
+    pub fn checkpoint_timestamp_ms(&self) -> u64 {
+        self.timestamp_ms
+    }
+
+    /// Return this checkpoint's call id for host checkpoint logs.
+    pub fn checkpoint_call_id(&self) -> &str {
+        &self.call_id
+    }
+
     /// Return whether this checkpoint is after another checkpoint.
     pub fn is_after(&self, other: &Self) -> bool {
         (self.timestamp_ms, self.call_id.as_str()) > (other.timestamp_ms, other.call_id.as_str())
@@ -563,12 +573,12 @@ impl ToolAuditCheckpointPage {
 
     /// Return the checkpoint timestamp to use for the next read.
     pub fn next_checkpoint_timestamp_ms(&self) -> u64 {
-        self.next_checkpoint.timestamp_ms
+        self.next_checkpoint.checkpoint_timestamp_ms()
     }
 
     /// Return the checkpoint call id to use for the next read.
     pub fn next_checkpoint_call_id(&self) -> &str {
-        &self.next_checkpoint.call_id
+        self.next_checkpoint.checkpoint_call_id()
     }
 }
 
@@ -2727,6 +2737,17 @@ mod tests {
             .expect_err("call ids are append-only audit keys");
 
         assert!(matches!(error, StorageError::Conflict { .. }));
+    }
+
+    #[test]
+    fn read_checkpoints_expose_scalar_accessors() {
+        let beginning = ToolAuditReadCheckpoint::beginning();
+        assert_eq!(beginning.checkpoint_timestamp_ms(), 0);
+        assert_eq!(beginning.checkpoint_call_id(), "");
+
+        let checkpoint = ToolAuditReadCheckpoint::new(151, "call_2");
+        assert_eq!(checkpoint.checkpoint_timestamp_ms(), 151);
+        assert_eq!(checkpoint.checkpoint_call_id(), "call_2");
     }
 
     #[test]

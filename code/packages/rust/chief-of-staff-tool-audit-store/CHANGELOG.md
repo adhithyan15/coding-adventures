@@ -10,6 +10,7 @@ All notable changes to this package will be documented in this file.
 - JSON encoding/decoding for payload-free `ToolAuditRecord` rows.
 - Query and inventory helpers over persisted audit records.
 - Deterministic checkpoint pages for incremental audit replay.
+- Timestamp and call-id scalar accessors for replay checkpoints.
 - Durable named checkpoint state for supervisors that resume audit replay.
 - Next-checkpoint timestamp and call-id scalar accessors for checkpoint pages.
 - Timestamp and call-id scalar accessors for stored checkpoint state.
