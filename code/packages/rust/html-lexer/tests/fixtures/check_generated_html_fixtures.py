@@ -279,6 +279,13 @@ def default_checks() -> list[FixtureCheck]:
             ),
         ),
         FixtureCheck(
+            "html5lib-tree-construction-smoke",
+            (
+                str(PARSER_FIXTURE_DIR / "check_html5lib_tree_construction_smoke.py"),
+                "--check",
+            ),
+        ),
+        FixtureCheck(
             "whatwg-parser-audit-manifest",
             (
                 str(PARSER_FIXTURE_DIR / "check_whatwg_audit_manifest.py"),

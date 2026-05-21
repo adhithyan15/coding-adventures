@@ -9,6 +9,13 @@ The format is the upstream tree-construction test format documented in
 that format lets this crate grow toward WHATWG tree-construction compliance
 without inventing a Rust-only test schema.
 
+Validate the checked-in smoke fixture's case boundaries and metadata with:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/check_html5lib_tree_construction_smoke.py \
+  --check
+```
+
 `audit_html5lib_coverage.py` compares this fixture and the sibling lexer
 html5lib fixtures against an upstream html5lib-tests checkout by source
 signature:
