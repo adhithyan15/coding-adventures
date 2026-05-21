@@ -8,7 +8,6 @@
 use grammar_tools::parser_grammar::ParserGrammar;
 
 pub const SUPPORTED_VERSIONS: &[&str] = &[
-    "",
     "es1",
     "es3",
     "es5",
@@ -27,7 +26,6 @@ pub const SUPPORTED_VERSIONS: &[&str] = &[
 
 pub fn parser_grammar(version: &str) -> Option<ParserGrammar> {
     match version {
-        "" => Some(generic::parser_grammar()),
         "es1" => Some(v_es1::parser_grammar()),
         "es3" => Some(v_es3::parser_grammar()),
         "es5" => Some(v_es5::parser_grammar()),
@@ -46,110 +44,6 @@ pub fn parser_grammar(version: &str) -> Option<ParserGrammar> {
     }
 }
 
-mod generic {
-    // AUTO-GENERATED FILE — DO NOT EDIT
-    // Source: javascript.grammar
-    // Regenerate with: grammar-tools compile-grammar javascript.grammar
-    //
-    // This file embeds a ParserGrammar as native Rust data structures.
-    // Call `parser_grammar()` instead of reading and parsing the .grammar file.
-
-    use grammar_tools::parser_grammar::{GrammarElement, GrammarRule, ParserGrammar};
-
-    pub fn parser_grammar() -> ParserGrammar {
-        ParserGrammar {
-            rules: vec![
-            GrammarRule {
-                name: r#"program"#.to_string(),
-                body: GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"statement"#.to_string() }) },
-                line_number: 28,
-            },
-            GrammarRule {
-                name: r#"statement"#.to_string(),
-                body: GrammarElement::Alternation { choices: vec![
-                    GrammarElement::RuleReference { name: r#"var_declaration"#.to_string() },
-                    GrammarElement::RuleReference { name: r#"assignment"#.to_string() },
-                    GrammarElement::RuleReference { name: r#"expression_stmt"#.to_string() },
-                ] },
-                line_number: 29,
-            },
-            GrammarRule {
-                name: r#"var_declaration"#.to_string(),
-                body: GrammarElement::Sequence { elements: vec![
-                    GrammarElement::TokenReference { name: r#"KEYWORD"#.to_string() },
-                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
-                    GrammarElement::TokenReference { name: r#"EQUALS"#.to_string() },
-                    GrammarElement::RuleReference { name: r#"expression"#.to_string() },
-                    GrammarElement::TokenReference { name: r#"SEMICOLON"#.to_string() },
-                ] },
-                line_number: 30,
-            },
-            GrammarRule {
-                name: r#"assignment"#.to_string(),
-                body: GrammarElement::Sequence { elements: vec![
-                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
-                    GrammarElement::TokenReference { name: r#"EQUALS"#.to_string() },
-                    GrammarElement::RuleReference { name: r#"expression"#.to_string() },
-                    GrammarElement::TokenReference { name: r#"SEMICOLON"#.to_string() },
-                ] },
-                line_number: 31,
-            },
-            GrammarRule {
-                name: r#"expression_stmt"#.to_string(),
-                body: GrammarElement::Sequence { elements: vec![
-                    GrammarElement::RuleReference { name: r#"expression"#.to_string() },
-                    GrammarElement::TokenReference { name: r#"SEMICOLON"#.to_string() },
-                ] },
-                line_number: 32,
-            },
-            GrammarRule {
-                name: r#"expression"#.to_string(),
-                body: GrammarElement::Sequence { elements: vec![
-                    GrammarElement::RuleReference { name: r#"term"#.to_string() },
-                    GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                            GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
-                                    GrammarElement::TokenReference { name: r#"PLUS"#.to_string() },
-                                    GrammarElement::TokenReference { name: r#"MINUS"#.to_string() },
-                                ] }) },
-                            GrammarElement::RuleReference { name: r#"term"#.to_string() },
-                        ] }) },
-                ] },
-                line_number: 33,
-            },
-            GrammarRule {
-                name: r#"term"#.to_string(),
-                body: GrammarElement::Sequence { elements: vec![
-                    GrammarElement::RuleReference { name: r#"factor"#.to_string() },
-                    GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                            GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
-                                    GrammarElement::TokenReference { name: r#"STAR"#.to_string() },
-                                    GrammarElement::TokenReference { name: r#"SLASH"#.to_string() },
-                                ] }) },
-                            GrammarElement::RuleReference { name: r#"factor"#.to_string() },
-                        ] }) },
-                ] },
-                line_number: 34,
-            },
-            GrammarRule {
-                name: r#"factor"#.to_string(),
-                body: GrammarElement::Alternation { choices: vec![
-                    GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
-                    GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
-                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
-                    GrammarElement::TokenReference { name: r#"KEYWORD"#.to_string() },
-                    GrammarElement::Sequence { elements: vec![
-                        GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
-                        GrammarElement::RuleReference { name: r#"expression"#.to_string() },
-                        GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
-                    ] },
-                ] },
-                line_number: 35,
-            },
-        ],
-            version: 1,
-        }
-    }
-}
 
 mod v_es1 {
     // AUTO-GENERATED FILE — DO NOT EDIT

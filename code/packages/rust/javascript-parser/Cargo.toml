@@ -1,8 +1,8 @@
 [package]
 name = "coding-adventures-javascript-parser"
-version = "0.1.0"
+version = "0.3.0"
 edition = "2021"
-description = "JavaScript parser — parses JavaScript source code into an AST using the grammar-driven parser and the javascript.grammar file"
+description = "JavaScript parser — parses JavaScript source code against any ECMAScript edition (es1 through es2025) using the grammar-driven parser."
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }

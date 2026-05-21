@@ -1,4 +1,4 @@
-//! JavaScript parser backed by compiled generic and ECMAScript parser grammars.
+//! JavaScript parser backed by compiled ECMAScript parser grammars (es1 through es2025).
 
 use coding_adventures_javascript_lexer::tokenize_javascript;
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
@@ -40,8 +40,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parses_generic_javascript() {
-        let ast = parse_javascript("var x = 1;", "").unwrap();
+    fn parses_es5_javascript() {
+        let ast = parse_javascript("var x = 1;", "es5").unwrap();
         assert_eq!(ast.rule_name, "program");
     }
 
