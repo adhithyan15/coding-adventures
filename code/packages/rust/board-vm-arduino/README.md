@@ -36,7 +36,9 @@ native-USB 1200-baud bootloader touch and runtime port rediscovery expectation
 for boards whose Arduino package owns that behavior. The same language-core
 path emits the `arduino-cli upload` invocation template, leaving language
 frontends to fill concrete port and firmware-image paths rather than maintain
-their own flag tables.
+their own flag tables. The same Rust-owned path can now build the concrete
+Arduino CLI upload argv after a frontend supplies the selected port and
+firmware-image path.
 
 The shared target registry also records physical wireless radios for the
 Arduino-family boards that have Wi-Fi or BLE hardware, including MKR/Nano

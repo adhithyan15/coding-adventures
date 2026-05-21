@@ -152,6 +152,12 @@ upload-property flag, verify flag, and placeholder argument template so
 frontends fill concrete port and firmware-image paths without re-creating an
 Arduino CLI flag table.
 
+The Arduino CLI upload command tranche converts that template into concrete
+argv after a frontend supplies the selected port and firmware-image path. Rust
+language core keeps the FQBN, flag order, optional upload-property expansion,
+and verify flag placement centralized, so language frontends do not assemble
+Arduino CLI commands locally.
+
 The Arduino wireless metadata tranche records physical Wi-Fi and Bluetooth LE
 radios for non-Uno boards such as MKR WiFi 1010, Nano 33 IoT, Nano 33 BLE Rev2,
 Nano RP2040 Connect, Nano ESP32, GIGA R1 WiFi, Portenta H7 Lite Connected,

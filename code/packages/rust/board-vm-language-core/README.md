@@ -42,6 +42,10 @@ reset path. `arduino_cli_upload_invocation_for_target` keeps the final
 `arduino-cli upload` flag template Rust-owned too, including the FQBN, port,
 input-file, input-directory, upload-property, and verify flags language
 frontends should fill with concrete paths.
+`arduino_cli_upload_command_for_target` and
+`arduino_cli_upload_command_with_options_for_target` go one step further by
+building concrete `arduino-cli upload` argv from the selected port, firmware
+image, optional upload properties, and verify flag.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
