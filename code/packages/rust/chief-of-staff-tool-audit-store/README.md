@@ -19,6 +19,8 @@ The crate keeps the boundary narrow:
   after restarts without reprocessing the whole store
 - supervisors can persist named replay checkpoints through the same D18A
   storage backend and advance them without regressing reader state
+- stored checkpoints expose timestamp and call-id scalar accessors for host
+  state logs
 - supervisors can replay bounded pages from named checkpoints into audit sinks
   and advance the durable cursor after delivery
 - checkpoint replay summaries expose starting and next checkpoint scalar

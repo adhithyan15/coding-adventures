@@ -573,6 +573,18 @@ pub struct ToolAuditStoredCheckpoint {
     pub updated_at: u64,
 }
 
+impl ToolAuditStoredCheckpoint {
+    /// Return the durable checkpoint timestamp for host state logs.
+    pub fn checkpoint_timestamp_ms(&self) -> u64 {
+        self.checkpoint.timestamp_ms
+    }
+
+    /// Return the durable checkpoint call id for host state logs.
+    pub fn checkpoint_call_id(&self) -> &str {
+        &self.checkpoint.call_id
+    }
+}
+
 /// Summary for replaying one named checkpoint page into a sink.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ToolAuditCheckpointReplaySummary {
@@ -2789,6 +2801,8 @@ mod tests {
                 stored.checkpoint,
                 ToolAuditReadCheckpoint::new(151, "call_2")
             );
+            assert_eq!(stored.checkpoint_timestamp_ms(), 151);
+            assert_eq!(stored.checkpoint_call_id(), "call_2");
         }
 
         {
@@ -2803,6 +2817,8 @@ mod tests {
                 stored.checkpoint,
                 ToolAuditReadCheckpoint::new(151, "call_2")
             );
+            assert_eq!(stored.checkpoint_timestamp_ms(), 151);
+            assert_eq!(stored.checkpoint_call_id(), "call_2");
         }
 
         let _ = fs::remove_dir_all(&root);
@@ -2825,11 +2841,15 @@ mod tests {
             first.checkpoint,
             ToolAuditReadCheckpoint::new(151, "call_2")
         );
+        assert_eq!(first.checkpoint_timestamp_ms(), 151);
+        assert_eq!(first.checkpoint_call_id(), "call_2");
         assert_eq!(older.checkpoint, first.checkpoint);
         assert_eq!(
             newer.checkpoint,
             ToolAuditReadCheckpoint::new(151, "call_3")
         );
+        assert_eq!(newer.checkpoint_timestamp_ms(), 151);
+        assert_eq!(newer.checkpoint_call_id(), "call_3");
         assert_eq!(
             store
                 .fetch_checkpoint("supervisor")
