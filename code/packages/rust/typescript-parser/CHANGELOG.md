@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-typescript-parser` crate will be documented in this file.
 
+## [0.3.0] - 2026-05-21
+
+### Removed
+- Dropped support for the empty-string `""` "generic" version that pointed at the stub `code/grammars/typescript.grammar`. The full TS 1.0 through 5.8 grammars under `code/grammars/typescript/` supersede it.
+- Removed the embedded `mod generic` block (~103 lines) from `_grammar.rs`.
+
+### Changed
+- Crate docstring no longer mentions the "generic" grammar.
+
+### Migration
+- Replace `parse_typescript(source, "")` with `parse_typescript(source, "ts5.8")` (or another explicit TS version).
+
+### Notes
+- Rust-only second step of CLOC01 Phase 1 stub retirement (sibling of PR #3785). Other language ports (Go, Python, TypeScript, Ruby) get equivalent follow-up PRs; the stub `.grammar` source file is preserved until all ports migrate.
+
 ## [0.2.0] - 2026-04-05
 
 ### Changed

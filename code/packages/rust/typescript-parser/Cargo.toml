@@ -1,8 +1,8 @@
 [package]
 name = "coding-adventures-typescript-parser"
-version = "0.1.0"
+version = "0.3.0"
 edition = "2021"
-description = "TypeScript parser — parses TypeScript source code into an AST using the grammar-driven parser and the typescript.grammar file"
+description = "TypeScript parser — parses TypeScript source code against any version (ts1.0 through ts5.8) using the grammar-driven parser."
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }
