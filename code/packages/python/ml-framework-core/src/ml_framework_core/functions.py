@@ -48,11 +48,14 @@ from ._rust_backend import (
     add_via_rust,
     div_via_rust,
     matmul_via_rust,
+    mean_via_rust,
     mul_via_rust,
     neg_via_rust,
     should_use_rust_for_elementwise,
     should_use_rust_for_matmul,
+    should_use_rust_for_reduction,
     sub_via_rust,
+    sum_via_rust,
 )
 from .autograd import Function
 from .tensor import Tensor, _compute_strides, _numel
@@ -405,6 +408,12 @@ class SumFunction(Function):
         self.saved_metadata["keepdim"] = keepdim
 
         if dim is None:
+            # MX10 Phase 3 — optional Rust fast path (reduce-all).
+            # Axis-specific reductions (dim != None) stay pure-Python
+            # in Phase 3; broadcasting + output-shape computation
+            # differ enough to warrant their own sub-phase.
+            if should_use_rust_for_reduction(len(a.data)):
+                return sum_via_rust(a)
             # Sum all elements → scalar
             total = sum(a.data)
             return Tensor([total], (1,), device=a.device)
@@ -513,6 +522,10 @@ class MeanFunction(Function):
         self.saved_metadata["dim"] = dim
 
         if dim is None:
+            # MX10 Phase 3 — optional Rust fast path (reduce-all).
+            # Axis-specific path stays pure-Python in Phase 3.
+            if should_use_rust_for_reduction(len(a.data)):
+                return mean_via_rust(a)
             total = sum(a.data)
             return Tensor([total / a.numel], (1,), device=a.device)
 

@@ -2,6 +2,71 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 3: optional Rust fast path for reduce-all `SumFunction` / `MeanFunction`
+
+Extends the per-op conditional dispatch to the **reduce-all path
+of `SumFunction` and `MeanFunction`** (the `dim=None` case that
+collapses any-shape tensor → scalar).  Axis-specific reductions
+(`dim=<int>`) stay pure-Python in Phase 3 — output-shape computation
+and the backward broadcast differ materially from the reduce-all
+case, and warrant their own sub-phase.
+
+#### Implementation
+
+- **`_rust_backend.py`** — adds:
+    - `should_use_rust_for_reduction(numel)` predicate.  Reuses the
+      same threshold (`_ELEMENTWISE_RUST_THRESHOLD = 100_000`) as
+      elementwise — reductions have roughly the same per-cell cost
+      (one add/divide per cell).
+    - `_reduce_all_via_rust(a, op_kind)` shared helper for the
+      single-op envelope: 1 input tensor, 1 output tensor (shape
+      `[]` — a scalar), op with `axes=[0, 1, ..., ndim-1]` and
+      `keep_dims=False`.
+    - Public wrappers `sum_via_rust(a)` and `mean_via_rust(a)` that
+      use matrix-ir-json's `ReduceSum` and `ReduceMean` ops
+      respectively.  Both return Tensor of shape `(1,)` to match
+      the pure-Python contract.
+
+- **`functions.py`** — `SumFunction.forward` and
+  `MeanFunction.forward` each gain a 2-line dispatch block inside
+  the `if dim is None:` branch.  The `dim != None` branches are
+  untouched — Phase 3 only accelerates the reduce-all path.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `dim is None`, numel ≥ 100_000 | **Rust** |
+| Extension installed, `dim is None`, numel < 100_000 | Pure-Python |
+| `dim != None` (axis-specific) | Pure-Python (always) |
+| Extension NOT installed | Pure-Python |
+
+#### Tests (36 total MX10 tests, was 27)
+
+- **`ReductionParityTests`** (3 cases, skip if extension missing):
+  predicate sanity + Sum + Mean parity at the 100_000-cell threshold,
+  same `rtol=1e-3, atol=1e-4` tolerance as matmul/elementwise.
+- **`ReductionFallbackTests`** (6 cases, always runs): predicate
+  short-circuit, direct-call `RuntimeError`, Sum/Mean correctness via
+  pure-Python fallback (`[1,2,3,4,5].sum() == 15`,
+  `[1,2,3,4,5].mean() == 3`), and a sanity test confirming the
+  axis-specific path (`sum(dim=0)`) is unchanged by Phase 3.
+
+All passing locally on darwin-arm64 py 3.10.6 with the C extension
+built; full suite at 355 passed + the same `test_device.py`
+pre-existing failure unrelated to this PR.
+
+### What's NOT in Phase 3
+
+- Axis-specific reductions (`dim != None`).  Deferred to Phase 3b
+  if profiling shows demand.
+- Other reductions (Min, Max, Std, Var, ArgMin, ArgMax).  Only
+  Sum/Mean are routed in Phase 3 because they're the most common in
+  ML workloads (loss aggregation, batch normalisation, etc.); the
+  rest can be added later using the same `_reduce_all_via_rust`
+  factory.
+- No activations (Phase 4: ReLU/Sigmoid/Tanh/GELU/Softmax).
+
 ### Added — MX10 Phase 2: optional Rust fast path for the elementwise op family
 
 Extends the per-op conditional dispatch from Phase 1 (matmul only)

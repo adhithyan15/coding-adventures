@@ -249,5 +249,71 @@ class ElementwiseFallbackTests(unittest.TestCase):
         self.assertEqual(result.data, [1.0, 2.0, 3.0, 4.0])
 
 
+# ──────────────────────────────────────────────────────────────────
+# MX10 Phase 3 — reduction fallback tests
+#
+# Same pattern as elementwise: monkey-patch ``_RUST_AVAILABLE = False``
+# and confirm the pure-Python kernel produces correct results.
+# ──────────────────────────────────────────────────────────────────
+
+
+class ReductionFallbackTests(unittest.TestCase):
+    """Confirm sum/mean still work when the Rust path is disabled."""
+
+    def setUp(self) -> None:
+        self._saved_available = _rust_backend._RUST_AVAILABLE
+        _rust_backend._RUST_AVAILABLE = False
+
+    def tearDown(self) -> None:
+        _rust_backend._RUST_AVAILABLE = self._saved_available
+
+    def test_predicate_returns_false_for_reduction_when_unavailable(self) -> None:
+        self.assertFalse(_rust_backend.should_use_rust_for_reduction(10_000_000))
+
+    def test_sum_via_rust_raises_when_unavailable(self) -> None:
+        a = Tensor([1.0, 2.0, 3.0], (3,))
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.sum_via_rust(a)
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_mean_via_rust_raises_when_unavailable(self) -> None:
+        a = Tensor([1.0, 2.0, 3.0], (3,))
+        with self.assertRaises(RuntimeError):
+            _rust_backend.mean_via_rust(a)
+
+    def test_sum_correct_via_fallback(self) -> None:
+        """``a.sum()`` (reduce-all) gives the right total via pure-Python."""
+        a = Tensor([1.0, 2.0, 3.0, 4.0, 5.0], (5,))
+        result = a.sum()
+        self.assertEqual(result.shape, (1,))
+        self.assertEqual(result.data, [15.0])
+
+    def test_mean_correct_via_fallback(self) -> None:
+        """``a.mean()`` (reduce-all) gives the right average via pure-Python."""
+        a = Tensor([1.0, 2.0, 3.0, 4.0, 5.0], (5,))
+        result = a.mean()
+        self.assertEqual(result.shape, (1,))
+        self.assertEqual(result.data, [3.0])
+
+    def test_axis_specific_reduction_unchanged_by_phase_3(self) -> None:
+        """``a.sum(dim=0)`` stays pure-Python in Phase 3 — never dispatches.
+
+        Even with the Rust extension installed, the axis-specific
+        path bypasses the threshold check entirely (the dispatch
+        condition is wrapped in ``if dim is None``).  Sanity:
+        the result is still correct.
+        """
+        # Reset to "extension available" but the predicate isn't even
+        # consulted for dim != None, so behavior matches whether or
+        # not extension is present.
+        _rust_backend._RUST_AVAILABLE = self._saved_available
+
+        # 2x3 tensor, sum along dim=0 → shape (3,) with column sums.
+        a = Tensor([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], (2, 3))
+        result = a.sum(dim=0)
+        # Column sums: [1+4, 2+5, 3+6] = [5, 7, 9]
+        self.assertEqual(result.data, [5.0, 7.0, 9.0])
+
+
 if __name__ == "__main__":
     unittest.main()

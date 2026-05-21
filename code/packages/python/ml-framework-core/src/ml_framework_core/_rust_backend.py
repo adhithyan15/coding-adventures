@@ -437,3 +437,124 @@ def abs_via_rust(a: Tensor) -> Tensor:
 # competitive (Python's float pow is C-implemented and tight).
 # Deferred until matrix-cpu adds a scalar-exponent variant of Pow,
 # or until profiling shows it's worth the broadcast cost.
+
+
+# ──────────────────────────────────────────────────────────────────
+# Reduction fast paths (MX10 Phase 3)
+#
+# Sum and Mean over the whole tensor (the ``dim=None`` case in
+# SumFunction / MeanFunction) collapse the input to a single scalar.
+# matrix-ir-json supports this via ReduceSum / ReduceMean with the
+# "axes" field listing every axis and keep_dims=false.
+#
+# **Axis-specific reductions (``dim != None``) are not accelerated
+# in Phase 3.**  The output-shape computation, the axis broadcast
+# for backward, and the per-test fixture coverage all differ
+# materially from the reduce-all case.  Adding axis-specific
+# dispatch is straightforward extension work but its own PR.
+# ──────────────────────────────────────────────────────────────────
+
+
+# Reductions have roughly the same per-cell cost as elementwise
+# (one add/divide per cell), so the FFI break-even threshold is in
+# the same neighbourhood.  We reuse the elementwise threshold here
+# rather than tracking a separate constant — if profiling shows
+# reductions break even at a different point we can split.
+def should_use_rust_for_reduction(numel: int) -> bool:
+    """Decide whether to dispatch a reduce-all op (Sum / Mean over
+    the whole tensor) to Rust.
+
+    Returns ``True`` iff the C extension is installed AND the input
+    has at least ``_ELEMENTWISE_RUST_THRESHOLD`` cells.
+
+    For axis-specific reductions (``dim != None``), the caller should
+    NOT call this — Phase 3 only accelerates the reduce-all path.
+    """
+    if not _RUST_AVAILABLE:
+        return False
+    return numel >= _ELEMENTWISE_RUST_THRESHOLD
+
+
+def _reduce_all_via_rust(a: Tensor, op_kind: str) -> Tensor:
+    """Generic helper for ReduceSum / ReduceMean over the whole tensor.
+
+    Input shape: arbitrary.
+    Output shape: ``(1,)`` — same shape SumFunction/MeanFunction return
+    in the ``dim=None`` case.
+
+    ``axes = [0, 1, ..., ndim-1]`` reduces along every dimension;
+    ``keep_dims = false`` collapses to a 0-D tensor which matrix-ir-json
+    represents as the shape returned by Shape::reduce_along_axes.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            f"{op_kind.lower()}_via_rust called but Rust backend is not available; "
+            f"callers must check should_use_rust_for_reduction() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(a.data)
+    input_shape = list(a.shape)
+    # All axes — reduce along every dimension to collapse to a scalar.
+    all_axes = list(range(len(input_shape)))
+
+    a_bytes = struct.pack(f"<{numel}f", *a.data)
+
+    # Reduce-all with keep_dims=False produces a 0-element-rank
+    # (scalar) output.  matrix-ir's Shape::reduce_along_axes with
+    # keep_dims=false returns an empty shape `[]` for full reduction;
+    # the executor still allocates 1 cell of buffer.  We declare
+    # output shape `[]` and expect 1 f32 (4 bytes) back.
+    output_shape: list[int] = []
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    {"id": 0, "dtype": "f32", "shape": input_shape},
+                    {"id": 1, "dtype": "f32", "shape": output_shape},
+                ],
+                "inputs": [0],
+                "outputs": [1],
+                "ops": [
+                    {
+                        "kind": op_kind,
+                        "input": 0,
+                        "axes": all_axes,
+                        "keep_dims": False,
+                        "output": 1,
+                    }
+                ],
+                "constants": [],
+            },
+            "inputs": [a_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_hex = result["outputs"][0]
+    out_bytes = bytes.fromhex(out_hex)
+
+    if len(out_bytes) != 4:
+        raise RuntimeError(
+            f"{op_kind.lower()}_via_rust: expected 4 output bytes (1 f32), "
+            f"got {len(out_bytes)}"
+        )
+    (scalar,) = struct.unpack("<f", out_bytes)
+
+    # SumFunction / MeanFunction return shape (1,) for dim=None.
+    # Match that contract so the dispatch is a drop-in replacement.
+    return _Tensor([scalar], (1,), device=a.device)
+
+
+def sum_via_rust(a: Tensor) -> Tensor:
+    """``a.sum()`` (reduce-all) via Rust.  Returns Tensor of shape ``(1,)``."""
+    return _reduce_all_via_rust(a, "ReduceSum")
+
+
+def mean_via_rust(a: Tensor) -> Tensor:
+    """``a.mean()`` (reduce-all) via Rust.  Returns Tensor of shape ``(1,)``."""
+    return _reduce_all_via_rust(a, "ReduceMean")
