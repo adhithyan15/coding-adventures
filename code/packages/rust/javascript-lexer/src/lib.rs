@@ -1,8 +1,21 @@
 //! JavaScript lexer backed by compiled ECMAScript token grammars (es1 through es2025).
+//!
+//! # Correlation-vector plumbing
+//!
+//! Per [CLOC03](../../../specs/CLOC03-correlation-vector-plumbing.md)
+//! §"Stage 1 — Lexer," when called via [`tokenize_javascript_with_cv`] the
+//! lexer assigns a fresh correlation-vector ID to every emitted token via
+//! `CVLog::create(Some(Origin{ ... }))`. The `Origin` records the source
+//! filename and a `line:column` location string built from the token's
+//! own positional info. No `Contribution` is appended at this stage —
+//! lexing is the act of *creation*, and there is nothing yet to contribute
+//! about.
 
+use coding_adventures_correlation_vector::{CVLog, Origin};
 use coding_adventures_javascript_tokens::EsVersion;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
+use std::collections::HashMap;
 
 mod _grammar;
 
@@ -73,6 +86,60 @@ pub fn tokenize_javascript_typed(
         .map_err(|e| format!("JavaScript tokenization failed: {e}"))
 }
 
+/// A token paired with the correlation-vector ID assigned to it by
+/// [`tokenize_javascript_with_cv`].
+///
+/// The CV ID is a string in the same format that
+/// [`CVLog`](coding_adventures_correlation_vector::CVLog) returns — e.g.
+/// `"a3f1.1"`. Downstream consumers (the parser, the AST) can look it up
+/// in the same `CVLog` they passed in.
+#[derive(Debug, Clone)]
+pub struct TokenWithCv {
+    /// The token as produced by [`tokenize_javascript_typed`]. Fields are
+    /// unchanged; nothing about the token itself depends on CV plumbing.
+    pub token: Token,
+    /// The CV ID assigned to this token. Use it to look up the
+    /// `CVEntry` (origin, contributions, parents) in the same `CVLog`.
+    pub cv: String,
+}
+
+/// Tokenize and assign a fresh correlation-vector ID to every emitted token.
+///
+/// Per CLOC03 §"Stage 1 — Lexer", every token gets exactly one
+/// `CVLog::create(Some(Origin{ ... }))` call with an `Origin` whose
+/// `source` is `source_file` and whose `location` is `"line:col"` built
+/// from the token's own `line` and `column` fields. No `Contribution` is
+/// appended; lexing is creation, not modification.
+///
+/// `source_file` should be the path or display name of the input file
+/// (e.g. `"src/api.js"`). For stdin input, conventions vary — the existing
+/// repo uses `"stdin"`. The string ends up in `Origin.source` and is what
+/// the source-map generator resolves back to.
+///
+/// The `cv` log is borrowed mutably for the duration of the call. The same
+/// log is then handed to the parser, typechecker, and every downstream
+/// pass — see CLOC03 for the full lifecycle.
+pub fn tokenize_javascript_with_cv(
+    source: &str,
+    source_file: &str,
+    version: EsVersion,
+    cv: &mut CVLog,
+) -> Result<Vec<TokenWithCv>, String> {
+    let tokens = tokenize_javascript_typed(source, version)?;
+    let mut out = Vec::with_capacity(tokens.len());
+    for token in tokens {
+        let origin = Origin {
+            source: source_file.to_string(),
+            location: format!("{}:{}", token.line, token.column),
+            timestamp: None,
+            meta: HashMap::new(),
+        };
+        let id = cv.create(Some(origin));
+        out.push(TokenWithCv { token, cv: id });
+    }
+    Ok(out)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -133,5 +200,70 @@ mod tests {
     fn create_lexer_typed_returns_grammar_lexer() {
         // Constructor returns infallibly (no unknown-version path).
         let _lexer = create_javascript_lexer_typed("var x = 1;", EsVersion::Es5);
+    }
+
+    // ----- CV-plumbed tokenization (CLOC03 Stage 1) -----
+
+    #[test]
+    fn tokenize_with_cv_assigns_an_id_per_token() {
+        let mut cv = CVLog::new(true);
+        let tokens =
+            tokenize_javascript_with_cv("var x = 1;", "src/test.js", EsVersion::Es5, &mut cv)
+                .unwrap();
+        assert!(!tokens.is_empty(), "expected at least one token");
+        for t in &tokens {
+            assert!(!t.cv.is_empty(), "expected a non-empty CV id");
+        }
+    }
+
+    #[test]
+    fn tokenize_with_cv_ids_are_unique() {
+        let mut cv = CVLog::new(true);
+        let tokens =
+            tokenize_javascript_with_cv("var x = 1; var y = 2;", "u.js", EsVersion::Es5, &mut cv)
+                .unwrap();
+        let mut ids: Vec<&str> = tokens.iter().map(|t| t.cv.as_str()).collect();
+        let len = ids.len();
+        ids.sort();
+        ids.dedup();
+        assert_eq!(ids.len(), len, "all CV ids should be unique");
+    }
+
+    #[test]
+    fn tokenize_with_cv_entries_resolvable_in_log() {
+        let mut cv = CVLog::new(true);
+        let tokens =
+            tokenize_javascript_with_cv("var x = 1;", "lookup.js", EsVersion::Es5, &mut cv)
+                .unwrap();
+        for t in &tokens {
+            let entry = cv
+                .get(&t.cv)
+                .unwrap_or_else(|| panic!("CV id {:?} not found in log", t.cv));
+            let origin = entry
+                .origin
+                .as_ref()
+                .expect("token CV must have an Origin");
+            assert_eq!(origin.source, "lookup.js");
+            // location is "line:col" — must contain a colon.
+            assert!(
+                origin.location.contains(':'),
+                "expected line:col location, got {:?}",
+                origin.location
+            );
+        }
+    }
+
+    #[test]
+    fn tokenize_with_cv_disabled_log_still_returns_tokens() {
+        // Per CLOC03, when the log is disabled, create() still returns IDs
+        // (so call sites stay shape-identical) but no entries get stored.
+        let mut cv = CVLog::new(false);
+        let tokens =
+            tokenize_javascript_with_cv("var x = 1;", "off.js", EsVersion::Es5, &mut cv).unwrap();
+        assert!(!tokens.is_empty());
+        // Log has no entries, but tokens do have (synthetic) IDs.
+        for t in &tokens {
+            assert!(!t.cv.is_empty());
+        }
     }
 }
