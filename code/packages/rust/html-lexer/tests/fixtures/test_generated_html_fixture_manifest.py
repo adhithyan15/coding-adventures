@@ -37,6 +37,7 @@ class GeneratedHtmlFixtureManifestTest(unittest.TestCase):
             for path in manifest.PARSER_FIXTURE_DIR.glob("generate_whatwg_*_fixture.py")
         }
 
+        self.assertIn("check_html_fixture_scripts_compile.py", checked_scripts)
         self.assertIn("normalize_html5lib_fixtures.py", checked_scripts)
         self.assertIn("check_html5lib_tokenizer_coverage.py", checked_scripts)
         self.assertIn("check_whatwg_lexer_fixture_metadata.py", checked_scripts)

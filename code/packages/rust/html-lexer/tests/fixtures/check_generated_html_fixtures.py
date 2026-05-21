@@ -101,6 +101,13 @@ def parse_args() -> argparse.Namespace:
 def default_checks() -> list[FixtureCheck]:
     return [
         FixtureCheck(
+            "html-fixture-python-scripts-compile",
+            (
+                str(FIXTURE_DIR / "check_html_fixture_scripts_compile.py"),
+                "--check",
+            ),
+        ),
+        FixtureCheck(
             "html5lib-tokenizer-normalized",
             (
                 str(FIXTURE_DIR / "normalize_html5lib_fixtures.py"),

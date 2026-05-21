@@ -529,6 +529,14 @@ python3 code/packages/rust/html-lexer/tests/fixtures/normalize_html5lib_fixtures
   --check
 ```
 
+To check that all lexer/parser fixture helper and generator Python scripts still
+compile without writing bytecode into the worktree:
+
+```bash
+python3 code/packages/rust/html-lexer/tests/fixtures/check_html_fixture_scripts_compile.py \
+  --check
+```
+
 Planned flow:
 
 1. Import or mirror selected upstream tokenizer cases into a generator script.
