@@ -68,6 +68,9 @@ documented in this file.
   recovery audit generator alongside the other parser audit fixture generators.
 - The generated fixture manifest now includes the parser focused-audit coverage
   check alongside the stale generator checks.
+- The generated fixture manifest now includes a local html5lib tokenizer
+  coverage check that proves every raw smoke case maps to the expected
+  normalized fixture ID or skipped-case marker.
 - Parser-facing seeded RCDATA/RAWTEXT/script end-tag continuation contexts,
   including end-tag-name, whitespace, attributes, and self-closing substates
   with current-end-tag and temporary-buffer seeding.

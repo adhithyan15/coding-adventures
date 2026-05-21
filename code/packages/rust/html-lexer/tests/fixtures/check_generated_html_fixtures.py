@@ -109,6 +109,13 @@ def default_checks() -> list[FixtureCheck]:
                 "--check",
             ),
         ),
+        FixtureCheck(
+            "html5lib-tokenizer-coverage",
+            (
+                str(FIXTURE_DIR / "check_html5lib_tokenizer_coverage.py"),
+                "--check",
+            ),
+        ),
         *lexer_fixture_checks(),
         FixtureCheck(
             "whatwg-tree-insertion-audit",
