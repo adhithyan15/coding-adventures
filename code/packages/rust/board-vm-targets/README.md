@@ -55,6 +55,9 @@ paths into Rust-owned `arduino-cli upload` flags instead of rebuilding the
 command shape. The matching command builder now accepts the concrete selected
 port and firmware image path and returns the final argv, including optional
 Arduino CLI upload properties and verify mode.
+The execution-plan helper composes that argv with reset and rediscovery steps,
+preserving native-USB bootloader behavior and serial-adapter expectations
+without making the target registry open devices or spawn `arduino-cli`.
 
 Wireless metadata separates physical support from the generic front-end sugar:
 

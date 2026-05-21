@@ -46,6 +46,10 @@ frontends should fill with concrete paths.
 `arduino_cli_upload_command_with_options_for_target` go one step further by
 building concrete `arduino-cli upload` argv from the selected port, firmware
 image, optional upload properties, and verify flag.
+`arduino_cli_upload_execution_plan_for_target` layers reset and rediscovery
+metadata onto that concrete argv, so language frontends can execute the command
+while still asking Rust whether the selected port is native USB, a USB serial
+bridge, or an external adapter and whether runtime rediscovery is expected.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves

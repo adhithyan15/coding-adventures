@@ -38,7 +38,8 @@ path emits the `arduino-cli upload` invocation template, leaving language
 frontends to fill concrete port and firmware-image paths rather than maintain
 their own flag tables. The same Rust-owned path can now build the concrete
 Arduino CLI upload argv after a frontend supplies the selected port and
-firmware-image path.
+firmware-image path, and can wrap that argv in an execution plan with reset and
+runtime rediscovery steps for native-USB and serial-adapter boards.
 
 The shared target registry also records physical wireless radios for the
 Arduino-family boards that have Wi-Fi or BLE hardware, including MKR/Nano

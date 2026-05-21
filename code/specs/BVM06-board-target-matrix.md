@@ -158,6 +158,13 @@ language core keeps the FQBN, flag order, optional upload-property expansion,
 and verify flag placement centralized, so language frontends do not assemble
 Arduino CLI commands locally.
 
+The Arduino CLI upload execution-plan tranche composes that concrete argv with
+the reset and rediscovery lifecycle. Native USB boards keep their 1200-baud
+bootloader touch and runtime CDC rediscovery expectations in Rust-owned
+metadata, while USB-serial bridge and external-adapter boards explicitly reuse
+the selected serial port after the board package handles reset/programmer
+behavior.
+
 The Arduino wireless metadata tranche records physical Wi-Fi and Bluetooth LE
 radios for non-Uno boards such as MKR WiFi 1010, Nano 33 IoT, Nano 33 BLE Rev2,
 Nano RP2040 Connect, Nano ESP32, GIGA R1 WiFi, Portenta H7 Lite Connected,

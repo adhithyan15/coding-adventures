@@ -205,6 +205,10 @@ shared across Ruby, Python, Lua, Java, JS, and future CLIs. Arduino CLI plans
 must preserve whether the board expects an onboard USB serial bridge, a native
 USB bootloader port, or an external serial adapter so frontends do not infer
 that from board names.
+For Arduino CLI targets, SDKs should use the Rust-owned execution plan after
+port and firmware-image selection so argv construction, reset delegation, and
+runtime rediscovery expectations stay shared even when the language layer owns
+the final process launch.
 
 Selector handling follows the same ownership boundary. If a frontend receives
 an Arduino CLI FQBN such as `arduino:renesas_uno:nanor4`, it should ask the Rust
