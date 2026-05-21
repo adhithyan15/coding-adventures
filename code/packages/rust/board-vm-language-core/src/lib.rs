@@ -100,6 +100,9 @@ pub const LANGUAGE_BOARD_VM_WIRE_PROTOCOL: &str = "board_vm_cobs_crc";
 pub const ARDUINO_CLI_NATIVE_USB_BOOTLOADER_TOUCH_BAUD: u32 = 1_200;
 pub const ARDUINO_CLI_UPLOAD_PORT_PLACEHOLDER: &str = "<port>";
 pub const ARDUINO_CLI_UPLOAD_INPUT_FILE_PLACEHOLDER: &str = "<firmware-image>";
+pub const ARDUINO_CLI_UPLOAD_PROCESS_STDIN_MODE: &str = "null";
+pub const ARDUINO_CLI_UPLOAD_PROCESS_STDOUT_MODE: &str = "piped";
+pub const ARDUINO_CLI_UPLOAD_PROCESS_STDERR_MODE: &str = "piped";
 
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -653,6 +656,27 @@ pub struct LanguageArduinoCliUploadExecutionPlan {
     pub serial_adapter_required: bool,
     pub steps: Vec<String>,
     pub success_exit_codes: Vec<i32>,
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageArduinoCliUploadProcess {
+    pub board_id: String,
+    pub executable: String,
+    pub args: Vec<String>,
+    pub env: Vec<(String, String)>,
+    pub current_dir: Option<String>,
+    pub stdin_mode: String,
+    pub stdout_mode: String,
+    pub stderr_mode: String,
+    pub success_exit_codes: Vec<i32>,
+    pub port_hint: String,
+    pub port_selection_step: String,
+    pub reset_method: String,
+    pub reset_delegated_to_board_package: bool,
+    pub expects_port_reenumeration: bool,
+    pub wait_for_runtime_rediscovery: bool,
+    pub serial_adapter_required: bool,
     pub notes: String,
 }
 
@@ -1266,6 +1290,55 @@ pub fn arduino_cli_upload_execution_plan_with_options_for_target(
     })
 }
 
+pub fn arduino_cli_upload_process_for_target(
+    selector: &str,
+    port: &str,
+    input_file: &str,
+) -> Option<LanguageArduinoCliUploadProcess> {
+    arduino_cli_upload_process_with_options_for_target(selector, port, input_file, &[], false)
+}
+
+pub fn arduino_cli_upload_process_with_options_for_target(
+    selector: &str,
+    port: &str,
+    input_file: &str,
+    upload_properties: &[&str],
+    verify: bool,
+) -> Option<LanguageArduinoCliUploadProcess> {
+    let plan = arduino_cli_upload_execution_plan_with_options_for_target(
+        selector,
+        port,
+        input_file,
+        upload_properties,
+        verify,
+    )?;
+    Some(arduino_cli_upload_process_for_execution_plan(&plan))
+}
+
+pub fn arduino_cli_upload_process_for_execution_plan(
+    plan: &LanguageArduinoCliUploadExecutionPlan,
+) -> LanguageArduinoCliUploadProcess {
+    LanguageArduinoCliUploadProcess {
+        board_id: plan.board_id.clone(),
+        executable: plan.executable.clone(),
+        args: plan.args.clone(),
+        env: Vec::new(),
+        current_dir: None,
+        stdin_mode: ARDUINO_CLI_UPLOAD_PROCESS_STDIN_MODE.to_owned(),
+        stdout_mode: ARDUINO_CLI_UPLOAD_PROCESS_STDOUT_MODE.to_owned(),
+        stderr_mode: ARDUINO_CLI_UPLOAD_PROCESS_STDERR_MODE.to_owned(),
+        success_exit_codes: plan.success_exit_codes.clone(),
+        port_hint: plan.port_hint.clone(),
+        port_selection_step: plan.port_selection_step.clone(),
+        reset_method: plan.reset_method.clone(),
+        reset_delegated_to_board_package: plan.reset_delegated_to_board_package,
+        expects_port_reenumeration: plan.expects_port_reenumeration,
+        wait_for_runtime_rediscovery: plan.wait_for_runtime_rediscovery,
+        serial_adapter_required: plan.serial_adapter_required,
+        notes: arduino_cli_upload_process_notes(&plan.port_hint).to_owned(),
+    }
+}
+
 pub fn arduino_cli_upload_result_for_target(
     selector: &str,
     exit_code: i32,
@@ -1290,10 +1363,28 @@ pub fn arduino_cli_upload_result_for_execution_plan(
     stdout: &str,
     stderr: &str,
 ) -> LanguageArduinoCliUploadResult {
-    arduino_cli_upload_result(
+    arduino_cli_upload_result_with_success_exit_codes(
         plan.board_id.clone(),
         plan.port_hint.clone(),
         plan.wait_for_runtime_rediscovery,
+        &plan.success_exit_codes,
+        exit_code,
+        stdout,
+        stderr,
+    )
+}
+
+pub fn arduino_cli_upload_result_for_process_output(
+    process: &LanguageArduinoCliUploadProcess,
+    exit_code: i32,
+    stdout: &str,
+    stderr: &str,
+) -> LanguageArduinoCliUploadResult {
+    arduino_cli_upload_result_with_success_exit_codes(
+        process.board_id.clone(),
+        process.port_hint.clone(),
+        process.wait_for_runtime_rediscovery,
+        &process.success_exit_codes,
         exit_code,
         stdout,
         stderr,
@@ -1992,6 +2083,21 @@ fn arduino_cli_upload_execution_notes(port_hint: TargetUploadPortHint) -> &'stat
     }
 }
 
+fn arduino_cli_upload_process_notes(port_hint: &str) -> &'static str {
+    match port_hint {
+        "native_usb" => {
+            "Launch this Arduino CLI process with stdout and stderr captured; after a successful native USB upload, wait for the runtime CDC port to reappear before opening Board VM transport."
+        }
+        "usb_serial_bridge" => {
+            "Launch this Arduino CLI process with stdout and stderr captured; after success, reuse the selected USB serial bridge port for Board VM transport."
+        }
+        "external_serial_adapter" => {
+            "Launch this Arduino CLI process with stdout and stderr captured; after success, reuse the caller-selected external serial adapter port for Board VM transport."
+        }
+        _ => "Launch this Arduino CLI process with stdout and stderr captured, then feed the exit code and captured output back into Rust result parsing.",
+    }
+}
+
 fn arduino_cli_upload_result(
     board_id: String,
     port_hint: String,
@@ -2000,7 +2106,33 @@ fn arduino_cli_upload_result(
     stdout: &str,
     stderr: &str,
 ) -> LanguageArduinoCliUploadResult {
-    let failure_kind = arduino_cli_upload_failure_kind(exit_code, stdout, stderr);
+    arduino_cli_upload_result_with_success_exit_codes(
+        board_id,
+        port_hint,
+        wait_for_runtime_rediscovery,
+        &[0],
+        exit_code,
+        stdout,
+        stderr,
+    )
+}
+
+fn arduino_cli_upload_result_with_success_exit_codes(
+    board_id: String,
+    port_hint: String,
+    wait_for_runtime_rediscovery: bool,
+    success_exit_codes: &[i32],
+    exit_code: i32,
+    stdout: &str,
+    stderr: &str,
+) -> LanguageArduinoCliUploadResult {
+    let failure_kind = if success_exit_codes.contains(&exit_code) {
+        None
+    } else if exit_code == 0 {
+        Some("command_failed")
+    } else {
+        arduino_cli_upload_failure_kind(exit_code, stdout, stderr)
+    };
     let success = failure_kind.is_none();
     let failure_kind_string = failure_kind.map(str::to_owned);
 
@@ -6143,6 +6275,84 @@ mod tests {
     }
 
     #[test]
+    fn arduino_cli_upload_process_is_owned_by_rust_language_core() {
+        let process = arduino_cli_upload_process_for_target(
+            "arduino:renesas_uno:nanor4",
+            "/dev/cu.usbmodem101",
+            "/tmp/board-vm-nano-r4.bin",
+        )
+        .unwrap();
+        assert_eq!(process.board_id, "arduino-nano-r4");
+        assert_eq!(process.executable, "arduino-cli");
+        assert_eq!(
+            process.args,
+            vec![
+                "upload",
+                "-p",
+                "/dev/cu.usbmodem101",
+                "-b",
+                "arduino:renesas_uno:nanor4",
+                "-i",
+                "/tmp/board-vm-nano-r4.bin",
+            ]
+        );
+        assert!(process.env.is_empty());
+        assert_eq!(process.current_dir, None);
+        assert_eq!(process.stdin_mode, ARDUINO_CLI_UPLOAD_PROCESS_STDIN_MODE);
+        assert_eq!(process.stdout_mode, ARDUINO_CLI_UPLOAD_PROCESS_STDOUT_MODE);
+        assert_eq!(process.stderr_mode, ARDUINO_CLI_UPLOAD_PROCESS_STDERR_MODE);
+        assert_eq!(process.success_exit_codes, vec![0]);
+        assert_eq!(process.port_hint, "native_usb");
+        assert_eq!(process.port_selection_step, "select_native_usb_port");
+        assert_eq!(process.reset_method, "arduino_board_package");
+        assert!(process.reset_delegated_to_board_package);
+        assert!(process.expects_port_reenumeration);
+        assert!(process.wait_for_runtime_rediscovery);
+        assert!(!process.serial_adapter_required);
+        assert!(process.notes.contains("runtime CDC port"));
+
+        let process = arduino_cli_upload_process_with_options_for_target(
+            "arduino-mega-2560",
+            "COM7",
+            "C:/tmp/mega.hex",
+            &["upload.speed=115200"],
+            true,
+        )
+        .unwrap();
+        assert_eq!(process.port_hint, "usb_serial_bridge");
+        assert!(!process.expects_port_reenumeration);
+        assert!(!process.wait_for_runtime_rediscovery);
+        assert!(!process.serial_adapter_required);
+        assert_eq!(
+            process.args,
+            vec![
+                "upload",
+                "-p",
+                "COM7",
+                "-b",
+                "arduino:avr:mega:cpu=atmega2560",
+                "-i",
+                "C:/tmp/mega.hex",
+                "--upload-property",
+                "upload.speed=115200",
+                "-t",
+            ]
+        );
+        assert!(process.notes.contains("USB serial bridge port"));
+
+        assert!(
+            arduino_cli_upload_process_for_target("arduino-pro-mini", "", "/tmp/pro-mini.hex")
+                .is_none()
+        );
+        assert!(arduino_cli_upload_process_for_target(
+            "esp32",
+            "/dev/cu.usbserial-esp32",
+            "/tmp/esp32.bin"
+        )
+        .is_none());
+    }
+
+    #[test]
     fn arduino_cli_upload_results_are_owned_by_rust_language_core() {
         let plan = arduino_cli_upload_execution_plan_for_target(
             "arduino:renesas_uno:nanor4",
@@ -6165,6 +6375,27 @@ mod tests {
         assert_eq!(result.port_hint, "native_usb");
         assert_eq!(result.message, "Arduino CLI upload completed successfully.");
         assert_eq!(result.diagnostic, "Done uploading.");
+
+        let mut process = arduino_cli_upload_process_for_execution_plan(&plan);
+        process.success_exit_codes = vec![0, 42];
+        let result =
+            arduino_cli_upload_result_for_process_output(&process, 42, "Done uploading.\n", "");
+        assert!(result.success);
+        assert_eq!(result.failure_kind, None);
+        assert!(result.wait_for_runtime_rediscovery);
+
+        let result = arduino_cli_upload_result_for_process_output(
+            &process,
+            1,
+            "",
+            "Error: programmer is not responding",
+        );
+        assert_eq!(
+            result.failure_kind.as_deref(),
+            Some("upload_transport_error")
+        );
+        assert!(result.retryable);
+        assert!(!result.wait_for_runtime_rediscovery);
 
         let result = arduino_cli_upload_result_for_target(
             "arduino-mega-2560",

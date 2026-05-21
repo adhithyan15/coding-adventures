@@ -165,6 +165,11 @@ metadata, while USB-serial bridge and external-adapter boards explicitly reuse
 the selected serial port after the board package handles reset/programmer
 behavior.
 
+The Arduino CLI upload process tranche derives a typed process-launch contract
+from that execution plan. Rust language core owns the executable, argv, stdio
+capture modes, success exit codes, reset metadata, and rediscovery hints, while
+language adapters only perform the OS spawn and return captured output.
+
 The Arduino CLI upload result tranche classifies the process exit code and
 stdout/stderr diagnostics after a frontend runs the Rust-owned execution plan.
 Rust language core reports success, failure kind, retryability, port-selection,
