@@ -13,6 +13,7 @@ All notable changes to this package will be documented in this file.
 - Durable named checkpoint state for supervisors that resume audit replay.
 - Checkpointed replay helpers that deliver bounded pages into audit sinks and
   advance durable named checkpoints.
+- Starting and next checkpoint scalar accessors for checkpoint replay summaries.
 - Read-only supervisor checkpoint status inspection before draining.
 - Starting and next checkpoint scalar accessors for supervisor checkpoint
   status.

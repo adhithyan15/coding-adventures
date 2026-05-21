@@ -21,6 +21,8 @@ The crate keeps the boundary narrow:
   storage backend and advance them without regressing reader state
 - supervisors can replay bounded pages from named checkpoints into audit sinks
   and advance the durable cursor after delivery
+- checkpoint replay summaries expose starting and next checkpoint scalar
+  accessors for host replay logs
 - supervisors can inspect named checkpoint status before draining without
   advancing durable cursor state
 - supervisor checkpoint status exposes starting and next checkpoint scalar
