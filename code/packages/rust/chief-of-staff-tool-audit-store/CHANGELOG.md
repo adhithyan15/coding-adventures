@@ -78,6 +78,8 @@ All notable changes to this package will be documented in this file.
 - No-host-investigation helpers for supervisor drain run reports and summaries.
 - Host-investigation component helpers for supervisor drain run reports and
   summaries.
+- Flattened host-investigation component flags for supervisor drain run
+  summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Report-level scheduler action labels for supervisor drain runs.
