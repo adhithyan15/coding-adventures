@@ -973,6 +973,23 @@ pub const fn host_endpoint_transport_name(
     }
 }
 
+pub const fn host_endpoint_transport_uses_baud_rate(
+    transport: LanguageHostEndpointTransport,
+) -> bool {
+    matches!(transport, LanguageHostEndpointTransport::SerialPort)
+}
+
+pub fn host_endpoint_connection_label(
+    endpoint: &LanguageHostEndpointSummary,
+    baud_rate: u32,
+) -> String {
+    if host_endpoint_transport_uses_baud_rate(endpoint.endpoint_transport) {
+        format!("endpoint={} baud={baud_rate}", endpoint.endpoint)
+    } else {
+        format!("endpoint={}", endpoint.endpoint)
+    }
+}
+
 pub const fn upload_adapter_name(adapter: TargetUploadAdapter) -> &'static str {
     match adapter {
         TargetUploadAdapter::ArduinoCli => "arduino_cli",
@@ -5858,6 +5875,23 @@ mod tests {
                 .unwrap()
                 .endpoint_transport,
             LanguageHostEndpointTransport::TcpSocket
+        );
+
+        assert_eq!(
+            host_endpoint_connection_label(&serial, 57_600),
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            host_endpoint_connection_label(&tcp, 57_600),
+            "endpoint=127.0.0.1:4170"
+        );
+        assert_eq!(
+            host_endpoint_connection_label(&ble, 57_600),
+            "endpoint=ble://uno-r4-wifi/180f/2a19/2a1a"
+        );
+        assert_eq!(
+            host_endpoint_connection_label(&rfcomm, 57_600),
+            "endpoint=rfcomm://ESP32-BoardVM:3"
         );
     }
 

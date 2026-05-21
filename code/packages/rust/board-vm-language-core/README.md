@@ -82,7 +82,10 @@ CLI consumers and language adapters route serial, TCP, BLE GATT, and RFCOMM
 without duplicating scheme dispatch. `parse_host_endpoint_with_error` returns
 the same summary with a Rust-owned parse error kind for malformed endpoint
 input, so frontends can present native messages without inventing their own
-endpoint failure taxonomy.
+endpoint failure taxonomy. `host_endpoint_connection_label` also keeps the
+cross-transport display policy in Rust: serial endpoints carry the runtime baud
+rate in host logs, while TCP and Bluetooth endpoints use the endpoint string
+alone.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
