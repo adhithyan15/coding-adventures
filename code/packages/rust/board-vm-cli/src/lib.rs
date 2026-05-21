@@ -23,6 +23,8 @@ use board_vm_host::{
 };
 use board_vm_language_core::{
     bluetooth_transact_wire_frame, parse_bluetooth_endpoint as parse_language_bluetooth_endpoint,
+    serial_runtime_open_plan_for_target, LanguageSerialRuntimeOpenPlan,
+    LANGUAGE_SERIAL_OPEN_SETTLE_MS,
 };
 use board_vm_language_core::{detect_target, discover_devices, LanguageHostDevice};
 use board_vm_protocol::{
@@ -30,8 +32,8 @@ use board_vm_protocol::{
     BOOT_STORE_ONLY,
 };
 use board_vm_serial::{
-    available_ports, BoardSerialTransport, SerialConfig, SerialPort, SerialPortInfo,
-    SerialTransportError, DEFAULT_BAUD_RATE, DEFAULT_TIMEOUT_MS,
+    available_ports, BoardSerialTransport, DataBits, FlowControl, Parity, SerialConfig, SerialPort,
+    SerialPortInfo, SerialTransportError, StopBits, DEFAULT_BAUD_RATE, DEFAULT_TIMEOUT_MS,
 };
 use board_vm_targets::{all_targets, BoardTargetInfo, OnboardLed};
 use board_vm_tcp::{BoardTcpTransport, TcpConfig, TcpTransportError};
@@ -40,7 +42,7 @@ pub const DEFAULT_PROGRAM_ID: u16 = 1;
 pub const DEFAULT_INSTRUCTION_BUDGET: u32 = 12;
 pub const DEFAULT_HOST_NONCE: u32 = 0xB0A2_D001;
 pub const DEFAULT_HOST_NAME: &str = "board-vm-cli";
-pub const DEFAULT_OPEN_SETTLE_MS: u64 = 250;
+pub const DEFAULT_OPEN_SETTLE_MS: u64 = LANGUAGE_SERIAL_OPEN_SETTLE_MS;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CliCommand {
@@ -71,12 +73,12 @@ pub struct SmokeOptions {
 
 impl SmokeOptions {
     pub fn serial_config(&self, port: &str) -> SerialConfig {
-        SerialConfig::new(port)
-            .baud_rate(self.baud_rate)
-            .timeout(Duration::from_millis(self.timeout_ms))
-            .dtr_on_open(true)
-            .clear_on_open(true)
-            .settle_on_open(Duration::from_millis(DEFAULT_OPEN_SETTLE_MS))
+        session_serial_config(
+            target_selector_for_board(&self.board).as_deref(),
+            port,
+            self.baud_rate,
+            self.timeout_ms,
+        )
     }
 
     pub fn tcp_config(&self, endpoint: &str) -> TcpConfig {
@@ -163,12 +165,12 @@ pub struct ReplOptions {
 
 impl ReplOptions {
     pub fn serial_config(&self, port: &str) -> SerialConfig {
-        SerialConfig::new(port)
-            .baud_rate(self.baud_rate)
-            .timeout(Duration::from_millis(self.timeout_ms))
-            .dtr_on_open(true)
-            .clear_on_open(true)
-            .settle_on_open(Duration::from_millis(DEFAULT_OPEN_SETTLE_MS))
+        session_serial_config(
+            target_selector_for_board(&self.board).as_deref(),
+            port,
+            self.baud_rate,
+            self.timeout_ms,
+        )
     }
 
     pub fn tcp_config(&self, endpoint: &str) -> TcpConfig {
@@ -190,12 +192,12 @@ pub struct BootloaderRebootOptions {
 
 impl BootloaderRebootOptions {
     pub fn serial_config(&self, port: &str) -> SerialConfig {
-        SerialConfig::new(port)
-            .baud_rate(self.baud_rate)
-            .timeout(Duration::from_millis(self.timeout_ms))
-            .dtr_on_open(true)
-            .clear_on_open(true)
-            .settle_on_open(Duration::from_millis(DEFAULT_OPEN_SETTLE_MS))
+        session_serial_config(
+            target_selector_for_board(&self.board).as_deref(),
+            port,
+            self.baud_rate,
+            self.timeout_ms,
+        )
     }
 
     pub fn tcp_config(&self, endpoint: &str) -> TcpConfig {
@@ -947,13 +949,113 @@ pub struct EspUploadReport {
     pub md5_digest: Option<[u8; 16]>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ResolvedSessionPort {
+    port: String,
+    target_selector: Option<String>,
+}
+
 pub fn resolve_session_port(port: Option<&str>, board: &str) -> Result<String, CliError> {
+    resolve_session_runtime_port(port, board).map(|selection| selection.port)
+}
+
+fn resolve_session_runtime_port(
+    port: Option<&str>,
+    board: &str,
+) -> Result<ResolvedSessionPort, CliError> {
     if let Some(port) = port {
-        return Ok(port.to_owned());
+        return Ok(ResolvedSessionPort {
+            port: port.to_owned(),
+            target_selector: target_selector_for_board(board),
+        });
     }
 
     let devices = discover_devices();
-    select_runtime_device(board, &devices).map(|device| device.port)
+    select_runtime_device(board, &devices).map(|device| {
+        let target_selector = device
+            .target
+            .as_ref()
+            .map(|target| target.board_id.clone())
+            .or_else(|| target_selector_for_board(board));
+        ResolvedSessionPort {
+            port: device.port,
+            target_selector,
+        }
+    })
+}
+
+fn target_selector_for_board(board: &str) -> Option<String> {
+    if board == "auto" {
+        return None;
+    }
+    detect_target(board).map(|target| target.board_id)
+}
+
+fn session_serial_config(
+    target_selector: Option<&str>,
+    port: &str,
+    baud_rate: u32,
+    timeout_ms: u64,
+) -> SerialConfig {
+    if let Some(plan) =
+        target_selector.and_then(|selector| serial_runtime_open_plan_for_target(selector, port))
+    {
+        return serial_config_from_runtime_open_plan(&plan)
+            .baud_rate(baud_rate)
+            .timeout(Duration::from_millis(timeout_ms));
+    }
+
+    SerialConfig::new(port)
+        .baud_rate(baud_rate)
+        .timeout(Duration::from_millis(timeout_ms))
+        .dtr_on_open(true)
+        .clear_on_open(true)
+        .settle_on_open(Duration::from_millis(DEFAULT_OPEN_SETTLE_MS))
+}
+
+fn serial_config_from_runtime_open_plan(plan: &LanguageSerialRuntimeOpenPlan) -> SerialConfig {
+    SerialConfig::new(&plan.port)
+        .baud_rate(plan.baud_rate)
+        .timeout(Duration::from_millis(plan.timeout_ms))
+        .data_bits(data_bits_from_plan(plan.data_bits))
+        .flow_control(flow_control_from_plan(&plan.flow_control))
+        .parity(parity_from_plan(&plan.parity))
+        .stop_bits(stop_bits_from_plan(plan.stop_bits))
+        .dtr_on_open(plan.dtr_on_open)
+        .clear_on_open(plan.clear_on_open)
+        .settle_on_open(Duration::from_millis(plan.settle_on_open_ms))
+}
+
+fn data_bits_from_plan(data_bits: u8) -> DataBits {
+    match data_bits {
+        5 => DataBits::Five,
+        6 => DataBits::Six,
+        7 => DataBits::Seven,
+        _ => DataBits::Eight,
+    }
+}
+
+fn flow_control_from_plan(flow_control: &str) -> FlowControl {
+    match flow_control {
+        "software" => FlowControl::Software,
+        "hardware" => FlowControl::Hardware,
+        _ => FlowControl::None,
+    }
+}
+
+fn parity_from_plan(parity: &str) -> Parity {
+    match parity {
+        "odd" => Parity::Odd,
+        "even" => Parity::Even,
+        _ => Parity::None,
+    }
+}
+
+fn stop_bits_from_plan(stop_bits: u8) -> StopBits {
+    match stop_bits {
+        2 => StopBits::Two,
+        _ => StopBits::One,
+    }
 }
 
 pub fn select_runtime_device(
@@ -1512,12 +1614,16 @@ fn open_smoke_transport(
         ));
     }
 
-    let port = resolve_session_port(options.port.as_deref(), &options.board)?;
-    let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config(&port))?;
+    let (connection_label, transport) = open_serial_session_transport(
+        options.port.as_deref(),
+        &options.board,
+        options.baud_rate,
+        options.timeout_ms,
+    )?;
     Ok((
         SmokeConnectionTransport::SerialPort,
-        format!("port={} baud={}", port, options.baud_rate),
-        SessionTransport::Serial(transport),
+        connection_label,
+        transport,
     ))
 }
 
@@ -1535,12 +1641,16 @@ fn open_bootloader_reboot_transport(
         ));
     }
 
-    let port = resolve_session_port(options.port.as_deref(), &options.board)?;
-    let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config(&port))?;
+    let (connection_label, transport) = open_serial_session_transport(
+        options.port.as_deref(),
+        &options.board,
+        options.baud_rate,
+        options.timeout_ms,
+    )?;
     Ok((
         SmokeConnectionTransport::SerialPort,
-        format!("port={} baud={}", port, options.baud_rate),
-        SessionTransport::Serial(transport),
+        connection_label,
+        transport,
     ))
 }
 
@@ -1551,10 +1661,30 @@ fn open_repl_transport(options: &ReplOptions) -> Result<(String, SessionTranspor
         return Ok((format!("endpoint={endpoint}"), transport));
     }
 
-    let port = resolve_session_port(options.port.as_deref(), &options.board)?;
-    let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config(&port))?;
+    open_serial_session_transport(
+        options.port.as_deref(),
+        &options.board,
+        options.baud_rate,
+        options.timeout_ms,
+    )
+}
+
+fn open_serial_session_transport(
+    port: Option<&str>,
+    board: &str,
+    baud_rate: u32,
+    timeout_ms: u64,
+) -> Result<(String, SessionTransport), CliError> {
+    let runtime_port = resolve_session_runtime_port(port, board)?;
+    let config = session_serial_config(
+        runtime_port.target_selector.as_deref(),
+        &runtime_port.port,
+        baud_rate,
+        timeout_ms,
+    );
+    let transport = BoardSerialTransport::<_, 1024>::open(&config)?;
     Ok((
-        format!("port={} baud={}", port, options.baud_rate),
+        format!("port={} baud={}", config.path, config.baud_rate),
         SessionTransport::Serial(transport),
     ))
 }
@@ -3242,6 +3372,40 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
             config.settle_on_open,
             Duration::from_millis(DEFAULT_OPEN_SETTLE_MS)
         );
+    }
+
+    #[test]
+    fn session_serial_config_uses_language_core_runtime_open_plan() {
+        let port = "/dev/cu.usbmodem-test";
+        let plan = serial_runtime_open_plan_for_target("uno-r4-wifi", port).unwrap();
+
+        let selection = resolve_session_runtime_port(Some(port), "uno-r4-wifi").unwrap();
+        let config = session_serial_config(
+            selection.target_selector.as_deref(),
+            &selection.port,
+            57_600,
+            250,
+        );
+
+        assert_eq!(selection.port, port);
+        assert_eq!(
+            selection.target_selector.as_deref(),
+            Some(plan.board_id.as_str())
+        );
+        assert_eq!(config.path, plan.port);
+        assert_eq!(config.baud_rate, 57_600);
+        assert_eq!(config.timeout, Duration::from_millis(250));
+        assert_eq!(config.data_bits, DataBits::Eight);
+        assert_eq!(config.flow_control, FlowControl::None);
+        assert_eq!(config.parity, Parity::None);
+        assert_eq!(config.stop_bits, StopBits::One);
+        assert_eq!(config.dtr_on_open, Some(plan.dtr_on_open));
+        assert_eq!(config.clear_on_open, plan.clear_on_open);
+        assert_eq!(
+            config.settle_on_open,
+            Duration::from_millis(plan.settle_on_open_ms)
+        );
+        assert_eq!(DEFAULT_OPEN_SETTLE_MS, LANGUAGE_SERIAL_OPEN_SETTLE_MS);
     }
 
     #[test]
