@@ -21,6 +21,12 @@ case_sensitive: false
 escapes: none
 
 BLOB_HEX      = /[xX]'[0-9A-Fa-f]*'/ -> BLOB
+# Hex integer literal — SQLite spelling is `0x...` or `0X...` with one or
+# more hex digits.  Must precede NUMBER so the leading `0` does not get
+# eaten as a separate decimal token (which would leave `xFF` to be parsed
+# as a NAME).  HEX_INT folds down to a NUMBER token so the grammar can
+# keep referencing a single literal-integer token type everywhere.
+HEX_INT       = /0[xX][0-9A-Fa-f]+/ -> NUMBER
 NAME          = /[a-zA-Z_][a-zA-Z0-9_]*/
 NUMBER        = /[0-9]+\.?[0-9]*/
 STRING_SQ     = /'(''|[^'])*'/ -> STRING

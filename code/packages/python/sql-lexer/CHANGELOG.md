@@ -2,6 +2,18 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.24.0] - 2026-05-21
+
+### Added
+
+- Recognise SQLite hex integer literals (`0x1F`, `0XDEADBEEF`).  The
+  new `HEX_INT` token (`/0[xX][0-9A-Fa-f]+/`) is declared *before*
+  `NUMBER` so the longest-match rule wins — otherwise the lexer would
+  emit `0` as a NUMBER and leave `xFF` to be parsed as a NAME, the way
+  it did before this change.  `HEX_INT` aliases to `NUMBER` so the
+  parser grammar keeps using a single literal-integer terminal
+  everywhere.
+
 ## [0.23.0] - 2026-05-21
 
 ### Added

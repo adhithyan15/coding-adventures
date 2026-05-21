@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.78.0] - 2026-05-21
+
+### Added
+
+- SQLite hex integer literals: `0x1F`, `0XDEADBEEF`, etc.  Accepted
+  anywhere a decimal integer is — expressions, WHERE clauses, LIMIT /
+  OFFSET clauses, window-frame offsets, INSERT values.  Case-
+  insensitive in both the prefix (`0x` vs `0X`) and the hex digits.
+- Two SQLite-faithful semantics for these literals:
+  1. **16-digit cap.**  More than 16 hex digits (i.e. > 64 bits)
+     raises `OperationalError("hex literal too big: ...")`, matching
+     the message stdlib `sqlite3` emits.  This also doubles as a
+     parser-layer DoS guard: a 1MB hex literal can't pin the parser
+     thread in Python's O(N²) `int(s, 16)` path (which is *not*
+     covered by Python's PYTHONINTMAXSTRDIGITS guard — that one
+     applies to base-10 only).
+  2. **64-bit two's-complement wrap.**  `0xFFFFFFFFFFFFFFFF`
+     evaluates to `-1` (not `+18446744073709551615`), and
+     `0x8000000000000000` evaluates to `-2^63`, matching SQLite's
+     INTEGER affinity.
+- 31 oracle tests in `tests/test_tier3_hex_int_literals.py` covering
+  basic forms, arithmetic, bitwise composition (where these literals
+  shine), table data, LIMIT/OFFSET, INSERT, and the wrap/size-cap
+  edge cases.
+
+### Changed
+
+- `_parse_number` now recognises the `0x` / `0X` prefix and routes
+  through `int(s, 16)` instead of failing in `int(s)`.  The LIMIT /
+  OFFSET and frame-offset code paths route through `_parse_number`
+  too, where they used to do bare `int(c.value)` / `int(float(...))`
+  and would have raised on hex input.
+
 ## [1.77.0] - 2026-05-21
 
 ### Added
