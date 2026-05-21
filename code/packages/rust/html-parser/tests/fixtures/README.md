@@ -281,3 +281,14 @@ contain stale or duplicate source references:
 python3 code/packages/rust/html-parser/tests/fixtures/check_whatwg_audit_coverage.py \
   --check
 ```
+
+`check_whatwg_audit_manifest.py` verifies that every focused
+`whatwg-*-audit.json` parser fixture has a matching generator, that those
+generators are wired into the shared generated-fixture manifest, and that audit
+metadata such as `format`, `source_fixture`, `case_count`, case fields, and
+axis counts stay internally consistent:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/check_whatwg_audit_manifest.py \
+  --check
+```
