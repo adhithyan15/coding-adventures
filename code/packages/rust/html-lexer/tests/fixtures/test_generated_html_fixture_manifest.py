@@ -40,6 +40,7 @@ class GeneratedHtmlFixtureManifestTest(unittest.TestCase):
         self.assertIn("normalize_html5lib_fixtures.py", checked_scripts)
         self.assertIn("check_html5lib_tokenizer_coverage.py", checked_scripts)
         self.assertIn("check_whatwg_lexer_fixture_metadata.py", checked_scripts)
+        self.assertIn("check_whatwg_lexer_rust_tests.py", checked_scripts)
         self.assertIn("check_whatwg_audit_manifest.py", checked_scripts)
         self.assertIn("check_html5lib_tree_construction_smoke.py", checked_scripts)
         self.assertIn("check_whatwg_audit_rust_tests.py", checked_scripts)

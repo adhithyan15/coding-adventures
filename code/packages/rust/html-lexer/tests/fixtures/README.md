@@ -107,6 +107,9 @@ binary while production code continues to link only static Rust source.
 - `check_whatwg_lexer_fixture_metadata.py`: checker that keeps the generated
   WHATWG lexer fixture files, generator pairs, metadata formats, and
   stale-check manifest wiring aligned
+- `check_whatwg_lexer_rust_tests.py`: checker that keeps every focused WHATWG
+  lexer fixture paired with a Rust test that parses the fixture and exercises
+  the lexer harness
 - `check_generated_html_fixtures.py`: manifest check that runs every
   self-contained generated lexer/parser fixture stale check from checked-in
   inputs, with optional flags for upstream-only source inputs
@@ -180,6 +183,8 @@ Verify local WHATWG lexer fixture metadata and manifest coverage with:
 
 ```bash
 python3 code/packages/rust/html-lexer/tests/fixtures/check_whatwg_lexer_fixture_metadata.py \
+  --check
+python3 code/packages/rust/html-lexer/tests/fixtures/check_whatwg_lexer_rust_tests.py \
   --check
 ```
 
