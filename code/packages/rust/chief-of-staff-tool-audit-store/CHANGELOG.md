@@ -11,6 +11,7 @@ All notable changes to this package will be documented in this file.
 - Query and inventory helpers over persisted audit records.
 - Deterministic checkpoint pages for incremental audit replay.
 - Durable named checkpoint state for supervisors that resume audit replay.
+- Next-checkpoint timestamp and call-id scalar accessors for checkpoint pages.
 - Timestamp and call-id scalar accessors for stored checkpoint state.
 - Checkpointed replay helpers that deliver bounded pages into audit sinks and
   advance durable named checkpoints.

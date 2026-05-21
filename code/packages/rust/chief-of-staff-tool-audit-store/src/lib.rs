@@ -560,6 +560,16 @@ impl ToolAuditCheckpointPage {
     pub fn len(&self) -> usize {
         self.records.len()
     }
+
+    /// Return the checkpoint timestamp to use for the next read.
+    pub fn next_checkpoint_timestamp_ms(&self) -> u64 {
+        self.next_checkpoint.timestamp_ms
+    }
+
+    /// Return the checkpoint call id to use for the next read.
+    pub fn next_checkpoint_call_id(&self) -> &str {
+        &self.next_checkpoint.call_id
+    }
 }
 
 /// Durable named replay checkpoint stored beside audit rows.
@@ -2739,6 +2749,8 @@ mod tests {
             first.next_checkpoint,
             ToolAuditReadCheckpoint::new(120, "call_1")
         );
+        assert_eq!(first.next_checkpoint_timestamp_ms(), 120);
+        assert_eq!(first.next_checkpoint_call_id(), "call_1");
         assert_eq!(first.inventory.completed_records, 1);
 
         let second = store
@@ -2756,12 +2768,16 @@ mod tests {
             second.next_checkpoint,
             ToolAuditReadCheckpoint::new(151, "call_2")
         );
+        assert_eq!(second.next_checkpoint_timestamp_ms(), 151);
+        assert_eq!(second.next_checkpoint_call_id(), "call_2");
 
         let empty = store
             .query_audits_after_checkpoint(&second.next_checkpoint, Some(10))
             .unwrap();
         assert!(empty.is_empty());
         assert_eq!(empty.next_checkpoint, second.next_checkpoint);
+        assert_eq!(empty.next_checkpoint_timestamp_ms(), 151);
+        assert_eq!(empty.next_checkpoint_call_id(), "call_2");
     }
 
     #[test]
@@ -2781,6 +2797,8 @@ mod tests {
             page.next_checkpoint,
             ToolAuditReadCheckpoint::new(120, "call_b")
         );
+        assert_eq!(page.next_checkpoint_timestamp_ms(), 120);
+        assert_eq!(page.next_checkpoint_call_id(), "call_b");
     }
 
     #[test]
