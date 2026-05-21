@@ -63,6 +63,12 @@ language frontends do not parse CLI diagnostics themselves.
 `arduino_cli_upload_result_for_process_output` performs the same classification
 directly from the process-launch contract after the frontend captures
 stdout/stderr.
+`arduino_cli_upload_runtime_handoff_for_execution_plan` and
+`arduino_cli_upload_runtime_handoff_for_process_output` derive the Board VM
+transport port to open after a successful upload. Native USB boards prefer the
+`New upload port:` value reported by Arduino CLI and otherwise carry the
+rediscovery requirement with the selected upload port; USB serial bridge and
+external-adapter targets reuse the selected port.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves

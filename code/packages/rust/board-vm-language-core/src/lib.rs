@@ -698,6 +698,17 @@ pub struct LanguageArduinoCliUploadResult {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageArduinoCliUploadRuntimeHandoff {
+    pub board_id: String,
+    pub upload_port: String,
+    pub runtime_port: String,
+    pub runtime_port_source: String,
+    pub wait_for_runtime_rediscovery: bool,
+    pub port_hint: String,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageUploadOptions {
     pub board_id: String,
     pub adapter: String,
@@ -1386,6 +1397,55 @@ pub fn arduino_cli_upload_result_for_process_output(
         process.wait_for_runtime_rediscovery,
         &process.success_exit_codes,
         exit_code,
+        stdout,
+        stderr,
+    )
+}
+
+pub fn arduino_cli_new_upload_port(output: &str) -> Option<String> {
+    output.lines().rev().find_map(|line| {
+        let (_, port) = line.split_once("New upload port:")?;
+        let port = port
+            .trim()
+            .split_once(" (")
+            .map_or_else(|| port.trim(), |(port, _)| port.trim());
+
+        (!port.is_empty()).then(|| port.to_owned())
+    })
+}
+
+pub fn arduino_cli_upload_runtime_handoff_for_execution_plan(
+    plan: &LanguageArduinoCliUploadExecutionPlan,
+    exit_code: i32,
+    stdout: &str,
+    stderr: &str,
+) -> Option<LanguageArduinoCliUploadRuntimeHandoff> {
+    let result = arduino_cli_upload_result_for_execution_plan(plan, exit_code, stdout, stderr);
+    arduino_cli_upload_runtime_handoff(
+        plan.board_id.clone(),
+        &plan.port,
+        plan.port_hint.clone(),
+        result.success,
+        result.wait_for_runtime_rediscovery,
+        stdout,
+        stderr,
+    )
+}
+
+pub fn arduino_cli_upload_runtime_handoff_for_process_output(
+    process: &LanguageArduinoCliUploadProcess,
+    selected_upload_port: &str,
+    exit_code: i32,
+    stdout: &str,
+    stderr: &str,
+) -> Option<LanguageArduinoCliUploadRuntimeHandoff> {
+    let result = arduino_cli_upload_result_for_process_output(process, exit_code, stdout, stderr);
+    arduino_cli_upload_runtime_handoff(
+        process.board_id.clone(),
+        selected_upload_port,
+        process.port_hint.clone(),
+        result.success,
+        result.wait_for_runtime_rediscovery,
         stdout,
         stderr,
     )
@@ -2150,6 +2210,74 @@ fn arduino_cli_upload_result_with_success_exit_codes(
         port_hint,
         message: arduino_cli_upload_result_message(failure_kind).to_owned(),
         diagnostic: arduino_cli_upload_diagnostic(stdout, stderr),
+    }
+}
+
+fn arduino_cli_upload_runtime_handoff(
+    board_id: String,
+    selected_upload_port: &str,
+    port_hint: String,
+    success: bool,
+    wait_for_runtime_rediscovery: bool,
+    stdout: &str,
+    stderr: &str,
+) -> Option<LanguageArduinoCliUploadRuntimeHandoff> {
+    if !success {
+        return None;
+    }
+
+    let selected_upload_port = selected_upload_port.trim();
+    let new_upload_port = wait_for_runtime_rediscovery
+        .then(|| {
+            arduino_cli_new_upload_port(stdout).or_else(|| arduino_cli_new_upload_port(stderr))
+        })
+        .flatten();
+    let (runtime_port, runtime_port_source) = match new_upload_port {
+        Some(port) => (port, "arduino_cli_new_upload_port"),
+        None => {
+            if selected_upload_port.is_empty() {
+                return None;
+            }
+
+            (selected_upload_port.to_owned(), "selected_upload_port")
+        }
+    };
+
+    Some(LanguageArduinoCliUploadRuntimeHandoff {
+        board_id,
+        upload_port: selected_upload_port.to_owned(),
+        runtime_port,
+        runtime_port_source: runtime_port_source.to_owned(),
+        wait_for_runtime_rediscovery,
+        port_hint: port_hint.clone(),
+        message: arduino_cli_upload_runtime_handoff_message(
+            &port_hint,
+            runtime_port_source,
+            wait_for_runtime_rediscovery,
+        )
+        .to_owned(),
+    })
+}
+
+fn arduino_cli_upload_runtime_handoff_message(
+    port_hint: &str,
+    runtime_port_source: &str,
+    wait_for_runtime_rediscovery: bool,
+) -> &'static str {
+    match (wait_for_runtime_rediscovery, runtime_port_source, port_hint) {
+        (true, "arduino_cli_new_upload_port", _) => {
+            "Arduino CLI reported the runtime port after native USB upload; open Board VM transport on that port."
+        }
+        (true, _, _) => {
+            "Arduino CLI did not report a new runtime port; wait for native USB runtime rediscovery before opening Board VM transport."
+        }
+        (false, _, "usb_serial_bridge") => {
+            "Upload used an onboard USB serial bridge; reuse the selected port for Board VM transport."
+        }
+        (false, _, "external_serial_adapter") => {
+            "Upload used an external serial adapter; reuse the selected adapter port for Board VM transport."
+        }
+        _ => "Reuse the selected upload port for Board VM transport after successful upload.",
     }
 }
 
@@ -6453,6 +6581,100 @@ mod tests {
         assert!(result.retryable);
 
         assert!(arduino_cli_upload_result_for_target("esp32", 1, "", "Error").is_none());
+    }
+
+    #[test]
+    fn arduino_cli_upload_runtime_handoff_is_owned_by_rust_language_core() {
+        assert_eq!(
+            arduino_cli_new_upload_port(
+                "Sketch uses 30720 bytes.\nNew upload port: /dev/cu.usbmodem1101 (serial)\n"
+            ),
+            Some("/dev/cu.usbmodem1101".to_owned())
+        );
+        assert_eq!(
+            arduino_cli_new_upload_port(
+                "New upload port: /dev/cu.usbmodem9070692469E42 (serial)\n\
+                 New upload port: /dev/cu.usbmodem1101 (serial)\n"
+            ),
+            Some("/dev/cu.usbmodem1101".to_owned())
+        );
+        assert_eq!(
+            arduino_cli_new_upload_port("No new serial port found."),
+            None
+        );
+
+        let native_plan = arduino_cli_upload_execution_plan_for_target(
+            "arduino-nano-r4",
+            "/dev/cu.usbmodem9070692469E42",
+            "/tmp/board-vm-nano-r4.bin",
+        )
+        .unwrap();
+        let handoff = arduino_cli_upload_runtime_handoff_for_execution_plan(
+            &native_plan,
+            0,
+            "Resetting board...\nNew upload port: /dev/cu.usbmodem1101 (serial)\n",
+            "",
+        )
+        .unwrap();
+        assert_eq!(handoff.board_id, "arduino-nano-r4");
+        assert_eq!(handoff.upload_port, "/dev/cu.usbmodem9070692469E42");
+        assert_eq!(handoff.runtime_port, "/dev/cu.usbmodem1101");
+        assert_eq!(handoff.runtime_port_source, "arduino_cli_new_upload_port");
+        assert!(handoff.wait_for_runtime_rediscovery);
+        assert_eq!(handoff.port_hint, "native_usb");
+        assert!(handoff.message.contains("reported the runtime port"));
+
+        let stderr_handoff = arduino_cli_upload_runtime_handoff_for_execution_plan(
+            &native_plan,
+            0,
+            "Done uploading.\n",
+            "New upload port: /dev/cu.usbmodem2201 (serial)\n",
+        )
+        .unwrap();
+        assert_eq!(stderr_handoff.runtime_port, "/dev/cu.usbmodem2201");
+
+        let fallback = arduino_cli_upload_runtime_handoff_for_execution_plan(
+            &native_plan,
+            0,
+            "Done uploading.\n",
+            "",
+        )
+        .unwrap();
+        assert_eq!(fallback.runtime_port, "/dev/cu.usbmodem9070692469E42");
+        assert_eq!(fallback.runtime_port_source, "selected_upload_port");
+        assert!(fallback.wait_for_runtime_rediscovery);
+        assert!(fallback
+            .message
+            .contains("did not report a new runtime port"));
+
+        let bridge_process = arduino_cli_upload_process_for_target(
+            "arduino:avr:mega:cpu=atmega2560",
+            "COM7",
+            "C:/tmp/mega.hex",
+        )
+        .unwrap();
+        let bridge_handoff = arduino_cli_upload_runtime_handoff_for_process_output(
+            &bridge_process,
+            "COM7",
+            0,
+            "Done uploading.\nNew upload port: COM8 (serial)\n",
+            "",
+        )
+        .unwrap();
+        assert_eq!(bridge_handoff.board_id, "arduino-mega-2560");
+        assert_eq!(bridge_handoff.runtime_port, "COM7");
+        assert_eq!(bridge_handoff.runtime_port_source, "selected_upload_port");
+        assert!(!bridge_handoff.wait_for_runtime_rediscovery);
+        assert_eq!(bridge_handoff.port_hint, "usb_serial_bridge");
+        assert!(bridge_handoff.message.contains("USB serial bridge"));
+
+        assert!(arduino_cli_upload_runtime_handoff_for_execution_plan(
+            &native_plan,
+            1,
+            "",
+            "Error: programmer is not responding",
+        )
+        .is_none());
     }
 
     #[test]

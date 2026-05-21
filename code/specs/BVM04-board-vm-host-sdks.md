@@ -214,6 +214,11 @@ codes, and rediscovery hints stay uniform across language adapters. SDKs should
 feed the resulting Arduino CLI exit code, stdout, and stderr back into Rust
 language core so upload status, retryability, port-selection, board-package
 install, firmware-artifact, and rediscovery hints stay shared too.
+After a successful Arduino CLI upload, SDKs should also ask Rust for the
+runtime handoff port. Native USB targets should use Arduino CLI's reported
+`New upload port:` value when present and otherwise keep the Rust-owned
+rediscovery hint with the selected upload port; USB serial bridge and external
+adapter targets should reuse the selected port.
 
 Selector handling follows the same ownership boundary. If a frontend receives
 an Arduino CLI FQBN such as `arduino:renesas_uno:nanor4`, it should ask the Rust
