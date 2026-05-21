@@ -218,9 +218,18 @@ def _stmt_dispatch(
 # --------------------------------------------------------------------------
 
 
+# Shorthand for the value type of the active-CTE dict.  A named CTE's
+# body can be a plain SELECT, a set-op tree (UNION/INTERSECT/EXCEPT
+# anywhere on the left spine), or a recursive reference token; all
+# three plug into ``DerivedTableRef.select`` at substitution time.
+# Aliased here purely so the dozen function signatures threading this
+# dict around don't blow past the 100-column ruff limit.
+_CTEBody = SelectStmt | UnionStmt | IntersectStmt | ExceptStmt | RecursiveCTERef
+
+
 def _query_stmt(
     node: ASTNode,
-    ctes: dict[str, SelectStmt | UnionStmt | IntersectStmt | ExceptStmt | RecursiveCTERef] | None = None,
+    ctes: dict[str, _CTEBody] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> Statement:
     """Translate ``query_stmt = [ with_clause ] select_stmt { set_op_clause }`` to a Statement.
@@ -236,7 +245,7 @@ def _query_stmt(
     set-operation tree.
     """
     # Accumulate CTEs: outer dict (if any) merged with any new WITH clause.
-    active_ctes: dict[str, SelectStmt | UnionStmt | IntersectStmt | ExceptStmt | RecursiveCTERef] = dict(ctes) if ctes else {}
+    active_ctes: dict[str, _CTEBody] = dict(ctes) if ctes else {}
     with_node = _maybe_child(node, "with_clause")
     if with_node is not None:
         # Check whether the WITH clause carries the RECURSIVE keyword.
@@ -346,7 +355,7 @@ def _set_op_clause(node: ASTNode) -> tuple[str, bool, ASTNode]:
 
 def _select(
     node: ASTNode,
-    ctes: dict[str, SelectStmt | UnionStmt | IntersectStmt | ExceptStmt | RecursiveCTERef] | None = None,
+    ctes: dict[str, _CTEBody] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> SelectStmt:
     state = _PlaceholderCounter()
@@ -417,7 +426,7 @@ def _select_item(node: ASTNode, state: _PlaceholderCounter) -> SelectItem:
 
 def _table_ref(
     node: ASTNode,
-    ctes: dict[str, SelectStmt | UnionStmt | IntersectStmt | ExceptStmt | RecursiveCTERef] | None = None,
+    ctes: dict[str, _CTEBody] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> TableRef | DerivedTableRef | RecursiveCTERef:
     """Translate a table_ref node.
@@ -529,7 +538,7 @@ def _table_ref(
 def _join_clause(
     node: ASTNode,
     state: _PlaceholderCounter,
-    ctes: dict[str, SelectStmt | UnionStmt | IntersectStmt | ExceptStmt | RecursiveCTERef] | None = None,
+    ctes: dict[str, _CTEBody] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> JoinClause:
     # join_clause has two forms (grammar):
