@@ -57,9 +57,10 @@ CLI `--baud` and `--timeout-ms` overrides before touching the OS port. That
 keeps DTR/open-settle, stale-byte clearing, endpoint metadata, and wire
 protocol ownership in the Rust target layer while this crate performs the
 platform-specific open/read/write call. The endpoint path accepts Rust-owned
-serial endpoint metadata (`serial://...`) plus TCP sockets and Board VM
-Bluetooth endpoints (`ble://`, `btspp://`, or `rfcomm://`) through the
-Rust-owned transport adapters. The smoke report starts with a stable
+serial endpoint metadata (`serial://...`), TCP endpoint metadata (`tcp://...` or
+bare `host:port`), and Board VM Bluetooth endpoints (`ble://`, `btspp://`, or
+`rfcomm://`) through the Rust-owned transport adapters. The smoke report starts
+with a stable
 `connection transport=...` field so hardware logs can distinguish serial, TCP
 socket, BLE GATT, and RFCOMM runs without parsing endpoint strings. The default
 run budget is intentionally small because the current firmware executes

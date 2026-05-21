@@ -389,6 +389,15 @@ pub struct LanguageSerialEndpoint {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageTcpEndpoint {
+    pub endpoint: String,
+    pub transport: LanguageConnectionTransport,
+    pub endpoint_transport: LanguageHostEndpointTransport,
+    pub endpoint_scheme: String,
+    pub authority: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageBluetoothEndpoint {
     pub endpoint: String,
     pub transport: LanguageConnectionTransport,
@@ -1534,6 +1543,25 @@ pub fn parse_serial_endpoint(endpoint: &str) -> Option<LanguageSerialEndpoint> {
         endpoint_transport: LanguageHostEndpointTransport::SerialPort,
         endpoint_scheme: scheme.to_owned(),
         port: port.to_owned(),
+    })
+}
+
+pub fn parse_tcp_endpoint(endpoint: &str) -> Option<LanguageTcpEndpoint> {
+    let (scheme, authority) = match endpoint.split_once("://") {
+        Some(("tcp", authority)) => ("tcp", authority),
+        Some(_) => return None,
+        None => ("tcp", endpoint),
+    };
+    let authority = authority.trim();
+    if authority.is_empty() {
+        return None;
+    }
+    Some(LanguageTcpEndpoint {
+        endpoint: endpoint.to_owned(),
+        transport: LanguageConnectionTransport::Wifi,
+        endpoint_transport: LanguageHostEndpointTransport::TcpSocket,
+        endpoint_scheme: scheme.to_owned(),
+        authority: authority.to_owned(),
     })
 }
 
@@ -5656,6 +5684,27 @@ mod tests {
         assert!(parse_serial_endpoint("serial://   ").is_none());
         assert!(serial_runtime_open_plan_for_target("uno-r4-wifi", "   ").is_none());
         assert!(serial_runtime_open_plan_for_target("not-a-board", "COM7").is_none());
+    }
+
+    #[test]
+    fn tcp_endpoint_metadata_is_owned_by_rust_language_core() {
+        let endpoint = parse_tcp_endpoint("tcp://board-vm.local:4170").unwrap();
+        assert_eq!(endpoint.endpoint, "tcp://board-vm.local:4170");
+        assert_eq!(endpoint.transport, LanguageConnectionTransport::Wifi);
+        assert_eq!(
+            endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(endpoint.endpoint_scheme, "tcp");
+        assert_eq!(endpoint.authority, "board-vm.local:4170");
+
+        let bare_endpoint = parse_tcp_endpoint("127.0.0.1:4170").unwrap();
+        assert_eq!(bare_endpoint.endpoint, "127.0.0.1:4170");
+        assert_eq!(bare_endpoint.endpoint_scheme, "tcp");
+        assert_eq!(bare_endpoint.authority, "127.0.0.1:4170");
+
+        assert!(parse_tcp_endpoint("serial:///dev/cu.usbmodem1101").is_none());
+        assert!(parse_tcp_endpoint("tcp://   ").is_none());
     }
 
     #[test]

@@ -228,6 +228,9 @@ When a frontend receives a `serial://...` endpoint string from that plan or from
 a user-facing CLI surface, it should parse the endpoint through the Rust-owned
 serial endpoint helper and then apply the same serial open plan instead of
 maintaining a parallel endpoint scheme table.
+TCP endpoint strings should follow the same boundary: frontends should ask Rust
+for `tcp://...` or bare `host:port` endpoint metadata and keep their local code
+to the platform-specific socket open/read/write call.
 
 Selector handling follows the same ownership boundary. If a frontend receives
 an Arduino CLI FQBN such as `arduino:renesas_uno:nanor4`, it should ask the Rust
