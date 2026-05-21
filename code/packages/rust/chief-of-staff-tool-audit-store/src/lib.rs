@@ -1232,6 +1232,8 @@ impl ToolAuditSupervisorDrainRunReport {
             host_investigation_kind: self.host_investigation_kind(),
             host_investigation_label: self.host_investigation_label(),
             requires_host_investigation: self.requires_host_investigation(),
+            requires_host_plan_drift_investigation: self.requires_host_plan_drift_investigation(),
+            requires_host_count_drift_investigation: self.requires_host_count_drift_investigation(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
             reached_end_of_log: self.reached_end_of_log(),
@@ -1461,6 +1463,10 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_investigation_label: &'static str,
     /// Whether the host should investigate any run divergence.
     pub requires_host_investigation: bool,
+    /// Whether the host investigation includes plan drift.
+    pub requires_host_plan_drift_investigation: bool,
+    /// Whether the host investigation includes count drift.
+    pub requires_host_count_drift_investigation: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether the actual run preserved the planned follow-up pressure count.
@@ -1690,14 +1696,12 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether the host investigation includes plan drift.
     pub fn requires_host_plan_drift_investigation(&self) -> bool {
-        self.host_investigation_kind()
-            .requires_plan_drift_investigation()
+        self.requires_host_plan_drift_investigation
     }
 
     /// Return whether the host investigation includes count drift.
     pub fn requires_host_count_drift_investigation(&self) -> bool {
-        self.host_investigation_kind()
-            .requires_count_drift_investigation()
+        self.requires_host_count_drift_investigation
     }
 
     /// Return whether the host can skip drain-run investigation.
@@ -3811,7 +3815,9 @@ mod tests {
         assert_eq!(summary.host_investigation_label(), "no_investigation");
         assert!(!summary.requires_host_investigation);
         assert!(!summary.requires_host_investigation());
+        assert!(!summary.requires_host_plan_drift_investigation);
         assert!(!summary.requires_host_plan_drift_investigation());
+        assert!(!summary.requires_host_count_drift_investigation);
         assert!(!summary.requires_host_count_drift_investigation());
         assert!(!summary.replayed_extra_records());
         assert!(!summary.missed_planned_records());
@@ -4410,6 +4416,10 @@ mod tests {
         assert_eq!(summary.host_investigation_label(), "no_investigation");
         assert!(!summary.requires_host_investigation);
         assert!(!summary.requires_host_investigation());
+        assert!(!summary.requires_host_plan_drift_investigation);
+        assert!(!summary.requires_host_plan_drift_investigation());
+        assert!(!summary.requires_host_count_drift_investigation);
+        assert!(!summary.requires_host_count_drift_investigation());
         assert!(summary.is_no_host_investigation());
         assert!(summary.matches_planned_record_count);
         assert!(summary.matches_planned_record_count());
@@ -4521,7 +4531,9 @@ mod tests {
         assert_eq!(summary.host_investigation_label(), "plan_and_count_drift");
         assert!(summary.requires_host_investigation);
         assert!(summary.requires_host_investigation());
+        assert!(summary.requires_host_plan_drift_investigation);
         assert!(summary.requires_host_plan_drift_investigation());
+        assert!(summary.requires_host_count_drift_investigation);
         assert!(summary.requires_host_count_drift_investigation());
         assert!(!summary.is_no_host_investigation());
         assert!(summary.replayed_extra_records());
@@ -4596,7 +4608,9 @@ mod tests {
         assert_eq!(summary.host_investigation_label(), "plan_and_count_drift");
         assert!(summary.requires_host_investigation);
         assert!(summary.requires_host_investigation());
+        assert!(summary.requires_host_plan_drift_investigation);
         assert!(summary.requires_host_plan_drift_investigation());
+        assert!(summary.requires_host_count_drift_investigation);
         assert!(summary.requires_host_count_drift_investigation());
         assert!(!summary.is_no_host_investigation());
         assert!(!summary.replayed_extra_records());
@@ -4675,7 +4689,9 @@ mod tests {
         assert_eq!(summary.host_investigation_label(), "count_drift");
         assert!(summary.requires_host_investigation);
         assert!(summary.requires_host_investigation());
+        assert!(!summary.requires_host_plan_drift_investigation);
         assert!(!summary.requires_host_plan_drift_investigation());
+        assert!(summary.requires_host_count_drift_investigation);
         assert!(summary.requires_host_count_drift_investigation());
         assert!(!summary.is_no_host_investigation());
         assert!(summary.matches_planned_record_count);

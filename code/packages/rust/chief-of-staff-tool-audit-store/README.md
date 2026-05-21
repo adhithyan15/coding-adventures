@@ -106,6 +106,8 @@ The crate keeps the boundary narrow:
   for terminal log branches
 - supervisor drain reports and summaries expose host-investigation component
   helpers for plan-drift and count-drift branches
+- supervisor drain run summaries flatten host-investigation component flags for
+  payload-free host logs
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
