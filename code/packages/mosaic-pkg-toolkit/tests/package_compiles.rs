@@ -35,8 +35,9 @@ use std::path::PathBuf;
 /// Alphabetical order matches the manifest's `[components].exports`
 /// list. Reorder both together if it ever changes.
 const COMPONENTS: &[&str] = &[
-    "Alert", "Badge", "Button", "Checkbox", "Field", "Input",
-    "ListGroup", "Modal", "Radio", "Spinner", "Toast",
+    "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
+    "Checkbox", "Field", "Input", "ListGroup", "Modal", "Nav",
+    "Radio", "Spinner", "Toast",
 ];
 
 /// Themes shipped per component. Both must compile.
@@ -310,4 +311,42 @@ fn field_interface_matches_spec() {
     );
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onChange", "onCommit"]);
+}
+
+/// Nav — horizontal list of nav links. Same shape as ListGroup
+/// (items + selected-style index + onSelect with index payload),
+/// laid out horizontally via Row.
+#[test]
+fn nav_interface_matches_spec() {
+    let mil_src = read_source("Nav.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["items", "active-index"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// ButtonGroup — row of related buttons that visually share borders.
+#[test]
+fn button_group_interface_matches_spec() {
+    let mil_src = read_source("ButtonGroup.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["items"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Breadcrumb — hierarchical nav trail. Same For-over-list pattern.
+#[test]
+fn breadcrumb_interface_matches_spec() {
+    let mil_src = read_source("Breadcrumb.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["crumbs"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
 }

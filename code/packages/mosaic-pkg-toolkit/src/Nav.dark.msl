@@ -1,0 +1,15 @@
+// Nav.dark.msl — dark-theme styling.
+
+style Nav {
+  part nav {
+    padding : 4 ;
+  }
+  part nav-link {
+    padding       : 8 ;
+    background    : "transparent" ;
+    color         : "#60a5fa" ;
+    border-width  : 0 ;
+    font-size     : 14 ;
+    border-radius : 4 ;
+  }
+}

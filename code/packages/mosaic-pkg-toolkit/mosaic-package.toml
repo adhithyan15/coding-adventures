@@ -22,11 +22,13 @@ license     = "MIT OR Apache-2.0"
 # v0.1 PR-3: Checkbox, Input, Radio (form controls).
 # v0.1 PR-4: ListGroup, Modal.
 # v0.1 PR-5: Field (label + HostInput + help/error).
+# v0.2 PR-6: Tier-2 batch 1 — Nav, ButtonGroup, Breadcrumb.
 # Remaining Tier-1 (Card, Container) blocked on UI29-2 children
 # pass-through spec; ship when that lands.
 exports = [
-  "Alert", "Badge", "Button", "Checkbox", "Field", "Input",
-  "ListGroup", "Modal", "Radio", "Spinner", "Toast",
+  "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
+  "Checkbox", "Field", "Input", "ListGroup", "Modal", "Nav",
+  "Radio", "Spinner", "Toast",
 ]
 
 [dependencies]
