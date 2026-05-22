@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.6.0] - 2026-05-20
+
+### Added (Phase 6e — symbol literals `:foo` / `:"bar"`)
+- `symbol_literal = COLON ( NAME | KEYWORD | STRING ) ;`
+- Added as a `factor` alternative so symbols can appear wherever an expression is valid.
+- Quoted symbols (`:"hello world"`) reuse the existing STRING token shape — the lexer strips the quotes, so the symbol's name is the inner content directly.
+
+### Tests (+3 new, total 24)
+- `:foo` (name), `:def` (keyword name — names can be Ruby keywords), `:"hello world"` (quoted).
+
 ## [0.5.0] - 2026-05-20
 
 ### Added (Phase 6d — array and hash literals)

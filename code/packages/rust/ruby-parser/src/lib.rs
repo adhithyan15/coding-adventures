@@ -385,5 +385,45 @@ mod tests {
             "expected hash_entry subnode"
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6e — symbol literals `:foo`, `:"bar"`
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_symbol_name() {
+        let ast = parse_ruby("x = :foo");
+        let sym = find_descendant(&ast, "symbol_literal").expect("expected symbol_literal");
+        // The grammar puts COLON then NAME under the rule.
+        let name_tok = sym.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Name) => {
+                Some(t.value.as_str())
+            }
+            _ => None,
+        });
+        assert_eq!(name_tok, Some("foo"));
+    }
+
+    #[test]
+    fn test_parse_symbol_keyword() {
+        // `:def` — the symbol name happens to be a Ruby keyword.
+        let ast = parse_ruby("x = :def");
+        assert!(find_descendant(&ast, "symbol_literal").is_some());
+    }
+
+    #[test]
+    fn test_parse_symbol_quoted() {
+        let ast = parse_ruby(r#"x = :"hello world""#);
+        let sym = find_descendant(&ast, "symbol_literal").expect("expected symbol_literal");
+        let str_tok = sym.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t)
+                if matches!(t.type_, lexer::token::TokenType::String) =>
+            {
+                Some(t.value.as_str())
+            }
+            _ => None,
+        });
+        assert_eq!(str_tok, Some("hello world"));
+    }
 }
 

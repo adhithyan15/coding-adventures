@@ -808,6 +808,7 @@ impl Lowerer {
             "factor" => self.lower_factor(node),
             "array_literal" => self.lower_array_literal(node),
             "hash_literal" => self.lower_hash_literal(node),
+            "symbol_literal" => self.lower_symbol_literal(node),
             // The parser sometimes wraps a bare token into an "expression_stmt"
             // when reached as the RHS of an assignment.  Recurse into it.
             "expression_stmt" => {
@@ -885,6 +886,38 @@ impl Lowerer {
     }
 
     /// Lower a `factor` node — the leaves of the expression tree.
+    /// Phase 6e — `:foo` / `:"bar"` → `Expr::SymLit`.  The leading
+    /// COLON is the syntactic marker; the symbol's *name* is the
+    /// Name/Keyword/String token that follows.  For quoted forms
+    /// (`:"hello world"`) the String token's value already strips
+    /// the surrounding quotes, so we use it verbatim.
+    fn lower_symbol_literal(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        let name_tok = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t)
+                if matches!(
+                    t.type_,
+                    TokenType::Name | TokenType::Keyword | TokenType::String
+                ) =>
+            {
+                Some(t)
+            }
+            _ => None,
+        });
+        let name_tok = name_tok.ok_or_else(|| RubyLowerError {
+            message: "symbol_literal missing payload token".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })?;
+        self.features_used.insert(Feature::Symbols);
+        Ok(Expr::SymLit {
+            name: name_tok.value.clone(),
+            span: self.span_of(node),
+        })
+    }
+
     /// Phase 6d — `[a, b, c]` → `Expr::SeqLit`.
     fn lower_array_literal(
         &mut self,

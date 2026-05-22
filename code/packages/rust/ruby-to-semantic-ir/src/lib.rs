@@ -520,6 +520,55 @@ mod tests {
         );
     }
 
+    // -----------------------------------------------------------------
+    // Phase 6e — symbol literals `:foo` / `:"bar"`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn symbol_lowers_to_sym_lit() {
+        let m = lower("x = :foo\n");
+        let main = main_body(&m);
+        let sym = main.stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { value: Expr::SymLit { name, .. }, .. } => Some(name.as_str()),
+            _ => None,
+        });
+        assert_eq!(sym, Some("foo"));
+    }
+
+    #[test]
+    fn quoted_symbol_lowers_to_sym_lit_with_spaces() {
+        let m = lower(r#"x = :"hello world""#);
+        let main = main_body(&m);
+        let sym = main.stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { value: Expr::SymLit { name, .. }, .. } => Some(name.as_str()),
+            _ => None,
+        });
+        assert_eq!(sym, Some("hello world"));
+    }
+
+    #[test]
+    fn keyword_symbol_lowers_cleanly() {
+        // `:def` — the symbol name happens to be a Ruby keyword.
+        let m = lower("x = :def\n");
+        let main = main_body(&m);
+        let sym = main.stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { value: Expr::SymLit { name, .. }, .. } => Some(name.as_str()),
+            _ => None,
+        });
+        assert_eq!(sym, Some("def"));
+    }
+
+    #[test]
+    fn symbol_module_passes_sir_validator() {
+        let m = lower("x = :foo\ny = :bar\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected our output: {:?}",
+            result
+        );
+    }
+
     #[test]
     fn module_with_def_passes_sir_validator() {
         // v0 grammar can't yet parse nested method calls in args

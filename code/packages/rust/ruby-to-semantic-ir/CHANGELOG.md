@@ -2,6 +2,18 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.6.0] - 2026-05-20
+
+### Added (Phase 6e — symbol-literal lowering)
+- `lower_symbol_literal` — picks the first Name / Keyword / String token under the `symbol_literal` node and emits an `Expr::SymLit` with that lexeme as the symbol name.  Quoted symbols (`:"hello world"`) work transparently because the String token's value already has the surrounding quotes stripped.
+- Declares `Feature::Symbols` on every symbol literal (same feature the hash-shorthand entries already used).
+
+### Tests (+4 new, total 30)
+- `:foo` → `SymLit("foo")`.
+- `:"hello world"` → `SymLit("hello world")` (spaces preserved).
+- `:def` (keyword-shaped name) → `SymLit("def")`.
+- Symbol-containing module passes `semantic_ir::validate`.
+
 ## [0.5.0] - 2026-05-20
 
 ### Added (Phase 6d — array and hash literal lowering)
