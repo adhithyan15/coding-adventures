@@ -100,6 +100,9 @@ pub const LANGUAGE_BOARD_VM_WIRE_PROTOCOL: &str = "board_vm_cobs_crc";
 pub const LANGUAGE_SERIAL_DEFAULT_BAUD_RATE: u32 = 115_200;
 pub const LANGUAGE_SERIAL_DEFAULT_TIMEOUT_MS: u64 = 1_000;
 pub const LANGUAGE_SERIAL_OPEN_SETTLE_MS: u64 = 250;
+pub const LANGUAGE_INPUT_CALLBACK_DEFAULT_DEBOUNCE_MS: u16 = 25;
+pub const LANGUAGE_INPUT_CALLBACK_DEFAULT_QUEUE_CAPACITY: u8 = 8;
+pub const LANGUAGE_INPUT_CALLBACK_DISPATCH_MODEL: &str = "cooperative_event_queue";
 pub const ARDUINO_CLI_NATIVE_USB_BOOTLOADER_TOUCH_BAUD: u32 = 1_200;
 pub const ARDUINO_CLI_UPLOAD_PORT_PLACEHOLDER: &str = "<port>";
 pub const ARDUINO_CLI_UPLOAD_INPUT_FILE_PLACEHOLDER: &str = "<firmware-image>";
@@ -609,6 +612,71 @@ pub struct LanguageDigitalPin {
     pub supports_interrupt: bool,
     pub boot_strap: bool,
     pub notes: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTrigger {
+    RisingEdge,
+    FallingEdge,
+    Change,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackPull {
+    Floating,
+    PullUp,
+    PullDown,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackQueuePolicy {
+    DropNewest,
+    DropOldest,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LanguageInputCallbackOptions {
+    pub trigger: LanguageInputCallbackTrigger,
+    pub pull: LanguageInputCallbackPull,
+    pub debounce_ms: u16,
+    pub queue_capacity: u8,
+    pub queue_policy: LanguageInputCallbackQueuePolicy,
+    pub callback_program_id: u16,
+    pub callback_instruction_budget: u32,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackPlan {
+    pub board_id: String,
+    pub pin: u8,
+    pub label: String,
+    pub trigger: LanguageInputCallbackTrigger,
+    pub pull: LanguageInputCallbackPull,
+    pub debounce_ms: u16,
+    pub queue_capacity: u8,
+    pub queue_policy: LanguageInputCallbackQueuePolicy,
+    pub callback_program_id: u16,
+    pub callback_instruction_budget: u32,
+    pub interrupt_backed: bool,
+    pub dispatch_model: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackPlanErrorKind {
+    UnknownTarget,
+    UnknownPin,
+    PinDoesNotSupportInput,
+    PinDoesNotSupportInterrupt,
+    PinDoesNotSupportPull,
+    EmptyQueue,
+    EmptyCallbackBudget,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackPlanError {
+    pub selector: String,
+    pub pin: u8,
+    pub kind: LanguageInputCallbackPlanErrorKind,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1586,6 +1654,114 @@ pub fn serial_runtime_open_plan_from_upload_handoff(
     language_serial_runtime_open_plan(&target, &handoff.runtime_port, &handoff.runtime_port_source)
 }
 
+pub const fn default_button_input_callback_options(
+    callback_program_id: u16,
+    callback_instruction_budget: u32,
+) -> LanguageInputCallbackOptions {
+    LanguageInputCallbackOptions {
+        trigger: LanguageInputCallbackTrigger::FallingEdge,
+        pull: LanguageInputCallbackPull::PullUp,
+        debounce_ms: LANGUAGE_INPUT_CALLBACK_DEFAULT_DEBOUNCE_MS,
+        queue_capacity: LANGUAGE_INPUT_CALLBACK_DEFAULT_QUEUE_CAPACITY,
+        queue_policy: LanguageInputCallbackQueuePolicy::DropOldest,
+        callback_program_id,
+        callback_instruction_budget,
+    }
+}
+
+pub fn input_callback_plan_for_target(
+    selector: &str,
+    pin: u8,
+    callback_program_id: u16,
+    callback_instruction_budget: u32,
+) -> Result<LanguageInputCallbackPlan, LanguageInputCallbackPlanError> {
+    input_callback_plan_with_options_for_target(
+        selector,
+        pin,
+        default_button_input_callback_options(callback_program_id, callback_instruction_budget),
+    )
+}
+
+pub fn input_callback_plan_with_options_for_target(
+    selector: &str,
+    pin: u8,
+    options: LanguageInputCallbackOptions,
+) -> Result<LanguageInputCallbackPlan, LanguageInputCallbackPlanError> {
+    let target = detect_target(selector).ok_or_else(|| {
+        input_callback_plan_error(
+            selector,
+            pin,
+            LanguageInputCallbackPlanErrorKind::UnknownTarget,
+        )
+    })?;
+    let digital_pin = target
+        .digital_pins
+        .iter()
+        .find(|digital_pin| digital_pin.pin == pin)
+        .ok_or_else(|| {
+            input_callback_plan_error(
+                selector,
+                pin,
+                LanguageInputCallbackPlanErrorKind::UnknownPin,
+            )
+        })?;
+
+    if !digital_pin.supports_input {
+        return Err(input_callback_plan_error(
+            selector,
+            pin,
+            LanguageInputCallbackPlanErrorKind::PinDoesNotSupportInput,
+        ));
+    }
+
+    if !digital_pin.supports_interrupt {
+        return Err(input_callback_plan_error(
+            selector,
+            pin,
+            LanguageInputCallbackPlanErrorKind::PinDoesNotSupportInterrupt,
+        ));
+    }
+
+    if !input_callback_pull_supported(digital_pin, options.pull) {
+        return Err(input_callback_plan_error(
+            selector,
+            pin,
+            LanguageInputCallbackPlanErrorKind::PinDoesNotSupportPull,
+        ));
+    }
+
+    if options.queue_capacity == 0 {
+        return Err(input_callback_plan_error(
+            selector,
+            pin,
+            LanguageInputCallbackPlanErrorKind::EmptyQueue,
+        ));
+    }
+
+    if options.callback_instruction_budget == 0 {
+        return Err(input_callback_plan_error(
+            selector,
+            pin,
+            LanguageInputCallbackPlanErrorKind::EmptyCallbackBudget,
+        ));
+    }
+
+    Ok(LanguageInputCallbackPlan {
+        board_id: target.board_id,
+        pin: digital_pin.pin,
+        label: digital_pin.label.clone(),
+        trigger: options.trigger,
+        pull: options.pull,
+        debounce_ms: options.debounce_ms,
+        queue_capacity: options.queue_capacity,
+        queue_policy: options.queue_policy,
+        callback_program_id: options.callback_program_id,
+        callback_instruction_budget: options.callback_instruction_budget,
+        interrupt_backed: true,
+        dispatch_model: LANGUAGE_INPUT_CALLBACK_DISPATCH_MODEL.to_owned(),
+    })
+}
+
 pub fn parse_serial_endpoint(endpoint: &str) -> Option<LanguageSerialEndpoint> {
     let (scheme, port) = endpoint.split_once("://")?;
     if scheme != "serial" {
@@ -2099,6 +2275,29 @@ fn language_digital_pin(pin: &TargetDigitalPin) -> LanguageDigitalPin {
         supports_interrupt: pin.supports_interrupt,
         boot_strap: pin.boot_strap,
         notes: pin.notes.to_owned(),
+    }
+}
+
+fn input_callback_pull_supported(
+    pin: &LanguageDigitalPin,
+    pull: LanguageInputCallbackPull,
+) -> bool {
+    match pull {
+        LanguageInputCallbackPull::Floating => true,
+        LanguageInputCallbackPull::PullUp => pin.supports_pullup,
+        LanguageInputCallbackPull::PullDown => pin.supports_pulldown,
+    }
+}
+
+fn input_callback_plan_error(
+    selector: &str,
+    pin: u8,
+    kind: LanguageInputCallbackPlanErrorKind,
+) -> LanguageInputCallbackPlanError {
+    LanguageInputCallbackPlanError {
+        selector: selector.to_owned(),
+        pin,
+        kind,
     }
 }
 
@@ -5791,6 +5990,122 @@ mod tests {
         assert!(parse_serial_endpoint("serial://   ").is_none());
         assert!(serial_runtime_open_plan_for_target("uno-r4-wifi", "   ").is_none());
         assert!(serial_runtime_open_plan_for_target("not-a-board", "COM7").is_none());
+    }
+
+    #[test]
+    fn input_callback_plans_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+
+        assert_eq!(plan.board_id, "arduino-uno-r4-wifi");
+        assert_eq!(plan.pin, 3);
+        assert_eq!(plan.label, "D3");
+        assert_eq!(plan.trigger, LanguageInputCallbackTrigger::FallingEdge);
+        assert_eq!(plan.pull, LanguageInputCallbackPull::PullUp);
+        assert_eq!(
+            plan.debounce_ms,
+            LANGUAGE_INPUT_CALLBACK_DEFAULT_DEBOUNCE_MS
+        );
+        assert_eq!(
+            plan.queue_capacity,
+            LANGUAGE_INPUT_CALLBACK_DEFAULT_QUEUE_CAPACITY
+        );
+        assert_eq!(
+            plan.queue_policy,
+            LanguageInputCallbackQueuePolicy::DropOldest
+        );
+        assert_eq!(plan.callback_program_id, 7);
+        assert_eq!(plan.callback_instruction_budget, 64);
+        assert!(plan.interrupt_backed);
+        assert_eq!(plan.dispatch_model, LANGUAGE_INPUT_CALLBACK_DISPATCH_MODEL);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 3,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 11,
+                callback_instruction_budget: 128,
+            },
+        )
+        .unwrap();
+        assert_eq!(custom.trigger, LanguageInputCallbackTrigger::RisingEdge);
+        assert_eq!(custom.pull, LanguageInputCallbackPull::Floating);
+        assert_eq!(custom.debounce_ms, 5);
+        assert_eq!(custom.queue_capacity, 3);
+        assert_eq!(
+            custom.queue_policy,
+            LanguageInputCallbackQueuePolicy::DropNewest
+        );
+        assert_eq!(custom.callback_program_id, 11);
+        assert_eq!(custom.callback_instruction_budget, 128);
+
+        let error = input_callback_plan_for_target("not-a-board", 3, 7, 64).unwrap_err();
+        assert_eq!(error.selector, "not-a-board");
+        assert_eq!(error.pin, 3);
+        assert_eq!(
+            error.kind,
+            LanguageInputCallbackPlanErrorKind::UnknownTarget
+        );
+
+        let error = input_callback_plan_for_target("uno-r4-wifi", 250, 7, 64).unwrap_err();
+        assert_eq!(error.kind, LanguageInputCallbackPlanErrorKind::UnknownPin);
+
+        let error = input_callback_plan_for_target("arduino-opta-wifi", 8, 7, 64).unwrap_err();
+        assert_eq!(
+            error.kind,
+            LanguageInputCallbackPlanErrorKind::PinDoesNotSupportInput
+        );
+
+        let error = input_callback_plan_for_target("uno-r4-wifi", 4, 7, 64).unwrap_err();
+        assert_eq!(
+            error.kind,
+            LanguageInputCallbackPlanErrorKind::PinDoesNotSupportInterrupt
+        );
+
+        let error = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::Change,
+                pull: LanguageInputCallbackPull::PullDown,
+                debounce_ms: 10,
+                queue_capacity: 2,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropOldest,
+                callback_program_id: 7,
+                callback_instruction_budget: 64,
+            },
+        )
+        .unwrap_err();
+        assert_eq!(
+            error.kind,
+            LanguageInputCallbackPlanErrorKind::PinDoesNotSupportPull
+        );
+
+        let error = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::Change,
+                pull: LanguageInputCallbackPull::PullUp,
+                debounce_ms: 10,
+                queue_capacity: 0,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropOldest,
+                callback_program_id: 7,
+                callback_instruction_budget: 64,
+            },
+        )
+        .unwrap_err();
+        assert_eq!(error.kind, LanguageInputCallbackPlanErrorKind::EmptyQueue);
+
+        let error = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 0).unwrap_err();
+        assert_eq!(
+            error.kind,
+            LanguageInputCallbackPlanErrorKind::EmptyCallbackBudget
+        );
     }
 
     #[test]

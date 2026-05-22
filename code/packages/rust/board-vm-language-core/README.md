@@ -88,6 +88,13 @@ rate in host logs, while TCP and Bluetooth endpoints use the endpoint string
 alone. `host_endpoint_session_summary` packages the parsed endpoint metadata
 with that connection label so CLI consumers and language adapters can open a
 session without recombining transport and display policy.
+`input_callback_plan_for_target` and
+`input_callback_plan_with_options_for_target` provide the same Rust-owned
+boundary for interrupt-backed input callbacks. The default button plan uses a
+falling edge, pull-up, debounce window, bounded event queue, and cooperative
+event-queue dispatch model, while the planner validates target input,
+interrupt, pull-mode, queue, and callback budget support before frontends wire
+callbacks to buttons or other input events.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
