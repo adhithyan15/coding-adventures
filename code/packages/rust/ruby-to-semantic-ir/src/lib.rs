@@ -231,4 +231,111 @@ mod tests {
             result
         );
     }
+
+    // -----------------------------------------------------------------
+    // Phase 6a — `def name(params) … end` method definitions.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn def_lowers_to_top_level_function() {
+        let m = lower("def add(x, y)\n  x + y\nend\n");
+        // The user-defined function comes first; `main` is last.
+        let add = m
+            .functions
+            .iter()
+            .find(|f| f.name == "add")
+            .expect("expected `add` function");
+        assert_eq!(add.params.len(), 2);
+        assert_eq!(add.params[0].name, "x");
+        assert_eq!(add.params[1].name, "y");
+        match &add.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "+");
+                assert_eq!(args.len(), 2);
+            }
+            other => panic!("expected BuiltinCall(+, …), got {:?}", other),
+        }
+        // `main` is still present and exported.
+        assert!(m.functions.iter().any(|f| f.name == "main"));
+        assert!(m.exports.iter().any(|e| e.name == "main"));
+    }
+
+    #[test]
+    fn def_with_no_params_lowers_cleanly() {
+        let m = lower("def hello\nend\n");
+        let hello = m
+            .functions
+            .iter()
+            .find(|f| f.name == "hello")
+            .expect("expected `hello` function");
+        assert!(hello.params.is_empty());
+        // Empty body → block.value is NilLit.
+        assert!(matches!(hello.body.value, Expr::NilLit { .. }));
+    }
+
+    #[test]
+    fn def_does_not_leak_locals_to_outer_scope() {
+        // The method body declares `x` as a local (via `x = 1`); the
+        // outer program also has `x = 2`.  Both should be first
+        // occurrences (LetBinding), because the method's locals are
+        // confined to its body.
+        let m = lower("def inner\n  x = 1\nend\nx = 2\n");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        // First main statement is the no-op for the hoisted def.
+        // Second is the outer `x = 2` LetBinding.
+        let outer_x = main.body.stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { name, .. } if name == "x" => Some(name.as_str()),
+            _ => None,
+        });
+        assert_eq!(outer_x, Some("x"));
+        let inner = m.functions.iter().find(|f| f.name == "inner").unwrap();
+        let inner_x_kind = match &inner.body.stmts[0] {
+            Stmt::LetBinding { name, .. } => format!("LetBinding({})", name),
+            Stmt::Assign { name, .. } => format!("Assign({})", name),
+            other => format!("{:?}", other),
+        };
+        // The method's `x = 1` is a LetBinding (first occurrence in
+        // the *method scope*), not an Assign.
+        assert!(
+            inner_x_kind.starts_with("LetBinding"),
+            "expected LetBinding in method body, got {inner_x_kind}"
+        );
+    }
+
+    #[test]
+    fn def_with_param_reassignment_routes_through_assign() {
+        // Parameters are pre-declared as locals inside the method,
+        // so `x = 2` re-binds and emits `Stmt::Assign`.
+        let m = lower("def f(x)\n  x = 2\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "f").unwrap();
+        match &f.body.stmts[0] {
+            Stmt::Assign { name, scope, .. } => {
+                assert_eq!(name, "x");
+                assert_eq!(*scope, Scope::Local);
+            }
+            other => panic!("expected Assign(x), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn module_with_def_passes_sir_validator() {
+        // v0 grammar can't yet parse nested method calls in args
+        // (`puts(add(1, 2))` — `add(1, 2)` isn't a `factor`).  The
+        // grammar extension lands in Phase 6+.  Until then, exercise
+        // the `def` lowering with sibling statements that the
+        // grammar already accepts.
+        let m = lower(concat!(
+            "def add(x, y)\n",
+            "  x + y\n",
+            "end\n",
+            "z = 3 + 4\n",
+            "puts(z)\n",
+        ));
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected our output: {:?}",
+            result
+        );
+    }
 }

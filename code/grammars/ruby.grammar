@@ -25,7 +25,9 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = assignment | method_call | expression_stmt ;
+statement    = def_statement | assignment | method_call | expression_stmt ;
+def_statement = "def" NAME [ LPAREN [ params ] RPAREN ] { !"end" statement } "end" ;
+params       = NAME { COMMA NAME } ;
 assignment   = NAME EQUALS expression ;
 method_call  = ( NAME | KEYWORD ) LPAREN [ expression { COMMA expression } ] RPAREN ;
 expression_stmt = expression ;

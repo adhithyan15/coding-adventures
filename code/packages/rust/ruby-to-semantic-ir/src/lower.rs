@@ -13,8 +13,8 @@ use std::collections::HashSet;
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, Effect, EffectSet, ExportName, Expr, FeatureManifest, Function, Metadata, Module,
-    Scope, Span, Stmt,
+    Block, Effect, EffectSet, ExportName, Expr, Feature, FeatureManifest, Function, Metadata,
+    Module, Param, Scope, Span, Stmt,
 };
 
 /// A failure encountered during Ruby → SIR lowering.
@@ -66,7 +66,14 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
     let mut lw = Lowerer {
         file_name: module_name.to_string(),
         declared_locals: HashSet::new(),
+        current_params: HashSet::new(),
+        user_functions: Vec::new(),
     };
+    // Phase 6a: hoist `def name(params) … end` declarations to
+    // top-level Functions BEFORE walking the rest of the program so
+    // the main-body lowerer knows which names resolve as
+    // `DirectCall` targets vs. unknown builtins.
+    lw.collect_def_statements(program)?;
     let block = lw.lower_program(program)?;
 
     let main = Function {
@@ -80,9 +87,22 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         span: lw.span_of(program),
     };
 
+    // User-defined functions come first, then `main`.  The SIR
+    // validator doesn't care about ordering — backends that emit
+    // forward declarations will still see `main` exported.
+    let mut functions = std::mem::take(&mut lw.user_functions);
+    functions.push(main);
+
+    // SIR's validator requires modules that use untyped params or
+    // globals (which everything Ruby produces in v0) to declare the
+    // `DynamicTyping` feature.  Ruby is dynamically typed, so we
+    // always declare it.
+    let mut manifest = FeatureManifest::new();
+    manifest.add(Feature::DynamicTyping);
+
     Ok(Module {
         name: module_name.to_string(),
-        manifest: FeatureManifest::new(),
+        manifest,
         imports: Vec::new(),
         // `main` is the conventional entry point — exporting it lets
         // SIR backends recognise it as such.
@@ -90,7 +110,7 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
             name: "main".to_string(),
             span: Span::synthetic(),
         }],
-        functions: vec![main],
+        functions,
         globals: Vec::new(),
         metadata: Metadata::new(),
         span: lw.span_of(program),
@@ -107,6 +127,17 @@ struct Lowerer {
     /// current scope.  Drives the `LetBinding` vs `Assign` choice:
     /// first occurrence binds, subsequent occurrences re-assign.
     declared_locals: HashSet<String>,
+    /// Phase 6a: parameter names visible in the *current* function
+    /// scope.  Empty at the top level (main).  When a Name token is
+    /// emitted as a `VarRef`, this set decides whether the `scope`
+    /// is `Scope::Param` (the validator's expectation for function
+    /// parameters) or `Scope::Local`.
+    current_params: HashSet<String>,
+    /// Phase 6a: user-defined functions collected from
+    /// `def name(params) … end` declarations.  Filled by
+    /// `collect_def_statements` (a top-level hoisting pass) before
+    /// the main-body lowerer runs.
+    user_functions: Vec<Function>,
 }
 
 impl Lowerer {
@@ -229,12 +260,197 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
+            "def_statement" => {
+                // `def` declarations were hoisted to top-level
+                // Functions in the pre-pass; here we drop them from
+                // the main-body statement stream.  Returning a no-op
+                // ExprStmt keeps the `Block.stmts` slot occupied but
+                // valid SIR-wise.
+                Ok(Stmt::ExprStmt {
+                    expr: Expr::NilLit {
+                        span: self.span_of(node),
+                    },
+                    span: self.span_of(node),
+                })
+            }
             other => Err(RubyLowerError {
                 message: format!("unsupported statement form `{other}`"),
                 line: node.start_line.unwrap_or(0),
                 column: node.start_column.unwrap_or(0),
             }),
         }
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 6a — def_statement hoisting
+    // -------------------------------------------------------------------
+
+    /// Pre-pass: walk `program` children and lift every
+    /// `def_statement` into a top-level `Function` on
+    /// `self.user_functions`.  Method bodies are recursively
+    /// lowered using a *fresh* declared-locals set so the outer
+    /// program's let-bindings don't leak in.
+    fn collect_def_statements(
+        &mut self,
+        program: &GrammarASTNode,
+    ) -> Result<(), RubyLowerError> {
+        for child in &program.children {
+            let stmt = match child {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => n,
+                _ => continue,
+            };
+            let inner = match self.first_node_child(stmt) {
+                Some(n) => n,
+                None => continue,
+            };
+            if inner.rule_name != "def_statement" {
+                continue;
+            }
+            let func = self.lower_def_statement(inner)?;
+            self.user_functions.push(func);
+        }
+        Ok(())
+    }
+
+    fn lower_def_statement(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Function, RubyLowerError> {
+        // Shape:
+        //   KEYWORD("def") NAME [ LPAREN [ params ] RPAREN ]
+        //                  { !"end" statement } KEYWORD("end")
+        // The first child token is the `def` keyword itself; the
+        // method name is the *Name* token that follows.  We can't
+        // use `expect_first_name_token` because it accepts both
+        // Name and Keyword — it would return "def".
+        let name_token = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+            _ => None,
+        });
+        let name_token = name_token.ok_or_else(|| RubyLowerError {
+            message: "def_statement missing method-name token".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })?;
+        let name = name_token.value.clone();
+
+        // Collect parameters.  The optional `params` rule node lists
+        // each parameter name as a sequence of Name tokens separated
+        // by COMMA tokens — we only care about the names.
+        let params_node = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "params" => Some(n),
+            _ => None,
+        });
+        let params: Vec<Param> = if let Some(pn) = params_node {
+            pn.children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Token(t)
+                        if matches!(t.type_, TokenType::Name) =>
+                    {
+                        Some(Param {
+                            name: t.value.clone(),
+                            sir_type: None,
+                            span: self.span_of_token(t),
+                        })
+                    }
+                    _ => None,
+                })
+                .collect()
+        } else {
+            Vec::new()
+        };
+
+        // Lower the body using a fresh locals + params scope so the
+        // outer program's bindings don't leak into the method.
+        // Parameters are pre-declared as "locals" so a re-assignment
+        // to a param routes through `Stmt::Assign` (SIR-correct),
+        // *and* are tracked in `current_params` so any `VarRef` to
+        // them inside the body gets `Scope::Param` (validator-correct).
+        let saved_locals = std::mem::take(&mut self.declared_locals);
+        let saved_params = std::mem::take(&mut self.current_params);
+        for p in &params {
+            self.declared_locals.insert(p.name.clone());
+            self.current_params.insert(p.name.clone());
+        }
+
+        // The body is every `statement` child of the def_statement
+        // that *isn't* the method's own def_statement (we already
+        // matched that), in source order.
+        let body_stmts: Vec<&GrammarASTNode> = node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+                _ => None,
+            })
+            .collect();
+
+        let mut stmts_out: Vec<Stmt> = Vec::new();
+        let mut value: Option<Expr> = None;
+        if body_stmts.is_empty() {
+            value = Some(Expr::NilLit {
+                span: self.span_of(node),
+            });
+        } else {
+            let last_idx = body_stmts.len() - 1;
+            for (i, s) in body_stmts.iter().enumerate() {
+                let inner = self.first_node_child(s).ok_or_else(|| {
+                    RubyLowerError {
+                        message: "statement node had no child rule".to_string(),
+                        line: s.start_line.unwrap_or(0),
+                        column: s.start_column.unwrap_or(0),
+                    }
+                })?;
+                let is_tail = i == last_idx;
+                let kind = inner.rule_name.as_str();
+                if is_tail && matches!(kind, "expression_stmt" | "method_call") {
+                    let v = match kind {
+                        "expression_stmt" => {
+                            let expr_node =
+                                self.first_node_child(inner).ok_or_else(|| {
+                                    RubyLowerError {
+                                        message:
+                                            "expression_stmt had no expression child"
+                                                .to_string(),
+                                        line: inner.start_line.unwrap_or(0),
+                                        column: inner.start_column.unwrap_or(0),
+                                    }
+                                })?;
+                            self.lower_expression(expr_node)?
+                        }
+                        "method_call" => self.lower_method_call(inner)?,
+                        _ => unreachable!(),
+                    };
+                    value = Some(v);
+                } else {
+                    stmts_out.push(self.lower_statement_inner(inner)?);
+                }
+            }
+        }
+        let value = value.unwrap_or(Expr::NilLit {
+            span: self.span_of(node),
+        });
+
+        // Restore the outer scope's locals + params so the rest of
+        // the program lowers correctly.
+        self.declared_locals = saved_locals;
+        self.current_params = saved_params;
+
+        Ok(Function {
+            name,
+            params,
+            return_type: None,
+            captures: Vec::new(),
+            body: Block {
+                stmts: stmts_out,
+                value,
+                span: self.span_of(node),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: self.span_of(node),
+        })
     }
 
     // -------------------------------------------------------------------
@@ -432,13 +648,22 @@ impl Lowerer {
                             });
                         }
                         TokenType::Name => {
-                            // `nil` / `true` / `false` would be Keyword
-                            // tokens, not Name.  All Name tokens here
-                            // are locals (or unresolved — backend will
-                            // tell us).
+                            // Inside a function body, parameter
+                            // names lex as `VarRef` with
+                            // `Scope::Param` so the SIR validator
+                            // can verify they bind to a `Param`
+                            // declaration.  At the top level
+                            // (main) the params set is empty and
+                            // every name falls through to
+                            // `Scope::Local`.
+                            let scope = if self.current_params.contains(&tok.value) {
+                                Scope::Param
+                            } else {
+                                Scope::Local
+                            };
                             return Ok(Expr::VarRef {
                                 name: tok.value.clone(),
-                                scope: Scope::Local,
+                                scope,
                                 span,
                             });
                         }
