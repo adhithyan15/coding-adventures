@@ -109,6 +109,18 @@ pub struct RubyLexer {
     /// will host further era-gated fusions (`&.` in 2.3, `<<~` in
     /// 2.3, `_1`..`_9` in 2.7, …) as they land.
     era: String,
+    /// Phase 4c: parallel array — one entry per token in `tokens`.
+    /// `true` if there was at least one whitespace (or comment)
+    /// character consumed between the previous emit and this one.
+    /// Used by the era-fusion post-pass to distinguish source-level
+    /// `&.` from source-level `& .` (with whitespace between) — the
+    /// engine's per-token column tracking can't always tell them
+    /// apart because peek-state operators report the *follower's*
+    /// column rather than their own.
+    whitespace_before_token: Vec<bool>,
+    /// Phase 4c: scratch flag set on each whitespace consume and
+    /// flushed into `whitespace_before_token` on the next emit.
+    whitespace_pending: bool,
 }
 
 /// Phase 3c — a heredoc opener whose body we still owe.
@@ -168,6 +180,8 @@ impl RubyLexer {
             pending_heredocs: VecDeque::new(),
             heredoc_op_candidate: None,
             era: canonical_era.to_string(),
+            whitespace_before_token: Vec::new(),
+            whitespace_pending: false,
         })
     }
 
@@ -336,12 +350,60 @@ impl RubyLexer {
     ///   era keeps them as two tokens so `f -> g` parses as
     ///   subtraction followed by `>` (Ruby 1.8 doesn't know about
     ///   lambda literals).
+    /// - `2.3+`: adjacent `Op("&")` + `Dot(".")` fuses into a single
+    ///   `Op("&.")` — the safe-navigation operator.  `a&.b` calls
+    ///   `b` on `a` if `a` is non-nil, otherwise short-circuits to
+    ///   `nil`.  Pre-2.3 eras keep them as two tokens so `a & .b`
+    ///   stays parseable as bitwise-AND + (a stray) dot.
     ///
     /// Future eras will plug in here without touching the
     /// state-machine TOML.
     fn apply_era_token_fusions(&mut self) {
         if era_at_least(&self.era, "1.9.1") {
             self.fuse_lambda_arrow();
+        }
+        if era_at_least(&self.era, "2.3") {
+            self.fuse_safe_nav();
+        }
+    }
+
+    /// 2.3: fold adjacent `Op("&")` + `Dot(".")` tokens into a
+    /// single `Op("&.")` (safe-nav opener).  Same adjacency
+    /// heuristic as `fuse_lambda_arrow` — single-char operators
+    /// like `&` are emitted on the follower character, so the `&`
+    /// token's recorded column can be up to 2 ahead of the source
+    /// position.
+    fn fuse_safe_nav(&mut self) {
+        let mut i = 0;
+        while i + 1 < self.tokens.len() {
+            let merge = {
+                let a = &self.tokens[i];
+                let b = &self.tokens[i + 1];
+                let a_is_amp = a.value == "&" && matches!(a.type_, TokenType::Name);
+                let b_is_dot = b.type_ == TokenType::Dot && b.value == ".";
+                let same_line = a.line == b.line;
+                let no_ws = !self
+                    .whitespace_before_token
+                    .get(i + 1)
+                    .copied()
+                    .unwrap_or(false);
+                a_is_amp && b_is_dot && same_line && no_ws
+            };
+            if merge {
+                let span_line = self.tokens[i].line;
+                let span_col = self.tokens[i].column;
+                self.tokens.remove(i + 1);
+                self.whitespace_before_token.remove(i + 1);
+                self.tokens[i] = Token {
+                    type_: TokenType::Name,
+                    value: "&.".to_string(),
+                    line: span_line,
+                    column: span_col,
+                    type_name: None,
+                    flags: None,
+                };
+            }
+            i += 1;
         }
     }
 
@@ -370,19 +432,24 @@ impl RubyLexer {
                 let a_is_minus =
                     a.type_ == TokenType::Minus && a.value == "-";
                 let b_is_gt = b.value == ">"
-                    // The engine currently classifies single `>`
-                    // as `TokenType::Name` because Phase 1 did not
-                    // split out `>` / `>=` into a dedicated kind.
                     && matches!(b.type_, TokenType::Name);
-                let close_enough = a.line == b.line
-                    && b.column >= a.column
-                    && b.column - a.column <= 2;
-                a_is_minus && b_is_gt && close_enough
+                let same_line = a.line == b.line;
+                // Phase 4c: require that no whitespace was consumed
+                // between the two tokens — the parallel array tracks
+                // this explicitly so we don't have to interpret
+                // peek-state column quirks.
+                let no_ws = !self
+                    .whitespace_before_token
+                    .get(i + 1)
+                    .copied()
+                    .unwrap_or(false);
+                a_is_minus && b_is_gt && same_line && no_ws
             };
             if merge {
                 let span_line = self.tokens[i].line;
                 let span_col = self.tokens[i].column;
                 self.tokens.remove(i + 1);
+                self.whitespace_before_token.remove(i + 1);
                 self.tokens[i] = Token {
                     type_: TokenType::Name,
                     value: "->".to_string(),
@@ -474,6 +541,16 @@ impl RubyLexer {
                 .map_err(|e| format!("ruby lexer error at {}:{}: {e}", self.line, self.column))?;
             self.apply_effects(&step.effects, Some(ch))?;
             if step.consume {
+                // Phase 4c: flag whitespace consumes so the next
+                // emitted token records that whitespace preceded it.
+                // The era-fusion post-pass uses this signal to keep
+                // source-level `&.` distinct from source-level `& .`
+                // — the per-token column tracking alone can't always
+                // tell them apart because peek-state operators
+                // report the follower's column.
+                if ch == ' ' || ch == '\t' {
+                    self.whitespace_pending = true;
+                }
                 if ch == '\n' {
                     self.line += 1;
                     self.column = 1;
@@ -699,6 +776,12 @@ impl RubyLexer {
         // pushing so the next `/` interceptor sees the up-to-date
         // state.
         self.lex_state = next_lex_state(self.lex_state, type_, &value);
+        // Phase 4c: snapshot whether whitespace was consumed since
+        // the last emit, then clear the flag.  The era-fusion
+        // post-pass reads this parallel array to keep source-level
+        // `&.` distinct from `& .`.
+        let had_ws = self.whitespace_pending;
+        self.whitespace_pending = false;
         self.tokens.push(Token {
             type_,
             value,
@@ -707,6 +790,7 @@ impl RubyLexer {
             type_name: None,
             flags: None,
         });
+        self.whitespace_before_token.push(had_ws);
         // Reset start position so the next immediate-emit token
         // (e.g. an `LParen` right after a `Name`) gets the current
         // source position, not the prior token's start.
@@ -1862,6 +1946,79 @@ mod tests {
                 "era {era} should inherit lambda-arrow fusion"
             );
         }
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 4c — 2.3 safe-navigation `&.` token fusion.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn era_2_3_fuses_safe_nav() {
+        let toks = tokenize_ruby_for_version("a&.b", "2.3").unwrap();
+        let values: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert!(
+            values.contains(&"&."),
+            "expected fused `&.` token, got {:?}",
+            values
+        );
+        assert!(!values.contains(&"&"));
+    }
+
+    #[test]
+    fn era_1_8_does_not_fuse_safe_nav() {
+        let toks = tokenize_ruby_for_version("a&.b", "1.8").unwrap();
+        let values: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert!(!values.contains(&"&."), "1.8 must not fuse `&.`");
+        assert!(values.contains(&"&"));
+        assert!(values.contains(&"."));
+    }
+
+    #[test]
+    fn era_2_3_does_not_fuse_amp_dot_with_whitespace_between() {
+        let toks = tokenize_ruby_for_version("a & .b", "2.3").unwrap();
+        let values: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert!(!values.contains(&"&."));
+    }
+
+    #[test]
+    fn era_3_3_inherits_safe_nav_from_2_3() {
+        for era in ["2.5", "2.7", "3.0", "3.3"] {
+            let toks = tokenize_ruby_for_version("a&.b", era).unwrap();
+            let values: Vec<&str> = toks
+                .iter()
+                .filter(|t| t.type_ != TokenType::Eof)
+                .map(|t| t.value.as_str())
+                .collect();
+            assert!(
+                values.contains(&"&."),
+                "era {era} should inherit safe-nav fusion"
+            );
+        }
+    }
+
+    #[test]
+    fn era_2_1_does_not_fuse_safe_nav_yet() {
+        // 2.1 < 2.3 — the era gate must keep them separate so
+        // pre-2.3 programs lex the same way they did when written.
+        let toks = tokenize_ruby_for_version("a&.b", "2.1").unwrap();
+        let values: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert!(!values.contains(&"&."), "2.1 should NOT fuse `&.`");
     }
 
     #[test]

@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.9.0] - 2026-05-20
+
+### Added (Phase 4c — 2.3 safe-nav `&.` token fusion)
+- New `fuse_safe_nav` post-pass — under era ≥ 2.3, adjacent `Op("&")` + `Dot(".")` tokens fuse into a single `Op("&.")` (the safe-navigation operator).  Pre-2.3 eras keep them split so the lexing is faithful to what each Ruby version originally accepted.
+- **Whitespace-aware adjacency**: a new parallel `whitespace_before_token: Vec<bool>` field on `RubyLexer` records whether any whitespace (`' '` / `'\t'`) was consumed between the previous emit and this one.  The fusion post-pass consults this array directly — peek-state operators (`>`, `&`, `=`, `!`, `<`, `|`) report the column of the *follower* character, so the per-token column field alone can't always distinguish `&.` from `& .`.  Tracking whitespace explicitly is robust.
+- Both Phase 4b's `fuse_lambda_arrow` and the new `fuse_safe_nav` now share the same adjacency criterion: *same line, no whitespace between*.  The fragile "column distance ≤ 2" heuristic from Phase 4b is replaced.
+
+### Tests (+5 new, total 92)
+- 2.3 fuses `a&.b`; 1.8 does NOT; `a & .b` (with whitespace) does NOT fuse even under 2.3.
+- Eras 2.5, 2.7, 3.0, 3.3 all inherit the fusion from 2.3.
+- Era 2.1 (one notch before 2.3) does NOT fuse — the era gate is precise.
+
 ## [0.8.0] - 2026-05-20
 
 ### Added (Phase 4b — 1.9.1 lambda `->` token fusion)
