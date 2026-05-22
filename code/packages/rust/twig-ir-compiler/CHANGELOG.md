@@ -1,5 +1,52 @@
 # Changelog — twig-ir-compiler
 
+## [0.18.0] — 2026-05-22 (Path A — typed `let` / `let*` / `and` / `or`)
+
+### Added — Typed `mov` at the remaining branch-merge sites
+
+Increment 4 of the Twig → IIR-to-* end-to-end story.  Extends the
+`FnCtx::emit_move` helper from increment 3 to the four other
+control-flow sites that previously emitted `call_builtin "_move"`:
+`compile_let`, `compile_let_star`, `compile_and`, `compile_or`.
+
+#### What changed
+
+- `compile_let` — each binding's RHS-to-name copy uses `emit_move`.
+  Type propagates from RHS to binding.
+- `compile_let_star` — same.  Each subsequent RHS sees the previous
+  binding's type, so chains like `(let* ((a 1) (b (+ a 1))) b)` end
+  up fully typed.
+- `compile_and` — both the then-merge and the constant-`#f` else-merge
+  use `emit_move`.  The `#f` literal is emitted with `type_hint "bool"`
+  (matching `Expr::BoolLit`'s increment-1 behaviour).
+- `compile_or` — both the truthy-merge and the falsy-merge use
+  `emit_move`.
+
+`compile_match` (variant arms, binding arms, wildcard arms) still
+uses `call_builtin "_move"` at 7 sites.  Match programs are deferred
+to increment 5+ — the lowering is more complex (variant tag checks,
+field extraction, fallthrough) and needs separate review.
+
+#### What this unlocks
+
+| Program                              | wasm | jvm | clr | beam |
+|--------------------------------------|------|-----|-----|------|
+| `(let ((x 5)) x)`                    | ✅ (was ❌) | ✅ | ✅ | ✅ |
+| `(let* ((a 1) (b (+ a 1))) b)`       | ✅ (was ❌) | ✅ | ✅ | ✅ |
+| `(let ((x 5) (y 10)) (+ x y))`       | ✅ (was ❌) | ✅ | ✅ | ✅ |
+| `(and #t #t)`                        | ✅ (was ❌) | ✅ | ✅ | ✅ |
+| `(or #f 42)`                         | ✅ (was ❌) | ✅ | ✅ | ✅ |
+| `(match x ((Some v) v))`             | ❌ still rejected — match arm `_move`s | ❌ | ❌ | ❌ |
+
+#### Tests
+
+- Existing `let_binds_via_move` test renamed → `let_binds_via_typed_mov`
+  and updated to assert `mov x [i64]`, not `call_builtin "_move"`.
+- 2 new e2e tests in `tests/backend_compat.rs`:
+  - `twig_typed_let_accepted_by_every_backend` — `(let ((x 5)) x)`
+  - `twig_typed_let_star_with_arithmetic` — `(let* ((a 1) (b (+ a 1))) b)`
+- 73 lib + 9 backend e2e tests pass (was 73 + 7).
+
 ## [0.17.0] — 2026-05-22 (Path A — typed `if` + typed `mov`)
 
 ### Added — Typed `mov` for branch-merge sites

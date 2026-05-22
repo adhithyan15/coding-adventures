@@ -181,6 +181,64 @@ fn twig_typed_arithmetic_in_if_accepted_by_every_backend() {
     }
 }
 
+/// Path-A increment 4: `let` bindings now use typed `mov`.
+#[test]
+fn twig_typed_let_accepted_by_every_backend() {
+    let m = compile_source("(let ((x 5)) x)", "compat")
+        .expect("Twig must compile");
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64",
+        "main return_type should be inferred as i64 for `(let ((x 5)) x)`");
+    assert!(
+        main.instructions.iter().any(|i| i.op == "mov"
+            && i.dest.as_deref() == Some("x")
+            && i.type_hint == "i64"),
+        "let-binding should emit typed `mov x` with i64 type",
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm",  iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        ("clr",  iir_to_cil_bytecode::validate::validate_iir_for_clr(&m)),
+        ("beam", iir_to_beam::validate::validate_for_beam(&m)),
+    ] {
+        assert!(errs.is_empty(),
+            "[{name}] should accept `(let ((x 5)) x)`; got {errs:?}",
+            errs = errs);
+    }
+}
+
+/// `let*` builds up typed bindings sequentially.  `(let* ((a 1) (b (+ a 1))) b)`
+/// types `a` as i64, then `(+ a 1)` lowers to typed `add`, then `b`
+/// inherits i64 too.
+#[test]
+fn twig_typed_let_star_with_arithmetic() {
+    let m = compile_source("(let* ((a 1) (b (+ a 1))) b)", "compat")
+        .expect("Twig must compile");
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+    let a_mov = main.instructions.iter().find(|i| i.op == "mov"
+        && i.dest.as_deref() == Some("a"))
+        .expect("expected `mov a`");
+    assert_eq!(a_mov.type_hint, "i64");
+    let b_mov = main.instructions.iter().find(|i| i.op == "mov"
+        && i.dest.as_deref() == Some("b"))
+        .expect("expected `mov b`");
+    assert_eq!(b_mov.type_hint, "i64",
+        "binding `b` should inherit i64 from the typed-add RHS");
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm",  iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        ("clr",  iir_to_cil_bytecode::validate::validate_iir_for_clr(&m)),
+        ("beam", iir_to_beam::validate::validate_for_beam(&m)),
+    ] {
+        assert!(errs.is_empty(),
+            "[{name}] should accept `(let* ((a 1) (b (+ a 1))) b)`; got {errs:?}",
+            errs = errs);
+    }
+}
+
 /// Pin the *current* boundary: arithmetic where at least one operand
 /// has a dynamic type (comes from a `call_builtin` like `car`) still
 /// emits `call_builtin "+"` and gets rejected by every backend.  When
