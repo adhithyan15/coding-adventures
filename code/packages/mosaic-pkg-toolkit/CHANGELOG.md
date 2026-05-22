@@ -1,5 +1,45 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — v0.1 PR-4 — ListGroup / Modal
+
+### Added — 2 more Tier-1 components
+
+- **`ListGroup`** — vertical list of selectable text rows.
+  Bootstrap's `<ul class="list-group">` distilled to `list<text>` +
+  onSelect-with-index. Composition:
+  `Column[list-group] { For (each: items, as: item, index: i) {
+  HostButton[list-group-item] (label: item, onClick: onSelect) } }`.
+  First toolkit component that uses the `For` block.
+
+- **`Modal`** — titled modal dialog wrapping the kernel `HostDialog`.
+  Composition: `HostDialog[modal-shell] (open, title, onClose,
+  modal: true) { Column { Box[modal-body], Box[modal-actions] {
+  HostButton[modal-close-btn] } } }`. The XAML backend hoists
+  HostDialog to a `<ContentDialog>` root (Fix A1 from the demo
+  catalog); other backends produce their native dialog idioms.
+
+### Constraints carried forward
+
+Both components ship a "text-only" surface for v0.1:
+- ListGroup's items are `list<text>` — not `list<node>`. Rich rows
+  (icons, secondary text) need the children-pass-through kernel
+  feature that's the subject of the upcoming UI29 follow-up spec.
+- Modal's body is a single `message: text` slot — same reason. The
+  full-fidelity dialog with arbitrary content lands when
+  children-pass-through does.
+
+A future `RichListGroup` and a children-aware Modal variant can
+layer on top once the kernel feature exists; the v0.1 surfaces stay
+forward-compatible.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 12 (was 10). 10 components total
+in the manifest. All pass.
+
+**10 of 13 Tier-1 components shipped.** Remaining: Card, Container,
+Field — all blocked on the children-pass-through spec.
+
 ## [Unreleased] — v0.1 PR-3 — Input / Checkbox / Radio (form controls)
 
 ### Added — 3 form-control components
