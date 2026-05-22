@@ -345,6 +345,7 @@ members = [
     "oct-lexer",
     "oct-parser",
     "oct-type-checker",
+    "oct-iir-compiler",
     "affine2d",
     "algol-lexer",
     "algol-parser",
