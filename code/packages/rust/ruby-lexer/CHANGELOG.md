@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.10.0] - 2026-05-20
+
+### Added (Phase 4d — 2.7 numbered block params `_1`..`_9`)
+- New public constant `NUMBERED_BLOCK_PARAM_FLAG: u32 = 1 << 0` — flag bit set on `Token.flags` for Name tokens whose lexeme matches the `_<digit>` (1–9) pattern under era ≥ 2.7.
+- New `mark_numbered_block_params` post-pass — runs under era ≥ 2.7 and tags every `Name` token whose value is `_1`..`_9` with the flag bit.  Pre-2.7 eras leave the flag clear so callers treat them as ordinary locals.
+- The lexer can't tell whether a given `_1` is actually *inside a block* (that's parser-level context), but it can flag every `_N` lexeme as a *candidate* numbered-param so downstream consumers can apply the era-aware semantics without re-scanning the token stream.
+- `is_numbered_block_param` helper exactly matches `_1`..`_9` and explicitly excludes `_0`, `_10`, `_`, `_foo`, etc.
+
+### Tests (+5 new, total 97)
+- Era 2.7 flags `_1` and `_2`.
+- Era 2.6 does NOT flag them — the era gate is precise.
+- Era 2.7 leaves `_foo`, `_`, `_0`, `_10` unflagged (they're not numbered params).
+- Eras 2.7, 3.0, 3.3 all flag `_1` consistently.
+- `is_numbered_block_param` classifier table-test covering the +/- boundaries.
+
 ## [0.9.0] - 2026-05-20
 
 ### Added (Phase 4c — 2.3 safe-nav `&.` token fusion)

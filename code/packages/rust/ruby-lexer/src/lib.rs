@@ -42,6 +42,9 @@ pub use lex_state::LexState;
 pub use machine::ERA_VERSIONS;
 pub use oracle::{NoLocals, ParserOracle, StaticLocals};
 
+// Phase 4d — re-export the numbered-block-param flag bit for
+// downstream tooling.  Defined further down in the file.
+
 /// Non-fatal diagnostic produced by the lexer.  Stray bytes /
 /// unterminated strings / etc. are recorded here; the lexer keeps
 /// going from the next character so callers always get a complete
@@ -364,6 +367,31 @@ impl RubyLexer {
         }
         if era_at_least(&self.era, "2.3") {
             self.fuse_safe_nav();
+        }
+        if era_at_least(&self.era, "2.7") {
+            self.mark_numbered_block_params();
+        }
+    }
+
+    /// 2.7: tag Name tokens whose lexeme is `_1` through `_9` with
+    /// flag bit [`NUMBERED_BLOCK_PARAM_FLAG`] so the parser/SIR
+    /// frontend can identify them as implicit block parameters.
+    ///
+    /// In Ruby 2.7+, an identifier of the form `_<digit>` inside a
+    /// block body refers to that ordinal positional argument: `_1`
+    /// is the first, `_2` the second, and so on through `_9`.
+    /// Pre-2.7 these are just regular local variables.  The lexer
+    /// can't tell whether a given `_1` is *actually* inside a block
+    /// (that's parser-level context), but it can flag every `_N`
+    /// lexeme as a *candidate* numbered-param so downstream
+    /// consumers can apply the era-aware semantics without
+    /// re-scanning the token stream.
+    fn mark_numbered_block_params(&mut self) {
+        for tok in &mut self.tokens {
+            if tok.type_ == TokenType::Name && is_numbered_block_param(&tok.value) {
+                let prev = tok.flags.unwrap_or(0);
+                tok.flags = Some(prev | NUMBERED_BLOCK_PARAM_FLAG);
+            }
         }
     }
 
@@ -932,6 +960,23 @@ fn era_at_least(era: &str, min: &str) -> bool {
             })
     };
     normalise(era) >= normalise(min)
+}
+
+/// Phase 4d — flag bit set on the `Token.flags` field for Name
+/// tokens that match the `_<digit>` numbered-block-param pattern
+/// (Ruby 2.7+).  Downstream tooling can check
+/// `(tok.flags.unwrap_or(0) & NUMBERED_BLOCK_PARAM_FLAG) != 0` to
+/// dispatch on numbered-param semantics.  Higher bits are reserved
+/// for future era flags.
+pub const NUMBERED_BLOCK_PARAM_FLAG: u32 = 1 << 0;
+
+/// Phase 4d — true if `s` is `_1`, `_2`, …, `_9` exactly.  These
+/// are the only nine numbered block parameter lexemes Ruby 2.7+
+/// recognises.  `_0`, `_10`, `_1abc` etc. are NOT numbered params
+/// and lex as regular Name tokens.
+fn is_numbered_block_param(s: &str) -> bool {
+    let bytes = s.as_bytes();
+    bytes.len() == 2 && bytes[0] == b'_' && (b'1'..=b'9').contains(&bytes[1])
 }
 
 fn is_heredoc_tag(s: &str) -> bool {
@@ -2019,6 +2064,69 @@ mod tests {
             .map(|t| t.value.as_str())
             .collect();
         assert!(!values.contains(&"&."), "2.1 should NOT fuse `&.`");
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 4d — 2.7 numbered block params `_1` .. `_9`.
+    // -----------------------------------------------------------------
+
+    fn has_numbered_param_flag(t: &Token) -> bool {
+        (t.flags.unwrap_or(0) & NUMBERED_BLOCK_PARAM_FLAG) != 0
+    }
+
+    #[test]
+    fn era_2_7_flags_underscore_digit_names() {
+        let toks = tokenize_ruby_for_version("_1 + _2", "2.7").unwrap();
+        let flagged: Vec<&str> = toks
+            .iter()
+            .filter(|t| has_numbered_param_flag(t))
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(flagged, vec!["_1", "_2"]);
+    }
+
+    #[test]
+    fn era_2_6_does_not_flag_underscore_digit_names() {
+        // 2.6 < 2.7 — the flag must stay off so callers treat `_1`
+        // as a regular local variable.
+        let toks = tokenize_ruby_for_version("_1 + _2", "2.6").unwrap();
+        let any_flagged = toks.iter().any(has_numbered_param_flag);
+        assert!(!any_flagged, "2.6 must not flag _N tokens");
+    }
+
+    #[test]
+    fn era_2_7_does_not_flag_other_underscore_names() {
+        // `_foo`, `_`, `_0`, `_10` are NOT numbered block params.
+        let toks = tokenize_ruby_for_version("_foo + _ + _0 + _10", "2.7").unwrap();
+        let any_flagged = toks.iter().any(has_numbered_param_flag);
+        assert!(
+            !any_flagged,
+            "lexemes other than `_1`..`_9` must not get the flag"
+        );
+    }
+
+    #[test]
+    fn era_3_3_inherits_numbered_block_param_flag() {
+        for era in ["2.7", "3.0", "3.3"] {
+            let toks = tokenize_ruby_for_version("_1", era).unwrap();
+            let any_flagged = toks.iter().any(has_numbered_param_flag);
+            assert!(any_flagged, "era {era} should flag _1");
+        }
+    }
+
+    #[test]
+    fn is_numbered_block_param_classifies_correctly() {
+        assert!(is_numbered_block_param("_1"));
+        assert!(is_numbered_block_param("_5"));
+        assert!(is_numbered_block_param("_9"));
+        // Edge cases that look numbered but aren't.
+        assert!(!is_numbered_block_param("_0"));
+        assert!(!is_numbered_block_param("_10"));
+        assert!(!is_numbered_block_param("_"));
+        assert!(!is_numbered_block_param("_a"));
+        assert!(!is_numbered_block_param("_1a"));
+        assert!(!is_numbered_block_param(""));
+        assert!(!is_numbered_block_param("1"));
     }
 
     #[test]
