@@ -166,6 +166,15 @@ impl IphcTrafficClassFlowLabel {
             _ => Self::Elided,
         }
     }
+
+    fn bits(self) -> u8 {
+        match self {
+            Self::Inline => 0,
+            Self::FlowLabelInline => 1,
+            Self::TrafficClassInline => 2,
+            Self::Elided => 3,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -185,6 +194,15 @@ impl IphcHopLimit {
             _ => Self::TwoHundredFiftyFive,
         }
     }
+
+    fn bits(self) -> u8 {
+        match self {
+            Self::Inline => 0,
+            Self::One => 1,
+            Self::SixtyFour => 2,
+            Self::TwoHundredFiftyFive => 3,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -202,6 +220,15 @@ impl IphcAddressMode {
             1 => Self::Compressed64,
             2 => Self::Compressed16,
             _ => Self::Elided,
+        }
+    }
+
+    fn bits(self) -> u8 {
+        match self {
+            Self::Inline128 => 0,
+            Self::Compressed64 => 1,
+            Self::Compressed16 => 2,
+            Self::Elided => 3,
         }
     }
 }
@@ -236,6 +263,102 @@ impl IphcEncoding {
             destination_address_compression: second & (1 << 2) != 0,
             destination_address_mode: IphcAddressMode::from_bits(second),
         })
+    }
+
+    pub fn encode(self) -> [u8; 2] {
+        [
+            0b0110_0000
+                | (self.traffic_class_flow_label.bits() << 3)
+                | ((self.next_header_compressed as u8) << 2)
+                | self.hop_limit.bits(),
+            ((self.context_identifier_extension as u8) << 7)
+                | ((self.source_address_compression as u8) << 6)
+                | (self.source_address_mode.bits() << 4)
+                | ((self.multicast_destination as u8) << 3)
+                | ((self.destination_address_compression as u8) << 2)
+                | self.destination_address_mode.bits(),
+        ]
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct IphcContextIdentifier {
+    pub source_context: u8,
+    pub destination_context: u8,
+}
+
+impl IphcContextIdentifier {
+    pub fn new(source_context: u8, destination_context: u8) -> Result<Self, SixlowpanError> {
+        validate_context_identifier(source_context)?;
+        validate_context_identifier(destination_context)?;
+        Ok(Self {
+            source_context,
+            destination_context,
+        })
+    }
+
+    pub fn parse(byte: u8) -> Self {
+        Self {
+            source_context: byte >> 4,
+            destination_context: byte & 0x0f,
+        }
+    }
+
+    pub fn encode(self) -> Result<u8, SixlowpanError> {
+        validate_context_identifier(self.source_context)?;
+        validate_context_identifier(self.destination_context)?;
+        Ok((self.source_context << 4) | self.destination_context)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IphcHeader {
+    pub encoding: IphcEncoding,
+    pub context_identifier: Option<IphcContextIdentifier>,
+    pub payload: Vec<u8>,
+}
+
+impl IphcHeader {
+    pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
+        if bytes.len() < 2 {
+            return Err(SixlowpanError::Truncated {
+                needed: 2,
+                remaining: bytes.len(),
+            });
+        }
+        let encoding = IphcEncoding::parse(bytes[0], bytes[1])?;
+        let mut pos = 2;
+        let context_identifier = if encoding.context_identifier_extension {
+            Some(IphcContextIdentifier::parse(read_u8(bytes, &mut pos)?))
+        } else {
+            None
+        };
+        Ok(Self {
+            encoding,
+            context_identifier,
+            payload: bytes[pos..].to_vec(),
+        })
+    }
+
+    pub fn encoded_header_len(&self) -> usize {
+        2 + usize::from(self.context_identifier.is_some())
+    }
+
+    pub fn encode_prefix(&self) -> Result<Vec<u8>, SixlowpanError> {
+        let mut out = Vec::with_capacity(self.encoded_header_len());
+        let mut encoding = self.encoding;
+        encoding.context_identifier_extension = self.context_identifier.is_some();
+        out.extend_from_slice(&encoding.encode());
+        if let Some(context_identifier) = self.context_identifier {
+            out.push(context_identifier.encode()?);
+        }
+        Ok(out)
+    }
+
+    pub fn encode(&self) -> Result<Vec<u8>, SixlowpanError> {
+        let mut out = self.encode_prefix()?;
+        out.extend_from_slice(&self.payload);
+        Ok(out)
     }
 }
 
@@ -752,6 +875,7 @@ pub enum SixlowpanError {
     NotUdpNhc(u8),
     NotFragment(u8),
     NotMesh(u8),
+    InvalidContextIdentifier(u8),
     UdpPortNotCompressible {
         port: u16,
         compression: UdpPortCompression,
@@ -786,6 +910,9 @@ impl fmt::Display for SixlowpanError {
             }
             Self::NotMesh(value) => {
                 write!(f, "dispatch 0x{value:02x} is not a 6LoWPAN mesh header")
+            }
+            Self::InvalidContextIdentifier(value) => {
+                write!(f, "6LoWPAN IPHC context identifier {value} exceeds 4 bits")
             }
             Self::UdpPortNotCompressible { port, compression } => write!(
                 f,
@@ -866,6 +993,13 @@ fn read_array<const N: usize>(bytes: &[u8], pos: &mut usize) -> Result<[u8; N], 
 fn validate_datagram_size(datagram_size: u16) -> Result<(), SixlowpanError> {
     if datagram_size > 0x07ff {
         return Err(SixlowpanError::DatagramSizeTooLarge(datagram_size));
+    }
+    Ok(())
+}
+
+fn validate_context_identifier(context_identifier: u8) -> Result<(), SixlowpanError> {
+    if context_identifier > 0x0f {
+        return Err(SixlowpanError::InvalidContextIdentifier(context_identifier));
     }
     Ok(())
 }
@@ -1013,6 +1147,42 @@ mod tests {
         assert_eq!(encoding.source_address_mode, IphcAddressMode::Elided);
         assert!(encoding.multicast_destination);
         assert_eq!(encoding.destination_address_mode, IphcAddressMode::Elided);
+        assert_eq!(encoding.encode(), [0b0111_1110, 0b1111_1111]);
+    }
+
+    #[test]
+    fn iphc_header_parses_optional_context_identifier_extension() {
+        let header = IphcHeader::parse(&[0b0111_1110, 0b1111_1111, 0xab, 0xf3, 0x00]).unwrap();
+
+        assert!(header.encoding.context_identifier_extension);
+        assert_eq!(
+            header.context_identifier,
+            Some(IphcContextIdentifier {
+                source_context: 0x0a,
+                destination_context: 0x0b,
+            })
+        );
+        assert_eq!(header.encoded_header_len(), 3);
+        assert_eq!(header.payload, vec![0xf3, 0x00]);
+        assert_eq!(
+            header.encode().unwrap(),
+            vec![0b0111_1110, 0b1111_1111, 0xab, 0xf3, 0x00]
+        );
+    }
+
+    #[test]
+    fn iphc_header_omits_context_identifier_when_cid_flag_is_clear() {
+        let header = IphcHeader::parse(&[0b0110_0000, 0b0000_0000, 0xaa]).unwrap();
+
+        assert!(!header.encoding.context_identifier_extension);
+        assert_eq!(header.context_identifier, None);
+        assert_eq!(header.encoded_header_len(), 2);
+        assert_eq!(header.payload, vec![0xaa]);
+        assert_eq!(header.encode().unwrap(), vec![0b0110_0000, 0x00, 0xaa]);
+        assert_eq!(
+            IphcContextIdentifier::new(16, 0),
+            Err(SixlowpanError::InvalidContextIdentifier(16))
+        );
     }
 
     #[test]
