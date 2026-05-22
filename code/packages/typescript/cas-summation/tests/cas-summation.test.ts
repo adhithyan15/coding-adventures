@@ -246,11 +246,96 @@ describe("summation: Phase 39 telescoping", () => {
     expect(out.kind === "apply" && out.head === SUM).toBe(false);
   });
 
-  it("infinite upper bound falls through (no limit-aware telescope yet)", () => {
+  it("infinite upper bound with non-vanishing g falls through (Phase 41 guard)", () => {
+    // g(k) = k grows at infinity, so the Phase 41 limit check refuses.
     const k = sym("k");
     const f = app(SUB, [app(ADD, [k, int(1)]), k]);
     const out = evaluateSum(f, k, int(0), sym("%inf"), evalNode);
     expect(out.kind).toBe("apply");
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 41+42: limit-aware infinite telescope.
+//
+// When `hi = %inf` AND `g(k)` provably vanishes at infinity, the
+// dispatcher emits −g(lo) (standard orientation) or g(lo) (antisymmetric).
+//
+// The narrow vanishing-at-infinity recogniser handles:
+//   - Phase 41 fast path: Div(constant, positive-degree-polynomial-in-k)
+//   - Phase 42 widening: Div(P, Q) with both polynomials and deg(P)<deg(Q)
+//
+// Anything else (transcendental, improper rational, non-Div) falls
+// through to the unevaluated Sum(...).
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 41+42 limit-aware infinite telescope", () => {
+  it("∑_{k=1}^∞ [1/k − 1/(k+1)] = 1 (Phase 41 antisymmetric)", () => {
+    const k = sym("k");
+    const f = app(SUB, [
+      app(DIV, [int(1), k]),
+      app(DIV, [int(1), app(ADD, [k, int(1)])]),
+    ]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(int(1));
+  });
+
+  it("∑_{k=1}^∞ [1/(k+1) − 1/k] = −1 (Phase 41 standard orientation)", () => {
+    const k = sym("k");
+    const f = app(SUB, [
+      app(DIV, [int(1), app(ADD, [k, int(1)])]),
+      app(DIV, [int(1), k]),
+    ]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(int(-1));
+  });
+
+  it("higher starting index ∑_{k=2}^∞ [1/k − 1/(k+1)] = 1/2", () => {
+    const k = sym("k");
+    const f = app(SUB, [
+      app(DIV, [int(1), k]),
+      app(DIV, [int(1), app(ADD, [k, int(1)])]),
+    ]);
+    expect(evaluateSum(f, k, int(2), sym("%inf"), evalNode)).toEqual(rational(1, 2));
+  });
+
+  it("quadratic denominator ∑_{k=1}^∞ [1/k² − 1/(k+1)²] = 1", () => {
+    const k = sym("k");
+    const kSq = app(POW, [k, int(2)]);
+    const kPlus1Sq = app(POW, [app(ADD, [k, int(1)]), int(2)]);
+    const f = app(SUB, [app(DIV, [int(1), kSq]), app(DIV, [int(1), kPlus1Sq])]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(int(1));
+  });
+
+  it("Phase 42 proper rational ∑_{k=1}^∞ [k/(k²+1) − (k+1)/((k+1)²+1)] = 1/2", () => {
+    const k = sym("k");
+    const gK = app(DIV, [k, app(ADD, [app(POW, [k, int(2)]), int(1)])]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const gKp1 = app(DIV, [kp1, app(ADD, [app(POW, [kp1, int(2)]), int(1)])]);
+    const f = app(SUB, [gK, gKp1]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(rational(1, 2));
+  });
+
+  it("Phase 42 improper rational ∑_{k=1}^∞ [k/(k+1) − (k+1)/(k+2)] falls through", () => {
+    // g(k) = k/(k+1) has equal degrees, limit is 1 (not 0).
+    const k = sym("k");
+    const gK = app(DIV, [k, app(ADD, [k, int(1)])]);
+    const gKp1 = app(DIV, [app(ADD, [k, int(1)]), app(ADD, [k, int(2)])]);
+    const f = app(SUB, [gK, gKp1]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+
+  it("transcendental numerator ∑_{k=1}^∞ [sin(k)/k² − sin(k+1)/(k+1)²] falls through", () => {
+    // sin(k)/k² is non-polynomial; conservative refuse.
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const kPlus1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kPlus1]);
+    const f = app(SUB, [
+      app(DIV, [sinK, app(POW, [k, int(2)])]),
+      app(DIV, [sinKp1, app(POW, [kPlus1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
   });
 });

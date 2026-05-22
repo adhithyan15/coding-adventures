@@ -124,22 +124,41 @@ export function evaluateSum(f: IRNode, k: IRNode, lo: IRNode, hi: IRNode, evalFn
     if (raw !== undefined) return evalFn(raw);
   }
 
-  // Phase 39: telescoping sums. Detect ``f = g(k+1) − g(k)`` (or the
-  // antisymmetric ``g(k) − g(k+1)``) and emit ``g(hi+1) − g(lo)``
-  // (resp. ``g(lo) − g(hi+1)``).  Only the finite case is handled —
-  // infinite telescopes need a limit argument we leave to a future
-  // phase.  When ``α = 1, β = 0`` this is purely structural, no
-  // partial-fraction work is attempted.
-  if (!infUpper) {
+  // Phase 39 (finite) + Phase 41/42 (infinite) telescoping sums.
+  //
+  // Detect ``f = g(k+1) − g(k)`` (or its antisymmetric ``g(k) − g(k+1)``)
+  // and emit a closed form:
+  // - Phase 39 (finite ``hi``): ``g(hi+1) − g(lo)`` / ``g(lo) − g(hi+1)``.
+  // - Phase 41+42 (``hi = %inf``): emit ``−g(lo)`` (standard) or ``g(lo)``
+  //   (antisymmetric) when ``g(k)`` provably vanishes at infinity per
+  //   :func:`gVanishesAtInfinity` (constant numerator + positive-degree
+  //   polynomial denominator, or any proper rational with
+  //   ``deg(num) < deg(den)``).  When the limit isn't decidable by the
+  //   narrow recogniser, fall through to later rules — the original
+  //   unevaluated ``Sum`` node is then returned at the bottom.
+  {
     const tele = tryTelescoping(f, k, evalFn);
     if (tele !== undefined) {
-      const hiPlusOne = app(ADD, [hi, int(1)]);
-      const gAtHiPlusOne = substitute(tele.gExpr, k, hiPlusOne);
-      const gAtLo = substitute(tele.gExpr, k, lo);
-      if (tele.sign === 1) {
-        return evalFn(app(SUB, [gAtHiPlusOne, gAtLo]));
+      if (infUpper) {
+        if (gVanishesAtInfinity(tele.gExpr, k)) {
+          const gAtLo = substitute(tele.gExpr, k, lo);
+          if (tele.sign === 1) {
+            // ∑[g(k+1) − g(k)] from lo to ∞ = 0 − g(lo) = −g(lo)
+            return evalFn(app(NEG, [gAtLo]));
+          }
+          // ∑[g(k) − g(k+1)] from lo to ∞ = g(lo) − 0 = g(lo)
+          return evalFn(gAtLo);
+        }
+        // Limit not provably zero — fall through.
+      } else {
+        const hiPlusOne = app(ADD, [hi, int(1)]);
+        const gAtHiPlusOne = substitute(tele.gExpr, k, hiPlusOne);
+        const gAtLo = substitute(tele.gExpr, k, lo);
+        if (tele.sign === 1) {
+          return evalFn(app(SUB, [gAtHiPlusOne, gAtLo]));
+        }
+        return evalFn(app(SUB, [gAtLo, gAtHiPlusOne]));
       }
-      return evalFn(app(SUB, [gAtLo, gAtHiPlusOne]));
     }
   }
 
@@ -255,6 +274,123 @@ function tryTelescoping(
     return { gExpr: left, sign: -1 };
   }
   return undefined;
+}
+
+/**
+ * Phase 41+42: True when ``node`` is recognised as a polynomial in ``k``
+ * of strictly positive degree.
+ *
+ * Used by :func:`gVanishesAtInfinity` to decide whether a denominator
+ * grows without bound as ``k → ∞``.  Recognised shapes: ``k``, ``k^n``
+ * (integer n ≥ 1), ``Add`` with at least one positive-degree term and
+ * all other args either constant-in-k or positive-degree, and ``Mul``
+ * with at least one positive-degree factor and all others either
+ * constant-in-k or positive-degree.  Anything else returns ``false``.
+ */
+function isPositiveDegreePolynomialInK(node: IRNode, k: IRNode): boolean {
+  if (equals(node, k)) return true;
+  if (node.kind !== "apply") return false;
+  if (equals(node.head, POW) && node.args.length === 2) {
+    const [base, exp] = node.args;
+    if (equals(base, k) && exp.kind === "integer" && exp.value >= 1n) {
+      return true;
+    }
+  }
+  if (equals(node.head, ADD) && node.args.length >= 2) {
+    if (!node.args.some((a) => isPositiveDegreePolynomialInK(a, k))) return false;
+    return node.args.every(
+      (a) => isConstantIn(a, k) || isPositiveDegreePolynomialInK(a, k),
+    );
+  }
+  if (equals(node.head, MUL) && node.args.length >= 2) {
+    let hasPositive = false;
+    for (const arg of node.args) {
+      if (isConstantIn(arg, k)) continue;
+      if (isPositiveDegreePolynomialInK(arg, k)) {
+        hasPositive = true;
+        continue;
+      }
+      return false;
+    }
+    return hasPositive;
+  }
+  return false;
+}
+
+/**
+ * Phase 42: Return the polynomial degree of ``node`` in ``k``, or
+ * ``undefined`` for non-polynomial shapes.
+ *
+ * +-----------------------+---------------------------+
+ * | Input                 | Returns                   |
+ * +=======================+===========================+
+ * | constant in k         | 0                         |
+ * | k                     | 1                         |
+ * | k^n (integer n ≥ 0)   | n                         |
+ * | Neg(p)                | deg(p)                    |
+ * | Add(p1, p2, …)        | max(deg(pi))              |
+ * | Sub(p1, p2)           | max(deg(p1), deg(p2))     |
+ * | Mul(p1, p2, …)        | sum(deg(pi))              |
+ * | otherwise             | undefined                 |
+ * +-----------------------+---------------------------+
+ */
+function polynomialDegreeInK(node: IRNode, k: IRNode): number | undefined {
+  if (isConstantIn(node, k)) return 0;
+  if (equals(node, k)) return 1;
+  if (node.kind !== "apply") return undefined;
+  if (equals(node.head, POW) && node.args.length === 2) {
+    const [base, exp] = node.args;
+    if (equals(base, k) && exp.kind === "integer" && exp.value >= 0n) {
+      return Number(exp.value);
+    }
+    return undefined;
+  }
+  if (equals(node.head, NEG) && node.args.length === 1) {
+    return polynomialDegreeInK(node.args[0], k);
+  }
+  if (equals(node.head, ADD) || equals(node.head, SUB)) {
+    const degrees = node.args.map((a) => polynomialDegreeInK(a, k));
+    if (degrees.some((d) => d === undefined)) return undefined;
+    return Math.max(...(degrees as number[]));
+  }
+  if (equals(node.head, MUL)) {
+    const degrees = node.args.map((a) => polynomialDegreeInK(a, k));
+    if (degrees.some((d) => d === undefined)) return undefined;
+    return (degrees as number[]).reduce((a, b) => a + b, 0);
+  }
+  return undefined;
+}
+
+/**
+ * Phase 41+42: True when ``g(k)`` provably tends to 0 as ``k → ∞``.
+ *
+ * Two-tier recognition:
+ *
+ * 1. **Phase 41 fast path** — ``Div(c, h(k))`` with ``c`` constant in
+ *    ``k`` and ``h(k)`` recognised as a positive-degree polynomial.
+ * 2. **Phase 42 widening** — ``Div(P(k), Q(k))`` with both
+ *    ``P`` and ``Q`` pure polynomials in ``k`` and
+ *    ``deg(P) < deg(Q)``.
+ *
+ * Anything else (transcendental numerator, improper rational with
+ * ``deg(P) ≥ deg(Q)``, non-Div shapes) returns ``false`` —
+ * conservatively refusing keeps the closed-form emission safe.
+ */
+function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
+  if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
+    return false;
+  }
+  const [num, den] = g.args;
+  // Phase 41 fast path: constant numerator + positive-degree denominator.
+  if (isConstantIn(num, k)) {
+    return isPositiveDegreePolynomialInK(den, k);
+  }
+  // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
+  const numDeg = polynomialDegreeInK(num, k);
+  if (numDeg === undefined) return false;
+  const denDeg = polynomialDegreeInK(den, k);
+  if (denDeg === undefined) return false;
+  return numDeg < denDeg;
 }
 
 function tryPowerOfK(f: IRNode, k: IRNode): { coeff: RationalValue; m: number } | undefined {
