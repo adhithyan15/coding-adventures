@@ -698,6 +698,35 @@ class ActivationParityTests(unittest.TestCase):
         # default rtol=1e-3 anyway for consistency.
         self._assert_close(rust_result.data, python_result.data)
 
+    def test_gelu_parity(self) -> None:
+        """``GELUFunction.apply(t)`` Rust matches pure-Python.
+
+        Phase 4c — GELU is the most ops-heavy member of the Phase 4
+        family: a 9-op composed graph (Mul → Mul → Add → Mul → Mul →
+        Tanh → Add → Mul → Mul) with four full-shape constant
+        tensors (``0.044715``, ``1.0``, ``sqrt(2/π)``, ``0.5``).
+        Numerical drift between the f32 Rust path and the double
+        pure-Python path accumulates across 9 ops, so the standard
+        ``rtol=1e-3, atol=1e-4`` tolerance is the right
+        f32-vs-double budget — strict enough to catch a real bug,
+        loose enough to accept the expected quantisation.
+        """
+        from ml_framework_core import GELUFunction, _rust_backend
+
+        a = self._make_tensor(seed=77)
+
+        rust_result = GELUFunction.apply(a)
+        self.assertEqual(rust_result.shape, self.SHAPE)
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = GELUFunction.apply(a)
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close(rust_result.data, python_result.data)
+
     def test_softmax_dim0_parity(self) -> None:
         """``SoftmaxFunction.apply(t, dim=0)`` Rust matches pure-Python.
 

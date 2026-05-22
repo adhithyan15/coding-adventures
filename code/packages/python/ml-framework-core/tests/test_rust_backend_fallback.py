@@ -30,6 +30,7 @@ import math
 from ml_framework_core import Tensor
 from ml_framework_core import _rust_backend
 from ml_framework_core.functions import (
+    GELUFunction,
     ReLUFunction,
     SigmoidFunction,
     SoftmaxFunction,
@@ -611,6 +612,83 @@ class SoftmaxFallbackTests(unittest.TestCase):
         # For uniform softmax, ones-grad backward is zero
         for g in a.grad.data:
             self.assertAlmostEqual(g, 0.0, places=12)
+
+
+# ──────────────────────────────────────────────────────────────────
+# MX10 Phase 4c — GELU fallback tests
+#
+# GELU joins the activation family via a 9-op composed graph using
+# the tanh approximation. Same fallback pattern: when
+# ``_RUST_AVAILABLE = False``, dispatch must short-circuit and the
+# pure-Python kernel must produce the right answer.
+# ──────────────────────────────────────────────────────────────────
+
+
+class GELUFallbackTests(unittest.TestCase):
+    """Confirm GELU still works when the Rust path is disabled."""
+
+    def setUp(self) -> None:
+        self._saved_available = _rust_backend._RUST_AVAILABLE
+        _rust_backend._RUST_AVAILABLE = False
+
+    def tearDown(self) -> None:
+        _rust_backend._RUST_AVAILABLE = self._saved_available
+
+    def test_gelu_via_rust_raises_when_unavailable(self) -> None:
+        """``gelu_via_rust`` must raise (defence-in-depth)."""
+        a = Tensor([0.0, 1.0, -1.0], (3,))
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.gelu_via_rust(a)
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_gelu_correct_via_fallback(self) -> None:
+        """``GELUFunction.apply(a)`` falls back to the pure-Python
+        tanh-approximation kernel.
+
+        Hand-computed reference: ``GELU(0) = 0`` exactly (because
+        ``x=0`` factors out at the very last step: ``0.5 * 0 * (...)
+        = 0``).  ``GELU(1)`` and ``GELU(-1)`` we compute from the
+        formula and compare.  ``assertAlmostEqual`` at ``places=12``
+        because the pure-Python path uses double-precision math
+        throughout.
+        """
+        a = Tensor([0.0, 1.0, -1.0], (3,))
+        result = GELUFunction.apply(a)
+        self.assertEqual(result.shape, (3,))
+
+        # GELU(0) = 0 by construction (the leading x factor)
+        self.assertAlmostEqual(result.data[0], 0.0, places=12)
+
+        # Compute the reference values directly with math
+        sqrt_2_pi = math.sqrt(2.0 / math.pi)
+        coeff = 0.044715
+        for i, x in enumerate([1.0, -1.0], start=1):
+            inner = sqrt_2_pi * (x + coeff * x * x * x)
+            expected = 0.5 * x * (1.0 + math.tanh(inner))
+            self.assertAlmostEqual(result.data[i], expected, places=12)
+
+    def test_gelu_backward_via_fallback(self) -> None:
+        """GELU's backward formula recomputes ``inner`` and
+        ``tanh(inner)`` from the saved input (no metadata handshake
+        needed).  Confirm the backward path still produces the
+        analytic gradient through the fallback forward.
+        """
+        a = Tensor([1.0], (1,), requires_grad=True)
+        result = GELUFunction.apply(a)
+        result.backward(Tensor([1.0], (1,)))
+        self.assertIsNotNone(a.grad)
+
+        # Analytic gradient for x=1 (matches the closed-form in
+        # GELUFunction.backward):
+        sqrt_2_pi = math.sqrt(2.0 / math.pi)
+        coeff = 0.044715
+        x = 1.0
+        inner = sqrt_2_pi * (x + coeff * x * x * x)
+        tanh_val = math.tanh(inner)
+        sech2 = 1.0 - tanh_val * tanh_val
+        d_inner = sqrt_2_pi * (1.0 + 3.0 * coeff * x * x)
+        expected_grad = 0.5 * (1.0 + tanh_val) + 0.5 * x * sech2 * d_inner
+        self.assertAlmostEqual(a.grad.data[0], expected_grad, places=10)
 
 
 if __name__ == "__main__":

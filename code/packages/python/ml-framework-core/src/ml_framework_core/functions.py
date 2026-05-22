@@ -47,6 +47,7 @@ from ._rust_backend import (
     abs_via_rust,
     add_via_rust,
     div_via_rust,
+    gelu_via_rust,
     matmul_via_rust,
     mean_axis_via_rust,
     mean_via_rust,
@@ -843,6 +844,22 @@ class GELUFunction(Function):
 
     def forward(self, a: Tensor) -> Tensor:
         self.save_for_backward(a)
+        # MX10 Phase 4c — optional Rust fast path.  GELU is composed
+        # as a 9-op graph using the standard tanh approximation:
+        #   0.5 * x * (1 + tanh(sqrt(2/π) * x * (1 + 0.044715 * x²)))
+        # Algebraically equivalent to the 4-line pure-Python loop
+        # below, but the entire composition ships in one FFI envelope
+        # so the per-call overhead is paid once rather than once per
+        # intermediate.  Four constants (0.044715, 1.0, sqrt(2/π),
+        # 0.5) are materialised as full-shape tensors because
+        # matrix-cpu Mul/Add don't broadcast scalars.
+        #
+        # No saved_metadata handshake needed: GELU's backward
+        # recomputes ``inner`` and ``tanh(inner)`` from the input
+        # ``a`` (saved via save_for_backward above), so backward
+        # works the same regardless of which forward path ran.
+        if should_use_rust_for_activation(len(a.data)):
+            return gelu_via_rust(a)
         data = []
         for x in a.data:
             inner = self._SQRT_2_PI * (x + self._COEFF * x * x * x)

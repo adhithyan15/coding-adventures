@@ -2,6 +2,120 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 4c: optional Rust fast path for `GELUFunction` via a 9-op composed graph (tanh approximation)
+
+Closes the Phase 4 activation family: with this PR, **every member
+of the classic 5-activation set** (`ReLU`, `Sigmoid`, `Tanh`, `GELU`,
+`Softmax`) has a Rust fast path.
+
+GELU uses the standard **tanh approximation** form (matches what
+BERT/GPT use, and what `GELUFunction`'s pure-Python kernel already
+implemented):
+
+```
+GELU(x) ≈ 0.5 * x * (1 + tanh(sqrt(2/π) * (x + 0.044715 * x³)))
+```
+
+The exact form would need `erf`, which matrix-cpu doesn't expose
+today.
+
+#### Algebraic refactor saves one Mul
+
+The inner term `x + 0.044715 * x³` factors as `x * (1 + 0.044715 * x²)`,
+which lets us avoid computing `x³` separately (and avoids needing
+scalar Pow, which is the same constraint that defers Phase 2b).
+`x² = Mul(x, x)` is the only "power" we need.
+
+#### Graph topology
+
+```
+input(0) ──Mul(x, x)──> x²(1)
+Mul(x²(1), c_0.044715(2))         ──> 0.044715·x²(3)
+Add(0.044715·x²(3), c_1(4))       ──> 1 + 0.044715·x²(5)
+Mul(input(0), 1 + 0.044715·x²(5)) ──> x · (1 + 0.044715·x²)(6)
+Mul(... (6), c_sqrt_2π(7))        ──> sqrt(2/π) · x · (...)(8)  [= inner]
+Tanh(inner(8))                    ──> tanh(inner)(9)
+Add(tanh(inner)(9), c_1(4))       ──> 1 + tanh(inner)(10)
+Mul(input(0), 1 + tanh(inner)(10)) ──> x · (1 + tanh(inner))(11)
+Mul(... (11), c_0.5(12))           ──> output(13)
+```
+
+**9 ops, 14 tensors, 4 distinct constants** (`0.044715`, `1.0`,
+`sqrt(2/π)`, `0.5`).  Each constant is materialised at full input
+shape because matrix-cpu's `Mul`/`Add` don't broadcast scalars
+(same constraint that drove ReLU's zero-tensor and Sigmoid's
+ones-tensor materialisations).  `c_1` is referenced by two `Add`
+ops (rows 3 and 7) but only ships once in `constants[]` — graph
+tensor IDs are dedup-friendly.
+
+All 9 ops ship in **one** FFI envelope so per-call overhead is paid
+once.  Reuses the existing `should_use_rust_for_activation`
+predicate from Phase 4 (same `_ELEMENTWISE_RUST_THRESHOLD =
+100_000`).
+
+#### Implementation
+
+- **`_rust_backend.py`** — adds:
+    - Module-level imports: `math` (for `math.sqrt(2.0 / math.pi)`).
+    - Two private constants `_GELU_SQRT_2_PI` and `_GELU_COEFF`
+      computed once at import time.
+    - `gelu_via_rust(a)` (~140 LOC) builds the envelope above
+      using an inner `_const_bytes(value)` helper to keep the
+      four constant-buffer hex-encodings readable.
+    - Updates the Phase 4 module-level comment to mark GELU as
+      shipped and note that the classic 5-activation set is now
+      fully covered.
+
+- **`functions.py`** — `GELUFunction.forward` gains a 2-line
+  dispatch block.  No `saved_metadata["output"]` handshake is
+  needed because GELU's backward recomputes `inner` and `tanh(inner)`
+  from the saved input `a` (via `save_for_backward` which is
+  unchanged), so backward works the same regardless of which
+  forward path ran.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `numel ≥ 100_000` | **Rust** (9-op composed graph in one FFI call) |
+| Extension installed, `numel < 100_000` | Pure-Python tanh-approximation kernel |
+| Extension NOT installed | Pure-Python tanh-approximation kernel |
+
+#### Tests (65 total MX10 tests, was 61)
+
+- **`ActivationParityTests.test_gelu_parity`** (1 case, skip if
+  extension missing): random `(500, 200)` tensor in `[-3, 3]`,
+  compares Rust vs pure-Python at the standard `rtol=1e-3,
+  atol=1e-4`.  Numerical drift across 9 ops in f32 vs double is
+  bounded well within this budget.
+- **`GELUFallbackTests`** (3 cases, always run):
+    - Defence-in-depth `RuntimeError` from `gelu_via_rust` when
+      unavailable.
+    - Correctness for `[0, 1, -1]` against the analytic formula
+      (`GELU(0) = 0` by construction; `GELU(±1)` computed from
+      the tanh-approximation formula).
+    - Backward gradient via the fallback path matches the
+      closed-form derivative for `x = 1`.
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**362 passed + 25 skipped (parity tests that need the extension)**;
+the pre-existing `test_device.py` failure on main is unrelated.
+
+### What's NOT in Phase 4c (and overall Phase 4)
+
+- Exact-form GELU (`0.5 * x * (1 + erf(x / sqrt(2)))`).  Needs
+  `erf` op in matrix-cpu — not exposed today.  The tanh
+  approximation is within ~1e-4 of the exact form across the
+  typical input range and is what every major transformer
+  implementation uses, so no functional gap.
+- Backward-path Rust dispatch for any of the Phase 4 activations.
+  ReLU/Sigmoid/Tanh have trivial scalar-op backwards;
+  GELU/Softmax have multi-op backwards that would benefit from
+  Rust composition but warrant a separate follow-up sub-phase
+  once profiling identifies the bottleneck.
+- PowFunction Rust path.  Still deferred — needs scalar-exponent
+  variant in matrix-cpu or a Broadcast-based workaround.
+
 ### Added — MX10 Phase 4d: optional Rust fast path for `SoftmaxFunction` via a 7-op composed graph
 
 Extends the activation dispatch from Phase 4/4b's {Tanh, ReLU,
