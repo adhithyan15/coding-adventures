@@ -1,9 +1,49 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-22 (after Phase 42 degree-aware vanishing-at-
-> infinity landed in Python — non-constant numerator infinite telescopes
-> now close end-to-end too).
+> Last updated: 2026-05-22 (after Phase 48 Apart-for-repeated-linear-
+> factors landed in Python — all three Phase 45-documented summation
+> gaps are now closed).
+>
+> **Phase 48 — Apart for repeated linear factors (Python only, so far):**
+> `symbolic-vm` 0.72.0 (PR #3927).  Extends ``Apart`` to decompose
+> denominators of the form ``∏_r (x − r)^{m_r}`` where each ``r`` is
+> rational and ``m_r ≥ 1``.  Algorithm: for each root r of
+> multiplicity m, Taylor-expand ``P(r + t)`` and
+> ``Q(r + t) = den(r + t) / t^m`` to order ``m − 1``, then power-
+> series-divide to get ``φ(t) = P(r + t) / Q(r + t)``; the j-th
+> Taylor coefficient is the residue ``A_{r, m − j}``.  Everything
+> stays exact (``Fraction`` arithmetic).  Closes the last Phase 45-
+> documented gap: ``∑_{k=1}^∞ (2k+1)/(k²(k+1)²) = 1``.  TS/Rust
+> ports remain blocked on porting ``Apart`` itself.
+>
+> **Phase 47 — Nested-Add flattening (Python + TS + Rust):**
+> `symbolic-vm` 0.71.0 (Python PR #3922), 0.12.0 (TS PR #3923),
+> 0.12.0 (Rust PR #3923).  Add handler now flattens nested
+> ``Add(Add(k, 1), 1) → Add(k, 2)`` trees so structural-equality
+> consumers (e.g. the cas-summation telescope detector) see
+> canonical forms.  Substrate fix — benefits any CAS module that
+> pattern-matches ``Add(k, c)``.  Closes the shifted-denominator
+> case ``∑ 1/((k+1)(k+2)) = 1/2``.
+>
+> **Phase 46 — Apart-retry constant-numerator widening (Python +
+> TS + Rust):** `symbolic-vm` 0.70.0 (Python PR #3918), `cas-summation`
+> 0.6.0 (TS+Rust PR #3920).  Phase 40's normaliser now recognises
+> ``Div(c, d)`` with literal ``c < 0`` as a negation (in addition
+> to top-level ``Neg(x)``), so summands like ``5/(k(k+1))`` whose
+> Apart output folds the sign into the numerator (``Add(Div(-5,
+> k+1), Div(5, k))``) close via the telescope chain.
+>
+> **Phase 45 — End-to-end integration tests (Python only):**
+> `symbolic-vm` 0.69.0 (PR #3914).  Tests-only release pinning the
+> Apart + telescope cross-phase behaviour.  Documented 3 gaps as
+> ``pytest.skip`` markers; all three are now closed by Phases 46–48.
+>
+> **Phase 43+44 — Transcendental vanishing-at-infinity (Python +
+> TS + Rust):** `cas-summation` 0.5.0–0.6.0.  Extended the recogniser
+> for ``∑ [g(k+1) − g(k)]`` to handle ``Exp(h(k))``, ``Pow(b, h(k))``
+> with ``b > 1``, ``Log(...)``, and ``Mul(...)`` factors that diverge.
+> Sign-aware via ``_polynomial_leading_coeff_sign_in_k``.
 >
 > **Phase 42 — Degree-aware vanishing-at-infinity (Python only, so far):**
 > `cas-summation` 0.4.0 + `symbolic-vm` 0.66.0 (PR #3887 ✅ merged).
