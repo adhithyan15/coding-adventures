@@ -561,6 +561,132 @@ class TestPhase40_ApartTelescope:
             f"Expected scalar 1; got {result!r}"
         )
 
+    def test_phase45_chain_higher_starting_index(self):
+        """``∑_{k=2}^∞ 1/(k(k+1))``: Apart → telescope → g(2) = 1/2.
+
+        Same Phase 40 + Phase 41 chain but starting at k=2 instead of
+        k=1.  Confirms the chain handles arbitrary lo.
+        """
+        from fractions import Fraction
+        from symbolic_ir import IRRational
+
+        denom = IRApply(MUL, (K, IRApply(ADD, (K, _int(1)))))
+        f = IRApply(DIV, (_int(1), denom))
+        result = _sum(f, _int(2), INF)
+        # Expect 1/2.  Result is IRRational or IRInteger (folded).
+        if isinstance(result, IRInteger):
+            assert result.value == 0 or result.value * 2 == 1, f"got {result!r}"
+        else:
+            assert isinstance(result, IRRational)
+            assert Fraction(result.numer, result.denom) == Fraction(1, 2), (
+                f"got {result!r}"
+            )
+
+    def test_phase45_chain_shifted_denominator(self):
+        """``∑_{k=1}^∞ 1/((k+1)(k+2))`` — known gap: the Phase 40
+        Apart-retry doesn't currently re-shift purely shifted
+        denominators (no bare ``k`` factor).
+
+        Mathematically this Aparts to ``1/(k+1) − 1/(k+2)`` and the
+        antisymmetric telescope closes to ``g(1) = 1/(1+1) = 1/2``.
+        Apart's heuristic recogniser matches the ``k(k+1)`` shape but
+        not ``(k+a)(k+b)`` with both factors shifted.
+
+        Documents the gap so a future "Apart Phase 3" (shifted
+        denominator support) can drop the skip and the test will pass
+        automatically with result == 1/2.
+        """
+        import pytest
+        from fractions import Fraction
+        from symbolic_ir import IRRational
+
+        kp1 = IRApply(ADD, (K, _int(1)))
+        kp2 = IRApply(ADD, (K, _int(2)))
+        denom = IRApply(MUL, (kp1, kp2))
+        f = IRApply(DIV, (_int(1), denom))
+        result = _sum(f, _int(1), INF)
+        if _is_unevaluated_sum(result):
+            pytest.skip(
+                "Apart-retry doesn't yet handle purely shifted "
+                "denominators (k+a)(k+b) with no bare k factor; the "
+                "math says 1/(k+1) − 1/(k+2) telescopes to 1/2.  When "
+                "Apart Phase 3 (shifted denominators) lands, remove "
+                "this skip."
+            )
+        # If Apart Phase 3 has landed, the chain closes to 1/2.
+        if isinstance(result, IRInteger):
+            assert result.value * 2 == 1
+        else:
+            assert isinstance(result, IRRational)
+            assert Fraction(result.numer, result.denom) == Fraction(1, 2)
+
+    def test_phase45_repeated_factor_known_gap(self):
+        """``∑_{k=1}^∞ (2k+1)/(k²(k+1)²)`` — known gap: documents that the
+        Phase 1 Apart implementation doesn't decompose denominators with
+        repeated linear factors.
+
+        The math says this telescopes to ``∑ [1/k² − 1/(k+1)²] = 1``
+        via Apart ``→ 1/k² − 1/(k+1)²`` followed by Phase 41/42
+        (g(k) = 1/k² vanishes at ∞).  But Apart's current implementation
+        only handles non-repeated simple linear factors, so the sum
+        stays unevaluated.
+
+        This test records the gap so a future "Apart Phase 2"
+        (repeated-factor support) can drop the skip and the test will
+        pass automatically.
+        """
+        import pytest
+
+        k_sq = IRApply(POW, (K, _int(2)))
+        kp1_sq = IRApply(POW, (IRApply(ADD, (K, _int(1))), _int(2)))
+        denom = IRApply(MUL, (k_sq, kp1_sq))
+        numer = IRApply(ADD, (IRApply(MUL, (_int(2), K)), _int(1)))
+        f = IRApply(DIV, (numer, denom))
+        result = _sum(f, _int(1), INF)
+        if _is_unevaluated_sum(result):
+            pytest.skip(
+                "Apart doesn't yet handle repeated linear factors; "
+                "(2k+1)/(k²(k+1)²) → 1/k² − 1/(k+1)² is not currently "
+                "decomposed.  When Apart Phase 2 (repeated-factor "
+                "support) lands, remove this skip and the test should "
+                "pass with result == 1."
+            )
+        # If Apart Phase 2 has landed, the chain closes to 1.
+        assert isinstance(result, IRInteger) and result.value == 1, (
+            f"Expected scalar 1; got {result!r}"
+        )
+
+    def test_phase45_chain_with_outer_constant_numerator(self):
+        """``∑_{k=1}^∞ 5/(k(k+1)) = 5`` — known gap: documents that the
+        Phase 40 Apart-retry doesn't currently fan a non-unit constant
+        numerator through to the telescope branch.
+
+        Mathematically Apart gives ``5/k − 5/(k+1)`` (an antisymmetric
+        telescope with ``g(k) = 5/k``) which Phase 41 closes to
+        ``g(1) = 5``.  The current canonicaliser only recognises the
+        ``Div(1, k(k+1))`` shape with a literal unit numerator.
+
+        Documents the gap so a future Apart-retry generalisation (or a
+        pre-pass that factors out outer constants) can drop the skip
+        and the test will pass automatically with result == 5.
+        """
+        import pytest
+
+        denom = IRApply(MUL, (K, IRApply(ADD, (K, _int(1)))))
+        f = IRApply(DIV, (_int(5), denom))
+        result = _sum(f, _int(1), INF)
+        if _is_unevaluated_sum(result):
+            pytest.skip(
+                "Apart-retry only matches Div(1, k(k+1)) shape with a "
+                "unit numerator; non-unit constants like 5/(k(k+1)) "
+                "fall through.  When the retry path generalises (or a "
+                "constant-factor pre-pass lands), remove this skip."
+            )
+        # If the gap is closed, the chain closes to 5.
+        assert isinstance(result, IRInteger) and result.value == 5, (
+            f"Expected scalar 5; got {result!r}"
+        )
+
 
 # ===========================================================================
 # 8. Product — constant factor

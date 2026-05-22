@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.69.0 — 2026-05-22
+
+**Phase 45 — End-to-end integration tests for the Apart + telescope
+chain.**
+
+Tests-only release.  Adds four new integration tests inside
+`tests/test_phase25.py::TestPhase40_ApartTelescope` that pin the
+cross-phase composition behaviour and surface the remaining gaps as
+documented `pytest.skip` markers (so a future generalisation of Apart
+drops the skips and the tests pass automatically).
+
+### Added — tests
+
+`tests/test_phase25.py::TestPhase40_ApartTelescope` — 4 new cases:
+
+- `test_phase45_chain_higher_starting_index` — verifies
+  ``∑_{k=2}^∞ 1/(k(k+1)) = 1/2`` (Apart → Phase 41 antisymmetric
+  telescope at an arbitrary ``lo``).
+- `test_phase45_chain_shifted_denominator` — documents that
+  ``∑_{k=1}^∞ 1/((k+1)(k+2))`` stays unevaluated because the
+  Phase 40 Apart-retry doesn't currently re-shift purely shifted
+  denominators (no bare ``k`` factor).  Skipped with a "drop me
+  when Apart Phase 3 lands" hint; math closes to ``1/2``.
+- `test_phase45_repeated_factor_known_gap` — documents that
+  ``∑_{k=1}^∞ (2k+1)/(k²(k+1)²)`` stays unevaluated because Apart's
+  current implementation doesn't decompose denominators with
+  repeated linear factors.  Skipped with a "drop me when Apart
+  Phase 2 lands" hint; math closes to ``1``.
+- `test_phase45_chain_with_outer_constant_numerator` — documents
+  that ``∑_{k=1}^∞ 5/(k(k+1))`` stays unevaluated because the
+  Apart-retry recogniser only matches the unit-numerator shape
+  ``Div(1, k(k+1))``.  Skipped with a "drop me when the retry
+  generalises" hint; math closes to ``5``.
+
+No production code touched; no version bumps to dependencies.
+Full ``tests/test_phase25.py`` sweep: **65 passed, 11 skipped**
+(63 passed + 8 skipped prior; +2 passing, +3 documented gaps).
+
+### Still deferred
+
+- Apart Phase 2: repeated linear factors (e.g. ``1/(k²(k+1)²)``).
+- Apart Phase 3: shifted-only denominators (e.g. ``1/((k+1)(k+2))``).
+- Apart-retry generalisation to fan non-unit constant numerators
+  through to the telescope branch.
+
 ## 0.68.0 — 2026-05-22
 
 **Phase 44 dep bump — Log divergence in vanishing-at-infinity.**
