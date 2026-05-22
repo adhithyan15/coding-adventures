@@ -567,6 +567,21 @@ class ActivationFallbackTests(unittest.TestCase):
         self.assertEqual(result.shape, (5,))
         self.assertEqual(result.data, [0.0, 0.0, 0.0, 1.0, 2.0])
 
+    def test_tanh_backward_via_rust_raises_when_unavailable(self) -> None:
+        """``tanh_backward_via_rust`` must raise (defence-in-depth)."""
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.tanh_backward_via_rust(
+                [1.0, 1.0, 1.0], [0.0, 0.5, -0.5], (3,)
+            )
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_sigmoid_backward_via_rust_raises_when_unavailable(self) -> None:
+        """``sigmoid_backward_via_rust`` must raise (defence-in-depth)."""
+        with self.assertRaises(RuntimeError):
+            _rust_backend.sigmoid_backward_via_rust(
+                [1.0, 1.0, 1.0], [0.5, 0.5, 0.5], (3,)
+            )
+
     def test_tanh_saved_metadata_populated_via_fallback(self) -> None:
         """The pure-Python ``TanhFunction.forward`` saves the output in
         ``saved_metadata["output"]`` so that backward can reuse it.

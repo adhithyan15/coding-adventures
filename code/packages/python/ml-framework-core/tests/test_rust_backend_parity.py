@@ -845,6 +845,77 @@ class ActivationParityTests(unittest.TestCase):
         # default rtol=1e-3 anyway for consistency.
         self._assert_close(rust_result.data, python_result.data)
 
+    def test_tanh_backward_parity(self) -> None:
+        """``TanhFunction.backward`` Rust matches pure-Python.
+
+        Phase 4-back — Tanh backward = ``g * (1 - y²)``, a 3-op
+        composed graph on (grad, saved_output) plus a ones-constant.
+        Random `(500, 200)` input in ``[-3, 3]`` (saturates Tanh at
+        both ends, gives a meaningful gradient pattern).
+        Tolerance: standard `rtol=1e-3, atol=1e-4`.
+        """
+        from ml_framework_core import TanhFunction, _rust_backend
+
+        a = self._make_tensor(seed=88)
+        a.requires_grad = True
+
+        # Rust path forward then Rust path backward.
+        y = TanhFunction.apply(a)
+        grad_data = [1.0] * (500 * 200)
+        y.backward(self._make_grad_tensor(grad_data))
+        rust_grad = a.grad
+        self.assertIsNotNone(rust_grad)
+        self.assertEqual(rust_grad.shape, self.SHAPE)
+
+        # Pure-Python reference run with same forward.
+        from ml_framework_core import Tensor
+        a2 = Tensor(list(a.data), self.SHAPE, requires_grad=True)
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            y2 = TanhFunction.apply(a2)
+            y2.backward(self._make_grad_tensor(grad_data))
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close(rust_grad.data, a2.grad.data)
+
+    def test_sigmoid_backward_parity(self) -> None:
+        """``SigmoidFunction.backward`` Rust matches pure-Python.
+
+        Phase 4-back — Sigmoid backward = ``g * y * (1 - y)``,
+        same 3-op shape as Tanh backward but a different
+        intermediate.  Same input range and tolerance.
+        """
+        from ml_framework_core import SigmoidFunction, _rust_backend
+
+        a = self._make_tensor(seed=99)
+        a.requires_grad = True
+
+        y = SigmoidFunction.apply(a)
+        grad_data = [1.0] * (500 * 200)
+        y.backward(self._make_grad_tensor(grad_data))
+        rust_grad = a.grad
+        self.assertIsNotNone(rust_grad)
+        self.assertEqual(rust_grad.shape, self.SHAPE)
+
+        from ml_framework_core import Tensor
+        a2 = Tensor(list(a.data), self.SHAPE, requires_grad=True)
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            y2 = SigmoidFunction.apply(a2)
+            y2.backward(self._make_grad_tensor(grad_data))
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close(rust_grad.data, a2.grad.data)
+
+    def _make_grad_tensor(self, data: list[float]):
+        """Helper to build a Tensor of self.SHAPE from a flat list."""
+        from ml_framework_core import Tensor
+        return Tensor(list(data), self.SHAPE)
+
     def test_gelu_parity(self) -> None:
         """``GELUFunction.apply(t)`` Rust matches pure-Python.
 

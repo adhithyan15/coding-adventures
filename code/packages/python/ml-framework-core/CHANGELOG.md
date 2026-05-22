@@ -2,6 +2,103 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 4-back: optional Rust fast path for `TanhFunction.backward` + `SigmoidFunction.backward`
+
+First activation-family backward dispatch.  Tanh and Sigmoid are
+the two activations whose backward depends only on the **saved
+output** `y` (not the input), so each has a tight 3-op composed
+graph form:
+
+- `Tanh.backward`:    `g * (1 - y²)`
+- `Sigmoid.backward`: `g * y * (1 - y)`
+
+#### Graph topology (same op count, slightly different shape)
+
+```
+Tanh backward (3 ops, 6 tensors, 1 constant):
+  Mul(y, y)            → y²
+  Sub(ones-const, y²)  → 1 - y²
+  Mul(g, 1 - y²)       → grad_input
+
+Sigmoid backward (3 ops, 6 tensors, 1 constant):
+  Sub(ones-const, y)   → 1 - y
+  Mul(y, 1 - y)        → y · (1 - y)
+  Mul(g, y · (1 - y))  → grad_input
+```
+
+The ones-tensor constant is materialised at full target shape
+because matrix-cpu's `Sub` doesn't broadcast scalars — same
+constraint that drove Sigmoid's forward composition.
+
+Both helpers take **grad_data and output_data as separate inputs**
+(2-input graph), then output the gradient through the same 3-op
+shape.  Same `should_use_rust_for_activation` predicate and
+threshold as forward.
+
+#### Why not ReLU/GELU/Softmax backward in this PR
+
+- **ReLU**: backward is `g * (x > 0)` — needs a comparison op
+  with a zero-tensor or a Greater op (matrix-ir-json doesn't
+  expose this today as a single op).  Doable as a different
+  graph shape, deferred.
+- **GELU**: backward has multiple terms (`0.5 * (1 + tanh) + 0.5
+  * x * sech² * d_inner`) — multi-op composition with a sech²
+  intermediate; deferred to its own sub-phase.
+- **Softmax**: backward is `y * (g - sum(g * y))` — multi-op
+  with an axis reduce; deferred (could reuse Phase 3b's
+  axis-reduction helpers).
+
+#### Implementation
+
+- **`_rust_backend.py`** — adds:
+    - `tanh_backward_via_rust(grad_data, output_data, target_shape, device)`:
+      builds the 3-op graph above with 2 inputs + 1 ones-constant.
+    - `sigmoid_backward_via_rust(grad_data, output_data, target_shape, device)`:
+      same shape, different intermediate op layout.
+    - Both validate `len(grad_data) == len(output_data)` before
+      packing (catches caller bugs).
+
+- **`functions.py`** — `TanhFunction.backward` and
+  `SigmoidFunction.backward` each gain a 6-line dispatch block at
+  the top.  Pure-Python list-comprehension fallbacks are
+  byte-identical (the saved output was already populated by
+  Phase 4 / Phase 4b's forward dispatch).
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `numel ≥ 100_000` | **Rust** (3-op graph in one FFI call) |
+| Extension installed, `numel < 100_000` | Pure-Python backward kernel |
+| Extension NOT installed | Pure-Python backward kernel |
+
+#### Tests (82 total MX10 tests, was 78)
+
+- **`ActivationParityTests.test_tanh_backward_parity`** and
+  **`test_sigmoid_backward_parity`** (2 cases, skip if extension
+  missing): builds a `(500, 200)` requires_grad input in
+  `[-3, 3]`, runs forward+backward via Rust, then via pure-Python,
+  compares gradients at the standard `rtol=1e-3, atol=1e-4`
+  tolerance.
+- **`SigmoidFallbackTests` + `ActivationFallbackTests`** gain a
+  `*_backward_via_rust_raises_when_unavailable` defence-in-depth
+  test each (2 new fallback tests).  The pure-Python backward
+  correctness is already covered by the existing
+  `saved_metadata_populated_via_fallback` tests from earlier
+  phases.
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**373 passed + 31 skipped (parity tests that need the extension)**;
+the pre-existing `test_device.py` failure on main is unrelated.
+
+### What's NOT in Phase 4-back
+
+- ReLU backward (needs Greater op or zero-tensor compare).
+- GELU backward (multi-op chain rule expansion).
+- Softmax backward (`y * (g - sum(g * y))` with an axis reduce).
+- Elementwise op backwards (most are trivial scalar `*1` or `*-1`
+  — likely net-loss vs FFI overhead).
+
 ### Added — MX10 Phase 3d: optional Rust fast path for axis-specific `SumFunction.backward` / `MeanFunction.backward` (`dim != None`)
 
 Closes the gap Phase 3c explicitly deferred: the `dim != None`
