@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.13.0] - 2026-05-20
+
+### Added (Phase 4g — 2.0 `%i[]` / `%I[]` symbol-array percent literals)
+- New `PercentI` and `PercentBigI` token kinds declared in `ruby-1.8.lexer.states.toml`.
+- New states `percent_i_open`, `percent_i_body`, `percent_big_i_open`, `percent_big_i_body` mirror the existing `%w[]` / `%q{}` state shapes.
+- `after_percent` now has arms for `i` and `I` follower letters — they enter the corresponding *open* state, which then requires `[` as the canonical delimiter (other followers bail to "% is modulo").
+- The action interpreter emits `PercentI` / `PercentBigI` as `TokenType::String` carrying the verbatim source-shape (`%i[a b c]` / `%I[a b c]`), matching the Phase 3a precedent for `%w[]` / `%q{}`.
+- v0 caveat: the lexer accepts `%i[]` / `%I[]` for *all* eras (since they're lexically the same shape as `%w[]`); pre-2.0 Ruby would have rejected them at the parser level.  A future era-aware downgrade can split them back into `%` + identifier + bracket tokens.
+
+### Tests (+4 new, total 112)
+- 2.0 lexes `%i[a b c]` as a single String token with the verbatim value.
+- 2.0 lexes `%I[a b c]`.
+- Unterminated `%i[a b c` records an `unterminated_percent_i` diagnostic.
+- Plain `5 % 2` (modulo) still works — the `% → after_percent` route correctly bails when the follower isn't a recognised type letter.
+
 ## [0.12.0] - 2026-05-20
 
 ### Added (Phase 4f — 2.1 numeric suffixes `r` / `i`)
