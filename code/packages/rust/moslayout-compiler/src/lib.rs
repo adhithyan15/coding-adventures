@@ -100,6 +100,13 @@ const PRIMITIVES: &[&str] = &[
     // (currently both nodes coexist as siblings in `children`).
     "If",
     "Else",
+    // UI29 §2.1 / UI29-1 — host primitives. Each lowers to the host
+    // platform's native widget (DOM <input>, SwiftUI TextField, Qt
+    // TextInput, etc.). HostDialog (UI29-1) is the 16th kernel
+    // primitive, added after mosaic-pkg-dialog v0.1.0 exposed the need
+    // for a native dialog primitive with modal/focus/top-layer/
+    // accessibility semantics that composition cannot provide.
+    "HostInput", "HostButton", "HostTable", "HostScroll", "HostDialog",
 ];
 
 fn is_primitive(tag: &str) -> bool {
@@ -2063,6 +2070,23 @@ mod tests {
     fn if_and_else_are_in_primitives() {
         assert!(PRIMITIVES.contains(&"If"));
         assert!(PRIMITIVES.contains(&"Else"));
+    }
+
+    /// UI29-1 — HostDialog joined the kernel as the 16th primitive after
+    /// `mosaic-pkg-dialog` v0.1.0 demonstrated that composed dialogs lose
+    /// modal/focus/top-layer/accessibility semantics. PRIMITIVES is the
+    /// canonical roster every backend looks at; pin the entry so future
+    /// refactors that mistakenly drop it are caught at test time.
+    #[test]
+    fn host_dialog_and_friends_in_primitives() {
+        assert!(PRIMITIVES.contains(&"HostInput"));
+        assert!(PRIMITIVES.contains(&"HostButton"));
+        assert!(PRIMITIVES.contains(&"HostTable"));
+        assert!(PRIMITIVES.contains(&"HostScroll"));
+        assert!(
+            PRIMITIVES.contains(&"HostDialog"),
+            "UI29-1 added HostDialog as the 16th kernel primitive"
+        );
     }
 
     // =====================================================================
