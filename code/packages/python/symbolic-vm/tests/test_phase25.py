@@ -656,36 +656,74 @@ class TestPhase40_ApartTelescope:
             f"Expected scalar 1; got {result!r}"
         )
 
-    def test_phase45_chain_with_outer_constant_numerator(self):
-        """``∑_{k=1}^∞ 5/(k(k+1)) = 5`` — known gap: documents that the
-        Phase 40 Apart-retry doesn't currently fan a non-unit constant
-        numerator through to the telescope branch.
+    def test_phase46_chain_with_outer_constant_numerator(self):
+        """``∑_{k=1}^∞ 5/(k(k+1)) = 5`` — Phase 46 closure of the
+        constant-numerator gap previously documented as
+        ``test_phase45_chain_with_outer_constant_numerator``.
 
-        Mathematically Apart gives ``5/k − 5/(k+1)`` (an antisymmetric
-        telescope with ``g(k) = 5/k``) which Phase 41 closes to
-        ``g(1) = 5``.  The current canonicaliser only recognises the
-        ``Div(1, k(k+1))`` shape with a literal unit numerator.
-
-        Documents the gap so a future Apart-retry generalisation (or a
-        pre-pass that factors out outer constants) can drop the skip
-        and the test will pass automatically with result == 5.
+        Apart returns ``Add(Div(-5, k+1), Div(5, k))`` (note: the
+        ``-5`` is folded into the numerator rather than a top-level
+        ``Neg``).  Phase 46 extends ``_normalise_add_neg_to_sub`` to
+        also recognise ``Div(negative_literal, denom)`` as a negation,
+        so the rewrite ``Add(a, Div(-c, d)) → Sub(a, Div(c, d))`` now
+        fires.  The result threads into the Phase 41 antisymmetric
+        telescope ``g(k) = 5/k`` and closes to ``g(1) = 5``.
         """
-        import pytest
-
         denom = IRApply(MUL, (K, IRApply(ADD, (K, _int(1)))))
         f = IRApply(DIV, (_int(5), denom))
         result = _sum(f, _int(1), INF)
-        if _is_unevaluated_sum(result):
-            pytest.skip(
-                "Apart-retry only matches Div(1, k(k+1)) shape with a "
-                "unit numerator; non-unit constants like 5/(k(k+1)) "
-                "fall through.  When the retry path generalises (or a "
-                "constant-factor pre-pass lands), remove this skip."
-            )
-        # If the gap is closed, the chain closes to 5.
         assert isinstance(result, IRInteger) and result.value == 5, (
             f"Expected scalar 5; got {result!r}"
         )
+
+    def test_phase46_negative_constant_numerator(self):
+        """``∑_{k=1}^∞ (-3)/(k(k+1)) = -3`` — sign of the outer constant
+        propagates through Apart + telescope.
+
+        Apart yields ``Add(Div(3, k+1), Div(-3, k))`` (signs flipped
+        from the positive case), and the same Phase 46 widening
+        rewrites it to ``Sub(Div(3, k+1), Div(3, k))`` — the *standard*
+        orientation ``g(k+1) − g(k)`` with ``g(k) = 3/k``, which
+        Phase 41 closes to ``−g(1) = −3``.
+        """
+        from fractions import Fraction
+        from symbolic_ir import IRRational
+
+        denom = IRApply(MUL, (K, IRApply(ADD, (K, _int(1)))))
+        f = IRApply(DIV, (_int(-3), denom))
+        result = _sum(f, _int(1), INF)
+        if isinstance(result, IRInteger):
+            assert result.value == -3, f"got {result!r}"
+        else:
+            assert isinstance(result, IRRational)
+            assert Fraction(result.numer, result.denom) == Fraction(-3, 1), (
+                f"got {result!r}"
+            )
+
+    def test_phase46_rational_outer_constant(self):
+        """``∑_{k=1}^∞ (1/2)/(k(k+1)) = 1/2`` — IRRational numerator
+        case, exercising the rational-literal arm of
+        :func:`_extract_negation`'s mirror.
+
+        Here the outer constant is positive so no negation logic fires
+        for the numerator itself; this pins that Phase 46 didn't
+        accidentally over-trigger on positive rational numerators.
+        Apart returns ``Add(Div(-1/2, k+1), Div(1/2, k))`` which the
+        new widening rewrites to the standard ``Sub`` shape.
+        """
+        from fractions import Fraction
+        from symbolic_ir import IRRational
+
+        denom = IRApply(MUL, (K, IRApply(ADD, (K, _int(1)))))
+        f = IRApply(DIV, (IRRational(1, 2), denom))
+        result = _sum(f, _int(1), INF)
+        if isinstance(result, IRInteger):
+            assert result.value * 2 == 1, f"got {result!r}"
+        else:
+            assert isinstance(result, IRRational)
+            assert Fraction(result.numer, result.denom) == Fraction(1, 2), (
+                f"got {result!r}"
+            )
 
 
 # ===========================================================================

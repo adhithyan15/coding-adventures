@@ -1,5 +1,67 @@
 # Changelog
 
+## 0.70.0 — 2026-05-22
+
+**Phase 46 — Apart-retry constant-numerator widening.**
+
+Closes the constant-numerator gap previously documented as Phase 45's
+``test_phase45_chain_with_outer_constant_numerator`` skip.  The
+Phase 40 Apart-retry path now correctly handles ``Div(c, k(k+1))``
+shapes with arbitrary integer / rational / float constant ``c``, not
+just the unit numerator ``1``.
+
+### Root cause
+
+``Apart(5/(k(k+1)), k)`` returns ``Add(Div(-5, k+1), Div(5, k))`` —
+the negation is folded into the ``Div`` numerator rather than wrapped
+in a top-level ``Neg``.  The previous version of
+``_normalise_add_neg_to_sub`` only matched ``Add(a, Neg(b))`` /
+``Add(Neg(b), a)`` shapes, so the Apart-rewritten summand was
+returned as an unchanged ``Add`` and the Phase 39 telescope detector
+(which keys off ``Sub``) never fired.
+
+### Added
+
+- **`_extract_negation(node) -> IRNode | None`** in
+  ``src/symbolic_vm/cas_handlers.py`` — uniform negation recogniser
+  that returns the positive magnitude of:
+  1. ``Neg(x)`` (top-level wrapper)               → ``x``
+  2. ``Div(c, d)`` with literal ``c < 0`` (numerator-folded sign)
+     → ``Div(|c|, d)``
+  Handles ``IRInteger``, ``IRRational``, and ``IRFloat`` numerators.
+
+### Changed
+
+- ``_normalise_add_neg_to_sub`` now calls ``_extract_negation`` on
+  each side of the two-term ``Add`` rather than checking the ``Neg``
+  head directly.  The case table grows two rows for the new
+  numerator-folded shape but the rewrite logic is identical.
+
+### Added — tests
+
+`tests/test_phase25.py::TestPhase40_ApartTelescope` — 3 new cases (and
+the renamed Phase-45 skip that now passes):
+
+- `test_phase46_chain_with_outer_constant_numerator` — verifies
+  ``∑_{k=1}^∞ 5/(k(k+1)) = 5``.  Previously ``test_phase45_*``
+  skipped; now passes.
+- `test_phase46_negative_constant_numerator` — verifies the sign
+  propagates: ``∑_{k=1}^∞ (-3)/(k(k+1)) = -3``.  Exercises the
+  *opposite* orientation (standard ``g(k+1) − g(k)``) when the
+  outer constant is negative.
+- `test_phase46_rational_outer_constant` — verifies
+  ``∑_{k=1}^∞ (1/2)/(k(k+1)) = 1/2``.  Pins the ``IRRational``
+  numerator path of ``_extract_negation``.
+
+Test sweep: `tests/test_phase25.py` → **68 passed, 10 skipped** (was
+65 passed + 11 skipped; +3 passing, -1 skipped — the Phase-45 skip
+is now a Phase-46 pass).
+
+### Still deferred
+
+- Apart Phase 2: repeated linear factors (``1/(k²(k+1)²)``).
+- Apart Phase 3: shifted-only denominators (``1/((k+1)(k+2))``).
+
 ## 0.69.0 — 2026-05-22
 
 **Phase 45 — End-to-end integration tests for the Apart + telescope

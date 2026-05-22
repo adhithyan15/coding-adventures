@@ -4485,43 +4485,91 @@ def _canonicalise_add_operand_order(node: IRNode) -> IRNode:
     return node
 
 
-def _normalise_add_neg_to_sub(node: IRNode) -> IRNode:
-    """Rewrite two-term ``Add`` nodes containing a ``Neg`` into the
-    equivalent ``Sub`` shape, then deep-canonicalise the operand order on
-    every remaining ``Add`` so downstream pattern matchers that key off
-    ``Sub`` (notably the Phase 39 telescope detector in ``cas_summation``)
-    can fire and structural ``==`` comparisons survive operand-order
-    differences between Apart's output and the substituted half.
+def _extract_negation(node: IRNode) -> IRNode | None:
+    """Detect whether ``node`` represents a negation and, if so, return
+    the corresponding positive magnitude (the thing that, prepended with
+    a unary minus, equals ``node``).  Returns ``None`` when ``node`` is
+    not a recognised negation.
 
-    +---------------------------------+----------------+
-    | Input shape                     | Output         |
-    +=================================+================+
-    | ``Add(a, Neg(b))``              | ``Sub(a, b)``  |
-    | ``Add(Neg(b), a)``              | ``Sub(a, b)``  |
-    | ``Add(Neg(a), Neg(b))``         | left untouched |
-    | other (Add with 3+ args, etc.)  | left untouched |
-    +---------------------------------+----------------+
+    Two recognised shapes:
+
+    1.  Top-level ``Neg(x)``                           → ``x``
+    2.  ``Div(c, d)`` with literal ``c < 0`` (numerator carrying the
+        sign)                                          → ``Div(|c|, d)``
+
+    Case 2 is the Phase 46 widening — ``Apart`` of ``5/(k(k+1))`` is
+    ``Add(Div(-5, k+1), Div(5, k))``, with the ``-5`` folded into the
+    numerator rather than a top-level ``Neg`` wrapper.  Without this
+    extraction, ``_normalise_add_neg_to_sub`` can't see the negation
+    and the telescope retry misses.
+    """
+    # Case 1: top-level Neg wrapper.
+    if isinstance(node, IRApply) and node.head == NEG and len(node.args) == 1:
+        return node.args[0]
+    # Case 2: Div with a negative literal numerator.  Only handle the
+    # two-arg ``Div(numer, denom)`` shape — Apart always produces
+    # exactly this shape, and we don't want to over-trigger on other
+    # arities.
+    if isinstance(node, IRApply) and node.head == DIV and len(node.args) == 2:
+        numer, denom = node.args
+        if isinstance(numer, IRInteger) and numer.value < 0:
+            pos = IRInteger(-numer.value)
+            return IRApply(DIV, (pos, denom))
+        if isinstance(numer, IRRational) and numer.numer < 0:
+            pos = IRRational(-numer.numer, numer.denom)
+            return IRApply(DIV, (pos, denom))
+        if isinstance(numer, IRFloat) and numer.value < 0:
+            pos = IRFloat(-numer.value)
+            return IRApply(DIV, (pos, denom))
+    return None
+
+
+def _normalise_add_neg_to_sub(node: IRNode) -> IRNode:
+    """Rewrite two-term ``Add`` nodes containing a (recognised) negation
+    into the equivalent ``Sub`` shape, then deep-canonicalise the
+    operand order on every remaining ``Add`` so downstream pattern
+    matchers that key off ``Sub`` (notably the Phase 39 telescope
+    detector in ``cas_summation``) can fire and structural ``==``
+    comparisons survive operand-order differences between Apart's
+    output and the substituted half.
+
+    +-----------------------------------------+----------------+
+    | Input shape                             | Output         |
+    +=========================================+================+
+    | ``Add(a, Neg(b))``                      | ``Sub(a, b)``  |
+    | ``Add(Neg(b), a)``                      | ``Sub(a, b)``  |
+    | ``Add(a, Div(-c, d))`` (Phase 46)       | ``Sub(a, Div(c, d))`` |
+    | ``Add(Div(-c, d), a)`` (Phase 46)       | ``Sub(a, Div(c, d))`` |
+    | ``Add(Neg(a), Neg(b))``                 | left untouched |
+    | other (Add with 3+ args, etc.)          | left untouched |
+    +-----------------------------------------+----------------+
 
     Only the top-level ``Add`` is rewritten to ``Sub``; the deep ADD
     operand canonicalisation runs everywhere underneath via
     :func:`_canonicalise_add_operand_order`.
+
+    Phase 46 — constant-numerator Apart-retry widening
+    ----------------------------------------------------
+    Before Phase 46 only the top-level ``Neg`` wrapper was recognised,
+    so summands like ``5/(k(k+1))`` — whose ``Apart`` output folds the
+    sign into the ``Div`` numerator (``Div(-5, k+1)``) — fell through
+    the Apart-retry path.  The :func:`_extract_negation` helper now
+    detects both forms uniformly.
     """
     if not isinstance(node, IRApply) or node.head != ADD or len(node.args) != 2:
         return _canonicalise_add_operand_order(node)
     left, right = node.args
-    left_is_neg = isinstance(left, IRApply) and left.head == NEG and len(left.args) == 1
-    right_is_neg = (
-        isinstance(right, IRApply) and right.head == NEG and len(right.args) == 1
-    )
-    if left_is_neg and right_is_neg:
-        # ``Add(Neg(a), Neg(b))`` is genuinely negative on both sides;
-        # leaving it alone preserves the structural identity.
+    left_pos = _extract_negation(left)
+    right_pos = _extract_negation(right)
+    if left_pos is not None and right_pos is not None:
+        # Both sides genuinely negative; leaving alone preserves the
+        # structural identity (no telescope to expose).
         return _canonicalise_add_operand_order(node)
-    if right_is_neg:
-        rewritten = IRApply(SUB, (left, right.args[0]))
+    if right_pos is not None:
+        rewritten = IRApply(SUB, (left, right_pos))
         return _canonicalise_add_operand_order(rewritten)
-    if left_is_neg:
-        rewritten = IRApply(SUB, (right, left.args[0]))
+    if left_pos is not None:
+        rewritten = IRApply(SUB, (right, left_pos))
         return _canonicalise_add_operand_order(rewritten)
     return _canonicalise_add_operand_order(node)
 
