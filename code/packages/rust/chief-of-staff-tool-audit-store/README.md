@@ -96,6 +96,8 @@ The crate keeps the boundary narrow:
   investigation flags for host schedulers
 - supervisor drain reports and summaries expose no-count-drift helpers for
   aligned planned-vs-replayed counts
+- supervisor drain run summaries flatten no-count-drift flags beside stable
+  count-drift classifications
 - supervisor drain summaries flatten plan-drift investigation flags beside
   count- and host-investigation flags
 - supervisor drain reports and summaries expose host-investigation flags that
