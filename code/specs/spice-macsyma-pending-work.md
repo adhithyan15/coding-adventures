@@ -1,8 +1,21 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-21 (after Phase 39 telescoping sums landed and PSS
-> analysis work started).
+> Last updated: 2026-05-22 (after Phase 40 Apart+telescope composition
+> landed in Python).
+>
+> **Phase 40 — Apart + telescope composition (Python only, so far):**
+> `symbolic-vm` 0.64.0 (PR #3872 ✅ merged).  The `sum_handler` now
+> composes the existing partial-fraction decomposition (`Apart`) with the
+> Phase 39 telescoping detector, so classic sums like
+> `∑ 1/(k·(k+1)) = 1 − 1/(N+1)` close in one step.  When the initial
+> `evaluate_sum` returns unevaluated AND the summand has a `Div` head,
+> the handler runs `Apart(f, k)` once, normalises the
+> `Add(Neg(...), ...)` output into `Sub(...)` form, deep-canonicalises
+> `Add` operand order, and re-runs `evaluate_sum`.  Irreducible
+> denominators (e.g. `1/(k²+1)`) stay unevaluated.  TypeScript and Rust
+> ports are blocked on first porting the `Apart` handler itself (those
+> backends don't have partial-fraction decomposition yet).
 >
 > **Phases 37 + 38 + 39 sprint complete:**
 > - **Phase 37** — Weierstrass log form cos branch covers `b < −|a|`: Python
@@ -476,7 +489,7 @@ The Risch integration suite is ~90% complete. Known remaining gaps:
 | Feature | Priority | Notes |
 |---|---|---|
 | **MACSYMA package system** | Low | `:load`, `:algebraic`, `:orthopoly` etc. No design yet. |
-| **Symbolic infinite sums** | Low | `sum` handles Faulhaber, geometric, classic-series, and Phase 39 structural telescoping (finite range) across Python, TypeScript, and Rust (`cas-summation` 0.2.0 — PRs #3706 ✅, #3720 ✅, #3724 ✅). Hypergeometric and partial-fraction-induced telescoping (`Apart` + telescope composition) still open. Infinite telescopes need a limit-aware phase. |
+| **Symbolic infinite sums** | Low | `sum` handles Faulhaber, geometric, classic-series, and Phase 39 structural telescoping (finite range) across Python, TypeScript, and Rust (`cas-summation` 0.2.0 — PRs #3706 ✅, #3720 ✅, #3724 ✅). Phase 40 adds Apart + telescope composition for `1/(k(k+1))` style sums in Python (`symbolic-vm` 0.64.0 — PR #3872 ✅). TS / Rust ports blocked on porting `Apart`. Hypergeometric and limit-aware infinite telescopes (`∑_{k=1}^{∞} 1/(k(k+1)) = 1`) still open. |
 
 #### Diagnostic / tooling gaps
 
