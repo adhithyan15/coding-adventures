@@ -64,11 +64,14 @@ classification comes from the shared `board-vm-language-core`
 `parse_host_endpoint_with_error` summary, so the CLI does not maintain its own
 endpoint scheme or parse-error tables. Endpoint connection labels also come
 from `host_endpoint_connection_label`, which keeps the serial-only baud label
-policy in the shared Rust layer. The smoke report starts with a stable
-`connection transport=...` field so hardware logs can distinguish serial, TCP
-socket, BLE GATT, and RFCOMM runs without parsing endpoint strings. The default
-run budget is intentionally small because the current firmware executes blink
-bytecode synchronously while it prepares the run report.
+policy in the shared Rust layer. Endpoint open paths consume
+`host_endpoint_session_summary`, so the parsed endpoint metadata and display
+label arrive together before this crate touches platform transport APIs. The
+smoke report starts with a stable `connection transport=...` field so hardware
+logs can distinguish serial, TCP socket, BLE GATT, and RFCOMM runs without
+parsing endpoint strings. The default run budget is intentionally small because
+the current firmware executes blink bytecode synchronously while it prepares
+the run report.
 
 `repl` opens the same serial-plan-backed transport, sends `HELLO`, and then
 accepts a small interactive command set: `caps`, `upload-blink`, `upload-gpio-read <pin>

@@ -85,7 +85,9 @@ input, so frontends can present native messages without inventing their own
 endpoint failure taxonomy. `host_endpoint_connection_label` also keeps the
 cross-transport display policy in Rust: serial endpoints carry the runtime baud
 rate in host logs, while TCP and Bluetooth endpoints use the endpoint string
-alone.
+alone. `host_endpoint_session_summary` packages the parsed endpoint metadata
+with that connection label so CLI consumers and language adapters can open a
+session without recombining transport and display policy.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves

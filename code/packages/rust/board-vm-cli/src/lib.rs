@@ -23,12 +23,11 @@ use board_vm_host::{
 };
 use board_vm_language_core::{
     bluetooth_transact_wire_frame,
-    host_endpoint_connection_label as language_host_endpoint_connection_label,
-    parse_host_endpoint_with_error as parse_language_host_endpoint_with_error,
+    host_endpoint_session_summary as language_host_endpoint_session_summary,
     parse_serial_endpoint as parse_language_serial_endpoint, serial_runtime_open_plan_for_target,
     LanguageHostEndpointParseError, LanguageHostEndpointParseErrorKind,
-    LanguageHostEndpointSummary, LanguageHostEndpointTransport, LanguageSerialRuntimeOpenPlan,
-    LANGUAGE_SERIAL_OPEN_SETTLE_MS,
+    LanguageHostEndpointSessionSummary, LanguageHostEndpointTransport,
+    LanguageSerialRuntimeOpenPlan, LANGUAGE_SERIAL_OPEN_SETTLE_MS,
 };
 use board_vm_language_core::{detect_target, discover_devices, LanguageHostDevice};
 use board_vm_protocol::{
@@ -1612,9 +1611,9 @@ fn open_smoke_transport(
 ) -> Result<(SmokeConnectionTransport, String, SessionTransport), CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
-        let endpoint_summary = endpoint_summary(endpoint)?;
+        let endpoint_summary = endpoint_session_summary(endpoint, options.baud_rate)?;
         let endpoint_transport =
-            SessionEndpointTransport::from(endpoint_summary.endpoint_transport);
+            SessionEndpointTransport::from(endpoint_summary.endpoint.endpoint_transport);
         let connection_transport = SmokeConnectionTransport::from(endpoint_transport);
         let transport = open_endpoint_transport(
             endpoint,
@@ -1626,7 +1625,7 @@ fn open_smoke_transport(
         )?;
         return Ok((
             connection_transport,
-            language_host_endpoint_connection_label(&endpoint_summary, options.baud_rate),
+            endpoint_summary.connection_label,
             transport,
         ));
     }
@@ -1649,9 +1648,9 @@ fn open_bootloader_reboot_transport(
 ) -> Result<(SmokeConnectionTransport, String, SessionTransport), CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
-        let endpoint_summary = endpoint_summary(endpoint)?;
+        let endpoint_summary = endpoint_session_summary(endpoint, options.baud_rate)?;
         let endpoint_transport =
-            SessionEndpointTransport::from(endpoint_summary.endpoint_transport);
+            SessionEndpointTransport::from(endpoint_summary.endpoint.endpoint_transport);
         let connection_transport = SmokeConnectionTransport::from(endpoint_transport);
         let transport = open_endpoint_transport(
             endpoint,
@@ -1663,7 +1662,7 @@ fn open_bootloader_reboot_transport(
         )?;
         return Ok((
             connection_transport,
-            language_host_endpoint_connection_label(&endpoint_summary, options.baud_rate),
+            endpoint_summary.connection_label,
             transport,
         ));
     }
@@ -1684,9 +1683,9 @@ fn open_bootloader_reboot_transport(
 fn open_repl_transport(options: &ReplOptions) -> Result<(String, SessionTransport), CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
-        let endpoint_summary = endpoint_summary(endpoint)?;
+        let endpoint_summary = endpoint_session_summary(endpoint, options.baud_rate)?;
         let endpoint_transport =
-            SessionEndpointTransport::from(endpoint_summary.endpoint_transport);
+            SessionEndpointTransport::from(endpoint_summary.endpoint.endpoint_transport);
         let transport = open_endpoint_transport(
             endpoint,
             endpoint_transport,
@@ -1695,10 +1694,7 @@ fn open_repl_transport(options: &ReplOptions) -> Result<(String, SessionTranspor
             options.timeout_ms,
             &options.tcp_config(endpoint),
         )?;
-        return Ok((
-            language_host_endpoint_connection_label(&endpoint_summary, options.baud_rate),
-            transport,
-        ));
+        return Ok((endpoint_summary.connection_label, transport));
     }
 
     open_serial_session_transport(
@@ -1801,17 +1797,20 @@ impl From<SessionEndpointTransport> for SmokeConnectionTransport {
 
 #[cfg(test)]
 fn endpoint_connection_label(endpoint: &str, baud_rate: u32) -> Result<String, CliError> {
-    endpoint_summary(endpoint)
-        .map(|endpoint| language_host_endpoint_connection_label(&endpoint, baud_rate))
+    endpoint_session_summary(endpoint, baud_rate).map(|endpoint| endpoint.connection_label)
 }
 
 #[cfg(test)]
 fn endpoint_transport(endpoint: &str) -> Result<SessionEndpointTransport, CliError> {
-    endpoint_summary(endpoint).map(|endpoint| endpoint.endpoint_transport.into())
+    endpoint_session_summary(endpoint, DEFAULT_BAUD_RATE)
+        .map(|endpoint| endpoint.endpoint.endpoint_transport.into())
 }
 
-fn endpoint_summary(endpoint: &str) -> Result<LanguageHostEndpointSummary, CliError> {
-    parse_language_host_endpoint_with_error(endpoint).map_err(endpoint_parse_error)
+fn endpoint_session_summary(
+    endpoint: &str,
+    baud_rate: u32,
+) -> Result<LanguageHostEndpointSessionSummary, CliError> {
+    language_host_endpoint_session_summary(endpoint, baud_rate).map_err(endpoint_parse_error)
 }
 
 fn endpoint_parse_error(error: LanguageHostEndpointParseError) -> CliError {
