@@ -2,6 +2,102 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 3d: optional Rust fast path for axis-specific `SumFunction.backward` / `MeanFunction.backward` (`dim != None`)
+
+Closes the gap Phase 3c explicitly deferred: the `dim != None`
+branch of `SumFunction.backward` and `MeanFunction.backward` now
+dispatches through Rust at the same `100_000`-cell threshold.
+With this PR, **all reduce-all and axis-specific Sum/Mean
+forward/backward paths** in `ml-framework-core` get the optional
+Rust fast path.
+
+#### Key insight: declare the input shape with size 1 at dim
+
+matrix-cpu's `Broadcast` op requires the source rank to match the
+target rank.  The flat data of `grad_output` is the same whether
+its declared shape is `(K,)` (keepdim=False) or `(1, K)`
+(keepdim=True for a 2-D input with dim=0) — same K floats in the
+same order.
+
+So the helper **always declares the input shape as "target shape
+with size 1 at dim"** regardless of the user's keepdim flag — no
+Reshape op is needed, just a single Broadcast.  This avoids the
+2-op `Reshape → Broadcast` composition the prerequisite design
+sketch assumed.
+
+#### Mean folds /count into the grad in Python
+
+For axis Mean, divide is by `count = target_shape[dim]`.  Rather
+than appending a `Mul` op + materialising an inverse-count
+constant tensor at full target shape, the helper pre-divides each
+grad cell by `count` in Python before packing.  This is cheap —
+the divisor loop is `len(grad_data)` divisions, where `grad_data`
+has the reduced shape (typically much smaller than `target_numel`).
+The alternative of shipping the constant would add
+`target_numel * 4` bytes per call.
+
+#### Implementation
+
+- **`_rust_backend.py`** — adds:
+    - `_broadcast_reduced_grad_via_rust(grad_data, input_shape_with_size1_at_dim, target_shape, device)`:
+      single-op graph helper.  Validates that the declared input
+      shape's product equals `len(grad_data)` (catches caller
+      bugs where the size-1 insertion was forgotten).
+    - `sum_backward_axis_via_rust(grad_data, target_shape, dim, device)`
+      thin wrapper.  Computes the size-1-at-dim shape, ships
+      grad as-is.
+    - `mean_backward_axis_via_rust(grad_data, target_shape, dim, device)`
+      wrapper.  Pre-divides grad by `target_shape[dim]` in Python,
+      then ships through the same single-op graph as Sum.
+
+- **`functions.py`** — imports + 5-line dispatch in
+  `SumFunction.backward` and `MeanFunction.backward` after the
+  negative-dim normalisation; pure-Python axis-loop kernels stay
+  byte-identical in the fallback path.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `numel ≥ 100_000`, `dim != None` | **Rust** (1-op Broadcast) |
+| Extension installed, `numel < 100_000`, `dim != None` | Pure-Python axis loop |
+| `dim is None` | Phase 3c (reduce-all backward) |
+| Extension NOT installed | Pure-Python axis loop |
+
+#### Tests (78 total MX10 tests, was 72)
+
+- **`ReductionAxisParityTests.test_sum_axis_dim0_backward_parity`**
+  and **`test_mean_axis_dim1_backward_parity`** (2 cases, skip if
+  extension missing): builds a 100_000-cell `requires_grad=True`
+  tensor, runs `.sum(dim=0).backward(grad)` / `.mean(dim=1).backward(grad)`
+  via Rust, compares vs pure-Python.  Sum uses exact equality
+  (no float ops); Mean uses `assertAlmostEqual(places=5)` (per-row
+  division round-trips through f32).
+- **`ReductionBackwardFallbackTests`** gains 4 new cases (in
+  addition to Phase 3c's 5): defence-in-depth `RuntimeError` for
+  both axis helpers, plus hand-computed correctness for
+  `sum(dim=0)` on a 2x3 tensor (column broadcast) and
+  `mean(dim=1)` on a 2x3 tensor (row broadcast with /3 scaling).
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**371 passed + 29 skipped (parity tests that need the extension)**;
+the pre-existing `test_device.py` failure on main is unrelated.
+
+### What's NOT in Phase 3d
+
+- Backward-path Rust dispatch for the activation family.  ReLU
+  backward is a mask `g * (x > 0)`; Sigmoid/Tanh backward are
+  small scalar ops on the saved output; GELU/Softmax backwards
+  are multi-op composed graphs.  Each gets its own sub-phase
+  if profiling identifies it as a bottleneck.
+- Multi-axis reductions (e.g. `dim=(0, 2)`).  The Sum/Mean API
+  takes `int | None`, not a tuple, so this is API-shaped not
+  dispatch-shaped — would need surface changes.
+- Other reductions (Min, Max, Std, Var, ArgMin, ArgMax) and
+  their backward paths.  Same story as the forward: Sum/Mean
+  are the most common; others can be added with the same
+  factory.
+
 ### Added — MX10 Phase 3c: optional Rust fast path for reduce-all `SumFunction.backward` / `MeanFunction.backward`
 
 The previous MX10 phases accelerated forward paths for the entire

@@ -1323,3 +1323,170 @@ def mean_backward_reduce_all_via_rust(
     """
     scaled = float(grad_scalar) / float(target_numel)
     return _broadcast_scalar_via_rust(scaled, target_shape, device=device)
+
+
+# ──────────────────────────────────────────────────────────────────
+# Axis-specific reduction backward (MX10 Phase 3d)
+#
+# Phase 3c shipped the dim=None backward.  This adds the dim != None
+# case: grad_output has shape ``a.shape with axis collapsed`` (or
+# with axis size 1 if keepdim was True), and we need to broadcast
+# it back to ``a.shape``.
+#
+# Key observation: matrix-cpu's Broadcast op requires the source
+# rank to match the target rank.  The flat data of grad_output is
+# the same whether its declared shape is ``(K,)`` (keepdim=False) or
+# ``(1, K)`` (keepdim=True for a 2-D input with dim=0) — it's the
+# same K floats in the same order.  So we can **always declare the
+# input shape as "input shape with size 1 at dim"** regardless of
+# the user's keepdim flag — no Reshape op is needed, just Broadcast.
+#
+# For Mean, divide by ``count = a.shape[dim]`` is folded into the
+# input bytes in Python (one division per grad_output cell) so the
+# Rust graph is still a single Broadcast op.  ``count`` is typically
+# tiny (the reduced dimension), so the Python divide loop is cheap
+# vs the alternative of materialising an inverse-count constant
+# tensor at full input shape and appending a Mul op.
+# ──────────────────────────────────────────────────────────────────
+
+
+def _broadcast_reduced_grad_via_rust(
+    grad_data: list[float],
+    input_shape_with_size1_at_dim: tuple[int, ...] | list[int],
+    target_shape: tuple[int, ...],
+    *,
+    device: str | None = None,
+) -> Tensor:
+    """Broadcast a reduced-shape gradient back to ``target_shape``.
+
+    ``grad_data`` is the flat data of grad_output, which has
+    ``len(grad_data)`` elements.  The Rust input tensor is declared
+    with shape ``input_shape_with_size1_at_dim`` (same rank as
+    ``target_shape``, with size 1 at the reduced axis), so
+    matrix-cpu's Broadcast can expand it directly to ``target_shape``.
+
+    Single-op graph: 2 tensors, 1 Broadcast op.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "_broadcast_reduced_grad_via_rust called but Rust backend is "
+            "not available; callers must check "
+            "should_use_rust_for_backward_broadcast() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    grad_numel = len(grad_data)
+    target_shape_list = list(target_shape)
+    input_shape_list = list(input_shape_with_size1_at_dim)
+
+    # Sanity: product of input_shape must equal grad_numel.
+    declared_input_numel = 1
+    for s in input_shape_list:
+        declared_input_numel *= s
+    if declared_input_numel != grad_numel:
+        raise RuntimeError(
+            f"_broadcast_reduced_grad_via_rust: declared input shape "
+            f"{input_shape_list} has product {declared_input_numel} but "
+            f"grad_data has {grad_numel} elements"
+        )
+
+    target_numel = 1
+    for s in target_shape_list:
+        target_numel *= s
+
+    grad_bytes = struct.pack(f"<{grad_numel}f", *grad_data)
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    # input: reduced grad with size 1 at the collapsed axis
+                    {"id": 0, "dtype": "f32", "shape": input_shape_list},
+                    # output: broadcast back to target_shape
+                    {"id": 1, "dtype": "f32", "shape": target_shape_list},
+                ],
+                "inputs": [0],
+                "outputs": [1],
+                "ops": [
+                    {
+                        "kind": "Broadcast",
+                        "input": 0,
+                        "target_shape": target_shape_list,
+                        "output": 1,
+                    }
+                ],
+                "constants": [],
+            },
+            "inputs": [grad_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_hex = result["outputs"][0]
+    out_bytes = bytes.fromhex(out_hex)
+
+    expected_bytes = target_numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"_broadcast_reduced_grad_via_rust: expected {expected_bytes} "
+            f"output bytes ({target_numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{target_numel}f", out_bytes))
+
+    return _Tensor(out_floats, target_shape, device=device)
+
+
+def sum_backward_axis_via_rust(
+    grad_data: list[float],
+    target_shape: tuple[int, ...],
+    dim: int,
+    *,
+    device: str | None = None,
+) -> Tensor:
+    """``SumFunction.backward(grad)`` for ``dim != None``.
+
+    The grad_output is treated as if it had shape
+    ``target_shape with size 1 at dim`` (which works regardless of
+    the user's original keepdim flag — the flat data ordering is the
+    same).  Single Broadcast op expands to ``target_shape``.
+    """
+    input_shape_with_size1_at_dim = list(target_shape)
+    input_shape_with_size1_at_dim[dim] = 1
+    return _broadcast_reduced_grad_via_rust(
+        grad_data,
+        input_shape_with_size1_at_dim,
+        target_shape,
+        device=device,
+    )
+
+
+def mean_backward_axis_via_rust(
+    grad_data: list[float],
+    target_shape: tuple[int, ...],
+    dim: int,
+    *,
+    device: str | None = None,
+) -> Tensor:
+    """``MeanFunction.backward(grad)`` for ``dim != None``.
+
+    Pre-divides each grad cell by ``count = target_shape[dim]`` in
+    Python (``len(grad_data)`` cheap float divisions) before
+    packing, then broadcasts the pre-scaled values.  This keeps the
+    Rust graph at one Broadcast op — the alternative of appending
+    a Mul + materialising an inverse-count constant tensor at
+    target_shape would cost an extra ``product(target_shape) * 4``
+    bytes per call to ship the constant.
+    """
+    count = float(target_shape[dim])
+    scaled_grad = [g / count for g in grad_data]
+    input_shape_with_size1_at_dim = list(target_shape)
+    input_shape_with_size1_at_dim[dim] = 1
+    return _broadcast_reduced_grad_via_rust(
+        scaled_grad,
+        input_shape_with_size1_at_dim,
+        target_shape,
+        device=device,
+    )

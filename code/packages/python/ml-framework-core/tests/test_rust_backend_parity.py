@@ -665,6 +665,81 @@ class ReductionAxisParityTests(unittest.TestCase):
 
         self._assert_close_vec(rust_result.data, python_result.data)
 
+    def test_sum_axis_dim0_backward_parity(self) -> None:
+        """``a.sum(dim=0).backward(grad)`` — axis-specific backward.
+
+        Phase 3d — broadcasts the reduced grad back to a.shape via
+        a single Broadcast op.  Expected: each input gradient cell
+        equals the corresponding grad_output cell (no scaling for
+        Sum), broadcast along the reduced axis.
+
+        Hand-computed: ``a.shape = (500, 200)``, sum along dim=0
+        produces ``(200,)``.  Backward with ``grad = [k for k in
+        range(200)]`` gives gradient where every row of the input
+        is the gradient vector itself.
+        """
+        from ml_framework_core import Tensor, _rust_backend
+
+        # Use small, non-random values so any indexing bug is
+        # obvious.  Backward only depends on shape and the grad
+        # passed in.
+        a_data = [0.0] * (500 * 200)
+        a = Tensor(a_data, self.SHAPE, requires_grad=True)
+        s = a.sum(dim=0)
+        # grad = [0, 1, 2, ..., 199]
+        grad = Tensor([float(k) for k in range(200)], (200,))
+        s.backward(grad)
+        rust_grad = a.grad
+        self.assertIsNotNone(rust_grad)
+        self.assertEqual(rust_grad.shape, self.SHAPE)
+
+        a2 = Tensor(list(a_data), self.SHAPE, requires_grad=True)
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            s_py = a2.sum(dim=0)
+            s_py.backward(Tensor([float(k) for k in range(200)], (200,)))
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        # Exact equality — pure data movement, no float ops.
+        self.assertEqual(rust_grad.data, a2.grad.data)
+
+    def test_mean_axis_dim1_backward_parity(self) -> None:
+        """``a.mean(dim=1).backward(grad)`` — Mean axis backward.
+
+        Mean folds ``/count`` into the grad in Python before
+        broadcasting.  For ``a.shape = (500, 200)`` reduced along
+        dim=1, count = 200.  Each input cell of row k gets
+        ``grad[k] / 200``.
+
+        Uses ``assertAlmostEqual(places=5)`` because the per-row
+        division round-trips through f32 (matrix-cpu's f32-only
+        dtype is the binding constraint, not the Python pre-divide).
+        """
+        from ml_framework_core import Tensor, _rust_backend
+
+        a_data = [0.0] * (500 * 200)
+        a = Tensor(a_data, self.SHAPE, requires_grad=True)
+        m = a.mean(dim=1)
+        # grad = [1, 1, ..., 1] of shape (500,)
+        m.backward(Tensor([1.0] * 500, (500,)))
+        rust_grad = a.grad
+        self.assertIsNotNone(rust_grad)
+        self.assertEqual(rust_grad.shape, self.SHAPE)
+
+        a2 = Tensor(list(a_data), self.SHAPE, requires_grad=True)
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            m_py = a2.mean(dim=1)
+            m_py.backward(Tensor([1.0] * 500, (500,)))
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        for got, want in zip(rust_grad.data, a2.grad.data, strict=False):
+            self.assertAlmostEqual(got, want, places=5)
+
 
 # ──────────────────────────────────────────────────────────────────
 # MX10 Phase 4 — activation parity tests (Tanh + ReLU)

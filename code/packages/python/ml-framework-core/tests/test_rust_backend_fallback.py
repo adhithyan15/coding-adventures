@@ -393,6 +393,55 @@ class ReductionBackwardFallbackTests(unittest.TestCase):
         self.assertEqual(a.grad.shape, (4,))
         self.assertEqual(a.grad.data, [2.0, 2.0, 2.0, 2.0])
 
+    def test_sum_axis_backward_via_rust_raises_when_unavailable(self) -> None:
+        """``sum_backward_axis_via_rust`` must raise (defence-in-depth)."""
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.sum_backward_axis_via_rust(
+                [1.0, 2.0, 3.0], (2, 3), dim=0
+            )
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_mean_axis_backward_via_rust_raises_when_unavailable(self) -> None:
+        """``mean_backward_axis_via_rust`` must raise."""
+        with self.assertRaises(RuntimeError):
+            _rust_backend.mean_backward_axis_via_rust(
+                [1.0, 2.0, 3.0], (2, 3), dim=0
+            )
+
+    def test_sum_axis_backward_correct_via_fallback(self) -> None:
+        """``a.sum(dim=0).backward(grad)`` broadcasts column-wise.
+
+        Hand-computed: for ``a.shape = (2, 3)`` and
+        ``grad = [10, 20, 30]``, the input gradient is
+        ``[[10,20,30],[10,20,30]]`` (every row of the input
+        gets the same column-grad).
+        """
+        a = Tensor([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], (2, 3), requires_grad=True)
+        s = a.sum(dim=0)
+        s.backward(Tensor([10.0, 20.0, 30.0], (3,)))
+        self.assertIsNotNone(a.grad)
+        self.assertEqual(a.grad.shape, (2, 3))
+        self.assertEqual(
+            a.grad.data, [10.0, 20.0, 30.0, 10.0, 20.0, 30.0]
+        )
+
+    def test_mean_axis_backward_correct_via_fallback(self) -> None:
+        """``a.mean(dim=1).backward(grad)`` broadcasts row-wise / count.
+
+        For ``a.shape = (2, 3)`` and ``grad = [6, 12]``,
+        count along dim=1 is 3, so input gradient is
+        ``[[2,2,2],[4,4,4]]`` (each row k's grad spreads as
+        ``grad[k] / 3`` across all 3 columns).
+        """
+        a = Tensor([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], (2, 3), requires_grad=True)
+        m = a.mean(dim=1)
+        m.backward(Tensor([6.0, 12.0], (2,)))
+        self.assertIsNotNone(a.grad)
+        self.assertEqual(a.grad.shape, (2, 3))
+        self.assertEqual(
+            a.grad.data, [2.0, 2.0, 2.0, 4.0, 4.0, 4.0]
+        )
+
 
 # ──────────────────────────────────────────────────────────────────
 # MX10 Phase 3b — axis-specific reduction fallback tests

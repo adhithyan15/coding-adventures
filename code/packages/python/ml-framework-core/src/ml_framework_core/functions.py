@@ -50,6 +50,7 @@ from ._rust_backend import (
     gelu_via_rust,
     matmul_via_rust,
     mean_axis_via_rust,
+    mean_backward_axis_via_rust,
     mean_backward_reduce_all_via_rust,
     mean_via_rust,
     mul_via_rust,
@@ -64,6 +65,7 @@ from ._rust_backend import (
     softmax_via_rust,
     sub_via_rust,
     sum_axis_via_rust,
+    sum_backward_axis_via_rust,
     sum_backward_reduce_all_via_rust,
     sum_via_rust,
     tanh_via_rust,
@@ -512,6 +514,18 @@ class SumFunction(Function):
         if dim < 0:
             dim = a.ndim + dim
 
+        # MX10 Phase 3d — optional Rust fast path (axis-specific
+        # backward).  Same threshold as Phase 3c.  The Rust helper
+        # declares grad_output with shape "input shape with size 1
+        # at dim" — which works regardless of the user's keepdim
+        # flag because the flat data ordering matches either way.
+        if should_use_rust_for_backward_broadcast(a.numel):
+            return (
+                sum_backward_axis_via_rust(
+                    grad_output.data, a.shape, dim, device=a.device
+                ),
+            )
+
         # Expand gradient along the reduced dimension
         grad_data = [0.0] * a.numel
         strides = _compute_strides(a.shape)
@@ -605,6 +619,17 @@ class MeanFunction(Function):
         if dim < 0:
             dim = a.ndim + dim
         count = a.shape[dim]
+
+        # MX10 Phase 3d — optional Rust fast path.  Pre-divides each
+        # grad cell by ``count`` in Python (cheap — len(grad_data)
+        # divisions, where grad_data is the reduced shape) then
+        # broadcasts.  Same single-op Broadcast graph as Sum.
+        if should_use_rust_for_backward_broadcast(a.numel):
+            return (
+                mean_backward_axis_via_rust(
+                    grad_output.data, a.shape, dim, device=a.device
+                ),
+            )
 
         # Expand gradient (same as SumFunction) then divide by count
         sum_grad_fn = SumFunction()
