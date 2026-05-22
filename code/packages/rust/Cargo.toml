@@ -487,6 +487,7 @@ members = [
     "x25519",
     "type-checker-protocol",
     "type-declarations",
+    "type-sidecar",
     "grammar-type-checker",
     "nib-lexer",
     "nib-parser",

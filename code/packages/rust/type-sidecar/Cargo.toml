@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-type-sidecar"
+version = "0.1.0"
+edition = "2021"
+description = "Type sidecar — the producer-agnostic format that carries JS/TS type information into the Closure pipeline. Per CLOC04, JSDoc / TypeScript / hand-written annotations all emit the same shape; downstream typechecker and passes consume Sidecars without caring who wrote them."
+
+[dependencies]
+# Note: not depending on coding_adventures_correlation_vector for v1 — CvId
+# is a String alias here (matching the correlation-vector crate's current
+# representation). When CvId is promoted to a real newtype, this crate
+# will pick that up as a real dependency.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
