@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.3.0] - 2026-05-20
+
+### Added (Phase 6b — `if … else … end` and `unless`)
+- New grammar rules in `code/grammars/ruby.grammar`:
+
+      if_statement     = "if" expression { !"else" !"elsif" !"end" statement }
+                           { elsif_clause } [ else_clause ] "end"
+      elsif_clause     = "elsif" expression { !"else" !"elsif" !"end" statement }
+      else_clause      = "else" { !"end" statement }
+      unless_statement = "unless" expression { !"else" !"end" statement }
+                           [ else_clause ] "end"
+
+- `if_statement` and `unless_statement` are added as alternatives in `statement` right after `def_statement`, so the dispatch order is: def → if → unless → assignment → method_call → expression_stmt.
+- The body repetitions all use negative lookaheads (`!"end"`, `!"else"`, `!"elsif"`) so they stop short of the closing keyword — same trick as `def_statement` in Phase 6a.
+- Regenerated `src/_grammar.rs`.
+
+### Tests (+4 new, total 14)
+- `if` with body, `if`/`else`, `if`/`elsif`/`else`, `unless`.
+
 ## [0.2.0] - 2026-05-20
 
 ### Added (Phase 6a — `def name(params) … end` method definitions)

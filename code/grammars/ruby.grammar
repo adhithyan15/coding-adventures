@@ -25,9 +25,13 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = def_statement | assignment | method_call | expression_stmt ;
+statement    = def_statement | if_statement | unless_statement | assignment | method_call | expression_stmt ;
 def_statement = "def" NAME [ LPAREN [ params ] RPAREN ] { !"end" statement } "end" ;
 params       = NAME { COMMA NAME } ;
+if_statement = "if" expression { !"else" !"elsif" !"end" statement } { elsif_clause } [ else_clause ] "end" ;
+elsif_clause = "elsif" expression { !"else" !"elsif" !"end" statement } ;
+else_clause  = "else" { !"end" statement } ;
+unless_statement = "unless" expression { !"else" !"end" statement } [ else_clause ] "end" ;
 assignment   = NAME EQUALS expression ;
 method_call  = ( NAME | KEYWORD ) LPAREN [ expression { COMMA expression } ] RPAREN ;
 expression_stmt = expression ;
