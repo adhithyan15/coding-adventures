@@ -2,6 +2,81 @@
 
 All notable changes to this crate are documented here.
 
+## [0.5.0] — 2026-05-22 (Brainfuck — `byte[]` tape + I/O via env.BFRuntime)
+
+### Added — Brainfuck `load_mem` / `store_mem` / `call_builtin` lowering
+
+Stage 3 of 4 for the BF→{wasm,jvm,clr,beam} story.  Mirrors PR #3921
+(iir-to-wasm 0.4.0) and PR #3928 (iir-to-jvm-class-file 0.5.0) for the
+CLR target.  Lets BF's IIR — including `load_mem`, `store_mem`, and
+`call_builtin "putchar"`/`"getchar"` — flow through the same universal
+`iir-to-cil-bytecode` backend that Twig, BASIC, Oct, and Nib already
+use.
+
+#### Validator changes
+
+- `load_mem` and `store_mem` removed from `UNSUPPORTED_OPS` (previously
+  hard-rejected).  Both lower to CIL `ldelem.u1` / `stelem.i1` over a
+  host-provided byte array.
+- `call_builtin` is now **conditionally** accepted via a new
+  `CALL_BUILTIN_SUPPORTED_NAMES` whitelist (currently
+  `["putchar", "getchar"]`).  Unknown builtin names still produce a
+  clear `UnsupportedOp` error that includes the rejected name and the
+  whitelist.
+
+#### Lowering changes
+
+- Three new reserved metadata tokens referencing the simulated
+  `env.BFRuntime` host class:
+  - `BF_TAPE_TOKEN   = 0x0400_0001` — FieldRef row 1, the static `byte[] __tape`.
+  - `BF_PUTCHAR_TOKEN = 0x0A00_0003` — MemberRef row 3 (Console.WriteLine is row 2),
+    `void env.BFRuntime::putchar(int32)`.
+  - `BF_GETCHAR_TOKEN = 0x0A00_0004` — MemberRef row 4,
+    `int32 env.BFRuntime::getchar()`.
+- New `emit_instr` arms:
+  - `load_mem v ptr` → `ldsfld BF_TAPE_TOKEN; ldloc ptr; ldelem.u1;
+    stloc dest`.  `ldelem.u1` zero-extends the byte to int32 — matching
+    BF's u8 cell semantics without the sign-extension surgery the JVM
+    target requires after `baload`.
+  - `store_mem ptr v` → `ldsfld BF_TAPE_TOKEN; ldloc ptr; ldloc v;
+    stelem.i1`.  `stelem.i1` truncates the int32 to a byte, matching
+    BF's u8 wraparound.
+  - `call_builtin "putchar" v` → `ldloc v; call BF_PUTCHAR_TOKEN`.
+  - `call_builtin "getchar" -> v` → `call BF_GETCHAR_TOKEN; stloc v`.
+- Defense in depth: hand-crafted IIR that slips an unknown builtin
+  past the validator still hits a `UnsupportedOp` in `lower.rs`.
+
+#### Host class contract
+
+The CLR runtime / launcher (or PE packager) must provide `env.BFRuntime`:
+
+| Symbol                                       | Metadata token reserved | Notes                          |
+|----------------------------------------------|--------------------------|--------------------------------|
+| `public static byte[] __tape`                | FieldRef row 1           | typically 30 KB BF tape         |
+| `public static void putchar(int32)`          | MemberRef row 3          | write one byte to stdout        |
+| `public static int32 getchar()`              | MemberRef row 4          | read one byte; -1 / 0 on EOF     |
+
+This is the CLR analog of the WASM backend's `env` import namespace
+and the JVM backend's `env/BFRuntime` class — same model, different ABI.
+
+### Tests
+
+- 5 new validator unit tests (`load_mem_accepted_for_bf`,
+  `store_mem_accepted_for_bf`, `call_builtin_putchar_accepted`,
+  `call_builtin_getchar_accepted`,
+  `call_builtin_unknown_name_rejected`).
+- 33 lib + 83 integration tests pass.
+- 4 new BF→CLR e2e tests in
+  `brainfuck-iir-compiler/tests/clr_e2e.rs` assert exact byte
+  sequences for `call BF_PUTCHAR_TOKEN`, `ldsfld BF_TAPE_TOKEN`,
+  and `call BF_GETCHAR_TOKEN`.
+
+### Compatibility
+
+- Non-BF frontends (Twig, BASIC, Oct, Nib) unchanged.  Modules without
+  BF features get no `env.BFRuntime` token references, preserving CIL
+  byte-equivalence with pre-0.5.0 output.
+
 ## [0.4.1] — 2026-05-13
 
 ### Fixed (Multi-backend demo — fib(10)=55)
