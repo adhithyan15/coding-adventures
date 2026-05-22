@@ -290,5 +290,36 @@ mod tests {
         let ast = parse_ruby("unless x\n  y = 1\nend");
         assert!(find_statement_inner(&ast, "unless_statement").is_some());
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6c — `while` / `until` loops
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_while() {
+        let ast = parse_ruby("while x\n  y = 1\nend");
+        let node = find_statement_inner(&ast, "while_statement")
+            .expect("expected while_statement");
+        let body_count = node
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "statement"))
+            .count();
+        assert!(body_count >= 1);
+    }
+
+    #[test]
+    fn test_parse_until() {
+        let ast = parse_ruby("until x\n  y = 1\nend");
+        assert!(find_statement_inner(&ast, "until_statement").is_some());
+    }
+
+    #[test]
+    fn test_parse_while_empty_body() {
+        // `while cond ; end` — zero-iteration body.  The grammar's
+        // Repetition matches zero statements, then `end` closes.
+        let ast = parse_ruby("while x\nend");
+        assert!(find_statement_inner(&ast, "while_statement").is_some());
+    }
 }
 

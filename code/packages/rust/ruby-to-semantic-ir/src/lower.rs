@@ -103,6 +103,7 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
     for f in [
         Feature::DynamicTyping,
         Feature::MutableBindings,
+        Feature::Loops,
         Feature::Closures,
     ] {
         if lw.features_used.contains(&f) {
@@ -300,6 +301,12 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
+            "while_statement" | "until_statement" => {
+                // Phase 6c: SIR's `Stmt::While` is the canonical
+                // top-level loop — `until cond` lowers to
+                // `while !cond` (wrap the condition in `not`).
+                self.lower_while_or_until(node)
+            }
             other => Err(RubyLowerError {
                 message: format!("unsupported statement form `{other}`"),
                 line: node.start_line.unwrap_or(0),
@@ -475,6 +482,46 @@ impl Lowerer {
         Ok(Block {
             stmts: stmts_out,
             value,
+            span: self.span_of(node),
+        })
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 6c — `while cond … end` / `until cond … end`
+    // -------------------------------------------------------------------
+
+    /// Lower a `while_statement` or `until_statement` into a
+    /// `Stmt::While`.  `until cond` lowers to `while !cond`
+    /// (condition wrapped in `BuiltinCall("not", ...)`).
+    fn lower_while_or_until(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Stmt, RubyLowerError> {
+        let is_until = node.rule_name == "until_statement";
+        let cond_node = self
+            .find_node_child(node, "expression")
+            .ok_or_else(|| RubyLowerError {
+                message: format!("{} missing condition expression", node.rule_name),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let mut cond = self.lower_expression(cond_node)?;
+        if is_until {
+            cond = Expr::BuiltinCall {
+                name: "not".to_string(),
+                args: vec![cond],
+                effects: EffectSet::PURE,
+                span: self.span_of(cond_node),
+            };
+        }
+        let body = self.lower_clause_statements(node)?;
+        // Phase 6c: the SIR validator requires `loops` to be
+        // declared whenever the module emits a `Stmt::While` /
+        // `Stmt::ForRange` / `Stmt::ForEach`.
+        self.features_used.insert(Feature::Loops);
+        Ok(Stmt::While {
+            cond,
+            body,
             span: self.span_of(node),
         })
     }
