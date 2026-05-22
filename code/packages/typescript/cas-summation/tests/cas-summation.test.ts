@@ -483,3 +483,86 @@ describe("summation: Phase 44 Log divergence", () => {
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 40+46 (TypeScript port): Add-with-negation telescope normaliser.
+//
+// Ports the Python helpers `_extract_negation` and
+// `_normalise_add_neg_to_sub` so that a user-written summand in
+// `Add(g(k+1), Neg(g(k)))` or `Add(g(k+1), Div(-c, d))` form is
+// rewritten to the canonical `Sub` shape before the Phase 39 / 41
+// telescope detectors run.
+//
+// On the Python side this also feeds the symbolic-vm Apart-retry path,
+// but `cas-summation` (TypeScript) doesn't depend on an Apart
+// implementation — the value here is purely letting the telescope
+// detector match more shapes the user might write directly.
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 40+46 Add-with-negation normaliser", () => {
+  it("Add(g(k+1), Neg(g(k))) is treated as Sub(g(k+1), g(k)) — standard", () => {
+    // ∑_{k=1}^∞ [1/(k+1) + Neg(1/k)] = -1 (same as the canonical
+    // Phase 41 standard-orientation case, just spelled differently).
+    const k = sym("k");
+    const f = app(ADD, [
+      app(DIV, [int(1), app(ADD, [k, int(1)])]),
+      app(NEG, [app(DIV, [int(1), k])]),
+    ]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(int(-1));
+  });
+
+  it("Add(Neg(g(k)), g(k+1)) — order swapped — still closes", () => {
+    const k = sym("k");
+    const f = app(ADD, [
+      app(NEG, [app(DIV, [int(1), k])]),
+      app(DIV, [int(1), app(ADD, [k, int(1)])]),
+    ]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(int(-1));
+  });
+
+  it("Add(g(k), Div(-1, k+1)) (Phase 46: numerator-folded Neg) — antisymmetric", () => {
+    // ∑_{k=1}^∞ [1/k + (-1)/(k+1)] = 1 (antisymmetric).
+    const k = sym("k");
+    const f = app(ADD, [
+      app(DIV, [int(1), k]),
+      app(DIV, [int(-1), app(ADD, [k, int(1)])]),
+    ]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(int(1));
+  });
+
+  it("Add(Div(-c, k+1), Div(c, k)) with c=5 (non-unit constant) closes to 5", () => {
+    // ∑_{k=1}^∞ [(-5)/(k+1) + 5/k] = 5 — the Phase 46 constant-numerator
+    // case after numerator-folded negation detection.
+    const k = sym("k");
+    const f = app(ADD, [
+      app(DIV, [int(-5), app(ADD, [k, int(1)])]),
+      app(DIV, [int(5), k]),
+    ]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(int(5));
+  });
+
+  it("Add(Div(1/2, k), Div(-1/2, k+1)) with rational numerator closes to 1/2", () => {
+    // Exercises the IRRational arm of extractNegation's symmetric case.
+    const k = sym("k");
+    const f = app(ADD, [
+      app(DIV, [rational(1, 2), k]),
+      app(DIV, [rational(-1, 2), app(ADD, [k, int(1)])]),
+    ]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(rational(1, 2));
+  });
+
+  it("Add(Neg(a), Neg(b)) (both negative) is left untouched — no telescope", () => {
+    // ∑_{k=1}^N [-1 + -1/(k+1)] should NOT route through the telescope
+    // detector; it has no g(k+1)−g(k) structure even after rewriting.
+    const k = sym("k");
+    const f = app(ADD, [
+      app(NEG, [app(DIV, [int(1), k])]),
+      app(NEG, [app(DIV, [int(1), app(ADD, [k, int(1)])])]),
+    ]);
+    // The summand doesn't telescope, so we expect the result NOT to be
+    // the closed-form integer 1 or -1.  It either evaluates numerically
+    // (for finite hi) or stays as an unevaluated Sum (for ∞).
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});

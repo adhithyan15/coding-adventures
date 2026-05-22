@@ -683,3 +683,109 @@ fn phase44_log_of_negative_polynomial_refuses() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ---------------------------------------------------------------------------
+// Phase 40+46 (Rust port): Add-with-negation telescope normaliser.
+//
+// Ports the Python helpers `_extract_negation` and
+// `_normalise_add_neg_to_sub` so a user-written summand in
+// `Add(g(k+1), Neg(g(k)))` or `Add(g(k+1), Div(-c, d))` form is
+// rewritten to the canonical `Sub` shape before the Phase 39 / 41
+// telescope detectors run.
+//
+// On the Python side this also feeds the symbolic-vm Apart-retry path,
+// but `cas-summation` (Rust) doesn't depend on an Apart implementation
+// — the value here is purely letting the telescope detector match
+// more shapes the user might write directly.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase46_add_neg_standard_orientation() {
+    // ∑_{k=1}^∞ [1/(k+1) + Neg(1/k)] = -1.
+    let k = sym("k");
+    let f = apply(
+        sym(ADD),
+        vec![
+            apply(sym(DIV), vec![int(1), apply(sym(ADD), vec![k.clone(), int(1)])]),
+            apply(sym(NEG), vec![apply(sym(DIV), vec![int(1), k.clone()])]),
+        ],
+    );
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert_eq!(out, int(-1));
+}
+
+#[test]
+fn phase46_add_neg_order_swapped() {
+    // ∑_{k=1}^∞ [Neg(1/k) + 1/(k+1)] = -1.
+    let k = sym("k");
+    let f = apply(
+        sym(ADD),
+        vec![
+            apply(sym(NEG), vec![apply(sym(DIV), vec![int(1), k.clone()])]),
+            apply(sym(DIV), vec![int(1), apply(sym(ADD), vec![k.clone(), int(1)])]),
+        ],
+    );
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert_eq!(out, int(-1));
+}
+
+#[test]
+fn phase46_div_with_negative_numerator_antisymmetric() {
+    // ∑_{k=1}^∞ [1/k + (-1)/(k+1)] = 1 (numerator-folded Neg).
+    let k = sym("k");
+    let f = apply(
+        sym(ADD),
+        vec![
+            apply(sym(DIV), vec![int(1), k.clone()]),
+            apply(sym(DIV), vec![int(-1), apply(sym(ADD), vec![k.clone(), int(1)])]),
+        ],
+    );
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert_eq!(out, int(1));
+}
+
+#[test]
+fn phase46_div_with_negative_numerator_non_unit_constant() {
+    // ∑_{k=1}^∞ [Div(-5, k+1) + Div(5, k)] = 5 — the constant-numerator case.
+    let k = sym("k");
+    let f = apply(
+        sym(ADD),
+        vec![
+            apply(sym(DIV), vec![int(-5), apply(sym(ADD), vec![k.clone(), int(1)])]),
+            apply(sym(DIV), vec![int(5), k.clone()]),
+        ],
+    );
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert_eq!(out, int(5));
+}
+
+#[test]
+fn phase46_div_with_rational_negative_numerator() {
+    // ∑_{k=1}^∞ [Div(1/2, k) + Div(-1/2, k+1)] = 1/2.
+    // Exercises the IRNode::Rational arm of extract_negation.
+    let k = sym("k");
+    let f = apply(
+        sym(ADD),
+        vec![
+            apply(sym(DIV), vec![rat(1, 2), k.clone()]),
+            apply(sym(DIV), vec![rat(-1, 2), apply(sym(ADD), vec![k.clone(), int(1)])]),
+        ],
+    );
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert_eq!(out, rat(1, 2));
+}
+
+#[test]
+fn phase46_both_negative_left_untouched() {
+    // Add(Neg(a), Neg(b)) has no telescope structure — stays unevaluated.
+    let k = sym("k");
+    let f = apply(
+        sym(ADD),
+        vec![
+            apply(sym(NEG), vec![apply(sym(DIV), vec![int(1), k.clone()])]),
+            apply(sym(NEG), vec![apply(sym(DIV), vec![int(1), apply(sym(ADD), vec![k.clone(), int(1)])])]),
+        ],
+    );
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}

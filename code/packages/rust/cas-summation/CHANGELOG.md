@@ -1,5 +1,65 @@
 # Changelog
 
+## 0.6.0 — 2026-05-22
+
+**Phase 40+46 — Add-with-negation telescope normaliser (Rust port).**
+
+Ports the Python helpers ``_extract_negation`` and
+``_normalise_add_neg_to_sub`` (introduced in ``symbolic-vm``
+0.50/0.70).  Widens ``try_telescoping`` to accept summands written in
+``Add(g(k+1), Neg(g(k)))`` or ``Add(g(k+1), Div(-c, d))`` form by
+rewriting them to the canonical ``Sub`` shape before the structural
+match runs.
+
+### Why this is useful in Rust even without ``Apart``
+
+The Python ``Apart`` step (``symbolic-vm`` 0.50/0.70) emits
+``Add(Div(-c, k+1), Div(c, k))``, exactly the shape the new
+normaliser targets.  On the Rust side ``cas-summation`` doesn't own
+an ``Apart`` implementation, but users (or upstream pipelines) who
+emit the same shape directly now get the telescope closure for free.
+
+### Added
+
+- **`extract_negation(node: &IRNode) -> Option<IRNode>`** — uniformly
+  detects a negation in two recognised forms:
+  1.  Top-level ``Neg(x)``                         → ``x``
+  2.  ``Div(c, d)`` with literal ``c < 0``         → ``Div(|c|, d)``.
+  Handles ``IRNode::Integer``, ``IRNode::Rational``, and
+  ``IRNode::Float`` numerators.
+- **`normalise_add_neg_to_sub(node: &IRNode) -> IRNode`** — rewrites
+  two-term ``Add`` containing a recognised negation into the
+  equivalent ``Sub`` shape; returns the input clone unchanged when
+  no rewrite applies (including the both-sides-negative case).
+
+### Changed
+
+- ``try_telescoping`` now calls ``normalise_add_neg_to_sub`` on
+  ``Add`` inputs before the ``SUB`` head check.  Pure ``Sub`` and
+  non-``Add`` shapes are untouched (zero cost).
+
+### Added — tests
+
+`tests/tests.rs` — 6 new ``phase46_*`` tests covering:
+
+- ``Add(g(k+1), Neg(g(k)))`` closes to −1 (standard orientation).
+- ``Add(Neg(g(k)), g(k+1))`` closes to −1 (operand-order swap).
+- ``Add(g(k), Div(-1, k+1))`` closes to 1 (numerator-folded Neg,
+  antisymmetric).
+- ``Add(Div(-5, k+1), Div(5, k))`` closes to 5 (non-unit integer
+  constant — the Python Phase 46 case).
+- ``Add(Div(1/2, k), Div(-1/2, k+1))`` closes to 1/2
+  (``IRNode::Rational`` numerator path).
+- ``Add(Neg(a), Neg(b))`` intentionally stays unevaluated — no
+  telescope to expose.
+
+Full suite: **37 passed** (was 31; +6 net new).
+
+### Still deferred
+
+- ``Apart`` partial-fraction-decomposition handler.
+- Transcendental limit-finder.
+
 ## 0.5.0 — 2026-05-22
 
 **Phase 44 — Log divergence recogniser (Rust port).**

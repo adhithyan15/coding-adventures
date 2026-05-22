@@ -1,5 +1,69 @@
 # Changelog
 
+## 0.6.0 — 2026-05-22
+
+**Phase 40+46 — Add-with-negation telescope normaliser (TypeScript port).**
+
+Ports the Python helpers ``_extract_negation`` and
+``_normalise_add_neg_to_sub`` (introduced in symbolic-vm 0.50/0.70).
+Widens ``tryTelescoping`` to accept summands written in
+``Add(g(k+1), Neg(g(k)))`` or ``Add(g(k+1), Div(-c, d))`` form by
+rewriting them to the canonical ``Sub`` shape before the structural
+match runs.
+
+### Why this is useful in TS even without ``Apart``
+
+The Python ``Apart`` step (Phase 40 + Phase 46 in ``symbolic-vm``)
+emits ``Add(Div(-c, k+1), Div(c, k))``, which is exactly the shape
+the new normaliser targets.  On the TS side ``cas-summation`` doesn't
+own an ``Apart`` implementation, but users (or upstream pipelines)
+who emit the same shape directly now get the telescope closure for
+free — no churn at the call site required.
+
+### Added
+
+- **`extractNegation(node): IRNode | undefined`** — uniformly
+  detects a negation in two recognised forms:
+  1.  ``Neg(x)`` (top-level wrapper)               → ``x``
+  2.  ``Div(c, d)`` with literal ``c < 0`` (numerator-folded sign)
+      → ``Div(|c|, d)``.  Handles integer and rational numerators.
+- **`normaliseAddNegToSub(node): IRNode`** — rewrites two-term
+  ``Add`` containing a recognised negation into the equivalent ``Sub``
+  shape (returns input unchanged when no rewrite applies, including
+  the both-sides-negative case).
+
+### Changed
+
+- ``tryTelescoping`` now calls ``normaliseAddNegToSub`` on ``Add``
+  inputs before the ``SUB`` head check.  Pure ``Sub`` and non-``Add``
+  shapes are untouched (zero cost).
+
+### Added — tests
+
+`tests/cas-summation.test.ts` — new
+``summation: Phase 40+46 Add-with-negation normaliser`` describe
+block with 6 cases:
+
+- ``Add(g(k+1), Neg(g(k)))`` closes to −1 (standard orientation).
+- ``Add(Neg(g(k)), g(k+1))`` closes to −1 (operand-order swap).
+- ``Add(g(k), Div(-1, k+1))`` closes to 1 (numerator-folded Neg,
+  antisymmetric).
+- ``Add(Div(-5, k+1), Div(5, k))`` closes to 5 (non-unit constant —
+  the Python Phase 46 constant-numerator case).
+- ``Add(Div(1/2, k), Div(-1/2, k+1))`` closes to 1/2 (rational
+  numerator).
+- ``Add(Neg(a), Neg(b))`` (both sides negative) intentionally
+  stays unevaluated — no telescope to expose.
+
+Full suite: **37 passed** (was 31; +6 net new).
+
+### Still deferred
+
+- ``Apart`` partial-fraction-decomposition handler.  Until ported,
+  callers must pre-decompose any rational summand they want to feed
+  through the telescope detector.
+- Transcendental limit-finder (``sin(k)/k²``, …).
+
 ## 0.5.0 — 2026-05-22
 
 **Phase 44 — Log divergence recogniser (TypeScript port).**

@@ -472,11 +472,99 @@ fn try_power_of_k(f: &IRNode, k: &IRNode) -> Option<(Rational, i64)> {
 ///   of the SUB and compare against the other half after `eval_fn`
 ///   normalisation.  No partial-fraction expansion is attempted — the
 ///   classic `1/(k(k+1))` form needs an explicit `Apart` step first.
+/// Phase 40+46 (Rust port): Detect whether `node` represents a negation
+/// and, if so, return the corresponding positive magnitude (the thing
+/// that, prepended with a unary minus, equals `node`).
+///
+/// Two recognised shapes:
+///
+///   1.  Top-level `Neg(x)`                       → `x`
+///   2.  `Div(c, d)` with literal `c < 0`         → `Div(|c|, d)`
+///
+/// Case 2 is the Phase 46 widening — Python's `Apart` of
+/// `5/(k(k+1))` returns `Add(Div(-5, k+1), Div(5, k))` with the
+/// negation folded into the numerator.  Even without `Apart` on the
+/// Rust side, users who write the equivalent shape directly get the
+/// benefit of the widened telescope detector.
+///
+/// Returns `None` when `node` is not a recognised negation.
+fn extract_negation(node: &IRNode) -> Option<IRNode> {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return None,
+    };
+    // Case 1: top-level Neg wrapper.
+    if head_is(&apply_node.head, NEG) && apply_node.args.len() == 1 {
+        return Some(apply_node.args[0].clone());
+    }
+    // Case 2: Div with a negative literal numerator.
+    if head_is(&apply_node.head, DIV) && apply_node.args.len() == 2 {
+        let numer = &apply_node.args[0];
+        let denom = &apply_node.args[1];
+        match numer {
+            IRNode::Integer(v) if *v < 0 => {
+                return Some(binary(DIV, int(-v), denom.clone()));
+            }
+            IRNode::Rational(n, d) if *n < 0 => {
+                // The IRNode::Rational invariant keeps denom > 0, so
+                // negating the numerator alone flips the sign cleanly.
+                return Some(binary(DIV, rat(-n, *d), denom.clone()));
+            }
+            IRNode::Float(v) if *v < 0.0 => {
+                return Some(binary(DIV, IRNode::Float(-v), denom.clone()));
+            }
+            _ => {}
+        }
+    }
+    None
+}
+
+/// Phase 40+46 (Rust port): Rewrite two-term `Add` nodes containing a
+/// (recognised) negation into the equivalent `Sub` shape.  Used by
+/// `try_telescoping` as a fallback when the direct `Sub` match fails.
+///
+/// Input shape                              | Output
+/// -----------------------------------------+----------------------
+/// `Add(a, Neg(b))`                         | `Sub(a, b)`
+/// `Add(Neg(b), a)`                         | `Sub(a, b)`
+/// `Add(a, Div(-c, d))` (Phase 46)          | `Sub(a, Div(c, d))`
+/// `Add(Div(-c, d), a)` (Phase 46)          | `Sub(a, Div(c, d))`
+/// `Add(Neg(a), Neg(b))`                    | unchanged
+/// anything else                            | unchanged
+fn normalise_add_neg_to_sub(node: &IRNode) -> IRNode {
+    let apply_node = match node {
+        IRNode::Apply(a) if head_is(&a.head, ADD) && a.args.len() == 2 => a,
+        _ => return node.clone(),
+    };
+    let left = &apply_node.args[0];
+    let right = &apply_node.args[1];
+    let left_pos = extract_negation(left);
+    let right_pos = extract_negation(right);
+    match (left_pos, right_pos) {
+        // Both sides genuinely negative — no telescope to expose.
+        (Some(_), Some(_)) => node.clone(),
+        (_, Some(rp)) => binary(SUB, left.clone(), rp),
+        (Some(lp), _) => binary(SUB, right.clone(), lp),
+        (None, None) => node.clone(),
+    }
+}
+
 fn try_telescoping<E>(f: &IRNode, k: &IRNode, eval_fn: &mut E) -> Option<(IRNode, i32)>
 where
     E: FnMut(IRNode) -> IRNode,
 {
-    let node = match f {
+    // Phase 46: if f is an Add-with-negation shape, normalise to Sub
+    // first so the existing structural match below fires.  No-op when
+    // f is already a Sub or a non-Add shape.
+    let normalised: IRNode;
+    let f_ref: &IRNode = match f {
+        IRNode::Apply(a) if head_is(&a.head, ADD) && a.args.len() == 2 => {
+            normalised = normalise_add_neg_to_sub(f);
+            &normalised
+        }
+        _ => f,
+    };
+    let node = match f_ref {
         IRNode::Apply(node) if head_is(&node.head, SUB) && node.args.len() == 2 => node,
         _ => return None,
     };
