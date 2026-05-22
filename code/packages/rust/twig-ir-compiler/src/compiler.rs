@@ -186,6 +186,41 @@ fn is_builtin(name: &str) -> bool {
     BUILTINS.contains(&name)
 }
 
+/// Path-A increment 2: map an arithmetic / comparison builtin name to the
+/// typed CIR mnemonic that the IIR-to-* backends accept directly.
+///
+/// Returns `Some(&'static str)` when the builtin has a typed-CIR analog;
+/// `None` for builtins that have no direct typed equivalent yet
+/// (`cons`, `length`, `host/*`, the higher-order list ops, etc.).
+///
+/// The caller's responsibility is to verify that the operand types are
+/// concrete before substituting the typed mnemonic — see the
+/// `compile_apply` arm for `is_builtin(&v.name)`.  This table is the
+/// pure name → name lookup; type-check happens at the call site.
+///
+/// Mirrors the same pattern used by `nib-iir-compiler::cir_op_for`
+/// (PR #3903) and `oct-iir-compiler::compile_binary`.
+fn typed_arith_op_for(name: &str) -> Option<&'static str> {
+    match name {
+        // Arithmetic — all four basic operators map to typed CIR mnemonics.
+        "+" => Some("add"),
+        "-" => Some("sub"),
+        "*" => Some("mul"),
+        "/" => Some("div"),
+        // Comparison — Twig uses Scheme-style names; CIR uses C-style.
+        // `=` is Twig's equality (works on numbers, symbols, booleans,
+        // strings, etc.).  For increment 2 we only fire when both operands
+        // are `i64`, in which case `=` reduces to integer equality —
+        // which `cmp_eq` (with type `i64`) is exactly.
+        "="  => Some("cmp_eq"),
+        "<"  => Some("cmp_lt"),
+        ">"  => Some("cmp_gt"),
+        "<=" => Some("cmp_le"),
+        ">=" => Some("cmp_ge"),
+        _    => None,
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Per-function compilation context
 // ---------------------------------------------------------------------------
@@ -1212,9 +1247,70 @@ impl Compiler {
             }
 
             if is_builtin(&v.name) {
-                let mut srcs: Vec<Operand> = vec![Operand::Var(v.name.clone())];
-                for a in &expr.args {
-                    let r = self.compile_expr(a, ctx)?;
+                // Resolve every argument before deciding the lowering path.
+                let arg_regs: Vec<String> = expr
+                    .args
+                    .iter()
+                    .map(|a| self.compile_expr(a, ctx))
+                    .collect::<Result<_, _>>()?;
+
+                // ── Twig path-A increment 2: typed binary arithmetic / cmp ───
+                //
+                // When every resolved argument has a statically-known type
+                // (recorded in `FnCtx::var_types` by literal-emission sites
+                // and by previous typed builds-up such as earlier `add`
+                // operations), and the builtin name is in the arithmetic /
+                // comparison set, we can lower the call to a *typed CIR
+                // mnemonic* (`add`, `cmp_lt`, …) that the IIR-to-* backends
+                // accept directly — instead of the legacy
+                // `call_builtin "<op>"` path which carries `type_hint = "any"`
+                // and gets rejected at every backend validator.
+                //
+                // The pattern mirrors PR #3903's fix for Nib
+                // (`compile_binary_chain` → typed CIR mnemonics).  See
+                // `typed_arith_op_for` below for the symbol → mnemonic table.
+                //
+                // Scoped to binary forms (`(+ a b)`).  Variadic forms
+                // (`(+ a b c)`), and any call where one arg has an unknown /
+                // dynamic type, continue to use the `call_builtin "any"`
+                // fallback — they remain rejected by the backend validators
+                // until a later increment lowers variadic folds and / or
+                // adds runtime type guards.
+                if arg_regs.len() == 2 {
+                    if let Some(typed_mnemonic) = typed_arith_op_for(&v.name) {
+                        let lhs_ty = ctx.type_of(&arg_regs[0]).to_string();
+                        let rhs_ty = ctx.type_of(&arg_regs[1]).to_string();
+                        if lhs_ty == "i64" && rhs_ty == "i64" {
+                            // Emit `<typed_mnemonic> dest = lhs, rhs [i64]`.
+                            // Result type depends on the family:
+                            //   add/sub/mul/div  → i64
+                            //   cmp_* / =        → bool
+                            let result_ty: &str =
+                                if typed_mnemonic.starts_with("cmp_") {
+                                    "bool"
+                                } else {
+                                    "i64"
+                                };
+                            let dest = ctx.fresh_var("r");
+                            ctx.emit(IIRInstr::new(
+                                typed_mnemonic,
+                                Some(dest.clone()),
+                                vec![
+                                    Operand::Var(arg_regs[0].clone()),
+                                    Operand::Var(arg_regs[1].clone()),
+                                ],
+                                result_ty,
+                            ), loc);
+                            ctx.record_type(&dest, result_ty);
+                            return Ok(dest);
+                        }
+                    }
+                }
+
+                // Fallback: legacy dynamic `call_builtin` path.
+                let mut srcs: Vec<Operand> =
+                    vec![Operand::Var(v.name.clone())];
+                for r in arg_regs {
                     srcs.push(Operand::Var(r));
                 }
                 let dest = ctx.fresh_var("r");

@@ -1,5 +1,71 @@
 # Changelog — twig-ir-compiler
 
+## [0.16.0] — 2026-05-22 (Path A — typed binary arithmetic + comparison)
+
+### Added — Typed CIR mnemonics for binary arithmetic / comparison
+
+Increment 2 of the Twig → IIR-to-* end-to-end story.  Builds on
+0.15.0's typed-literals work to lower **binary arithmetic** (`+ - * /`)
+and **comparisons** (`= < > <= >=`) on i64 arguments to typed CIR
+mnemonics (`add`, `sub`, `mul`, `div`, `cmp_eq`, `cmp_lt`, `cmp_gt`,
+`cmp_le`, `cmp_ge`) instead of the legacy `call_builtin "<op>"`
+dispatch.
+
+Mirrors the same pattern PR #3903 used for Nib
+(`compile_binary_chain` → typed CIR mnemonics).
+
+#### What changed
+
+- New `typed_arith_op_for(name) -> Option<&'static str>` table maps
+  Twig builtin names to the typed-CIR mnemonic.  9 entries:
+  `+ - * /` → `add sub mul div`; `= < > <= >=` → `cmp_eq cmp_lt
+  cmp_gt cmp_le cmp_ge`.
+- `compile_apply`'s `is_builtin` branch now:
+  1. Resolves all argument expressions first (existing behaviour).
+  2. For binary forms (n=2) where both args have statically-known
+     `i64` type, emits the typed mnemonic with `type_hint = "i64"`
+     (arithmetic) or `"bool"` (comparison), records the dest's type,
+     and short-circuits the legacy `call_builtin` path.
+  3. Otherwise falls back to the existing `call_builtin "<op>"`
+     dispatch.
+- Result types:
+  - `add` / `sub` / `mul` / `div` over `i64` → `i64`.  Recorded so a
+    chained expression like `(+ (* 2 3) 4)` flows through the typed
+    path for the outer `+` too (the `*` dest is `i64`).
+  - `cmp_*` → `bool`.
+
+#### What this unlocks
+
+| Program             | wasm | jvm | clr | beam |
+|---------------------|------|-----|-----|------|
+| `(+ 1 2)`           | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) |
+| `(< 1 2)`           | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) |
+| `(+ (* 2 3) 4)`     | ✅ (typed chain) | ✅ | ✅ | ✅ |
+| `(+ (car (cons 1 2)) 3)` | ❌ still rejected (left arg is `any`) | ❌ | ❌ | ❌ |
+
+Variadic forms (`(+ a b c)`, n>2) and arithmetic over dynamically-typed
+sources (results of `car` / `length` / user-defined functions) still
+flow through `call_builtin`.  Subsequent increments will lower
+variadic folds and inject runtime type guards.
+
+#### Tests
+
+- Existing `builtin_call_uses_call_builtin_directly` test renamed
+  → `builtin_call_uses_typed_add_for_i64_args` and updated to assert
+  the typed path.
+- New `builtin_call_falls_back_to_call_builtin_for_dynamic_args`
+  asserts the fallback path still fires when an arg is `any`.
+- `builtins_recognised` narrowed to non-typed builtins (cons / car /
+  cdr / predicates / print) — typed arithmetic moved to its own
+  dedicated test.
+- 2 new e2e tests in `tests/backend_compat.rs`:
+  - `twig_typed_arithmetic_accepted_by_every_backend` — `(+ 1 2)`
+  - `twig_typed_comparison_accepted_by_every_backend` — `(< 1 2)`
+- The "still rejected" boundary marker from increment 1 has flipped
+  to `twig_arithmetic_over_dynamic_args_still_rejected`, pinning the
+  current boundary one step further along.
+- 73 lib + 5 backend e2e tests pass.
+
 ## [0.15.0] — 2026-05-22 (Path A — typed literals + typed return)
 
 ### Added — Local type inference for integer / boolean literals
