@@ -405,6 +405,12 @@ pub struct LanguageHostEndpointSummary {
     pub endpoint_scheme: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageHostEndpointSessionSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageHostEndpointParseErrorKind {
     InvalidSerialEndpoint,
@@ -988,6 +994,18 @@ pub fn host_endpoint_connection_label(
     } else {
         format!("endpoint={}", endpoint.endpoint)
     }
+}
+
+pub fn host_endpoint_session_summary(
+    endpoint: &str,
+    baud_rate: u32,
+) -> Result<LanguageHostEndpointSessionSummary, LanguageHostEndpointParseError> {
+    let endpoint = parse_host_endpoint_with_error(endpoint)?;
+    let connection_label = host_endpoint_connection_label(&endpoint, baud_rate);
+    Ok(LanguageHostEndpointSessionSummary {
+        endpoint,
+        connection_label,
+    })
 }
 
 pub const fn upload_adapter_name(adapter: TargetUploadAdapter) -> &'static str {
@@ -5892,6 +5910,27 @@ mod tests {
         assert_eq!(
             host_endpoint_connection_label(&rfcomm, 57_600),
             "endpoint=rfcomm://ESP32-BoardVM:3"
+        );
+
+        let session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session summary");
+        assert_eq!(
+            session.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            session.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        let session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session summary");
+        assert_eq!(
+            session.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(
+            session.connection_label,
+            "endpoint=tcp://board-vm.local:4170"
         );
     }
 
