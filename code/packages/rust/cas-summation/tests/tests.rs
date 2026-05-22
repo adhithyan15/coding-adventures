@@ -298,11 +298,169 @@ fn phase39_symbolic_upper_bound_non_unevaluated() {
 
 #[test]
 fn phase39_infinite_upper_falls_through() {
+    // g(k) = k grows at infinity; Phase 41 guard refuses.
     let k = sym("k");
     let f = apply(
         sym(SUB),
         vec![apply(sym(ADD), vec![k.clone(), int(1)]), k.clone()],
     );
     let out = evaluate_sum(f, k, int(0), sym("%inf"), eval);
+    assert!(matches!(out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ---------------------------------------------------------------------------
+// Phase 41+42: limit-aware infinite telescope.
+//
+// When `hi = %inf` AND `g(k)` provably vanishes at infinity, the dispatcher
+// emits −g(lo) (standard orientation) or g(lo) (antisymmetric).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase41_antisymmetric_one_over_k_minus_one_over_kp1() {
+    // ∑_{k=1}^∞ [1/k − 1/(k+1)] = 1 (Phase 41 antisymmetric).
+    let k = sym("k");
+    let f = apply(
+        sym(SUB),
+        vec![
+            apply(sym(DIV), vec![int(1), k.clone()]),
+            apply(
+                sym(DIV),
+                vec![int(1), apply(sym(ADD), vec![k.clone(), int(1)])],
+            ),
+        ],
+    );
+    assert_eq!(evaluate_sum(f, k, int(1), sym("%inf"), eval), int(1));
+}
+
+#[test]
+fn phase41_standard_orientation_kp1_minus_k() {
+    // ∑_{k=1}^∞ [1/(k+1) − 1/k] = −1.
+    let k = sym("k");
+    let f = apply(
+        sym(SUB),
+        vec![
+            apply(
+                sym(DIV),
+                vec![int(1), apply(sym(ADD), vec![k.clone(), int(1)])],
+            ),
+            apply(sym(DIV), vec![int(1), k.clone()]),
+        ],
+    );
+    assert_eq!(evaluate_sum(f, k, int(1), sym("%inf"), eval), int(-1));
+}
+
+#[test]
+fn phase41_higher_starting_index() {
+    // ∑_{k=2}^∞ [1/k − 1/(k+1)] = 1/2.
+    let k = sym("k");
+    let f = apply(
+        sym(SUB),
+        vec![
+            apply(sym(DIV), vec![int(1), k.clone()]),
+            apply(
+                sym(DIV),
+                vec![int(1), apply(sym(ADD), vec![k.clone(), int(1)])],
+            ),
+        ],
+    );
+    assert_eq!(evaluate_sum(f, k, int(2), sym("%inf"), eval), rat(1, 2));
+}
+
+#[test]
+fn phase41_quadratic_denominator() {
+    // ∑_{k=1}^∞ [1/k² − 1/(k+1)²] = 1.
+    let k = sym("k");
+    let f = apply(
+        sym(SUB),
+        vec![
+            apply(
+                sym(DIV),
+                vec![int(1), apply(sym(POW), vec![k.clone(), int(2)])],
+            ),
+            apply(
+                sym(DIV),
+                vec![
+                    int(1),
+                    apply(
+                        sym(POW),
+                        vec![apply(sym(ADD), vec![k.clone(), int(1)]), int(2)],
+                    ),
+                ],
+            ),
+        ],
+    );
+    assert_eq!(evaluate_sum(f, k, int(1), sym("%inf"), eval), int(1));
+}
+
+#[test]
+fn phase42_proper_rational_k_over_k_squared_plus_1() {
+    // ∑_{k=1}^∞ [k/(k²+1) − (k+1)/((k+1)²+1)] = g(1) = 1/2.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let g_k = apply(
+        sym(DIV),
+        vec![
+            k.clone(),
+            apply(
+                sym(ADD),
+                vec![apply(sym(POW), vec![k.clone(), int(2)]), int(1)],
+            ),
+        ],
+    );
+    let g_kp1 = apply(
+        sym(DIV),
+        vec![
+            kp1.clone(),
+            apply(
+                sym(ADD),
+                vec![apply(sym(POW), vec![kp1.clone(), int(2)]), int(1)],
+            ),
+        ],
+    );
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    assert_eq!(evaluate_sum(f, k, int(1), sym("%inf"), eval), rat(1, 2));
+}
+
+#[test]
+fn phase42_improper_rational_falls_through() {
+    // g(k) = k/(k+1) has equal degrees; limit is 1, not 0.  Refuse.
+    let k = sym("k");
+    let g_k = apply(
+        sym(DIV),
+        vec![k.clone(), apply(sym(ADD), vec![k.clone(), int(1)])],
+    );
+    let g_kp1 = apply(
+        sym(DIV),
+        vec![
+            apply(sym(ADD), vec![k.clone(), int(1)]),
+            apply(sym(ADD), vec![k.clone(), int(2)]),
+        ],
+    );
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase42_transcendental_numerator_falls_through() {
+    // sin(k)/k² is non-polynomial; conservative refuse.
+    let k = sym("k");
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let f = apply(
+        sym(SUB),
+        vec![
+            apply(
+                sym(DIV),
+                vec![sin_k, apply(sym(POW), vec![k.clone(), int(2)])],
+            ),
+            apply(
+                sym(DIV),
+                vec![sin_kp1, apply(sym(POW), vec![kp1, int(2)])],
+            ),
+        ],
+    );
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(out, IRNode::Apply(node) if node.head == sym(SUM)));
 }

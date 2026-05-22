@@ -1,5 +1,66 @@
 # Changelog
 
+## 0.3.0 — 2026-05-22
+
+**Phase 41 + Phase 42 — Limit-aware infinite telescope (Rust port).**
+
+Ports Python `cas-summation` 0.3.0 (PR #3880 ✅) and 0.4.0
+(PR #3887 ✅) in one go.  Extends `evaluate_sum`'s telescope detection
+to handle `hi = %inf` when `g(k)` provably vanishes at infinity:
+
+    ∑_{k=lo}^∞ [g(k+1) − g(k)]  =  −g(lo)   (standard orientation)
+    ∑_{k=lo}^∞ [g(k) − g(k+1)]  =   g(lo)   (antisymmetric)
+
+The vanishing-at-infinity check uses two tiers:
+
+1.  **Phase 41 fast path** — `Div(constant-in-k, h(k))` with `h` a
+    positive-degree polynomial in `k`.
+2.  **Phase 42 widening** — `Div(P(k), Q(k))` where both are pure
+    polynomials and `deg(P) < deg(Q)`.
+
+Anything transcendental, improper, or non-Div falls through to the
+unevaluated `Sum(...)`.
+
+### Added
+
+- **`is_positive_degree_polynomial_in_k(node, k)`** — recogniser for
+  `k`, `k^n` (n ≥ 1), `Add`, and `Mul` of these.
+- **`polynomial_degree_in_k(node, k) -> Option<i64>`** — returns the
+  polynomial degree of an IR node in `k`, or `None` for non-polynomial
+  shapes (Div, Sin, fractional Pow, …).
+- **`g_vanishes_at_infinity(g, k)`** — two-tier predicate combining
+  the above.
+
+### Changed
+
+- The `!inf_upper` gate around the Phase 39 telescope branch is
+  lifted; the dispatcher now runs telescope detection for both finite
+  and infinite ranges and routes through the new vanishing-at-infinity
+  check when `hi = %inf`.
+- Existing `phase39_infinite_upper_falls_through` test docstring
+  updated to reflect that it now pins the Phase 41 guard against
+  divergent telescopes (`g(k) = k`).
+
+### Added — tests
+
+`tests/tests.rs` — 7 new `#[test]` functions:
+
+- `phase41_antisymmetric_one_over_k_minus_one_over_kp1` (= 1).
+- `phase41_standard_orientation_kp1_minus_k` (= −1).
+- `phase41_higher_starting_index` (= 1/2).
+- `phase41_quadratic_denominator` (= 1).
+- `phase42_proper_rational_k_over_k_squared_plus_1` (= 1/2).
+- `phase42_improper_rational_falls_through` (`k/(k+1)`).
+- `phase42_transcendental_numerator_falls_through` (`sin(k)/k²`).
+
+Full suite: **21 passed** (14 prior + 7 net new).
+
+### Still deferred
+
+- Apart-induced telescopes (`1/(k(k+1))`) — blocked on porting the
+  `Apart` partial-fraction-decomposition handler to Rust.
+- Transcendental limit-finder (`sin(k)/k²`, `log(k)/k`, `1/exp(k)`).
+
 ## 0.2.0 — 2026-05-20
 
 **Phase 39 — Telescoping sum recognition (Rust port).**

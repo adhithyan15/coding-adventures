@@ -268,13 +268,32 @@ where
         }
     }
 
-    // Phase 39: telescoping sums.  Detect `f = g(k+1) − g(k)` (or the
-    // antisymmetric `g(k) − g(k+1)`) and emit `g(hi+1) − g(lo)` (resp.
-    // `g(lo) − g(hi+1)`).  Pure structural detection — no partial
-    // fraction expansion; infinite case deferred to a future limit-aware
-    // phase.
-    if !inf_upper {
-        if let Some((g_expr, sign)) = try_telescoping(&f, &k, &mut eval_fn) {
+    // Phase 39 (finite) + Phase 41/42 (infinite) telescoping sums.
+    //
+    // Detect `f = g(k+1) − g(k)` (or its antisymmetric `g(k) − g(k+1)`)
+    // and emit a closed form:
+    // - Phase 39 (finite hi): g(hi+1) − g(lo) / g(lo) − g(hi+1).
+    // - Phase 41+42 (hi = %inf): emit −g(lo) (standard) or g(lo)
+    //   (antisymmetric) when g(k) provably vanishes at infinity per
+    //   `g_vanishes_at_infinity` (constant numerator + positive-degree
+    //   polynomial denominator, or any proper rational with
+    //   deg(num) < deg(den)).  Otherwise fall through to the
+    //   unevaluated SUM at the bottom.
+    if let Some((g_expr, sign)) = try_telescoping(&f, &k, &mut eval_fn) {
+        if inf_upper {
+            if g_vanishes_at_infinity(&g_expr, &k) {
+                let g_at_lo = substitute(&g_expr, &k, &lo);
+                let closed = if sign > 0 {
+                    // ∑[g(k+1) − g(k)] from lo to ∞ = −g(lo)
+                    apply(sym(NEG), vec![g_at_lo])
+                } else {
+                    // ∑[g(k) − g(k+1)] from lo to ∞ = g(lo)
+                    g_at_lo
+                };
+                return eval_fn(closed);
+            }
+            // Limit not provably zero — fall through.
+        } else {
             let hi_plus_one = binary(ADD, hi.clone(), int(1));
             let g_at_hi_plus_one = substitute(&g_expr, &k, &hi_plus_one);
             let g_at_lo = substitute(&g_expr, &k, &lo);
@@ -476,6 +495,158 @@ where
         return Some((left.clone(), -1));
     }
     None
+}
+
+/// Phase 41+42: True when `node` is a polynomial in `k` of strictly
+/// positive degree.  Used by `g_vanishes_at_infinity` to decide whether
+/// a denominator grows without bound as `k → ∞`.
+fn is_positive_degree_polynomial_in_k(node: &IRNode, k: &IRNode) -> bool {
+    if node == k {
+        return true;
+    }
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return false,
+    };
+    let head_str = match &apply_node.head {
+        IRNode::Symbol(s) => s.as_str(),
+        _ => return false,
+    };
+    // k^n with n ≥ 1.
+    if head_str == POW && apply_node.args.len() == 2 {
+        let base = &apply_node.args[0];
+        let exp = &apply_node.args[1];
+        if base == k {
+            if let IRNode::Integer(n) = exp {
+                if *n >= 1 {
+                    return true;
+                }
+            }
+        }
+    }
+    if head_str == ADD && apply_node.args.len() >= 2 {
+        if !apply_node
+            .args
+            .iter()
+            .any(|a| is_positive_degree_polynomial_in_k(a, k))
+        {
+            return false;
+        }
+        return apply_node
+            .args
+            .iter()
+            .all(|a| is_constant_in(a, k) || is_positive_degree_polynomial_in_k(a, k));
+    }
+    if head_str == MUL && apply_node.args.len() >= 2 {
+        let mut has_positive = false;
+        for arg in &apply_node.args {
+            if is_constant_in(arg, k) {
+                continue;
+            }
+            if is_positive_degree_polynomial_in_k(arg, k) {
+                has_positive = true;
+                continue;
+            }
+            return false;
+        }
+        return has_positive;
+    }
+    false
+}
+
+/// Phase 42: Return the polynomial degree of `node` in `k`, or `None`
+/// for non-polynomial shapes.
+fn polynomial_degree_in_k(node: &IRNode, k: &IRNode) -> Option<i64> {
+    if is_constant_in(node, k) {
+        return Some(0);
+    }
+    if node == k {
+        return Some(1);
+    }
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return None,
+    };
+    let head_str = match &apply_node.head {
+        IRNode::Symbol(s) => s.as_str(),
+        _ => return None,
+    };
+    if head_str == POW && apply_node.args.len() == 2 {
+        let base = &apply_node.args[0];
+        let exp = &apply_node.args[1];
+        if base == k {
+            if let IRNode::Integer(n) = exp {
+                if *n >= 0 {
+                    return Some(*n);
+                }
+            }
+        }
+        return None;
+    }
+    if head_str == NEG && apply_node.args.len() == 1 {
+        return polynomial_degree_in_k(&apply_node.args[0], k);
+    }
+    if head_str == ADD || head_str == SUB {
+        let mut max_deg: i64 = 0;
+        for arg in &apply_node.args {
+            match polynomial_degree_in_k(arg, k) {
+                Some(d) => {
+                    if d > max_deg {
+                        max_deg = d;
+                    }
+                }
+                None => return None,
+            }
+        }
+        return Some(max_deg);
+    }
+    if head_str == MUL {
+        let mut sum_deg: i64 = 0;
+        for arg in &apply_node.args {
+            match polynomial_degree_in_k(arg, k) {
+                Some(d) => sum_deg += d,
+                None => return None,
+            }
+        }
+        return Some(sum_deg);
+    }
+    None
+}
+
+/// Phase 41+42: True when `g(k)` provably tends to 0 as `k → ∞`.
+///
+/// Two-tier recognition:
+///   1. Phase 41 fast path: `Div(c, h(k))` with `c` constant in `k` and
+///      `h(k)` recognised as a positive-degree polynomial.
+///   2. Phase 42 widening: `Div(P(k), Q(k))` with both pure polynomials
+///      and `deg(P) < deg(Q)`.
+///
+/// Anything else (transcendental, improper rational, non-Div) returns
+/// `false`.
+fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
+    let apply_node = match g {
+        IRNode::Apply(a) => a,
+        _ => return false,
+    };
+    if !matches!(&apply_node.head, IRNode::Symbol(s) if s == DIV) || apply_node.args.len() != 2 {
+        return false;
+    }
+    let num = &apply_node.args[0];
+    let den = &apply_node.args[1];
+    // Phase 41 fast path: constant numerator + positive-degree denominator.
+    if is_constant_in(num, k) {
+        return is_positive_degree_polynomial_in_k(den, k);
+    }
+    // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
+    let num_deg = match polynomial_degree_in_k(num, k) {
+        Some(d) => d,
+        None => return false,
+    };
+    let den_deg = match polynomial_degree_in_k(den, k) {
+        Some(d) => d,
+        None => return false,
+    };
+    num_deg < den_deg
 }
 
 fn split_linear_coeff(f: &IRNode, k: &IRNode) -> Option<Rational> {
