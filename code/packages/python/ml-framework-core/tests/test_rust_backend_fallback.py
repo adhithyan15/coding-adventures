@@ -302,17 +302,17 @@ class ReductionFallbackTests(unittest.TestCase):
         self.assertEqual(result.shape, (1,))
         self.assertEqual(result.data, [3.0])
 
-    def test_axis_specific_reduction_unchanged_by_phase_3(self) -> None:
-        """``a.sum(dim=0)`` stays pure-Python in Phase 3 — never dispatches.
+    def test_axis_specific_reduction_below_threshold_stays_pure_python(self) -> None:
+        """``a.sum(dim=0)`` on a tiny tensor uses pure-Python regardless.
 
-        Even with the Rust extension installed, the axis-specific
-        path bypasses the threshold check entirely (the dispatch
-        condition is wrapped in ``if dim is None``).  Sanity:
-        the result is still correct.
+        Phase 3b (axis-specific reductions) reuses the same
+        ``should_use_rust_for_reduction`` predicate as reduce-all, so
+        small tensors below the threshold fall back to the pure-Python
+        axis loop even when the extension is installed.  The 2x3
+        tensor here has 6 cells — well below the 100_000 threshold.
         """
-        # Reset to "extension available" but the predicate isn't even
-        # consulted for dim != None, so behavior matches whether or
-        # not extension is present.
+        # Reset to "extension available" so we exercise the
+        # threshold-gated dispatch (not the unavailable short-circuit).
         _rust_backend._RUST_AVAILABLE = self._saved_available
 
         # 2x3 tensor, sum along dim=0 → shape (3,) with column sums.
@@ -320,6 +320,63 @@ class ReductionFallbackTests(unittest.TestCase):
         result = a.sum(dim=0)
         # Column sums: [1+4, 2+5, 3+6] = [5, 7, 9]
         self.assertEqual(result.data, [5.0, 7.0, 9.0])
+
+
+# ──────────────────────────────────────────────────────────────────
+# MX10 Phase 3b — axis-specific reduction fallback tests
+#
+# Phase 3 covered the dim=None case; Phase 3b adds dim != None.
+# The same predicate gates both, so the only new fallback assertions
+# are: defence-in-depth RuntimeError from the new helpers, and
+# correctness of the pure-Python axis loop when _RUST_AVAILABLE=False.
+# ──────────────────────────────────────────────────────────────────
+
+
+class ReductionAxisFallbackTests(unittest.TestCase):
+    """Confirm axis-specific sum/mean still work when Rust is disabled."""
+
+    def setUp(self) -> None:
+        self._saved_available = _rust_backend._RUST_AVAILABLE
+        _rust_backend._RUST_AVAILABLE = False
+
+    def tearDown(self) -> None:
+        _rust_backend._RUST_AVAILABLE = self._saved_available
+
+    def test_sum_axis_via_rust_raises_when_unavailable(self) -> None:
+        """``sum_axis_via_rust`` must raise (defence-in-depth)."""
+        a = Tensor([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], (2, 3))
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.sum_axis_via_rust(a, dim=0, keepdim=False)
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_mean_axis_via_rust_raises_when_unavailable(self) -> None:
+        """``mean_axis_via_rust`` must raise (defence-in-depth)."""
+        a = Tensor([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], (2, 3))
+        with self.assertRaises(RuntimeError):
+            _rust_backend.mean_axis_via_rust(a, dim=0, keepdim=False)
+
+    def test_sum_axis_keepdim_false_correct_via_fallback(self) -> None:
+        """``a.sum(dim=0)`` shape (3,): column sums of 2x3 tensor."""
+        a = Tensor([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], (2, 3))
+        result = a.sum(dim=0)
+        self.assertEqual(result.shape, (3,))
+        # Columns: [1+4, 2+5, 3+6] = [5, 7, 9]
+        self.assertEqual(result.data, [5.0, 7.0, 9.0])
+
+    def test_sum_axis_keepdim_true_correct_via_fallback(self) -> None:
+        """``a.sum(dim=0, keepdim=True)`` keeps the axis as size 1."""
+        a = Tensor([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], (2, 3))
+        result = a.sum(dim=0, keepdim=True)
+        self.assertEqual(result.shape, (1, 3))
+        self.assertEqual(result.data, [5.0, 7.0, 9.0])
+
+    def test_mean_axis_keepdim_false_correct_via_fallback(self) -> None:
+        """``a.mean(dim=1)`` shape (2,): row means of 2x3 tensor."""
+        a = Tensor([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], (2, 3))
+        result = a.mean(dim=1)
+        self.assertEqual(result.shape, (2,))
+        # Row means: [(1+2+3)/3, (4+5+6)/3] = [2.0, 5.0]
+        self.assertEqual(result.data, [2.0, 5.0])
 
 
 # ──────────────────────────────────────────────────────────────────

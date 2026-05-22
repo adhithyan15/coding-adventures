@@ -561,6 +561,139 @@ def mean_via_rust(a: Tensor) -> Tensor:
 
 
 # ──────────────────────────────────────────────────────────────────
+# Axis-specific reduction fast paths (MX10 Phase 3b)
+#
+# Phase 3 shipped reduce-all (dim=None) only.  Phase 3b adds the
+# dim != None branch — reducing along a single named axis with
+# either keep_dims=True (axis becomes size 1) or keep_dims=False
+# (axis is dropped).
+#
+# The same matrix-ir-json ReduceSum / ReduceMean ops are used as
+# Phase 3; the only difference is the ``axes`` list contains one
+# element (the named dim) instead of every dim, and ``keep_dims``
+# follows the user-supplied keepdim flag.
+#
+# Why this is its own helper rather than reusing _reduce_all_via_rust:
+#   - output shape changes based on dim and keepdim (not always (1,))
+#   - output numel varies (input numel / shape[dim])
+#   - the ``(1,) when empty`` fallback for rank-0 reductions matches
+#     a contract that's unique to SumFunction/MeanFunction
+# ──────────────────────────────────────────────────────────────────
+
+
+def _reduce_axis_via_rust(
+    a: Tensor, op_kind: str, dim: int, keepdim: bool
+) -> Tensor:
+    """Generic helper for ReduceSum / ReduceMean along a single axis.
+
+    Args:
+        a: input tensor.
+        op_kind: "ReduceSum" or "ReduceMean" (matrix-ir-json op name).
+        dim: non-negative axis index (caller must normalise negatives).
+        keepdim: if True, output shape preserves the axis as size 1;
+            if False, the axis is dropped.
+
+    Output-shape convention matches SumFunction's pure-Python path:
+      - shape[dim] becomes 1 (keepdim) or is removed (not keepdim)
+      - if removing the axis leaves an empty shape (e.g. 1-D input
+        with dim=0 keepdim=False), we return shape ``(1,)`` to match
+        the existing user-facing contract.
+
+    For matrix-cpu the requested output shape is whatever shape we
+    declare on the output tensor; the executor allocates exactly
+    ``product(output_shape)`` cells (clamped to 1 for rank-0).
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            f"{op_kind.lower()}_axis_via_rust called but Rust backend is "
+            f"not available; callers must check "
+            f"should_use_rust_for_reduction() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(a.data)
+    input_shape = list(a.shape)
+
+    # Compute the matrix-ir-json output shape (sent to the executor):
+    # keep_dims=True → axis becomes 1; keep_dims=False → axis dropped.
+    if keepdim:
+        ir_output_shape = list(input_shape)
+        ir_output_shape[dim] = 1
+    else:
+        ir_output_shape = [s for i, s in enumerate(input_shape) if i != dim]
+
+    # Output numel: product of remaining dims (after axis collapse).
+    # For a rank-0 result (1-D input reduced without keepdim) the IR
+    # shape is [] but the executor still writes 1 f32 cell.
+    output_numel = 1
+    for s in ir_output_shape:
+        output_numel *= s
+
+    a_bytes = struct.pack(f"<{numel}f", *a.data)
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    {"id": 0, "dtype": "f32", "shape": input_shape},
+                    {"id": 1, "dtype": "f32", "shape": ir_output_shape},
+                ],
+                "inputs": [0],
+                "outputs": [1],
+                "ops": [
+                    {
+                        "kind": op_kind,
+                        "input": 0,
+                        "axes": [dim],
+                        "keep_dims": keepdim,
+                        "output": 1,
+                    }
+                ],
+                "constants": [],
+            },
+            "inputs": [a_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_hex = result["outputs"][0]
+    out_bytes = bytes.fromhex(out_hex)
+
+    expected_bytes = output_numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"{op_kind.lower()}_axis_via_rust: expected {expected_bytes} "
+            f"output bytes ({output_numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{output_numel}f", out_bytes))
+
+    # Match SumFunction's user-facing contract: rank-0 outputs are
+    # presented as shape (1,) rather than ().
+    user_shape = tuple(ir_output_shape) if ir_output_shape else (1,)
+
+    return _Tensor(out_floats, user_shape, device=a.device)
+
+
+def sum_axis_via_rust(a: Tensor, dim: int, keepdim: bool) -> Tensor:
+    """``a.sum(dim=dim, keepdim=keepdim)`` via Rust ReduceSum."""
+    return _reduce_axis_via_rust(a, "ReduceSum", dim, keepdim)
+
+
+def mean_axis_via_rust(a: Tensor, dim: int, keepdim: bool) -> Tensor:
+    """``a.mean(dim=dim, keepdim=keepdim)`` via Rust ReduceMean.
+
+    Note: We dispatch directly to ReduceMean rather than composing
+    ``ReduceSum`` + divide, so the division happens inside matrix-cpu
+    (one f32 multiply by ``1/count``) and we don't have to ship the
+    divisor as a constant.
+    """
+    return _reduce_axis_via_rust(a, "ReduceMean", dim, keepdim)
+
+
+# ──────────────────────────────────────────────────────────────────
 # Activation fast paths (MX10 Phase 4)
 #
 # matrix-ir-json supports Tanh, Sqrt, Exp, Log, Recip directly as
