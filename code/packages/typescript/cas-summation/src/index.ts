@@ -635,6 +635,45 @@ function hDivergesAtInfinity(node: IRNode, k: IRNode): boolean {
   return false;
 }
 
+const _SIN_HEAD = sym("Sin");
+const _COS_HEAD = sym("Cos");
+
+/**
+ * Phase 49: True when ``node`` is *provably* uniformly bounded in ``k``.
+ *
+ * Used by :func:`gVanishesAtInfinity` to recognise shapes like
+ * ``sin(k)/k²`` where the numerator is bounded (``|sin(k)| ≤ 1``) and
+ * the denominator diverges, hence the quotient vanishes.
+ *
+ *   node shape                   | Provably bounded?
+ *   -----------------------------|----------------------------
+ *   constant in ``k``            | yes (trivially)
+ *   ``Sin(h(k))`` / ``Cos(...)`` | yes (``|sin|, |cos| ≤ 1``)
+ *   ``Mul(bounded, bounded)``    | yes (recursive)
+ *   ``Add(bounded, bounded)``    | yes (recursive)
+ *   ``Neg(bounded)``             | yes
+ *   ``k`` / ``k²``               | no (diverges)
+ *   ``Exp(k)`` / ``Log(k)``      | no (diverges)
+ *
+ * Conservative — when in doubt, returns false.
+ */
+function isBoundedInK(node: IRNode, k: IRNode): boolean {
+  if (isConstantIn(node, k)) return true;
+  if (node.kind !== "apply") return false;
+  if (equals(node.head, _SIN_HEAD) && node.args.length === 1) return true;
+  if (equals(node.head, _COS_HEAD) && node.args.length === 1) return true;
+  if (equals(node.head, MUL)) {
+    return node.args.every((a) => isBoundedInK(a, k));
+  }
+  if (equals(node.head, ADD)) {
+    return node.args.every((a) => isBoundedInK(a, k));
+  }
+  if (equals(node.head, NEG) && node.args.length === 1) {
+    return isBoundedInK(node.args[0], k);
+  }
+  return false;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -644,6 +683,11 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   // (positive-degree polynomial OR exp / b^k transcendental).
   if (isConstantIn(num, k)) {
     return hDivergesAtInfinity(den, k);
+  }
+  // Phase 49: bounded numerator + diverging denominator.  Covers
+  // shapes like ``sin(k)/k²`` and ``cos(k)·sin(k)/k³``.
+  if (isBoundedInK(num, k) && hDivergesAtInfinity(den, k)) {
+    return true;
   }
   // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
   const numDeg = polynomialDegreeInK(num, k);

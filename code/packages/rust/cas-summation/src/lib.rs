@@ -910,6 +910,50 @@ fn h_diverges_at_infinity(node: &IRNode, k: &IRNode) -> bool {
     false
 }
 
+/// Phase 49 (Rust port): True when ``node`` is *provably* uniformly
+/// bounded in ``k``.  Used by ``g_vanishes_at_infinity`` to recognise
+/// shapes like ``sin(k)/k²``.
+///
+///   node shape                   | Provably bounded?
+///   -----------------------------|----------------------------
+///   constant in k                | yes (trivially)
+///   Sin(any) / Cos(any)          | yes (|sin|, |cos| ≤ 1)
+///   Mul(bounded, bounded)        | yes (recursive)
+///   Add(bounded, bounded)        | yes (recursive)
+///   Neg(bounded)                 | yes
+///   anything else                | no (conservative)
+fn is_bounded_in_k(node: &IRNode, k: &IRNode) -> bool {
+    if is_constant_in(node, k) {
+        return true;
+    }
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return false,
+    };
+    let head_name = match &apply_node.head {
+        IRNode::Symbol(s) => s.as_str(),
+        _ => return false,
+    };
+    // Sin / Cos bounded by 1 in modulus.
+    if head_name == "Sin" && apply_node.args.len() == 1 {
+        return true;
+    }
+    if head_name == "Cos" && apply_node.args.len() == 1 {
+        return true;
+    }
+    // Closure under Mul / Add / Neg.
+    if head_name == MUL {
+        return apply_node.args.iter().all(|a| is_bounded_in_k(a, k));
+    }
+    if head_name == ADD {
+        return apply_node.args.iter().all(|a| is_bounded_in_k(a, k));
+    }
+    if head_name == NEG && apply_node.args.len() == 1 {
+        return is_bounded_in_k(&apply_node.args[0], k);
+    }
+    false
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -924,6 +968,11 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     // (positive-degree polynomial OR exp / b^k transcendental).
     if is_constant_in(num, k) {
         return h_diverges_at_infinity(den, k);
+    }
+    // Phase 49: bounded numerator + diverging denominator.  Covers
+    // shapes like sin(k)/k² and cos(k)·sin(k)/k³.
+    if is_bounded_in_k(num, k) && h_diverges_at_infinity(den, k) {
+        return true;
     }
     // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
     let num_deg = match polynomial_degree_in_k(num, k) {
