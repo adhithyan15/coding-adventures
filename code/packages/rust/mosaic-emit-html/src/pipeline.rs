@@ -68,6 +68,7 @@
 //! | `HostTableHead`        | `<thead>` with `<tr>`/`<th>` (sub-tag of `HostTable`)           |
 //! | `HostTableBody`        | `<tbody>` with `<tr>`/`<td>` (sub-tag of `HostTable`)           |
 //! | `HostTableFoot`        | `<tfoot>` with `<tr>`/`<td>` (sub-tag of `HostTable`)           |
+//! | `HostDialog`           | `<dialog>` (UI29-1) — native browser modal/focus-trap/top-layer |
 //! | `If` / `Else`          | `<!-- mosaic-if when="…" -->` comment-bracketed branches        |
 //! | `For`                  | `<!-- mosaic-for each="…" as="…" index="…" -->` comment wrapper |
 //!
@@ -95,12 +96,47 @@
 //! returns [`PipelineEmitError::UnknownPrimitive`] rather than producing
 //! wrong HTML silently.
 
+use std::cell::Cell;
 use std::collections::HashMap;
 use std::fmt::Write as _;
 
 use mosmodel_compiler::MosmodelComponent;
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
 use mosstyle_compiler::{StyleDef, StyleProp};
+
+// =====================================================================
+// HostDialog id counter (UI29-1 §3.5)
+// =====================================================================
+//
+// HostDialog needs a deterministic per-call id so the inline modal-init
+// / dismiss-intercept scripts can target the right `<dialog>` element by
+// `id`. The walker is recursion-friendly stateless code; we lift the
+// counter into a thread-local `Cell` that's reset at the top of every
+// `from_pipeline` call. The reset means two consecutive emits produce
+// byte-identical output for the same input — important for snapshot
+// tests and for the build tool's cache keys.
+//
+// Why thread-local instead of plumbing `&mut counter`: every existing
+// walker function (`emit_html_tree`, `emit_children`, `emit_table_node`,
+// etc.) would need a new parameter, and the only state being passed is
+// a single `usize`. The thread-local keeps the rest of the file
+// undisturbed and the counter is invisible to callers.
+
+thread_local! {
+    static DIALOG_ID_COUNTER: Cell<usize> = const { Cell::new(0) };
+}
+
+fn next_dialog_id() -> usize {
+    DIALOG_ID_COUNTER.with(|c| {
+        let n = c.get();
+        c.set(n + 1);
+        n
+    })
+}
+
+fn reset_dialog_id_counter() {
+    DIALOG_ID_COUNTER.with(|c| c.set(0));
+}
 
 // =====================================================================
 // Public API
@@ -169,6 +205,10 @@ pub fn from_pipeline(
     layout: &LayoutDef,
     style: &StyleDef,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
+    // Reset the per-call HostDialog id counter so two emits of the same
+    // input produce byte-identical output.
+    reset_dialog_id_counter();
+
     // 1. Sanity check: the mosmodel and moslayout files must agree on the
     //    component name. The mosstyle file's name is allowed to differ
     //    (UI23 §4 — styles can target a layout variant).
@@ -404,6 +444,17 @@ fn emit_html_tree(
     }
     if node.tag == "HostButton" {
         out.push_str(&emit_host_button(node, indent, part_styles)?);
+        return Ok(out);
+    }
+
+    // UI29-1 §3.5 — `HostDialog` lowers to HTML's native `<dialog>`
+    // element. The browser provides modal blocking, focus trap,
+    // top-layer rendering, and Esc-to-close for free; we only need a
+    // tiny inline script for `modal: true` (since the bare `open`
+    // attribute alone triggers non-modal `show()`) and another for
+    // `dismiss-on-backdrop: false` (to swallow the `cancel` event).
+    if node.tag == "HostDialog" {
+        out.push_str(&emit_host_dialog(node, indent, part_styles)?);
         return Ok(out);
     }
 
@@ -659,6 +710,180 @@ fn emit_host_button(
             }
         }
     }
+}
+
+// =====================================================================
+// UI29-1 §3.5 — HostDialog lowering
+// =====================================================================
+
+/// Lower a UI29-1 `HostDialog` node to a `<dialog>` block (+ optional
+/// inline scripts for modal-init and backdrop-dismiss interception).
+///
+/// HTML's native `<dialog>` element does most of the heavy lifting for
+/// free — modal blocking, focus trap, top-layer rendering, and
+/// Esc-to-close are all built into the browser. The lowering therefore
+/// stays close to the source authoring shape:
+///
+/// ```html
+/// <dialog id="mos-dlg-0" open>
+///   <h2>{{title}}</h2>      <!-- only when title: slot: x -->
+///   ...children...
+/// </dialog>
+/// <script>document.querySelector('dialog#mos-dlg-0').showModal()</script>
+/// ```
+///
+/// ## Prop handling
+///
+/// | Prop                       | SlotRef                        | Keyword `true` / `false`                  |
+/// |----------------------------|--------------------------------|-------------------------------------------|
+/// | `open`                     | `open="{{slot}}"` substitution | `true` → `open` attr; `false` → omit      |
+/// | `modal` (compile-time)     | (n/a)                          | `true` → inline `showModal()` script; `false` → nothing |
+/// | `title`                    | `<h2>{{slot}}</h2>` first child | (n/a — title is text)                     |
+/// | `dismiss-on-backdrop`      | (n/a)                          | `false` → inline `cancel`-event interceptor; `true` → nothing |
+/// | `onOpen` / `onClose` emits | (no JS runtime) → drop comment | (n/a)                                     |
+///
+/// `modal: true` is the spec default; we treat an absent `modal` prop
+/// as `true` so the lowering matches the documented behavior.
+///
+/// Static-HTML compromise (mirrors the `If` / `For` story): we cannot
+/// wire `onOpen` / `onClose` to a Mosaic dispatch — there's no JS
+/// runtime in the HTML backend. The emits are dropped with a comment
+/// per the existing `EmitRef` convention so the generated fragment
+/// stays self-documenting.
+fn emit_host_dialog(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mut out = String::new();
+
+    // Assign a stable per-call id so the modal-init / dismiss-intercept
+    // scripts can target this exact dialog. The counter resets at the
+    // top of every `from_pipeline` call (deterministic output).
+    let id = format!("mos-dlg-{}", next_dialog_id());
+
+    // open: slot ref → `open="{{slot}}"` (host template engine resolves
+    // it). Literal `true` → bare `open` attribute. Literal `false` (or
+    // absent) → omit.
+    //
+    // Important detail: the bare `open` attribute alone triggers the
+    // browser's *non-modal* presentation (equivalent to `dialog.show()`).
+    // For modal=true with open=true, we additionally emit an inline
+    // `showModal()` script after the dialog (see below) so the dialog
+    // actually lands in the top layer with backdrop + focus trap.
+    let open_value = find_prop(node, "open");
+    let open_attr = match open_value {
+        Some(LayoutPropValue::SlotRef(s)) => format!(" open=\"{{{{{}}}}}\"", camel(s)),
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => " open".to_string(),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => String::new(),
+        _ => String::new(),
+    };
+
+    // modal: compile-time keyword. Absent → spec default of `true`.
+    // Only `false` actively suppresses the modal-init script.
+    let modal_is_false = matches!(
+        find_prop(node, "modal"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false"
+    );
+    let modal_true = !modal_is_false;
+
+    // dismiss-on-backdrop: compile-time keyword. Absent → spec default
+    // of `true`. Only `false` triggers the cancel-event interceptor
+    // script.
+    let dismiss_on_backdrop_false = matches!(
+        find_prop(node, "dismiss-on-backdrop"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false"
+    );
+
+    // onOpen / onClose emit refs are already comment-dropped by the
+    // generic `EmitRef` pass at the top of `emit_html_tree`. We don't
+    // need to re-emit those comments here.
+
+    let style_attr = build_style_attr(node, "", part_styles);
+
+    // Render the dialog body. A `title: slot: x` prop becomes an `<h2>`
+    // first child — the slot value flows through the host's template
+    // engine the same way every other slot does.
+    let title_html = match find_prop(node, "title") {
+        Some(LayoutPropValue::SlotRef(s)) => {
+            let inner_pad = " ".repeat(indent + 2);
+            Some(format!(
+                "{inner_pad}<h2>{{{{{slot}}}}}</h2>\n",
+                slot = camel(s)
+            ))
+        }
+        Some(LayoutPropValue::String(lit)) => {
+            let inner_pad = " ".repeat(indent + 2);
+            Some(format!(
+                "{inner_pad}<h2>{esc}</h2>\n",
+                esc = escape_html_text(lit)
+            ))
+        }
+        _ => None,
+    };
+
+    let has_body = title_html.is_some() || !node.children.is_empty();
+
+    if !has_body {
+        writeln!(
+            out,
+            "{pad}<dialog id=\"{id}\"{open_attr}{style_attr}></dialog>"
+        )
+        .unwrap();
+    } else {
+        writeln!(
+            out,
+            "{pad}<dialog id=\"{id}\"{open_attr}{style_attr}>"
+        )
+        .unwrap();
+        if let Some(h2) = title_html {
+            out.push_str(&h2);
+        }
+        if !node.children.is_empty() {
+            out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
+        }
+        writeln!(out, "{pad}</dialog>").unwrap();
+    }
+
+    // modal: true + a chance of being open → emit a tiny init script
+    // that calls `showModal()` on the dialog. Why not always emit it:
+    // for `open: false` literal the dialog stays closed and the script
+    // would force-open it; for `modal: false` the spec wants `show()`
+    // (i.e. the bare `open` attribute) instead.
+    //
+    // The script is wrapped in an IIFE and references the dialog by
+    // its generated id so multiple HostDialogs on a page don't clobber
+    // one another.
+    if modal_true {
+        let should_init = match &open_attr[..] {
+            " open" => true,                       // literal open: true
+            s if s.starts_with(" open=") => true,  // slot ref — host decides at runtime
+            _ => false,                            // literal false / absent
+        };
+        if should_init {
+            writeln!(
+                out,
+                "{pad}<script>(function(){{var d=document.querySelector('dialog#{id}');if(d&&d.hasAttribute('open')){{d.removeAttribute('open');d.showModal();}}}})();</script>"
+            )
+            .unwrap();
+        }
+    }
+
+    // dismiss-on-backdrop: false → intercept the `cancel` event so the
+    // browser's Esc / backdrop-dismiss does not close the dialog. The
+    // user-visible effect: the dialog stays open until an explicit
+    // close action (a child button calling `close()`, or the `open`
+    // slot flipping to false) takes it down.
+    if dismiss_on_backdrop_false {
+        writeln!(
+            out,
+            "{pad}<script>(function(){{var d=document.querySelector('dialog#{id}');if(d){{d.addEventListener('cancel',function(e){{e.preventDefault();}});}}}})();</script>"
+        )
+        .unwrap();
+    }
+
+    Ok(out)
 }
 
 // =====================================================================
@@ -1941,6 +2166,7 @@ mod tests {
             "HostInput",
             "HostButton",
             "HostTable",
+            "HostDialog",
         ] {
             let l = layout("X", node(tag));
             let r = from_pipeline(&component("X", vec![]), &l, &empty_style("X"));
@@ -1949,5 +2175,290 @@ mod tests {
                 "expected primitive {tag} to lower without error, got: {r:?}"
             );
         }
+    }
+
+    // ===================================================================
+    // UI29-1 HostDialog tests (U29-1-K-html)
+    // ===================================================================
+
+    // -------------------------------------------------------------------
+    // U29-1-K-html test 1 — An empty HostDialog (no props, no children,
+    // implicit modal=true default but no `open`) lowers to a closed
+    // `<dialog>` with no body. The browser shows nothing until something
+    // sets the `open` attribute or calls `showModal()`.
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_dialog_empty_lowers_to_closed_dialog() {
+        let out = from_pipeline(
+            &component("D", vec![]),
+            &layout("D", node("HostDialog")),
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("<dialog id=\"mos-dlg-0\"></dialog>"),
+            "expected empty closed dialog, got:\n{out}"
+        );
+        // Implicit modal: true but the dialog isn't open — no init
+        // script should be emitted (we'd just open a closed dialog).
+        assert!(
+            !out.contains("showModal()"),
+            "expected no showModal() for closed dialog, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-1-K-html test 2 — `open: true` literal adds the bare `open`
+    // HTML attribute. Combined with the spec-default `modal: true`, an
+    // inline `showModal()` init script promotes it to a real modal.
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_dialog_with_open_true_literal_emits_open_attr_and_modal_script() {
+        let l = layout(
+            "D",
+            node_with_props("HostDialog", vec![prop_keyword("open", "true")]),
+        );
+        let out = from_pipeline(&component("D", vec![]), &l, &empty_style("D"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<dialog id=\"mos-dlg-0\" open>"),
+            "expected open attribute, got:\n{out}"
+        );
+        assert!(
+            out.contains("showModal()"),
+            "expected modal init script (modal:true default), got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-1-K-html test 3 — `open: slot: x` substitutes a `{{x}}`
+    // template token in the `open` attribute; the host's template
+    // engine resolves it at render time. The modal-init script is also
+    // emitted (slot semantics: assume it *might* be open).
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_dialog_with_open_slot_ref_substitutes_template_token() {
+        let l = layout(
+            "D",
+            node_with_props("HostDialog", vec![prop_slot("open", "is-open")]),
+        );
+        let out = from_pipeline(&component("D", vec![]), &l, &empty_style("D"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("open=\"{{isOpen}}\""),
+            "expected handlebars open placeholder, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-1-K-html test 4 — `modal: true` (the default) with `open:
+    // true` emits the showModal() init script. With `modal: false` the
+    // script is suppressed (HTML's bare `open` attribute on its own
+    // already performs the non-modal `show()` for us).
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_dialog_modal_false_suppresses_show_modal_script() {
+        let l = layout(
+            "D",
+            node_with_props(
+                "HostDialog",
+                vec![
+                    prop_keyword("open", "true"),
+                    prop_keyword("modal", "false"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("D", vec![]), &l, &empty_style("D"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains(" open"),
+            "expected bare open attribute for non-modal show(), got:\n{out}"
+        );
+        assert!(
+            !out.contains("showModal()"),
+            "expected no showModal() with modal:false, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-1-K-html test 5 — Children render inside the dialog in tree
+    // order, indented one level deeper. Verifies that the existing
+    // walker plumbing works through the dialog body.
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_dialog_with_children_renders_them_inside() {
+        let dialog = node_with_props_and_children(
+            "HostDialog",
+            vec![],
+            vec![
+                node_with_props("Text", vec![prop_string("content", "Hello")]),
+                node("Divider"),
+            ],
+        );
+        let out = from_pipeline(
+            &component("D", vec![]),
+            &layout("D", dialog),
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        // Open + close tags wrap a body, body contains children in order.
+        assert!(out.contains("<dialog"), "expected open dialog, got:\n{out}");
+        assert!(out.contains("</dialog>"), "expected close dialog, got:\n{out}");
+        let i_hello = out.find("Hello").expect("Hello present");
+        let i_hr = out.find("<hr>").expect("<hr> present");
+        let i_close = out.find("</dialog>").expect("</dialog> present");
+        assert!(
+            i_hello < i_hr && i_hr < i_close,
+            "expected children inside dialog in tree order, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-1-K-html test 6 — `title: slot: t` renders as an `<h2>` first
+    // child inside the dialog body, with the slot name substituted as
+    // a handlebars token.
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_dialog_with_title_slot_emits_h2_first_child() {
+        let l = layout(
+            "D",
+            node_with_props_and_children(
+                "HostDialog",
+                vec![prop_slot("title", "dialog-title")],
+                vec![node_with_props("Text", vec![prop_string("content", "body")])],
+            ),
+        );
+        let out = from_pipeline(&component("D", vec![]), &l, &empty_style("D"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<h2>{{dialogTitle}}</h2>"),
+            "expected h2 with title slot placeholder, got:\n{out}"
+        );
+        // h2 must precede the body children.
+        let i_h2 = out.find("<h2>").expect("h2 present");
+        let i_body = out.find("body").expect("body present");
+        assert!(
+            i_h2 < i_body,
+            "expected title h2 before body, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-1-K-html test 7 — `dismiss-on-backdrop: false` adds an
+    // inline script that intercepts the `cancel` event (the browser's
+    // Esc / backdrop-click signal). The dialog stays open until an
+    // explicit close action.
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_dialog_dismiss_on_backdrop_false_adds_cancel_intercept_script() {
+        let l = layout(
+            "D",
+            node_with_props(
+                "HostDialog",
+                vec![prop_keyword("dismiss-on-backdrop", "false")],
+            ),
+        );
+        let out = from_pipeline(&component("D", vec![]), &l, &empty_style("D"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("addEventListener('cancel'"),
+            "expected cancel-event interceptor, got:\n{out}"
+        );
+        assert!(
+            out.contains("preventDefault()"),
+            "expected preventDefault in interceptor, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-1-K-html test 8 — `onClose` (and `onOpen`) emit refs are
+    // dropped silently with the standard "emit dropped: HTML is
+    // static" comment, mirroring the rest of the HTML backend's no-JS-
+    // runtime convention.
+    // -------------------------------------------------------------------
+    #[test]
+    fn host_dialog_on_close_emit_ref_drops_with_comment() {
+        let m = MosmodelComponent {
+            component: "D".to_string(),
+            slots: Vec::new(),
+            emits: vec![EmitDecl {
+                name: "onClose".to_string(),
+                params: Vec::new(),
+            }],
+        };
+        let l = layout(
+            "D",
+            node_with_props("HostDialog", vec![prop_emit("onClose", "onClose")]),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("D")).unwrap().output;
+        assert!(
+            out.contains("<!-- emit \"onClose\" dropped: HTML is static -->"),
+            "expected drop comment for onClose, got:\n{out}"
+        );
+        // No JS event-handler attribute should leak through.
+        assert!(
+            !out.contains("onclose="),
+            "emit must not produce a DOM attribute, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-1-K-html test 9 — Multiple HostDialogs on a single page get
+    // distinct ids (`mos-dlg-0`, `mos-dlg-1`, …) so the inline
+    // showModal / cancel-intercept scripts target the right element.
+    // -------------------------------------------------------------------
+    #[test]
+    fn multiple_host_dialogs_get_distinct_ids() {
+        let l = layout(
+            "D",
+            node_with_props_and_children(
+                "Box",
+                vec![],
+                vec![node("HostDialog"), node("HostDialog")],
+            ),
+        );
+        let out = from_pipeline(&component("D", vec![]), &l, &empty_style("D"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("id=\"mos-dlg-0\""),
+            "expected first dialog id, got:\n{out}"
+        );
+        assert!(
+            out.contains("id=\"mos-dlg-1\""),
+            "expected second dialog id, got:\n{out}"
+        );
+    }
+
+    // -------------------------------------------------------------------
+    // U29-1-K-html test 10 — The dialog id counter resets between
+    // `from_pipeline` calls so repeated emits of the same input
+    // produce byte-identical output. Critical for snapshot tests and
+    // the build tool's caching.
+    // -------------------------------------------------------------------
+    #[test]
+    fn dialog_id_counter_resets_between_pipeline_calls() {
+        let first = from_pipeline(
+            &component("D", vec![]),
+            &layout("D", node("HostDialog")),
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        let second = from_pipeline(
+            &component("D", vec![]),
+            &layout("D", node("HostDialog")),
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        assert_eq!(first, second, "emits must be deterministic across calls");
     }
 }
