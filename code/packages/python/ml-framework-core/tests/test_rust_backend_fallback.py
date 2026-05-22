@@ -725,6 +725,14 @@ class SoftmaxFallbackTests(unittest.TestCase):
         self.assertAlmostEqual(sum(result.data[0:3]), 1.0, places=12)
         self.assertAlmostEqual(sum(result.data[3:6]), 1.0, places=12)
 
+    def test_softmax_backward_via_rust_raises_when_unavailable(self) -> None:
+        """``softmax_backward_via_rust`` must raise (defence-in-depth)."""
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.softmax_backward_via_rust(
+                [1.0, 1.0, 1.0], [0.3, 0.3, 0.4], (3,), dim=0
+            )
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
     def test_softmax_saved_metadata_populated_via_fallback(self) -> None:
         """Backward needs ``saved_metadata["output"]``.  Confirm the
         fallback path populates it and the gradient lands correctly.

@@ -63,6 +63,7 @@ from ._rust_backend import (
     should_use_rust_for_reduction,
     sigmoid_backward_via_rust,
     sigmoid_via_rust,
+    softmax_backward_via_rust,
     softmax_via_rust,
     sub_via_rust,
     sum_axis_via_rust,
@@ -1045,6 +1046,22 @@ class SoftmaxFunction(Function):
 
         if dim < 0:
             dim = a.ndim + dim
+
+        # MX10 Phase 4-back-softmax — optional Rust fast path.
+        # Softmax backward = ``y * (grad - sum(grad * y, dim, keepdim=True))``
+        # via a 5-op composed graph (Mul → ReduceSum → Broadcast →
+        # Sub → Mul) reusing Phase 3b/3d axis-reduction and broadcast
+        # building blocks.  Same threshold as forward.
+        if should_use_rust_for_activation(len(output)):
+            return (
+                softmax_backward_via_rust(
+                    grad_output.data,
+                    output,
+                    a.shape,
+                    dim,
+                    device=a.device,
+                ),
+            )
 
         if a.ndim == 1:
             # y * (grad - sum(grad * y))

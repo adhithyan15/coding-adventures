@@ -1691,3 +1691,107 @@ def sigmoid_backward_via_rust(
         )
     out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
     return _Tensor(out_floats, target_shape, device=device)
+
+
+def softmax_backward_via_rust(
+    grad_data: list[float],
+    output_data: list[float],
+    target_shape: tuple[int, ...],
+    dim: int,
+    *,
+    device: str | None = None,
+) -> Tensor:
+    """``y * (g - sum(g * y, dim, keep_dims=True))`` as a 5-op composed graph.
+
+    Topology (for a 2-D input of shape ``(N, K)`` with ``dim=1``)::
+
+        g(0) ─┬─Mul(g, y)──> gy(2)
+        y(1) ─┘                │
+                              ReduceSum(gy, axes=[dim], keep_dims=True) ──> sum_gy(3)   shape (N, 1)
+                                                                              │
+                              Broadcast(sum_gy, target=input_shape) ──> sum_gy_bcast(4) shape (N, K)
+        g(0) ──Sub(g, sum_gy_bcast)──> g_minus_sum(5)                                   shape (N, K)
+        y(1) ──┐
+        g_minus_sum(5) ──Mul(y, g_minus_sum)──> output(6)                                shape (N, K)
+
+    5 ops, 7 tensors, no constants.  All building blocks already
+    used elsewhere in this module (Mul/ReduceSum/Broadcast/Sub/Mul);
+    this is the first composed graph that combines per-axis
+    reduction (Phase 3b) with broadcast (Phase 3d's helper pattern).
+
+    Caller must normalise ``dim`` to non-negative before calling.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "softmax_backward_via_rust called but Rust backend is not "
+            "available; callers must check should_use_rust_for_activation() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(grad_data)
+    if len(output_data) != numel:
+        raise RuntimeError(
+            f"softmax_backward_via_rust: grad has {numel} cells but output "
+            f"has {len(output_data)} cells — must match"
+        )
+
+    target_shape_list = list(target_shape)
+    # The per-axis reduce-with-keepdim output: same rank, dim becomes 1.
+    reduced_shape = list(target_shape_list)
+    reduced_shape[dim] = 1
+
+    grad_bytes = struct.pack(f"<{numel}f", *grad_data)
+    y_bytes = struct.pack(f"<{numel}f", *output_data)
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    {"id": 0, "dtype": "f32", "shape": target_shape_list},  # g
+                    {"id": 1, "dtype": "f32", "shape": target_shape_list},  # y
+                    {"id": 2, "dtype": "f32", "shape": target_shape_list},  # gy
+                    {"id": 3, "dtype": "f32", "shape": reduced_shape},      # sum_gy
+                    {"id": 4, "dtype": "f32", "shape": target_shape_list},  # sum_gy_bcast
+                    {"id": 5, "dtype": "f32", "shape": target_shape_list},  # g - sum_gy_bcast
+                    {"id": 6, "dtype": "f32", "shape": target_shape_list},  # output = y * (g - sum_gy_bcast)
+                ],
+                "inputs": [0, 1],
+                "outputs": [6],
+                "ops": [
+                    {"kind": "Mul", "lhs": 0, "rhs": 1, "output": 2},
+                    {
+                        "kind": "ReduceSum",
+                        "input": 2,
+                        "axes": [dim],
+                        "keep_dims": True,
+                        "output": 3,
+                    },
+                    {
+                        "kind": "Broadcast",
+                        "input": 3,
+                        "target_shape": target_shape_list,
+                        "output": 4,
+                    },
+                    {"kind": "Sub", "lhs": 0, "rhs": 4, "output": 5},
+                    {"kind": "Mul", "lhs": 1, "rhs": 5, "output": 6},
+                ],
+                "constants": [],
+            },
+            "inputs": [grad_bytes.hex(), y_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_bytes = bytes.fromhex(result["outputs"][0])
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"softmax_backward_via_rust: expected {expected_bytes} output "
+            f"bytes ({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+    return _Tensor(out_floats, target_shape, device=device)
