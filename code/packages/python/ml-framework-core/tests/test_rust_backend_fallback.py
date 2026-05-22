@@ -325,6 +325,76 @@ class ReductionFallbackTests(unittest.TestCase):
 
 
 # ──────────────────────────────────────────────────────────────────
+# MX10 Phase 3c — Sum/Mean reduce-all backward fallback tests
+#
+# Phase 3c adds backward-path dispatch for SumFunction and
+# MeanFunction when ``dim is None``.  Both go through a single
+# Broadcast op (scalar → input shape) in Rust; Mean folds its
+# ``/numel`` into the scalar before dispatch.
+#
+# Fallback: when ``_RUST_AVAILABLE = False``, dispatch must
+# short-circuit and the pure-Python ``[grad[0]] * a.numel`` list
+# multiplication must still produce the correct gradient.
+# ──────────────────────────────────────────────────────────────────
+
+
+class ReductionBackwardFallbackTests(unittest.TestCase):
+    """Confirm Sum/Mean reduce-all backward still works without Rust."""
+
+    def setUp(self) -> None:
+        self._saved_available = _rust_backend._RUST_AVAILABLE
+        _rust_backend._RUST_AVAILABLE = False
+
+    def tearDown(self) -> None:
+        _rust_backend._RUST_AVAILABLE = self._saved_available
+
+    def test_predicate_returns_false_when_unavailable(self) -> None:
+        """Even a giant target must fall back when the extension is missing."""
+        self.assertFalse(
+            _rust_backend.should_use_rust_for_backward_broadcast(10_000_000)
+        )
+
+    def test_sum_backward_via_rust_raises_when_unavailable(self) -> None:
+        """``sum_backward_reduce_all_via_rust`` must raise."""
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.sum_backward_reduce_all_via_rust(1.0, (3,))
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_mean_backward_via_rust_raises_when_unavailable(self) -> None:
+        """``mean_backward_reduce_all_via_rust`` must raise."""
+        with self.assertRaises(RuntimeError):
+            _rust_backend.mean_backward_reduce_all_via_rust(1.0, (3,), 3)
+
+    def test_sum_reduce_all_backward_correct_via_fallback(self) -> None:
+        """``a.sum().backward(grad)`` fills the input grad with ``grad[0]``.
+
+        Hand-computed: for ``a = [1, 2, 3]`` (any values), ``a.sum()``
+        backward with ``grad = [7.0]`` puts ``7.0`` in every input
+        gradient cell.
+        """
+        a = Tensor([1.0, 2.0, 3.0], (3,), requires_grad=True)
+        scalar_sum = a.sum()
+        scalar_sum.backward(Tensor([7.0], (1,)))
+        self.assertIsNotNone(a.grad)
+        self.assertEqual(a.grad.shape, (3,))
+        self.assertEqual(a.grad.data, [7.0, 7.0, 7.0])
+
+    def test_mean_reduce_all_backward_correct_via_fallback(self) -> None:
+        """``a.mean().backward(grad)`` fills the input grad with
+        ``grad[0] / numel``.
+
+        Hand-computed: for ``a = [1, 2, 3, 4]`` and ``grad = [8.0]``,
+        each gradient cell = ``8.0 / 4 = 2.0``.
+        """
+        a = Tensor([1.0, 2.0, 3.0, 4.0], (4,), requires_grad=True)
+        scalar_mean = a.mean()
+        scalar_mean.backward(Tensor([8.0], (1,)))
+        self.assertIsNotNone(a.grad)
+        self.assertEqual(a.grad.shape, (4,))
+        self.assertEqual(a.grad.data, [2.0, 2.0, 2.0, 2.0])
+
+
+# ──────────────────────────────────────────────────────────────────
 # MX10 Phase 3b — axis-specific reduction fallback tests
 #
 # Phase 3 covered the dim=None case; Phase 3b adds dim != None.

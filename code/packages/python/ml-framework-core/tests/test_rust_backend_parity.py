@@ -469,6 +469,78 @@ class ReductionParityTests(unittest.TestCase):
 
         self._assert_close_scalar(rust_result.data[0], python_result.data[0])
 
+    def test_sum_reduce_all_backward_parity(self) -> None:
+        """``SumFunction.backward(grad)`` for ``dim=None`` produces
+        the same broadcast gradient via Rust and pure-Python.
+
+        Phase 3c — backward broadcasts the scalar gradient back to
+        the input shape.  Rust uses a single Broadcast op (input
+        shape (1,) → input shape); pure-Python uses the
+        ``[grad[0]] * a.numel`` list multiplication.  Both should
+        produce element-wise identical results (no floating-point
+        ops involved — pure data movement).
+        """
+        from ml_framework_core import Tensor, _rust_backend
+
+        # Build a requires_grad tensor at the threshold (100_000 cells).
+        a_data = [0.0] * (500 * 200)
+        a = Tensor(a_data, self.SHAPE, requires_grad=True)
+        scalar_sum = a.sum()
+        # Backward with grad = 42.0 (any non-trivial value; the
+        # broadcast itself doesn't depend on the value).
+        scalar_sum.backward(Tensor([42.0], (1,)))
+        rust_grad = a.grad
+        self.assertIsNotNone(rust_grad)
+        self.assertEqual(rust_grad.shape, self.SHAPE)
+
+        # Pure-Python reference: each cell = 42.0.
+        a2 = Tensor(list(a_data), self.SHAPE, requires_grad=True)
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            scalar_sum_py = a2.sum()
+            scalar_sum_py.backward(Tensor([42.0], (1,)))
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        # Element-wise equality (no f32 quantisation issue —
+        # 42.0 round-trips through f32 exactly).
+        self.assertEqual(rust_grad.data, a2.grad.data)
+
+    def test_mean_reduce_all_backward_parity(self) -> None:
+        """``MeanFunction.backward(grad)`` for ``dim=None`` —
+        Rust pre-divides the scalar then broadcasts; pure-Python
+        divides per-cell.  Both produce ``grad / numel`` in every
+        cell.
+
+        Using ``grad = 100.0`` and numel = 100_000: per-cell value
+        is exactly ``0.001`` which round-trips through f32 cleanly
+        enough that ``assertAlmostEqual(places=6)`` catches any
+        real numerical bug.
+        """
+        from ml_framework_core import Tensor, _rust_backend
+
+        a_data = [0.0] * (500 * 200)
+        a = Tensor(a_data, self.SHAPE, requires_grad=True)
+        scalar_mean = a.mean()
+        scalar_mean.backward(Tensor([100.0], (1,)))
+        rust_grad = a.grad
+        self.assertIsNotNone(rust_grad)
+        self.assertEqual(rust_grad.shape, self.SHAPE)
+
+        a2 = Tensor(list(a_data), self.SHAPE, requires_grad=True)
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            scalar_mean_py = a2.mean()
+            scalar_mean_py.backward(Tensor([100.0], (1,)))
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        # Element-wise approx equality (100.0 / 100_000 = 0.001)
+        for got, want in zip(rust_grad.data, a2.grad.data, strict=False):
+            self.assertAlmostEqual(got, want, places=6)
+
 
 # ──────────────────────────────────────────────────────────────────
 # MX10 Phase 3b — axis-specific reduction parity tests

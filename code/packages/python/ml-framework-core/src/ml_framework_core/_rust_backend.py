@@ -1176,3 +1176,150 @@ def gelu_via_rust(a: Tensor) -> Tensor:
     out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
 
     return _Tensor(out_floats, a.shape, device=a.device)
+
+
+# ──────────────────────────────────────────────────────────────────
+# Backward-path helpers (MX10 Phase 3c)
+#
+# Phase 3 (forward) and Phase 3b (forward axis-specific) routed the
+# reduce-all and axis-specific Sum/Mean forwards through Rust.
+# Phase 3c starts wiring the **backward** path for the reduce-all
+# case (``dim is None``).
+#
+# Sum's reduce-all backward is ``[grad_output[0]] * a.numel`` —
+# the same scalar repeated ``numel`` times.  Mean's reduce-all
+# backward is the same shape, but with each cell divided by
+# ``a.numel`` first.
+#
+# Both reduce to **broadcast a scalar to a target shape** via
+# matrix-cpu's ``Broadcast`` op.  For Mean we pre-divide the scalar
+# in Python (one division done once) rather than appending a Mul to
+# the graph, so a single helper covers both ops with zero ops
+# difference between them.
+#
+# Axis-specific backward (``dim != None``) is deferred to Phase 3d
+# — it needs a Reshape + Broadcast composition because the
+# grad_output rank is smaller than the input rank, and the rank
+# bump is non-trivial to wire generically.
+# ──────────────────────────────────────────────────────────────────
+
+
+def should_use_rust_for_backward_broadcast(target_numel: int) -> bool:
+    """Predicate gating ``_broadcast_scalar_via_rust``.
+
+    Broadcast-from-scalar is pure data movement (every output cell
+    is the same f32 value), so the per-cell cost is lower than a
+    forward reduction.  We reuse the same ``100_000`` threshold for
+    now — if profiling shows backward break-even at a different
+    point we can split into its own constant.
+    """
+    if not _RUST_AVAILABLE:
+        return False
+    return target_numel >= _ELEMENTWISE_RUST_THRESHOLD
+
+
+def _broadcast_scalar_via_rust(
+    scalar: float, target_shape: tuple[int, ...], *, device: str | None = None
+) -> Tensor:
+    """Broadcast a single f32 ``scalar`` to a tensor of ``target_shape``.
+
+    Single-op graph: input is shape ``(1,)`` carrying ``[scalar]``,
+    output is shape ``target_shape``, the op is ``Broadcast`` with
+    ``target_shape``.
+
+    Output numel = product of ``target_shape``.  Caller passes
+    ``device`` so the returned ``Tensor`` lands on the same device
+    as the original autograd-tracked input (matches the pure-Python
+    contract for SumFunction/MeanFunction backward).
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "_broadcast_scalar_via_rust called but Rust backend is not available; "
+            "callers must check should_use_rust_for_backward_broadcast() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    target_shape_list = list(target_shape)
+    target_numel = 1
+    for s in target_shape_list:
+        target_numel *= s
+
+    scalar_bytes = struct.pack("<f", float(scalar))
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    # input: shape (1,) carrying the scalar
+                    {"id": 0, "dtype": "f32", "shape": [1]},
+                    # output: shape target_shape, every cell = scalar
+                    {"id": 1, "dtype": "f32", "shape": target_shape_list},
+                ],
+                "inputs": [0],
+                "outputs": [1],
+                "ops": [
+                    {
+                        "kind": "Broadcast",
+                        "input": 0,
+                        "target_shape": target_shape_list,
+                        "output": 1,
+                    }
+                ],
+                "constants": [],
+            },
+            "inputs": [scalar_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_hex = result["outputs"][0]
+    out_bytes = bytes.fromhex(out_hex)
+
+    expected_bytes = target_numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"_broadcast_scalar_via_rust: expected {expected_bytes} output "
+            f"bytes ({target_numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{target_numel}f", out_bytes))
+
+    return _Tensor(out_floats, target_shape, device=device)
+
+
+def sum_backward_reduce_all_via_rust(
+    grad_scalar: float, target_shape: tuple[int, ...], *, device: str | None = None
+) -> Tensor:
+    """``SumFunction.backward(grad)`` for the ``dim=None`` case.
+
+    Pure-Python equivalent: ``[grad_scalar] * a.numel``.
+    Rust path: broadcast ``grad_scalar`` from shape ``(1,)`` to
+    ``target_shape`` in a single Broadcast op.
+    """
+    return _broadcast_scalar_via_rust(grad_scalar, target_shape, device=device)
+
+
+def mean_backward_reduce_all_via_rust(
+    grad_scalar: float,
+    target_shape: tuple[int, ...],
+    target_numel: int,
+    *,
+    device: str | None = None,
+) -> Tensor:
+    """``MeanFunction.backward(grad)`` for the ``dim=None`` case.
+
+    Pure-Python equivalent: ``[grad_scalar / a.numel] * a.numel``.
+    Rust path: pre-divide ``grad_scalar`` by ``target_numel`` in
+    Python (one division), then broadcast the result.  Same Rust
+    op as ``sum_backward_reduce_all_via_rust`` — we just hand it a
+    pre-scaled scalar.
+
+    Composing as ``Broadcast → Mul(c_inv_count)`` would also work,
+    but appending the Mul + materialising the inverse-count
+    constant tensor at full input shape would be net-loss for
+    backward.  One Python division up front is strictly cheaper.
+    """
+    scaled = float(grad_scalar) / float(target_numel)
+    return _broadcast_scalar_via_rust(scaled, target_shape, device=device)

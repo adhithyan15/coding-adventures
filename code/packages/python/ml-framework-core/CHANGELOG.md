@@ -2,6 +2,98 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 3c: optional Rust fast path for reduce-all `SumFunction.backward` / `MeanFunction.backward`
+
+The previous MX10 phases accelerated forward paths for the entire
+op family (matmul, all elementwise, all reductions, all 5 classic
+activations) plus the matmul backward path.  This PR is the first
+non-matmul **backward**-path dispatch: the reduce-all case of
+`SumFunction.backward` and `MeanFunction.backward`.
+
+#### What the backward does
+
+For both ops, the `dim is None` backward broadcasts the scalar
+gradient back to the input shape:
+
+- `SumFunction.backward(grad)`: every input grad cell = `grad[0]`.
+- `MeanFunction.backward(grad)`: every input grad cell = `grad[0] / numel`.
+
+Pure-Python uses a list multiplication (`[scalar] * a.numel`).
+The Rust path uses matrix-cpu's `Broadcast` op with input shape
+`(1,)` and `target_shape=a.shape` — pure data movement, no
+elementwise math involved.
+
+#### Mean folds its divisor into the scalar
+
+Rather than appending a `Mul` op + ones-tensor constant after
+`Broadcast`, the Mean helper pre-divides the scalar in Python
+(one float division done once) and ships the pre-scaled scalar
+through the same single-op `Broadcast` graph as Sum.  This keeps
+both ops at exactly one Rust op and zero constants.
+
+#### Implementation
+
+- **`_rust_backend.py`** — adds:
+    - `should_use_rust_for_backward_broadcast(target_numel)` predicate.
+      Reuses the same `_ELEMENTWISE_RUST_THRESHOLD = 100_000` for
+      consistency; broadcast-from-scalar is pure data movement so
+      the per-cell cost is even lower than forward reduction, but
+      the FFI round-trip is still the dominant cost.
+    - `_broadcast_scalar_via_rust(scalar, target_shape, device)`
+      single-op graph helper.  Builds a 2-tensor 1-op envelope:
+      input shape `(1,)` carrying the scalar, output shape
+      `target_shape`, op = `Broadcast` with `target_shape`.
+    - Two thin public wrappers: `sum_backward_reduce_all_via_rust`
+      and `mean_backward_reduce_all_via_rust`.  Mean wraps with one
+      Python division.
+
+- **`functions.py`** — imports the two new helpers + predicate;
+  adds a 4-line dispatch block at the top of both `SumFunction.backward`
+  and `MeanFunction.backward`'s `dim is None` branch.  Pure-Python
+  list-multiplication kernels stay byte-identical in the fallback path.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `numel ≥ 100_000` | **Rust** (1-op Broadcast) |
+| Extension installed, `numel < 100_000` | Pure-Python `[scalar] * numel` |
+| Extension NOT installed | Pure-Python `[scalar] * numel` |
+| `dim != None` (axis-specific backward) | Pure-Python (always — Phase 3d) |
+
+#### Tests (72 total MX10 tests, was 65)
+
+- **`ReductionParityTests.test_sum_reduce_all_backward_parity`** and
+  **`test_mean_reduce_all_backward_parity`** (2 cases, skip if
+  extension missing): builds a 100_000-cell `requires_grad=True`
+  tensor, runs `.sum().backward(grad)` / `.mean().backward(grad)`
+  via Rust, then re-runs via pure-Python and compares gradients.
+  Sum uses exact equality (no float ops); Mean uses
+  `assertAlmostEqual(places=6)` (one Python division per dispatch).
+- **`ReductionBackwardFallbackTests`** (5 cases, always run):
+  predicate short-circuit, defence-in-depth `RuntimeError` for
+  both helpers, correctness for Sum (3-element tensor, grad=7 →
+  `[7,7,7]`), correctness for Mean (4-element tensor, grad=8,
+  numel=4 → `[2,2,2,2]`).
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**367 passed + 27 skipped (parity tests that need the extension)**;
+the pre-existing `test_device.py` failure on main is unrelated.
+
+### What's NOT in Phase 3c
+
+- Axis-specific backward (`dim != None`).  Deferred to Phase 3d —
+  needs a `Reshape + Broadcast` composition because grad_output
+  rank is smaller than input rank (the reduced axis is collapsed),
+  so the rank-bump-then-broadcast is non-trivial to wire generically.
+- Backward-path Rust dispatch for the activation family (ReLU,
+  Sigmoid, Tanh, GELU, Softmax).  Sigmoid/Tanh are scalar ops on
+  saved output; ReLU is a mask; GELU/Softmax have multi-op
+  backwards.  Each gets its own sub-phase if profiling shows demand.
+- Backward-path Rust dispatch for elementwise ops.  Most are
+  trivial (`+1` / `-1` / pass-through of grad); not worth a Rust
+  round-trip.
+
 ### Added — MX10 Phase 4c: optional Rust fast path for `GELUFunction` via a 9-op composed graph (tanh approximation)
 
 Closes the Phase 4 activation family: with this PR, **every member
