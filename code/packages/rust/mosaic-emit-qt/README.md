@@ -89,10 +89,12 @@ Three things to notice:
 | `HostInput`   | `TextInput { text: ...; readOnly: ...; onAccepted/Keys.onEscapePressed }`   |
 | `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (from Controls 2.15)   |
 | `HostScroll`  | `ScrollView { ... children ... }` (from Controls 2.15)                      |
+| `HostDialog`  | `Popup { modal: ...; visible: ...; closePolicy: ...; contentItem: ColumnLayout { ... } }` (from Controls 2.15) |
 
 The `QtQuick.Controls 2.15` import is added **only when** the layout
-tree uses a Controls-backed primitive (`HostButton` or `HostScroll`),
-keeping the import set minimal for components that don't need it.
+tree uses a Controls-backed primitive (`HostButton`, `HostScroll`, or
+`HostDialog`), keeping the import set minimal for components that
+don't need it.
 
 ### Host primitive prop mappings (UI29 §3)
 
@@ -120,6 +122,22 @@ keeping the import set minimal for components that don't need it.
 | `disabled: slot: x`     | `enabled: !x`          |
 | `disabled: true/false`  | `enabled: !true/false` |
 | `onTap: emit: onE`      | `onClicked: e()`       |
+
+**`HostDialog` (`Popup` from Controls, UI29-1):**
+
+| moslayout prop                     | QML output                                                                       |
+|---|---|
+| `open: slot: x`                    | `visible: x` (bare identifier)                                                   |
+| `open: true/false`                 | `visible: true/false`                                                            |
+| (no `open` prop)                   | `visible: false`                                                                 |
+| `modal: true` (keyword, default)   | `modal: true` — focus trap + background dim                                      |
+| `modal: false` (keyword)           | `modal: false` — in-flow popover                                                 |
+| `title: slot: x` / `"literal"`     | a synthesised `Text { text: ...; font.bold: true }` as the first contentItem child |
+| `dismiss-on-backdrop: false` (kw)  | `closePolicy: Popup.CloseOnEscape`                                               |
+| `dismiss-on-backdrop: true` / abs. | `closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent` (default)   |
+| `onClose: emit: onE`               | `onClosed: e()`                                                                  |
+| `onOpen: emit: onE`                | `onOpened: e()`                                                                  |
+| (children)                         | body of `contentItem: ColumnLayout { ... }`                                      |
 
 **`Stack` (`Item` overlay):**
 

@@ -4,6 +4,46 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — U29-1-K-qt — `HostDialog` kernel primitive lowering
+
+Brings the 16th UI29 kernel primitive (`HostDialog`, UI29-1, spec
+`code/specs/UI29-1-host-dialog.md`) into the Qt/QML backend.
+
+- **`HostDialog` → `Popup { ... }`** from `QtQuick.Controls 2.15`.
+  `Popup` provides focus trap + background dim out of the box when
+  `modal: true`; `modal: false` produces an in-flow popover.
+- **Prop mappings:**
+  - `open: slot: x` → `visible: x` (bare identifier binding); absent →
+    `visible: false`.
+  - `modal: true` / `modal: false` (compile-time keyword) → `modal:
+    true` / `modal: false`; default is `modal: true`.
+  - `dismiss-on-backdrop: false` → `closePolicy: Popup.CloseOnEscape`
+    (Esc-only); default (absent or `true`) →
+    `Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent`.
+  - `onClose: emit: onE` → `onClosed: e()` — Popup's signal is
+    past-tense `closed`; the Mosaic emit follows the `on` + present
+    convention.
+  - `onOpen: emit: onE` → `onOpened: e()` — same pattern.
+- **`title:` slot or literal** lowers to a synthesised
+  `Text { text: ...; font.bold: true }` as the first child of
+  `contentItem`. Plain `Popup` has no built-in title slot, so we
+  insert a bold text row before the author's body.
+- **Children render inside `contentItem: ColumnLayout { ... }`.** We
+  always emit the `ColumnLayout` wrapper (even for an empty dialog)
+  so the Popup has a well-defined single content element and a
+  consistent styling anchor across calls.
+- **Conditional `QtQuick.Controls 2.15` import** now triggers on
+  `HostDialog` too, alongside `HostButton` and `HostScroll`.
+- **9 new unit tests** in `pipeline.rs` cover: empty dialog skeleton;
+  `open` slot → `visible`; `modal: true`; `modal: false`; `onClose` →
+  `onClosed`; children rendered inside contentItem; `title:` slot
+  emits bold Text as first child (ordering pinned); `dismiss-on-backdrop:
+  false` switches to escape-only closePolicy (with a sanity check that
+  the default keeps outside-press); and that using `HostDialog` triggers
+  the QtQuick.Controls 2.15 import. A 10th test pins `onOpen` →
+  `onOpened` separately so regressions on one signal direction don't
+  slip through.
+
 ### Added — U29-K-qt — `For` / `If` / `Else` meta-primitive lowering
 
 Completes the Qt/QML kernel surface for the UI29 §3 meta-primitives.
