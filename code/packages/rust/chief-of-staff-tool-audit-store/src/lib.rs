@@ -1225,6 +1225,7 @@ impl ToolAuditSupervisorDrainRunReport {
             follow_up_record_count_delta: self.follow_up_record_count_delta(),
             has_record_count_drift: self.has_record_count_drift(),
             has_follow_up_record_count_drift: self.has_follow_up_record_count_drift(),
+            has_count_drift: self.has_count_drift(),
             count_drift_kind: self.count_drift_kind(),
             count_drift_label: self.count_drift_label(),
             is_no_count_drift: self.is_no_count_drift(),
@@ -1451,6 +1452,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub has_record_count_drift: bool,
     /// Whether follow-up pressure count drift was observed.
     pub has_follow_up_record_count_drift: bool,
+    /// Whether any planned-vs-actual count drift was observed.
+    pub has_count_drift: bool,
     /// Stable classification of observed planned-vs-actual count drift.
     pub count_drift_kind: ToolAuditSupervisorDrainCountDriftKind,
     /// Stable count-drift classification label for host logs.
@@ -1662,7 +1665,7 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether any planned-vs-actual count drift was observed.
     pub fn has_count_drift(&self) -> bool {
-        self.has_record_count_drift() || self.has_follow_up_record_count_drift()
+        self.has_count_drift
     }
 
     /// Return whether planned and replayed counts stayed aligned.
@@ -4398,6 +4401,7 @@ mod tests {
         assert_eq!(summary.follow_up_record_count_delta(), 0);
         assert!(!summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
+        assert!(!summary.has_count_drift);
         assert!(!summary.has_count_drift());
         assert!(summary.is_no_count_drift);
         assert!(summary.is_no_count_drift());
@@ -4523,6 +4527,7 @@ mod tests {
         assert!(summary.has_record_count_drift());
         assert!(!summary.has_follow_up_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift());
+        assert!(summary.has_count_drift);
         assert!(summary.has_count_drift());
         assert!(!summary.is_no_count_drift);
         assert!(!summary.is_no_count_drift());
@@ -4603,6 +4608,7 @@ mod tests {
         assert!(!summary.matches_record_count());
         assert!(summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
+        assert!(summary.has_count_drift);
         assert!(summary.has_count_drift());
         assert!(!summary.is_no_count_drift);
         assert!(!summary.is_no_count_drift());
@@ -4683,6 +4689,7 @@ mod tests {
         assert!(!summary.has_record_count_drift());
         assert!(summary.has_follow_up_record_count_drift);
         assert!(summary.has_follow_up_record_count_drift());
+        assert!(summary.has_count_drift);
         assert!(summary.has_count_drift());
         assert!(!summary.is_no_count_drift);
         assert!(!summary.is_no_count_drift());

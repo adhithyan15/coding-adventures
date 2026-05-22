@@ -64,6 +64,7 @@ All notable changes to this package will be documented in this file.
 - Flattened idle, progress, and continuation flags in supervisor drain run
   summaries.
 - Count-drift presence flags for supervisor drain run reports and summaries.
+- Flattened aggregate count-drift flags for supervisor drain run summaries.
 - Stable count-drift classifications for supervisor drain run reports and
   summaries.
 - Flattened count-drift and host-investigation labels in supervisor drain run
