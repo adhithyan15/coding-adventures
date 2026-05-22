@@ -104,6 +104,9 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         Feature::DynamicTyping,
         Feature::MutableBindings,
         Feature::Loops,
+        Feature::Sequences,
+        Feature::Maps,
+        Feature::Symbols,
         Feature::Closures,
     ] {
         if lw.features_used.contains(&f) {
@@ -803,6 +806,8 @@ impl Lowerer {
             "expression" => self.lower_binary_chain(node, &["PLUS", "MINUS"]),
             "term" => self.lower_binary_chain(node, &["STAR", "SLASH"]),
             "factor" => self.lower_factor(node),
+            "array_literal" => self.lower_array_literal(node),
+            "hash_literal" => self.lower_hash_literal(node),
             // The parser sometimes wraps a bare token into an "expression_stmt"
             // when reached as the RHS of an assignment.  Recurse into it.
             "expression_stmt" => {
@@ -880,6 +885,105 @@ impl Lowerer {
     }
 
     /// Lower a `factor` node — the leaves of the expression tree.
+    /// Phase 6d — `[a, b, c]` → `Expr::SeqLit`.
+    fn lower_array_literal(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        let items: Vec<Expr> = node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .map(|n| self.lower_expression(n))
+            .collect::<Result<Vec<_>, _>>()?;
+        // SIR's SeqLit allocates a runtime list — declare the
+        // `sequences` feature so the validator accepts it.
+        self.features_used.insert(Feature::Sequences);
+        Ok(Expr::SeqLit {
+            items,
+            span: self.span_of(node),
+        })
+    }
+
+    /// Phase 6d — `{a: 1, b => 2}` → `Expr::MapLit`.  Both the
+    /// `NAME COLON expression` shorthand and the `expression => expression`
+    /// hash-rocket form lower to the same node — the key becomes a
+    /// `SymLit` for the shorthand (since `a:` is sugar for `:a =>`)
+    /// or whatever the LHS expression evaluates to for the rocket
+    /// form.
+    fn lower_hash_literal(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        let entry_nodes: Vec<&GrammarASTNode> = node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "hash_entry" => Some(n),
+                _ => None,
+            })
+            .collect();
+        let mut entries: Vec<semantic_ir::nodes::MapEntry> = Vec::with_capacity(entry_nodes.len());
+        for ent in &entry_nodes {
+            entries.push(self.lower_hash_entry(ent)?);
+        }
+        self.features_used.insert(Feature::Maps);
+        Ok(Expr::MapLit {
+            entries,
+            span: self.span_of(node),
+        })
+    }
+
+    fn lower_hash_entry(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<semantic_ir::nodes::MapEntry, RubyLowerError> {
+        // Two shapes are possible:
+        //   1. `NAME COLON expression` — shorthand.  The Name token
+        //      is the symbol key.
+        //   2. `expression "=>" expression` — hash-rocket.  Two
+        //      `expression` rule children.
+        let expression_subnodes: Vec<&GrammarASTNode> = node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .collect();
+        if expression_subnodes.len() == 2 {
+            // Rocket form.
+            let key = self.lower_expression(expression_subnodes[0])?;
+            let value = self.lower_expression(expression_subnodes[1])?;
+            return Ok(semantic_ir::nodes::MapEntry { key, value });
+        }
+        // Shorthand form — find the leading Name token.
+        let key_tok = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+            _ => None,
+        });
+        let key_tok = key_tok.ok_or_else(|| RubyLowerError {
+            message: "hash_entry missing key Name token".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })?;
+        let key = Expr::SymLit {
+            name: key_tok.value.clone(),
+            span: self.span_of_token(key_tok),
+        };
+        self.features_used.insert(Feature::Symbols);
+        let value_node = expression_subnodes.first().ok_or_else(|| RubyLowerError {
+            message: "hash_entry shorthand missing value expression".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })?;
+        let value = self.lower_expression(value_node)?;
+        Ok(semantic_ir::nodes::MapEntry { key, value })
+    }
+
     fn lower_factor(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         // factor ::= NUMBER | STRING | NAME | KEYWORD | LPAREN expression RPAREN
         for child in &node.children {

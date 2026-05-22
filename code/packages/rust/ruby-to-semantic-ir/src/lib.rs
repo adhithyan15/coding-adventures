@@ -460,6 +460,66 @@ mod tests {
         );
     }
 
+    // -----------------------------------------------------------------
+    // Phase 6d — array `[a, b, c]` and hash `{a: 1, b => 2}` literals.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn array_literal_lowers_to_seq_lit() {
+        let m = lower("x = [1, 2, 3]\n");
+        let main = main_body(&m);
+        let arr = main.stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { value: Expr::SeqLit { items, .. }, .. } => Some(items),
+            _ => None,
+        }).expect("expected SeqLit");
+        assert_eq!(arr.len(), 3);
+        assert!(matches!(arr[0], Expr::IntLit { value: 1, .. }));
+    }
+
+    #[test]
+    fn empty_array_literal_lowers_to_empty_seq_lit() {
+        let m = lower("x = []\n");
+        let main = main_body(&m);
+        let arr = main.stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { value: Expr::SeqLit { items, .. }, .. } => Some(items),
+            _ => None,
+        }).expect("expected SeqLit");
+        assert!(arr.is_empty());
+    }
+
+    #[test]
+    fn hash_shorthand_lowers_to_map_lit_with_sym_keys() {
+        let m = lower("x = {a: 1, b: 2}\n");
+        let main = main_body(&m);
+        let entries = main
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::LetBinding { value: Expr::MapLit { entries, .. }, .. } => Some(entries),
+                _ => None,
+            })
+            .expect("expected MapLit");
+        assert_eq!(entries.len(), 2);
+        // Keys should be SymLit("a") and SymLit("b").
+        assert!(
+            matches!(&entries[0].key, Expr::SymLit { name, .. } if name == "a")
+        );
+        assert!(
+            matches!(&entries[1].key, Expr::SymLit { name, .. } if name == "b")
+        );
+    }
+
+    #[test]
+    fn array_and_hash_modules_pass_sir_validator() {
+        let m = lower("x = [1, 2]\ny = {a: 1}\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected our output: {:?}",
+            result
+        );
+    }
+
     #[test]
     fn module_with_def_passes_sir_validator() {
         // v0 grammar can't yet parse nested method calls in args

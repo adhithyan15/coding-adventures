@@ -2,6 +2,23 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.5.0] - 2026-05-20
+
+### Added (Phase 6d — array and hash literal lowering)
+- `lower_array_literal` — `[a, b, c]` → `Expr::SeqLit` with all element expressions lowered recursively.
+- `lower_hash_literal` — `{a: 1, b => 2}` → `Expr::MapLit { entries }`.
+- `lower_hash_entry` handles both syntactic forms:
+  - **Shorthand** (`NAME COLON expression`) — the Name becomes a `SymLit` key (sugar for `:name =>`).
+  - **Hash-rocket** (`expression "=>" expression`) — both sides are lowered as ordinary expressions.
+- `lower_expression` now dispatches `array_literal` and `hash_literal` rule nodes alongside `expression`/`term`/`factor`.
+- Feature tracking extended: `Sequences` declared on SeqLit, `Maps` on MapLit, `Symbols` on the shorthand hash-entry key.
+
+### Tests (+4 new, total 26)
+- `[1, 2, 3]` → `SeqLit` with three items.
+- `[]` → empty `SeqLit`.
+- `{a: 1, b: 2}` → `MapLit` with two entries whose keys are `SymLit("a")` and `SymLit("b")`.
+- Combined array+hash module passes `semantic_ir::validate` (feature manifests align exactly).
+
 ## [0.4.0] - 2026-05-20
 
 ### Added (Phase 6c — `while … end` / `until … end` lowering)

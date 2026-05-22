@@ -321,5 +321,69 @@ mod tests {
         let ast = parse_ruby("while x\nend");
         assert!(find_statement_inner(&ast, "while_statement").is_some());
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6d — array and hash literals
+    // -----------------------------------------------------------------------
+
+    /// Walk the AST looking for the first node whose rule_name matches.
+    fn find_descendant<'a>(
+        node: &'a GrammarASTNode,
+        rule: &str,
+    ) -> Option<&'a GrammarASTNode> {
+        for c in &node.children {
+            if let ASTNodeOrToken::Node(n) = c {
+                if n.rule_name == rule {
+                    return Some(n);
+                }
+                if let Some(found) = find_descendant(n, rule) {
+                    return Some(found);
+                }
+            }
+        }
+        None
+    }
+
+    #[test]
+    fn test_parse_array_literal() {
+        let ast = parse_ruby("x = [1, 2, 3]");
+        let arr = find_descendant(&ast, "array_literal")
+            .expect("expected array_literal");
+        // Each element is an `expression` subnode.
+        let elem_count = arr
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression"))
+            .count();
+        assert_eq!(elem_count, 3);
+    }
+
+    #[test]
+    fn test_parse_empty_array_literal() {
+        let ast = parse_ruby("x = []");
+        assert!(find_descendant(&ast, "array_literal").is_some());
+    }
+
+    #[test]
+    fn test_parse_hash_literal_shorthand() {
+        let ast = parse_ruby("x = {a: 1, b: 2}");
+        let h = find_descendant(&ast, "hash_literal").expect("expected hash_literal");
+        let entry_count = h
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "hash_entry"))
+            .count();
+        assert_eq!(entry_count, 2);
+    }
+
+    #[test]
+    fn test_parse_hash_literal_rocket() {
+        let ast = parse_ruby("x = {a => 1}");
+        let h = find_descendant(&ast, "hash_literal").expect("expected hash_literal");
+        assert!(
+            find_descendant(h, "hash_entry").is_some(),
+            "expected hash_entry subnode"
+        );
+    }
 }
 

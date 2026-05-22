@@ -209,6 +209,8 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                 GrammarElement::TokenReference { name: r#"KEYWORD"#.to_string() },
+                GrammarElement::RuleReference { name: r#"array_literal"#.to_string() },
+                GrammarElement::RuleReference { name: r#"hash_literal"#.to_string() },
                 GrammarElement::Sequence { elements: vec![
                     GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
                     GrammarElement::RuleReference { name: r#"expression"#.to_string() },
@@ -216,6 +218,52 @@ pub fn parser_grammar() -> ParserGrammar {
                 ] },
             ] },
             line_number: 42,
+        },
+        GrammarRule {
+            name: r#"array_literal"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::TokenReference { name: r#"LBRACKET"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::RuleReference { name: r#"expression"#.to_string() },
+                        GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
+                                GrammarElement::RuleReference { name: r#"expression"#.to_string() },
+                            ] }) },
+                    ] }) },
+                GrammarElement::TokenReference { name: r#"RBRACKET"#.to_string() },
+            ] },
+            line_number: 43,
+        },
+        GrammarRule {
+            name: r#"hash_literal"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::TokenReference { name: r#"LBRACE"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::RuleReference { name: r#"hash_entry"#.to_string() },
+                        GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
+                                GrammarElement::RuleReference { name: r#"hash_entry"#.to_string() },
+                            ] }) },
+                    ] }) },
+                GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
+            ] },
+            line_number: 44,
+        },
+        GrammarRule {
+            name: r#"hash_entry"#.to_string(),
+            body: GrammarElement::Alternation { choices: vec![
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    GrammarElement::TokenReference { name: r#"COLON"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expression"#.to_string() },
+                ] },
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::RuleReference { name: r#"expression"#.to_string() },
+                    GrammarElement::Literal { value: r#"=>"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expression"#.to_string() },
+                ] },
+            ] },
+            line_number: 45,
         },
     ],
         version: 1,

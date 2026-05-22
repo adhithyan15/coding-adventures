@@ -39,4 +39,7 @@ method_call  = ( NAME | KEYWORD ) LPAREN [ expression { COMMA expression } ] RPA
 expression_stmt = expression ;
 expression   = term { ( PLUS | MINUS ) term } ;
 term         = factor { ( STAR | SLASH ) factor } ;
-factor       = NUMBER | STRING | NAME | KEYWORD | LPAREN expression RPAREN ;
+factor       = NUMBER | STRING | NAME | KEYWORD | array_literal | hash_literal | LPAREN expression RPAREN ;
+array_literal = LBRACKET [ expression { COMMA expression } ] RBRACKET ;
+hash_literal = LBRACE [ hash_entry { COMMA hash_entry } ] RBRACE ;
+hash_entry   = NAME COLON expression | expression "=>" expression ;

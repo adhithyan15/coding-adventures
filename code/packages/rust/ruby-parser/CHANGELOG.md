@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.5.0] - 2026-05-20
+
+### Added (Phase 6d — array and hash literals)
+- `array_literal = LBRACKET [ expression { COMMA expression } ] RBRACKET`
+- `hash_literal  = LBRACE [ hash_entry { COMMA hash_entry } ] RBRACE`
+- `hash_entry    = NAME COLON expression | expression "=>" expression`
+- `factor` now accepts `array_literal` and `hash_literal` as alternatives, so they can appear anywhere an expression is valid.
+
+### Tests (+4 new, total 21)
+- Array literal `[1, 2, 3]`, empty array `[]`, hash shorthand `{a: 1, b: 2}`, hash rocket `{a => 1}`.
+
 ## [0.4.0] - 2026-05-20
 
 ### Added (Phase 6c — `while … end` / `until … end` loops)
