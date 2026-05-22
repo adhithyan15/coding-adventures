@@ -1,14 +1,15 @@
 [package]
 name = "brainfuck-iir-compiler"
-version = "0.1.2"
+version = "0.2.0"
 edition = "2021"
-description = "BF04 — Brainfuck → InterpreterIR compiler and vm-core wrapper"
+description = "BF04/BF05 — Brainfuck → InterpreterIR compiler, vm-core wrapper, and jit-core JIT chain"
 license = "MIT"
 
 [dependencies]
 brainfuck      = { path = "../brainfuck" }
 interpreter-ir = { path = "../interpreter-ir" }
 vm-core        = { path = "../vm-core" }
+jit-core       = { path = "../jit-core" }
 parser         = { path = "../parser" }
 lexer          = { path = "../lexer" }
 
