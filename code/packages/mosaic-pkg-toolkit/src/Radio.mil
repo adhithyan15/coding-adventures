@@ -1,0 +1,23 @@
+// Radio.mil — interface for the toolkit's Radio button.
+//
+// Visually identical surface to Checkbox; the difference is
+// semantic. A Radio belongs to a group; only one in the group can
+// be selected at a time. The toolkit doesn't model groups —
+// authors handle that in their host state (passing `selected:
+// bool` per Radio).
+
+component Radio {
+  // Display label rendered to the right of the bullet.
+  slot label : text ;
+
+  // Current selected state. Host owns it.
+  slot selected : bool ;
+
+  // Disabled flag.
+  slot disabled : bool ;
+
+  // Fired when the user clicks the Radio. The host typically
+  // updates a group-level "selected-id" slot in response and
+  // propagates the new value to every Radio in the group.
+  emit onSelect ;
+}

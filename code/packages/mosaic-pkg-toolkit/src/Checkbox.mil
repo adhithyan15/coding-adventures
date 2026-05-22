@@ -1,0 +1,26 @@
+// Checkbox.mil — interface for the toolkit's Checkbox.
+//
+// A labeled checkbox. The kernel has no `HostCheckbox` (UI29 v1
+// scope), so this composes from HostButton (the toggle) + an inline
+// If/Else to swap a checkmark glyph + a Text label.
+//
+// State is host-owned: the toolkit doesn't track checked-ness
+// internally. The host passes `checked: bool`, receives onChange
+// when the user clicks, and flips the slot value.
+
+component Checkbox {
+  // Display label rendered to the right of the box.
+  slot label : text ;
+
+  // Current checked state. Host owns it; toggle on each onChange.
+  slot checked : bool ;
+
+  // Disabled flag. When true the button stops firing onChange and
+  // paints the disabled style.
+  slot disabled : bool ;
+
+  // Fired when the user clicks the checkbox. The toolkit does NOT
+  // include the new value in the payload — the host already knows
+  // the current value and just inverts it on receipt.
+  emit onChange ;
+}
