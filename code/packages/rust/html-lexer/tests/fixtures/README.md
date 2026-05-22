@@ -113,6 +113,9 @@ binary while production code continues to link only static Rust source.
 - `check_html_fixture_schemas.py`: checker that makes the checked-in lexer and
   parser fixture JSON schema contracts explicit for tokenizer, input-stream,
   chunk-boundary, numeric-reference, and parser-audit corpora
+- `check_html_fixture_format_registry.py`: checker that keeps every
+  format-bearing lexer/parser fixture JSON file explicitly registered with its
+  expected format string and fixture category
 - `check_whatwg_lexer_rust_tests.py`: checker that keeps every focused WHATWG
   lexer fixture paired with a Rust test that parses the fixture and exercises
   the lexer harness
@@ -193,6 +196,8 @@ python3 code/packages/rust/html-lexer/tests/fixtures/check_whatwg_lexer_fixture_
 python3 code/packages/rust/html-lexer/tests/fixtures/check_html_fixture_case_ids.py \
   --check
 python3 code/packages/rust/html-lexer/tests/fixtures/check_html_fixture_schemas.py \
+  --check
+python3 code/packages/rust/html-lexer/tests/fixtures/check_html_fixture_format_registry.py \
   --check
 python3 code/packages/rust/html-lexer/tests/fixtures/check_whatwg_lexer_rust_tests.py \
   --check
