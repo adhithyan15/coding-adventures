@@ -1,30 +1,37 @@
-// Dialog.mil — interface for the Dialog component.
+// Dialog.mil — interface for the Dialog component (v0.2.0).
 //
-// A Dialog is the simplest "real" userland component the Mosaic framework
-// can host: a styled container that shows a title, a body message, and a
-// single button to dismiss itself.  It is deliberately minimal so it can
-// compile cleanly against every backend on main today (React, SwiftUI, Qt,
-// WebComponent, HTML, XAML) — the cross-backend smoke test for the kernel.
+// v0.2.0 rewrites Dialog as a thin wrapper around the UI29-1 kernel
+// primitive `HostDialog`.  v0.1.0 had to be composed from Box + Column +
+// Text + HostButton because no kernel dialog existed — but a composed
+// dialog cannot deliver modal blocking, focus trap, Esc-to-close,
+// top-layer rendering, or the screen-reader `dialog` role.  UI29-1
+// added `HostDialog` to the kernel exactly so userland Dialog could
+// hand all that off to the platform's native primitive.
 //
 // Slot vocabulary
 // ---------------
+//   open          whether the dialog is visible.  v0.2.0's biggest
+//                 change from v0.1.0: the host now drives visibility
+//                 through this slot instead of choosing whether to
+//                 render Dialog at all.  Flipping `open` from false to
+//                 true presents the dialog; flipping back hides it.
 //   title         the heading line shown at the top of the dialog
 //   message       the body text shown between the title and the actions
 //   close-label   the label shown on the close button (e.g. "OK", "Close")
 //
 // Emit vocabulary
 // ---------------
-//   onClose       fired when the close button is activated; the host is
-//                 responsible for tearing the Dialog down (the v0.1.0
-//                 Dialog does not gate its own visibility — see README).
-//
-// v0.2.0 will add a `visible: bool` slot plus an `If (when: ...)` gate
-// once the `If` primitive is available across every backend (today only
-// HTML, WebComponent, and XAML have it; React/SwiftUI/Qt are still
-// landing it in parallel PRs).  Until then, the host decides whether to
-// render Dialog at all by mounting/unmounting it externally.
+//   onClose       fired when the dialog should close.  Triggers, all
+//                 wired by the HostDialog primitive:
+//                   - user pressed Esc
+//                   - user clicked the backdrop (default for modal)
+//                   - user clicked the close button child
+//                   - the host flipped `open` back to false
+//                 The host is responsible for flipping `open` back to
+//                 false in response (the dialog does not gate itself).
 
 component Dialog {
+  slot open        : bool ;
   slot title       : text ;
   slot message     : text ;
   slot close-label : text ;

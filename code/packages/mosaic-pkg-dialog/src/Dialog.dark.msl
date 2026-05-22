@@ -1,35 +1,43 @@
-// Dialog.dark.msl — dark theme styles for the Dialog component.
+// Dialog.dark.msl — dark theme styles for the Dialog component (v0.2.0).
 //
-// Targets the four named parts declared in Dialog.mll:
+// Targets the three named parts declared in Dialog.mll:
 //
-//   dialog-root      outer frame: background, border, padding, default text colour
-//   dialog-title     heading: larger font, bolder, white-on-dark
-//   dialog-message   body text: regular weight, slightly smaller, inherits colour
-//   dialog-actions   action row: deliberately empty in v0.1.0 — host can
-//                    override alignment via composition (mosstyle cascade
-//                    rules let a host-level .msl tighten this without
-//                    forking the package)
+//   dialog-shell     outer dialog element: background, border, padding,
+//                    default text colour.  Renamed from v0.1.0's
+//                    `dialog-root` to match the new HostDialog kernel
+//                    primitive vocabulary (the part now styles the
+//                    native `<dialog>` / `Popup` / `.sheet` element via
+//                    the platform's dialog styling hook, not a plain
+//                    Box wrapper).
+//   dialog-message   body text: regular weight, slightly smaller, with
+//                    padding under it so the actions row isn't crammed
+//                    against the message.
+//   dialog-actions   action row: deliberately empty — host can override
+//                    alignment via composition (mosstyle cascade rules
+//                    let a host-level .msl tighten this without forking
+//                    the package).
+//
+// v0.1.0 also had a `dialog-title` part.  That's gone in v0.2.0:
+// HostDialog's native `title:` slot renders the title via the
+// platform's own title typography (`<dialog>`'s heading, `.sheet`'s
+// navigation bar title, `Popup`'s contentItem title, `ContentDialog`'s
+// `Title` property), which is the right behaviour for accessibility
+// and platform consistency.  Authors who want to override the title
+// styling do it via the host's theme, not via a part on this package.
 //
 // Colour palette: VS Code Dark+ derived.
 //   #2d2d30   panel background (matches Code's editor side panel)
 //   #3f3f46   subtle border between dialog and content beneath it
 //   #cccccc   default text colour for the dialog body
-//   #ffffff   pure white for the title to give it visual weight
 
 style Dialog {
-  part dialog-root {
+  part dialog-shell {
     background:   #2d2d30 ;
     border-width: 1px ;
     border-style: solid ;
     border-color: #3f3f46 ;
     padding:      16px ;
     color:        #cccccc ;
-  }
-  part dialog-title {
-    font-size:      16px ;
-    font-weight:    bold ;
-    color:          #ffffff ;
-    padding-bottom: 8px ;
   }
   part dialog-message {
     font-size:      13px ;

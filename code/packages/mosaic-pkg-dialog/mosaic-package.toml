@@ -6,16 +6,16 @@
 # primitives — no other userland packages), and a [kernel] table declaring
 # the UI29 kernel revision the package targets.
 #
-# Dialog is intentionally the smallest "real" userland component: it stress-
-# tests the package shape and the cross-backend compile path without leaning
-# on primitives that have not yet landed in every backend.  The only
-# primitives it uses (Box, Column, Text, HostButton) are present in every
-# Mosaic backend on main today.
+# v0.2.0 (UI29-1-P): rewritten on the new `HostDialog` kernel primitive
+# added by UI29-1.  Earlier v0.1.0 was composed from Box + Column + Text +
+# HostButton because the kernel had no dialog primitive yet; v0.2.0 hands
+# the modal / focus-trap / Esc-to-close / top-layer / accessibility
+# semantics off to the platform's native dialog element via HostDialog.
 
 [package]
 name = "mosaic-pkg-dialog"
-version = "0.1.0"
-description = "A simple cross-backend Dialog component (title + message + close button) built on UI29 kernel primitives"
+version = "0.2.0"
+description = "A cross-backend Dialog component built as a thin wrapper around the UI29-1 HostDialog kernel primitive"
 license = "MIT OR Apache-2.0"
 
 [components]
