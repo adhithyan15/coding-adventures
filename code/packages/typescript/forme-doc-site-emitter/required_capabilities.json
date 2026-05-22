@@ -1,0 +1,4 @@
+{
+  "capabilities": [],
+  "rationale": "forme-doc-site-emitter is a pure transform: it takes per-page rendered HTML, the sidebar tree, the search manifest+shards, and site config; it returns a PageBundleConfig data structure for forme-aot-page-bundle-emitter to consume.  No I/O primitive is instantiated here.  The actual disk writes happen downstream in the FM00 deploy chain (forme-aot-page-bundle-emitter -> forme-aot-deploy-manifest-emitter -> forme-deploy-runner), which already own the relevant capabilities.  Per DOC00 spec section 8: 'Every DOC00 package has required_capabilities.json -> capabilities: []. No exceptions in v0.'"
+}
