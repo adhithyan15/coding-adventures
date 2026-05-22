@@ -815,13 +815,23 @@ mod tests {
     }
 
     #[test]
-    fn let_binds_via_move() {
+    fn let_binds_via_typed_mov() {
+        // Path-A increment 4: let-bindings now use typed `mov` instead
+        // of `call_builtin "_move"`.  The type of the RHS (`1` → `i64`)
+        // propagates to the binding name `x`.
         let i = main_instrs("(let ((x 1)) x)");
-        // Should have a _move into a register named "x".
-        let mv = i.iter().find(|x| x.op == "call_builtin"
-            && matches!(&x.srcs[0], Operand::Var(s) if s == "_move")
-            && x.dest.as_deref() == Some("x"));
-        assert!(mv.is_some(), "expected (let ((x 1)) ...) to _move into x");
+        let mv = i.iter().find(|x| x.op == "mov"
+            && x.dest.as_deref() == Some("x")).expect(
+            "expected (let ((x 1)) ...) to emit `mov x = <rhs>`",
+        );
+        assert_eq!(mv.type_hint, "i64",
+            "typed mov must carry the RHS's inferred type");
+        // The legacy `call_builtin "_move"` shape must NOT appear.
+        assert!(
+            !i.iter().any(|x| x.op == "call_builtin"
+                && matches!(&x.srcs[0], Operand::Var(s) if s == "_move")),
+            "compile_let must not emit legacy call_builtin \"_move\"",
+        );
     }
 
     #[test]
