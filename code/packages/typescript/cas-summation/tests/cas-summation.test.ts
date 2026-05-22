@@ -3,6 +3,7 @@ import {
   ADD,
   DIV,
   EXP,
+  LOG,
   MUL,
   NEG,
   POW,
@@ -408,6 +409,77 @@ describe("summation: Phase 43 transcendental vanishing-at-infinity", () => {
       app(DIV, [int(1), app(POW, [int(2), app(NEG, [app(ADD, [k, int(1)])])])]),
     ]);
     const out = evaluateSum(f, k, int(0), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 44: Log divergence in vanishing-at-infinity recogniser.
+//
+// Extends Phase 43 to accept `Log(h(k))` where h(k) → +∞ (so log(h) → +∞).
+// Sign-aware guards:
+//   - Polynomial inner: positive leading coefficient required.
+//   - Exp inner: always positive; defer.
+//   - Pow inner: base > 1 strictly required (not just |b| > 1).
+//
+// The telescope detector compares `g(k+1)` (via k→k+1 substitution in g)
+// against the supplied `g_kp1`.  The stub VM doesn't canonicalise
+// `Add(Add(k,1), 1) ↔ Add(k, 2)`, so we build `g_kp1` via substitution
+// from `g_k` so the structural `==` comparison succeeds.
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 44 Log divergence", () => {
+  // Helper: substitute k → k+1 in `node` to build the shifted half.
+  function substitute(node: IRNode, from: IRNode, to: IRNode): IRNode {
+    if (node.kind === "apply") {
+      return app(node.head, node.args.map((a) => substitute(a, from, to)));
+    }
+    if (node.kind === "symbol" && from.kind === "symbol" && node.name === from.name) {
+      return to;
+    }
+    return node;
+  }
+
+  it("Log(k+1) recognised → telescope closes", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const gK = app(DIV, [int(1), app(LOG, [kp1])]);
+    const gKp1 = substitute(gK, k, kp1);
+    const f = app(SUB, [gK, gKp1]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // Must not stay as Sum(...) — closed form will be a symbolic
+    // 1/log(2) expression that the stub VM can't fold further.
+    expect(out.kind === "apply" && out.head === SUM).toBe(false);
+  });
+
+  it("Log(2^k) recognised via Phase 43 Pow delegation", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const gK = app(DIV, [int(1), app(LOG, [app(POW, [int(2), k])])]);
+    const gKp1 = substitute(gK, k, kp1);
+    const f = app(SUB, [gK, gKp1]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" && out.head === SUM).toBe(false);
+  });
+
+  it("regression: Log(Pow(-2, k)) refused — negative base", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const gK = app(DIV, [int(1), app(LOG, [app(POW, [int(-2), k])])]);
+    const gKp1 = substitute(gK, k, kp1);
+    const f = app(SUB, [gK, gKp1]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+
+  it("regression: Log(Mul(-1, k)) refused — negative leading polynomial", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const negK = app(MUL, [int(-1), k]);
+    const gK = app(DIV, [int(1), app(LOG, [negK])]);
+    const gKp1 = substitute(gK, k, kp1);
+    const f = app(SUB, [gK, gKp1]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
   });
 });

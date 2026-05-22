@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.5.0 — 2026-05-22
+
+**Phase 44 — Log divergence recogniser (TypeScript port).**
+
+Ports Python `cas-summation` 0.6.0 (PR #3909).  Extends Phase 43's
+`hDivergesAtInfinity` to also accept `Log(h(k))` where `h(k) → +∞`.
+
+### Added
+
+- New **Log branch** in `hDivergesAtInfinity` with three sub-cases:
+  1. Polynomial inner: positive leading coefficient required.
+  2. `Exp(h')` inner: always positive; defer.
+  3. `Pow(b, h')` inner: require base `b > 1` *strictly positive*
+     (not just `|b| > 1`; `Pow(-2, k)` value oscillates so
+     `log((-2)^k)` not real-valued).
+
+### Added — tests
+
+4 new cases:
+- `Log(k+1)` recognised.
+- `Log(2^k)` recognised via Phase 43 Pow delegation.
+- Regression: `Log(Pow(-2, k))` refused.
+- Regression: `Log(Mul(-1, k))` refused.
+
+Full suite: **31 passed** (27 prior + 4 net new).
+
 ## 0.4.0 — 2026-05-22
 
 **Phase 43 — Transcendental vanishing-at-infinity (TypeScript port).**
