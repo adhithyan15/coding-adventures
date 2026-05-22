@@ -1225,6 +1225,8 @@ impl ToolAuditSupervisorDrainRunReport {
             replayed_extra_records: self.replayed_extra_records(),
             missed_planned_records: self.missed_planned_records(),
             follow_up_record_count_delta: self.follow_up_record_count_delta(),
+            replayed_extra_follow_up_records: self.replayed_extra_follow_up_records(),
+            missed_planned_follow_up_records: self.missed_planned_follow_up_records(),
             has_record_count_drift: self.has_record_count_drift(),
             has_follow_up_record_count_drift: self.has_follow_up_record_count_drift(),
             has_count_drift: self.has_count_drift(),
@@ -1454,6 +1456,10 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub missed_planned_records: bool,
     /// Replayed-minus-planned follow-up pressure count delta.
     pub follow_up_record_count_delta: i128,
+    /// Whether more follow-up pressure rows replayed than the preflight plan expected.
+    pub replayed_extra_follow_up_records: bool,
+    /// Whether fewer follow-up pressure rows replayed than the preflight plan expected.
+    pub missed_planned_follow_up_records: bool,
     /// Whether row count drift was observed.
     pub has_record_count_drift: bool,
     /// Whether follow-up pressure count drift was observed.
@@ -1736,12 +1742,12 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether the actual run replayed more follow-up pressure than planned.
     pub fn replayed_extra_follow_up_records(&self) -> bool {
-        self.follow_up_record_count_delta > 0
+        self.replayed_extra_follow_up_records
     }
 
     /// Return whether the actual run replayed less follow-up pressure than planned.
     pub fn missed_planned_follow_up_records(&self) -> bool {
-        self.follow_up_record_count_delta < 0
+        self.missed_planned_follow_up_records
     }
 
     /// Return the stable scheduler-action label for host logs.
@@ -4409,6 +4415,10 @@ mod tests {
         assert!(!summary.missed_planned_records());
         assert_eq!(summary.follow_up_record_count_delta, 0);
         assert_eq!(summary.follow_up_record_count_delta(), 0);
+        assert!(!summary.replayed_extra_follow_up_records);
+        assert!(!summary.replayed_extra_follow_up_records());
+        assert!(!summary.missed_planned_follow_up_records);
+        assert!(!summary.missed_planned_follow_up_records());
         assert!(!summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
         assert!(!summary.has_count_drift);
@@ -4707,6 +4717,10 @@ mod tests {
         assert!(!summary.missed_planned_records);
         assert!(!summary.missed_planned_records());
         assert_eq!(summary.follow_up_record_count_delta, -1);
+        assert!(!summary.replayed_extra_follow_up_records);
+        assert!(!summary.replayed_extra_follow_up_records());
+        assert!(summary.missed_planned_follow_up_records);
+        assert!(summary.missed_planned_follow_up_records());
         assert!(!summary.has_record_count_drift);
         assert!(!summary.has_record_count_drift());
         assert!(summary.has_follow_up_record_count_drift);
@@ -4760,10 +4774,16 @@ mod tests {
             .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut sink)
             .unwrap();
         report.drain.ticks[0].replay.inventory.follow_up_records = 2;
+        let summary = report.summary();
 
         assert_eq!(report.follow_up_record_count_delta(), 1);
         assert!(report.replayed_extra_follow_up_records());
         assert!(!report.missed_planned_follow_up_records());
+        assert_eq!(summary.follow_up_record_count_delta, 1);
+        assert!(summary.replayed_extra_follow_up_records);
+        assert!(summary.replayed_extra_follow_up_records());
+        assert!(!summary.missed_planned_follow_up_records);
+        assert!(!summary.missed_planned_follow_up_records());
     }
 
     #[test]
