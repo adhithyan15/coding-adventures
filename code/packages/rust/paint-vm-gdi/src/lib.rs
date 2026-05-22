@@ -14,7 +14,7 @@
 //!
 //! | Instruction       | Status                                          |
 //! |-------------------|-------------------------------------------------|
-//! | `PaintRect`       | Fully implemented — solid-colour filled rects   |
+//! | `PaintRect`       | Fully implemented - solid/gradient fill + stroke |
 //! | `PaintLine`       | Fully implemented — rendered via pen + LineTo   |
 //! | `PaintGroup`      | Implemented — direct render + opacity/transform  |
 //! | `PaintClip`       | Fully implemented — IntersectClipRect + restore |
@@ -22,7 +22,7 @@
 //! | `PaintEllipse`    | Implemented — Ellipse()                         |
 //! | `PaintPath`       | Implemented — BeginPath/PolyBezierTo            |
 //! | `PaintLayer`      | Implemented — isolated offscreen compositing    |
-//! | `PaintGradient`   | Planned — GradientFill (limited)                |
+//! | `PaintGradient`   | Implemented - masked linear/radial surfaces     |
 //! | `PaintImage`      | Implemented — WIC decode + AlphaBlend           |
 //!
 //! ## GDI pipeline
@@ -65,9 +65,9 @@ pub const VERSION: &str = "0.1.0";
 
 use arc2d::SvgArc;
 use paint_instructions::{
-    FillRule, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage,
-    PaintInstruction, PaintLayer, PaintLine, PaintPath, PaintRect, PaintScene, PaintText,
-    PathCommand, PixelContainer, TextAlign, Transform2D,
+    FillRule, GradientKind, GradientStop, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun,
+    PaintGradient, PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintLine, PaintPath,
+    PaintRect, PaintScene, PaintText, PathCommand, PixelContainer, TextAlign, Transform2D,
 };
 #[cfg(target_os = "windows")]
 use paint_vm_runtime::{
@@ -75,6 +75,8 @@ use paint_vm_runtime::{
     PaintBackendTier, PaintPlatformSupport, PaintRenderError, PaintRenderer, SupportLevel,
 };
 use point2d::Point as Point2D;
+#[cfg(target_os = "windows")]
+use std::collections::HashMap;
 
 // ---------------------------------------------------------------------------
 // Platform gate — this crate only compiles on Windows
@@ -200,6 +202,185 @@ fn parse_css_channel(s: &str) -> f64 {
 
 fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
     parse_css_color(s)
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct Rgba {
+    r: u8,
+    g: u8,
+    b: u8,
+    a: u8,
+}
+
+impl Rgba {
+    const TRANSPARENT: Self = Self {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 0,
+    };
+}
+
+fn css_color_to_rgba(s: &str) -> Rgba {
+    let (r, g, b, a) = parse_css_color(s);
+    let channel = |value: f64| -> u8 { (value.clamp(0.0, 1.0) * 255.0).round() as u8 };
+    Rgba {
+        r: channel(r),
+        g: channel(g),
+        b: channel(b),
+        a: channel(a),
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn collect_gradients(instructions: &[PaintInstruction]) -> HashMap<String, PaintGradient> {
+    let mut gradients = HashMap::new();
+    collect_gradients_into(instructions, &mut gradients);
+    gradients
+}
+
+#[cfg(target_os = "windows")]
+fn collect_gradients_into(
+    instructions: &[PaintInstruction],
+    gradients: &mut HashMap<String, PaintGradient>,
+) {
+    for instruction in instructions {
+        match instruction {
+            PaintInstruction::Gradient(gradient) => {
+                if let Some(id) = gradient.base.id.as_ref() {
+                    gradients.insert(id.clone(), gradient.clone());
+                }
+            }
+            PaintInstruction::Group(group) => collect_gradients_into(&group.children, gradients),
+            PaintInstruction::Layer(layer) => collect_gradients_into(&layer.children, gradients),
+            PaintInstruction::Clip(clip) => collect_gradients_into(&clip.children, gradients),
+            _ => {}
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn gradient_ref(value: &str) -> Option<&str> {
+    value
+        .trim()
+        .strip_prefix("url(#")
+        .and_then(|value| value.strip_suffix(')'))
+}
+
+#[cfg(target_os = "windows")]
+fn gradient_for_paint<'a>(
+    paint: Option<&str>,
+    gradients: &'a HashMap<String, PaintGradient>,
+) -> Option<&'a PaintGradient> {
+    paint
+        .and_then(gradient_ref)
+        .and_then(|id| gradients.get(id))
+}
+
+#[cfg(target_os = "windows")]
+fn solid_colorref_for_mode(
+    paint: &str,
+    mode: RenderMode,
+) -> Option<windows::Win32::Foundation::COLORREF> {
+    if gradient_ref(paint).is_some() {
+        return None;
+    }
+    parse_colorref_for_mode(paint, mode)
+}
+
+#[cfg(target_os = "windows")]
+fn coverage_colorref() -> windows::Win32::Foundation::COLORREF {
+    windows::Win32::Foundation::COLORREF(color_to_colorref(1.0, 1.0, 1.0))
+}
+
+#[cfg(target_os = "windows")]
+fn colorref_for_paint(
+    paint: Option<&str>,
+    gradient: Option<&PaintGradient>,
+    mode: RenderMode,
+) -> Option<windows::Win32::Foundation::COLORREF> {
+    match (gradient.is_some(), mode) {
+        (true, RenderMode::Coverage) => Some(coverage_colorref()),
+        (true, RenderMode::Normal) => None,
+        (false, _) => paint.and_then(|paint| solid_colorref_for_mode(paint, mode)),
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn gradient_stops(stops: &[GradientStop]) -> Vec<(f64, Rgba)> {
+    let mut stops: Vec<(f64, Rgba)> = stops
+        .iter()
+        .map(|stop| (stop.offset.clamp(0.0, 1.0), css_color_to_rgba(&stop.color)))
+        .collect();
+    stops.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal));
+    stops
+}
+
+#[cfg(target_os = "windows")]
+fn mix_rgba(a: Rgba, b: Rgba, t: f64) -> Rgba {
+    let t = t.clamp(0.0, 1.0);
+    let mix = |left: u8, right: u8| -> u8 {
+        (left as f64 + (right as f64 - left as f64) * t)
+            .round()
+            .clamp(0.0, 255.0) as u8
+    };
+    Rgba {
+        r: mix(a.r, b.r),
+        g: mix(a.g, b.g),
+        b: mix(a.b, b.b),
+        a: mix(a.a, b.a),
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn sample_gradient_stops(stops: &[(f64, Rgba)], t: f64) -> Rgba {
+    if stops.is_empty() {
+        return Rgba::TRANSPARENT;
+    }
+    let t = t.clamp(0.0, 1.0);
+    if t <= stops[0].0 {
+        return stops[0].1;
+    }
+    for pair in stops.windows(2) {
+        let (left_offset, left_color) = pair[0];
+        let (right_offset, right_color) = pair[1];
+        if t <= right_offset {
+            let width = (right_offset - left_offset).max(f64::EPSILON);
+            return mix_rgba(left_color, right_color, (t - left_offset) / width);
+        }
+    }
+    stops
+        .last()
+        .map(|(_, color)| *color)
+        .unwrap_or(Rgba::TRANSPARENT)
+}
+
+#[cfg(target_os = "windows")]
+fn linear_gradient_t(x: f64, y: f64, x1: f64, y1: f64, x2: f64, y2: f64) -> f64 {
+    let dx = x2 - x1;
+    let dy = y2 - y1;
+    let len2 = dx * dx + dy * dy;
+    if len2 <= f64::EPSILON {
+        return 0.0;
+    }
+    (((x - x1) * dx + (y - y1) * dy) / len2).clamp(0.0, 1.0)
+}
+
+#[cfg(target_os = "windows")]
+fn sample_gradient(gradient: &PaintGradient, stops: &[(f64, Rgba)], x: f64, y: f64) -> Rgba {
+    let t = match gradient.kind {
+        GradientKind::Linear { x1, y1, x2, y2 } => linear_gradient_t(x, y, x1, y1, x2, y2),
+        GradientKind::Radial { cx, cy, r } => {
+            if r <= f64::EPSILON {
+                0.0
+            } else {
+                let dx = x - cx;
+                let dy = y - cy;
+                ((dx * dx + dy * dy).sqrt() / r).clamp(0.0, 1.0)
+            }
+        }
+    };
+    sample_gradient_stops(stops, t)
 }
 
 #[cfg(target_os = "windows")]
@@ -699,6 +880,126 @@ where
 }
 
 #[cfg(target_os = "windows")]
+unsafe fn current_world_transform(hdc: HDC) -> XFORM {
+    let _ = SetGraphicsMode(hdc, GM_ADVANCED);
+    let mut transform = xform_identity();
+    let _ = GetWorldTransform(hdc, &mut transform);
+    transform
+}
+
+#[cfg(target_os = "windows")]
+fn inverse_transform_point(transform: &XFORM, x: f64, y: f64) -> Option<(f64, f64)> {
+    let m11 = transform.eM11 as f64;
+    let m12 = transform.eM12 as f64;
+    let m21 = transform.eM21 as f64;
+    let m22 = transform.eM22 as f64;
+    let dx = transform.eDx as f64;
+    let dy = transform.eDy as f64;
+    let det = m11 * m22 - m12 * m21;
+    if det.abs() <= f64::EPSILON {
+        return None;
+    }
+    let x = x - dx;
+    let y = y - dy;
+    Some(((x * m22 - y * m21) / det, (-x * m12 + y * m11) / det))
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn with_identity_world_transform<F>(hdc: HDC, f: F)
+where
+    F: FnOnce(),
+{
+    let saved = SaveDC(hdc);
+    let _ = SetGraphicsMode(hdc, GM_ADVANCED);
+    let _ = SetWorldTransform(hdc, &xform_identity());
+    f();
+    let _ = RestoreDC(hdc, saved);
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn fill_gradient_surface(
+    gradient_surface: &mut GdiSurface,
+    coverage_surface: &GdiSurface,
+    gradient: &PaintGradient,
+    world_transform: &XFORM,
+) {
+    let stops = gradient_stops(&gradient.stops);
+    let coverage = coverage_surface.pixels();
+    let width = gradient_surface.width;
+    let height = gradient_surface.height;
+    let pixels = gradient_surface.pixels_mut();
+    for y in 0..height {
+        for x in 0..width {
+            let index = ((y as usize * width as usize) + x as usize) * 4;
+            let coverage_alpha = coverage[index]
+                .max(coverage[index + 1])
+                .max(coverage[index + 2]);
+            if coverage_alpha == 0 || stops.is_empty() {
+                pixels[index] = 0;
+                pixels[index + 1] = 0;
+                pixels[index + 2] = 0;
+                pixels[index + 3] = 0;
+                continue;
+            }
+            let (ux, uy) = inverse_transform_point(world_transform, x as f64 + 0.5, y as f64 + 0.5)
+                .unwrap_or((x as f64 + 0.5, y as f64 + 0.5));
+            let color = sample_gradient(gradient, &stops, ux, uy);
+            let alpha = ((coverage_alpha as u16 * color.a as u16 + 127) / 255) as u8;
+            pixels[index] = ((color.b as u16 * alpha as u16 + 127) / 255) as u8;
+            pixels[index + 1] = ((color.g as u16 * alpha as u16 + 127) / 255) as u8;
+            pixels[index + 2] = ((color.r as u16 * alpha as u16 + 127) / 255) as u8;
+            pixels[index + 3] = alpha;
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_masked_gradient<F>(
+    hdc: HDC,
+    gradient: &PaintGradient,
+    scene_width: u32,
+    scene_height: u32,
+    draw_mask: F,
+) where
+    F: FnOnce(HDC),
+{
+    if scene_width == 0 || scene_height == 0 {
+        return;
+    }
+    let world_transform = current_world_transform(hdc);
+    let Some(mut coverage_surface) = create_surface(scene_width, scene_height) else {
+        return;
+    };
+    let Some(mut gradient_surface) = create_surface(scene_width, scene_height) else {
+        return;
+    };
+
+    coverage_surface.pixels_mut().fill(0);
+    gradient_surface.pixels_mut().fill(0);
+
+    let _ = SetGraphicsMode(coverage_surface.hdc, GM_ADVANCED);
+    let _ = SetWorldTransform(coverage_surface.hdc, &world_transform);
+    draw_mask(coverage_surface.hdc);
+    fill_gradient_surface(
+        &mut gradient_surface,
+        &coverage_surface,
+        gradient,
+        &world_transform,
+    );
+    with_identity_world_transform(hdc, || {
+        alpha_blend_surface(
+            hdc,
+            &gradient_surface,
+            0,
+            0,
+            scene_width as i32,
+            scene_height as i32,
+            None,
+        );
+    });
+}
+
+#[cfg(target_os = "windows")]
 fn pbgra_to_white_alpha(pbgra: &mut [u8]) {
     for pixel in pbgra.chunks_exact_mut(4) {
         let alpha = pixel[3];
@@ -729,6 +1030,7 @@ unsafe fn render_offscreen_composited(
     scene_height: u32,
     transform: Option<&Transform2D>,
     opacity: f64,
+    gradients: &HashMap<String, PaintGradient>,
     mode: RenderMode,
 ) {
     if scene_width == 0 || scene_height == 0 || opacity <= 0.0 {
@@ -750,6 +1052,7 @@ unsafe fn render_offscreen_composited(
             instructions,
             scene_width,
             scene_height,
+            gradients,
             mode,
         );
     });
@@ -759,6 +1062,7 @@ unsafe fn render_offscreen_composited(
             instructions,
             scene_width,
             scene_height,
+            gradients,
             RenderMode::Coverage,
         );
     });
@@ -781,6 +1085,7 @@ unsafe fn render_group(
     group: &PaintGroup,
     scene_width: u32,
     scene_height: u32,
+    gradients: &HashMap<String, PaintGradient>,
     mode: RenderMode,
 ) {
     let opacity = group.opacity.unwrap_or(1.0).clamp(0.0, 1.0);
@@ -795,11 +1100,19 @@ unsafe fn render_group(
             scene_height,
             group.transform.as_ref(),
             opacity,
+            gradients,
             mode,
         );
     } else {
         with_transform(hdc, group.transform.as_ref(), || {
-            render_instructions(hdc, &group.children, scene_width, scene_height, mode);
+            render_instructions(
+                hdc,
+                &group.children,
+                scene_width,
+                scene_height,
+                gradients,
+                mode,
+            );
         });
     }
 }
@@ -810,6 +1123,7 @@ unsafe fn render_layer(
     layer: &PaintLayer,
     scene_width: u32,
     scene_height: u32,
+    gradients: &HashMap<String, PaintGradient>,
     mode: RenderMode,
 ) {
     let opacity = layer.opacity.unwrap_or(1.0).clamp(0.0, 1.0);
@@ -823,6 +1137,7 @@ unsafe fn render_layer(
         scene_height,
         layer.transform.as_ref(),
         opacity,
+        gradients,
         mode,
     );
 }
@@ -890,28 +1205,36 @@ unsafe fn render_instructions(
     instructions: &[PaintInstruction],
     scene_width: u32,
     scene_height: u32,
+    gradients: &HashMap<String, PaintGradient>,
     mode: RenderMode,
 ) {
     for instr in instructions {
         match instr {
-            PaintInstruction::Rect(rect) => render_rect(hdc, rect, mode),
-            PaintInstruction::Line(line) => render_line(hdc, line, mode),
-            PaintInstruction::Group(group) => {
-                render_group(hdc, group, scene_width, scene_height, mode)
+            PaintInstruction::Rect(rect) => {
+                render_rect(hdc, rect, scene_width, scene_height, gradients, mode)
             }
-            PaintInstruction::Clip(clip) => render_clip(hdc, clip, scene_width, scene_height, mode),
+            PaintInstruction::Line(line) => {
+                render_line(hdc, line, scene_width, scene_height, gradients, mode)
+            }
+            PaintInstruction::Group(group) => {
+                render_group(hdc, group, scene_width, scene_height, gradients, mode)
+            }
+            PaintInstruction::Clip(clip) => {
+                render_clip(hdc, clip, scene_width, scene_height, gradients, mode)
+            }
             PaintInstruction::Text(text) => render_text(hdc, text, mode),
             PaintInstruction::GlyphRun(run) => render_glyph_run(hdc, run, mode),
-            PaintInstruction::Ellipse(ellipse) => render_ellipse(hdc, ellipse, mode),
-            PaintInstruction::Path(path) => render_path(hdc, path, mode),
+            PaintInstruction::Ellipse(ellipse) => {
+                render_ellipse(hdc, ellipse, scene_width, scene_height, gradients, mode)
+            }
+            PaintInstruction::Path(path) => {
+                render_path(hdc, path, scene_width, scene_height, gradients, mode)
+            }
             PaintInstruction::Layer(layer) => {
-                render_layer(hdc, layer, scene_width, scene_height, mode)
+                render_layer(hdc, layer, scene_width, scene_height, gradients, mode)
             }
             PaintInstruction::Image(image) => render_image(hdc, image, mode),
-            // Planned but not yet implemented — same skip list as paint-metal:
-            PaintInstruction::Gradient(_) => {
-                // No-op for now. Barcodes only need Rect/Line/Group/Clip.
-            }
+            PaintInstruction::Gradient(_) => {}
         }
     }
 }
@@ -1028,15 +1351,50 @@ unsafe fn render_glyph_run(
 /// GDI's `Rectangle` / `RoundRect` can paint fill and stroke in one pass using
 /// the currently selected brush and pen.
 #[cfg(target_os = "windows")]
-unsafe fn render_rect(hdc: windows::Win32::Graphics::Gdi::HDC, rect: &PaintRect, mode: RenderMode) {
-    let fill_color = rect
-        .fill
-        .as_deref()
-        .and_then(|fill| parse_colorref_for_mode(fill, mode));
-    let stroke_color = rect
-        .stroke
-        .as_deref()
-        .and_then(|stroke| parse_colorref_for_mode(stroke, mode));
+unsafe fn render_rect(
+    hdc: windows::Win32::Graphics::Gdi::HDC,
+    rect: &PaintRect,
+    scene_width: u32,
+    scene_height: u32,
+    gradients: &HashMap<String, PaintGradient>,
+    mode: RenderMode,
+) {
+    let fill_gradient = gradient_for_paint(rect.fill.as_deref(), gradients);
+    let stroke_gradient = gradient_for_paint(rect.stroke.as_deref(), gradients);
+    if mode == RenderMode::Normal {
+        if let Some(gradient) = fill_gradient {
+            let mut mask_rect = rect.clone();
+            mask_rect.fill = Some("#ffffff".to_string());
+            mask_rect.stroke = None;
+            render_masked_gradient(hdc, gradient, scene_width, scene_height, |mask_hdc| {
+                render_rect(
+                    mask_hdc,
+                    &mask_rect,
+                    scene_width,
+                    scene_height,
+                    gradients,
+                    RenderMode::Normal,
+                );
+            });
+        }
+        if let Some(gradient) = stroke_gradient {
+            let mut mask_rect = rect.clone();
+            mask_rect.fill = None;
+            mask_rect.stroke = Some("#ffffff".to_string());
+            render_masked_gradient(hdc, gradient, scene_width, scene_height, |mask_hdc| {
+                render_rect(
+                    mask_hdc,
+                    &mask_rect,
+                    scene_width,
+                    scene_height,
+                    gradients,
+                    RenderMode::Normal,
+                );
+            });
+        }
+    }
+    let fill_color = colorref_for_paint(rect.fill.as_deref(), fill_gradient, mode);
+    let stroke_color = colorref_for_paint(rect.stroke.as_deref(), stroke_gradient, mode);
     if fill_color.is_none() && stroke_color.is_none() {
         return;
     }
@@ -1098,8 +1456,32 @@ unsafe fn render_rect(hdc: windows::Win32::Graphics::Gdi::HDC, rect: &PaintRect,
 ///         ← pen width →
 /// ```
 #[cfg(target_os = "windows")]
-unsafe fn render_line(hdc: windows::Win32::Graphics::Gdi::HDC, line: &PaintLine, mode: RenderMode) {
-    let Some(colorref) = parse_colorref_for_mode(&line.stroke, mode) else {
+unsafe fn render_line(
+    hdc: windows::Win32::Graphics::Gdi::HDC,
+    line: &PaintLine,
+    scene_width: u32,
+    scene_height: u32,
+    gradients: &HashMap<String, PaintGradient>,
+    mode: RenderMode,
+) {
+    let stroke_gradient = gradient_for_paint(Some(&line.stroke), gradients);
+    if mode == RenderMode::Normal {
+        if let Some(gradient) = stroke_gradient {
+            let mut mask_line = line.clone();
+            mask_line.stroke = "#ffffff".to_string();
+            render_masked_gradient(hdc, gradient, scene_width, scene_height, |mask_hdc| {
+                render_line(
+                    mask_hdc,
+                    &mask_line,
+                    scene_width,
+                    scene_height,
+                    gradients,
+                    RenderMode::Normal,
+                );
+            });
+        }
+    }
+    let Some(colorref) = colorref_for_paint(Some(&line.stroke), stroke_gradient, mode) else {
         return;
     };
     let pen = create_pen_for_stroke(colorref, line.stroke_width, line.stroke_dash.as_deref());
@@ -1120,16 +1502,47 @@ unsafe fn render_line(hdc: windows::Win32::Graphics::Gdi::HDC, line: &PaintLine,
 unsafe fn render_ellipse(
     hdc: windows::Win32::Graphics::Gdi::HDC,
     ellipse: &PaintEllipse,
+    scene_width: u32,
+    scene_height: u32,
+    gradients: &HashMap<String, PaintGradient>,
     mode: RenderMode,
 ) {
-    let fill_color = ellipse
-        .fill
-        .as_deref()
-        .and_then(|fill| parse_colorref_for_mode(fill, mode));
-    let stroke_color = ellipse
-        .stroke
-        .as_deref()
-        .and_then(|stroke| parse_colorref_for_mode(stroke, mode));
+    let fill_gradient = gradient_for_paint(ellipse.fill.as_deref(), gradients);
+    let stroke_gradient = gradient_for_paint(ellipse.stroke.as_deref(), gradients);
+    if mode == RenderMode::Normal {
+        if let Some(gradient) = fill_gradient {
+            let mut mask_ellipse = ellipse.clone();
+            mask_ellipse.fill = Some("#ffffff".to_string());
+            mask_ellipse.stroke = None;
+            render_masked_gradient(hdc, gradient, scene_width, scene_height, |mask_hdc| {
+                render_ellipse(
+                    mask_hdc,
+                    &mask_ellipse,
+                    scene_width,
+                    scene_height,
+                    gradients,
+                    RenderMode::Normal,
+                );
+            });
+        }
+        if let Some(gradient) = stroke_gradient {
+            let mut mask_ellipse = ellipse.clone();
+            mask_ellipse.fill = None;
+            mask_ellipse.stroke = Some("#ffffff".to_string());
+            render_masked_gradient(hdc, gradient, scene_width, scene_height, |mask_hdc| {
+                render_ellipse(
+                    mask_hdc,
+                    &mask_ellipse,
+                    scene_width,
+                    scene_height,
+                    gradients,
+                    RenderMode::Normal,
+                );
+            });
+        }
+    }
+    let fill_color = colorref_for_paint(ellipse.fill.as_deref(), fill_gradient, mode);
+    let stroke_color = colorref_for_paint(ellipse.stroke.as_deref(), stroke_gradient, mode);
     if fill_color.is_none() && stroke_color.is_none() {
         return;
     }
@@ -1175,15 +1588,50 @@ unsafe fn render_ellipse(
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_path(hdc: windows::Win32::Graphics::Gdi::HDC, path: &PaintPath, mode: RenderMode) {
-    let fill_color = path
-        .fill
-        .as_deref()
-        .and_then(|fill| parse_colorref_for_mode(fill, mode));
-    let stroke_color = path
-        .stroke
-        .as_deref()
-        .and_then(|stroke| parse_colorref_for_mode(stroke, mode));
+unsafe fn render_path(
+    hdc: windows::Win32::Graphics::Gdi::HDC,
+    path: &PaintPath,
+    scene_width: u32,
+    scene_height: u32,
+    gradients: &HashMap<String, PaintGradient>,
+    mode: RenderMode,
+) {
+    let fill_gradient = gradient_for_paint(path.fill.as_deref(), gradients);
+    let stroke_gradient = gradient_for_paint(path.stroke.as_deref(), gradients);
+    if mode == RenderMode::Normal {
+        if let Some(gradient) = fill_gradient {
+            let mut mask_path = path.clone();
+            mask_path.fill = Some("#ffffff".to_string());
+            mask_path.stroke = None;
+            render_masked_gradient(hdc, gradient, scene_width, scene_height, |mask_hdc| {
+                render_path(
+                    mask_hdc,
+                    &mask_path,
+                    scene_width,
+                    scene_height,
+                    gradients,
+                    RenderMode::Normal,
+                );
+            });
+        }
+        if let Some(gradient) = stroke_gradient {
+            let mut mask_path = path.clone();
+            mask_path.fill = None;
+            mask_path.stroke = Some("#ffffff".to_string());
+            render_masked_gradient(hdc, gradient, scene_width, scene_height, |mask_hdc| {
+                render_path(
+                    mask_hdc,
+                    &mask_path,
+                    scene_width,
+                    scene_height,
+                    gradients,
+                    RenderMode::Normal,
+                );
+            });
+        }
+    }
+    let fill_color = colorref_for_paint(path.fill.as_deref(), fill_gradient, mode);
+    let stroke_color = colorref_for_paint(path.stroke.as_deref(), stroke_gradient, mode);
     if fill_color.is_none() && stroke_color.is_none() {
         return;
     }
@@ -1388,6 +1836,7 @@ unsafe fn render_clip(
     clip: &PaintClip,
     scene_width: u32,
     scene_height: u32,
+    gradients: &HashMap<String, PaintGradient>,
     mode: RenderMode,
 ) {
     let _ = SaveDC(hdc);
@@ -1400,7 +1849,14 @@ unsafe fn render_clip(
         (clip.y + clip.height).round() as i32,
     );
 
-    render_instructions(hdc, &clip.children, scene_width, scene_height, mode);
+    render_instructions(
+        hdc,
+        &clip.children,
+        scene_width,
+        scene_height,
+        gradients,
+        mode,
+    );
 
     let _ = RestoreDC(hdc, -1);
 }
@@ -1499,8 +1955,8 @@ pub fn descriptor() -> PaintBackendDescriptor {
             layer_opacity: SupportLevel::Supported,
             layer_filters: SupportLevel::Unsupported,
             layer_blend_modes: SupportLevel::Unsupported,
-            linear_gradient: SupportLevel::Unsupported,
-            radial_gradient: SupportLevel::Unsupported,
+            linear_gradient: SupportLevel::Supported,
+            radial_gradient: SupportLevel::Supported,
             antialiasing: SupportLevel::Unsupported,
             offscreen_pixels: SupportLevel::Supported,
         },
@@ -1595,7 +2051,15 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
     let _ = DeleteObject(bg_brush);
 
     // ── Step 5: Dispatch PaintInstructions ────────────────────────────────
-    render_instructions(hdc, &scene.instructions, width, height, RenderMode::Normal);
+    let gradients = collect_gradients(&scene.instructions);
+    render_instructions(
+        hdc,
+        &scene.instructions,
+        width,
+        height,
+        &gradients,
+        RenderMode::Normal,
+    );
 
     // ── Step 6: Read back pixels (BGRA → RGBA) ──────────────────────────
     //
@@ -1675,7 +2139,11 @@ mod tests {
         assert_eq!(descriptor.capabilities.path_arc_to, SupportLevel::Supported);
         assert_eq!(
             descriptor.capabilities.linear_gradient,
-            SupportLevel::Unsupported
+            SupportLevel::Supported
+        );
+        assert_eq!(
+            descriptor.capabilities.radial_gradient,
+            SupportLevel::Supported
         );
     }
 
@@ -1708,6 +2176,150 @@ mod tests {
     }
 
     // ─── Colour parser tests ────────────────────────────────────────────────
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_linear_gradient_rect_fill() {
+        let mut scene = PaintScene::new(20.0, 4.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 20.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0,
+                0.0,
+                20.0,
+                4.0,
+                "url(#fade)",
+            )));
+
+        let pixels = render(&scene);
+        let (left, _, _, _) = pixels.pixel_at(1, 2);
+        let (right, _, _, _) = pixels.pixel_at(18, 2);
+        assert!(left < 80, "expected dark left edge, got {left}");
+        assert!(right > 170, "expected bright right edge, got {right}");
+        assert!(left < right);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_linear_gradient_line_stroke() {
+        let mut scene = PaintScene::new(20.0, 5.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("stroke-fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 20.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Line(PaintLine {
+            base: PaintBase::default(),
+            x1: 0.0,
+            y1: 2.0,
+            x2: 20.0,
+            y2: 2.0,
+            stroke: "url(#stroke-fade)".to_string(),
+            stroke_width: Some(2.0),
+            stroke_cap: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+        let (left, _, _, _) = pixels.pixel_at(1, 2);
+        let (right, _, _, _) = pixels.pixel_at(18, 2);
+        assert!(left < 80, "expected dark left stroke, got {left}");
+        assert!(right > 170, "expected bright right stroke, got {right}");
+        assert!(left < right);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_radial_gradient_ellipse_fill() {
+        let mut scene = PaintScene::new(16.0, 16.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("spot".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Radial {
+                    cx: 8.0,
+                    cy: 8.0,
+                    r: 8.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene
+            .instructions
+            .push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: 8.0,
+                cy: 8.0,
+                rx: 7.0,
+                ry: 7.0,
+                fill: Some("url(#spot)".to_string()),
+                stroke: None,
+                stroke_width: None,
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+
+        let pixels = render(&scene);
+        let (center, _, _, _) = pixels.pixel_at(8, 8);
+        let corner = pixels.pixel_at(0, 0);
+        assert!(center < 80, "expected dark radial center, got {center}");
+        assert_eq!(corner, (255, 255, 255, 255));
+    }
 
     #[test]
     fn parse_hex_color_6_digit() {
