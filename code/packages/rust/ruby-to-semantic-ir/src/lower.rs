@@ -1131,9 +1131,14 @@ impl Lowerer {
 
     fn lower_expression(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         // Pass through wrapper rules transparently — the parser
-        // sometimes nests `expression → term → factor → expression`.
+        // sometimes nests `expression → sum → term → factor → expression`.
         match node.rule_name.as_str() {
-            "expression" => self.lower_binary_chain(node, &["PLUS", "MINUS"]),
+            // Phase 6i: `expression` is the comparison layer; `sum`
+            // is the new additive layer (matches the pre-6i
+            // `expression` rule).  Both lower as left-associative
+            // binary chains, just with different operator sets.
+            "expression" => self.lower_comparison_chain(node),
+            "sum" => self.lower_binary_chain(node, &["PLUS", "MINUS"]),
             "term" => self.lower_binary_chain(node, &["STAR", "SLASH"]),
             "factor" => self.lower_factor(node),
             "array_literal" => self.lower_array_literal(node),
@@ -1210,6 +1215,66 @@ impl Lowerer {
 
         acc.ok_or_else(|| RubyLowerError {
             message: "binary chain had no operands".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })
+    }
+
+    /// Lower the `expression` rule's comparison-operator chain.
+    /// Phase 6i — supports `==`, `!=`, `<`, `>`, `<=`, `>=` as
+    /// left-associative BuiltinCalls.
+    ///
+    /// The lexer's `classify_op_token` reclassifies most comparison
+    /// operators as `Name`-type tokens (its catch-all branch — only
+    /// `==` gets a dedicated `EqualsEquals` type).  So we identify
+    /// comparison operators by *value*, not by token type — the same
+    /// trick used for `=>` in `hash_entry`.  This means the helper is
+    /// resilient to the lexer's classifier changing in the future.
+    fn lower_comparison_chain(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        const COMPARISON_OPS: &[&str] = &["==", "!=", "<", ">", "<=", ">="];
+        let mut acc: Option<Expr> = None;
+        let mut pending_op: Option<(String, Span)> = None;
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(sub) => {
+                    let expr = self.lower_expression(sub)?;
+                    acc = Some(match (acc.take(), pending_op.take()) {
+                        (None, _) => expr,
+                        (Some(lhs), Some((op_name, op_span))) => Expr::BuiltinCall {
+                            name: op_name,
+                            args: vec![lhs, expr],
+                            effects: EffectSet::PURE,
+                            span: op_span,
+                        },
+                        (Some(lhs), None) => {
+                            return Err(RubyLowerError {
+                                message:
+                                    "two consecutive sum sub-expressions without a comparison \
+                                     operator between them"
+                                        .to_string(),
+                                line: sub.start_line.unwrap_or(0),
+                                column: sub.start_column.unwrap_or(0),
+                            }
+                            .also(lhs));
+                        }
+                    });
+                }
+                ASTNodeOrToken::Token(tok) => {
+                    // Match by lexeme — covers both EqualsEquals
+                    // (`==`) and Name-classified operators (`<`, `>`,
+                    // `<=`, `>=`, `!=`).
+                    if COMPARISON_OPS.iter().any(|op| *op == tok.value) {
+                        pending_op = Some((tok.value.clone(), self.span_of_token(tok)));
+                    }
+                    // Whitespace/newline tokens fall through silently.
+                }
+            }
+        }
+        acc.ok_or_else(|| RubyLowerError {
+            message: "comparison chain had no operands".to_string(),
             line: node.start_line.unwrap_or(0),
             column: node.start_column.unwrap_or(0),
         })

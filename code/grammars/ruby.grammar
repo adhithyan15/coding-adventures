@@ -78,7 +78,28 @@ method_call  = ( NAME | KEYWORD ) LPAREN [ expression { COMMA expression } ] RPA
 # (same as existing behaviour pre-6h).
 method_call_no_paren = ( NAME | KEYWORD ) expression { COMMA expression } ;
 expression_stmt = expression ;
-expression   = term { ( PLUS | MINUS ) term } ;
+# Phase 6i — comparison operators at the top of the precedence pyramid.
+#
+# Precedence (lowest to highest):
+#   expression  =  comparison    (==, !=, <, >, <=, >=)
+#   sum         =  additive      (+, -)
+#   term        =  multiplicative (*, /)
+#   factor      =  unary/atoms
+#
+# Comparison operators are non-associative and lowest-precedence among
+# arithmetic operators — `1 + 2 < 5` parses as `(1 + 2) < 5`, exactly
+# matching real Ruby precedence.  Chained comparisons (`a < b < c`)
+# fold left-associatively as `(a < b) < c` (which is rarely useful in
+# Ruby but matches the simple chain semantics of `+` / `-`).
+#
+# Note on token typing: the lexer's `classify_op_token` reclassifies
+# `<`, `>`, `<=`, `>=`, `!=` as `Name` tokens (its catch-all branch)
+# because Ruby treats them as method-call sites in expression position.
+# The literal matchers below (`"<"`, `">="`, etc.) match by *value*,
+# not type, so this works transparently — same trick `hash_entry` uses
+# for `"=>"`.
+expression   = sum { ( "==" | "!=" | "<=" | ">=" | "<" | ">" ) sum } ;
+sum          = term { ( PLUS | MINUS ) term } ;
 term         = factor { ( STAR | SLASH ) factor } ;
 factor       = NUMBER | STRING | NAME | KEYWORD | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN ;
 symbol_literal = COLON ( NAME | KEYWORD | STRING ) ;

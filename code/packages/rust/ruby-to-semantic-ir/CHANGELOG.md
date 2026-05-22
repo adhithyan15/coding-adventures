@@ -2,18 +2,22 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.10.0] - 2026-05-22
+
+### Added (Phase 6i — comparison operator lowering)
+- `lower_expression` now dispatches the renamed `sum` rule via the existing `lower_binary_chain(..., ["PLUS", "MINUS"])`.
+- New `lower_comparison_chain` helper — left-associative reduce of comparison operators into `BuiltinCall("==", [lhs, rhs])` (and similarly for `!=`, `<`, `>`, `<=`, `>=`).
+
+### Tests (+5 new, total 49)
+- `equality_op_lowers_to_builtin_call`, `less_than_op_lowers_to_builtin_call`, `all_six_comparison_operators_lower_with_correct_names`, `comparison_has_lower_precedence_than_arithmetic`, `comparison_used_in_if_condition_passes_validator`.
+
 ## [0.9.0] - 2026-05-22
 
 ### Added (Phase 6h — no-paren method call lowering)
-- `lower_statement_inner` dispatches `method_call_no_paren` to the existing `lower_method_call` helper.  The two rule shapes are layout-compatible (same callee + `expression` argument children, just without the LPAREN/RPAREN tokens), so `lower_method_call`'s `expression`-filter handles both transparently — no new helper needed.
-- Tail-expression promotion in `lower_program` and `lower_clause_statements` extended to recognise `method_call_no_paren` alongside `method_call` and `expression_stmt`, so a trailing `puts 1` becomes the block's `value` instead of an `ExprStmt` in the statement list.
+- `lower_statement_inner` dispatches `method_call_no_paren` to the existing `lower_method_call` helper.
 
 ### Tests (+5 new, total 44)
-- `no_paren_call_with_single_arg_lowers_to_builtin_call` — `puts 1` → `BuiltinCall("puts", [IntLit(1)])` with `MayPrint` effect.
-- `no_paren_call_with_multiple_args` — `puts 1, 2, 3` → three args.
-- `no_paren_call_with_binary_expr_arg_groups_correctly` — `puts 1 + 2` → one arg, itself a nested `BuiltinCall("+", [1, 2])`.
-- `no_paren_call_module_passes_sir_validator` — end-to-end `x = 1\nputs x, x + 1\n` passes `semantic_ir::validate`.
-- `paren_form_still_lowers_unchanged` — `puts(42)` keeps lowering as before (no regression).
+- `no_paren_call_with_single_arg_lowers_to_builtin_call`, `no_paren_call_with_multiple_args`, `no_paren_call_with_binary_expr_arg_groups_correctly`, `no_paren_call_module_passes_sir_validator`, `paren_form_still_lowers_unchanged`.
 
 ## [0.8.0] - 2026-05-22
 
@@ -27,16 +31,12 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 - `Feature::Closures` is added to the manifest whenever a block is lowered (the SIR validator requires this exact-match).
 - Builtin table grew to recognise common block-taking iterators (`each`, `map`, `select`, `reject`, `filter`, `each_with_index`, `each_with_object`, `times`, `tap`, `then`, `yield_self`, `loop`, `collect`, `find`, `detect`, `any?`, `all?`, `none?`, `count`, `reduce`, `inject`, `sort_by`, `group_by`, `min_by`, `max_by`, `flat_map`, `partition`, `each_slice`, `each_cons`) so `each { … }` lowers without forcing every consumer to declare `each` as a user function.
 
-### Documented v0 caveats
-- **Captures are empty**: block bodies that reference outer locals (not their own block params) produce a `VarRef` against an undeclared local, which the SIR validator rejects.  Real Ruby closures capture by reference; v0 SIR will need a capture-analysis pass before that lands.
-- **No-paren method calls inside blocks**: `each { puts 1 }` (no parens around `1`) doesn't parse as `method_call` in the v0 grammar — the test corpus uses the parenned form `puts(1)` to exercise the call-dispatch path.  The no-paren form lands when the grammar's `method_call` rule grows an optional-parens alternative.
-
 ### Tests (+5 new, total 39)
-- `brace_block_hoists_to_synthetic_function_and_make_closure` — `each { puts(1) }` produces `__block_0` whose tail value is `BuiltinCall(puts, [IntLit(1)])`, and the main body's `each` call has `MakeClosure(__block_0)` as its last arg.
-- `do_block_with_pipe_params_lowers_to_function_with_params` — `each do |x|\n  puts(x)\nend` produces `__block_0` with param `x`; inside the body `x` resolves as `Scope::Param`.
-- `multiple_blocks_get_distinct_synthetic_names` — two blocks produce `__block_0` and `__block_1`.
-- `block_module_declares_closures_feature` — the manifest contains `Closures`.
-- `block_lowering_passes_sir_validator` — end-to-end: a block-using program passes `semantic_ir::validate`.
+- `brace_block_hoists_to_synthetic_function_and_make_closure`
+- `do_block_with_pipe_params_lowers_to_function_with_params`
+- `multiple_blocks_get_distinct_synthetic_names`
+- `block_module_declares_closures_feature`
+- `block_lowering_passes_sir_validator`
 
 ## [0.7.0] - 2026-05-22
 

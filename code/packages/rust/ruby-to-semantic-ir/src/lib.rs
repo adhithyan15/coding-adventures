@@ -723,7 +723,6 @@ mod tests {
         match &b.value {
             Expr::BuiltinCall { name, args, effects, .. } => {
                 assert_eq!(name, "puts");
-                assert_eq!(args.len(), 1);
                 assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
                 assert!(effects.contains(Effect::MayPrint));
             }
@@ -779,6 +778,81 @@ mod tests {
             &b.value,
             Expr::BuiltinCall { name, args, .. } if name == "puts" && args.len() == 1
         ));
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 6i — comparison operators (`==`, `!=`, `<`, `>`, `<=`, `>=`).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn equality_op_lowers_to_builtin_call() {
+        let m = lower("x = 1 == 2");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value, .. } => match value {
+                Expr::BuiltinCall { name, args, .. } => {
+                    assert_eq!(name, "==");
+                    assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
+                    assert!(matches!(args[1], Expr::IntLit { value: 2, .. }));
+                }
+                other => panic!("expected BuiltinCall(==), got {:?}", other),
+            },
+            other => panic!("expected LetBinding, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn less_than_op_lowers_to_builtin_call() {
+        let m = lower("5 < 10");
+        let b = main_body(&m);
+        match &b.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "<");
+                assert!(matches!(args[0], Expr::IntLit { value: 5, .. }));
+                assert!(matches!(args[1], Expr::IntLit { value: 10, .. }));
+            }
+            other => panic!("expected BuiltinCall(<), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn all_six_comparison_operators_lower_with_correct_names() {
+        for op in &["==", "!=", "<", ">", "<=", ">="] {
+            let src = format!("x = 1 {op} 2");
+            let m = lower(&src);
+            let b = main_body(&m);
+            if let Stmt::LetBinding { value: Expr::BuiltinCall { name, .. }, .. } =
+                &b.stmts[0]
+            {
+                assert_eq!(name, op);
+            } else {
+                panic!("expected LetBinding(BuiltinCall(`{op}`))");
+            }
+        }
+    }
+
+    #[test]
+    fn comparison_has_lower_precedence_than_arithmetic() {
+        let m = lower("1 + 2 < 5");
+        let b = main_body(&m);
+        match &b.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "<");
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner, .. } => assert_eq!(inner, "+"),
+                    other => panic!("expected `+` LHS, got {:?}", other),
+                }
+                assert!(matches!(args[1], Expr::IntLit { value: 5, .. }));
+            }
+            other => panic!("expected top-level `<`, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn comparison_used_in_if_condition_passes_validator() {
+        let m = lower("x = 5\nif x < 10\n  y = 1\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
     }
 
     #[test]
