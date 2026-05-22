@@ -4,6 +4,7 @@ html-lexer/tests/fixtures/check_generated_html_fixtures.py
 html-lexer/tests/fixtures/check_html5lib_tokenizer_coverage.py
 html-lexer/tests/fixtures/check_html_fixture_case_ids.py
 html-lexer/tests/fixtures/check_html_fixture_format_registry.py
+html-lexer/tests/fixtures/check_html_fixture_readme_inventory.py
 html-lexer/tests/fixtures/check_html_fixture_schemas.py
 html-lexer/tests/fixtures/check_html_fixture_scripts_compile.py
 html-lexer/tests/fixtures/check_whatwg_lexer_fixture_metadata.py
@@ -29,6 +30,7 @@ html-lexer/tests/fixtures/normalize_html5lib_fixtures.py
 html-lexer/tests/fixtures/test_generated_html_fixture_manifest.py
 html-lexer/tests/fixtures/test_html_fixture_case_ids.py
 html-lexer/tests/fixtures/test_html_fixture_format_registry.py
+html-lexer/tests/fixtures/test_html_fixture_readme_inventory.py
 html-lexer/tests/fixtures/test_html_fixture_schemas.py
 html-lexer/tests/fixtures/test_html_fixture_scripts_compile.py
 html-parser/tests/fixtures/audit_html5lib_coverage.py

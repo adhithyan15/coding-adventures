@@ -129,6 +129,13 @@ def default_checks() -> list[FixtureCheck]:
             ),
         ),
         FixtureCheck(
+            "html-fixture-readme-inventory",
+            (
+                str(FIXTURE_DIR / "check_html_fixture_readme_inventory.py"),
+                "--check",
+            ),
+        ),
+        FixtureCheck(
             "html5lib-tokenizer-normalized",
             (
                 str(FIXTURE_DIR / "normalize_html5lib_fixtures.py"),

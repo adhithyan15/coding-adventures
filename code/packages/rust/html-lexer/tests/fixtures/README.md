@@ -59,6 +59,9 @@ binary while production code continues to link only static Rust source.
 - `whatwg-character-reference-boundaries.json`: generated HTML tokenizer
   character-reference boundary cases used by Rust tests to pin text,
   attribute, RCDATA, and seeded named/numeric continuation recovery
+- `whatwg-attribute-boundaries.json`: generated HTML tokenizer attribute
+  boundary cases used by Rust tests to pin seeded start-tag and
+  current-attribute continuation recovery
 - `whatwg-input-stream.json`: generated HTML Standard input-stream
   preprocessing cases used by Rust tests to exercise CRLF and bare-CR
   normalization across tokenizer contexts and chunk boundaries
@@ -71,6 +74,9 @@ binary while production code continues to link only static Rust source.
 - `whatwg-text-mode-delimiters.json`: generated HTML tokenizer text-mode
   delimiter cases used by Rust tests to pin RCDATA, RAWTEXT, script-data,
   escaped-script, and seeded end-tag continuation recovery
+- `whatwg-text-mode-boundaries.json`: generated HTML tokenizer text-mode
+  boundary cases used by Rust tests to pin parser-seeded RCDATA, RAWTEXT,
+  PLAINTEXT, and text-mode continuation recovery
 - `whatwg-script-escape-boundaries.json`: generated HTML tokenizer script
   escape boundary cases used by Rust tests to pin escaped/double-escaped
   script data, NULL, EOF, and seeded continuation recovery
@@ -116,6 +122,9 @@ binary while production code continues to link only static Rust source.
 - `check_html_fixture_format_registry.py`: checker that keeps every
   format-bearing lexer/parser fixture JSON file explicitly registered with its
   expected format string and fixture category
+- `check_html_fixture_readme_inventory.py`: checker that keeps the lexer and
+  parser fixture READMEs aligned with user-facing fixture data and command
+  scripts
 - `check_whatwg_lexer_rust_tests.py`: checker that keeps every focused WHATWG
   lexer fixture paired with a Rust test that parses the fixture and exercises
   the lexer harness
@@ -138,6 +147,9 @@ binary while production code continues to link only static Rust source.
 - `generate_whatwg_character_reference_boundaries_fixture.py`: importer that
   generates focused character-reference boundary cases for the checked-in
   `whatwg-character-reference-boundaries.json` fixture
+- `generate_whatwg_attribute_boundaries_fixture.py`: importer that generates
+  focused attribute boundary cases for the checked-in
+  `whatwg-attribute-boundaries.json` fixture
 - `generate_whatwg_input_stream_fixture.py`: importer that generates finite
   CRLF/bare-CR preprocessing cases for the checked-in
   `whatwg-input-stream.json` fixture
@@ -149,6 +161,9 @@ binary while production code continues to link only static Rust source.
 - `generate_whatwg_text_mode_delimiters_fixture.py`: importer that generates
   text-mode end-tag delimiter cases for the checked-in
   `whatwg-text-mode-delimiters.json` fixture
+- `generate_whatwg_text_mode_boundaries_fixture.py`: importer that generates
+  focused text-mode boundary cases for the checked-in
+  `whatwg-text-mode-boundaries.json` fixture
 - `generate_whatwg_script_escape_boundaries_fixture.py`: importer that
   generates focused script escape boundary cases for the checked-in
   `whatwg-script-escape-boundaries.json` fixture
@@ -198,6 +213,8 @@ python3 code/packages/rust/html-lexer/tests/fixtures/check_html_fixture_case_ids
 python3 code/packages/rust/html-lexer/tests/fixtures/check_html_fixture_schemas.py \
   --check
 python3 code/packages/rust/html-lexer/tests/fixtures/check_html_fixture_format_registry.py \
+  --check
+python3 code/packages/rust/html-lexer/tests/fixtures/check_html_fixture_readme_inventory.py \
   --check
 python3 code/packages/rust/html-lexer/tests/fixtures/check_whatwg_lexer_rust_tests.py \
   --check
