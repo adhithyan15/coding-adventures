@@ -52,6 +52,7 @@ from fractions import Fraction
 from symbolic_ir import (
     ADD,
     DIV,
+    EXP,
     MUL,
     NEG,
     POW,
@@ -365,6 +366,185 @@ def _polynomial_degree_in_k(node: IRNode, k: IRSymbol) -> int | None:
     return None
 
 
+def _polynomial_leading_coeff_sign_in_k(node: IRNode, k: IRSymbol) -> int | None:
+    """Phase 43 helper: return the *sign* of the leading coefficient of
+    ``node`` as a polynomial in ``k``, or ``None`` if ``node`` is not a
+    polynomial in ``k`` (or has degree 0).
+
+    Returns ``+1`` or ``−1``.  Used by :func:`_h_diverges_at_infinity` to
+    decide whether the polynomial exponent inside ``Exp`` / ``Pow``
+    actually drives the value toward ``+∞`` (sign ``+1``, divergent) or
+    toward ``−∞`` (sign ``−1``, makes ``exp(h)`` / ``b^h`` → 0).
+
+    A naïve "positive-degree polynomial" check (Phase 41/42) is *not*
+    sign-aware: ``Mul(-1, k)`` (the canonical IR for ``-k``) passes the
+    positive-degree test but its leading coefficient is ``-1``.  Without
+    this helper, ``Exp(-k)`` and ``Pow(2, -k)`` would be wrongly claimed
+    to diverge — they actually vanish.
+
+    Recognised shapes
+    -----------------
+
+    +-----------------------------+-------------------------------+
+    | Input                       | Sign of leading coefficient   |
+    +=============================+===============================+
+    | constant in k               | ``None`` (degree 0)           |
+    | ``k``                       | +1                            |
+    | ``k^n`` with n ≥ 1 integer  | +1                            |
+    | ``Neg(p)``                  | flips sign of ``p``           |
+    | ``Mul(c, p)`` with ``c``    | ``sign(c) * sign(p)``         |
+    |   constant in k (rational)  |                               |
+    | ``Mul(p1, p2, …)`` pure     | product of signs              |
+    |   polynomials in k          |                               |
+    | ``Add(p1, p2, …)`` — sign   | sign of the maximum-degree    |
+    |   of the highest-degree     | term (assuming non-cancelling |
+    |   term                      | leading coefficients)         |
+    | anything else (Div, Sin,    | ``None``                      |
+    |   fractional Pow, …)        |                               |
+    +-----------------------------+-------------------------------+
+    """
+    # Constant in k — no leading coefficient (degree 0).
+    if _is_constant_in(node, k):
+        return None
+    if node == k:
+        return 1
+    if not isinstance(node, IRApply):
+        return None
+    # k^n with n ≥ 1.
+    if node.head == POW and len(node.args) == 2:
+        base, exp_arg = node.args
+        if (
+            base == k
+            and isinstance(exp_arg, IRInteger)
+            and exp_arg.value >= 1
+        ):
+            return 1
+        return None
+    # Neg(p): flip sign.
+    if node.head == NEG and len(node.args) == 1:
+        inner = _polynomial_leading_coeff_sign_in_k(node.args[0], k)
+        return None if inner is None else -inner
+    # Mul(...): pick the k-bearing factor(s) and multiply their signs;
+    # constants-in-k contribute their own sign.
+    if node.head == MUL:
+        sign = 1
+        any_k_bearing = False
+        for arg in node.args:
+            if _is_constant_in(arg, k):
+                # Constant factor — multiply by its sign.
+                val = _ir_rational_val(arg)
+                if val is None:
+                    # Symbolic constant whose sign we can't decide.
+                    return None
+                if val == 0:
+                    return None  # Vanishing factor; not a leading coeff.
+                if val < 0:
+                    sign = -sign
+                continue
+            inner = _polynomial_leading_coeff_sign_in_k(arg, k)
+            if inner is None:
+                return None
+            sign = sign if inner == 1 else -sign
+            any_k_bearing = True
+        return sign if any_k_bearing else None
+    # Add(...): the highest-degree term dominates.  Walk children,
+    # picking the one with the largest polynomial degree and use its
+    # leading-coefficient sign.  If multiple children share the maximum
+    # degree we conservatively return ``None`` (could cancel).
+    if node.head == ADD:
+        max_deg: int = -1
+        leader_sign: int | None = None
+        tied_at_max = False
+        for arg in node.args:
+            deg = _polynomial_degree_in_k(arg, k)
+            if deg is None:
+                return None  # non-polynomial child — refuse
+            if deg == 0:
+                continue  # constant terms don't determine leading sign
+            if deg > max_deg:
+                max_deg = deg
+                leader_sign = _polynomial_leading_coeff_sign_in_k(arg, k)
+                tied_at_max = False
+            elif deg == max_deg:
+                tied_at_max = True
+        if tied_at_max:
+            # Two or more terms share the highest degree; the leading
+            # coefficient could cancel, so we conservatively refuse.
+            return None
+        return leader_sign
+    return None
+
+
+def _h_diverges_at_infinity(node: IRNode, k: IRSymbol) -> bool:
+    """Phase 43: Return True when ``node`` provably diverges (to ±∞) as
+    ``k → ∞``.
+
+    A union of the Phase 41/42 positive-degree polynomial recogniser and
+    new transcendental cases:
+
+    +-----------------------------------+------------------------------+
+    | Input                             | Diverges?                    |
+    +===================================+==============================+
+    | positive-degree polynomial in k   | yes (Phase 41/42)            |
+    | ``Exp(h(k))`` with ``h``          | yes (Phase 43)               |
+    |   diverging                       |                              |
+    | ``Pow(b, h(k))`` with             | yes (Phase 43)               |
+    |   ``b ∈ ℤ``, ``|b| > 1`` rational |                              |
+    |   and ``h`` diverging             |                              |
+    | ``Mul(...)`` where at least       | yes (Phase 43)               |
+    |   one factor diverges and others  |                              |
+    |   are constant-in-k or diverging  |                              |
+    | anything else                     | no (conservatively)          |
+    +-----------------------------------+------------------------------+
+
+    Notes
+    -----
+    The ``b`` check uses ``|b| > 1`` so both ``2`` and ``−2`` (and
+    rationals like ``3/2``) count.  For negative bases the sign
+    oscillates but the magnitude diverges; ``c / b^k`` still tends to
+    0 because the absolute value of the denominator grows.
+    """
+    # Phase 41/42 fast path — pure polynomial in k of positive degree.
+    if _is_positive_degree_polynomial_in_k(node, k):
+        return True
+    if not isinstance(node, IRApply):
+        return False
+    # Phase 43: Exp(h(k)) with h → +∞.  `exp(+∞) = +∞` but `exp(−∞) = 0`,
+    # so we MUST verify the leading coefficient of h is positive — a
+    # naïve "positive-degree polynomial" check accepts ``Mul(-1, k)``
+    # (i.e. ``-k``) whose leading coefficient is ``-1``, in which case
+    # ``exp(h) → 0`` and the closed form would be silently wrong.
+    if node.head == EXP and len(node.args) == 1:
+        inner = node.args[0]
+        if _is_positive_degree_polynomial_in_k(inner, k):
+            return _polynomial_leading_coeff_sign_in_k(inner, k) == 1
+        return False
+    # Phase 43: Pow(b, h(k)) with |b| > 1 rational and h → +∞.  Same
+    # sign-of-leading-coefficient requirement as the Exp branch —
+    # ``Pow(2, Mul(-1, k))`` is ``2^(-k) → 0``, not ∞.
+    if node.head == POW and len(node.args) == 2:
+        base, exp = node.args
+        if _is_constant_in(base, k):
+            base_val = _ir_rational_val(base)
+            if base_val is not None and abs(base_val) > 1:
+                if _is_positive_degree_polynomial_in_k(exp, k):
+                    if _polynomial_leading_coeff_sign_in_k(exp, k) == 1:
+                        return True
+    # Phase 43: Mul(...) — at least one factor diverges, others are
+    # constant in k or also diverging.  Recursive.
+    if node.head == MUL and len(node.args) >= 2:
+        has_divergent = False
+        for arg in node.args:
+            if _is_constant_in(arg, k):
+                continue
+            if _h_diverges_at_infinity(arg, k):
+                has_divergent = True
+                continue
+            return False  # unrecognised k-dependence
+        return has_divergent
+    return False
+
+
 def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     """Return True when ``g(k)`` provably tends to 0 as ``k → ∞``.
 
@@ -407,9 +587,10 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     if not isinstance(g, IRApply) or g.head != DIV or len(g.args) != 2:
         return False
     num, den = g.args
-    # Phase 41 fast path: constant numerator + positive-degree denominator.
+    # Phase 41/43 fast path: constant numerator + diverging denominator
+    # (positive-degree polynomial OR exp / b^k transcendental).
     if _is_constant_in(num, k):
-        return _is_positive_degree_polynomial_in_k(den, k)
+        return _h_diverges_at_infinity(den, k)
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:

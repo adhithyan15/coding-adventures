@@ -600,3 +600,250 @@ class TestEvaluateSumPhase42DegreeAware:
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         # Conservative: refuse since num is not a polynomial.
         assert isinstance(result, IRApply) and result.head == SUM
+
+
+# ---------------------------------------------------------------------------
+# Phase 43: transcendental vanishing-at-infinity.
+#
+# Extends Phase 41's denominator recogniser to also accept exponentially
+# diverging shapes:
+#   - Exp(h(k)) with h(k) a positive-degree polynomial in k
+#   - Pow(b, h(k)) with |b| > 1 rational and h(k) positive-degree
+#   - Mul(...) with at least one diverging factor and others constant
+#     in k or also diverging
+#
+# Closes telescopes like ∑_{k=0}^∞ [1/2^k − 1/2^(k+1)] = g(0) = 1.
+# ---------------------------------------------------------------------------
+
+
+class TestEvaluateSumPhase43Transcendental:
+    def test_antisymmetric_one_over_2_pow_k(self):
+        """``∑_{k=0}^∞ [1/2^k − 1/2^(k+1)] = g(0) = 1/2^0 = 1``.
+
+        Phase 43 recognises ``Pow(2, k)`` as a diverging denominator;
+        the antisymmetric telescope emits ``g(0) = 1``.
+        """
+        from symbolic_ir import SUB
+
+        g_k = IRApply(DIV, (IRInteger(1), IRApply(POW, (IRInteger(2), _k))))
+        g_kp1 = IRApply(
+            DIV,
+            (IRInteger(1), IRApply(POW, (IRInteger(2), IRApply(ADD, (_k, IRInteger(1)))))),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(0), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRInteger) and result.value == 1
+
+    def test_pow_3_with_higher_starting_index(self):
+        """``∑_{k=1}^∞ [1/3^k − 1/3^(k+1)] = g(1) = 1/3``.
+
+        Phase 43: base = 3 (>1), exponent = k (positive degree).
+        Antisymmetric closed form is ``g(1) = 1/3``.
+        """
+        from fractions import Fraction
+        from symbolic_ir import SUB
+
+        g_k = IRApply(DIV, (IRInteger(1), IRApply(POW, (IRInteger(3), _k))))
+        g_kp1 = IRApply(
+            DIV,
+            (IRInteger(1), IRApply(POW, (IRInteger(3), IRApply(ADD, (_k, IRInteger(1)))))),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        from symbolic_ir import IRRational
+
+        assert isinstance(result, IRRational)
+        assert Fraction(result.numer, result.denom) == Fraction(1, 3)
+
+    def test_pow_negative_base_with_magnitude_above_one(self):
+        """``∑_{k=0}^∞ [1/(-2)^k − 1/(-2)^(k+1)] = 1/(-2)^0 = 1``.
+
+        Phase 43 accepts ``|b| > 1`` for the base, so negative bases
+        with magnitude > 1 still count (the magnitude diverges; the
+        sign oscillates but doesn't affect the limit being 0).
+        """
+        from symbolic_ir import SUB
+
+        neg2 = IRInteger(-2)
+        g_k = IRApply(DIV, (IRInteger(1), IRApply(POW, (neg2, _k))))
+        g_kp1 = IRApply(
+            DIV,
+            (IRInteger(1), IRApply(POW, (neg2, IRApply(ADD, (_k, IRInteger(1)))))),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(0), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRInteger) and result.value == 1
+
+    def test_base_one_falls_through(self):
+        """``Pow(1, k) = 1`` doesn't diverge; Phase 43 refuses.
+
+        ``∑_{k=0}^∞ [1/1^k − 1/1^(k+1)] = ∑ [1 − 1] = ∑ 0`` — but the
+        constant-summand rule fires first (Step 1) so it never reaches
+        Phase 43.  This test pins the Phase 43 ``|b| > 1`` guard against
+        accidentally claiming ``b = 1`` diverges.
+        """
+        from symbolic_ir import SUB
+
+        g_k = IRApply(DIV, (IRInteger(1), IRApply(POW, (IRInteger(1), _k))))
+        g_kp1 = IRApply(
+            DIV,
+            (IRInteger(1), IRApply(POW, (IRInteger(1), IRApply(ADD, (_k, IRInteger(1)))))),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(0), IRSymbol("%inf"), _VM)
+        # Constant-summand path folds [1 − 1] = 0 first; check it's
+        # either the integer 0 OR fell through to unevaluated (the
+        # stub VM may not fold the SUB).  Definitely must not emit
+        # ``−g(lo) = −1`` via a wrongly-fired Phase 43.
+        if isinstance(result, IRInteger):
+            assert result.value == 0
+        else:
+            assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_pow_fractional_base_above_one_diverges(self):
+        """``Pow(3/2, k)`` has rational base 3/2 with magnitude > 1 →
+        diverges.  ``∑_{k=0}^∞ [1/(3/2)^k − 1/(3/2)^(k+1)] = 1``.
+        """
+        from symbolic_ir import SUB
+
+        three_halves = IRRational(3, 2)
+        g_k = IRApply(DIV, (IRInteger(1), IRApply(POW, (three_halves, _k))))
+        g_kp1 = IRApply(
+            DIV,
+            (IRInteger(1), IRApply(POW, (three_halves, IRApply(ADD, (_k, IRInteger(1)))))),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(0), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRInteger) and result.value == 1
+
+    def test_pow_half_falls_through(self):
+        """``Pow(1/2, k) = (1/2)^k → 0``, not diverging.  Phase 43
+        refuses (we need denominator to diverge).
+        """
+        from symbolic_ir import SUB
+
+        half = IRRational(1, 2)
+        g_k = IRApply(DIV, (IRInteger(1), IRApply(POW, (half, _k))))
+        g_kp1 = IRApply(
+            DIV,
+            (IRInteger(1), IRApply(POW, (half, IRApply(ADD, (_k, IRInteger(1)))))),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(0), IRSymbol("%inf"), _VM)
+        # Phase 43 must refuse — the denominator (1/2)^k → 0, so g(k)
+        # actually diverges; emitting ``−g(lo)`` would be wrong.
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_mul_of_polynomial_and_exponential_diverges(self):
+        """``∑_{k=1}^∞ [1/(k·2^k) − 1/((k+1)·2^(k+1))] = 1/2``.
+
+        Denominator is ``k · 2^k`` — Phase 43 ``Mul`` case combines a
+        positive-degree polynomial factor (``k``) with an exponential
+        factor (``2^k``), both diverging.  Closed form: ``g(1) = 1/2``.
+        """
+        from fractions import Fraction
+        from symbolic_ir import SUB
+
+        g_k = IRApply(
+            DIV,
+            (IRInteger(1), IRApply(MUL, (_k, IRApply(POW, (IRInteger(2), _k))))),
+        )
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        g_kp1 = IRApply(
+            DIV, (IRInteger(1), IRApply(MUL, (kp1, IRApply(POW, (IRInteger(2), kp1))))),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        from symbolic_ir import IRRational
+
+        assert isinstance(result, IRRational)
+        assert Fraction(result.numer, result.denom) == Fraction(1, 2)
+
+    # ----- Phase 43 sign-aware regressions (from security review) -----
+
+    def test_exp_negative_polynomial_exponent_does_not_diverge(self):
+        """``Exp(Mul(-1, k))`` represents ``exp(-k) → 0``, NOT ∞.
+
+        The Phase 43 sign-aware guard must refuse to claim divergence
+        when the polynomial exponent has a negative leading coefficient.
+        Otherwise ``Div(c, exp(-k)) = c·exp(k) → ∞`` would be wrongly
+        claimed to vanish.
+        """
+        from symbolic_ir import EXP, SUB
+
+        neg_k = IRApply(MUL, (IRInteger(-1), _k))
+        neg_kp1 = IRApply(MUL, (IRInteger(-1), IRApply(ADD, (_k, IRInteger(1)))))
+        g_k = IRApply(DIV, (IRInteger(1), IRApply(EXP, (neg_k,))))
+        g_kp1 = IRApply(DIV, (IRInteger(1), IRApply(EXP, (neg_kp1,))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(0), IRSymbol("%inf"), _VM)
+        # MUST stay unevaluated — g(k) = 1/exp(-k) = exp(k) actually
+        # diverges, so the sum doesn't have a finite closed form via
+        # this rule.
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_pow_negative_polynomial_exponent_does_not_diverge(self):
+        """``Pow(2, Mul(-1, k)) = 2^(-k) → 0``, NOT ∞.
+
+        Same regression as the Exp case: Phase 43 must refuse the
+        ``Div(c, 2^(-k))`` shape because the denominator vanishes
+        rather than diverging.
+        """
+        from symbolic_ir import SUB
+
+        neg_k = IRApply(MUL, (IRInteger(-1), _k))
+        neg_kp1 = IRApply(MUL, (IRInteger(-1), IRApply(ADD, (_k, IRInteger(1)))))
+        g_k = IRApply(DIV, (IRInteger(1), IRApply(POW, (IRInteger(2), neg_k))))
+        g_kp1 = IRApply(DIV, (IRInteger(1), IRApply(POW, (IRInteger(2), neg_kp1))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(0), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_mul_with_negative_polynomial_exponent_does_not_diverge(self):
+        """``k · 2^(-k) → 0``, NOT ∞ (the exponential decay wins).
+
+        Phase 43's ``Mul`` recursion must propagate the sign-aware
+        refusal from its child: ``k`` is positive-degree, but ``2^(-k)``
+        is correctly rejected by the Pow branch, so the overall ``Mul``
+        recogniser refuses too.
+        """
+        from symbolic_ir import SUB
+
+        neg_k = IRApply(MUL, (IRInteger(-1), _k))
+        neg_kp1 = IRApply(MUL, (IRInteger(-1), IRApply(ADD, (_k, IRInteger(1)))))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        g_k = IRApply(
+            DIV,
+            (IRInteger(1), IRApply(MUL, (_k, IRApply(POW, (IRInteger(2), neg_k))))),
+        )
+        g_kp1 = IRApply(
+            DIV,
+            (
+                IRInteger(1),
+                IRApply(MUL, (kp1, IRApply(POW, (IRInteger(2), neg_kp1)))),
+            ),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_exp_with_neg_wrapper_does_not_diverge(self):
+        """``Exp(Neg(k))`` — the canonical ``-k`` written as an
+        explicit ``NEG`` wrapper rather than ``Mul(-1, k)``.  Same
+        ``exp(-k) → 0`` behaviour; Phase 43 must refuse.
+        """
+        from symbolic_ir import EXP, NEG, SUB
+
+        g_k = IRApply(DIV, (IRInteger(1), IRApply(EXP, (IRApply(NEG, (_k,)),))))
+        g_kp1 = IRApply(
+            DIV,
+            (
+                IRInteger(1),
+                IRApply(
+                    EXP, (IRApply(NEG, (IRApply(ADD, (_k, IRInteger(1))),)),),
+                ),
+            ),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(0), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
