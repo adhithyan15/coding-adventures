@@ -357,28 +357,34 @@ impl Lowerer {
                 self.lower_while_or_until(node)
             }
             "method_with_block" => {
-                // Phase 6g: a method call with a trailing block.  v0
-                // SIR support is a strict subset of real Ruby semantics:
-                //
-                //   1. The *call* itself lowers identically to a bare
-                //      `method_call` — same builtin/direct dispatch.
-                //   2. The block's body is hoisted to a synthetic
-                //      top-level Function named `__block_<n>`.  Its
-                //      params come from `block_params`; its body is
-                //      lowered with a fresh `declared_locals` +
-                //      `current_params` scope so locals/params don't
-                //      leak.
-                //   3. The synthetic Function is referenced as a final
-                //      argument to the call via `Expr::MakeClosure`.
-                //      Backends that don't yet support closures will
-                //      surface a diagnostic; backends that do can
-                //      forward the closure handle to the method.
-                //   4. Captures are empty in v0 — block bodies that
-                //      reference outer locals are accepted by the
-                //      parser but the SIR validator will reject them
-                //      if the body actually emits a non-Param VarRef.
-                //      Documented as a known v0 limitation.
+                // Phase 6g
                 let expr = self.lower_method_with_block(node)?;
+                return Ok(Stmt::ExprStmt {
+                    expr,
+                    span: self.span_of(node),
+                });
+            }
+            "return_statement" | "break_statement" | "next_statement" => {
+                // Phase 6j: control-flow keywords lower to BuiltinCall
+                // with Effect::Divergent.  Optional trailing expression
+                // becomes the single arg; bare `return` carries NilLit.
+                let name = match node.rule_name.as_str() {
+                    "return_statement" => "return",
+                    "break_statement" => "break",
+                    "next_statement" => "next",
+                    _ => unreachable!(),
+                };
+                let arg_node = self.find_node_child(node, "expression");
+                let arg = match arg_node {
+                    Some(n) => self.lower_expression(n)?,
+                    None => Expr::NilLit { span: self.span_of(node) },
+                };
+                let expr = Expr::BuiltinCall {
+                    name: name.to_string(),
+                    args: vec![arg],
+                    effects: EffectSet::PURE.with(Effect::Divergent),
+                    span: self.span_of(node),
+                };
                 Ok(Stmt::ExprStmt {
                     expr,
                     span: self.span_of(node),

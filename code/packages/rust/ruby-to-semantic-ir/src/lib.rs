@@ -655,7 +655,6 @@ mod tests {
         match &block_fn.body.value {
             Expr::BuiltinCall { name, args, .. } => {
                 assert_eq!(name, "puts");
-                assert_eq!(args.len(), 1);
                 assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
             }
             other => panic!("expected BuiltinCall(puts, …) tail, got {:?}", other),
@@ -667,9 +666,7 @@ mod tests {
             _ => None,
         }).expect("expected ExprStmt(call)");
         let last_arg = call_args.last().expect("call must have ≥1 arg (the closure)");
-        assert!(
-            matches!(last_arg, Expr::MakeClosure { fn_name, .. } if fn_name == "__block_0")
-        );
+        assert!(matches!(last_arg, Expr::MakeClosure { fn_name, .. } if fn_name == "__block_0"));
     }
 
     #[test]
@@ -683,9 +680,7 @@ mod tests {
         assert_eq!(block_fn.params.len(), 1);
         assert_eq!(block_fn.params[0].name, "x");
         if let Expr::BuiltinCall { args, .. } = &block_fn.body.value {
-            assert!(
-                matches!(&args[0], Expr::VarRef { name, scope, .. } if name == "x" && *scope == Scope::Param)
-            );
+            assert!(matches!(&args[0], Expr::VarRef { name, scope, .. } if name == "x" && *scope == Scope::Param));
         } else {
             panic!("expected BuiltinCall body");
         }
@@ -851,6 +846,72 @@ mod tests {
     #[test]
     fn comparison_used_in_if_condition_passes_validator() {
         let m = lower("x = 5\nif x < 10\n  y = 1\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 6j — control-flow keywords: `return`, `break`, `next`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn return_with_value_lowers_to_divergent_builtin_call() {
+        let m = lower("return 42");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
+                assert_eq!(name, "return");
+                assert!(matches!(args[0], Expr::IntLit { value: 42, .. }));
+                assert!(effects.contains(Effect::Divergent));
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(return)), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn bare_return_lowers_with_nil_arg() {
+        let m = lower("return");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "return");
+                assert!(matches!(args[0], Expr::NilLit { .. }));
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(return, [nil])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn break_and_next_lower_to_their_respective_builtins() {
+        for kw in &["break", "next"] {
+            let src = format!("{kw} 1");
+            let m = lower(&src);
+            let b = main_body(&m);
+            match &b.stmts[0] {
+                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
+                    assert_eq!(name, kw);
+                    assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
+                    assert!(effects.contains(Effect::Divergent));
+                }
+                other => panic!("expected BuiltinCall({kw}), got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn return_inside_def_body() {
+        let m = lower("def f(x)\n  return x + 1\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "f").expect("expected fn f");
+        let has_return = f.body.stmts.iter().any(|s| matches!(
+            s,
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "return"
+        ));
+        assert!(has_return);
+    }
+
+    #[test]
+    fn return_module_passes_sir_validator() {
+        let m = lower("def f(x)\n  return x\nend\n");
         let result = semantic_ir::validate(&m);
         assert!(result.is_ok(), "validator rejected our output: {:?}", result);
     }

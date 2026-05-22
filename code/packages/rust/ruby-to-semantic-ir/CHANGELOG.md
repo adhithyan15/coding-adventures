@@ -2,6 +2,14 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.11.0] - 2026-05-22
+
+### Added (Phase 6j — `return` / `break` / `next` lowering)
+- `lower_statement_inner` dispatches `return_statement` / `break_statement` / `next_statement` to a common arm that emits `Expr::BuiltinCall` with the keyword name, the optional trailing expression as the sole argument (or `NilLit` when absent), and `Effect::Divergent` declared.
+
+### Tests (+5 new, total 54)
+- `return_with_value_lowers_to_divergent_builtin_call`, `bare_return_lowers_with_nil_arg`, `break_and_next_lower_to_their_respective_builtins`, `return_inside_def_body`, `return_module_passes_sir_validator`.
+
 ## [0.10.0] - 2026-05-22
 
 ### Added (Phase 6i — comparison operator lowering)
@@ -23,20 +31,13 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 
 ### Added (Phase 6g — method-with-block lowering)
 - `lower_method_with_block` lowers the `method_with_block` rule node into:
-  1. A `BuiltinCall` / `DirectCall` for the method dispatch (identical to a bare `method_call`).
-  2. A hoisted top-level `Function` named `__block_<n>` for the block body, with `block_params` as `Param`s.
+  1. A `BuiltinCall` / `DirectCall` for the method dispatch.
+  2. A hoisted top-level `Function` named `__block_<n>` for the block body.
   3. An `Expr::MakeClosure { fn_name, captures: [] }` appended as the call's trailing argument.
-- New `Lowerer.block_counter: usize` field mints monotonic `__block_0`, `__block_1`, … names for distinct synthesised closure functions.
-- New `hoist_block_to_function` helper saves/restores `declared_locals` + `current_params` around the block-body lowering — same scope-isolation pattern as `lower_def_statement` — so block params resolve as `Scope::Param` and outer-scope locals don't leak in.
-- `Feature::Closures` is added to the manifest whenever a block is lowered (the SIR validator requires this exact-match).
-- Builtin table grew to recognise common block-taking iterators (`each`, `map`, `select`, `reject`, `filter`, `each_with_index`, `each_with_object`, `times`, `tap`, `then`, `yield_self`, `loop`, `collect`, `find`, `detect`, `any?`, `all?`, `none?`, `count`, `reduce`, `inject`, `sort_by`, `group_by`, `min_by`, `max_by`, `flat_map`, `partition`, `each_slice`, `each_cons`) so `each { … }` lowers without forcing every consumer to declare `each` as a user function.
+- New `Lowerer.block_counter: usize` field, new `hoist_block_to_function` helper, `Feature::Closures` declared, expanded builtin iterator table.
 
 ### Tests (+5 new, total 39)
-- `brace_block_hoists_to_synthetic_function_and_make_closure`
-- `do_block_with_pipe_params_lowers_to_function_with_params`
-- `multiple_blocks_get_distinct_synthetic_names`
-- `block_module_declares_closures_feature`
-- `block_lowering_passes_sir_validator`
+- `brace_block_hoists_to_synthetic_function_and_make_closure`, `do_block_with_pipe_params_lowers_to_function_with_params`, `multiple_blocks_get_distinct_synthetic_names`, `block_module_declares_closures_feature`, `block_lowering_passes_sir_validator`.
 
 ## [0.7.0] - 2026-05-22
 
