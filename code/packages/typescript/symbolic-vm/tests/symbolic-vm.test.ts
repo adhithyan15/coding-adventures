@@ -1437,3 +1437,65 @@ describe("Phase 33: Trig π-multiple exact values", () => {
     expect(vm.eval(app(TAN, [int(0)]))).toEqual(int(0));
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 47 (TypeScript port): Nested-Add flattening.
+//
+// Ports the Python Phase 47 fix.  When either binary Add operand is itself
+// an Add(...) apply, the handler flattens the tree, sums numeric literals
+// once, and rebuilds a left-associated chain.  Makes Add canonical for
+// any consumer comparing trees structurally.
+// ---------------------------------------------------------------------------
+
+describe("Phase 47: nested-Add flattening", () => {
+  const vm = new VM(new SymbolicBackend());
+  const k = sym("k");
+
+  it("Add(Add(k, 1), 1) flattens to Add(k, 2)", () => {
+    const nested = app(ADD, [app(ADD, [k, int(1)]), int(1)]);
+    const out = vm.eval(nested);
+    expect(out).toEqual(app(ADD, [k, int(2)]));
+  });
+
+  it("triply-nested Add(Add(Add(k, 1), 1), 1) → Add(k, 3)", () => {
+    const nested = app(ADD, [
+      app(ADD, [app(ADD, [k, int(1)]), int(1)]),
+      int(1),
+    ]);
+    const out = vm.eval(nested);
+    expect(out).toEqual(app(ADD, [k, int(3)]));
+  });
+
+  it("Add(Add(k, 2), 3) folds the constants", () => {
+    const nested = app(ADD, [app(ADD, [k, int(2)]), int(3)]);
+    const out = vm.eval(nested);
+    expect(out).toEqual(app(ADD, [k, int(5)]));
+  });
+
+  it("Add(Add(k, 1), -1) cancels the constants → bare k", () => {
+    const nested = app(ADD, [app(ADD, [k, int(1)]), int(-1)]);
+    const out = vm.eval(nested);
+    expect(out).toEqual(k);
+  });
+
+  it("Add(Add(x, y), z) leaves order alone when no literals present", () => {
+    const x = sym("x");
+    const y = sym("y");
+    const z = sym("z");
+    const nested = app(ADD, [app(ADD, [x, y]), z]);
+    const out = vm.eval(nested);
+    // Should rebuild as left-associated Add(Add(x, y), z) with same args.
+    expect(out).toEqual(app(ADD, [app(ADD, [x, y]), z]));
+  });
+
+  it("non-nested Add(k, 1) is untouched (no rebuild)", () => {
+    const flat = app(ADD, [k, int(1)]);
+    const out = vm.eval(flat);
+    expect(out).toEqual(flat);
+  });
+
+  it("regression: Add(0, x) still simplifies to x", () => {
+    const x = sym("x");
+    expect(vm.eval(app(ADD, [int(0), x]))).toEqual(x);
+  });
+});

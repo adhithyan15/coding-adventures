@@ -1,5 +1,54 @@
 # Changelog
 
+## [0.12.0] — 2026-05-22
+
+**Phase 47 — Nested-Add flattening (TypeScript port).**
+
+Ports the Python ``symbolic-vm`` 0.71.0 Add-handler fix.  When either
+binary ``Add`` operand is itself an ``Add(...)`` apply, the handler
+now flattens the tree, sums numeric literals once, and rebuilds a
+left-associated chain.  Example:
+
+    Add(Add(k, 1), 1)  →  Add(k, 2)
+    Add(Add(Add(k, 1), 1), 1)  →  Add(k, 3)
+
+Why it matters: makes ``Add`` canonical for any consumer that
+compares trees structurally.  In particular, downstream
+``cas-summation`` users get reliable structural-equality matches in
+the telescope detector even when ``Apart`` (in Python) or hand-
+written shifted summands (anywhere) produce nested ``Add`` forms.
+
+### Changed
+
+- ``buildHandlerTable``'s ``ADD`` entry now wraps the existing
+  ``binaryNumeric`` handler with a pre-pass that:
+  1. Detects nested ``Add`` operands.
+  2. Walks the tree via the existing ``flattenAddTerms`` helper.
+  3. Partitions leaves into numerics vs symbolics.
+  4. Sums numerics once (priority handled by ``addNumeric``).
+  5. Rebuilds a left-associated chain
+     ``Add(...non_literals, lit_sum)`` (dropping the literal if it's
+     zero, collapsing to the bare symbol if only one operand remains).
+
+Strict mode (``simplify=false``) keeps the original binary
+semantics.
+
+### Added — tests
+
+`tests/symbolic-vm.test.ts` — new ``Phase 47: nested-Add flattening``
+describe block with 7 cases:
+
+- ``Add(Add(k, 1), 1)`` → ``Add(k, 2)``.
+- Triply-nested ``Add(Add(Add(k, 1), 1), 1)`` → ``Add(k, 3)``.
+- ``Add(Add(k, 2), 3)`` → ``Add(k, 5)`` (constant folding).
+- ``Add(Add(k, 1), -1)`` → bare ``k`` (literal zeroes out).
+- ``Add(Add(x, y), z)`` — no literals — stays as left-associated
+  chain (pin: no spurious reordering).
+- ``Add(k, 1)`` — non-nested — untouched (no rebuild).
+- Regression: ``Add(0, x)`` still simplifies to ``x``.
+
+Full suite: **161 passed** (was 154; +7 net new).
+
 ## [0.11.0] — 2026-05-20
 
 ### Added — Phase 38: Weierstrass closed forms lifted to linear trig arguments

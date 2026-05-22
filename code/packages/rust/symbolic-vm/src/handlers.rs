@@ -274,8 +274,94 @@ fn is_truthy(node: &IRNode) -> Option<bool> {
 // Arithmetic handlers
 // ---------------------------------------------------------------------------
 
+/// Phase 47 (Rust port): walk a nested `Add` tree and append every
+/// non-`Add` leaf to `out`.  Used by the `Add` handler's flattening
+/// path.
+fn flatten_add_leaves(node: &IRNode, out: &mut Vec<IRNode>) {
+    match node {
+        IRNode::Apply(apply_node) if matches!(&apply_node.head, IRNode::Symbol(s) if s == ADD) => {
+            for arg in &apply_node.args {
+                flatten_add_leaves(arg, out);
+            }
+        }
+        _ => out.push(node.clone()),
+    }
+}
+
 fn add_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
+        // Phase 47: nested-Add flattening for the symbolic backend.
+        // When either binary Add operand is itself an Add(...) apply,
+        // gather every non-Add leaf, sum the numeric literals once,
+        // and rebuild a left-associated chain.  This makes Add
+        // canonical for any consumer that compares trees structurally
+        // — most importantly the cas-summation telescope detector.
+        if simplify && expr.args.len() == 2 {
+            let a_is_add = matches!(
+                &expr.args[0],
+                IRNode::Apply(a) if matches!(&a.head, IRNode::Symbol(s) if s == ADD)
+            );
+            let b_is_add = matches!(
+                &expr.args[1],
+                IRNode::Apply(a) if matches!(&a.head, IRNode::Symbol(s) if s == ADD)
+            );
+            if a_is_add || b_is_add {
+                let mut leaves: Vec<IRNode> = Vec::new();
+                flatten_add_leaves(&expr.args[0], &mut leaves);
+                flatten_add_leaves(&expr.args[1], &mut leaves);
+                // Re-evaluation guard: only rebuild when flattening
+                // actually changed the operand list (saves a needless
+                // round-trip when neither side was nested).
+                let rebuilt = leaves.len() != 2
+                    || leaves.iter().any(|leaf| {
+                        matches!(
+                            leaf,
+                            IRNode::Apply(a) if matches!(&a.head, IRNode::Symbol(s) if s == ADD)
+                        )
+                    });
+                if rebuilt {
+                    let mut lit_acc: Option<Numeric> = None;
+                    let mut non_literals: Vec<IRNode> = Vec::new();
+                    for leaf in leaves {
+                        match to_numeric(&leaf) {
+                            Some(n) => {
+                                lit_acc = Some(match lit_acc {
+                                    Some(acc) => acc + n,
+                                    None => n,
+                                });
+                            }
+                            None => non_literals.push(leaf),
+                        }
+                    }
+                    if non_literals.is_empty() {
+                        let total = lit_acc.unwrap_or(Numeric::Int(0));
+                        return from_numeric(total);
+                    }
+                    let lit_is_zero = match lit_acc {
+                        None => true,
+                        Some(n) => n.is_zero(),
+                    };
+                    let mut final_args = non_literals;
+                    if !lit_is_zero {
+                        final_args.push(from_numeric(lit_acc.unwrap()));
+                    }
+                    if final_args.len() == 1 {
+                        return final_args.into_iter().next().unwrap();
+                    }
+                    // Left-associate the chain.
+                    let mut iter = final_args.into_iter();
+                    let mut out = iter.next().unwrap();
+                    for nxt in iter {
+                        out = IRNode::Apply(Box::new(IRApply {
+                            head: IRNode::Symbol(ADD.to_string()),
+                            args: vec![out, nxt],
+                        }));
+                    }
+                    return out;
+                }
+            }
+        }
+
         let (a, b) = match binary_args(&expr) {
             Some(p) => p,
             None => return IRNode::Apply(Box::new(expr)),

@@ -440,11 +440,69 @@ const _ABS_HEAD = sym("Abs");
 
 function buildHandlerTable(simplify: boolean): ReadonlyMap<string, Handler> {
   const table = new Map<string, Handler>();
-  table.set(ADD.name, binaryNumeric("Add", simplify, (a, b) => addNumeric(a, b), (expr, a, b) => {
+  // Phase 47 (TypeScript port): nested-Add flattening.  When either
+  // binary Add operand is itself an Add(...) apply, gather every
+  // non-Add leaf via the existing `flattenAddTerms` walker, sum the
+  // numeric literals once, and rebuild a left-associated chain.
+  // Without this, the structural-equality check inside cas-summation's
+  // telescope detector misses telescopes whose denominators contain
+  // (k + a) shifts produced by Apart (e.g. ∑ 1/((k+1)(k+2))).
+  // Strict mode (simplify=false) keeps the original binary semantics.
+  const addBinary = binaryNumeric("Add", simplify, (a, b) => addNumeric(a, b), (expr, a, b) => {
     if (isZero(a)) return b;
     if (isZero(b)) return a;
     return expr;
-  }));
+  });
+  table.set(ADD.name, (vm, expr) => {
+    if (simplify && expr.args.length === 2) {
+      const [aPre, bPre] = expr.args;
+      const aIsAdd = aPre.kind === "apply" && equals(aPre.head, ADD);
+      const bIsAdd = bPre.kind === "apply" && equals(bPre.head, ADD);
+      if (aIsAdd || bIsAdd) {
+        const leaves = [...flattenAddTerms(aPre), ...flattenAddTerms(bPre)];
+        // Re-evaluation guard: only rewrite when flattening actually
+        // changed the operand list (saves a needless rebuild when
+        // flattenAddTerms walked through a SUB it normalised).
+        const rebuilt =
+          leaves.length !== 2 ||
+          leaves.some((leaf) => leaf.kind === "apply" && equals(leaf.head, ADD));
+        if (rebuilt) {
+          // Sum numeric leaves once; collect symbolic ones in order.
+          let litAcc: Numeric | undefined;
+          const nonLiterals: IRNode[] = [];
+          for (const leaf of leaves) {
+            const n = toNumeric(leaf);
+            if (n === undefined) {
+              nonLiterals.push(leaf);
+            } else {
+              litAcc = litAcc === undefined ? n : addNumeric(litAcc, n);
+            }
+          }
+          if (nonLiterals.length === 0) {
+            // Whole expression folded to a single numeric literal.
+            return fromNumeric(litAcc ?? { kind: "int", value: 0n });
+          }
+          const litIsZero =
+            litAcc === undefined ||
+            (litAcc.kind === "int" && litAcc.value === 0n) ||
+            (litAcc.kind === "rat" && litAcc.numer === 0n);
+          const finalArgs = litIsZero
+            ? nonLiterals
+            : [...nonLiterals, fromNumeric(litAcc!)];
+          if (finalArgs.length === 1) {
+            return finalArgs[0];
+          }
+          // Left-associate the chain for predictable structural equality.
+          let out: IRNode = finalArgs[0];
+          for (let i = 1; i < finalArgs.length; i += 1) {
+            out = app(ADD, [out, finalArgs[i]]);
+          }
+          return out;
+        }
+      }
+    }
+    return addBinary(vm, expr);
+  });
   table.set(SUB.name, binaryNumeric("Sub", simplify, (a, b) => subNumeric(a, b), (expr, _a, b) => {
     if (isZero(b)) return expr.args[0];
     return expr;
