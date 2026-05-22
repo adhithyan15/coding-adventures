@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **U29-1-K-webcomp** — `HostDialog` kernel primitive (UI29-1) lowers
+  to a `<dialog id="mos-dlg-N">…</dialog>` element inside the shadow
+  root plus a post-`innerHTML` lifecycle block in `_render()` that
+  calls `showModal()` / `show()` / `close()` and wires the dialog's
+  `close` event back to `this.dispatch(...)`.
+  - `open: slot: x` reads `this.getAttribute("x") === "true"` to
+    drive `showModal()` vs `close()`.
+  - `modal: false` (compile-time keyword) selects `show()` instead of
+    `showModal()`.
+  - `title: slot: x` / `title: "literal"` injects an `<h2>` as the
+    first child of the `<dialog>` for accessible heading semantics.
+  - `dismiss-on-backdrop: false` adds a `cancel`-event interceptor
+    that `preventDefault()`s the native Esc/backdrop close.
+  - `onClose` / `onOpen` emits wire into `this.dispatch(...)` via the
+    CustomEvent path (bubbles + composed, crosses the shadow boundary).
+  - Multiple `HostDialog`s in one component are disambiguated with
+    monotonic ids (`mos-dlg-0`, `mos-dlg-1`, …).
+
 ## [0.2.0] - 2026-05-19
 
 ### Added
