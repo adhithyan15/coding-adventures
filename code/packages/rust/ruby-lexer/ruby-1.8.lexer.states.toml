@@ -54,8 +54,9 @@ alphabet = [
   # in `data` and `ident_body` / `int_body`)
   "_",
   # percent-literal type letters: `w` for `%w[...]`, `q` for `%q{...}`.
-  # Both are referenced as `literal` matchers in `after_percent`.
-  "w", "q",
+  # `i` and `I` (2.0+ symbol arrays) are recognised by the lexer
+  # unconditionally; era < 2.0 downgrades them in the post-pass.
+  "w", "q", "i", "I",
 ]
 
 # ── Token vocabulary ──────────────────────────────────────────────
@@ -87,6 +88,19 @@ fields = ["value"]
 
 [[tokens]]
 name = "PercentQ"      # %q{single-quoted-style string}
+fields = ["value"]
+
+# Phase 4g — Ruby 2.0+ symbol-array percent literals.  The lexer
+# unconditionally recognises the `%i[…]` / `%I[…]` shape (Ruby 1.x
+# would reject them at parse time anyway); the post-pass downgrades
+# them back to a `%` + `i`/`I` token sequence under era < 2.0 so
+# pre-2.0 lexings stay faithful to what those eras actually did.
+[[tokens]]
+name = "PercentI"      # %i[a b c]   — interpolation-free symbol array (2.0+)
+fields = ["value"]
+
+[[tokens]]
+name = "PercentBigI"   # %I[a b c]   — interpolating symbol array (2.0+)
 fields = ["value"]
 
 [[tokens]]
@@ -218,6 +232,14 @@ id = "percent_w_body"    # inside `%w[...]` — accumulating string-array body.
 id = "percent_q_open"    # saw `%q`, peeking for `{` opening delim.
 [[states]]
 id = "percent_q_body"    # inside `%q{...}` — accumulating string body.
+[[states]]
+id = "percent_i_open"    # saw `%i`, peeking for `[` opening delim (2.0+).
+[[states]]
+id = "percent_i_body"    # inside `%i[...]` — accumulating symbol-array body.
+[[states]]
+id = "percent_big_i_open"# saw `%I`, peeking for `[` opening delim (2.0+).
+[[states]]
+id = "percent_big_i_body"# inside `%I[...]` — accumulating interpolating symbol-array body.
 
 [[states]]
 id = "comment_body"      # # to end-of-line
@@ -852,6 +874,20 @@ matcher = { literal = "q" }
 to = "percent_q_open"
 actions = ["append_text(current)"]
 
+# `%i` — Ruby 2.0+ non-interpolating symbol array.
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "i" }
+to = "percent_i_open"
+actions = ["append_text(current)"]
+
+# `%I` — Ruby 2.0+ interpolating symbol array.
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "I" }
+to = "percent_big_i_open"
+actions = ["append_text(current)"]
+
 # Any other follower: `%` is a modulo operator.  Re-dispatch the
 # next char to `data` so it lexes normally.
 [[transitions]]
@@ -951,6 +987,88 @@ actions = ["parse_error(unterminated_percent_q)", "emit(Eof)"]
 from = "percent_q_body"
 matcher = { anything = true }
 to = "percent_q_body"
+actions = ["append_text(current)"]
+
+# ─── %i[…] (Ruby 2.0+ symbol arrays) ────────────────────────────
+# After `%i`, the next char must be `[`.  Any other follower
+# bails to "% is modulo" + the `i` as an identifier.
+[[transitions]]
+from = "percent_i_open"
+matcher = { literal = "[" }
+to = "percent_i_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_i_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_i_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_i_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_i_no_delim)", "set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "percent_i_body"
+matcher = { literal = "]" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentI)"]
+
+[[transitions]]
+from = "percent_i_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_i)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_i_body"
+matcher = { anything = true }
+to = "percent_i_body"
+actions = ["append_text(current)"]
+
+# ─── %I[…] (Ruby 2.0+ interpolating symbol arrays) ──────────────
+[[transitions]]
+from = "percent_big_i_open"
+matcher = { literal = "[" }
+to = "percent_big_i_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_big_i_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_big_i_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_big_i_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_big_i_no_delim)", "set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "percent_big_i_body"
+matcher = { literal = "]" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentBigI)"]
+
+[[transitions]]
+from = "percent_big_i_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_big_i)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_big_i_body"
+matcher = { anything = true }
+to = "percent_big_i_body"
 actions = ["append_text(current)"]
 
 # ─────────────────────────────────────────────────────────────────

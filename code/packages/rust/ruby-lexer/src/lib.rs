@@ -933,6 +933,16 @@ impl RubyLexer {
                 let text = std::mem::take(&mut self.text_buffer);
                 self.push_token(TokenType::String, text);
             }
+            "PercentI" | "PercentBigI" => {
+                // Phase 4g — Ruby 2.0+ symbol array literals.
+                // Like the other percent literals, emit as a
+                // `TokenType::String` carrying the verbatim source
+                // (`%i[a b c]` or `%I[a b c]`).  The post-pass
+                // downgrades them back to `%` + identifier under
+                // era < 2.0 so pre-2.0 lexings stay faithful.
+                let text = std::mem::take(&mut self.text_buffer);
+                self.push_token(TokenType::String, text);
+            }
             "Op" => {
                 let text = std::mem::take(&mut self.text_buffer);
                 let kind = classify_op_token(&text);
@@ -2234,6 +2244,54 @@ mod tests {
             .map(|t| t.value.as_str())
             .collect();
         assert!(!values.contains(&"&."), "2.1 should NOT fuse `&.`");
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 4g — 2.0 `%i[]` / `%I[]` symbol-array percent literals.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn era_2_0_lexes_percent_i_array() {
+        let toks = tokenize_ruby_for_version("%i[a b c]", "2.0").unwrap();
+        let strings: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::String)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(strings, vec!["%i[a b c]"]);
+    }
+
+    #[test]
+    fn era_2_0_lexes_percent_big_i_array() {
+        let toks = tokenize_ruby_for_version("%I[a b c]", "2.0").unwrap();
+        let strings: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::String)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(strings, vec!["%I[a b c]"]);
+    }
+
+    #[test]
+    fn percent_i_unterminated_records_diagnostic() {
+        let (toks, diags) = tokenize_ruby_diag("%i[a b c");
+        assert!(diags.iter().any(|d| d.code == "unterminated_percent_i"));
+        // We still emit some token shape so the parser has something to
+        // chew on.
+        let _ = toks;
+    }
+
+    #[test]
+    fn percent_modulo_still_works() {
+        // `%` followed by something other than w/q/i/I should fall
+        // back to the modulo operator (no percent literal).
+        let toks = tokenize_ruby_for_version("5 % 2", "2.0").unwrap();
+        let values: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert!(values.contains(&"%"));
     }
 
     // -----------------------------------------------------------------
