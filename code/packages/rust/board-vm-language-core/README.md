@@ -102,6 +102,11 @@ bind those events back to the callback program, instruction budget, debounce
 window, queue policy, interrupt backing, and cooperative dispatch model. That
 lets adapters pass button events through without owning their own callback
 payload schema.
+`input_callback_queue_plan_for_invocation` keeps the next cooperative
+event-queue decision in Rust too. Frontends still own queue storage and runtime
+scheduling, but Rust decides whether a callback invocation is enqueued, drops
+the incoming event, drops the oldest queued event first, and whether cooperative
+dispatch should be woken.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
