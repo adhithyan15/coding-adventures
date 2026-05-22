@@ -3022,3 +3022,85 @@ fn phase38_fallthrough_symbolic_alpha() {
     let result = integrate(integrand);
     assert!(is_unevaluated_integrate(&result));
 }
+
+// ---------------------------------------------------------------------------
+// Phase 47 (Rust port): Nested-Add flattening.
+//
+// Ports the Python Phase 47 fix.  When either binary Add operand is itself
+// an Add(...) apply, the handler flattens the tree, sums numeric literals
+// once, and rebuilds a left-associated chain.  Makes Add canonical for
+// any consumer comparing trees structurally.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase47_nested_add_flattens() {
+    let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+    let k = sym("k");
+    let nested = apply(sym(ADD), vec![
+        apply(sym(ADD), vec![k.clone(), int(1)]),
+        int(1),
+    ]);
+    let out = vm.eval(nested);
+    let expected = apply(sym(ADD), vec![k, int(2)]);
+    assert_eq!(out, expected);
+}
+
+#[test]
+fn phase47_triply_nested_add() {
+    let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+    let k = sym("k");
+    let nested = apply(sym(ADD), vec![
+        apply(sym(ADD), vec![
+            apply(sym(ADD), vec![k.clone(), int(1)]),
+            int(1),
+        ]),
+        int(1),
+    ]);
+    let out = vm.eval(nested);
+    let expected = apply(sym(ADD), vec![k, int(3)]);
+    assert_eq!(out, expected);
+}
+
+#[test]
+fn phase47_add_constants_fold() {
+    let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+    let k = sym("k");
+    let nested = apply(sym(ADD), vec![
+        apply(sym(ADD), vec![k.clone(), int(2)]),
+        int(3),
+    ]);
+    let out = vm.eval(nested);
+    let expected = apply(sym(ADD), vec![k, int(5)]);
+    assert_eq!(out, expected);
+}
+
+#[test]
+fn phase47_constants_cancel_to_bare_symbol() {
+    let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+    let k = sym("k");
+    let nested = apply(sym(ADD), vec![
+        apply(sym(ADD), vec![k.clone(), int(1)]),
+        int(-1),
+    ]);
+    let out = vm.eval(nested);
+    // Constants sum to zero → drop the literal → bare k.
+    assert_eq!(out, k);
+}
+
+#[test]
+fn phase47_non_nested_add_untouched() {
+    let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+    let k = sym("k");
+    let flat = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let out = vm.eval(flat);
+    let expected = apply(sym(ADD), vec![k, int(1)]);
+    assert_eq!(out, expected);
+}
+
+#[test]
+fn phase47_add_zero_still_simplifies() {
+    let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+    let x = sym("x");
+    let out = vm.eval(apply(sym(ADD), vec![int(0), x.clone()]));
+    assert_eq!(out, x);
+}

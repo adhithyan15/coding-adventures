@@ -1,5 +1,50 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.12.0] — 2026-05-22
+
+**Phase 47 — Nested-Add flattening (Rust port).**
+
+Ports the Python ``symbolic-vm`` 0.71.0 Add-handler fix.  When either
+binary ``Add`` operand is itself an ``Add(...)`` apply, the handler
+now flattens the tree, sums numeric literals once, and rebuilds a
+left-associated chain.  Example:
+
+    Add(Add(k, 1), 1)  →  Add(k, 2)
+    Add(Add(Add(k, 1), 1), 1)  →  Add(k, 3)
+
+### Added
+
+- **`flatten_add_leaves(node: &IRNode, out: &mut Vec<IRNode>)`** in
+  ``src/handlers.rs`` — recursive walker that appends every
+  non-``Add`` leaf of a nested ``Add`` tree to the ``out`` vector.
+
+### Changed
+
+- ``add_handler(simplify=true)`` now pre-checks whether either binary
+  operand is an ``Add`` apply.  If so, it collects all non-``Add``
+  leaves via ``flatten_add_leaves``, partitions into numerics vs
+  symbolics, sums the numerics into a single ``Numeric`` via
+  ``Add for Numeric``, and rebuilds a left-associated chain
+  ``Add(...non_literals, lit_sum)`` — dropping the literal if it's
+  zero, collapsing to a bare leaf if only one operand remains.
+  Strict mode (``simplify=false``) keeps the original binary
+  semantics.
+
+### Added — tests
+
+`tests/test_vm.rs` — 6 new ``phase47_*`` cases:
+
+- ``phase47_nested_add_flattens``: ``Add(Add(k, 1), 1)`` → ``Add(k, 2)``.
+- ``phase47_triply_nested_add``: 3-level flattening.
+- ``phase47_add_constants_fold``: ``Add(Add(k, 2), 3)`` → ``Add(k, 5)``.
+- ``phase47_constants_cancel_to_bare_symbol``: ``Add(Add(k, 1), -1)``
+  → bare ``k``.
+- ``phase47_non_nested_add_untouched``: ``Add(k, 1)`` — no rebuild.
+- ``phase47_add_zero_still_simplifies``: regression for the existing
+  ``x + 0 → x`` identity.
+
+Full suite: **194 passed** (was 188; +6 net new).
+
 ## [0.11.0] — 2026-05-20
 
 ### Added — Phase 38: Weierstrass closed forms lifted to linear trig arguments
