@@ -29,12 +29,13 @@ use std::fs;
 use std::path::PathBuf;
 
 /// The list of exported components. Grows as each Tier-1 component
-/// lands. v0.1 PR-1: Button, Alert. v0.1 PR-2 adds: Badge, Spinner,
-/// Toast.
+/// lands. v0.1 PR-1: Button, Alert. v0.1 PR-2: Badge, Spinner, Toast.
+/// v0.1 PR-3 adds: Checkbox, Input, Radio.
 ///
 /// Alphabetical order matches the manifest's `[components].exports`
 /// list. Reorder both together if it ever changes.
-const COMPONENTS: &[&str] = &["Alert", "Badge", "Button", "Spinner", "Toast"];
+const COMPONENTS: &[&str] =
+    &["Alert", "Badge", "Button", "Checkbox", "Input", "Radio", "Spinner", "Toast"];
 
 /// Themes shipped per component. Both must compile.
 const THEMES: &[&str] = &["light", "dark"];
@@ -231,4 +232,40 @@ fn toast_interface_matches_spec() {
     assert_eq!(slot_names, vec!["title", "message", "variant", "open"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onClose"]);
+}
+
+/// Input — text input with onChange (text payload) + onCommit.
+#[test]
+fn input_interface_matches_spec() {
+    let mil_src = read_source("Input.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["value", "placeholder", "disabled", "size"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onChange", "onCommit"]);
+}
+
+/// Checkbox — toggle button + label, host-owned state.
+#[test]
+fn checkbox_interface_matches_spec() {
+    let mil_src = read_source("Checkbox.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["label", "checked", "disabled"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onChange"]);
+}
+
+/// Radio — single-select toggle, host owns group state.
+#[test]
+fn radio_interface_matches_spec() {
+    let mil_src = read_source("Radio.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["label", "selected", "disabled"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
 }

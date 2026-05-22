@@ -19,9 +19,10 @@ license     = "MIT OR Apache-2.0"
 [components]
 # v0.1 PR-1: Button, Alert.
 # v0.1 PR-2: Badge, Spinner, Toast.
-# Remaining Tier-1 (Card, Checkbox, Container, Field, Input,
-# ListGroup, Modal, Radio) lands across follow-up PRs.
-exports = ["Alert", "Badge", "Button", "Spinner", "Toast"]
+# v0.1 PR-3: Checkbox, Input, Radio (form controls).
+# Remaining Tier-1 (Card, Container, Field, ListGroup, Modal) lands
+# across follow-up PRs.
+exports = ["Alert", "Badge", "Button", "Checkbox", "Input", "Radio", "Spinner", "Toast"]
 
 [dependencies]
 # No other userland packages — toolkit components compose purely from

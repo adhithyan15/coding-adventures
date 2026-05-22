@@ -10,7 +10,7 @@ for the architecture, component catalog, and phasing plan.
 
 ## v0.1 — exports so far
 
-**5 of 13 Tier-1 components shipped:**
+**8 of 13 Tier-1 components shipped:**
 
 - **`Alert`** — colored info banner with `variant`, optional inline
   dismiss button. Composed from `Box` + `Row` + `Text` + `If` +
@@ -19,6 +19,15 @@ for the architecture, component catalog, and phasing plan.
   `label`, `variant`.
 - **`Button`** — styled push button with `variant`, `size`,
   `disabled` slots. Wraps the kernel `HostButton`.
+- **`Checkbox`** — labeled checkbox. `Row { If checked HostButton[✓]
+  Else HostButton[], Text }`. Slots: `label`, `checked`,
+  `disabled`. Emit: `onChange`. Host owns the state.
+- **`Input`** — styled single-line text input. Wraps the kernel
+  `HostInput`. Slots: `value`, `placeholder`, `disabled`, `size`.
+  Emits: `onChange(value: text)`, `onCommit`.
+- **`Radio`** — labeled radio (single-select). Same shape as
+  Checkbox with circular styling. Slots: `label`, `selected`,
+  `disabled`. Emit: `onSelect`.
 - **`Spinner`** — indeterminate loading indicator.
   `Stack[spinner] { Icon[spinner-glyph] }`. Slots: `size`,
   `variant`, `aria-label`.
@@ -36,8 +45,9 @@ Per spec §7:
 | Phase | Components |
 |---|---|
 | v0.1 PR-1 | Button, Alert |
-| v0.1 PR-2 (this) | Badge, Spinner, Toast |
-| v0.1 PR-3..N | Card, Checkbox, Container, Field, Input, ListGroup, Modal, Radio — 8 remaining Tier-1 components |
+| v0.1 PR-2 | Badge, Spinner, Toast |
+| v0.1 PR-3 (this) | Input, Checkbox, Radio |
+| v0.1 PR-4..N | Card, Container, Field, ListGroup, Modal — 5 remaining Tier-1 components |
 | v0.2 | Tier 2 — Nav, Navbar, Pagination, Breadcrumb, InputGroup, ButtonGroup, Tabs, DropdownMenu, Accordion, Select |
 | v0.3 | Bootstrap-aesthetic theme overlay |
 | v0.4 | Tier 3 — Tooltip, Popover, Carousel, Offcanvas (depends on kernel follow-ups) |

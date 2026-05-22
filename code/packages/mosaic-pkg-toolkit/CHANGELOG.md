@@ -1,5 +1,46 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — v0.1 PR-3 — Input / Checkbox / Radio (form controls)
+
+### Added — 3 form-control components
+
+- **`Input`** — styled single-line text input. `HostInput[input]`
+  wrapper. Slots: `value`, `placeholder`, `disabled`, `size`. Emits:
+  `onChange(value: text)`, `onCommit`.
+- **`Checkbox`** — labeled checkbox. `Row[checkbox] { If checked
+  HostButton[checkbox-box-checked] Else HostButton[checkbox-box-unchecked],
+  Text[checkbox-label] }`. State is host-owned. Slots: `label`,
+  `checked`, `disabled`. Emit: `onChange`.
+- **`Radio`** — labeled radio button. Structurally identical to
+  Checkbox but with circular styling (border-radius=9 on the
+  18×18 box). Slots: `label`, `selected`, `disabled`. Emit:
+  `onSelect`.
+
+Both Checkbox and Radio use the `If/Else over the checked/selected
+slot` pattern to swap the glyph between checked/unchecked states.
+Each branch is a separate styleable part (e.g. `checkbox-box-checked`
+vs `checkbox-box-unchecked`), so the .msl theme can apply different
+colors per state.
+
+### Notes on the kernel-mapping trade-off
+
+The kernel doesn't include a `HostCheckbox` / `HostRadio` primitive
+(UI29 v1 scope). The toolkit's Checkbox / Radio compose from
+HostButton + If/Else + Text. This works but means the underlying
+control is a button semantically, not a checkbox/radio — screen
+readers may announce it as "button" rather than "checkbox" on some
+backends. A future UI29-2 spec could add `HostCheckbox` /
+`HostRadio` to close this a11y gap; the toolkit can switch
+implementation without changing its public surface.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 10 (was 7):
+- Manifest exports list updated alphabetically.
+- Per-component surface tests added for Input, Checkbox, Radio.
+
+All pass. Total components in the manifest: 8.
+
 ## [Unreleased] — v0.1 PR-2 — Badge / Spinner / Toast
 
 ### Added — 3 more Tier-1 components
