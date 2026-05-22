@@ -1,5 +1,70 @@
 # Changelog
 
+## 0.7.0 — 2026-05-22
+
+**Phase 49 — Bounded × vanishing recogniser.**
+
+Extends ``_g_vanishes_at_infinity`` to accept
+``Div(bounded, diverging)`` shapes where the numerator is uniformly
+bounded.  Closes telescopes like ``∑ [sin(k)/k² − sin(k+1)/(k+1)²]
+ = sin(1)`` that the previous Phase 42 degree-aware path refused
+(``sin(k)`` isn't a polynomial, so its degree-in-k was ``None``).
+
+### Added
+
+- **`_is_bounded_in_k(node, k)`** — recogniser for uniformly
+  bounded shapes:
+  1.  constant in ``k``                                  → True
+  2.  ``Sin(...)`` or ``Cos(...)`` (any inner argument)  → True
+  3.  ``Mul(bounded, bounded)``                          → True
+  4.  ``Add(bounded, bounded)``                          → True
+  5.  ``Neg(bounded)``                                   → True
+  6.  anything else (bare ``k``, ``Log(k)``, ``Exp(k)``, …) → False
+
+  Conservative — when in doubt, returns False so the caller falls
+  through to the unevaluated ``Sum(...)`` form.
+
+### Changed
+
+- ``_g_vanishes_at_infinity`` now consults ``_is_bounded_in_k`` on
+  the numerator (before falling through to the Phase 42 degree-
+  aware path).  If the numerator is bounded AND the denominator
+  diverges (via the existing ``_h_diverges_at_infinity``), the
+  quotient vanishes at infinity.
+
+### Added — tests
+
+`tests/test_summation.py::TestEvaluateSumPhase49BoundedNumerator`
+— 5 new cases:
+
+- ``test_sin_over_k_squared_closes`` —
+  ``∑ [sin(k)/k² − sin(k+1)/(k+1)²]`` closes to ``sin(1)``.
+- ``test_cos_over_k_cube_closes`` — analogous with ``cos`` / ``k³``.
+- ``test_sin_cos_product_over_diverging`` — product of bounded
+  factors is bounded (closure under ``Mul``).
+- ``test_unbounded_numerator_still_refused`` — regression for
+  Phase 42 path on ``k/k³`` (deg-difference catches it, not
+  Phase 49).
+- ``test_log_numerator_still_refused`` — regression: ``log(k)/k²``
+  stays unevaluated.  The math limit IS 0 by squeeze, but
+  ``Log(k)`` isn't bounded — the recogniser refuses correctly.
+
+### Renamed
+
+- ``test_transcendental_numerator_falls_through`` →
+  ``test_transcendental_numerator_closes_via_phase49`` (assertion
+  flipped from "stays unevaluated" to "now closes").
+
+Full suite: **98 passed** (was 92 + 1 stale assertion that
+required updating; +5 net new + 1 flipped).
+
+### Still deferred
+
+- Transcendental growth-rate recogniser for shapes like
+  ``log(k)/k`` or ``log(k)/k²`` — these vanish by squeeze too,
+  but require comparing growth rates (``log`` < any polynomial),
+  not just boundedness.  Future phase.
+
 ## 0.6.0 — 2026-05-22
 
 **Phase 44 — Log divergence in vanishing-at-infinity recogniser.**

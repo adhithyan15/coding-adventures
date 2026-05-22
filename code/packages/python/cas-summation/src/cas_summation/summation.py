@@ -578,6 +578,58 @@ def _h_diverges_at_infinity(node: IRNode, k: IRSymbol) -> bool:
     return False
 
 
+_SIN = IRSymbol("Sin")
+_COS = IRSymbol("Cos")
+
+
+def _is_bounded_in_k(node: IRNode, k: IRSymbol) -> bool:
+    """Return True when ``node`` is *provably* uniformly bounded in ``k``.
+
+    Phase 49 — used by :func:`_g_vanishes_at_infinity` to recognise
+    shapes like ``sin(k)/k²`` where the numerator is bounded
+    (``|sin(k)| ≤ 1``) and the denominator diverges, hence the
+    quotient vanishes.
+
+    +-----------------------------+----------------------------+
+    | ``node`` shape              | Provably bounded?          |
+    +=============================+============================+
+    | constant in ``k``           | yes (trivially)            |
+    | ``Sin(h(k))`` / ``Cos(...)``| yes (``|sin|, |cos| ≤ 1``) |
+    | ``Mul(bounded, bounded)``   | yes (recursive)            |
+    | ``Add(bounded, bounded)``   | yes (recursive)            |
+    | ``Neg(bounded)``            | yes (sign flip preserves)  |
+    | ``k`` / ``k²``              | no (diverges)              |
+    | ``Exp(k)``                  | no (diverges)              |
+    | ``Log(k)``                  | no (diverges)              |
+    +-----------------------------+----------------------------+
+
+    Conservative — when in doubt, returns False so the caller falls
+    through to the unevaluated ``Sum(...)`` form.
+    """
+    # Trivial case: nothing depending on k is bounded by being
+    # constant in k.
+    if _is_constant_in(node, k):
+        return True
+    if not isinstance(node, IRApply):
+        # Bare ``k`` is *not* bounded; it diverges.
+        return False
+    # Sin / Cos with any inner argument are bounded by 1 in modulus.
+    # The inner argument can depend on k freely — ``sin(k²)`` is still
+    # bounded by 1.
+    if node.head == _SIN and len(node.args) == 1:
+        return True
+    if node.head == _COS and len(node.args) == 1:
+        return True
+    # Closure under Mul / Add / Neg.
+    if node.head == MUL:
+        return all(_is_bounded_in_k(a, k) for a in node.args)
+    if node.head == ADD:
+        return all(_is_bounded_in_k(a, k) for a in node.args)
+    if node.head == NEG and len(node.args) == 1:
+        return _is_bounded_in_k(node.args[0], k)
+    return False
+
+
 def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     """Return True when ``g(k)`` provably tends to 0 as ``k → ∞``.
 
@@ -624,6 +676,12 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     # (positive-degree polynomial OR exp / b^k transcendental).
     if _is_constant_in(num, k):
         return _h_diverges_at_infinity(den, k)
+    # Phase 49: bounded numerator + diverging denominator.  Covers
+    # shapes like ``sin(k)/k²`` and ``cos(k)·sin(k)/k³`` where the
+    # numerator is uniformly bounded (``|sin|, |cos| ≤ 1`` and
+    # closures under Mul/Add/Neg).
+    if _is_bounded_in_k(num, k) and _h_diverges_at_infinity(den, k):
+        return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:

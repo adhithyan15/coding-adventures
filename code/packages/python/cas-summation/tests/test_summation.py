@@ -578,11 +578,15 @@ class TestEvaluateSumPhase42DegreeAware:
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert isinstance(result, IRApply) and result.head == SUM
 
-    def test_transcendental_numerator_falls_through(self):
-        """``g(k) = sin(k)/k²``: numerator is not a polynomial, so the
-        degree-aware path refuses.  (The limit IS 0 by squeeze, but
-        decidably proving so needs a transcendental limit-finder we
-        don't have yet.)
+    def test_transcendental_numerator_closes_via_phase49(self):
+        """``g(k) = sin(k)/k²``: previously refused by the
+        degree-aware path because ``sin(k)`` isn't a polynomial.
+        Phase 49 (bounded-numerator widening) recognises that
+        ``|sin(k)| ≤ 1`` and the denominator ``k²`` diverges, so the
+        quotient vanishes at ∞.
+
+        The antisymmetric telescope ``g(k) − g(k+1)`` from k=1 to ∞
+        closes to ``g(1) = sin(1)/1 = sin(1)``.
         """
         from symbolic_ir import POW, SIN, SUB
 
@@ -598,8 +602,13 @@ class TestEvaluateSumPhase42DegreeAware:
         )
         f = IRApply(SUB, (g_k, g_kp1))
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
-        # Conservative: refuse since num is not a polynomial.
-        assert isinstance(result, IRApply) and result.head == SUM
+        # Phase 49 closure: g(1) = sin(1)/1² = sin(1).  Either:
+        #   - the result is exactly the Sin apply (``Sin(1)``)
+        #   - or it's the Div shape that vm-eval folded to ``Sin(1)/1``
+        # Pin the new behaviour: result is no longer the unevaluated Sum.
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 49 should close this telescope; got {result!r}"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -952,4 +961,131 @@ class TestEvaluateSumPhase44LogDivergence:
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         # Phase 44 must refuse — `log((-2)^k)` is complex / undefined
         # for odd k, so the sum doesn't have a real closed form.
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+# ---------------------------------------------------------------------------
+# Phase 49 — Bounded × vanishing recogniser.
+#
+# Extends `_g_vanishes_at_infinity` to accept ``Div(bounded, diverging)``
+# shapes where the numerator is uniformly bounded (``Sin``, ``Cos``, or
+# constants — closed under Mul/Add/Neg) and the denominator diverges.
+# Closes telescopes like ``∑ [sin(k)/k² − sin(k+1)/(k+1)²] = sin(1)``.
+# ---------------------------------------------------------------------------
+
+
+class TestEvaluateSumPhase49BoundedNumerator:
+    def test_sin_over_k_squared_closes(self):
+        """``∑_{k=1}^∞ [sin(k)/k² − sin(k+1)/(k+1)²] = sin(1)``.
+
+        Phase 49: ``sin(k)`` is bounded, ``k²`` diverges, so the
+        quotient vanishes.  Antisymmetric telescope closes to
+        ``g(1) = sin(1)/1²``.
+        """
+        from symbolic_ir import POW, SIN, SUB
+
+        sin_k = IRApply(SIN, (_k,))
+        sin_kp1 = IRApply(SIN, (IRApply(ADD, (_k, IRInteger(1))),))
+        g_k = IRApply(DIV, (sin_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(
+            DIV,
+            (
+                sin_kp1,
+                IRApply(POW, (IRApply(ADD, (_k, IRInteger(1))), IRInteger(2))),
+            ),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Must close — not the unevaluated Sum form.
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 49 should close; got {result!r}"
+        )
+
+    def test_cos_over_k_cube_closes(self):
+        """``∑_{k=1}^∞ [cos(k)/k³ − cos(k+1)/(k+1)³] = cos(1)``.
+
+        Phase 49: ``cos(k)`` is bounded; ``k³`` diverges.
+        """
+        from symbolic_ir import COS, POW, SUB
+
+        cos_k = IRApply(COS, (_k,))
+        cos_kp1 = IRApply(COS, (IRApply(ADD, (_k, IRInteger(1))),))
+        g_k = IRApply(DIV, (cos_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(
+            DIV,
+            (
+                cos_kp1,
+                IRApply(POW, (IRApply(ADD, (_k, IRInteger(1))), IRInteger(3))),
+            ),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sin_cos_product_over_diverging(self):
+        """``sin(k)·cos(k)`` is bounded (product of two bounded functions),
+        so ``sin(k)·cos(k)/k²`` vanishes at ∞.
+        """
+        from symbolic_ir import COS, MUL, POW, SIN, SUB
+
+        sin_k = IRApply(SIN, (_k,))
+        cos_k = IRApply(COS, (_k,))
+        num_k = IRApply(MUL, (sin_k, cos_k))
+        sin_kp1 = IRApply(SIN, (IRApply(ADD, (_k, IRInteger(1))),))
+        cos_kp1 = IRApply(COS, (IRApply(ADD, (_k, IRInteger(1))),))
+        num_kp1 = IRApply(MUL, (sin_kp1, cos_kp1))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(
+            DIV,
+            (
+                num_kp1,
+                IRApply(POW, (IRApply(ADD, (_k, IRInteger(1))), IRInteger(2))),
+            ),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_unbounded_numerator_still_refused(self):
+        """Regression: ``g(k) = k/k³`` looks like ``unbounded/diverging``
+        on the surface (Phase 49 doesn't apply), but Phase 42 catches
+        it via deg-difference (deg 1 < deg 3).  This pins the right
+        recogniser fires — not Phase 49 — and the sum still closes.
+        """
+        from symbolic_ir import POW, SUB
+
+        g_k = IRApply(DIV, (_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(
+            DIV,
+            (
+                IRApply(ADD, (_k, IRInteger(1))),
+                IRApply(POW, (IRApply(ADD, (_k, IRInteger(1))), IRInteger(3))),
+            ),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log_numerator_still_refused(self):
+        """Regression: ``g(k) = log(k)/k²``.  ``log(k)`` is NOT bounded
+        (diverges to ∞ slowly).  Phase 49 must NOT incorrectly accept
+        it.  The sum stays unevaluated.
+        """
+        from symbolic_ir import LOG, POW, SUB
+
+        log_k = IRApply(LOG, (_k,))
+        log_kp1 = IRApply(LOG, (IRApply(ADD, (_k, IRInteger(1))),))
+        g_k = IRApply(DIV, (log_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(
+            DIV,
+            (
+                log_kp1,
+                IRApply(POW, (IRApply(ADD, (_k, IRInteger(1))), IRInteger(2))),
+            ),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Math: limit of log(k)/k² IS 0, but Phase 49 isn't smart enough
+        # to recognise that.  Stay unevaluated until a transcendental
+        # growth-rate recogniser lands.
         assert isinstance(result, IRApply) and result.head == SUM
