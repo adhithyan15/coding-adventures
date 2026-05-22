@@ -487,6 +487,27 @@ fn handle_ret_void(ctx: &mut DispatchCtx, _instr: &IIRInstr) -> Result<Option<Va
 /// and then the index access panics.
 const MAX_REGISTER_IDX: usize = 65_535;
 
+/// `mov dest = src` — copy `src`'s value to the named slot `dest`.
+///
+/// Mirrors the AOT pipeline's `mov_<ty>` typed CIR opcode and the
+/// `call_builtin "_move"` form emitted by some frontends.  Frontends
+/// that emit `mov` directly (e.g. `dartmouth-basic-iir-compiler`,
+/// `oct-iir-compiler`) need this entry point at the interpreted layer
+/// too, otherwise the JIT pipeline rejects them with
+/// `UnknownOpcode("mov")` before the JIT ever gets a chance to
+/// specialise the program.
+fn handle_mov(ctx: &mut DispatchCtx<'_>, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let value = {
+        let frame = ctx.frames.last()
+            .ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+    };
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
 fn handle_load_reg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let value = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
@@ -736,6 +757,7 @@ type StdHandlerFn = fn(&mut DispatchCtx<'_>, &IIRInstr) -> Result<Option<Value>,
 pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
     match op {
         "const"        => Some(handle_const),
+        "mov"          => Some(handle_mov),
         "add"          => Some(handle_add),
         "sub"          => Some(handle_sub),
         "mul"          => Some(handle_mul),
