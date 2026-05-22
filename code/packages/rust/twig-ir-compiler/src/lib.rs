@@ -579,17 +579,31 @@ mod tests {
     }
 
     #[test]
-    fn every_instruction_has_any_or_void_type_hint() {
+    fn every_instruction_has_known_type_hint() {
+        // Twig path-A increment 1: integer / boolean / string literals
+        // and the `ret` instructions that consume them now carry
+        // concrete type hints (`"i64"`, `"bool"`, `"str"`), not just
+        // `"any"`.  The valid set is therefore broader than before but
+        // still strictly known — no `"polymorphic"` or unknown strings.
+        //
+        // This test guards against accidental regressions where a new
+        // emission site uses some ad-hoc / typo'd type hint.
         let src = "(define (f x) (if (= x 0) 1 (* x 2))) (f 3)";
         let m = module(src);
+        let allowed = [
+            "any", "void",
+            "i64", "bool", "str",  // path-A increment 1 — literals
+        ];
         for f in &m.functions {
             for i in &f.instructions {
                 assert!(
-                    i.type_hint == "any" || i.type_hint == "void",
-                    "fn {} instr {} has unexpected type_hint {:?}",
+                    allowed.contains(&i.type_hint.as_str()),
+                    "fn {} instr {} has unexpected type_hint {:?} \
+                     (allowed: {:?})",
                     f.name,
                     i.op,
-                    i.type_hint
+                    i.type_hint,
+                    allowed,
                 );
             }
         }

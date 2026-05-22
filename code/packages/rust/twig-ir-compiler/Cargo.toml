@@ -1,6 +1,6 @@
 [package]
 name = "twig-ir-compiler"
-version = "0.14.0"
+version = "0.15.0"
 edition = "2021"
 description = "TW00 — Twig (Lisp-precursor) → InterpreterIR (IIR) compiler.  LANG52: let*, and/or special forms.  LANG55: HOF builtins.  LANG56: IIRExport from module_info.  LANG57: match jmpif bug fix + string/symbol conversion builtins.  LANG58: string/char builtins for TW05-E.  LANG72: compile_program_with_externs_and_globals for cross-module strict type checking."
 
@@ -14,3 +14,9 @@ lang-refined-types = { path = "../lang-refined-types" }
 twig-type-checker  = { path = "../twig-type-checker" }
 # LANG50: AnnotatedNode type for post-processing type_hint fields.
 type-declarations  = { path = "../type-declarations" }
+
+[dev-dependencies]
+iir-to-wasm           = { path = "../iir-to-wasm" }
+iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }
+iir-to-cil-bytecode   = { path = "../iir-to-cil-bytecode" }
+iir-to-beam           = { path = "../iir-to-beam" }

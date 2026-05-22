@@ -210,6 +210,21 @@ struct FnCtx {
     /// `compile_expr` and checked against [`MAX_COMPILE_DEPTH`] to
     /// guard against stack-overflow on adversarial input.
     depth: usize,
+    /// LANG-Twig increment-1 local type inference.
+    ///
+    /// Tracks the *statically-known* type of each destination variable
+    /// produced by the current function.  Populated only for sites where
+    /// the type is unambiguous from the source code alone (integer
+    /// literals → `"i64"`, boolean literals → `"bool"`, string literals
+    /// → `"str"`).  Dynamic / call_builtin destinations are intentionally
+    /// **not** recorded — the absence of an entry means "the type is
+    /// genuinely `any` at static-analysis time".
+    ///
+    /// Used by `ret` emission sites to upgrade their `type_hint` from
+    /// the legacy `"any"` to the precise type, which lets the IIR-to-*
+    /// backends (wasm/jvm/clr/beam) actually accept the result.
+    /// See [`crate::lib`]'s "Twig path A" notes for the larger story.
+    var_types: HashMap<String, String>,
 }
 
 impl FnCtx {
@@ -221,6 +236,7 @@ impl FnCtx {
             var_counter: 0,
             label_counter: 0,
             depth: 0,
+            var_types: HashMap::new(),
         }
     }
 
@@ -242,6 +258,24 @@ impl FnCtx {
     fn emit(&mut self, instr: IIRInstr, loc: SourceLoc) {
         self.instrs.push(instr);
         self.source_map.push(loc);
+    }
+
+    /// Record that `var` was statically inferred to have type `ty`.
+    ///
+    /// Only literal-defining sites (`IntLit`, `BoolLit`, `StrLit`) call
+    /// this; dynamically-typed sites (call_builtin, ret of unknown
+    /// register, etc.) leave the entry absent, signalling "type is
+    /// genuinely `any` at static-analysis time".
+    fn record_type(&mut self, var: &str, ty: &str) {
+        self.var_types.insert(var.to_string(), ty.to_string());
+    }
+
+    /// Look up the inferred type of `var`, returning the matching
+    /// `&'static str` if known.  Returns `"any"` when nothing was
+    /// inferred — which is the legacy default and a valid type hint
+    /// (just one that the IIR-to-* backends reject).
+    fn type_of(&self, var: &str) -> &str {
+        self.var_types.get(var).map(|s| s.as_str()).unwrap_or("any")
     }
 }
 
@@ -423,11 +457,16 @@ impl Compiler {
 
         // ── Synthesise `main` ────────────────────────────────────────
         if let Some(reg) = last_main_value {
+            // Twig path-A increment 1: propagate the source var's inferred
+            // type to the `ret` instruction.  `_n1` returned from `42`
+            // becomes `ret _n1 [i64]` instead of `ret _n1 [any]`, which
+            // every IIR-to-* backend validator now accepts.
+            let ret_ty = main_ctx.type_of(&reg).to_string();
             main_ctx.emit(IIRInstr::new(
                 "ret",
                 None,
                 vec![Operand::Var(reg)],
-                "any",
+                ret_ty.as_str(),
             ), SourceLoc::SYNTHETIC);
         } else {
             // No final value-producing expression → return nil.
@@ -446,10 +485,24 @@ impl Compiler {
             ), SourceLoc::SYNTHETIC);
         }
 
+        // Twig path-A increment 1: derive `main`'s `return_type` from
+        // the trailing `ret` instruction's `type_hint`.  This lets the
+        // IIR-to-* backends emit a typed return (`ret_i64`, `ret_bool`,
+        // …) instead of falling back to the untyped fallback path.
+        // Functions whose ret source is genuinely dynamic still carry
+        // `"any"` and continue to flow through the existing dynamic path.
+        let main_return_type = main_ctx
+            .instrs
+            .iter()
+            .rev()
+            .find(|i| i.op == "ret")
+            .map(|i| i.type_hint.clone())
+            .unwrap_or_else(|| "any".to_string());
+
         let main_fn = IIRFunction {
             name: "main".into(),
             params: vec![],
-            return_type: "any".into(),
+            return_type: main_return_type,
             register_count: count_registers(&main_ctx.instrs),
             instructions: main_ctx.instrs,
             type_status: FunctionTypeStatus::Untyped,
@@ -685,23 +738,36 @@ impl Compiler {
         match expr {
             Expr::IntLit(IntLit { value, .. }) => {
                 let v = ctx.fresh_var("n");
+                // Twig path-A increment 1: integer literals lower to typed
+                // `const_i64`-compatible IR by stamping `type_hint = "i64"`.
+                // The IIR-to-* validators (wasm/jvm/clr/beam) reject `"any"`,
+                // so this is the difference between "Twig compiles to a
+                // .wasm" and "Twig fails validation at every backend".
+                //
+                // `var_types[v]` is recorded so downstream `ret` emission
+                // can propagate the type instead of falling back to `"any"`.
                 ctx.emit(IIRInstr::new(
                     "const",
                     Some(v.clone()),
                     vec![Operand::Int(*value)],
-                    "any",
+                    "i64",
                 ), loc);
+                ctx.record_type(&v, "i64");
                 Ok(v)
             }
 
             Expr::BoolLit(BoolLit { value, .. }) => {
                 let v = ctx.fresh_var("b");
+                // Twig path-A increment 1: boolean literals lower with
+                // `type_hint = "bool"` (the IIR-to-* validators all accept
+                // it; the JVM/CLR backends map it to `i32` 0/1).
                 ctx.emit(IIRInstr::new(
                     "const",
                     Some(v.clone()),
                     vec![Operand::Bool(*value)],
-                    "any",
+                    "bool",
                 ), loc);
+                ctx.record_type(&v, "bool");
                 Ok(v)
             }
 

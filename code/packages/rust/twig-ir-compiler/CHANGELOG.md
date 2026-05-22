@@ -1,5 +1,74 @@
 # Changelog — twig-ir-compiler
 
+## [0.15.0] — 2026-05-22 (Path A — typed literals + typed return)
+
+### Added — Local type inference for integer / boolean literals
+
+Increment 1 of the Twig → IIR-to-* end-to-end story (the LANG VM
+"any frontend, any backend" promise).  A probe against
+`iir-to-{wasm,jvm,clr,beam}` validators on the simplest possible Twig
+program (`42`) showed every backend rejected it — every instruction
+carried `type_hint = "any"`, which the validators all reject with
+`UntypedInstruction`.
+
+This release narrows the gap by stamping concrete `type_hint`s on
+integer / boolean literals and propagating those types through `ret`
+emission sites.
+
+#### What changed
+
+- New `var_types: HashMap<String, String>` on `FnCtx`, populated only
+  at sites where the type is statically obvious — literal-defining
+  expressions (`IntLit`, `BoolLit`).  Dynamic / `call_builtin`
+  destinations are intentionally not recorded; absence means
+  "genuinely `any`".
+- `Expr::IntLit` now emits `const Int(n)` with `type_hint = "i64"`
+  (was `"any"`) and records `var_types[dest] = "i64"`.
+- `Expr::BoolLit` now emits `const Bool(b)` with `type_hint = "bool"`.
+- `ret` emission sites propagate the source var's inferred type via
+  `FnCtx::type_of`.  Dynamic returns still emit `"any"` correctly.
+- `main`'s `return_type` is now derived from the last `ret`
+  instruction's `type_hint` rather than hard-coded to `"any"`.
+
+#### What this unlocks
+
+The simplest Twig programs flow through every IIR-to-* backend:
+
+| Program   | wasm | jvm | clr | beam |
+|-----------|------|-----|-----|------|
+| `42`      | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) |
+| `#t`      | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) |
+| `(+ 1 2)` | ❌ still rejected — `call_builtin "any"` | ❌ | ❌ | ❌ |
+
+Arithmetic / list / closure programs still emit `call_builtin` with
+`type_hint = "any"` and stay rejected.  Subsequent path-A increments
+will lower `(+ 1 2)` to typed `add_i64`, then `cmp_*`, then non-trivial
+control flow.
+
+#### Tests
+
+- 3 new e2e tests in `tests/backend_compat.rs`:
+  - `twig_int_literal_accepted_by_every_backend` — `42` validates on
+    all four backends; `main.return_type == "i64"`.
+  - `twig_bool_literal_accepted_by_every_backend` — same for `#t`.
+  - `twig_arithmetic_still_rejected_in_increment_1` — pins down the
+    current boundary; a future increment that types arithmetic must
+    explicitly update this test.
+- The existing `every_instruction_has_any_or_void_type_hint` test
+  renamed to `every_instruction_has_known_type_hint` and updated to
+  accept `"i64"` / `"bool"` / `"str"` in addition to `"any"` / `"void"`.
+- 72 unit tests pass (was 71).
+
+#### Compatibility
+
+- Non-Twig callers unaffected.
+- Downstream Twig tooling (twig-aot, twig-vm) all continue to pass —
+  the new type hints are *stricter* than the old `"any"`, never
+  broader.
+- Pre-existing twig-module-driver `tw05*` self-compile tests fail on
+  this branch *and* on `main` (a Windows file-path issue in the test
+  fixture, unrelated to this PR).
+
 ## [0.14.0] — 2026-05-17
 
 ### Added (LANG72 — TW05-Q cross-module strict type checking)
