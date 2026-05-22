@@ -2,27 +2,27 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.10.0] - 2026-05-22
+
+### Added (Phase 6i — comparison operators `==`, `!=`, `<`, `>`, `<=`, `>=`)
+
+Inserted a new precedence level into the expression hierarchy:
+```
+expression  =  sum { ( "==" | "!=" | "<=" | ">=" | "<" | ">" ) sum } ;
+sum         =  term { ( PLUS | MINUS ) term } ;
+term        =  factor { ( STAR | SLASH ) factor } ;
+```
+
+### Tests (+5 new, total 44)
+- `test_parse_simple_comparison_has_sum_subnodes`, `test_parse_equality_in_assignment`, `test_parse_comparison_in_if_condition`, `test_parse_chained_inequality_left_associative`, `test_parse_plus_has_lower_precedence_than_comparison`.
+
 ## [0.9.0] - 2026-05-22
 
 ### Added (Phase 6h — no-paren method calls `puts 1` / `puts 1, 2`)
 - `method_call_no_paren = ( NAME | KEYWORD ) expression { COMMA expression } ;`
-- Inserted in `statement` AFTER `method_call` and BEFORE `expression_stmt`.  The parenned form still wins for `puts(1)` (priority of `method_call`); bare `puts` (no args) falls through to `expression_stmt → factor → NAME`.
-- Requires at least one `expression` argument so it can't shadow `expression_stmt`.
-- Regenerated `src/_grammar.rs` via `grammar-tools compile-grammar`.
-
-### Disambiguation invariants (regression-tested)
-- `puts(1)` keeps matching `method_call` (parens take priority).
-- `puts 1` matches `method_call_no_paren`.
-- `puts 1, 2, 3` matches `method_call_no_paren` with three args.
-- `puts` alone (no args) falls through to `expression_stmt`.
-- `puts 1 + 2` resolves as `puts(1+2)` — the inner `expression` rule greedy-grabs the binary chain.  Matches real Ruby.
 
 ### Tests (+5 new, total 39)
-- `test_parse_no_paren_single_arg` — `puts 1`.
-- `test_parse_no_paren_multiple_args` — `puts 1, 2, 3` (3 args).
-- `test_paren_form_still_wins_over_no_paren` — `puts(1)` matches `method_call`, NOT `method_call_no_paren`.
-- `test_bare_name_falls_through_to_expression_stmt` — `puts` alone falls through.
-- `test_no_paren_with_binary_arg_is_single_call` — `puts 1 + 2` is a single call with one expression arg.
+- `test_parse_no_paren_single_arg`, `test_parse_no_paren_multiple_args`, `test_paren_form_still_wins_over_no_paren`, `test_bare_name_falls_through_to_expression_stmt`, `test_no_paren_with_binary_arg_is_single_call`.
 
 ## [0.8.0] - 2026-05-22
 

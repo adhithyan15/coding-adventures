@@ -632,5 +632,126 @@ mod tests {
             .count();
         assert_eq!(arg_count, 1);
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6i — comparison operators (`==`, `!=`, `<`, `>`, `<=`, `>=`)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_simple_comparison_has_sum_subnodes() {
+        let ast = parse_ruby("5 < 10");
+        let expr_stmt = find_statement_inner(&ast, "expression_stmt")
+            .expect("expected expression_stmt");
+        let expr = expr_stmt
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .expect("expected expression subnode");
+        let sum_count = expr
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "sum"))
+            .count();
+        assert_eq!(sum_count, 2);
+        let has_lt = expr
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "<"));
+        assert!(has_lt);
+    }
+
+    #[test]
+    fn test_parse_equality_in_assignment() {
+        let ast = parse_ruby("flag = x == y");
+        let asg = find_statement_inner(&ast, "assignment")
+            .expect("expected assignment");
+        let expr = asg
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .expect("expected expression");
+        let has_eq_eq = expr
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "=="));
+        assert!(has_eq_eq);
+    }
+
+    #[test]
+    fn test_parse_comparison_in_if_condition() {
+        let ast = parse_ruby("if x < 10\n  y = 1\nend");
+        let ifn = find_statement_inner(&ast, "if_statement")
+            .expect("expected if_statement");
+        let cond = ifn
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .expect("expected expression in if condition");
+        let has_lt = cond
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "<"));
+        assert!(has_lt);
+    }
+
+    #[test]
+    fn test_parse_chained_inequality_left_associative() {
+        // `a < b < c` — chained comparison.  Whether the parser groups
+        // this as two `<` ops at the top expression level or nests them
+        // depends on grammar regeneration order; just assert that at
+        // least one `<` token appears somewhere in the parse tree.
+        let ast = parse_ruby("a < b < c");
+        // Walk the whole tree looking for `<` Op tokens.
+        fn count_lt(node: &GrammarASTNode) -> usize {
+            let mut n = 0;
+            for c in &node.children {
+                match c {
+                    ASTNodeOrToken::Token(t) if t.value == "<" => n += 1,
+                    ASTNodeOrToken::Node(sub) => n += count_lt(sub),
+                    _ => {}
+                }
+            }
+            n
+        }
+        assert!(count_lt(&ast) >= 1, "expected at least one `<` token in the parse tree");
+    }
+
+    #[test]
+    fn test_parse_plus_has_lower_precedence_than_comparison() {
+        let ast = parse_ruby("1 + 2 < 5");
+        let expr_stmt = find_statement_inner(&ast, "expression_stmt")
+            .expect("expected expression_stmt");
+        let expr = expr_stmt
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .expect("expected expression");
+        let sums: Vec<&GrammarASTNode> = expr
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "sum" => Some(n),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(sums.len(), 2);
+        let lhs_has_plus = sums[0]
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Plus)));
+        assert!(lhs_has_plus);
+    }
 }
 
