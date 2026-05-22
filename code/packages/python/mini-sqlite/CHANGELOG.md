@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.79.0] - 2026-05-21
+
+### Added
+
+- **UNION / INTERSECT / EXCEPT in non-recursive CTE bodies.**  Closes
+  the same gap PR #3817 fixed for derived tables, but for *named*
+  CTEs.  Previously the adapter raised
+  `"CTE 'x' body must be a plain SELECT, not a set operation"`
+  even though the parser accepts the syntax.  Now the body of a
+  ``WITH x AS (SELECT … UNION SELECT …)`` plays through the same set-
+  op tree that derived tables use.
+- CTE column aliases on a set-op body — `WITH u(label) AS (SELECT 'a'
+  UNION SELECT 'b') …` — work too.  The aliases apply to the
+  *leftmost* SelectStmt in the set-op tree (matching SQLite, which
+  derives output column names from the leftmost operand of a set-op
+  chain).
+- 21 oracle tests in `tests/test_tier3_materialized_cte.py` that pin
+  both behaviours: the `[NOT] MATERIALIZED` parse-and-ignore contract
+  (existing behaviour, previously untested) and the new set-op-in-CTE
+  support, including column aliases and 4-way UNION chains.
+
+### Changed
+
+- `_apply_cte_col_aliases` now walks down the `.left` spine of a
+  set-op tree until it reaches the leftmost SelectStmt, then rewrites
+  its items.  Returns the same tree shape on the way back out.
+- `ctes` dict type widened from
+  `dict[str, SelectStmt | RecursiveCTERef]` to
+  `dict[str, SelectStmt | UnionStmt | IntersectStmt | ExceptStmt | RecursiveCTERef]`
+  across the adapter so set-op bodies can be stored and substituted
+  into FROM clauses via the existing `DerivedTableRef.select` union
+  type.
+
 ## [1.78.0] - 2026-05-21
 
 ### Added

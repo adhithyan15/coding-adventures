@@ -218,9 +218,18 @@ def _stmt_dispatch(
 # --------------------------------------------------------------------------
 
 
+# Shorthand for the value type of the active-CTE dict.  A named CTE's
+# body can be a plain SELECT, a set-op tree (UNION/INTERSECT/EXCEPT
+# anywhere on the left spine), or a recursive reference token; all
+# three plug into ``DerivedTableRef.select`` at substitution time.
+# Aliased here purely so the dozen function signatures threading this
+# dict around don't blow past the 100-column ruff limit.
+_CTEBody = SelectStmt | UnionStmt | IntersectStmt | ExceptStmt | RecursiveCTERef
+
+
 def _query_stmt(
     node: ASTNode,
-    ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
+    ctes: dict[str, _CTEBody] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> Statement:
     """Translate ``query_stmt = [ with_clause ] select_stmt { set_op_clause }`` to a Statement.
@@ -236,7 +245,7 @@ def _query_stmt(
     set-operation tree.
     """
     # Accumulate CTEs: outer dict (if any) merged with any new WITH clause.
-    active_ctes: dict[str, SelectStmt | RecursiveCTERef] = dict(ctes) if ctes else {}
+    active_ctes: dict[str, _CTEBody] = dict(ctes) if ctes else {}
     with_node = _maybe_child(node, "with_clause")
     if with_node is not None:
         # Check whether the WITH clause carries the RECURSIVE keyword.
@@ -289,12 +298,13 @@ def _query_stmt(
                 )
             else:
                 inner_stmt = _query_stmt(inner_q, ctes=active_ctes, view_defs=view_defs)
-                if not isinstance(inner_stmt, SelectStmt):
-                    raise ProgrammingError(
-                        f"CTE '{cte_name}' body must be a plain SELECT, not a set operation"
-                    )
-                # Apply column aliases to the non-recursive CTE's SELECT items.
-                if col_aliases and isinstance(inner_stmt, SelectStmt):
+                # The body may be a plain SelectStmt or a set-op tree
+                # (UnionStmt / IntersectStmt / ExceptStmt) — both are
+                # accepted, matching SQLite.  Column aliases on the CTE
+                # name are applied to the *leftmost* SelectStmt in the
+                # tree (set-op output column names inherit from the
+                # left operand, matching SQLite).
+                if col_aliases:
                     inner_stmt = _apply_cte_col_aliases(inner_stmt, col_aliases)
                 # Make this CTE visible to subsequent CTEs and the main query.
                 active_ctes[cte_name] = inner_stmt
@@ -345,7 +355,7 @@ def _set_op_clause(node: ASTNode) -> tuple[str, bool, ASTNode]:
 
 def _select(
     node: ASTNode,
-    ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
+    ctes: dict[str, _CTEBody] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> SelectStmt:
     state = _PlaceholderCounter()
@@ -416,7 +426,7 @@ def _select_item(node: ASTNode, state: _PlaceholderCounter) -> SelectItem:
 
 def _table_ref(
     node: ASTNode,
-    ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
+    ctes: dict[str, _CTEBody] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> TableRef | DerivedTableRef | RecursiveCTERef:
     """Translate a table_ref node.
@@ -528,7 +538,7 @@ def _table_ref(
 def _join_clause(
     node: ASTNode,
     state: _PlaceholderCounter,
-    ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
+    ctes: dict[str, _CTEBody] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> JoinClause:
     # join_clause has two forms (grammar):
@@ -2391,8 +2401,11 @@ def _cte_col_aliases(cte_node: ASTNode) -> list[str]:
     return aliases
 
 
-def _apply_cte_col_aliases(stmt: SelectStmt, aliases: list[str]) -> SelectStmt:
-    """Apply column aliases declared in a CTE definition to the CTE's SELECT items.
+def _apply_cte_col_aliases(
+    stmt: SelectStmt | UnionStmt | IntersectStmt | ExceptStmt,
+    aliases: list[str],
+) -> SelectStmt | UnionStmt | IntersectStmt | ExceptStmt:
+    """Apply column aliases declared in a CTE definition to the CTE's body.
 
     When a CTE is declared with an explicit column list::
 
@@ -2402,15 +2415,30 @@ def _apply_cte_col_aliases(stmt: SelectStmt, aliases: list[str]) -> SelectStmt:
     name is ``"1"`` (the literal).  The column alias list ``(n)`` says the
     output column should be named ``n``.
 
-    This helper adds ``alias=<declared_name>`` to each :class:`SelectItem` in
-    the anchor query's SELECT list, ensuring the planner sees the right
-    column names when it derives the CTE's output schema.
+    For a plain ``SelectStmt`` body, we add ``alias=<declared_name>`` to
+    each :class:`SelectItem`.  For a set-op tree (``a UNION b``,
+    ``a INTERSECT b``, ``a EXCEPT b``) we walk down the *left* spine
+    until we reach the leftmost :class:`SelectStmt` and rewrite that
+    one's items.  SQLite (and the SQL standard) derives the output
+    column names of a set-op chain entirely from the leftmost operand,
+    so renaming the leftmost SELECT is sufficient to make the planner
+    see the right schema.
 
-    If ``aliases`` is shorter than ``stmt.items`` the trailing items keep their
-    current aliases (the same behaviour as SQLite).  If ``aliases`` is empty,
-    ``stmt`` is returned unchanged.
+    If ``aliases`` is shorter than the SELECT list the trailing items
+    keep their current aliases (matches SQLite).  If ``aliases`` is
+    empty, ``stmt`` is returned unchanged.
     """
-    if not aliases or not stmt.items:
+    if not aliases:
+        return stmt
+    if isinstance(stmt, (UnionStmt, IntersectStmt, ExceptStmt)):
+        # Recursively rewrite the left side; right side is left alone.
+        new_left = _apply_cte_col_aliases(stmt.left, aliases)  # type: ignore[arg-type]
+        if isinstance(stmt, UnionStmt):
+            return UnionStmt(left=new_left, right=stmt.right, all=stmt.all)  # type: ignore[arg-type]
+        if isinstance(stmt, IntersectStmt):
+            return IntersectStmt(left=new_left, right=stmt.right, all=stmt.all)  # type: ignore[arg-type]
+        return ExceptStmt(left=new_left, right=stmt.right, all=stmt.all)  # type: ignore[arg-type]
+    if not stmt.items:
         return stmt
     new_items_list: list[SelectItem] = []
     for i, item in enumerate(stmt.items):
