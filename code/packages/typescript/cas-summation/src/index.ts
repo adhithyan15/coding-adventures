@@ -236,6 +236,84 @@ function tryGeometric(f: IRNode, k: IRNode): { coeff: IRNode; base: IRNode } | u
 }
 
 /**
+ * Phase 40+46 (TypeScript port): Detect whether ``node`` represents a
+ * negation, and if so return the corresponding positive magnitude.
+ *
+ * Two recognised shapes:
+ *
+ *   1.  Top-level ``Neg(x)``                       → ``x``
+ *   2.  ``Div(c, d)`` with literal ``c < 0``       → ``Div(|c|, d)``
+ *
+ * Case 2 is the Phase 46 widening — Python's ``Apart`` of
+ * ``5/(k(k+1))`` returns ``Add(Div(-5, k+1), Div(5, k))`` with the
+ * negation folded into the numerator.  Even without ``Apart`` on the
+ * TypeScript side, users who write ``g(k+1) − g(k)`` as
+ * ``Add(g(k+1), Div(-1, ...))`` directly get the benefit of the
+ * widened telescope detector.
+ *
+ * Returns ``undefined`` when ``node`` is not a recognised negation.
+ */
+function extractNegation(node: IRNode): IRNode | undefined {
+  if (node.kind !== "apply") return undefined;
+  // Case 1: top-level Neg wrapper.
+  if (irEquals(node.head, NEG) && node.args.length === 1) {
+    return node.args[0];
+  }
+  // Case 2: Div with a negative literal numerator (Integer or
+  // Rational).  Only handle the canonical two-arg Div shape.
+  if (irEquals(node.head, DIV) && node.args.length === 2) {
+    const [numer, denom] = node.args;
+    if (numer.kind === "integer" && numer.value < 0n) {
+      return app(DIV, [int(-numer.value), denom]);
+    }
+    if (numer.kind === "rational" && numer.numer < 0n) {
+      return app(DIV, [rational(-numer.numer, numer.denom), denom]);
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Phase 40+46 (TypeScript port): Rewrite two-term ``Add`` nodes
+ * containing a (recognised) negation into the equivalent ``Sub`` shape.
+ *
+ * Used by :func:`tryTelescoping` as a fallback when the direct ``Sub``
+ * match fails — the telescope detector keys off ``Sub``, so summands
+ * already in ``Add(a, Neg(b))`` or ``Add(a, Div(-c, d))`` form would
+ * otherwise miss.
+ *
+ *   Input shape                              | Output
+ *   -----------------------------------------+----------------------
+ *   ``Add(a, Neg(b))``                       | ``Sub(a, b)``
+ *   ``Add(Neg(b), a)``                       | ``Sub(a, b)``
+ *   ``Add(a, Div(-c, d))`` (Phase 46)        | ``Sub(a, Div(c, d))``
+ *   ``Add(Div(-c, d), a)`` (Phase 46)        | ``Sub(a, Div(c, d))``
+ *   ``Add(Neg(a), Neg(b))``                  | unchanged
+ *   anything else                            | unchanged
+ *
+ * Returns the input unchanged when no rewrite applies.
+ */
+function normaliseAddNegToSub(node: IRNode): IRNode {
+  if (node.kind !== "apply" || !irEquals(node.head, ADD) || node.args.length !== 2) {
+    return node;
+  }
+  const [left, right] = node.args;
+  const leftPos = extractNegation(left);
+  const rightPos = extractNegation(right);
+  if (leftPos !== undefined && rightPos !== undefined) {
+    // Both sides genuinely negative — no telescope to expose.
+    return node;
+  }
+  if (rightPos !== undefined) {
+    return app(SUB, [left, rightPos]);
+  }
+  if (leftPos !== undefined) {
+    return app(SUB, [right, leftPos]);
+  }
+  return node;
+}
+
+/**
  * Phase 39: Detect a *structurally telescoping* summand
  * ``f = g(k+1) − g(k)`` (or its antisymmetric ``g(k) − g(k+1)``).
  *
@@ -257,6 +335,13 @@ function tryTelescoping(
   k: IRNode,
   evalFn: EvalFn,
 ): { gExpr: IRNode; sign: 1 | -1 } | undefined {
+  // Phase 46: if f is an Add-with-negation shape, normalise to Sub first
+  // so the existing structural match below fires.  No-op when f is
+  // already a Sub or a non-Add shape — the helper returns its input
+  // unchanged in those cases.
+  if (f.kind === "apply" && equals(f.head, ADD) && f.args.length === 2) {
+    f = normaliseAddNegToSub(f);
+  }
   if (f.kind !== "apply" || !equals(f.head, SUB) || f.args.length !== 2) {
     return undefined;
   }
