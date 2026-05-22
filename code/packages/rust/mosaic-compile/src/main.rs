@@ -182,6 +182,13 @@ fn run(result: cli_builder::types::ParseResult) {
     let style_path = flags.get("style").and_then(|v| v.as_str());
     let source_path = args.get("source").and_then(|v| v.as_str());
     let output_path = flags.get("output").and_then(|v| v.as_str());
+    // --emit-project: when set on a pipeline xaml build, emit a full
+    // WinUI 3 host shell (csproj + App + MainWindow + manifest +
+    // build.ps1 + README) alongside the component triple. Fix B1.
+    let emit_project = flags
+        .get("emit-project")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
 
     let pipeline_any =
         interface_path.is_some() || layout_path.is_some() || style_path.is_some();
@@ -199,7 +206,7 @@ fn run(result: cli_builder::types::ParseResult) {
         let interface = require_pipeline_flag("interface", interface_path);
         let layout = require_pipeline_flag("layout", layout_path);
         let style = require_pipeline_flag("style", style_path);
-        run_pipeline(backend, interface, layout, style, output_path);
+        run_pipeline(backend, interface, layout, style, output_path, emit_project);
         return;
     }
 
@@ -359,6 +366,7 @@ fn run_pipeline(
     layout_path: &str,
     style_path: &str,
     output_path: Option<&str>,
+    emit_project: bool,
 ) {
     if backend != "react" && backend != "xaml" {
         eprintln!(
@@ -432,12 +440,14 @@ fn run_pipeline(
             eprintln!("Written: {out}");
         }
         "xaml" => {
+            let mut opts = mosaic_emit_xaml::EmitOptions::default();
+            opts.emit_project = emit_project;
             let result = mosaic_emit_xaml::from_pipeline(
                 &mosmodel_out.component,
                 &layout_out.def,
                 &style_out.def,
                 None,
-                &mosaic_emit_xaml::EmitOptions::default(),
+                &opts,
             )
             .unwrap_or_else(|e| {
                 eprintln!("mosaic-compile: xaml pipeline emit error: {e}");
@@ -465,17 +475,46 @@ fn run_pipeline(
             eprintln!("Written: {cs_path}");
             eprintln!("Written: {evt_path}");
             // Per-For RowVm files (PR-2). One side-file per For block.
+            //
+            // Helper: place a side-file next to the .xaml file (same
+            // directory as `base`).
+            let side_file_path = |filename: &str| -> String {
+                match base.rfind(|c| c == '/' || c == '\\') {
+                    Some(idx) => format!("{}/{}", &base[..idx], filename),
+                    None => filename.to_string(),
+                }
+            };
             for vm in &result.for_view_models {
-                // The base path's parent directory is where the RowVm
-                // lands; treat `base` as a path-like value and split
-                // on the last separator so the RowVm sits next to the
-                // matching XAML file.
-                let rv_path = match base.rfind(|c| c == '/' || c == '\\') {
-                    Some(idx) => format!("{}/{}", &base[..idx], vm.filename),
-                    None => vm.filename.clone(),
-                };
+                let rv_path = side_file_path(&vm.filename);
                 write_file_or_die(&rv_path, &vm.source);
                 eprintln!("Written: {rv_path}");
+            }
+            // PR-2 (Fix A5): if BoolToVisibilityConverter.cs was
+            // emitted, write it alongside.
+            for helper in &result.if_helpers {
+                let path = side_file_path(&helper.filename);
+                write_file_or_die(&path, &helper.source);
+                eprintln!("Written: {path}");
+            }
+            // Fix B1: --emit-project — full WinUI 3 host shell.
+            if let Some(proj) = &result.project {
+                let component = &result.component_name;
+                let writes: [(String, &str); 7] = [
+                    (side_file_path(&format!("{component}.csproj")), &proj.csproj),
+                    (side_file_path("App.xaml"), &proj.app_xaml),
+                    (side_file_path("App.xaml.cs"), &proj.app_xaml_cs),
+                    (side_file_path("MainWindow.xaml"), &proj.main_window_xaml),
+                    (side_file_path("MainWindow.xaml.cs"), &proj.main_window_cs),
+                    (side_file_path("app.manifest"), &proj.package_manifest),
+                    (side_file_path("build.ps1"), &proj.build_script),
+                ];
+                for (path, src) in &writes {
+                    write_file_or_die(path, src);
+                    eprintln!("Written: {path}");
+                }
+                let readme_path = side_file_path("README.md");
+                write_file_or_die(&readme_path, &proj.readme);
+                eprintln!("Written: {readme_path}");
             }
         }
         _ => {

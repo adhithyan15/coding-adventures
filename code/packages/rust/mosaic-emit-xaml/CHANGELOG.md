@@ -1,5 +1,106 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — `--emit-project` (B1, B2, B3 from demo catalog)
+
+### Added — full WinUI 3 host shell generation
+
+`mosaic-compile --backend xaml --emit-project -o <BASE>` now produces a
+buildable WinUI 3 project alongside the per-component triple. Output:
+
+| File | Source |
+|---|---|
+| `<Component>.xaml` / `.xaml.cs` / `.Event.cs` | mosaic-emit-xaml (component triple) |
+| `<Component>.csproj` | --emit-project |
+| `App.xaml` / `App.xaml.cs` | --emit-project |
+| `MainWindow.xaml` / `MainWindow.xaml.cs` | --emit-project |
+| `app.manifest` | --emit-project |
+| `build.ps1` | --emit-project |
+| `README.md` | --emit-project |
+| `BoolToVisibilityConverter.cs` (when `If` used) | A5 (PR-2) |
+| `<Component>_<As>Vm.cs` (one per For block) | PR-2 |
+
+The `MainWindow` shape depends on the component's `RootShape`:
+- `ContentDialog`-rooted (HostDialog): host window has a "Show
+  dialog" button which constructs the dialog, sets its `XamlRoot`
+  from the button (Fix D1 from the demo catalog), wires the
+  `Dispatch` event to a stub handler, and `ShowAsync`'s it.
+- `UserControl`-rooted: host window's Grid hosts the component
+  directly as its main content; component DPs are wired in the
+  MainWindow constructor.
+
+Slot DPs are pre-populated with sensible stubs (`"Sample <Slot>"`
+for text, `0` for number, `false` for bool, `null!` for image/node,
+empty list for `list<T>`). The user replaces them with real data.
+
+The `Dispatch` event is wired to `OnComponentDispatch` which
+pattern-matches the discriminated event union. Each arm has a
+`// TODO: business logic for <EventName>` comment marking the
+insertion point.
+
+### Added — Fix B2: native runtime DLL flattening via MSBuild post-build target
+
+The emitted `.csproj` includes a `FlattenNativeRuntimeDlls` target
+that copies `Microsoft.WindowsAppRuntime.Bootstrap.dll` from
+`runtimes/win-x64/native/` to the output root next to the .exe.
+`dotnet build` doesn't do this (only `dotnet publish` does); without
+it the unpackaged bootstrap crashes on launch.
+
+### Added — Fix B3: `build.ps1` driver script
+
+Cleans bin/obj with `-Clean`, builds with `dotnet build -c Debug
+-p:Platform=x64 --nologo` (Platform=x64 required because
+WindowsAppSDK refuses AnyCPU), and with `-Run` launches the .exe.
+
+### Added — Per-project README
+
+Documents file roles, the `winget install
+Microsoft.WindowsAppRuntime.1.7` prerequisite, the expected cosmetic
+MSB4062 error, and the build/run commands.
+
+### CLI
+
+- New `--emit-project` boolean flag in
+  `code/specs/mosaic-compile.json`.
+- `run_pipeline` threads it through to `EmitOptions::emit_project`.
+- The xaml branch also writes any `if_helpers` side-files (the
+  BoolToVisibilityConverter.cs from A5, when needed).
+
+### MSBuild csproj details that required experimentation
+
+- `<UseRidGraph>true</UseRidGraph>` — WindowsAppSDK uses legacy
+  `win10-*` RIDs that .NET 8+ removed from the default graph.
+- `<AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>` +
+  `<EnableDefaultPriItems>false</EnableDefaultPriItems>` — bypass
+  most AppxPackage MSBuild plumbing that requires Visual Studio.
+  One cosmetic MSB4062 still fires at the very end of build; the
+  .exe + dependencies are produced first.
+- `<WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>`
+  (NOT true). The 1.7 NuGet's bundled `Microsoft.UI.Xaml.dll`
+  3.1.7.0 currently crashes with `0xc000027b` on initialization
+  when self-contained — switching to framework-dependent (relying
+  on system-installed runtime) is the only path that actually
+  launches.
+
+### End-to-end verification
+
+1. Authored a minimal `HelloDialog.mil`/`.mll`/`.dark.msl` triple
+   using HostDialog.
+2. Ran `mosaic-compile --backend xaml --emit-project -o
+   /tmp/proj-test/HelloDialog` — 11 files written.
+3. Ran `powershell ./build.ps1`. Build emitted one cosmetic
+   MSB4062 error (documented); the .exe was produced at
+   `bin/x64/Debug/.../HelloDialog.exe`.
+4. Launched the .exe. Window appeared with title "HelloDialog —
+   Mosaic → XAML demo".
+5. Clicked "Open the dialog" via UIAutomation. The ContentDialog
+   appeared with the stub Message and a Close button.
+6. Pressed Close. The dialog dismissed; the status bar updated to
+   "Dispatch: Close" — proof the `HelloDialogEvent.Close` event
+   round-tripped through the generated wiring to the host's
+   `OnComponentDispatch` handler.
+
+End-to-end Mosaic → XAML → on-screen dialog with **zero hand-patches**.
+
 ## [Unreleased] — HostDialog runnability fixes (A1–A5 from demo catalog)
 
 ### Fixed — HostDialog now actually renders on WinUI 3
