@@ -543,6 +543,24 @@ class TestPhase40_ApartTelescope:
         result = _sum(f, _int(1), N)
         assert _is_unevaluated_sum(result)
 
+    def test_phase40_plus_phase41_infinite_chain(self):
+        """End-to-end Phase 40 + Phase 41 chain:
+
+        ``∑_{k=1}^∞ 1/(k(k+1))``
+            →  Apart →  ``∑_{k=1}^∞ [1/k − 1/(k+1)]``           (Phase 40)
+            →  telescope detected, g(k) = 1/k vanishes at ∞    (Phase 41)
+            →  g(1) − lim g = 1 − 0 = 1                         (closed form)
+
+        The single dispatch through ``sum_handler`` must produce the
+        scalar integer ``1`` for this canonical infinite series.
+        """
+        denom = IRApply(MUL, (K, IRApply(ADD, (K, _int(1)))))
+        f = IRApply(DIV, (_int(1), denom))
+        result = _sum(f, _int(1), INF)
+        assert isinstance(result, IRInteger) and result.value == 1, (
+            f"Expected scalar 1; got {result!r}"
+        )
+
 
 # ===========================================================================
 # 8. Product — constant factor

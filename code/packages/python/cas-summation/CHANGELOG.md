@@ -1,5 +1,78 @@
 # Changelog
 
+## 0.3.0 — 2026-05-22
+
+**Phase 41 — Limit-aware infinite telescope.**
+
+Extends Phase 39 telescoping to handle `hi = %inf` when ``g(k)``
+provably vanishes at infinity.  The classic motivating case is
+
+    ∑_{k=1}^∞ 1/(k·(k+1))  =  1
+
+which closes end-to-end through the symbolic-vm dispatcher as:
+
+```
+∑_{k=1}^∞ 1/(k(k+1))
+  →  Apart                  (Phase 40, lives in symbolic-vm)
+  →  ∑_{k=1}^∞ [1/k − 1/(k+1)]
+  →  telescope detected     (Phase 39, antisymmetric)
+  →  g(k) = 1/k vanishes    (Phase 41 limit check)
+  →  g(1) − 0 = 1            (closed form)
+```
+
+The narrow vanishing-at-infinity recogniser handles only
+``Div(constant-in-k, positive-degree-polynomial-in-k)`` shapes — every
+output Apart can produce from a rational summand whose denominator
+factors over ℚ into simple linear factors.  Anything else (where the
+limit is undecidable without a deeper symbolic limit-finder) falls
+through to the unevaluated `Sum(...)`.
+
+### Added
+
+- **`_g_vanishes_at_infinity(g, k)`** in `summation.py` — returns True
+  for `Div(c, h(k))` shapes where `c` is constant in `k` and `h(k)` is
+  a polynomial in `k` of strictly positive degree.
+- **`_is_positive_degree_polynomial_in_k(node, k)`** — conservative
+  walker recognising `k`, `k^n` (n ≥ 1), `Add`, and `Mul` of these.
+
+### Changed
+
+- **Step 4 of the `evaluate_sum` dispatcher** — the telescope detector
+  now runs for both finite and infinite ranges.  Infinite ranges only
+  emit a closed form when `_g_vanishes_at_infinity(g, k)` is True;
+  otherwise they fall through to the unevaluated `Sum(...)`.
+- **Existing `test_telescope_does_not_fire_for_infinite_upper`** is
+  renamed to `test_telescope_does_not_fire_for_infinite_upper_when_g_grows`
+  and its docstring updated to reflect that it now pins the Phase 41
+  guard against accidental closure when `g(k)` grows rather than
+  vanishes.
+
+### Added — tests
+
+`tests/test_summation.py` — new
+`TestEvaluateSumPhase41InfiniteTelescope` class with 6 cases:
+
+- Antisymmetric `∑_{k=1}^∞ [1/k − 1/(k+1)] = 1`.
+- Standard orientation `∑_{k=1}^∞ [1/(k+1) − 1/k] = −1`.
+- Higher starting index `∑_{k=2}^∞ [1/k − 1/(k+1)] = 1/2`.
+- Quadratic denominator `∑_{k=1}^∞ [1/k² − 1/(k+1)²] = 1`.
+- Constant-summand fallthrough (`SUB(c, c)` reduces to 0 via Step 1).
+- Non-`Div` summand fallthrough (`g(k) = k` doesn't vanish; stays
+  unevaluated — pins the Phase 41 guard against divergent telescopes).
+
+Full `cas-summation` suite: **72 passed** (66 prior + 6 net new).
+End-to-end via `symbolic-vm` Phase 40 + Phase 41 chain: a new
+`test_phase40_plus_phase41_infinite_chain` test confirms
+``∑_{k=1}^∞ 1/(k(k+1)) = 1`` as the single-dispatch closed form.
+
+### Still deferred
+
+- Wider `_g_vanishes_at_infinity` recogniser (e.g. ``deg(num) < deg(den)``
+  rational shapes with non-constant numerator).
+- Limits involving transcendental functions (`1/exp(k)`, etc.).
+- Cross-language port to TypeScript / Rust (blocked on porting `Apart`
+  to those backends — see Phase 40 deferral).
+
 ## 0.2.0 — 2026-05-20
 
 **Phase 39 — Telescoping sum recognition.**
