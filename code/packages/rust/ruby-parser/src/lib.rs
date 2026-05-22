@@ -484,5 +484,122 @@ mod tests {
             .count();
         assert!(body_count >= 1);
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6g — blocks `do … end` and brace-blocks `method { … }`
+    // -----------------------------------------------------------------------
+    //
+    // Both forms attach to a preceding method-name token (with optional
+    // parenthesised args).  `block_params` captures the `|x, y|` pipe
+    // syntax.  See the grammar file for the disambiguation rules:
+    // bare `{a: 1}` at statement position remains a hash literal, not
+    // a block — blocks always follow a method name.
+
+    #[test]
+    fn test_parse_method_with_do_block_no_params() {
+        // `each do\n  puts 1\nend`
+        let ast = parse_ruby("each do\n  puts 1\nend");
+        assert_program_root(&ast);
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        let block = mwb
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "block" => Some(n),
+                _ => None,
+            })
+            .expect("expected block subnode");
+        assert!(
+            find_descendant(block, "do_block").is_some(),
+            "expected do_block under block"
+        );
+    }
+
+    #[test]
+    fn test_parse_method_with_brace_block() {
+        // `each { puts 1 }`
+        let ast = parse_ruby("each { puts 1 }");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        assert!(
+            find_descendant(mwb, "brace_block").is_some(),
+            "expected brace_block under method_with_block"
+        );
+    }
+
+    #[test]
+    fn test_parse_do_block_with_pipe_params() {
+        // `each do |x| puts x end` — the `|x|` is `block_params`.
+        // Note: the lexer's `classify_op_token` maps unrecognised ops
+        // (including `|`) to `TokenType::Name`, so we filter by *value*
+        // (excluding "|") to extract the actual parameter names.
+        let ast = parse_ruby("each do |x|\n  puts x\nend");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        let bp = find_descendant(mwb, "block_params").expect("expected block_params");
+        let names: Vec<&str> = bp
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, lexer::token::TokenType::Name) && t.value != "|" =>
+                {
+                    Some(t.value.as_str())
+                }
+                _ => None,
+            })
+            .collect();
+        assert_eq!(names, vec!["x"]);
+    }
+
+    #[test]
+    fn test_parse_brace_block_with_two_pipe_params() {
+        let ast = parse_ruby("each { |x, y| x + y }");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        let bp = find_descendant(mwb, "block_params").expect("expected block_params");
+        let names: Vec<&str> = bp
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, lexer::token::TokenType::Name) && t.value != "|" =>
+                {
+                    Some(t.value.as_str())
+                }
+                _ => None,
+            })
+            .collect();
+        assert_eq!(names, vec!["x", "y"]);
+    }
+
+    #[test]
+    fn test_parse_method_call_with_args_and_block() {
+        // `each(1, 2) { puts 1 }` — the call has parenthesised args AND
+        // a trailing block.  This combination is the most general
+        // form `method_with_block` accepts.
+        let ast = parse_ruby("each(1, 2) { puts 1 }");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        // Both an expression-arg subnode and a brace_block subnode exist.
+        let has_args = mwb
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression"));
+        let has_block = find_descendant(mwb, "brace_block").is_some();
+        assert!(has_args && has_block);
+    }
+
+    #[test]
+    fn test_parse_hash_literal_still_works_at_statement_position() {
+        // Bare `{a: 1}` is a hash literal, not a block — blocks always
+        // follow a method name.  This test pins the disambiguation
+        // rule that Phase 6g must preserve.
+        let ast = parse_ruby("x = {a: 1}");
+        assert!(find_descendant(&ast, "hash_literal").is_some());
+        // And NOT a brace_block.
+        assert!(find_descendant(&ast, "brace_block").is_none());
+    }
 }
 
