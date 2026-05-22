@@ -1,9 +1,20 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-22 (after Phase 41 limit-aware infinite
-> telescope landed in Python — `∑_{k=1}^∞ 1/(k(k+1)) = 1` now closes
-> end-to-end).
+> Last updated: 2026-05-22 (after Phase 42 degree-aware vanishing-at-
+> infinity landed in Python — non-constant numerator infinite telescopes
+> now close end-to-end too).
+>
+> **Phase 42 — Degree-aware vanishing-at-infinity (Python only, so far):**
+> `cas-summation` 0.4.0 + `symbolic-vm` 0.66.0 (PR #3887 ✅ merged).
+> Widens Phase 41's narrow constant-numerator recogniser to handle any
+> proper rational ``P(k)/Q(k)`` shape with ``deg(P) < deg(Q)``.  New
+> ``_polynomial_degree_in_k`` helper returns the polynomial degree of an
+> IR node in ``k`` (or ``None`` for non-polynomial shapes like Sin/Log/
+> fractional-Pow).  Closes telescopes like
+> ``∑_{k=1}^∞ [k/(k²+1) − (k+1)/((k+1)²+1)] = 1/2`` end-to-end.
+> Transcendental limits (e.g. ``sin(k)/k²``, ``log(k)/k``) and TS/Rust
+> ports still deferred.
 >
 > **Phase 41 — Limit-aware infinite telescope (Python only, so far):**
 > `cas-summation` 0.3.0 + `symbolic-vm` 0.65.0 (PR #3880 ✅ merged).
@@ -500,7 +511,7 @@ The Risch integration suite is ~90% complete. Known remaining gaps:
 | Feature | Priority | Notes |
 |---|---|---|
 | **MACSYMA package system** | Low | `:load`, `:algebraic`, `:orthopoly` etc. No design yet. |
-| **Symbolic infinite sums** | Low | `sum` handles Faulhaber, geometric, classic-series, and Phase 39 structural telescoping (finite range) across Python, TypeScript, and Rust (`cas-summation` 0.2.0 — PRs #3706 ✅, #3720 ✅, #3724 ✅). Phase 40 adds Apart + telescope composition for `1/(k(k+1))` style sums in Python (`symbolic-vm` 0.64.0 — PR #3872 ✅). Phase 41 adds limit-aware infinite telescopes (`cas-summation` 0.3.0 + `symbolic-vm` 0.65.0 — PR #3880 ✅) so `∑_{k=1}^∞ 1/(k(k+1)) = 1` closes end-to-end via the Phase 40 + Phase 41 chain. TS / Rust ports blocked on porting `Apart`. Hypergeometric series and wider vanishing-at-infinity recognition (e.g. transcendental limits like `1/exp(k)`) still open. |
+| **Symbolic infinite sums** | Low | `sum` handles Faulhaber, geometric, classic-series, and Phase 39 structural telescoping (finite range) across Python, TypeScript, and Rust (`cas-summation` 0.2.0 — PRs #3706 ✅, #3720 ✅, #3724 ✅). Phase 40 adds Apart + telescope composition for `1/(k(k+1))` style sums in Python (`symbolic-vm` 0.64.0 — PR #3872 ✅). Phase 41 adds limit-aware infinite telescopes (`cas-summation` 0.3.0 + `symbolic-vm` 0.65.0 — PR #3880 ✅) so `∑_{k=1}^∞ 1/(k(k+1)) = 1` closes end-to-end. Phase 42 widens the vanishing-at-infinity check to any proper rational `deg(P) < deg(Q)` (`cas-summation` 0.4.0 + `symbolic-vm` 0.66.0 — PR #3887 ✅) so `∑_{k=1}^∞ [k/(k²+1) − (k+1)/((k+1)²+1)] = 1/2` and similar close in one dispatch. TS / Rust ports blocked on porting `Apart`. Hypergeometric series and transcendental limits (e.g. `sin(k)/k²`, `1/exp(k)`) still open. |
 
 #### Diagnostic / tooling gaps
 
