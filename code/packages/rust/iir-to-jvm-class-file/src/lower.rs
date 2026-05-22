@@ -180,6 +180,29 @@ const INVOKEVIRTUAL: u8 = 0xB6;  // invoke instance method (2-byte CP index)
 // ── Field access ────────────────────────────────────────────────────────────
 const GETSTATIC: u8 = 0xB2; // get value of static field (2-byte CP index)
 
+// JVM byte-array access opcodes — used by Brainfuck `load_mem` / `store_mem`.
+// BALOAD pops [arrayref, index] and pushes the byte at that index, sign-extended
+// to an int.  BASTORE pops [arrayref, index, value] and stores `value & 0xFF`
+// at `arrayref[index]`.  These match Brainfuck's u8 tape semantics exactly,
+// modulo the sign-extension on load (we mask with `& 0xFF` after BALOAD).
+const BALOAD: u8 = 0x33;
+const BASTORE: u8 = 0x54;
+
+/// Host class name for Brainfuck's I/O builtins and tape storage.
+///
+/// The host (Java runtime / launcher) must provide a class with this binary
+/// name (slash-separated) containing:
+///
+///   * `public static byte[] __tape` — the BF tape (typically 30,000 bytes)
+///   * `public static void putchar(int)` — write one byte to stdout
+///   * `public static int  getchar()`    — read one byte from stdin, or `-1` / `0`
+///                                          on EOF (BF's interpreter convention is `0`)
+///
+/// Picking a fixed host class keeps the BF-compiled class self-contained:
+/// no `<clinit>` required on the BF side, and no per-program tape size baked
+/// into the bytecode — the host can dial that knob without recompiling.
+const BF_RUNTIME_CLASS: &str = "env/BFRuntime";
+
 // ── Comparison and branching ───────────────────────────────────────────────
 const IFEQ: u8 = 0x99;      // branch if TOS int == 0
 const IFNE: u8 = 0x9A;      // branch if TOS int != 0
@@ -1955,6 +1978,163 @@ fn lower_function(
             //
             // We look up the callee function in the module to find its descriptor,
             // then add (or find) a Methodref in the constant pool.
+            // ── load_mem (Brainfuck) ─────────────────────────────────────────
+            //
+            // `load_mem  v  ptr  u8`  → read tape[ptr] into `v`.
+            //
+            // The tape is `env/BFRuntime.__tape : [B`, a static byte array
+            // provided by the host class.  JVM `baload` pops [array, index]
+            // and pushes the byte at that index sign-extended to an int.
+            // We mask with `& 0xFF` to match BF's unsigned u8 semantics
+            // (cells are u8 — the high bits of the int must be zero).
+            //
+            // Emitted sequence (5 bytes + 1 = 6):
+            //
+            //   GETSTATIC env/BFRuntime.__tape : [B    ; push array ref
+            //   ILOAD     <ptr_slot>                    ; push index
+            //   BALOAD                                  ; pop[arr,idx], push byte
+            //   SIPUSH    0x00FF                        ; push mask (2 bytes inline)
+            //   IAND                                    ; mask off sign-extended bits
+            //   ISTORE    <dest_slot>                   ; store as u8 value
+            //
+            // We use SIPUSH + IAND rather than i2b because `i2b` re-sign-
+            // extends, which is exactly the opposite of what we want.
+            "load_mem" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                    IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "load_mem must have a dest".to_string(),
+                    }
+                })?;
+                let addr_name = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "load_mem src[0] must be Operand::Var(addr)".to_string(),
+                    }),
+                };
+                let (addr_slot, _) = lookup_var(&addr_name)?;
+                let (dest_slot, _) = lookup_var(dest_name)?;
+
+                let tape_fieldref = cp.add_fieldref(BF_RUNTIME_CLASS, "__tape", "[B");
+                code.push(GETSTATIC);
+                code.extend_from_slice(&tape_fieldref.to_be_bytes());
+                emit_iload(&mut code, addr_slot);
+                code.push(BALOAD);
+                // Mask sign-extended byte back into u8 (0..=255 int).
+                code.push(SIPUSH);
+                code.extend_from_slice(&0x00FFi16.to_be_bytes());
+                code.push(IAND);
+                emit_istore(&mut code, dest_slot);
+            }
+
+            // ── store_mem (Brainfuck) ────────────────────────────────────────
+            //
+            // `store_mem  ptr  v  u8`  → write low byte of v into tape[ptr].
+            //
+            // JVM `bastore` pops [array, index, value] and stores
+            // `value & 0xFF` at `array[index]`.  Truncation matches BF's u8
+            // tape — overflow / sign of `v` is irrelevant.
+            //
+            // Emitted sequence (4 bytes + 1 = 5):
+            //
+            //   GETSTATIC env/BFRuntime.__tape : [B    ; push array ref
+            //   ILOAD     <ptr_slot>                    ; push index
+            //   ILOAD     <val_slot>                    ; push value
+            //   BASTORE                                 ; pop[arr,idx,val]
+            "store_mem" => {
+                if instr.srcs.len() < 2 {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_mem requires 2 srcs: [addr, val]".to_string(),
+                    });
+                }
+                let addr_name = match &instr.srcs[0] {
+                    Operand::Var(s) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_mem src[0] must be Operand::Var(addr)".to_string(),
+                    }),
+                };
+                let val_name = match &instr.srcs[1] {
+                    Operand::Var(s) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_mem src[1] must be Operand::Var(val)".to_string(),
+                    }),
+                };
+                let (addr_slot, _) = lookup_var(&addr_name)?;
+                let (val_slot, _)  = lookup_var(&val_name)?;
+
+                let tape_fieldref = cp.add_fieldref(BF_RUNTIME_CLASS, "__tape", "[B");
+                code.push(GETSTATIC);
+                code.extend_from_slice(&tape_fieldref.to_be_bytes());
+                emit_iload(&mut code, addr_slot);
+                emit_iload(&mut code, val_slot);
+                code.push(BASTORE);
+            }
+
+            // ── call_builtin (Brainfuck putchar / getchar) ───────────────────
+            //
+            // The validator (validate.rs) enforces that `srcs[0]` is in
+            // [`CALL_BUILTIN_SUPPORTED_NAMES`], so the inner match here only
+            // handles whitelisted names.  Falling off the match indicates a
+            // validator/lowerer drift and returns `UnsupportedOp` as a safety
+            // net.
+            //
+            // | Builtin   | Operand layout                          | Bytecode emitted |
+            // |-----------|------------------------------------------|-------------------|
+            // | `putchar` | srcs = [Var("putchar"), Var(val)]; no dest | iload val; invokestatic env/BFRuntime.putchar(I)V |
+            // | `getchar` | srcs = [Var("getchar")]; dest = byte slot  | invokestatic env/BFRuntime.getchar()I; istore dest |
+            "call_builtin" => {
+                let builtin_name = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "call_builtin: srcs[0] must be the builtin name as Operand::Var".to_string(),
+                    }),
+                };
+                match builtin_name.as_str() {
+                    "putchar" => {
+                        // putchar takes one i32 arg and returns void.
+                        let val_name = match instr.srcs.get(1) {
+                            Some(Operand::Var(s)) => s.clone(),
+                            _ => return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: "call_builtin \"putchar\" requires srcs[1] = Operand::Var(val)".to_string(),
+                            }),
+                        };
+                        let (val_slot, _) = lookup_var(&val_name)?;
+                        emit_iload(&mut code, val_slot);
+                        let mref = cp.add_methodref(BF_RUNTIME_CLASS, "putchar", "(I)V");
+                        code.push(INVOKESTATIC);
+                        code.extend_from_slice(&mref.to_be_bytes());
+                    }
+                    "getchar" => {
+                        // getchar takes no args, returns i32 (the byte, or -1/0
+                        // for EOF — host convention).
+                        let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                            IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: "call_builtin \"getchar\" requires a dest register".to_string(),
+                            }
+                        })?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let mref = cp.add_methodref(BF_RUNTIME_CLASS, "getchar", "()I");
+                        code.push(INVOKESTATIC);
+                        code.extend_from_slice(&mref.to_be_bytes());
+                        emit_istore(&mut code, dest_slot);
+                    }
+                    _ => {
+                        // Validator should have rejected this; defense in depth.
+                        return Err(IIRJvmError::UnsupportedOp {
+                            function: fname.clone(),
+                            op: format!("call_builtin {:?}: not in JVM backend whitelist", builtin_name),
+                        });
+                    }
+                }
+            }
+
             "call" => {
                 // First source is the callee name (as a Var operand).
                 let callee_name = match instr.srcs.first() {

@@ -3,6 +3,87 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.5.0] — 2026-05-22 (Brainfuck — `byte[]` tape + I/O via env/BFRuntime)
+
+### Added — Brainfuck `load_mem` / `store_mem` / `call_builtin` lowering
+
+Stage 2 of 4 for the BF→{wasm,jvm,clr,beam} story.  Mirrors the WASM PR
+(iir-to-wasm 0.4.0) for the JVM target.  Lets BF's IIR — including
+`load_mem`, `store_mem`, and `call_builtin "putchar"`/`"getchar"` —
+flow through the same universal `iir-to-jvm-class-file` backend that
+Twig, BASIC, Oct, and Nib already use.
+
+#### Validator changes
+
+- `load_mem` and `store_mem` removed from `UNSUPPORTED_OPS` (previously
+  hard-rejected).  Both lower to JVM `baload` / `bastore` over a
+  host-provided byte array — see `BF_RUNTIME_CLASS` below.
+- `call_builtin` is now **conditionally** accepted: the builtin name
+  carried in `srcs[0]` as `Operand::Var` must be in the new
+  `CALL_BUILTIN_SUPPORTED_NAMES` whitelist.  Today's whitelist covers
+  Brainfuck's two I/O builtins (`putchar`, `getchar`); extending it
+  takes three steps documented in the constant's doc comment.
+- Unknown builtin names still produce a clear `UnsupportedOp` error
+  with the rejected name and the whitelist included.
+
+#### Lowering changes
+
+- New `BALOAD` / `BASTORE` opcode constants (0x33 / 0x54) for JVM byte
+  array access.
+- New `BF_RUNTIME_CLASS` constant `"env/BFRuntime"` — the host helper
+  class providing the tape and I/O methods.  Picking a fixed host
+  class keeps BF-compiled `.class` files self-contained: no `<clinit>`
+  required on the BF side, no per-program tape size baked into the
+  bytecode, and the host can dial the tape size without recompiling.
+- New `emit_instr` arms:
+  - `load_mem v ptr` → `getstatic env/BFRuntime.__tape : [B; iload ptr;
+    baload; sipush 0x00FF; iand; istore v`.  The `sipush 0x00FF; iand`
+    masks the sign-extension that `baload` performs, so the int result
+    is properly `0..=255` (matching BF's unsigned u8 cell semantics).
+  - `store_mem ptr v` → `getstatic env/BFRuntime.__tape : [B; iload ptr;
+    iload v; bastore`.  `bastore` truncates the int value to a byte
+    automatically, matching BF's u8 wraparound.
+  - `call_builtin "putchar" v` → `iload v; invokestatic
+    env/BFRuntime.putchar(I)V`.
+  - `call_builtin "getchar" -> v` → `invokestatic
+    env/BFRuntime.getchar()I; istore v`.
+
+#### Host class contract
+
+The host (Java runtime / launcher) must provide a class with binary name
+`env/BFRuntime` containing:
+
+| Symbol                  | JVM descriptor | Purpose                           |
+|-------------------------|----------------|-----------------------------------|
+| `public static byte[] __tape` | `[B`     | The BF tape (typically 30,000 B). |
+| `public static void putchar(int)` | `(I)V` | Write one byte to stdout.         |
+| `public static int getchar()`     | `()I`  | Read one byte from stdin; convention is 0 / -1 on EOF. |
+
+This is the JVM analog of the WASM backend's `env` import namespace —
+same pattern, different ABI.
+
+### Tests
+
+- 5 new validator unit tests covering the new acceptance:
+  `load_mem_accepted_for_bf`, `store_mem_accepted_for_bf`,
+  `call_builtin_putchar_accepted`, `call_builtin_getchar_accepted`,
+  `call_builtin_unknown_name_rejected`.
+- The existing `unsupported_ops_rejected` test updated: `load_mem`,
+  `store_mem`, `call_builtin` removed from the unconditional-reject
+  list with a comment pointing to the new tests.
+- 43 lib + 86 integration tests pass.
+- 4 new BF→JVM e2e tests in `brainfuck-iir-compiler/tests/jvm_e2e.rs`
+  exercise the full chain from source to `.class` bytes.
+
+### Compatibility
+
+- Non-BF frontends (Twig, BASIC, Oct, Nib) are unchanged — they don't
+  emit `load_mem` / `store_mem` or `call_builtin`, so the new code
+  paths are only reached for BF.
+- Modules without BF features get no `env/BFRuntime` constant-pool
+  entries, preserving binary equivalence with pre-0.5.0 output for
+  every non-BF caller.
+
 ## [0.4.1] — 2026-05-13
 
 ### Fixed (Multi-backend demo — fib(10)=55)
