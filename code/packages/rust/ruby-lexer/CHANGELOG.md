@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.11.0] - 2026-05-20
+
+### Added (Phase 4e — range fusion + 2.6 endless ranges)
+- New unconditional `fuse_range_ops` post-pass — folds adjacent `Dot` tokens into `Op("..")` (inclusive range) or `Op("...")` (exclusive range).  Ruby has had range literals since 1.0, so this fires for every era.
+- New `ENDLESS_RANGE_FLAG: u32 = 1 << 1` — set on `..` / `...` range tokens under era ≥ 2.6 when they're followed by a *closer* (`)`, `]`, `}`, `,`, `;`, `\n`, or EOF).  Pre-2.6 these positions were parse errors; 2.6 made them legal endless ranges (`(1..)`, `arr[2..]`, etc.).
+- New `mark_endless_ranges` post-pass runs only under era ≥ 2.6.
+
+### Tests (+6 new, total 103)
+- `..` fuses unconditionally across eras 1.0/1.8/2.0/3.3.
+- `...` fuses unconditionally.
+- 2.6 flags `(1..)` as endless range.
+- 2.3 does NOT flag — era gate is precise.
+- 2.6 leaves normal ranges (`1..5`) unflagged.
+- 2.6 flags endless ranges before newline and before comma.
+
 ## [0.10.0] - 2026-05-20
 
 ### Added (Phase 4d — 2.7 numbered block params `_1`..`_9`)

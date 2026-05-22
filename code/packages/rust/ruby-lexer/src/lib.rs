@@ -362,14 +362,129 @@ impl RubyLexer {
     /// Future eras will plug in here without touching the
     /// state-machine TOML.
     fn apply_era_token_fusions(&mut self) {
+        // The range fusions (`..` / `...`) are unconditional — Ruby
+        // has had range literals since 1.0.  They run first so
+        // later era-gated passes operate on the already-fused
+        // stream.
+        self.fuse_range_ops();
         if era_at_least(&self.era, "1.9.1") {
             self.fuse_lambda_arrow();
         }
         if era_at_least(&self.era, "2.3") {
             self.fuse_safe_nav();
         }
+        if era_at_least(&self.era, "2.6") {
+            self.mark_endless_ranges();
+        }
         if era_at_least(&self.era, "2.7") {
             self.mark_numbered_block_params();
+        }
+    }
+
+    /// Unconditional: fold adjacent `Dot` tokens into a single
+    /// `Op("..")` (inclusive range) or `Op("...")` (exclusive
+    /// range).  Ruby has had these range operators since 1.0; the
+    /// 1.8 state machine emits each `.` as a separate Dot and
+    /// leaves the multi-dot composition to this post-pass — same
+    /// pattern Phase 4b/4c used for `->` and `&.`.
+    fn fuse_range_ops(&mut self) {
+        // First pass: combine pairs of adjacent Dots into `..`.
+        let mut i = 0;
+        while i + 1 < self.tokens.len() {
+            let merge = {
+                let a = &self.tokens[i];
+                let b = &self.tokens[i + 1];
+                let both_dots =
+                    a.type_ == TokenType::Dot && b.type_ == TokenType::Dot;
+                let same_line = a.line == b.line;
+                let no_ws = !self
+                    .whitespace_before_token
+                    .get(i + 1)
+                    .copied()
+                    .unwrap_or(false);
+                both_dots && same_line && no_ws
+            };
+            if merge {
+                let span_line = self.tokens[i].line;
+                let span_col = self.tokens[i].column;
+                self.tokens.remove(i + 1);
+                self.whitespace_before_token.remove(i + 1);
+                self.tokens[i] = Token {
+                    type_: TokenType::Name,
+                    value: "..".to_string(),
+                    line: span_line,
+                    column: span_col,
+                    type_name: None,
+                    flags: None,
+                };
+            }
+            i += 1;
+        }
+        // Second pass: `..` (now a Name token from the first pass)
+        // followed by a Dot fuses into `...`.
+        let mut i = 0;
+        while i + 1 < self.tokens.len() {
+            let merge = {
+                let a = &self.tokens[i];
+                let b = &self.tokens[i + 1];
+                let a_is_dotdot = a.type_ == TokenType::Name && a.value == "..";
+                let b_is_dot = b.type_ == TokenType::Dot;
+                let same_line = a.line == b.line;
+                let no_ws = !self
+                    .whitespace_before_token
+                    .get(i + 1)
+                    .copied()
+                    .unwrap_or(false);
+                a_is_dotdot && b_is_dot && same_line && no_ws
+            };
+            if merge {
+                let span_line = self.tokens[i].line;
+                let span_col = self.tokens[i].column;
+                self.tokens.remove(i + 1);
+                self.whitespace_before_token.remove(i + 1);
+                self.tokens[i] = Token {
+                    type_: TokenType::Name,
+                    value: "...".to_string(),
+                    line: span_line,
+                    column: span_col,
+                    type_name: None,
+                    flags: None,
+                };
+            }
+            i += 1;
+        }
+    }
+
+    /// 2.6: tag `..` / `...` range tokens followed by a *closer*
+    /// (right paren, right bracket, comma, semicolon, newline, or
+    /// EOF) with [`ENDLESS_RANGE_FLAG`].  Pre-2.6 these positions
+    /// were parse errors; 2.6 made them legal endless ranges
+    /// (`(1..)`, `arr[2..]`, etc.).
+    fn mark_endless_ranges(&mut self) {
+        let closers = [
+            TokenType::RParen,
+            TokenType::RBracket,
+            TokenType::RBrace,
+            TokenType::Comma,
+            TokenType::Semicolon,
+            TokenType::Newline,
+            TokenType::Eof,
+        ];
+        for i in 0..self.tokens.len() {
+            let is_range = self.tokens[i].type_ == TokenType::Name
+                && (self.tokens[i].value == ".." || self.tokens[i].value == "...");
+            if !is_range {
+                continue;
+            }
+            let next_kind = self
+                .tokens
+                .get(i + 1)
+                .map(|t| t.type_)
+                .unwrap_or(TokenType::Eof);
+            if closers.contains(&next_kind) {
+                let prev = self.tokens[i].flags.unwrap_or(0);
+                self.tokens[i].flags = Some(prev | ENDLESS_RANGE_FLAG);
+            }
         }
     }
 
@@ -969,6 +1084,15 @@ fn era_at_least(era: &str, min: &str) -> bool {
 /// dispatch on numbered-param semantics.  Higher bits are reserved
 /// for future era flags.
 pub const NUMBERED_BLOCK_PARAM_FLAG: u32 = 1 << 0;
+
+/// Phase 4e — flag bit set on `Token.flags` for range tokens
+/// (`..` / `...`) under era ≥ 2.6 when they're followed by a
+/// *closer* token (right paren/bracket/brace, comma, semicolon,
+/// newline, or EOF) — i.e. the syntactic position of an "endless
+/// range" like `(1..)` or `arr[2..]`.  Pre-2.6 these positions
+/// were parse errors, so the flag stays off and any downstream
+/// parser can reject them.
+pub const ENDLESS_RANGE_FLAG: u32 = 1 << 1;
 
 /// Phase 4d — true if `s` is `_1`, `_2`, …, `_9` exactly.  These
 /// are the only nine numbered block parameter lexemes Ruby 2.7+
@@ -2064,6 +2188,88 @@ mod tests {
             .map(|t| t.value.as_str())
             .collect();
         assert!(!values.contains(&"&."), "2.1 should NOT fuse `&.`");
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 4e — range fusions `..` / `...` and 2.6 endless ranges.
+    // -----------------------------------------------------------------
+
+    fn has_endless_range_flag(t: &Token) -> bool {
+        (t.flags.unwrap_or(0) & ENDLESS_RANGE_FLAG) != 0
+    }
+
+    #[test]
+    fn range_dotdot_fuses_unconditionally() {
+        // `..` is range syntax since Ruby 1.0 — every era fuses it.
+        for era in ["1.0", "1.8", "2.0", "3.3"] {
+            let toks = tokenize_ruby_for_version("1..5", era).unwrap();
+            let values: Vec<&str> = toks
+                .iter()
+                .filter(|t| t.type_ != TokenType::Eof)
+                .map(|t| t.value.as_str())
+                .collect();
+            assert!(
+                values.contains(&".."),
+                "era {era} should fuse `..` (got {:?})",
+                values
+            );
+            // No bare `.` should remain in the fused range.
+            assert_eq!(values.iter().filter(|v| **v == ".").count(), 0);
+        }
+    }
+
+    #[test]
+    fn range_dotdotdot_fuses_unconditionally() {
+        let toks = tokenize_ruby_for_version("1...5", "1.8").unwrap();
+        let values: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert!(values.contains(&"..."));
+        assert!(!values.contains(&".."));
+    }
+
+    #[test]
+    fn era_2_6_flags_endless_range_before_rparen() {
+        let toks = tokenize_ruby_for_version("(1..)", "2.6").unwrap();
+        let any_flagged = toks
+            .iter()
+            .any(|t| t.value == ".." && has_endless_range_flag(t));
+        assert!(any_flagged, "expected endless-range flag on `..`");
+    }
+
+    #[test]
+    fn era_2_3_does_not_flag_endless_range() {
+        // 2.3 < 2.6 — the flag must stay off so callers reject
+        // endless ranges as parse errors (which they were pre-2.6).
+        let toks = tokenize_ruby_for_version("(1..)", "2.3").unwrap();
+        let any_flagged = toks.iter().any(has_endless_range_flag);
+        assert!(!any_flagged, "2.3 must not flag endless ranges");
+    }
+
+    #[test]
+    fn era_2_6_does_not_flag_normal_range() {
+        // `1..5` has a non-closer follower (`5`), so even under 2.6
+        // it isn't an endless range — flag stays clear.
+        let toks = tokenize_ruby_for_version("1..5", "2.6").unwrap();
+        let any_flagged = toks.iter().any(has_endless_range_flag);
+        assert!(!any_flagged, "normal range must not get endless flag");
+    }
+
+    #[test]
+    fn era_2_6_flags_endless_range_before_newline_and_comma() {
+        for src in ["1..\n", "x = [1.., 2]\n"] {
+            let toks = tokenize_ruby_for_version(src, "2.6").unwrap();
+            let any_flagged = toks
+                .iter()
+                .any(|t| t.value == ".." && has_endless_range_flag(t));
+            assert!(
+                any_flagged,
+                "expected endless-range flag in source `{}`",
+                src
+            );
+        }
     }
 
     // -----------------------------------------------------------------
