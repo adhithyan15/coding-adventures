@@ -1204,6 +1204,10 @@ impl ToolAuditSupervisorDrainRunReport {
             checkpoint_name: self.checkpoint_name().to_owned(),
             outcome: self.outcome(),
             outcome_label: self.outcome_label(),
+            is_caught_up: self.is_caught_up(),
+            needs_continuation: self.needs_continuation(),
+            needs_follow_up: self.needs_follow_up(),
+            plan_diverged: self.plan_diverged(),
             scheduler_action: self.scheduler_action(),
             scheduler_action_label: self.scheduler_action_label(),
             is_no_scheduler_action: self.scheduler_action().is_no_action(),
@@ -1414,6 +1418,14 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub outcome: ToolAuditSupervisorDrainRunOutcome,
     /// Stable scheduler-facing outcome label for host logs.
     pub outcome_label: &'static str,
+    /// Whether rows were replayed and this run reached the current log end.
+    pub is_caught_up: bool,
+    /// Whether this run needs another drain pass.
+    pub needs_continuation: bool,
+    /// Whether this run outcome routes follow-up pressure to the host.
+    pub needs_follow_up: bool,
+    /// Whether this run diverged from its preflight plan.
+    pub plan_diverged: bool,
     /// Recommended host scheduler action for this run.
     pub scheduler_action: ToolAuditSupervisorDrainSchedulerAction,
     /// Stable scheduler action label for host logs.
@@ -1532,22 +1544,22 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether rows were replayed and this run reached the current log end.
     pub fn is_caught_up(&self) -> bool {
-        self.outcome.is_caught_up()
+        self.is_caught_up
     }
 
     /// Return whether this run needs another drain pass.
     pub fn needs_continuation(&self) -> bool {
-        self.outcome.needs_continuation()
+        self.needs_continuation
     }
 
     /// Return whether this run outcome routes follow-up pressure to the host.
     pub fn needs_follow_up(&self) -> bool {
-        self.outcome.needs_follow_up()
+        self.needs_follow_up
     }
 
     /// Return whether this run diverged from its preflight plan.
     pub fn plan_diverged(&self) -> bool {
-        self.outcome.plan_diverged()
+        self.plan_diverged
     }
 
     /// Return the recommended scheduler action for this run.
@@ -3795,9 +3807,13 @@ mod tests {
         let summary = report.summary();
         assert_eq!(summary.outcome_label, "needs_follow_up");
         assert_eq!(summary.outcome_label(), "needs_follow_up");
+        assert!(!summary.is_caught_up);
         assert!(!summary.is_caught_up());
+        assert!(!summary.needs_continuation);
         assert!(!summary.needs_continuation());
+        assert!(summary.needs_follow_up);
         assert!(summary.needs_follow_up());
+        assert!(!summary.plan_diverged);
         assert!(!summary.plan_diverged());
         assert_eq!(summary.scheduler_action_label, "route_follow_up");
         assert_eq!(summary.scheduler_action_label(), "route_follow_up");
@@ -3928,6 +3944,15 @@ mod tests {
         assert!(!report.needs_continuation());
         assert!(!report.needs_follow_up());
         assert!(!report.plan_diverged());
+        let summary = report.summary();
+        assert!(summary.is_caught_up);
+        assert!(summary.is_caught_up());
+        assert!(!summary.needs_continuation);
+        assert!(!summary.needs_continuation());
+        assert!(!summary.needs_follow_up);
+        assert!(!summary.needs_follow_up());
+        assert!(!summary.plan_diverged);
+        assert!(!summary.plan_diverged());
     }
 
     #[test]
@@ -4361,9 +4386,13 @@ mod tests {
         );
         assert_eq!(summary.outcome_label, "needs_continuation");
         assert_eq!(summary.outcome_label(), "needs_continuation");
+        assert!(!summary.is_caught_up);
         assert!(!summary.is_caught_up());
+        assert!(summary.needs_continuation);
         assert!(summary.needs_continuation());
+        assert!(!summary.needs_follow_up);
         assert!(!summary.needs_follow_up());
+        assert!(!summary.plan_diverged);
         assert!(!summary.plan_diverged());
         assert_eq!(
             summary.scheduler_action,
@@ -4508,9 +4537,13 @@ mod tests {
         assert!(!report.is_caught_up());
         assert!(!report.needs_continuation());
         assert!(!report.needs_follow_up());
+        assert!(summary.plan_diverged);
         assert!(summary.plan_diverged());
+        assert!(!summary.is_caught_up);
         assert!(!summary.is_caught_up());
+        assert!(!summary.needs_continuation);
         assert!(!summary.needs_continuation());
+        assert!(!summary.needs_follow_up);
         assert!(!summary.needs_follow_up());
         assert_eq!(
             summary.scheduler_action,
