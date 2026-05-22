@@ -8,3 +8,7 @@ description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers par
 coding-adventures-dartmouth-basic-parser = { path = "../dartmouth-basic-parser" }
 parser           = { path = "../parser" }
 interpreter-ir   = { path = "../interpreter-ir" }
+
+[dev-dependencies]
+vm-core          = { path = "../vm-core" }
+jit-core         = { path = "../jit-core" }

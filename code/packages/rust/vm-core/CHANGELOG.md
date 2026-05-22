@@ -1,5 +1,30 @@
 # Changelog — vm-core
 
+## [0.2.1] — 2026-05-22
+
+### Added (LANG74 follow-up — universal `mov` dispatch)
+
+- `dispatch.rs`: new `handle_mov` + `"mov" => Some(handle_mov)` entry in
+  the standard opcode table.  Implements the IIR canonical
+  `mov dest = src` semantics — resolve `src`, assign to the named slot
+  `dest` in the current frame.
+- Unblocks the JIT chain for frontends that emit `mov` directly
+  (e.g. `dartmouth-basic-iir-compiler`, `oct-iir-compiler`).
+  Previously these programs ran fine through `lang-aot` (the AOT
+  specialiser rewrites `mov` to the typed `mov_<ty>` CIR variant the
+  backends handle) but tripped `VMError::UnknownOpcode("mov")` the
+  moment `VMCore::execute` saw them.
+
+### Proof
+
+`dartmouth-basic-iir-compiler` ships a new
+`tests/jit_smoke.rs` that runs four BASIC programs (PRINT-only, LET +
+arithmetic + PRINT, FOR/NEXT, IF/THEN/GOTO) through
+`JITCore::execute_with_jit`, registering `print_i64` on a custom
+`BuiltinRegistry` to capture output.  All four pass — meaning every
+language in the LANG74 roadmap now runs end-to-end through **both** the
+AOT chain (`lang-aot`) and the JIT chain (`vm-core` + `jit-core`).
+
 ## [0.2.0] — 2026-05-11
 
 ### Changed (LANG32 — Operand::Str exhaustiveness)
