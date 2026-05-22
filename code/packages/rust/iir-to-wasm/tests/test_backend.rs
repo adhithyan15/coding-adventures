@@ -222,21 +222,28 @@ fn validate_io_out_accepted() {
 
 // Test 1.12
 #[test]
-fn validate_memory_ops_rejected() {
-    // load_mem and store_mem are unconditionally rejected (no linear memory).
-    // alloc with a non-ref type hint is rejected (needs ref<LispyPair>).
+fn validate_memory_ops_accepted() {
+    // After the BF→WASM lowering, `load_mem` and `store_mem` are
+    // accepted — they lower to `i32.load8_u` and `i32.store8` over the
+    // module's linear memory (a single 1-page WASM memory injected when
+    // any memory op is used).  See iir-to-wasm/src/lower.rs.
+    //
+    // Note: validate.rs's per-instruction errors are emitted independently,
+    // so we tolerate other errors (e.g. UndefinedVariable) here — only the
+    // `UnsupportedOp` check is relevant for the memory-op promotion.
     for op in &["load_mem", "store_mem"] {
         let m = module_one("f", vec![], "void", vec![
-            IIRInstr::new(*op, None, vec![], "void"),
+            IIRInstr::new(*op, None, vec![], "u8"),
         ]);
         let errs = validate_for_wasm(&m);
         assert!(
-            errs.iter().any(|e| e.contains("UnsupportedOp")),
-            "expected UnsupportedOp for {:?}",
-            op
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "{:?} should no longer be UnsupportedOp; errs: {:?}",
+            op, errs
         );
     }
-    // alloc with i32 type is rejected.
+    // `alloc` with a non-ref type hint is still rejected — GC ops require a
+    // supported ref<...> type.
     {
         let m = module_one("f", vec![], "void", vec![
             IIRInstr::new("alloc", None, vec![], "i32"),

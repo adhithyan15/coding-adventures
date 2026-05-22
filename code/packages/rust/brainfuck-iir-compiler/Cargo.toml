@@ -1,6 +1,6 @@
 [package]
 name = "brainfuck-iir-compiler"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
 description = "BF04/BF05 — Brainfuck → InterpreterIR compiler, vm-core wrapper, jit-core JIT chain, and real CIR-bytecode JIT backend"
 license = "MIT"
@@ -14,3 +14,6 @@ parser         = { path = "../parser" }
 lexer          = { path = "../lexer" }
 
 [dev-dependencies]
+iir-to-wasm         = { path = "../iir-to-wasm" }
+wasm-module-encoder = { path = "../wasm-module-encoder" }
+wasm-types          = { path = "../wasm-types" }

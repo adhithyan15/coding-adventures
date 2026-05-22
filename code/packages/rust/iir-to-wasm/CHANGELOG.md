@@ -3,6 +3,72 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.0] — 2026-05-22 (Brainfuck — linear memory + I/O imports)
+
+### Added — Brainfuck `load_mem` / `store_mem` / `call_builtin` lowering
+
+#### Validator changes
+
+- `validate_for_wasm` now **accepts** `load_mem` and `store_mem` — they
+  were previously in `UNSUPPORTED_OPS`.  Both lower to WASM linear-memory
+  ops (`i32.load8_u`, `i32.store8`) over a module-defined memory.
+- `call_builtin` is now **conditionally** accepted: the builtin name
+  carried in `srcs[0]` must be in the new
+  `CALL_BUILTIN_SUPPORTED_NAMES` whitelist.  Today's whitelist covers
+  Brainfuck's two I/O builtins (`putchar`, `getchar`); extending it
+  takes three steps documented in the constant's doc comment.
+- Unknown builtin names still produce a clear `UnsupportedOp` error
+  with the builtin name and the whitelist included.
+
+#### Lowering changes
+
+- New `ModuleFeatures` struct collected by `collect_module_features`
+  (replaces the narrower `collect_globals_and_io`).  Captures
+  `uses_io_out`, `uses_putchar`, `uses_getchar`, and `uses_memory`
+  flags in a single module walk.
+- When `uses_putchar`: inject `env.putchar : (i32) -> ()` host import.
+- When `uses_getchar`: inject `env.getchar : () -> i32` host import.
+- When `uses_memory`: inject a single 1-page (64 KiB) linear `Memory`
+  — the Brainfuck tape.  Programs that don't use memory ops get no
+  memory section, preserving binary compatibility with existing
+  non-BF callers (Twig, BASIC, Oct, Nib, Lispy).
+- Function-index space: imports occupy the first slots in
+  declaration order — `env.__print_i64` (LANG32, when used),
+  then `env.putchar`, then `env.getchar`.  Defined functions follow.
+- New `emit_instr` arms:
+  - `load_mem` → `local.get addr; i32.load8_u; local.set dest`
+  - `store_mem` → `local.get addr; local.get val; i32.store8`
+  - `call_builtin "putchar"` → `local.get val; call <putchar_idx>`
+  - `call_builtin "getchar"` → `call <getchar_idx>; local.set dest`
+
+#### Why this matters
+
+After this PR, Brainfuck's IIR — including `+++.` (memory + putchar),
+`,[.,]` (cat), and the multiplication idiom — flows through the
+*same* `iir-to-wasm` backend that Twig, BASIC, Oct, Nib, and Lispy
+use.  Stage 1 of 4 for the BF→{wasm,jvm,clr,beam} story; the JVM,
+CLR, and BEAM lowerings are queued behind this PR.
+
+#### Tests
+
+- `validate.rs::tests` — 5 new unit tests for the validator changes:
+  - `load_mem_accepted_for_bf`
+  - `store_mem_accepted_for_bf`
+  - `call_builtin_putchar_accepted`
+  - `call_builtin_getchar_accepted`
+  - `call_builtin_unknown_name_rejected`
+- Existing `unsupported_ops_rejected` updated: `load_mem`, `store_mem`,
+  `call_builtin` removed from the unconditional-reject list; comments
+  point readers to the new tests.
+- Existing `tests/test_backend.rs::validate_memory_ops_rejected`
+  renamed → `validate_memory_ops_accepted` and updated to assert the
+  promotion.
+- Doc-tests unchanged.
+
+Total: 45 lib + 88 integration tests pass.
+
+---
+
 ## [0.3.0] — 2026-05-12
 
 ### Added (LANG35 — Closure Backend Integration)
