@@ -471,6 +471,130 @@ class ReductionParityTests(unittest.TestCase):
 
 
 # ──────────────────────────────────────────────────────────────────
+# MX10 Phase 3b — axis-specific reduction parity tests
+#
+# Phase 3 covered dim=None.  Phase 3b adds the dim != None branch.
+# Output shape varies based on dim and keepdim, so we test both
+# keepdim=True (axis becomes 1) and keepdim=False (axis dropped),
+# plus both Sum and Mean.
+# ──────────────────────────────────────────────────────────────────
+
+
+@unittest.skipUnless(
+    EXTENSION_AVAILABLE,
+    "matrix_rust_python C extension not installed; see parity-tests skip-reason.",
+)
+class ReductionAxisParityTests(unittest.TestCase):
+    """Compare axis-specific Sum/Mean Rust and pure-Python kernels."""
+
+    SHAPE = (500, 200)  # 100_000 cells
+
+    def _make_tensor(self, seed: int):
+        import random
+
+        from ml_framework_core import Tensor
+
+        rng = random.Random(seed)
+        data = [rng.uniform(-1.0, 1.0) for _ in range(500 * 200)]
+        return Tensor(data, self.SHAPE)
+
+    def _assert_close_vec(
+        self,
+        actual: list[float],
+        expected: list[float],
+        rtol: float = 1e-3,
+        atol: float = 1e-4,
+    ) -> None:
+        """Same f32-vs-double tolerance as the other parity tests.
+
+        Axis reductions sum up to 500 cells in f32 (for dim=0 over a
+        500x200 tensor) — well within the rtol budget but not as
+        forgiving as the 100_000-cell reduce-all sum.
+        """
+        self.assertEqual(len(actual), len(expected))
+        for i, (a, e) in enumerate(zip(actual, expected, strict=False)):
+            denom = max(abs(a), abs(e), atol)
+            err = abs(a - e) / denom
+            self.assertLess(
+                err,
+                rtol,
+                f"index {i}: rust={a!r}, python={e!r}, relative error {err:.2e}",
+            )
+
+    def test_sum_axis_dim0_keepdim_false_parity(self) -> None:
+        """``a.sum(dim=0)`` (column sums) — Rust vs pure-Python."""
+        from ml_framework_core import _rust_backend
+
+        a = self._make_tensor(seed=11)
+
+        rust_result = a.sum(dim=0)
+        self.assertEqual(rust_result.shape, (200,))
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = a.sum(dim=0)
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close_vec(rust_result.data, python_result.data)
+
+    def test_sum_axis_dim1_keepdim_true_parity(self) -> None:
+        """``a.sum(dim=1, keepdim=True)`` (row sums, axis kept as 1)."""
+        from ml_framework_core import _rust_backend
+
+        a = self._make_tensor(seed=22)
+
+        rust_result = a.sum(dim=1, keepdim=True)
+        self.assertEqual(rust_result.shape, (500, 1))
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = a.sum(dim=1, keepdim=True)
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close_vec(rust_result.data, python_result.data)
+
+    def test_mean_axis_dim0_keepdim_false_parity(self) -> None:
+        """``a.mean(dim=0)`` (column means) — Rust vs pure-Python."""
+        from ml_framework_core import _rust_backend
+
+        a = self._make_tensor(seed=33)
+
+        rust_result = a.mean(dim=0)
+        self.assertEqual(rust_result.shape, (200,))
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = a.mean(dim=0)
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close_vec(rust_result.data, python_result.data)
+
+    def test_mean_axis_dim1_keepdim_true_parity(self) -> None:
+        """``a.mean(dim=1, keepdim=True)`` (row means, axis kept as 1)."""
+        from ml_framework_core import _rust_backend
+
+        a = self._make_tensor(seed=44)
+
+        rust_result = a.mean(dim=1, keepdim=True)
+        self.assertEqual(rust_result.shape, (500, 1))
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = a.mean(dim=1, keepdim=True)
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close_vec(rust_result.data, python_result.data)
+
+
+# ──────────────────────────────────────────────────────────────────
 # MX10 Phase 4 — activation parity tests (Tanh + ReLU)
 #
 # Tanh is a direct unary op (matches Neg/Abs envelope shape from

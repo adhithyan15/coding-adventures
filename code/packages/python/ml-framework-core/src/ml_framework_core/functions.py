@@ -48,6 +48,7 @@ from ._rust_backend import (
     add_via_rust,
     div_via_rust,
     matmul_via_rust,
+    mean_axis_via_rust,
     mean_via_rust,
     mul_via_rust,
     neg_via_rust,
@@ -58,6 +59,7 @@ from ._rust_backend import (
     should_use_rust_for_reduction,
     sigmoid_via_rust,
     sub_via_rust,
+    sum_axis_via_rust,
     sum_via_rust,
     tanh_via_rust,
 )
@@ -425,6 +427,15 @@ class SumFunction(Function):
         if dim < 0:
             dim = a.ndim + dim
 
+        # MX10 Phase 3b — optional Rust fast path (axis-specific).
+        # Same threshold as reduce-all (per-cell cost is similar);
+        # matrix-cpu's ReduceSum takes an ``axes=[dim]`` list and
+        # ``keep_dims=keepdim`` flag.  Pure-Python axis loop below
+        # is the fallback for small tensors or when the extension
+        # isn't installed.
+        if should_use_rust_for_reduction(len(a.data)):
+            return sum_axis_via_rust(a, dim, keepdim)
+
         # Sum along a specific dimension
         list(a.shape)
         stride = _compute_strides(a.shape)
@@ -532,6 +543,17 @@ class MeanFunction(Function):
                 return mean_via_rust(a)
             total = sum(a.data)
             return Tensor([total / a.numel], (1,), device=a.device)
+
+        # MX10 Phase 3b — optional Rust fast path (axis-specific).
+        # We dispatch directly to ReduceMean (rather than reusing the
+        # ReduceSum-then-divide composition below) so the division
+        # happens inside matrix-cpu in f32 throughout, and we skip
+        # creating a spurious SumFunction autograd node.  Normalise
+        # the dim to non-negative first because matrix-ir-json's
+        # axes are unsigned.
+        norm_dim = dim if dim >= 0 else a.ndim + dim
+        if should_use_rust_for_reduction(len(a.data)):
+            return mean_axis_via_rust(a, norm_dim, keepdim)
 
         # Use SumFunction then divide
         sum_result = SumFunction.apply(a, dim, keepdim)

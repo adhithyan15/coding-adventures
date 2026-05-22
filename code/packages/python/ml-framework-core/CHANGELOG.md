@@ -2,6 +2,102 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 3b: optional Rust fast path for axis-specific `SumFunction` / `MeanFunction` (`dim != None`)
+
+Closes the gap Phase 3 explicitly deferred — the `dim != None`
+branch of `SumFunction.forward` and `MeanFunction.forward` now also
+dispatches through Rust when the extension is installed and the
+input is at or above the threshold.  Phase 3 only covered the
+reduce-all (`dim=None`) case; this PR makes axis-specific reductions
+get the same speedup using the same `_ELEMENTWISE_RUST_THRESHOLD =
+100_000` predicate.
+
+#### Why this is its own helper rather than reusing `_reduce_all_via_rust`
+
+- Output shape changes based on `dim` and `keepdim`.  Reduce-all
+  always produces a scalar; axis reductions can be any shape with
+  one dimension collapsed (`keep_dims=True`) or removed
+  (`keep_dims=False`).
+- Output `numel` varies — `input_numel / shape[dim]` rather than 1.
+- The `shape (1,) when result_shape is empty` fallback for rank-0
+  outputs matches a contract unique to `SumFunction` / `MeanFunction`.
+
+#### Implementation
+
+- **`_rust_backend.py`** — adds:
+    - `_reduce_axis_via_rust(a, op_kind, dim, keepdim)` generic
+      helper for `ReduceSum` / `ReduceMean` along a single axis.
+      Computes the matrix-ir-json output shape from `(input_shape,
+      dim, keepdim)`, ships `axes=[dim]` and `keep_dims=keepdim` in
+      the op, then unpacks `product(output_shape)` f32 cells.
+      Caller normalises negative dims because matrix-ir-json's
+      `axes` field is unsigned.
+    - Public wrappers `sum_axis_via_rust(a, dim, keepdim)` and
+      `mean_axis_via_rust(a, dim, keepdim)`.  Mean dispatches
+      directly to `ReduceMean` (rather than composing `ReduceSum`
+      + divide) so the division happens inside matrix-cpu in f32
+      throughout, and we don't need to ship the divisor as a
+      constant.
+
+- **`functions.py`**:
+    - Imports `sum_axis_via_rust`, `mean_axis_via_rust`.
+    - `SumFunction.forward` (`dim != None` branch) gains a 2-line
+      dispatch block after the negative-dim normalisation; the
+      pure-Python axis loop below is the fallback.
+    - `MeanFunction.forward` (`dim != None` branch) gains a 3-line
+      dispatch block.  Bypasses the existing `SumFunction.apply +
+      divide` composition when going through Rust — avoids creating
+      a spurious `SumFunction` autograd node in the graph and lets
+      matrix-cpu do the f32 division.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `numel ≥ 100_000` | **Rust** (ReduceSum/ReduceMean with `axes=[dim]`) |
+| Extension installed, `numel < 100_000` | Pure-Python axis loop |
+| Extension NOT installed | Pure-Python axis loop |
+| `dim is None` | Phase 3 reduce-all path (unchanged) |
+
+#### Tests (57 total MX10 tests, was 48)
+
+- **`ReductionAxisParityTests`** (4 cases, skip if extension
+  missing): four parity tests covering the four
+  `{Sum, Mean} × {keepdim=True, keepdim=False}` combinations on a
+  `(500, 200) = 100_000`-cell tensor, comparing Rust vs pure-Python
+  at the standard `rtol=1e-3, atol=1e-4` tolerance.  Axis reductions
+  sum up to 500 cells in f32 (for `dim=0`), well within the rtol
+  budget but not as forgiving as the 100_000-cell reduce-all sum.
+- **`ReductionAxisFallbackTests`** (5 cases, always run):
+  defence-in-depth `RuntimeError` from `sum_axis_via_rust` and
+  `mean_axis_via_rust` when unavailable, plus correctness via the
+  pure-Python axis loop for `sum(dim=0)`, `sum(dim=0, keepdim=True)`,
+  and `mean(dim=1)` on a 2x3 tensor.
+- **Renamed**: `test_axis_specific_reduction_unchanged_by_phase_3`
+  → `test_axis_specific_reduction_below_threshold_stays_pure_python`,
+  with updated docstring to reflect that Phase 3b changed *what
+  dispatches when* — small tensors still bypass Rust even with the
+  extension installed, but for the new reason (sub-threshold rather
+  than `dim != None` blanket).
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**355 passed + 22 skipped (parity-tests that need the extension)**;
+the pre-existing `test_device.py` failure on main is unrelated.
+
+### What's NOT in Phase 3b
+
+- Multi-axis reductions (e.g. `dim=(0, 2)`).  `SumFunction` /
+  `MeanFunction` don't expose a multi-axis API at this layer
+  (they accept `int | None`); matrix-ir-json's `axes` field would
+  support it, but the change is API-shaped, not dispatch-shaped.
+- Other reductions (`Min`, `Max`, `Std`, `Var`, `ArgMin`, `ArgMax`).
+  Same story as Phase 3 — Sum/Mean are the most common in ML
+  workloads (loss, batch norm); others can be added using the same
+  `_reduce_axis_via_rust` factory.
+- Backward-path Rust dispatch.  The Sum/Mean backward broadcasts
+  the gradient back to the input shape; doable as a `Broadcast` op
+  in matrix-cpu but currently pure-Python.
+
 ### Added — MX10 Phase 4b: optional Rust fast path for `SigmoidFunction` via a 4-op composed graph
 
 Extends Phase 4's activation dispatch from `TanhFunction` +
