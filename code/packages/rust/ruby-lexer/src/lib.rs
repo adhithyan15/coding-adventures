@@ -370,6 +370,9 @@ impl RubyLexer {
         if era_at_least(&self.era, "1.9.1") {
             self.fuse_lambda_arrow();
         }
+        if era_at_least(&self.era, "2.1") {
+            self.fuse_numeric_suffixes();
+        }
         if era_at_least(&self.era, "2.3") {
             self.fuse_safe_nav();
         }
@@ -378,6 +381,49 @@ impl RubyLexer {
         }
         if era_at_least(&self.era, "2.7") {
             self.mark_numbered_block_params();
+        }
+    }
+
+    /// 2.1: fold a `Number` token followed (with no whitespace) by
+    /// a single-letter `Name("r")` or `Name("i")` into one fused
+    /// numeric token — Ruby 2.1's rational (`2r`) and complex
+    /// (`3i`) literal suffixes.  Pre-2.1 these were two separate
+    /// tokens (a number plus a stray identifier).  The era gate
+    /// keeps that behaviour faithful for older programs.
+    fn fuse_numeric_suffixes(&mut self) {
+        let mut i = 0;
+        while i + 1 < self.tokens.len() {
+            let merge = {
+                let a = &self.tokens[i];
+                let b = &self.tokens[i + 1];
+                let a_is_num = a.type_ == TokenType::Number;
+                let b_is_suffix = b.type_ == TokenType::Name
+                    && (b.value == "r" || b.value == "i");
+                let same_line = a.line == b.line;
+                let no_ws = !self
+                    .whitespace_before_token
+                    .get(i + 1)
+                    .copied()
+                    .unwrap_or(false);
+                a_is_num && b_is_suffix && same_line && no_ws
+            };
+            if merge {
+                let suffix = self.tokens[i + 1].value.clone();
+                let span_line = self.tokens[i].line;
+                let span_col = self.tokens[i].column;
+                let new_value = format!("{}{}", self.tokens[i].value, suffix);
+                self.tokens.remove(i + 1);
+                self.whitespace_before_token.remove(i + 1);
+                self.tokens[i] = Token {
+                    type_: TokenType::Number,
+                    value: new_value,
+                    line: span_line,
+                    column: span_col,
+                    type_name: None,
+                    flags: None,
+                };
+            }
+            i += 1;
         }
     }
 
@@ -2188,6 +2234,73 @@ mod tests {
             .map(|t| t.value.as_str())
             .collect();
         assert!(!values.contains(&"&."), "2.1 should NOT fuse `&.`");
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 4f — 2.1 numeric suffixes `r` / `i`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn era_2_1_fuses_rational_suffix() {
+        let toks = tokenize_ruby_for_version("2r + 3r", "2.1").unwrap();
+        let nums: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(nums, vec!["2r", "3r"]);
+    }
+
+    #[test]
+    fn era_2_1_fuses_complex_suffix() {
+        let toks = tokenize_ruby_for_version("4i", "2.1").unwrap();
+        let nums: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(nums, vec!["4i"]);
+    }
+
+    #[test]
+    fn era_2_0_does_not_fuse_numeric_suffixes() {
+        // 2.0 < 2.1 — the suffixes stay as separate Name tokens
+        // (which is what Ruby 2.0 actually did).
+        let toks = tokenize_ruby_for_version("2r", "2.0").unwrap();
+        let nums: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(nums, vec!["2"]);
+        let has_r = toks
+            .iter()
+            .any(|t| t.type_ == TokenType::Name && t.value == "r");
+        assert!(has_r, "2.0 should leave `r` as a separate Name");
+    }
+
+    #[test]
+    fn era_2_1_does_not_fuse_with_whitespace_before_suffix() {
+        // `2 r` has whitespace between — not a numeric suffix.
+        let toks = tokenize_ruby_for_version("2 r", "2.1").unwrap();
+        let nums: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(nums, vec!["2"]);
+    }
+
+    #[test]
+    fn era_2_1_does_not_fuse_with_unrelated_suffix() {
+        // `2x` — `x` isn't a recognised suffix.  Stays split.
+        let toks = tokenize_ruby_for_version("2x", "2.1").unwrap();
+        let nums: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(nums, vec!["2"]);
     }
 
     // -----------------------------------------------------------------

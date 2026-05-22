@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.12.0] - 2026-05-20
+
+### Added (Phase 4f — 2.1 numeric suffixes `r` / `i`)
+- New `fuse_numeric_suffixes` post-pass under era ≥ 2.1 — folds a `Number` token followed (no whitespace) by `Name("r")` or `Name("i")` into a single fused `Number` token (e.g. `2` + `r` → `2r`).  Ruby 2.1's rational and complex literal forms.
+- Pre-2.1 eras leave them split — the era gate is precise.
+
+### Tests (+5 new, total 108)
+- 2.1 fuses `2r + 3r` to two Number tokens with values "2r", "3r".
+- 2.1 fuses `4i`.
+- 2.0 does NOT fuse — the `r` stays as a Name.
+- `2 r` (whitespace) does NOT fuse even under 2.1.
+- `2x` (`x` isn't a recognised suffix) stays split.
+
 ## [0.11.0] - 2026-05-20
 
 ### Added (Phase 4e — range fusion + 2.6 endless ranges)
