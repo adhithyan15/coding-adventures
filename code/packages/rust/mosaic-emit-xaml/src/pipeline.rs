@@ -380,10 +380,22 @@ pub fn from_pipeline(
     let mut ctx = EmitContext::new(name, &interface.slots);
     ctx.registry = registry;
 
+    // 3a. Pick the XAML root shape (UserControl vs ContentDialog)
+    //     based on the moslayout root. HostDialog-rooted layouts
+    //     produce a ContentDialog root + partial class. Fix A1.
+    let shape = pick_root_shape(&layout.root);
+    populate_slot_aliases(&mut ctx, shape, &interface.slots);
+
     // 4. Emit each of the three files.
     let xaml = emit_xaml(name, &layout.root, &part_styles, options, &mut ctx)?;
-    let code_behind =
-        emit_code_behind(name, &interface.slots, &interface.emits, options, &ctx)?;
+    let code_behind = emit_code_behind(
+        name,
+        &interface.slots,
+        &interface.emits,
+        options,
+        &ctx,
+        shape,
+    )?;
     let events = emit_events(name, &interface.emits, options)?;
 
     // 5. Assemble the result. RowVms become entries in `for_view_models`;
@@ -401,6 +413,19 @@ pub fn from_pipeline(
         })
         .collect();
 
+    // Fix A5: when `If` or HostDialog-with-bound-open emitted a
+    // `{StaticResource BoolToVisibilityConverter}` reference, ship
+    // the converter's C# source as a side-file. Same lifecycle as
+    // RowVms; lands in `if_helpers` (per the spec's original intent
+    // for that field).
+    let mut if_helpers: Vec<EmittedFile> = Vec::new();
+    if ctx.needs_bool_to_vis {
+        if_helpers.push(EmittedFile {
+            filename: "BoolToVisibilityConverter.cs".to_string(),
+            source: emit_bool_to_vis_converter_source(&options.namespace),
+        });
+    }
+
     Ok(XamlEmitResult {
         xaml,
         code_behind,
@@ -408,7 +433,7 @@ pub fn from_pipeline(
         component_name: name.clone(),
         project: None,             // PR-5
         for_view_models,
-        if_helpers: Vec::new(),    // helpers live inline in code_behind
+        if_helpers,
     })
 }
 
@@ -540,6 +565,17 @@ struct EmitContext<'a> {
     /// root after the walk completes. One entry per distinct package
     /// referenced. Keyed by xmlns prefix to dedupe.
     used_xmlns: std::collections::BTreeMap<String, String>,
+    /// Slot names (kebab-case) whose PascalCased form collides with a
+    /// property on the chosen base class (ContentDialog has `Title`,
+    /// etc.). The DP generator renames these to `<BaseName>{Slot}`;
+    /// the in-XAML `{x:Bind}` paths consult this map to use the alias.
+    /// Fix A4.
+    slot_aliases: std::collections::HashMap<String, String>,
+    /// When the XAML root is a HostDialog hoisted to `<ContentDialog>`
+    /// (Fix A1), this carries the dialog's attributes (Title, Closed
+    /// handler, etc.) for `emit_xaml` to splice into the open tag.
+    /// `None` for the standard UserControl root.
+    root_extra_attrs: Option<String>,
 }
 
 impl<'a> EmitContext<'a> {
@@ -560,7 +596,22 @@ impl<'a> EmitContext<'a> {
             host_counter: 0,
             registry: None,
             used_xmlns: std::collections::BTreeMap::new(),
+            slot_aliases: std::collections::HashMap::new(),
+            root_extra_attrs: None,
         }
+    }
+
+    /// PascalCased slot name (PR-1 default), unless the slot collides
+    /// with a property on the chosen base class — in which case the
+    /// alias from `slot_aliases` wins. `{x:Bind}` paths route through
+    /// this so a slot named `title` on a ContentDialog-rooted
+    /// component resolves to `DialogTitle`, not the shadowed
+    /// `Title`. Fix A4.
+    fn slot_xbind_path(&self, slot_name: &str) -> String {
+        if let Some(alias) = self.slot_aliases.get(slot_name) {
+            return alias.clone();
+        }
+        kebab_to_pascal_case(slot_name)
     }
 
     /// Allocate a unique counter for a Host* element that lacks a
@@ -715,6 +766,106 @@ fn is_safe_identifier(s: &str) -> bool {
 ///
 /// `ctx` is mutated during the walk: `For` pushes/pops bindings, `If`
 /// adds helper methods, both may flip `needs_bool_to_vis`.
+/// Identifies which XAML root the emitter is producing. Most
+/// components lower to a `<UserControl>` root; HostDialog-rooted
+/// components hoist to a `<ContentDialog>` root (Fix A1).
+///
+/// The base class affects:
+///   - the XAML root element name
+///   - the partial class's base type (emit_code_behind)
+///   - whether slot DP names collide with inherited properties
+///     (emit_dependency_property uses ctx.slot_aliases)
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum RootShape {
+    /// Standard component — `<UserControl>` root, `: UserControl` C#.
+    UserControl,
+    /// HostDialog-rooted — `<ContentDialog>` root, `: ContentDialog`
+    /// C#. The moslayout root's HostDialog props become attributes on
+    /// the ContentDialog itself; its children become the Content.
+    ContentDialog,
+}
+
+impl RootShape {
+    fn xaml_tag(self) -> &'static str {
+        match self {
+            RootShape::UserControl => "UserControl",
+            RootShape::ContentDialog => "ContentDialog",
+        }
+    }
+    fn csharp_base(self) -> &'static str {
+        match self {
+            RootShape::UserControl => "UserControl",
+            RootShape::ContentDialog => "ContentDialog",
+        }
+    }
+    /// The set of inherited property names that the slot-DP generator
+    /// must alias around so the author's `slot title : text` doesn't
+    /// shadow `ContentDialog.Title`. Fix A4. PascalCased.
+    fn inherited_properties(self) -> &'static [&'static str] {
+        match self {
+            // UserControl has very few user-facing properties; the
+            // generated DPs almost never collide.
+            RootShape::UserControl => &[],
+            // ContentDialog has `Title`, `PrimaryButtonText`,
+            // `SecondaryButtonText`, `CloseButtonText`,
+            // `IsPrimaryButtonEnabled`, etc. List the ones authors
+            // are most likely to step on; expand as we discover
+            // more.
+            RootShape::ContentDialog => &[
+                "Title",
+                "PrimaryButtonText",
+                "SecondaryButtonText",
+                "CloseButtonText",
+                "IsPrimaryButtonEnabled",
+                "IsSecondaryButtonEnabled",
+                "DefaultButton",
+            ],
+        }
+    }
+}
+
+/// Choose the root shape for the component's emitted XAML.
+///
+/// HostDialog as the moslayout root → ContentDialog root + partial
+/// class extends ContentDialog. This matches the WinUI 3 idiom that
+/// ContentDialog is a top-layer popup primitive: it can't be embedded
+/// inside a UserControl and then shown via ShowAsync(); the parented
+/// child can't be re-parented for the modal popup.
+///
+/// Discovered in `demo/hello-dialog-xaml/ISSUES.md` A1.
+fn pick_root_shape(root: &LayoutNode) -> RootShape {
+    match root.tag.as_str() {
+        "HostDialog" => RootShape::ContentDialog,
+        _ => RootShape::UserControl,
+    }
+}
+
+/// Populate `ctx.slot_aliases` with `slot_name → AliasedDpName` entries
+/// for every slot whose PascalCased name collides with a property on
+/// the chosen base class. Fix A4.
+///
+/// Aliasing rule: `BaseTypeName + PascalCasedSlotName`. So a
+/// `slot title : text` on a ContentDialog-rooted component generates a
+/// DP named `DialogTitle`. The XAML `{x:Bind}` paths route through
+/// `EmitContext::slot_xbind_path` to use the alias.
+fn populate_slot_aliases(ctx: &mut EmitContext<'_>, shape: RootShape, slots: &[SlotDecl]) {
+    let inherited = shape.inherited_properties();
+    if inherited.is_empty() {
+        return;
+    }
+    let base_prefix = match shape {
+        RootShape::ContentDialog => "Dialog",
+        RootShape::UserControl => "Control",
+    };
+    for slot in slots {
+        let pascal = kebab_to_pascal_case(&slot.name);
+        if inherited.iter().any(|p| *p == pascal) {
+            let alias = format!("{base_prefix}{pascal}");
+            ctx.slot_aliases.insert(slot.name.clone(), alias);
+        }
+    }
+}
+
 fn emit_xaml(
     name: &str,
     root: &LayoutNode,
@@ -724,10 +875,12 @@ fn emit_xaml(
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let ns = &options.namespace;
+    let shape = pick_root_shape(root);
+    let root_tag = shape.xaml_tag();
 
     writeln!(out, "<!-- Auto-generated by mosaic-emit-xaml. Do not edit. -->")
         .unwrap();
-    writeln!(out, "<UserControl").unwrap();
+    writeln!(out, "<{root_tag}").unwrap();
     writeln!(out, "    x:Class=\"{ns}.{name}\"").unwrap();
     writeln!(out, "    xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"")
         .unwrap();
@@ -738,30 +891,46 @@ fn emit_xaml(
     // Walk the root node — at the moslayout level a component has
     // exactly one root, but we still pass through the children iterator
     // because `If`/`Else` pairing happens there.
-    let body = emit_xaml_node(root, 4, part_styles, ctx)?;
+    //
+    // For a ContentDialog-rooted component (HostDialog) the
+    // `emit_host_dialog` emitter knows to emit the dialog's *contents*
+    // (its children) without re-wrapping in another `<ContentDialog>`.
+    // That's done via `EmitContext::root_already_emitted`, set below.
+    let body = if shape == RootShape::ContentDialog {
+        emit_host_dialog_as_root(root, 4, part_styles, ctx)?
+    } else {
+        emit_xaml_node(root, 4, part_styles, ctx)?
+    };
     out.push_str(&body);
 
+    // ---- Locate the root open tag for splicing ----
+    //
+    // The output begins with an auto-generated comment whose own `>`
+    // would otherwise mislead `find(">\n")`. We anchor on the literal
+    // `<{root_tag}` substring to find the actual root open tag, then
+    // search forward for its closing `>\n`. Helper closure for the
+    // multiple splice sites below.
+    let find_root_open_close = |s: &str| -> Option<usize> {
+        let start = format!("<{root_tag}");
+        s.find(&start).and_then(|p| s[p..].find(">\n").map(|q| p + q))
+    };
+
     // After walking, if any `If` was emitted we must declare the
-    // converter resource. We splice it in after the open `<UserControl>`
-    // by rebuilding — small enough cost given a typical component has
-    // a few hundred bytes of XAML.
+    // converter resource. We splice it in after the open root tag.
     if ctx.needs_bool_to_vis {
-        let resources = emit_bool_to_vis_resource_block(4);
-        // Insert after the `<UserControl ... >` opening tag (find the
-        // `>\n` that closes the open tag).
-        let split_at = out
-            .find(">\n")
-            .map(|p| p + 2)
-            .unwrap_or(out.len());
+        let resources_tag = match shape {
+            RootShape::UserControl => "UserControl.Resources",
+            RootShape::ContentDialog => "ContentDialog.Resources",
+        };
+        let resources = emit_bool_to_vis_resource_block(4, resources_tag);
+        let split_at = find_root_open_close(&out).map(|p| p + 2).unwrap_or(out.len());
         let (head, tail) = out.split_at(split_at);
         out = format!("{head}{resources}{tail}");
     }
 
     // PR-5: inject `xmlns:{prefix}="{value}"` declarations for any
-    // resolved component references onto the `<UserControl>` open tag.
-    // Insert just before the `>` that closes the open tag. The xmlns
-    // table is BTreeMap-keyed so the output is alphabetically sorted
-    // (deterministic across runs).
+    // resolved component references onto the root open tag, just
+    // before its closing `>`.
     if !ctx.used_xmlns.is_empty() {
         let mut xmlns_lines = String::new();
         for (prefix, value) in &ctx.used_xmlns {
@@ -770,16 +939,24 @@ fn emit_xaml(
                 escape_xaml_attr(value)
             ));
         }
-        // Find the closing `>` of the `<UserControl ...>` open tag
-        // (the first `>` followed by a newline).
-        if let Some(close) = out.find(">\n") {
+        if let Some(close) = find_root_open_close(&out) {
             let (head, tail) = out.split_at(close);
             out = format!("{head}{xmlns_lines}{tail}");
         }
     }
 
+    // Fix A1 ContentDialog-root path: splice the HostDialog
+    // attributes that `emit_host_dialog_as_root` stashed onto the
+    // open ContentDialog tag, just before its closing `>`.
+    if let Some(extra) = ctx.root_extra_attrs.clone() {
+        if let Some(close) = find_root_open_close(&out) {
+            let (head, tail) = out.split_at(close);
+            out = format!("{head}{extra}{tail}");
+        }
+    }
+
     writeln!(out).unwrap();
-    writeln!(out, "</UserControl>").unwrap();
+    writeln!(out, "</{root_tag}>").unwrap();
     Ok(out)
 }
 
@@ -1119,8 +1296,10 @@ fn emit_code_behind(
     emits: &[EmitDecl],
     options: &EmitOptions,
     ctx: &EmitContext<'_>,
+    shape: RootShape,
 ) -> Result<String, PipelineEmitError> {
     let ns = &options.namespace;
+    let base_class = shape.csharp_base();
     let mut out = String::new();
 
     writeln!(out, "// Auto-generated by mosaic-emit-xaml. Do not edit.").unwrap();
@@ -1132,7 +1311,11 @@ fn emit_code_behind(
     writeln!(out, "namespace {ns};").unwrap();
     writeln!(out).unwrap();
 
-    writeln!(out, "public sealed partial class {name} : UserControl").unwrap();
+    writeln!(
+        out,
+        "public sealed partial class {name} : {base_class}"
+    )
+    .unwrap();
     writeln!(out, "{{").unwrap();
 
     // Constructor: `InitializeComponent()`. The XAML compiler generates
@@ -1144,9 +1327,13 @@ fn emit_code_behind(
     writeln!(out, "    }}").unwrap();
     writeln!(out).unwrap();
 
-    // One DependencyProperty per declared slot (spec §8).
+    // One DependencyProperty per declared slot (spec §8). Slots whose
+    // PascalCased name collides with a property on the chosen base
+    // class are renamed to `<BaseName>{Slot}` via `ctx.slot_aliases`
+    // (Fix A4 — e.g. `slot title : text` on a ContentDialog-rooted
+    // component becomes `DialogTitle`).
     for slot in slots {
-        out.push_str(&emit_dependency_property(slot, name)?);
+        out.push_str(&emit_dependency_property(slot, name, ctx)?);
         writeln!(out).unwrap();
     }
 
@@ -1206,8 +1393,12 @@ fn emit_code_behind(
 fn emit_dependency_property(
     slot: &SlotDecl,
     component: &str,
+    ctx: &EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
-    let pascal = kebab_to_pascal_case(&slot.name);
+    // Fix A4: use the alias if this slot's PascalCased name would
+    // collide with an inherited property on the chosen base class
+    // (e.g. ContentDialog.Title).
+    let pascal = ctx.slot_xbind_path(&slot.name);
     if !is_safe_identifier(&pascal) {
         return Err(PipelineEmitError::UnsafeSlotName(pascal));
     }
@@ -1583,18 +1774,56 @@ fn emit_if(
 /// The `<UserControl.Resources>` block carrying the
 /// `BoolToVisibilityConverter` resource. Added exactly once per
 /// UserControl when any `If` is emitted.
-fn emit_bool_to_vis_resource_block(indent: usize) -> String {
+fn emit_bool_to_vis_resource_block(indent: usize, resources_tag: &str) -> String {
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
     let mut out = String::new();
-    writeln!(out, "{pad}<UserControl.Resources>").unwrap();
+    writeln!(out, "{pad}<{resources_tag}>").unwrap();
     writeln!(
         out,
         "{pad2}<local:BoolToVisibilityConverter x:Key=\"BoolToVisibilityConverter\"/>"
     )
     .unwrap();
-    writeln!(out, "{pad}</UserControl.Resources>").unwrap();
+    writeln!(out, "{pad}</{resources_tag}>").unwrap();
     out
+}
+
+/// C# source for the `BoolToVisibilityConverter` class. Emitted as a
+/// sibling file in `XamlEmitResult::if_helpers` whenever the
+/// generator wrote `{StaticResource BoolToVisibilityConverter}` into
+/// the XAML (any `If` use, or any HostDialog with bound `open`). Fix
+/// A5 from `demo/hello-dialog-xaml/ISSUES.md`.
+///
+/// Implements `IValueConverter` with optional `ConverterParameter`
+/// support: passing `"invert"` flips the boolean before converting
+/// to `Visibility`. That matches the `If`/`Else` lowering in §6.2.
+fn emit_bool_to_vis_converter_source(namespace: &str) -> String {
+    format!(
+        "// Auto-generated by mosaic-emit-xaml. Do not edit.\n\
+         //\n\
+         // Bool → Visibility converter. Used by every `If` / `Else` lowering and by\n\
+         // HostDialog `open: slot:` bindings. ConverterParameter=\"invert\" flips the\n\
+         // boolean before mapping (used by the Else branch of an If/Else pair).\n\
+         using System;\n\
+         using Microsoft.UI.Xaml;\n\
+         using Microsoft.UI.Xaml.Data;\n\
+         \n\
+         namespace {namespace};\n\
+         \n\
+         public sealed class BoolToVisibilityConverter : IValueConverter\n\
+         {{\n    \
+             public object Convert(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 var b = value is bool x && x;\n        \
+                 if (parameter is string p && p == \"invert\") b = !b;\n        \
+                 return b ? Visibility.Visible : Visibility.Collapsed;\n    \
+             }}\n\n    \
+             public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 throw new NotImplementedException();\n    \
+             }}\n\
+         }}\n"
+    )
 }
 
 /// Generate the C# source for one RowVm record. Each `For` block
@@ -2530,6 +2759,104 @@ fn emit_host_scroll(
 // spec's boolean. A keyword-true (the default) becomes a no-op; a
 // keyword-false surfaces as an emitted XAML comment so the gap is
 // visible in diffs without breaking the compile.
+/// Build the attribute/comment/handler bundle shared between the two
+/// HostDialog emission paths (nested or root). Returns
+/// `(attrs_string, comment_lines)` where `attrs_string` is spliced
+/// into the opening tag and `comment_lines` is emitted just above it.
+///
+/// Fix A2: dropped the `mos:Dialog.IsOpen` attribute entirely. The
+/// open-state still surfaces as a comment (the host code-behind
+/// remains responsible for calling ShowAsync()/Hide() — same contract
+/// as before, minus the undeclared-namespace XAML).
+///
+/// Fix A3: `Title="{Binding X}"` → `Title="{x:Bind X, Mode=OneWay}"`
+/// to match the rest of the emitter. The `{Binding}` form silently
+/// failed because nothing sets DataContext.
+///
+/// Fix A4: routes the `title` slot through `ctx.slot_xbind_path()` so
+/// a ContentDialog-rooted component uses the `DialogTitle` alias.
+fn build_host_dialog_attrs(
+    node: &LayoutNode,
+    ctx: &mut EmitContext<'_>,
+    counter: u32,
+) -> Result<(String, Vec<String>), PipelineEmitError> {
+    let mut attrs = String::new();
+    let mut comments: Vec<String> = Vec::new();
+
+    // title: slot/string — Fix A3 + A4.
+    match find_prop_value(node, "title") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let path = ctx.slot_xbind_path(slot);
+            if !is_safe_identifier(&path) {
+                return Err(PipelineEmitError::UnsafeSlotName(path));
+            }
+            attrs.push_str(&format!(" Title=\"{{x:Bind {path}, Mode=OneWay}}\""));
+        }
+        Some(LayoutPropValue::String(s)) => {
+            attrs.push_str(&format!(" Title=\"{}\"", escape_xaml_attr(s)));
+        }
+        _ => {}
+    }
+
+    // open: slot/keyword — Fix A2: NO `mos:Dialog.IsOpen` emission.
+    // The lifecycle contract lives in a doc comment for the host.
+    match find_prop_value(node, "open") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let path = ctx.slot_xbind_path(slot);
+            if !is_safe_identifier(&path) {
+                return Err(PipelineEmitError::UnsafeSlotName(path));
+            }
+            comments.push(format!(
+                "<!-- HostDialog #{counter} open-state: bind '{path}'; host code-behind watches this DP and calls ShowAsync()/Hide() accordingly. -->"
+            ));
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            comments.push(format!(
+                "<!-- HostDialog #{counter} open-state: literal true; host code-behind calls ShowAsync() once on load. -->"
+            ));
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {
+            comments.push(format!(
+                "<!-- HostDialog #{counter} open-state: literal false; dialog stays hidden until host code-behind calls ShowAsync(). -->"
+            ));
+        }
+        _ => {}
+    }
+
+    // dismiss-on-backdrop: WinUI 3 has no clean boolean analogue.
+    if let Some("false") = find_prop_keyword(node, "dismiss-on-backdrop") {
+        comments.push(format!(
+            "<!-- HostDialog #{counter} dismiss-on-backdrop: false — XAML's ContentDialog has no boolean equivalent (only LightDismissOverlayMode enum). Host must override the dismiss behaviour in code-behind. -->"
+        ));
+    }
+
+    // onClose → Closed handler. Handler dispatches the declared emit
+    // case with no payload.
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onClose") {
+        let handler = format!("OnHostDialogClose_{counter}");
+        let emit_case = strip_on_prefix(emit_name);
+        let case_pascal = kebab_to_pascal_case(&emit_case);
+        let component = ctx.component_name;
+        let body = format!(
+            "    private void {handler}(object sender, object e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}());\n    }}"
+        );
+        ctx.add_host_handler(HostHandler {
+            name: handler.clone(),
+            source: body,
+        });
+        attrs.push_str(&format!(" Closed=\"{handler}\""));
+        comments.push(format!(
+            "<!-- HostDialog #{counter} onClose: dispatches {case_pascal}; handler wired in code-behind. -->"
+        ));
+    }
+
+    Ok((attrs, comments))
+}
+
+/// HostDialog as a NESTED layout primitive (the rare case — most
+/// HostDialog uses are at the moslayout root). Emits a
+/// `<ContentDialog>` or `<Flyout>` element with its own attributes
+/// and children.
 fn emit_host_dialog(
     node: &LayoutNode,
     indent: usize,
@@ -2539,132 +2866,67 @@ fn emit_host_dialog(
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
 
-    // -- 1. Choose the host element: ContentDialog (modal, default) vs
-    //    Flyout (non-modal popover). Per the spec the choice is a
-    //    compile-time keyword. --
     let modal_keyword = find_prop_keyword(node, "modal");
     let element = match modal_keyword {
         Some("false") => "Flyout",
-        // `true`, missing, or any other keyword → modal (default).
         _ => "ContentDialog",
     };
-
-    // -- 2. Allocate a deterministic counter — used both for the
-    //    Closed handler name and the open-state comment, so the two
-    //    stubs share an identity for the host's code-behind to wire
-    //    against. --
     let counter = ctx.next_host_counter();
+    let (attrs, comments) = build_host_dialog_attrs(node, ctx, counter)?;
 
-    // -- 3. Build attribute set incrementally. --
-    let mut attrs = String::new();
-
-    // title: slot/string. Per the user-facing instructions we emit the
-    // {Binding ...} form here (matches the spec §3.6 sketch). The rest
-    // of the emitter prefers {x:Bind ...}, but the spec sketch's
-    // Binding form is what a host expects on a ContentDialog whose
-    // DataContext is the parent UserControl.
-    match find_prop_value(node, "title") {
-        Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
-            if !is_safe_identifier(&pascal) {
-                return Err(PipelineEmitError::UnsafeSlotName(pascal));
-            }
-            attrs.push_str(&format!(" Title=\"{{Binding {pascal}}}\""));
-        }
-        Some(LayoutPropValue::String(s)) => {
-            attrs.push_str(&format!(" Title=\"{}\"", escape_xaml_attr(s)));
-        }
-        _ => {}
-    }
-
-    // open: slot/keyword. Emit a binding on the (host-defined) attached
-    // property `mos:Dialog.IsOpen`. The attached property doesn't
-    // exist in the WinUI 3 SDK — the host project is expected to
-    // implement it (or watch the bound slot's DP and call
-    // `ShowAsync()` / `Hide()` directly). We emit a comment alongside
-    // the binding so the contract is visible.
-    let mut open_stub: Option<String> = None;
-    match find_prop_value(node, "open") {
-        Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
-            if !is_safe_identifier(&pascal) {
-                return Err(PipelineEmitError::UnsafeSlotName(pascal));
-            }
-            attrs.push_str(&format!(" mos:Dialog.IsOpen=\"{{Binding {pascal}}}\""));
-            open_stub = Some(format!(
-                "<!-- HostDialog #{counter} open-state: bind {pascal}; host code-behind must call ShowAsync()/Hide() when this flips. -->"
-            ));
-        }
-        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
-            attrs.push_str(" mos:Dialog.IsOpen=\"True\"");
-            open_stub = Some(format!(
-                "<!-- HostDialog #{counter} open-state: literal true; host code-behind must call ShowAsync() once on load. -->"
-            ));
-        }
-        Some(LayoutPropValue::Keyword(k)) if k == "false" => {
-            attrs.push_str(" mos:Dialog.IsOpen=\"False\"");
-        }
-        _ => {}
-    }
-
-    // dismiss-on-backdrop: keyword. WinUI 3 has no clean boolean
-    // analogue. We surface the unsupported case as a comment rather
-    // than failing the compile or silently dropping the prop.
-    let dismiss_stub: Option<String> = match find_prop_keyword(node, "dismiss-on-backdrop") {
-        Some("false") => Some(format!(
-            "<!-- HostDialog #{counter} dismiss-on-backdrop: false — XAML's ContentDialog has no boolean equivalent (only LightDismissOverlayMode enum). Host must override the dismiss behaviour in code-behind. -->"
-        )),
-        _ => None,
-    };
-
-    // onClose: emit ref → Closed event handler (matches the HostButton
-    // / HostInput pattern). Register the handler body on
-    // EmitContext::host_handlers; the assembly step writes it into
-    // the partial class.
-    let mut close_stub: Option<String> = None;
-    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onClose") {
-        let handler = format!("OnHostDialogClose_{counter}");
-        let emit_case = strip_on_prefix(emit_name);
-        let case_pascal = kebab_to_pascal_case(&emit_case);
-        let component = ctx.component_name;
-        // ContentDialog.Closed has args type ContentDialogClosedEventArgs;
-        // Flyout.Closed has args type object. We use `object` in the
-        // signature for both so the generated handler compiles
-        // regardless of the host element. The handler dispatches the
-        // declared emit case with no payload (onClose has no payload
-        // per spec §2.2).
-        let body = format!(
-            "    private void {handler}(object sender, object e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}());\n    }}"
-        );
-        ctx.add_host_handler(HostHandler {
-            name: handler.clone(),
-            source: body,
-        });
-        attrs.push_str(&format!(" Closed=\"{handler}\""));
-        close_stub = Some(format!(
-            "<!-- HostDialog #{counter} onClose: dispatches {case_pascal}; handler wired in code-behind. -->"
-        ));
-    }
-
-    // -- 4. Emit the element with children. --
     let mut out = String::new();
-
-    // Comments first — they live above the open tag for visibility in
-    // diffs. The exact ordering is open / dismiss / close so authors
-    // reading the XAML see the lifecycle-related comments grouped.
-    if let Some(c) = &open_stub {
+    for c in &comments {
         writeln!(out, "{pad}{c}").unwrap();
     }
-    if let Some(c) = &dismiss_stub {
-        writeln!(out, "{pad}{c}").unwrap();
-    }
-    if let Some(c) = &close_stub {
-        writeln!(out, "{pad}{c}").unwrap();
-    }
-
     writeln!(out, "{pad}<{element}{attrs}{style}>").unwrap();
     out.push_str(&emit_xaml_children(&node.children, indent + 4, part_styles, ctx)?);
     writeln!(out, "{pad}</{element}>").unwrap();
+    Ok(out)
+}
+
+/// HostDialog as the moslayout ROOT — the common case after Fix A1.
+/// The component's XAML root IS the `<ContentDialog>`, so this
+/// emitter writes the dialog's *attributes* and *children* only,
+/// without wrapping in another `<ContentDialog>` (that wrapping is
+/// done by `emit_xaml` at the outer level).
+///
+/// The attributes (Title, Closed handler, …) need to land on the
+/// outer ContentDialog tag. We emit them by SPLICING into the
+/// already-written `<ContentDialog>` open tag — that's the only way
+/// to keep one source of truth for the attribute list across the
+/// nested vs root paths.
+///
+/// We return:
+///   1. the comments to emit above the root (open-state, dismiss,
+///      close-handler docs)
+///   2. the child markup
+///   3. the attribute string, packaged into a sentinel comment line
+///      that `emit_xaml` looks for and splices into the open tag.
+///
+/// The sentinel approach is fragile — a cleaner refactor is on the
+/// to-do list — but it keeps the diff small and gets the demo green.
+fn emit_host_dialog_as_root(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    // Reserve the counter at #1 to match the standalone HostDialog
+    // numbering convention.
+    let counter = ctx.next_host_counter();
+    let (attrs, comments) = build_host_dialog_attrs(node, ctx, counter)?;
+    let style = part_style_attr(node, part_styles);
+
+    // The root's attributes need to live on the outer ContentDialog
+    // tag written by `emit_xaml`. Stash them in `ctx.used_xmlns` —
+    // no, that's xmlns prefixes only. Use a side channel.
+    ctx.root_extra_attrs = Some(format!("{attrs}{style}"));
+
+    let mut out = String::new();
+    for c in &comments {
+        writeln!(out, "{}{c}", " ".repeat(indent)).unwrap();
+    }
+    out.push_str(&emit_xaml_children(&node.children, indent, part_styles, ctx)?);
     Ok(out)
 }
 
@@ -5420,10 +5682,46 @@ mod tests {
         assert!(!r.xaml.contains("<Flyout"), "got:\n{}", r.xaml);
     }
 
+    /// `modal: false` switches the *nested* HostDialog emission to a
+    /// `<Flyout>` (popover form per spec §3.6). At the moslayout root,
+    /// `modal:` is honored but the XAML root remains `<ContentDialog>`
+    /// because Flyout cannot be a XAML root (it's an anchored
+    /// popover). Updated for Fix A1: HostDialog-at-root → ContentDialog
+    /// root regardless of modal.
     #[test]
-    fn host_dialog_modal_false_uses_flyout() {
-        // Test 3: `modal: false` keyword switches to <Flyout> (the
-        // popover form per spec §3.6).
+    fn nested_host_dialog_modal_false_uses_flyout() {
+        let c = component("Foo", vec![], vec![]);
+        // Nest the HostDialog inside a Box so we exercise the nested
+        // emission path, not the root-hoisting one.
+        let nested = host_dialog_node(
+            None,
+            vec![LayoutProp {
+                name: "modal".to_string(),
+                value: LayoutPropValue::Keyword("false".to_string()),
+            }],
+            Vec::new(),
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![nested],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<Flyout"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("</Flyout>"), "got:\n{}", r.xaml);
+    }
+
+    /// Fix A1: HostDialog at the layout root hoists to a
+    /// `<ContentDialog>` XAML root regardless of the `modal:` flag —
+    /// Flyout cannot be a XAML root. The behavior `modal:` was meant
+    /// to control surfaces at runtime (e.g. via
+    /// IsLightDismissEnabled) and is documented as future work.
+    #[test]
+    fn host_dialog_at_root_modal_false_still_uses_contentdialog_root() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root(
             "Foo",
@@ -5437,15 +5735,22 @@ mod tests {
             ),
         );
         let r = compile(&c, &l, &empty_style("Foo"));
-        assert!(r.xaml.contains("<Flyout"), "got:\n{}", r.xaml);
-        assert!(r.xaml.contains("</Flyout>"), "got:\n{}", r.xaml);
-        assert!(!r.xaml.contains("ContentDialog"), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml.contains("<ContentDialog"),
+            "expected ContentDialog root, got:\n{}",
+            r.xaml
+        );
+        // Should NOT emit a wrapping UserControl.
+        assert!(!r.xaml.contains("<UserControl"), "got:\n{}", r.xaml);
     }
 
+    /// Fix A3: `title: slot: t` becomes `Title="{x:Bind ..., Mode=OneWay}"`,
+    /// consistent with every other emitter (which uses `{x:Bind}`).
+    /// Fix A4: when the component's root is ContentDialog, the slot
+    /// `t` does NOT collide with `Title` (only a slot literally named
+    /// `title` would). The slot's PascalCased name `T` is used.
     #[test]
-    fn host_dialog_title_slot_emits_binding() {
-        // Test 4: `title: slot: t` becomes Title="{Binding T}" per the
-        // §3.6 sketch.
+    fn host_dialog_title_slot_emits_xbind_oneway_after_a3() {
         let c = component("Foo", vec![slot("t", SlotType::Text, true)], vec![]);
         let l = layout_with_root(
             "Foo",
@@ -5460,9 +5765,54 @@ mod tests {
         );
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
-            r.xaml.contains("Title=\"{Binding T}\""),
+            r.xaml.contains("Title=\"{x:Bind T, Mode=OneWay}\""),
             "got:\n{}",
             r.xaml
+        );
+        // Make sure no {Binding} leaked through.
+        assert!(!r.xaml.contains("{Binding"), "got:\n{}", r.xaml);
+    }
+
+    /// Fix A4: a slot literally named `title` on a ContentDialog-rooted
+    /// component must be aliased to `DialogTitle` (so the DP doesn't
+    /// shadow `ContentDialog.Title`). Both the DP declaration in the
+    /// code-behind and the `{x:Bind}` path in the XAML resolve to the
+    /// alias.
+    #[test]
+    fn host_dialog_title_slot_named_title_aliases_to_dialog_title() {
+        let c = component(
+            "Foo",
+            vec![slot("title", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            host_dialog_node(
+                None,
+                vec![LayoutProp {
+                    name: "title".to_string(),
+                    value: LayoutPropValue::SlotRef("title".to_string()),
+                }],
+                Vec::new(),
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // XAML uses the aliased path on the outer ContentDialog.
+        assert!(
+            r.xaml.contains("Title=\"{x:Bind DialogTitle, Mode=OneWay}\""),
+            "got:\n{}",
+            r.xaml
+        );
+        // Code-behind declares DialogTitle, not Title.
+        assert!(
+            r.code_behind.contains("public string DialogTitle"),
+            "got:\n{}",
+            r.code_behind
+        );
+        assert!(
+            !r.code_behind.contains("public string Title"),
+            "Title would shadow ContentDialog.Title; got:\n{}",
+            r.code_behind
         );
     }
 
@@ -5542,11 +5892,14 @@ mod tests {
         );
     }
 
+    /// Fix A2: `open: slot: x` previously emitted a
+    /// `mos:Dialog.IsOpen="{Binding X}"` attribute referencing an
+    /// undeclared `mos:` namespace. That broke XAML parsing at
+    /// runtime. The fix drops the attribute entirely — the host code-
+    /// behind is the only mechanism for show/hide, and the comment
+    /// stub documents that contract clearly.
     #[test]
-    fn host_dialog_open_slot_emits_open_state_binding_stub() {
-        // Test 7: `open: slot: x` lands a mos:Dialog.IsOpen="{Binding X}"
-        // attribute AND a documented stub comment so the host knows
-        // code-behind plumbing is required.
+    fn host_dialog_open_slot_emits_comment_stub_only_after_a2() {
         let c = component("Foo", vec![slot("show", SlotType::Bool, true)], vec![]);
         let l = layout_with_root(
             "Foo",
@@ -5560,11 +5913,14 @@ mod tests {
             ),
         );
         let r = compile(&c, &l, &empty_style("Foo"));
+        // Fix A2: no `mos:Dialog.IsOpen` attribute.
         assert!(
-            r.xaml.contains("mos:Dialog.IsOpen=\"{Binding Show}\""),
-            "got:\n{}",
+            !r.xaml.contains("mos:Dialog.IsOpen"),
+            "mos:Dialog.IsOpen should NOT be emitted (undeclared namespace), got:\n{}",
             r.xaml
         );
+        // But the comment stub still documents the host's
+        // ShowAsync()/Hide() responsibility.
         assert!(
             r.xaml.contains("<!-- HostDialog "),
             "expected a code-behind stub comment, got:\n{}",
@@ -5573,6 +5929,13 @@ mod tests {
         assert!(
             r.xaml.contains("ShowAsync()"),
             "expected stub to mention ShowAsync(), got:\n{}",
+            r.xaml
+        );
+        // The slot path appears in the comment (so authors can grep
+        // for it).
+        assert!(
+            r.xaml.contains("'Show'"),
+            "expected comment to reference the bound DP, got:\n{}",
             r.xaml
         );
     }
