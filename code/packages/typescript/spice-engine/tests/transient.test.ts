@@ -14,6 +14,7 @@ import {
   estimatePeriod,
   inductor,
   inductorWithInitialCurrent,
+  pss,
   pssNewtonCandidate,
   pssNewtonIteration,
   pssNewtonSolve,
@@ -308,6 +309,34 @@ describe("transient", () => {
     );
     expect(result!.finalCircuit).toBe(result!.iterations.at(-1)!.nextCircuit);
     expect(result!.finalStateVector).toEqual(result!.iterations.at(-1)!.nextStateVector);
+  });
+
+  it("returns a solved PSS steady-state period", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+    circuit.add(capacitorWithInitialVoltage("C1", "out", "0", 1.0e-6, 0.1));
+
+    const result = pss(circuit, 32, 1.0e-3, 1.0e-5, 4);
+
+    expect(result).not.toBeUndefined();
+    expect(result!.converged).toBe(true);
+    expect(result!.solve.converged).toBe(true);
+    expect(result!.periodSeconds).toBe(result!.solve.finalResidual.periodSeconds);
+    expect(result!.timeStepSeconds).toBe(result!.solve.finalResidual.timeStepSeconds);
+    expect(result!.steadyState.length).toBeGreaterThan(0);
+    expect(result!.steadyState.at(-1)!.time).toBeCloseTo(result!.periodSeconds, 12);
+    expect(
+      pssResidual(result!.solve.finalCircuit, 32, 1.0e-3)!.residualL2Norm,
+    ).toBeCloseTo(result!.solve.finalResidual.residualL2Norm, 12);
   });
 
   it("does not report a PSS residual without a periodic source period", () => {

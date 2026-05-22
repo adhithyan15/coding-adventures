@@ -1,8 +1,8 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-20 (after Phase 39 telescoping sums landed and PSS
-> Newton solve work started).
+> Last updated: 2026-05-21 (after Phase 39 telescoping sums landed and PSS
+> analysis work started).
 >
 > **Phases 37 + 38 + 39 sprint complete:**
 > - **Phase 37** — Weierstrass log form cos branch covers `b < −|a|`: Python
@@ -130,12 +130,13 @@ IC parameters for C/L; AC phasor specs for V/I sources.
 
 ### What is in flight
 
-- PSS Newton solve helpers across Python, TypeScript, and Rust SPICE
+- PSS analysis helpers across Python, TypeScript, and Rust SPICE
   engines: ordered residual vectors, L2/RMS norms, finite-difference residual
   Jacobians, reactive initial-condition update deltas, and Newton candidate
-  circuits have landed. One-step Newton iteration acceptance has landed, and
-  this follow-up runs bounded accepted iterations until residual convergence,
-  no improvement, or the iteration cap.
+  circuits have landed. One-step Newton iteration acceptance and bounded
+  Newton solves have landed; this follow-up wraps the solve in a direct PSS
+  analysis result that returns one steady-state transient period from the
+  solved circuit.
 
 ---
 
@@ -157,7 +158,7 @@ and the sparse real solver path landed in PR #3391.
 | Feature | Design notes |
 |---|---|
 | **S-parameter extraction** | Two-port network characterisation. Run AC sweep, compute Y-parameters from node voltages and port currents, convert to S-parameters. Shipped in PR #3490. |
-| **Periodic steady-state (PSS)** | RF / oscillator analysis. Shooting-Newton method: find the initial condition `x(0)` such that `x(T) = x(0)`. Source-period estimation for periodic `SIN` / `PULSE` waveforms shipped in PR #3524; one-period node-closure residual helpers shipped in PR #3534; tolerance-aware residual closure shipped in PR #3540; branch-current residual closure shipped in PR #3553; ordered residual vectors shipped in PR #3560; residual vector norms shipped in PR #3566; finite-difference residual Jacobians shipped in PR #3570; Newton correction helpers shipped in PR #3578; Newton candidate helpers shipped in PR #3588; one-step Newton iteration acceptance shipped in PR #3770; bounded Newton solve is in flight as the next shooting-Newton foothold. |
+| **Periodic steady-state (PSS)** | RF / oscillator analysis. Shooting-Newton method: find the initial condition `x(0)` such that `x(T) = x(0)`. Source-period estimation for periodic `SIN` / `PULSE` waveforms shipped in PR #3524; one-period node-closure residual helpers shipped in PR #3534; tolerance-aware residual closure shipped in PR #3540; branch-current residual closure shipped in PR #3553; ordered residual vectors shipped in PR #3560; residual vector norms shipped in PR #3566; finite-difference residual Jacobians shipped in PR #3570; Newton correction helpers shipped in PR #3578; Newton candidate helpers shipped in PR #3588; one-step Newton iteration acceptance shipped in PR #3770; bounded Newton solve shipped in PR #3776; direct PSS analysis output is in flight as the next shooting-Newton foothold. |
 | **Multi-corner parallel sweep** | Run the same analysis at N PVT corners in parallel goroutines / subprocesses. Mostly an orchestration problem once the core engine is solid. DC operating-point corners shipped in PR #3495; DC source sweep corners shipped in PR #3501; AC frequency sweep corners shipped in PR #3511; transfer-function corners shipped in PR #3516. |
 | **Mixed-signal coupling with `hardware-vm`** | AMS simulation — digital events feed into analog SPICE nodes and vice versa. Long-range project; `hardware-vm.md` spec describes the interface. |
 | **Verilog-A compact models** | Custom device models. Requires a Verilog-A parser (`code/specs/verilog-a-parser.md` is referenced but not written). |

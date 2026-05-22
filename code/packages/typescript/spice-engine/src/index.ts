@@ -665,6 +665,14 @@ export interface PssNewtonSolveResult {
   readonly iterationCount: number;
 }
 
+export interface PssResult {
+  readonly solve: PssNewtonSolveResult;
+  readonly steadyState: readonly TransientPoint[];
+  readonly periodSeconds: number;
+  readonly timeStepSeconds: number;
+  readonly converged: boolean;
+}
+
 export class SpiceError extends Error {
   constructor(
     message: string,
@@ -2172,6 +2180,38 @@ export function pssNewtonSolve(
     finalResidual: finalIteration.nextResidual,
     converged: finalIteration.nextResidual.withinTolerance,
     iterationCount: iterations.length,
+  };
+}
+
+export function pss(
+  circuit: Circuit,
+  stepsPerPeriod = 64,
+  residualTolerance = 1.0e-6,
+  perturbation = 1.0e-6,
+  maxNewtonIterations = 8,
+): PssResult | undefined {
+  const solve = pssNewtonSolve(
+    circuit,
+    stepsPerPeriod,
+    residualTolerance,
+    perturbation,
+    maxNewtonIterations,
+  );
+  if (solve === undefined) {
+    return undefined;
+  }
+
+  const steadyState = transient(
+    solve.finalCircuit,
+    solve.finalResidual.timeStepSeconds,
+    solve.finalResidual.periodSeconds,
+  );
+  return {
+    solve,
+    steadyState,
+    periodSeconds: solve.finalResidual.periodSeconds,
+    timeStepSeconds: solve.finalResidual.timeStepSeconds,
+    converged: solve.converged,
   };
 }
 

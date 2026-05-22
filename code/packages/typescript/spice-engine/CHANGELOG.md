@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `pss`, which runs the bounded shooting-Newton solve and returns one
+  steady-state transient period from the solved circuit.
 - Add `pssNewtonSolve`, which runs bounded accepted Newton iterations until
   residual convergence, no improvement, or the iteration cap.
 - Add `pssNewtonIteration`, which runs one candidate update, accepts it only
