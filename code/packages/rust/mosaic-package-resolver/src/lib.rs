@@ -86,8 +86,13 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     "Text", "Image", "Spacer", "Divider", "Icon",
     // Control flow (§3)
     "If", "Else", "For",
-    // Host primitives (§2.1 "Host*" rows)
-    "HostInput", "HostButton", "HostTable", "HostScroll",
+    // Host primitives (§2.1 "Host*" rows + UI29-1's HostDialog).
+    // HostDialog was added in UI29-1 after mosaic-pkg-dialog v0.1.0
+    // demonstrated that composing a dialog from Box+Column+Text loses
+    // modal/focus/top-layer/accessibility semantics that only the
+    // host's native dialog primitive (DOM <dialog>, Qt Popup, SwiftUI
+    // .sheet, XAML ContentDialog) provides.
+    "HostInput", "HostButton", "HostTable", "HostScroll", "HostDialog",
 ];
 
 // ---------------------------------------------------------------------------
@@ -645,14 +650,16 @@ version = "1"
 
     #[test]
     fn kernel_set_covers_ui29_section_2_1() {
-        // The fifteen primitives explicitly listed in the §2.1 table.
-        let expected_15 = [
+        // The sixteen primitives — fifteen from UI29 §2.1 plus
+        // HostDialog added in UI29-1 (#3846).
+        let expected_16 = [
             "Box", "Row", "Column", "Stack", "Text", "Image",
             "Spacer", "Divider", "Icon",
             "If", "For",
             "HostInput", "HostButton", "HostTable", "HostScroll",
+            "HostDialog",
         ];
-        for name in &expected_15 {
+        for name in &expected_16 {
             assert!(
                 KERNEL_PRIMITIVES.contains(name),
                 "kernel must include `{name}`"
