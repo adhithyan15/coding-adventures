@@ -1,5 +1,77 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.4.0 — 2026-05-22 (typed CIR ops — unblocks IIR-to-* backends)
+
+Nib's IIR output is now accepted by every IIR-to-* backend
+(`iir-to-wasm`, `iir-to-jvm-class-file`, `iir-to-cil-bytecode`,
+`iir-to-beam`) without needing the AOT pipeline's `pre_lower_aot_builtins`
+pre-pass.
+
+### Background
+
+A 5-frontend × 4-backend probe matrix run after the vm-core `mov`
+dispatch fix (PR #3888) showed that Nib's IIR output was rejected by
+every IIR-to-* backend with the same three errors:
+
+```text
+UntypedInstruction: function "main", op "call_builtin" has type_hint "any"
+UnsupportedOp:      function "main", op "call_builtin" is not supported …
+UntypedInstruction: function "main", op "ret" has type_hint "any"
+```
+
+Root cause: `compile_binary_chain` emitted `call_builtin "<op>"` with
+`type_hint: "any"`, expecting the AOT chain's `pre_lower_aot_builtins`
+pass to rewrite each one to a typed CIR op (`add`, `cmp_eq`, …) before
+the native backends saw it.  That assumption held for `lang-aot`'s AOT
+path but broke every IIR-to-* backend (they validate against concrete
+CIR opcodes).
+
+### Fix
+
+Mirror `oct-iir-compiler::compile_binary` exactly:
+
+- `compile_binary_chain` now emits typed CIR mnemonics directly:
+  `+` → `add`, `-` → `sub`, `==` → `cmp_eq`, `!=` → `cmp_ne`,
+  `<` → `cmp_lt`, `>` → `cmp_gt`, `<=` → `cmp_le`, `>=` → `cmp_ge`.
+- `type_hint` is now `"i64"` for every binary op (Nib's narrow types
+  u4/u8/bool all flow through 64-bit slots at the IIR level — the
+  function's declared Nib return type stays on `IIRFunction`).
+- `return_stmt`'s fallback type_hint is now `"i64"` instead of
+  `"any"` (which leaked through to the IIR-to-* validators).
+
+### What still works
+
+The AOT chain (`lang-aot`) is unchanged.  `pre_lower_aot_builtins`
+becomes a no-op when there's nothing to rewrite, so the typed `add` /
+`cmp_*` ops flow straight through.  All five existing lang-aot Nib
+e2e tests still pass:
+
+- `end_to_end_nib_returns_42_via_lang_aot`
+- `end_to_end_nib_arithmetic_via_lang_aot`
+- `end_to_end_nib_cross_fn_call_returns_42`
+- `end_to_end_nib_print_writes_42`
+- `end_to_end_nib_while_loop_counts_to_10`
+
+### Tests added (5)
+
+`tests/backend_compat.rs`:
+
+- `nib_iir_accepted_by_iir_to_wasm`
+- `nib_iir_accepted_by_iir_to_jvm`
+- `nib_iir_accepted_by_iir_to_clr`
+- `nib_iir_accepted_by_iir_to_beam`
+- `nib_iir_with_comparison_accepted_by_every_backend` — exercises
+  `cmp_lt` (verifies the comparison-operator mapping too).
+
+Plus an updated `tests::compiles_arithmetic` unit test that explicitly
+guards against the old `call_builtin "+"` shape ever leaking back in.
+
+### Helper rename
+
+`builtin_for(text, type_name) -> Option<&str>` → `cir_op_for(text, type_name)`.
+Same callers; the return value is now a typed CIR mnemonic instead of
+the bare operator symbol.
+
 ## 0.3.0 — 2026-05-20 (NIB04 step 3 — while loops)
 
 Closes the third (and final V1) NIB04 step.  Nib programs can now use

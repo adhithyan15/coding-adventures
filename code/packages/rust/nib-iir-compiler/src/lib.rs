@@ -207,7 +207,17 @@ impl Compiler {
             "return_stmt" => {
                 if let Some(expr) = expression_children(stmt).first() {
                     let v = self.compile_expr(expr, types, env, out)?;
-                    let ty_str = lookup_node_type(expr, types).map(nib_ty_str).unwrap_or("any").to_string();
+                    // Use the expression's inferred type if the type
+                    // checker annotated it; otherwise default to "i64"
+                    // (Nib's u4/u8/bool all materialise as i64 at the
+                    // IIR level — same convention as compile_binary_chain
+                    // and oct-iir-compiler).  Falling back to "any" used
+                    // to leak through to the IIR-to-* backends which
+                    // reject untyped instructions.
+                    let ty_str = lookup_node_type(expr, types)
+                        .map(nib_ty_str)
+                        .unwrap_or("i64")
+                        .to_string();
                     out.push(IIRInstr::new(
                         "ret",
                         None,
@@ -598,22 +608,28 @@ impl Compiler {
             };
 
             let rhs = self.compile_expr(rhs_node, types, env, out)?;
-            let op_name = builtin_for(&op_tok.value, &op_tok.effective_type_name())
+            // Map operator token to a typed CIR mnemonic the IIR-to-*
+            // backends (wasm/jvm/clr/beam) recognise.  Mirrors the
+            // pattern oct-iir-compiler uses — emit `add` / `cmp_eq` etc.
+            // directly instead of `call_builtin "+"` (the latter requires
+            // a downstream `pre_lower_aot_builtins` pass that only runs
+            // in the AOT chain, not in the IIR-to-* backends).
+            let cir_op = cir_op_for(&op_tok.value, &op_tok.effective_type_name())
                 .ok_or_else(|| CompileError::Unsupported(format!("op {:?}", op_tok.value)))?;
 
             let dest = self.fresh_var();
-            // Result type — comparisons produce bool, arithmetic preserves.
-            let ty_str = if is_comparison_op(op_name) { "bool" }
-                         else { lookup_node_type(node, types).map(nib_ty_str).unwrap_or("any") };
+            // At the IIR level Nib's narrow types (u4/u8/bool) all flow
+            // through 64-bit slots — match the pattern in oct-iir-compiler
+            // which uses `"i64"` uniformly.  The function's declared
+            // Nib return type ("u8" / "bool" / "void") stays the source
+            // of truth on the IIRFunction; instruction type_hints are
+            // a separate IIR-level concept and concrete-typing them as
+            // `i64` lets every IIR-to-* validator accept the module.
             out.push(IIRInstr::new(
-                "call_builtin",
+                cir_op,
                 Some(dest.clone()),
-                vec![
-                    Operand::Var(op_name.into()),
-                    Operand::Var(acc),
-                    Operand::Var(rhs),
-                ],
-                ty_str,
+                vec![Operand::Var(acc), Operand::Var(rhs)],
+                "i64",
             ));
             acc = dest;
         }
@@ -801,28 +817,36 @@ fn nib_ty_str(t: &NibType) -> &'static str {
     }
 }
 
-/// Map a Nib operator token to the IIR builtin name `aot-core::specialise`
-/// recognises.
-fn builtin_for(text: &str, type_name: &str) -> Option<&'static str> {
+/// Map a Nib operator token to a typed CIR mnemonic that every IIR
+/// consumer in the workspace recognises (vm-core, aarch64-backend,
+/// x86_64-backend, iir-to-wasm, iir-to-jvm-class-file,
+/// iir-to-cil-bytecode, iir-to-beam).
+///
+/// Pre-NIB04-fix this returned the operator *symbol* (`"+"`, `"=="`)
+/// inside a `call_builtin` instruction, on the assumption that the AOT
+/// chain's `pre_lower_aot_builtins` pass would rewrite each one to a
+/// typed CIR op before the native backends saw it.  That assumption
+/// holds for `lang-aot`'s AOT path but breaks every IIR-to-* backend
+/// (they validate against concrete CIR opcodes and reject
+/// `call_builtin`).  Returning the typed op directly keeps the AOT
+/// path working (the rewrite pass is a no-op when there's nothing to
+/// rewrite) and unblocks the IIR-to-* backends.
+///
+/// Mirrors `oct-iir-compiler::compile_binary` exactly.
+fn cir_op_for(text: &str, type_name: &str) -> Option<&'static str> {
     match (text, type_name) {
         // Arithmetic
-        ("+", _) | (_, "PLUS")        => Some("+"),
-        ("-", _) | (_, "MINUS")       => Some("-"),
+        ("+", _) | (_, "PLUS")        => Some("add"),
+        ("-", _) | (_, "MINUS")       => Some("sub"),
         // Comparisons
-        ("==", _) | (_, "EQ_EQ")      => Some("=="),
-        ("!=", _) | (_, "NEQ")        => Some("!="),
-        ("<",  _) | (_, "LT")         => Some("<"),
-        (">",  _) | (_, "GT")         => Some(">"),
-        ("<=", _) | (_, "LEQ")        => Some("<="),
-        (">=", _) | (_, "GEQ")        => Some(">="),
-        // Logical (passed as comparisons of bool — V1 doesn't fully support)
-        // ("&&", _) | (_, "LAND") => ...
+        ("==", _) | (_, "EQ_EQ")      => Some("cmp_eq"),
+        ("!=", _) | (_, "NEQ")        => Some("cmp_ne"),
+        ("<",  _) | (_, "LT")         => Some("cmp_lt"),
+        (">",  _) | (_, "GT")         => Some("cmp_gt"),
+        ("<=", _) | (_, "LEQ")        => Some("cmp_le"),
+        (">=", _) | (_, "GEQ")        => Some("cmp_ge"),
         _ => None,
     }
-}
-
-fn is_comparison_op(name: &str) -> bool {
-    matches!(name, "==" | "!=" | "<" | "<=" | ">" | ">=")
 }
 
 // ---------------------------------------------------------------------------
@@ -851,14 +875,22 @@ mod tests {
         let src = "fn main() -> u8 { return 30 + 12; }";
         let m = compile_source(src, "test").expect("ok");
         let body = &m.functions[0].instructions;
-        // Expected: const(30), const(12), call_builtin "+", ret
+        // Expected after the typed-CIR fix:
+        //   const _n0 = 30 (u8)
+        //   const _n1 = 12 (u8)
+        //   add   _n2 = _n0, _n1 (i64)   ← was `call_builtin "+"` pre-fix
+        //   ret   _n2 (u8)
         let consts = body.iter().filter(|i| i.op == "const").count();
         assert!(consts >= 2, "got body: {body:?}");
-        assert!(body.iter().any(|i|
+        assert!(body.iter().any(|i| i.op == "add"),
+            "expected typed `add` op (not `call_builtin \"+\"`); got body: {body:?}");
+        // Old behaviour leaked `call_builtin "+"` — verify we no longer do that.
+        assert!(!body.iter().any(|i|
             i.op == "call_builtin" && i.srcs.first().and_then(|s| match s {
                 Operand::Var(n) => Some(n.as_str()),
                 _ => None,
-            }) == Some("+")));
+            }) == Some("+")),
+            "regression: `call_builtin \"+\"` leaked into IIR (would break IIR-to-* backends)");
         assert!(body.iter().any(|i| i.op == "ret"));
     }
 
