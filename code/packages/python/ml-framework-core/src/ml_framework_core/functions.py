@@ -58,6 +58,7 @@ from ._rust_backend import (
     should_use_rust_for_matmul,
     should_use_rust_for_reduction,
     sigmoid_via_rust,
+    softmax_via_rust,
     sub_via_rust,
     sum_axis_via_rust,
     sum_via_rust,
@@ -876,6 +877,22 @@ class SoftmaxFunction(Function):
 
         if dim < 0:
             dim = a.ndim + dim
+
+        # MX10 Phase 4d — optional Rust fast path.  Softmax composes
+        # as a 7-op graph (ReduceMax → Broadcast → Sub → Exp →
+        # ReduceSum → Broadcast → Div) in a single FFI envelope.
+        # All seven ops share the input tensor's element-cost
+        # profile, so the same threshold as elementwise/activation
+        # applies.  Backward needs ``saved_metadata["output"]``;
+        # populate it from the Rust result the same way TanhFunction
+        # / SigmoidFunction do.
+        #
+        # The 1-D and n-D pure-Python branches below are byte-for-byte
+        # unchanged in the fallback path.
+        if should_use_rust_for_activation(len(a.data)):
+            result = softmax_via_rust(a, dim)
+            self.saved_metadata["output"] = result.data
+            return result
 
         if a.ndim == 1:
             max_val = max(a.data)

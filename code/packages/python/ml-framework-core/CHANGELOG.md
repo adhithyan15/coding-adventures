@@ -2,6 +2,114 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 4d: optional Rust fast path for `SoftmaxFunction` via a 7-op composed graph
+
+Extends the activation dispatch from Phase 4/4b's {Tanh, ReLU,
+Sigmoid} to also cover `SoftmaxFunction` — the last of the
+classic 5-activation set the Phase 4 family targets.  GELU remains
+deferred (its 8-op tanh-approximation composition still warrants
+its own sub-phase).
+
+This phase was unblocked by **two prerequisites that landed earlier
+in MX10**:
+- Phase 3b's axis-reduction helpers (`ReduceSum` / `ReduceMax` with
+  `axes=[dim]` and `keep_dims=True`) for the per-axis max-subtract
+  and sum-exp steps.
+- matrix-cpu's existing `Broadcast` op (with `target_shape`) for
+  expanding the keepdim-shaped intermediates back to the input
+  shape before the elementwise subtract and divide.
+
+#### Numerical stability
+
+The shift-by-max step is essential: if any element of the input is
+large (say 1000), `exp(1000)` overflows f32 to `+inf` and the
+output is `NaN`.  Subtracting the per-axis max forces the largest
+argument to `exp` to be `0`, so the sum of exps is always `>= 1.0`
+and the division is well-conditioned.  This is the standard
+"numerically stable softmax" recipe, and both the pure-Python and
+Rust paths implement it identically.
+
+#### Graph topology
+
+For a 2-D input of shape `(N, K)` with `dim = 1`::
+
+    input(0) ──ReduceMax(axes=[dim], keep_dims=True)──> max(1)        shape (N, 1)
+    max(1) ──Broadcast(target=input_shape)──> max_bcast(2)             shape (N, K)
+    Sub(input(0), max_bcast(2)) ──> shifted(3)                         shape (N, K)
+    shifted(3) ──Exp──> exp_shifted(4)                                  shape (N, K)
+    exp_shifted(4) ──ReduceSum(axes=[dim], keep_dims=True)──> denom(5) shape (N, 1)
+    denom(5) ──Broadcast(target=input_shape)──> denom_bcast(6)         shape (N, K)
+    Div(exp_shifted(4), denom_bcast(6)) ──> out(7)                     shape (N, K)
+
+All seven ops ship in **one** FFI envelope so the per-call overhead
+is paid once.  matrix-cpu's `Sub` and `Div` don't broadcast scalars,
+so the two explicit `Broadcast` ops are required to expand the
+keepdim-shaped reduction outputs back to the input shape before
+the elementwise subtract/divide.
+
+#### Implementation
+
+- **`_rust_backend.py`** — adds `softmax_via_rust(a, dim)`:
+    - Builds the 8-tensor 7-op envelope above.
+    - Reuses the existing `should_use_rust_for_activation` predicate
+      from Phase 4 (same `_ELEMENTWISE_RUST_THRESHOLD = 100_000`) —
+      softmax has roughly the same per-cell cost as other
+      activations (one exp + one max + one divide per cell).
+    - Caller normalises negative dims before passing in (matches
+      the contract for `_reduce_axis_via_rust`).
+    - Updates the Phase 4 module-level comment to flip Softmax from
+      "deferred" to "shipped in Phase 4d".
+
+- **`functions.py`** — `SoftmaxFunction.forward` gains a dispatch
+  block before the existing 1-D / n-D pure-Python branches.  The
+  Rust path normalises `dim` first, populates
+  `self.saved_metadata["output"]` (backward formula
+  `y * (grad - sum(grad * y))` depends on output), then returns.
+  The pure-Python branches are byte-for-byte unchanged in the
+  fallback path.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `numel ≥ 100_000` | **Rust** (7-op composed graph in one FFI call) |
+| Extension installed, `numel < 100_000` | Pure-Python softmax kernel |
+| Extension NOT installed | Pure-Python softmax kernel |
+
+#### Tests (61 total MX10 tests, was 57)
+
+- **`ActivationParityTests.test_softmax_dim0_parity`** and
+  **`test_softmax_dim1_parity`** (2 cases, skip if extension
+  missing): random `(500, 200)` tensor in `[-3, 3]`, compares Rust
+  vs pure-Python at the standard `rtol=1e-3, atol=1e-4` tolerance.
+  Tests both `dim=0` (non-contiguous stride access in pure-Python)
+  and `dim=1` (contiguous) to catch any axis-handling bugs.
+- **`SoftmaxFallbackTests`** (4 cases, always run):
+  defence-in-depth `RuntimeError` for `softmax_via_rust`,
+  1-D correctness for `[1, 2, 3]` against hand-computed values,
+  2-D `dim=1` row-sum-to-1 invariant for a 2x3 tensor, plus a
+  `saved_metadata["output"]` handshake test that exercises
+  uniform-input → uniform-output → zero-gradient (a nice
+  closed-form property of softmax backward).
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**359 passed + 24 skipped (parity tests that need the extension)**;
+the pre-existing `test_device.py` failure on main is unrelated.
+
+### What's NOT in Phase 4d
+
+- GELU.  Tanh-approximation form is 8 ops + scalar `Pow(3)` (or
+  three `Mul`s instead).  Doable now, but the right place for it is
+  Phase 4c — a separate PR — because it's an isolated composition
+  with no overlap with the Softmax design.
+- Backward-path Rust dispatch for Softmax.  The formula
+  `y * (grad - sum(grad * y))` is itself a small composed graph
+  (one Mul + one ReduceSum + one Broadcast + one Sub + one Mul);
+  doable as a Phase 4d-back follow-up if profiling shows demand.
+- Higher-arity softmax variants (per-row vs per-column with
+  different normalisation conventions, log-softmax, etc.).  Only
+  the standard along-axis softmax is in scope here.
+
 ### Added — MX10 Phase 3b: optional Rust fast path for axis-specific `SumFunction` / `MeanFunction` (`dim != None`)
 
 Closes the gap Phase 3 explicitly deferred — the `dim != None`

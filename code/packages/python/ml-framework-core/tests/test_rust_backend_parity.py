@@ -698,6 +698,56 @@ class ActivationParityTests(unittest.TestCase):
         # default rtol=1e-3 anyway for consistency.
         self._assert_close(rust_result.data, python_result.data)
 
+    def test_softmax_dim0_parity(self) -> None:
+        """``SoftmaxFunction.apply(t, dim=0)`` Rust matches pure-Python.
+
+        Phase 4d — Softmax is the first activation built from a 7-op
+        composed graph (ReduceMax → Broadcast → Sub → Exp → ReduceSum
+        → Broadcast → Div).  The shift-by-max step is essential for
+        numerical stability; the random inputs in ``[-3, 3]`` stay well
+        within f32 range without it, but the test still exercises the
+        full graph including both Broadcast ops.
+
+        Each output column should sum to ~1.0 (softmax is a
+        probability distribution along the reduced axis).
+        """
+        from ml_framework_core import SoftmaxFunction, _rust_backend
+
+        a = self._make_tensor(seed=55)
+
+        rust_result = SoftmaxFunction.apply(a, 0)
+        self.assertEqual(rust_result.shape, self.SHAPE)
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = SoftmaxFunction.apply(a, 0)
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close(rust_result.data, python_result.data)
+
+    def test_softmax_dim1_parity(self) -> None:
+        """``SoftmaxFunction.apply(t, dim=1)`` — softmax along the
+        contiguous (last) dimension. Different stride access pattern
+        than dim=0.
+        """
+        from ml_framework_core import SoftmaxFunction, _rust_backend
+
+        a = self._make_tensor(seed=66)
+
+        rust_result = SoftmaxFunction.apply(a, 1)
+        self.assertEqual(rust_result.shape, self.SHAPE)
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = SoftmaxFunction.apply(a, 1)
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close(rust_result.data, python_result.data)
+
     def test_sigmoid_parity(self) -> None:
         """``SigmoidFunction.apply(t)`` Rust matches pure-Python.
 
