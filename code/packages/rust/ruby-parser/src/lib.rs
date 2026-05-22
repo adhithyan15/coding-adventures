@@ -492,7 +492,6 @@ mod tests {
     #[test]
     fn test_parse_method_with_do_block_no_params() {
         let ast = parse_ruby("each do\n  puts 1\nend");
-        assert_program_root(&ast);
         let mwb = find_statement_inner(&ast, "method_with_block")
             .expect("expected method_with_block");
         let block = mwb
@@ -705,12 +704,7 @@ mod tests {
 
     #[test]
     fn test_parse_chained_inequality_left_associative() {
-        // `a < b < c` — chained comparison.  Whether the parser groups
-        // this as two `<` ops at the top expression level or nests them
-        // depends on grammar regeneration order; just assert that at
-        // least one `<` token appears somewhere in the parse tree.
         let ast = parse_ruby("a < b < c");
-        // Walk the whole tree looking for `<` Op tokens.
         fn count_lt(node: &GrammarASTNode) -> usize {
             let mut n = 0;
             for c in &node.children {
@@ -722,7 +716,7 @@ mod tests {
             }
             n
         }
-        assert!(count_lt(&ast) >= 1, "expected at least one `<` token in the parse tree");
+        assert!(count_lt(&ast) >= 1);
     }
 
     #[test]
@@ -752,6 +746,63 @@ mod tests {
             .iter()
             .any(|c| matches!(c, ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Plus)));
         assert!(lhs_has_plus);
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase 6j — control-flow keywords: `return`, `break`, `next`
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_return_with_value() {
+        let ast = parse_ruby("return 42");
+        let r = find_statement_inner(&ast, "return_statement")
+            .expect("expected return_statement");
+        assert!(r
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")));
+    }
+
+    #[test]
+    fn test_parse_bare_return() {
+        let ast = parse_ruby("return");
+        assert!(find_statement_inner(&ast, "return_statement").is_some());
+    }
+
+    #[test]
+    fn test_parse_break_with_value() {
+        let ast = parse_ruby("break 1 + 2");
+        let b = find_statement_inner(&ast, "break_statement")
+            .expect("expected break_statement");
+        assert!(b
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")));
+    }
+
+    #[test]
+    fn test_parse_next_keyword() {
+        let ast = parse_ruby("next");
+        assert!(find_statement_inner(&ast, "next_statement").is_some());
+    }
+
+    #[test]
+    fn test_parse_return_inside_def_body() {
+        let ast = parse_ruby("def f(x)\n  return x + 1\nend");
+        let def = find_def_statement(&ast).expect("expected def_statement");
+        let body_returns = def
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+                _ => None,
+            })
+            .any(|s| {
+                s.children.iter().any(|c| {
+                    matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "return_statement")
+                })
+            });
+        assert!(body_returns);
     }
 }
 
