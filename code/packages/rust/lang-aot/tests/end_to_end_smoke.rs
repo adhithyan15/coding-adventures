@@ -417,3 +417,53 @@ fn end_to_end_nib_print_writes_42() {
         String::from_utf8_lossy(&out.stderr),
     );
 }
+
+/// NIB04 step 3 — `while` loop counts from 0 to 10, returns 10.
+/// Exercises `let`, comparison, assignment, increment, and the full
+/// label / jmp_if_false / jmp loop scaffold in concert.
+const NIB_WHILE_COUNT_TO_10: &str =
+    "fn main() -> u4 { \
+       let n: u4 = 0; \
+       while n < 10 { n = n + 1; } \
+       return n; \
+     }";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_nib_while_loop_counts_to_10() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("while.nib");
+    let exe = dir.path().join("while.exe");
+    std::fs::write(&src, NIB_WHILE_COUNT_TO_10).unwrap();
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::Nib)
+        .unwrap_or_else(|e| panic!("Nib compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.status.code(), Some(10),
+        "expected exit code 10, got {:?}; stderr={:?}",
+        out.status.code(),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_nib_while_loop_counts_to_10() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("while.nib");
+    let exe = dir.path().join("while");
+    std::fs::write(&src, NIB_WHILE_COUNT_TO_10).unwrap();
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::Nib)
+        .unwrap_or_else(|e| panic!("Nib compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.status.code(), Some(10),
+        "expected exit code 10, got {:?}; stderr={:?}",
+        out.status.code(),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}

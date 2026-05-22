@@ -256,11 +256,17 @@ keywords:
   # Void functions use bare return; (no expression).
   return
 
-  # For loop keyword. Only loop construct in Nib v1.
+  # For loop keyword. The for loop's const bounds make trip count statically
+  # verifiable, which the original 4004 backend relies on.
   # Form: for NAME: type in expr..expr { ... }
-  # No while loop — the for loop with const bounds is sufficient for 4004 programs,
-  # and const bounds make loop trip count statically verifiable.
   for
+
+  # While loop keyword (NIB04).  Added so Nib programs can use unbounded
+  # condition-driven loops for the LANG VM AOT chain (where statically-bounded
+  # iteration is not required).  The 4004 backend rejects `while` because it
+  # cannot compile loops with non-const bounds; the AOT chain accepts it.
+  # Form: while expr { ... }
+  while
 
   # Range keyword in for loop: for i: u4 in 0..8 { ... }
   # The "in" keyword separates the loop variable from the range.
