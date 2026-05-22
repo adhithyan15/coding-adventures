@@ -471,3 +471,132 @@ class TestEvaluateSumPhase41InfiniteTelescope:
         f = IRApply(SUB, (IRApply(ADD, (_k, IRInteger(1))), _k))
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert isinstance(result, IRApply) and result.head == SUM
+
+
+# ---------------------------------------------------------------------------
+# Phase 42: degree-aware vanishing-at-infinity.
+#
+# Extends Phase 41's narrow constant-numerator recogniser to handle any
+# proper rational ``P(k)/Q(k)`` where ``deg(P) < deg(Q)``.  This widens
+# the set of telescopes that close at infinity to cover Apart outputs
+# from any partial-fraction decomposition with non-constant numerators.
+#
+# The Phase 41 fast path (constant numerator) is preserved as a special
+# case — these tests pin the new degree-aware behaviour.
+# ---------------------------------------------------------------------------
+
+
+class TestEvaluateSumPhase42DegreeAware:
+    def test_proper_rational_k_over_k_squared_plus_1_minus_shift(self):
+        """``∑_{k=1}^∞ [k/(k²+1) − (k+1)/((k+1)²+1)]``.
+
+        g(k) = k/(k²+1) has deg(num)=1 < deg(den)=2, so vanishes at ∞.
+        Closed form (antisymmetric): g(1) = 1/2.
+        """
+        from fractions import Fraction
+        from symbolic_ir import POW, SUB
+
+        # g(k) = k / (k² + 1)
+        g_k = IRApply(
+            DIV,
+            (
+                _k,
+                IRApply(ADD, (IRApply(POW, (_k, IRInteger(2))), IRInteger(1))),
+            ),
+        )
+        # g(k+1) = (k+1) / ((k+1)² + 1)
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        g_kp1 = IRApply(
+            DIV,
+            (
+                kp1,
+                IRApply(ADD, (IRApply(POW, (kp1, IRInteger(2))), IRInteger(1))),
+            ),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # g(1) = 1 / (1 + 1) = 1/2
+        from symbolic_ir import IRRational
+
+        assert isinstance(result, IRRational)
+        assert Fraction(result.numer, result.denom) == Fraction(1, 2)
+
+    def test_polynomial_degree_constant_numerator_still_works(self):
+        """Regression: Phase 41 fast path (constant/Q) still closes.
+
+        ``∑_{k=1}^∞ [1/k − 1/(k+1)] = 1`` must continue to work after the
+        Phase 42 degree-aware widening replaces some of the recogniser.
+        """
+        from symbolic_ir import SUB
+
+        f = IRApply(
+            SUB,
+            (
+                IRApply(DIV, (IRInteger(1), _k)),
+                IRApply(DIV, (IRInteger(1), IRApply(ADD, (_k, IRInteger(1))))),
+            ),
+        )
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRInteger) and result.value == 1
+
+    def test_improper_rational_falls_through(self):
+        """``∑_{k=1}^∞ [k/(k+1) − (k+1)/(k+2)]``.
+
+        g(k) = k/(k+1) has deg(num)=1 = deg(den)=1; the limit is 1
+        (not 0), so Phase 42 must refuse and the sum stays unevaluated.
+        """
+        from symbolic_ir import SUB
+
+        g_k = IRApply(DIV, (_k, IRApply(ADD, (_k, IRInteger(1)))))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        g_kp1 = IRApply(
+            DIV, (kp1, IRApply(ADD, (_k, IRInteger(2))))
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Limit isn't 0; must stay unevaluated.
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_super_improper_rational_falls_through(self):
+        """``g(k) = k²/(k+1)``: limit is ∞, not 0.  Phase 42 refuses.
+
+        We construct the SUB shape ``[k²/(k+1) − (k+1)²/(k+2)]`` and
+        confirm Phase 41/42 both refuse to close it (the limit is +∞,
+        not 0).
+        """
+        from symbolic_ir import POW, SUB
+
+        g_k = IRApply(
+            DIV, (IRApply(POW, (_k, IRInteger(2))), IRApply(ADD, (_k, IRInteger(1))))
+        )
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        g_kp1 = IRApply(
+            DIV,
+            (IRApply(POW, (kp1, IRInteger(2))), IRApply(ADD, (_k, IRInteger(2)))),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_transcendental_numerator_falls_through(self):
+        """``g(k) = sin(k)/k²``: numerator is not a polynomial, so the
+        degree-aware path refuses.  (The limit IS 0 by squeeze, but
+        decidably proving so needs a transcendental limit-finder we
+        don't have yet.)
+        """
+        from symbolic_ir import POW, SIN, SUB
+
+        sin_k = IRApply(SIN, (_k,))
+        sin_kp1 = IRApply(SIN, (IRApply(ADD, (_k, IRInteger(1))),))
+        g_k = IRApply(DIV, (sin_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(
+            DIV,
+            (
+                sin_kp1,
+                IRApply(POW, (IRApply(ADD, (_k, IRInteger(1))), IRInteger(2))),
+            ),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Conservative: refuse since num is not a polynomial.
+        assert isinstance(result, IRApply) and result.head == SUM

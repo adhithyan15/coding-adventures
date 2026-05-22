@@ -1,5 +1,54 @@
 # Changelog
 
+## 0.4.0 — 2026-05-22
+
+**Phase 42 — Degree-aware vanishing-at-infinity recogniser.**
+
+Widens Phase 41's narrow constant-numerator check to handle *any*
+proper rational ``P(k)/Q(k)`` shape with ``deg(P) < deg(Q)``.  This
+covers Apart outputs from any partial-fraction decomposition with
+non-constant numerators — e.g. infinite telescopes built from
+``k/(k²+1) − (k+1)/((k+1)²+1)`` close in one dispatch.
+
+### Added
+
+- **`_polynomial_degree_in_k(node, k) -> int | None`** in
+  `summation.py` — returns the polynomial degree of an IR node in
+  ``k`` (or ``None`` for non-polynomial shapes like ``Div``, ``Sin``,
+  ``Pow(k, fractional)``).
+- **Phase 42 widening branch** in `_g_vanishes_at_infinity`: when the
+  numerator is *not* constant in ``k``, fall through to a
+  degree-comparison check.  The function still returns ``True`` for
+  Phase 41 fast-path shapes (constant numerator + positive-degree
+  polynomial denominator) so Phase 41 remains a strict special case.
+
+### Added — tests
+
+`tests/test_summation.py` — new
+`TestEvaluateSumPhase42DegreeAware` class with 5 cases:
+
+- `test_proper_rational_k_over_k_squared_plus_1_minus_shift` —
+  `∑_{k=1}^∞ [k/(k²+1) − (k+1)/((k+1)²+1)] = g(1) = 1/2`.
+- `test_polynomial_degree_constant_numerator_still_works` — Phase 41
+  fast-path regression: `∑_{k=1}^∞ [1/k − 1/(k+1)] = 1` still closes.
+- `test_improper_rational_falls_through` — `g(k) = k/(k+1)` has equal
+  degrees; limit is 1, not 0.  Phase 42 refuses; sum stays unevaluated.
+- `test_super_improper_rational_falls_through` — `g(k) = k²/(k+1)` has
+  deg(num) > deg(den); limit is +∞.  Sum stays unevaluated.
+- `test_transcendental_numerator_falls_through` — `g(k) = sin(k)/k²`
+  has a non-polynomial numerator; the degree comparison can't run, so
+  Phase 42 conservatively refuses (transcendental limits deferred).
+
+Full suite: **77 passed** (72 prior + 5 net new).
+
+### Still deferred
+
+- Transcendental limit-finder (`sin(k)/k²`, `log(k)/k`, `1/exp(k)`,
+  …).  These require a real symbolic limit machine; out of scope for
+  Phase 42's pure polynomial path.
+- Cross-language port to TypeScript / Rust (blocked on porting
+  `Apart` to those backends — see Phase 40 deferral).
+
 ## 0.3.0 — 2026-05-22
 
 **Phase 41 — Limit-aware infinite telescope.**

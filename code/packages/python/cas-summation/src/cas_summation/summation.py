@@ -301,53 +301,123 @@ def _is_positive_degree_polynomial_in_k(node: IRNode, k: IRSymbol) -> bool:
     return False
 
 
+def _polynomial_degree_in_k(node: IRNode, k: IRSymbol) -> int | None:
+    """Return the polynomial degree of ``node`` in ``k`` (Phase 42).
+
+    Returns ``0`` for expressions constant in ``k``, ``1`` for bare
+    ``k``, ``n`` for ``k^n``, the maximum of children for ``Add``, and
+    the sum of children for ``Mul``.  Returns ``None`` for shapes that
+    are not pure polynomials in ``k`` (e.g. ``Div``, ``Sin``, ``Cos``,
+    ``Log``, ``Pow(k, fractional)``, ``Pow(non-constant, k)``).
+
+    The polynomial degree is used by :func:`_g_vanishes_at_infinity` to
+    decide whether a rational ``P(k)/Q(k)`` summand tends to 0 as
+    ``k → ∞`` — true iff ``deg(P) < deg(Q)``.
+
+    Recognised shapes
+    -----------------
+
+    +-------------------------+-------------------------+
+    | Input                   | Degree                  |
+    +=========================+=========================+
+    | constant in ``k``       | ``0``                   |
+    | ``k``                   | ``1``                   |
+    | ``k^n`` integer n ≥ 0   | ``n``                   |
+    | ``Neg(p)``              | ``deg(p)``              |
+    | ``Add(p1, p2, …)``      | ``max(deg(pi))``        |
+    | ``Sub(p1, p2)``         | ``max(deg(p1), deg(p2))`` |
+    | ``Mul(p1, p2, …)``      | ``sum(deg(pi))``        |
+    | otherwise (Div, Pow,…)  | ``None``                |
+    +-------------------------+-------------------------+
+    """
+    # Constant in k — degree 0.
+    if _is_constant_in(node, k):
+        return 0
+    # Bare k — degree 1.
+    if node == k:
+        return 1
+    if not isinstance(node, IRApply):
+        return None
+    # k^n where n is a non-negative integer.
+    if node.head == POW and len(node.args) == 2:
+        base, exp = node.args
+        if base == k and isinstance(exp, IRInteger) and exp.value >= 0:
+            return int(exp.value)
+        # Pow(non-k base depending on k, …) or fractional exponent: not a
+        # pure polynomial in k.
+        return None
+    # Unary Neg preserves degree.
+    if node.head == NEG and len(node.args) == 1:
+        return _polynomial_degree_in_k(node.args[0], k)
+    # ADD / SUB: max of child degrees (None propagates).
+    if node.head in (ADD, SUB):
+        degrees = [_polynomial_degree_in_k(a, k) for a in node.args]
+        if any(d is None for d in degrees):
+            return None
+        return max(degrees)  # type: ignore[arg-type]
+    # MUL: sum of child degrees (None propagates).
+    if node.head == MUL:
+        degrees = [_polynomial_degree_in_k(a, k) for a in node.args]
+        if any(d is None for d in degrees):
+            return None
+        return sum(degrees)  # type: ignore[misc]
+    # Div, Sin, Cos, Log, Exp, Sqrt, … — not pure polynomials.
+    return None
+
+
 def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     """Return True when ``g(k)`` provably tends to 0 as ``k → ∞``.
 
-    Narrow recognition for Phase 41 — we only fire on shapes where the
-    vanishing limit is obvious without needing a full symbolic
-    limit-finder:
+    Two-tier recognition:
+
+    1.  **Phase 41 fast path** — ``Div(c, h(k))`` with ``c`` constant
+        in ``k`` and ``h(k)`` recognised as a positive-degree polynomial
+        in ``k`` (via :func:`_is_positive_degree_polynomial_in_k`).
+        This handles every shape Apart can emit from a rational summand
+        whose denominator factors over ℚ into simple linear factors.
+
+    2.  **Phase 42 widening** — ``Div(P(k), Q(k))`` where both ``P`` and
+        ``Q`` are polynomials in ``k`` (via
+        :func:`_polynomial_degree_in_k`) and ``deg(P) < deg(Q)``.  This
+        closes telescopes like ``k/((k+1)(k+2)(k+3))`` and any other
+        proper rational shape Apart might emit.
 
     +-------------------------------+--------------------------+
     | ``g`` shape                   | Provably ``→ 0``?        |
     +===============================+==========================+
-    | ``Div(c, h(k))``              | yes, iff ``h(k) → ∞``    |
-    |   with ``c`` constant in k    |                          |
-    |   and ``h`` recognised as a   |                          |
-    |   positive-degree polynomial  |                          |
-    |   in ``k`` by                 |                          |
-    |   :func:`_is_positive_degree_…` |                        |
+    | ``Div(constant, k+a)``        | yes (Phase 41)           |
+    | ``Div(constant, k²·(k+1))``   | yes (Phase 41)           |
+    | ``Div(k, k²+1)``              | yes (Phase 42)           |
+    | ``Div(k+1, k³−5)``            | yes (Phase 42)           |
+    | constant                      | no (limit is the const)  |
+    | ``k`` or ``k²+1``             | no (limit is ∞)          |
+    | ``1/sin(k)`` / ``log(k)/k``   | no (numerator is not a   |
+    |                               |    polynomial; transcend- |
+    |                               |    ental limits deferred) |
     +-------------------------------+--------------------------+
-    | anything else                 | no (conservatively)      |
-    +-------------------------------+--------------------------+
-
-    This covers every shape Apart can emit from a rational summand
-    ``P(k)/Q(k)`` whose denominator factors over ℚ into simple linear
-    factors — the common case is ``c / (k + a)^m`` for integer ``m ≥ 1``
-    and rational ``a``.
 
     Examples
     --------
-    - ``1/k`` → True (denominator is bare ``k``, positive degree).
-    - ``1/(k+1)`` → True (denominator is ``Add(k, 1)``, positive degree).
-    - ``3/(k*(k+2))`` → True (denominator is a product of two positive-
-      degree factors).
-    - ``1/(k**2)`` → True (positive-degree ``POW(k, 2)``).
-    - ``1`` → False (constant in k; the limit is 1, not 0).
-    - ``k`` → False (the limit is ∞, not 0).
-    - ``1/sin(k)`` → False (denominator's behaviour at ∞ is undecidable
-      without a deeper limit-finder; conservatively refuse).
+    - ``1/k`` → True (Phase 41: constant/k).
+    - ``k/(k²+1)`` → True (Phase 42: deg 1 < deg 2).
+    - ``(k²+1)/k³`` → True (Phase 42: deg 2 < deg 3).
+    - ``k/(k+1)`` → False (deg 1 = deg 1; limit is 1, not 0).
+    - ``k²/(k+1)`` → False (improper; limit is ∞).
     """
     if not isinstance(g, IRApply) or g.head != DIV or len(g.args) != 2:
         return False
     num, den = g.args
-    # Numerator must not introduce k-dependence — restrict to "constant
-    # in k" so the limit of g is fully determined by the denominator's
-    # behaviour.  A future phase could widen this to "deg(num) < deg(den)".
-    if not _is_constant_in(num, k):
+    # Phase 41 fast path: constant numerator + positive-degree denominator.
+    if _is_constant_in(num, k):
+        return _is_positive_degree_polynomial_in_k(den, k)
+    # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
+    num_degree = _polynomial_degree_in_k(num, k)
+    if num_degree is None:
         return False
-    # Denominator must grow without bound as k → ∞.
-    return _is_positive_degree_polynomial_in_k(den, k)
+    den_degree = _polynomial_degree_in_k(den, k)
+    if den_degree is None:
+        return False
+    return num_degree < den_degree
 
 
 def _try_power_of_k(
