@@ -1,14 +1,22 @@
 # Issues found making the Mosaic → XAML → on-screen dialog actually work
 
+> **All eleven issues are now closed.** This file remains as the
+> historical chronicle of the first time we made Mosaic → XAML run
+> end-to-end. The summary table at the bottom links each entry to the
+> PR that closed it.
+
 This document chronicles every concrete obstacle hit while taking the
 generated XAML output and turning it into a running Windows app that
 displays the authored dialog. Each issue is logged with: what we saw,
 what's actually wrong, where to fix it, and the workaround we used in
 the meantime.
 
-The intent: each item here is a follow-up PR. Once they all land, the
-generator should emit a project that runs as-is once the host's
-business logic is filled in.
+The original intent was that each item here would become a follow-up
+PR. They all landed across `#3910` (the A1–A5 generator fixes) and
+`#3917` (the B1–B3 project-shell + build infrastructure). The C-series
+items are environmental (missing VS Build Tools, runtime install
+requirement) and remain documented in lessons.md + the emitted
+README rather than fixed in code.
 
 The screenshot proving the end-state works is
 [`dialog-rendered.png`](./dialog-rendered.png) — the "Hello
@@ -397,34 +405,40 @@ assigned in
 
 ---
 
-# Summary table
+# Summary table — all issues closed
 
-| # | Layer | Severity | Fix difficulty |
+| # | Layer | Status | Where fixed |
 |---|---|---|---|
-| A1 | Generator: HostDialog lowering | Critical (blocks demo) | Medium |
-| A2 | Generator: undeclared `mos:` namespace | Critical | Easy |
-| A3 | Generator: `{Binding}` vs `{x:Bind}` | High | Easy |
-| A4 | Generator: `Title` slot collision | High | Easy |
-| A5 | Generator: missing BoolToVisibilityConverter.cs | High (any `If` user) | Easy |
-| B1 | Generator: missing `--emit-project` | High | Medium |
-| B2 | Generator: native DLLs not flattened | Medium | Easy |
-| B3 | Generator: no build driver script | Medium | Easy |
-| C1 | WinUI SDK: missing AppxPackage MSBuild tasks | Low (cosmetic) | N/A — document only |
-| C2 | WinUI runtime: system-wide install required | Medium | N/A — document or bundle |
-| D1 | Host code: explicit XamlRoot on ContentDialog | High | Easy (boilerplate fix) |
+| A1 | Generator: HostDialog lowering | ✅ resolved | #3910 — `RootShape` enum + `emit_host_dialog_as_root` |
+| A2 | Generator: undeclared `mos:` namespace | ✅ resolved | #3910 — dropped `mos:Dialog.IsOpen`, comment-stub only |
+| A3 | Generator: `{Binding}` vs `{x:Bind}` | ✅ resolved | #3910 — `Title=` uses `{x:Bind ..., Mode=OneWay}` |
+| A4 | Generator: `Title` slot collision | ✅ resolved | #3910 — `slot_aliases` + `RootShape::inherited_properties` |
+| A5 | Generator: missing `BoolToVisibilityConverter.cs` | ✅ resolved | #3910 — auto-emitted into `XamlEmitResult::if_helpers` |
+| B1 | Generator: missing `--emit-project` | ✅ resolved | #3917 — `build_project_files()` + CLI wiring |
+| B2 | Generator: native DLLs not flattened | ✅ resolved | #3917 — `FlattenNativeRuntimeDlls` MSBuild target |
+| B3 | Generator: no build driver script | ✅ resolved | #3917 — `build.ps1` template + README |
+| C1 | WinUI SDK: missing AppxPackage MSBuild tasks | Doc-only | lessons.md + emitted README + `<AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>` mitigation in the csproj |
+| C2 | WinUI runtime: system-wide install required | Doc-only | `winget install Microsoft.WindowsAppRuntime.1.7` in emitted README |
+| D1 | Host code: explicit XamlRoot on ContentDialog | ✅ resolved | #3917 — MainWindow template uses `(sender as FrameworkElement)?.XamlRoot` |
 
-After A1–A5 + B1–B3 land, the generator should emit a project that
-runs end-to-end with only business-logic code from the user.
+Generator output now matches the hand-patched reference: regenerating
+this directory's `winui/` produces a project that builds, runs, and
+displays the dialog with **only the host's business logic remaining
+for the user to fill in.**
 
-# Working hand-patched files in this directory
+# Regenerating
 
-- [`winui/HelloDialog.xaml`](./winui/HelloDialog.xaml) — `<ContentDialog>` root (A1), no `mos:` (A2), `{x:Bind}` Title (A3), `DialogTitle` alias (A4).
-- [`winui/HelloDialog.xaml.cs`](./winui/HelloDialog.xaml.cs) — `: ContentDialog` (A1), `DialogTitle` DP (A4).
-- [`winui/MainWindow.xaml`](./winui/MainWindow.xaml) — minimal host with a button to re-open the dialog.
-- [`winui/MainWindow.xaml.cs`](./winui/MainWindow.xaml.cs) — passes the button's `XamlRoot` to `dlg.ShowAsync()` (D1).
-- [`winui/App.xaml(.cs)`](./winui/App.xaml) — Application shell (B1).
-- [`winui/HelloDialog.csproj`](./winui/HelloDialog.csproj) — WindowsAppSDK reference + self-contained runtime (C2) + `AppxGeneratePriEnabled=false` (C1 mitigation that didn't fully take, but kept for posterity).
-- [`winui/app.manifest`](./winui/app.manifest) — DPI awareness (B1).
+Run from the repo root (no longer needs hand-patches):
 
-These are what the generator OUGHT to produce. Re-running the
-generator should reproduce them.
+```powershell
+$compiler = ".\code\packages\rust\target\release\mosaic-compile.exe"
+& $compiler `
+    --interface demo\hello-dialog-xaml\mosaic\HelloDialog.mil `
+    --layout    demo\hello-dialog-xaml\mosaic\HelloDialog.mll `
+    --style     demo\hello-dialog-xaml\mosaic\HelloDialog.dark.msl `
+    --backend   xaml `
+    --emit-project `
+    -o          demo\hello-dialog-xaml\winui\HelloDialog
+```
+
+All 11 files in `winui/` are produced by that single invocation.
