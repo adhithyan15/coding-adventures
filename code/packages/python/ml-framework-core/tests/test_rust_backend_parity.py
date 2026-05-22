@@ -574,6 +574,34 @@ class ActivationParityTests(unittest.TestCase):
         # default rtol=1e-3 anyway for consistency.
         self._assert_close(rust_result.data, python_result.data)
 
+    def test_sigmoid_parity(self) -> None:
+        """``SigmoidFunction.apply(t)`` Rust matches pure-Python.
+
+        Phase 4b — Sigmoid is the first activation built from a
+        4-op composed graph (Neg → Exp → Add(1-const) → Recip)
+        rather than a direct unary op.  Numerical drift between
+        the f32 Rust path and the double pure-Python path
+        accumulates across the four ops, so we keep the same
+        ``rtol=1e-3, atol=1e-4`` tolerance the other parity tests
+        use — strict enough to catch a real bug, loose enough to
+        accept f32 quantisation.
+        """
+        from ml_framework_core import SigmoidFunction, _rust_backend
+
+        a = self._make_tensor(seed=99)
+
+        rust_result = SigmoidFunction.apply(a)
+        self.assertEqual(rust_result.shape, self.SHAPE)
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = SigmoidFunction.apply(a)
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close(rust_result.data, python_result.data)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -2,6 +2,94 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 4b: optional Rust fast path for `SigmoidFunction` via a 4-op composed graph
+
+Extends Phase 4's activation dispatch from `TanhFunction` +
+`ReLUFunction` to also cover `SigmoidFunction`.  GELU and Softmax
+remain deferred — see "What's NOT in Phase 4b" below.
+
+Sigmoid is the first activation in the dispatch helpers that's built
+from a **multi-op composed graph** rather than a direct unary op or
+the two-input Max trick ReLU uses.  The graph topology is:
+
+```
+input(0) ──Neg──> neg(1) ──Exp──> exp_neg(2) ─┐
+                                               ├Add──> one_plus(4) ──Recip──> out(5)
+                          ones-const(3) ──────┘
+```
+
+All four ops (Neg, Exp, Add, Recip) ship in a single FFI envelope so
+the per-call overhead (bytes-pack + JSON-build + planner-plan +
+executor-dispatch + bytes-unpack) is paid once, not four times.  The
+executor sees one graph, plans it once, and dispatches the ops
+back-to-back internally.
+
+Like ReLU's zero-tensor, the `1` in `1 + exp(-x)` must be materialised
+as a full ones-tensor of `a.shape` because matrix-cpu's `Add` op
+doesn't broadcast scalars.  The constant ships in the graph's
+`constants[]` array (same pattern as ReLU's zero-tensor and matmul's
+weight/bias buffers).
+
+#### Implementation
+
+- **`_rust_backend.py`** — adds:
+    - `sigmoid_via_rust(a)` — ~80 LOC.  Reuses the existing
+      `should_use_rust_for_activation` predicate from Phase 4 (same
+      `_ELEMENTWISE_RUST_THRESHOLD = 100_000`).  Builds the 6-tensor
+      4-op envelope above, ships the ones-constant via `constants[]`,
+      and validates output length before unpacking.
+    - Updates the Phase 4 module-level comment to flip Sigmoid from
+      "deferred" to "shipped in Phase 4b".
+
+- **`functions.py`** — `SigmoidFunction.forward` gains a 4-line
+  dispatch block that mirrors `TanhFunction`'s shape: both must
+  populate `self.saved_metadata["output"]` (backward formula
+  `g * y * (1 - y)` depends only on the output, not the input).
+  The pure-Python `1.0 / (1.0 + math.exp(-x))` kernel is unchanged
+  in the fallback branch.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, numel ≥ 100_000 | **Rust** (4-op composed graph) |
+| Extension installed, numel < 100_000 | Pure-Python `1/(1+exp(-x))` |
+| Extension NOT installed | Pure-Python `1/(1+exp(-x))` |
+| Activation outside {Tanh, ReLU, Sigmoid} | Pure-Python (always) |
+
+#### Tests (48 total MX10 tests, was 45)
+
+- **`ActivationParityTests.test_sigmoid_parity`** (1 case, skip if
+  extension missing): random `(500, 200)` tensor in `[-3, 3]` (same
+  range as Tanh — covers the saturation tails), compares Rust vs
+  pure-Python with the standard `rtol=1e-3, atol=1e-4` f32-vs-double
+  tolerance.  Tighter would risk false failures from f32 drift
+  across 4 ops; looser would miss real numerical bugs.
+- **`SigmoidFallbackTests`** (3 cases, always run): direct-call
+  `RuntimeError` from `sigmoid_via_rust` when unavailable, pure-Python
+  correctness for `[0, 1, -1]` against `math.exp`, plus a
+  `saved_metadata["output"]` handshake test that runs backward and
+  checks `g * y * (1 - y)`.
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**350 passed + 18 skipped (parity-tests that need the extension)**;
+the same `test_device.py` pre-existing failure on main is unrelated.
+
+### What's NOT in Phase 4b
+
+- GELU.  The tanh-approximation form
+  (`0.5 * x * (1 + tanh(sqrt(2/π) * (x + 0.044715 * x³)))`) needs an
+  8-op composition plus a scalar `Pow(3)`; the latter is still
+  deferred from Phase 2 pending a scalar-exponent Pow variant in
+  matrix-cpu.  Composing `x * x * x` via three Muls works but adds
+  more graph nodes than warranted before profiling.
+- Softmax.  Needs `exp(x - max(x))` followed by per-axis broadcast
+  and divide; the broadcast dimension overlaps with Phase 3b
+  (axis-specific reductions) and warrants their joint design.
+- No backward-path Rust dispatch for Sigmoid (formula is two scalar
+  Muls per cell on the saved output — pure-Python is fast enough
+  that the FFI round-trip would lose).
+
 ### Added — MX10 Phase 4: optional Rust fast path for `TanhFunction` + `ReLUFunction` activations
 
 Extends the per-op conditional dispatch to two members of the
