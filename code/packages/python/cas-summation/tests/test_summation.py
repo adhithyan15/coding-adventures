@@ -339,15 +339,135 @@ class TestEvaluateSumTelescoping:
         # require it isn't the unevaluated SUM node.
         assert not (isinstance(result, IRApply) and result.head == SUM)
 
-    def test_telescope_does_not_fire_for_infinite_upper(self):
-        """``∑_{k=0}^{∞} [g(k+1) − g(k)]`` requires a limit argument we
-        don't yet implement; must fall through to the unevaluated form
-        (the classic-infinite recogniser does not pattern-match this
-        shape either).
+    def test_telescope_does_not_fire_for_infinite_upper_when_g_grows(self):
+        """``∑_{k=0}^{∞} [(k+1) − k]`` — here ``g(k) = k`` does NOT vanish
+        at infinity (it grows), so Phase 41 refuses and the sum stays
+        unevaluated.  This pins the Phase 41 guard against accidentally
+        emitting ``−g(lo)`` for divergent telescopes.
         """
         from symbolic_ir import SUB
 
         f = IRApply(SUB, (IRApply(ADD, (_k, IRInteger(1))), _k))
         result = evaluate_sum(f, _k, IRInteger(0), IRSymbol("%inf"), _VM)
-        # Stays unevaluated (or numeric fallback fails on infinite range).
+        # Stays unevaluated — g doesn't vanish at infinity.
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+# ---------------------------------------------------------------------------
+# Phase 41: limit-aware infinite telescope.
+#
+# When ``hi`` is ``%inf`` AND ``g(k)`` provably vanishes at infinity (per
+# the narrow ``_g_vanishes_at_infinity`` recogniser — currently
+# ``Div(const, positive-degree-polynomial-in-k)`` shapes), the dispatcher
+# emits ``∑_{k=lo}^∞ [g(k+1) − g(k)] = −g(lo)`` (standard orientation) or
+# ``∑_{k=lo}^∞ [g(k) − g(k+1)] = g(lo)`` (antisymmetric).
+#
+# The classic motivating example is ``∑_{k=1}^∞ 1/k − 1/(k+1) = 1``, the
+# "1/(k·(k+1))" series after Apart decomposition.
+# ---------------------------------------------------------------------------
+
+
+class TestEvaluateSumPhase41InfiniteTelescope:
+    def test_antisymmetric_1_over_k_minus_1_over_kp1(self):
+        """``∑_{k=1}^∞ [1/k − 1/(k+1)] = 1 − 0 = 1``.
+
+        g(k) = 1/k vanishes at infinity → Phase 41 emits g(lo) = 1/1 = 1.
+        """
+        from symbolic_ir import SUB
+
+        f = IRApply(
+            SUB,
+            (
+                IRApply(DIV, (IRInteger(1), _k)),
+                IRApply(DIV, (IRInteger(1), IRApply(ADD, (_k, IRInteger(1))))),
+            ),
+        )
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRInteger) and result.value == 1
+
+    def test_standard_orientation_1_over_kp1_minus_1_over_k(self):
+        """``∑_{k=1}^∞ [1/(k+1) − 1/k] = 0 − 1 = −1``.
+
+        Standard orientation g(k+1) − g(k) with g(k) = 1/k.  Phase 41
+        emits −g(lo) = −1.
+        """
+        from symbolic_ir import SUB
+
+        f = IRApply(
+            SUB,
+            (
+                IRApply(DIV, (IRInteger(1), IRApply(ADD, (_k, IRInteger(1))))),
+                IRApply(DIV, (IRInteger(1), _k)),
+            ),
+        )
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRInteger) and result.value == -1
+
+    def test_higher_starting_index(self):
+        """``∑_{k=2}^∞ [1/k − 1/(k+1)] = g(2) = 1/2``."""
+        from fractions import Fraction
+
+        from symbolic_ir import SUB
+
+        f = IRApply(
+            SUB,
+            (
+                IRApply(DIV, (IRInteger(1), _k)),
+                IRApply(DIV, (IRInteger(1), IRApply(ADD, (_k, IRInteger(1))))),
+            ),
+        )
+        result = evaluate_sum(f, _k, IRInteger(2), IRSymbol("%inf"), _VM)
+        # 1/2
+        from symbolic_ir import IRRational
+
+        assert isinstance(result, IRRational)
+        assert Fraction(result.numer, result.denom) == Fraction(1, 2)
+
+    def test_quadratic_denominator_vanishes(self):
+        """``∑_{k=1}^∞ [1/k² − 1/(k+1)²]`` (telescope of 1/k²).
+
+        g(k) = 1/k² vanishes at infinity → Phase 41 emits g(1) = 1.
+        """
+        from symbolic_ir import POW, SUB
+
+        f = IRApply(
+            SUB,
+            (
+                IRApply(DIV, (IRInteger(1), IRApply(POW, (_k, IRInteger(2))))),
+                IRApply(
+                    DIV,
+                    (
+                        IRInteger(1),
+                        IRApply(POW, (IRApply(ADD, (_k, IRInteger(1))), IRInteger(2))),
+                    ),
+                ),
+            ),
+        )
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRInteger) and result.value == 1
+
+    def test_constant_g_falls_through(self):
+        """``∑_{k=1}^∞ [c − c] = ∑ 0`` — the SUB folds to 0 first (step 1
+        constant rule), so Phase 41 never runs.  Result: 0."""
+        from symbolic_ir import SUB
+
+        f = IRApply(SUB, (IRInteger(7), IRInteger(7)))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Constant zero summand: sum is also 0 (or stays as 0·∞ via the
+        # constant-summand rule; either way must not be the unevaluated SUM
+        # of the original SUB).
+        if isinstance(result, IRInteger):
+            assert result.value == 0
+        else:
+            # Some stub VMs return a `Mul(0, hi-lo+1)` style shape;
+            # confirm it's not a Sum.
+            assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_g_not_a_div_falls_through(self):
+        """``∑_{k=1}^∞ [(k+1) − k]`` — g(k) = k is not a Div, doesn't
+        vanish.  Phase 41 refuses; result is the unevaluated Sum."""
+        from symbolic_ir import SUB
+
+        f = IRApply(SUB, (IRApply(ADD, (_k, IRInteger(1))), _k))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert isinstance(result, IRApply) and result.head == SUM

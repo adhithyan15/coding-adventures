@@ -21,9 +21,14 @@ Dispatch order for ``evaluate_sum``
 3. **Power of index** — f = coeff · k^m (m = 0…5):
        Uses Faulhaber's formula  Σ_{k=lo}^{hi} k^m = F(hi,m) − F(lo−1,m)
 
-4. **Telescoping** (Phase 39) — f = g(k+1) − g(k) (or its antisymmetric):
-       Σ_{k=lo}^{hi} [g(k+1) − g(k)] = g(hi+1) − g(lo)
-       Σ_{k=lo}^{hi} [g(k) − g(k+1)] = g(lo) − g(hi+1)
+4. **Telescoping** (Phase 39 finite + Phase 41 infinite) —
+   f = g(k+1) − g(k) (or its antisymmetric):
+       Σ_{k=lo}^{hi} [g(k+1) − g(k)] = g(hi+1) − g(lo)         (finite)
+       Σ_{k=lo}^{hi} [g(k) − g(k+1)] = g(lo) − g(hi+1)         (finite)
+       Σ_{k=lo}^{∞}  [g(k+1) − g(k)] = −g(lo)                   (Phase 41)
+       Σ_{k=lo}^{∞}  [g(k) − g(k+1)] =  g(lo)                   (Phase 41)
+   The infinite case only fires when ``g(k)`` provably vanishes at
+   infinity (``Div(constant, positive-degree-polynomial-in-k)`` shapes).
    Pure structural detection: substitute k → k+1 in one half and
    compare to the other half after VM normalisation.
 
@@ -48,6 +53,7 @@ from symbolic_ir import (
     ADD,
     DIV,
     MUL,
+    NEG,
     POW,
     PRODUCT,
     SUB,
@@ -232,6 +238,118 @@ def _try_telescoping(
     return None
 
 
+def _is_positive_degree_polynomial_in_k(node: IRNode, k: IRSymbol) -> bool:
+    """Conservative recogniser: True when ``node`` is a polynomial in ``k``
+    of strictly positive degree.
+
+    Used by :func:`_g_vanishes_at_infinity` to decide whether a denominator
+    grows without bound as ``k → ∞`` (in which case ``c / denominator → 0``).
+
+    Recognised shapes
+    -----------------
+
+    +-------------------------------------+
+    | ``k`` itself                        |
+    | ``k^n`` with ``n ≥ 1`` integer      |
+    | ``Add(...)`` with at least one      |
+    |   positive-degree term, all other   |
+    |   args either constant-in-k or      |
+    |   positive-degree                   |
+    | ``Mul(...)`` where at least one     |
+    |   factor has positive degree, all   |
+    |   other factors are constant-in-k   |
+    |   or positive-degree                |
+    +-------------------------------------+
+
+    Anything else returns ``False`` — most importantly, ``Div`` shapes
+    (e.g. ``1/k``) are rejected because their limit is 0, not ∞, which
+    would make a ``c / (1/k)`` shape *not* vanish at infinity.
+    """
+    # k itself — degree 1.
+    if node == k:
+        return True
+    if not isinstance(node, IRApply):
+        return False
+    # k^n with integer n ≥ 1.
+    if node.head == POW and len(node.args) == 2:
+        base, exp = node.args
+        if base == k and isinstance(exp, IRInteger) and exp.value >= 1:
+            return True
+    # Add(...): at least one term has positive degree; every other
+    # argument must be constant-in-k or itself positive-degree.
+    if node.head == ADD and len(node.args) >= 2:
+        if not any(
+            _is_positive_degree_polynomial_in_k(arg, k) for arg in node.args
+        ):
+            return False
+        return all(
+            _is_constant_in(arg, k) or _is_positive_degree_polynomial_in_k(arg, k)
+            for arg in node.args
+        )
+    # Mul(...): at least one factor has positive degree; every other
+    # factor must be constant-in-k or also positive-degree.
+    if node.head == MUL and len(node.args) >= 2:
+        has_positive = False
+        for arg in node.args:
+            if _is_constant_in(arg, k):
+                continue
+            if _is_positive_degree_polynomial_in_k(arg, k):
+                has_positive = True
+                continue
+            return False  # unrecognised k-dependence (e.g. 1/k factor)
+        return has_positive
+    return False
+
+
+def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
+    """Return True when ``g(k)`` provably tends to 0 as ``k → ∞``.
+
+    Narrow recognition for Phase 41 — we only fire on shapes where the
+    vanishing limit is obvious without needing a full symbolic
+    limit-finder:
+
+    +-------------------------------+--------------------------+
+    | ``g`` shape                   | Provably ``→ 0``?        |
+    +===============================+==========================+
+    | ``Div(c, h(k))``              | yes, iff ``h(k) → ∞``    |
+    |   with ``c`` constant in k    |                          |
+    |   and ``h`` recognised as a   |                          |
+    |   positive-degree polynomial  |                          |
+    |   in ``k`` by                 |                          |
+    |   :func:`_is_positive_degree_…` |                        |
+    +-------------------------------+--------------------------+
+    | anything else                 | no (conservatively)      |
+    +-------------------------------+--------------------------+
+
+    This covers every shape Apart can emit from a rational summand
+    ``P(k)/Q(k)`` whose denominator factors over ℚ into simple linear
+    factors — the common case is ``c / (k + a)^m`` for integer ``m ≥ 1``
+    and rational ``a``.
+
+    Examples
+    --------
+    - ``1/k`` → True (denominator is bare ``k``, positive degree).
+    - ``1/(k+1)`` → True (denominator is ``Add(k, 1)``, positive degree).
+    - ``3/(k*(k+2))`` → True (denominator is a product of two positive-
+      degree factors).
+    - ``1/(k**2)`` → True (positive-degree ``POW(k, 2)``).
+    - ``1`` → False (constant in k; the limit is 1, not 0).
+    - ``k`` → False (the limit is ∞, not 0).
+    - ``1/sin(k)`` → False (denominator's behaviour at ∞ is undecidable
+      without a deeper limit-finder; conservatively refuse).
+    """
+    if not isinstance(g, IRApply) or g.head != DIV or len(g.args) != 2:
+        return False
+    num, den = g.args
+    # Numerator must not introduce k-dependence — restrict to "constant
+    # in k" so the limit of g is fully determined by the denominator's
+    # behaviour.  A future phase could widen this to "deg(num) < deg(den)".
+    if not _is_constant_in(num, k):
+        return False
+    # Denominator must grow without bound as k → ∞.
+    return _is_positive_degree_polynomial_in_k(den, k)
+
+
 def _try_power_of_k(
     f: IRNode, k: IRSymbol
 ) -> tuple[Fraction, int] | None:
@@ -345,21 +463,42 @@ def evaluate_sum(
             if raw is not None:
                 return vm.eval(raw)
 
-    # ── 4. Telescoping sums (Phase 39) ──────────────────────────────────────
+    # ── 4. Telescoping sums (Phase 39 finite + Phase 41 infinite) ──────────
     # Detect ``f = g(k+1) − g(k)`` (or its antisymmetric ``g(k) − g(k+1)``)
-    # and emit ``g(hi+1) − g(lo)`` (or ``g(lo) − g(hi+1)``).  Only the
-    # finite case is handled — an infinite telescope needs a limit
-    # argument that we leave to a future phase.
-    if not inf_upper:
-        tele = _try_telescoping(f, k, vm)
-        if tele is not None:
-            from cas_substitution import subst
+    # and emit a closed form.
+    #
+    # - **Phase 39 (finite range)**: ``∑_{k=lo}^{hi} [g(k+1) − g(k)] =
+    #   g(hi+1) − g(lo)`` (and the antisymmetric mirror).
+    # - **Phase 41 (infinite range)**: when ``hi`` is ``%inf`` AND ``g(k)``
+    #   provably vanishes at infinity per :func:`_g_vanishes_at_infinity`,
+    #   ``∑_{k=lo}^{∞} [g(k+1) − g(k)] = lim g − g(lo) = −g(lo)`` (and
+    #   ``g(lo) − lim g = g(lo)`` for the antisymmetric case).  When
+    #   the limit isn't decidable by the narrow recogniser, fall through
+    #   to later rules — the original unevaluated SUM is then returned by
+    #   the bottom of this function.
+    tele = _try_telescoping(f, k, vm)
+    if tele is not None:
+        from cas_substitution import subst
 
-            g_expr, sign = tele
+        g_expr, sign = tele
+        sign_val = _ir_int_val(sign)
+        if inf_upper:
+            # Phase 41: only close when we can prove the limit is 0.
+            if _g_vanishes_at_infinity(g_expr, k):
+                g_at_lo = subst(lo, k, g_expr)
+                if sign_val == 1:
+                    # ∑[g(k+1) − g(k)] from lo to ∞ = 0 − g(lo) = −g(lo)
+                    return vm.eval(IRApply(NEG, (g_at_lo,)))
+                # ∑[g(k) − g(k+1)] from lo to ∞ = g(lo) − 0 = g(lo)
+                return vm.eval(g_at_lo)
+            # Limit not provably zero — fall through so the original
+            # unevaluated SUM is returned at the bottom.
+        else:
+            # Phase 39 (finite range) — bit-for-bit the same code path as
+            # the original implementation.
             hi_plus_one = IRApply(ADD, (hi, IRInteger(1)))
             g_at_hi_plus_one = subst(hi_plus_one, k, g_expr)
             g_at_lo = subst(lo, k, g_expr)
-            sign_val = _ir_int_val(sign)
             if sign_val == 1:
                 # ∑[g(k+1) − g(k)] = g(hi+1) − g(lo)
                 return vm.eval(IRApply(SUB, (g_at_hi_plus_one, g_at_lo)))

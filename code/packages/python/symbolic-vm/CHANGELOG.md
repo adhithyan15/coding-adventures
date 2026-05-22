@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.65.0 — 2026-05-22
+
+**Phase 40 + Phase 41 chain end-to-end.**
+
+Bumps the `coding-adventures-cas-summation` dependency to `>=0.3.0`,
+which introduces Phase 41 limit-aware infinite telescopes.  Combined
+with the existing Phase 40 Apart-retry path in `sum_handler`, the
+following canonical series now closes in a single dispatch:
+
+```
+∑_{k=1}^∞ 1/(k(k+1))
+  →  Apart (Phase 40)            →  ∑_{k=1}^∞ [1/k − 1/(k+1)]
+  →  telescope (Phase 39)        →  antisymmetric, g(k) = 1/k
+  →  g vanishes at ∞ (Phase 41)  →  g(1) − 0
+  →  eval                         →  1
+```
+
+### Added — tests
+
+- **`test_phase40_plus_phase41_infinite_chain`** in
+  `tests/test_phase25.py` confirms the end-to-end pipeline returns the
+  scalar integer `1` for ``∑_{k=1}^∞ 1/(k(k+1))``.
+
+### Changed
+
+- Bumped dep `coding-adventures-cas-summation>=0.3.0` (was `>=0.1.0`)
+  to lock in the Phase 41 closure capability.
+
 ## 0.64.0 — 2026-05-22
 
 **Phase 40 — Apart + telescope composition.**
