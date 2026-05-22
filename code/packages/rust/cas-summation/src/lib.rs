@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 
-use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, DIV, EXP, MUL, NEG, POW, SUB};
+use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, DIV, EXP, LOG, MUL, NEG, POW, SUB};
 
 pub const SUM: &str = "Sum";
 pub const PRODUCT: &str = "Product";
@@ -784,6 +784,40 @@ fn h_diverges_at_infinity(node: &IRNode, k: &IRNode) -> bool {
             return false;
         }
         return has_divergent;
+    }
+    // Phase 44: Log(h(k)) where h(k) → +∞.  Three sub-cases:
+    //   - Polynomial h: positive leading coefficient required.
+    //   - Exp inner: always positive; defer to recursion.
+    //   - Pow(b, h') inner: require b > 1 strictly (Pow(-2, k) value
+    //     oscillates in sign, log((-2)^k) not real).
+    // Anything else (Log(const), Log(Sin), Log(Mul(...))) refused.
+    if head_str == LOG && apply_node.args.len() == 1 {
+        let inner = &apply_node.args[0];
+        if is_positive_degree_polynomial_in_k(inner, k) {
+            return polynomial_leading_coeff_sign_in_k(inner, k) == Some(1);
+        }
+        if let IRNode::Apply(inner_apply) = inner {
+            let inner_head = match &inner_apply.head {
+                IRNode::Symbol(s) => s.as_str(),
+                _ => return false,
+            };
+            if inner_head == EXP {
+                return h_diverges_at_infinity(inner, k);
+            }
+            if inner_head == POW && inner_apply.args.len() == 2 {
+                let base = &inner_apply.args[0];
+                if is_constant_in(base, k) {
+                    if let Some(base_val) = rational_value(base) {
+                        // Strictly positive base > 1: numer > denom AND
+                        // numer > 0 (denom > 0 in normalised Rational).
+                        if base_val.numer > base_val.denom && base_val.numer > 0 {
+                            return h_diverges_at_infinity(inner, k);
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
     false
 }

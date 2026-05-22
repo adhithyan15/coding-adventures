@@ -2,6 +2,7 @@ import {
   ADD,
   DIV,
   EXP,
+  LOG,
   MUL,
   NEG,
   POW,
@@ -507,6 +508,44 @@ function hDivergesAtInfinity(node: IRNode, k: IRNode): boolean {
       return false;
     }
     return hasDivergent;
+  }
+  // Phase 44: Log(h(k)) where h(k) → +∞.  Two requirements:
+  //   (a) h(k) → +∞ (not just |h| → ∞)
+  //   (b) h(k) > 0 for k sufficiently large
+  // so log(h) is real-valued and diverges to +∞.
+  //
+  // Three sub-cases:
+  //   - Polynomial h: require positive leading coefficient explicitly.
+  //   - Exp(h'): always positive; defer to hDivergesAtInfinity recursion.
+  //   - Pow(b, h'): require strictly positive base b > 1 (not just
+  //     |b| > 1; Pow(-2, k) oscillates in sign so log((-2)^k) is
+  //     not real-valued).
+  // Other shapes (Log(const), Log(Sin), Log(Mul(...))) refused.
+  if (equals(node.head, LOG) && node.args.length === 1) {
+    const inner = node.args[0];
+    if (isPositiveDegreePolynomialInK(inner, k)) {
+      return polynomialLeadingCoeffSignInK(inner, k) === 1;
+    }
+    if (inner.kind === "apply" && equals(inner.head, EXP)) {
+      return hDivergesAtInfinity(inner, k);
+    }
+    if (
+      inner.kind === "apply" &&
+      equals(inner.head, POW) &&
+      inner.args.length === 2
+    ) {
+      const base = inner.args[0];
+      if (isConstantIn(base, k)) {
+        const baseVal = rationalValue(base);
+        if (baseVal !== undefined) {
+          // base > 1 strictly: numer > denom AND numer > 0 (denom > 0).
+          if (baseVal.numer > baseVal.denom && baseVal.numer > 0n) {
+            return hDivergesAtInfinity(inner, k);
+          }
+        }
+      }
+    }
+    return false;
   }
   return false;
 }

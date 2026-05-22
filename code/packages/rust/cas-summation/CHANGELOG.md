@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.5.0 — 2026-05-22
+
+**Phase 44 — Log divergence recogniser (Rust port).**
+
+Ports Python `cas-summation` 0.6.0 (PR #3909).  Extends Phase 43's
+`h_diverges_at_infinity` to also accept `Log(h(k))` where `h(k) → +∞`.
+
+### Added
+
+- New **Log branch** in `h_diverges_at_infinity` with three sub-cases:
+  1. Polynomial inner: positive leading coefficient required.
+  2. `Exp(h')` inner: always positive; defer.
+  3. `Pow(b, h')` inner: require base `b > 1` *strictly positive*.
+
+### Added — tests
+
+4 new `#[test]` functions:
+- `phase44_log_of_polynomial_recognised`.
+- `phase44_log_of_exp_recognised`.
+- `phase44_log_of_pow_negative_base_refuses` (regression).
+- `phase44_log_of_negative_polynomial_refuses` (regression).
+
+Full suite: **31 passed** (27 prior + 4 net new).
+
 ## 0.4.0 — 2026-05-22
 
 **Phase 43 — Transcendental vanishing-at-infinity (Rust port).**

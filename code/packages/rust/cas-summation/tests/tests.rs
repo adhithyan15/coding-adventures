@@ -2,7 +2,7 @@ use cas_summation::{
     evaluate_product, evaluate_product_expr, evaluate_sum, faulhaber_ir, geometric_sum_ir,
     poly_sum_ir, rational_value, try_special_infinite, Rational, GAMMA_FUNC, PRODUCT, SUM,
 };
-use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, DIV, EXP, MUL, NEG, POW, SUB};
+use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, DIV, EXP, LOG, MUL, NEG, POW, SUB};
 
 fn eval(node: IRNode) -> IRNode {
     match node {
@@ -603,4 +603,83 @@ fn phase43_pow_neg_wrapper_refuses() {
     );
     let out = evaluate_sum(f, k, int(0), sym("%inf"), eval);
     assert!(matches!(out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ---------------------------------------------------------------------------
+// Phase 44: Log divergence in vanishing-at-infinity recogniser.
+// ---------------------------------------------------------------------------
+
+fn substitute_kp1(node: &IRNode, k: &IRNode, kp1: &IRNode) -> IRNode {
+    if node == k {
+        return kp1.clone();
+    }
+    if let IRNode::Apply(apply_node) = node {
+        let new_args: Vec<IRNode> = apply_node
+            .args
+            .iter()
+            .map(|a| substitute_kp1(a, k, kp1))
+            .collect();
+        return apply(apply_node.head.clone(), new_args);
+    }
+    node.clone()
+}
+
+#[test]
+fn phase44_log_of_polynomial_recognised() {
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let g_k = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(LOG), vec![kp1.clone()])],
+    );
+    let g_kp1 = substitute_kp1(&g_k, &k, &kp1);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase44_log_of_exp_recognised() {
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let g_k = apply(
+        sym(DIV),
+        vec![
+            int(1),
+            apply(sym(LOG), vec![apply(sym(POW), vec![int(2), k.clone()])]),
+        ],
+    );
+    let g_kp1 = substitute_kp1(&g_k, &k, &kp1);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase44_log_of_pow_negative_base_refuses() {
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let g_k = apply(
+        sym(DIV),
+        vec![
+            int(1),
+            apply(sym(LOG), vec![apply(sym(POW), vec![int(-2), k.clone()])]),
+        ],
+    );
+    let g_kp1 = substitute_kp1(&g_k, &k, &kp1);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase44_log_of_negative_polynomial_refuses() {
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let neg_k = apply(sym(MUL), vec![int(-1), k.clone()]);
+    let g_k = apply(sym(DIV), vec![int(1), apply(sym(LOG), vec![neg_k])]);
+    let g_kp1 = substitute_kp1(&g_k, &k, &kp1);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
