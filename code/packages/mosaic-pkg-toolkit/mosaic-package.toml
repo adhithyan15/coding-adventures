@@ -17,9 +17,11 @@ description = "Bootstrap-shaped Mosaic UI component library — ready-made compo
 license     = "MIT OR Apache-2.0"
 
 [components]
-# v0.1 PR-1 exports. The full Tier-1 catalog (13 components) lands in
-# follow-up PRs; the exports list grows with each.
-exports = ["Button", "Alert"]
+# v0.1 PR-1: Button, Alert.
+# v0.1 PR-2: Badge, Spinner, Toast.
+# Remaining Tier-1 (Card, Checkbox, Container, Field, Input,
+# ListGroup, Modal, Radio) lands across follow-up PRs.
+exports = ["Alert", "Badge", "Button", "Spinner", "Toast"]
 
 [dependencies]
 # No other userland packages — toolkit components compose purely from

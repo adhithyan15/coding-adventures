@@ -1,5 +1,41 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — v0.1 PR-2 — Badge / Spinner / Toast
+
+### Added — 3 more Tier-1 components
+
+- **`Badge`** — pill label. `Box[badge] { Text[badge-text] }`. Slots:
+  `label`, `variant`. No emits. Used for counts and status tags.
+- **`Spinner`** — indeterminate loading indicator.
+  `Stack[spinner] { Icon[spinner-glyph] }`. Slots: `size`, `variant`,
+  `aria-label`. No emits. Animation is intentionally backend-driven
+  (CSS keyframes / SwiftUI `.rotationEffect()` / etc.); v0.1 ships
+  the static glyph + color and the host adds rotation in its own
+  stylesheet overlay.
+- **`Toast`** — bottom-anchored notification.
+  `If open { Box[toast] { Column { Row[toast-header], Box[toast-body] } } }`.
+  Slots: `title`, `message`, `variant`, `open` (bool). Emit:
+  `onClose`. Visibility driven by the `open` slot via an `If` block
+  (which auto-triggers `BoolToVisibilityConverter.cs` emission in
+  the XAML backend — proving the Fix A5 pipeline works for
+  toolkit components too).
+
+Each new component ships `.light.msl` and `.dark.msl` themes.
+
+### Changed
+
+- `mosaic-package.toml` `[components].exports` grew to 5: Alert,
+  Badge, Button, Spinner, Toast (alphabetical).
+- Smoke test (`tests/package_compiles.rs`) now drives 5 components.
+  Total: 7 tests (was 4 in PR-1), all passing.
+
+### Compile-time verification
+
+All three new components compile cleanly through `mosaic-compile
+--backend xaml`. Toast's `If open` block produces the expected
+`<ContentControl Visibility="...">` wrapping pattern + the
+auto-emitted `BoolToVisibilityConverter.cs` side-file.
+
 ## [0.1.0] — Unreleased — PR-1 scaffold
 
 ### Added

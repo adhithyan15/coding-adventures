@@ -28,9 +28,13 @@
 use std::fs;
 use std::path::PathBuf;
 
-/// The list of exported components in PR-1. Drives the per-component
-/// compile loop. Grows as each Tier-1 component lands.
-const COMPONENTS: &[&str] = &["Button", "Alert"];
+/// The list of exported components. Grows as each Tier-1 component
+/// lands. v0.1 PR-1: Button, Alert. v0.1 PR-2 adds: Badge, Spinner,
+/// Toast.
+///
+/// Alphabetical order matches the manifest's `[components].exports`
+/// list. Reorder both together if it ever changes.
+const COMPONENTS: &[&str] = &["Alert", "Badge", "Button", "Spinner", "Toast"];
 
 /// Themes shipped per component. Both must compile.
 const THEMES: &[&str] = &["light", "dark"];
@@ -189,6 +193,42 @@ fn alert_interface_matches_spec() {
     let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
     assert_eq!(slot_names, vec!["message", "variant", "dismissible"]);
 
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onClose"]);
+}
+
+/// Badge — pill label, slot-driven variant. No emits.
+#[test]
+fn badge_interface_matches_spec() {
+    let mil_src = read_source("Badge.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["label", "variant"]);
+    assert!(c.emits.is_empty(), "Badge has no emits");
+}
+
+/// Spinner — display-only loading indicator. No emits.
+#[test]
+fn spinner_interface_matches_spec() {
+    let mil_src = read_source("Spinner.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["size", "variant", "aria-label"]);
+    assert!(c.emits.is_empty(), "Spinner has no emits");
+}
+
+/// Toast — bottom-anchored notification with title/message/open/variant
+/// slots and onClose emit. The `open` slot is a bool that drives an
+/// `If` block in the .mll.
+#[test]
+fn toast_interface_matches_spec() {
+    let mil_src = read_source("Toast.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["title", "message", "variant", "open"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onClose"]);
 }

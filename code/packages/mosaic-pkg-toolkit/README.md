@@ -8,19 +8,26 @@ per-backend code.
 See [`code/specs/mosaic-pkg-toolkit.md`](../../specs/mosaic-pkg-toolkit.md)
 for the architecture, component catalog, and phasing plan.
 
-## v0.1 — PR-1 (scaffold)
+## v0.1 — exports so far
 
-**Exports:**
+**5 of 13 Tier-1 components shipped:**
 
-- **`Button`** — styled push button with `variant` (primary /
-  secondary / success / danger / warning / info / light / dark),
-  `size` (sm / md / lg), and `disabled` slots. Wraps the kernel
-  `HostButton`.
 - **`Alert`** — colored info banner with `variant`, optional inline
   dismiss button. Composed from `Box` + `Row` + `Text` + `If` +
   `HostButton`.
+- **`Badge`** — small pill label. `Box[badge] { Text }`. Slots:
+  `label`, `variant`.
+- **`Button`** — styled push button with `variant`, `size`,
+  `disabled` slots. Wraps the kernel `HostButton`.
+- **`Spinner`** — indeterminate loading indicator.
+  `Stack[spinner] { Icon[spinner-glyph] }`. Slots: `size`,
+  `variant`, `aria-label`.
+- **`Toast`** — bottom-anchored notification.
+  `If open { Box[toast] { Column { Row[toast-header],
+  Box[toast-body] } } }`. Slots: `title`, `message`, `variant`,
+  `open`. Emit: `onClose`.
 
-Both ship a `.light.msl` and `.dark.msl` theme.
+Every component ships `.light.msl` and `.dark.msl` themes.
 
 ## Roadmap
 
@@ -28,8 +35,9 @@ Per spec §7:
 
 | Phase | Components |
 |---|---|
-| v0.1 PR-1 (this) | Button, Alert |
-| v0.1 PR-2..N | Badge, Card, Checkbox, Container, Field, Input, ListGroup, Modal, Radio, Spinner, Toast — 11 more Tier-1 components |
+| v0.1 PR-1 | Button, Alert |
+| v0.1 PR-2 (this) | Badge, Spinner, Toast |
+| v0.1 PR-3..N | Card, Checkbox, Container, Field, Input, ListGroup, Modal, Radio — 8 remaining Tier-1 components |
 | v0.2 | Tier 2 — Nav, Navbar, Pagination, Breadcrumb, InputGroup, ButtonGroup, Tabs, DropdownMenu, Accordion, Select |
 | v0.3 | Bootstrap-aesthetic theme overlay |
 | v0.4 | Tier 3 — Tooltip, Popover, Carousel, Offcanvas (depends on kernel follow-ups) |
