@@ -88,6 +88,8 @@ The crate keeps the boundary narrow:
   for host log entries
 - supervisor drain run summaries expose count-drift presence flags beside
   signed deltas for host logs
+- supervisor drain run summaries flatten aggregate count-drift flags for
+  payload-free host logs
 - supervisor drain run summaries expose stable count-drift classifications so
   hosts can distinguish row, follow-up pressure, and combined drift
 - supervisor drain run summaries flatten stable count-drift and
