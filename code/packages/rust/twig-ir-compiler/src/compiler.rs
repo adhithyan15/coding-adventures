@@ -312,6 +312,40 @@ impl FnCtx {
     fn type_of(&self, var: &str) -> &str {
         self.var_types.get(var).map(|s| s.as_str()).unwrap_or("any")
     }
+
+    /// Path-A increment 3: emit a typed `mov dst = src` instruction,
+    /// propagating the source's inferred type to the destination.
+    ///
+    /// Replaces the legacy `call_builtin "_move" src` emission pattern
+    /// that the IIR-to-* backend validators all reject (because
+    /// `_move` is not in their `CALL_BUILTIN_SUPPORTED_NAMES` whitelist).
+    /// The typed `mov` IR opcode is accepted by every backend
+    /// (vm-core dispatch fix #3888, iir-to-beam mov lowering #3898,
+    /// and the iir-to-wasm / iir-to-jvm / iir-to-cil backends all
+    /// have native `"mov"` arms in their `lower.rs` match tables).
+    ///
+    /// The `type_hint` carried on the `mov` is the source variable's
+    /// type — `"any"` for dynamically-typed sources, `"i64"` / `"bool"`
+    /// for sources statically inferred by increments 1 and 2.
+    ///
+    /// When the source's type is known, the destination's type is
+    /// recorded so downstream consumers (e.g. the outer `ret` in
+    /// `main`) can propagate further.
+    fn emit_move(&mut self, dst: &str, src: &str, loc: SourceLoc) {
+        let ty = self.type_of(src).to_string();
+        self.emit(
+            IIRInstr::new(
+                "mov",
+                Some(dst.to_string()),
+                vec![Operand::Var(src.to_string())],
+                ty.as_str(),
+            ),
+            loc,
+        );
+        if ty != "any" {
+            self.record_type(dst, ty.as_str());
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -958,15 +992,16 @@ impl Compiler {
             "void",
         ), loc);
 
-        // Then branch — compile and copy into `result` via `_move`.
+        // Then branch — compile and copy into `result` via typed `mov`.
+        // Path-A increment 3: replaces the legacy `call_builtin "_move"`
+        // with a typed `mov` IR opcode.  If both arms produce the same
+        // statically-known type, `result` ends up typed and propagates
+        // through downstream `ret` instructions; programs like
+        // `(if (< x 0) -1 1)` now flow through every IIR-to-* backend.
         let then_v = self.compile_expr(&expr.then_branch, ctx)?;
+        let then_ty = ctx.type_of(&then_v).to_string();
         let then_loc = SourceLoc::new(expr.then_branch.pos().0, expr.then_branch.pos().1);
-        ctx.emit(IIRInstr::new(
-            "call_builtin",
-            Some(result.clone()),
-            vec![Operand::Var("_move".into()), Operand::Var(then_v)],
-            "any",
-        ), then_loc);
+        ctx.emit_move(&result, &then_v, then_loc);
         ctx.emit(IIRInstr::new(
             "jmp",
             None,
@@ -982,13 +1017,32 @@ impl Compiler {
             "void",
         ), loc);
         let else_v = self.compile_expr(&expr.else_branch, ctx)?;
+        let else_ty = ctx.type_of(&else_v).to_string();
         let else_loc = SourceLoc::new(expr.else_branch.pos().0, expr.else_branch.pos().1);
+        // `emit_move` for the else arm would overwrite `result`'s
+        // recorded type from the then-arm's `emit_move`.  Compute the
+        // consensus type up front so the recorded type reflects both
+        // arms' agreement (or `"any"` when they disagree).
         ctx.emit(IIRInstr::new(
-            "call_builtin",
+            "mov",
             Some(result.clone()),
-            vec![Operand::Var("_move".into()), Operand::Var(else_v)],
-            "any",
+            vec![Operand::Var(else_v)],
+            else_ty.as_str(),
         ), else_loc);
+        // Consensus: if both arms agree on a concrete type, that's the
+        // type of the `if` expression.  Otherwise it's `any`.
+        let consensus_ty = if then_ty == else_ty && then_ty != "any" {
+            then_ty
+        } else {
+            "any".to_string()
+        };
+        if consensus_ty != "any" {
+            ctx.record_type(&result, &consensus_ty);
+        } else {
+            // Clear any record from the then-arm's emit_move so
+            // downstream lookups don't return a stale type.
+            ctx.var_types.remove(&result);
+        }
 
         ctx.emit(IIRInstr::new(
             "label",
@@ -1008,19 +1062,17 @@ impl Compiler {
             binding_values.push((name.clone(), v));
         }
 
-        // Bind each name into `locals_` via a `_move` copy so the
+        // Bind each name into `locals_` via a typed `mov` copy so the
         // binding name exists as a named register in the frame.
+        // Path-A increment 4: typed `mov` propagates the RHS's
+        // inferred type to the binding name, so subsequent expressions
+        // that reference `name` see the concrete type.
         let mut added: Vec<String> = Vec::new();
         for (name, src) in &binding_values {
             if ctx.locals.insert(name.clone()) {
                 added.push(name.clone());
             }
-            ctx.emit(IIRInstr::new(
-                "call_builtin",
-                Some(name.clone()),
-                vec![Operand::Var("_move".into()), Operand::Var(src.clone())],
-                "any",
-            ), loc);
+            ctx.emit_move(name, src, loc);
         }
 
         // Compile body — at least one expression (parser-enforced).
@@ -1062,15 +1114,12 @@ impl Compiler {
             let v = self.compile_expr(rhs, ctx)?;
 
             // Bind the name into locals BEFORE compiling the next binding.
+            // Path-A increment 4: typed `mov` propagates the RHS's
+            // inferred type to the binding name (mirrors compile_let).
             if ctx.locals.insert(name.clone()) {
                 added.push(name.clone());
             }
-            ctx.emit(IIRInstr::new(
-                "call_builtin",
-                Some(name.clone()),
-                vec![Operand::Var("_move".into()), Operand::Var(v)],
-                "any",
-            ), loc);
+            ctx.emit_move(name, &v, loc);
         }
 
         // Compile body — parser-enforced at least one expression.
@@ -1128,18 +1177,23 @@ impl Compiler {
                     vec![Operand::Var(cond), Operand::Var(else_label.clone())],
                     "void"), loc);
 
-                // Then path: compile rest, copy to dest, jump to end.
+                // Then path: compile rest, copy to dest via typed `mov`,
+                // jump to end.  Path-A increment 4.
                 let then_val = self.compile_and(rest, ctx, loc)?;
-                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
-                    vec![Operand::Var("_move".into()), Operand::Var(then_val)], "any"), loc);
+                ctx.emit_move(&dest, &then_val, loc);
                 ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
 
-                // Else path: dest ← #f
+                // Else path: dest ← #f (typed `mov` from a `const_bool`-
+                // typed temporary so the dest carries `"bool"`).
                 ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(else_label)], "void"), loc);
                 let false_tmp = ctx.fresh_var("f");
-                ctx.emit(IIRInstr::new("const", Some(false_tmp.clone()), vec![Operand::Bool(false)], "any"), loc);
-                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
-                    vec![Operand::Var("_move".into()), Operand::Var(false_tmp)], "any"), loc);
+                // The false literal site uses the same typed `const`
+                // shape that `Expr::BoolLit` emits — see compile_expr
+                // path-A increment 1.
+                ctx.emit(IIRInstr::new("const", Some(false_tmp.clone()),
+                    vec![Operand::Bool(false)], "bool"), loc);
+                ctx.record_type(&false_tmp, "bool");
+                ctx.emit_move(&dest, &false_tmp, loc);
 
                 ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
                 Ok(dest)
@@ -1180,16 +1234,15 @@ impl Compiler {
                     vec![Operand::Var(cond.clone()), Operand::Var(falsy_label.clone())],
                     "void"), loc);
 
-                // Truthy path: dest ← cond, jump to end.
-                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
-                    vec![Operand::Var("_move".into()), Operand::Var(cond)], "any"), loc);
+                // Truthy path: dest ← cond via typed `mov`, jump to end.
+                // Path-A increment 4.
+                ctx.emit_move(&dest, &cond, loc);
                 ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
 
-                // Falsy path: evaluate rest.
+                // Falsy path: evaluate rest, copy via typed `mov`.
                 ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(falsy_label)], "void"), loc);
                 let rest_val = self.compile_or(rest, ctx, loc)?;
-                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
-                    vec![Operand::Var("_move".into()), Operand::Var(rest_val)], "any"), loc);
+                ctx.emit_move(&dest, &rest_val, loc);
 
                 ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
                 Ok(dest)

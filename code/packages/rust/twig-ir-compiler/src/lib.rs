@@ -794,26 +794,44 @@ mod tests {
     fn if_emits_jmp_if_false_and_two_labels() {
         let i = main_instrs("(if #t 1 2)");
         let ops = op_names(&i);
-        // jmp_if_false ... call_builtin _move ... jmp ... label ... call_builtin _move ... label ... ret
+        // jmp_if_false ... mov ... jmp ... label ... mov ... label ... ret
         assert!(ops.contains(&"jmp_if_false"));
         assert!(ops.contains(&"jmp"));
         assert_eq!(ops.iter().filter(|&&o| o == "label").count(), 2);
-        // Both arms use _move (preserves type, doesn't coerce booleans).
-        let moves: Vec<_> = i.iter().filter(|x| {
-            x.op == "call_builtin"
-                && matches!(&x.srcs[0], Operand::Var(s) if s == "_move")
-        }).collect();
-        assert_eq!(moves.len(), 2);
+        // Path-A increment 3: both arms use typed `mov` (not the legacy
+        // `call_builtin "_move"`).  This is what makes the if's result
+        // flow through the IIR-to-* backend validators — they all
+        // accept `mov` but reject unknown `call_builtin` names.
+        let moves: Vec<_> = i.iter().filter(|x| x.op == "mov").collect();
+        assert_eq!(moves.len(), 2,
+            "compile_if should emit two typed `mov` instructions \
+             (one per branch); got ops: {ops:?}");
+        // The legacy `_move` shape must NOT appear anywhere.
+        assert!(
+            !i.iter().any(|x| x.op == "call_builtin"
+                && matches!(&x.srcs[0], Operand::Var(s) if s == "_move")),
+            "compile_if must not emit the legacy call_builtin \"_move\" form",
+        );
     }
 
     #[test]
-    fn let_binds_via_move() {
+    fn let_binds_via_typed_mov() {
+        // Path-A increment 4: let-bindings now use typed `mov` instead
+        // of `call_builtin "_move"`.  The type of the RHS (`1` → `i64`)
+        // propagates to the binding name `x`.
         let i = main_instrs("(let ((x 1)) x)");
-        // Should have a _move into a register named "x".
-        let mv = i.iter().find(|x| x.op == "call_builtin"
-            && matches!(&x.srcs[0], Operand::Var(s) if s == "_move")
-            && x.dest.as_deref() == Some("x"));
-        assert!(mv.is_some(), "expected (let ((x 1)) ...) to _move into x");
+        let mv = i.iter().find(|x| x.op == "mov"
+            && x.dest.as_deref() == Some("x")).expect(
+            "expected (let ((x 1)) ...) to emit `mov x = <rhs>`",
+        );
+        assert_eq!(mv.type_hint, "i64",
+            "typed mov must carry the RHS's inferred type");
+        // The legacy `call_builtin "_move"` shape must NOT appear.
+        assert!(
+            !i.iter().any(|x| x.op == "call_builtin"
+                && matches!(&x.srcs[0], Operand::Var(s) if s == "_move")),
+            "compile_let must not emit legacy call_builtin \"_move\"",
+        );
     }
 
     #[test]
