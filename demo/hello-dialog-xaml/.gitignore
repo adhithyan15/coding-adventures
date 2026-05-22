@@ -1,0 +1,6 @@
+# build artifacts — regeneratable from the .csproj + sources
+winui/bin/
+winui/obj/
+winui/build/
+winui/build2/
+winui/*.stale.*

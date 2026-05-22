@@ -1,0 +1,19 @@
+// HelloDialog.dark.msl — minimal style. The native ContentDialog handles
+// most of the chrome; we just give the message Box a bit of breathing
+// room.
+
+style HelloDialog {
+  part shell {
+  }
+  part stack {
+    padding : 16 ;
+  }
+  part message {
+    padding : 8 ;
+  }
+  part actions {
+    padding : 8 ;
+  }
+  part close-btn {
+  }
+}

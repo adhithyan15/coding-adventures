@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
+    <RootNamespace>Mosaic.HelloDialog.Demo</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <PublishProfile>win-$(Platform).pubxml</PublishProfile>
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>false</EnableMsixTooling>
+    <WindowsPackageType>None</WindowsPackageType>
+    <!-- Disable PRI / MRT resource indexing — needs the AppxPackage MSBuild
+         tasks shipped with Visual Studio (this machine is bare .NET SDK).
+         The MrtCore.PriGen.targets file's Target gates on
+         AppxGeneratePriEnabled != false. -->
+    <AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>
+    <EnableDefaultPriItems>false</EnableDefaultPriItems>
+    <DisableEmbeddedXbf>true</DisableEmbeddedXbf>
+    <EnableMrtResourceIndexer>false</EnableMrtResourceIndexer>
+    <GenerateLibraryLayout>false</GenerateLibraryLayout>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <!-- Framework-dependent: the Windows App Runtime 1.6 is installed
+         system-wide; we don't need to bundle it. -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Exclude any stale build outputs from prior compilation attempts. -->
+    <Compile Remove="bin.stale.*\**" />
+    <Compile Remove="build*\**" />
+    <Page Remove="bin.stale.*\**" />
+    <Page Remove="build*\**" />
+    <ApplicationDefinition Remove="bin.stale.*\**" />
+    <ApplicationDefinition Remove="build*\**" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
+  </ItemGroup>
+
+  <!-- Override the WindowsAppSDK PRI / MSIX MSBuild targets that depend
+       on the AppxPackage MSBuild tasks (those tasks only ship with
+       Visual Studio, not the bare .NET SDK). The targets are pure
+       packaging plumbing — irrelevant for an unpackaged, self-contained
+       exe. Each empty override prevents the missing-task error and
+       lets the build proceed to copying outputs. -->
+  <Target Name="CopyLocalFilesOutputGroup" Returns="@(CopyLocalFilesOutputGroupOutput)">
+    <ItemGroup>
+      <CopyLocalFilesOutputGroupOutput Include="@(ReferenceCopyLocalPaths)">
+        <TargetPath>%(ReferenceCopyLocalPaths.DestinationSubDirectory)%(ReferenceCopyLocalPaths.Filename)%(ReferenceCopyLocalPaths.Extension)</TargetPath>
+      </CopyLocalFilesOutputGroupOutput>
+    </ItemGroup>
+  </Target>
+  <Target Name="AddPriPayloadFilesToCopyToOutputDirectoryItems" />
+  <Target Name="_FilterAndProjectReferences" />
+
+</Project>
