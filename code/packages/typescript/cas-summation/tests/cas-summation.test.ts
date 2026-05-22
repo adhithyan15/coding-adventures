@@ -339,3 +339,75 @@ describe("summation: Phase 41+42 limit-aware infinite telescope", () => {
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 43: transcendental vanishing-at-infinity.
+//
+// Extends Phase 41/42 to accept exponentially diverging shapes
+// (Exp(h(k)), Pow(b, h(k)) with |b| > 1, and Mul of such factors).
+// Sign-aware leading-coefficient check refuses `exp(-k)`, `2^(-k)`,
+// and the Mul / NEG-wrapped variants of those (these vanish, not diverge).
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 43 transcendental vanishing-at-infinity", () => {
+  it("∑_{k=0}^∞ [1/2^k − 1/2^(k+1)] = 1 (Pow(2, k) diverges)", () => {
+    const k = sym("k");
+    const f = app(SUB, [
+      app(DIV, [int(1), app(POW, [int(2), k])]),
+      app(DIV, [int(1), app(POW, [int(2), app(ADD, [k, int(1)])])]),
+    ]);
+    expect(evaluateSum(f, k, int(0), sym("%inf"), evalNode)).toEqual(int(1));
+  });
+
+  it("∑_{k=1}^∞ [1/3^k − 1/3^(k+1)] = 1/3", () => {
+    const k = sym("k");
+    const f = app(SUB, [
+      app(DIV, [int(1), app(POW, [int(3), k])]),
+      app(DIV, [int(1), app(POW, [int(3), app(ADD, [k, int(1)])])]),
+    ]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(rational(1, 3));
+  });
+
+  it("base 1/2 falls through (Pow(1/2, k) → 0, not ∞)", () => {
+    const k = sym("k");
+    const f = app(SUB, [
+      app(DIV, [int(1), app(POW, [rational(1, 2), k])]),
+      app(DIV, [int(1), app(POW, [rational(1, 2), app(ADD, [k, int(1)])])]),
+    ]);
+    const out = evaluateSum(f, k, int(0), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+
+  it("Mul of polynomial × exponential ∑ 1/(k·2^k) − 1/((k+1)·2^(k+1)) = 1/2", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const f = app(SUB, [
+      app(DIV, [int(1), app(MUL, [k, app(POW, [int(2), k])])]),
+      app(DIV, [int(1), app(MUL, [kp1, app(POW, [int(2), kp1])])]),
+    ]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(rational(1, 2));
+  });
+
+  it("regression: Pow(2, Mul(-1, k)) = 2^(-k) does NOT diverge — refuse", () => {
+    // Sign-aware leading-coefficient check must catch this.
+    const k = sym("k");
+    const negK = app(MUL, [int(-1), k]);
+    const negKp1 = app(MUL, [int(-1), app(ADD, [k, int(1)])]);
+    const f = app(SUB, [
+      app(DIV, [int(1), app(POW, [int(2), negK])]),
+      app(DIV, [int(1), app(POW, [int(2), negKp1])]),
+    ]);
+    const out = evaluateSum(f, k, int(0), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+
+  it("regression: Pow(2, Neg(k)) does NOT diverge — refuse (NEG wrapper form)", () => {
+    const k = sym("k");
+    const f = app(SUB, [
+      app(DIV, [int(1), app(POW, [int(2), app(NEG, [k])])]),
+      app(DIV, [int(1), app(POW, [int(2), app(NEG, [app(ADD, [k, int(1)])])])]),
+    ]);
+    const out = evaluateSum(f, k, int(0), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});

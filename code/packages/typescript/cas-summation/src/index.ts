@@ -376,14 +376,150 @@ function polynomialDegreeInK(node: IRNode, k: IRNode): number | undefined {
  * ``deg(P) ≥ deg(Q)``, non-Div shapes) returns ``false`` —
  * conservatively refusing keeps the closed-form emission safe.
  */
+/**
+ * Phase 43 helper: return the sign (+1 or -1) of the leading
+ * coefficient of `node` as a polynomial in `k`, or `undefined` for
+ * non-polynomial / degree-0 / unknown-sign shapes.
+ *
+ * Required by `hDivergesAtInfinity` to verify that `Exp(h)` / `Pow(b, h)`
+ * actually drive toward +∞ rather than 0.  Naïve "positive-degree
+ * polynomial" tests accept `Mul(-1, k)` (i.e. `-k`) whose leading
+ * coefficient is negative — without this helper we'd wrongly claim
+ * `exp(-k)` or `2^(-k)` diverge (they vanish).
+ */
+function polynomialLeadingCoeffSignInK(
+  node: IRNode,
+  k: IRNode,
+): 1 | -1 | undefined {
+  if (isConstantIn(node, k)) return undefined;
+  if (equals(node, k)) return 1;
+  if (node.kind !== "apply") return undefined;
+  // k^n (n >= 1)
+  if (equals(node.head, POW) && node.args.length === 2) {
+    const [base, exp] = node.args;
+    if (equals(base, k) && exp.kind === "integer" && exp.value >= 1n) {
+      return 1;
+    }
+    return undefined;
+  }
+  // Neg(p) flips sign.
+  if (equals(node.head, NEG) && node.args.length === 1) {
+    const inner = polynomialLeadingCoeffSignInK(node.args[0], k);
+    return inner === undefined ? undefined : ((inner === 1 ? -1 : 1) as 1 | -1);
+  }
+  // Mul: multiply signs of constant + k-bearing factors.  Symbolic
+  // constants of unknown sign / zero literals → undefined (refuse).
+  if (equals(node.head, MUL)) {
+    let sign: 1 | -1 = 1;
+    let anyKBearing = false;
+    for (const arg of node.args) {
+      if (isConstantIn(arg, k)) {
+        const val = rationalValue(arg);
+        if (val === undefined) return undefined;
+        if (val.numer === 0n) return undefined;
+        if (val.numer < 0n) sign = (sign === 1 ? -1 : 1) as 1 | -1;
+        continue;
+      }
+      const inner = polynomialLeadingCoeffSignInK(arg, k);
+      if (inner === undefined) return undefined;
+      sign = inner === 1 ? sign : ((sign === 1 ? -1 : 1) as 1 | -1);
+      anyKBearing = true;
+    }
+    return anyKBearing ? sign : undefined;
+  }
+  // Add: dominated by the highest-degree term.  Tied max degrees → refuse
+  // (leading coefficients could cancel).
+  if (equals(node.head, ADD)) {
+    let maxDeg = -1;
+    let leaderSign: 1 | -1 | undefined;
+    let tiedAtMax = false;
+    for (const arg of node.args) {
+      const deg = polynomialDegreeInK(arg, k);
+      if (deg === undefined) return undefined;
+      if (deg === 0) continue;
+      if (deg > maxDeg) {
+        maxDeg = deg;
+        leaderSign = polynomialLeadingCoeffSignInK(arg, k);
+        tiedAtMax = false;
+      } else if (deg === maxDeg) {
+        tiedAtMax = true;
+      }
+    }
+    return tiedAtMax ? undefined : leaderSign;
+  }
+  return undefined;
+}
+
+/**
+ * Phase 43: True when `node` provably diverges to ±∞ as `k → ∞`.
+ *
+ * Union of Phase 41/42 positive-degree polynomial + three transcendental
+ * cases:
+ *   1. `Exp(h(k))` with h positive-degree AND positive leading coeff.
+ *   2. `Pow(b, h(k))` with rational |b| > 1 AND h positive-degree with
+ *      positive leading coefficient.
+ *   3. `Mul(...)` where at least one factor diverges and the rest are
+ *      constant-in-k or also diverging.  Recursive.
+ *
+ * The sign-aware leading-coefficient check is critical: `exp(-k) → 0`
+ * and `2^(-k) → 0`, not ∞.
+ */
+function hDivergesAtInfinity(node: IRNode, k: IRNode): boolean {
+  // Phase 41/42 fast path.
+  if (isPositiveDegreePolynomialInK(node, k)) return true;
+  if (node.kind !== "apply") return false;
+  // Phase 43: Exp(h) with h → +∞.
+  if (equals(node.head, EXP) && node.args.length === 1) {
+    const inner = node.args[0];
+    if (isPositiveDegreePolynomialInK(inner, k)) {
+      return polynomialLeadingCoeffSignInK(inner, k) === 1;
+    }
+    return false;
+  }
+  // Phase 43: Pow(b, h) with |b| > 1 and h → +∞.
+  if (equals(node.head, POW) && node.args.length === 2) {
+    const [base, exp] = node.args;
+    if (isConstantIn(base, k)) {
+      const baseVal = rationalValue(base);
+      if (baseVal !== undefined) {
+        // |base| > 1 iff |numer| > denom (denom always > 0 in normalised form).
+        const absNumer = baseVal.numer < 0n ? -baseVal.numer : baseVal.numer;
+        if (absNumer > baseVal.denom) {
+          if (isPositiveDegreePolynomialInK(exp, k)) {
+            if (polynomialLeadingCoeffSignInK(exp, k) === 1) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+  }
+  // Phase 43: Mul(...) — at least one factor diverges, others constant
+  // in k or also diverging.  Recursive.
+  if (equals(node.head, MUL) && node.args.length >= 2) {
+    let hasDivergent = false;
+    for (const arg of node.args) {
+      if (isConstantIn(arg, k)) continue;
+      if (hDivergesAtInfinity(arg, k)) {
+        hasDivergent = true;
+        continue;
+      }
+      return false;
+    }
+    return hasDivergent;
+  }
+  return false;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
   }
   const [num, den] = g.args;
-  // Phase 41 fast path: constant numerator + positive-degree denominator.
+  // Phase 41/43 fast path: constant numerator + diverging denominator
+  // (positive-degree polynomial OR exp / b^k transcendental).
   if (isConstantIn(num, k)) {
-    return isPositiveDegreePolynomialInK(den, k);
+    return hDivergesAtInfinity(den, k);
   }
   // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
   const numDeg = polynomialDegreeInK(num, k);

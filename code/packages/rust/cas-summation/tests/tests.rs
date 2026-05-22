@@ -464,3 +464,143 @@ fn phase42_transcendental_numerator_falls_through() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ---------------------------------------------------------------------------
+// Phase 43: transcendental vanishing-at-infinity.
+//
+// Extends Phase 41/42 to accept Pow(b, h(k)) with |b| > 1 and h positive-
+// degree with positive leading coefficient.  Sign-aware guard refuses
+// `2^(-k)` and similar (these vanish, not diverge).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase43_pow_2_diverges_closes() {
+    // ∑_{k=0}^∞ [1/2^k − 1/2^(k+1)] = 1.
+    let k = sym("k");
+    let f = apply(
+        sym(SUB),
+        vec![
+            apply(sym(DIV), vec![int(1), apply(sym(POW), vec![int(2), k.clone()])]),
+            apply(
+                sym(DIV),
+                vec![
+                    int(1),
+                    apply(sym(POW), vec![int(2), apply(sym(ADD), vec![k.clone(), int(1)])]),
+                ],
+            ),
+        ],
+    );
+    assert_eq!(evaluate_sum(f, k, int(0), sym("%inf"), eval), int(1));
+}
+
+#[test]
+fn phase43_pow_3_higher_start() {
+    // ∑_{k=1}^∞ [1/3^k − 1/3^(k+1)] = 1/3.
+    let k = sym("k");
+    let f = apply(
+        sym(SUB),
+        vec![
+            apply(sym(DIV), vec![int(1), apply(sym(POW), vec![int(3), k.clone()])]),
+            apply(
+                sym(DIV),
+                vec![
+                    int(1),
+                    apply(sym(POW), vec![int(3), apply(sym(ADD), vec![k.clone(), int(1)])]),
+                ],
+            ),
+        ],
+    );
+    assert_eq!(evaluate_sum(f, k, int(1), sym("%inf"), eval), rat(1, 3));
+}
+
+#[test]
+fn phase43_base_half_falls_through() {
+    // Pow(1/2, k) → 0, not ∞; Phase 43 refuses.
+    let k = sym("k");
+    let f = apply(
+        sym(SUB),
+        vec![
+            apply(sym(DIV), vec![int(1), apply(sym(POW), vec![rat(1, 2), k.clone()])]),
+            apply(
+                sym(DIV),
+                vec![
+                    int(1),
+                    apply(sym(POW), vec![rat(1, 2), apply(sym(ADD), vec![k.clone(), int(1)])]),
+                ],
+            ),
+        ],
+    );
+    let out = evaluate_sum(f, k, int(0), sym("%inf"), eval);
+    assert!(matches!(out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase43_mul_polynomial_times_exponential() {
+    // ∑_{k=1}^∞ [1/(k·2^k) − 1/((k+1)·2^(k+1))] = g(1) = 1/2.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let f = apply(
+        sym(SUB),
+        vec![
+            apply(
+                sym(DIV),
+                vec![
+                    int(1),
+                    apply(sym(MUL), vec![k.clone(), apply(sym(POW), vec![int(2), k.clone()])]),
+                ],
+            ),
+            apply(
+                sym(DIV),
+                vec![
+                    int(1),
+                    apply(sym(MUL), vec![kp1.clone(), apply(sym(POW), vec![int(2), kp1.clone()])]),
+                ],
+            ),
+        ],
+    );
+    assert_eq!(evaluate_sum(f, k, int(1), sym("%inf"), eval), rat(1, 2));
+}
+
+#[test]
+fn phase43_pow_negative_exponent_polynomial_refuses() {
+    // Pow(2, Mul(-1, k)) = 2^(-k) → 0, not ∞.  Sign-aware guard must refuse.
+    let k = sym("k");
+    let neg_k = apply(sym(MUL), vec![int(-1), k.clone()]);
+    let neg_kp1 = apply(sym(MUL), vec![int(-1), apply(sym(ADD), vec![k.clone(), int(1)])]);
+    let f = apply(
+        sym(SUB),
+        vec![
+            apply(sym(DIV), vec![int(1), apply(sym(POW), vec![int(2), neg_k])]),
+            apply(sym(DIV), vec![int(1), apply(sym(POW), vec![int(2), neg_kp1])]),
+        ],
+    );
+    let out = evaluate_sum(f, k, int(0), sym("%inf"), eval);
+    assert!(matches!(out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase43_pow_neg_wrapper_refuses() {
+    // Pow(2, Neg(k)) — alternate IR for 2^(-k); same refusal.
+    let k = sym("k");
+    let f = apply(
+        sym(SUB),
+        vec![
+            apply(
+                sym(DIV),
+                vec![int(1), apply(sym(POW), vec![int(2), apply(sym(NEG), vec![k.clone()])])],
+            ),
+            apply(
+                sym(DIV),
+                vec![
+                    int(1),
+                    apply(
+                        sym(POW),
+                        vec![int(2), apply(sym(NEG), vec![apply(sym(ADD), vec![k.clone(), int(1)])])],
+                    ),
+                ],
+            ),
+        ],
+    );
+    let out = evaluate_sum(f, k, int(0), sym("%inf"), eval);
+    assert!(matches!(out, IRNode::Apply(node) if node.head == sym(SUM)));
+}

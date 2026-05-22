@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.4.0 — 2026-05-22
+
+**Phase 43 — Transcendental vanishing-at-infinity (TypeScript port).**
+
+Ports Python `cas-summation` 0.5.0 (PR #3899 in review).  Extends the
+Phase 41/42 denominator recogniser to accept exponentially diverging
+shapes so `∑_{k=0}^∞ [1/2^k − 1/2^(k+1)] = 1` and similar close.
+
+### Added
+
+- **`hDivergesAtInfinity(node, k)`** — union of Phase 41/42
+  positive-degree polynomial check and three transcendental cases:
+  1. `Exp(h(k))` with h positive-degree AND positive leading coeff.
+  2. `Pow(b, h(k))` with rational `|b| > 1` AND h positive-degree
+     with positive leading coefficient.
+  3. `Mul(...)` where at least one factor diverges and the others
+     are constant-in-k or also diverging.  Recursive.
+- **`polynomialLeadingCoeffSignInK(node, k) -> 1 | -1 | undefined`**
+  — returns the sign of the polynomial's leading coefficient in `k`,
+  or `undefined` for non-polynomial / degree-0 / unknown-sign shapes.
+  Required to refuse `exp(-k)`, `2^(-k)`, etc. (these vanish, not
+  diverge).
+
+### Changed
+
+- `gVanishesAtInfinity` Phase 41 fast path now calls
+  `hDivergesAtInfinity` instead of `isPositiveDegreePolynomialInK`
+  directly, picking up the transcendental cases automatically.
+
+### Added — tests
+
+`tests/cas-summation.test.ts` — new
+`summation: Phase 43 transcendental vanishing-at-infinity` describe
+block with 6 cases:
+
+- `∑_{k=0}^∞ [1/2^k − 1/2^(k+1)] = 1`.
+- `∑_{k=1}^∞ [1/3^k − 1/3^(k+1)] = 1/3`.
+- Base 1/2 falls through (`(1/2)^k → 0`, not ∞).
+- `Mul` of polynomial × exponential `k · 2^k` closes (= 1/2).
+- Regression: `2^(-k)` via `Mul(-1, k)` does NOT diverge → refuse.
+- Regression: `2^(Neg(k))` does NOT diverge → refuse (NEG wrapper).
+
+Full suite: **27 passed** (21 prior + 6 net new).
+
+### Still deferred
+
+- Apart-induced telescopes (e.g. `1/(k(k+1))`) — blocked on porting
+  the `Apart` partial-fraction-decomposition handler to TypeScript.
+- Transcendental limit-finder for shapes the polynomial-degree path
+  doesn't cover (e.g. `sin(k)/k²`, `log(k)/k`).
+
 ## 0.3.0 — 2026-05-22
 
 **Phase 41 + Phase 42 — Limit-aware infinite telescope (TypeScript port).**
