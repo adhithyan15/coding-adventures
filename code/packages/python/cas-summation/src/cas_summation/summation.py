@@ -682,6 +682,14 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     # closures under Mul/Add/Neg).
     if _is_bounded_in_k(num, k) and _h_diverges_at_infinity(den, k):
         return True
+    # Phase 50: Log(diverging) numerator + diverging denominator.
+    # log(h(k)) → +∞ at logarithmic rate, while any positive-degree
+    # polynomial / exp / b^k denominator grows strictly faster, so the
+    # quotient vanishes.  Reuses ``_h_diverges_at_infinity`` for both
+    # the numerator argument and the denominator — same sign-aware
+    # divergence check used elsewhere.
+    if _is_log_of_diverging_in_k(num, k) and _h_diverges_at_infinity(den, k):
+        return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -690,6 +698,32 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     if den_degree is None:
         return False
     return num_degree < den_degree
+
+
+def _is_log_of_diverging_in_k(node: IRNode, k: IRSymbol) -> bool:
+    """Return True when ``node = Log(h(k))`` with ``h(k) → +∞``.
+
+    Phase 50 — used by :func:`_g_vanishes_at_infinity` to recognise
+    that ``log(k)/k²``, ``log(k+1)/k``, ``log(2^k)/k³``, etc. all
+    vanish at infinity.  The squeeze argument: ``log(h) → ∞`` at a
+    logarithmic rate, while any positive-degree polynomial /
+    exponential denominator grows strictly faster, so ``log/poly → 0``.
+
+    Sign-aware: delegates the divergence check to
+    :func:`_h_diverges_at_infinity` *on the entire `Log(...)` node*,
+    which routes through Phase 44's Log branch.  That branch already
+    refuses shapes like ``Log(Mul(-1, k))`` (negative leading
+    coefficient — ``log(-k)`` isn't real for odd k), so Phase 50
+    inherits the same conservatism for free.
+    """
+    if not isinstance(node, IRApply):
+        return False
+    if node.head != LOG or len(node.args) != 1:
+        return False
+    # Delegate to the full Log-aware divergence check.  This refuses
+    # Log(negative-polynomial) shapes without us having to redo the
+    # sign analysis.
+    return _h_diverges_at_infinity(node, k)
 
 
 def _try_power_of_k(
