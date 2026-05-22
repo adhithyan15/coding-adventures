@@ -488,6 +488,7 @@ members = [
     "type-checker-protocol",
     "type-declarations",
     "type-sidecar",
+    "type-sidecar-merger",
     "grammar-type-checker",
     "nib-lexer",
     "nib-parser",
