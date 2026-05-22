@@ -74,6 +74,7 @@
 
 pub mod compiler;
 pub mod errors;
+pub(crate) mod jit_backend;
 pub mod vm;
 
 pub use compiler::{compile_source, compile_to_iir};

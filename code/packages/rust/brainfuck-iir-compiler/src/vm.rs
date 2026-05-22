@@ -39,26 +39,48 @@
 //! ## JIT mode (BF05)
 //!
 //! When `jit=true`, [`BrainfuckVM::execute_module`] dispatches through
-//! [`jit_core::core::JITCore`] instead of calling [`VMCore::execute`]
-//! directly.  Brainfuck IIR is `FullyTyped` from birth (see
-//! `compiler.rs`), so the JIT chain *would* eagerly tier-promote the
-//! `main` function to a native backend on the very first call — except
-//! none of the existing JIT backends (NullBackend, EchoBackend, future
-//! WASM/x86_64 backends) know how to lower Brainfuck's custom
-//! `load_mem` / `store_mem` opcodes yet.  Until a backend learns
-//! Brainfuck's tape memory model, we wire `JITCore` with the
-//! private [`InterpOnlyBackend`] (whose `compile()` always returns
-//! `None`), which forces every function to stay on the interpreter
-//! tier.  The plumbing is real — the same `VMCore` runs the program,
-//! the same `putchar` / `getchar` / `load_mem` / `store_mem` / `label`
-//! handlers are wired up, and the tier-up path is observable via
-//! `JITCore::cache_stats()` — there's just no native code generated
-//! today.
+//! [`jit_core::core::JITCore`].  The backend handed to `JITCore` is
+//! the private [`crate::jit_backend::BrainfuckCirJit`], which:
 //!
-//! That gives Brainfuck access to the LANG VM's JIT chain in the
-//! same shape as Dartmouth BASIC's `jit_smoke.rs`: any future backend
-//! that grows support for `load_mem` / `store_mem` automatically
-//! tier-promotes BF programs without touching this wrapper.
+//! 1. **Compiles** Brainfuck's CIR (post-specialise, post-optimise)
+//!    into a packed register-machine bytecode (1-byte opcode tags,
+//!    1-byte register indices, `i16` little-endian branch offsets,
+//!    natural-width literals).  See `src/jit_backend.rs` for the full
+//!    encoding.
+//! 2. **Runs** that bytecode in a tight `match`-loop, owning a fresh
+//!    tape per call.  This bypasses `vm-core`'s generic IIR dispatch
+//!    entirely — no `HashMap<String, OpcodeHandler>` lookup per
+//!    instruction, no string-keyed register file, no IIR-level
+//!    operand-resolution overhead.
+//!
+//! This is a "JIT" in the classic, historical sense — the same shape
+//! used by the JVM (Ignition tier), Smalltalk-80, V8 Ignition, Lua,
+//! and many other production JITs as their first tier.  It is **not**
+//! a native-code JIT (no Cranelift, no hand-rolled machine code);
+//! growing that is a separate piece of work.  When a backend learns
+//! to emit real machine code from CIR, swapping it in here is a
+//! one-line change.
+//!
+//! ### Builtins and I/O under the JIT path
+//!
+//! The JIT-handler signature
+//! ([`jit_core::backend::Backend::run`]) is `Fn(&[u8], &[Value]) ->
+//! Value` — no access to the VM's builtin registry.  Instead, the
+//! backend captures the same `Arc<Mutex<…>>` output / input / step /
+//! error slots that the interpreter path uses, so both paths read
+//! from the same input buffer and write to the same output buffer —
+//! and so [`tests/jit_smoke.rs`](https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/rust/brainfuck-iir-compiler/tests/jit_smoke.rs)
+//! can compare them byte-for-byte.
+//!
+//! ### Fallback
+//!
+//! If [`BrainfuckCirJit::compile`] returns `None` for some CIR shape
+//! the backend doesn't recognise (e.g. an unexpected `mul_u8` or a
+//! branch target offset bigger than `i16::MAX`), `JITCore` skips the
+//! cache-entry registration and the function falls through to
+//! `vm-core`'s standard interpreter — which still has all five
+//! Brainfuck-specific opcode/builtin handlers registered, so
+//! correctness is preserved.
 //!
 //! ## Fuel cap
 //!
@@ -82,8 +104,6 @@ use std::collections::VecDeque;
 use std::sync::{Arc, Mutex};
 
 use interpreter_ir::module::IIRModule;
-use jit_core::backend::Backend;
-use jit_core::cir::CIRInstr;
 use jit_core::core::JITCore;
 use vm_core::{
     core::VMCore,
@@ -95,6 +115,7 @@ use vm_core::{
 use crate::{
     compiler::compile_source,
     errors::BrainfuckError,
+    jit_backend::BrainfuckCirJit,
 };
 
 /// Maximum output bytes returned by a single [`BrainfuckVM::run`] call.
@@ -205,6 +226,59 @@ impl BrainfuckVM {
         self.execute_module(&module, input_bytes)
     }
 
+    /// Compile `source`, run it through the BF JIT bytecode compiler, and
+    /// return the resulting bytecode length in bytes — or `None` if the
+    /// JIT would refuse to compile this program (and would fall back to
+    /// `vm-core`'s interpreter).
+    ///
+    /// Useful for confirming the JIT path is doing real work rather than
+    /// silently falling back to the interpreter.  The bytecode format is
+    /// internal and unstable; only the *length* is exposed here.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`BrainfuckError`] if the source fails to parse or compile
+    /// to IIR.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use brainfuck_iir_compiler::BrainfuckVM;
+    ///
+    /// let vm = BrainfuckVM::new(true, 30_000, None).unwrap();
+    /// // `+++.` compiles to a non-empty bytecode stream — the JIT is real.
+    /// let len = vm.jit_bytecode_len("+++.").unwrap();
+    /// assert!(len.is_some());
+    /// assert!(len.unwrap() > 0);
+    /// ```
+    pub fn jit_bytecode_len(&self, source: &str) -> Result<Option<usize>, BrainfuckError> {
+        use jit_core::backend::Backend;
+        use jit_core::optimizer::CIROptimizer;
+        use jit_core::specialise::specialise;
+
+        let module = self.compile(source)?;
+        let fn_ = module.functions.iter().find(|f| f.name == "main")
+            .ok_or_else(|| BrainfuckError::new("compiled module has no `main` function"))?;
+
+        // Run the same specialise → optimize → compile pipeline that
+        // `JITCore::execute_with_jit` Phase 1 runs.  We use a throwaway
+        // BrainfuckCirJit instance (with empty I/O buffers) since
+        // `compile()` is pure — it only reads CIR and emits bytes.
+        let cir = specialise(fn_, 5);
+        let cir = CIROptimizer::new().run(cir);
+
+        let throwaway = BrainfuckCirJit::new(
+            Arc::new(Mutex::new(Vec::new())),
+            Arc::new(Mutex::new(VecDeque::new())),
+            Arc::new(Mutex::new(0)),
+            Arc::new(Mutex::new(None)),
+            self.tape_size,
+            self.max_steps,
+            MAX_OUTPUT_BYTES,
+        );
+        Ok(throwaway.compile(&cir).map(|b| b.len()))
+    }
+
     /// Execute an already-compiled `module` and return stdout bytes.
     ///
     /// Useful for callers that want to compile once and run many times with
@@ -230,6 +304,13 @@ impl BrainfuckVM {
             Arc::new(Mutex::new(VecDeque::from(input_bytes.to_vec())));
         // Shared step counter — bumped by the `label` opcode handler.
         let steps: Arc<Mutex<u64>> = Arc::new(Mutex::new(0));
+        // Shared JIT error slot — see the JIT mode section in this module's
+        // top-level docs.  The JIT backend writes here on fuel-cap or
+        // out-of-bounds errors (the `Backend::run` signature returns Value,
+        // not Result, so this slot is how we get a structured error back
+        // to the caller).  Unused by the interpreter path, which surfaces
+        // errors through VMError directly.
+        let jit_error: Arc<Mutex<Option<String>>> = Arc::new(Mutex::new(None));
 
         let tape_size = self.tape_size;
         let max_steps = self.max_steps;
@@ -374,15 +455,37 @@ impl BrainfuckVM {
         );
 
         // ---- Execute --------------------------------------------------
-        // The two execution paths share the same `VMCore` (with all five
-        // Brainfuck-specific handlers registered above).  The only difference
-        // is whether we drive that VM through `VMCore::execute` (pure
-        // interpreter) or `JITCore::execute_with_jit` (interpreter +
-        // tier-promotion hook).  See the JIT mode section in this module's
-        // top-level docs for why the JIT path uses `InterpOnlyBackend`.
+        // Both execution paths share the same `VMCore` with all five
+        // Brainfuck-specific handlers registered above — that keeps the
+        // interpreter fallback fully correct.  When `jit=true`:
+        //
+        //   - `JITCore::execute_with_jit` Phase 1 calls
+        //     `BrainfuckCirJit::compile`, which translates the CIR
+        //     instruction stream to packed bytecode and registers a JIT
+        //     handler with `vm-core` for `main`.
+        //   - Phase 2 dispatches `main` and `vm-core` jumps straight to
+        //     the JIT handler, bypassing the IIR interpreter entirely.
+        //     The handler runs the bytecode in a tight loop against an
+        //     owned tape, writing to the shared `output` Arc.
+        //   - If compile() returns `None` (unknown CIR shape, branch
+        //     offset too large), Phase 1 leaves `main` uncompiled and
+        //     Phase 2 falls through to the IIR interpreter — same as the
+        //     `jit=false` path.
+        //
+        // When `jit=false`, we call `vm.execute(...)` directly.  Same
+        // VMCore, same handlers, no JIT chain involved.
         let mut module_clone = module.clone();
         let exec_result = if self.jit_enabled {
-            let mut jit = JITCore::new(&mut vm, Box::new(InterpOnlyBackend));
+            let backend = BrainfuckCirJit::new(
+                Arc::clone(&output),
+                Arc::clone(&input),
+                Arc::clone(&steps),
+                Arc::clone(&jit_error),
+                self.tape_size,
+                self.max_steps,
+                MAX_OUTPUT_BYTES,
+            );
+            let mut jit = JITCore::new(&mut vm, Box::new(backend));
             jit.execute_with_jit(&mut vm, &mut module_clone, "main", &[])
                 .map(|_| ())
         } else {
@@ -393,6 +496,13 @@ impl BrainfuckVM {
             // and fuel-cap cases (both paths surface VMError on failure).
             BrainfuckError::new(e.to_string())
         })?;
+        // Surface any error written by the JIT backend's bytecode
+        // interpreter.  The `Backend::run` signature returns Value, not
+        // Result, so the JIT path can't propagate VMError directly —
+        // hence the shared error slot.
+        if let Some(msg) = jit_error.lock().unwrap_or_else(|e| e.into_inner()).take() {
+            return Err(BrainfuckError::new(msg));
+        }
 
         // Recover from poisoned mutex on final read.
         let result = output.lock().unwrap_or_else(|e| e.into_inner()).clone();
@@ -471,56 +581,6 @@ fn resolve_value(
                 .and_then(|f| f.resolve(name).cloned())
                 .unwrap_or(Value::Int(0))
         }
-    }
-}
-
-// ---------------------------------------------------------------------------
-// InterpOnlyBackend — pin BF on the interpreter tier of jit-core
-// ---------------------------------------------------------------------------
-
-/// A [`Backend`] that refuses to compile, forcing `JITCore` to fall back to
-/// the interpreter for every function.
-///
-/// # Why this exists
-///
-/// Brainfuck's IIR is `FullyTyped` from birth, which means
-/// [`JITCore::execute_with_jit`] would eagerly compile `main` on the first
-/// call (see Phase 1 in its docs).  That's normally good — but no current
-/// backend (NullBackend, EchoBackend, future WASM/x86_64 ports) knows how
-/// to lower Brainfuck's custom `load_mem` / `store_mem` opcodes.  Compiling
-/// with a backend that can't handle those would silently replace `main` with
-/// a stub that returns `Null`, producing no output.
-///
-/// Returning `None` from [`Backend::compile`] tells `JITCore`:
-///
-/// > "I refuse to compile this function — keep it interpreted forever."
-///
-/// All five Brainfuck-specific handlers (`putchar`, `getchar`, `load_mem`,
-/// `store_mem`, `label`) live on the underlying `VMCore`, so the interpreter
-/// path still works correctly.  When a future backend learns Brainfuck's
-/// tape memory model, swap this out for that backend and the same `BrainfuckVM`
-/// wrapper tier-promotes automatically.
-///
-/// # Why kept private
-///
-/// Out-of-crate callers should use `BrainfuckVM::new(jit, ...)`; this struct
-/// is an implementation detail of the JIT-mode wiring.
-struct InterpOnlyBackend;
-
-impl Backend for InterpOnlyBackend {
-    fn name(&self) -> &str {
-        "brainfuck-interp-only"
-    }
-
-    fn compile(&self, _ir: &[CIRInstr]) -> Option<Vec<u8>> {
-        // Refusing to compile is the *point* — see the docs above.
-        None
-    }
-
-    fn run(&self, _binary: &[u8], _args: &[Value]) -> Value {
-        // Unreachable: `compile()` returns None, so `JITCore` never builds
-        // a cache entry and never calls `run()`.  Return Null defensively.
-        Value::Null
     }
 }
 
