@@ -1490,3 +1490,204 @@ def mean_backward_axis_via_rust(
         target_shape,
         device=device,
     )
+
+
+# ──────────────────────────────────────────────────────────────────
+# Activation backward helpers (MX10 Phase 4-back)
+#
+# Phase 4 + 4b/c/d shipped all five classic activation forwards.
+# This sub-phase adds **backward** dispatch for the two activations
+# whose backward depends only on the saved output (so it has a
+# tight 3-op composed-graph form):
+#
+#   * Tanh:    grad_in = g * (1 - y²)
+#   * Sigmoid: grad_in = g * y * (1 - y)
+#
+# Both ship as 3-op graphs that take grad_output and saved_output
+# as inputs, plus a ones-constant tensor (full-shape because
+# matrix-cpu Sub doesn't broadcast scalars — same constraint that
+# drove ReLU's zero-tensor and Sigmoid forward's ones-tensor).
+#
+# Skipped here:
+#   * ReLU backward (`g * (x > 0)`) — needs a comparison op + a
+#     gate-multiply; doable but a different shape than these two.
+#   * GELU backward — the closed form has multiple terms (sech²
+#     and d_inner from the chain rule); deferred.
+#   * Softmax backward (`y * (g - sum(g * y))`) — multi-op
+#     composition with a reduce; deferred.
+#
+# The forward already established that y (the activation output)
+# is saved in `self.saved_metadata["output"]` for both Tanh and
+# Sigmoid, so the backward dispatch is a drop-in upgrade.
+# ──────────────────────────────────────────────────────────────────
+
+
+def tanh_backward_via_rust(
+    grad_data: list[float],
+    output_data: list[float],
+    target_shape: tuple[int, ...],
+    *,
+    device: str | None = None,
+) -> Tensor:
+    """``g * (1 - y²)`` as a 3-op composed graph.
+
+    Topology::
+
+        g(0)  ─┐
+        y(1) ──Mul(y, y)──> y²(2)
+        ones(3) ──Sub(ones, y²)──> 1 - y²(4)
+        Mul(g(0), 1 - y²(4)) ──> output(5)
+
+    3 ops, 6 tensors, 1 constant (ones at target_shape).
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "tanh_backward_via_rust called but Rust backend is not available; "
+            "callers must check should_use_rust_for_activation() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(grad_data)
+    if len(output_data) != numel:
+        raise RuntimeError(
+            f"tanh_backward_via_rust: grad has {numel} cells but output "
+            f"has {len(output_data)} cells — must match"
+        )
+
+    target_shape_list = list(target_shape)
+    grad_bytes = struct.pack(f"<{numel}f", *grad_data)
+    y_bytes = struct.pack(f"<{numel}f", *output_data)
+    ones_hex = struct.pack(f"<{numel}f", *([1.0] * numel)).hex()
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    {"id": 0, "dtype": "f32", "shape": target_shape_list},  # g
+                    {"id": 1, "dtype": "f32", "shape": target_shape_list},  # y
+                    {"id": 2, "dtype": "f32", "shape": target_shape_list},  # y²
+                    {"id": 3, "dtype": "f32", "shape": target_shape_list},  # ones
+                    {"id": 4, "dtype": "f32", "shape": target_shape_list},  # 1 - y²
+                    {"id": 5, "dtype": "f32", "shape": target_shape_list},  # output
+                ],
+                "inputs": [0, 1],
+                "outputs": [5],
+                "ops": [
+                    {"kind": "Mul", "lhs": 1, "rhs": 1, "output": 2},
+                    {"kind": "Sub", "lhs": 3, "rhs": 2, "output": 4},
+                    {"kind": "Mul", "lhs": 0, "rhs": 4, "output": 5},
+                ],
+                "constants": [
+                    {
+                        "tensor_id": 3,
+                        "dtype": "f32",
+                        "shape": target_shape_list,
+                        "bytes_hex": ones_hex,
+                    }
+                ],
+            },
+            "inputs": [grad_bytes.hex(), y_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_bytes = bytes.fromhex(result["outputs"][0])
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"tanh_backward_via_rust: expected {expected_bytes} output "
+            f"bytes ({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+    return _Tensor(out_floats, target_shape, device=device)
+
+
+def sigmoid_backward_via_rust(
+    grad_data: list[float],
+    output_data: list[float],
+    target_shape: tuple[int, ...],
+    *,
+    device: str | None = None,
+) -> Tensor:
+    """``g * y * (1 - y)`` as a 3-op composed graph.
+
+    Topology::
+
+        g(0)  ─┐
+        y(1) ──┤
+        ones(2) ──Sub(ones, y)──> 1 - y(3)
+        Mul(y(1), 1 - y(3)) ──> y · (1 - y)(4)
+        Mul(g(0), y · (1 - y)(4)) ──> output(5)
+
+    3 ops, 6 tensors, 1 constant (ones at target_shape).
+    Same op count as Tanh backward — just a different
+    intermediate (Mul-then-Sub-then-Mul vs Mul(y,y)-Sub-Mul).
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "sigmoid_backward_via_rust called but Rust backend is not "
+            "available; callers must check should_use_rust_for_activation() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(grad_data)
+    if len(output_data) != numel:
+        raise RuntimeError(
+            f"sigmoid_backward_via_rust: grad has {numel} cells but output "
+            f"has {len(output_data)} cells — must match"
+        )
+
+    target_shape_list = list(target_shape)
+    grad_bytes = struct.pack(f"<{numel}f", *grad_data)
+    y_bytes = struct.pack(f"<{numel}f", *output_data)
+    ones_hex = struct.pack(f"<{numel}f", *([1.0] * numel)).hex()
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    {"id": 0, "dtype": "f32", "shape": target_shape_list},  # g
+                    {"id": 1, "dtype": "f32", "shape": target_shape_list},  # y
+                    {"id": 2, "dtype": "f32", "shape": target_shape_list},  # ones
+                    {"id": 3, "dtype": "f32", "shape": target_shape_list},  # 1 - y
+                    {"id": 4, "dtype": "f32", "shape": target_shape_list},  # y · (1 - y)
+                    {"id": 5, "dtype": "f32", "shape": target_shape_list},  # output
+                ],
+                "inputs": [0, 1],
+                "outputs": [5],
+                "ops": [
+                    {"kind": "Sub", "lhs": 2, "rhs": 1, "output": 3},
+                    {"kind": "Mul", "lhs": 1, "rhs": 3, "output": 4},
+                    {"kind": "Mul", "lhs": 0, "rhs": 4, "output": 5},
+                ],
+                "constants": [
+                    {
+                        "tensor_id": 2,
+                        "dtype": "f32",
+                        "shape": target_shape_list,
+                        "bytes_hex": ones_hex,
+                    }
+                ],
+            },
+            "inputs": [grad_bytes.hex(), y_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_bytes = bytes.fromhex(result["outputs"][0])
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"sigmoid_backward_via_rust: expected {expected_bytes} output "
+            f"bytes ({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+    return _Tensor(out_floats, target_shape, device=device)

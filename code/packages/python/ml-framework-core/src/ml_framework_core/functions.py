@@ -61,6 +61,7 @@ from ._rust_backend import (
     should_use_rust_for_elementwise,
     should_use_rust_for_matmul,
     should_use_rust_for_reduction,
+    sigmoid_backward_via_rust,
     sigmoid_via_rust,
     softmax_via_rust,
     sub_via_rust,
@@ -68,6 +69,7 @@ from ._rust_backend import (
     sum_backward_axis_via_rust,
     sum_backward_reduce_all_via_rust,
     sum_via_rust,
+    tanh_backward_via_rust,
     tanh_via_rust,
 )
 from .autograd import Function
@@ -829,6 +831,19 @@ class SigmoidFunction(Function):
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         output = self.saved_metadata["output"]
+        # MX10 Phase 4-back — optional Rust fast path.  Sigmoid backward
+        # is ``g * y * (1 - y)`` — a 3-op composed graph on (grad, y)
+        # with a ones-constant tensor at target_shape.  Same threshold
+        # as forward (the per-cell cost is two muls plus a sub).
+        if should_use_rust_for_activation(len(output)):
+            return (
+                sigmoid_backward_via_rust(
+                    grad_output.data,
+                    output,
+                    grad_output.shape,
+                    device=grad_output.device,
+                ),
+            )
         return (
             Tensor(
                 [
@@ -865,6 +880,19 @@ class TanhFunction(Function):
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         output = self.saved_metadata["output"]
+        # MX10 Phase 4-back — optional Rust fast path.  Tanh backward
+        # is ``g * (1 - y²)`` — a 3-op composed graph on (grad, y)
+        # with a ones-constant tensor at target_shape.  Same threshold
+        # as forward.
+        if should_use_rust_for_activation(len(output)):
+            return (
+                tanh_backward_via_rust(
+                    grad_output.data,
+                    output,
+                    grad_output.shape,
+                    device=grad_output.device,
+                ),
+            )
         return (
             Tensor(
                 [
