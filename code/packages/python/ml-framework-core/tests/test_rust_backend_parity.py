@@ -845,6 +845,42 @@ class ActivationParityTests(unittest.TestCase):
         # default rtol=1e-3 anyway for consistency.
         self._assert_close(rust_result.data, python_result.data)
 
+    def test_softmax_dim1_backward_parity(self) -> None:
+        """``SoftmaxFunction.backward`` (dim=1) Rust matches pure-Python.
+
+        Phase 4-back-softmax — backward is
+        ``y * (grad - sum(grad * y, dim, keepdim=True))`` via a
+        5-op composed graph (Mul → ReduceSum → Broadcast → Sub →
+        Mul) reusing Phase 3b/3d helpers as building blocks.
+
+        Random `(500, 200)` input in ``[-3, 3]``, dim=1 (contiguous
+        stride access).  Numerical drift across 5 ops in f32 vs
+        double stays within the standard `rtol=1e-3, atol=1e-4`.
+        """
+        from ml_framework_core import SoftmaxFunction, Tensor, _rust_backend
+
+        a = self._make_tensor(seed=111)
+        a.requires_grad = True
+        y = SoftmaxFunction.apply(a, 1)
+        # Use a slightly varied grad (not all-ones) to exercise the
+        # non-trivial cancellation in `g - sum(g * y)`.
+        grad_data = [float((k % 7) - 3) for k in range(500 * 200)]
+        y.backward(Tensor(list(grad_data), self.SHAPE))
+        rust_grad = a.grad
+        self.assertIsNotNone(rust_grad)
+        self.assertEqual(rust_grad.shape, self.SHAPE)
+
+        a2 = Tensor(list(a.data), self.SHAPE, requires_grad=True)
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            y2 = SoftmaxFunction.apply(a2, 1)
+            y2.backward(Tensor(list(grad_data), self.SHAPE))
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close(rust_grad.data, a2.grad.data)
+
     def test_tanh_backward_parity(self) -> None:
         """``TanhFunction.backward`` Rust matches pure-Python.
 

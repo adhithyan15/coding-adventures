@@ -2,6 +2,93 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 4-back-softmax: optional Rust fast path for `SoftmaxFunction.backward` via a 5-op composed graph
+
+Closes the third activation backward.  After Phase 4-back's
+Tanh + Sigmoid, this adds Softmax — the only Phase 4 activation
+whose backward involves a per-axis reduction in its formula:
+
+```
+SoftmaxBackward(grad, y, dim) = y * (grad - sum(grad * y, dim, keepdim=True))
+```
+
+#### First composition that combines axis-reduction with broadcast
+
+This is the first composed graph in `_rust_backend.py` that
+combines two earlier MX10 building blocks in a single envelope:
+- Phase 3b's `ReduceSum` with `axes=[dim]` + `keep_dims=True`
+- Phase 3d's `Broadcast` from reduced shape back to input shape
+
+The reduce-then-broadcast pattern is essential because matrix-cpu's
+`Sub` op doesn't broadcast — the per-row dot-product result has to
+be expanded back to input shape explicitly before the subtraction.
+
+#### Graph topology (5 ops, 7 tensors, no constants)
+
+```
+g(0) ─┬─Mul(g, y)─────────────────────────> gy(2)
+y(1) ─┘                                       │
+                       ReduceSum(gy, axes=[dim], keep_dims=True) ──> sum_gy(3)   shape with dim=1
+                                                                       │
+                       Broadcast(sum_gy, target=input_shape) ──> sum_gy_bcast(4)  full shape
+g(0) ──Sub(g, sum_gy_bcast)──> g_minus_sum(5)
+y(1) ──┐
+g_minus_sum(5) ──Mul(y, g_minus_sum)──> output(6)
+```
+
+All 5 ops ship in a single FFI envelope.  Reuses the existing
+`should_use_rust_for_activation` predicate and 100_000-cell
+threshold from the forward path.
+
+#### Implementation
+
+- **`_rust_backend.py`** — adds `softmax_backward_via_rust(grad_data,
+  output_data, target_shape, dim, device)` (~115 LOC).  Validates
+  `len(grad_data) == len(output_data)` before packing.  Caller
+  normalises negative `dim` first (matches the contract for the
+  axis-reduction helpers from Phase 3b/3d).
+- **`functions.py`** — `SoftmaxFunction.backward` gains a dispatch
+  block after the negative-dim normalisation, before the existing
+  1-D / n-D pure-Python branches (both branches stay byte-identical
+  in the fallback path).
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `numel ≥ 100_000` | **Rust** (5-op composed graph in one FFI call) |
+| Extension installed, `numel < 100_000` | Pure-Python 1-D / n-D backward kernels |
+| Extension NOT installed | Pure-Python 1-D / n-D backward kernels |
+
+#### Tests (84 total MX10 tests, was 82)
+
+- **`ActivationParityTests.test_softmax_dim1_backward_parity`**
+  (1 case, skip if extension missing): builds a `(500, 200)`
+  requires_grad input in `[-3, 3]`, runs `Softmax(dim=1)` forward
+  + backward via Rust, then via pure-Python, compares gradients at
+  `rtol=1e-3, atol=1e-4`.  Uses a varied (not all-ones) grad
+  vector to exercise the non-trivial cancellation in
+  `g - sum(g * y)`.
+- **`SoftmaxFallbackTests.test_softmax_backward_via_rust_raises_when_unavailable`**
+  (1 case, always runs): defence-in-depth `RuntimeError` from
+  `softmax_backward_via_rust`.  Pure-Python backward correctness
+  is already covered by the existing
+  `test_softmax_saved_metadata_populated_via_fallback` test from
+  Phase 4d.
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**374 passed + 32 skipped (parity tests that need the extension)**;
+the pre-existing `test_device.py` failure on main is unrelated.
+
+### What's NOT in Phase 4-back-softmax
+
+- ReLU backward (`g * (x > 0)` — needs a `Greater` op which matrix-
+  ir-json doesn't expose today as a single primitive, or a workaround
+  using `Max(x, 0) / x * g` which has div-by-zero on the negative
+  half).  Deferred to its own sub-phase.
+- GELU backward (multi-term closed form with `sech²` and a
+  composite `d_inner`).  Deferred — distinct algorithmic shape.
+
 ### Added — MX10 Phase 4-back: optional Rust fast path for `TanhFunction.backward` + `SigmoidFunction.backward`
 
 First activation-family backward dispatch.  Tanh and Sigmoid are
