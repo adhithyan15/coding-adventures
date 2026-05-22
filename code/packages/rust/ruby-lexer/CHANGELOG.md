@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.8.0] - 2026-05-20
+
+### Added (Phase 4b — 1.9.1 lambda `->` token fusion)
+- `RubyLexer` now records its target era (`era: String`) and applies era-gated token-stream rewrites in `finish()` after the engine reaches its final state.
+- New post-pass `apply_era_token_fusions` — extensible hook for every era's "compose multiple 1.8 tokens into a single newer-era operator" rewrite.  Phase 4b ships the first one; later phases (`&.` in 2.3, etc.) plug in here without touching the TOML state machine.
+- **Lambda arrow `->` (1.9.1+)** — adjacent `Op("-")` + `Op(">")` tokens, with no source whitespace between them, fuse into a single `Op("->")` token under era ≥ 1.9.1.  The 1.8 baseline keeps them as two tokens (Ruby 1.8 doesn't know about lambda literals).
+- New `era_at_least` helper — total ordering of era strings against `machine::ERA_VERSIONS` (chronological).  Unknown era strings fold to the `1.8` baseline so misconfigured callers get the conservative behaviour.
+
+### Adjacency heuristic
+- The 1.8 state machine emits single-char operators like `>` on a *follower* character (it peeks one char ahead to disambiguate `>` vs `>=`), so the `>` token's recorded column is the *follower's* column, 1–2 ahead of the `>` source position.  The fusion check allows a "virtual gap" of up to 2 columns — strictly less than the ≥ 3 a real whitespace-separated `-` `>` would produce.
+
+### Tests (+5 new, total 87)
+- 1.9.1 fuses `->(a)` to a single token.
+- 1.8 does NOT fuse `->(a)` — the era gate works.
+- `1 - > 2` (with a space) does NOT fuse even under 1.9.1 — the adjacency check is strict enough.
+- Eras 2.0, 2.3, 2.7, 3.0, 3.3 all inherit the lambda fusion from 1.9.1.
+- `era_at_least` is total + chronological, with sensible fallback for unknown / empty era strings.
+
 ## [0.7.0] - 2026-05-20
 
 ### Added (Phase 4a — 15-era version dispatch)
