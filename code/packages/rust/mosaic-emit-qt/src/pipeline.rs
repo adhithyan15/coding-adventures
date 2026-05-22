@@ -41,6 +41,7 @@
 //! | `HostInput`   | `TextInput { text: ...; readOnly: ...; onAccepted/Keys.onEscapePressed }`   |
 //! | `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (Controls 2.15)        |
 //! | `HostScroll`  | `ScrollView { ... children ... }`                                           |
+//! | `HostDialog`  | `Popup { modal: ...; visible: ...; closePolicy: ...; contentItem: ColumnLayout { ... } }` (Controls 2.15) |
 //! | `HostTable`   | `ColumnLayout { ... }` of `RowLayout` rows (first-cut shape — see `emit_host_table_qml` for the deferred true-`TableView` lowering) |
 //! | `For`         | `Repeater { model: <coll>; delegate: Item { property var <as>: modelData; <children> } }` — see `emit_for_qml` |
 //! | `If`/`Else`   | `Loader { active: <cond>; sourceComponent: Component { ... } }` pairs — see `emit_if_qml` |
@@ -294,6 +295,7 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
     match node.tag.as_str() {
         "HostInput" => return emit_host_input_qml(node, depth),
         "HostButton" => return emit_host_button_qml(node, depth),
+        "HostDialog" => return emit_host_dialog_qml(node, depth),
         "HostTable" => return emit_host_table_qml(node, depth),
         // UI29 §3.1 — `For` meta-primitive: lower to a `Repeater` with an
         // `Item` delegate that re-exports `modelData` / `index` under the
@@ -556,11 +558,11 @@ fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
             is_text: false,
             is_image: false,
         },
-        // `HostInput` and `HostButton` are handled by their own
-        // emitters earlier in `emit_qml_tree`; reaching this branch
-        // would be an internal logic error.
-        "HostInput" | "HostButton" => unreachable!(
-            "HostInput/HostButton are handled by dedicated emitters; should not reach primitive_to_qml"
+        // `HostInput`, `HostButton`, and `HostDialog` are handled by
+        // their own emitters earlier in `emit_qml_tree`; reaching this
+        // branch would be an internal logic error.
+        "HostInput" | "HostButton" | "HostDialog" => unreachable!(
+            "HostInput/HostButton/HostDialog are handled by dedicated emitters; should not reach primitive_to_qml"
         ),
         other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     })
@@ -777,13 +779,182 @@ fn emit_host_button_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipel
     Ok(out)
 }
 
+/// Lower a `HostDialog` node (UI29-1, the 16th kernel primitive) to a
+/// QML `Popup { ... }` block.
+///
+/// `Popup` lives in `QtQuick.Controls 2.15`. With `modal: true` it
+/// installs a focus trap and a backdrop dim automatically; with
+/// `modal: false` it behaves as an in-flow popover.
+///
+/// ## Property handling
+///
+/// | moslayout prop                         | QML output                                                              |
+/// |---|---|
+/// | `open: slot: x`                        | `visible: x` (bare identifier binding)                                  |
+/// | `open: true/false`                     | `visible: true/false`                                                   |
+/// | `modal: true` (keyword)                | `modal: true`                                                           |
+/// | `modal: false` (keyword)               | `modal: false`                                                          |
+/// | `title: slot: x`                       | a `Text { text: x; font.bold: true }` as the first contentItem child   |
+/// | `title: "literal"`                     | a `Text { text: "literal"; font.bold: true }` as the first child       |
+/// | `dismiss-on-backdrop: false` (kw)      | `closePolicy: Popup.CloseOnEscape`                                      |
+/// | `dismiss-on-backdrop: true` (kw)       | `closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent`    |
+/// | (no `dismiss-on-backdrop`)             | same as `true` — the default                                            |
+/// | `onClose: emit: onE`                   | `onClosed: e()` — Popup's signal name is past-tense `closed`            |
+/// | `onOpen: emit: onE`                    | `onOpened: e()` — past-tense `opened` to match Qt convention            |
+///
+/// ## Why `contentItem: ColumnLayout`
+///
+/// `Popup` accepts a single `contentItem` element that hosts the
+/// dialog's body. We always wrap children in a `ColumnLayout` so
+/// authors can drop in any number of children without thinking about
+/// `Popup`'s single-element constraint. The children walk through
+/// `emit_qml_children` so nested `If`/`Else`/`For` inside the dialog
+/// body work without special-casing.
+///
+/// ## Title: no native `Popup.title`
+///
+/// Plain `Popup` has no built-in title slot (QtQuick.Controls's
+/// `Dialog` subclass does, but it brings in extra footer/header
+/// machinery we don't want for a primitive). When a `title:` prop is
+/// bound, we synthesise a bold `Text` element as the first child of
+/// `contentItem`, before the author's children.
+fn emit_host_dialog_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner_pad = "    ".repeat(depth + 1);
+    let content_pad = "    ".repeat(depth + 2);
+    let mut out = String::new();
+    writeln!(out, "{pad}Popup {{").unwrap();
+
+    // modal: <bool>. Defaults to `true` when the prop is absent, per
+    // UI29-1 §2.1. The grammar passes the boolean literal through as a
+    // `Keyword("true"|"false")` value.
+    let modal_keyword = find_keyword_prop(node, "modal").unwrap_or("true");
+    let modal_value = if matches!(modal_keyword, "true" | "false") {
+        modal_keyword
+    } else {
+        "true"
+    };
+    writeln!(out, "{inner_pad}modal: {modal_value}").unwrap();
+
+    // visible: <slot or literal>. Sourced from `open`. When absent the
+    // dialog stays hidden until something binds visibility — emit
+    // `visible: false` so the QML is well-formed and predictable.
+    if let Some(line) = build_open_attribute(node) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    } else {
+        writeln!(out, "{inner_pad}visible: false").unwrap();
+    }
+
+    // closePolicy: chosen by `dismiss-on-backdrop`. The default
+    // (absent or explicit `true`) accepts both Esc and outside-press;
+    // `dismiss-on-backdrop: false` keeps only Esc so the dialog must
+    // be closed by the program (e.g. a child button calling the
+    // `onClose` emit).
+    let dismiss = find_keyword_prop(node, "dismiss-on-backdrop").unwrap_or("true");
+    let close_policy = if dismiss == "false" {
+        "Popup.CloseOnEscape"
+    } else {
+        "Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent"
+    };
+    writeln!(out, "{inner_pad}closePolicy: {close_policy}").unwrap();
+
+    // onClosed / onOpened — wire to the Mosaic emit signals. Popup's
+    // own signals are past-tense (`closed`/`opened`); the host-side
+    // Mosaic emits are present-tense (`onClose`/`onOpen`) per
+    // UI29-1 §2.2.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onClose") {
+        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        writeln!(out, "{inner_pad}onClosed: {camel}()").unwrap();
+    }
+    if let Some(emit_name) = find_emit_ref_prop(node, "onOpen") {
+        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        writeln!(out, "{inner_pad}onOpened: {camel}()").unwrap();
+    }
+
+    // contentItem: ColumnLayout { ... children ... }. We always emit
+    // the ColumnLayout — even when there are zero children and no
+    // title — so the Popup has a well-defined body to anchor styling
+    // and so the structural shape stays consistent across calls.
+    writeln!(out, "{inner_pad}contentItem: ColumnLayout {{").unwrap();
+
+    // Optional title row: bold Text as the first child of contentItem.
+    if let Some(title_line) = build_dialog_title_text_line(node) {
+        writeln!(out, "{content_pad}Text {{").unwrap();
+        writeln!(out, "{content_pad}    {title_line}").unwrap();
+        writeln!(out, "{content_pad}    font.bold: true").unwrap();
+        writeln!(out, "{content_pad}}}").unwrap();
+    }
+
+    // Author's children — walked through the shared children walker so
+    // nested meta-primitives (If/Else/For) get the same treatment they
+    // get anywhere else in the tree. `is_stack: false` — a dialog
+    // body is a normal column, not a Z-stack.
+    out.push_str(&emit_qml_children(&node.children, depth + 2, false)?);
+
+    writeln!(out, "{inner_pad}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Build the `visible: ...` attribute for a `HostDialog` from its
+/// `open` prop. Same shape as `build_read_only_attribute` — accepts a
+/// slot ref or the `true`/`false` keyword literals. Returns `None`
+/// when the prop is absent so the caller can pick a sensible default.
+fn build_open_attribute(node: &LayoutNode) -> Option<String> {
+    let prop = node.props.iter().find(|p| p.name == "open")?;
+    Some(match &prop.value {
+        LayoutPropValue::SlotRef(s) => {
+            let camel = to_camel_case_first_lower(s);
+            if is_safe_identifier(&camel) {
+                format!("visible: {camel}")
+            } else {
+                "visible: false".to_string()
+            }
+        }
+        LayoutPropValue::Keyword(k) if k == "true" || k == "false" => {
+            format!("visible: {k}")
+        }
+        // A string/number/emit-ref isn't a meaningful boolean source.
+        // Default to hidden — the safe shape.
+        _ => "visible: false".to_string(),
+    })
+}
+
+/// Build the `text: ...` line that goes inside the synthesised title
+/// `Text` element for a `HostDialog`. Mirrors `build_text_attribute`
+/// but reads from `title` instead of `content`. Returns `None` when
+/// the dialog has no `title:` prop.
+fn build_dialog_title_text_line(node: &LayoutNode) -> Option<String> {
+    let prop = node.props.iter().find(|p| p.name == "title")?;
+    Some(match &prop.value {
+        LayoutPropValue::String(s) => format!("text: \"{}\"", escape_qml_string(s)),
+        LayoutPropValue::SlotRef(s) => {
+            let camel = to_camel_case_first_lower(s);
+            if is_safe_identifier(&camel) {
+                format!("text: {camel}")
+            } else {
+                "text: \"\"".to_string()
+            }
+        }
+        LayoutPropValue::Keyword(k) => format!("text: \"{k}\""),
+        LayoutPropValue::Number(n) => format!("text: \"{n}\""),
+        LayoutPropValue::EmitRef(_) => "text: \"\"".to_string(),
+        // U29-G3 expression — same treatment as other build_*_attribute fns.
+        LayoutPropValue::Expr(_) => "text: \"\"".to_string(),
+    })
+}
+
 /// True iff any node in the layout tree lowers to a `QtQuick.Controls`
 /// element. Today: `HostButton` → `Button`, `HostScroll` →
-/// `ScrollView`. Used to decide whether to emit
-/// `import QtQuick.Controls 2.15` at the top of the file.
+/// `ScrollView`, `HostDialog` → `Popup`. Used to decide whether to
+/// emit `import QtQuick.Controls 2.15` at the top of the file.
 fn tree_needs_controls_import(node: &LayoutNode) -> bool {
-    matches!(node.tag.as_str(), "HostButton" | "HostScroll")
-        || node.children.iter().any(tree_needs_controls_import)
+    matches!(
+        node.tag.as_str(),
+        "HostButton" | "HostScroll" | "HostDialog"
+    ) || node.children.iter().any(tree_needs_controls_import)
 }
 
 /// Lower a `HostTable` node to a QML `ColumnLayout` of `RowLayout` rows.
@@ -3226,6 +3397,352 @@ mod tests {
         assert!(
             count_occurrences(&result.output, "Item {") >= 2,
             "expected an inner Item wrapping multi-child If body in:\n{}",
+            result.output
+        );
+    }
+
+    // =====================================================================
+    // U29-1-K-qt — `HostDialog` kernel primitive tests
+    // =====================================================================
+    //
+    // The HostDialog lowering is described in `emit_host_dialog_qml`. The
+    // tests below pin every documented case.
+
+    /// Build a bare `HostDialog` node with the given props and children.
+    fn host_dialog(props: Vec<LayoutProp>, children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "HostDialog".to_string(),
+            part_name: None,
+            props,
+            children,
+        }
+    }
+
+    /// Wrap a HostDialog as the root of a `LayoutDef` for component "X".
+    fn dialog_layout(props: Vec<LayoutProp>, children: Vec<LayoutNode>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: host_dialog(props, children),
+        }
+    }
+
+    // -------- Test 46: empty HostDialog emits Popup skeleton --------
+
+    /// An empty `HostDialog` (no props, no children) lowers to a
+    /// `Popup { modal: true; visible: false; closePolicy: ...;
+    /// contentItem: ColumnLayout { } }`. The contentItem is always
+    /// emitted so the Popup has a well-defined body to anchor styling.
+    #[test]
+    fn empty_host_dialog_emits_popup_skeleton() {
+        let m = component("X", vec![], vec![]);
+        let l = dialog_layout(vec![], vec![]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("Popup {"),
+            "missing Popup in:\n{}",
+            result.output
+        );
+        // Default modal is true (UI29-1 §2.1).
+        assert!(
+            result.output.contains("modal: true"),
+            "missing default modal:true in:\n{}",
+            result.output
+        );
+        // No `open` prop → visible: false default.
+        assert!(
+            result.output.contains("visible: false"),
+            "missing default visible:false in:\n{}",
+            result.output
+        );
+        // contentItem: ColumnLayout always present.
+        assert!(
+            result.output.contains("contentItem: ColumnLayout {"),
+            "missing contentItem ColumnLayout in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 47: HostDialog open slot drives visible --------
+
+    /// `open: slot: is-open` lowers to `visible: isOpen` (bare
+    /// identifier binding) — QML's `Popup.visible` is the open/close
+    /// hook.
+    #[test]
+    fn host_dialog_open_slot_binds_visible() {
+        let m = component(
+            "X",
+            vec![slot("is-open", SlotType::Bool, false)],
+            vec![],
+        );
+        let l = dialog_layout(
+            vec![LayoutProp {
+                name: "open".to_string(),
+                value: LayoutPropValue::SlotRef("is-open".to_string()),
+            }],
+            vec![],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("visible: isOpen"),
+            "missing visible:isOpen binding in:\n{}",
+            result.output
+        );
+        // The default-false line must NOT appear when an `open` prop binds it.
+        assert!(
+            !result.output.contains("visible: false"),
+            "default visible:false should be suppressed when open is bound:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 48: HostDialog modal: true keyword --------
+
+    /// `modal: true` (a compile-time keyword) lowers to `modal: true`.
+    /// Same as the default, but pin the path so an authoring-explicit
+    /// `modal: true` doesn't accidentally regress.
+    #[test]
+    fn host_dialog_modal_true_keyword() {
+        let m = component("X", vec![], vec![]);
+        let l = dialog_layout(
+            vec![LayoutProp {
+                name: "modal".to_string(),
+                value: LayoutPropValue::Keyword("true".to_string()),
+            }],
+            vec![],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("modal: true"),
+            "missing modal:true in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 49: HostDialog modal: false keyword --------
+
+    /// `modal: false` (compile-time keyword) lowers to `modal: false`
+    /// — the non-modal popover shape. UI29-1 §3.3 distinguishes this
+    /// from modal explicitly.
+    #[test]
+    fn host_dialog_modal_false_keyword() {
+        let m = component("X", vec![], vec![]);
+        let l = dialog_layout(
+            vec![LayoutProp {
+                name: "modal".to_string(),
+                value: LayoutPropValue::Keyword("false".to_string()),
+            }],
+            vec![],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("modal: false"),
+            "missing modal:false in:\n{}",
+            result.output
+        );
+        // Defensive — no `modal: true` should escape from the default
+        // path when `modal: false` was explicitly bound.
+        assert!(
+            !result.output.contains("modal: true"),
+            "modal:true should not appear when modal:false was bound:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 50: HostDialog onClose wires onClosed --------
+
+    /// `onClose: emit: onDismiss` lowers to `onClosed: dismiss()`. Note
+    /// the Popup signal is past-tense `closed` (QML convention); the
+    /// Mosaic emit name follows the `on` + present-tense convention
+    /// (UI24 §5).
+    #[test]
+    fn host_dialog_on_close_wires_on_closed() {
+        let m = component("X", vec![], vec![emit_decl("onDismiss", vec![])]);
+        let l = dialog_layout(
+            vec![LayoutProp {
+                name: "onClose".to_string(),
+                value: LayoutPropValue::EmitRef("onDismiss".to_string()),
+            }],
+            vec![],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("onClosed: dismiss()"),
+            "missing onClosed signal call in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 51: HostDialog children render inside contentItem --------
+
+    /// Author-supplied children render as the body of the
+    /// `contentItem: ColumnLayout { ... }`. Verifies a `Text` child
+    /// appears inside the contentItem block (positionally after the
+    /// `ColumnLayout` opener and before the dialog's closing brace).
+    #[test]
+    fn host_dialog_children_render_inside_content_item() {
+        let m = component("X", vec![], vec![]);
+        let child = LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::String("Hello dialog".to_string()),
+            }],
+            children: Vec::new(),
+        };
+        let l = dialog_layout(vec![], vec![child]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        // The contentItem ColumnLayout must precede the Text child.
+        let content_pos = result
+            .output
+            .find("contentItem: ColumnLayout {")
+            .expect("contentItem missing");
+        let text_pos = result
+            .output
+            .find("text: \"Hello dialog\"")
+            .expect("child Text missing");
+        assert!(
+            content_pos < text_pos,
+            "child must appear inside contentItem in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 52: HostDialog title slot emits bold Text first --------
+
+    /// A `title: slot: dialog-title` prop synthesises a bold `Text`
+    /// element as the FIRST child of `contentItem`. Pinned because
+    /// `Popup` has no native title slot — this is our convention.
+    #[test]
+    fn host_dialog_title_slot_emits_bold_text_first_child() {
+        let m = component(
+            "X",
+            vec![slot("dialog-title", SlotType::Text, false)],
+            vec![],
+        );
+        // Add an author child so we can pin the ordering: title Text
+        // before the author's child.
+        let body_child = LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::String("body text".to_string()),
+            }],
+            children: Vec::new(),
+        };
+        let l = dialog_layout(
+            vec![LayoutProp {
+                name: "title".to_string(),
+                value: LayoutPropValue::SlotRef("dialog-title".to_string()),
+            }],
+            vec![body_child],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+
+        // The title Text must use a bare-identifier binding.
+        assert!(
+            result.output.contains("text: dialogTitle"),
+            "missing title slot-ref binding in:\n{}",
+            result.output
+        );
+        // The title row must carry font.bold: true.
+        assert!(
+            result.output.contains("font.bold: true"),
+            "missing font.bold on title row in:\n{}",
+            result.output
+        );
+        // Title Text must come before the body Text.
+        let title_pos = result
+            .output
+            .find("text: dialogTitle")
+            .expect("title Text missing");
+        let body_pos = result
+            .output
+            .find("text: \"body text\"")
+            .expect("body Text missing");
+        assert!(
+            title_pos < body_pos,
+            "title must appear before body in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 53: dismiss-on-backdrop: false → escape-only --------
+
+    /// `dismiss-on-backdrop: false` (compile-time keyword) lowers to
+    /// `closePolicy: Popup.CloseOnEscape` — Esc still closes, but
+    /// clicks outside the popup are ignored. The default (absent or
+    /// `true`) keeps both Esc and outside-press handling.
+    #[test]
+    fn host_dialog_dismiss_on_backdrop_false_adjusts_close_policy() {
+        let m = component("X", vec![], vec![]);
+        let l = dialog_layout(
+            vec![LayoutProp {
+                name: "dismiss-on-backdrop".to_string(),
+                value: LayoutPropValue::Keyword("false".to_string()),
+            }],
+            vec![],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("closePolicy: Popup.CloseOnEscape"),
+            "missing escape-only closePolicy in:\n{}",
+            result.output
+        );
+        // The combined policy must NOT appear.
+        assert!(
+            !result.output.contains("Popup.CloseOnPressOutsideParent"),
+            "outside-press must be absent when dismiss-on-backdrop:false:\n{}",
+            result.output
+        );
+
+        // Sanity: the default (absent prop) keeps the combined policy.
+        let l_default = dialog_layout(vec![], vec![]);
+        let r_default = from_pipeline(&m, &l_default, &empty_style("X")).unwrap();
+        assert!(
+            r_default.output.contains("Popup.CloseOnPressOutsideParent"),
+            "default closePolicy must include outside-press in:\n{}",
+            r_default.output
+        );
+    }
+
+    // -------- Test 54: HostDialog triggers QtQuick.Controls 2.15 import --------
+
+    /// `HostDialog` lowers to `Popup`, which lives in
+    /// `QtQuick.Controls 2.15`. Using a dialog must add the conditional
+    /// Controls import — same gate as `HostButton` / `HostScroll`.
+    #[test]
+    fn host_dialog_triggers_qtquick_controls_import() {
+        let m = component("X", vec![], vec![]);
+        let l = dialog_layout(vec![], vec![]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("import QtQuick.Controls 2.15"),
+            "Controls import missing when HostDialog used in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 55: HostDialog onOpen wires onOpened --------
+
+    /// `onOpen: emit: onShow` lowers to `onOpened: show()`. Mirrors the
+    /// onClose handling. Pinned separately so a regression on one
+    /// signal direction doesn't slip through.
+    #[test]
+    fn host_dialog_on_open_wires_on_opened() {
+        let m = component("X", vec![], vec![emit_decl("onShow", vec![])]);
+        let l = dialog_layout(
+            vec![LayoutProp {
+                name: "onOpen".to_string(),
+                value: LayoutPropValue::EmitRef("onShow".to_string()),
+            }],
+            vec![],
+        );
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("onOpened: show()"),
+            "missing onOpened signal call in:\n{}",
             result.output
         );
     }
