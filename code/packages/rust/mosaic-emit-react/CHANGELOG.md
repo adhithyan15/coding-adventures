@@ -4,6 +4,36 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `HostDialog` kernel primitive (UI29-1, U29-1-K-react)
+
+- New `HostDialog` lowering emits React's native `<dialog>` element with
+  a paired `useRef` + `useEffect` block that drives `showModal()`/`show()`/
+  `close()` from the `open` slot.
+  - `modal: true` (default) → `d.showModal()` (top layer + `::backdrop`).
+  - `modal: false` → `d.show()` (non-modal popover, in-flow).
+  - `open: slot: x` appears in the `useEffect` dep array as `[x]`.
+  - `onOpen: emit: onX` dispatches from inside the open branch of the
+    effect, in the same tick that calls `showModal()`/`show()`.
+  - `onClose: emit: onX` wires the dialog's `onClose` React handler to
+    `dispatch({ type: "x" })`.
+  - `dismiss-on-backdrop: false` adds `onCancel={e => e.preventDefault()}`
+    so Escape / backdrop click does not close the dialog.
+  - `title: slot: t` adds an `<h2>{t}</h2>` first child inside the dialog.
+  - Children render normally inside the `<dialog>` element via the
+    standard children walk (with the title heading inserted first when
+    present).
+- When *any* `HostDialog` is present in the layout, the emitter adds an
+  `import { useRef, useEffect } from "react";` line at the top of the
+  generated TSX file. Components without HostDialog continue to omit
+  the hook import so strict-mode `noUnusedLocals` hosts stay clean.
+- Multiple HostDialogs in the same component get distinct ref names
+  (`dialogRef_0`, `dialogRef_1`, ...) assigned in DFS source order.
+- 12 new tests covering: empty dialog ref+effect, `open` slot in dep
+  array, `modal: true`/`modal: false`, `onClose`, children rendering,
+  `title` heading, `dismiss-on-backdrop: false`, hook imports added,
+  hook imports omitted when no dialog, multiple dialogs get unique
+  ref names, and `onOpen` dispatch placement.
+
 ### Added — `For` / `If` / `Else` meta-primitives (UI29 §3.1, §3.2)
 
 - New pipeline emitters for the three control-flow meta-primitives that
