@@ -1089,3 +1089,106 @@ class TestEvaluateSumPhase49BoundedNumerator:
         # to recognise that.  Stay unevaluated until a transcendental
         # growth-rate recogniser lands.
         assert isinstance(result, IRApply) and result.head == SUM
+
+
+# ---------------------------------------------------------------------------
+# Phase 51 — Sqrt/polynomial growth-rate recogniser.
+#
+# sqrt(P(k)) has effective polynomial degree deg(P)/2.  When the
+# denominator is a polynomial of strictly higher degree, the quotient
+# vanishes.  Closes shapes like sqrt(k)/k², sqrt(k)/k³.
+# ---------------------------------------------------------------------------
+
+
+class TestEvaluateSumPhase51SqrtOverPolynomial:
+    def test_sqrt_k_over_k_squared_closes(self):
+        """``∑ [sqrt(k)/k² − sqrt(k+1)/(k+1)²]`` closes.
+
+        Effective degrees: num = 1/2, den = 2; 1/2 < 2 so vanishes.
+        """
+        from symbolic_ir import POW, SQRT, SUB
+
+        sqrt_k = IRApply(SQRT, (_k,))
+        sqrt_kp1 = IRApply(SQRT, (IRApply(ADD, (_k, IRInteger(1))),))
+        g_k = IRApply(DIV, (sqrt_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(
+            DIV,
+            (
+                sqrt_kp1,
+                IRApply(POW, (IRApply(ADD, (_k, IRInteger(1))), IRInteger(2))),
+            ),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 51 should close; got {result!r}"
+        )
+
+    def test_sqrt_k_cubed_over_k_squared_refused(self):
+        """``∑ [sqrt(k³)/k² − …]``: sqrt(k³) has effective degree 3/2,
+        denominator has degree 2.  Since 3/2 < 2, this DOES vanish.
+        Edge case worth pinning.
+        """
+        from symbolic_ir import POW, SQRT, SUB
+
+        k_cubed = IRApply(POW, (_k, IRInteger(3)))
+        sqrt_k3 = IRApply(SQRT, (k_cubed,))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sqrt_kp1_3 = IRApply(SQRT, (IRApply(POW, (kp1, IRInteger(3))),))
+        g_k = IRApply(DIV, (sqrt_k3, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(DIV, (sqrt_kp1_3, IRApply(POW, (kp1, IRInteger(2)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # 3/2 < 2 → vanishes
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_squared_over_k_squared_refused(self):
+        """``∑ [sqrt(k²)/k² − …]``: sqrt(k²) has effective degree 1
+        (= k for positive k), denominator has degree 2.  Since 1 < 2,
+        vanishes.
+        """
+        from symbolic_ir import POW, SQRT, SUB
+
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        sqrt_k_sq = IRApply(SQRT, (k_sq,))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sqrt_kp1_sq = IRApply(SQRT, (IRApply(POW, (kp1, IRInteger(2))),))
+        g_k = IRApply(DIV, (sqrt_k_sq, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(DIV, (sqrt_kp1_sq, IRApply(POW, (kp1, IRInteger(2)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # 1 < 2 → vanishes
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_over_k_refused_equal_degrees(self):
+        """``∑ [sqrt(k)/k − sqrt(k+1)/(k+1)]``: 1/2 < 1, so it should
+        vanish.  But also a sanity check that the recogniser correctly
+        compares ``Fraction(1, 2)`` against ``Fraction(1)``.
+        """
+        from symbolic_ir import SQRT, SUB
+
+        sqrt_k = IRApply(SQRT, (_k,))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        g_k = IRApply(DIV, (sqrt_k, _k))
+        g_kp1 = IRApply(DIV, (sqrt_kp1, kp1))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_of_negative_polynomial_refused(self):
+        """Regression: ``sqrt(Mul(-1, k))`` isn't real for positive k.
+        Phase 51 must NOT close this telescope.
+        """
+        from symbolic_ir import MUL, POW, SQRT, SUB
+
+        neg_k = IRApply(MUL, (IRInteger(-1), _k))
+        sqrt_neg_k = IRApply(SQRT, (neg_k,))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sqrt_neg_kp1 = IRApply(SQRT, (IRApply(MUL, (IRInteger(-1), kp1)),))
+        g_k = IRApply(DIV, (sqrt_neg_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(DIV, (sqrt_neg_kp1, IRApply(POW, (kp1, IRInteger(2)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Must stay unevaluated — sqrt of negative polynomial.
+        assert isinstance(result, IRApply) and result.head == SUM

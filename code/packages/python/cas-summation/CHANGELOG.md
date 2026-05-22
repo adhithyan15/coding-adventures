@@ -1,5 +1,52 @@
 # Changelog
 
+## 0.9.0 — 2026-05-22
+
+**Phase 51 — Sqrt(polynomial)/polynomial growth-rate recogniser.**
+
+Closes the ``sqrt(k)/k²``-style gap noted as deferred in Phase 50.
+``sqrt(P(k))`` has effective polynomial degree ``deg(P)/2`` for large
+``k`` (assuming positive leading coefficient so the root is
+real-valued).  When the denominator is a polynomial of strictly
+higher degree, the quotient vanishes.
+
+Bumps 0.7.0 → 0.9.0 (skipping 0.8.0 reserved for the in-flight
+Phase 50 PR #3938).
+
+### Added
+
+- **`_sqrt_effective_half_degree(node, k)`** — returns
+  ``Fraction(deg(P), 2)`` for ``node = Sqrt(P(k))`` with ``P``
+  positive-degree and positive leading coefficient; ``None``
+  otherwise.  Conservative: refuses ``Sqrt(negative-polynomial)``
+  shapes whose root isn't real.
+
+### Changed
+
+- ``_g_vanishes_at_infinity`` adds a Phase 51 branch between the
+  Phase 49 bounded check and the Phase 42 degree-aware path.  If the
+  numerator is ``Sqrt(positive-poly)`` and the denominator's
+  polynomial degree exceeds the sqrt's half-degree, the quotient
+  vanishes.
+
+### Added — tests
+
+`tests/test_summation.py::TestEvaluateSumPhase51SqrtOverPolynomial`
+— 5 new cases:
+
+- ``sqrt(k)/k²`` closes (1/2 < 2).
+- ``sqrt(k³)/k²`` closes (3/2 < 2 — tight margin).
+- ``sqrt(k²)/k²`` closes (1 < 2).
+- ``sqrt(k)/k`` closes (1/2 < 1 — also a half-degree edge case).
+- ``sqrt(Mul(-1, k))/k²`` stays unevaluated (regression).
+
+Full suite: **103 passed** (was 98; +5 net new).
+
+### Still deferred
+
+- ``sqrt`` of more exotic shapes (``Sqrt(Exp(k))``, etc.).
+- General transcendental limit-finder.
+
 ## 0.7.0 — 2026-05-22
 
 **Phase 49 — Bounded × vanishing recogniser.**

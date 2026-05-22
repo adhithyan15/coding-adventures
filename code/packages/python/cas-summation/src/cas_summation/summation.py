@@ -58,6 +58,7 @@ from symbolic_ir import (
     NEG,
     POW,
     PRODUCT,
+    SQRT,
     SUB,
     SUM,
     IRApply,
@@ -682,6 +683,14 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     # closures under Mul/Add/Neg).
     if _is_bounded_in_k(num, k) and _h_diverges_at_infinity(den, k):
         return True
+    # Phase 51: Sqrt(positive-leading polynomial) numerator + polynomial
+    # denominator with higher degree than the sqrt's half-degree.
+    # ``sqrt(P(k))`` has effective degree ``deg(P)/2`` for large k.
+    sqrt_half_degree = _sqrt_effective_half_degree(num, k)
+    if sqrt_half_degree is not None:
+        den_degree = _polynomial_degree_in_k(den, k)
+        if den_degree is not None and Fraction(den_degree) > sqrt_half_degree:
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -690,6 +699,37 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     if den_degree is None:
         return False
     return num_degree < den_degree
+
+
+def _sqrt_effective_half_degree(node: IRNode, k: IRSymbol) -> Fraction | None:
+    """Return the effective degree of ``sqrt(P(k))`` for large ``k``, as a
+    :class:`Fraction` (so ``sqrt(k³)`` is ``3/2``).
+
+    Recognised shape: ``node = Sqrt(P(k))`` where ``P(k)`` is a
+    positive-degree polynomial in ``k`` with positive leading
+    coefficient (so the square root is real-valued for sufficiently
+    large ``k``).
+
+    Returns ``None`` for any other shape — including bare ``k``,
+    ``Pow(k, n)``, ``Sqrt(negative-polynomial)``, etc.
+
+    Phase 51 — used by :func:`_g_vanishes_at_infinity` to recognise
+    that ``sqrt(k)/k²`` and similar shapes vanish at ∞ (sqrt grows
+    polynomially with degree ``1/2``, slower than any positive-
+    degree polynomial denominator with degree ≥ 1).
+    """
+    if not isinstance(node, IRApply):
+        return None
+    if node.head != SQRT or len(node.args) != 1:
+        return None
+    inner = node.args[0]
+    inner_degree = _polynomial_degree_in_k(inner, k)
+    if inner_degree is None or inner_degree < 1:
+        return None
+    # Need positive leading coefficient so sqrt is real for large k.
+    if _polynomial_leading_coeff_sign_in_k(inner, k) != 1:
+        return None
+    return Fraction(inner_degree, 2)
 
 
 def _try_power_of_k(
