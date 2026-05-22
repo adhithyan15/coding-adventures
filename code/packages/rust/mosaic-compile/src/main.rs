@@ -189,6 +189,15 @@ fn run(result: cli_builder::types::ParseResult) {
         .get("emit-project")
         .and_then(|v| v.as_bool())
         .unwrap_or(false);
+    // --package-manifest: when set, the .mll's component-reference
+    // resolver auto-registers every name in [components].exports so
+    // intra-package references work (e.g. Field → Input in
+    // mosaic-pkg-toolkit). UI29-§4.4-style external dependencies
+    // are NOT loaded yet — only the self-package's exports.
+    let package_manifest_path = flags
+        .get("package-manifest")
+        .and_then(|v| v.as_str())
+        .map(str::to_string);
 
     let pipeline_any =
         interface_path.is_some() || layout_path.is_some() || style_path.is_some();
@@ -206,7 +215,15 @@ fn run(result: cli_builder::types::ParseResult) {
         let interface = require_pipeline_flag("interface", interface_path);
         let layout = require_pipeline_flag("layout", layout_path);
         let style = require_pipeline_flag("style", style_path);
-        run_pipeline(backend, interface, layout, style, output_path, emit_project);
+        run_pipeline(
+            backend,
+            interface,
+            layout,
+            style,
+            output_path,
+            emit_project,
+            package_manifest_path.as_deref(),
+        );
         return;
     }
 
@@ -353,6 +370,70 @@ fn require_pipeline_flag<'a>(name: &str, value: Option<&'a str>) -> &'a str {
     })
 }
 
+/// Build a `mosaic_emit_xaml::ComponentRegistry` that registers every
+/// component exported by the active package's manifest — minus the
+/// component currently being compiled (a component shouldn't reference
+/// itself).
+///
+/// Returns `None` when `manifest_path` is `None` (the user didn't pass
+/// `--package-manifest`), or when the manifest fails to parse (we
+/// print a warning and continue without a registry — a single-file
+/// compile shouldn't be blocked by a malformed sibling-manifest).
+///
+/// The xmlns prefix derives from the manifest's `package.name`
+/// (lowercase, drops the `mosaic-pkg-` prefix). `mosaic-pkg-toolkit`
+/// → `toolkit`. The xmlns value derives from the active emitter's
+/// C# namespace, since all components in the same package share a
+/// generated namespace.
+///
+/// Fix for the self-reference gap that blocked Field from
+/// referencing Input cleanly in `mosaic-pkg-toolkit`.
+fn build_self_package_registry(
+    manifest_path: Option<&str>,
+    current_component: &str,
+    csharp_namespace: &str,
+) -> Option<mosaic_emit_xaml::ComponentRegistry> {
+    let path = manifest_path?;
+    let manifest = match mosaic_package_manifest::parse_path(std::path::Path::new(path)) {
+        Ok(m) => m,
+        Err(e) => {
+            eprintln!(
+                "mosaic-compile: warning: ignoring --package-manifest {path}: {e:?}"
+            );
+            return None;
+        }
+    };
+    let xmlns_prefix = manifest
+        .package
+        .name
+        .strip_prefix("mosaic-pkg-")
+        .unwrap_or(&manifest.package.name)
+        .to_lowercase();
+    let xmlns_value = format!("using:{csharp_namespace}");
+
+    let mut reg = mosaic_emit_xaml::ComponentRegistry::new();
+    for export in &manifest.components.exports {
+        if export == current_component {
+            // Self-self-reference is meaningless and would mask
+            // recursion bugs at parse time.
+            continue;
+        }
+        reg.register(
+            export.as_str(),
+            xmlns_prefix.as_str(),
+            xmlns_value.as_str(),
+            manifest.package.name.as_str(),
+        );
+    }
+    if reg.is_empty() {
+        // A single-export package, or every export is the current
+        // component — no point handing the emitter an empty registry.
+        None
+    } else {
+        Some(reg)
+    }
+}
+
 /// Run the three-file pipeline path: compile `.mil`, `.mll`, `.msl` to a
 /// single output file using the new pipeline-aware backend emitter.
 ///
@@ -367,6 +448,7 @@ fn run_pipeline(
     style_path: &str,
     output_path: Option<&str>,
     emit_project: bool,
+    package_manifest_path: Option<&str>,
 ) {
     if backend != "react" && backend != "xaml" {
         eprintln!(
@@ -442,11 +524,22 @@ fn run_pipeline(
         "xaml" => {
             let mut opts = mosaic_emit_xaml::EmitOptions::default();
             opts.emit_project = emit_project;
+            // Build the component registry: auto-register every name
+            // in the active package's [components].exports so the .mll
+            // can reference its siblings (UI29 §4.4 ish — but for the
+            // SELF package, not external dependencies). Skips the
+            // currently-being-compiled component to avoid a useless
+            // self-self-reference.
+            let registry = build_self_package_registry(
+                package_manifest_path,
+                &mosmodel_out.component.component,
+                &opts.namespace,
+            );
             let result = mosaic_emit_xaml::from_pipeline(
                 &mosmodel_out.component,
                 &layout_out.def,
                 &style_out.def,
-                None,
+                registry.as_ref(),
                 &opts,
             )
             .unwrap_or_else(|e| {
@@ -657,4 +750,117 @@ fn write_bytes_or_die(path: &str, content: &[u8]) {
         eprintln!("mosaic-compile: cannot write {path}: {e}");
         process::exit(1);
     });
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// `build_self_package_registry` returns None when no manifest
+    /// path is provided.
+    #[test]
+    fn registry_is_none_without_manifest() {
+        let r = build_self_package_registry(None, "Field", "Mosaic.Generated");
+        assert!(r.is_none());
+    }
+
+    /// Given a manifest path that points at a valid manifest, the
+    /// registry contains every export except the current component.
+    #[test]
+    fn registry_registers_sibling_exports() {
+        let tmp = std::env::temp_dir().join(format!(
+            "self-ref-test-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir_all(&tmp).unwrap();
+        let mpath = tmp.join("mosaic-package.toml");
+        std::fs::write(
+            &mpath,
+            r#"
+[package]
+name = "mosaic-pkg-toolkit"
+version = "0.1.0"
+description = "test"
+license = "MIT"
+[components]
+exports = ["Button", "Field", "Input"]
+[dependencies]
+[kernel]
+version = "1"
+"#,
+        )
+        .unwrap();
+
+        let r = build_self_package_registry(
+            Some(mpath.to_str().unwrap()),
+            "Field",
+            "Mosaic.Generated",
+        );
+        let reg = r.expect("registry built from valid manifest");
+        assert!(reg.lookup("Button").is_some(), "Button should be registered");
+        assert!(reg.lookup("Input").is_some(), "Input should be registered");
+        assert!(
+            reg.lookup("Field").is_none(),
+            "current component should NOT self-reference"
+        );
+
+        let entry = reg.lookup("Button").unwrap();
+        assert_eq!(entry.xmlns_prefix, "toolkit");
+        assert_eq!(entry.xmlns_value, "using:Mosaic.Generated");
+        assert_eq!(entry.package_name, "mosaic-pkg-toolkit");
+
+        std::fs::remove_dir_all(&tmp).ok();
+    }
+
+    /// A package that exports only the current component returns None
+    /// — no point handing the emitter an empty registry.
+    #[test]
+    fn registry_is_none_when_only_export_is_current_component() {
+        let tmp = std::env::temp_dir().join(format!(
+            "self-ref-test2-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir_all(&tmp).unwrap();
+        let mpath = tmp.join("mosaic-package.toml");
+        std::fs::write(
+            &mpath,
+            r#"
+[package]
+name = "mosaic-pkg-card"
+version = "0.1.0"
+description = "test"
+license = "MIT"
+[components]
+exports = ["Card"]
+[dependencies]
+[kernel]
+version = "1"
+"#,
+        )
+        .unwrap();
+        let r = build_self_package_registry(
+            Some(mpath.to_str().unwrap()),
+            "Card",
+            "Mosaic.Generated",
+        );
+        assert!(r.is_none());
+        std::fs::remove_dir_all(&tmp).ok();
+    }
+
+    /// A missing manifest path produces a warning + None.
+    #[test]
+    fn registry_is_none_when_manifest_missing() {
+        let r = build_self_package_registry(
+            Some("/this/path/definitely/does/not/exist.toml"),
+            "Field",
+            "Mosaic.Generated",
+        );
+        assert!(r.is_none());
+    }
 }
