@@ -95,6 +95,13 @@ falling edge, pull-up, debounce window, bounded event queue, and cooperative
 event-queue dispatch model, while the planner validates target input,
 interrupt, pull-mode, queue, and callback budget support before frontends wire
 callbacks to buttons or other input events.
+`input_callback_event_for_plan` and `input_callback_invocation_for_event`
+package the runtime delivery side of that contract: digital input events carry
+the board, pin, trigger, level, sequence, and timestamp, and invocation summaries
+bind those events back to the callback program, instruction budget, debounce
+window, queue policy, interrupt backing, and cooperative dispatch model. That
+lets adapters pass button events through without owning their own callback
+payload schema.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
