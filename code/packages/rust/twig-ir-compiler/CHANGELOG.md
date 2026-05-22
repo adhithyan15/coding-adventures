@@ -1,5 +1,56 @@
 # Changelog — twig-ir-compiler
 
+## [0.19.0] — 2026-05-22 (Path A — typed `match` arm merges)
+
+### Added — Typed `mov` for the 7 remaining `compile_match` sites
+
+Increment 5 of the Twig → IIR-to-* end-to-end story.  Converts all
+remaining `call_builtin "_move"` emission sites in `compile_match`
+to typed `mov` via `FnCtx::emit_move`.
+
+After this PR, **zero `call_builtin "_move"` emission sites** remain
+in twig-ir-compiler.  Every value-copy goes through the typed `mov`
+opcode.
+
+#### Sites converted
+
+| Site                           | Description                                      |
+|--------------------------------|--------------------------------------------------|
+| Scrutinee → matched (initial)  | Bind scrutinee to a stable register              |
+| nil_init → result              | Default fallthrough value                         |
+| arm_result → result (unknown variant) | Bare-binding arm result merge               |
+| field_reg → binding            | Field extraction in variant arms                  |
+| body_v → result (variant arm)  | Variant-arm body result merge                     |
+| arm_result → result (binding arm) | Binding-arm result merge                       |
+| body_v → result (wildcard arm) | Wildcard-arm body result merge                    |
+| matched_reg → name (helper)    | Binding-arm helper's name binding                 |
+
+#### What's not in this PR
+
+Match arms produce mixed types in general (variant constructors vs.
+raw values), so the match expression's result type stays `"any"` —
+no consensus pass across arms.  Adding that is a separate increment
+(would need a Hindley–Milner-style unifier over the arm types).
+
+#### What this unlocks
+
+The IR is now structurally valid for the backends: no
+`call_builtin "_move"` survives in compile_match's output.
+Backend acceptance of full match programs is bottlenecked on
+`make_nil`, `car`, `cdr`, `=` over reference types — which all
+still emit `call_builtin "<op>"` with `type_hint "any"`.  Those are
+the next increments.
+
+#### Tests
+
+- New e2e test `twig_typed_match_wildcard_accepted_by_every_backend`
+  asserts the IR no longer contains `call_builtin "_move"` and
+  contains at least one typed `mov`.  Full backend acceptance for
+  `(match 1 (_ 42))` is deferred — the `make_nil` initialiser still
+  emits an untyped `call_builtin`.
+- 73 lib + 10 backend e2e tests pass (was 73 + 9).
+- 179 twig-vm tests pass.
+
 ## [0.18.0] — 2026-05-22 (Path A — typed `let` / `let*` / `and` / `or`)
 
 ### Added — Typed `mov` at the remaining branch-merge sites
