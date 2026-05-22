@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-cil-bytecode"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
-description = "IIR → CIL bytecode backend — lowers IIRModule to CILProgramArtifact without compiler-ir"
+description = "IIR → CIL bytecode backend — lowers IIRModule to CILProgramArtifact (now with Brainfuck tape + I/O via env.BFRuntime)"
 
 [lib]
 name = "iir_to_cil_bytecode"
