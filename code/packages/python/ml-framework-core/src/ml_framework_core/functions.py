@@ -50,11 +50,13 @@ from ._rust_backend import (
     gelu_via_rust,
     matmul_via_rust,
     mean_axis_via_rust,
+    mean_backward_reduce_all_via_rust,
     mean_via_rust,
     mul_via_rust,
     neg_via_rust,
     relu_via_rust,
     should_use_rust_for_activation,
+    should_use_rust_for_backward_broadcast,
     should_use_rust_for_elementwise,
     should_use_rust_for_matmul,
     should_use_rust_for_reduction,
@@ -62,6 +64,7 @@ from ._rust_backend import (
     softmax_via_rust,
     sub_via_rust,
     sum_axis_via_rust,
+    sum_backward_reduce_all_via_rust,
     sum_via_rust,
     tanh_via_rust,
 )
@@ -488,7 +491,16 @@ class SumFunction(Function):
         dim = self.saved_metadata["dim"]
 
         if dim is None:
-            # Scalar sum: broadcast gradient to all elements
+            # Scalar sum: broadcast gradient to all elements.
+            # MX10 Phase 3c — optional Rust fast path.  Same scalar
+            # broadcast via matrix-cpu's Broadcast op (input shape
+            # (1,) → target_shape).
+            if should_use_rust_for_backward_broadcast(a.numel):
+                return (
+                    sum_backward_reduce_all_via_rust(
+                        grad_output.data[0], a.shape, device=a.device
+                    ),
+                )
             return (
                 Tensor(
                     [grad_output.data[0]] * a.numel,
@@ -572,6 +584,16 @@ class MeanFunction(Function):
 
         if dim is None:
             n = a.numel
+            # MX10 Phase 3c — optional Rust fast path.  Pre-divide
+            # the scalar once in Python, then broadcast via matrix-cpu
+            # (same single Broadcast op as Sum.backward; the Mean
+            # /n is folded into the scalar before dispatch).
+            if should_use_rust_for_backward_broadcast(n):
+                return (
+                    mean_backward_reduce_all_via_rust(
+                        grad_output.data[0], a.shape, n, device=a.device
+                    ),
+                )
             return (
                 Tensor(
                     [grad_output.data[0] / n] * n,
