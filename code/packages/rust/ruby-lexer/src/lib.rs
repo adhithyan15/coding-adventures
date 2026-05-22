@@ -102,6 +102,13 @@ pub struct RubyLexer {
     /// - otherwise the candidate is cleared and the `<<` stays as a
     ///   plain left-shift operator.
     heredoc_op_candidate: Option<usize>,
+    /// Phase 4b: the Ruby era this lexer is targeting.  Drives the
+    /// post-pass token-stream rewriter (see
+    /// [`RubyLexer::apply_era_token_fusions`]) which folds adjacent
+    /// `Op("-")` + `Op(">")` into `Op("->")` for era ≥ 1.9.1, and
+    /// will host further era-gated fusions (`&.` in 2.3, `<<~` in
+    /// 2.3, `_1`..`_9` in 2.7, …) as they land.
+    era: String,
 }
 
 /// Phase 3c — a heredoc opener whose body we still owe.
@@ -144,6 +151,7 @@ impl RubyLexer {
         let definition = machine::definition_for_version(version)?;
         let machine = EffectfulStateMachine::from_definition(&definition)
             .map_err(|e| format!("failed to build ruby lexer state machine: {e}"))?;
+        let canonical_era = if version.is_empty() { "1.8" } else { version };
         Ok(Self {
             machine,
             tokens: Vec::new(),
@@ -159,6 +167,7 @@ impl RubyLexer {
             interp_brace_depth: 0,
             pending_heredocs: VecDeque::new(),
             heredoc_op_candidate: None,
+            era: canonical_era.to_string(),
         })
     }
 
@@ -291,11 +300,13 @@ impl RubyLexer {
 
     /// Signal end-of-input.  Drains any pending state (some peek
     /// states need one or two EOF events to fully flush their
-    /// accumulators) and ultimately emits an EOF token.
+    /// accumulators), emits an EOF token, then applies era-specific
+    /// token-stream fusions (Phase 4b+).
     pub fn finish(&mut self) -> Result<(), String> {
         const MAX_DRAIN: usize = 32;
         for _ in 0..MAX_DRAIN {
             if self.machine.is_final() {
+                self.apply_era_token_fusions();
                 return Ok(());
             }
             let step = self
@@ -307,6 +318,82 @@ impl RubyLexer {
         Err(format!(
             "ruby lexer did not reach final state within {MAX_DRAIN} drain iterations"
         ))
+    }
+
+    /// Phase 4b — apply era-gated token-stream rewrites.
+    ///
+    /// The 1.8 baseline state machine is deliberately conservative —
+    /// it emits the minimal token shapes that every Ruby era agrees
+    /// on, and leaves the era-specific *combinations* (lambda `->`,
+    /// safe-nav `&.`, …) for this post-pass to fold in.  This keeps
+    /// the TOML state machine a single source of truth and lets us
+    /// add new era deltas without forking the (large) TOML file.
+    ///
+    /// ## v0 fusions
+    ///
+    /// - `1.9.1+`: adjacent `Op("-")` + `Op(">")` (same line, no gap)
+    ///   fuses into `Op("->")` — the lambda literal opener.  The 1.8
+    ///   era keeps them as two tokens so `f -> g` parses as
+    ///   subtraction followed by `>` (Ruby 1.8 doesn't know about
+    ///   lambda literals).
+    ///
+    /// Future eras will plug in here without touching the
+    /// state-machine TOML.
+    fn apply_era_token_fusions(&mut self) {
+        if era_at_least(&self.era, "1.9.1") {
+            self.fuse_lambda_arrow();
+        }
+    }
+
+    /// 1.9.1: fold adjacent `Op("-")` + `Op(">")` tokens into a
+    /// single `Op("->")` (lambda opener) when they were emitted
+    /// without any whitespace between them.
+    ///
+    /// Adjacency note: single-char operators like `>` are emitted by
+    /// the engine on the *follower* character (the engine peeks one
+    /// char ahead to disambiguate `>` vs `>=`), so the `>` token's
+    /// recorded `column` is the column of that follower, not the
+    /// source position of `>` itself.  In practice this leaves a 1-
+    /// or 2-column gap between the `-` and the `>` tokens even
+    /// though there's no source whitespace.  We allow up to 2
+    /// columns of "virtual gap" so the adjacency check is robust
+    /// against this quirk without accidentally matching real
+    /// whitespace-separated `-` `>` sequences (where the gap is
+    /// strictly ≥ 3 — `-` at col N, space at N+1, `>` token emitted
+    /// from col N+3).
+    fn fuse_lambda_arrow(&mut self) {
+        let mut i = 0;
+        while i + 1 < self.tokens.len() {
+            let merge = {
+                let a = &self.tokens[i];
+                let b = &self.tokens[i + 1];
+                let a_is_minus =
+                    a.type_ == TokenType::Minus && a.value == "-";
+                let b_is_gt = b.value == ">"
+                    // The engine currently classifies single `>`
+                    // as `TokenType::Name` because Phase 1 did not
+                    // split out `>` / `>=` into a dedicated kind.
+                    && matches!(b.type_, TokenType::Name);
+                let close_enough = a.line == b.line
+                    && b.column >= a.column
+                    && b.column - a.column <= 2;
+                a_is_minus && b_is_gt && close_enough
+            };
+            if merge {
+                let span_line = self.tokens[i].line;
+                let span_col = self.tokens[i].column;
+                self.tokens.remove(i + 1);
+                self.tokens[i] = Token {
+                    type_: TokenType::Name,
+                    value: "->".to_string(),
+                    line: span_line,
+                    column: span_col,
+                    type_name: None,
+                    flags: None,
+                };
+            }
+            i += 1;
+        }
     }
 
     /// Take ownership of all tokens emitted so far.
@@ -737,6 +824,32 @@ fn classify_op_token(text: &str) -> TokenType {
 /// not starting with a digit).  Ruby itself permits any identifier
 /// shape here — the heredoc-vs-shift decision is driven purely by
 /// the expression-start context that the call site already checked.
+/// Phase 4b — true iff `era` is the same as or newer than `min`.
+///
+/// Compares the two era strings against
+/// [`machine::ERA_VERSIONS`] (chronological order).  Unknown era
+/// strings sort as the *baseline* `1.8` to match the lexer's
+/// default — that way a misconfigured caller still gets the
+/// conservative pre-1.9.1 behaviour rather than silently enabling
+/// modern syntax fusions.
+fn era_at_least(era: &str, min: &str) -> bool {
+    let normalise = |v: &str| -> usize {
+        let needle = if v.is_empty() { "1.8" } else { v };
+        machine::ERA_VERSIONS
+            .iter()
+            .position(|&e| e == needle)
+            .unwrap_or_else(|| {
+                // Unknown era — fall back to the 1.8 baseline index
+                // so era-gated fusions stay disabled.
+                machine::ERA_VERSIONS
+                    .iter()
+                    .position(|&e| e == "1.8")
+                    .unwrap_or(0)
+            })
+    };
+    normalise(era) >= normalise(min)
+}
+
 fn is_heredoc_tag(s: &str) -> bool {
     let mut chars = s.chars();
     match chars.next() {
@@ -1672,6 +1785,96 @@ mod tests {
     fn tokenize_ruby_for_version_rejects_unknown() {
         let err = tokenize_ruby_for_version("x\n", "5.0").unwrap_err();
         assert!(err.contains("not a recognized Ruby era"));
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 4b — 1.9.1 lambda `->` token fusion.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn era_1_9_1_fuses_lambda_arrow() {
+        // `f = ->(a) { a + 1 }` — under 1.9.1 the `->` is a single
+        // operator token (lambda opener).  We just check the token
+        // stream for the fused `->` lexeme; the parser will use it
+        // to dispatch to the lambda production once Phase 6 ships
+        // the grammar extension.
+        let toks = tokenize_ruby_for_version("->(a)", "1.9.1").unwrap();
+        let values: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert!(
+            values.contains(&"->"),
+            "expected fused `->` token, got {:?}",
+            values
+        );
+        // No bare `-` or `>` should remain in this stream.
+        assert!(!values.contains(&"-"));
+        assert!(!values.contains(&">"));
+    }
+
+    #[test]
+    fn era_1_8_does_not_fuse_lambda_arrow() {
+        // Under 1.8 (and earlier), `->` is two separate tokens —
+        // Ruby 1.8 doesn't know about lambda literals.  The Phase
+        // 4b fusion is era-gated to 1.9.1+ specifically so 1.8
+        // programs keep their pre-lambda lexing.
+        let toks = tokenize_ruby_for_version("->(a)", "1.8").unwrap();
+        let values: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert!(!values.contains(&"->"), "1.8 must not fuse `->`");
+        assert!(values.contains(&"-"));
+        assert!(values.contains(&">"));
+    }
+
+    #[test]
+    fn era_1_9_1_does_not_fuse_minus_greater_with_whitespace_between() {
+        // `1 - > 2` (with a space between `-` and `>`) is *not* a
+        // lambda — it's a syntax error in real Ruby, but the lexer
+        // still emits two separate tokens.  The fusion must require
+        // strict column-adjacency.
+        let toks = tokenize_ruby_for_version("1 - > 2", "1.9.1").unwrap();
+        let values: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert!(!values.contains(&"->"));
+    }
+
+    #[test]
+    fn era_2_3_inherits_lambda_arrow_from_1_9_1() {
+        // The fusion is era-gated to ≥ 1.9.1 — every later era
+        // (2.0 through 3.3) inherits it.  Spot-check a couple.
+        for era in ["2.0", "2.3", "2.7", "3.0", "3.3"] {
+            let toks = tokenize_ruby_for_version("->(a)", era).unwrap();
+            let values: Vec<&str> = toks
+                .iter()
+                .filter(|t| t.type_ != TokenType::Eof)
+                .map(|t| t.value.as_str())
+                .collect();
+            assert!(
+                values.contains(&"->"),
+                "era {era} should inherit lambda-arrow fusion"
+            );
+        }
+    }
+
+    #[test]
+    fn era_at_least_comparator_is_total_and_chronological() {
+        assert!(era_at_least("1.9.1", "1.9.1"));
+        assert!(era_at_least("2.0", "1.9.1"));
+        assert!(era_at_least("3.3", "1.0"));
+        assert!(!era_at_least("1.8", "1.9.1"));
+        assert!(!era_at_least("1.0", "1.6"));
+        // Unknown era folds to 1.8.
+        assert!(!era_at_least("99.0", "1.9.1"));
+        // Empty string folds to 1.8 (the lexer default).
+        assert!(!era_at_least("", "1.9.1"));
     }
 
     #[test]
