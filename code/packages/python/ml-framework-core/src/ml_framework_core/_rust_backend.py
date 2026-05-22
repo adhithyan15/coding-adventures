@@ -710,12 +710,16 @@ def mean_axis_via_rust(a: Tensor, dim: int, keepdim: bool) -> Tensor:
 #   — multi-op composition with constants and Pow.  Deferred until
 #   matrix-cpu adds scalar-exponent Pow (would simplify the
 #   ``x^3`` term).
-# * Softmax = exp(x - max(x)) / sum(exp(...)) — needs per-axis
-#   broadcast which is Phase 3b territory; deferred to coincide.
+# * Softmax = exp(x - max(x)) / sum(exp(...)) — composed as a 7-op
+#   graph (ReduceMax → Broadcast → Sub → Exp → ReduceSum → Broadcast
+#   → Div) now that Phase 3b's axis-reduction helpers and matrix-cpu
+#   ``Broadcast`` exist as building blocks.  **Shipped in Phase 4d**
+#   via ``softmax_via_rust`` below.
 #
 # Phase 4 shipped Tanh + ReLU; Phase 4b adds Sigmoid via the 4-op
-# graph factory ``_sigmoid_via_rust_composed`` below.  GELU and
-# Softmax wait for later sub-phases.
+# graph below; Phase 4d adds Softmax via the 7-op graph below.
+# GELU still waits — its tanh-approximation form (8-op composition
+# with x^3 via three Muls) is doable but warrants its own sub-phase.
 # ──────────────────────────────────────────────────────────────────
 
 
@@ -900,6 +904,129 @@ def sigmoid_via_rust(a: Tensor) -> Tensor:
     if len(out_bytes) != expected_bytes:
         raise RuntimeError(
             f"sigmoid_via_rust: expected {expected_bytes} output bytes "
+            f"({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+
+    return _Tensor(out_floats, a.shape, device=a.device)
+
+
+def softmax_via_rust(a: Tensor, dim: int) -> Tensor:
+    """``Softmax(a, dim) = exp(a - max(a, dim)) / sum(exp(...), dim)``
+    as a 7-op composed graph.
+
+    Topology (with axis-reduction shapes shown for a 2-D input
+    of shape ``(N, K)`` and ``dim = 1``)::
+
+        input(0) ──ReduceMax(axes=[dim], keep_dims=True)──> max(1)        shape (N, 1)
+        max(1) ──Broadcast(target=input_shape)──> max_bcast(2)             shape (N, K)
+        Sub(input(0), max_bcast(2)) ──> shifted(3)                         shape (N, K)
+        shifted(3) ──Exp──> exp_shifted(4)                                  shape (N, K)
+        exp_shifted(4) ──ReduceSum(axes=[dim], keep_dims=True)──> denom(5) shape (N, 1)
+        denom(5) ──Broadcast(target=input_shape)──> denom_bcast(6)         shape (N, K)
+        Div(exp_shifted(4), denom_bcast(6)) ──> out(7)                     shape (N, K)
+
+    All seven ops ship in one envelope so the FFI overhead is paid
+    once.  matrix-cpu's ``Sub`` and ``Div`` don't broadcast scalars,
+    so we explicitly insert two ``Broadcast`` ops to expand the
+    reduce-with-keepdim results back to the input shape before the
+    elementwise subtract/divide.
+
+    The shift-by-max step is essential for **numerical stability** —
+    if any element of ``a`` is large (say 1000), ``exp(1000)``
+    overflows f32 to +inf and you get NaN.  Subtracting the per-axis
+    max forces the largest argument to ``exp`` to be 0, so the
+    sum of exps is always ``>= 1.0`` and the division is well-conditioned.
+
+    Caller must normalise negative dims before calling.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "softmax_via_rust called but Rust backend is not available; "
+            "callers must check should_use_rust_for_activation() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(a.data)
+    input_shape = list(a.shape)
+
+    # Axis-reduction output shape: dim becomes size 1 (keep_dims=True).
+    reduced_shape = list(input_shape)
+    reduced_shape[dim] = 1
+
+    a_bytes = struct.pack(f"<{numel}f", *a.data)
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    # tensor 0 = input x
+                    {"id": 0, "dtype": "f32", "shape": input_shape},
+                    # tensor 1 = max(x, dim, keepdim=True)
+                    {"id": 1, "dtype": "f32", "shape": reduced_shape},
+                    # tensor 2 = broadcast(max, target=input_shape)
+                    {"id": 2, "dtype": "f32", "shape": input_shape},
+                    # tensor 3 = x - max_bcast
+                    {"id": 3, "dtype": "f32", "shape": input_shape},
+                    # tensor 4 = exp(shifted)
+                    {"id": 4, "dtype": "f32", "shape": input_shape},
+                    # tensor 5 = sum(exp_shifted, dim, keepdim=True)
+                    {"id": 5, "dtype": "f32", "shape": reduced_shape},
+                    # tensor 6 = broadcast(denom, target=input_shape)
+                    {"id": 6, "dtype": "f32", "shape": input_shape},
+                    # tensor 7 = output = exp_shifted / denom_bcast
+                    {"id": 7, "dtype": "f32", "shape": input_shape},
+                ],
+                "inputs": [0],
+                "outputs": [7],
+                "ops": [
+                    {
+                        "kind": "ReduceMax",
+                        "input": 0,
+                        "axes": [dim],
+                        "keep_dims": True,
+                        "output": 1,
+                    },
+                    {
+                        "kind": "Broadcast",
+                        "input": 1,
+                        "target_shape": input_shape,
+                        "output": 2,
+                    },
+                    {"kind": "Sub", "lhs": 0, "rhs": 2, "output": 3},
+                    {"kind": "Exp", "input": 3, "output": 4},
+                    {
+                        "kind": "ReduceSum",
+                        "input": 4,
+                        "axes": [dim],
+                        "keep_dims": True,
+                        "output": 5,
+                    },
+                    {
+                        "kind": "Broadcast",
+                        "input": 5,
+                        "target_shape": input_shape,
+                        "output": 6,
+                    },
+                    {"kind": "Div", "lhs": 4, "rhs": 6, "output": 7},
+                ],
+                "constants": [],
+            },
+            "inputs": [a_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_hex = result["outputs"][0]
+    out_bytes = bytes.fromhex(out_hex)
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"softmax_via_rust: expected {expected_bytes} output bytes "
             f"({numel} f32), got {len(out_bytes)}"
         )
     out_floats = list(struct.unpack(f"<{numel}f", out_bytes))

@@ -32,6 +32,7 @@ from ml_framework_core import _rust_backend
 from ml_framework_core.functions import (
     ReLUFunction,
     SigmoidFunction,
+    SoftmaxFunction,
     TanhFunction,
 )
 
@@ -527,6 +528,89 @@ class SigmoidFallbackTests(unittest.TestCase):
         y1 = 1.0 / (1.0 + math.exp(-2.0))
         self.assertAlmostEqual(a.grad.data[0], y0 * (1.0 - y0), places=10)
         self.assertAlmostEqual(a.grad.data[1], y1 * (1.0 - y1), places=10)
+
+
+# ──────────────────────────────────────────────────────────────────
+# MX10 Phase 4d — Softmax fallback tests
+#
+# Softmax joins the activation family via a 7-op composed graph
+# (ReduceMax → Broadcast → Sub → Exp → ReduceSum → Broadcast → Div).
+# Same fallback pattern: when ``_RUST_AVAILABLE = False``, dispatch
+# must short-circuit and the pure-Python softmax kernel must produce
+# the right answer.
+# ──────────────────────────────────────────────────────────────────
+
+
+class SoftmaxFallbackTests(unittest.TestCase):
+    """Confirm Softmax still works when the Rust path is disabled."""
+
+    def setUp(self) -> None:
+        self._saved_available = _rust_backend._RUST_AVAILABLE
+        _rust_backend._RUST_AVAILABLE = False
+
+    def tearDown(self) -> None:
+        _rust_backend._RUST_AVAILABLE = self._saved_available
+
+    def test_softmax_via_rust_raises_when_unavailable(self) -> None:
+        """``softmax_via_rust`` must raise (defence-in-depth)."""
+        a = Tensor([1.0, 2.0, 3.0], (3,))
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.softmax_via_rust(a, dim=0)
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_softmax_1d_correct_via_fallback(self) -> None:
+        """``SoftmaxFunction.apply(a, 0)`` on a 1-D tensor sums to ~1.
+
+        Softmax is a probability distribution, so the output values
+        must sum to 1.0 (within float tolerance).  Hand-computed for
+        ``[1, 2, 3]``: ``exp([1,2,3] - 3) = [exp(-2), exp(-1), 1]``,
+        normalised by their sum.
+        """
+        a = Tensor([1.0, 2.0, 3.0], (3,))
+        result = SoftmaxFunction.apply(a, 0)
+        self.assertEqual(result.shape, (3,))
+
+        # Hand computation
+        exps = [math.exp(-2.0), math.exp(-1.0), 1.0]
+        total = sum(exps)
+        expected = [e / total for e in exps]
+        for got, want in zip(result.data, expected, strict=False):
+            self.assertAlmostEqual(got, want, places=12)
+
+        # Probability-distribution invariant
+        self.assertAlmostEqual(sum(result.data), 1.0, places=12)
+
+    def test_softmax_2d_dim1_correct_via_fallback(self) -> None:
+        """``a.softmax(dim=1)`` on a 2x3 tensor — each row sums to ~1."""
+        a = Tensor([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], (2, 3))
+        result = SoftmaxFunction.apply(a, 1)
+        self.assertEqual(result.shape, (2, 3))
+
+        # Each row sums to 1
+        self.assertAlmostEqual(sum(result.data[0:3]), 1.0, places=12)
+        self.assertAlmostEqual(sum(result.data[3:6]), 1.0, places=12)
+
+    def test_softmax_saved_metadata_populated_via_fallback(self) -> None:
+        """Backward needs ``saved_metadata["output"]``.  Confirm the
+        fallback path populates it and the gradient lands correctly.
+
+        Softmax backward: ``y * (grad - sum(grad * y))``.  For a
+        uniform input the softmax output is uniform and backward
+        with grad=ones gives zero (because ``grad == sum(grad * y)``
+        for uniform y).
+        """
+        a = Tensor([1.0, 1.0, 1.0], (3,), requires_grad=True)
+        result = SoftmaxFunction.apply(a, 0)
+        # Uniform input → uniform softmax → all 1/3
+        for v in result.data:
+            self.assertAlmostEqual(v, 1.0 / 3.0, places=12)
+
+        # Backward with ones-grad
+        result.backward(Tensor([1.0, 1.0, 1.0], (3,)))
+        self.assertIsNotNone(a.grad)
+        # For uniform softmax, ones-grad backward is zero
+        for g in a.grad.data:
+            self.assertAlmostEqual(g, 0.0, places=12)
 
 
 if __name__ == "__main__":
