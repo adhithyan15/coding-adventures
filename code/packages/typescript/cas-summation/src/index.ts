@@ -635,6 +635,30 @@ function hDivergesAtInfinity(node: IRNode, k: IRNode): boolean {
   return false;
 }
 
+const _SQRT_HEAD = sym("Sqrt");
+
+/**
+ * Phase 51 (TypeScript port): Return the effective polynomial half-
+ * degree of ``Sqrt(P(k))`` when ``P`` is a positive-degree polynomial
+ * with positive leading coefficient.  Returns ``undefined`` otherwise.
+ *
+ * The half-degree is ``deg(P) / 2`` (so ``sqrt(k³)`` is degree ``1.5``).
+ * Used in :func:`gVanishesAtInfinity` to recognise that
+ * ``sqrt(P)/Q`` vanishes when ``deg(Q) > deg(P)/2``.
+ *
+ * Conservative — refuses ``Sqrt(negative-polynomial)`` (not real) and
+ * non-Sqrt heads.
+ */
+function sqrtEffectiveHalfDegree(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply") return undefined;
+  if (!equals(node.head, _SQRT_HEAD) || node.args.length !== 1) return undefined;
+  const inner = node.args[0];
+  const innerDeg = polynomialDegreeInK(inner, k);
+  if (innerDeg === undefined || innerDeg < 1) return undefined;
+  if (polynomialLeadingCoeffSignInK(inner, k) !== 1) return undefined;
+  return innerDeg / 2;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -644,6 +668,15 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   // (positive-degree polynomial OR exp / b^k transcendental).
   if (isConstantIn(num, k)) {
     return hDivergesAtInfinity(den, k);
+  }
+  // Phase 51: Sqrt(positive-poly) numerator + polynomial denominator
+  // with deg(den) > deg(P)/2.
+  const sqrtHalfDeg = sqrtEffectiveHalfDegree(num, k);
+  if (sqrtHalfDeg !== undefined) {
+    const denDegSqrt = polynomialDegreeInK(den, k);
+    if (denDegSqrt !== undefined && denDegSqrt > sqrtHalfDeg) {
+      return true;
+    }
   }
   // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
   const numDeg = polynomialDegreeInK(num, k);

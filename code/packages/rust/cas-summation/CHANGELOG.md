@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.9.0 — 2026-05-22
+
+**Phase 51 — Sqrt(polynomial)/polynomial recogniser (Rust port).**
+
+Ports Python ``cas-summation`` 0.9.0.  Recognises that ``sqrt(P(k))``
+has effective polynomial degree ``deg(P)/2``; quotient vanishes when
+denominator degree exceeds half-degree.
+
+Bumps 0.6.0 → 0.9.0 (skipping 0.7.0 / 0.8.0).
+
+### Added
+
+- **`sqrt_effective_half_degree_x2(node, k) -> Option<i64>`** —
+  returns ``deg(P)`` (twice the half-degree) for ``Sqrt(P(k))`` with
+  positive-leading-coefficient ``P``.  Caller compares with
+  ``2 * den_deg`` to preserve the inequality without floats.
+
+### Tests
+
+3 new ``phase51_*`` cases.  Full suite: **40 passed** (was 37; +3).
+
 ## 0.6.0 — 2026-05-22
 
 **Phase 40+46 — Add-with-negation telescope normaliser (Rust port).**

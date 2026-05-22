@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.9.0 — 2026-05-22
+
+**Phase 51 — Sqrt(polynomial)/polynomial recogniser (TypeScript port).**
+
+Ports Python ``cas-summation`` 0.9.0.  Extends ``gVanishesAtInfinity``
+to recognise that ``sqrt(P(k))`` has effective polynomial degree
+``deg(P)/2`` for large ``k``.  When the denominator's polynomial
+degree exceeds this half-degree, the quotient vanishes.
+
+Bumps 0.6.0 → 0.9.0 (skipping 0.7.0 / 0.8.0 reserved for the
+in-flight Phase 49 / Phase 50 TS+Rust ports).
+
+### Added
+
+- **`sqrtEffectiveHalfDegree(node, k)`** — returns ``deg(P)/2`` for
+  ``Sqrt(P(k))`` with positive-leading-coefficient ``P``; undefined
+  otherwise.
+
+### Tests
+
+3 new ``summation: Phase 51 sqrt/polynomial growth-rate`` cases.
+Full suite: **40 passed** (was 37; +3 net new).
+
 ## 0.6.0 — 2026-05-22
 
 **Phase 40+46 — Add-with-negation telescope normaliser (TypeScript port).**
