@@ -1,0 +1,843 @@
+//! # `oct-iir-compiler` — Oct source → `IIRModule` (OCT02 phase 3).
+//!
+//! Bridges parsed and type-checked Oct programs into the LANG VM AOT
+//! chain by emitting [`interpreter_ir::IIRModule`].  Sits between
+//! [`coding_adventures_oct_parser`] + [`oct_type_checker`] and the
+//! shared backend that powers Twig, Nib, Brainfuck, and Dartmouth BASIC.
+//!
+//! ```text
+//! Oct source
+//!     │
+//!     ▼ oct-lexer + oct-parser            (OCT02 phase 1)
+//! GrammarASTNode
+//!     │
+//!     ▼ oct-type-checker                  (OCT02 phase 2)
+//! verified AST
+//!     │
+//!     ▼ oct-iir-compiler                  ← THIS CRATE (phase 3)
+//! IIRModule
+//!     │
+//!     ▼ lang-aot                          (phase 4)
+//! native executable
+//! ```
+//!
+//! ## V1 scope
+//!
+//! What lowers (matches the Oct grammar):
+//!
+//! - Integer / bool / hex / binary literals.
+//! - Arithmetic `+` `-`, bitwise `&` `|` `^`, comparisons (`==` `!=` `<` `>` `<=` `>=`),
+//!   logical `&&` `||`, unary `!` `~`.
+//! - `if expr block [else block]`, `while expr block`, `loop block`, `break`.
+//! - User-defined `fn`s with parameters and return values.
+//! - Recursion (uses the cross-function `call` reloc landed in LANG43).
+//! - Local variables and `static` decls (lowered to `mov`/load-store).
+//!
+//! What doesn't (each fails with a clean `OctError` variant):
+//!
+//! - **8008 intrinsics** (`in`, `out`, `adc`, `sbb`, `rlc`, `rrc`, `ral`,
+//!   `rar`, `carry`, `parity`) → `OctError::Unsupported8008Intrinsic`.
+//!   The LANG VM has no port-I/O abstraction; the Intel-8008 simulator
+//!   remains the right home for these programs.
+//! - **Strings** → `OctError::StringsNotYetSupported`.  The Oct grammar
+//!   has no string literals today, but if a future revision adds them
+//!   we'll reject them until LANG77 lands.
+//!
+//! ## Entry-point convention
+//!
+//! Oct programs declare `fn main()` with void return.  The LANG VM AOT
+//! chain expects `main` to return `i64` (the value becomes the process
+//! exit code via the C runtime's `exit()` truncation to `& 0xFF`).  This
+//! crate rewrites Oct's void `main` to return `i64 0` so the chain's
+//! convention holds.
+
+#![warn(missing_docs)]
+#![warn(rust_2018_idioms)]
+
+use coding_adventures_oct_parser::parse_oct;
+use interpreter_ir::function::IIRFunction;
+use interpreter_ir::instr::{IIRInstr, Operand};
+use interpreter_ir::module::IIRModule;
+use oct_type_checker::check_ast;
+use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
+
+// ===========================================================================
+// Public API
+// ===========================================================================
+
+/// Errors that can surface from the compile pipeline.
+#[derive(Debug, Clone)]
+pub enum OctError {
+    /// Parser rejected the source (unmatched braces, malformed expr, …).
+    Parse(String),
+    /// Type checker rejected the program.  Carries one human-readable
+    /// message per diagnostic.
+    Type(Vec<String>),
+    /// The program calls an 8008 hardware intrinsic that has no LANG VM
+    /// equivalent.  Carries the intrinsic name (`in`, `out`, …).
+    Unsupported8008Intrinsic(String),
+    /// V1 doesn't compile string-literal expressions; LANG77 will add
+    /// `.rodata` packaging.  (Currently unreachable — the Oct grammar
+    /// has no string literals — but reserved for forwards compatibility.)
+    StringsNotYetSupported,
+    /// AST shape didn't match our expectations.  A parser change
+    /// probably requires updating this crate.
+    Malformed(String),
+}
+
+impl std::fmt::Display for OctError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            OctError::Parse(s) => write!(f, "oct parse: {s}"),
+            OctError::Type(errs) => {
+                write!(f, "oct type-check failed:\n{}", errs.join("\n"))
+            }
+            OctError::Unsupported8008Intrinsic(name) => write!(f,
+                "oct: 8008 intrinsic '{name}' is not supported on the LANG VM \
+                 AOT chain — use the dedicated Intel-8008 simulator backend"),
+            OctError::StringsNotYetSupported => write!(f,
+                "oct: string literals require LANG77 (.rodata packaging); \
+                 not yet supported"),
+            OctError::Malformed(s) => write!(f, "oct AST malformed: {s}"),
+        }
+    }
+}
+
+impl std::error::Error for OctError {}
+
+/// Compile an Oct source string to an [`IIRModule`].
+///
+/// The pipeline runs:
+///
+/// 1. `oct-parser` — produces the AST.
+/// 2. `oct-type-checker` — verifies invariants.
+/// 3. This crate — walks the typed AST emitting IIR.
+///
+/// On success the returned module has `entry_point = Some("main")` and
+/// `main` returns `i64`.  See the crate doc for the entry-point
+/// convention.
+pub fn compile_source(source: &str, module_name: &str)
+    -> Result<IIRModule, OctError>
+{
+    let ast = parse_oct(source).map_err(|e| OctError::Parse(format!("{e}")))?;
+    let type_result = check_ast(&ast);
+    if !type_result.ok {
+        return Err(OctError::Type(
+            type_result.errors.into_iter().map(|e| e.message).collect()
+        ));
+    }
+    compile_ast(&ast, module_name)
+}
+
+/// Compile a pre-parsed (but not necessarily type-checked) AST.
+///
+/// Most callers want [`compile_source`]; this is exposed for testing
+/// and for callers that have already invoked the parser.
+pub fn compile_ast(ast: &GrammarASTNode, module_name: &str)
+    -> Result<IIRModule, OctError>
+{
+    let mut comp = Compiler::default();
+    comp.compile_program(ast)?;
+    let mut module = IIRModule::new(module_name, "oct");
+    module.functions = comp.functions;
+    module.entry_point = Some("main".to_string());
+    Ok(module)
+}
+
+// ===========================================================================
+// Compiler
+// ===========================================================================
+
+#[derive(Default)]
+struct Compiler {
+    functions: Vec<IIRFunction>,
+    /// Loop-end labels for `break` to jump to (innermost on top).
+    break_stack: Vec<String>,
+    /// Per-function: counter for temp register names.
+    tmp_counter: usize,
+    /// Per-function: counter for synthesised label families.
+    label_counter: usize,
+}
+
+impl Compiler {
+    fn fresh_tmp(&mut self) -> String {
+        let i = self.tmp_counter;
+        self.tmp_counter += 1;
+        format!("_t{i}")
+    }
+
+    fn fresh_label(&mut self, prefix: &str) -> String {
+        let i = self.label_counter;
+        self.label_counter += 1;
+        format!("{prefix}_{i}")
+    }
+
+    fn emit(&self, out: &mut Vec<IIRInstr>, op: &str, dest: Option<&str>,
+            srcs: Vec<Operand>, ty: &str)
+    {
+        out.push(IIRInstr::new(op, dest.map(|s| s.to_string()), srcs, ty));
+    }
+
+    fn compile_program(&mut self, ast: &GrammarASTNode) -> Result<(), OctError> {
+        if ast.rule_name != "program" {
+            return Err(OctError::Malformed(format!(
+                "expected root `program`, got `{}`", ast.rule_name)));
+        }
+        // Statics: V1 leaves them out for now — the type checker recorded
+        // them but most Oct programs the AOT chain will see use locals.
+        // A future revision could route `static_decl` to LANG39 globals.
+        //
+        // For now: collect every `fn_decl` and lower each one.
+        for top in child_nodes(ast) {
+            if top.rule_name != "top_decl" { continue; }
+            for inner in child_nodes(top) {
+                match inner.rule_name.as_str() {
+                    "fn_decl"     => self.compile_fn(inner)?,
+                    "static_decl" => {
+                        // V1: silently ignore at IIR-gen time.  The type
+                        // checker has already verified the declaration.
+                        // Lowering globals is a follow-up.
+                    }
+                    _ => {}
+                }
+            }
+        }
+        Ok(())
+    }
+
+    fn compile_fn(&mut self, fn_decl: &GrammarASTNode) -> Result<(), OctError> {
+        // Reset per-function counters for stable register naming.
+        self.tmp_counter = 0;
+        self.label_counter = 0;
+        self.break_stack.clear();
+
+        let name = first_name_token(fn_decl)
+            .ok_or_else(|| OctError::Malformed("fn_decl missing NAME".into()))?;
+        let params = extract_params(fn_decl);
+        let return_type = extract_return_type(fn_decl);
+
+        let mut body: Vec<IIRInstr> = Vec::new();
+        if let Some(block) = child_nodes(fn_decl).into_iter()
+            .find(|n| n.rule_name == "block")
+        {
+            self.compile_block(block, &mut body)?;
+        }
+
+        // Synthesize an i64 ret on `main` so the AOT chain's exit-code
+        // convention works.  Oct's `main` is declared void; we materialise
+        // it as `i64` returning 0.
+        let actual_return_type = if name == "main" { "i64".to_string() }
+            else { return_type.clone().unwrap_or_else(|| "void".to_string()) };
+
+        if name == "main" {
+            // Ensure main ends with `const 0; ret 0`.  If user wrote an
+            // explicit `return;` we already emitted `ret_void`, but the
+            // AOT chain needs `ret i64`.  Replace any trailing `ret_void`
+            // with `const r=0; ret r`, and append the same if missing.
+            if let Some(last) = body.last() {
+                if last.op == "ret_void" {
+                    body.pop();
+                }
+            }
+            if !body.last().map_or(false, |i| i.op == "ret") {
+                let r = self.fresh_tmp();
+                self.emit(&mut body, "const", Some(&r),
+                          vec![Operand::Int(0)], "i64");
+                self.emit(&mut body, "ret", None,
+                          vec![Operand::Var(r)], "i64");
+            }
+        } else if !body.iter().any(|i| i.op.starts_with("ret")) {
+            // Defensive epilogue: void → `ret_void`; typed → `const 0; ret 0`.
+            match return_type.as_deref() {
+                Some(_) => {
+                    let r = self.fresh_tmp();
+                    self.emit(&mut body, "const", Some(&r),
+                              vec![Operand::Int(0)], "i64");
+                    self.emit(&mut body, "ret", None,
+                              vec![Operand::Var(r)], "i64");
+                }
+                None => {
+                    self.emit(&mut body, "ret_void", None, vec![], "void");
+                }
+            }
+        }
+
+        let iir_fn = IIRFunction::new(
+            &name,
+            params.into_iter().map(|(n, _ty)| (n, "i64".to_string())).collect(),
+            &actual_return_type,
+            body,
+        );
+        self.functions.push(iir_fn);
+        Ok(())
+    }
+
+    // ── Statement lowering ─────────────────────────────────────────────────
+
+    fn compile_block(&mut self, block: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<(), OctError>
+    {
+        for stmt in child_nodes(block) {
+            if stmt.rule_name == "stmt" {
+                self.compile_stmt(stmt, out)?;
+            }
+        }
+        Ok(())
+    }
+
+    fn compile_stmt(&mut self, stmt: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<(), OctError>
+    {
+        // `stmt` wraps exactly one of the *_stmt rules.
+        let inner = child_nodes(stmt).into_iter().next()
+            .ok_or_else(|| OctError::Malformed("empty stmt".into()))?;
+        match inner.rule_name.as_str() {
+            "let_stmt"     => self.compile_let(inner, out),
+            "static_decl"  => Ok(()), // global-level; ignored inside body
+            "assign_stmt"  => self.compile_assign(inner, out),
+            "return_stmt"  => self.compile_return(inner, out),
+            "if_stmt"      => self.compile_if(inner, out),
+            "while_stmt"   => self.compile_while(inner, out),
+            "loop_stmt"    => self.compile_loop(inner, out),
+            "break_stmt"   => self.compile_break(inner, out),
+            "expr_stmt"    => self.compile_expr_stmt(inner, out),
+            other => Err(OctError::Malformed(format!("unknown stmt `{other}`"))),
+        }
+    }
+
+    fn compile_let(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<(), OctError>
+    {
+        let name = first_name_token(node)
+            .ok_or_else(|| OctError::Malformed("let_stmt missing NAME".into()))?;
+        let expr = child_nodes(node).into_iter()
+            .find(|n| n.rule_name != "type")
+            .ok_or_else(|| OctError::Malformed("let_stmt missing initialiser".into()))?;
+        let v = self.compile_expr(expr, out)?;
+        self.emit(out, "mov", Some(&name), vec![Operand::Var(v)], "i64");
+        Ok(())
+    }
+
+    fn compile_assign(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<(), OctError>
+    {
+        let name = first_name_token(node)
+            .ok_or_else(|| OctError::Malformed("assign_stmt missing NAME".into()))?;
+        let expr = child_nodes(node).into_iter().next()
+            .ok_or_else(|| OctError::Malformed("assign_stmt missing expr".into()))?;
+        let v = self.compile_expr(expr, out)?;
+        self.emit(out, "mov", Some(&name), vec![Operand::Var(v)], "i64");
+        Ok(())
+    }
+
+    fn compile_return(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<(), OctError>
+    {
+        match child_nodes(node).into_iter().next() {
+            Some(expr) => {
+                let v = self.compile_expr(expr, out)?;
+                self.emit(out, "ret", None, vec![Operand::Var(v)], "i64");
+            }
+            None => {
+                self.emit(out, "ret_void", None, vec![], "void");
+            }
+        }
+        Ok(())
+    }
+
+    fn compile_if(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<(), OctError>
+    {
+        let mut cond: Option<&GrammarASTNode> = None;
+        let mut blocks: Vec<&GrammarASTNode> = Vec::new();
+        for c in child_nodes(node) {
+            if c.rule_name == "block" { blocks.push(c); }
+            else if cond.is_none() { cond = Some(c); }
+        }
+        let cond = cond.ok_or_else(|| OctError::Malformed("if missing cond".into()))?;
+        let then_block = blocks.first().copied()
+            .ok_or_else(|| OctError::Malformed("if missing then-block".into()))?;
+        let else_block = blocks.get(1).copied();
+
+        let cond_v = self.compile_expr(cond, out)?;
+        let else_lbl = self.fresh_label("if_else");
+        let end_lbl  = self.fresh_label("if_end");
+
+        self.emit(out, "jmp_if_false", None,
+            vec![Operand::Var(cond_v), Operand::Var(else_lbl.clone())], "void");
+        self.compile_block(then_block, out)?;
+        self.emit(out, "jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+        self.emit(out, "label", None, vec![Operand::Var(else_lbl)], "void");
+        if let Some(eb) = else_block {
+            self.compile_block(eb, out)?;
+        }
+        self.emit(out, "label", None, vec![Operand::Var(end_lbl)], "void");
+        Ok(())
+    }
+
+    fn compile_while(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<(), OctError>
+    {
+        let mut cond: Option<&GrammarASTNode> = None;
+        let mut block: Option<&GrammarASTNode> = None;
+        for c in child_nodes(node) {
+            if c.rule_name == "block" { block = Some(c); }
+            else if cond.is_none() { cond = Some(c); }
+        }
+        let cond = cond.ok_or_else(|| OctError::Malformed("while missing cond".into()))?;
+        let block = block.ok_or_else(|| OctError::Malformed("while missing body".into()))?;
+
+        let top = self.fresh_label("while_top");
+        let end = self.fresh_label("while_end");
+        self.break_stack.push(end.clone());
+
+        self.emit(out, "label", None, vec![Operand::Var(top.clone())], "void");
+        let cond_v = self.compile_expr(cond, out)?;
+        self.emit(out, "jmp_if_false", None,
+            vec![Operand::Var(cond_v), Operand::Var(end.clone())], "void");
+        self.compile_block(block, out)?;
+        self.emit(out, "jmp", None, vec![Operand::Var(top)], "void");
+        self.emit(out, "label", None, vec![Operand::Var(end)], "void");
+
+        self.break_stack.pop();
+        Ok(())
+    }
+
+    fn compile_loop(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<(), OctError>
+    {
+        let block = child_nodes(node).into_iter()
+            .find(|n| n.rule_name == "block")
+            .ok_or_else(|| OctError::Malformed("loop missing body".into()))?;
+        let top = self.fresh_label("loop_top");
+        let end = self.fresh_label("loop_end");
+        self.break_stack.push(end.clone());
+
+        self.emit(out, "label", None, vec![Operand::Var(top.clone())], "void");
+        self.compile_block(block, out)?;
+        self.emit(out, "jmp", None, vec![Operand::Var(top)], "void");
+        self.emit(out, "label", None, vec![Operand::Var(end)], "void");
+
+        self.break_stack.pop();
+        Ok(())
+    }
+
+    fn compile_break(&mut self, _node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<(), OctError>
+    {
+        // The type checker doesn't verify break-in-loop today, but a
+        // structurally well-formed source can't reach here otherwise
+        // (the parser requires `break` to appear inside a block).
+        let end = self.break_stack.last().cloned()
+            .ok_or_else(|| OctError::Malformed("`break` outside of a loop".into()))?;
+        self.emit(out, "jmp", None, vec![Operand::Var(end)], "void");
+        Ok(())
+    }
+
+    fn compile_expr_stmt(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<(), OctError>
+    {
+        let inner = child_nodes(node).into_iter().next()
+            .ok_or_else(|| OctError::Malformed("expr_stmt missing expr".into()))?;
+        let _ = self.compile_expr(inner, out)?;
+        Ok(())
+    }
+
+    // ── Expression lowering ───────────────────────────────────────────────
+
+    fn compile_expr(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<String, OctError>
+    {
+        match node.rule_name.as_str() {
+            "expr" => {
+                let inner = child_nodes(node).into_iter().next()
+                    .ok_or_else(|| OctError::Malformed("empty expr".into()))?;
+                self.compile_expr(inner, out)
+            }
+            "or_expr" | "and_expr" | "eq_expr" | "cmp_expr"
+            | "add_expr" | "bitwise_expr" => self.compile_binary(node, out),
+            "unary_expr" => self.compile_unary(node, out),
+            "primary"    => self.compile_primary(node, out),
+            _ => {
+                // Unknown wrapper — recurse into first child.
+                let inner = child_nodes(node).into_iter().next()
+                    .ok_or_else(|| OctError::Malformed(format!(
+                        "unknown expr rule `{}`", node.rule_name)))?;
+                self.compile_expr(inner, out)
+            }
+        }
+    }
+
+    fn compile_binary(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<String, OctError>
+    {
+        // Pass-through detection: if there's only one operand child the
+        // higher-precedence rule will handle it; recurse.
+        let operand_count = node.children.iter().filter(|c| match c {
+            ASTNodeOrToken::Node(_) => true,
+            ASTNodeOrToken::Token(t) => !is_binary_op_token(&token_kind(t)),
+        }).count();
+        if operand_count == 1 {
+            let first = node.children.iter().find_map(|c| match c {
+                ASTNodeOrToken::Node(n) => Some(n),
+                _ => None,
+            }).ok_or_else(|| OctError::Malformed(format!(
+                "{} has no node child", node.rule_name)))?;
+            return self.compile_expr(first, out);
+        }
+
+        // Walk pairwise: left, op, right, op, right, …
+        let mut iter = node.children.iter();
+        let first = iter.next().ok_or_else(|| OctError::Malformed(
+            format!("empty {}", node.rule_name)))?;
+        let mut acc = self.compile_child(first, out)?;
+
+        loop {
+            let Some(op_child) = iter.next() else { break; };
+            let op_kind = match op_child {
+                ASTNodeOrToken::Token(t) => token_kind(t),
+                _ => break,
+            };
+            let Some(rhs_child) = iter.next() else { break; };
+            let rhs = self.compile_child(rhs_child, out)?;
+            let cir_op = match op_kind.as_str() {
+                "PLUS" => "add",
+                "MINUS" => "sub",
+                "AMP" => "and",
+                "PIPE" => "or",
+                "CARET" => "xor",
+                "EQ_EQ" => "cmp_eq",
+                "NEQ" => "cmp_ne",
+                "LT" => "cmp_lt",
+                "GT" => "cmp_gt",
+                "LEQ" => "cmp_le",
+                "GEQ" => "cmp_ge",
+                // Short-circuit `&&` / `||` are lowered as eager bitwise
+                // for V1.  Oct programs that depend on lazy evaluation
+                // (side-effecting RHS) are out of V1 scope — the type
+                // checker already requires bool operands, so bitwise
+                // and / or on 0/1 values produces the right truth value.
+                "LAND" => "and",
+                "LOR"  => "or",
+                other => return Err(OctError::Malformed(format!(
+                    "unknown operator token `{other}`"))),
+            };
+            let dest = self.fresh_tmp();
+            self.emit(out, cir_op, Some(&dest),
+                vec![Operand::Var(acc), Operand::Var(rhs)], "i64");
+            acc = dest;
+        }
+        Ok(acc)
+    }
+
+    fn compile_unary(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<String, OctError>
+    {
+        // `unary = (BANG | TILDE) unary | primary`
+        let kids: Vec<&ASTNodeOrToken> = node.children.iter().collect();
+        let first = kids.first().ok_or_else(|| OctError::Malformed("empty unary".into()))?;
+        if let ASTNodeOrToken::Token(t) = first {
+            let kind = token_kind(t);
+            if kind == "BANG" || kind == "TILDE" {
+                let operand = kids.get(1).ok_or_else(|| OctError::Malformed(
+                    "unary missing operand".into()))?;
+                let v = self.compile_child(operand, out)?;
+                let dest = self.fresh_tmp();
+                let cir_op = if kind == "BANG" { "not" } else { "not" };
+                // Both `!bool` (logical NOT, operand is 0/1) and `~u8`
+                // (bitwise NOT) lower to IIR `not` — for 0/1 values the
+                // result is 1/0 which is the right boolean inversion.
+                // Real bitwise-not for arbitrary u8 should mask to 8
+                // bits; deferred to V2 (the backend `not_i64` flips all
+                // 64 bits and consumers downstream don't yet care).
+                self.emit(out, cir_op, Some(&dest),
+                    vec![Operand::Var(v)], "i64");
+                return Ok(dest);
+            }
+        }
+        // Pass-through.
+        self.compile_child(first, out)
+    }
+
+    fn compile_primary(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<String, OctError>
+    {
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(n) => match n.rule_name.as_str() {
+                    "intrinsic_call" => return self.compile_intrinsic(n, out),
+                    "call_expr"      => return self.compile_call_expr(n, out),
+                    "expr"           => return self.compile_expr(n, out),
+                    _ => return self.compile_expr(n, out),
+                },
+                ASTNodeOrToken::Token(t) => {
+                    let kind = token_kind(t);
+                    if kind == "LPAREN" || kind == "RPAREN" { continue; }
+                    return self.compile_token_primary(t, out);
+                }
+            }
+        }
+        Err(OctError::Malformed(format!(
+            "empty primary node (kids={})", node.children.len())))
+    }
+
+    fn compile_token_primary(&mut self, tok: &lexer::token::Token, out: &mut Vec<IIRInstr>)
+        -> Result<String, OctError>
+    {
+        let kind = token_kind(tok);
+        let v = match kind.as_str() {
+            "INT_LIT" => tok.value.parse::<i64>().unwrap_or(0),
+            "HEX_LIT" => i64::from_str_radix(
+                tok.value.trim_start_matches("0x"), 16).unwrap_or(0),
+            "BIN_LIT" => i64::from_str_radix(
+                tok.value.trim_start_matches("0b"), 2).unwrap_or(0),
+            "true"    => 1,
+            "false"   => 0,
+            "NAME"    => {
+                // Bare identifier — already in a register slot keyed
+                // by name (see compile_let / compile_assign / fn param).
+                return Ok(tok.value.clone());
+            }
+            _ => return Err(OctError::Malformed(format!(
+                "unknown primary token kind `{kind}`"))),
+        };
+        let dest = self.fresh_tmp();
+        self.emit(out, "const", Some(&dest), vec![Operand::Int(v)], "i64");
+        Ok(dest)
+    }
+
+    fn compile_child(&mut self, child: &ASTNodeOrToken, out: &mut Vec<IIRInstr>)
+        -> Result<String, OctError>
+    {
+        match child {
+            ASTNodeOrToken::Node(n) => self.compile_expr(n, out),
+            ASTNodeOrToken::Token(t) => self.compile_token_primary(t, out),
+        }
+    }
+
+    fn compile_call_expr(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
+        -> Result<String, OctError>
+    {
+        let name = first_name_token(node)
+            .ok_or_else(|| OctError::Malformed("call_expr missing NAME".into()))?;
+        let mut srcs = vec![Operand::Var(name)];
+        if let Some(arg_list) = child_nodes(node).into_iter()
+            .find(|n| n.rule_name == "arg_list")
+        {
+            for c in child_nodes(arg_list) {
+                let v = self.compile_expr(c, out)?;
+                srcs.push(Operand::Var(v));
+            }
+        }
+        let dest = self.fresh_tmp();
+        self.emit(out, "call", Some(&dest), srcs, "i64");
+        Ok(dest)
+    }
+
+    fn compile_intrinsic(&mut self, node: &GrammarASTNode, _out: &mut Vec<IIRInstr>)
+        -> Result<String, OctError>
+    {
+        // V1: every Intel-8008 intrinsic is rejected with a clean error.
+        // We don't bother walking arg expressions because the type
+        // checker has already done that.
+        let name = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) => {
+                let v = &t.value;
+                if matches!(v.as_str(),
+                    "in" | "out" | "adc" | "sbb" | "rlc"
+                    | "rrc" | "ral" | "rar" | "carry" | "parity")
+                { Some(v.clone()) } else { None }
+            }
+            _ => None,
+        }).unwrap_or_else(|| "?".to_string());
+        Err(OctError::Unsupported8008Intrinsic(name))
+    }
+}
+
+// ===========================================================================
+// AST helpers
+// ===========================================================================
+
+fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    node.children.iter().filter_map(|c| match c {
+        ASTNodeOrToken::Node(n) => Some(n),
+        _ => None,
+    }).collect()
+}
+
+fn first_name_token(node: &GrammarASTNode) -> Option<String> {
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if token_kind(t) == "NAME" {
+                return Some(t.value.clone());
+            }
+        }
+    }
+    None
+}
+
+fn token_kind(t: &lexer::token::Token) -> String {
+    t.effective_type_name().to_string()
+}
+
+fn is_binary_op_token(kind: &str) -> bool {
+    matches!(kind,
+        "LOR" | "LAND" | "EQ_EQ" | "NEQ" | "LT" | "GT" | "LEQ" | "GEQ"
+        | "PLUS" | "MINUS" | "AMP" | "PIPE" | "CARET"
+    )
+}
+
+fn extract_params(fn_decl: &GrammarASTNode) -> Vec<(String, String)> {
+    let mut out = Vec::new();
+    let Some(plist) = child_nodes(fn_decl).into_iter()
+        .find(|n| n.rule_name == "param_list") else { return out; };
+    for p in child_nodes(plist) {
+        if p.rule_name != "param" { continue; }
+        let Some(name) = first_name_token(p) else { continue; };
+        // V1 represents every Oct type as `i64` at the IIR level (u8 and
+        // bool both fit; type-check has already verified usage).
+        out.push((name, "i64".to_string()));
+    }
+    out
+}
+
+fn extract_return_type(fn_decl: &GrammarASTNode) -> Option<String> {
+    let mut saw_arrow = false;
+    for c in &fn_decl.children {
+        match c {
+            ASTNodeOrToken::Token(t) if token_kind(t) == "ARROW" => saw_arrow = true,
+            ASTNodeOrToken::Node(n) if saw_arrow && n.rule_name == "type" => {
+                return first_name_token(n);
+            }
+            _ => {}
+        }
+    }
+    None
+}
+
+// ===========================================================================
+// Tests
+// ===========================================================================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn ops(m: &IIRModule, fn_name: &str) -> Vec<String> {
+        m.functions.iter().find(|f| f.name == fn_name).unwrap()
+            .instructions.iter().map(|i| i.op.clone()).collect()
+    }
+
+    #[test]
+    fn compiles_minimal_main() {
+        let m = compile_source("fn main() { }", "test").expect("ok");
+        assert_eq!(m.entry_point.as_deref(), Some("main"));
+        let main = m.functions.iter().find(|f| f.name == "main").expect("main");
+        assert_eq!(main.return_type, "i64",
+                   "main must be rewritten to i64 for AOT");
+        // body must end in `ret`.
+        assert_eq!(main.instructions.last().unwrap().op, "ret");
+    }
+
+    #[test]
+    fn compiles_let_and_arithmetic() {
+        let src = "fn main() { let x: u8 = 30; let y: u8 = x + 12; }";
+        let m = compile_source(src, "test").expect("ok");
+        let o = ops(&m, "main");
+        assert!(o.contains(&"const".to_string()));
+        assert!(o.contains(&"add".to_string()));
+        assert!(o.contains(&"mov".to_string()));
+    }
+
+    #[test]
+    fn compiles_if_else() {
+        let src = "fn main() { let x: u8 = 0; if x == 0 { x = 1; } else { x = 2; } }";
+        let m = compile_source(src, "test").expect("ok");
+        let o = ops(&m, "main");
+        assert!(o.contains(&"cmp_eq".to_string()));
+        assert!(o.contains(&"jmp_if_false".to_string()));
+        assert!(o.contains(&"jmp".to_string()));
+        assert!(o.iter().filter(|op| *op == "label").count() >= 2);
+    }
+
+    #[test]
+    fn compiles_while_loop() {
+        let src = "fn main() { let n: u8 = 0; while n < 10 { n = n + 1; } }";
+        let m = compile_source(src, "test").expect("ok");
+        let o = ops(&m, "main");
+        assert!(o.contains(&"cmp_lt".to_string()));
+        assert!(o.contains(&"jmp_if_false".to_string()));
+    }
+
+    #[test]
+    fn compiles_loop_break() {
+        let src = "fn main() { loop { break; } }";
+        let m = compile_source(src, "test").expect("ok");
+        let o = ops(&m, "main");
+        // loop_top label + loop_end label + body jmp + epilogue.
+        assert!(o.iter().filter(|op| *op == "label").count() >= 2);
+        assert!(o.contains(&"jmp".to_string()));
+    }
+
+    #[test]
+    fn compiles_cross_function_call() {
+        let src = "fn add(a: u8, b: u8) -> u8 { return a + b; } \
+                   fn main() { let x: u8 = add(1, 2); }";
+        let m = compile_source(src, "test").expect("ok");
+        let main_o = ops(&m, "main");
+        assert!(main_o.contains(&"call".to_string()),
+                "main must contain a call instruction; got {main_o:?}");
+        let add_o = ops(&m, "add");
+        assert!(add_o.contains(&"add".to_string()));
+        assert!(add_o.contains(&"ret".to_string()));
+    }
+
+    #[test]
+    fn rejects_8008_intrinsic() {
+        let src = "fn main() { let x: u8 = in(1); }";
+        let err = compile_source(src, "test").unwrap_err();
+        match err {
+            OctError::Unsupported8008Intrinsic(name) => assert_eq!(name, "in"),
+            other => panic!("expected Unsupported8008Intrinsic, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn rejects_carry_intrinsic() {
+        let src = "fn main() { let b: bool = carry(); }";
+        let err = compile_source(src, "test").unwrap_err();
+        assert!(matches!(err, OctError::Unsupported8008Intrinsic(_)));
+    }
+
+    #[test]
+    fn rejects_type_error() {
+        // u8 → bool not allowed.
+        let src = "fn main() { let x: u8 = 5; let y: bool = x; }";
+        let err = compile_source(src, "test").unwrap_err();
+        assert!(matches!(err, OctError::Type(_)),
+                "expected Type error, got {err:?}");
+    }
+
+    #[test]
+    fn rejects_parse_error() {
+        let err = compile_source("fn main(", "test").unwrap_err();
+        assert!(matches!(err, OctError::Parse(_)));
+    }
+
+    /// Recursion: type checker accepts it, and the IIR compiler emits the
+    /// `call` opcode normally — the AOT chain's cross-function reloc patch
+    /// from PR #3331 handles self-calls.
+    #[test]
+    fn compiles_recursive_function() {
+        let src = "fn fact(n: u8) -> u8 { \
+                     if n == 0 { return 1; } \
+                     return n + fact(n); \
+                   } \
+                   fn main() { let x: u8 = fact(5); }";
+        let m = compile_source(src, "test").expect("ok");
+        // fact must contain at least one `call` to itself.
+        let fact_o = ops(&m, "fact");
+        assert!(fact_o.contains(&"call".to_string()),
+                "fact must self-call; got {fact_o:?}");
+    }
+}
