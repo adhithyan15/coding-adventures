@@ -834,6 +834,9 @@ fn emit_xaml_node(
         // PR-4: HostTable.
         "HostTable" => emit_host_table(node, indent, part_styles, ctx),
 
+        // U29-1-K-xaml: HostDialog kernel primitive (UI29-1 §3.6).
+        "HostDialog" => emit_host_dialog(node, indent, part_styles, ctx),
+
         // The four section sub-tags are recognised only as children of
         // HostTable. Encountering them as direct nodes here means the
         // author wrote them at the wrong level (outside a HostTable);
@@ -872,15 +875,7 @@ fn emit_xaml_children(
         let child = &children[i];
         if child.tag == "If" {
             // Look ahead one position for an `Else` sibling.
-            let else_node = if let Some(next) = children.get(i + 1) {
-                if next.tag == "Else" {
-                    Some(next)
-                } else {
-                    None
-                }
-            } else {
-                None
-            };
+            let else_node = children.get(i + 1).filter(|next| next.tag == "Else");
             out.push_str(&emit_if(child, else_node, indent, part_styles, ctx)?);
             // Skip past the consumed `Else` if we paired one.
             i += if else_node.is_some() { 2 } else { 1 };
@@ -945,7 +940,7 @@ fn emit_stack_panel(
         "{pad}<StackPanel Orientation=\"{orientation}\"{style}>\n"
     );
     out.push_str(&emit_xaml_children(&node.children, indent + 4, part_styles, ctx)?);
-    write!(out, "{pad}</StackPanel>\n").unwrap();
+    writeln!(out, "{pad}</StackPanel>").unwrap();
     Ok(out)
 }
 
@@ -974,7 +969,7 @@ fn emit_container(
     let style = part_style_attr(node, part_styles);
     let mut out = format!("{pad}<{element}{style}>\n");
     out.push_str(&emit_xaml_children(&node.children, indent + 4, part_styles, ctx)?);
-    write!(out, "{pad}</{element}>\n").unwrap();
+    writeln!(out, "{pad}</{element}>").unwrap();
     Ok(out)
 }
 
@@ -1005,12 +1000,10 @@ fn emit_text(
         }
         Some(LayoutPropValue::Keyword(k)) => {
             // A `content: <NAME>` form. PR-2: if `k` is a for-bound
-            // name, treat as `{x:Bind ForName}`; otherwise as literal
-            // text (matches the React backend's behaviour pre-PR-2).
-            if ctx.lookup_for_binding(k).is_some() {
-                let pascal = kebab_to_pascal_case(k);
-                format!(" Text=\"{{x:Bind {pascal}}}\"")
-            } else if ctx.lookup_for_index(k).is_some() {
+            // name (either the element or the index binding), treat as
+            // `{x:Bind ForName}`; otherwise as literal text (matches
+            // the React backend's behaviour pre-PR-2).
+            if ctx.lookup_for_binding(k).is_some() || ctx.lookup_for_index(k).is_some() {
                 let pascal = kebab_to_pascal_case(k);
                 format!(" Text=\"{{x:Bind {pascal}}}\"")
             } else {
@@ -2495,7 +2488,183 @@ fn emit_host_scroll(
         "{pad}<ScrollViewer VerticalScrollBarVisibility=\"{v_vis}\" HorizontalScrollBarVisibility=\"{h_vis}\"{style}>\n"
     );
     out.push_str(&emit_xaml_children(&node.children, indent + 4, part_styles, ctx)?);
-    write!(out, "{pad}</ScrollViewer>\n").unwrap();
+    writeln!(out, "{pad}</ScrollViewer>").unwrap();
+    Ok(out)
+}
+
+// =====================================================================
+// U29-1-K-xaml: HostDialog (UI29-1 §3.6)
+// =====================================================================
+//
+// `HostDialog` lowers to WinUI 3's `ContentDialog` (modal: true, the
+// default) or `Flyout` (modal: false). Both are platform-level
+// top-layer primitives that provide modal blocking / focus trap /
+// dismiss handling out of the box — exactly the properties UI29-1 §1
+// identified as impossible to compose from `<div>`/`<Border>`.
+//
+// Lifecycle (ShowAsync / Hide) requires C# code-behind on the host
+// side: ContentDialog is not driven by a simple `IsOpen` DP — the
+// caller must `await dialog.ShowAsync()` to present it. The emitter
+// therefore takes the documented "code-behind stub" path:
+//
+//   - `open: slot: x` lands as a XAML comment + a `{Binding x}`
+//     attribute on a Mosaic attached property name
+//     (`mos:Dialog.IsOpen`). The host project's code-behind is
+//     expected to either implement that attached property or watch
+//     the slot's DP and call `ShowAsync()` / `Hide()` itself. The
+//     comment makes that contract visible in the emitted XAML.
+//   - `onClose: emit: onX` wires a `Closed="OnHostDialogClose_N"`
+//     event handler. The handler body is generated into the
+//     code-behind (same shape as HostButton's Click handler) and
+//     dispatches the named emit.
+//
+// Modal selection is a compile-time keyword (`modal: true|false`)
+// matching the spec's compile-time-only choice; we route to two
+// different XAML elements at lowering time rather than emitting one
+// element and toggling a runtime property.
+//
+// `dismiss-on-backdrop` is documented as not-yet-bindable here:
+// ContentDialog's nearest analogue is `LightDismissOverlayMode`
+// (an enum, not a bool) and Flyout's is `LightDismissOverlayMode`
+// + `ShouldConstrainToRootBounds` — neither maps cleanly to the
+// spec's boolean. A keyword-true (the default) becomes a no-op; a
+// keyword-false surfaces as an emitted XAML comment so the gap is
+// visible in diffs without breaking the compile.
+fn emit_host_dialog(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let style = part_style_attr(node, part_styles);
+
+    // -- 1. Choose the host element: ContentDialog (modal, default) vs
+    //    Flyout (non-modal popover). Per the spec the choice is a
+    //    compile-time keyword. --
+    let modal_keyword = find_prop_keyword(node, "modal");
+    let element = match modal_keyword {
+        Some("false") => "Flyout",
+        // `true`, missing, or any other keyword → modal (default).
+        _ => "ContentDialog",
+    };
+
+    // -- 2. Allocate a deterministic counter — used both for the
+    //    Closed handler name and the open-state comment, so the two
+    //    stubs share an identity for the host's code-behind to wire
+    //    against. --
+    let counter = ctx.next_host_counter();
+
+    // -- 3. Build attribute set incrementally. --
+    let mut attrs = String::new();
+
+    // title: slot/string. Per the user-facing instructions we emit the
+    // {Binding ...} form here (matches the spec §3.6 sketch). The rest
+    // of the emitter prefers {x:Bind ...}, but the spec sketch's
+    // Binding form is what a host expects on a ContentDialog whose
+    // DataContext is the parent UserControl.
+    match find_prop_value(node, "title") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            if !is_safe_identifier(&pascal) {
+                return Err(PipelineEmitError::UnsafeSlotName(pascal));
+            }
+            attrs.push_str(&format!(" Title=\"{{Binding {pascal}}}\""));
+        }
+        Some(LayoutPropValue::String(s)) => {
+            attrs.push_str(&format!(" Title=\"{}\"", escape_xaml_attr(s)));
+        }
+        _ => {}
+    }
+
+    // open: slot/keyword. Emit a binding on the (host-defined) attached
+    // property `mos:Dialog.IsOpen`. The attached property doesn't
+    // exist in the WinUI 3 SDK — the host project is expected to
+    // implement it (or watch the bound slot's DP and call
+    // `ShowAsync()` / `Hide()` directly). We emit a comment alongside
+    // the binding so the contract is visible.
+    let mut open_stub: Option<String> = None;
+    match find_prop_value(node, "open") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            if !is_safe_identifier(&pascal) {
+                return Err(PipelineEmitError::UnsafeSlotName(pascal));
+            }
+            attrs.push_str(&format!(" mos:Dialog.IsOpen=\"{{Binding {pascal}}}\""));
+            open_stub = Some(format!(
+                "<!-- HostDialog #{counter} open-state: bind {pascal}; host code-behind must call ShowAsync()/Hide() when this flips. -->"
+            ));
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            attrs.push_str(" mos:Dialog.IsOpen=\"True\"");
+            open_stub = Some(format!(
+                "<!-- HostDialog #{counter} open-state: literal true; host code-behind must call ShowAsync() once on load. -->"
+            ));
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {
+            attrs.push_str(" mos:Dialog.IsOpen=\"False\"");
+        }
+        _ => {}
+    }
+
+    // dismiss-on-backdrop: keyword. WinUI 3 has no clean boolean
+    // analogue. We surface the unsupported case as a comment rather
+    // than failing the compile or silently dropping the prop.
+    let dismiss_stub: Option<String> = match find_prop_keyword(node, "dismiss-on-backdrop") {
+        Some("false") => Some(format!(
+            "<!-- HostDialog #{counter} dismiss-on-backdrop: false — XAML's ContentDialog has no boolean equivalent (only LightDismissOverlayMode enum). Host must override the dismiss behaviour in code-behind. -->"
+        )),
+        _ => None,
+    };
+
+    // onClose: emit ref → Closed event handler (matches the HostButton
+    // / HostInput pattern). Register the handler body on
+    // EmitContext::host_handlers; the assembly step writes it into
+    // the partial class.
+    let mut close_stub: Option<String> = None;
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onClose") {
+        let handler = format!("OnHostDialogClose_{counter}");
+        let emit_case = strip_on_prefix(emit_name);
+        let case_pascal = kebab_to_pascal_case(&emit_case);
+        let component = ctx.component_name;
+        // ContentDialog.Closed has args type ContentDialogClosedEventArgs;
+        // Flyout.Closed has args type object. We use `object` in the
+        // signature for both so the generated handler compiles
+        // regardless of the host element. The handler dispatches the
+        // declared emit case with no payload (onClose has no payload
+        // per spec §2.2).
+        let body = format!(
+            "    private void {handler}(object sender, object e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}());\n    }}"
+        );
+        ctx.add_host_handler(HostHandler {
+            name: handler.clone(),
+            source: body,
+        });
+        attrs.push_str(&format!(" Closed=\"{handler}\""));
+        close_stub = Some(format!(
+            "<!-- HostDialog #{counter} onClose: dispatches {case_pascal}; handler wired in code-behind. -->"
+        ));
+    }
+
+    // -- 4. Emit the element with children. --
+    let mut out = String::new();
+
+    // Comments first — they live above the open tag for visibility in
+    // diffs. The exact ordering is open / dismiss / close so authors
+    // reading the XAML see the lifecycle-related comments grouped.
+    if let Some(c) = &open_stub {
+        writeln!(out, "{pad}{c}").unwrap();
+    }
+    if let Some(c) = &dismiss_stub {
+        writeln!(out, "{pad}{c}").unwrap();
+    }
+    if let Some(c) = &close_stub {
+        writeln!(out, "{pad}{c}").unwrap();
+    }
+
+    writeln!(out, "{pad}<{element}{attrs}{style}>").unwrap();
+    out.push_str(&emit_xaml_children(&node.children, indent + 4, part_styles, ctx)?);
+    writeln!(out, "{pad}</{element}>").unwrap();
     Ok(out)
 }
 
@@ -5191,5 +5360,295 @@ mod tests {
         let l = layout_with_root("Foo", box_root());
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(r.if_helpers.is_empty());
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // U29-1-K-xaml: HostDialog tests (UI29-1 §3.6)
+    // ─────────────────────────────────────────────────────────────────
+
+    fn host_dialog_node(
+        part: Option<&str>,
+        props: Vec<LayoutProp>,
+        children: Vec<LayoutNode>,
+    ) -> LayoutNode {
+        LayoutNode {
+            tag: "HostDialog".to_string(),
+            part_name: part.map(String::from),
+            props,
+            children,
+        }
+    }
+
+    #[test]
+    fn host_dialog_empty_emits_contentdialog() {
+        // Test 1 + Test 8: A bare HostDialog with no props lowers to
+        // <ContentDialog> (the modal default) — and is recognised, i.e.
+        // does not return UnsupportedPrimitive.
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", host_dialog_node(None, Vec::new(), Vec::new()));
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("<ContentDialog"),
+            "expected <ContentDialog, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("</ContentDialog>"),
+            "expected closing tag, got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_dialog_modal_true_uses_contentdialog() {
+        // Test 2: explicit `modal: true` keyword also lowers to
+        // ContentDialog (same as the default).
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_dialog_node(
+                None,
+                vec![LayoutProp {
+                    name: "modal".to_string(),
+                    value: LayoutPropValue::Keyword("true".to_string()),
+                }],
+                Vec::new(),
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<ContentDialog"), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("<Flyout"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn host_dialog_modal_false_uses_flyout() {
+        // Test 3: `modal: false` keyword switches to <Flyout> (the
+        // popover form per spec §3.6).
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_dialog_node(
+                None,
+                vec![LayoutProp {
+                    name: "modal".to_string(),
+                    value: LayoutPropValue::Keyword("false".to_string()),
+                }],
+                Vec::new(),
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<Flyout"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("</Flyout>"), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("ContentDialog"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn host_dialog_title_slot_emits_binding() {
+        // Test 4: `title: slot: t` becomes Title="{Binding T}" per the
+        // §3.6 sketch.
+        let c = component("Foo", vec![slot("t", SlotType::Text, true)], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_dialog_node(
+                None,
+                vec![LayoutProp {
+                    name: "title".to_string(),
+                    value: LayoutPropValue::SlotRef("t".to_string()),
+                }],
+                Vec::new(),
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("Title=\"{Binding T}\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_dialog_with_children_renders_them_inside() {
+        // Test 5: Children of HostDialog land inside the element body.
+        // Verifies the emit_xaml_children walk runs at indent + 4.
+        let c = component("Foo", vec![], vec![]);
+        let child_text = LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::String("Hello".to_string()),
+            }],
+            children: Vec::new(),
+        };
+        let l = layout_with_root(
+            "Foo",
+            host_dialog_node(None, Vec::new(), vec![child_text]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<ContentDialog"), "got:\n{}", r.xaml);
+        // The Text child renders as a <TextBlock Text="Hello"/> inside
+        // the dialog body — substring check both for the literal text
+        // and the order (TextBlock appears before the closing tag).
+        let close = r.xaml.find("</ContentDialog>").expect("closing tag");
+        let body_substr = &r.xaml[..close];
+        assert!(
+            body_substr.contains("<TextBlock Text=\"Hello\""),
+            "expected TextBlock child inside ContentDialog body, got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_dialog_on_close_emits_handler_and_dispatch() {
+        // Test 6: `onClose: emit: onCloseMe` emits Closed="..." on the
+        // XAML element AND a private handler method in the code-behind
+        // that invokes Dispatch with the right event case.
+        let c = component(
+            "Foo",
+            vec![],
+            vec![emit("onCloseMe", Vec::new())],
+        );
+        let l = layout_with_root(
+            "Foo",
+            host_dialog_node(
+                None,
+                vec![LayoutProp {
+                    name: "onClose".to_string(),
+                    value: LayoutPropValue::EmitRef("onCloseMe".to_string()),
+                }],
+                Vec::new(),
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // The XAML attribute references the generated handler name
+        // (`OnHostDialogClose_<n>` per the spec's stub convention).
+        assert!(
+            r.xaml.contains("Closed=\"OnHostDialogClose_"),
+            "got:\n{}",
+            r.xaml
+        );
+        // The code-behind has the matching private void handler.
+        assert!(
+            r.code_behind.contains("private void OnHostDialogClose_"),
+            "got:\n{}",
+            r.code_behind
+        );
+        // The handler body dispatches the CloseMe case (the `on`
+        // prefix gets stripped per strip_on_prefix → PascalCase).
+        assert!(
+            r.code_behind.contains("new FooEvent.CloseMe()"),
+            "got:\n{}",
+            r.code_behind
+        );
+    }
+
+    #[test]
+    fn host_dialog_open_slot_emits_open_state_binding_stub() {
+        // Test 7: `open: slot: x` lands a mos:Dialog.IsOpen="{Binding X}"
+        // attribute AND a documented stub comment so the host knows
+        // code-behind plumbing is required.
+        let c = component("Foo", vec![slot("show", SlotType::Bool, true)], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_dialog_node(
+                None,
+                vec![LayoutProp {
+                    name: "open".to_string(),
+                    value: LayoutPropValue::SlotRef("show".to_string()),
+                }],
+                Vec::new(),
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("mos:Dialog.IsOpen=\"{Binding Show}\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<!-- HostDialog "),
+            "expected a code-behind stub comment, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("ShowAsync()"),
+            "expected stub to mention ShowAsync(), got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_dialog_is_recognised_not_unknown_primitive() {
+        // Test 8 (explicit): HostDialog must NOT surface as
+        // UnsupportedPrimitive or any other error — that was the whole
+        // point of UI29-1 §3.6. Construct a moderately-decorated
+        // HostDialog and assert from_pipeline returns Ok.
+        let c = component(
+            "Foo",
+            vec![
+                slot("open-state", SlotType::Bool, true),
+                slot("dialog-title", SlotType::Text, true),
+            ],
+            vec![emit("onClose", Vec::new())],
+        );
+        let l = layout_with_root(
+            "Foo",
+            host_dialog_node(
+                Some("dialog-shell"),
+                vec![
+                    LayoutProp {
+                        name: "open".to_string(),
+                        value: LayoutPropValue::SlotRef("open-state".to_string()),
+                    },
+                    LayoutProp {
+                        name: "modal".to_string(),
+                        value: LayoutPropValue::Keyword("true".to_string()),
+                    },
+                    LayoutProp {
+                        name: "title".to_string(),
+                        value: LayoutPropValue::SlotRef("dialog-title".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onClose".to_string(),
+                        value: LayoutPropValue::EmitRef("onClose".to_string()),
+                    },
+                ],
+                Vec::new(),
+            ),
+        );
+        let s = empty_style("Foo");
+        // The cardinal assertion: the emitter SUCCEEDS for HostDialog.
+        let result = from_pipeline(&c, &l, &s, None, &opts());
+        assert!(
+            result.is_ok(),
+            "HostDialog should not error, got: {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn host_dialog_dismiss_on_backdrop_false_emits_comment() {
+        // Bonus test: dismiss-on-backdrop: false is documented as
+        // not-cleanly-bindable on WinUI 3; the emitter should surface
+        // a comment rather than silently drop or crash.
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_dialog_node(
+                None,
+                vec![LayoutProp {
+                    name: "dismiss-on-backdrop".to_string(),
+                    value: LayoutPropValue::Keyword("false".to_string()),
+                }],
+                Vec::new(),
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("dismiss-on-backdrop"),
+            "expected stub comment mentioning dismiss-on-backdrop, got:\n{}",
+            r.xaml
+        );
+        assert!(r.xaml.contains("<ContentDialog"), "got:\n{}", r.xaml);
     }
 }
