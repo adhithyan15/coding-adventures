@@ -23,10 +23,12 @@ use board_vm_host::{
 };
 use board_vm_language_core::{
     bluetooth_transact_wire_frame,
+    host_endpoint_connection_label as language_host_endpoint_connection_label,
     parse_host_endpoint_with_error as parse_language_host_endpoint_with_error,
     parse_serial_endpoint as parse_language_serial_endpoint, serial_runtime_open_plan_for_target,
     LanguageHostEndpointParseError, LanguageHostEndpointParseErrorKind,
-    LanguageHostEndpointTransport, LanguageSerialRuntimeOpenPlan, LANGUAGE_SERIAL_OPEN_SETTLE_MS,
+    LanguageHostEndpointSummary, LanguageHostEndpointTransport, LanguageSerialRuntimeOpenPlan,
+    LANGUAGE_SERIAL_OPEN_SETTLE_MS,
 };
 use board_vm_language_core::{detect_target, discover_devices, LanguageHostDevice};
 use board_vm_protocol::{
@@ -1550,11 +1552,8 @@ where
 #[cfg(test)]
 fn repl_connection_label(options: &ReplOptions) -> String {
     if let Some(endpoint) = options.endpoint.as_deref() {
-        return endpoint_connection_label(
-            endpoint,
-            endpoint_transport(endpoint).expect("test repl endpoint should be valid"),
-            options.baud_rate,
-        );
+        return endpoint_connection_label(endpoint, options.baud_rate)
+            .expect("test repl endpoint should be valid");
     }
     match options.port.as_deref() {
         Some(port) => format!("port={port} baud={}", options.baud_rate),
@@ -1575,11 +1574,8 @@ fn smoke_connection_transport(options: &SmokeOptions) -> SmokeConnectionTranspor
 #[cfg(test)]
 fn smoke_connection_label(options: &SmokeOptions) -> String {
     if let Some(endpoint) = options.endpoint.as_deref() {
-        return endpoint_connection_label(
-            endpoint,
-            endpoint_transport(endpoint).expect("test smoke endpoint should be valid"),
-            options.baud_rate,
-        );
+        return endpoint_connection_label(endpoint, options.baud_rate)
+            .expect("test smoke endpoint should be valid");
     }
     match options.port.as_deref() {
         Some(port) => format!("port={port} baud={}", options.baud_rate),
@@ -1602,11 +1598,8 @@ fn bootloader_reboot_connection_transport(
 #[cfg(test)]
 fn bootloader_reboot_connection_label(options: &BootloaderRebootOptions) -> String {
     if let Some(endpoint) = options.endpoint.as_deref() {
-        return endpoint_connection_label(
-            endpoint,
-            endpoint_transport(endpoint).expect("test bootloader endpoint should be valid"),
-            options.baud_rate,
-        );
+        return endpoint_connection_label(endpoint, options.baud_rate)
+            .expect("test bootloader endpoint should be valid");
     }
     match options.port.as_deref() {
         Some(port) => format!("port={port} baud={}", options.baud_rate),
@@ -1619,7 +1612,9 @@ fn open_smoke_transport(
 ) -> Result<(SmokeConnectionTransport, String, SessionTransport), CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
-        let endpoint_transport = endpoint_transport(endpoint)?;
+        let endpoint_summary = endpoint_summary(endpoint)?;
+        let endpoint_transport =
+            SessionEndpointTransport::from(endpoint_summary.endpoint_transport);
         let connection_transport = SmokeConnectionTransport::from(endpoint_transport);
         let transport = open_endpoint_transport(
             endpoint,
@@ -1631,7 +1626,7 @@ fn open_smoke_transport(
         )?;
         return Ok((
             connection_transport,
-            endpoint_connection_label(endpoint, endpoint_transport, options.baud_rate),
+            language_host_endpoint_connection_label(&endpoint_summary, options.baud_rate),
             transport,
         ));
     }
@@ -1654,7 +1649,9 @@ fn open_bootloader_reboot_transport(
 ) -> Result<(SmokeConnectionTransport, String, SessionTransport), CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
-        let endpoint_transport = endpoint_transport(endpoint)?;
+        let endpoint_summary = endpoint_summary(endpoint)?;
+        let endpoint_transport =
+            SessionEndpointTransport::from(endpoint_summary.endpoint_transport);
         let connection_transport = SmokeConnectionTransport::from(endpoint_transport);
         let transport = open_endpoint_transport(
             endpoint,
@@ -1666,7 +1663,7 @@ fn open_bootloader_reboot_transport(
         )?;
         return Ok((
             connection_transport,
-            endpoint_connection_label(endpoint, endpoint_transport, options.baud_rate),
+            language_host_endpoint_connection_label(&endpoint_summary, options.baud_rate),
             transport,
         ));
     }
@@ -1687,7 +1684,9 @@ fn open_bootloader_reboot_transport(
 fn open_repl_transport(options: &ReplOptions) -> Result<(String, SessionTransport), CliError> {
     if let Some(endpoint) = options.endpoint.as_deref() {
         ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
-        let endpoint_transport = endpoint_transport(endpoint)?;
+        let endpoint_summary = endpoint_summary(endpoint)?;
+        let endpoint_transport =
+            SessionEndpointTransport::from(endpoint_summary.endpoint_transport);
         let transport = open_endpoint_transport(
             endpoint,
             endpoint_transport,
@@ -1697,7 +1696,7 @@ fn open_repl_transport(options: &ReplOptions) -> Result<(String, SessionTranspor
             &options.tcp_config(endpoint),
         )?;
         return Ok((
-            endpoint_connection_label(endpoint, endpoint_transport, options.baud_rate),
+            language_host_endpoint_connection_label(&endpoint_summary, options.baud_rate),
             transport,
         ));
     }
@@ -1800,23 +1799,19 @@ impl From<SessionEndpointTransport> for SmokeConnectionTransport {
     }
 }
 
-fn endpoint_connection_label(
-    endpoint: &str,
-    endpoint_transport: SessionEndpointTransport,
-    baud_rate: u32,
-) -> String {
-    match endpoint_transport {
-        SessionEndpointTransport::Serial => format!("endpoint={endpoint} baud={baud_rate}"),
-        SessionEndpointTransport::Tcp
-        | SessionEndpointTransport::BluetoothLeGatt
-        | SessionEndpointTransport::BluetoothClassicRfcomm => format!("endpoint={endpoint}"),
-    }
+#[cfg(test)]
+fn endpoint_connection_label(endpoint: &str, baud_rate: u32) -> Result<String, CliError> {
+    endpoint_summary(endpoint)
+        .map(|endpoint| language_host_endpoint_connection_label(&endpoint, baud_rate))
 }
 
+#[cfg(test)]
 fn endpoint_transport(endpoint: &str) -> Result<SessionEndpointTransport, CliError> {
-    parse_language_host_endpoint_with_error(endpoint)
-        .map(|endpoint| endpoint.endpoint_transport.into())
-        .map_err(endpoint_parse_error)
+    endpoint_summary(endpoint).map(|endpoint| endpoint.endpoint_transport.into())
+}
+
+fn endpoint_summary(endpoint: &str) -> Result<LanguageHostEndpointSummary, CliError> {
+    parse_language_host_endpoint_with_error(endpoint).map_err(endpoint_parse_error)
 }
 
 fn endpoint_parse_error(error: LanguageHostEndpointParseError) -> CliError {
@@ -2876,7 +2871,7 @@ mod tests {
             SessionEndpointTransport::Serial
         );
         assert_eq!(
-            endpoint_connection_label(endpoint, SessionEndpointTransport::Serial, 57_600),
+            endpoint_connection_label(endpoint, 57_600).unwrap(),
             "endpoint=serial:///dev/cu.usbmodem-test baud=57600"
         );
     }
