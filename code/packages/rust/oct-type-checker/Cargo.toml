@@ -1,0 +1,10 @@
+[package]
+name = "oct-type-checker"
+version = "0.1.0"
+edition = "2021"
+description = "Oct type checker — walks the oct-parser AST and produces a typed AST (OCT02 phase 2)."
+
+[dependencies]
+lexer                        = { path = "../lexer" }
+parser                       = { path = "../parser" }
+coding-adventures-oct-parser = { path = "../oct-parser" }

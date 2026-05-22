@@ -344,6 +344,7 @@ members = [
     "dartmouth-basic-ge225-compiler",
     "oct-lexer",
     "oct-parser",
+    "oct-type-checker",
     "affine2d",
     "algol-lexer",
     "algol-parser",
