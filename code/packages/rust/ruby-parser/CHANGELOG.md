@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.12.0] - 2026-05-22
+
+### Added (Phase 6k — unary minus `-5`, `-x`, `-(1+2)`)
+- New `factor` alternative `unary_minus = MINUS factor`.  Right-recursive (`--5` parses fine); precedence tighter than binary `+ -`.
+
+### Tests (+5 new, total 54)
+- `test_parse_unary_minus_on_number`, `test_parse_unary_minus_on_name`, `test_parse_unary_minus_on_parenthesised_expression`, `test_parse_double_unary_minus_nests`, `test_parse_unary_minus_with_binary_addition`.
+
 ## [0.11.0] - 2026-05-22
 
 ### Added (Phase 6j — control-flow keywords `return` / `break` / `next`)

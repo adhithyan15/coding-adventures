@@ -373,8 +373,17 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::RuleReference { name: r#"expression"#.to_string() },
                     GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
                 ] },
+                GrammarElement::RuleReference { name: r#"unary_minus"#.to_string() },
             ] },
-            line_number: 93,
+            line_number: 97,
+        },
+        GrammarRule {
+            name: r#"unary_minus"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::TokenReference { name: r#"MINUS"#.to_string() },
+                GrammarElement::RuleReference { name: r#"factor"#.to_string() },
+            ] },
+            line_number: 98,
         },
         GrammarRule {
             name: r#"symbol_literal"#.to_string(),
@@ -386,7 +395,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
                     ] }) },
             ] },
-            line_number: 94,
+            line_number: 99,
         },
         GrammarRule {
             name: r#"array_literal"#.to_string(),
@@ -401,7 +410,7 @@ pub fn parser_grammar() -> ParserGrammar {
                     ] }) },
                 GrammarElement::TokenReference { name: r#"RBRACKET"#.to_string() },
             ] },
-            line_number: 95,
+            line_number: 100,
         },
         GrammarRule {
             name: r#"hash_literal"#.to_string(),
@@ -416,7 +425,7 @@ pub fn parser_grammar() -> ParserGrammar {
                     ] }) },
                 GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
             ] },
-            line_number: 96,
+            line_number: 101,
         },
         GrammarRule {
             name: r#"hash_entry"#.to_string(),
@@ -432,7 +441,7 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::RuleReference { name: r#"expression"#.to_string() },
                 ] },
             ] },
-            line_number: 97,
+            line_number: 102,
         },
     ],
         version: 1,

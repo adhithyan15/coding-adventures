@@ -1147,6 +1147,21 @@ impl Lowerer {
             "sum" => self.lower_binary_chain(node, &["PLUS", "MINUS"]),
             "term" => self.lower_binary_chain(node, &["STAR", "SLASH"]),
             "factor" => self.lower_factor(node),
+            "unary_minus" => {
+                // Phase 6k — `-x` → BuiltinCall("neg", [x]).
+                let inner = self.first_node_child(node).ok_or_else(|| RubyLowerError {
+                    message: "unary_minus had no factor child".to_string(),
+                    line: node.start_line.unwrap_or(0),
+                    column: node.start_column.unwrap_or(0),
+                })?;
+                let operand = self.lower_expression(inner)?;
+                Ok(Expr::BuiltinCall {
+                    name: "neg".to_string(),
+                    args: vec![operand],
+                    effects: EffectSet::PURE,
+                    span: self.span_of(node),
+                })
+            }
             "array_literal" => self.lower_array_literal(node),
             "hash_literal" => self.lower_hash_literal(node),
             "symbol_literal" => self.lower_symbol_literal(node),

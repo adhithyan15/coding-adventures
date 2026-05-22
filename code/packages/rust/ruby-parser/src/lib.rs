@@ -804,5 +804,63 @@ mod tests {
             });
         assert!(body_returns);
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6k — unary minus `-5`, `-x`, `-(1+2)`
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_unary_minus_on_number() {
+        let ast = parse_ruby("x = -5");
+        assert!(find_descendant(&ast, "unary_minus").is_some());
+    }
+
+    #[test]
+    fn test_parse_unary_minus_on_name() {
+        let ast = parse_ruby("x = -y");
+        let um = find_descendant(&ast, "unary_minus").expect("expected unary_minus");
+        let name_tok = um.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "factor" => {
+                n.children.iter().find_map(|cc| match cc {
+                    ASTNodeOrToken::Token(t)
+                        if matches!(t.type_, lexer::token::TokenType::Name) =>
+                    {
+                        Some(t.value.as_str())
+                    }
+                    _ => None,
+                })
+            }
+            _ => None,
+        });
+        assert_eq!(name_tok, Some("y"));
+    }
+
+    #[test]
+    fn test_parse_unary_minus_on_parenthesised_expression() {
+        let ast = parse_ruby("x = -(1 + 2)");
+        assert!(find_descendant(&ast, "unary_minus").is_some());
+    }
+
+    #[test]
+    fn test_parse_double_unary_minus_nests() {
+        let ast = parse_ruby("x = --5");
+        let outer = find_descendant(&ast, "unary_minus")
+            .expect("expected outer unary_minus");
+        assert!(find_descendant(outer, "unary_minus").is_some());
+    }
+
+    #[test]
+    fn test_parse_unary_minus_with_binary_addition() {
+        let ast = parse_ruby("x = -5 + 3");
+        assert!(find_descendant(&ast, "unary_minus").is_some());
+        // The expression also contains a PLUS somewhere in its tree.
+        fn has_plus(node: &GrammarASTNode) -> bool {
+            node.children.iter().any(|c| match c {
+                ASTNodeOrToken::Token(t) => matches!(t.type_, lexer::token::TokenType::Plus),
+                ASTNodeOrToken::Node(sub) => has_plus(sub),
+            })
+        }
+        assert!(has_plus(&ast));
+    }
 }
 
