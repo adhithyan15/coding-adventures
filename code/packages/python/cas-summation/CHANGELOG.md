@@ -1,5 +1,53 @@
 # Changelog
 
+## 1.0.0 — 2026-05-22
+
+**Phase 52 — Bounded × polynomial numerator pattern.**
+
+Extends Phase 50 to recognise that ``Mul(bounded, polynomial)``
+numerators have effective growth equal to the polynomial part's
+degree.  Closes telescopes like ``sin(k)·k/k³``, ``k·cos(k)/k²``,
+where the numerator mixes a bounded factor with a non-trivial
+polynomial factor.
+
+Major version bump (1.0.0) reflects the maturity of the
+vanishing-at-infinity recogniser: Phases 41–52 collectively handle
+the realistic cases of rational, transcendental, logarithmic,
+and mixed bounded × polynomial summands.
+
+Builds on Phase 50 (0.8.0) which added ``_is_log_of_diverging_in_k``.
+Bumps 0.8.0 → 1.0.0.
+
+### Added
+
+- **`_split_bounded_polynomial_factor(node, k)`** — partitions a
+  ``Mul`` node's factors into a bounded aggregate and a summed
+  polynomial degree; returns ``None`` if any factor is neither
+  bounded nor polynomial, or if no non-constant bounded factor
+  exists (those go through Phase 42).
+
+### Changed
+
+- ``_g_vanishes_at_infinity`` now has a Phase 52 branch between
+  Phase 50 (log numerator) and Phase 42 (degree-aware): when
+  the numerator factors as ``bounded × polynomial`` with positive
+  polynomial degree, the quotient vanishes iff the denominator's
+  polynomial degree strictly exceeds the polynomial part's degree.
+
+### Added — tests
+
+`tests/test_summation.py::TestEvaluateSumPhase52BoundedTimesPolynomial`
+— 5 new cases:
+
+- ``sin(k)·k/k³`` closes (bounded × deg 1 / deg 3).
+- ``k·cos(k)/k²`` closes (order of factors doesn't matter).
+- ``sin(k)·k²/k³`` closes (deg 2 < 3).
+- ``sin(k)·k²/k²`` stays unevaluated (degrees tie).
+- Regression: ``k/k²`` still closes via Phase 42 (Phase 52 doesn't
+  interfere when no bounded factor is present).
+
+Full suite: **103 passed** (was 98; +5 net new).
+
 ## 0.8.0 — 2026-05-22
 
 **Phase 50 — Log/polynomial growth-rate recogniser.**
