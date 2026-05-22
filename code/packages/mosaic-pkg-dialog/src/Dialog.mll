@@ -1,45 +1,65 @@
-// Dialog.mll — layout for the Dialog component.
+// Dialog.mll — layout for the Dialog component (v0.2.0).
 //
 // Decomposition (kernel primitives only):
 //
-//   Box [dialog-root]                ← stylable outer frame
-//     Column [dialog-stack]          ← vertical stack: title, message, actions
-//       Box [dialog-title]           ← stylable title row (its own `part`)
-//         Text (content: slot: title)
-//       Box [dialog-message]         ← stylable message row
+//   HostDialog [dialog-shell]           ← native dialog primitive
+//     open  : slot: open                  (visibility driven by host slot)
+//     modal : true                        (compile-time keyword; UI29-1 §2.1)
+//     title : slot: title                 (host primitive's title slot)
+//     onClose : emit: onClose             (fires on Esc / backdrop / close)
+//   {
+//     Column [dialog-stack]             ← vertical stack inside the dialog
+//       Box [dialog-message]            ← stylable message row
 //         Text (content: slot: message)
-//       Box [dialog-actions]         ← stylable actions row
-//         HostButton                 ← kernel-canonical clickable
+//       Box [dialog-actions]            ← stylable actions row
+//         HostButton                    ← explicit close button
 //           label: slot: close-label
-//           onTap : emit: onClose
+//           onTap: emit: onClose
+//   }
 //
-// Why only Box / Column / Text / HostButton?
-// ------------------------------------------
-// These four primitives are the lowest-common-denominator set: every
-// Mosaic backend on main today (React, SwiftUI, Qt, WebComponent, HTML,
-// XAML) lowers them.  `If` is only present in HTML, WebComponent, and
-// XAML right now; `For` is only present in HTML, WebComponent, and (just
-// landing) React; `HostTable` is only present in React/SwiftUI/Qt/WebComp/
-// HTML/XAML but adds complexity Dialog does not need.  Sticking to the
-// LCD set makes Dialog the cross-backend smoke test that proves *every*
-// emitter can ingest a userland package end-to-end.
+// What changed from v0.1.0
+// ------------------------
+// v0.1.0 used `Box [dialog-root] { Column { Box [dialog-title] { ... } } }`
+// — i.e. it built the dialog frame from scratch out of Boxes.  v0.2.0
+// makes `HostDialog` the layout root and lets the platform render the
+// native dialog element: `<dialog>` on React/HTML/WebComponent, `.sheet`
+// on SwiftUI, `Popup` on Qt, `ContentDialog` on XAML.  Three things
+// fall out:
 //
-// Why nested Boxes for the parts?
-// -------------------------------
-// mosstyle attaches style rules to *parts* (named via the `[part-name]`
-// bracket annotation).  We want the title, message, and actions row to
-// each be individually stylable — different padding, font, alignment —
-// so each gets its own Box wrapper that owns a part name.  The inner
-// Text / HostButton primitives stay style-free; they pick up colour and
-// font from their parent Box via CSS inheritance (or its backend
-// equivalent).
+//   1. The outer Box wrapper is gone — `HostDialog` IS the root.
+//   2. The inner `dialog-title` Box is gone — `HostDialog`'s `title:`
+//      slot renders the title natively (with the platform's typography
+//      and accessibility metadata).
+//   3. The userland composition shrinks while the rendered behavior
+//      gets dramatically richer: modal blocking, focus trap,
+//      Esc-to-close, top-layer rendering, screen-reader `dialog` role.
+//
+// What stayed the same
+// --------------------
+// The mosstyle parts vocabulary still works the way authors expect:
+// `dialog-shell` (renamed from `dialog-root`) styles the dialog frame
+// via the platform's dialog-element styling hook, `dialog-message`
+// styles the body text row, and `dialog-actions` styles the button row.
+//
+// Why HostButton and not the dialog primitive's "default action" slot?
+// -------------------------------------------------------------------
+// HostDialog deliberately does not include built-in OK/Cancel buttons —
+// kernel primitives carry the *structural* semantics (visibility,
+// modality, dismiss policy) and leave action vocabulary to userland.
+// Different products want different button text, different button
+// counts, different positions; a kernel-level "default action" slot
+// would constrain that.  Dialog v0.2.0 exposes a single close button
+// because that's the package's contract; richer dialog packages
+// (Confirm, Alert, Prompt) compose differently.
 
 layout Dialog {
-  Box [ dialog-root ] {
+  HostDialog [ dialog-shell ] (
+    open    : slot: open ,
+    modal   : true ,
+    title   : slot: title ,
+    onClose : emit: onClose
+  ) {
     Column [ dialog-stack ] {
-      Box [ dialog-title ] {
-        Text ( content: slot: title )
-      }
       Box [ dialog-message ] {
         Text ( content: slot: message )
       }
