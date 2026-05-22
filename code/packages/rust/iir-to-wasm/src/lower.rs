@@ -167,6 +167,44 @@ use crate::validate::validate_for_wasm;
 /// `global.get` pushes the current value of module-level global variable at
 /// index `idx` onto the WASM value stack.  The global must already exist in
 /// the module's global section (or be imported).
+/// Emit `i32.load8_u offset=0 align=0` — read one byte from linear memory.
+///
+/// The address is the top of the operand stack (i32, byte offset into the
+/// module's default memory).  The result is the zero-extended `u8` value
+/// as an `i32` on the stack.
+///
+/// # WASM binary layout
+///
+/// ```text
+/// 0x2D  <align:LEB128 u32>  <offset:LEB128 u32>
+/// ```
+///
+/// For Brainfuck we use natural alignment 0 (1-byte access) and zero
+/// offset — addresses are passed dynamically, never as an immediate.
+///
+/// Result encoding: `[0x2D, 0x00, 0x00]` — opcode + align byte + offset byte.
+fn encode_i32_load8_u() -> Vec<u8> {
+    // `0x2D` = i32.load8_u; align = 0 (LEB128); offset = 0 (LEB128).
+    vec![0x2Du8, 0x00u8, 0x00u8]
+}
+
+/// Emit `i32.store8 offset=0 align=0` — write the low byte of an i32 to memory.
+///
+/// Pops `value` then `addr` from the stack (in that order — same as every
+/// WASM store opcode), and stores `value & 0xFF` at `mem[addr]`.
+///
+/// # WASM binary layout
+///
+/// ```text
+/// 0x3A  <align:LEB128 u32>  <offset:LEB128 u32>
+/// ```
+///
+/// Result encoding: `[0x3A, 0x00, 0x00]`.
+fn encode_i32_store8() -> Vec<u8> {
+    // `0x3A` = i32.store8; align = 0; offset = 0.
+    vec![0x3Au8, 0x00u8, 0x00u8]
+}
+
 fn encode_global_get(idx: u32) -> Vec<u8> {
     use wasm_leb128::encode_unsigned;
     let mut bytes = vec![0x23u8]; // global.get opcode
@@ -646,6 +684,8 @@ fn emit_instr(
     lispy_pair_type_idx: Option<u32>,
     global_map: &HashMap<String, u32>,
     print_fn_idx: Option<u32>,
+    putchar_fn_idx: Option<u32>,
+    getchar_fn_idx: Option<u32>,
 ) -> Result<(), IIRWasmError> {
     // Helper closures to resolve variable names.
     let get_reg = |var: &str| -> Result<u32, IIRWasmError> {
@@ -1500,6 +1540,148 @@ fn emit_instr(
             code.extend(encode_call(fn_idx));
         }
 
+        // ── load_mem → i32.load8_u offset=0 align=0 ──────────────────────────
+        //
+        // `load_mem  v  ptr   u8`  → read tape byte at address `ptr` into `v`.
+        //
+        // The WASM linear memory is a flat `Vec<u8>` from the host's
+        // perspective.  `i32.load8_u` reads one byte at the address on top
+        // of the stack and pushes the zero-extended `u8` value as `i32`.
+        // Brainfuck's `ptr` register holds a `u32` (encoded as `i32` in
+        // WASM), so the address is already on the stack in the right type.
+        //
+        // The tape itself is allocated by `lower_iir_to_wasm` when the
+        // module uses memory ops (see the `uses_memory` injection step).
+        // Out-of-bounds reads trap at the WASM layer — Brainfuck's
+        // interpreter chose the "oob read = 0" lazy-tape convention, but
+        // WASM has no zero-fill-on-trap; programs that walk the pointer
+        // outside `[0, tape_size)` will fail at runtime.  The brainfuck
+        // frontend allocates a 30,000-cell tape by default, which fits
+        // comfortably in one 64 KiB page.
+        "load_mem" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "load_mem must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let addr_var = match instr.srcs.first() {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "load_mem requires Operand::Var(addr) as src[0]".to_string(),
+                }),
+            };
+            let addr_slot = get_reg(addr_var)?;
+            code.extend(encode_local_get(addr_slot));
+            code.extend(encode_i32_load8_u());
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── store_mem → i32.store8 offset=0 align=0 ──────────────────────────
+        //
+        // `store_mem   ptr  v   u8`  → write low byte of `v` to tape[ptr].
+        //
+        // WASM `i32.store8` pops the value (top of stack) and then the
+        // address (next on stack), then stores `value & 0xFF` at
+        // `mem[addr]`.  We push `addr` first, then `val`, so the stack at
+        // call time is `[addr, val]` (addr deeper, val on top) — exactly
+        // what i32.store8 expects.
+        //
+        // Out-of-bounds writes trap, terminating the WASM module.  The
+        // bf-iir-compiler's `BrainfuckVM::execute_module` raises a
+        // structured `BrainfuckError` for the same case in the interpreter
+        // path; the JIT path's `store_mem` handler does the same.  The
+        // WASM path's "trap and abort" is the standard memory-safe
+        // alternative.
+        "store_mem" => {
+            if instr.srcs.len() < 2 {
+                return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "store_mem requires 2 srcs: [addr, val]".to_string(),
+                });
+            }
+            let addr_var = match &instr.srcs[0] {
+                Operand::Var(v) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "store_mem src[0] must be Operand::Var(addr)".to_string(),
+                }),
+            };
+            let val_var = match &instr.srcs[1] {
+                Operand::Var(v) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "store_mem src[1] must be Operand::Var(val)".to_string(),
+                }),
+            };
+            let addr_slot = get_reg(addr_var)?;
+            let val_slot  = get_reg(val_var)?;
+            code.extend(encode_local_get(addr_slot));
+            code.extend(encode_local_get(val_slot));
+            code.extend(encode_i32_store8());
+        }
+
+        // ── call_builtin → call $env.<name> ──────────────────────────────────
+        //
+        // Dispatch on `srcs[0]` (the builtin name, carried as Var) to the
+        // corresponding host import.  The validator (validate.rs) has
+        // already rejected any name not in `CALL_BUILTIN_SUPPORTED_NAMES`,
+        // so the inner match here only handles whitelisted names; falling
+        // off the match indicates a validator/lowerer drift and returns
+        // `UnsupportedOp` as a safety net.
+        //
+        // | Builtin   | Host import       | Operand layout                        |
+        // |-----------|-------------------|----------------------------------------|
+        // | `putchar` | `env.putchar(i32)` | srcs = [Var("putchar"), Var(val)]      |
+        // | `getchar` | `env.getchar() → i32` | srcs = [Var("getchar")]; dest = byte |
+        "call_builtin" => {
+            let name = match instr.srcs.first() {
+                Some(Operand::Var(s)) => s.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "call_builtin: srcs[0] must be the builtin name as Operand::Var".to_string(),
+                }),
+            };
+            match name {
+                "putchar" => {
+                    let val_var = match instr.srcs.get(1) {
+                        Some(Operand::Var(v)) => v.as_str(),
+                        _ => return Err(IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: "call_builtin \"putchar\" requires srcs[1] = Operand::Var(val)".to_string(),
+                        }),
+                    };
+                    let val_slot = get_reg(val_var)?;
+                    let fn_idx = putchar_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "call_builtin \"putchar\": no env.putchar import registered (internal error)".to_string(),
+                    })?;
+                    code.extend(encode_local_get(val_slot));
+                    code.extend(encode_call(fn_idx));
+                }
+                "getchar" => {
+                    let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: "call_builtin \"getchar\" requires a dest register".to_string(),
+                    })?;
+                    let rd = get_reg(dest)?;
+                    let fn_idx = getchar_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "call_builtin \"getchar\": no env.getchar import registered (internal error)".to_string(),
+                    })?;
+                    code.extend(encode_call(fn_idx));
+                    code.extend(encode_local_set(rd));
+                }
+                _ => {
+                    // Validator should have rejected this; defense in depth.
+                    return Err(IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: format!("call_builtin {:?}: not in WASM backend whitelist", name),
+                    });
+                }
+            }
+        }
+
         // ── Unknown op ────────────────────────────────────────────────────────
         _ => {
             return Err(IIRWasmError::UnsupportedOp {
@@ -1572,6 +1754,8 @@ fn lower_function(
     lispy_pair_type_idx: Option<u32>,
     global_map: &HashMap<String, u32>,
     print_fn_idx: Option<u32>,
+    putchar_fn_idx: Option<u32>,
+    getchar_fn_idx: Option<u32>,
 ) -> Result<FunctionBody, IIRWasmError> {
     let param_count = fn_.params.len() as u32;
     let reg_map = build_register_map(fn_);
@@ -1650,6 +1834,8 @@ fn lower_function(
                     lispy_pair_type_idx,
                     global_map,
                     print_fn_idx,
+                    putchar_fn_idx,
+                    getchar_fn_idx,
                 )?;
             }
 
@@ -1704,6 +1890,8 @@ fn lower_function(
                 lispy_pair_type_idx,
                 global_map,
                 print_fn_idx,
+                putchar_fn_idx,
+                getchar_fn_idx,
             )?;
         }
     }
@@ -1767,7 +1955,38 @@ fn make_lispy_pair_struct_type() -> StructType {
 ///   position in the vec determines their WASM global section index.
 /// - `uses_io_out` — `true` if any instruction in any function has the
 ///   `"io_out"` opcode.  Triggers injection of the `env.__print_i64` import.
-fn collect_globals_and_io(module: &IIRModule) -> (Vec<String>, bool) {
+/// Features the WASM lowering must materialize as imports / sections.
+///
+/// Populated by [`collect_module_features`] from a single pass over the
+/// module.  Each boolean field gates an injection step in
+/// [`lower_iir_to_wasm`]:
+///
+/// | Field            | Trigger                              | What it injects |
+/// |------------------|--------------------------------------|-----------------|
+/// | `global_names`   | `global_load` / `global_store`        | `Global` entries (one per name, i64, mutable) |
+/// | `uses_io_out`    | `io_out`                              | `env.__print_i64` import |
+/// | `uses_putchar`   | `call_builtin` with name `"putchar"`  | `env.putchar` import   |
+/// | `uses_getchar`   | `call_builtin` with name `"getchar"`  | `env.getchar` import   |
+/// | `uses_memory`    | `load_mem` / `store_mem`              | A 1-page linear `Memory` |
+///
+/// All combinations are valid — the eventual import order is documented
+/// in [`lower_iir_to_wasm`].
+struct ModuleFeatures {
+    /// Deduplicated global names, in first-seen order.  Position in the
+    /// vec = WASM global-section index.
+    global_names: Vec<String>,
+    uses_io_out: bool,
+    uses_putchar: bool,
+    uses_getchar: bool,
+    /// True when the module reads or writes Brainfuck's tape memory.
+    /// Triggers the addition of a single 1-page linear memory to the
+    /// module's `Memory` section.
+    uses_memory: bool,
+}
+
+/// Walk the module once to collect everything the lowering needs to know
+/// for module-level decisions (imports, sections, fn-index offsets).
+fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     // Use a HashSet for O(1) deduplication checks, preserving first-seen order
     // in the Vec.  Without the set, deduplication would be O(M × N) where M is
     // the number of global accesses and N the number of distinct names —
@@ -1775,6 +1994,9 @@ fn collect_globals_and_io(module: &IIRModule) -> (Vec<String>, bool) {
     let mut global_names: Vec<String> = Vec::new();
     let mut global_names_seen: HashSet<String> = HashSet::new();
     let mut uses_io_out = false;
+    let mut uses_putchar = false;
+    let mut uses_getchar = false;
+    let mut uses_memory = false;
     for fn_ in &module.functions {
         for instr in &fn_.instructions {
             match instr.op.as_str() {
@@ -1788,11 +2010,33 @@ fn collect_globals_and_io(module: &IIRModule) -> (Vec<String>, bool) {
                 "io_out" => {
                     uses_io_out = true;
                 }
+                "load_mem" | "store_mem" => {
+                    uses_memory = true;
+                }
+                "call_builtin" => {
+                    // The builtin name is in srcs[0] as Var.
+                    if let Some(Operand::Var(name)) = instr.srcs.first() {
+                        match name.as_str() {
+                            "putchar" => uses_putchar = true,
+                            "getchar" => uses_getchar = true,
+                            // Other builtin names are rejected by the
+                            // validator before we get here — be defensive
+                            // and don't crash on unknown ones at compile time.
+                            _ => {}
+                        }
+                    }
+                }
                 _ => {}
             }
         }
     }
-    (global_names, uses_io_out)
+    ModuleFeatures {
+        global_names,
+        uses_io_out,
+        uses_putchar,
+        uses_getchar,
+        uses_memory,
+    }
 }
 
 /// Lower an `IIRModule` to a `WasmModule`, with WasmGC struct types.
@@ -1841,16 +2085,26 @@ pub fn lower_iir_to_wasm(
     // collected.
     let uses_lispy_pair = module_uses_lispy_pair(module);
 
-    // ── Step 2b: Collect global variable names and io_out usage ──────────────
+    // ── Step 2b: Collect globals, io_out, and Brainfuck features ─────────────
     //
     // `global_names` is a deduplicated list of all global variable names
     // referenced by `global_load`/`global_store` instructions, in first-seen
     // order.  Position in the vec = WASM global section index.
     //
-    // `uses_io_out` triggers injection of the `env.__print_i64(i64)` host
-    // import, which occupies function index 0 in the WASM function index
-    // space (imports come before defined functions).
-    let (global_names, uses_io_out) = collect_globals_and_io(module);
+    // `uses_io_out` triggers injection of the `env.__print_i64(i64)` host import.
+    // `uses_putchar` / `uses_getchar` trigger injection of `env.putchar(i32)` /
+    // `env.getchar() -> i32` host imports — Brainfuck's I/O builtins.
+    // `uses_memory` triggers injection of a 1-page linear memory (the BF tape).
+    //
+    // Imports occupy the first slots of the WASM function-index space, in
+    // declaration order; defined functions are then shifted up by the
+    // import count.
+    let features = collect_module_features(module);
+    let global_names = features.global_names.clone();
+    let uses_io_out  = features.uses_io_out;
+    let uses_putchar = features.uses_putchar;
+    let uses_getchar = features.uses_getchar;
+    let uses_memory  = features.uses_memory;
 
     // Map each global name to its WASM global section index.
     let global_map: HashMap<String, u32> = global_names
@@ -1861,12 +2115,24 @@ pub fn lower_iir_to_wasm(
 
     // ── Step 3: Build function index map ─────────────────────────────────────
     //
-    // WASM function indices are contiguous starting from 0.  When a
-    // `$__print_i64` import is present it occupies index 0, so all defined
-    // functions are shifted up by 1.
+    // WASM function indices are contiguous starting from 0.  Imports occupy
+    // the first slots, in declaration order.  Defined functions follow.
     //
-    // `fn_idx_base` is 1 when the print import is injected, 0 otherwise.
-    let fn_idx_base: u32 = if uses_io_out { 1 } else { 0 };
+    // Import order (mirrored when building `imports` below):
+    //   0. env.__print_i64   (if uses_io_out)
+    //   1. env.putchar       (if uses_putchar)
+    //   2. env.getchar       (if uses_getchar)
+    let mut next_import_idx: u32 = 0;
+    let print_fn_idx: Option<u32> = if uses_io_out {
+        let i = next_import_idx; next_import_idx += 1; Some(i)
+    } else { None };
+    let putchar_fn_idx: Option<u32> = if uses_putchar {
+        let i = next_import_idx; next_import_idx += 1; Some(i)
+    } else { None };
+    let getchar_fn_idx: Option<u32> = if uses_getchar {
+        let i = next_import_idx; next_import_idx += 1; Some(i)
+    } else { None };
+    let fn_idx_base: u32 = next_import_idx;
 
     let fn_map: HashMap<String, u32> = module
         .functions
@@ -1929,35 +2195,58 @@ pub fn lower_iir_to_wasm(
         None
     };
 
-    // Add the $__print_i64 import type and import entry if io_out is used.
+    // Add host-import types & entries for any enabled features.
     //
-    // The print import type is pushed AFTER all defined-function FuncTypes and
-    // after the optional LispyPair struct type, so its type index is
-    // `types.len() + struct_types_count`.  Since struct_types are encoded in
-    // the same WASM type section after func types, the print type index is
-    // `types.len() + (1 if uses_lispy_pair else 0)`.
+    // Each FuncType is appended to `types` after defined-function FuncTypes
+    // and after the optional LispyPair struct type.  The struct type, when
+    // present, occupies one slot between the function types and the
+    // imports' function types.
     //
-    // `print_fn_idx` is always 0 (the import occupies the first function slot).
-    let print_fn_idx: Option<u32>;
-    let print_imports: Vec<Import>;
+    // Imports are pushed to `host_imports` in the same order their
+    // function indices were assigned earlier in Step 3:
+    //   0. env.__print_i64   (if uses_io_out)
+    //   1. env.putchar       (if uses_putchar)
+    //   2. env.getchar       (if uses_getchar)
+    //
+    // The function index that emit_instr uses is the one we assigned earlier
+    // (print_fn_idx / putchar_fn_idx / getchar_fn_idx).  Here we just need
+    // to push the type and import entries in matching order.
+    let mut host_imports: Vec<Import> = Vec::new();
+    let struct_type_offset: u32 = if uses_lispy_pair { 1 } else { 0 };
     if uses_io_out {
-        // The print type goes after function types and the optional struct type.
-        let print_type_idx =
-            types.len() as u32 + if uses_lispy_pair { 1 } else { 0 };
-        types.push(FuncType {
-            params: vec![ValueType::I64],
-            results: vec![],
-        });
-        print_fn_idx = Some(0u32);
-        print_imports = vec![Import {
+        // env.__print_i64(i64) -> ()
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType { params: vec![ValueType::I64], results: vec![] });
+        host_imports.push(Import {
             module_name: "env".to_string(),
             name: "__print_i64".to_string(),
             kind: ExternalKind::Function,
-            type_info: ImportTypeInfo::Function(print_type_idx),
-        }];
-    } else {
-        print_fn_idx = None;
-        print_imports = vec![];
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
+    }
+    if uses_putchar {
+        // env.putchar(i32) -> ()
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType { params: vec![ValueType::I32], results: vec![] });
+        host_imports.push(Import {
+            module_name: "env".to_string(),
+            name: "putchar".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
+    }
+    if uses_getchar {
+        // env.getchar() -> i32  (returns the next byte, or -1 / 0 for EOF
+        // depending on host convention — Brainfuck's interpreter convention
+        // is 0 for EOF, which matches the lazy-tape semantics).
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType { params: vec![], results: vec![ValueType::I32] });
+        host_imports.push(Import {
+            module_name: "env".to_string(),
+            name: "getchar".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
     }
 
     // Build WASM Global entries — one mutable i64 per named global,
@@ -1990,8 +2279,12 @@ pub fn lower_iir_to_wasm(
         });
 
         // Lower the function body, passing GC type index, global map, and
-        // the print import index if io_out is used.
-        let body = lower_function(fn_, &fn_map, lispy_pair_type_idx, &global_map, print_fn_idx)?;
+        // the host-import indices (print / putchar / getchar) so emit_instr
+        // can `call <import_idx>` directly.
+        let body = lower_function(
+            fn_, &fn_map, lispy_pair_type_idx, &global_map,
+            print_fn_idx, putchar_fn_idx, getchar_fn_idx,
+        )?;
         code.push(body);
     }
 
@@ -2004,11 +2297,27 @@ pub fn lower_iir_to_wasm(
         vec![]
     };
 
+    // Brainfuck tape: a single 1-page linear memory.  Each WASM memory page is
+    // 64 KiB = 65,536 bytes, comfortably larger than Brainfuck's default 30,000
+    // -cell tape.  The memory is module-defined (not imported); a future
+    // extension can add an `import` variant if the host wants to provide
+    // the buffer.  Modules that don't use `load_mem`/`store_mem` get no
+    // memory section, preserving binary compatibility with the existing
+    // non-BF callers (Twig, BASIC, Oct, Nib, Lispy).
+    let memories: Vec<wasm_types::MemoryType> = if uses_memory {
+        vec![wasm_types::MemoryType {
+            limits: wasm_types::Limits { min: 1, max: Some(1) },
+        }]
+    } else {
+        vec![]
+    };
+
     Ok(WasmModule {
         types,
         struct_types,
         functions,
-        imports: print_imports,
+        imports: host_imports,
+        memories,
         globals: wasm_globals,
         exports,
         code,

@@ -1,5 +1,38 @@
 # Changelog — brainfuck-iir-compiler
 
+## [0.3.1] — 2026-05-22 (BF → WASM end-to-end test)
+
+### Added — `tests/wasm_e2e.rs`
+
+Stage 1 of 4 for the BF → {wasm, jvm, clr, beam} story.  Walks the new
+IIR-based chain end-to-end:
+
+```text
+BF source → IIRModule → iir-to-wasm validator → lower_iir_to_wasm → .wasm bytes
+```
+
+Before iir-to-wasm 0.4.0, the validator rejected `load_mem` /
+`store_mem` and any `call_builtin` (including BF's `putchar` /
+`getchar`).  With iir-to-wasm 0.4.0 those are accepted, and this
+e2e test locks the path in for Brainfuck:
+
+- `brainfuck_three_increments_lowers_to_wasm_bytes` — `+++.` compiles
+  through, the resulting `WasmModule` has an `env.putchar` import,
+  a 1-page linear memory, and a `main` export.  The encoded bytes
+  start with the canonical WASM magic + version.
+- `brainfuck_loop_lowers_to_wasm_bytes` — `++[-]` (a non-trivial
+  loop) compiles through; declares a memory; no putchar.
+- `brainfuck_input_emits_getchar_import` — `,.` emits both
+  `env.getchar` and `env.putchar` imports.
+- `brainfuck_empty_program_emits_minimal_wasm` — the empty BF
+  program emits no memory and no imports, proving feature detection
+  is conditional (doesn't burden modules that don't need tape/IO).
+
+No source-code changes in this crate — the test runs against the
+existing `compile_source`.  Only the WASM e2e test file is new.
+
+Stages 2–4 (JVM, CLR, BEAM) are queued as follow-on PRs.
+
 ## [0.3.0] — 2026-05-22 (BF05 — real CIR-bytecode JIT backend)
 
 ### Added — `BrainfuckCirJit`, a real `jit_core::backend::Backend`

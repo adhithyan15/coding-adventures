@@ -97,18 +97,41 @@ const GC_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
 // - `global_load`   — lowered to `global.get <idx>` (WASM global section).
 
 const UNSUPPORTED_OPS: &[&str] = &[
-    "call_builtin",
+    // `call_builtin` is *conditionally* unsupported — handled below.  See
+    // `CALL_BUILTIN_SUPPORTED_NAMES` and the call_builtin branch in the
+    // per-instruction loop.  Whitelisting specific builtins (`putchar`,
+    // `getchar`) lets Brainfuck flow through this backend while still
+    // rejecting unknown / unsafe builtin names.
     "io_in",
     // "io_out"       — LANG32: now supported (host import $__print_i64).
     // "global_store" — LANG32: now supported (WASM global.set).
     // "global_load"  — LANG32: now supported (WASM global.get).
     "cast",
-    "load_mem",
-    "store_mem",
+    // "load_mem"     — Brainfuck: now supported (i32.load8_u over linear memory).
+    // "store_mem"    — Brainfuck: now supported (i32.store8 over linear memory).
     "box",
     "unbox",
     "safepoint",
 ];
+
+/// Builtin names that the WASM backend can lower via a host import.
+///
+/// Each entry maps to a `(env, name)` WASM import pair that the host
+/// environment is expected to supply.  Today's list covers the
+/// Brainfuck I/O builtins:
+///
+/// | Builtin     | Host import       | Signature |
+/// |-------------|-------------------|-----------|
+/// | `"putchar"` | `env.putchar`     | `(i32) -> ()`     |
+/// | `"getchar"` | `env.getchar`     | `() -> i32`       |
+///
+/// Adding a new builtin requires:
+///   1. Listing it here so the validator accepts it.
+///   2. Adding a matching `case` to `lower.rs::emit_instr`'s
+///      `call_builtin` branch that emits the right WASM call.
+///   3. Injecting the import entry in `lower_iir_to_wasm` (see the
+///      analogous wiring for `io_out` → `env.__print_i64`).
+pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &["putchar", "getchar"];
 
 // ---------------------------------------------------------------------------
 // validate_for_wasm
@@ -260,12 +283,42 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // NOT in UNSUPPORTED_OPS — they are accepted when paired with
             // `ref<LispyPair>`.  Reject them here only when the type hint
             // is NOT a supported reference type.
+            //
+            // `call_builtin` is conditionally accepted: the builtin name
+            // (carried in `srcs[0]` as `Operand::Var`) must be in
+            // [`CALL_BUILTIN_SUPPORTED_NAMES`].  This lets Brainfuck's
+            // `putchar` / `getchar` flow through while still rejecting
+            // unknown / unsafe builtins.
             if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
                      the WASM backend; it requires a host import or runtime support",
                     func.name, instr.op
                 ));
+            } else if instr.op == "call_builtin" {
+                // Inspect srcs[0] for the builtin name.  IIR carries it as
+                // `Operand::Var(name)` (Rust's IIR has no separate string
+                // operand kind — names and var refs share `Var`).
+                let name: Option<&str> = match instr.srcs.first() {
+                    Some(interpreter_ir::Operand::Var(s)) => Some(s.as_str()),
+                    _ => None,
+                };
+                match name {
+                    Some(n) if CALL_BUILTIN_SUPPORTED_NAMES.contains(&n) => {
+                        // Accepted — emit_instr will lower it to a call into
+                        // the corresponding host import.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"call_builtin\" with \
+                             builtin name {:?} is not in the WASM backend's host-import \
+                             whitelist (supported: {:?}); add the builtin to \
+                             CALL_BUILTIN_SUPPORTED_NAMES and the lowering rule in \
+                             lower.rs to extend coverage",
+                            func.name, name, CALL_BUILTIN_SUPPORTED_NAMES
+                        ));
+                    }
+                }
             } else if instr.op == "alloc" || instr.op == "field_load" || instr.op == "field_store" {
                 // These GC ops require the instruction's type_hint to be a
                 // supported reference type.  They allocate or access fields
@@ -420,12 +473,14 @@ mod tests {
         // These ops are unconditionally rejected.
         // Note: `io_out`, `global_store`, `global_load` are NOT in this list —
         // they were promoted to supported in LANG32.
+        // `load_mem`, `store_mem` are NOT in this list — Brainfuck linear-
+        // memory lowering promoted them to supported in the BF→WASM PR.
+        // `call_builtin` is NOT in this list — it's conditionally accepted
+        // for builtin names in `CALL_BUILTIN_SUPPORTED_NAMES`; see the
+        // call_builtin_*_tests below.
         for op in &[
-            "call_builtin",
             "io_in",
             "cast",
-            "load_mem",
-            "store_mem",
             "box",
             "unbox",
             "safepoint",
@@ -443,6 +498,108 @@ mod tests {
                 errs
             );
         }
+    }
+
+    // ─── BF lowering: load_mem / store_mem now pass ─────────────────────────
+
+    #[test]
+    fn load_mem_accepted_for_bf() {
+        let errs = validate_for_wasm(&module_with(vec![
+            // load_mem v ptr [u8]  — read tape cell into v.
+            IIRInstr::new(
+                "load_mem",
+                Some("v".into()),
+                vec![Operand::Var("ptr".into())],
+                "u8",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "load_mem should be accepted by WASM validator for Brainfuck \
+             linear-memory lowering; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn store_mem_accepted_for_bf() {
+        let errs = validate_for_wasm(&module_with(vec![
+            // store_mem ptr v [u8]  — write v into tape[ptr].
+            IIRInstr::new(
+                "store_mem",
+                None,
+                vec![Operand::Var("ptr".into()), Operand::Var("v".into())],
+                "u8",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "store_mem should be accepted by WASM validator; got: {:?}",
+            errs
+        );
+    }
+
+    // ─── BF lowering: call_builtin whitelist (putchar / getchar) ─────────────
+
+    #[test]
+    fn call_builtin_putchar_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            // call_builtin putchar v [void]  — write v as a byte to stdout.
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![
+                    Operand::Var("putchar".into()),
+                    Operand::Var("v".into()),
+                ],
+                "void",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "call_builtin \"putchar\" should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn call_builtin_getchar_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            // call_builtin v getchar [u8]  — read a byte from stdin into v.
+            IIRInstr::new(
+                "call_builtin",
+                Some("v".into()),
+                vec![Operand::Var("getchar".into())],
+                "u8",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "call_builtin \"getchar\" should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn call_builtin_unknown_name_rejected() {
+        // An arbitrary builtin name not in the whitelist must still fail
+        // validation so unknown / unsafe builtins can't slip through.
+        let errs = validate_for_wasm(&module_with(vec![IIRInstr::new(
+            "call_builtin",
+            None,
+            vec![Operand::Var("system_exec".into())],
+            "void",
+        )]));
+        assert!(
+            errs.iter().any(|e| e.contains("UnsupportedOp")
+                && e.contains("system_exec")),
+            "unknown call_builtin name should be rejected; got: {:?}",
+            errs
+        );
     }
 
     #[test]
