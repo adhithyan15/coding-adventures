@@ -635,6 +635,22 @@ function hDivergesAtInfinity(node: IRNode, k: IRNode): boolean {
   return false;
 }
 
+/**
+ * Phase 50 (TypeScript port): True when ``node = Log(h(k))`` with
+ * ``h(k) → +∞``.
+ *
+ * The squeeze argument: ``log(h) → ∞`` at a logarithmic rate, while
+ * any positive-degree polynomial / exponential denominator grows
+ * strictly faster.  Sign-aware: delegates to ``hDivergesAtInfinity``
+ * on the full ``Log(...)`` node so Phase 44's Log branch refuses
+ * ``Log(Mul(-1, k))``-style negative-polynomial shapes for free.
+ */
+function isLogOfDivergingInK(node: IRNode, k: IRNode): boolean {
+  if (node.kind !== "apply") return false;
+  if (!equals(node.head, LOG) || node.args.length !== 1) return false;
+  return hDivergesAtInfinity(node, k);
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -644,6 +660,11 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   // (positive-degree polynomial OR exp / b^k transcendental).
   if (isConstantIn(num, k)) {
     return hDivergesAtInfinity(den, k);
+  }
+  // Phase 50: Log(diverging) numerator + diverging denominator.
+  // log/poly → 0 always (log grows slower than any positive power).
+  if (isLogOfDivergingInK(num, k) && hDivergesAtInfinity(den, k)) {
+    return true;
   }
   // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
   const numDeg = polynomialDegreeInK(num, k);

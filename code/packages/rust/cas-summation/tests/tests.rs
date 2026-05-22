@@ -789,3 +789,54 @@ fn phase46_both_negative_left_untouched() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ---------------------------------------------------------------------------
+// Phase 50 (Rust port): Log/polynomial growth-rate recogniser.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase50_log_over_k_squared_closes() {
+    let k = sym("k");
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![log_k, apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![log_kp1, apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase50_log_of_polynomial_argument_closes() {
+    let k = sym("k");
+    let k_sq_plus_1 = apply(sym(ADD), vec![apply(sym(POW), vec![k.clone(), int(2)]), int(1)]);
+    let log_term = apply(sym(LOG), vec![k_sq_plus_1]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let kp1_sq_plus_1 = apply(sym(ADD), vec![apply(sym(POW), vec![kp1.clone(), int(2)]), int(1)]);
+    let log_kp1 = apply(sym(LOG), vec![kp1_sq_plus_1]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![log_term, apply(sym(POW), vec![k.clone(), int(3)])]),
+        apply(sym(DIV), vec![log_kp1, apply(sym(POW), vec![kp1, int(3)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase50_log_of_negative_argument_refused() {
+    // log of negative arg isn't real for odd k — must stay unevaluated.
+    let k = sym("k");
+    let neg_k = apply(sym(MUL), vec![int(-1), k.clone()]);
+    let log_neg_k = apply(sym(LOG), vec![neg_k]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let neg_kp1 = apply(sym(MUL), vec![int(-1), kp1.clone()]);
+    let log_neg_kp1 = apply(sym(LOG), vec![neg_kp1]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![log_neg_k, apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![log_neg_kp1, apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}

@@ -910,6 +910,19 @@ fn h_diverges_at_infinity(node: &IRNode, k: &IRNode) -> bool {
     false
 }
 
+/// Phase 50 (Rust port): True when ``node = Log(h(k))`` with
+/// ``h(k) → +∞``.  Sign-aware via ``h_diverges_at_infinity``.
+fn is_log_of_diverging_in_k(node: &IRNode, k: &IRNode) -> bool {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return false,
+    };
+    if !matches!(&apply_node.head, IRNode::Symbol(s) if s == LOG) || apply_node.args.len() != 1 {
+        return false;
+    }
+    h_diverges_at_infinity(node, k)
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -924,6 +937,10 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     // (positive-degree polynomial OR exp / b^k transcendental).
     if is_constant_in(num, k) {
         return h_diverges_at_infinity(den, k);
+    }
+    // Phase 50: Log(diverging) numerator + diverging denominator.
+    if is_log_of_diverging_in_k(num, k) && h_diverges_at_infinity(den, k) {
+        return true;
     }
     // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
     let num_deg = match polynomial_degree_in_k(num, k) {

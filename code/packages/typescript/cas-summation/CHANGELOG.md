@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.8.0 — 2026-05-22
+
+**Phase 50 — Log/polynomial growth-rate recogniser (TypeScript port).**
+
+Ports Python ``cas-summation`` 0.8.0.  Extends ``gVanishesAtInfinity``
+to accept ``Div(Log(diverging), diverging)`` shapes via the squeeze
+argument: ``log(h) → ∞`` at a logarithmic rate, denominator grows
+strictly faster, so the quotient vanishes.
+
+> Note: bumps 0.6.0 → 0.8.0 (skipping 0.7.0, reserved for the
+> in-flight Phase 49 TS+Rust port PR #3936).
+
+### Added
+
+- **`isLogOfDivergingInK(node, k)`** — recognises ``Log(h(k))``
+  with ``h(k) → +∞``.  Sign-aware: delegates to
+  ``hDivergesAtInfinity`` on the full ``Log(...)`` node so
+  Phase 44's Log branch refuses ``Log(Mul(-1, k))``-style negative
+  shapes for free.
+
+### Changed
+
+- ``gVanishesAtInfinity`` now has a Phase 50 branch checking the
+  numerator for ``Log(diverging)`` before the Phase 42 degree-aware
+  path.
+
+### Added — tests
+
+3 new ``summation: Phase 50 log/polynomial growth-rate`` cases:
+- ``log(k)/k²`` closes.
+- ``log(k²+1)/k³`` closes.
+- Regression: ``log(Mul(-1, k))/k²`` stays unevaluated.
+
+Full suite: **40 passed** (was 37; +3 net new).
+
 ## 0.6.0 — 2026-05-22
 
 **Phase 40+46 — Add-with-negation telescope normaliser (TypeScript port).**

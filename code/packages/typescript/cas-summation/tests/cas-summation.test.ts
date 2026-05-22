@@ -566,3 +566,58 @@ describe("summation: Phase 40+46 Add-with-negation normaliser", () => {
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 50 (TypeScript port): Log/polynomial growth-rate recogniser.
+//
+// Closes Div(Log(diverging), diverging) telescopes via the squeeze
+// argument: log(h) → ∞ at a logarithmic rate, denominator grows
+// faster polynomially / exponentially, so log/poly → 0.
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 50 log/polynomial growth-rate", () => {
+  it("∑_{k=1}^∞ [log(k)/k² − log(k+1)/(k+1)²] closes", () => {
+    const k = sym("k");
+    const logK = app(LOG, [k]);
+    const kPlus1 = app(ADD, [k, int(1)]);
+    const logKp1 = app(LOG, [kPlus1]);
+    const f = app(SUB, [
+      app(DIV, [logK, app(POW, [k, int(2)])]),
+      app(DIV, [logKp1, app(POW, [kPlus1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑_{k=1}^∞ [log(k²+1)/k³ − log((k+1)²+1)/(k+1)³] closes", () => {
+    const k = sym("k");
+    const kSqPlus1 = app(ADD, [app(POW, [k, int(2)]), int(1)]);
+    const logK = app(LOG, [kSqPlus1]);
+    const kPlus1 = app(ADD, [k, int(1)]);
+    const kPlus1SqPlus1 = app(ADD, [app(POW, [kPlus1, int(2)]), int(1)]);
+    const logKp1 = app(LOG, [kPlus1SqPlus1]);
+    const f = app(SUB, [
+      app(DIV, [logK, app(POW, [k, int(3)])]),
+      app(DIV, [logKp1, app(POW, [kPlus1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: log(Mul(-1, k))/k² stays unevaluated", () => {
+    // log of negative argument isn't real-valued for odd k.
+    const k = sym("k");
+    const negK = app(MUL, [int(-1), k]);
+    const logNegK = app(LOG, [negK]);
+    const kPlus1 = app(ADD, [k, int(1)]);
+    const negKp1 = app(MUL, [int(-1), kPlus1]);
+    const logNegKp1 = app(LOG, [negKp1]);
+    const f = app(SUB, [
+      app(DIV, [logNegK, app(POW, [k, int(2)])]),
+      app(DIV, [logNegKp1, app(POW, [kPlus1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // Phase 50 must NOT close this.
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});

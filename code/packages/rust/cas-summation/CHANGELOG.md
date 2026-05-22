@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.8.0 — 2026-05-22
+
+**Phase 50 — Log/polynomial growth-rate recogniser (Rust port).**
+
+Ports Python ``cas-summation`` 0.8.0.  Extends ``g_vanishes_at_infinity``
+to accept ``Div(Log(diverging), diverging)`` shapes via the squeeze
+argument.
+
+> Bumps 0.6.0 → 0.8.0 (skipping 0.7.0, reserved for the in-flight
+> Phase 49 TS+Rust port PR #3936).
+
+### Added
+
+- **`is_log_of_diverging_in_k(node, k)`** — recognises ``Log(h(k))``
+  with ``h(k) → +∞``.  Sign-aware via ``h_diverges_at_infinity``
+  (refuses ``Log(Mul(-1, k))``-style shapes).
+
+### Changed
+
+- ``g_vanishes_at_infinity`` adds the Phase 50 branch between the
+  Phase 41 fast path and the Phase 42 degree-aware path.
+
+### Added — tests
+
+3 new ``phase50_*`` cases:
+- ``phase50_log_over_k_squared_closes``
+- ``phase50_log_of_polynomial_argument_closes``
+- ``phase50_log_of_negative_argument_refused`` (regression)
+
+Full suite: **40 passed** (was 37; +3 net new).
+
 ## 0.6.0 — 2026-05-22
 
 **Phase 40+46 — Add-with-negation telescope normaliser (Rust port).**
