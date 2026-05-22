@@ -1,5 +1,67 @@
 # Changelog — twig-ir-compiler
 
+## [0.17.0] — 2026-05-22 (Path A — typed `if` + typed `mov`)
+
+### Added — Typed `mov` for branch-merge sites
+
+Increment 3 of the Twig → IIR-to-* end-to-end story.  Replaces the
+legacy `call_builtin "_move"` emission pattern with the **typed `mov`
+IR opcode** at branch-merge sites in `compile_if`.  When both arms
+of an `(if cond then else)` expression produce a value of the same
+statically-known type, the if's result type is recorded so
+downstream `ret` instructions propagate it cleanly.
+
+#### What changed
+
+- New `FnCtx::emit_move(dst, src, loc)` helper that emits a typed
+  `mov dst = src [type]` instruction.  Type is sourced from
+  `var_types[src]` (or `"any"` when unknown).  When the type is
+  concrete, the destination is also recorded.
+- `compile_if` now uses `emit_move` for both then-branch and
+  else-branch merge sites.  After both arms are emitted, the
+  compiler computes a *consensus type*: if both arms produce the
+  same concrete type, that becomes the if's result type; otherwise
+  the result stays `"any"` (matching the existing dynamic semantics).
+- `compile_if` no longer emits any `call_builtin "_move"` form.
+
+#### What this unlocks
+
+| Program                          | wasm | jvm | clr | beam |
+|----------------------------------|------|-----|-----|------|
+| `(if #t 1 2)`                    | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) |
+| `(if (< 1 2) (+ 10 20) (- 10 20))` | ✅ (combined typed cmp+arith+if) | ✅ | ✅ | ✅ |
+| `(if cond 1 "hello")`            | ❌ still rejected — disagreeing arm types (any) | ❌ | ❌ | ❌ |
+
+Programs where both arms produce the same concrete type now flow
+through every backend.  Programs whose if branches return different
+types still hit the dynamic fallback.
+
+#### twig-vm regression fix
+
+Path-A increments 2 (PR #3949) and this PR break twig-vm runtime
+execution by emitting typed CIR mnemonics that twig-vm's dispatch
+table doesn't recognise.  PR #3949 includes the corresponding
+twig-vm patch (`twig-vm` 0.19.0) — typed CIR mnemonics now
+synthesise the equivalent `call_builtin "<runtime_name>"` form and
+delegate to the existing builtin dispatch.
+
+#### Tests
+
+- Existing `if_emits_jmp_if_false_and_two_labels` test renamed
+  and updated to assert two typed `mov` instructions (zero legacy
+  `_move`).
+- 2 new e2e tests in `tests/backend_compat.rs`:
+  - `twig_typed_if_accepted_by_every_backend` — `(if #t 1 2)`
+  - `twig_typed_arithmetic_in_if_accepted_by_every_backend` —
+    `(if (< 1 2) (+ 10 20) (- 10 20))`
+- 73 lib + 7 backend e2e tests pass.
+
+#### Compatibility
+
+- Non-Twig callers unaffected.
+- twig-vm 0.19.0 (this stack, base #3949) handles the typed `mov`
+  natively — no Twig program changes runtime behaviour.
+
 ## [0.16.0] — 2026-05-22 (Path A — typed binary arithmetic + comparison)
 
 ### Added — Typed CIR mnemonics for binary arithmetic / comparison
