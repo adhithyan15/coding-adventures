@@ -29,7 +29,11 @@ import math
 
 from ml_framework_core import Tensor
 from ml_framework_core import _rust_backend
-from ml_framework_core.functions import ReLUFunction, TanhFunction
+from ml_framework_core.functions import (
+    ReLUFunction,
+    SigmoidFunction,
+    TanhFunction,
+)
 
 
 class MatMulFallbackTests(unittest.TestCase):
@@ -403,6 +407,69 @@ class ActivationFallbackTests(unittest.TestCase):
         expected_grad_1 = 1.0 - math.tanh(-0.5) ** 2
         self.assertAlmostEqual(a.grad.data[0], expected_grad_0, places=10)
         self.assertAlmostEqual(a.grad.data[1], expected_grad_1, places=10)
+
+
+# ──────────────────────────────────────────────────────────────────
+# MX10 Phase 4b — Sigmoid fallback tests
+#
+# Sigmoid joins the activation family in Phase 4b via a 4-op composed
+# graph (Neg → Exp → Add(1) → Recip).  Same fallback pattern: when
+# ``_RUST_AVAILABLE = False``, dispatch must short-circuit and the
+# pure-Python ``1 / (1 + exp(-x))`` kernel must produce the right
+# answer.
+# ──────────────────────────────────────────────────────────────────
+
+
+class SigmoidFallbackTests(unittest.TestCase):
+    """Confirm Sigmoid still works when the Rust path is disabled."""
+
+    def setUp(self) -> None:
+        self._saved_available = _rust_backend._RUST_AVAILABLE
+        _rust_backend._RUST_AVAILABLE = False
+
+    def tearDown(self) -> None:
+        _rust_backend._RUST_AVAILABLE = self._saved_available
+
+    def test_sigmoid_via_rust_raises_when_unavailable(self) -> None:
+        """``sigmoid_via_rust`` must raise (defence-in-depth)."""
+        a = Tensor([0.0, 1.0, -1.0], (3,))
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.sigmoid_via_rust(a)
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_sigmoid_correct_via_fallback(self) -> None:
+        """``SigmoidFunction.apply(a)`` falls back to ``1/(1+exp(-x))``.
+
+        Hand-computed: sigmoid(0) = 0.5; sigmoid(1) ≈ 0.7310585786;
+        sigmoid(-1) ≈ 0.2689414214.  ``assertAlmostEqual`` with
+        ``places=12`` because the pure-Python path uses
+        double-precision ``math.exp``.
+        """
+        a = Tensor([0.0, 1.0, -1.0], (3,))
+        result = SigmoidFunction.apply(a)
+        self.assertEqual(result.shape, (3,))
+        self.assertAlmostEqual(result.data[0], 0.5, places=12)
+        self.assertAlmostEqual(
+            result.data[1], 1.0 / (1.0 + math.exp(-1.0)), places=12
+        )
+        self.assertAlmostEqual(
+            result.data[2], 1.0 / (1.0 + math.exp(1.0)), places=12
+        )
+
+    def test_sigmoid_saved_metadata_populated_via_fallback(self) -> None:
+        """Backward needs ``saved_metadata["output"]`` (formula
+        ``g * y * (1 - y)`` is in terms of the output, not the input).
+        Confirm the contract holds via the fallback path.
+        """
+        a = Tensor([0.0, 2.0], (2,), requires_grad=True)
+        result = SigmoidFunction.apply(a)
+        result.backward(Tensor([1.0, 1.0], (2,)))
+        self.assertIsNotNone(a.grad)
+        # d/dx sigmoid(x) = sigmoid(x) * (1 - sigmoid(x))
+        y0 = 1.0 / (1.0 + math.exp(-0.0))  # 0.5
+        y1 = 1.0 / (1.0 + math.exp(-2.0))
+        self.assertAlmostEqual(a.grad.data[0], y0 * (1.0 - y0), places=10)
+        self.assertAlmostEqual(a.grad.data[1], y1 * (1.0 - y1), places=10)
 
 
 if __name__ == "__main__":

@@ -56,6 +56,7 @@ from ._rust_backend import (
     should_use_rust_for_elementwise,
     should_use_rust_for_matmul,
     should_use_rust_for_reduction,
+    sigmoid_via_rust,
     sub_via_rust,
     sum_via_rust,
     tanh_via_rust,
@@ -740,6 +741,17 @@ class SigmoidFunction(Function):
 
     def forward(self, a: Tensor) -> Tensor:
         self.save_for_backward(a)
+        # MX10 Phase 4b — optional Rust fast path.  Sigmoid is
+        # composed as a 4-op graph (Neg → Exp → Add(1) → Recip)
+        # in matrix-cpu; the entire composition is bundled into one
+        # FFI envelope so we pay the per-call overhead just once.
+        # Output is saved for backward via the same metadata key the
+        # pure-Python path uses (backward formula: y * (1 - y) only
+        # depends on the output, not the input).
+        if should_use_rust_for_activation(len(a.data)):
+            result = sigmoid_via_rust(a)
+            self.saved_metadata["output"] = result.data
+            return result
         data = [1.0 / (1.0 + math.exp(-x)) for x in a.data]
         self.saved_metadata["output"] = data
         return Tensor(data, a.shape, device=a.device)

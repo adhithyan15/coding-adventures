@@ -570,21 +570,19 @@ def mean_via_rust(a: Tensor) -> Tensor:
 #
 # The other classic activations are deferred:
 #
-# * Sigmoid = 1 / (1 + exp(-x)) — needs Exp + Neg + Add (with
-#   1-const) + Recip in a 4-op graph.  Doable but adds enough
-#   complexity that profiling should justify the FFI overhead
-#   first.
+# * Sigmoid = 1 / (1 + exp(-x)) — composed as a 4-op graph (Neg →
+#   Exp → Add(1-const) → Recip).  **Shipped in Phase 4b** via
+#   ``sigmoid_via_rust`` below.
 # * GELU = 0.5 * x * (1 + tanh(sqrt(2/pi) * (x + 0.044715 * x^3)))
 #   — multi-op composition with constants and Pow.  Deferred until
 #   matrix-cpu adds scalar-exponent Pow (would simplify the
 #   ``x^3`` term).
 # * Softmax = exp(x - max(x)) / sum(exp(...)) — needs per-axis
-#   broadcast which Phase 3b territory; deferred to coincide.
+#   broadcast which is Phase 3b territory; deferred to coincide.
 #
-# So Phase 4 ships **Tanh** and **ReLU** — the two most common
-# activations in modern ML workloads (Tanh in older RNN architectures
-# and GLU gates; ReLU in every CNN/transformer feed-forward block).
-# Sigmoid/GELU/Softmax wait for Phase 4b.
+# Phase 4 shipped Tanh + ReLU; Phase 4b adds Sigmoid via the 4-op
+# graph factory ``_sigmoid_via_rust_composed`` below.  GELU and
+# Softmax wait for later sub-phases.
 # ──────────────────────────────────────────────────────────────────
 
 
@@ -674,6 +672,101 @@ def relu_via_rust(a: Tensor) -> Tensor:
     if len(out_bytes) != expected_bytes:
         raise RuntimeError(
             f"relu_via_rust: expected {expected_bytes} output bytes "
+            f"({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+
+    return _Tensor(out_floats, a.shape, device=a.device)
+
+
+def sigmoid_via_rust(a: Tensor) -> Tensor:
+    """``Sigmoid(a) = 1 / (1 + exp(-a))`` composed as a 4-op graph.
+
+    Topology::
+
+        input(0) ──Neg──> neg(1) ──Exp──> exp_neg(2) ─┐
+                                                       ├Add──> one_plus(4) ──Recip──> out(5)
+                                  ones-const(3) ──────┘
+
+    matrix-cpu doesn't broadcast scalars (the same constraint that
+    forces ReLU's zero-tensor materialisation), so the ``1`` in
+    ``1 + exp(-x)`` is materialised as a full ones-tensor of shape
+    ``a.shape`` and shipped via the graph's ``constants[]`` array.
+
+    Why 4 ops in one envelope rather than 4 separate envelopes:
+    each FFI round-trip pays the bytes-pack + JSON-build +
+    planner-plan + executor-dispatch + bytes-unpack cost.  Bundling
+    the entire composition into one envelope amortises that
+    overhead — the executor sees a single graph, plans it once,
+    and dispatches the ops back-to-back in the same call.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "sigmoid_via_rust called but Rust backend is not available; "
+            "callers must check should_use_rust_for_activation() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(a.data)
+    shape_list = list(a.shape)
+
+    a_bytes = struct.pack(f"<{numel}f", *a.data)
+    # All-ones constant of shape a.shape — same pattern as the
+    # zero-tensor in relu_via_rust, but with 1.0 in every cell.
+    # We pack via struct rather than computing the hex literal
+    # ("0000803f" per cell) so the code stays readable.
+    ones_bytes = struct.pack(f"<{numel}f", *([1.0] * numel))
+    ones_hex = ones_bytes.hex()
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    # tensor 0 = input x
+                    {"id": 0, "dtype": "f32", "shape": shape_list},
+                    # tensor 1 = -x
+                    {"id": 1, "dtype": "f32", "shape": shape_list},
+                    # tensor 2 = exp(-x)
+                    {"id": 2, "dtype": "f32", "shape": shape_list},
+                    # tensor 3 = ones constant (one per cell)
+                    {"id": 3, "dtype": "f32", "shape": shape_list},
+                    # tensor 4 = 1 + exp(-x)
+                    {"id": 4, "dtype": "f32", "shape": shape_list},
+                    # tensor 5 = 1 / (1 + exp(-x)) — output
+                    {"id": 5, "dtype": "f32", "shape": shape_list},
+                ],
+                "inputs": [0],
+                "outputs": [5],
+                "ops": [
+                    {"kind": "Neg", "input": 0, "output": 1},
+                    {"kind": "Exp", "input": 1, "output": 2},
+                    {"kind": "Add", "lhs": 2, "rhs": 3, "output": 4},
+                    {"kind": "Recip", "input": 4, "output": 5},
+                ],
+                "constants": [
+                    {
+                        "tensor_id": 3,
+                        "dtype": "f32",
+                        "shape": shape_list,
+                        "bytes_hex": ones_hex,
+                    }
+                ],
+            },
+            "inputs": [a_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_hex = result["outputs"][0]
+    out_bytes = bytes.fromhex(out_hex)
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"sigmoid_via_rust: expected {expected_bytes} output bytes "
             f"({numel} f32), got {len(out_bytes)}"
         )
     out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
