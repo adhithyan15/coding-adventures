@@ -569,6 +569,76 @@ mod tests {
         );
     }
 
+    // -----------------------------------------------------------------
+    // Phase 6f — `class Foo … end` / `module Foo … end`.
+    //
+    // v0 lowering collapses the namespace: nested `def`s are hoisted
+    // to top-level Functions (same machinery as program-level `def`
+    // hoisting), and the class/module declaration itself emits a
+    // no-op `Stmt::ExprStmt(NilLit)`.  This is documented in the
+    // CHANGELOG as a known v0 limitation that lands properly when
+    // SIR grows a `class` / `namespace` node.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn class_with_method_hoists_def_to_top_level() {
+        // The nested `def greet … end` should appear as a top-level
+        // `greet` function on the resulting module, exactly as
+        // `def greet … end` at the program top level would.
+        let m = lower("class Foo\n  def greet\n  end\nend\n");
+        let greet = m.functions.iter().find(|f| f.name == "greet");
+        assert!(
+            greet.is_some(),
+            "expected `greet` to be hoisted to top-level functions, got {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+        // `main` is still present (no top-level statements were lost).
+        assert!(m.functions.iter().any(|f| f.name == "main"));
+    }
+
+    #[test]
+    fn empty_class_lowers_cleanly() {
+        // `class Foo; end` with no body should produce a module that
+        // still has `main` and no extra user functions.
+        let m = lower("class Foo\nend\n");
+        // Only `main` exists.
+        assert_eq!(m.functions.len(), 1);
+        assert_eq!(m.functions[0].name, "main");
+        // The class declaration lowered to a no-op stmt in main.
+        let main = main_body(&m);
+        assert_eq!(main.stmts.len(), 1);
+        assert!(matches!(
+            &main.stmts[0],
+            Stmt::ExprStmt { expr: Expr::NilLit { .. }, .. }
+        ));
+    }
+
+    #[test]
+    fn module_with_def_hoists_def_to_top_level() {
+        let m = lower("module M\n  def helper\n  end\nend\n");
+        assert!(m.functions.iter().any(|f| f.name == "helper"));
+    }
+
+    #[test]
+    fn class_module_lowering_passes_sir_validator() {
+        let m = lower(concat!(
+            "class Foo\n",
+            "  def bar\n",
+            "  end\n",
+            "end\n",
+            "module M\n",
+            "  def helper\n",
+            "  end\n",
+            "end\n",
+        ));
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected our output: {:?}",
+            result
+        );
+    }
+
     #[test]
     fn module_with_def_passes_sir_validator() {
         // v0 grammar can't yet parse nested method calls in args

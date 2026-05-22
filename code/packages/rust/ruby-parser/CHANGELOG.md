@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.7.0] - 2026-05-22
+
+### Added (Phase 6f — `class Foo … end` / `module Foo … end` namespace declarations)
+- `class_statement  = "class"  NAME { !"end" statement } "end" ;`
+- `module_statement = "module" NAME { !"end" statement } "end" ;`
+- Added as alternatives in `statement` right after `def_statement`, so the dispatch order is: def → class → module → if → unless → while → until → assignment → method_call → expression_stmt.
+- The body's `Repetition { statement }` uses the same negative-lookahead `!"end"` as `def_statement` so the closing `end` doesn't get eaten by `expression_stmt → factor → KEYWORD`.
+- Regenerated `src/_grammar.rs` via `grammar-tools compile-grammar`.
+
+### Tests (+4 new, total 28)
+- `test_parse_empty_class` — `class Foo\nend` parses and the first Name token is `"Foo"`.
+- `test_parse_class_with_method_body` — `class Foo\n  def bar\n  end\nend` produces a class with at least one body `statement` (the nested `def`).
+- `test_parse_empty_module` — `module M\nend` parses to a `module_statement` subnode.
+- `test_parse_module_with_assignment_body` — `module M\n  x = 1\nend` keeps the body assignment under the module.
+
 ## [0.6.0] - 2026-05-20
 
 ### Added (Phase 6e — symbol literals `:foo` / `:"bar"`)
