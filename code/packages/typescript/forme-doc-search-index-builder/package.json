@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-doc-search-index-builder",
+  "version": "0.1.0",
+  "description": "Build-time inverted-index builder for the documentation-site search.  Takes per-page text + metadata, tokenises each body via @coding-adventures/forme-doc-search-tokenizer, builds a token → postings inverted index, shards by token-prefix for incremental browser loading, and emits the shards plus a small bootstrap manifest.  Bounded memory via configurable caps (pages, tokens-per-page, postings-per-token).  Pure transform, capability [].  DOC00 v0 search-engine package.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-doc-search-tokenizer": "file:../forme-doc-search-tokenizer"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
