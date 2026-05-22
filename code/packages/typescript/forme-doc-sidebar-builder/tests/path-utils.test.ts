@@ -96,6 +96,18 @@ describe("normalisePath — errors", () => {
     const ok = Array.from({ length: 63 }, (_, i) => `d${i}`).join("/") + "/file.md";
     expect(() => normalisePath(ok)).not.toThrow();
   });
+  it("raw path exceeding 8192-char length cap throws (regex-DoS defence)", () => {
+    // E.g. 10,000 leading slashes — the old regex-based stripper
+    // would have done linear-but-large work; the new explicit
+    // loop is also bounded, but the upfront length cap fails fast
+    // before any per-character processing runs.
+    const huge = "/".repeat(10_000) + "x.md";
+    expect(() => normalisePath(huge)).toThrow(/length cap/);
+  });
+  it("raw path at exactly 8192 chars is accepted", () => {
+    const ok = "a".repeat(8189) + ".md"; // 8189 + 3 = 8192
+    expect(() => normalisePath(ok)).not.toThrow();
+  });
 });
 
 describe("stripRoot", () => {

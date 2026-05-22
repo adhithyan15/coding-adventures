@@ -44,18 +44,47 @@ export interface NormalisedPath {
 }
 
 /**
+ * Strip leading and trailing slashes using explicit index walks.
+ *
+ * We do this with index loops rather than `.replace(/^\/+/, "")`
+ * /  `.replace(/\/+$/, "")` because CodeQL's `js/polynomial-redos`
+ * query flags those anchored-`+` patterns as potentially
+ * super-linear on adversarial input (even though both ARE
+ * linear in V8's regex engine).  Linear index walks make the
+ * O(N) cost obvious to both the static analyser and the
+ * reader.
+ *
+ * @internal
+ */
+function stripSlashes(s: string): string {
+  let start = 0;
+  while (start < s.length && s.charCodeAt(start) === 0x2f /* "/" */) start++;
+  let end = s.length;
+  while (end > start && s.charCodeAt(end - 1) === 0x2f) end--;
+  if (start === 0 && end === s.length) return s;
+  return s.slice(start, end);
+}
+
+/**
  * Strip leading slashes, trailing slashes, and a recognised
  * extension from a raw path, then split on `/`.
  *
  * @internal
  */
 function splitAndClean(rawPath: string): string[] {
-  // Strip leading slash.
-  let p = rawPath.replace(/^\/+/, "");
-  // Strip trailing slash.
-  p = p.replace(/\/+$/, "");
-  // Strip recognised extension (case-insensitive on the dot+ext).
-  p = p.replace(/\.(md|mdx|html|htm)$/i, "");
+  // Strip leading / trailing slashes (linear, regex-free).
+  let p = stripSlashes(rawPath);
+  // Strip recognised extension.  Anchored `$`, finite literal
+  // alternation, single non-quantified `\.` — not polynomial.
+  // We use endsWith() instead of a regex anyway to keep the
+  // intent obvious and the analyser happy.
+  const lower = p.toLowerCase();
+  for (const ext of [".md", ".mdx", ".html", ".htm"]) {
+    if (lower.endsWith(ext)) {
+      p = p.slice(0, p.length - ext.length);
+      break;
+    }
+  }
   if (p === "") return [];
   return p.split("/").filter((s) => s.length > 0);
 }
@@ -72,6 +101,15 @@ function splitAndClean(rawPath: string): string[] {
 const MAX_DEPTH = 64;
 
 /**
+ * Maximum raw-path length (in characters).  Caps the input size
+ * BEFORE any per-character processing runs, defending against
+ * adversarial inputs that might otherwise consume disproportionate
+ * CPU even with linear-time helpers.  Real filesystem paths max
+ * out around 4 KiB on most platforms; we leave a generous margin.
+ */
+const MAX_PATH_LENGTH = 8192;
+
+/**
  * Normalise a raw page path into directory parts + index flag.
  *
  * @param rawPath - The input path string.
@@ -83,6 +121,16 @@ const MAX_DEPTH = 64;
  *         adversarial deeply-nested inputs.
  */
 export function normalisePath(rawPath: string): NormalisedPath {
+  // Cheap upfront cap — fail fast before any per-character work.
+  // This bounds the CPU cost of normalisation against adversarial
+  // inputs (e.g. a 100MB path of slashes) regardless of how
+  // efficient the inner helpers are.
+  if (rawPath.length > MAX_PATH_LENGTH) {
+    throw new TypeError(
+      `forme-doc-sidebar-builder: raw path exceeds ${MAX_PATH_LENGTH}-character ` +
+        `length cap (got ${rawPath.length})`,
+    );
+  }
   const trimmed = rawPath.trim();
   if (trimmed === "") {
     throw new TypeError(
