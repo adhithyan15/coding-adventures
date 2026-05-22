@@ -2,6 +2,29 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.8.0] - 2026-05-22
+
+### Added (Phase 6g — method-with-block lowering)
+- `lower_method_with_block` lowers the `method_with_block` rule node into:
+  1. A `BuiltinCall` / `DirectCall` for the method dispatch (identical to a bare `method_call`).
+  2. A hoisted top-level `Function` named `__block_<n>` for the block body, with `block_params` as `Param`s.
+  3. An `Expr::MakeClosure { fn_name, captures: [] }` appended as the call's trailing argument.
+- New `Lowerer.block_counter: usize` field mints monotonic `__block_0`, `__block_1`, … names for distinct synthesised closure functions.
+- New `hoist_block_to_function` helper saves/restores `declared_locals` + `current_params` around the block-body lowering — same scope-isolation pattern as `lower_def_statement` — so block params resolve as `Scope::Param` and outer-scope locals don't leak in.
+- `Feature::Closures` is added to the manifest whenever a block is lowered (the SIR validator requires this exact-match).
+- Builtin table grew to recognise common block-taking iterators (`each`, `map`, `select`, `reject`, `filter`, `each_with_index`, `each_with_object`, `times`, `tap`, `then`, `yield_self`, `loop`, `collect`, `find`, `detect`, `any?`, `all?`, `none?`, `count`, `reduce`, `inject`, `sort_by`, `group_by`, `min_by`, `max_by`, `flat_map`, `partition`, `each_slice`, `each_cons`) so `each { … }` lowers without forcing every consumer to declare `each` as a user function.
+
+### Documented v0 caveats
+- **Captures are empty**: block bodies that reference outer locals (not their own block params) produce a `VarRef` against an undeclared local, which the SIR validator rejects.  Real Ruby closures capture by reference; v0 SIR will need a capture-analysis pass before that lands.
+- **No-paren method calls inside blocks**: `each { puts 1 }` (no parens around `1`) doesn't parse as `method_call` in the v0 grammar — the test corpus uses the parenned form `puts(1)` to exercise the call-dispatch path.  The no-paren form lands when the grammar's `method_call` rule grows an optional-parens alternative.
+
+### Tests (+5 new, total 39)
+- `brace_block_hoists_to_synthetic_function_and_make_closure` — `each { puts(1) }` produces `__block_0` whose tail value is `BuiltinCall(puts, [IntLit(1)])`, and the main body's `each` call has `MakeClosure(__block_0)` as its last arg.
+- `do_block_with_pipe_params_lowers_to_function_with_params` — `each do |x|\n  puts(x)\nend` produces `__block_0` with param `x`; inside the body `x` resolves as `Scope::Param`.
+- `multiple_blocks_get_distinct_synthetic_names` — two blocks produce `__block_0` and `__block_1`.
+- `block_module_declares_closures_feature` — the manifest contains `Closures`.
+- `block_lowering_passes_sir_validator` — end-to-end: a block-using program passes `semantic_ir::validate`.
+
 ## [0.7.0] - 2026-05-22
 
 ### Added (Phase 6f — class/module lowering with nested-def hoisting)

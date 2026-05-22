@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.8.0] - 2026-05-22
+
+### Added (Phase 6g — blocks `do … end` and `method { … }`)
+- `method_with_block = ( NAME | KEYWORD ) [ LPAREN [ expression { COMMA expression } ] RPAREN ] block ;`
+- `block = do_block | brace_block ;`
+- `do_block = "do" [ block_params ] { !"end" statement } "end" ;`
+- `brace_block = LBRACE [ block_params ] { statement } RBRACE ;`
+- `block_params = "|" NAME { COMMA NAME } "|" ;`
+- `method_with_block` is inserted in `statement` **before** `method_call` and `expression_stmt` so the parser commits to the longer prefix match (call + trailing block) when a block is present, and falls through to `method_call` / `expression_stmt` otherwise.
+
+### Disambiguation rules
+- Bare `LBRACE … RBRACE` at statement position remains a **hash literal** (handled inside `expression_stmt → factor → hash_literal`), NOT a block — blocks always attach to a preceding method-name token.  Test `test_parse_hash_literal_still_works_at_statement_position` pins this invariant.
+- `do_block` requires the same `!"end"` negative-lookahead as `def_statement` because `end` is a KEYWORD token and `expression_stmt → factor → KEYWORD` would otherwise greedy-match it.
+- `brace_block` does NOT need an analogous `!"}"` lookahead because RBRACE isn't a `factor` alternative — the body repetition naturally stops at the closing brace.
+
+### Tests (+6 new, total 34)
+- `test_parse_method_with_do_block_no_params` — `each do\n  puts 1\nend`.
+- `test_parse_method_with_brace_block` — `each { puts 1 }`.
+- `test_parse_do_block_with_pipe_params` — `each do |x|\n  puts x\nend` extracts param name `x` (filter excludes `|` tokens which the lexer's `classify_op_token` reclassifies as `Name`).
+- `test_parse_brace_block_with_two_pipe_params` — `each { |x, y| x + y }` extracts both params.
+- `test_parse_method_call_with_args_and_block` — `each(1, 2) { puts 1 }` has both expression args and a brace_block subnode.
+- `test_parse_hash_literal_still_works_at_statement_position` — `x = {a: 1}` remains a hash literal (no `brace_block` subnode appears).
+
 ## [0.7.0] - 2026-05-22
 
 ### Added (Phase 6f — `class Foo … end` / `module Foo … end` namespace declarations)

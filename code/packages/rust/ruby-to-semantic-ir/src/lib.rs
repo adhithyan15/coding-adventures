@@ -639,6 +639,126 @@ mod tests {
         );
     }
 
+    // -----------------------------------------------------------------
+    // Phase 6g — method-with-block lowering: `do … end` / `{ … }`.
+    //
+    // v0 lowering:
+    // - The call itself emits a `BuiltinCall` / `DirectCall` exactly
+    //   as a bare `method_call` would.
+    // - The block body is hoisted to a synthetic `Function` named
+    //   `__block_<n>` with the `|x, y|` pipe params as `Param`s.
+    // - The synthesised function is referenced as a trailing arg via
+    //   `Expr::MakeClosure { fn_name: "__block_<n>", captures: [] }`.
+    // - `Feature::Closures` is added to the manifest whenever a block
+    //   is lowered.
+    //
+    // v0 caveat: captures are empty.  Block bodies that reference
+    // outer locals (not their own block params) will produce a
+    // `VarRef` against an undeclared local, which the SIR validator
+    // rejects.  Documented as a known limitation.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn brace_block_hoists_to_synthetic_function_and_make_closure() {
+        // Note: bare `puts 1` (no parens) doesn't parse as `method_call`
+        // in the v0 grammar — only the parenned `puts(1)` form does.
+        // The block tests use parens throughout to exercise the call-
+        // dispatch path.
+        let m = lower("each { puts(1) }");
+        // Synthetic Function `__block_0` lives on the module.
+        let block_fn = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("expected `__block_0` synthetic function");
+        // No params, body value is `puts(1)` (tail expression).
+        assert!(block_fn.params.is_empty());
+        match &block_fn.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "puts");
+                assert_eq!(args.len(), 1);
+                assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected BuiltinCall(puts, …) tail, got {:?}", other),
+        }
+        // The main body's tail expression is the BuiltinCall whose
+        // last arg is `MakeClosure { fn_name: "__block_0", … }`.
+        let main = main_body(&m);
+        let call_args = main.stmts.iter().find_map(|s| match s {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { args, .. }, .. }
+            | Stmt::ExprStmt { expr: Expr::DirectCall { args, .. }, .. } => Some(args),
+            _ => None,
+        }).expect("expected ExprStmt(call)");
+        let last_arg = call_args.last().expect("call must have ≥1 arg (the closure)");
+        assert!(
+            matches!(last_arg, Expr::MakeClosure { fn_name, .. } if fn_name == "__block_0"),
+            "expected last arg = MakeClosure(__block_0), got {:?}",
+            last_arg
+        );
+    }
+
+    #[test]
+    fn do_block_with_pipe_params_lowers_to_function_with_params() {
+        // `each do |x|\n  puts(x)\nend` — the `|x|` becomes a Param on
+        // the synthetic function.  Inside the body, `x` resolves as
+        // `Scope::Param` because `current_params` was populated for
+        // the block's body lowering.
+        let m = lower("each do |x|\n  puts(x)\nend\n");
+        let block_fn = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("expected __block_0");
+        assert_eq!(block_fn.params.len(), 1);
+        assert_eq!(block_fn.params[0].name, "x");
+        // Body's tail is `puts(x)` with `x` as Scope::Param.
+        if let Expr::BuiltinCall { args, .. } = &block_fn.body.value {
+            assert!(
+                matches!(&args[0], Expr::VarRef { name, scope, .. } if name == "x" && *scope == Scope::Param),
+                "expected VarRef(x, Param), got {:?}",
+                args[0]
+            );
+        } else {
+            panic!("expected BuiltinCall body");
+        }
+    }
+
+    #[test]
+    fn multiple_blocks_get_distinct_synthetic_names() {
+        // Two blocks in the same program → `__block_0` and `__block_1`.
+        // The counter is per-Lowerer, monotonic.
+        let m = lower("each { puts(1) }\nmap { puts(2) }\n");
+        assert!(m.functions.iter().any(|f| f.name == "__block_0"));
+        assert!(m.functions.iter().any(|f| f.name == "__block_1"));
+    }
+
+    #[test]
+    fn block_module_declares_closures_feature() {
+        // The manifest must list `Closures` whenever a block is
+        // emitted — the SIR validator requires this exact-match.
+        let m = lower("each { puts(1) }\n");
+        let has_closures = format!("{:?}", m.manifest).contains("Closures");
+        assert!(
+            has_closures,
+            "expected Closures feature in manifest, got {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn block_lowering_passes_sir_validator() {
+        // End-to-end: a method-with-block program lowers to a module
+        // that the SIR validator accepts.  This is the canonical
+        // "is the lowering well-formed" check for Phase 6g.
+        let m = lower("each do |x|\n  puts(x)\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected our output: {:?}",
+            result
+        );
+    }
+
     #[test]
     fn module_with_def_passes_sir_validator() {
         // v0 grammar can't yet parse nested method calls in args

@@ -69,6 +69,7 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         current_params: HashSet::new(),
         user_functions: Vec::new(),
         features_used: HashSet::new(),
+        block_counter: 0,
     };
     // Phase 6a: hoist `def name(params) … end` declarations to
     // top-level Functions BEFORE walking the rest of the program so
@@ -158,6 +159,11 @@ struct Lowerer {
     /// is an error), so we track on-demand instead of unconditionally
     /// declaring every feature.
     features_used: HashSet<semantic_ir::Feature>,
+    /// Phase 6g: monotonically-increasing counter for synthesised
+    /// closure-function names.  Each `method_with_block` increments
+    /// it once to mint a fresh `__block_<n>` name for the trailing
+    /// block's hoisted Function.
+    block_counter: usize,
 }
 
 impl Lowerer {
@@ -336,6 +342,34 @@ impl Lowerer {
                 // top-level loop — `until cond` lowers to
                 // `while !cond` (wrap the condition in `not`).
                 self.lower_while_or_until(node)
+            }
+            "method_with_block" => {
+                // Phase 6g: a method call with a trailing block.  v0
+                // SIR support is a strict subset of real Ruby semantics:
+                //
+                //   1. The *call* itself lowers identically to a bare
+                //      `method_call` — same builtin/direct dispatch.
+                //   2. The block's body is hoisted to a synthetic
+                //      top-level Function named `__block_<n>`.  Its
+                //      params come from `block_params`; its body is
+                //      lowered with a fresh `declared_locals` +
+                //      `current_params` scope so locals/params don't
+                //      leak.
+                //   3. The synthetic Function is referenced as a final
+                //      argument to the call via `Expr::MakeClosure`.
+                //      Backends that don't yet support closures will
+                //      surface a diagnostic; backends that do can
+                //      forward the closure handle to the method.
+                //   4. Captures are empty in v0 — block bodies that
+                //      reference outer locals are accepted by the
+                //      parser but the SIR validator will reject them
+                //      if the body actually emits a non-Param VarRef.
+                //      Documented as a known v0 limitation.
+                let expr = self.lower_method_with_block(node)?;
+                Ok(Stmt::ExprStmt {
+                    expr,
+                    span: self.span_of(node),
+                })
             }
             other => Err(RubyLowerError {
                 message: format!("unsupported statement form `{other}`"),
@@ -859,6 +893,226 @@ impl Lowerer {
     }
 
     // -------------------------------------------------------------------
+    // Phase 6g — method-with-block lowering
+    // -------------------------------------------------------------------
+
+    /// Lower a `method_with_block` node into the SIR shape:
+    /// the call itself plus a synthesised `Expr::MakeClosure`
+    /// appended as the call's last argument.  Block body becomes a
+    /// new top-level `Function` named `__block_<n>` on
+    /// `self.user_functions`.
+    ///
+    /// v0 simplification: block bodies see only their own params
+    /// (no captures from the outer scope).  Bodies that reference
+    /// outer locals will fail the SIR validator at the `VarRef` stage.
+    /// Documented in the crate CHANGELOG as a known limitation.
+    fn lower_method_with_block(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        // Shape:
+        //   (NAME | KEYWORD) [LPAREN [expression (COMMA expression)*] RPAREN] block
+        // The leading callee name comes first.
+        let (callee, _callee_span) = self.expect_first_name_token(node)?;
+
+        // Collect explicit argument expressions (direct `expression`
+        // children of the method_with_block node — *not* inside the
+        // block).  The block node holds its own `statement` children;
+        // we route around it.
+        let args: Vec<Expr> = node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .map(|n| self.lower_expression(n))
+            .collect::<Result<Vec<_>, _>>()?;
+
+        // Find the trailing `block` subnode and lower it to a hoisted
+        // Function.  The Function's name is `__block_<n>` where `n`
+        // monotonically counts every block we've lowered so far —
+        // unique across the whole module.
+        let block_node = self
+            .find_node_child(node, "block")
+            .ok_or_else(|| RubyLowerError {
+                message: "method_with_block missing block subnode".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let fn_name = self.hoist_block_to_function(block_node)?;
+
+        // Append `MakeClosure` as the trailing arg.  Captures are
+        // empty in v0 (block bodies that reference outer locals are
+        // a known limitation).
+        let make_closure = Expr::MakeClosure {
+            fn_name: fn_name.clone(),
+            captures: Vec::new(),
+            span: self.span_of(block_node),
+        };
+        self.features_used.insert(Feature::Closures);
+
+        let mut all_args = args;
+        all_args.push(make_closure);
+
+        let span = self.span_of(node);
+        if let Some(effects) = ruby_builtin_effects(&callee) {
+            Ok(Expr::BuiltinCall {
+                name: callee,
+                args: all_args,
+                effects,
+                span,
+            })
+        } else {
+            Ok(Expr::DirectCall {
+                fn_name: callee,
+                args: all_args,
+                effects: EffectSet::PURE,
+                span,
+            })
+        }
+    }
+
+    /// Hoist a `block` (with one `do_block` or `brace_block` child)
+    /// into a synthesised top-level Function on `user_functions`.
+    /// Returns the synthesised function name so the caller can refer
+    /// to it via `MakeClosure { fn_name }`.
+    fn hoist_block_to_function(
+        &mut self,
+        block_node: &GrammarASTNode,
+    ) -> Result<String, RubyLowerError> {
+        // Drill into the do_block / brace_block child.
+        let inner = self.first_node_child(block_node).ok_or_else(|| RubyLowerError {
+            message: "block missing do_block/brace_block child".to_string(),
+            line: block_node.start_line.unwrap_or(0),
+            column: block_node.start_column.unwrap_or(0),
+        })?;
+
+        // Extract block parameters (the `|x, y|` pipe form).  Each
+        // Name token *that isn't a `|`* is a parameter.  The lexer
+        // classifies bare `|` ops as Name tokens (see
+        // ruby-lexer/src/lib.rs::classify_op_token), so we filter
+        // them out by value, not by type.
+        let params_node = self.find_node_child(inner, "block_params");
+        let params: Vec<Param> = match params_node {
+            Some(pn) => pn
+                .children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Token(t)
+                        if matches!(t.type_, TokenType::Name) && t.value != "|" =>
+                    {
+                        Some(Param {
+                            name: t.value.clone(),
+                            sir_type: None,
+                            span: self.span_of_token(t),
+                        })
+                    }
+                    _ => None,
+                })
+                .collect(),
+            None => Vec::new(),
+        };
+        // Block params are untyped → declare dynamic-typing.
+        if !params.is_empty() {
+            self.features_used.insert(Feature::DynamicTyping);
+        }
+
+        // Lower the body with a fresh locals+params scope so the
+        // outer program's bindings don't leak in (same pattern as
+        // `lower_def_statement`).
+        let saved_locals = std::mem::take(&mut self.declared_locals);
+        let saved_params = std::mem::take(&mut self.current_params);
+        for p in &params {
+            self.declared_locals.insert(p.name.clone());
+            self.current_params.insert(p.name.clone());
+        }
+
+        // Body statements: every direct `statement` child of the
+        // inner do_block / brace_block, in source order.  Tail-
+        // expression promotion follows the same rule as
+        // `lower_program` / `lower_clause_statements`.
+        let body_stmts: Vec<&GrammarASTNode> = inner
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+                _ => None,
+            })
+            .collect();
+        let mut stmts_out: Vec<Stmt> = Vec::new();
+        let mut value: Option<Expr> = None;
+        if body_stmts.is_empty() {
+            value = Some(Expr::NilLit {
+                span: self.span_of(inner),
+            });
+        } else {
+            let last_idx = body_stmts.len() - 1;
+            for (i, s) in body_stmts.iter().enumerate() {
+                let inner_stmt = self.first_node_child(s).ok_or_else(|| RubyLowerError {
+                    message: "statement node had no child rule".to_string(),
+                    line: s.start_line.unwrap_or(0),
+                    column: s.start_column.unwrap_or(0),
+                })?;
+                let is_tail = i == last_idx;
+                let kind = inner_stmt.rule_name.as_str();
+                if is_tail && matches!(kind, "expression_stmt" | "method_call") {
+                    let v = match kind {
+                        "expression_stmt" => {
+                            let en = self.first_node_child(inner_stmt).ok_or_else(|| {
+                                RubyLowerError {
+                                    message: "expression_stmt had no expression child".to_string(),
+                                    line: inner_stmt.start_line.unwrap_or(0),
+                                    column: inner_stmt.start_column.unwrap_or(0),
+                                }
+                            })?;
+                            self.lower_expression(en)?
+                        }
+                        "method_call" => self.lower_method_call(inner_stmt)?,
+                        _ => unreachable!(),
+                    };
+                    value = Some(v);
+                } else {
+                    stmts_out.push(self.lower_statement_inner(inner_stmt)?);
+                }
+            }
+        }
+        let value = value.unwrap_or(Expr::NilLit {
+            span: self.span_of(inner),
+        });
+
+        // Restore outer scope.
+        self.declared_locals = saved_locals;
+        self.current_params = saved_params;
+
+        // Mint the synthetic function name and push the hoisted
+        // Function onto user_functions.  Underscore-prefixed names
+        // are conventionally treated as "compiler-generated" by SIR
+        // backends — they should not collide with user-declared
+        // identifiers.
+        let n = self.block_counter;
+        self.block_counter += 1;
+        let fn_name = format!("__block_{n}");
+
+        self.user_functions.push(Function {
+            name: fn_name.clone(),
+            params,
+            return_type: None,
+            captures: Vec::new(),
+            body: Block {
+                stmts: stmts_out,
+                value,
+                span: self.span_of(inner),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: self.span_of(block_node),
+        });
+
+        Ok(fn_name)
+    }
+
+    // -------------------------------------------------------------------
     // expression / term / factor
     // -------------------------------------------------------------------
 
@@ -1258,6 +1512,23 @@ fn ruby_builtin_effects(name: &str) -> Option<EffectSet> {
             // unreachable-code warnings and to emit `throw`/`return`
             // shapes correctly.
             Some(EffectSet::PURE.with(Effect::MayThrow).with(Effect::Divergent))
+        }
+        // Phase 6g: block-taking iterators.  These all accept a
+        // trailing block (closure) as their last argument and invoke
+        // it zero or more times.  v0 models them as pure builtins —
+        // their effect set is the *closure's* effect set lifted, but
+        // SIR's effect inference handles that at the call site, so
+        // we just declare PURE here.  Adding them to the builtin
+        // table makes `each { … }` lower cleanly without forcing
+        // every consumer to declare `each` as a user function.
+        "each" | "map" | "select" | "reject" | "filter"
+        | "each_with_index" | "each_with_object" | "times"
+        | "tap" | "then" | "yield_self" | "loop"
+        | "collect" | "find" | "detect" | "any?" | "all?"
+        | "none?" | "count" | "reduce" | "inject" | "sort_by"
+        | "group_by" | "min_by" | "max_by" | "flat_map"
+        | "partition" | "each_slice" | "each_cons" => {
+            Some(EffectSet::PURE)
         }
         _ => None,
     }
