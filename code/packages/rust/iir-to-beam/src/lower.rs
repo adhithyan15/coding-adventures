@@ -1000,6 +1000,47 @@ pub fn lower_iir_to_beam(
                     ]));
                 }
 
+                // ── mov dest = src ───────────────────────────────────────────
+                //
+                // Universal IIR primitive emitted by `dartmouth-basic-iir-compiler`,
+                // `oct-iir-compiler`, and any frontend that wants the simplest
+                // "copy slot to slot" form.  Lowers directly to a BEAM `move`
+                // between two `{x,reg}` operands — no immediate decode, no
+                // arithmetic.
+                //
+                // The matching `vm-core` dispatch arm (see
+                // `vm-core/src/dispatch.rs::handle_mov`) is the JIT-path twin
+                // of this lowering — both reduce `mov` to a single value copy.
+                "mov" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "mov instruction must have a dest".into(),
+                        }),
+                    };
+                    // srcs[0] is the source slot.  Literals here would be a
+                    // frontend bug (a `const` should produce the literal into
+                    // its own slot first); accept only `Operand::Var`.
+                    let src_reg = match instr.srcs.first() {
+                        Some(Operand::Var(name)) => var_reg!(name),
+                        Some(other) => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!(
+                                "mov src must be Var, got {:?}", other
+                            ),
+                        }),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "mov instruction has no source operand".into(),
+                        }),
+                    };
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(src_reg), // {x,src_reg}
+                        BEAMOperand::x(rd),      // {x,rd}
+                    ]));
+                }
+
                 // ── alloc ref<LispyPair> → put_list (look-ahead fusion) ──────
                 //
                 // The three-instruction cons pattern from iir-builtin-lowering:
@@ -2245,5 +2286,50 @@ mod tests {
         assert_eq!(beam.instructions[0].opcode, OP_LABEL);
         assert_eq!(beam.instructions[1].opcode, OP_FUNC_INFO);
         assert_eq!(beam.instructions[2].opcode, OP_LABEL);
+    }
+
+    /// Cross-backend probe: `mov dest = src` must lower to a single
+    /// BEAM `move {x,src_reg}, {x,dest_reg}` instruction.  Without this
+    /// fix the codegen panicked on any frontend that emitted `mov`
+    /// (Dartmouth BASIC, Oct).
+    #[test]
+    fn mov_lowers_to_beam_move_between_registers() {
+        // const a = 42;  mov b = a;  ret b
+        let m = IIRModule {
+            name: "mov_test".into(),
+            functions: vec![IIRFunction::new(
+                "main",
+                vec![],
+                "i64",
+                vec![
+                    IIRInstr::new("const", Some("a".into()),
+                                  vec![Operand::Int(42)], "i64"),
+                    IIRInstr::new("mov", Some("b".into()),
+                                  vec![Operand::Var("a".into())], "i64"),
+                    IIRInstr::new("ret", None,
+                                  vec![Operand::Var("b".into())], "i64"),
+                ],
+            )],
+            entry_point: Some("main".into()),
+            language: "test".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let beam = lower_iir_to_beam(&m, &default_cfg())
+            .expect("module with `mov` must lower without errors");
+
+        // Count `move` instructions.  We expect at least two:
+        // 1. `const 42 → a`   lowers to `move {i,42}, {x,a_reg}`
+        // 2. `mov b = a`      lowers to `move {x,a_reg}, {x,b_reg}`
+        //
+        // Before this fix, codegen panicked with
+        //   `IIRBeamCodeGenerator::generate called on invalid IIRModule:
+        //    function "main": unsupported op "mov"`
+        // so just reaching the assertion is half the proof.
+        let move_count = beam.instructions.iter()
+            .filter(|i| i.opcode == OP_MOVE)
+            .count();
+        assert!(move_count >= 2,
+                "expected ≥ 2 move instructions (one per `const`/`mov`); got {move_count}");
     }
 }

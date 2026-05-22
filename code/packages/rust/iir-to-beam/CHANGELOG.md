@@ -3,6 +3,40 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.2] — 2026-05-22
+
+### Added — handle the universal `mov` opcode
+
+- `lower.rs`: new match arm `"mov" => …` that lowers `mov dest = src`
+  to a single BEAM `move {x,src_reg}, {x,dest_reg}` register copy.
+
+### Why this matters
+
+Before this fix, frontends that emit the IIR canonical `mov` (e.g.
+`dartmouth-basic-iir-compiler` for `LET` statements,
+`oct-iir-compiler` for `let`) compiled cleanly through the AOT chain
+(`lang-aot` rewrites `mov` → typed `mov_<ty>` CIR before the native
+backends see it) but **panicked** when handed to
+`IIRBeamCodeGenerator::generate`:
+
+```text
+IIRBeamCodeGenerator::generate called on invalid IIRModule:
+  function "main": unsupported op "mov"
+```
+
+The validator accepted the module (mov wasn't in `UNSUPPORTED_OPS`),
+but the codegen had no lowering rule.  Now both the JIT chain
+(vm-core + jit-core, via the companion `vm-core` 0.2.1 release) and
+the BEAM target accept `mov` directly — closing the gap shown by a
+5-frontend × 4-backend probe matrix run after the vm-core fix.
+
+### Tests
+
+- `mov_lowers_to_beam_move_between_registers`: feeds a 3-instr
+  module (`const 42 → a; mov b = a; ret b`) and asserts at least two
+  `OP_MOVE` instructions appear in the output (one from `const`, one
+  from `mov`).  Before this fix the codegen panicked.
+
 ## [0.4.1] — 2026-05-13
 
 ### Added
