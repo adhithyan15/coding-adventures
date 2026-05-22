@@ -582,21 +582,22 @@ class TestPhase40_ApartTelescope:
                 f"got {result!r}"
             )
 
-    def test_phase45_chain_shifted_denominator(self):
-        """``∑_{k=1}^∞ 1/((k+1)(k+2))`` — known gap: the Phase 40
-        Apart-retry doesn't currently re-shift purely shifted
-        denominators (no bare ``k`` factor).
+    def test_phase47_chain_shifted_denominator(self):
+        """``∑_{k=1}^∞ 1/((k+1)(k+2)) = 1/2`` — Phase 47 closure of the
+        shifted-denominator gap previously documented as
+        ``test_phase45_chain_shifted_denominator``.
 
-        Mathematically this Aparts to ``1/(k+1) − 1/(k+2)`` and the
-        antisymmetric telescope closes to ``g(1) = 1/(1+1) = 1/2``.
-        Apart's heuristic recogniser matches the ``k(k+1)`` shape but
-        not ``(k+a)(k+b)`` with both factors shifted.
+        ``Apart`` already decomposed the denominator into
+        ``Add(Neg(Div(1, k+2)), Div(1, k+1))``, but the cas-summation
+        telescope detector substitutes ``k → k+1`` in the left half
+        and got ``Div(1, Add(Add(k, 1), 1))``, which the symbolic-vm
+        Add handler left unflattened — so structural equality against
+        ``Div(1, Add(k, 2))`` failed.
 
-        Documents the gap so a future "Apart Phase 3" (shifted
-        denominator support) can drop the skip and the test will pass
-        automatically with result == 1/2.
+        Phase 47 teaches the Add handler to flatten nested ``Add``s
+        of literals (``Add(Add(k, 1), 1) → Add(k, 2)``), and the
+        antisymmetric telescope closes cleanly to ``g(1) = 1/2``.
         """
-        import pytest
         from fractions import Fraction
         from symbolic_ir import IRRational
 
@@ -605,20 +606,71 @@ class TestPhase40_ApartTelescope:
         denom = IRApply(MUL, (kp1, kp2))
         f = IRApply(DIV, (_int(1), denom))
         result = _sum(f, _int(1), INF)
-        if _is_unevaluated_sum(result):
-            pytest.skip(
-                "Apart-retry doesn't yet handle purely shifted "
-                "denominators (k+a)(k+b) with no bare k factor; the "
-                "math says 1/(k+1) − 1/(k+2) telescopes to 1/2.  When "
-                "Apart Phase 3 (shifted denominators) lands, remove "
-                "this skip."
-            )
-        # If Apart Phase 3 has landed, the chain closes to 1/2.
         if isinstance(result, IRInteger):
             assert result.value * 2 == 1
         else:
             assert isinstance(result, IRRational)
-            assert Fraction(result.numer, result.denom) == Fraction(1, 2)
+            assert Fraction(result.numer, result.denom) == Fraction(1, 2), (
+                f"got {result!r}"
+            )
+
+    def test_phase47_nested_add_flattens(self):
+        """Direct test of the Add handler's Phase 47 flattening.
+
+        Pin the underlying behaviour exploited by the shifted-
+        denominator telescope: ``Add(Add(k, 1), 1)`` evaluates to the
+        canonical ``Add(k, 2)``.
+        """
+        from symbolic_vm.backends import SymbolicBackend
+        from symbolic_vm.vm import VM
+
+        vm = VM(SymbolicBackend())
+        nested = IRApply(ADD, (IRApply(ADD, (K, _int(1))), _int(1)))
+        out = vm.eval(nested)
+        assert isinstance(out, IRApply) and out.head == ADD, f"got {out!r}"
+        assert out.args == (K, _int(2)), f"got {out!r}"
+
+    def test_phase47_triply_nested_add(self):
+        """``Add(Add(Add(k, 1), 1), 1) → Add(k, 3)`` — flattening is
+        recursive, not just one level deep.
+        """
+        from symbolic_vm.backends import SymbolicBackend
+        from symbolic_vm.vm import VM
+
+        vm = VM(SymbolicBackend())
+        triple = IRApply(
+            ADD,
+            (
+                IRApply(ADD, (IRApply(ADD, (K, _int(1))), _int(1))),
+                _int(1),
+            ),
+        )
+        out = vm.eval(triple)
+        assert isinstance(out, IRApply) and out.head == ADD
+        assert out.args == (K, _int(3)), f"got {out!r}"
+
+    def test_phase47_higher_shifted_denominator(self):
+        """``∑_{k=1}^∞ 1/((k+2)(k+3)) = 1/3`` — higher shifts still
+        telescope after Phase 47 flattening.
+
+        Apart decomposes to ``1/(k+2) − 1/(k+3)``; the antisymmetric
+        telescope closes to ``g(1) = 1/(1+2) = 1/3``.
+        """
+        from fractions import Fraction
+        from symbolic_ir import IRRational
+
+        kp2 = IRApply(ADD, (K, _int(2)))
+        kp3 = IRApply(ADD, (K, _int(3)))
+        denom = IRApply(MUL, (kp2, kp3))
+        f = IRApply(DIV, (_int(1), denom))
+        result = _sum(f, _int(1), INF)
+        if isinstance(result, IRInteger):
+            assert result.value * 3 == 1
+        else:
+            assert isinstance(result, IRRational)
+            assert Fraction(result.numer, result.denom) == Fraction(1, 3), (
+                f"got {result!r}"
+            )
 
     def test_phase45_repeated_factor_known_gap(self):
         """``∑_{k=1}^∞ (2k+1)/(k²(k+1)²)`` — known gap: documents that the
