@@ -1,5 +1,81 @@
 # Changelog
 
+## 0.64.0 — 2026-05-22
+
+**Phase 40 — Apart + telescope composition.**
+
+The `sum_handler` now composes the existing partial-fraction
+decomposition (`Apart`) with the Phase 39 telescoping detector so
+classic sums like `∑ 1/(k·(k+1))` close in one step.
+
+Pipeline:
+
+```
+∑ 1/(k·(k+1))  →  Apart → 1/k − 1/(k+1)
+                  → telescope → 1 − 1/(N+1)
+                  → eval → N/(N+1)
+```
+
+When the initial `evaluate_sum` call falls through to the unevaluated
+`Sum(...)` shape AND the summand has a `Div` head, the handler runs
+`Apart(f, k)` once.  If Apart actually changes the shape (i.e. the
+denominator factors over ℚ), the handler normalises the
+`Add(a, Neg(b))` output into a `Sub(a, b)` and deep-canonicalises ADD
+operand ordering, then re-runs `evaluate_sum`.  The Phase 39 telescope
+detector matches on the rewritten form and emits the closed sum.  When
+Apart doesn't change the shape (irreducible denominator), the retry is
+a no-op and the original unevaluated `Sum(...)` is returned.
+
+### Added
+
+- **`_normalise_add_neg_to_sub(node)`** in `cas_handlers.py` — rewrites
+  the two-term `Add(a, Neg(b))` / `Add(Neg(b), a)` shape into the
+  equivalent `Sub(a, b)` form.  Apart emits the negative half via
+  `Neg(...)`, but the Phase 39 telescope detector keys off the `Sub`
+  head, so the rewrite is required for the two phases to compose.
+- **`_canonicalise_add_operand_order(node)`** — recursive walker that
+  reorders each `Add`'s arguments so numeric literals appear *last*.
+  The symbolic VM doesn't impose a canonical operand order on `Add`,
+  so `Add(k, 1)` and `Add(1, k)` are structurally distinct; the
+  telescope detector's `==` comparison after `vm.eval` therefore needs
+  both halves to agree on operand order.
+
+### Changed
+
+- **`sum_handler`** (`cas_handlers.py`) — adds a Phase 40 retry block
+  between the initial `evaluate_sum` call and the unevaluated
+  fallback.  Guarded by `isinstance(f, IRApply) and f.head == DIV` so
+  non-rational summands (Sin/Log/etc.) skip the extra dispatch cost.
+
+### Added — tests
+
+`tests/test_phase25.py` — new `TestPhase40_ApartTelescope` class with
+6 cases:
+
+- `test_one_over_k_times_kp1_concrete` — `∑_{k=1}^{4} 1/(k(k+1)) = 4/5`.
+- `test_one_over_k_times_kp1_concrete_larger` —
+  `∑_{k=1}^{10} 1/(k(k+1)) = 10/11`.
+- `test_one_over_k_times_kp1_symbolic_upper` — symbolic `n` bound; the
+  result must not be the unevaluated `Sum(...)`.
+- `test_one_over_kp1_times_kp2_concrete` —
+  `∑_{k=1}^{4} 1/((k+1)(k+2)) = 1/3` (shifted-denominator telescope).
+- `test_apart_irreducible_quadratic_stays_unevaluated` — `1/(k²+1)`
+  has no rational roots, so Apart leaves the input unchanged and the
+  retry is a no-op; result stays unevaluated.
+- `test_non_div_summand_skips_apart_retry` — `sin(k)` summand never
+  reaches the Apart retry (non-`Div` head).
+
+Full sum test set: 45 passed (39 prior Phase 25 + 6 net new Phase 40).
+Broader symbolic-vm slice (Phase 25 / 34 / integrate / cas-handlers):
+295 passed, 8 skipped, no regressions.
+
+### Still deferred
+
+- Hypergeometric / closed-form telescoping that needs more than one
+  Apart pass (e.g. nested denominators).
+- Limit-aware infinite telescope (`∑_{k=1}^{∞} 1/(k(k+1)) = 1`).
+- Cross-language port to TypeScript / Rust (a separate sprint).
+
 ## 0.63.0 — 2026-05-20
 
 **Phase 38 — Weierstrass closed forms lifted to linear trig arguments

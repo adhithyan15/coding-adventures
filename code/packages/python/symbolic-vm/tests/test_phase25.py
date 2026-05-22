@@ -467,6 +467,84 @@ class TestPhase25_SumUnevaluated:
 
 
 # ===========================================================================
+# Phase 40 — Apart + telescope composition
+#
+# The sum_handler first calls ``evaluate_sum`` on the original summand.
+# If that falls through to the unevaluated ``Sum(...)`` shape AND the
+# summand has a ``Div`` head, the handler retries once after expanding
+# via ``Apart(f, k)`` (partial-fraction decomposition).  Classic case:
+# ``∑_{k=1}^{N} 1/(k(k+1))`` → ``∑ [1/k − 1/(k+1)]`` (Phase 39 telescope
+# then closes it to ``1 − 1/(N+1)``).  When ``Apart`` returns the input
+# unchanged (denominator not factorable into simple roots over ℚ), the
+# retry is a no-op and the sum stays unevaluated.
+# ===========================================================================
+
+
+class TestPhase40_ApartTelescope:
+    def test_one_over_k_times_kp1_concrete(self):
+        """``∑_{k=1}^{4} 1/(k(k+1)) = 1/2 + 1/6 + 1/12 + 1/20 = 4/5``."""
+        denom = IRApply(MUL, (K, IRApply(ADD, (K, _int(1)))))
+        f = IRApply(DIV, (_int(1), denom))
+        result = _sum(f, _int(1), _int(4))
+        v = _as_frac(result)
+        assert v is not None and v == Fraction(4, 5), f"got {result!r}"
+
+    def test_one_over_k_times_kp1_concrete_larger(self):
+        """``∑_{k=1}^{10} 1/(k(k+1)) = 10/11`` — Apart → telescope
+        gives ``1 − 1/11 = 10/11``."""
+        denom = IRApply(MUL, (K, IRApply(ADD, (K, _int(1)))))
+        f = IRApply(DIV, (_int(1), denom))
+        result = _sum(f, _int(1), _int(10))
+        v = _as_frac(result)
+        assert v is not None and v == Fraction(10, 11), f"got {result!r}"
+
+    def test_one_over_k_times_kp1_symbolic_upper(self):
+        """``∑_{k=1}^{n} 1/(k(k+1))`` symbolic n: Phase 40 must not leave
+        the sum unevaluated.  The exact closed form is ``1 − 1/(n+1)``
+        or equivalently ``n/(n+1)``; we don't pin a specific IR shape."""
+        denom = IRApply(MUL, (K, IRApply(ADD, (K, _int(1)))))
+        f = IRApply(DIV, (_int(1), denom))
+        result = _sum(f, _int(1), N)
+        assert not _is_unevaluated_sum(result), (
+            f"Expected Phase 40 to close ∑ 1/(k(k+1)); got {result!r}"
+        )
+
+    def test_one_over_kp1_times_kp2_concrete(self):
+        """``∑_{k=1}^{4} 1/((k+1)(k+2)) = 1/6 + 1/12 + 1/20 + 1/30 = 1/3``.
+
+        Apart on a shifted denominator still exposes the telescope:
+        ``1/((k+1)(k+2)) = 1/(k+1) − 1/(k+2)`` so the closed form is
+        ``1/2 − 1/6 = 1/3``.
+        """
+        kp1 = IRApply(ADD, (K, _int(1)))
+        kp2 = IRApply(ADD, (K, _int(2)))
+        denom = IRApply(MUL, (kp1, kp2))
+        f = IRApply(DIV, (_int(1), denom))
+        result = _sum(f, _int(1), _int(4))
+        v = _as_frac(result)
+        assert v is not None and v == Fraction(1, 3), f"got {result!r}"
+
+    def test_apart_irreducible_quadratic_stays_unevaluated(self):
+        """``∑_{k=1}^{n} 1/(k² + 1)``: denominator has no rational roots,
+        so Apart returns the input unchanged and the Phase 40 retry is a
+        no-op.  The sum must remain unevaluated."""
+        denom = IRApply(ADD, (IRApply(POW, (K, _int(2))), _int(1)))
+        f = IRApply(DIV, (_int(1), denom))
+        result = _sum(f, _int(1), N)
+        assert _is_unevaluated_sum(result), (
+            f"Expected unevaluated for irreducible denominator; got {result!r}"
+        )
+
+    def test_non_div_summand_skips_apart_retry(self):
+        """``∑_{k=1}^{n} sin(k)`` is not a Div shape — Phase 40 must not
+        attempt the Apart retry (which would be expensive) and must
+        leave the result as the original unevaluated Sum."""
+        f = IRApply(SIN, (K,))
+        result = _sum(f, _int(1), N)
+        assert _is_unevaluated_sum(result)
+
+
+# ===========================================================================
 # 8. Product — constant factor
 # ===========================================================================
 
