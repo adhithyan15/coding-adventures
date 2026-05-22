@@ -1,0 +1,22 @@
+// Spinner.mil — interface for the toolkit's Spinner component.
+//
+// An indeterminate loading indicator. Bootstrap's
+// `<div class="spinner-border">` equivalent. The actual rotation
+// animation is the backend's responsibility (CSS animation in
+// React/HTML/WebComponent, .rotationEffect() in SwiftUI, etc.) —
+// this component just declares the surface.
+
+component Spinner {
+  // Size keyword. One of: sm, md, lg. Default: md.
+  // Affects the diameter of the rendered spinner.
+  slot size : text ;
+
+  // Variant keyword (one of: primary, secondary, success, danger,
+  // warning, info, light, dark). Default: primary. Drives color.
+  slot variant : text ;
+
+  // Optional accessibility label read by screen readers. When
+  // empty, the spinner falls back to a generic "Loading" announce
+  // (the backend default).
+  slot aria-label : text ;
+}
