@@ -62,6 +62,13 @@
       "description": "Path to a .msl mosstyle file (three-file pipeline mode)",
       "type": "string",
       "required": false
+    },
+    {
+      "id": "emit-project",
+      "long": "emit-project",
+      "description": "For --backend xaml: also emit a full WinUI 3 host shell (csproj + App + MainWindow + manifest + build.ps1 + README) next to the component triple. Resulting directory is buildable as-is.",
+      "type": "boolean",
+      "required": false
     }
   ],
   "arguments": [

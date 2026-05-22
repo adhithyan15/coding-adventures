@@ -112,18 +112,47 @@ pub struct EmittedFile {
     pub source: String,
 }
 
-/// Project-shaped artifacts emitted when `EmitOptions::emit_project` is on.
-///
-/// PR-1 never populates this — the field is on `XamlEmitResult` to lock
-/// the API shape for PR-5's project-mode work.
+/// Project-shaped artifacts emitted when `EmitOptions::emit_project` is
+/// on. With these in addition to the per-component triple, the output
+/// directory is a buildable WinUI 3 project — `dotnet build` produces a
+/// runnable .exe (modulo the well-documented bare-SDK MSBuild error,
+/// see lessons.md).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ProjectFiles {
+    /// `<Component>.csproj` — MSBuild project file. Targets net9.0-windows,
+    /// references WindowsAppSDK + Microsoft.Windows.SDK.BuildTools,
+    /// declares the project unpackaged + self-contained, includes a
+    /// post-build target that flattens the native runtime DLLs (Fix B2).
     pub csproj: String,
+    /// `App.xaml` — application resource dictionary (Fluent / Mica
+    /// styles).
     pub app_xaml: String,
+    /// `App.xaml.cs` — application code-behind: instantiates
+    /// MainWindow on OnLaunched.
     pub app_xaml_cs: String,
+    /// `MainWindow.xaml` — host window. Layout depends on the chosen
+    /// `RootShape`:
+    ///   - `UserControl` root: hosts the component directly in the
+    ///     Grid (full-window placement).
+    ///   - `ContentDialog` root: hosts a "Show dialog" button which
+    ///     spawns the dialog on click, plus a status bar that echoes
+    ///     dispatched events.
     pub main_window_xaml: String,
+    /// `MainWindow.xaml.cs` — host code-behind. Wires the component's
+    /// Dispatch event to a stub handler the user fills in with their
+    /// business logic.
     pub main_window_cs: String,
+    /// `app.manifest` — Win32 app manifest with DPI awareness +
+    /// supported-OS GUID.
     pub package_manifest: String,
+    /// `build.ps1` — driver script that runs `mosaic-compile` over
+    /// each `.mil/.mll/.msl` triple, then `dotnet build`, then
+    /// optionally launches the .exe. Fix B3.
+    pub build_script: String,
+    /// `README.md` for the emitted project — describes prerequisites
+    /// (Windows App Runtime install), the build command, and the
+    /// known MSBuild error from bare-SDK environments.
+    pub readme: String,
 }
 
 /// Registry of components that the emitter is allowed to reference as
@@ -219,7 +248,9 @@ pub struct EmitOptions {
     pub namespace: String,
 
     /// Windows App SDK version to pin in the emitted `.csproj` (only used
-    /// when `emit_project` is on). Default `"1.5"`.
+    /// when `emit_project` is on). Default `"1.7.250606001"` — a known-
+    /// good full version. A bare `"1.5"` or `"1.6"` doesn't pin enough
+    /// for NuGet to resolve a build-able combination on every machine.
     pub windows_app_sdk: String,
 
     /// Lower `HostTable` to `controls:DataGrid` from the Community
@@ -237,7 +268,7 @@ impl Default for EmitOptions {
         Self {
             emit_project: false,
             namespace: "Mosaic.Generated".to_string(),
-            windows_app_sdk: "1.5".to_string(),
+            windows_app_sdk: "1.7.250606001".to_string(),
             use_community_datagrid: false,
             package_mode: false,
         }
@@ -426,12 +457,27 @@ pub fn from_pipeline(
         });
     }
 
+    // Fix B1: when --emit-project is on, populate the full project
+    // shell (csproj + App + MainWindow + manifest + build.ps1 + README).
+    // The CLI then writes them next to the component triple.
+    let project = if options.emit_project {
+        Some(build_project_files(
+            name,
+            &interface.slots,
+            &interface.emits,
+            shape,
+            options,
+        ))
+    } else {
+        None
+    };
+
     Ok(XamlEmitResult {
         xaml,
         code_behind,
         events,
         component_name: name.clone(),
-        project: None,             // PR-5
+        project,
         for_view_models,
         if_helpers,
     })
@@ -1855,6 +1901,569 @@ fn emit_row_vm_source(_component: &str, vm: &RowVm, options: &EmitOptions) -> St
     )
     .unwrap();
     out
+}
+
+// =====================================================================
+// --emit-project: generate a full WinUI 3 project shell (Fix B1)
+// =====================================================================
+//
+// The CLI flag `--emit-project` flips `EmitOptions::emit_project`. When
+// on, `from_pipeline` populates `XamlEmitResult::project` with a full
+// set of host-project files (csproj, App.xaml(.cs), MainWindow.xaml(.cs),
+// app.manifest, build.ps1, README.md). The CLI writes them next to the
+// component triple. Result: a directory you can `dotnet build && run`
+// to see the component on screen.
+//
+// What the host MainWindow does depends on the component's RootShape:
+//   - `RootShape::UserControl` → MainWindow's Grid hosts the component
+//     directly as its content (full-window placement).
+//   - `RootShape::ContentDialog` → MainWindow has a button that
+//     constructs the dialog (a ContentDialog under the hood), sets
+//     its XamlRoot from the button (Fix D1), and ShowAsync's it.
+//
+// The component's slot DPs become host-set values in the generated
+// MainWindow code; the user replaces these stubs with real values
+// when filling in business logic. Sensible defaults:
+//   - text slot → "Sample <SlotName>"
+//   - number slot → 0
+//   - bool slot → false
+//   - color slot → /* TODO */ Windows.UI.Colors.Gray
+//   - image slot → null
+//   - node slot → null
+//   - list<T> slot → an empty array
+//
+// The component's emits are wired to a single `OnComponentDispatch`
+// handler that pattern-matches the event union and updates a status
+// TextBlock. The user replaces the match arms' bodies with real
+// business logic.
+
+/// Build the full `ProjectFiles` set for a component.
+fn build_project_files(
+    name: &str,
+    slots: &[SlotDecl],
+    emits: &[EmitDecl],
+    shape: RootShape,
+    options: &EmitOptions,
+) -> ProjectFiles {
+    ProjectFiles {
+        csproj: emit_csproj(name, options),
+        app_xaml: emit_app_xaml(options),
+        app_xaml_cs: emit_app_xaml_cs(options),
+        main_window_xaml: emit_main_window_xaml(name, options, shape),
+        main_window_cs: emit_main_window_cs(name, slots, emits, options, shape),
+        package_manifest: emit_app_manifest(name),
+        build_script: emit_build_script(name),
+        readme: emit_project_readme(name, shape),
+    }
+}
+
+fn emit_csproj(name: &str, options: &EmitOptions) -> String {
+    let ns = &options.namespace;
+    let sdk_ver = if options.windows_app_sdk.is_empty() {
+        "1.7.250606001"
+    } else {
+        options.windows_app_sdk.as_str()
+    };
+    format!(
+        "<Project Sdk=\"Microsoft.NET.Sdk\">\n\
+         \n\
+           <!-- Auto-generated by mosaic-emit-xaml in emit-project mode. -->\n\
+           <PropertyGroup>\n\
+             <OutputType>WinExe</OutputType>\n\
+             <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>\n\
+             <RootNamespace>{ns}</RootNamespace>\n\
+             <ApplicationManifest>app.manifest</ApplicationManifest>\n\
+             <Platforms>x64</Platforms>\n\
+             <RuntimeIdentifier>win-x64</RuntimeIdentifier>\n\
+             <UseWinUI>true</UseWinUI>\n\
+             <EnableMsixTooling>false</EnableMsixTooling>\n\
+             <WindowsPackageType>None</WindowsPackageType>\n\
+             <Nullable>enable</Nullable>\n\
+             <ImplicitUsings>enable</ImplicitUsings>\n\
+             <LangVersion>latest</LangVersion>\n\
+             <!-- Framework-dependent: the Windows App Runtime must be installed\n\
+                  system-wide (`winget install Microsoft.WindowsAppRuntime.1.7`).\n\
+                  Self-contained bundling (<WindowsAppSDKSelfContained>true) is\n\
+                  available, but the bundled Microsoft.UI.Xaml.dll 3.1.7.0 in the\n\
+                  1.7 NuGet currently crashes on initialization (0xc000027b in\n\
+                  Microsoft.UI.Xaml.dll). Use framework-dependent until that's\n\
+                  resolved upstream. -->\n\
+             <WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>\n\
+             <SelfContained>false</SelfContained>\n\
+             <!-- WindowsAppSDK uses the legacy `win10-*` RIDs that .NET 8+\n\
+                  removed from the default graph. UseRidGraph=true restores\n\
+                  support for them. -->\n\
+             <UseRidGraph>true</UseRidGraph>\n\
+             <!-- Fix C1 mitigation: the AppxPackage / MrtCore.PriGen targets\n\
+                  ship with Visual Studio's MSBuild tasks, not the bare .NET SDK.\n\
+                  These two flags suppress most of the PRI/MSIX plumbing that\n\
+                  would otherwise fail on a SDK-only machine. The build still\n\
+                  emits one cosmetic MSB4062 error at the very end of the\n\
+                  packaging cleanup; ignore it. The .exe + dependencies are\n\
+                  produced before the failing target runs. -->\n\
+             <AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>\n\
+             <EnableDefaultPriItems>false</EnableDefaultPriItems>\n\
+           </PropertyGroup>\n\
+         \n\
+           <ItemGroup>\n\
+             <PackageReference Include=\"Microsoft.WindowsAppSDK\" Version=\"{sdk_ver}\" />\n\
+             <PackageReference Include=\"Microsoft.Windows.SDK.BuildTools\" Version=\"10.0.22621.756\" />\n\
+           </ItemGroup>\n\
+         \n\
+           <!-- Fix B2: dotnet build leaves the native runtime DLLs in\n\
+                runtimes/win-x64/native/. Flatten them next to the .exe so\n\
+                the unpackaged bootstrap finds them at launch. -->\n\
+           <Target Name=\"FlattenNativeRuntimeDlls\" AfterTargets=\"Build\">\n\
+             <ItemGroup>\n\
+               <_NativeRuntimeDlls Include=\"$(OutDir)runtimes/win-x64/native/*.dll\" />\n\
+             </ItemGroup>\n\
+             <Copy SourceFiles=\"@(_NativeRuntimeDlls)\" DestinationFolder=\"$(OutDir)\"\n\
+                   SkipUnchangedFiles=\"true\" />\n\
+           </Target>\n\
+         \n\
+         </Project>\n"
+    )
+}
+
+fn emit_app_xaml(options: &EmitOptions) -> String {
+    let ns = &options.namespace;
+    format!(
+        "<!-- Auto-generated by mosaic-emit-xaml in emit-project mode. -->\n\
+         <Application\n    \
+             x:Class=\"{ns}.App\"\n    \
+             xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"\n    \
+             xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">\n    \
+             <Application.Resources>\n        \
+                 <ResourceDictionary>\n            \
+                     <ResourceDictionary.MergedDictionaries>\n                \
+                         <XamlControlsResources xmlns=\"using:Microsoft.UI.Xaml.Controls\"/>\n            \
+                     </ResourceDictionary.MergedDictionaries>\n        \
+                 </ResourceDictionary>\n    \
+             </Application.Resources>\n\
+         </Application>\n"
+    )
+}
+
+fn emit_app_xaml_cs(options: &EmitOptions) -> String {
+    let ns = &options.namespace;
+    format!(
+        "// Auto-generated by mosaic-emit-xaml in emit-project mode.\n\
+         using Microsoft.UI.Xaml;\n\
+         \n\
+         namespace {ns};\n\
+         \n\
+         public partial class App : Application\n\
+         {{\n    \
+             private Window? _window;\n\
+         \n    \
+             public App()\n    \
+             {{\n        \
+                 this.InitializeComponent();\n    \
+             }}\n\
+         \n    \
+             protected override void OnLaunched(LaunchActivatedEventArgs args)\n    \
+             {{\n        \
+                 _window = new MainWindow();\n        \
+                 _window.Activate();\n    \
+             }}\n\
+         }}\n"
+    )
+}
+
+fn emit_main_window_xaml(name: &str, options: &EmitOptions, shape: RootShape) -> String {
+    let ns = &options.namespace;
+    match shape {
+        RootShape::ContentDialog => {
+            // For a HostDialog-rooted component, the MainWindow has a
+            // button and a status text. Click → spawn the dialog.
+            format!(
+                "<!-- Auto-generated by mosaic-emit-xaml in emit-project mode. -->\n\
+                 <Window\n    \
+                     x:Class=\"{ns}.MainWindow\"\n    \
+                     xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"\n    \
+                     xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"\n    \
+                     xmlns:local=\"using:{ns}\"\n    \
+                     Title=\"{name} — Mosaic → XAML demo\">\n    \
+                     <Grid>\n        \
+                         <Grid.RowDefinitions>\n            \
+                             <RowDefinition Height=\"*\"/>\n            \
+                             <RowDefinition Height=\"Auto\"/>\n        \
+                         </Grid.RowDefinitions>\n        \
+                         <TextBlock Grid.Row=\"0\" Margin=\"40\" FontSize=\"18\" TextWrapping=\"Wrap\"\n                   \
+                                    Text=\"Mosaic-authored {name} dialog. Click the button to open it.\"/>\n        \
+                         <TextBlock Grid.Row=\"1\" Margin=\"40,0,40,20\" x:Name=\"StatusText\" Foreground=\"#888\"\n                   \
+                                    Text=\"Status: waiting for dispatch…\"/>\n        \
+                         <Button Grid.Row=\"1\" HorizontalAlignment=\"Right\" Margin=\"0,0,40,20\"\n                \
+                                 x:Name=\"OpenButton\" Content=\"Open the dialog\" Click=\"OnOpenButtonClick\"/>\n    \
+                     </Grid>\n\
+                 </Window>\n"
+            )
+        }
+        RootShape::UserControl => {
+            // Hosts the component directly as the window's content.
+            format!(
+                "<!-- Auto-generated by mosaic-emit-xaml in emit-project mode. -->\n\
+                 <Window\n    \
+                     x:Class=\"{ns}.MainWindow\"\n    \
+                     xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"\n    \
+                     xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"\n    \
+                     xmlns:gen=\"using:{ns}\"\n    \
+                     Title=\"{name} — Mosaic → XAML demo\">\n    \
+                     <Grid>\n        \
+                         <Grid.RowDefinitions>\n            \
+                             <RowDefinition Height=\"*\"/>\n            \
+                             <RowDefinition Height=\"Auto\"/>\n        \
+                         </Grid.RowDefinitions>\n        \
+                         <gen:{name} Grid.Row=\"0\" x:Name=\"Component\"/>\n        \
+                         <TextBlock Grid.Row=\"1\" Margin=\"20\" x:Name=\"StatusText\" Foreground=\"#888\"\n                   \
+                                    Text=\"Status: waiting for dispatch…\"/>\n    \
+                     </Grid>\n\
+                 </Window>\n"
+            )
+        }
+    }
+}
+
+fn emit_main_window_cs(
+    name: &str,
+    slots: &[SlotDecl],
+    emits: &[EmitDecl],
+    options: &EmitOptions,
+    shape: RootShape,
+) -> String {
+    let ns = &options.namespace;
+    let component_ctor = build_component_constructor(name, slots);
+    let dispatch_match = build_dispatch_match(name, emits);
+
+    match shape {
+        RootShape::ContentDialog => {
+            format!(
+                "// Auto-generated by mosaic-emit-xaml in emit-project mode.\n\
+                 //\n\
+                 // STUB host for the {name} dialog. Replace the slot values in\n\
+                 // ShowMosaicDialog() and the body of each match arm in\n\
+                 // OnComponentDispatch with your real business logic.\n\
+                 //\n\
+                 using Microsoft.UI.Xaml;\n\
+                 using Microsoft.UI.Xaml.Controls;\n\
+                 \n\
+                 namespace {ns};\n\
+                 \n\
+                 public sealed partial class MainWindow : Window\n\
+                 {{\n    \
+                     public MainWindow()\n    \
+                     {{\n        \
+                         this.InitializeComponent();\n    \
+                     }}\n\
+                 \n    \
+                     private async void OnOpenButtonClick(object sender, RoutedEventArgs e)\n    \
+                     {{\n        \
+                         // Fix D1: use the button's XamlRoot — it's guaranteed in-tree at click time.\n        \
+                         var xamlRoot = (sender as FrameworkElement)?.XamlRoot;\n        \
+                         if (xamlRoot is null) {{ this.StatusText.Text = \"No XamlRoot on click sender\"; return; }}\n        \
+                         try\n        \
+                         {{\n            \
+                             var dlg = {component_ctor};\n            \
+                             dlg.XamlRoot = xamlRoot;\n            \
+                             dlg.Dispatch += OnComponentDispatch;\n            \
+                             await dlg.ShowAsync();\n        \
+                         }}\n        \
+                         catch (System.Exception ex)\n        \
+                         {{\n            \
+                             this.StatusText.Text = $\"Exception: {{ex.GetType().Name}}: {{ex.Message}}\";\n        \
+                         }}\n    \
+                     }}\n\
+                 \n    \
+                     /// <summary>\n    \
+                     /// Receives Mosaic Dispatch events. Replace each arm's body with the\n    \
+                     /// business logic that should run when that event fires.\n    \
+                     /// </summary>\n    \
+                     private void OnComponentDispatch(object? sender, {name}Event ev)\n    \
+                     {{\n        \
+                         {dispatch_match}\n    \
+                     }}\n\
+                 }}\n"
+            )
+        }
+        RootShape::UserControl => {
+            format!(
+                "// Auto-generated by mosaic-emit-xaml in emit-project mode.\n\
+                 //\n\
+                 // STUB host for the {name} component. The component is placed in the\n\
+                 // window's Grid as `x:Name=\"Component\"`. Set its slot values in the\n\
+                 // constructor below and fill in the OnComponentDispatch match arms.\n\
+                 //\n\
+                 using Microsoft.UI.Xaml;\n\
+                 \n\
+                 namespace {ns};\n\
+                 \n\
+                 public sealed partial class MainWindow : Window\n\
+                 {{\n    \
+                     public MainWindow()\n    \
+                     {{\n        \
+                         this.InitializeComponent();\n        \
+                         // Wire slot values: replace the stub defaults with your real data.\n        \
+                         {component_ctor_inline}\n        \
+                         this.Component.Dispatch += OnComponentDispatch;\n    \
+                     }}\n\
+                 \n    \
+                     /// <summary>\n    \
+                     /// Receives Mosaic Dispatch events. Replace each arm's body with the\n    \
+                     /// business logic that should run when that event fires.\n    \
+                     /// </summary>\n    \
+                     private void OnComponentDispatch(object? sender, {name}Event ev)\n    \
+                     {{\n        \
+                         {dispatch_match}\n    \
+                     }}\n\
+                 }}\n",
+                component_ctor_inline = build_component_inline_setup(slots),
+            )
+        }
+    }
+}
+
+/// Build a `new ComponentName { Slot = default, ... }` initializer
+/// for the ContentDialog-rooted MainWindow path.
+fn build_component_constructor(name: &str, slots: &[SlotDecl]) -> String {
+    if slots.is_empty() {
+        return format!("new {name}()");
+    }
+    let mut out = format!("new {name}\n            {{\n");
+    let ctx_stub = EmitContext::new("", &[]);
+    for slot in slots {
+        // Use the same aliased PascalCase the DP generator emits.
+        let pascal = if let Some(alias) = ctx_stub.slot_aliases.get(&slot.name) {
+            alias.clone()
+        } else {
+            kebab_to_pascal_case(&slot.name)
+        };
+        let value = stub_value_for_slot(&slot.r#type, &slot.name);
+        out.push_str(&format!("                {pascal} = {value},\n"));
+    }
+    out.push_str("            }");
+    out
+}
+
+/// Build `this.Component.Slot = default;` statements for the
+/// UserControl-rooted MainWindow path.
+fn build_component_inline_setup(slots: &[SlotDecl]) -> String {
+    if slots.is_empty() {
+        return String::from("// (no slots)");
+    }
+    let mut lines: Vec<String> = Vec::with_capacity(slots.len());
+    for slot in slots {
+        let pascal = kebab_to_pascal_case(&slot.name);
+        let value = stub_value_for_slot(&slot.r#type, &slot.name);
+        lines.push(format!("this.Component.{pascal} = {value};"));
+    }
+    lines.join("\n        ")
+}
+
+/// Pick a reasonable stub literal for a slot's C# value. Used to
+/// pre-populate the host MainWindow's component instance.
+fn stub_value_for_slot(t: &SlotType, slot_name: &str) -> String {
+    match t {
+        SlotType::Text => format!("\"Sample {}\"", kebab_to_pascal_case(slot_name)),
+        SlotType::Number => "0".to_string(),
+        SlotType::Bool => "false".to_string(),
+        SlotType::Color => "Microsoft.UI.Colors.Gray".to_string(),
+        SlotType::Image => "null!".to_string(),
+        SlotType::Node => "null!".to_string(),
+        SlotType::List(inner) => format!("new System.Collections.Generic.List<{}>()", list_inner_csharp(inner)),
+        // Component slots (rare) — surface a stub null for now.
+        _ => "null!".to_string(),
+    }
+}
+
+fn list_inner_csharp(t: &ListInnerType) -> String {
+    match t {
+        ListInnerType::Text => "string".to_string(),
+        ListInnerType::Number => "double".to_string(),
+        ListInnerType::Bool => "bool".to_string(),
+        ListInnerType::Color => "Windows.UI.Color".to_string(),
+        ListInnerType::Image => "Microsoft.UI.Xaml.Media.Imaging.ImageSource".to_string(),
+        ListInnerType::Node => "Microsoft.UI.Xaml.UIElement".to_string(),
+        ListInnerType::Component(c) => c.clone(),
+        ListInnerType::List(inner) => format!("System.Collections.Generic.IReadOnlyList<{}>", list_inner_csharp(inner)),
+    }
+}
+
+/// Build the body of `OnComponentDispatch` — a `switch (ev) { ... }`
+/// over the emit cases. Each arm sets `this.StatusText.Text` to a
+/// stub label and has a `/* TODO: business logic */` comment.
+fn build_dispatch_match(name: &str, emits: &[EmitDecl]) -> String {
+    if emits.is_empty() {
+        return format!(
+            "// {name} declares no emits — Dispatch never fires.\n        \
+             this.StatusText.Text = $\"Dispatched (no emits declared): {{ev}}\";"
+        );
+    }
+    let mut out = String::from("switch (ev)\n        {\n");
+    for emit in emits {
+        let case_name = kebab_to_pascal_case(&strip_on_prefix(&emit.name));
+        if emit.params.is_empty() {
+            out.push_str(&format!(
+                "            case {name}Event.{case_name}:\n                \
+                     this.StatusText.Text = \"Dispatch: {case_name}\";\n                \
+                     // TODO: business logic for {case_name}\n                \
+                     break;\n"
+            ));
+        } else {
+            let pattern_args: Vec<String> = emit
+                .params
+                .iter()
+                .map(|p| kebab_to_pascal_case(&p.name))
+                .map(|n| n.to_lowercase())
+                .collect();
+            let pattern = pattern_args.join(", ");
+            out.push_str(&format!(
+                "            case {name}Event.{case_name}({pattern}) c:\n                \
+                     this.StatusText.Text = $\"Dispatch: {case_name}({{c}})\";\n                \
+                     // TODO: business logic for {case_name}\n                \
+                     break;\n"
+            ));
+        }
+    }
+    out.push_str("        }");
+    out
+}
+
+fn emit_app_manifest(_name: &str) -> String {
+    // DPI awareness + supported-OS GUID for Windows 10 / 11.
+    "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n\
+     <assembly manifestVersion=\"1.0\" xmlns=\"urn:schemas-microsoft-com:asm.v1\">\n  \
+       <application xmlns=\"urn:schemas-microsoft-com:asm.v3\">\n    \
+         <windowsSettings>\n      \
+           <dpiAware xmlns=\"http://schemas.microsoft.com/SMI/2005/WindowsSettings\">true/pm</dpiAware>\n      \
+           <dpiAwareness xmlns=\"http://schemas.microsoft.com/SMI/2016/WindowsSettings\">PerMonitorV2, PerMonitor</dpiAwareness>\n    \
+         </windowsSettings>\n  \
+       </application>\n  \
+       <compatibility xmlns=\"urn:schemas-microsoft-com:compatibility.v1\">\n    \
+         <application>\n      \
+           <supportedOS Id=\"{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}\"/>\n    \
+         </application>\n  \
+       </compatibility>\n\
+     </assembly>\n"
+        .to_string()
+}
+
+fn emit_build_script(name: &str) -> String {
+    format!(
+        "# Auto-generated by mosaic-emit-xaml in emit-project mode.\n\
+         #\n\
+         # Driver for the {name} WinUI 3 host project. Regenerates the per-component\n\
+         # triple from the Mosaic sources (if mosaic-compile is on PATH), then runs\n\
+         # `dotnet build`.\n\
+         #\n\
+         # Known frictions:\n\
+         #   - On a bare .NET SDK (no Visual Studio Build Tools), `dotnet build` will\n\
+         #     end with one MSB4062 error about `Microsoft.Build.AppxPackage.RemovePayloadDuplicates`.\n\
+         #     The .exe and dependencies are produced anyway; ignore the error.\n\
+         #   - Without `<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>`,\n\
+         #     a system-wide install of the Windows App Runtime is required:\n\
+         #         winget install Microsoft.WindowsAppRuntime.1.7\n\
+         #\n\
+         param([switch]$Clean, [switch]$Run)\n\
+         \n\
+         $proj = Join-Path $PSScriptRoot \"{name}.csproj\"\n\
+         \n\
+         if ($Clean) {{\n    \
+             Remove-Item -Recurse -Force -ErrorAction SilentlyContinue (Join-Path $PSScriptRoot \"bin\")\n    \
+             Remove-Item -Recurse -Force -ErrorAction SilentlyContinue (Join-Path $PSScriptRoot \"obj\")\n\
+         }}\n\
+         \n\
+         # The Platform=x64 arg is required because WindowsAppSDK's\n\
+         # self-contained mode rejects AnyCPU. The csproj's <Platforms>x64</Platforms>\n\
+         # only declares the SET of platforms; the ACTIVE one comes from this arg.\n\
+         dotnet build $proj -c Debug -p:Platform=x64 --nologo\n\
+         # `dotnet build` returns non-zero from the cosmetic MSB4062 even when the\n\
+         # outputs ARE produced. Ignore $LASTEXITCODE for that one specific case.\n\
+         \n\
+         if ($Run) {{\n    \
+             # x64 Debug bin path. .NET 9 puts the platform in the path\n    \
+             # segment when -p:Platform=x64 is set.\n    \
+             $exe = Join-Path $PSScriptRoot \"bin\\x64\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\{name}.exe\"\n    \
+             if (-not (Test-Path $exe)) {{\n        \
+                 # Fallback to the non-platform-segment path for builds that\n        \
+                 # left it out.\n        \
+                 $exe = Join-Path $PSScriptRoot \"bin\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\{name}.exe\"\n    \
+             }}\n    \
+             if (Test-Path $exe) {{\n        \
+                 & $exe\n    \
+             }} else {{\n        \
+                 Write-Host \"No .exe at $exe -- build must have failed.\" -ForegroundColor Red\n    \
+             }}\n\
+         }}\n"
+    )
+}
+
+fn emit_project_readme(name: &str, shape: RootShape) -> String {
+    let shape_blurb = match shape {
+        RootShape::ContentDialog => {
+            "This project hosts a Mosaic-authored **dialog component** ({name}).\n\
+             The MainWindow contains a button — click it to display the dialog\n\
+             (a `<ContentDialog>` underneath).\n"
+        }
+        RootShape::UserControl => {
+            "This project hosts a Mosaic-authored **UserControl** ({name}) placed\n\
+             directly in the MainWindow as the full content area.\n"
+        }
+    };
+    let shape_blurb = shape_blurb.replace("{name}", name);
+    format!(
+        "# {name} — WinUI 3 host project\n\
+         \n\
+         Auto-generated by `mosaic-compile --backend xaml --emit-project`.\n\
+         \n\
+         {shape_blurb}\n\
+         ## Prerequisites\n\
+         \n\
+         1. **.NET 9.0 SDK** — `dotnet --list-sdks` should list one matching `9.0.*`.\n\
+         2. The Windows App Runtime bundles into the build output\n\
+            (`<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>`), so\n\
+            you don't need a system-wide install. If you switch to\n\
+            framework-dependent, run `winget install Microsoft.WindowsAppRuntime.1.7`.\n\
+         3. Optional but recommended: Visual Studio Build Tools 2022 with the UWP /\n\
+            WinUI workload. Without it, `dotnet build` emits one cosmetic MSB4062\n\
+            error from the AppxPackage MSBuild tasks — the .exe and dependencies\n\
+            still build correctly.\n\
+         \n\
+         ## Build\n\
+         \n\
+         ```powershell\n\
+         .\\build.ps1            # builds\n\
+         .\\build.ps1 -Run       # builds + runs\n\
+         .\\build.ps1 -Clean     # deletes bin/ + obj/\n\
+         ```\n\
+         \n\
+         The build emits a fully self-contained .exe at\n\
+         `bin\\Debug\\net9.0-windows10.0.19041.0\\{name}.exe`. The native\n\
+         WindowsAppRuntime DLLs are auto-flattened next to the .exe by an\n\
+         MSBuild post-build target (see the project's `.csproj`).\n\
+         \n\
+         ## Where to add business logic\n\
+         \n\
+         - **`MainWindow.xaml.cs`** has stub slot values for the component and a\n\
+           stub `OnComponentDispatch` handler. Replace the stub values with your\n\
+           real data, and fill in the body of each match arm with the logic that\n\
+           should run when each Mosaic emit fires.\n\
+         - The `{name}.xaml.cs` and `{name}.xaml` files are auto-generated\n\
+           from the Mosaic sources and **should NOT be edited by hand** — they\n\
+           get overwritten on the next `mosaic-compile` run.\n\
+         \n\
+         ## Files\n\
+         \n\
+         | File | Source | Edit by hand? |\n\
+         |---|---|---|\n\
+         | `{name}.xaml` | mosaic-compile | No |\n\
+         | `{name}.xaml.cs` | mosaic-compile | No |\n\
+         | `{name}.Event.cs` | mosaic-compile | No |\n\
+         | `MainWindow.xaml(.cs)` | --emit-project | **Yes** — your host |\n\
+         | `App.xaml(.cs)` | --emit-project | Rare |\n\
+         | `{name}.csproj` | --emit-project | Rare |\n\
+         | `app.manifest` | --emit-project | Rare |\n\
+         | `build.ps1` | --emit-project | Rare |\n"
+    )
 }
 
 /// Reduce a C# type like `IReadOnlyList<string>` to its inner element
@@ -5600,12 +6209,99 @@ mod tests {
 
     // ── unused-flag placeholders ──
 
+    /// `EmitOptions::emit_project = false` (default) → `project` is
+    /// `None`, no host shell emitted.
     #[test]
-    fn project_field_is_none_in_pr1() {
+    fn project_field_is_none_when_emit_project_false() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root("Foo", box_root());
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(r.project.is_none());
+    }
+
+    /// Fix B1: `EmitOptions::emit_project = true` → `project` is
+    /// populated with the full WinUI 3 host shell (csproj + App +
+    /// MainWindow + manifest + build.ps1 + README).
+    #[test]
+    fn project_field_populated_when_emit_project_true() {
+        let c = component("Foo", vec![slot("greeting", SlotType::Text, true)], vec![]);
+        let l = layout_with_root("Foo", box_root());
+        let s = empty_style("Foo");
+        let mut o = opts();
+        o.emit_project = true;
+        let r = from_pipeline(&c, &l, &s, None, &o).unwrap();
+        let p = r.project.as_ref().expect("project populated");
+        // csproj has the WindowsAppSDK reference + the C1 mitigation.
+        assert!(p.csproj.contains("Microsoft.WindowsAppSDK"));
+        assert!(p.csproj.contains("AppxGeneratePriEnabled>false"));
+        assert!(p.csproj.contains("UseRidGraph>true"));
+        assert!(p.csproj.contains("FlattenNativeRuntimeDlls"));
+        // App.xaml.cs references MainWindow.
+        assert!(p.app_xaml_cs.contains("new MainWindow()"));
+        // MainWindow.xaml.cs has the dispatch stub.
+        assert!(p.main_window_cs.contains("OnComponentDispatch"));
+        // MainWindow constructor pre-populates the Greeting slot stub.
+        assert!(p.main_window_cs.contains("Greeting"));
+        // build.ps1 passes -p:Platform=x64.
+        assert!(p.build_script.contains("-p:Platform=x64"));
+        // README mentions the cosmetic MSB4062 error.
+        assert!(p.readme.contains("MSB4062") || p.readme.contains("Visual Studio Build Tools"));
+        // app.manifest declares DPI awareness.
+        assert!(p.package_manifest.contains("PerMonitorV2"));
+    }
+
+    /// Fix B1: for a UserControl-rooted component, the MainWindow
+    /// hosts the component directly in its Grid.
+    #[test]
+    fn project_main_window_hosts_user_control_directly() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", box_root()); // Box → UserControl root
+        let s = empty_style("Foo");
+        let mut o = opts();
+        o.emit_project = true;
+        let r = from_pipeline(&c, &l, &s, None, &o).unwrap();
+        let p = r.project.as_ref().unwrap();
+        // The component appears as `<gen:Foo ... />` in the Grid.
+        assert!(
+            p.main_window_xaml.contains("<gen:Foo"),
+            "got:\n{}",
+            p.main_window_xaml
+        );
+    }
+
+    /// Fix B1: for a HostDialog-rooted component, MainWindow has a
+    /// Button + ShowAsync glue, not a direct embed.
+    #[test]
+    fn project_main_window_for_dialog_has_button_and_show_async() {
+        let c = component("Foo", vec![], vec![]);
+        let dialog_root = LayoutNode {
+            tag: "HostDialog".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: Vec::new(),
+        };
+        let l = layout_with_root("Foo", dialog_root);
+        let s = empty_style("Foo");
+        let mut o = opts();
+        o.emit_project = true;
+        let r = from_pipeline(&c, &l, &s, None, &o).unwrap();
+        let p = r.project.as_ref().unwrap();
+        assert!(
+            p.main_window_xaml.contains("Open the dialog"),
+            "got:\n{}",
+            p.main_window_xaml
+        );
+        assert!(
+            p.main_window_cs.contains("ShowAsync"),
+            "got:\n{}",
+            p.main_window_cs
+        );
+        // Fix D1: use the button's XamlRoot.
+        assert!(
+            p.main_window_cs.contains("(sender as FrameworkElement)?.XamlRoot"),
+            "got:\n{}",
+            p.main_window_cs
+        );
     }
 
     #[test]
