@@ -103,6 +103,7 @@
 //! | `HostTableBody` | `<tbody>…</tbody>` (children walked as `<tr>` rows of `<td>`)    |
 //! | `HostTableFoot` | `<tfoot>…</tfoot>` (children walked as `<tr>` rows of `<td>`)    |
 //! | `HostTableColGroup` | `<colgroup><col></colgroup>`                                 |
+//! | `HostDialog`    | `<dialog id="mos-dlg-N">…</dialog>` plus a post-`innerHTML` block in `_render()` that calls `showModal()`/`show()`/`close()` and wires `close`/`cancel` events (U29-1) |
 //! | `If`            | `${(cond) ? `then-html` : `else-html`}` (Else is consumed from the next sibling) |
 //! | `Else`          | element of the surrounding `If` — never reached as a top-level node when paired; standalone `Else` produces an empty interpolation |
 //! | `For`           | `${collection.map((item, idx) => `body-html`).join('')}`         |
@@ -381,11 +382,23 @@ fn emit_render(
         .unwrap();
     }
 
-    let html = emit_html_tree(layout_root, 0)?;
+    // The HTML walker also accumulates "post-render" snippets — small
+    // imperative bits of JS that need to run after `innerHTML` is set
+    // so that elements referenced by `id` exist in the shadow tree.
+    // HostDialog (U29-1) is the first primitive to need this: the
+    // `<dialog>` element is in the markup, but `showModal()` / `close()`
+    // and a `close`-event listener must be attached after the tree is
+    // live. Every `HostDialog` occurrence gets a unique id of the form
+    // `mos-dlg-N` so the post-script can `getElementById` it.
+    let mut ctx = RenderCtx::default();
+    let html = emit_html_tree(layout_root, 0, &mut ctx)?;
     // The HTML tree is one flat string for now (no per-line indentation
     // inside the template literal — keeps the output compact and avoids
     // surprising whitespace inside `<span>` and `<div>` text content).
     writeln!(out, "    this.shadowRoot.innerHTML = `{html}`;").unwrap();
+    for line in ctx.post_script_lines {
+        writeln!(out, "    {line}").unwrap();
+    }
     writeln!(out, "  }}").unwrap();
     Ok(out)
 }
@@ -470,7 +483,11 @@ fn emit_signal_method(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
 /// regardless.) The parameter is kept for symmetry with the React /
 /// Qt / SwiftUI walkers and to leave a clear hook for a future
 /// pretty-printer.
-fn emit_html_tree(node: &LayoutNode, _depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_html_tree(
+    node: &LayoutNode,
+    _depth: usize,
+    ctx: &mut RenderCtx,
+) -> Result<String, PipelineEmitError> {
     // -----------------------------------------------------------------
     // UI29 kernel — dedicated emitters first.
     //
@@ -482,8 +499,9 @@ fn emit_html_tree(node: &LayoutNode, _depth: usize) -> Result<String, PipelineEm
     match node.tag.as_str() {
         "HostInput" => return Ok(emit_host_input(node)),
         "HostButton" => return Ok(emit_host_button(node)),
-        "If" => return emit_if(node, None),
-        "For" => return emit_for(node),
+        "HostDialog" => return emit_host_dialog(node, ctx),
+        "If" => return emit_if(node, None, ctx),
+        "For" => return emit_for(node, ctx),
         // `Else` appearing as a top-level walker target means it was NOT
         // consumed by a preceding `If` (orphan). Validation in
         // moslayout-compiler already rejects this case; here we render
@@ -524,7 +542,7 @@ fn emit_html_tree(node: &LayoutNode, _depth: usize) -> Result<String, PipelineEm
         let mut inner = String::from("<tr>");
         for child in &node.children {
             inner.push_str(&format!("<{cell_tag}>"));
-            inner.push_str(&emit_html_tree(child, _depth + 1)?);
+            inner.push_str(&emit_html_tree(child, _depth + 1, ctx)?);
             inner.push_str(&format!("</{cell_tag}>"));
         }
         inner.push_str("</tr>");
@@ -551,11 +569,11 @@ fn emit_html_tree(node: &LayoutNode, _depth: usize) -> Result<String, PipelineEm
         if child.tag == "If" {
             // Look ahead for a paired `Else` sibling.
             let else_node = node.children.get(i + 1).filter(|n| n.tag == "Else");
-            inner.push_str(&emit_if(child, else_node)?);
+            inner.push_str(&emit_if(child, else_node, ctx)?);
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
         }
-        inner.push_str(&emit_html_tree(child, _depth + 1)?);
+        inner.push_str(&emit_html_tree(child, _depth + 1, ctx)?);
         i += 1;
     }
     Ok(format!("{open_with_attrs}{inner}{close}"))
@@ -569,18 +587,21 @@ fn emit_html_tree(node: &LayoutNode, _depth: usize) -> Result<String, PipelineEm
 /// that fills one branch of the ternary. Children are concatenated
 /// inline with the same rules as a container body, except no outer
 /// open/close tag is emitted.
-fn emit_branch_children(parent: &LayoutNode) -> Result<String, PipelineEmitError> {
+fn emit_branch_children(
+    parent: &LayoutNode,
+    ctx: &mut RenderCtx,
+) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
     while i < parent.children.len() {
         let child = &parent.children[i];
         if child.tag == "If" {
             let else_node = parent.children.get(i + 1).filter(|n| n.tag == "Else");
-            out.push_str(&emit_if(child, else_node)?);
+            out.push_str(&emit_if(child, else_node, ctx)?);
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
         }
-        out.push_str(&emit_html_tree(child, 0)?);
+        out.push_str(&emit_html_tree(child, 0, ctx)?);
         i += 1;
     }
     Ok(out)
@@ -603,6 +624,7 @@ fn emit_branch_children(parent: &LayoutNode) -> Result<String, PipelineEmitError
 fn emit_if(
     if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
+    ctx: &mut RenderCtx,
 ) -> Result<String, PipelineEmitError> {
     // Pull the `when:` prop. moslayout-compiler's validator already
     // requires this and rejects any other prop name on an `If`; this
@@ -614,9 +636,9 @@ fn emit_if(
         .map(|p| layout_value_to_js_expr(&p.value))
         .unwrap_or_else(|| "false".to_string());
 
-    let then_branch = emit_branch_children(if_node)?;
+    let then_branch = emit_branch_children(if_node, ctx)?;
     let else_branch = match else_node {
-        Some(n) => emit_branch_children(n)?,
+        Some(n) => emit_branch_children(n, ctx)?,
         None => String::new(),
     };
 
@@ -637,7 +659,7 @@ fn emit_if(
 /// `Text { content: slot: row }` style reference to the bound name
 /// just works because slot interpolation lowers to `${row}` — and
 /// `row` is the arrow-function parameter.
-fn emit_for(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+fn emit_for(node: &LayoutNode, ctx: &mut RenderCtx) -> Result<String, PipelineEmitError> {
     let mut each_expr = String::from("[]");
     let mut as_name = String::from("item");
     let mut index_name = String::from("idx");
@@ -665,7 +687,7 @@ fn emit_for(node: &LayoutNode) -> Result<String, PipelineEmitError> {
         }
     }
 
-    let body = emit_branch_children(node)?;
+    let body = emit_branch_children(node, ctx)?;
     Ok(format!(
         "${{{each_expr}.map(({as_name}, {index_name}) => `{body}`).join('')}}"
     ))
@@ -838,6 +860,190 @@ fn emit_host_button(node: &LayoutNode) -> String {
     };
 
     format!("<button{attrs}>{body}</button>")
+}
+
+// ---------------------------------------------------------------------
+// U29-1 — HostDialog
+//
+// Unlike the other host primitives, `HostDialog` needs *imperative*
+// post-render wiring because `showModal()`/`close()` and the dialog's
+// `close` event are not expressible as plain inline attributes:
+//
+// 1. The `<dialog>` element is emitted into the shadow innerHTML with
+//    a unique `id="mos-dlg-N"` so the post-script can find it.
+// 2. Each `RenderCtx::next_dialog_id()` call hands out the next index;
+//    every emitted dialog gets a distinct id so multiple HostDialogs
+//    in the same component don't collide.
+// 3. The post-script lines are appended to `_render()` AFTER the
+//    `innerHTML` assignment — that's the earliest point at which
+//    `shadowRoot.getElementById("mos-dlg-N")` returns a live element.
+//
+// Slot/keyword mapping (from UI29-1 §2.1 and §3.4):
+//
+// | Moslayout prop                    | WebComponent lowering                                          |
+// |-----------------------------------|----------------------------------------------------------------|
+// | `open: slot: x`                   | `this.getAttribute("x") === "true"` drives showModal/close     |
+// | `modal: true` (default, keyword)  | `d.showModal()`                                                |
+// | `modal: false` (keyword)          | `d.show()`                                                     |
+// | `title: slot: x`                  | inject `<h2>${x}</h2>` as the first child of `<dialog>`        |
+// | `title: "literal"`                | inject `<h2>literal</h2>`                                      |
+// | `dismiss-on-backdrop: false`      | add a `cancel`-event interceptor that `preventDefault()`s      |
+// | `onClose: emit: onX`              | `d.addEventListener("close", () => this.dispatch({type:"x"}))` |
+// | `onOpen:  emit: onX`              | one-shot `this.dispatch({type:"x"})` immediately after showModal|
+//
+// The dispatch is `this.dispatch(...)` (not the inline
+// `this.getRootNode().host.dispatch(...)` used by HostInput/HostButton)
+// because the post-script runs in the Custom Element's own method body
+// where `this` *is* the element.
+fn emit_host_dialog(
+    node: &LayoutNode,
+    ctx: &mut RenderCtx,
+) -> Result<String, PipelineEmitError> {
+    let dlg_idx = ctx.next_dialog_id();
+    let dlg_id = format!("mos-dlg-{dlg_idx}");
+    // Single per-dialog JS variable name. Suffixed with the index so two
+    // dialogs in the same component don't shadow each other.
+    let var = format!("_d{dlg_idx}");
+
+    // ----- compile-time keyword: modal -----
+    // Default is `true` (modal). Per spec, this is a compile-time choice
+    // — the keyword `modal: false` selects `show()` instead of `showModal()`.
+    // Default is `true` (modal) when the keyword is absent or any value
+    // other than the literal `"false"`. `matches!` keeps the intent
+    // direct: "modal unless the author opted out".
+    let modal = !matches!(find_keyword(node, "modal"), Some("false"));
+    let show_call = if modal { "showModal()" } else { "show()" };
+
+    // ----- compile-time keyword: dismiss-on-backdrop -----
+    // Default is `true`. `dismiss-on-backdrop: false` adds a one-line
+    // interceptor on the dialog's `cancel` event (`<dialog>` fires
+    // `cancel` for Esc and for backdrop dismissal; preventDefault()
+    // suppresses the auto-close).
+    let dismiss_on_backdrop = !matches!(find_keyword(node, "dismiss-on-backdrop"), Some("false"));
+
+    // ----- slot: open -----
+    // The author binds `open: slot: <name>`; on the WebComponent side we
+    // read the attribute back as a string and treat `"true"` as truthy.
+    // (Custom Element string attributes don't auto-coerce to booleans.)
+    let open_js = if let Some(slot) = find_slot_ref(node, "open") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            // The `_render()` body already declares `const <camel> =
+            // this.getAttribute(...);` for every observed slot, so the
+            // identifier is in scope. We compare strings because Custom
+            // Element attributes are always strings.
+            Some(format!("({camel} === \"true\")"))
+        } else {
+            None
+        }
+    } else if let Some(kw) = find_keyword(node, "open") {
+        // Literal compile-time `open: true`/`open: false` keyword.
+        Some((kw == "true").to_string())
+    } else {
+        // No `open:` prop at all — treat as closed by default.
+        Some("false".to_string())
+    };
+
+    // ----- title — emitted inside the <dialog> markup -----
+    // The title is rendered as an `<h2>` first child. Slot refs use the
+    // template-literal `${var}` form; string literals are HTML-escaped.
+    let title_html = if let Some(slot) = find_slot_ref(node, "title") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            format!("<h2>${{{camel}}}</h2>")
+        } else {
+            String::new()
+        }
+    } else if let Some(s) = find_string(node, "title") {
+        format!("<h2>{}</h2>", escape_html_text(s))
+    } else {
+        String::new()
+    };
+
+    // ----- children — recursively rendered into the dialog body -----
+    // We re-use the standard branch walker so `If`/`Else`/`For` nested
+    // inside a dialog body lower correctly.
+    let body = emit_branch_children(node, ctx)?;
+
+    // ----- markup -----
+    let markup = format!(r#"<dialog id="{dlg_id}">{title_html}{body}</dialog>"#);
+
+    // ----- post-script -----
+    // Order matters: grab the element, attach listeners, *then* toggle
+    // open. Doing it in that order means the very first `showModal()`
+    // call (when `open` is true on the initial render) is already
+    // covered by the `close` listener, so author-side `onClose` fires
+    // even on the first close.
+    ctx.post_script_lines.push(format!(
+        "const {var} = this.shadowRoot.getElementById(\"{dlg_id}\");"
+    ));
+
+    // onClose listener — wired before showModal/close so we never miss
+    // a close event that fires synchronously from a re-render.
+    if let Some(emit_name) = find_emit_ref(node, "onClose") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        if is_safe_identifier(&type_field) {
+            ctx.post_script_lines.push(format!(
+                "{var}.addEventListener(\"close\", () => this.dispatch({{type:\"{type_field}\"}}));"
+            ));
+        }
+    }
+
+    // dismiss-on-backdrop: false → suppress the native cancel-driven
+    // close. `<dialog>`'s `cancel` event fires for both Esc and a
+    // backdrop click on the closed-by-default dialog; `preventDefault()`
+    // is the documented way to keep the dialog open.
+    if !dismiss_on_backdrop {
+        ctx.post_script_lines.push(format!(
+            "{var}.addEventListener(\"cancel\", (e) => e.preventDefault());"
+        ));
+    }
+
+    // open/close lifecycle. Both branches are emitted so flipping the
+    // `open` slot from true back to false also drives the dialog
+    // closed; without the `else` clause the dialog would latch open
+    // after the first `true`.
+    let open_expr = open_js.unwrap_or_else(|| "false".to_string());
+    ctx.post_script_lines.push(format!(
+        "if ({open_expr}) {{ if (!{var}.open) {{ {var}.{show_call}; }} }} else {{ if ({var}.open) {{ {var}.close(); }} }}"
+    ));
+
+    // onOpen — one-shot. Fires *after* the show call lands, so authors
+    // can observe the transition. We re-check `open` so the dispatch
+    // only happens on the open path, not on close.
+    if let Some(emit_name) = find_emit_ref(node, "onOpen") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        if is_safe_identifier(&type_field) {
+            ctx.post_script_lines.push(format!(
+                "if ({open_expr}) {{ this.dispatch({{type:\"{type_field}\"}}); }}"
+            ));
+        }
+    }
+
+    Ok(markup)
+}
+
+/// Per-render walker context — accumulates post-`innerHTML` JS lines
+/// that need to run after the shadow tree is live. Currently the only
+/// contributor is `emit_host_dialog`; future imperative primitives
+/// (e.g. a `HostCanvas` that needs a `getContext("2d")` call) can
+/// reuse the same hook.
+#[derive(Default)]
+struct RenderCtx {
+    /// Monotonic counter — every `HostDialog` claims one id so multiple
+    /// dialogs in a single component do not collide on `id="mos-dlg-…"`.
+    dialog_count: usize,
+    /// One JS statement per line, appended to `_render()` AFTER the
+    /// `this.shadowRoot.innerHTML = ...` assignment.
+    post_script_lines: Vec<String>,
+}
+
+impl RenderCtx {
+    fn next_dialog_id(&mut self) -> usize {
+        let id = self.dialog_count;
+        self.dialog_count += 1;
+        id
+    }
 }
 
 // =====================================================================
@@ -2348,5 +2554,322 @@ mod tests {
             }],
             children: Vec::new(),
         }
+    }
+
+    // =================================================================
+    // U29-1-K-webcomp — HostDialog
+    //
+    // The eight tests below cover the UI29-1 HostDialog lowering: the
+    // `<dialog>` markup placement, the post-`innerHTML` lifecycle block
+    // (showModal / close), the modal vs non-modal compile-time keyword,
+    // children injection inside the dialog, the close-event listener
+    // (this.dispatch — NOT the inline getRootNode form), the title slot,
+    // the dismiss-on-backdrop cancel interceptor, and the
+    // unknown-primitive negative — `HostDialog` must be recognised.
+    // =================================================================
+
+    /// Helper: build a `LayoutProp` with a keyword value (e.g. `modal: true`).
+    fn kw_prop(name: &str, value: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::Keyword(value.to_string()),
+        }
+    }
+
+    /// Helper: build a `LayoutProp` with a slot-ref value.
+    fn slot_prop(name: &str, slot: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::SlotRef(slot.to_string()),
+        }
+    }
+
+    /// Helper: build a `LayoutProp` with an emit-ref value.
+    fn emit_prop(name: &str, emit_name: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::EmitRef(emit_name.to_string()),
+        }
+    }
+
+    /// Helper: build a `LayoutProp` with a string literal value.
+    fn str_prop(name: &str, value: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::String(value.to_string()),
+        }
+    }
+
+    /// Helper: build a HostDialog node with given props and children.
+    fn host_dialog(props: Vec<LayoutProp>, children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "HostDialog".to_string(),
+            part_name: None,
+            props,
+            children,
+        }
+    }
+
+    // -------- D1: empty HostDialog renders a <dialog> in the shadow root --------
+
+    /// Baseline: a HostDialog with no props and no children must
+    /// produce a `<dialog id="mos-dlg-0">…</dialog>` element in the
+    /// shadow innerHTML. The post-`innerHTML` block must look the
+    /// element up by that id so subsequent imperative calls land.
+    #[test]
+    fn host_dialog_empty_renders_dialog_in_shadow_root() {
+        let m = component("Confirm", vec![], vec![]);
+        let l = root_layout("Confirm", host_dialog(vec![], vec![]));
+        let r = from_pipeline(&m, &l, &empty_style("Confirm")).unwrap();
+        assert!(
+            r.output.contains(r#"<dialog id="mos-dlg-0"></dialog>"#),
+            "HostDialog markup missing or wrong shape, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output
+                .contains(r#"const _d0 = this.shadowRoot.getElementById("mos-dlg-0");"#),
+            "post-innerHTML element lookup missing, got:\n{}",
+            r.output
+        );
+    }
+
+    // -------- D2: open: slot: x → showModal()/close() driven by attribute --------
+
+    /// `open: slot: visible` reads `this.getAttribute("visible")` (via
+    /// the `_render()` local) and toggles `showModal()` vs `close()`
+    /// based on the string equalling `"true"`. The `if/else` must
+    /// guard against redundant calls so flipping the slot doesn't
+    /// double-fire.
+    #[test]
+    fn host_dialog_open_slot_drives_show_modal_and_close() {
+        let m = component(
+            "Confirm",
+            vec![slot("visible", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = root_layout(
+            "Confirm",
+            host_dialog(vec![slot_prop("open", "visible")], vec![]),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("Confirm")).unwrap();
+        // Slot was declared so `const visible = this.getAttribute(...)`
+        // is in scope. The dialog block must compare it as a string.
+        assert!(
+            r.output.contains(
+                "if ((visible === \"true\")) { if (!_d0.open) { _d0.showModal(); } } else { if (_d0.open) { _d0.close(); } }"
+            ),
+            "open-slot lifecycle block wrong, got:\n{}",
+            r.output
+        );
+    }
+
+    // -------- D3: modal: false picks show() over showModal() --------
+
+    /// The compile-time keyword `modal: false` selects the non-modal
+    /// `show()` API. Per spec §3.4 this is a compile-time decision —
+    /// the runtime branch only flips on `open`, not on modality.
+    #[test]
+    fn host_dialog_modal_false_uses_show_not_show_modal() {
+        let m = component("Pop", vec![], vec![]);
+        let l = root_layout(
+            "Pop",
+            host_dialog(
+                vec![kw_prop("modal", "false"), kw_prop("open", "true")],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("Pop")).unwrap();
+        assert!(
+            r.output.contains("_d0.show();"),
+            "modal: false must lower to show(), got:\n{}",
+            r.output
+        );
+        assert!(
+            !r.output.contains("_d0.showModal();"),
+            "modal: false must NOT emit showModal(), got:\n{}",
+            r.output
+        );
+    }
+
+    // -------- D4: children render inside the <dialog> --------
+
+    /// A HostDialog with children must inject them between the
+    /// `<dialog>` open/close tags so the platform sees them as the
+    /// dialog's content (vs. as siblings). Children walk through the
+    /// same emitter pipeline as any container, so a `Box` child
+    /// becomes `<div></div>` inside the dialog.
+    #[test]
+    fn host_dialog_children_render_inside_dialog() {
+        let m = component("Confirm", vec![], vec![]);
+        let l = root_layout(
+            "Confirm",
+            host_dialog(vec![], vec![leaf("Box"), text_leaf("Hi")]),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("Confirm")).unwrap();
+        assert!(
+            r.output
+                .contains(r#"<dialog id="mos-dlg-0"><div></div><span>Hi</span></dialog>"#),
+            "HostDialog body children missing/wrong, got:\n{}",
+            r.output
+        );
+    }
+
+    // -------- D5: onClose wires close-event listener with this.dispatch --------
+
+    /// `onClose: emit: onDismiss` must attach a `close`-event listener
+    /// that calls `this.dispatch({type:"dismiss"})`. Crucially the
+    /// listener uses bare `this.dispatch(...)` — NOT the inline
+    /// `this.getRootNode().host.dispatch(...)` form used by
+    /// HostInput/HostButton — because the post-`innerHTML` block runs
+    /// inside the Custom Element's own method body where `this` is
+    /// already the element.
+    #[test]
+    fn host_dialog_on_close_wires_close_event_listener() {
+        let m = component("Confirm", vec![], vec![emit_decl("onDismiss", vec![])]);
+        let l = root_layout(
+            "Confirm",
+            host_dialog(vec![emit_prop("onClose", "onDismiss")], vec![]),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("Confirm")).unwrap();
+        assert!(
+            r.output.contains(
+                r#"_d0.addEventListener("close", () => this.dispatch({type:"dismiss"}));"#
+            ),
+            "onClose listener wiring wrong, got:\n{}",
+            r.output
+        );
+        // Defensive: make sure we did NOT fall through to the inline
+        // form that's correct for HostInput but wrong here (we're
+        // inside `_render`, not an inline attribute).
+        assert!(
+            !r.output
+                .contains("this.getRootNode().host.dispatch({type:'dismiss'})"),
+            "HostDialog must not use the inline getRootNode form, got:\n{}",
+            r.output
+        );
+    }
+
+    // -------- D6: title slot injects an <h2> first child --------
+
+    /// `title: slot: heading` lifts the title slot's value into an
+    /// `<h2>${heading}</h2>` element that's the first child of the
+    /// `<dialog>` — so the dialog has a screen-reader-announced
+    /// heading without the author having to wire one manually.
+    #[test]
+    fn host_dialog_title_slot_injects_h2() {
+        let m = component(
+            "Confirm",
+            vec![slot("heading", SlotType::Text, true)],
+            vec![],
+        );
+        let l = root_layout(
+            "Confirm",
+            host_dialog(vec![slot_prop("title", "heading")], vec![leaf("Box")]),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("Confirm")).unwrap();
+        assert!(
+            r.output.contains(
+                r#"<dialog id="mos-dlg-0"><h2>${heading}</h2><div></div></dialog>"#
+            ),
+            "title slot must emit <h2> as first child, got:\n{}",
+            r.output
+        );
+    }
+
+    // -------- D7: dismiss-on-backdrop: false adds a cancel interceptor --------
+
+    /// The `dismiss-on-backdrop: false` compile-time keyword wires a
+    /// `cancel`-event listener that calls `preventDefault()` to suppress
+    /// the dialog's native Esc/backdrop auto-close. Authors who want a
+    /// dialog that *only* closes via an explicit button get this for
+    /// free without writing JS.
+    #[test]
+    fn host_dialog_dismiss_on_backdrop_false_adds_cancel_interceptor() {
+        let m = component("Modal", vec![], vec![]);
+        let l = root_layout(
+            "Modal",
+            host_dialog(vec![kw_prop("dismiss-on-backdrop", "false")], vec![]),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("Modal")).unwrap();
+        assert!(
+            r.output
+                .contains(r#"_d0.addEventListener("cancel", (e) => e.preventDefault());"#),
+            "dismiss-on-backdrop: false must intercept cancel, got:\n{}",
+            r.output
+        );
+    }
+
+    // -------- D8: HostDialog is recognised — no UnknownPrimitive error --------
+
+    /// Regression guard: emitting a `HostDialog` must succeed; the
+    /// pre-U29-1 emitter raised `UnknownPrimitive` for this tag. The
+    /// test also exercises `onOpen` to verify the one-shot dispatch
+    /// path emits a guarded `this.dispatch({type:"…"})` call.
+    #[test]
+    fn host_dialog_is_recognised_and_on_open_fires_one_shot() {
+        let m = component(
+            "Confirm",
+            vec![slot("visible", SlotType::Bool, true)],
+            vec![emit_decl("onShown", vec![])],
+        );
+        let l = root_layout(
+            "Confirm",
+            host_dialog(
+                vec![
+                    slot_prop("open", "visible"),
+                    emit_prop("onOpen", "onShown"),
+                    // Mix in a title literal to make sure the string-prop
+                    // path is exercised end-to-end too.
+                    str_prop("title", "Are you sure?"),
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("Confirm"))
+            .expect("HostDialog must lower without UnknownPrimitive");
+        // String-literal title path.
+        assert!(
+            r.output.contains("<h2>Are you sure?</h2>"),
+            "literal title not injected, got:\n{}",
+            r.output
+        );
+        // onOpen one-shot dispatch is guarded by the open expression so
+        // it only fires on the open path, not on close.
+        assert!(
+            r.output
+                .contains(r#"if ((visible === "true")) { this.dispatch({type:"shown"}); }"#),
+            "onOpen one-shot dispatch missing or unguarded, got:\n{}",
+            r.output
+        );
+    }
+
+    // -------- D9: multiple HostDialogs in one component get distinct ids --------
+
+    /// Bonus coverage: two `HostDialog`s in the same component must
+    /// not collide on `id="mos-dlg-…"`. The counter is per-render so
+    /// every emitted dialog claims a unique numeric suffix.
+    #[test]
+    fn multiple_host_dialogs_get_distinct_ids() {
+        let m = component("Twin", vec![], vec![]);
+        let root = container(
+            "Box",
+            vec![host_dialog(vec![], vec![]), host_dialog(vec![], vec![])],
+        );
+        let l = root_layout("Twin", root);
+        let r = from_pipeline(&m, &l, &empty_style("Twin")).unwrap();
+        assert!(
+            r.output.contains(r#"<dialog id="mos-dlg-0">"#),
+            "first dialog missing, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains(r#"<dialog id="mos-dlg-1">"#),
+            "second dialog must get id mos-dlg-1, got:\n{}",
+            r.output
+        );
+        // Both elements get distinct post-script variable bindings.
+        assert!(r.output.contains("const _d0 ="));
+        assert!(r.output.contains("const _d1 ="));
     }
 }
