@@ -37,7 +37,7 @@ lang-aot <FILE> [-o <OUT>] [--lang <LANG>]
 | Nib             | `.nib`          | `nib-iir-compiler`       | full |
 | Brainfuck       | `.bf`, `.b`    | `brainfuck-iir-compiler` + BF07 lowering pass | full — `lang-aot foo.bf` compiles end-to-end (cells live in a 30000-byte `alloc_bytes` tape; `load_mem`/`store_mem` are rewritten to `load_byte`/`store_byte` per LANG76) |
 | Dartmouth BASIC | `.bas`, `.basic` | `dartmouth-basic-iir-compiler` | full — integer programs with LET / PRINT / INPUT / IF / GOTO / FOR / NEXT / END / REM compile end-to-end (PL05).  GOSUB / arrays / strings / DEF deferred to V2 |
-| Oct             | `.oct`          | **TODO**               | only Python frontend exists; needs a Rust port or a bridge |
+| Oct             | `.oct`          | `oct-iir-compiler` (OCT02 phases 1–4) | full — integer subset compiles end-to-end (`fn`/`let`/`if`/`while`/`loop`/`break`, recursion).  8008 hardware intrinsics (`in`, `out`, `adc`, `sbb`, `rlc`, `rrc`, `ral`, `rar`, `carry`, `parity`) rejected cleanly with a pointer to the dedicated Intel-8008 simulator backend |
 
 If `--lang` is omitted the language is inferred from the file
 extension; unknown extensions get a "could not infer language" error

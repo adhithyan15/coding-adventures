@@ -467,3 +467,97 @@ fn end_to_end_nib_while_loop_counts_to_10() {
         String::from_utf8_lossy(&out.stderr),
     );
 }
+
+// ── OCT02 phase 4: Oct end-to-end via lang-aot ───────────────────────────────
+
+/// A minimal Oct program that exercises the entire pipeline:
+/// `let`, arithmetic, `if`, comparison, and `return`-via-main's-i64-rewrite.
+///
+/// Oct's `main` is declared void in source; `oct-iir-compiler` rewrites
+/// it to return `i64 0`, so the AOT chain's exit-code convention works.
+/// We exit with the static count `0`.
+const OCT_MINIMAL: &str = "fn main() { let x: u8 = 42; }";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_oct_minimal_main_exits_zero() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("min.oct");
+    let exe = dir.path().join("min.exe");
+    std::fs::write(&src, OCT_MINIMAL).unwrap();
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::Oct)
+        .unwrap_or_else(|e| panic!("Oct compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.status.code(), Some(0),
+        "expected exit code 0 from Oct's synthesised i64-return main; \
+         got {:?}; stderr={:?}",
+        out.status.code(),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_oct_minimal_main_exits_zero() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("min.oct");
+    let exe = dir.path().join("min");
+    std::fs::write(&src, OCT_MINIMAL).unwrap();
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::Oct)
+        .unwrap_or_else(|e| panic!("Oct compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.status.code(), Some(0),
+        "expected exit code 0 from Oct's synthesised i64-return main; \
+         got {:?}; stderr={:?}",
+        out.status.code(),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+/// Oct program with a user-defined function and recursion-style cross-fn
+/// call.  Verifies the cross-function `call` reloc + LANG43 patcher
+/// works for Oct just like Twig / Nib / BASIC.  Asserts exit code 0
+/// (main's synthesised return); we don't have printing in Oct yet to
+/// assert intermediate values.
+const OCT_USER_FN: &str = "fn double(a: u8) -> u8 { return a + a; } \
+                           fn main() { let x: u8 = double(21); }";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_oct_user_fn_call_succeeds() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("user.oct");
+    let exe = dir.path().join("user.exe");
+    std::fs::write(&src, OCT_USER_FN).unwrap();
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::Oct)
+        .unwrap_or_else(|e| panic!("Oct compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(out.status.code(), Some(0),
+        "expected exit 0; got {:?}; stderr={:?}",
+        out.status.code(), String::from_utf8_lossy(&out.stderr));
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_oct_user_fn_call_succeeds() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("user.oct");
+    let exe = dir.path().join("user");
+    std::fs::write(&src, OCT_USER_FN).unwrap();
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::Oct)
+        .unwrap_or_else(|e| panic!("Oct compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(out.status.code(), Some(0),
+        "expected exit 0; got {:?}; stderr={:?}",
+        out.status.code(), String::from_utf8_lossy(&out.stderr));
+}

@@ -22,7 +22,7 @@
 //! | Nib             | full | `nib-iir-compiler` |
 //! | Brainfuck       | full | `brainfuck-iir-compiler` |
 //! | Dartmouth BASIC | full (integer subset) | `dartmouth-basic-iir-compiler` |
-//! | Oct             | **TODO** — Python-only frontend; needs a Rust port or a bridge |
+//! | Oct             | full (integer subset; 8008 intrinsics rejected) | `oct-iir-compiler` |
 //!
 //! ## How to add a language
 //!
@@ -156,10 +156,12 @@ impl From<std::io::Error> for LangAotError {
 /// identifier; pick something descriptive (usually the input file's
 /// stem).
 ///
-/// Returns [`LangAotError::UnsupportedLanguage`] for `Oct` — that
-/// frontend exists in Python but hasn't been ported to the shared IIR
-/// shape yet (tracked by OCT02).  The error carries a one-line
-/// guidance string pointing at the work needed.
+/// All `Language` variants now have working Rust frontends — every
+/// dispatch arm returns [`Ok`] on a well-formed program.  Errors
+/// surface as [`LangAotError::FrontendError`] (parse / type / unsupported
+/// construct).  `LangAotError::UnsupportedLanguage` is no longer
+/// reachable from this function; it stays in the enum so adding a new
+/// `Language` variant continues to be a single-arm change.
 pub fn compile_source_to_iir(
     language: Language,
     source: &str,
@@ -196,13 +198,13 @@ pub fn compile_source_to_iir(
                     message: format!("{e}"),
                 })
         }
-        Language::Oct => Err(LangAotError::UnsupportedLanguage {
-            language,
-            guidance: "port the Python `oct-ir-compiler` to Rust (or bridge \
-                       it via subprocess); the Python IR also uses a custom \
-                       `IrProgram` shape that needs converting to \
-                       `interpreter_ir::IIRModule`",
-        }),
+        Language::Oct => {
+            oct_iir_compiler::compile_source(source, module_name)
+                .map_err(|e| LangAotError::FrontendError {
+                    language,
+                    message: format!("{e}"),
+                })
+        }
     }
 }
 
@@ -477,24 +479,31 @@ mod tests {
         assert_eq!(iir.functions[0].name, "main");
     }
 
+    /// OCT02 phase 4 — Oct now compiles to IIR (was UnsupportedLanguage).
     #[test]
-    fn oct_returns_clean_unsupported_error() {
-        let err = compile_source_to_iir(Language::Oct, "1 + 1", "oct")
-            .unwrap_err();
-        match err {
-            LangAotError::UnsupportedLanguage { language, .. } => {
-                assert_eq!(language, Language::Oct);
-            }
-            other => panic!("expected UnsupportedLanguage, got {other:?}"),
-        }
+    fn oct_compiles_to_iir() {
+        let iir = compile_source_to_iir(
+            Language::Oct, "fn main() { let x: u8 = 42; }", "oct"
+        ).expect("oct should compile");
+        assert!(!iir.functions.is_empty(),
+                "Oct module must have at least main");
+        assert_eq!(iir.functions[0].name, "main");
     }
 
+    /// 8008 intrinsics still produce a clean error (Unsupported8008Intrinsic
+    /// propagates through `FrontendError`, not `UnsupportedLanguage`).
     #[test]
-    fn unsupported_error_message_lists_guidance() {
-        let err = compile_source_to_iir(Language::Oct, "", "oct").unwrap_err();
-        let msg = err.to_string();
-        assert!(msg.contains("oct"), "msg should name the language: {msg}");
-        assert!(msg.contains("Python") || msg.contains("port"),
-                "msg should mention next-step guidance: {msg}");
+    fn oct_8008_intrinsic_reports_frontend_error() {
+        let err = compile_source_to_iir(
+            Language::Oct, "fn main() { let x: u8 = in(1); }", "oct"
+        ).unwrap_err();
+        match err {
+            LangAotError::FrontendError { language, message } => {
+                assert_eq!(language, Language::Oct);
+                assert!(message.contains("8008") || message.contains("intrinsic"),
+                        "expected 8008 intrinsic mention; got: {message}");
+            }
+            other => panic!("expected FrontendError, got {other:?}"),
+        }
     }
 }
