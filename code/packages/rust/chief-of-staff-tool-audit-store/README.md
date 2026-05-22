@@ -104,6 +104,8 @@ The crate keeps the boundary narrow:
   classifications for plan drift, count drift, or combined drift
 - supervisor drain reports and summaries expose no-host-investigation helpers
   for terminal log branches
+- supervisor drain run summaries flatten no-host-investigation flags for
+  payload-free terminal host branches
 - supervisor drain reports and summaries expose host-investigation component
   helpers for plan-drift and count-drift branches
 - supervisor drain run summaries flatten host-investigation component flags for

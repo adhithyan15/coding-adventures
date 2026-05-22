@@ -76,6 +76,7 @@ All notable changes to this package will be documented in this file.
 - Stable host-investigation classifications for supervisor drain run reports
   and summaries.
 - No-host-investigation helpers for supervisor drain run reports and summaries.
+- Flattened no-host-investigation flags for supervisor drain run summaries.
 - Host-investigation component helpers for supervisor drain run reports and
   summaries.
 - Flattened host-investigation component flags for supervisor drain run
