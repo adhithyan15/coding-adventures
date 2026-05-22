@@ -1,0 +1,29 @@
+# mosaic-package.toml — manifest for mosaic-pkg-toolkit.
+#
+# A Bootstrap-shaped Mosaic UI component library. Composed purely from
+# UI29 kernel primitives — every component lowers to every backend
+# (React, SwiftUI, Qt, WebComponent, HTML, XAML) with no per-backend
+# code.
+#
+# See `code/specs/mosaic-pkg-toolkit.md` for the design.
+#
+# Phase: v0.1 (PR-1) — scaffold + Button + Alert.
+# The full v0.1 catalog (13 components) lands across follow-up PRs.
+
+[package]
+name        = "mosaic-pkg-toolkit"
+version     = "0.1.0"
+description = "Bootstrap-shaped Mosaic UI component library — ready-made components composed purely from UI29 kernel primitives"
+license     = "MIT OR Apache-2.0"
+
+[components]
+# v0.1 PR-1 exports. The full Tier-1 catalog (13 components) lands in
+# follow-up PRs; the exports list grows with each.
+exports = ["Button", "Alert"]
+
+[dependencies]
+# No other userland packages — toolkit components compose purely from
+# UI29 kernel primitives. Stays empty across the full v0.1 catalog.
+
+[kernel]
+version = "1"

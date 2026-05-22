@@ -1,0 +1,15 @@
+// Button.dark.msl — dark-theme styling for Button.
+//
+// Same shape, darker palette tuned for dark backgrounds.
+
+style Button {
+  part button {
+    padding       : 8 ;
+    border-radius : 4 ;
+    font-weight   : 500 ;
+    background    : "#3b82f6" ;
+    color         : "#0f172a" ;
+    border-width  : 1 ;
+    border-color  : "#1e40af" ;
+  }
+}

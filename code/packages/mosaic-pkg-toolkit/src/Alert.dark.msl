@@ -1,0 +1,23 @@
+// Alert.dark.msl — dark-theme styling for Alert.
+
+style Alert {
+  part alert {
+    padding       : 12 ;
+    border-radius : 4 ;
+    background    : "#055160" ;
+    color         : "#cff4fc" ;
+    border-width  : 1 ;
+    border-color  : "#087990" ;
+  }
+  part alert-row {
+    padding : 0 ;
+  }
+  part message {
+  }
+  part close-btn {
+    padding : 4 ;
+    background : "transparent" ;
+    border-width : 0 ;
+    color : "#cff4fc" ;
+  }
+}
