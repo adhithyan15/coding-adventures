@@ -21,9 +21,11 @@ license     = "MIT OR Apache-2.0"
 # v0.1 PR-2: Badge, Spinner, Toast.
 # v0.1 PR-3: Checkbox, Input, Radio (form controls).
 # v0.1 PR-4: ListGroup, Modal.
-# Remaining Tier-1 (Card, Container, Field) lands across follow-up PRs.
+# v0.1 PR-5: Field (label + HostInput + help/error).
+# Remaining Tier-1 (Card, Container) blocked on UI29-2 children
+# pass-through spec; ship when that lands.
 exports = [
-  "Alert", "Badge", "Button", "Checkbox", "Input",
+  "Alert", "Badge", "Button", "Checkbox", "Field", "Input",
   "ListGroup", "Modal", "Radio", "Spinner", "Toast",
 ]
 

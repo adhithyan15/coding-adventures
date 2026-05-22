@@ -1,0 +1,32 @@
+// Field.dark.msl — dark-theme styling.
+
+style Field {
+  part field {
+    padding : 8 ;
+  }
+  part field-label {
+    color       : "#f1f5f9" ;
+    font-size   : 14 ;
+    font-weight : 500 ;
+    padding     : 0 ;
+  }
+  part field-input {
+    padding       : 8 ;
+    border-radius : 4 ;
+    background    : "#1e293b" ;
+    color         : "#f1f5f9" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    font-size     : 14 ;
+  }
+  part field-help {
+    color     : "#94a3b8" ;
+    font-size : 12 ;
+    padding   : 0 ;
+  }
+  part field-error {
+    color     : "#f87171" ;
+    font-size : 12 ;
+    padding   : 0 ;
+  }
+}
