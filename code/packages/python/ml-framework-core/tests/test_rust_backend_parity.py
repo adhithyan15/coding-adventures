@@ -470,5 +470,110 @@ class ReductionParityTests(unittest.TestCase):
         self._assert_close_scalar(rust_result.data[0], python_result.data[0])
 
 
+# ──────────────────────────────────────────────────────────────────
+# MX10 Phase 4 — activation parity tests (Tanh + ReLU)
+#
+# Tanh is a direct unary op (matches Neg/Abs envelope shape from
+# Phase 2).  ReLU is composed as max(x, 0) via the Max op with a
+# zero-valued constant tensor shipped in the graph's constants[].
+# ──────────────────────────────────────────────────────────────────
+
+
+@unittest.skipUnless(
+    EXTENSION_AVAILABLE,
+    "matrix_rust_python C extension not installed; see parity-tests skip-reason.",
+)
+class ActivationParityTests(unittest.TestCase):
+    """Compare Tanh / ReLU Rust and pure-Python kernels head-to-head."""
+
+    SHAPE = (500, 200)  # 100_000 cells
+
+    def _make_tensor(self, seed: int):
+        import random
+
+        from ml_framework_core import Tensor
+
+        rng = random.Random(seed)
+        # Use range [-3, 3] so tanh saturates at both ends (any bug
+        # in the f32 vs double path would show in the saturated
+        # region where small input differences produce ~0 output
+        # differences) and ReLU exercises both halves.
+        data = [rng.uniform(-3.0, 3.0) for _ in range(500 * 200)]
+        return Tensor(data, self.SHAPE)
+
+    def _assert_close(
+        self,
+        actual: list[float],
+        expected: list[float],
+        rtol: float = 1e-3,
+        atol: float = 1e-4,
+    ) -> None:
+        """Same f32-vs-double tolerance as matmul/elementwise/reduction."""
+        self.assertEqual(len(actual), len(expected))
+        for i, (a, e) in enumerate(zip(actual, expected, strict=False)):
+            denom = max(abs(a), abs(e), atol)
+            err = abs(a - e) / denom
+            self.assertLess(
+                err,
+                rtol,
+                f"index {i}: rust={a!r}, python={e!r}, relative error {err:.2e}",
+            )
+
+    def test_activation_dispatch_predicate_fires_at_threshold(self) -> None:
+        """``should_use_rust_for_activation(100_000)`` returns True."""
+        from ml_framework_core._rust_backend import should_use_rust_for_activation
+
+        self.assertTrue(
+            should_use_rust_for_activation(500 * 200),
+            "MX10 Phase 4 threshold should let 100_000 cells use Rust",
+        )
+
+    def test_tanh_parity(self) -> None:
+        """``TanhFunction.apply(t)`` Rust matches pure-Python."""
+        from ml_framework_core import TanhFunction, _rust_backend
+
+        a = self._make_tensor(seed=42)
+
+        rust_result = TanhFunction.apply(a)
+        self.assertEqual(rust_result.shape, self.SHAPE)
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = TanhFunction.apply(a)
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close(rust_result.data, python_result.data)
+
+    def test_relu_parity(self) -> None:
+        """``ReLUFunction.apply(t)`` Rust matches pure-Python.
+
+        ReLU is the only activation in Phase 4 that's not a direct
+        unary op — it's composed as Max(x, zero_const).  Verifying
+        the composed graph produces the same numerical result as
+        the trivial ``max(0.0, x)`` Python loop catches any bug in
+        the constant-buffer plumbing.
+        """
+        from ml_framework_core import ReLUFunction, _rust_backend
+
+        a = self._make_tensor(seed=7)
+
+        rust_result = ReLUFunction.apply(a)
+        self.assertEqual(rust_result.shape, self.SHAPE)
+
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            python_result = ReLUFunction.apply(a)
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        # ReLU has no f32 accumulation (it's a single comparison +
+        # passthrough), so tolerance can be tighter.  Use the
+        # default rtol=1e-3 anyway for consistency.
+        self._assert_close(rust_result.data, python_result.data)
+
+
 if __name__ == "__main__":
     unittest.main()

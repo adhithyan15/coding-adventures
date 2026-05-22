@@ -558,3 +558,124 @@ def sum_via_rust(a: Tensor) -> Tensor:
 def mean_via_rust(a: Tensor) -> Tensor:
     """``a.mean()`` (reduce-all) via Rust.  Returns Tensor of shape ``(1,)``."""
     return _reduce_all_via_rust(a, "ReduceMean")
+
+
+# ──────────────────────────────────────────────────────────────────
+# Activation fast paths (MX10 Phase 4)
+#
+# matrix-ir-json supports Tanh, Sqrt, Exp, Log, Recip directly as
+# unary ops (same shape as Neg/Abs in Phase 2).  For ReLU we
+# compose: ReLU(x) = max(x, 0) — Max op with a zero-valued
+# constant tensor.
+#
+# The other classic activations are deferred:
+#
+# * Sigmoid = 1 / (1 + exp(-x)) — needs Exp + Neg + Add (with
+#   1-const) + Recip in a 4-op graph.  Doable but adds enough
+#   complexity that profiling should justify the FFI overhead
+#   first.
+# * GELU = 0.5 * x * (1 + tanh(sqrt(2/pi) * (x + 0.044715 * x^3)))
+#   — multi-op composition with constants and Pow.  Deferred until
+#   matrix-cpu adds scalar-exponent Pow (would simplify the
+#   ``x^3`` term).
+# * Softmax = exp(x - max(x)) / sum(exp(...)) — needs per-axis
+#   broadcast which Phase 3b territory; deferred to coincide.
+#
+# So Phase 4 ships **Tanh** and **ReLU** — the two most common
+# activations in modern ML workloads (Tanh in older RNN architectures
+# and GLU gates; ReLU in every CNN/transformer feed-forward block).
+# Sigmoid/GELU/Softmax wait for Phase 4b.
+# ──────────────────────────────────────────────────────────────────
+
+
+# Activations share the elementwise cost profile (one transcendental
+# or comparison per cell), so the same threshold applies.
+def should_use_rust_for_activation(numel: int) -> bool:
+    """Decide whether to dispatch an activation (Tanh / ReLU) to
+    Rust.  Reuses the elementwise threshold (100_000 cells)."""
+    if not _RUST_AVAILABLE:
+        return False
+    return numel >= _ELEMENTWISE_RUST_THRESHOLD
+
+
+def tanh_via_rust(a: Tensor) -> Tensor:
+    """``tanh(a)`` via the unary Tanh op.  Same envelope shape as
+    Neg/Abs in Phase 2."""
+    return _elementwise_unary_via_rust(a, "Tanh")
+
+
+def relu_via_rust(a: Tensor) -> Tensor:
+    """``ReLU(a) = max(a, 0)`` via Max with a zero-valued constant
+    tensor of shape ``a.shape``.
+
+    Differs from the elementwise binary helper because the second
+    "input" isn't a real input — it's a constant we ship as part of
+    the graph's ``constants[]`` array, then reference from the Max
+    op like any other tensor.  The matrix-ir-json schema supports
+    this naturally: ``constants[]`` entries become buffer-uploaded
+    automatically by the executor.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "relu_via_rust called but Rust backend is not available; "
+            "callers must check should_use_rust_for_activation() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(a.data)
+    shape_list = list(a.shape)
+
+    a_bytes = struct.pack(f"<{numel}f", *a.data)
+    # Zero constant of the same shape — bytes are all-zero.  We
+    # ship the bytes_hex inline in the graph definition rather than
+    # as an envelope input (constants live in the graph, inputs in
+    # the envelope).
+    zero_bytes_hex = ("00" * numel * 4)  # 4 bytes per f32 cell, all zero
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    # tensor 0 = input x
+                    {"id": 0, "dtype": "f32", "shape": shape_list},
+                    # tensor 1 = zero constant (also same shape — matrix-cpu's
+                    # Max doesn't broadcast scalars, so we materialise a full
+                    # zero tensor)
+                    {"id": 1, "dtype": "f32", "shape": shape_list},
+                    # tensor 2 = output
+                    {"id": 2, "dtype": "f32", "shape": shape_list},
+                ],
+                "inputs": [0],
+                "outputs": [2],
+                "ops": [
+                    {"kind": "Max", "lhs": 0, "rhs": 1, "output": 2}
+                ],
+                "constants": [
+                    {
+                        "tensor_id": 1,
+                        "dtype": "f32",
+                        "shape": shape_list,
+                        "bytes_hex": zero_bytes_hex,
+                    }
+                ],
+            },
+            "inputs": [a_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_hex = result["outputs"][0]
+    out_bytes = bytes.fromhex(out_hex)
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"relu_via_rust: expected {expected_bytes} output bytes "
+            f"({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+
+    return _Tensor(out_floats, a.shape, device=a.device)
