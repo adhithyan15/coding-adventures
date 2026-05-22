@@ -165,7 +165,20 @@ export function safeHref(raw: string): string {
   // plus SPACE (U+0020).  `.trim()` only strips Unicode
   // whitespace — it leaves U+0000..U+0008 / U+000B / U+000C /
   // U+000E..U+001F alone, but the WHATWG parser strips them.
-  const cleaned = stripped.replace(/^[\x00-\x20]+|[\x00-\x20]+$/g, "");
+  //
+  // We do the leading and trailing strips as TWO separate
+  // single-anchored regexes rather than one alternation like
+  // `/^[\x00-\x20]+|[\x00-\x20]+$/g`.  CodeQL's
+  // `js/polynomial-redos` query flags the alternation form as
+  // potentially super-linear because both branches share the
+  // same character class — even though `^` and `$` make them
+  // positionally disjoint (so the actual behaviour is linear),
+  // the static analyser can't always tell.  Two separate
+  // strips are obviously O(N) to both the analyser and the
+  // reader.
+  const cleaned = stripped
+    .replace(/^[\x00-\x20]+/, "")
+    .replace(/[\x00-\x20]+$/, "");
   // Step 3: empty → "#".  Better than emitting an empty href
   // which browsers treat as "reload current page".
   if (cleaned === "") return "#";
