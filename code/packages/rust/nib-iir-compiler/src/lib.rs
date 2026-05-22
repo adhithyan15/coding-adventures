@@ -241,8 +241,67 @@ impl Compiler {
                 Ok(())
             }
             "if_stmt" => self.compile_if(stmt, types, env, out),
+            "while_stmt" => self.compile_while(stmt, types, env, out),
             other => Err(CompileError::Unsupported(format!("stmt: {other}"))),
         }
+    }
+
+    /// NIB04 step 3 — compile `while expr block` to the canonical
+    /// IIR loop shape that both x86_64 + aarch64 backends already
+    /// lower:
+    ///
+    /// ```text
+    /// label  while_<n>_top
+    /// <eval cond → c>
+    /// jmp_if_false c, while_<n>_end
+    /// <body>
+    /// jmp while_<n>_top
+    /// label  while_<n>_end
+    /// ```
+    ///
+    /// Re-evaluates the guard each iteration (no hoisting); the body
+    /// mutates locals via `assign_stmt`, which already maps to a
+    /// `call_builtin "_move"` that updates the slot in-place.
+    fn compile_while(
+        &mut self,
+        stmt: &GrammarASTNode,
+        types: &HashMap<usize, NibType>,
+        env: &mut HashMap<String, String>,
+        out: &mut Vec<IIRInstr>,
+    ) -> Result<(), CompileError> {
+        // Children: cond expr, body block.
+        let kids = child_nodes(stmt);
+        let cond_node = kids.iter().find(|n| is_expr_rule(&n.rule_name))
+            .copied()
+            .ok_or_else(|| CompileError::Unsupported(
+                "while_stmt missing condition".into()))?;
+        let body = kids.iter().find(|n| n.rule_name == "block")
+            .copied()
+            .ok_or_else(|| CompileError::Unsupported(
+                "while_stmt missing body block".into()))?;
+
+        let top_lbl = self.fresh_label();
+        let end_lbl = self.fresh_label();
+
+        // label while_<n>_top
+        out.push(IIRInstr::new("label", None,
+            vec![Operand::Var(top_lbl.clone())], "void"));
+
+        // <eval cond → c>; jmp_if_false c, while_<n>_end
+        let cond_v = self.compile_expr(cond_node, types, env, out)?;
+        out.push(IIRInstr::new("jmp_if_false", None,
+            vec![Operand::Var(cond_v), Operand::Var(end_lbl.clone())],
+            "void"));
+
+        // <body>
+        self.compile_block(body, types, env, out)?;
+
+        // jmp while_<n>_top; label while_<n>_end
+        out.push(IIRInstr::new("jmp", None,
+            vec![Operand::Var(top_lbl)], "void"));
+        out.push(IIRInstr::new("label", None,
+            vec![Operand::Var(end_lbl)], "void"));
+        Ok(())
     }
 
     fn compile_let(
@@ -893,6 +952,54 @@ mod tests {
             CompileError::Unsupported(_) => {}
             other => panic!("expected Unsupported for print() with 0 args, got {other:?}"),
         }
+    }
+
+    // ── NIB04 step 3 — while loops ─────────────────────────────────────────────
+
+    /// `while n < 10 { n = n + 1; }` lowers to the canonical
+    /// label / jmp_if_false / body / jmp / label loop shape.
+    ///
+    /// Uses `u4` because integer literals (`0`, `10`, `1`) default to
+    /// the smaller width in Nib's type-checker; widening would require
+    /// explicit cast syntax which V1 Nib doesn't have.
+    #[test]
+    fn compiles_while_loop() {
+        let src = "fn main() -> u4 { \
+                     let n: u4 = 0; \
+                     while n < 10 { n = n + 1; } \
+                     return n; \
+                   }";
+        let m = compile_source(src, "test").expect("ok");
+        let body = &m.functions[0].instructions;
+        let ops: Vec<&str> = body.iter().map(|i| i.op.as_str()).collect();
+        // Must have a label, a cmp via call_builtin "<", a jmp_if_false, an
+        // unconditional jmp back, and a closing label.
+        assert!(ops.contains(&"jmp_if_false"),
+                "while loop must emit jmp_if_false; got {ops:?}");
+        assert!(ops.contains(&"jmp"),
+                "while loop must emit a back-edge jmp; got {ops:?}");
+        let label_count = ops.iter().filter(|o| **o == "label").count();
+        assert!(label_count >= 2,
+                "while loop must emit at least 2 labels (top + end); got {label_count} in {ops:?}");
+    }
+
+    /// `while` body that performs cross-function calls + arithmetic — verifies
+    /// the loop integrates with the broader IIR pipeline.
+    #[test]
+    fn compiles_while_with_nested_call() {
+        let src = "fn one() -> u4 { return 1; } \
+                   fn main() -> u4 { \
+                     let n: u4 = 0; \
+                     while n < 3 { n = n + one(); } \
+                     return n; \
+                   }";
+        let m = compile_source(src, "test").expect("ok");
+        let main_fn = m.functions.iter().find(|f| f.name == "main").expect("main fn");
+        // The body should include both a `call` (to `one`) and a `jmp_if_false`.
+        let ops: Vec<&str> = main_fn.instructions.iter()
+            .map(|i| i.op.as_str()).collect();
+        assert!(ops.contains(&"call"), "missing `call` to `one`; got {ops:?}");
+        assert!(ops.contains(&"jmp_if_false"), "missing jmp_if_false; got {ops:?}");
     }
 }
 

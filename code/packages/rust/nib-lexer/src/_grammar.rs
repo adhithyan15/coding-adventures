@@ -238,7 +238,7 @@ pub fn token_grammar() -> TokenGrammar {
                 alias: None,
             },
         ],
-        keywords: vec![r#"fn"#.to_string(), r#"let"#.to_string(), r#"static"#.to_string(), r#"const"#.to_string(), r#"return"#.to_string(), r#"for"#.to_string(), r#"in"#.to_string(), r#"if"#.to_string(), r#"else"#.to_string(), r#"true"#.to_string(), r#"false"#.to_string()],
+        keywords: vec![r#"fn"#.to_string(), r#"let"#.to_string(), r#"static"#.to_string(), r#"const"#.to_string(), r#"return"#.to_string(), r#"for"#.to_string(), r#"while"#.to_string(), r#"in"#.to_string(), r#"if"#.to_string(), r#"else"#.to_string(), r#"true"#.to_string(), r#"false"#.to_string()],
         mode: None,
         skip_definitions: vec![
             TokenDefinition {

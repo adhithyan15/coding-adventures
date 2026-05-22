@@ -97,19 +97,24 @@ param         = NAME COLON type ;
 # dangling-else ambiguity at the grammar level.
 block         = LBRACE { stmt } RBRACE ;
 
-# A statement is one of six forms.
+# A statement is one of seven forms.
 # Nib has no expression statements for bare function calls (like C's `f();`) —
 # all statements must have visible side effects in their syntax:
 #   - let introduces a new variable
 #   - assignment writes to an existing variable
 #   - return exits the function
 #   - for iterates over a range
+#   - while iterates until a condition is false (NIB04 V1 cut)
 #   - if conditionally executes a block
 #   - expr_stmt allows a call expression to be used as a statement (for side effects)
+#
+# while_stmt appears AFTER for_stmt to keep the LL(1) "first set" disjoint:
+# for starts with the "for" keyword, while with the "while" keyword.
 stmt          = let_stmt
               | assign_stmt
               | return_stmt
               | for_stmt
+              | while_stmt
               | if_stmt
               | expr_stmt
               ;
@@ -152,6 +157,17 @@ return_stmt   = "return" expr SEMICOLON ;
 #
 # Example: for i: u4 in 0..8 { ... }
 for_stmt      = "for" NAME COLON type "in" expr RANGE expr block ;
+
+# While loop (NIB04 V1 cut).  Repeats the body as long as the guard
+# expression evaluates to a truthy value (anything non-zero / true).
+#
+# Example: while n < 42 { n = n + 1; }
+#
+# The body is a brace-delimited block (same as for_stmt and if_stmt) to
+# eliminate the dangling-statement ambiguity at the grammar level.
+# Loop variables come from existing `let` declarations or function
+# parameters — `while` does NOT introduce a new binding.
+while_stmt    = "while" expr block ;
 
 # Conditional statement. The else branch is optional.
 # Both branches must be full blocks (not single statements).
