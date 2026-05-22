@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.66.0 — 2026-05-22
+
+**Phase 42 dep bump — degree-aware vanishing-at-infinity.**
+
+Bumps the `coding-adventures-cas-summation` dependency to `>=0.4.0`,
+which introduces Phase 42's degree-aware `_g_vanishes_at_infinity`
+recogniser.  No symbolic-vm code changes — the existing Phase 40
+Apart-retry path automatically benefits when the partial-fraction
+output has a non-constant numerator, e.g. infinite series like
+``∑_{k=1}^∞ k/(k²+1) − (k+1)/((k+1)²+1) = 1/2`` now close in one
+dispatch through the `sum_handler`.
+
+### Changed
+
+- Bumped dep `coding-adventures-cas-summation>=0.4.0` (was `>=0.3.0`).
+
 ## 0.65.0 — 2026-05-22
 
 **Phase 40 + Phase 41 chain end-to-end.**
