@@ -1227,6 +1227,7 @@ impl ToolAuditSupervisorDrainRunReport {
             has_follow_up_record_count_drift: self.has_follow_up_record_count_drift(),
             count_drift_kind: self.count_drift_kind(),
             count_drift_label: self.count_drift_label(),
+            is_no_count_drift: self.is_no_count_drift(),
             requires_plan_drift_investigation: self.requires_plan_drift_investigation(),
             requires_count_drift_investigation: self.requires_count_drift_investigation(),
             host_investigation_kind: self.host_investigation_kind(),
@@ -1454,6 +1455,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub count_drift_kind: ToolAuditSupervisorDrainCountDriftKind,
     /// Stable count-drift classification label for host logs.
     pub count_drift_label: &'static str,
+    /// Whether planned and replayed counts stayed aligned.
+    pub is_no_count_drift: bool,
     /// Whether preflight/drain drift should be investigated by the host.
     pub requires_plan_drift_investigation: bool,
     /// Whether count drift should be investigated by the host.
@@ -1664,7 +1667,7 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether planned and replayed counts stayed aligned.
     pub fn is_no_count_drift(&self) -> bool {
-        self.count_drift_kind().is_no_drift()
+        self.is_no_count_drift
     }
 
     /// Return the typed count-drift classification.
@@ -4396,6 +4399,7 @@ mod tests {
         assert!(!summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
         assert!(!summary.has_count_drift());
+        assert!(summary.is_no_count_drift);
         assert!(summary.is_no_count_drift());
         assert_eq!(
             summary.count_drift_kind,
@@ -4520,6 +4524,7 @@ mod tests {
         assert!(!summary.has_follow_up_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift());
         assert!(summary.has_count_drift());
+        assert!(!summary.is_no_count_drift);
         assert!(!summary.is_no_count_drift());
         assert_eq!(
             summary.count_drift_kind,
@@ -4599,6 +4604,7 @@ mod tests {
         assert!(summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
         assert!(summary.has_count_drift());
+        assert!(!summary.is_no_count_drift);
         assert!(!summary.is_no_count_drift());
         assert_eq!(
             summary.count_drift_kind,
@@ -4678,6 +4684,7 @@ mod tests {
         assert!(summary.has_follow_up_record_count_drift);
         assert!(summary.has_follow_up_record_count_drift());
         assert!(summary.has_count_drift());
+        assert!(!summary.is_no_count_drift);
         assert!(!summary.is_no_count_drift());
         assert_eq!(
             summary.count_drift_kind,
