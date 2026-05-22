@@ -156,3 +156,69 @@ fn jit_brainfuck_multiple_outputs() {
     assert_eq!(jit, vec![1u8, 3u8, 6u8],
         "expected [1,3,6] from `+.++.+++.`, got {jit:?}");
 }
+
+// ---------------------------------------------------------------------------
+// "The JIT is real, not a fallback" tests
+// ---------------------------------------------------------------------------
+//
+// The tests above prove that the JIT *path* runs programs correctly.
+// The tests below prove that the BF JIT bytecode compiler actually
+// emits non-empty bytecode for representative programs — i.e. the JIT
+// is not silently falling back to `vm-core`'s interpreter via the
+// `compile()` returning `None` path.
+
+use brainfuck_iir_compiler::BrainfuckVM as _BrainfuckVM;
+
+/// `+++.` — the smallest BF program that exercises every basic op
+/// (const_u32, load_mem, const_u8, add_u8, store_mem, call_builtin
+/// putchar, ret_void).  Its bytecode should be ~30-40 bytes.
+#[test]
+fn jit_emits_real_bytecode_for_three_increments() {
+    let vm = _BrainfuckVM::new(true, 30_000, None).unwrap();
+    let len = vm.jit_bytecode_len("+++.").unwrap();
+    if len.is_none() {
+        // Print the CIR shape so a future test failure is debuggable.
+        use brainfuck_iir_compiler::compile_source;
+        use jit_core::specialise::specialise;
+        use jit_core::optimizer::CIROptimizer;
+        let m = compile_source("+++.", "demo").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let cir = specialise(f, 5);
+        let cir = CIROptimizer::new().run(cir);
+        eprintln!("CIR for `+++.` (after specialise+optimize):");
+        for (i, c) in cir.iter().enumerate() {
+            eprintln!("  {i}: op={:?} dest={:?} srcs={:?} ty={}",
+                c.op, c.dest, c.srcs, c.ty);
+        }
+    }
+    let len = len.expect("JIT should successfully compile `+++.` to bytecode");
+    assert!(len > 0, "JIT bytecode for `+++.` should be non-empty");
+    // Sanity floor — three `+` blocks (4 instrs each) + `.` (2 instrs)
+    // + const_u32 prologue + ret_void.  Each instr is 3-6 bytes.  We
+    // expect at least 20 bytes; we generously assert >= 15.
+    assert!(len >= 15,
+        "expected at least 15 bytes of bytecode, got {len}");
+}
+
+/// A program with a loop — `++[-]` zeroes a non-zero cell.  Exercises
+/// `label`, `jmp_if_false`, `jmp` (the canonical BF loop shape).
+/// Bytecode size should reflect the loop body, not just be a stub.
+#[test]
+fn jit_emits_bytecode_for_loop_program() {
+    let vm = _BrainfuckVM::new(true, 30_000, Some(1000)).unwrap();
+    let len = vm.jit_bytecode_len("++[-]").unwrap()
+        .expect("JIT should compile `++[-]` to bytecode");
+    assert!(len > 20,
+        "loop program should compile to non-trivial bytecode, got {len} bytes");
+}
+
+/// Confirm the JIT path also runs the loop program correctly end-to-end
+/// (parity with the interpreter).
+#[test]
+fn jit_runs_loop_program_correctly() {
+    // `++[-].` increments cell[0] to 2, loops decrementing until 0,
+    // then prints (should be 0).
+    let (_, jit) = run_both("++[-].", b"", 30_000, Some(1000));
+    assert_eq!(jit, vec![0u8],
+        "loop should drain cell to 0, got {jit:?}");
+}

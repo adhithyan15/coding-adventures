@@ -96,30 +96,42 @@ engine.  Brainfuck's IIR is `FullyTyped` from birth, so the JIT chain
 inherits the same eager-compile path that powers Dartmouth BASIC, Oct,
 and Nib.
 
-**The careful caveat**: today the wrapper supplies a private
-`InterpOnlyBackend` whose `compile()` always returns `None`, pinning
-every function on the interpreter tier.  Why?  Because Brainfuck's
-`load_mem` / `store_mem` opcodes are wired through *custom* `vm-core`
-opcode handlers, and no existing JIT backend (NullBackend, EchoBackend,
-future WASM/x86_64) knows how to lower them.  Trying to compile with a
-backend that silently can't handle those would replace `main` with a
-stub that returns `Null`, producing no output.  Refusing to compile is
-correct.
+### The backend
 
-**Why ship the wiring anyway?**  Because when a future backend learns
-Brainfuck's tape memory model, swapping the backend in `src/vm.rs` is
-the only change needed for tier promotion to kick in.  Until then, the
-JIT chain runs Brainfuck programs identically to the pure interpreter —
-verified by `tests/jit_smoke.rs`, which runs every program twice and
-asserts byte-identical output.
+A private `BrainfuckCirJit` in `src/jit_backend.rs` implements
+`jit_core::backend::Backend`.  Its `compile()` translates BF's CIR
+(post-specialise, post-`CIROptimizer`) into a **packed register-machine
+bytecode** — 1-byte opcode tags, 1-byte register indices, `i16` LE
+branch offsets, natural-width literals.  Its `run()` interprets that
+bytecode in a tight `match`-loop, owning a fresh tape per call.  This
+bypasses `vm-core`'s generic IIR dispatch entirely.
+
+This is a JIT in the classic, historical sense — the same shape used
+by the JVM (Ignition tier), Smalltalk-80, V8 Ignition, Lua, and many
+other production JITs as their first tier.  It is **not** a
+native-code JIT (no Cranelift, no hand-rolled machine code) — that's
+separate work.  Swapping in a native backend that supports BF's CIR
+is a one-line change in `src/vm.rs`.
+
+### How to confirm the JIT is doing real work
 
 ```rust
 use brainfuck_iir_compiler::BrainfuckVM;
 
-let vm = BrainfuckVM::new(true, 30_000, None).unwrap();  // JIT enabled
+let vm = BrainfuckVM::new(true, 30_000, None).unwrap();
+
+// Run end-to-end through the JIT chain:
 let out = vm.run("+++.", b"").unwrap();
 assert_eq!(out, vec![3u8]);
+
+// Confirm the JIT actually emitted bytecode (not silent fallback):
+let bytecode_len = vm.jit_bytecode_len("+++.").unwrap();
+assert!(bytecode_len.unwrap() >= 15);   // ~30-40 bytes for `+++.`
 ```
+
+`tests/jit_smoke.rs` runs every program twice — once with `jit=false`
+(pure interpreter), once with `jit=true` (CIR-bytecode JIT) — and
+asserts byte-identical output.  If they ever diverge, the JIT is wrong.
 
 ## Running tests
 
@@ -127,4 +139,4 @@ assert_eq!(out, vec![3u8]);
 cargo test -p brainfuck-iir-compiler
 ```
 
-69 tests total (55 unit + 8 doc-tests + 6 JIT smoke tests).
+81 tests total (63 unit + 9 doc-tests + 9 JIT smoke tests).
