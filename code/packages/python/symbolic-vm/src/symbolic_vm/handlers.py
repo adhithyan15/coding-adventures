@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import math
 from collections.abc import Mapping
+from fractions import Fraction
 
 from symbolic_ir import (
     ACOS,
@@ -106,9 +107,91 @@ def _is_truthy(node: IRNode) -> bool | None:
 
 
 def add(simplify: bool) -> Handler:
-    """Build an Add handler. See module docstring for the ``simplify`` flag."""
+    """Build an Add handler. See module docstring for the ``simplify`` flag.
+
+    Phase 47 — nested-Add flattening (symbolic mode only)
+    ------------------------------------------------------
+    Before the binary numeric fold, if either operand is itself an
+    ``Add(...)`` apply, the handler flattens the tree, sums any
+    numeric leaf literals into a single trailing constant, and
+    rebuilds a left-associated chain of ``Add``s.  Example:
+
+        Add(Add(k, 1), 1)  →  Add(k, 2)
+
+    Without this, the structural equality check in cas_summation's
+    telescope detector would see ``Add(Add(k, 1), 1) != Add(k, 2)``
+    and miss telescopes whose denominators contain ``(k + a)``
+    shifts produced by ``Apart`` (e.g. ``∑ 1/((k+1)(k+2))``).
+
+    Disabled in strict mode (``simplify=False``) — there's no
+    "symbolic" combination there; everything must be numeric.
+    """
 
     def handler(_vm, expr: IRApply) -> IRNode:
+        # Phase 47: nested-Add flattening for the symbolic backend.
+        if simplify and len(expr.args) == 2:
+            a_pre, b_pre = expr.args
+            a_is_add = isinstance(a_pre, IRApply) and a_pre.head == ADD
+            b_is_add = isinstance(b_pre, IRApply) and b_pre.head == ADD
+            if a_is_add or b_is_add:
+                # Collect all leaf operands by deep-walking nested ADDs.
+                leaves: list[IRNode] = []
+                _flatten_add(a_pre, leaves)
+                _flatten_add(b_pre, leaves)
+                # Partition into numeric literals and the rest.
+                lit_sum_n: int | None = 0
+                lit_sum_f: float = 0.0
+                lit_sum_frac: Fraction = Fraction(0)
+                use_frac = False
+                use_float = False
+                non_literals: list[IRNode] = []
+                for leaf in leaves:
+                    num = to_number(leaf)
+                    if num is None:
+                        non_literals.append(leaf)
+                    elif isinstance(num, float):
+                        use_float = True
+                        lit_sum_f += num
+                    elif isinstance(num, Fraction):
+                        use_frac = True
+                        lit_sum_frac += num
+                    else:  # int
+                        if use_frac:
+                            lit_sum_frac += num
+                        else:
+                            lit_sum_n = (lit_sum_n or 0) + num
+                # Combine the numeric accumulators in priority order:
+                # float > fraction > int (float takes over if any leaf was
+                # a float, fraction if any was rational, int otherwise).
+                if use_float:
+                    lit_total: int | float | Fraction = (
+                        lit_sum_f + float(lit_sum_frac) + (lit_sum_n or 0)
+                    )
+                elif use_frac:
+                    lit_total = lit_sum_frac + (lit_sum_n or 0)
+                else:
+                    lit_total = lit_sum_n or 0
+                # Only rebuild when flattening actually changed something —
+                # fall through to the binary path otherwise.
+                rebuilt_args = len(leaves) != 2 or any(
+                    isinstance(leaf, IRApply) and leaf.head == ADD for leaf in leaves
+                )
+                if rebuilt_args:
+                    if not non_literals:
+                        return from_number(lit_total)
+                    if is_zero(lit_total):
+                        new_args = non_literals
+                    else:
+                        new_args = non_literals + [from_number(lit_total)]
+                    if len(new_args) == 1:
+                        return new_args[0]
+                    # Left-associate the chain so structural equality
+                    # against substituted forms stays stable.
+                    out: IRNode = new_args[0]
+                    for nxt in new_args[1:]:
+                        out = IRApply(ADD, (out, nxt))
+                    return out
+
         a, b = _binary_args(expr)
         va, vb = to_number(a), to_number(b)
         if va is not None and vb is not None:
@@ -123,6 +206,20 @@ def add(simplify: bool) -> Handler:
         return expr
 
     return handler
+
+
+def _flatten_add(node: IRNode, out: list[IRNode]) -> None:
+    """Append every non-``Add`` leaf operand of ``node`` to ``out``.
+
+    Walks a nested ``Add`` tree; collects everything that's NOT
+    itself an ``Add`` apply.  Used by the ``add()`` handler's
+    Phase 47 flattening path.
+    """
+    if isinstance(node, IRApply) and node.head == ADD:
+        for arg in node.args:
+            _flatten_add(arg, out)
+    else:
+        out.append(node)
 
 
 def sub(simplify: bool) -> Handler:

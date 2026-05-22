@@ -1,5 +1,76 @@
 # Changelog
 
+## 0.71.0 — 2026-05-22
+
+**Phase 47 — Nested-Add flattening in the symbolic VM.**
+
+Closes the shifted-denominator gap previously documented as
+Phase 45's ``test_phase45_chain_shifted_denominator`` skip
+(``∑_{k=1}^∞ 1/((k+1)(k+2)) = 1/2``).  This was NOT an ``Apart`` gap
+— ``Apart`` already decomposes the shifted form to
+``Add(Neg(Div(1, k+2)), Div(1, k+1))``.  The gap was downstream:
+cas-summation's telescope detector substitutes ``k → k+1`` in
+``Div(1, Add(k, 1))`` and produces ``Div(1, Add(Add(k, 1), 1))``.
+The symbolic-vm ``Add`` handler used to leave that nested form
+alone, so structural equality against ``Div(1, Add(k, 2))`` failed.
+
+### Changed
+
+- **`add(simplify=True)` handler** in
+  ``src/symbolic_vm/handlers.py`` now flattens nested ``Add``
+  trees before the binary numeric fold.  When either operand is
+  itself an ``Add(...)`` apply, the handler:
+  1. Collects every non-``Add`` leaf via the new
+     ``_flatten_add(node, out)`` recursive walker.
+  2. Partitions leaves into literals (``IRInteger``,
+     ``IRRational``, ``IRFloat``) and symbolic terms.
+  3. Sums the literals once (priority: float > Fraction > int)
+     and rebuilds a left-associated chain
+     ``Add(*non_literals, lit_sum)``.
+  4. Drops the trailing literal when it sums to zero, collapses
+     a single-element result back to the bare symbol, etc.
+
+  Strict mode (``simplify=False``) is unchanged — there's no
+  "symbolic" combination there; everything must be numeric.
+
+### Added — helper
+
+- **`_flatten_add(node: IRNode, out: list[IRNode]) -> None`** —
+  recursive walker that appends every non-``Add`` leaf of a
+  nested ``Add`` tree to the ``out`` accumulator.
+
+### Added — tests
+
+`tests/test_phase25.py::TestPhase40_ApartTelescope` — 4 new
+``test_phase47_*`` cases:
+
+- ``test_phase47_chain_shifted_denominator``: closes the
+  Phase-45-documented skip.  ``∑ 1/((k+1)(k+2)) = 1/2``.
+- ``test_phase47_nested_add_flattens``: direct test that
+  ``Add(Add(k, 1), 1)`` evaluates to ``Add(k, 2)``.
+- ``test_phase47_triply_nested_add``: recursive flattening across
+  three levels.  ``Add(Add(Add(k, 1), 1), 1) → Add(k, 3)``.
+- ``test_phase47_higher_shifted_denominator``: arbitrary shifts
+  still telescope.  ``∑ 1/((k+2)(k+3)) = 1/3``.
+
+Full suite: ``tests/test_phase25.py`` → **69 passed, 9 skipped**
+(was 65 passed + 11 skipped; +4 passing, -1 skipped — the Phase-45
+shifted-denominator skip is now a Phase-47 pass).  Broader suite:
+**1496 passed** (was 1495; +1 from the dropped skip).  No new
+failures; the 59 pre-existing test_phase9 failures are unrelated.
+
+### Why this is more general than a "shifted denominator" patch
+
+The nested-Add flattening is a *substrate* fix — it makes ``Add``
+canonical for any consumer that compares trees structurally.  The
+telescope detector is one consumer; other CAS modules that pattern-
+match on ``Add(k, c)`` shapes also benefit immediately.
+
+### Still deferred
+
+- Apart Phase 2: repeated linear factors (``1/(k²(k+1)²)``) — Apart
+  itself doesn't decompose these yet.
+
 ## 0.70.0 — 2026-05-22
 
 **Phase 46 — Apart-retry constant-numerator widening.**
@@ -60,7 +131,8 @@ is now a Phase-46 pass).
 ### Still deferred
 
 - Apart Phase 2: repeated linear factors (``1/(k²(k+1)²)``).
-- Apart Phase 3: shifted-only denominators (``1/((k+1)(k+2))``).
+- Apart Phase 3: shifted-only denominators (``1/((k+1)(k+2))``) —
+  CLOSED in Phase 47 (see 0.71.0 above).
 
 ## 0.69.0 — 2026-05-22
 
