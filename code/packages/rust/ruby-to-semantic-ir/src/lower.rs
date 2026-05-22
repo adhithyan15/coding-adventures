@@ -293,6 +293,33 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
+            "class_statement" | "module_statement" => {
+                // Phase 6f: class/module declarations parse but don't
+                // yet introduce a real namespace in SIR v0 (SIR has no
+                // `class` / `namespace` node — that lands in a later
+                // phase together with method dispatch).  We walk the
+                // body so nested `def` declarations *are* hoisted to
+                // top-level Functions (matching the def_statement
+                // behaviour at the program level), then emit a no-op
+                // ExprStmt(NilLit) in place of the class/module so
+                // the main-body statement stream stays in sync with
+                // the source line count.
+                //
+                // Caveat (documented for backends): the hoisted
+                // methods land at top-level, not nested under the
+                // class name.  In real Ruby, `class Foo; def bar`
+                // makes `bar` an instance method of `Foo`.  v0 SIR
+                // collapses the namespace; the validator still
+                // accepts the result because every function has a
+                // unique name and `main` is the only export.
+                self.collect_def_statements_from_body(node)?;
+                Ok(Stmt::ExprStmt {
+                    expr: Expr::NilLit {
+                        span: self.span_of(node),
+                    },
+                    span: self.span_of(node),
+                })
+            }
             "if_statement" | "unless_statement" => {
                 // Phase 6b: SIR's `Expr::If` is an *expression* — it
                 // always yields a value.  We wrap it in `Stmt::ExprStmt`
@@ -556,6 +583,42 @@ impl Lowerer {
             }
             let func = self.lower_def_statement(inner)?;
             self.user_functions.push(func);
+        }
+        Ok(())
+    }
+
+    /// Phase 6f: walk the body of a `class_statement` / `module_statement`
+    /// and hoist every nested `def_statement` to a top-level `Function`
+    /// on `self.user_functions`.  This mirrors the program-level
+    /// `collect_def_statements` pre-pass — same hoisting semantics,
+    /// same scope-isolation behaviour (each method body gets a fresh
+    /// `declared_locals` / `current_params`).  Called from
+    /// `lower_statement_inner` when the class/module is first reached,
+    /// not from the global pre-pass, so each nested `def` is hoisted
+    /// exactly once.
+    fn collect_def_statements_from_body(
+        &mut self,
+        body_owner: &GrammarASTNode,
+    ) -> Result<(), RubyLowerError> {
+        for child in &body_owner.children {
+            let stmt = match child {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => n,
+                _ => continue,
+            };
+            let inner = match self.first_node_child(stmt) {
+                Some(n) => n,
+                None => continue,
+            };
+            if inner.rule_name == "def_statement" {
+                let func = self.lower_def_statement(inner)?;
+                self.user_functions.push(func);
+            } else if inner.rule_name == "class_statement"
+                || inner.rule_name == "module_statement"
+            {
+                // Nested class/module — recurse so deeply-nested
+                // `def`s still get hoisted.
+                self.collect_def_statements_from_body(inner)?;
+            }
         }
         Ok(())
     }

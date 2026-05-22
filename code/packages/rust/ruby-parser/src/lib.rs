@@ -425,5 +425,64 @@ mod tests {
         });
         assert_eq!(str_tok, Some("hello world"));
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6f — `class Foo … end` / `module Foo … end`
+    // -----------------------------------------------------------------------
+    //
+    // Like `def_statement`, the body of a class/module is a repetition of
+    // `statement` with a negative-lookahead `!"end"` so the closing keyword
+    // doesn't get eaten as a bare `expression_stmt → factor → KEYWORD`.
+
+    #[test]
+    fn test_parse_empty_class() {
+        let ast = parse_ruby("class Foo\nend");
+        assert_program_root(&ast);
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        // Class name is the first Name token.
+        let name_tok = cls.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Name) => {
+                Some(t.value.as_str())
+            }
+            _ => None,
+        });
+        assert_eq!(name_tok, Some("Foo"));
+    }
+
+    #[test]
+    fn test_parse_class_with_method_body() {
+        // A class with a nested `def` — the inner statement is itself a
+        // `def_statement` under the class body.
+        let ast = parse_ruby("class Foo\n  def bar\n  end\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        // The body has at least one `statement` child.
+        let body_count = cls
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "statement"))
+            .count();
+        assert!(body_count >= 1, "expected at least one body statement");
+    }
+
+    #[test]
+    fn test_parse_empty_module() {
+        let ast = parse_ruby("module M\nend");
+        assert!(find_statement_inner(&ast, "module_statement").is_some());
+    }
+
+    #[test]
+    fn test_parse_module_with_assignment_body() {
+        let ast = parse_ruby("module M\n  x = 1\nend");
+        let m = find_statement_inner(&ast, "module_statement")
+            .expect("expected module_statement");
+        let body_count = m
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "statement"))
+            .count();
+        assert!(body_count >= 1);
+    }
 }
 
