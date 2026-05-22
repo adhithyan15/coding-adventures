@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/specs/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-doc-search-tokenizer",
+  "capabilities": [],
+  "justification": "Pure transform: string → string[].  Lowercase, strip non-alphanumeric Unicode, split on whitespace runs, optional stop-word filter, optional Porter stemmer.  No eval, no Function, no JSON.parse-with-reviver, no fs/network/env/shell.  Zero runtime dependencies.  Per-character index-loop scanning (no `+`-quantified regex on user input) to avoid CodeQL `js/polynomial-redos` false positives that bit previous DOC00 packages."
+}
