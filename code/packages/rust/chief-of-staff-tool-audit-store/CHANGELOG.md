@@ -51,6 +51,7 @@ All notable changes to this package will be documented in this file.
 - Signed replayed-minus-planned row and follow-up pressure deltas in supervisor
   drain run summaries.
 - Delta-direction helpers for supervisor drain run reports.
+- Flattened row-count delta direction flags for supervisor drain run summaries.
 - Status aliases for supervisor drain run reports.
 - Row-count match helpers for supervisor drain run reports and summaries.
 - Planned-count match and drift flag accessors for supervisor drain run

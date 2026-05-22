@@ -1222,6 +1222,8 @@ impl ToolAuditSupervisorDrainRunReport {
             planned_follow_up_records: self.planned_follow_up_records(),
             drained_follow_up_records: self.drained_follow_up_records(),
             record_count_delta: self.record_count_delta(),
+            replayed_extra_records: self.replayed_extra_records(),
+            missed_planned_records: self.missed_planned_records(),
             follow_up_record_count_delta: self.follow_up_record_count_delta(),
             has_record_count_drift: self.has_record_count_drift(),
             has_follow_up_record_count_drift: self.has_follow_up_record_count_drift(),
@@ -1446,6 +1448,10 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub drained_follow_up_records: usize,
     /// Replayed-minus-planned row count delta.
     pub record_count_delta: i128,
+    /// Whether more rows replayed than the preflight plan expected.
+    pub replayed_extra_records: bool,
+    /// Whether fewer rows replayed than the preflight plan expected.
+    pub missed_planned_records: bool,
     /// Replayed-minus-planned follow-up pressure count delta.
     pub follow_up_record_count_delta: i128,
     /// Whether row count drift was observed.
@@ -1720,12 +1726,12 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether the actual run replayed more rows than planned.
     pub fn replayed_extra_records(&self) -> bool {
-        self.record_count_delta > 0
+        self.replayed_extra_records
     }
 
     /// Return whether the actual run replayed fewer rows than planned.
     pub fn missed_planned_records(&self) -> bool {
-        self.record_count_delta < 0
+        self.missed_planned_records
     }
 
     /// Return whether the actual run replayed more follow-up pressure than planned.
@@ -4397,6 +4403,10 @@ mod tests {
         assert_eq!(summary.drained_follow_up_records(), 0);
         assert_eq!(summary.record_count_delta, 0);
         assert_eq!(summary.record_count_delta(), 0);
+        assert!(!summary.replayed_extra_records);
+        assert!(!summary.replayed_extra_records());
+        assert!(!summary.missed_planned_records);
+        assert!(!summary.missed_planned_records());
         assert_eq!(summary.follow_up_record_count_delta, 0);
         assert_eq!(summary.follow_up_record_count_delta(), 0);
         assert!(!summary.has_record_count_drift);
@@ -4523,6 +4533,10 @@ mod tests {
         assert!(report.replayed_extra_records());
         assert!(!report.missed_planned_records());
         assert_eq!(summary.record_count_delta, 1);
+        assert!(summary.replayed_extra_records);
+        assert!(summary.replayed_extra_records());
+        assert!(!summary.missed_planned_records);
+        assert!(!summary.missed_planned_records());
         assert!(summary.has_record_count_drift);
         assert!(summary.has_record_count_drift());
         assert!(!summary.has_follow_up_record_count_drift);
@@ -4605,6 +4619,10 @@ mod tests {
         assert!(report.requires_host_count_drift_investigation());
         assert!(!report.is_no_host_investigation());
         assert_eq!(summary.record_count_delta, -1);
+        assert!(!summary.replayed_extra_records);
+        assert!(!summary.replayed_extra_records());
+        assert!(summary.missed_planned_records);
+        assert!(summary.missed_planned_records());
         assert!(!summary.matches_record_count());
         assert!(summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
@@ -4684,6 +4702,10 @@ mod tests {
         assert!(report.requires_host_count_drift_investigation());
         assert!(!report.is_no_host_investigation());
         assert_eq!(summary.record_count_delta, 0);
+        assert!(!summary.replayed_extra_records);
+        assert!(!summary.replayed_extra_records());
+        assert!(!summary.missed_planned_records);
+        assert!(!summary.missed_planned_records());
         assert_eq!(summary.follow_up_record_count_delta, -1);
         assert!(!summary.has_record_count_drift);
         assert!(!summary.has_record_count_drift());
