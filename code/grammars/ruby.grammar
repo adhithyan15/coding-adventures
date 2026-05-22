@@ -90,7 +90,12 @@ expression_stmt = expression ;
 expression   = sum { ( "==" | "!=" | "<=" | ">=" | "<" | ">" ) sum } ;
 sum          = term { ( PLUS | MINUS ) term } ;
 term         = factor { ( STAR | SLASH ) factor } ;
-factor       = NUMBER | STRING | NAME | KEYWORD | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN ;
+# Phase 6k — unary minus.  New `factor` alternative AFTER literals/names
+# so they win first.  Right-recursive: `--5` parses fine.  Precedence:
+# tighter than binary `+ -` (since `unary_minus` lives inside `factor`),
+# so `-5 + 3` parses as `(-5) + 3`.
+factor       = NUMBER | STRING | NAME | KEYWORD | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ;
+unary_minus  = MINUS factor ;
 symbol_literal = COLON ( NAME | KEYWORD | STRING ) ;
 array_literal = LBRACKET [ expression { COMMA expression } ] RBRACKET ;
 hash_literal = LBRACE [ hash_entry { COMMA hash_entry } ] RBRACE ;

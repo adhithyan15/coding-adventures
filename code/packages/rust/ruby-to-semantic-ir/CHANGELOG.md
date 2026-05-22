@@ -2,6 +2,14 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.12.0] - 2026-05-22
+
+### Added (Phase 6k — unary minus lowering)
+- `lower_expression` dispatches `unary_minus` to a new arm emitting `Expr::BuiltinCall { name: "neg", args: [inner], effects: PURE }`.
+
+### Tests (+5 new, total 59)
+- `unary_minus_on_number_lowers_to_neg_builtin`, `unary_minus_on_name_carries_scope`, `double_unary_minus_nests_correctly`, `unary_minus_with_binary_plus_resolves_precedence_correctly`, `unary_minus_module_passes_sir_validator`.
+
 ## [0.11.0] - 2026-05-22
 
 ### Added (Phase 6j — `return` / `break` / `next` lowering)

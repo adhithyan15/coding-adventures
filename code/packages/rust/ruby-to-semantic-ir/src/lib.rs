@@ -916,6 +916,91 @@ mod tests {
         assert!(result.is_ok(), "validator rejected our output: {:?}", result);
     }
 
+    // -----------------------------------------------------------------
+    // Phase 6k — unary minus → BuiltinCall("neg", [x]).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn unary_minus_on_number_lowers_to_neg_builtin() {
+        let m = lower("x = -5");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value, .. } => match value {
+                Expr::BuiltinCall { name, args, .. } => {
+                    assert_eq!(name, "neg");
+                    assert!(matches!(args[0], Expr::IntLit { value: 5, .. }));
+                }
+                other => panic!("expected BuiltinCall(neg, [5]), got {:?}", other),
+            },
+            other => panic!("expected LetBinding, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn unary_minus_on_name_carries_scope() {
+        let m = lower("x = 1\ny = -x\n");
+        let b = main_body(&m);
+        match &b.stmts[1] {
+            Stmt::LetBinding { value: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "neg");
+                assert!(matches!(
+                    &args[0],
+                    Expr::VarRef { name, scope, .. } if name == "x" && *scope == Scope::Local
+                ));
+            }
+            other => panic!("expected LetBinding(BuiltinCall(neg, [VarRef(x)])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn double_unary_minus_nests_correctly() {
+        let m = lower("x = --5");
+        let b = main_body(&m);
+        if let Stmt::LetBinding {
+            value: Expr::BuiltinCall { name: outer, args: outer_args, .. },
+            ..
+        } = &b.stmts[0]
+        {
+            assert_eq!(outer, "neg");
+            match &outer_args[0] {
+                Expr::BuiltinCall { name: inner, args: inner_args, .. } => {
+                    assert_eq!(inner, "neg");
+                    assert!(matches!(inner_args[0], Expr::IntLit { value: 5, .. }));
+                }
+                other => panic!("expected inner neg, got {:?}", other),
+            }
+        } else {
+            panic!("expected outer LetBinding(BuiltinCall(neg, …))");
+        }
+    }
+
+    #[test]
+    fn unary_minus_with_binary_plus_resolves_precedence_correctly() {
+        let m = lower("x = -5 + 3");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value: Expr::BuiltinCall { name: outer, args, .. }, .. } => {
+                assert_eq!(outer, "+");
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner, args: inner_args, .. } => {
+                        assert_eq!(inner, "neg");
+                        assert!(matches!(inner_args[0], Expr::IntLit { value: 5, .. }));
+                    }
+                    other => panic!("expected LHS = neg(5), got {:?}", other),
+                }
+                assert!(matches!(args[1], Expr::IntLit { value: 3, .. }));
+            }
+            other => panic!("expected LetBinding(BuiltinCall(+, …)), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn unary_minus_module_passes_sir_validator() {
+        let m = lower("x = -5\ny = -(1 + 2)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
     #[test]
     fn module_with_def_passes_sir_validator() {
         // v0 grammar can't yet parse nested method calls in args
