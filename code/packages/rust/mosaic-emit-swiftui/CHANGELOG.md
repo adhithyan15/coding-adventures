@@ -2,6 +2,58 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.5.0] - 2026-05-21
+
+### Added — UI29-1 `HostDialog` kernel primitive (U29-1-K-swiftui)
+
+`HostDialog` is now recognised by the SwiftUI emitter and lowers to an
+invisible `Color.clear.frame(width: 0, height: 0)` anchor view carrying
+a `.sheet(...)` (modal=true, default) or `.popover(...)` (modal=false)
+view modifier. SwiftUI exposes dialogs as view modifiers, not
+standalone views; anchoring on `Color.clear` lets `HostDialog` remain
+a single tree-walker node in the kernel emitter.
+
+Prop mapping:
+
+- `open: slot: x` → `isPresented: .constant(x)` (immutable-slot pattern;
+  same `.constant(...)` choice `HostInput` uses).
+- `modal: true` (default) → `.sheet(...)`.
+- `modal: false` → `.popover(...)`. SwiftUI's `.popover` does NOT
+  accept an `onDismiss:` argument, so when modal=false the emitter
+  silently drops the `onClose` wiring — the host should observe its
+  own `open` slot change and dispatch the close event itself.
+- `title: "..."` / `title: slot: x` → `.navigationTitle(...)` inside
+  the content closure.
+- `dismiss-on-backdrop: false` → `.interactiveDismissDisabled(true)`
+  inside the content closure.
+- `onClose: emit: onX` → `onDismiss: { dispatch(.x) }` (`.sheet` only).
+
+The dialog's children render inside the content closure's `VStack`,
+walked via `emit_children` so nested kernel primitives lower the same
+way they do anywhere else.
+
+### Added — tests
+
+- 8 new tests covering: empty HostDialog (Color.clear + .sheet),
+  `open` slot → `.constant(x)`, `modal: true` → `.sheet`, `modal: false`
+  → `.popover` (and `onClose` NOT wired), children render inside content
+  VStack with correct order, `onClose` → `onDismiss` callback,
+  `title` slot → `.navigationTitle` (plus string-literal sanity), and
+  `dismiss-on-backdrop: false` → `.interactiveDismissDisabled(true)`
+  (plus negative case for the default).
+
+### Changed
+
+- Recognised-vs-deferred matrix test now lists `HostDialog` as
+  recognised alongside `HostTable` / `HostInput` / etc.
+- Crate version bumped `0.4.0` → `0.5.0`.
+
+### Spec
+
+- `code/specs/UI29-1-host-dialog.md` ships in the same commit (specs
+  must precede implementation per repo workflow §8). The SwiftUI
+  lowering section pins exactly what this PR implements.
+
 ## [0.4.0] - 2026-05-20
 
 ### Added — UI29 `For` / `If` / `Else` meta-primitives (U29-K-swiftui)

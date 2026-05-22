@@ -64,6 +64,7 @@ struct ProfileCardView: View {
 | `HostInput`      | `TextField(placeholder, text: .constant(value))` *(v0.2.0; UI29 kernel)* |
 | `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |
 | `HostTable`      | `VStack(alignment: .leading, spacing: 0) { HStack { ... } }` *(v0.3.0; UI29 kernel)* |
+| `HostDialog`     | `Color.clear.frame(width: 0, height: 0).sheet(...)` / `.popover(...)` *(v0.5.0; UI29-1 kernel)* |
 
 ### `HostInput` binding choice — `.constant(value)`
 

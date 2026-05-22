@@ -400,6 +400,14 @@ fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
         // HStack rows, not SwiftUI.Table — for now).
         "HostTable" => emit_host_table(node, indent),
 
+        // UI29-1 kernel — `HostDialog` is the modal/popover primitive.
+        // It lowers to a `Color.clear` anchor view carrying a
+        // `.sheet(...)` (modal=true) or `.popover(...)` (modal=false)
+        // modifier. See [`emit_host_dialog`] for the lowering rationale
+        // (SwiftUI exposes dialogs as view modifiers, not standalone
+        // views).
+        "HostDialog" => emit_host_dialog(node, indent),
+
         // UI29 kernel — table sub-tags. When they appear OUTSIDE of a
         // HostTable parent they have nothing to attach to in SwiftUI;
         // we emit a self-documenting comment rather than erroring so the
@@ -862,6 +870,150 @@ fn emit_host_table(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     }
 
     writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+// =====================================================================
+// UI29-1 kernel — HostDialog emitter
+// =====================================================================
+
+/// Lower a UI29-1 `HostDialog` node to a SwiftUI `.sheet` (modal) or
+/// `.popover` (non-modal) view modifier.
+///
+/// ## Why anchor the modifier to a `Color.clear` view?
+///
+/// SwiftUI exposes dialog-style presentation as a *view modifier*
+/// (`.sheet(isPresented:onDismiss:content:)` /
+/// `.popover(isPresented:content:)`), not as a standalone view. The
+/// UI29 kernel emitter walks the layout tree as a stream of standalone
+/// view nodes, so the simplest way to keep `HostDialog` implementable
+/// as a single tree node is to emit an invisible anchor view —
+/// `Color.clear.frame(width: 0, height: 0)` — that carries the
+/// modifier. The anchor renders nothing visible; the actual dialog
+/// content lives inside the modifier's trailing closure.
+///
+/// A future enhancement can hoist `HostDialog` modifiers up to the
+/// nearest container parent (so they attach to a real view rather than
+/// a Color.clear), but that requires a structural pass over the tree —
+/// out of scope for this first cut.
+///
+/// ## Property handling
+///
+/// | Moslayout prop                  | SwiftUI                                                |
+/// |---------------------------------|--------------------------------------------------------|
+/// | `open: slot: x`                 | `isPresented: .constant(x)` (see binding note)         |
+/// | `modal: true` (default)         | `.sheet(...)`                                          |
+/// | `modal: false`                  | `.popover(...)`                                        |
+/// | `title: "..."` / `title: slot:` | `.navigationTitle(...)` inside the content closure     |
+/// | `dismiss-on-backdrop: false`    | `.interactiveDismissDisabled(true)` inside the closure |
+/// | `onClose: emit: onX`            | `onDismiss: { dispatch(.x) }` (`.sheet` only)          |
+///
+/// ## Binding choice — `.constant(value)`
+///
+/// SwiftUI bindings need mutable state, but Mosaic components receive
+/// slots as immutable `let`s. We follow the same `.constant(value)`
+/// pattern `HostInput` uses: the host owns close-via-dispatch through
+/// the UI24 Flux loop. A `@State` proxy that lifts the slot into
+/// mutable local state is a documented future enhancement.
+///
+/// ## `.popover` and `onClose`
+///
+/// SwiftUI's `.popover(isPresented:content:)` does **not** accept an
+/// `onDismiss:` closure (the API is `.popover(isPresented:attachmentAnchor:arrowEdge:content:)`).
+/// When `modal: false`, the emitter still wires the content closure
+/// but omits the `onDismiss` handler — the host should observe its own
+/// `open` slot change and dispatch the close event itself.
+///
+/// ## Generated shape (modal)
+///
+/// ```swift
+/// Color.clear.frame(width: 0, height: 0)
+///     .sheet(isPresented: .constant(open), onDismiss: { dispatch(.close) }) {
+///         VStack {
+///             // children
+///         }
+///         .navigationTitle("Save changes?")
+///         .interactiveDismissDisabled(true)
+///     }
+/// ```
+fn emit_host_dialog(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mod_pad = " ".repeat(indent + 4);
+    let inner_pad = " ".repeat(indent + 8);
+    let body_pad = " ".repeat(indent + 12);
+
+    // `open: slot: x` → `.constant(x)`. If unbound, fall back to
+    // `.constant(false)` so the generated source still type-checks —
+    // the host then has nothing to drive the dialog open, but the
+    // file compiles.
+    let open_binding = match find_slot_ref_prop(node, "open") {
+        Some(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!(".constant({camel})")
+        }
+        None => ".constant(false)".to_string(),
+    };
+
+    // `modal: false` → `.popover(...)`; anything else (including unset
+    // and `modal: true`) → `.sheet(...)`. The default is modal.
+    let is_modal = !matches!(find_keyword_prop(node, "modal"), Some("false"));
+    let presenter = if is_modal { "sheet" } else { "popover" };
+
+    // `onClose` → `onDismiss:` closure. Only valid on `.sheet`;
+    // `.popover` does not accept an `onDismiss` argument.
+    let on_dismiss_clause = if is_modal {
+        match find_emit_ref_prop(node, "onClose") {
+            Some(emit_name) => {
+                let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+                validate_emit_name(&case_name)?;
+                format!(", onDismiss: {{ dispatch(.{case_name}) }}")
+            }
+            None => String::new(),
+        }
+    } else {
+        String::new()
+    };
+
+    let mut out = String::new();
+    // The invisible anchor view. `Color.clear` is a SwiftUI primitive
+    // that renders nothing; `.frame(width: 0, height: 0)` shrinks it
+    // to zero size so it occupies no layout space either.
+    writeln!(out, "{pad}Color.clear.frame(width: 0, height: 0)").unwrap();
+    writeln!(
+        out,
+        "{mod_pad}.{presenter}(isPresented: {open_binding}{on_dismiss_clause}) {{"
+    )
+    .unwrap();
+
+    // Content closure: a VStack wrapping the children. Even with zero
+    // children we emit the VStack so the modifier signature is correct.
+    writeln!(out, "{inner_pad}VStack {{").unwrap();
+    if !node.children.is_empty() {
+        out.push_str(&emit_children(&node.children, indent + 12)?);
+    }
+    writeln!(out, "{inner_pad}}}").unwrap();
+
+    // `title:` → `.navigationTitle(...)` on the VStack content. Accept
+    // string literals and slot refs. The modifier is a no-op outside a
+    // `NavigationStack` parent, so it's safe to always emit.
+    if let Some(title) = find_string_prop(node, "title") {
+        let escaped = escape_swift_string(title);
+        writeln!(out, "{body_pad}.navigationTitle(\"{escaped}\")").unwrap();
+    } else if let Some(slot) = find_slot_ref_prop(node, "title") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        writeln!(out, "{body_pad}.navigationTitle({camel})").unwrap();
+    }
+
+    // `dismiss-on-backdrop: false` → `.interactiveDismissDisabled(true)`.
+    // Any other value (including the default `true` and unset) lets
+    // SwiftUI's default dismissal behaviour stand.
+    if matches!(find_keyword_prop(node, "dismiss-on-backdrop"), Some("false")) {
+        writeln!(out, "{body_pad}.interactiveDismissDisabled(true)").unwrap();
+    }
+
+    writeln!(out, "{mod_pad}}}").unwrap();
     Ok(out)
 }
 
@@ -1793,13 +1945,13 @@ mod tests {
     }
 
     // ---------------------------------------------------------------------
-    // Test 13 — version pin: the crate version is 0.4.0. Catches accidental
+    // Test 13 — version pin: the crate version is 0.5.0. Catches accidental
     // version bumps before they merge.
     // ---------------------------------------------------------------------
 
     #[test]
-    fn version_is_0_4_0() {
-        assert_eq!(env!("CARGO_PKG_VERSION"), "0.4.0");
+    fn version_is_0_5_0() {
+        assert_eq!(env!("CARGO_PKG_VERSION"), "0.5.0");
     }
 
     // ---------------------------------------------------------------------
@@ -2110,7 +2262,14 @@ mod tests {
         // UnknownPrimitive. (For/If/Else require props to lower
         // cleanly, so they are exercised in their dedicated tests
         // above; here we just confirm the leaf-shaped kernel.)
-        for tag in ["Stack", "HostScroll", "HostInput", "HostButton", "HostTable"] {
+        for tag in [
+            "Stack",
+            "HostScroll",
+            "HostInput",
+            "HostButton",
+            "HostTable",
+            "HostDialog",
+        ] {
             let layout = layout_with(
                 "X",
                 container_node("Box", vec![leaf(tag, vec![])]),
@@ -2939,6 +3098,332 @@ mod tests {
         assert!(
             out.contains("if editing {") && out.contains("} else {"),
             "expected paired if/else inside For body, got:\n{out}"
+        );
+    }
+
+    // =================================================================
+    // UI29-1 — `HostDialog` kernel-primitive tests (42 through 49).
+    //
+    // HostDialog lowers to an invisible `Color.clear` anchor view
+    // carrying a `.sheet(...)` (modal=true, default) or `.popover(...)`
+    // (modal=false) view modifier. The dialog children become the
+    // modifier's content closure, wrapped in a `VStack`.
+    //
+    // See [`emit_host_dialog`] for the lowering rationale and the
+    // full prop→modifier mapping.
+    // =================================================================
+
+    // -----------------------------------------------------------------
+    // Test 42 — Empty HostDialog emits a Color.clear anchor and a
+    // `.sheet` modifier. The content closure still contains a VStack
+    // so the modifier signature is well-formed under SwiftUI's
+    // `@ViewBuilder` rules even when no children are present.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn host_dialog_empty_emits_color_clear_anchor_and_sheet() {
+        let layout = layout_with(
+            "D",
+            container_node("Box", vec![leaf("HostDialog", vec![])]),
+        );
+        let out = from_pipeline(
+            &component("D", vec![], vec![]),
+            &layout,
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("Color.clear.frame(width: 0, height: 0)"),
+            "expected Color.clear anchor, got:\n{out}"
+        );
+        assert!(
+            out.contains(".sheet(isPresented: .constant(false)) {"),
+            "expected .sheet modifier with .constant(false) fallback, got:\n{out}"
+        );
+        assert!(
+            out.contains("VStack {"),
+            "expected content-closure VStack, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 43 — `open: slot: x` lowers to `.constant(x)` where `x` is
+    // the camelCased slot identifier. This mirrors HostInput's
+    // immutable-slot-via-.constant lowering choice (see the binding
+    // note in the emitter doc).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn host_dialog_open_slot_drives_constant_binding() {
+        let dialog = leaf(
+            "HostDialog",
+            vec![prop_slot_ref("open", "dialog-open")],
+        );
+        let layout = layout_with("D", container_node("Box", vec![dialog]));
+        let out = from_pipeline(
+            &component("D", vec![], vec![]),
+            &layout,
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".sheet(isPresented: .constant(dialogOpen)) {"),
+            "expected .constant(dialogOpen) binding from open slot, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 44 — `modal: true` (the default) selects `.sheet(...)`.
+    // Even when the keyword is explicit, we get the modal presenter.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn host_dialog_modal_true_uses_sheet() {
+        let dialog = leaf(
+            "HostDialog",
+            vec![
+                prop_slot_ref("open", "open"),
+                prop_keyword("modal", "true"),
+            ],
+        );
+        let layout = layout_with("D", container_node("Box", vec![dialog]));
+        let out = from_pipeline(
+            &component("D", vec![], vec![]),
+            &layout,
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".sheet(isPresented: .constant(open)) {"),
+            "expected modal .sheet presenter, got:\n{out}"
+        );
+        assert!(
+            !out.contains(".popover("),
+            "expected no .popover when modal=true, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 45 — `modal: false` switches to `.popover(...)`. Per the
+    // emitter doc and SwiftUI's API, `.popover` does NOT accept an
+    // `onDismiss:` argument, so even if `onClose` is bound, the
+    // popover form must NOT emit one.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn host_dialog_modal_false_uses_popover_without_on_dismiss() {
+        let dialog = leaf(
+            "HostDialog",
+            vec![
+                prop_slot_ref("open", "open"),
+                prop_keyword("modal", "false"),
+                prop_emit_ref("onClose", "onClose"),
+            ],
+        );
+        let layout = layout_with("D", container_node("Box", vec![dialog]));
+        let out = from_pipeline(
+            &component("D", vec![], vec![]),
+            &layout,
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".popover(isPresented: .constant(open)) {"),
+            "expected .popover presenter, got:\n{out}"
+        );
+        assert!(
+            !out.contains("onDismiss:"),
+            ".popover does not accept onDismiss; must not be emitted, got:\n{out}"
+        );
+        assert!(
+            !out.contains(".sheet("),
+            "expected no .sheet when modal=false, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 46 — children render inside the content closure's VStack,
+    // walked through `emit_children` so nested kernel primitives lower
+    // the same way they do anywhere else.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn host_dialog_children_render_inside_content_vstack() {
+        let dialog = node_with_props(
+            "HostDialog",
+            vec![prop_slot_ref("open", "open")],
+            vec![
+                leaf("Text", vec![prop_string("content", "Save changes?")]),
+                leaf(
+                    "HostButton",
+                    vec![prop_string("label", "Cancel")],
+                ),
+            ],
+        );
+        let layout = layout_with("D", container_node("Box", vec![dialog]));
+        let out = from_pipeline(
+            &component("D", vec![], vec![]),
+            &layout,
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("VStack {"),
+            "expected content VStack, got:\n{out}"
+        );
+        assert!(
+            out.contains(r#"Text("Save changes?")"#),
+            "expected child Text inside dialog, got:\n{out}"
+        );
+        assert!(
+            out.contains(r#"Text("Cancel")"#),
+            "expected child HostButton's label inside dialog, got:\n{out}"
+        );
+        // The VStack must appear AFTER the sheet opener, not before.
+        let sheet_idx = out
+            .find(".sheet(isPresented:")
+            .expect("sheet present");
+        let vstack_idx = out.find("VStack {").expect("vstack present");
+        assert!(
+            sheet_idx < vstack_idx,
+            "expected VStack to follow .sheet opener, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 47 — `onClose: emit: onClose` wires the `onDismiss:`
+    // argument on `.sheet`. The emit name follows the same
+    // strip-`on`-prefix + camelCase convention as every other emit
+    // in this backend, so `onClose` becomes `.close` in dispatch.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn host_dialog_on_close_wires_on_dismiss_callback() {
+        let dialog = leaf(
+            "HostDialog",
+            vec![
+                prop_slot_ref("open", "open"),
+                prop_emit_ref("onClose", "onDialogClose"),
+            ],
+        );
+        let layout = layout_with("D", container_node("Box", vec![dialog]));
+        let out = from_pipeline(
+            &component("D", vec![], vec![]),
+            &layout,
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(
+                ".sheet(isPresented: .constant(open), onDismiss: { dispatch(.dialogClose) })"
+            ),
+            "expected onDismiss wired to dispatch(.dialogClose), got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 48 — `title: slot: t` emits a `.navigationTitle(t)`
+    // modifier inside the content closure. The slot is camelCased
+    // (kebab → camel) before reaching the Swift source.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn host_dialog_title_slot_emits_navigation_title() {
+        let dialog = leaf(
+            "HostDialog",
+            vec![
+                prop_slot_ref("open", "open"),
+                prop_slot_ref("title", "dialog-title"),
+            ],
+        );
+        let layout = layout_with("D", container_node("Box", vec![dialog]));
+        let out = from_pipeline(
+            &component("D", vec![], vec![]),
+            &layout,
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".navigationTitle(dialogTitle)"),
+            "expected .navigationTitle(dialogTitle) modifier, got:\n{out}"
+        );
+
+        // Sanity: a string-literal title also lowers to .navigationTitle.
+        let dialog2 = leaf(
+            "HostDialog",
+            vec![
+                prop_slot_ref("open", "open"),
+                prop_string("title", "Save changes?"),
+            ],
+        );
+        let layout2 = layout_with("D", container_node("Box", vec![dialog2]));
+        let out2 = from_pipeline(
+            &component("D", vec![], vec![]),
+            &layout2,
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out2.contains(r#".navigationTitle("Save changes?")"#),
+            "expected string-literal navigation title, got:\n{out2}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test 49 — `dismiss-on-backdrop: false` emits
+    // `.interactiveDismissDisabled(true)` inside the content closure.
+    // The default (unset, or `true`) does NOT emit the modifier — we
+    // let SwiftUI's built-in dismissal behaviour stand.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn host_dialog_dismiss_on_backdrop_false_disables_interactive_dismiss() {
+        let dialog = leaf(
+            "HostDialog",
+            vec![
+                prop_slot_ref("open", "open"),
+                prop_keyword("dismiss-on-backdrop", "false"),
+            ],
+        );
+        let layout = layout_with("D", container_node("Box", vec![dialog]));
+        let out = from_pipeline(
+            &component("D", vec![], vec![]),
+            &layout,
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".interactiveDismissDisabled(true)"),
+            "expected .interactiveDismissDisabled(true), got:\n{out}"
+        );
+
+        // Negative: without the keyword (default), the modifier must
+        // NOT appear.
+        let default_dialog = leaf(
+            "HostDialog",
+            vec![prop_slot_ref("open", "open")],
+        );
+        let layout2 =
+            layout_with("D", container_node("Box", vec![default_dialog]));
+        let out2 = from_pipeline(
+            &component("D", vec![], vec![]),
+            &layout2,
+            &empty_style("D"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            !out2.contains(".interactiveDismissDisabled("),
+            "default backdrop behaviour must not emit modifier, got:\n{out2}"
         );
     }
 }

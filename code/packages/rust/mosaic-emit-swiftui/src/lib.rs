@@ -66,6 +66,14 @@
 //! | HostInput    | `TextField(placeholder, text: .constant(value))`   |
 //! | HostButton   | `Button(action: { dispatch(.tap) }) { Text(label) }` |
 //! | HostTable    | `VStack(alignment: .leading, spacing: 0) { HStack { ... } }` |
+//! | HostDialog   | `Color.clear.frame(...).sheet(isPresented:)` *(v0.5.0; UI29-1 kernel)* |
+//!
+//! `HostDialog` lowers to an invisible `Color.clear` anchor view
+//! carrying a `.sheet(...)` (modal=true, default) or `.popover(...)`
+//! (modal=false) view modifier. SwiftUI exposes dialogs as view
+//! modifiers, not standalone views; anchoring on `Color.clear` lets
+//! `HostDialog` remain a single tree-walker node. See
+//! `pipeline::emit_host_dialog` for the full prop→modifier mapping.
 //!
 //! `HostTable` lowers to a `VStack` of `HStack` rows rather than
 //! SwiftUI's data-driven `Table` view: the data-driven form needs a
