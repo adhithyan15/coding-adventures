@@ -1,5 +1,80 @@
 # Changelog
 
+## 0.5.0 — 2026-05-22
+
+**Phase 43 — Transcendental vanishing-at-infinity (`Exp(h)` and
+`Pow(b, h)` shapes).**
+
+Extends Phase 41/42's vanishing-at-infinity recogniser to accept
+exponentially diverging denominators, so infinite telescopes like
+
+    ∑_{k=0}^∞ [1/2^k − 1/2^(k+1)] = 1
+    ∑_{k=1}^∞ [1/(k·2^k) − 1/((k+1)·2^(k+1))] = 1/2
+
+close in one dispatch.
+
+### Added
+
+- **`_h_diverges_at_infinity(node, k)`** in `summation.py` — the
+  union of the Phase 41/42 positive-degree polynomial recogniser and
+  three new transcendental cases:
+  1. ``Exp(h(k))`` with ``h`` a positive-degree polynomial in ``k``
+     AND positive leading coefficient (so ``h → +∞``, not ``−∞``).
+  2. ``Pow(b, h(k))`` with ``b`` a rational of magnitude > 1 and
+     ``h`` positive-degree with positive leading coefficient.
+  3. ``Mul(...)`` where at least one factor diverges and the others
+     are constant in ``k`` or also diverging.  Recursive.
+- **`_polynomial_leading_coeff_sign_in_k(node, k) -> int | None`** —
+  returns the sign (``+1`` or ``−1``) of the polynomial's leading
+  coefficient in ``k``, or ``None`` for non-polynomial / degree-0 /
+  unknown-sign shapes.  Conservatively refuses on tied-degree ``Add``
+  terms (where leading coefficients could cancel) and symbolic
+  constants of unknown sign.  Required for the Exp / Pow branches
+  above so we don't claim ``exp(-k)`` or ``2^(-k)`` diverges (they
+  actually vanish).
+
+### Changed
+
+- `_g_vanishes_at_infinity` Phase 41 fast path now calls
+  `_h_diverges_at_infinity` instead of
+  `_is_positive_degree_polynomial_in_k` directly, picking up the
+  transcendental cases automatically.  Phase 42 widening (proper
+  rational `deg(P) < deg(Q)`) is unchanged.
+
+### Added — tests
+
+`tests/test_summation.py` — new
+`TestEvaluateSumPhase43Transcendental` class with 7 cases:
+
+- ``∑_{k=0}^∞ [1/2^k − 1/2^(k+1)] = 1``.
+- ``∑_{k=1}^∞ [1/3^k − 1/3^(k+1)] = 1/3``.
+- Negative base magnitude > 1: ``∑ [1/(-2)^k − …] = 1``.
+- Base = 1 falls through (Step 1 constant rule fires first; pins the
+  Phase 43 ``|b| > 1`` guard against accidental closure at b=1).
+- Rational base 3/2 diverges → closed form.
+- Base 1/2 falls through (denominator ``(1/2)^k → 0``, not ∞).
+- ``Mul`` of polynomial × exponential (``k · 2^k``) diverges → closed
+  form ``g(1) = 1/2``.
+
+Plus 4 sign-aware regression tests (from the in-flight security review):
+
+- ``exp(-k)`` and its symmetric pair MUST refuse (``-k`` has negative
+  leading coefficient → ``exp(-k) → 0``, not ∞; closing the sum would
+  silently emit a wrong answer).
+- ``2^(-k)`` MUST refuse for the same reason.
+- ``k · 2^(-k)`` MUST refuse — the Mul recursion propagates the
+  child-level refusal.
+- ``Exp(Neg(k))`` MUST refuse — same semantics as ``Exp(Mul(-1, k))``
+  but written with the explicit ``NEG`` wrapper.
+
+Full suite: **88 passed** (77 prior + 7 Phase 43 + 4 regression).
+
+### Still deferred
+
+- ``Log(h(k))`` divergence (``log(k) → ∞`` but only at logarithmic
+  rate; needs explicit limit handling).
+- Cross-language port to TypeScript / Rust.
+
 ## 0.4.0 — 2026-05-22
 
 **Phase 42 — Degree-aware vanishing-at-infinity recogniser.**

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.67.0 — 2026-05-22
+
+**Phase 43 dep bump — transcendental vanishing-at-infinity.**
+
+Bumps the `coding-adventures-cas-summation` dependency to `>=0.5.0`,
+which introduces Phase 43's transcendental denominator recogniser
+(``Exp(h(k))``, ``Pow(b, h(k))`` with ``|b| > 1``, and ``Mul`` of
+such factors).  Combined with the existing Phase 40 Apart-retry path,
+``∑_{k=0}^∞ [c_1/2^k + c_2/3^k + …]`` style series now close in one
+dispatch through the `sum_handler`.
+
+### Changed
+
+- Bumped dep `coding-adventures-cas-summation>=0.5.0` (was `>=0.4.0`).
+
 ## 0.66.0 — 2026-05-22
 
 **Phase 42 dep bump — degree-aware vanishing-at-infinity.**
