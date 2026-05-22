@@ -28,6 +28,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"assignment"#.to_string() },
                 GrammarElement::RuleReference { name: r#"method_with_block"#.to_string() },
                 GrammarElement::RuleReference { name: r#"method_call"#.to_string() },
+                GrammarElement::RuleReference { name: r#"method_call_no_paren"#.to_string() },
                 GrammarElement::RuleReference { name: r#"expression_stmt"#.to_string() },
             ] },
             line_number: 28,
@@ -265,9 +266,24 @@ pub fn parser_grammar() -> ParserGrammar {
             line_number: 65,
         },
         GrammarRule {
+            name: r#"method_call_no_paren"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
+                        GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                        GrammarElement::TokenReference { name: r#"KEYWORD"#.to_string() },
+                    ] }) },
+                GrammarElement::RuleReference { name: r#"expression"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
+                        GrammarElement::RuleReference { name: r#"expression"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 79,
+        },
+        GrammarRule {
             name: r#"expression_stmt"#.to_string(),
             body: GrammarElement::RuleReference { name: r#"expression"#.to_string() },
-            line_number: 66,
+            line_number: 80,
         },
         GrammarRule {
             name: r#"expression"#.to_string(),
@@ -281,7 +297,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::RuleReference { name: r#"term"#.to_string() },
                     ] }) },
             ] },
-            line_number: 67,
+            line_number: 81,
         },
         GrammarRule {
             name: r#"term"#.to_string(),
@@ -295,7 +311,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::RuleReference { name: r#"factor"#.to_string() },
                     ] }) },
             ] },
-            line_number: 68,
+            line_number: 82,
         },
         GrammarRule {
             name: r#"factor"#.to_string(),
@@ -313,7 +329,7 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
                 ] },
             ] },
-            line_number: 69,
+            line_number: 83,
         },
         GrammarRule {
             name: r#"symbol_literal"#.to_string(),
@@ -325,7 +341,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
                     ] }) },
             ] },
-            line_number: 70,
+            line_number: 84,
         },
         GrammarRule {
             name: r#"array_literal"#.to_string(),
@@ -340,7 +356,7 @@ pub fn parser_grammar() -> ParserGrammar {
                     ] }) },
                 GrammarElement::TokenReference { name: r#"RBRACKET"#.to_string() },
             ] },
-            line_number: 71,
+            line_number: 85,
         },
         GrammarRule {
             name: r#"hash_literal"#.to_string(),
@@ -355,7 +371,7 @@ pub fn parser_grammar() -> ParserGrammar {
                     ] }) },
                 GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
             ] },
-            line_number: 72,
+            line_number: 86,
         },
         GrammarRule {
             name: r#"hash_entry"#.to_string(),
@@ -371,7 +387,7 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::RuleReference { name: r#"expression"#.to_string() },
                 ] },
             ] },
-            line_number: 73,
+            line_number: 87,
         },
     ],
         version: 1,

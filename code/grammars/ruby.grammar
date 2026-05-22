@@ -25,7 +25,7 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | assignment | method_with_block | method_call | expression_stmt ;
+statement    = def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
 def_statement = "def" NAME [ LPAREN [ params ] RPAREN ] { !"end" statement } "end" ;
 # Phase 6f — class/module namespace declarations.  The body is a
 # sequence of statements (which may include nested `def`s).  Like
@@ -63,6 +63,20 @@ while_statement = "while" expression { !"end" statement } "end" ;
 until_statement = "until" expression { !"end" statement } "end" ;
 assignment   = NAME EQUALS expression ;
 method_call  = ( NAME | KEYWORD ) LPAREN [ expression { COMMA expression } ] RPAREN ;
+# Phase 6h — paren-less method call.  Idiomatic Ruby allows
+# `puts 1, 2` (no parens) when the call has at least one argument.
+#
+# Placed AFTER `method_call` in the `statement` alternation so the
+# parenned form wins for `puts(1)`.  Requires at least one
+# `expression` after the name so it doesn't shadow `expression_stmt →
+# factor → NAME` (which handles bare `puts` with no args).
+#
+# Caveat: ambiguities like `puts 1 + 2` resolve as `puts(1 + 2)`
+# because the inner `expression` rule grabs the full `1 + 2` chain
+# greedily — matching idiomatic Ruby.  `puts(1) + 2`, by contrast,
+# matches `method_call` first and leaves `+ 2` for downstream rules
+# (same as existing behaviour pre-6h).
+method_call_no_paren = ( NAME | KEYWORD ) expression { COMMA expression } ;
 expression_stmt = expression ;
 expression   = term { ( PLUS | MINUS ) term } ;
 term         = factor { ( STAR | SLASH ) factor } ;

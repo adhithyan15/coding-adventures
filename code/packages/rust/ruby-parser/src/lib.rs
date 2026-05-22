@@ -488,16 +488,9 @@ mod tests {
     // -----------------------------------------------------------------------
     // Phase 6g — blocks `do … end` and brace-blocks `method { … }`
     // -----------------------------------------------------------------------
-    //
-    // Both forms attach to a preceding method-name token (with optional
-    // parenthesised args).  `block_params` captures the `|x, y|` pipe
-    // syntax.  See the grammar file for the disambiguation rules:
-    // bare `{a: 1}` at statement position remains a hash literal, not
-    // a block — blocks always follow a method name.
 
     #[test]
     fn test_parse_method_with_do_block_no_params() {
-        // `each do\n  puts 1\nend`
         let ast = parse_ruby("each do\n  puts 1\nend");
         assert_program_root(&ast);
         let mwb = find_statement_inner(&ast, "method_with_block")
@@ -510,30 +503,19 @@ mod tests {
                 _ => None,
             })
             .expect("expected block subnode");
-        assert!(
-            find_descendant(block, "do_block").is_some(),
-            "expected do_block under block"
-        );
+        assert!(find_descendant(block, "do_block").is_some());
     }
 
     #[test]
     fn test_parse_method_with_brace_block() {
-        // `each { puts 1 }`
         let ast = parse_ruby("each { puts 1 }");
         let mwb = find_statement_inner(&ast, "method_with_block")
             .expect("expected method_with_block");
-        assert!(
-            find_descendant(mwb, "brace_block").is_some(),
-            "expected brace_block under method_with_block"
-        );
+        assert!(find_descendant(mwb, "brace_block").is_some());
     }
 
     #[test]
     fn test_parse_do_block_with_pipe_params() {
-        // `each do |x| puts x end` — the `|x|` is `block_params`.
-        // Note: the lexer's `classify_op_token` maps unrecognised ops
-        // (including `|`) to `TokenType::Name`, so we filter by *value*
-        // (excluding "|") to extract the actual parameter names.
         let ast = parse_ruby("each do |x|\n  puts x\nend");
         let mwb = find_statement_inner(&ast, "method_with_block")
             .expect("expected method_with_block");
@@ -576,13 +558,9 @@ mod tests {
 
     #[test]
     fn test_parse_method_call_with_args_and_block() {
-        // `each(1, 2) { puts 1 }` — the call has parenthesised args AND
-        // a trailing block.  This combination is the most general
-        // form `method_with_block` accepts.
         let ast = parse_ruby("each(1, 2) { puts 1 }");
         let mwb = find_statement_inner(&ast, "method_with_block")
             .expect("expected method_with_block");
-        // Both an expression-arg subnode and a brace_block subnode exist.
         let has_args = mwb
             .children
             .iter()
@@ -593,13 +571,66 @@ mod tests {
 
     #[test]
     fn test_parse_hash_literal_still_works_at_statement_position() {
-        // Bare `{a: 1}` is a hash literal, not a block — blocks always
-        // follow a method name.  This test pins the disambiguation
-        // rule that Phase 6g must preserve.
         let ast = parse_ruby("x = {a: 1}");
         assert!(find_descendant(&ast, "hash_literal").is_some());
-        // And NOT a brace_block.
         assert!(find_descendant(&ast, "brace_block").is_none());
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase 6h — no-paren method calls (`puts 1` / `puts 1, 2`)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_no_paren_single_arg() {
+        let ast = parse_ruby("puts 1");
+        let call = find_statement_inner(&ast, "method_call_no_paren")
+            .expect("expected method_call_no_paren");
+        let arg_count = call
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression"))
+            .count();
+        assert_eq!(arg_count, 1);
+    }
+
+    #[test]
+    fn test_parse_no_paren_multiple_args() {
+        let ast = parse_ruby("puts 1, 2, 3");
+        let call = find_statement_inner(&ast, "method_call_no_paren")
+            .expect("expected method_call_no_paren");
+        let arg_count = call
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression"))
+            .count();
+        assert_eq!(arg_count, 3);
+    }
+
+    #[test]
+    fn test_paren_form_still_wins_over_no_paren() {
+        let ast = parse_ruby("puts(1)");
+        assert!(find_statement_inner(&ast, "method_call").is_some());
+        assert!(find_statement_inner(&ast, "method_call_no_paren").is_none());
+    }
+
+    #[test]
+    fn test_bare_name_falls_through_to_expression_stmt() {
+        let ast = parse_ruby("puts");
+        assert!(find_statement_inner(&ast, "method_call_no_paren").is_none());
+        assert!(find_statement_inner(&ast, "expression_stmt").is_some());
+    }
+
+    #[test]
+    fn test_no_paren_with_binary_arg_is_single_call() {
+        let ast = parse_ruby("puts 1 + 2");
+        let call = find_statement_inner(&ast, "method_call_no_paren")
+            .expect("expected method_call_no_paren");
+        let arg_count = call
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression"))
+            .count();
+        assert_eq!(arg_count, 1);
     }
 }
 

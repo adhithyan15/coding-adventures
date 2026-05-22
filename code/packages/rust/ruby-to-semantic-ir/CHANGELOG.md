@@ -2,6 +2,19 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.9.0] - 2026-05-22
+
+### Added (Phase 6h — no-paren method call lowering)
+- `lower_statement_inner` dispatches `method_call_no_paren` to the existing `lower_method_call` helper.  The two rule shapes are layout-compatible (same callee + `expression` argument children, just without the LPAREN/RPAREN tokens), so `lower_method_call`'s `expression`-filter handles both transparently — no new helper needed.
+- Tail-expression promotion in `lower_program` and `lower_clause_statements` extended to recognise `method_call_no_paren` alongside `method_call` and `expression_stmt`, so a trailing `puts 1` becomes the block's `value` instead of an `ExprStmt` in the statement list.
+
+### Tests (+5 new, total 44)
+- `no_paren_call_with_single_arg_lowers_to_builtin_call` — `puts 1` → `BuiltinCall("puts", [IntLit(1)])` with `MayPrint` effect.
+- `no_paren_call_with_multiple_args` — `puts 1, 2, 3` → three args.
+- `no_paren_call_with_binary_expr_arg_groups_correctly` — `puts 1 + 2` → one arg, itself a nested `BuiltinCall("+", [1, 2])`.
+- `no_paren_call_module_passes_sir_validator` — end-to-end `x = 1\nputs x, x + 1\n` passes `semantic_ir::validate`.
+- `paren_form_still_lowers_unchanged` — `puts(42)` keeps lowering as before (no regression).
+
 ## [0.8.0] - 2026-05-22
 
 ### Added (Phase 6g — method-with-block lowering)

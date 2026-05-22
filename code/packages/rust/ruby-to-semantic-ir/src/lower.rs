@@ -228,7 +228,7 @@ impl Lowerer {
 
             let is_tail = i == last_idx;
             let tail_kind = inner.rule_name.as_str();
-            if is_tail && matches!(tail_kind, "expression_stmt" | "method_call") {
+            if is_tail && matches!(tail_kind, "expression_stmt" | "method_call" | "method_call_no_paren") {
                 // Promote the tail expression to the block's value.
                 let v = match tail_kind {
                     "expression_stmt" => {
@@ -241,7 +241,7 @@ impl Lowerer {
                         })?;
                         self.lower_expression(expr_node)?
                     }
-                    "method_call" => self.lower_method_call(inner)?,
+                    "method_call" | "method_call_no_paren" => self.lower_method_call(inner)?,
                     _ => unreachable!(),
                 };
                 value = Some(v);
@@ -268,6 +268,19 @@ impl Lowerer {
         match node.rule_name.as_str() {
             "assignment" => self.lower_assignment(node),
             "method_call" => {
+                let expr = self.lower_method_call(node)?;
+                Ok(Stmt::ExprStmt {
+                    expr,
+                    span: self.span_of(node),
+                })
+            }
+            "method_call_no_paren" => {
+                // Phase 6h: paren-less call.  Shape-compatible with
+                // `method_call` (same callee + expression-arg layout
+                // minus the LPAREN/RPAREN), so the existing
+                // `lower_method_call` handles it transparently —
+                // both shapes' `expression` children are collected
+                // the same way.
                 let expr = self.lower_method_call(node)?;
                 Ok(Stmt::ExprStmt {
                     expr,
@@ -520,7 +533,7 @@ impl Lowerer {
             })?;
             let is_tail = i == last_idx;
             let kind = inner.rule_name.as_str();
-            if is_tail && matches!(kind, "expression_stmt" | "method_call") {
+            if is_tail && matches!(kind, "expression_stmt" | "method_call" | "method_call_no_paren") {
                 let v = match kind {
                     "expression_stmt" => {
                         let expr_node = self.first_node_child(inner).ok_or_else(|| {
@@ -532,7 +545,7 @@ impl Lowerer {
                         })?;
                         self.lower_expression(expr_node)?
                     }
-                    "method_call" => self.lower_method_call(inner)?,
+                    "method_call" | "method_call_no_paren" => self.lower_method_call(inner)?,
                     _ => unreachable!(),
                 };
                 value = Some(v);
@@ -756,7 +769,7 @@ impl Lowerer {
                 })?;
                 let is_tail = i == last_idx;
                 let kind = inner.rule_name.as_str();
-                if is_tail && matches!(kind, "expression_stmt" | "method_call") {
+                if is_tail && matches!(kind, "expression_stmt" | "method_call" | "method_call_no_paren") {
                     let v = match kind {
                         "expression_stmt" => {
                             let expr_node =
@@ -771,7 +784,7 @@ impl Lowerer {
                                 })?;
                             self.lower_expression(expr_node)?
                         }
-                        "method_call" => self.lower_method_call(inner)?,
+                        "method_call" | "method_call_no_paren" => self.lower_method_call(inner)?,
                         _ => unreachable!(),
                     };
                     value = Some(v);
