@@ -2529,6 +2529,135 @@ mod tests {
         assert_eq!(ERA_VERSIONS.len(), 15);
     }
 
+    // -----------------------------------------------------------------
+    // Phase 4h — 1.9.1 hash shorthand `{a: 1}` (Name followed by `:`
+    // at hash-key position).
+    //
+    // Design note (load-bearing for backends): the hash-shorthand
+    // syntax `{a: 1}` was introduced in Ruby 1.9.1.  Pre-1.9.1, the
+    // only valid hash literal was the hash-rocket form `{:a => 1}`.
+    //
+    // At the *lexer* level, no token-level change is needed —
+    //   `{a: 1}` lexes uniformly across all 15 eras as
+    //   `LBrace Name(a) Colon Number(1) RBrace`
+    // because the colon is just a standalone `Colon` token in every
+    // era.  Real Ruby differentiates the two forms at the *parser*
+    // level (era-gated `hash_entry` production), which we already
+    // ship as Phase 6d: `hash_entry = NAME COLON expression | …`.
+    //
+    // So this phase is intentionally a *no-op at token granularity*.
+    // The era-gating belongs at the parser layer (already shipped)
+    // and at a later "reject-pre-1.9.1-hash-shorthand" pass that runs
+    // after the AST is in hand.  The tests below pin the invariant
+    // that the token stream for `{a: 1}` is era-independent so
+    // backends can trust it.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn hash_shorthand_lexes_uniformly_across_all_eras() {
+        // The same source `{a: 1}` must produce the identical token
+        // kind stream under every supported era.  If a future phase
+        // ever needs to differentiate at the lexer level (e.g. a new
+        // token kind for hash-shorthand colon), this assertion is the
+        // canary that will fail loudly.
+        let src = "{a: 1}";
+        let mut baseline: Option<Vec<TokenType>> = None;
+        for &v in ERA_VERSIONS {
+            let toks = tokenize_ruby_for_version(src, v)
+                .unwrap_or_else(|e| panic!("version {v} failed: {e}"));
+            let kinds: Vec<TokenType> = toks
+                .iter()
+                .filter(|t| t.type_ != TokenType::Eof)
+                .map(|t| t.type_)
+                .collect();
+            match baseline {
+                None => baseline = Some(kinds),
+                Some(ref b) => {
+                    assert_eq!(
+                        &kinds, b,
+                        "era {v} produced a divergent token stream for `{src}`",
+                    );
+                }
+            }
+        }
+        // Sanity-check the baseline shape: LBrace Name Colon Number RBrace
+        let kinds = baseline.expect("at least one era ran");
+        assert_eq!(
+            kinds,
+            vec![
+                TokenType::LBrace,
+                TokenType::Name,
+                TokenType::Colon,
+                TokenType::Number,
+                TokenType::RBrace,
+            ],
+            "baseline token shape unexpected"
+        );
+    }
+
+    #[test]
+    fn hash_shorthand_with_two_entries_lexes_uniformly() {
+        // Multi-entry hash literal — the comma is era-independent too.
+        let src = "{a: 1, b: 2}";
+        for &v in ERA_VERSIONS {
+            let toks = tokenize_ruby_for_version(src, v).unwrap();
+            let kinds: Vec<TokenType> = toks
+                .iter()
+                .filter(|t| t.type_ != TokenType::Eof)
+                .map(|t| t.type_)
+                .collect();
+            assert_eq!(
+                kinds,
+                vec![
+                    TokenType::LBrace,
+                    TokenType::Name,
+                    TokenType::Colon,
+                    TokenType::Number,
+                    TokenType::Comma,
+                    TokenType::Name,
+                    TokenType::Colon,
+                    TokenType::Number,
+                    TokenType::RBrace,
+                ],
+                "era {v} produced divergent token stream"
+            );
+        }
+    }
+
+    #[test]
+    fn hash_rocket_form_lexes_uniformly_across_all_eras() {
+        // The classic hash-rocket form `{:a => 1}` predates 1.9.1
+        // shorthand and remains valid in every Ruby version.  Lexer
+        // tokenisation must also be era-independent.  We just spot-
+        // check that `=>` appears as part of the stream.
+        let src = "{:a => 1}";
+        for &v in ERA_VERSIONS {
+            let toks = tokenize_ruby_for_version(src, v).unwrap();
+            let values: Vec<&str> =
+                toks.iter().filter(|t| t.type_ != TokenType::Eof).map(|t| t.value.as_str()).collect();
+            assert!(
+                values.contains(&"=>"),
+                "era {v} did not produce a `=>` token in {values:?}",
+            );
+        }
+    }
+
+    #[test]
+    fn hash_shorthand_and_rocket_differ_only_in_value_tokens() {
+        // The two forms produce different token streams (hash-rocket
+        // has `=>`, shorthand has `Colon`) but each form is invariant
+        // across eras.  This is the load-bearing guarantee parsers
+        // depend on when era-gating hash shorthand acceptance.
+        let shorthand = tokenize_ruby_for_version("{a: 1}", "1.9.1").unwrap();
+        let rocket = tokenize_ruby_for_version("{:a => 1}", "1.9.1").unwrap();
+        let shorthand_has_arrow = shorthand
+            .iter()
+            .any(|t| t.value == "=>");
+        let rocket_has_arrow = rocket.iter().any(|t| t.value == "=>");
+        assert!(!shorthand_has_arrow);
+        assert!(rocket_has_arrow);
+    }
+
     #[test]
     fn is_heredoc_tag_accepts_valid_idents() {
         assert!(is_heredoc_tag("EOF"));

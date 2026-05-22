@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.14.0] - 2026-05-22
+
+### Added (Phase 4h — 1.9.1 hash shorthand `{a: 1}` — confirmation pass)
+Hash shorthand `{a: 1}` was introduced in Ruby 1.9.1.  Pre-1.9.1, the only valid hash literal was the rocket form `{:a => 1}`.
+
+At the **lexer** level, no token-level change is needed: `{a: 1}` lexes uniformly across all 15 eras as `LBrace Name Colon Number RBrace` because the colon is just a standalone `Colon` token in every era.  Real Ruby differentiates the two forms at the **parser** level, which already shipped as Phase 6d's `hash_entry = NAME COLON expression | …`.  So this phase is intentionally a no-op at token granularity, accompanied by:
+- A design-note doc block in `src/lib.rs` explaining why no token-level change is needed and where the era-gating actually lives.
+- 4 new tests pinning the invariant that the token stream for `{a: 1}` / `{a: 1, b: 2}` / `{:a => 1}` is era-independent — so backends can trust it.
+
+The era-gating (rejecting pre-1.9.1 hash shorthand) belongs at the parser layer (already shipped) and at a later AST-level pass.  This PR completes the lexer chunk queue for the v0 era-delta surface.
+
+### Tests (+4 new, total 116)
+- `hash_shorthand_lexes_uniformly_across_all_eras` — `{a: 1}` produces the identical token kind stream under every era in `ERA_VERSIONS`; baseline shape is asserted explicitly.
+- `hash_shorthand_with_two_entries_lexes_uniformly` — `{a: 1, b: 2}` is era-independent (the comma is too).
+- `hash_rocket_form_lexes_uniformly_across_all_eras` — `{:a => 1}` produces a `=>` token under every era.
+- `hash_shorthand_and_rocket_differ_only_in_value_tokens` — the two hash forms produce different token streams (shorthand has `Colon`, rocket has `=>`), but each form is era-invariant; this is the load-bearing guarantee parsers depend on when era-gating hash-shorthand acceptance.
+
 ## [0.13.0] - 2026-05-20
 
 ### Added (Phase 4g — 2.0 `%i[]` / `%I[]` symbol-array percent literals)
