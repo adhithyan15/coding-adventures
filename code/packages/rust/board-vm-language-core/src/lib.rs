@@ -103,6 +103,7 @@ pub const LANGUAGE_SERIAL_OPEN_SETTLE_MS: u64 = 250;
 pub const LANGUAGE_INPUT_CALLBACK_DEFAULT_DEBOUNCE_MS: u16 = 25;
 pub const LANGUAGE_INPUT_CALLBACK_DEFAULT_QUEUE_CAPACITY: u8 = 8;
 pub const LANGUAGE_INPUT_CALLBACK_DISPATCH_MODEL: &str = "cooperative_event_queue";
+pub const LANGUAGE_INPUT_CALLBACK_EVENT_KIND: &str = "digital_input_change";
 pub const ARDUINO_CLI_NATIVE_USB_BOOTLOADER_TOUCH_BAUD: u32 = 1_200;
 pub const ARDUINO_CLI_UPLOAD_PORT_PLACEHOLDER: &str = "<port>";
 pub const ARDUINO_CLI_UPLOAD_INPUT_FILE_PLACEHOLDER: &str = "<firmware-image>";
@@ -677,6 +678,60 @@ pub struct LanguageInputCallbackPlanError {
     pub selector: String,
     pub pin: u8,
     pub kind: LanguageInputCallbackPlanErrorKind,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackLevel {
+    Low,
+    High,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackEvent {
+    pub board_id: String,
+    pub pin: u8,
+    pub label: String,
+    pub event_kind: String,
+    pub trigger: LanguageInputCallbackTrigger,
+    pub level: LanguageInputCallbackLevel,
+    pub sequence: u32,
+    pub timestamp_ms: u64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackInvocation {
+    pub board_id: String,
+    pub pin: u8,
+    pub label: String,
+    pub event_kind: String,
+    pub trigger: LanguageInputCallbackTrigger,
+    pub level: LanguageInputCallbackLevel,
+    pub callback_program_id: u16,
+    pub callback_instruction_budget: u32,
+    pub sequence: u32,
+    pub timestamp_ms: u64,
+    pub debounce_ms: u16,
+    pub queue_capacity: u8,
+    pub queue_policy: LanguageInputCallbackQueuePolicy,
+    pub interrupt_backed: bool,
+    pub dispatch_model: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackEventErrorKind {
+    BoardMismatch,
+    PinMismatch,
+    EventKindMismatch,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackEventError {
+    pub plan_board_id: String,
+    pub event_board_id: String,
+    pub plan_pin: u8,
+    pub event_pin: u8,
+    pub event_kind: String,
+    pub kind: LanguageInputCallbackEventErrorKind,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1762,6 +1817,71 @@ pub fn input_callback_plan_with_options_for_target(
     })
 }
 
+pub fn input_callback_event_for_plan(
+    plan: &LanguageInputCallbackPlan,
+    level: LanguageInputCallbackLevel,
+    sequence: u32,
+    timestamp_ms: u64,
+) -> LanguageInputCallbackEvent {
+    LanguageInputCallbackEvent {
+        board_id: plan.board_id.clone(),
+        pin: plan.pin,
+        label: plan.label.clone(),
+        event_kind: LANGUAGE_INPUT_CALLBACK_EVENT_KIND.to_owned(),
+        trigger: plan.trigger,
+        level,
+        sequence,
+        timestamp_ms,
+    }
+}
+
+pub fn input_callback_invocation_for_event(
+    plan: &LanguageInputCallbackPlan,
+    event: &LanguageInputCallbackEvent,
+) -> Result<LanguageInputCallbackInvocation, LanguageInputCallbackEventError> {
+    if event.board_id != plan.board_id {
+        return Err(input_callback_event_error(
+            plan,
+            event,
+            LanguageInputCallbackEventErrorKind::BoardMismatch,
+        ));
+    }
+
+    if event.pin != plan.pin {
+        return Err(input_callback_event_error(
+            plan,
+            event,
+            LanguageInputCallbackEventErrorKind::PinMismatch,
+        ));
+    }
+
+    if event.event_kind != LANGUAGE_INPUT_CALLBACK_EVENT_KIND {
+        return Err(input_callback_event_error(
+            plan,
+            event,
+            LanguageInputCallbackEventErrorKind::EventKindMismatch,
+        ));
+    }
+
+    Ok(LanguageInputCallbackInvocation {
+        board_id: plan.board_id.clone(),
+        pin: plan.pin,
+        label: plan.label.clone(),
+        event_kind: event.event_kind.clone(),
+        trigger: event.trigger,
+        level: event.level,
+        callback_program_id: plan.callback_program_id,
+        callback_instruction_budget: plan.callback_instruction_budget,
+        sequence: event.sequence,
+        timestamp_ms: event.timestamp_ms,
+        debounce_ms: plan.debounce_ms,
+        queue_capacity: plan.queue_capacity,
+        queue_policy: plan.queue_policy,
+        interrupt_backed: plan.interrupt_backed,
+        dispatch_model: plan.dispatch_model.clone(),
+    })
+}
+
 pub fn parse_serial_endpoint(endpoint: &str) -> Option<LanguageSerialEndpoint> {
     let (scheme, port) = endpoint.split_once("://")?;
     if scheme != "serial" {
@@ -2297,6 +2417,21 @@ fn input_callback_plan_error(
     LanguageInputCallbackPlanError {
         selector: selector.to_owned(),
         pin,
+        kind,
+    }
+}
+
+fn input_callback_event_error(
+    plan: &LanguageInputCallbackPlan,
+    event: &LanguageInputCallbackEvent,
+    kind: LanguageInputCallbackEventErrorKind,
+) -> LanguageInputCallbackEventError {
+    LanguageInputCallbackEventError {
+        plan_board_id: plan.board_id.clone(),
+        event_board_id: event.board_id.clone(),
+        plan_pin: plan.pin,
+        event_pin: event.pin,
+        event_kind: event.event_kind.clone(),
         kind,
     }
 }
@@ -6105,6 +6240,79 @@ mod tests {
         assert_eq!(
             error.kind,
             LanguageInputCallbackPlanErrorKind::EmptyCallbackBudget
+        );
+    }
+
+    #[test]
+    fn input_callback_events_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+
+        assert_eq!(event.board_id, "arduino-uno-r4-wifi");
+        assert_eq!(event.pin, 3);
+        assert_eq!(event.label, "D3");
+        assert_eq!(event.event_kind, LANGUAGE_INPUT_CALLBACK_EVENT_KIND);
+        assert_eq!(event.trigger, LanguageInputCallbackTrigger::FallingEdge);
+        assert_eq!(event.level, LanguageInputCallbackLevel::Low);
+        assert_eq!(event.sequence, 42);
+        assert_eq!(event.timestamp_ms, 9001);
+
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        assert_eq!(invocation.board_id, "arduino-uno-r4-wifi");
+        assert_eq!(invocation.pin, 3);
+        assert_eq!(invocation.label, "D3");
+        assert_eq!(invocation.event_kind, LANGUAGE_INPUT_CALLBACK_EVENT_KIND);
+        assert_eq!(
+            invocation.trigger,
+            LanguageInputCallbackTrigger::FallingEdge
+        );
+        assert_eq!(invocation.level, LanguageInputCallbackLevel::Low);
+        assert_eq!(invocation.callback_program_id, 7);
+        assert_eq!(invocation.callback_instruction_budget, 64);
+        assert_eq!(invocation.sequence, 42);
+        assert_eq!(invocation.timestamp_ms, 9001);
+        assert_eq!(
+            invocation.debounce_ms,
+            LANGUAGE_INPUT_CALLBACK_DEFAULT_DEBOUNCE_MS
+        );
+        assert_eq!(
+            invocation.queue_capacity,
+            LANGUAGE_INPUT_CALLBACK_DEFAULT_QUEUE_CAPACITY
+        );
+        assert_eq!(
+            invocation.queue_policy,
+            LanguageInputCallbackQueuePolicy::DropOldest
+        );
+        assert!(invocation.interrupt_backed);
+        assert_eq!(
+            invocation.dispatch_model,
+            LANGUAGE_INPUT_CALLBACK_DISPATCH_MODEL
+        );
+
+        let mut wrong_board = event.clone();
+        wrong_board.board_id = "esp32-devkit-v1".to_owned();
+        let error = input_callback_invocation_for_event(&plan, &wrong_board).unwrap_err();
+        assert_eq!(error.plan_board_id, "arduino-uno-r4-wifi");
+        assert_eq!(error.event_board_id, "esp32-devkit-v1");
+        assert_eq!(
+            error.kind,
+            LanguageInputCallbackEventErrorKind::BoardMismatch
+        );
+
+        let mut wrong_pin = event.clone();
+        wrong_pin.pin = 4;
+        let error = input_callback_invocation_for_event(&plan, &wrong_pin).unwrap_err();
+        assert_eq!(error.plan_pin, 3);
+        assert_eq!(error.event_pin, 4);
+        assert_eq!(error.kind, LanguageInputCallbackEventErrorKind::PinMismatch);
+
+        let mut wrong_kind = event;
+        wrong_kind.event_kind = "analog_input_change".to_owned();
+        let error = input_callback_invocation_for_event(&plan, &wrong_kind).unwrap_err();
+        assert_eq!(error.event_kind, "analog_input_change");
+        assert_eq!(
+            error.kind,
+            LanguageInputCallbackEventErrorKind::EventKindMismatch
         );
     }
 
