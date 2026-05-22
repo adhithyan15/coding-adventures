@@ -2,6 +2,25 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.3.0] - 2026-05-20
+
+### Added (Phase 6b — `if … else … end` / `unless` lowering)
+- New `lower_if_or_unless` handler — both rules produce a single `Expr::If` because SIR treats conditionals as expressions (every branch yields a value).
+- `unless cond` lowers to `if !cond` by wrapping the condition in `BuiltinCall("not", [cond])`.
+- `elsif` chains lower with right-associative nesting: the outermost `If`'s `else_branch` is itself a `Block` whose `value` is another `If` for the first `elsif`, and so on.  The validator sees one well-formed expression tree.
+- New `lower_clause_statements` helper saves/restores `declared_locals` around each branch so locals introduced in one `if`/`elsif`/`else` arm don't leak into siblings (which would have caused spurious `Stmt::Assign` emissions and validator errors).
+- `Lowerer.features_used: HashSet<Feature>` — tracks which SIR features the lowering actually exercises.  `compile` now emits a manifest that lists *only* the features in use:
+  - `DynamicTyping` whenever a function has at least one untyped param.
+  - `MutableBindings` whenever a `Stmt::Assign` re-binds an existing local.
+  This swaps the previous "always declare DynamicTyping" approach for an exact-match manifest, which is what the validator requires.
+
+### Tests (+5 new, total 19)
+- `if_lowers_to_expr_if` — basic if/end produces `Expr::If`.
+- `if_else_lowers_with_else_branch` — explicit else branch is captured.
+- `unless_negates_condition` — `unless cond` wraps the cond in `BuiltinCall("not", ...)`.
+- `if_elsif_else_chain_nests_right` — elsif chain produces nested `Expr::If` in `else_branch.value`.
+- `if_module_passes_sir_validator` — an `if … else … end` containing module passes `semantic_ir::validate`.
+
 ## [0.2.0] - 2026-05-20
 
 ### Added (Phase 6a — `def name(params) … end` method definitions)

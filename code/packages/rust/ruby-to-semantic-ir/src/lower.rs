@@ -68,6 +68,7 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         declared_locals: HashSet::new(),
         current_params: HashSet::new(),
         user_functions: Vec::new(),
+        features_used: HashSet::new(),
     };
     // Phase 6a: hoist `def name(params) … end` declarations to
     // top-level Functions BEFORE walking the rest of the program so
@@ -93,12 +94,21 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
     let mut functions = std::mem::take(&mut lw.user_functions);
     functions.push(main);
 
-    // SIR's validator requires modules that use untyped params or
-    // globals (which everything Ruby produces in v0) to declare the
-    // `DynamicTyping` feature.  Ruby is dynamically typed, so we
-    // always declare it.
+    // SIR's validator requires the manifest to *exactly* match
+    // usage (declared-but-unused is a warning, used-but-undeclared
+    // is an error).  We've been tallying features as we lowered;
+    // here we materialise them into the manifest in a stable
+    // chronological order.
     let mut manifest = FeatureManifest::new();
-    manifest.add(Feature::DynamicTyping);
+    for f in [
+        Feature::DynamicTyping,
+        Feature::MutableBindings,
+        Feature::Closures,
+    ] {
+        if lw.features_used.contains(&f) {
+            manifest.add(f);
+        }
+    }
 
     Ok(Module {
         name: module_name.to_string(),
@@ -138,6 +148,12 @@ struct Lowerer {
     /// `collect_def_statements` (a top-level hoisting pass) before
     /// the main-body lowerer runs.
     user_functions: Vec<Function>,
+    /// Phase 6b: SIR features actually exercised by this lowering.
+    /// The SIR validator requires manifests to *exactly* match
+    /// usage (declared-but-unused is a warning, used-but-undeclared
+    /// is an error), so we track on-demand instead of unconditionally
+    /// declaring every feature.
+    features_used: HashSet<semantic_ir::Feature>,
 }
 
 impl Lowerer {
@@ -273,12 +289,194 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
+            "if_statement" | "unless_statement" => {
+                // Phase 6b: SIR's `Expr::If` is an *expression* — it
+                // always yields a value.  We wrap it in `Stmt::ExprStmt`
+                // here so the body's value (or NilLit) propagates
+                // through the SIR statement stream.
+                let expr = self.lower_if_or_unless(node)?;
+                Ok(Stmt::ExprStmt {
+                    expr,
+                    span: self.span_of(node),
+                })
+            }
             other => Err(RubyLowerError {
                 message: format!("unsupported statement form `{other}`"),
                 line: node.start_line.unwrap_or(0),
                 column: node.start_column.unwrap_or(0),
             }),
         }
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 6b — `if … else … end` / `unless … else … end`
+    // -------------------------------------------------------------------
+
+    /// Lower an `if_statement` or `unless_statement` node into an
+    /// `Expr::If`.  Both rules have the same shape from the AST's
+    /// perspective; the only difference is that `unless`'s
+    /// condition is negated.  `elsif` chains nest right — the
+    /// `else_branch` of the outermost `If` is itself an `If` for
+    /// the first elsif, etc.
+    fn lower_if_or_unless(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        let is_unless = node.rule_name == "unless_statement";
+        // The first `expression` child is the condition.
+        let cond_node = self
+            .find_node_child(node, "expression")
+            .ok_or_else(|| RubyLowerError {
+                message: format!("{} missing condition expression", node.rule_name),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let mut cond = self.lower_expression(cond_node)?;
+        if is_unless {
+            // `unless cond` is `if !cond` — wrap in `not` builtin.
+            cond = Expr::BuiltinCall {
+                name: "not".to_string(),
+                args: vec![cond],
+                effects: EffectSet::PURE,
+                span: self.span_of(cond_node),
+            };
+        }
+
+        // Then-branch body: every `statement` child *until* the
+        // first elsif/else/end terminator.  Since the grammar
+        // already segregates elsif/else into their own subnodes,
+        // direct `statement` children of `node` are the then-body.
+        let then_body = self.lower_clause_statements(node)?;
+
+        // elsif chain — right-associative nesting.  Build the
+        // tail starting from `else_clause` and unwind back through
+        // any `elsif_clause` nodes in reverse order.
+        let elsifs: Vec<&GrammarASTNode> = node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "elsif_clause" => Some(n),
+                _ => None,
+            })
+            .collect();
+        let else_clause: Option<&GrammarASTNode> = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "else_clause" => Some(n),
+            _ => None,
+        });
+
+        // Start with the `else` body (or `NilLit` if absent).
+        let mut tail = if let Some(ec) = else_clause {
+            self.lower_clause_statements(ec)?
+        } else {
+            Block {
+                stmts: Vec::new(),
+                value: Expr::NilLit { span: self.span_of(node) },
+                span: self.span_of(node),
+            }
+        };
+
+        // Unwind elsif clauses in reverse order, each wrapping the
+        // accumulated tail as its own else-branch.
+        for ec in elsifs.iter().rev() {
+            let ec_cond = self.find_node_child(ec, "expression").ok_or_else(|| {
+                RubyLowerError {
+                    message: "elsif_clause missing condition expression".to_string(),
+                    line: ec.start_line.unwrap_or(0),
+                    column: ec.start_column.unwrap_or(0),
+                }
+            })?;
+            let ec_cond_expr = self.lower_expression(ec_cond)?;
+            let ec_body = self.lower_clause_statements(ec)?;
+            tail = Block {
+                stmts: Vec::new(),
+                value: Expr::If {
+                    cond: Box::new(ec_cond_expr),
+                    then_branch: Box::new(ec_body),
+                    else_branch: Box::new(tail),
+                    span: self.span_of(ec),
+                },
+                span: self.span_of(ec),
+            };
+        }
+
+        Ok(Expr::If {
+            cond: Box::new(cond),
+            then_branch: Box::new(then_body),
+            else_branch: Box::new(tail),
+            span: self.span_of(node),
+        })
+    }
+
+    /// Lower the `statement` children of a clause node (`if_statement`,
+    /// `elsif_clause`, `else_clause`, `unless_statement`) into a
+    /// `Block`.  Tail-expression promotion follows the same rule as
+    /// `lower_program` — last bare `expression_stmt` / `method_call`
+    /// becomes `value`, otherwise `value = NilLit`.
+    fn lower_clause_statements(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Block, RubyLowerError> {
+        // Phase 6b: each branch is an independent SIR `Block`.
+        // Lock the declared-locals set to the outer-scope's snapshot
+        // before lowering the body, then restore on exit.  Without
+        // this, locals introduced in one `if`-branch would leak
+        // into the other branch's scope and cause spurious
+        // `Stmt::Assign` emissions (or vice versa).
+        let saved_locals = self.declared_locals.clone();
+        let stmts_in: Vec<&GrammarASTNode> = node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+                _ => None,
+            })
+            .collect();
+        if stmts_in.is_empty() {
+            return Ok(Block {
+                stmts: Vec::new(),
+                value: Expr::NilLit { span: self.span_of(node) },
+                span: self.span_of(node),
+            });
+        }
+        let last_idx = stmts_in.len() - 1;
+        let mut stmts_out: Vec<Stmt> = Vec::new();
+        let mut value: Option<Expr> = None;
+        for (i, s) in stmts_in.iter().enumerate() {
+            let inner = self.first_node_child(s).ok_or_else(|| RubyLowerError {
+                message: "statement node had no child rule".to_string(),
+                line: s.start_line.unwrap_or(0),
+                column: s.start_column.unwrap_or(0),
+            })?;
+            let is_tail = i == last_idx;
+            let kind = inner.rule_name.as_str();
+            if is_tail && matches!(kind, "expression_stmt" | "method_call") {
+                let v = match kind {
+                    "expression_stmt" => {
+                        let expr_node = self.first_node_child(inner).ok_or_else(|| {
+                            RubyLowerError {
+                                message: "expression_stmt had no expression child".to_string(),
+                                line: inner.start_line.unwrap_or(0),
+                                column: inner.start_column.unwrap_or(0),
+                            }
+                        })?;
+                        self.lower_expression(expr_node)?
+                    }
+                    "method_call" => self.lower_method_call(inner)?,
+                    _ => unreachable!(),
+                };
+                value = Some(v);
+            } else {
+                stmts_out.push(self.lower_statement_inner(inner)?);
+            }
+        }
+        let value = value.unwrap_or(Expr::NilLit { span: self.span_of(node) });
+        // Restore the outer scope's declared locals.
+        self.declared_locals = saved_locals;
+        Ok(Block {
+            stmts: stmts_out,
+            value,
+            span: self.span_of(node),
+        })
     }
 
     // -------------------------------------------------------------------
@@ -360,6 +558,13 @@ impl Lowerer {
         } else {
             Vec::new()
         };
+
+        // Phase 6b: any non-empty parameter list means we'll emit
+        // untyped Params (sir_type=None), which the SIR validator
+        // requires `dynamic-typing` to be declared for.
+        if !params.is_empty() {
+            self.features_used.insert(Feature::DynamicTyping);
+        }
 
         // Lower the body using a fresh locals + params scope so the
         // outer program's bindings don't leak into the method.
@@ -471,6 +676,10 @@ impl Lowerer {
 
         let span = self.span_of(node);
         if self.declared_locals.contains(&name) {
+            // Phase 6b: `Stmt::Assign` re-binds an existing local —
+            // the SIR validator requires the manifest to declare
+            // `mutable-bindings` whenever this node appears.
+            self.features_used.insert(Feature::MutableBindings);
             Ok(Stmt::Assign {
                 name,
                 scope: Scope::Local,

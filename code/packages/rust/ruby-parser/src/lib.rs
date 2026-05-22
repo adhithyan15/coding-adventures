@@ -215,5 +215,80 @@ mod tests {
         assert_program_root(&ast);
         assert!(find_def_statement(&ast).is_some());
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6b — `if … else … end` and `unless`
+    // -----------------------------------------------------------------------
+
+    fn find_statement_inner<'a>(
+        ast: &'a GrammarASTNode,
+        rule: &str,
+    ) -> Option<&'a GrammarASTNode> {
+        for child in &ast.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                if n.rule_name == "statement" {
+                    for inner in &n.children {
+                        if let ASTNodeOrToken::Node(d) = inner {
+                            if d.rule_name == rule {
+                                return Some(d);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        None
+    }
+
+    #[test]
+    fn test_parse_if_with_body() {
+        let ast = parse_ruby("if x\n  y = 1\nend");
+        assert_program_root(&ast);
+        let node = find_statement_inner(&ast, "if_statement")
+            .expect("expected if_statement");
+        // The body has at least one `statement` subnode.
+        let body_count = node
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "statement"))
+            .count();
+        assert!(body_count >= 1);
+    }
+
+    #[test]
+    fn test_parse_if_else() {
+        let ast = parse_ruby("if x\n  y = 1\nelse\n  y = 2\nend");
+        let node = find_statement_inner(&ast, "if_statement")
+            .expect("expected if_statement");
+        let has_else = node
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "else_clause"));
+        assert!(has_else, "expected else_clause subnode");
+    }
+
+    #[test]
+    fn test_parse_if_elsif_else() {
+        let ast = parse_ruby("if x\n  a = 1\nelsif y\n  a = 2\nelse\n  a = 3\nend");
+        let node = find_statement_inner(&ast, "if_statement")
+            .expect("expected if_statement");
+        let elsif_count = node
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "elsif_clause"))
+            .count();
+        assert_eq!(elsif_count, 1);
+        let has_else = node
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "else_clause"));
+        assert!(has_else);
+    }
+
+    #[test]
+    fn test_parse_unless() {
+        let ast = parse_ruby("unless x\n  y = 1\nend");
+        assert!(find_statement_inner(&ast, "unless_statement").is_some());
+    }
 }
 

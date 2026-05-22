@@ -317,6 +317,108 @@ mod tests {
         }
     }
 
+    // -----------------------------------------------------------------
+    // Phase 6b — `if … else … end` / `unless … else … end`
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn if_lowers_to_expr_if() {
+        let m = lower("x = 1\nif x\n  y = 2\nend\n");
+        let main = main_body(&m);
+        // main.stmts: LetBinding(x=1), ExprStmt(If { ... })
+        let if_stmt = main.stmts.iter().find_map(|s| match s {
+            Stmt::ExprStmt { expr: Expr::If { cond, .. }, .. } => Some(cond),
+            _ => None,
+        });
+        assert!(if_stmt.is_some(), "expected If expr-stmt in main body");
+    }
+
+    #[test]
+    fn if_else_lowers_with_else_branch() {
+        let m = lower("if x\n  y = 1\nelse\n  y = 2\nend\n");
+        let main = main_body(&m);
+        let if_expr = main
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::ExprStmt { expr: e @ Expr::If { .. }, .. } => Some(e),
+                _ => None,
+            })
+            .expect("expected If expr");
+        // The else_branch has one statement.
+        if let Expr::If { else_branch, .. } = if_expr {
+            assert!(
+                !else_branch.stmts.is_empty()
+                    || !matches!(else_branch.value, Expr::NilLit { .. }),
+                "expected non-empty else branch"
+            );
+        }
+    }
+
+    #[test]
+    fn unless_negates_condition() {
+        let m = lower("unless x\n  y = 1\nend\n");
+        let main = main_body(&m);
+        let if_expr = main
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::ExprStmt { expr: e @ Expr::If { .. }, .. } => Some(e),
+                _ => None,
+            })
+            .expect("expected If expr");
+        // `unless cond` lowers to `if !cond` — the cond should be a
+        // `BuiltinCall("not", ...)`.
+        if let Expr::If { cond, .. } = if_expr {
+            assert!(
+                matches!(&**cond, Expr::BuiltinCall { name, .. } if name == "not"),
+                "expected `unless` to wrap cond in `not` builtin, got {:?}",
+                cond
+            );
+        }
+    }
+
+    #[test]
+    fn if_elsif_else_chain_nests_right() {
+        let m = lower("if x\n  a = 1\nelsif y\n  a = 2\nelse\n  a = 3\nend\n");
+        let main = main_body(&m);
+        let if_expr = main
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::ExprStmt { expr: e @ Expr::If { .. }, .. } => Some(e),
+                _ => None,
+            })
+            .expect("expected If expr");
+        // The outer if's else_branch.value should itself be another If
+        // (the elsif).  The inner If's else_branch contains the final
+        // else clause.
+        if let Expr::If { else_branch, .. } = if_expr {
+            match &else_branch.value {
+                Expr::If { .. } => {} // ✓
+                other => panic!("expected nested If in else_branch.value, got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn if_module_passes_sir_validator() {
+        let m = lower(concat!(
+            "x = 1\n",
+            "if x\n",
+            "  y = 2\n",
+            "else\n",
+            "  y = 3\n",
+            "end\n",
+        ));
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected our output: {:?}",
+            result
+        );
+    }
+
     #[test]
     fn module_with_def_passes_sir_validator() {
         // v0 grammar can't yet parse nested method calls in args
