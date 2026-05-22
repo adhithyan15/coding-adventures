@@ -4390,12 +4390,25 @@ def sum_handler(vm: VM, expr: IRApply) -> IRNode:
     1. Constant summand → ``f * (hi − lo + 1)``
     2. Geometric series (finite or infinite) → standard formula
     3. Power-of-index via Faulhaber's formula (k^m, m = 0…5)
-    4. Classic infinite series (Basel, Leibniz, Taylor for e/exp)
-    5. Numeric small range when bounds are concrete integers
-    6. Fallback: returns unevaluated ``Sum(f, k, lo, hi)``
+    4. Telescoping (Phase 39): ``f = g(k+1) − g(k)`` → ``g(hi+1) − g(lo)``
+    5. Classic infinite series (Basel, Leibniz, Taylor for e/exp)
+    6. Numeric small range when bounds are concrete integers
+    7. Fallback: returns unevaluated ``Sum(f, k, lo, hi)``
 
     The VM is passed through so the evaluator can invoke ``vm.eval`` on
     intermediate sub-expressions (e.g. constant-summand count).
+
+    Phase 40 — Apart-expanded telescope retry
+    -----------------------------------------
+    When the initial ``evaluate_sum`` call falls through to the unevaluated
+    ``Sum(...)`` shape AND the summand has the form ``Div(P(k), Q(k))``
+    that ``Apart`` can decompose into a sum of partial fractions, we
+    expand once via ``Apart(f, k)`` and retry ``evaluate_sum`` on the
+    decomposed shape.  The classic case is ``∑ 1/(k·(k+1))`` →
+    ``∑ [1/k − 1/(k+1)]`` (Phase 39 closes the latter as
+    ``1 − 1/(hi+1)``).  When Apart returns the integrand unchanged
+    (denominator not factorable or no partial-fraction structure) the
+    retry is a no-op cost and we return the original unevaluated form.
     """
     from cas_summation import evaluate_sum as _evaluate_sum
 
@@ -4408,10 +4421,109 @@ def sum_handler(vm: VM, expr: IRApply) -> IRNode:
     lo_ev = vm.eval(lo)
     hi_ev = vm.eval(hi)
     result = _evaluate_sum(f, k, lo_ev, hi_ev, vm)
-    # Avoid re-entering the handler if evaluate_sum fell back to unevaluated.
+    # Phase 40: if the dispatcher couldn't close the sum, try
+    # ``Apart(f, k)`` once (partial-fraction expansion) and re-run.
+    # This composes the existing Phase 39 telescope detection with the
+    # decomposition step needed to expose telescopes like ``1/(k(k+1))``.
     if isinstance(result, IRApply) and result.head == SUM:
+        # Only try Apart for rational-function shapes (Div head) — Apart
+        # leaves other shapes unchanged anyway, but skipping saves a
+        # round-trip through the handler dispatch.
+        if isinstance(f, IRApply) and f.head == DIV:
+            apart_attempt = vm.eval(IRApply(IRSymbol("Apart"), (f, k)))
+            # Only retry when Apart actually changed the shape — comparing
+            # to the original `f` catches the "not factorable" return path
+            # which returns the input unchanged.
+            if apart_attempt != f:
+                # Apart emits two-term partial fractions as
+                # ``Add(Neg(a), b)`` (or ``Add(a, Neg(b))``) rather than
+                # ``Sub(b, a)``.  The Phase 39 telescope detector matches
+                # ``Sub`` heads only, so normalise here before retrying.
+                normalised = _normalise_add_neg_to_sub(apart_attempt)
+                retry = _evaluate_sum(normalised, k, lo_ev, hi_ev, vm)
+                if not (isinstance(retry, IRApply) and retry.head == SUM):
+                    return vm.eval(retry)
         return result
     return vm.eval(result)
+
+
+def _canonicalise_add_operand_order(node: IRNode) -> IRNode:
+    """Deep-rewrite every ``Add`` so that numeric literals appear *last*
+    among its arguments, recursively.
+
+    The symbolic VM doesn't currently impose a canonical operand order on
+    ``Add``, so two structurally distinct trees can represent the same
+    mathematical expression — e.g. ``Add(k, 1)`` vs ``Add(1, k)``.  The
+    Phase 39 telescope detector relies on ``==`` after ``vm.eval``, so
+    these need to look identical for the Apart-rewritten summand to
+    match the substituted half.
+
+    This walker sorts each ``Add``'s arguments so that ``IRInteger`` /
+    ``IRRational`` / ``IRFloat`` literals come last, preserving the
+    relative order of non-literal children.  Other heads recurse into
+    their arguments unchanged.
+    """
+    if isinstance(node, IRApply):
+        new_args = tuple(_canonicalise_add_operand_order(a) for a in node.args)
+        if node.head == ADD and len(new_args) >= 2:
+            literals = [
+                a for a in new_args if isinstance(a, (IRInteger, IRRational, IRFloat))
+            ]
+            non_literals = [
+                a
+                for a in new_args
+                if not isinstance(a, (IRInteger, IRRational, IRFloat))
+            ]
+            if literals and non_literals:
+                # Only re-order when both kinds are present, otherwise
+                # leave the tuple alone (preserves all-literal folds and
+                # all-symbolic structures).
+                new_args = tuple(non_literals + literals)
+        if new_args != node.args:
+            return IRApply(node.head, new_args)
+        return node
+    return node
+
+
+def _normalise_add_neg_to_sub(node: IRNode) -> IRNode:
+    """Rewrite two-term ``Add`` nodes containing a ``Neg`` into the
+    equivalent ``Sub`` shape, then deep-canonicalise the operand order on
+    every remaining ``Add`` so downstream pattern matchers that key off
+    ``Sub`` (notably the Phase 39 telescope detector in ``cas_summation``)
+    can fire and structural ``==`` comparisons survive operand-order
+    differences between Apart's output and the substituted half.
+
+    +---------------------------------+----------------+
+    | Input shape                     | Output         |
+    +=================================+================+
+    | ``Add(a, Neg(b))``              | ``Sub(a, b)``  |
+    | ``Add(Neg(b), a)``              | ``Sub(a, b)``  |
+    | ``Add(Neg(a), Neg(b))``         | left untouched |
+    | other (Add with 3+ args, etc.)  | left untouched |
+    +---------------------------------+----------------+
+
+    Only the top-level ``Add`` is rewritten to ``Sub``; the deep ADD
+    operand canonicalisation runs everywhere underneath via
+    :func:`_canonicalise_add_operand_order`.
+    """
+    if not isinstance(node, IRApply) or node.head != ADD or len(node.args) != 2:
+        return _canonicalise_add_operand_order(node)
+    left, right = node.args
+    left_is_neg = isinstance(left, IRApply) and left.head == NEG and len(left.args) == 1
+    right_is_neg = (
+        isinstance(right, IRApply) and right.head == NEG and len(right.args) == 1
+    )
+    if left_is_neg and right_is_neg:
+        # ``Add(Neg(a), Neg(b))`` is genuinely negative on both sides;
+        # leaving it alone preserves the structural identity.
+        return _canonicalise_add_operand_order(node)
+    if right_is_neg:
+        rewritten = IRApply(SUB, (left, right.args[0]))
+        return _canonicalise_add_operand_order(rewritten)
+    if left_is_neg:
+        rewritten = IRApply(SUB, (right, left.args[0]))
+        return _canonicalise_add_operand_order(rewritten)
+    return _canonicalise_add_operand_order(node)
 
 
 def product_handler(vm: VM, expr: IRApply) -> IRNode:
