@@ -442,8 +442,9 @@ fn phase42_improper_rational_falls_through() {
 }
 
 #[test]
-fn phase42_transcendental_numerator_falls_through() {
-    // sin(k)/k² is non-polynomial; conservative refuse.
+fn phase42_transcendental_numerator_closes_via_phase49() {
+    // Phase 49 closes this: |sin(k)| ≤ 1 + k² → ∞.  Antisymmetric
+    // telescope reduces to g(1) = sin(1)/1² = sin(1).
     let k = sym("k");
     let sin_k = apply(sym("Sin"), vec![k.clone()]);
     let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
@@ -462,7 +463,8 @@ fn phase42_transcendental_numerator_falls_through() {
         ],
     );
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
-    assert!(matches!(out, IRNode::Apply(node) if node.head == sym(SUM)));
+    // Must NOT be the unevaluated Sum form.
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
 
 // ---------------------------------------------------------------------------
@@ -786,6 +788,76 @@ fn phase46_both_negative_left_untouched() {
             apply(sym(NEG), vec![apply(sym(DIV), vec![int(1), apply(sym(ADD), vec![k.clone(), int(1)])])]),
         ],
     );
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ---------------------------------------------------------------------------
+// Phase 49 (Rust port): Bounded × vanishing recogniser.
+//
+// Extends g_vanishes_at_infinity to accept Div(bounded, diverging)
+// shapes where the numerator is uniformly bounded (Sin/Cos, closed
+// under Mul/Add/Neg, constants in k).  Closes telescopes like
+// ∑ [sin(k)/k² − sin(k+1)/(k+1)²] = sin(1).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase49_sin_over_k_squared_closes() {
+    let k = sym("k");
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![sin_k, apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![sin_kp1, apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase49_cos_over_k_cube_closes() {
+    let k = sym("k");
+    let cos_k = apply(sym("Cos"), vec![k.clone()]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let cos_kp1 = apply(sym("Cos"), vec![kp1.clone()]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![cos_k, apply(sym(POW), vec![k.clone(), int(3)])]),
+        apply(sym(DIV), vec![cos_kp1, apply(sym(POW), vec![kp1, int(3)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase49_sin_cos_product_over_diverging() {
+    let k = sym("k");
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let cos_k = apply(sym("Cos"), vec![k.clone()]);
+    let num_k = apply(sym(MUL), vec![sin_k, cos_k]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let cos_kp1 = apply(sym("Cos"), vec![kp1.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![sin_kp1, cos_kp1]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase49_log_numerator_still_refused() {
+    // log(k) is NOT bounded — Phase 49 must refuse to close the sum.
+    let k = sym("k");
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![log_k, apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![log_kp1, apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
