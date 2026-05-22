@@ -1,312 +1,190 @@
-# UI29-1 — HostDialog kernel primitive
+# UI29-1 — `HostDialog` kernel primitive
 
-**Status:** Specification (amendment)
-**Layer:** UI / cross-cutting (kernel primitive vocabulary + every backend emitter)
-**Amends:** UI29 (primitive kernel)
-**Supersedes (partial):** `mosaic-pkg-dialog` v0.1.0, which composed a fake dialog from Box + Column + Text + HostButton
+**Status:** Specification (draft)
+**Layer:** UI / cross-cutting (moslayout kernel addition + every backend emitter)
+**Depends on:** UI29 (primitive kernel), UI24 (emit→dispatch)
+**Extends:** UI29 §2 — adds a sixteenth kernel primitive.
 
 ---
 
 ## 1. Why this exists
 
-The v0.1.0 `mosaic-pkg-dialog` (PR #3751) was built without a kernel
-`HostDialog` because we hadn't yet validated whether dialogs met the
-UI29 §2.2 kernel-inclusion criteria. They do — and the v0.1.0 package
-demonstrates exactly why.
+UI29 froze a 15-primitive kernel: enough to express layout, leaf
+content, two interactive host widgets (`HostInput`, `HostButton`), and
+a semantic data table. What it deliberately omitted — and listed in
+§2.3 as "not in the kernel" — was the dialog / modal pattern, calling
+out that it composes from `Stack` + portal mechanism + a "host service
+TBD".
 
-A composed-from-`Box` dialog cannot provide:
+Three demos in flight (visicalc save-as, the OpenClaw character-sheet
+mock, and the adjudication-evidence preview pane) need a modal dialog.
+Each of them attempted to compose one from `Stack` + `Box` and
+discovered the same three holes:
 
-- **Modal blocking.** Clicks outside the dialog continue to reach the
-  background UI. Real modal behavior needs the platform's top-layer /
-  popup / sheet primitive.
-- **Focus trap.** `Tab` escapes the dialog into the background; screen
-  readers can wander out. Native dialogs trap focus to the dialog's
-  descendants until close.
-- **`Esc`-to-close.** Native dialogs handle this without any author
-  wiring; a composed dialog has to bind a global keydown handler.
-- **Top-layer rendering.** A `<div>`-based dialog inherits its
-  ancestor's `z-index` stack — it sits *below* anything with a higher
-  z-index. Native `<dialog>` (DOM), `Popup` (Qt), `.sheet` (SwiftUI),
-  `ContentDialog` (XAML) all render in a platform-level top layer that
-  is always above page content.
-- **Accessibility role.** Screen readers announce a `<dialog>` /
-  `Popup` / `ContentDialog` as "dialog" because the host primitive
-  carries the `dialog` accessibility role (and `aria-modal` when modal).
-  A composed `<div>` carries no such semantics.
+1. **Native semantics.** Browsers, SwiftUI, Qt, and Compose all
+   provide a *native* dialog primitive (`<dialog>`, `.sheet`,
+   `Dialog { ... }`, `Dialog`). Screen readers, keyboard focus traps,
+   and z-order stacking integrate with the native primitive in ways
+   that a `Stack`+`Box` composition cannot replicate. This is the same
+   accessibility argument UI29 §2.2 used for `HostTable`.
+2. **Open/close state.** A `Stack`+`Box` composition has to render its
+   own conditional (`If when: open`) and rely on the host to manage
+   the bool. The native primitives all accept the open/close state as
+   a binding and own the show/hide animation themselves.
+3. **Backdrop and dismissal.** Click-outside-to-close, escape-key,
+   focus restoration on dismiss — every native primitive provides
+   these as flags. Re-implementing them in moslayout would mean
+   shipping focus-management primitives no userland package needs.
 
-Every host platform Mosaic targets ships a dedicated dialog primitive
-with these properties built in. Per UI29 §2.2:
-
-1. ✓ Every host has a native equivalent.
-2. ✓ No reasonable composition exists — the modal/focus/top-layer/
-   accessibility semantics are not expressible in lower primitives.
-3. ✓ Semantically irreducible — screen-reader users *require* the
-   dialog role to be present *as* a dialog, not as a div.
-
-Therefore `HostDialog` belongs in the kernel.
+`HostDialog` is therefore a kernel addition under UI29-1, the first
+expansion of the UI29 kernel.
 
 ---
 
-## 2. The primitive
+## 2. Inclusion criteria check (UI29 §2.2)
 
-### 2.1 Slots
+1. **Every host platform has a native equivalent.** Yes: DOM
+   `<dialog>`, SwiftUI `.sheet` / `.popover`, Qt/QML `Dialog`,
+   Compose `Dialog`.
+2. **No reasonable composition exists.** A `Stack`+`Box` composition
+   cannot replicate focus trap, backdrop blocking, native z-order, or
+   accessibility role semantics.
+3. **Semantically irreducible.** Screen readers announce `<dialog>`
+   with role="dialog" and treat its content as modal context. A fake
+   dialog made of divs does not get this announcement; this is a
+   first-class accessibility regression.
 
-| Slot | Type | Default | Effect |
-|---|---|---|---|
-| `open` | `bool` | `false` | Visibility — when `true` the dialog is presented |
-| `modal` | `bool` (literal) | `true` | Compile-time keyword. `true` → modal (focus trap + backdrop + top-layer); `false` → non-modal popover. |
-| `title` | `text` | `""` | Optional title; the host primitive's title slot when one exists |
-| `dismiss-on-backdrop` | `bool` (literal) | `true` | Whether clicking the backdrop closes the dialog. Compile-time keyword. |
-
-The `modal` and `dismiss-on-backdrop` keywords are compile-time
-constants (same pattern as `Grid`'s `sticky-header`) so backends can
-choose the matching API at lowering time — e.g. React selects
-`showModal()` vs `show()`, Qt selects `Popup`'s `modal: true` vs
-`false`, SwiftUI selects `.sheet` vs `.popover`.
-
-### 2.2 Emits
-
-| Emit | Payload | When |
-|---|---|---|
-| `onOpen` | (none) | The dialog has transitioned from closed to open. Fires once per open. |
-| `onClose` | (none) | The dialog has transitioned from open to closed. Fires once per close. Triggers: user pressed Esc, clicked backdrop (when `dismiss-on-backdrop: true`), clicked a child element that emitted `onClose`, or `open` slot flipped to `false`. |
-
-### 2.3 Children
-
-`HostDialog` takes arbitrary kernel-primitive children that render as
-the dialog's body. The host inserts them inside the platform's dialog
-element (`<dialog>`'s children, `Popup.contentItem`'s children, the
-trailing closure on `.sheet`, `ContentDialog.Content`, etc.).
-
-### 2.4 Sub-parts
-
-| Sub-part | Targets |
-|---|---|
-| `dialog` | The outer dialog element (`<dialog>`, `Popup`, `.sheet` content view, `ContentDialog`) |
-| `dialog:open` | While `open: true` |
-| `dialog/backdrop` | The backdrop (DOM `<dialog>::backdrop`, Qt `Popup.Overlay`, SwiftUI fullScreenCover dim, XAML `ContentDialog`'s background scrim) |
-
-Authors style the backdrop via the sub-part path the same way they
-style any other sub-part (UI27 §3.1).
+All three criteria are met.
 
 ---
 
-## 3. Backend lowerings
+## 3. Grammar surface
 
-### 3.1 React (`mosaic-emit-react`)
-
-```tsx
-<dialog
-  ref={dialogRef}
-  /* effect: if (open) dialogRef.current?.showModal() else dialogRef.current?.close() */
-  onClose={() => dispatch({ type: "close" })}
->
-  {children}
-</dialog>
-```
-
-- `modal: true` → `showModal()` (top layer + `::backdrop` element).
-- `modal: false` → `show()`.
-- `dismiss-on-backdrop` wired via a backdrop click handler that calls
-  `dialogRef.current?.close()`.
-- `open` slot drives a `useEffect` that calls `showModal()` / `close()`.
-
-### 3.2 SwiftUI (`mosaic-emit-swiftui`)
-
-```swift
-content
-  .sheet(isPresented: $open, onDismiss: { dispatch(.close) }) {
-    // children
-  }
-```
-
-- `modal: true` → `.sheet(...)` (default modal).
-- `modal: false` → `.popover(...)`.
-- `dismiss-on-backdrop` on SwiftUI is `interactiveDismissDisabled(!dismissOnBackdrop)`.
-
-The `content` host's existing view body sits to the left of the
-modifier; the dialog's children fill the closure.
-
-### 3.3 Qt/QML (`mosaic-emit-qt`)
-
-```qml
-import QtQuick.Controls 2.15
-
-Popup {
-    modal: true
-    visible: open
-    closePolicy: dismissOnBackdrop ? Popup.CloseOnEscape | Popup.CloseOnPressOutside : Popup.NoAutoClose
-    onClosed: close()    // signal call
-    contentItem: ColumnLayout { /* children */ }
-}
-```
-
-- `modal: true` → `Popup.modal: true` (focus trap + background dim).
-- `modal: false` → `Popup.modal: false` (popover-style).
-- `Popup`'s `Overlay.modal` slot is the styling hook for the backdrop sub-part.
-
-### 3.4 WebComponent (`mosaic-emit-webcomponent`)
-
-Same shape as React but inside the shadow DOM. The `<dialog>` element
-is in the shadow root; `this.dispatch({type:"close"})` replaces React's
-`dispatch` prop.
-
-### 3.5 HTML (`mosaic-emit-html`)
-
-```html
-<dialog id="..." {{open ? "open" : ""}}>
-  {{children}}
-</dialog>
-<script>
-  // tiny inline: when modal=true, dialog.showModal() on connect; otherwise dialog.show()
-</script>
-```
-
-- Static HTML cannot wire `onClose` to a Mosaic dispatch (no JS
-  runtime by design). The emitter drops the emit with a comment.
-- The browser still handles Esc and top-layer modality natively for
-  free.
-
-### 3.6 XAML / WinUI (`mosaic-emit-xaml`)
-
-```xml
-<ContentDialog
-  Title="{Binding title}"
-  IsOpen="{Binding open}"
-  Closed="OnClose">
-  <!-- children -->
-</ContentDialog>
-```
-
-- `modal` is implicit (ContentDialog is always modal); `modal: false`
-  on XAML lowers to a `Flyout` instead.
-- `Closed` event dispatches `onClose`.
-
-### 3.7 Paint-VM (`mosaic-emit-paint`)
-
-Future. A `PaintHostDialogInstruction` is added to the IR; the
-runtime layer renders it as a centered top-layer rect with a backdrop
-fill and forwards keyboard events.
-
----
-
-## 4. Inclusion criteria revisit (UI29 §2.2)
-
-The original UI29 §2.2 criteria, applied:
-
-| Criterion | HostDialog |
-|---|---|
-| Every host platform has a native equivalent | ✓ React `<dialog>`, SwiftUI `.sheet`, Qt `Popup`, HTML `<dialog>`, WebComponent `<dialog>`, XAML `ContentDialog` |
-| No reasonable composition exists | ✓ Modal blocking + focus trap + top-layer + accessibility role are not expressible at the layout level |
-| Semantically irreducible | ✓ Screen readers require the dialog role to be present as a dialog |
-
-HostDialog therefore satisfies all three. It is the **16th kernel
-primitive**. The kernel as of UI29-1:
-
-```
-Box  Row  Column  Stack
-Text  Image  Spacer  Divider  Icon
-If  Else  For
-HostInput  HostButton  HostTable  HostScroll  HostDialog
-```
-
----
-
-## 5. Migration: `mosaic-pkg-dialog` v0.1.0 → v0.2.0
-
-The userland `mosaic-pkg-dialog` (PR #3751) is rewritten on top of
-`HostDialog`:
+`HostDialog` is a kernel primitive. Its tag, like every other UI29
+primitive, parses through the existing moslayout primitive-tag rule —
+no grammar additions.
 
 ```moslayout
-// v0.2.0
-component Dialog {
-  slot open: bool;
-  slot title: text;
-  slot message: text;
-  slot close-label: text;
-  emit onClose();
-}
-
-layout Dialog {
-  HostDialog [dialog-shell] (
-    open: slot: open,
-    modal: true,
-    title: slot: title,
-    onClose: emit: onClose,
-  ) {
-    Column [dialog-stack] {
-      Box [dialog-message] {
-        Text (content: slot: message)
-      }
-      Box [dialog-actions] {
-        HostButton (label: slot: close-label, onTap: emit: onClose)
-      }
+HostDialog (
+  open: slot: dialog-open,
+  modal: true,
+  title: "Save changes?",
+  dismiss-on-backdrop: false,
+  onClose: emit: onDialogClose,
+) {
+  Column {
+    Text (content: "Are you sure you want to save?")
+    Row {
+      HostButton (label: "Cancel", onTap: emit: onCancel)
+      HostButton (label: "Save",   onTap: emit: onSave)
     }
   }
 }
 ```
 
-v0.2.0 gains: a real `open: bool` slot (replacing v0.1.0's
-host-controlled visibility), modal behavior, focus trap, Esc-to-close,
-top-layer rendering, screen-reader announcement. The mosstyle file
-keeps the same parts but the host `dialog-shell` part now styles the
-native dialog element directly via the platform's `Popup`/`<dialog>`
-styling hook.
+### 3.1 Props
 
-The userland code shrinks (no more `dialog-root` wrapper Box — the
-`HostDialog` IS the root) and the behavior gets dramatically richer.
+| Prop                    | Type         | Default       | Meaning                                       |
+|-------------------------|--------------|---------------|-----------------------------------------------|
+| `open`                  | slot: bool   | required      | Drives the open/close state.                  |
+| `modal`                 | keyword      | `true`        | `true` → modal sheet; `false` → popover.      |
+| `title`                 | string \| slot | none        | Optional dialog title.                        |
+| `dismiss-on-backdrop`   | keyword      | `true`        | When `false`, backdrop click does not close.  |
+| `onClose`               | emit ref     | none          | Fired when the host dismisses the dialog.     |
+
+### 3.2 SwiftUI lowering
+
+SwiftUI exposes dialog-style presentation as a **view modifier**
+(`.sheet(isPresented:onDismiss:content:)` or
+`.popover(isPresented:content:)`) attached to a parent view, not as a
+standalone view. Because the UI29 kernel emitter walks the layout tree
+as standalone view nodes, the simplest implementation is to emit an
+invisible *anchor* (`Color.clear.frame(width: 0, height: 0)`) that
+carries the modifier. The dialog children become the modifier's
+content closure.
+
+Shape:
+
+```swift
+Color.clear.frame(width: 0, height: 0)
+    .sheet(isPresented: $open, onDismiss: { dispatch(.dialogClose) }) {
+        VStack {
+            // children
+        }
+        .navigationTitle("Save changes?")          // if title bound
+        .interactiveDismissDisabled(true)          // if dismiss-on-backdrop: false
+    }
+```
+
+| Moslayout prop                  | SwiftUI                                                |
+|---------------------------------|--------------------------------------------------------|
+| `open: slot: x`                 | `isPresented: .constant(x)` *(see binding note)*       |
+| `modal: true` (default)         | `.sheet(...)`                                          |
+| `modal: false`                  | `.popover(...)`                                        |
+| `title: "..."` / `title: slot:` | `.navigationTitle("...")` inside content closure       |
+| `dismiss-on-backdrop: false`    | `.interactiveDismissDisabled(true)` inside closure     |
+| `onClose: emit: onX`            | `onDismiss: { dispatch(.x) }` *(sheet only)*           |
+
+#### 3.2.1 Binding choice — `.constant(x)`
+
+SwiftUI bindings need mutable state, but Mosaic components receive
+slots as immutable `let`s. We follow the same `.constant(value)`
+pattern `HostInput` uses (UI29-K-swiftui §HostInput binding choice):
+the host owns close-via-dispatch through the UI24 Flux loop. A
+`@State` proxy that lifts the slot into mutable local state is a
+documented future enhancement.
+
+#### 3.2.2 `.popover` and `onClose`
+
+SwiftUI's `.popover(isPresented:content:)` does **not** accept an
+`onDismiss:` closure. When `modal: false`, the emitter still wires the
+content closure but omits the `onDismiss` handler — the host should
+observe its own `open` slot change and dispatch the close event itself.
+
+### 3.3 Other backend lowerings
+
+- **DOM / React**: `<dialog open={open}>` with the children inside;
+  `modal: true` calls `.showModal()`, `modal: false` calls `.show()`.
+- **Qt / QML**: `Dialog { visible: open; modal: modal; ... }`.
+- **WebComponent**: shadow-root `<dialog>` mirroring the DOM lowering.
+- **HTML (static)**: emit a `<dialog>` element; runtime opens it.
+
+These are out of scope for this spec — each backend gets its own
+implementation PR (U29-1-K-react, U29-1-K-qt, etc.).
 
 ---
 
-## 6. Implementation roadmap
+## 4. Tests (SwiftUI backend)
 
-| ID | Work | Depends on |
-|---|---|---|
-| U29-1-G | `moslayout-compiler`: add `"HostDialog"` to `PRIMITIVES` | — |
-| U29-1-R | `mosaic-package-resolver`: add `"HostDialog"` to `KERNEL_PRIMITIVES` | — |
-| U29-1-K-react | `mosaic-emit-react`: `<dialog>` lowering | U29-1-G |
-| U29-1-K-swiftui | `mosaic-emit-swiftui`: `.sheet` lowering | U29-1-G |
-| U29-1-K-qt | `mosaic-emit-qt`: `Popup` lowering | U29-1-G |
-| U29-1-K-html | `mosaic-emit-html`: `<dialog>` lowering | U29-1-G |
-| U29-1-K-webcomp | `mosaic-emit-webcomponent`: `<dialog>` lowering | U29-1-G |
-| U29-1-K-xaml | `mosaic-emit-xaml`: `ContentDialog` lowering | U29-1-G |
-| U29-1-P | `mosaic-pkg-dialog` v0.2.0: rewrite on top of HostDialog | U29-1-K-react + U29-1-K-swiftui + U29-1-K-qt (at minimum) |
+The U29-1-K-swiftui PR ships at least eight tests:
 
-All K-* PRs run in parallel. P fans in.
+1. Empty `HostDialog` emits a `Color.clear` anchor + `.sheet`.
+2. `open: slot: x` references `x` as the binding.
+3. `modal: true` uses `.sheet(...)`.
+4. `modal: false` uses `.popover(...)`.
+5. Children render inside the content closure's `VStack`.
+6. `onClose` wires the `onDismiss` callback.
+7. `title: slot: t` emits `.navigationTitle(t)`.
+8. `dismiss-on-backdrop: false` emits `.interactiveDismissDisabled(true)`.
 
 ---
 
-## 7. Open questions (resolved in implementation PRs)
+## 5. Migration
 
-1. **Where does the `open: bool` slot live in the cross-backend
-   model?** React uses a ref + `useEffect`. SwiftUI uses a `Binding`.
-   Qt binds it directly. HTML uses a presence attribute. The kernel
-   primitive's *contract* is the slot semantic; backends decide the
-   mechanism. Each K-PR implements its own pattern.
-
-2. **Nested dialogs.** Spec is silent for v1. Most platforms allow
-   them (React `<dialog>` stacks via top layer; Qt `Popup` stacks via
-   z); UI29-2 can revisit if it surfaces real bugs.
-
-3. **Animation.** Out of scope for the kernel primitive — backends use
-   their platform's default open/close animation. A future
-   `.transition` or `.animation` modifier can ride atop the existing
-   sub-part vocabulary.
-
-4. **Form-submission integration** (React `<dialog>` + `<form
-   method="dialog">`). Out of scope; userland Form composition handles
-   it.
+This is a kernel addition. No existing demo uses `HostDialog`; no
+migration is required. Future demos that need a dialog stop composing
+`Stack`+`Box` and use `HostDialog` directly.
 
 ---
 
-## 8. What this spec does *not* do
+## 6. Open questions (resolved in implementation PRs)
 
-- Does not change UI29's kernel-versioning policy: HostDialog is added
-  via a numbered amendment (UI29-1), the kernel surface grows from 15
-  to 16 primitives, and it remains frozen thereafter unless another
-  numbered amendment ships.
-- Does not deprecate the v0.1.0 `mosaic-pkg-dialog`. The v0.1.0
-  composition still compiles and renders — it just lacks the native
-  semantics. v0.2.0 supersedes it; consumers update at their pace.
-- Does not opine on visual design. Backends use their platform default
-  styling; authors style via the `dialog` sub-part.
+1. **Multiple stacked dialogs.** A `HostDialog` inside another
+   `HostDialog`'s content closure should "just work" with `.sheet`, but
+   SwiftUI's stacking rules for nested sheets are platform-specific.
+   Pin in the test suite after the first dialog-stacking demo ships.
+2. **`title` slot binding for non-NavigationStack hosts.**
+   `.navigationTitle` only renders inside a `NavigationStack` parent;
+   for free-standing sheets the title needs to be rendered as a
+   `Text(...).font(.headline)` at the top of the content. Implementer
+   may emit both (the navigation modifier is a no-op outside a stack).
