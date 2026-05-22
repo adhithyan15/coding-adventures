@@ -65,6 +65,7 @@ profiling turns up surprises).
 from __future__ import annotations
 
 import json
+import math
 import struct
 from typing import TYPE_CHECKING
 
@@ -717,9 +718,11 @@ def mean_axis_via_rust(a: Tensor, dim: int, keepdim: bool) -> Tensor:
 #   via ``softmax_via_rust`` below.
 #
 # Phase 4 shipped Tanh + ReLU; Phase 4b adds Sigmoid via the 4-op
-# graph below; Phase 4d adds Softmax via the 7-op graph below.
-# GELU still waits — its tanh-approximation form (8-op composition
-# with x^3 via three Muls) is doable but warrants its own sub-phase.
+# graph below; Phase 4d adds Softmax via the 7-op graph below;
+# Phase 4c adds GELU via the 9-op tanh-approximation graph at the
+# bottom of this section.  This completes the classic
+# 5-activation set ({ReLU, Sigmoid, Tanh, GELU, Softmax}) — every
+# member of the Phase 4 family now has a Rust fast path.
 # ──────────────────────────────────────────────────────────────────
 
 
@@ -1027,6 +1030,147 @@ def softmax_via_rust(a: Tensor, dim: int) -> Tensor:
     if len(out_bytes) != expected_bytes:
         raise RuntimeError(
             f"softmax_via_rust: expected {expected_bytes} output bytes "
+            f"({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+
+    return _Tensor(out_floats, a.shape, device=a.device)
+
+
+# Tanh-approximation constants used by gelu_via_rust below.  Module
+# level rather than recomputed on every call.
+_GELU_SQRT_2_PI = math.sqrt(2.0 / math.pi)  # ≈ 0.7978845608
+_GELU_COEFF = 0.044715  # the magic constant in the tanh approximation
+
+
+def gelu_via_rust(a: Tensor) -> Tensor:
+    """``GELU(a) ≈ 0.5 * x * (1 + tanh(sqrt(2/π) * x * (1 + 0.044715 * x²)))``
+    composed as a 9-op graph.
+
+    This uses the standard **tanh approximation** to GELU
+    (matches `GELUFunction`'s pure-Python kernel and is the form
+    used in BERT/GPT).  The exact form would need ``erf``, which
+    matrix-cpu doesn't have today.
+
+    Algebraic refactor saves one ``Mul``: the original
+    ``x + 0.044715 * x^3`` factors as ``x * (1 + 0.044715 * x^2)``,
+    which lets us use ``x^2`` instead of computing ``x^3``
+    separately.  ``x^2 = Mul(x, x)`` is the only "power" we need.
+
+    Topology::
+
+        input(0) ──Mul(x, x)──> x²(1)
+        Mul(x²(1), c_0.044715(2)) ──> 0.044715·x²(3)
+        Add(0.044715·x²(3), c_1(4)) ──> 1 + 0.044715·x²(5)
+        Mul(input(0), 1 + 0.044715·x²(5)) ──> x · (1 + 0.044715·x²)(6)
+        Mul(... (6), c_sqrt_2π(7)) ──> sqrt(2/π) · x · (1 + 0.044715·x²)(8)  [= inner]
+        Tanh(inner(8)) ──> tanh(inner)(9)
+        Add(tanh(inner)(9), c_1(4)) ──> 1 + tanh(inner)(10)
+        Mul(input(0), 1 + tanh(inner)(10)) ──> x · (1 + tanh(inner))(11)
+        Mul(... (11), c_0.5(12)) ──> output(13)
+
+    9 ops, 14 tensors, 4 distinct constants (``0.044715``, ``1.0``,
+    ``sqrt(2/π)``, ``0.5``) — each materialised as a full-shape
+    tensor because matrix-cpu's elementwise ops don't broadcast
+    scalars (same constraint that drove ReLU's zero-tensor and
+    Sigmoid's ones-tensor materialisations).
+
+    All 9 ops ship in **one** FFI envelope so per-call overhead is
+    paid once.  ``c_1`` is referenced by both the Add at op 3 and
+    the Add at op 7 — same tensor id, declared once in
+    ``constants[]``.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "gelu_via_rust called but Rust backend is not available; "
+            "callers must check should_use_rust_for_activation() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(a.data)
+    shape_list = list(a.shape)
+
+    a_bytes = struct.pack(f"<{numel}f", *a.data)
+
+    # Build the four constant tensors.  Each is materialised at
+    # full input shape because matrix-cpu Mul/Add don't broadcast
+    # scalars.  Packed once each, hex-encoded for the envelope.
+    def _const_bytes(value: float) -> str:
+        return struct.pack(f"<{numel}f", *([value] * numel)).hex()
+
+    coeff_hex = _const_bytes(_GELU_COEFF)
+    ones_hex = _const_bytes(1.0)
+    sqrt_2pi_hex = _const_bytes(_GELU_SQRT_2_PI)
+    half_hex = _const_bytes(0.5)
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    # 0  = input x
+                    {"id": 0, "dtype": "f32", "shape": shape_list},
+                    # 1  = x * x = x²
+                    {"id": 1, "dtype": "f32", "shape": shape_list},
+                    # 2  = const 0.044715
+                    {"id": 2, "dtype": "f32", "shape": shape_list},
+                    # 3  = 0.044715 * x²
+                    {"id": 3, "dtype": "f32", "shape": shape_list},
+                    # 4  = const 1.0  (reused by two Adds)
+                    {"id": 4, "dtype": "f32", "shape": shape_list},
+                    # 5  = 1 + 0.044715 * x²
+                    {"id": 5, "dtype": "f32", "shape": shape_list},
+                    # 6  = x * (1 + 0.044715 * x²)
+                    {"id": 6, "dtype": "f32", "shape": shape_list},
+                    # 7  = const sqrt(2/π)
+                    {"id": 7, "dtype": "f32", "shape": shape_list},
+                    # 8  = sqrt(2/π) * x * (1 + 0.044715 * x²)   [inner]
+                    {"id": 8, "dtype": "f32", "shape": shape_list},
+                    # 9  = tanh(inner)
+                    {"id": 9, "dtype": "f32", "shape": shape_list},
+                    # 10 = 1 + tanh(inner)
+                    {"id": 10, "dtype": "f32", "shape": shape_list},
+                    # 11 = x * (1 + tanh(inner))
+                    {"id": 11, "dtype": "f32", "shape": shape_list},
+                    # 12 = const 0.5
+                    {"id": 12, "dtype": "f32", "shape": shape_list},
+                    # 13 = output = 0.5 * x * (1 + tanh(inner))
+                    {"id": 13, "dtype": "f32", "shape": shape_list},
+                ],
+                "inputs": [0],
+                "outputs": [13],
+                "ops": [
+                    {"kind": "Mul", "lhs": 0, "rhs": 0, "output": 1},     # x²
+                    {"kind": "Mul", "lhs": 1, "rhs": 2, "output": 3},     # 0.044715·x²
+                    {"kind": "Add", "lhs": 3, "rhs": 4, "output": 5},     # 1 + 0.044715·x²
+                    {"kind": "Mul", "lhs": 0, "rhs": 5, "output": 6},     # x · (...)
+                    {"kind": "Mul", "lhs": 6, "rhs": 7, "output": 8},     # sqrt(2/π) · x · (...)
+                    {"kind": "Tanh", "input": 8, "output": 9},            # tanh(inner)
+                    {"kind": "Add", "lhs": 9, "rhs": 4, "output": 10},    # 1 + tanh(inner)
+                    {"kind": "Mul", "lhs": 0, "rhs": 10, "output": 11},   # x · (1 + tanh(inner))
+                    {"kind": "Mul", "lhs": 11, "rhs": 12, "output": 13},  # 0.5 · (above)
+                ],
+                "constants": [
+                    {"tensor_id": 2, "dtype": "f32", "shape": shape_list, "bytes_hex": coeff_hex},
+                    {"tensor_id": 4, "dtype": "f32", "shape": shape_list, "bytes_hex": ones_hex},
+                    {"tensor_id": 7, "dtype": "f32", "shape": shape_list, "bytes_hex": sqrt_2pi_hex},
+                    {"tensor_id": 12, "dtype": "f32", "shape": shape_list, "bytes_hex": half_hex},
+                ],
+            },
+            "inputs": [a_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_hex = result["outputs"][0]
+    out_bytes = bytes.fromhex(out_hex)
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"gelu_via_rust: expected {expected_bytes} output bytes "
             f"({numel} f32), got {len(out_bytes)}"
         )
     out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
