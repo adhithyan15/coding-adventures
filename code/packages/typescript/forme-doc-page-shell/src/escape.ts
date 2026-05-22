@@ -108,6 +108,25 @@ export function escapeAttr(s: string): string {
 const SAFE_SCHEMES: ReadonlySet<string> = new Set(["http", "https", "mailto"]);
 
 /**
+ * Strip leading and trailing C0 controls (U+0000..U+001F) plus
+ * SPACE (U+0020) using explicit index walks.  Linear-time and
+ * obviously so — CodeQL's `js/polynomial-redos` query flags any
+ * `+` quantifier on user-controllable input regardless of
+ * whether the underlying regex is actually polynomial, and
+ * explicit loops sidestep the false-positive.
+ *
+ * @internal
+ */
+function stripC0Edges(s: string): string {
+  let start = 0;
+  while (start < s.length && s.charCodeAt(start) <= 0x20) start++;
+  let end = s.length;
+  while (end > start && s.charCodeAt(end - 1) <= 0x20) end--;
+  if (start === 0 && end === s.length) return s;
+  return s.slice(start, end);
+}
+
+/**
  * Sanitise a URL for use in an `href` attribute.
  *
  * =============================================================================
@@ -166,19 +185,15 @@ export function safeHref(raw: string): string {
   // whitespace — it leaves U+0000..U+0008 / U+000B / U+000C /
   // U+000E..U+001F alone, but the WHATWG parser strips them.
   //
-  // We do the leading and trailing strips as TWO separate
-  // single-anchored regexes rather than one alternation like
-  // `/^[\x00-\x20]+|[\x00-\x20]+$/g`.  CodeQL's
-  // `js/polynomial-redos` query flags the alternation form as
-  // potentially super-linear because both branches share the
-  // same character class — even though `^` and `$` make them
-  // positionally disjoint (so the actual behaviour is linear),
-  // the static analyser can't always tell.  Two separate
-  // strips are obviously O(N) to both the analyser and the
-  // reader.
-  const cleaned = stripped
-    .replace(/^[\x00-\x20]+/, "")
-    .replace(/[\x00-\x20]+$/, "");
+  // We do this with explicit index walks rather than
+  // `.replace(/^[\x00-\x20]+/, "")` / `.replace(/[\x00-\x20]+$/, "")`
+  // because CodeQL's `js/polynomial-redos` query flags ANY `+`
+  // quantifier on a user-controllable anchored regex — even a
+  // simple single character class with no nested quantifiers.
+  // The regex IS linear in V8, but the static analyser is
+  // conservative.  Explicit O(N) loops avoid the warning AND
+  // make the bound obvious to readers.
+  const cleaned = stripC0Edges(stripped);
   // Step 3: empty → "#".  Better than emitting an empty href
   // which browsers treat as "reload current page".
   if (cleaned === "") return "#";
