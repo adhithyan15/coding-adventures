@@ -10,6 +10,7 @@
 - PaintLine support via GDI `CreatePen` + `MoveToEx`/`LineTo`
 - PaintGroup support (recursive dispatch into children)
 - PaintClip support via `SaveDC`/`IntersectClipRect`/`RestoreDC`
+- PaintGradient support for linear and radial fills/strokes via masked pBGRA surfaces
 - Hex colour parser (#rgb, #rrggbb, #rrggbbaa, "transparent")
 - BGRA→RGBA pixel conversion from DIBSection memory
 - Top-down DIBSection for correct coordinate system (no Y-flip)
