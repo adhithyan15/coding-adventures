@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-jvm-class-file"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
-description = "IIR → JVM class file backend — lowers IIRModule to JvmClassFile without compiler-ir"
+description = "IIR → JVM class file backend — lowers IIRModule to JvmClassFile (now with Brainfuck tape + I/O via env/BFRuntime)"
 
 [lib]
 name = "iir_to_jvm_class_file"

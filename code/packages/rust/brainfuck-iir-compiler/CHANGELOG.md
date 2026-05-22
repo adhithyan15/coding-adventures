@@ -1,5 +1,40 @@
 # Changelog — brainfuck-iir-compiler
 
+## [0.3.2] — 2026-05-22 (BF → JVM end-to-end test)
+
+### Added — `tests/jvm_e2e.rs`
+
+Stage 2 of 4 for the BF → {wasm, jvm, clr, beam} story.  Walks the new
+IIR-based chain through the JVM backend:
+
+```text
+BF source → IIRModule → iir-to-jvm-class-file validator → lower_iir_to_jvm
+          → JvmClassFile → serialize_jvm_class_file → .class bytes
+```
+
+Before iir-to-jvm-class-file 0.5.0, the validator rejected `load_mem` /
+`store_mem` and any `call_builtin` (including BF's `putchar` /
+`getchar`).  With 0.5.0 those are accepted, and this e2e test locks
+the path in for Brainfuck:
+
+- `brainfuck_three_increments_lowers_to_jvm_class` — `+++.` compiles
+  through; the resulting `JvmClassFile` has constant-pool entries
+  referencing `env/BFRuntime`, and the serialized bytes start with the
+  canonical `CAFEBABE` magic.
+- `brainfuck_loop_lowers_to_jvm_class` — `++[-]` (a non-trivial loop)
+  compiles through; serialized bytes have the right magic.
+- `brainfuck_input_emits_getchar_methodref` — `,.` emits both
+  `getchar` and `putchar` method references into the constant pool.
+- `brainfuck_empty_program_emits_minimal_jvm` — the empty BF program
+  emits a class with **no** `env/BFRuntime` references, proving the
+  CP injection is correctly conditional (no burden on non-BF callers).
+
+No source-code changes in this crate — the test runs against the
+existing `compile_source`.  Only the JVM e2e test file is new.
+
+Stages 3 (CLR) and the BEAM-rejection doc are queued as follow-on
+work items.
+
 ## [0.3.1] — 2026-05-22 (BF → WASM end-to-end test)
 
 ### Added — `tests/wasm_e2e.rs`

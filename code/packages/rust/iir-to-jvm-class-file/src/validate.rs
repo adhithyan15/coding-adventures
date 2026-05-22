@@ -62,16 +62,37 @@ use interpreter_ir::{IIRModule, Operand};
 // - `is_null`      — null check via ifnull.
 
 const UNSUPPORTED_OPS: &[&str] = &[
-    "call_builtin",
+    // `call_builtin` is *conditionally* unsupported — handled below.
+    // See [`CALL_BUILTIN_SUPPORTED_NAMES`] for the whitelist.  Whitelisting
+    // specific builtins (today: `putchar`, `getchar`) lets Brainfuck flow
+    // through this backend while still rejecting unknown / unsafe names.
     "io_in",
     "io_out",
     "cast",
-    "load_mem",
-    "store_mem",
+    // `load_mem` / `store_mem` — Brainfuck: now supported (baload/bastore
+    // over a host-provided `env/BFRuntime.__tape : [B` static byte array).
     "box",
     "unbox",
     "safepoint",
 ];
+
+/// Builtin names that the JVM backend can lower via `invokestatic` to a
+/// host-provided helper class.
+///
+/// Each entry maps to a `(class, name, descriptor)` triple resolved at
+/// lowering time.  The standard host class is `env/BFRuntime`:
+///
+/// | Builtin     | JVM call                                 |
+/// |-------------|-------------------------------------------|
+/// | `"putchar"` | `invokestatic env/BFRuntime.putchar(I)V`  |
+/// | `"getchar"` | `invokestatic env/BFRuntime.getchar()I`   |
+///
+/// Adding a new builtin requires:
+///   1. Listing the name here so the validator accepts it.
+///   2. Adding a matching `case` to `lower.rs::lower_function`'s
+///      `call_builtin` branch that emits the right `invokestatic`.
+///   3. Documenting the expected host-class signature.
+pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &["putchar", "getchar"];
 
 /// Ops that are conditionally supported depending on their `type_hint`.
 ///
@@ -270,12 +291,40 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             // The JVM backend in this crate implements a focused subset of IIR.
             // Runtime, I/O, heap, and native-bridge operations have no direct
             // JVM-bytecode equivalent here.
+            //
+            // `call_builtin` is conditionally accepted: the builtin name
+            // carried in `srcs[0]` as `Operand::Var` must be in
+            // [`CALL_BUILTIN_SUPPORTED_NAMES`].  This lets Brainfuck's
+            // `putchar` / `getchar` flow through while still rejecting
+            // unknown / unsafe builtins.
             if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
                      the JVM backend; it requires a native method or Java standard-library call",
                     func.name, instr.op
                 ));
+            } else if instr.op == "call_builtin" {
+                // Inspect srcs[0] for the builtin name.
+                let name: Option<&str> = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => Some(s.as_str()),
+                    _ => None,
+                };
+                match name {
+                    Some(n) if CALL_BUILTIN_SUPPORTED_NAMES.contains(&n) => {
+                        // Accepted — lower.rs will emit the corresponding
+                        // invokestatic to `env/BFRuntime.<name>`.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"call_builtin\" with \
+                             builtin name {:?} is not in the JVM backend's host-class \
+                             whitelist (supported: {:?}); add the builtin to \
+                             CALL_BUILTIN_SUPPORTED_NAMES and the lowering rule in \
+                             lower.rs to extend coverage",
+                            func.name, name, CALL_BUILTIN_SUPPORTED_NAMES
+                        ));
+                    }
+                }
             }
 
             // ── Check 6: Conditionally supported ops ─────────────────────────
@@ -429,13 +478,14 @@ mod tests {
         // These ops are unconditionally unsupported by the JVM backend.
         // Note: alloc/field_load/field_store/is_null are Phase-2 supported ops
         // (via Object[] cons cells) and are NOT in this list.
+        // `load_mem` / `store_mem` were promoted to supported in the BF→JVM PR
+        // (baload/bastore over env/BFRuntime.__tape).  `call_builtin` is
+        // conditionally accepted via CALL_BUILTIN_SUPPORTED_NAMES — see
+        // the call_builtin_*_tests below.
         for op in &[
-            "call_builtin",
             "io_in",
             "io_out",
             "cast",
-            "load_mem",
-            "store_mem",
             "box",
             "unbox",
             "safepoint",
@@ -449,6 +499,104 @@ mod tests {
                 op
             );
         }
+    }
+
+    // ─── BF lowering: load_mem / store_mem now pass ─────────────────────────
+
+    #[test]
+    fn load_mem_accepted_for_bf() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "load_mem",
+                Some("v".into()),
+                vec![Operand::Var("ptr".into())],
+                "u8",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "load_mem should be accepted by JVM validator after BF→JVM PR; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn store_mem_accepted_for_bf() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "store_mem",
+                None,
+                vec![Operand::Var("ptr".into()), Operand::Var("v".into())],
+                "u8",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "store_mem should be accepted by JVM validator; got: {:?}",
+            errs
+        );
+    }
+
+    // ─── BF lowering: call_builtin whitelist (putchar / getchar) ─────────────
+
+    #[test]
+    fn call_builtin_putchar_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![
+                    Operand::Var("putchar".into()),
+                    Operand::Var("v".into()),
+                ],
+                "void",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "call_builtin \"putchar\" should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn call_builtin_getchar_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("v".into()),
+                vec![Operand::Var("getchar".into())],
+                "u8",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "call_builtin \"getchar\" should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn call_builtin_unknown_name_rejected() {
+        // An arbitrary builtin name not in the whitelist must still fail
+        // validation so unknown / unsafe builtins can't slip through.
+        let errs = validate_for_jvm(&single_fn_module(vec![IIRInstr::new(
+            "call_builtin",
+            None,
+            vec![Operand::Var("system_exec".into())],
+            "void",
+        )]));
+        assert!(
+            errs.iter().any(|e| e.contains("UnsupportedOp")
+                && e.contains("system_exec")),
+            "unknown call_builtin name should be rejected with surfaced \
+             whitelist; got: {:?}",
+            errs
+        );
     }
 
     /// `alloc ref<LispyPair>` is accepted (Phase 2 Object[] cons cells).
