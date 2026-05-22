@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.4.0 — 2026-05-22
+
+**Phase 43 — Transcendental vanishing-at-infinity (Rust port).**
+
+Ports Python `cas-summation` 0.5.0 (PR #3899 in review).  Extends the
+Phase 41/42 denominator recogniser to accept exponentially diverging
+shapes so `∑_{k=0}^∞ [1/2^k − 1/2^(k+1)] = 1` and similar close.
+
+### Added
+
+- **`h_diverges_at_infinity(node, k)`** — union of Phase 41/42
+  positive-degree polynomial check and three transcendental cases:
+  `Exp(h)`, `Pow(b, h)` with rational `|b| > 1`, and `Mul` of such
+  factors.  Each transcendental case requires the polynomial argument
+  ``h`` to have a positive leading coefficient (so it really diverges
+  to ``+∞``, not ``−∞``).
+- **`polynomial_leading_coeff_sign_in_k(node, k) -> Option<i64>`** —
+  returns `Some(1)` / `Some(-1)` for the polynomial's leading
+  coefficient sign in `k`, `None` for non-polynomial / degree-0 /
+  unknown-sign shapes.  Required to refuse `2^(-k)` (it vanishes).
+
+### Changed
+
+- `g_vanishes_at_infinity` Phase 41 fast path now calls
+  `h_diverges_at_infinity` instead of
+  `is_positive_degree_polynomial_in_k` directly.
+
+### Added — tests
+
+`tests/tests.rs` — 6 new `#[test]` functions:
+
+- `phase43_pow_2_diverges_closes` (= 1).
+- `phase43_pow_3_higher_start` (= 1/3).
+- `phase43_base_half_falls_through`.
+- `phase43_mul_polynomial_times_exponential` (= 1/2).
+- `phase43_pow_negative_exponent_polynomial_refuses` (regression).
+- `phase43_pow_neg_wrapper_refuses` (regression, NEG wrapper).
+
+Full suite: **27 passed** (21 prior + 6 net new).
+
+### Still deferred
+
+- Apart-induced telescopes — blocked on porting `Apart` to Rust.
+- Transcendental limit-finder for non-polynomial shapes.
+
 ## 0.3.0 — 2026-05-22
 
 **Phase 41 + Phase 42 — Limit-aware infinite telescope (Rust port).**

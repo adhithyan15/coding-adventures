@@ -623,6 +623,171 @@ fn polynomial_degree_in_k(node: &IRNode, k: &IRNode) -> Option<i64> {
 ///
 /// Anything else (transcendental, improper rational, non-Div) returns
 /// `false`.
+/// Phase 43 helper: return the sign (+1 / -1) of the leading
+/// coefficient of `node` as a polynomial in `k`, or `None` for
+/// non-polynomial / degree-0 / unknown-sign shapes.
+///
+/// Required by `h_diverges_at_infinity` so we don't claim
+/// `exp(-k)` or `2^(-k)` diverge (they vanish: `Mul(-1, k)` has
+/// negative leading coefficient).
+fn polynomial_leading_coeff_sign_in_k(node: &IRNode, k: &IRNode) -> Option<i64> {
+    if is_constant_in(node, k) {
+        return None;
+    }
+    if node == k {
+        return Some(1);
+    }
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return None,
+    };
+    let head_str = match &apply_node.head {
+        IRNode::Symbol(s) => s.as_str(),
+        _ => return None,
+    };
+    // k^n (n >= 1) → +1.
+    if head_str == POW && apply_node.args.len() == 2 {
+        let base = &apply_node.args[0];
+        let exp = &apply_node.args[1];
+        if base == k {
+            if let IRNode::Integer(n) = exp {
+                if *n >= 1 {
+                    return Some(1);
+                }
+            }
+        }
+        return None;
+    }
+    // Neg(p) flips sign.
+    if head_str == NEG && apply_node.args.len() == 1 {
+        return polynomial_leading_coeff_sign_in_k(&apply_node.args[0], k).map(|s| -s);
+    }
+    // Mul(...): multiply signs of constant + k-bearing factors.
+    if head_str == MUL {
+        let mut sign: i64 = 1;
+        let mut any_k_bearing = false;
+        for arg in &apply_node.args {
+            if is_constant_in(arg, k) {
+                let val = rational_value(arg)?;
+                if val.numer == 0 {
+                    return None;
+                }
+                if val.numer < 0 {
+                    sign = -sign;
+                }
+                continue;
+            }
+            let inner = polynomial_leading_coeff_sign_in_k(arg, k)?;
+            if inner < 0 {
+                sign = -sign;
+            }
+            any_k_bearing = true;
+        }
+        if any_k_bearing {
+            return Some(sign);
+        }
+        return None;
+    }
+    // Add(...): dominated by highest-degree term; tied → refuse.
+    if head_str == ADD {
+        let mut max_deg: i64 = -1;
+        let mut leader_sign: Option<i64> = None;
+        let mut tied_at_max = false;
+        for arg in &apply_node.args {
+            let deg = polynomial_degree_in_k(arg, k)?;
+            if deg == 0 {
+                continue;
+            }
+            match deg.cmp(&max_deg) {
+                Ordering::Greater => {
+                    max_deg = deg;
+                    leader_sign = polynomial_leading_coeff_sign_in_k(arg, k);
+                    tied_at_max = false;
+                }
+                Ordering::Equal => {
+                    tied_at_max = true;
+                }
+                Ordering::Less => {}
+            }
+        }
+        if tied_at_max {
+            return None;
+        }
+        return leader_sign;
+    }
+    None
+}
+
+/// Phase 43: True when `node` provably diverges to ±∞ as `k → ∞`.
+///
+/// Union of Phase 41/42 positive-degree polynomial + three transcendental
+/// cases:
+///   1. `Exp(h(k))` with h positive-degree AND positive leading coeff.
+///   2. `Pow(b, h(k))` with rational |b| > 1 AND h positive-degree with
+///      positive leading coefficient.
+///   3. `Mul(...)` where at least one factor diverges and the rest are
+///      constant-in-k or also diverging.  Recursive.
+fn h_diverges_at_infinity(node: &IRNode, k: &IRNode) -> bool {
+    // Phase 41/42 fast path.
+    if is_positive_degree_polynomial_in_k(node, k) {
+        return true;
+    }
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return false,
+    };
+    let head_str = match &apply_node.head {
+        IRNode::Symbol(s) => s.as_str(),
+        _ => return false,
+    };
+    // Phase 43: Exp(h(k)) with h positive-degree and positive leading coeff.
+    if head_str == EXP && apply_node.args.len() == 1 {
+        let inner = &apply_node.args[0];
+        if is_positive_degree_polynomial_in_k(inner, k) {
+            return polynomial_leading_coeff_sign_in_k(inner, k) == Some(1);
+        }
+        return false;
+    }
+    // Phase 43: Pow(b, h(k)) with |b| > 1 rational and h → +∞.
+    if head_str == POW && apply_node.args.len() == 2 {
+        let base = &apply_node.args[0];
+        let exp = &apply_node.args[1];
+        if is_constant_in(base, k) {
+            if let Some(base_val) = rational_value(base) {
+                // |base| > 1 iff |numer| > denom (denom > 0 in
+                // normalised Rational).  Compare in u64-space so that
+                // `numer == i64::MIN` doesn't truncate after
+                // `unsigned_abs()`.
+                let abs_numer: u64 = base_val.numer.unsigned_abs();
+                let denom_u: u64 = base_val.denom as u64; // denom > 0
+                if abs_numer > denom_u
+                    && is_positive_degree_polynomial_in_k(exp, k)
+                    && polynomial_leading_coeff_sign_in_k(exp, k) == Some(1)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    // Phase 43: Mul(...) — at least one factor diverges; others constant
+    // in k or also diverging.  Recursive.
+    if head_str == MUL && apply_node.args.len() >= 2 {
+        let mut has_divergent = false;
+        for arg in &apply_node.args {
+            if is_constant_in(arg, k) {
+                continue;
+            }
+            if h_diverges_at_infinity(arg, k) {
+                has_divergent = true;
+                continue;
+            }
+            return false;
+        }
+        return has_divergent;
+    }
+    false
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -633,9 +798,10 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     }
     let num = &apply_node.args[0];
     let den = &apply_node.args[1];
-    // Phase 41 fast path: constant numerator + positive-degree denominator.
+    // Phase 41/43 fast path: constant numerator + diverging denominator
+    // (positive-degree polynomial OR exp / b^k transcendental).
     if is_constant_in(num, k) {
-        return is_positive_degree_polynomial_in_k(den, k);
+        return h_diverges_at_infinity(den, k);
     }
     // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
     let num_deg = match polynomial_degree_in_k(num, k) {
