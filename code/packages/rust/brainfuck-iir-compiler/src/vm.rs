@@ -38,8 +38,27 @@
 //!
 //! ## JIT mode (BF05)
 //!
-//! The `jit` flag is accepted but raises an error in BF04.  The JIT path
-//! (wiring `jit-core` + a WASM backend) is implemented in BF05.
+//! When `jit=true`, [`BrainfuckVM::execute_module`] dispatches through
+//! [`jit_core::core::JITCore`] instead of calling [`VMCore::execute`]
+//! directly.  Brainfuck IIR is `FullyTyped` from birth (see
+//! `compiler.rs`), so the JIT chain *would* eagerly tier-promote the
+//! `main` function to a native backend on the very first call — except
+//! none of the existing JIT backends (NullBackend, EchoBackend, future
+//! WASM/x86_64 backends) know how to lower Brainfuck's custom
+//! `load_mem` / `store_mem` opcodes yet.  Until a backend learns
+//! Brainfuck's tape memory model, we wire `JITCore` with the
+//! private [`InterpOnlyBackend`] (whose `compile()` always returns
+//! `None`), which forces every function to stay on the interpreter
+//! tier.  The plumbing is real — the same `VMCore` runs the program,
+//! the same `putchar` / `getchar` / `load_mem` / `store_mem` / `label`
+//! handlers are wired up, and the tier-up path is observable via
+//! `JITCore::cache_stats()` — there's just no native code generated
+//! today.
+//!
+//! That gives Brainfuck access to the LANG VM's JIT chain in the
+//! same shape as Dartmouth BASIC's `jit_smoke.rs`: any future backend
+//! that grows support for `load_mem` / `store_mem` automatically
+//! tier-promotes BF programs without touching this wrapper.
 //!
 //! ## Fuel cap
 //!
@@ -63,6 +82,9 @@ use std::collections::VecDeque;
 use std::sync::{Arc, Mutex};
 
 use interpreter_ir::module::IIRModule;
+use jit_core::backend::Backend;
+use jit_core::cir::CIRInstr;
+use jit_core::core::JITCore;
 use vm_core::{
     core::VMCore,
     dispatch::OpcodeHandler,
@@ -199,12 +221,6 @@ impl BrainfuckVM {
         module: &IIRModule,
         input_bytes: &[u8],
     ) -> Result<Vec<u8>, BrainfuckError> {
-        if self.jit_enabled {
-            return Err(BrainfuckError::new(
-                "jit=true is not yet supported in BF04; see BF05",
-            ));
-        }
-
         // Shared output buffer — written by `putchar`, returned at the end.
         // Capacity capped at MAX_OUTPUT_BYTES to prevent OOM.
         let output: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
@@ -358,14 +374,25 @@ impl BrainfuckVM {
         );
 
         // ---- Execute --------------------------------------------------
+        // The two execution paths share the same `VMCore` (with all five
+        // Brainfuck-specific handlers registered above).  The only difference
+        // is whether we drive that VM through `VMCore::execute` (pure
+        // interpreter) or `JITCore::execute_with_jit` (interpreter +
+        // tier-promotion hook).  See the JIT mode section in this module's
+        // top-level docs for why the JIT path uses `InterpOnlyBackend`.
         let mut module_clone = module.clone();
-        vm.execute(&mut module_clone, "main", &[])
-            .map_err(|e| {
-                // Translate VMError back to BrainfuckError for out-of-bounds
-                // and fuel-cap cases.
-                let msg = e.to_string();
-                BrainfuckError::new(msg)
-            })?;
+        let exec_result = if self.jit_enabled {
+            let mut jit = JITCore::new(&mut vm, Box::new(InterpOnlyBackend));
+            jit.execute_with_jit(&mut vm, &mut module_clone, "main", &[])
+                .map(|_| ())
+        } else {
+            vm.execute(&mut module_clone, "main", &[]).map(|_| ())
+        };
+        exec_result.map_err(|e| {
+            // Translate VMError back to BrainfuckError for out-of-bounds
+            // and fuel-cap cases (both paths surface VMError on failure).
+            BrainfuckError::new(e.to_string())
+        })?;
 
         // Recover from poisoned mutex on final read.
         let result = output.lock().unwrap_or_else(|e| e.into_inner()).clone();
@@ -448,6 +475,56 @@ fn resolve_value(
 }
 
 // ---------------------------------------------------------------------------
+// InterpOnlyBackend — pin BF on the interpreter tier of jit-core
+// ---------------------------------------------------------------------------
+
+/// A [`Backend`] that refuses to compile, forcing `JITCore` to fall back to
+/// the interpreter for every function.
+///
+/// # Why this exists
+///
+/// Brainfuck's IIR is `FullyTyped` from birth, which means
+/// [`JITCore::execute_with_jit`] would eagerly compile `main` on the first
+/// call (see Phase 1 in its docs).  That's normally good — but no current
+/// backend (NullBackend, EchoBackend, future WASM/x86_64 ports) knows how
+/// to lower Brainfuck's custom `load_mem` / `store_mem` opcodes.  Compiling
+/// with a backend that can't handle those would silently replace `main` with
+/// a stub that returns `Null`, producing no output.
+///
+/// Returning `None` from [`Backend::compile`] tells `JITCore`:
+///
+/// > "I refuse to compile this function — keep it interpreted forever."
+///
+/// All five Brainfuck-specific handlers (`putchar`, `getchar`, `load_mem`,
+/// `store_mem`, `label`) live on the underlying `VMCore`, so the interpreter
+/// path still works correctly.  When a future backend learns Brainfuck's
+/// tape memory model, swap this out for that backend and the same `BrainfuckVM`
+/// wrapper tier-promotes automatically.
+///
+/// # Why kept private
+///
+/// Out-of-crate callers should use `BrainfuckVM::new(jit, ...)`; this struct
+/// is an implementation detail of the JIT-mode wiring.
+struct InterpOnlyBackend;
+
+impl Backend for InterpOnlyBackend {
+    fn name(&self) -> &str {
+        "brainfuck-interp-only"
+    }
+
+    fn compile(&self, _ir: &[CIRInstr]) -> Option<Vec<u8>> {
+        // Refusing to compile is the *point* — see the docs above.
+        None
+    }
+
+    fn run(&self, _binary: &[u8], _args: &[Value]) -> Value {
+        // Unreachable: `compile()` returns None, so `JITCore` never builds
+        // a cache entry and never calls `run()`.  Return Null defensively.
+        Value::Null
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
@@ -506,12 +583,38 @@ mod tests {
         }
     }
 
-    // --- JIT not yet supported ---
+    // --- JIT mode produces equivalent results to the interpreter ---
+    //
+    // Before BF05 these tests asserted that `jit=true` returned an error.
+    // After BF05 the JIT path is wired through `jit-core` with
+    // `InterpOnlyBackend`, so the program runs to completion via the
+    // interpreter tier and produces the same output as `jit=false`.
 
     #[test]
-    fn jit_true_returns_error_on_run() {
+    fn jit_true_runs_simple_program() {
+        // `+++.` should print chr(3) regardless of execution tier.
         let v = BrainfuckVM::new(true, 100, None).unwrap();
-        assert!(v.run("+", b"").is_err());
+        let out = v.run("+++.", b"").unwrap();
+        assert_eq!(out, vec![3u8]);
+    }
+
+    #[test]
+    fn jit_and_interp_paths_agree_on_hello_h() {
+        // Set cell[0] to 72 ('H') and print.  JIT and interpreter must agree.
+        let inc72 = "+".repeat(72);
+        let src = format!("{inc72}.");
+        let interp = BrainfuckVM::new(false, 100, None).unwrap().run(&src, b"").unwrap();
+        let jit    = BrainfuckVM::new(true,  100, None).unwrap().run(&src, b"").unwrap();
+        assert_eq!(interp, jit, "JIT path must produce identical output to interpreter");
+        assert_eq!(jit, vec![72u8]);
+    }
+
+    #[test]
+    fn jit_handles_loop_with_input() {
+        // `,[.,]` cat: read bytes and echo until EOF.
+        let v = BrainfuckVM::new(true, 30_000, Some(10_000)).unwrap();
+        let out = v.run(",[.,]", b"abc").unwrap();
+        assert_eq!(out, b"abc");
     }
 
     // --- Simple execution ---
