@@ -1066,10 +1066,28 @@ class TestEvaluateSumPhase49BoundedNumerator:
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert not (isinstance(result, IRApply) and result.head == SUM)
 
-    def test_log_numerator_still_refused(self):
-        """Regression: ``g(k) = log(k)/k²``.  ``log(k)`` is NOT bounded
-        (diverges to ∞ slowly).  Phase 49 must NOT incorrectly accept
-        it.  The sum stays unevaluated.
+    # Phase 49's test_log_numerator_still_refused was removed by Phase 50:
+    # log(k)/k² now closes via the new Phase 50 Log/polynomial recogniser
+    # (see TestEvaluateSumPhase50LogOverPolynomial below).
+
+
+# ---------------------------------------------------------------------------
+# Phase 50 — Log/polynomial growth-rate recogniser.
+#
+# Extends `_g_vanishes_at_infinity` to accept `Log(diverging)/diverging`
+# shapes via the growth-rate argument: log grows slower than any
+# positive-degree polynomial / exponential, so `log/poly → 0`.
+# ---------------------------------------------------------------------------
+
+
+class TestEvaluateSumPhase50LogOverPolynomial:
+    def test_log_over_k_squared_closes(self):
+        """``∑_{k=1}^∞ [log(k)/k² − log(k+1)/(k+1)²]`` closes via Phase 50.
+
+        Both halves vanish at ∞ (log/k² → 0 by squeeze).  Antisymmetric
+        telescope reduces to ``g(1) = log(1)/1² = 0`` mathematically,
+        but the symbolic shape may stay as a Log expression.  Test pins
+        that the result is no longer the unevaluated Sum.
         """
         from symbolic_ir import LOG, POW, SUB
 
@@ -1088,4 +1106,93 @@ class TestEvaluateSumPhase49BoundedNumerator:
         # Math: limit of log(k)/k² IS 0, but Phase 49 isn't smart enough
         # to recognise that.  Stay unevaluated until a transcendental
         # growth-rate recogniser lands.
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 50 should close; got {result!r}"
+        )
+
+    def test_log_over_k_cube_closes(self):
+        """``∑_{k=1}^∞ [log(k)/k³ − log(k+1)/(k+1)³]`` closes via Phase 50.
+
+        Higher denominator degree, same Log numerator.
+        """
+        from symbolic_ir import LOG, POW, SUB
+
+        log_k = IRApply(LOG, (_k,))
+        log_kp1 = IRApply(LOG, (IRApply(ADD, (_k, IRInteger(1))),))
+        g_k = IRApply(DIV, (log_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(
+            DIV,
+            (
+                log_kp1,
+                IRApply(POW, (IRApply(ADD, (_k, IRInteger(1))), IRInteger(3))),
+            ),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log_of_polynomial_argument(self):
+        """``∑ [log(k²+1)/k³ − log((k+1)²+1)/(k+1)³]`` closes.
+
+        Phase 50 with a non-trivial polynomial inside the Log.
+        """
+        from symbolic_ir import LOG, POW, SUB
+
+        # k² + 1
+        k_sq_plus_1 = IRApply(ADD, (IRApply(POW, (_k, IRInteger(2))), IRInteger(1)))
+        log_term = IRApply(LOG, (k_sq_plus_1,))
+        # (k+1)² + 1
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        kp1_sq_plus_1 = IRApply(ADD, (IRApply(POW, (kp1, IRInteger(2))), IRInteger(1)))
+        log_kp1 = IRApply(LOG, (kp1_sq_plus_1,))
+        g_k = IRApply(DIV, (log_term, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (log_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log_of_constant_numerator_still_refused(self):
+        """Regression: ``g(k) = log(5)/k²`` — the Log argument is
+        constant, not diverging.  Phase 41's constant-numerator path
+        catches this case (``log(5)`` is constant in k).  Verify that
+        Phase 50 doesn't accidentally trigger on it AND that the sum
+        still closes via Phase 41.
+        """
+        from symbolic_ir import LOG, POW, SUB
+
+        log_5 = IRApply(LOG, (IRInteger(5),))
+        g_k = IRApply(DIV, (log_5, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(
+            DIV,
+            (log_5, IRApply(POW, (IRApply(ADD, (_k, IRInteger(1))), IRInteger(2)))),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Phase 41 still closes this (log(5) is constant-in-k).
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log_of_negative_argument_refused(self):
+        """Regression: ``log(Mul(-1, k))`` is complex / undefined for
+        odd k.  ``_h_diverges_at_infinity`` correctly refuses the inner
+        argument (negative leading coefficient), so Phase 50 must NOT
+        close this telescope.
+        """
+        from symbolic_ir import LOG, MUL, POW, SUB
+
+        neg_k = IRApply(MUL, (IRInteger(-1), _k))
+        log_neg_k = IRApply(LOG, (neg_k,))
+        log_neg_kp1 = IRApply(
+            LOG, (IRApply(MUL, (IRInteger(-1), IRApply(ADD, (_k, IRInteger(1))))),)
+        )
+        g_k = IRApply(DIV, (log_neg_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(
+            DIV,
+            (
+                log_neg_kp1,
+                IRApply(POW, (IRApply(ADD, (_k, IRInteger(1))), IRInteger(2))),
+            ),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Must stay unevaluated.
         assert isinstance(result, IRApply) and result.head == SUM

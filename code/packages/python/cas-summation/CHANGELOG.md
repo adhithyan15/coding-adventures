@@ -1,5 +1,66 @@
 # Changelog
 
+## 0.8.0 — 2026-05-22
+
+**Phase 50 — Log/polynomial growth-rate recogniser.**
+
+Extends ``_g_vanishes_at_infinity`` to accept
+``Div(Log(diverging), diverging)`` shapes — i.e. ``log(h(k))`` over
+any positive-degree polynomial / exponential / b^k diverging
+denominator.  The squeeze argument: ``log(h) → ∞`` at a logarithmic
+rate, while the denominator grows strictly faster, so the quotient
+vanishes.  Closes the long-deferred ``log(k)/k²`` case noted in the
+Phase 49 CHANGELOG.
+
+> Note: stacks on Phase 49 (PR #3933, in flight) and the Phase 49
+> TS/Rust port (PR #3936).  Builds standalone — uses only
+> ``_h_diverges_at_infinity`` (Phase 43+44), not Phase 49's
+> ``_is_bounded_in_k``.  Independent from a code path perspective.
+
+### Added
+
+- **`_is_log_of_diverging_in_k(node, k)`** — recogniser for
+  ``Log(h(k))`` with ``h(k) → +∞``.  Sign-aware: delegates to
+  ``_h_diverges_at_infinity`` on the *full* ``Log(...)`` node, which
+  routes through Phase 44's Log branch (already refuses
+  ``Log(-k)`` / ``Log(Mul(-1, k))``-style negative shapes whose log
+  isn't real-valued).
+
+### Changed
+
+- ``_g_vanishes_at_infinity`` now has a Phase 50 branch between
+  the Phase 41 constant-numerator fast path and the Phase 42
+  degree-aware path: if the numerator is ``Log(diverging)`` AND
+  the denominator diverges, the quotient vanishes.
+
+### Added — tests
+
+`tests/test_summation.py::TestEvaluateSumPhase50LogOverPolynomial`
+— 5 new cases:
+
+- ``test_log_over_k_squared_closes`` —
+  ``∑ [log(k)/k² − log(k+1)/(k+1)²]`` closes.
+- ``test_log_over_k_cube_closes`` — higher denominator degree.
+- ``test_log_of_polynomial_argument`` — non-trivial inner
+  polynomial (``Log(k²+1)/k³``).
+- ``test_log_of_constant_numerator_still_refused`` — regression:
+  ``Log(5)`` is constant in ``k``, so Phase 41 catches it (not
+  Phase 50).  Test pins that the sum still closes via the right
+  branch.
+- ``test_log_of_negative_argument_refused`` — regression:
+  ``Log(Mul(-1, k))`` is complex for odd k; Phase 50 must NOT
+  accidentally close the sum.  Delegates to Phase 44's
+  sign-aware check.
+
+Full suite: **98 passed** (was 93; +5 net new).
+
+### Still deferred
+
+- ``sqrt(k)/k²`` style growth-rate gaps (sqrt grows faster than
+  log but slower than any positive integer power).  Future phase.
+- Transcendental limit-finder for general non-polynomial /
+  non-Log / non-Sin/Cos shapes.
+
 ## 0.7.0 — 2026-05-22
 
 **Phase 49 — Bounded × vanishing recogniser.**
@@ -64,6 +125,7 @@ required updating; +5 net new + 1 flipped).
   ``log(k)/k`` or ``log(k)/k²`` — these vanish by squeeze too,
   but require comparing growth rates (``log`` < any polynomial),
   not just boundedness.  Future phase.
+
 
 ## 0.6.0 — 2026-05-22
 
