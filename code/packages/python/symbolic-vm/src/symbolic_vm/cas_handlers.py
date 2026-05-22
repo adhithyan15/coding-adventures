@@ -851,6 +851,122 @@ def rat_simplify_handler(_vm: VM, expr: IRApply) -> IRNode:
     return IRApply(DIV, (from_polynomial(num_final, x), from_polynomial(den_final, x)))
 
 
+def _binomial(n: int, k: int) -> int:
+    """Return C(n, k), with C(n, k) = 0 for k < 0 or k > n.
+
+    Used by :func:`_taylor_expand_around_r` to shift a polynomial's
+    coefficient basis from ``x`` to ``(x − r)``.  Computed iteratively
+    to stay exact (Python ``int`` is arbitrary precision).
+    """
+    if k < 0 or k > n:
+        return 0
+    if k == 0 or k == n:
+        return 1
+    k = min(k, n - k)
+    result = 1
+    for i in range(k):
+        result = result * (n - i) // (i + 1)
+    return result
+
+
+def _taylor_expand_around_r(
+    poly: tuple[Fraction, ...], r: Fraction, length: int
+) -> tuple[Fraction, ...]:
+    """Return the first ``length`` Taylor coefficients of ``poly(r + t)``
+    as a polynomial in ``t``.
+
+    Algebra: if ``poly(x) = ∑_i c_i x^i``, then
+    ``poly(r + t) = ∑_i c_i (r + t)^i = ∑_j t^j · [∑_{i≥j} c_i · C(i, j) · r^(i−j)]``.
+    The bracketed sum is the coefficient of ``t^j`` in the result.
+
+    When ``length`` exceeds the polynomial degree the trailing
+    coefficients are zero (filled with ``Fraction(0)`` for index
+    safety).
+    """
+    deg = len(poly) - 1
+    result: list[Fraction] = []
+    for j in range(length):
+        c_j = Fraction(0)
+        # Contribution from each higher-degree original term.  Power
+        # of r is computed by multiplication to keep things exact.
+        r_pow = Fraction(1)  # r^(i - j) starts at r^0 when i == j
+        for i in range(j, deg + 1):
+            c_j += poly[i] * _binomial(i, j) * r_pow
+            r_pow *= r
+        result.append(c_j)
+    return tuple(result)
+
+
+def _series_div(
+    n_coeffs: tuple[Fraction, ...],
+    d_coeffs: tuple[Fraction, ...],
+    length: int,
+) -> tuple[Fraction, ...] | None:
+    """Compute the first ``length`` Taylor coefficients of ``N(t)/D(t)``.
+
+    Requires ``D(0) ≠ 0`` (otherwise the quotient has a pole at 0 and
+    a Taylor expansion doesn't exist).  Uses the standard series-
+    division recurrence:
+
+        Q_0 = N_0 / D_0
+        Q_j = (N_j − ∑_{k=1..j} D_k · Q_{j−k}) / D_0   for j ≥ 1
+
+    Returns ``None`` when ``D(0) == 0`` (signal to caller that
+    something went wrong — typically a repeated-root miscount).
+    """
+    if not d_coeffs or d_coeffs[0] == 0:
+        return None
+    d0 = d_coeffs[0]
+    q: list[Fraction] = []
+    for j in range(length):
+        n_j = n_coeffs[j] if j < len(n_coeffs) else Fraction(0)
+        s = Fraction(0)
+        for k in range(1, j + 1):
+            d_k = d_coeffs[k] if k < len(d_coeffs) else Fraction(0)
+            s += d_k * q[j - k]
+        q.append((n_j - s) / d0)
+    return tuple(q)
+
+
+def _root_multiplicities(
+    den: tuple[Fraction, ...], roots: list[Fraction]
+) -> dict[Fraction, int] | None:
+    """For each distinct rational root, count how many times ``(x − r)``
+    divides ``den``.
+
+    Returns a dict ``{r: m}`` such that ``∏_r (x − r)^m`` equals ``den``
+    up to a nonzero constant factor.  If the multiplicities don't fully
+    account for ``deg(den)`` — i.e. ``den`` has an irreducible factor
+    on top of the rational roots — returns ``None`` so the caller can
+    fall back to the unevaluated ``Apart(...)`` form.
+    """
+    multiplicities: dict[Fraction, int] = {}
+    remaining: tuple[Fraction, ...] = den
+    for r in roots:
+        m = 0
+        linear = (Fraction(-r), Fraction(1))  # (x − r)
+        while True:
+            quotient, rem = _poly_divmod(remaining, linear)
+            # Zero polynomial normalises to the empty tuple ``()``.
+            if not _poly_normalize(rem):
+                remaining = quotient
+                m += 1
+            else:
+                break
+        if m == 0:
+            # Shouldn't happen — ``r`` was returned by rational_roots
+            # so (x − r) must divide ``den`` at least once.  Defensive
+            # bail-out.
+            return None
+        multiplicities[r] = m
+    if sum(multiplicities.values()) != _poly_degree(den):
+        # ``remaining`` is a non-constant polynomial with no rational
+        # root — irreducible factor present.  Apart on rationals can't
+        # decompose this further.
+        return None
+    return multiplicities
+
+
 def _apart_proper(
     num: tuple[Fraction, ...],
     den: tuple[Fraction, ...],
@@ -858,18 +974,95 @@ def _apart_proper(
 ) -> IRNode | None:
     """Partial-fraction decompose a *proper* rational function (deg num < deg den).
 
-    Phase 1: handles only denominators whose roots are all distinct rational
-    numbers (= all roots are from ``polynomial.rational_roots``). Returns
-    ``None`` if the denominator has irreducible quadratic factors or
-    repeated roots.
+    **Phase 1** (distinct simple roots) — handles denominators whose roots
+    are all distinct rational numbers.  Uses the residue formula
+    ``A_i = P(r_i) / Q'(r_i)`` for each simple pole ``r_i``.
 
-    Uses the residue formula ``A_i = P(r_i) / Q'(r_i)`` for each simple
-    pole ``r_i``.
+    **Phase 48** (repeated linear factors) — extends Phase 1 to
+    denominators of the form ``∏_r (x − r)^{m_r}`` where the ``r`` are
+    rational and ``m_r ≥ 1``.  For each root ``r`` of multiplicity
+    ``m`` the partial-fraction terms are
+
+        A_{r, 1}/(x − r) + A_{r, 2}/(x − r)² + … + A_{r, m}/(x − r)^m
+
+    The coefficients come from the Taylor expansion of
+    ``φ(t) = P(r + t) / Q(r + t)`` around ``t = 0``, where
+    ``Q(x) = den(x) / (x − r)^m``.  Then ``A_{r, m − j} = φ_j``
+    (coefficient of ``t^j`` in ``φ``'s Taylor series).
+
+    Returns ``None`` when ``den`` has an irreducible quadratic factor
+    on top of the rational roots — partial fractions over the
+    rationals are insufficient in that case and we keep the
+    unevaluated ``Apart(...)`` form.
     """
     roots = _poly_rational_roots(den)
-    if len(roots) != _poly_degree(den):
-        return None  # Irreducible quadratic or repeated factors
+    if not roots:
+        return None  # Pure irreducible factors — out of scope
 
+    # Phase 48: compute each root's multiplicity, bail if irreducible
+    # factors remain on top.
+    multiplicities = _root_multiplicities(den, roots)
+    if multiplicities is None:
+        return None
+
+    # Phase 1 fast path — every root simple.  Reuses the residue
+    # formula, which is cheaper than the generic Taylor expansion
+    # and preserves the previous output shape for the regression
+    # tests written against it.
+    if all(m == 1 for m in multiplicities.values()):
+        return _apart_simple_roots(num, den, roots, x)
+
+    # Phase 48 generic path: Taylor + series-division per root.
+    terms: list[IRNode] = []
+    for r in roots:
+        m = multiplicities[r]
+        # Q(x) = den(x) / (x − r)^m.  Successive divisions are
+        # exact (we verified the multiplicity above).
+        q_poly: tuple[Fraction, ...] = den
+        linear = (Fraction(-r), Fraction(1))
+        for _ in range(m):
+            quotient, _rem = _poly_divmod(q_poly, linear)
+            q_poly = quotient
+        # Taylor-expand both P(r + t) and Q(r + t) up to t^(m−1).
+        n_taylor = _taylor_expand_around_r(num, r, m)
+        d_taylor = _taylor_expand_around_r(q_poly, r, m)
+        phi = _series_div(n_taylor, d_taylor, m)
+        if phi is None:
+            # Q(r) == 0 — multiplicity miscount; bail defensively.
+            return None
+        # A_{r, m − j} = phi[j].  Emit terms in ascending power
+        # order: 1/(x − r), 1/(x − r)², …, 1/(x − r)^m.
+        for power in range(1, m + 1):
+            j = m - power
+            A = phi[j]
+            if A == 0:
+                continue
+            term = _build_apart_term(A, r, power, x)
+            terms.append(term)
+
+    if not terms:
+        return IRInteger(0)
+    if len(terms) == 1:
+        return terms[0]
+    acc: IRNode = terms[0]
+    for t in terms[1:]:
+        acc = IRApply(ADD, (acc, t))
+    return acc
+
+
+def _apart_simple_roots(
+    num: tuple[Fraction, ...],
+    den: tuple[Fraction, ...],
+    roots: list[Fraction],
+    x: IRSymbol,
+) -> IRNode | None:
+    """Phase 1 simple-root path (preserved verbatim from the original
+    ``_apart_proper`` to keep its output shape stable for the existing
+    regression tests).
+
+    Uses the residue formula ``A_i = P(r_i) / Q'(r_i)`` for each
+    simple pole ``r_i``.  Returns the IR for the partial-fraction sum.
+    """
     den_deriv = _poly_deriv(den)
     terms: list[IRNode] = []
 
@@ -877,7 +1070,7 @@ def _apart_proper(
         num_val = _poly_evaluate(num, r)
         den_d_val = _poly_evaluate(den_deriv, r)
         if den_d_val == 0:
-            return None  # Repeated root (shouldn't happen for distinct roots)
+            return None  # Repeated root (caught upstream now)
 
         A = Fraction(num_val) / Fraction(den_d_val)
 
@@ -902,6 +1095,29 @@ def _apart_proper(
     for t in terms[1:]:
         acc = IRApply(ADD, (acc, t))
     return acc
+
+
+def _build_apart_term(
+    A: Fraction, r: Fraction, power: int, x: IRSymbol
+) -> IRNode:
+    """Build the IR node for ``A / (x − r)^power``.
+
+    Drops explicit ``±1`` coefficients in the numerator (matches the
+    formatting choice in :func:`_apart_simple_roots`).  When
+    ``power == 1`` the denominator is the bare linear factor; when
+    ``power > 1`` we emit ``Pow(linear, power)``.
+    """
+    neg_r = Fraction(-1) * r
+    factor_ir = from_polynomial((neg_r, Fraction(1)), x)
+    if power == 1:
+        denom_ir = factor_ir
+    else:
+        denom_ir = IRApply(POW, (factor_ir, IRInteger(power)))
+    if A == 1:
+        return IRApply(DIV, (IRInteger(1), denom_ir))
+    if A == -1:
+        return IRApply(NEG, (IRApply(DIV, (IRInteger(1), denom_ir)),))
+    return IRApply(DIV, (_frac_to_ir(A), denom_ir))
 
 
 def apart_handler(_vm: VM, expr: IRApply) -> IRNode:
