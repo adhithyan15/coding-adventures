@@ -718,6 +718,53 @@ pub struct LanguageInputCallbackInvocation {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackQueueAction {
+    Enqueue,
+    DropNewest,
+    DropOldestThenEnqueue,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackQueuePlan {
+    pub board_id: String,
+    pub pin: u8,
+    pub label: String,
+    pub event_kind: String,
+    pub callback_program_id: u16,
+    pub callback_instruction_budget: u32,
+    pub sequence: u32,
+    pub timestamp_ms: u64,
+    pub debounce_ms: u16,
+    pub queue_capacity: u8,
+    pub queue_depth_before: u8,
+    pub queue_depth_after: u8,
+    pub queue_policy: LanguageInputCallbackQueuePolicy,
+    pub action: LanguageInputCallbackQueueAction,
+    pub queued: bool,
+    pub dropped_existing_event: bool,
+    pub dropped_incoming_event: bool,
+    pub dispatch_required: bool,
+    pub interrupt_backed: bool,
+    pub dispatch_model: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackQueuePlanErrorKind {
+    EmptyQueue,
+    QueueDepthExceedsCapacity,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackQueuePlanError {
+    pub board_id: String,
+    pub pin: u8,
+    pub callback_program_id: u16,
+    pub queue_capacity: u8,
+    pub queue_depth: u8,
+    pub kind: LanguageInputCallbackQueuePlanErrorKind,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackEventErrorKind {
     BoardMismatch,
     PinMismatch,
@@ -1882,6 +1929,78 @@ pub fn input_callback_invocation_for_event(
     })
 }
 
+pub fn input_callback_queue_plan_for_invocation(
+    invocation: &LanguageInputCallbackInvocation,
+    queue_depth: u8,
+) -> Result<LanguageInputCallbackQueuePlan, LanguageInputCallbackQueuePlanError> {
+    if invocation.queue_capacity == 0 {
+        return Err(input_callback_queue_plan_error(
+            invocation,
+            queue_depth,
+            LanguageInputCallbackQueuePlanErrorKind::EmptyQueue,
+        ));
+    }
+
+    if queue_depth > invocation.queue_capacity {
+        return Err(input_callback_queue_plan_error(
+            invocation,
+            queue_depth,
+            LanguageInputCallbackQueuePlanErrorKind::QueueDepthExceedsCapacity,
+        ));
+    }
+
+    let (action, queue_depth_after, queued, dropped_existing_event, dropped_incoming_event) =
+        if queue_depth < invocation.queue_capacity {
+            (
+                LanguageInputCallbackQueueAction::Enqueue,
+                queue_depth + 1,
+                true,
+                false,
+                false,
+            )
+        } else {
+            match invocation.queue_policy {
+                LanguageInputCallbackQueuePolicy::DropNewest => (
+                    LanguageInputCallbackQueueAction::DropNewest,
+                    queue_depth,
+                    false,
+                    false,
+                    true,
+                ),
+                LanguageInputCallbackQueuePolicy::DropOldest => (
+                    LanguageInputCallbackQueueAction::DropOldestThenEnqueue,
+                    queue_depth,
+                    true,
+                    true,
+                    false,
+                ),
+            }
+        };
+
+    Ok(LanguageInputCallbackQueuePlan {
+        board_id: invocation.board_id.clone(),
+        pin: invocation.pin,
+        label: invocation.label.clone(),
+        event_kind: invocation.event_kind.clone(),
+        callback_program_id: invocation.callback_program_id,
+        callback_instruction_budget: invocation.callback_instruction_budget,
+        sequence: invocation.sequence,
+        timestamp_ms: invocation.timestamp_ms,
+        debounce_ms: invocation.debounce_ms,
+        queue_capacity: invocation.queue_capacity,
+        queue_depth_before: queue_depth,
+        queue_depth_after,
+        queue_policy: invocation.queue_policy,
+        action,
+        queued,
+        dropped_existing_event,
+        dropped_incoming_event,
+        dispatch_required: queued,
+        interrupt_backed: invocation.interrupt_backed,
+        dispatch_model: invocation.dispatch_model.clone(),
+    })
+}
+
 pub fn parse_serial_endpoint(endpoint: &str) -> Option<LanguageSerialEndpoint> {
     let (scheme, port) = endpoint.split_once("://")?;
     if scheme != "serial" {
@@ -2432,6 +2551,21 @@ fn input_callback_event_error(
         plan_pin: plan.pin,
         event_pin: event.pin,
         event_kind: event.event_kind.clone(),
+        kind,
+    }
+}
+
+fn input_callback_queue_plan_error(
+    invocation: &LanguageInputCallbackInvocation,
+    queue_depth: u8,
+    kind: LanguageInputCallbackQueuePlanErrorKind,
+) -> LanguageInputCallbackQueuePlanError {
+    LanguageInputCallbackQueuePlanError {
+        board_id: invocation.board_id.clone(),
+        pin: invocation.pin,
+        callback_program_id: invocation.callback_program_id,
+        queue_capacity: invocation.queue_capacity,
+        queue_depth,
         kind,
     }
 }
@@ -6313,6 +6447,109 @@ mod tests {
         assert_eq!(
             error.kind,
             LanguageInputCallbackEventErrorKind::EventKindMismatch
+        );
+    }
+
+    #[test]
+    fn input_callback_queue_plans_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        assert_eq!(queue_plan.board_id, "arduino-uno-r4-wifi");
+        assert_eq!(queue_plan.pin, 3);
+        assert_eq!(queue_plan.label, "D3");
+        assert_eq!(queue_plan.event_kind, LANGUAGE_INPUT_CALLBACK_EVENT_KIND);
+        assert_eq!(queue_plan.callback_program_id, 7);
+        assert_eq!(queue_plan.callback_instruction_budget, 64);
+        assert_eq!(queue_plan.sequence, 42);
+        assert_eq!(queue_plan.timestamp_ms, 9001);
+        assert_eq!(
+            queue_plan.debounce_ms,
+            LANGUAGE_INPUT_CALLBACK_DEFAULT_DEBOUNCE_MS
+        );
+        assert_eq!(
+            queue_plan.queue_capacity,
+            LANGUAGE_INPUT_CALLBACK_DEFAULT_QUEUE_CAPACITY
+        );
+        assert_eq!(queue_plan.queue_depth_before, 2);
+        assert_eq!(queue_plan.queue_depth_after, 3);
+        assert_eq!(
+            queue_plan.queue_policy,
+            LanguageInputCallbackQueuePolicy::DropOldest
+        );
+        assert_eq!(queue_plan.action, LanguageInputCallbackQueueAction::Enqueue);
+        assert!(queue_plan.queued);
+        assert!(!queue_plan.dropped_existing_event);
+        assert!(!queue_plan.dropped_incoming_event);
+        assert!(queue_plan.dispatch_required);
+        assert!(queue_plan.interrupt_backed);
+        assert_eq!(
+            queue_plan.dispatch_model,
+            LANGUAGE_INPUT_CALLBACK_DISPATCH_MODEL
+        );
+
+        let full_queue =
+            input_callback_queue_plan_for_invocation(&invocation, invocation.queue_capacity)
+                .unwrap();
+        assert_eq!(
+            full_queue.action,
+            LanguageInputCallbackQueueAction::DropOldestThenEnqueue
+        );
+        assert_eq!(
+            full_queue.queue_depth_after,
+            LANGUAGE_INPUT_CALLBACK_DEFAULT_QUEUE_CAPACITY
+        );
+        assert!(full_queue.queued);
+        assert!(full_queue.dropped_existing_event);
+        assert!(!full_queue.dropped_incoming_event);
+        assert!(full_queue.dispatch_required);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        assert_eq!(
+            newest_drop.action,
+            LanguageInputCallbackQueueAction::DropNewest
+        );
+        assert_eq!(newest_drop.queue_depth_before, 1);
+        assert_eq!(newest_drop.queue_depth_after, 1);
+        assert!(!newest_drop.queued);
+        assert!(!newest_drop.dropped_existing_event);
+        assert!(newest_drop.dropped_incoming_event);
+        assert!(!newest_drop.dispatch_required);
+
+        let error = input_callback_queue_plan_for_invocation(&custom_invocation, 2).unwrap_err();
+        assert_eq!(
+            error.kind,
+            LanguageInputCallbackQueuePlanErrorKind::QueueDepthExceedsCapacity
+        );
+        assert_eq!(error.queue_capacity, 1);
+        assert_eq!(error.queue_depth, 2);
+
+        let mut empty_queue = custom_invocation;
+        empty_queue.queue_capacity = 0;
+        let error = input_callback_queue_plan_for_invocation(&empty_queue, 0).unwrap_err();
+        assert_eq!(
+            error.kind,
+            LanguageInputCallbackQueuePlanErrorKind::EmptyQueue
         );
     }
 
