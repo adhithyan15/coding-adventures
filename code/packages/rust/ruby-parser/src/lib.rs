@@ -129,5 +129,91 @@ mod tests {
         assert_program_root(&ast);
         assert!(!ast.children.is_empty());
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6a — method definitions
+    // -----------------------------------------------------------------------
+
+    /// Look up the first `def_statement` node in a parsed program.
+    fn find_def_statement(ast: &GrammarASTNode) -> Option<&GrammarASTNode> {
+        for child in &ast.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                if n.rule_name == "statement" {
+                    for inner in &n.children {
+                        if let ASTNodeOrToken::Node(d) = inner {
+                            if d.rule_name == "def_statement" {
+                                return Some(d);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        None
+    }
+
+    #[test]
+    fn test_parse_def_no_params_no_body() {
+        let ast = parse_ruby("def foo()\nend");
+        assert_program_root(&ast);
+        let def = find_def_statement(&ast).expect("expected def_statement");
+        let name_token = def.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Name) => {
+                Some(t.value.as_str())
+            }
+            _ => None,
+        });
+        assert_eq!(name_token, Some("foo"));
+    }
+
+    #[test]
+    fn test_parse_def_with_params() {
+        let ast = parse_ruby("def add(x, y)\nend");
+        assert_program_root(&ast);
+        let def = find_def_statement(&ast).expect("expected def_statement");
+        let params_node = def
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "params" => Some(n),
+                _ => None,
+            })
+            .expect("expected params subnode");
+        let names: Vec<&str> = params_node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, lexer::token::TokenType::Name) =>
+                {
+                    Some(t.value.as_str())
+                }
+                _ => None,
+            })
+            .collect();
+        assert_eq!(names, vec!["x", "y"]);
+    }
+
+    #[test]
+    fn test_parse_def_with_body() {
+        let ast = parse_ruby("def add(x, y)\n  x + y\nend");
+        assert_program_root(&ast);
+        let def = find_def_statement(&ast).expect("expected def_statement");
+        let body_stmts: usize = def
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "statement"))
+            .count();
+        assert!(body_stmts >= 1, "expected body statements, got {body_stmts}");
+    }
+
+    #[test]
+    fn test_parse_def_without_parens() {
+        // `def foo` without `()` is valid Ruby — the parens are
+        // optional in the grammar.
+        let ast = parse_ruby("def foo\nend");
+        assert_program_root(&ast);
+        assert!(find_def_statement(&ast).is_some());
+    }
 }
 
