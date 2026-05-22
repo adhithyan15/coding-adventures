@@ -29,13 +29,15 @@ use std::fs;
 use std::path::PathBuf;
 
 /// The list of exported components. Grows as each Tier-1 component
-/// lands. v0.1 PR-1: Button, Alert. v0.1 PR-2: Badge, Spinner, Toast.
-/// v0.1 PR-3 adds: Checkbox, Input, Radio.
+/// lands. v0.1 PR-1: Button, Alert. PR-2: Badge, Spinner, Toast.
+/// PR-3: Checkbox, Input, Radio. PR-4 adds: ListGroup, Modal.
 ///
 /// Alphabetical order matches the manifest's `[components].exports`
 /// list. Reorder both together if it ever changes.
-const COMPONENTS: &[&str] =
-    &["Alert", "Badge", "Button", "Checkbox", "Input", "Radio", "Spinner", "Toast"];
+const COMPONENTS: &[&str] = &[
+    "Alert", "Badge", "Button", "Checkbox", "Input",
+    "ListGroup", "Modal", "Radio", "Spinner", "Toast",
+];
 
 /// Themes shipped per component. Both must compile.
 const THEMES: &[&str] = &["light", "dark"];
@@ -268,4 +270,28 @@ fn radio_interface_matches_spec() {
     assert_eq!(slot_names, vec!["label", "selected", "disabled"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// ListGroup — vertical list of selectable text rows. Iterates via For.
+#[test]
+fn listgroup_interface_matches_spec() {
+    let mil_src = read_source("ListGroup.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["items", "selected-index"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Modal — wraps HostDialog with title + message slots.
+#[test]
+fn modal_interface_matches_spec() {
+    let mil_src = read_source("Modal.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["title", "message", "open", "close-label"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onClose"]);
 }

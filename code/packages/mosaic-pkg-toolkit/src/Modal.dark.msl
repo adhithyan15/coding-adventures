@@ -1,0 +1,28 @@
+// Modal.dark.msl — dark-theme styling.
+
+style Modal {
+  part modal-shell {
+  }
+  part modal-stack {
+    padding : 0 ;
+  }
+  part modal-body {
+    padding : 16 ;
+  }
+  part modal-body-text {
+    color     : "#f1f5f9" ;
+    font-size : 14 ;
+  }
+  part modal-actions {
+    padding : 8 ;
+  }
+  part modal-close-btn {
+    padding       : 8 ;
+    border-radius : 4 ;
+    background    : "#475569" ;
+    color         : "#f1f5f9" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    font-weight   : 500 ;
+  }
+}

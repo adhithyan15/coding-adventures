@@ -10,7 +10,7 @@ for the architecture, component catalog, and phasing plan.
 
 ## v0.1 — exports so far
 
-**8 of 13 Tier-1 components shipped:**
+**10 of 13 Tier-1 components shipped:**
 
 - **`Alert`** — colored info banner with `variant`, optional inline
   dismiss button. Composed from `Box` + `Row` + `Text` + `If` +
@@ -25,6 +25,13 @@ for the architecture, component catalog, and phasing plan.
 - **`Input`** — styled single-line text input. Wraps the kernel
   `HostInput`. Slots: `value`, `placeholder`, `disabled`, `size`.
   Emits: `onChange(value: text)`, `onCommit`.
+- **`ListGroup`** — vertical list of selectable text rows.
+  Iterates via `For`. Slots: `items` (`list<text>`),
+  `selected-index`. Emit: `onSelect(index: number)`.
+- **`Modal`** — titled modal dialog wrapping the kernel
+  `HostDialog`. Slots: `title`, `message`, `open`, `close-label`.
+  Emit: `onClose`. The XAML backend produces a ContentDialog
+  root; other backends use their native dialog primitives.
 - **`Radio`** — labeled radio (single-select). Same shape as
   Checkbox with circular styling. Slots: `label`, `selected`,
   `disabled`. Emit: `onSelect`.
@@ -46,8 +53,9 @@ Per spec §7:
 |---|---|
 | v0.1 PR-1 | Button, Alert |
 | v0.1 PR-2 | Badge, Spinner, Toast |
-| v0.1 PR-3 (this) | Input, Checkbox, Radio |
-| v0.1 PR-4..N | Card, Container, Field, ListGroup, Modal — 5 remaining Tier-1 components |
+| v0.1 PR-3 | Input, Checkbox, Radio |
+| v0.1 PR-4 (this) | ListGroup, Modal |
+| v0.1 PR-5+ | Card, Container, Field — depend on the children-pass-through UI29 follow-up spec |
 | v0.2 | Tier 2 — Nav, Navbar, Pagination, Breadcrumb, InputGroup, ButtonGroup, Tabs, DropdownMenu, Accordion, Select |
 | v0.3 | Bootstrap-aesthetic theme overlay |
 | v0.4 | Tier 3 — Tooltip, Popover, Carousel, Offcanvas (depends on kernel follow-ups) |
