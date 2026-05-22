@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.6.0 — 2026-05-22
+
+**Phase 44 — Log divergence in vanishing-at-infinity recogniser.**
+
+Extends Phase 43's `_h_diverges_at_infinity` to also accept
+``Log(h(k))`` shapes where ``h(k) → +∞`` (so ``log(h) → +∞``,
+albeit at a logarithmic rate).
+
+### Added
+
+- New **Log branch** in `_h_diverges_at_infinity`.  Two cases:
+  1. ``h(k)`` is a positive-degree polynomial in ``k`` — require
+     **positive leading coefficient** explicitly.  The Phase 41/42
+     polynomial-magnitude check accepts e.g. ``Mul(-1, k)`` whose
+     magnitude diverges but whose value goes to ``-∞``, which would
+     make ``log(h)`` complex / undefined.  The sign-aware helper
+     (`_polynomial_leading_coeff_sign_in_k`, added in Phase 43)
+     gives the right answer here.
+  2. ``h(k)`` is itself ``Exp(...)`` or ``Pow(b, ...)`` — defer to
+     `_h_diverges_at_infinity` recursively (those branches are
+     already sign-aware and their values are positive by
+     construction).
+
+  Any other shape (``Log(constant)``, ``Log(transcendental ≠ Exp/Pow)``,
+  ``Log(Mul(-1, k))``, …) is conservatively refused.
+
+### Added — tests
+
+`tests/test_summation.py` — new `TestEvaluateSumPhase44LogDivergence`
+class with 4 cases:
+
+- ``Log(k+1)`` recognised; antisymmetric telescope closes to a
+  symbolic ``1/log(2)`` form.
+- ``Log(2^k)`` recognised via the Phase 43 Pow delegation.
+- ``Log(5)`` (finite constant) refused — never emits a wrong
+  ``−1/log(5)`` closed form.
+- ``Log(Mul(-1, k))`` refused (negative leading coefficient; Phase 44
+  must not pretend ``log(-k)`` is real).
+
+Full suite: **92 passed** (88 prior + 4 net new).
+
+### Still deferred
+
+- ``Log(non-polynomial non-Exp/Pow)`` shapes (e.g. ``Log(Sin(k) + k²)``).
+- Cross-language port to TypeScript / Rust.
+
 ## 0.5.0 — 2026-05-22
 
 **Phase 43 — Transcendental vanishing-at-infinity (`Exp(h)` and

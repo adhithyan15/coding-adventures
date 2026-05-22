@@ -847,3 +847,109 @@ class TestEvaluateSumPhase43Transcendental:
         f = IRApply(SUB, (g_k, g_kp1))
         result = evaluate_sum(f, _k, IRInteger(0), IRSymbol("%inf"), _VM)
         assert isinstance(result, IRApply) and result.head == SUM
+
+
+# ---------------------------------------------------------------------------
+# Phase 44: Log divergence in vanishing-at-infinity recogniser.
+# ---------------------------------------------------------------------------
+
+
+class TestEvaluateSumPhase44LogDivergence:
+    def test_log_of_polynomial_recognised(self):
+        """``Log(k+1)`` diverges → ``1/log(k+1) → 0`` → Phase 44 closes.
+
+        The telescope detector compares ``g(k+1)`` (via substitution
+        ``k → k+1`` in g) against the supplied ``g_kp1``.  Build
+        ``g_kp1`` via the same substitution so the structural ``==``
+        comparison succeeds under the stub VM (which doesn't
+        canonicalise ``Add(Add(k,1), 1) ↔ Add(k, 2)``).
+        """
+        from cas_substitution import subst
+        from symbolic_ir import LOG, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        g_k = IRApply(DIV, (IRInteger(1), IRApply(LOG, (kp1,))))
+        g_kp1 = subst(kp1, _k, g_k)
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log_of_exponential_recursion(self):
+        """``Log(2^k)`` diverges → Phase 44 Log case delegates to the
+        Phase 43 Pow check, which accepts.
+        """
+        from cas_substitution import subst
+        from symbolic_ir import LOG, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        g_k = IRApply(
+            DIV,
+            (IRInteger(1), IRApply(LOG, (IRApply(POW, (IRInteger(2), _k)),))),
+        )
+        g_kp1 = subst(kp1, _k, g_k)
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log_of_constant_falls_through(self):
+        """``Log(5)`` is a finite constant; Phase 44 must refuse.
+
+        The summand ``Sub(g, g)`` for constant g routes through the
+        constant-summand rule (Step 1) before telescope detection
+        even runs, producing ``0 * count``.  We just verify the
+        result is NOT the wrong closed form ``−1/log(5)`` (which is
+        what a buggy Phase 44 would emit by claiming Log(5) diverges).
+        """
+        from symbolic_ir import LOG, NEG, SUB
+
+        g_const = IRApply(DIV, (IRInteger(1), IRApply(LOG, (IRInteger(5),))))
+        f = IRApply(SUB, (g_const, g_const))
+        result = evaluate_sum(f, _k, IRInteger(0), IRSymbol("%inf"), _VM)
+        # Result must not be a Div or Neg(Div) shape (which would
+        # indicate Phase 44 wrongly fired on a finite-limit g).  In
+        # practice the constant-summand rule emits a Mul shape or
+        # folds to 0.
+        is_wrong = (
+            isinstance(result, IRApply)
+            and result.head in (DIV, NEG)
+        )
+        assert not is_wrong, f"Phase 44 wrongly fired on constant g: {result!r}"
+
+    def test_log_of_negative_polynomial_falls_through(self):
+        """``Log(Mul(-1, k))`` — the inner argument has negative
+        leading coefficient.  Phase 43's sign-aware chain refuses it,
+        and Phase 44 inherits that refusal via the recursion.
+        """
+        from cas_substitution import subst
+        from symbolic_ir import LOG, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        neg_k = IRApply(MUL, (IRInteger(-1), _k))
+        g_k = IRApply(DIV, (IRInteger(1), IRApply(LOG, (neg_k,))))
+        g_kp1 = subst(kp1, _k, g_k)
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_log_of_pow_negative_base_falls_through(self):
+        """``Log(Pow(-2, k))`` — base ``-2`` makes ``(-2)^k`` oscillate
+        in sign, so ``log((-2)^k)`` is not real-valued.
+
+        Regression for the security review: Phase 43's Pow case accepts
+        ``|b| > 1`` (so ``c/(-2)^k → 0`` is correct for the original
+        purpose), but Phase 44's Log delegation must additionally require
+        ``b > 1`` *strictly positive* to avoid claiming ``log(negative)``
+        diverges.
+        """
+        from cas_substitution import subst
+        from symbolic_ir import LOG, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        pow_neg2 = IRApply(POW, (IRInteger(-2), _k))
+        g_k = IRApply(DIV, (IRInteger(1), IRApply(LOG, (pow_neg2,))))
+        g_kp1 = subst(kp1, _k, g_k)
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Phase 44 must refuse — `log((-2)^k)` is complex / undefined
+        # for odd k, so the sum doesn't have a real closed form.
+        assert isinstance(result, IRApply) and result.head == SUM

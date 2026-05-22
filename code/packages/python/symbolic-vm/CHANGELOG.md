@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.68.0 — 2026-05-22
+
+**Phase 44 dep bump — Log divergence in vanishing-at-infinity.**
+
+Bumps `coding-adventures-cas-summation` to `>=0.6.0` (introduces the
+new ``Log(h(k))`` divergence recogniser).  Combined with the existing
+Phase 40 Apart-retry path, infinite series involving ``log(...)``
+denominators now close in one dispatch through the `sum_handler`.
+
+### Changed
+
+- Bumped dep `coding-adventures-cas-summation>=0.6.0` (was `>=0.5.0`).
+
 ## 0.67.0 — 2026-05-22
 
 **Phase 43 dep bump — transcendental vanishing-at-infinity.**

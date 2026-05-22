@@ -53,6 +53,7 @@ from symbolic_ir import (
     ADD,
     DIV,
     EXP,
+    LOG,
     MUL,
     NEG,
     POW,
@@ -530,6 +531,38 @@ def _h_diverges_at_infinity(node: IRNode, k: IRSymbol) -> bool:
                 if _is_positive_degree_polynomial_in_k(exp, k):
                     if _polynomial_leading_coeff_sign_in_k(exp, k) == 1:
                         return True
+    # Phase 44: Log(h(k)) where h(k) → +∞.  Two requirements:
+    #   (a) h(k) → +∞ (not just |h| → ∞)
+    #   (b) h(k) > 0 for k sufficiently large
+    # so that log(h) is real-valued and diverges to +∞.  We can't reuse
+    # the bare `_h_diverges_at_infinity` recursion because that helper's
+    # Phase 41/42 polynomial-magnitude branch ignores sign — it accepts
+    # ``Mul(-1, k)`` whose magnitude diverges but whose *value* goes to
+    # −∞, in which case ``log(h)`` would be complex / undefined.  So:
+    #   • Polynomial h: require positive leading coefficient explicitly
+    #     via `_polynomial_leading_coeff_sign_in_k`.
+    #   • Exp(h'): always positive (exp(x) > 0 for real x); defer to
+    #     `_h_diverges_at_infinity` which has the sign-aware check on h'.
+    #   • Pow(b, h'): require base ``b > 1`` (strictly positive, not just
+    #     ``|b| > 1``) so the value is positive.  ``Pow(-2, k)``
+    #     oscillates in sign and ``log((-2)^k)`` is not real-valued.
+    # Other shapes are conservatively refused.
+    if node.head == LOG and len(node.args) == 1:
+        inner = node.args[0]
+        if _is_positive_degree_polynomial_in_k(inner, k):
+            return _polynomial_leading_coeff_sign_in_k(inner, k) == 1
+        if isinstance(inner, IRApply) and inner.head == EXP:
+            return _h_diverges_at_infinity(inner, k)
+        if isinstance(inner, IRApply) and inner.head == POW and len(inner.args) == 2:
+            base = inner.args[0]
+            if _is_constant_in(base, k):
+                base_val = _ir_rational_val(base)
+                if base_val is not None and base_val > 1:
+                    # Strictly positive base > 1 — value is positive and
+                    # diverges.  Defer to the Pow branch's sign-aware
+                    # check on the exponent.
+                    return _h_diverges_at_infinity(inner, k)
+        return False
     # Phase 43: Mul(...) — at least one factor diverges, others are
     # constant in k or also diverging.  Recursive.
     if node.head == MUL and len(node.args) >= 2:
