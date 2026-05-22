@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.4.0] - 2026-05-20
+
+### Added (Phase 6c — `while … end` / `until … end` loops)
+- `while_statement = "while" expression { !"end" statement } "end"`
+- `until_statement = "until" expression { !"end" statement } "end"`
+- Added as alternatives in `statement` after the conditionals.
+- Body uses the same `!"end"` negative-lookahead trick from Phase 6a/6b.
+
+### Tests (+3 new, total 17)
+- `while` with body, `until`, `while` with empty body.
+
 ## [0.3.0] - 2026-05-20
 
 ### Added (Phase 6b — `if … else … end` and `unless`)

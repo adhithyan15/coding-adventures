@@ -2,6 +2,18 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.4.0] - 2026-05-20
+
+### Added (Phase 6c — `while … end` / `until … end` lowering)
+- New `lower_while_or_until` handler emits a `Stmt::While`.  `until cond` lowers to `while !cond` (condition wrapped in `BuiltinCall("not", ...)`).
+- `Feature::Loops` is now added to the module manifest whenever a `Stmt::While` is emitted (the SIR validator requires it).
+- Loop body uses the existing `lower_clause_statements` helper, so locals introduced inside the loop don't leak to the outer scope.
+
+### Tests (+3 new, total 22)
+- `while_lowers_to_stmt_while` — basic while produces `Stmt::While`.
+- `until_negates_condition` — `until cond` wraps cond in `BuiltinCall("not", ...)`.
+- `while_module_passes_sir_validator` — a while-loop module passes `semantic_ir::validate` (Feature::Loops gating works).
+
 ## [0.3.0] - 2026-05-20
 
 ### Added (Phase 6b — `if … else … end` / `unless` lowering)

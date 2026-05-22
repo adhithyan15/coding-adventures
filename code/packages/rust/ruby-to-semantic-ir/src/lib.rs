@@ -419,6 +419,47 @@ mod tests {
         );
     }
 
+    // -----------------------------------------------------------------
+    // Phase 6c — `while … end` / `until … end`
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn while_lowers_to_stmt_while() {
+        let m = lower("x = 0\nwhile x\n  y = 1\nend\n");
+        let main = main_body(&m);
+        let while_stmt = main.stmts.iter().find_map(|s| match s {
+            Stmt::While { cond, .. } => Some(cond),
+            _ => None,
+        });
+        assert!(while_stmt.is_some(), "expected While stmt");
+    }
+
+    #[test]
+    fn until_negates_condition() {
+        let m = lower("x = 0\nuntil x\n  y = 1\nend\n");
+        let main = main_body(&m);
+        let while_stmt = main.stmts.iter().find_map(|s| match s {
+            Stmt::While { cond, .. } => Some(cond),
+            _ => None,
+        }).expect("expected While stmt");
+        assert!(
+            matches!(while_stmt, Expr::BuiltinCall { name, .. } if name == "not"),
+            "expected `until` to wrap cond in `not`, got {:?}",
+            while_stmt
+        );
+    }
+
+    #[test]
+    fn while_module_passes_sir_validator() {
+        let m = lower("x = 0\nwhile x\n  y = 1\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected our output: {:?}",
+            result
+        );
+    }
+
     #[test]
     fn module_with_def_passes_sir_validator() {
         // v0 grammar can't yet parse nested method calls in args
