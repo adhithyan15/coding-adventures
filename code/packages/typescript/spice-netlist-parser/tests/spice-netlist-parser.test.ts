@@ -61,6 +61,22 @@ G1 out 0 in 0 2m
     ]);
   });
 
+  it("parses mutual-inductor K cards", () => {
+    const parsed = parseNetlist(`
+Lpri p 0 10m
+Lsec s 0 40m
+Kcouple Lpri Lsec 0.75
+`);
+
+    expect(parsed.circuit.elements()[2]).toMatchObject({
+      kind: "mutual-inductor",
+      name: "Kcouple",
+      primary: "Lpri",
+      secondary: "Lsec",
+      coupling: 0.75,
+    });
+  });
+
   it("parses .options analysis cards", () => {
     const parsed = parseNetlist(`
 .options reltol=1m abstol=1n gmin=1p method=trap noopiter
@@ -707,6 +723,25 @@ Xbuf out in 0 source_follower
       kind: "resistor",
       n1: "Xbuf.inner",
       n2: "0",
+    });
+  });
+
+  it("expands subcircuit mutual-inductor references into engine elements", () => {
+    const parsed = parseNetlist(`
+.subckt transformer p1 p2 s1 s2
+Lpri p1 p2 10m
+Lsec s1 s2 40m
+Kcore Lpri Lsec 0.9
+.ends transformer
+Xtx in 0 out 0 transformer
+`);
+
+    expect(parsed.circuit.elements()[2]).toMatchObject({
+      kind: "mutual-inductor",
+      name: "Xtx.Kcore",
+      primary: "Xtx.Lpri",
+      secondary: "Xtx.Lsec",
+      coupling: 0.9,
     });
   });
 

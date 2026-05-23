@@ -22,6 +22,7 @@ from spice_engine import (
     Inductor,
     JFET,
     Mosfet,
+    MutualInductor,
     PulseWaveform,
     PwlWaveform,
     Resistor,
@@ -342,6 +343,9 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             parse_value(fields[3]),
             initial_current=params.get("IC", 0.0),
         )
+    if prefix == "K":
+        _require_fields(fields, 4, "mutual inductor")
+        return MutualInductor(name, fields[1], fields[2], parse_value(fields[3]))
     if prefix == "V":
         _require_min_fields(fields, 4, "voltage source")
         source = _parse_source_value(fields[3:])
@@ -531,6 +535,10 @@ def _map_subckt_fields(
         mapped[1] = _map_subckt_node(fields[1], instance_name, node_map)
         mapped[2] = _map_subckt_node(fields[2], instance_name, node_map)
         mapped[3] = _map_subckt_source_ref(fields[3], instance_name)
+    elif prefix == "K":
+        _require_fields(fields, 4, "subcircuit mutual inductor")
+        mapped[1] = _map_subckt_source_ref(fields[1], instance_name)
+        mapped[2] = _map_subckt_source_ref(fields[2], instance_name)
     elif prefix == "X":
         mapped[1:-1] = [
             _map_subckt_node(node, instance_name, node_map) for node in fields[1:-1]

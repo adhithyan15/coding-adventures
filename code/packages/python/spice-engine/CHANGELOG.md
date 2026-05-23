@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Mutual-inductor element foothold** — `MutualInductor` now exposes the
+  public `K`-card coupling shape for future coupled-inductor AC/transient
+  stamping.
+
 - **JFET DC/AC analysis foothold** — `JFET` now participates in nonlinear DC
   operating-point solves and AC small-signal analysis using the DC bias point.
 

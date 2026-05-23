@@ -7,6 +7,7 @@ export type Element =
   | Resistor
   | Capacitor
   | Inductor
+  | MutualInductor
   | VoltageSource
   | CurrentSource
   | BSource
@@ -43,6 +44,14 @@ export interface Inductor {
   readonly n2: string;
   readonly inductanceHenrys: number;
   readonly initialCurrent: number;
+}
+
+export interface MutualInductor {
+  readonly kind: "mutual-inductor";
+  readonly name: string;
+  readonly primary: string;
+  readonly secondary: string;
+  readonly coupling: number;
 }
 
 export type Waveform =
@@ -891,6 +900,8 @@ function cloneSubcktElement(
       return capacitorWithInitialVoltage(name, mapSubcktNode(element.n1, instanceName, nodeMap), mapSubcktNode(element.n2, instanceName, nodeMap), element.capacitanceFarads, element.initialVoltage);
     case "inductor":
       return inductorWithInitialCurrent(name, mapSubcktNode(element.n1, instanceName, nodeMap), mapSubcktNode(element.n2, instanceName, nodeMap), element.inductanceHenrys, element.initialCurrent);
+    case "mutual-inductor":
+      return mutualInductor(name, mapSubcktSourceRef(element.primary, instanceName), mapSubcktSourceRef(element.secondary, instanceName), element.coupling);
     case "voltage-source":
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
     case "current-source":
@@ -974,6 +985,21 @@ export function inductorWithInitialCurrent(
     n2,
     inductanceHenrys,
     initialCurrent,
+  };
+}
+
+export function mutualInductor(
+  name: string,
+  primary: string,
+  secondary: string,
+  coupling: number,
+): MutualInductor {
+  return {
+    kind: "mutual-inductor",
+    name,
+    primary,
+    secondary,
+    coupling,
   };
 }
 
@@ -2636,6 +2662,7 @@ function randomizedElement(
       return element;
     case "capacitor":
     case "inductor":
+    case "mutual-inductor":
       return element;
   }
 }

@@ -253,6 +253,12 @@ fn clone_subckt_element(
             element.inductance_henrys,
             element.initial_current,
         )),
+        Element::MutualInductor(element) => Element::MutualInductor(MutualInductor::new(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_source_ref(&element.primary, instance_name),
+            map_subckt_source_ref(&element.secondary, instance_name),
+            element.coupling,
+        )),
         Element::VoltageSource(element) => Element::VoltageSource(VoltageSource {
             name: format!("{instance_name}.{}", element.name),
             positive: map_subckt_node(&element.positive, instance_name, node_map),
@@ -669,6 +675,7 @@ pub enum Element {
     Resistor(Resistor),
     Capacitor(Capacitor),
     Inductor(Inductor),
+    MutualInductor(MutualInductor),
     VoltageSource(VoltageSource),
     CurrentSource(CurrentSource),
     BSource(BSource),
@@ -811,6 +818,30 @@ impl Inductor {
             n2: n2.into(),
             inductance_henrys,
             initial_current,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct MutualInductor {
+    pub name: String,
+    pub primary: String,
+    pub secondary: String,
+    pub coupling: f64,
+}
+
+impl MutualInductor {
+    pub fn new(
+        name: impl Into<String>,
+        primary: impl Into<String>,
+        secondary: impl Into<String>,
+        coupling: f64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            primary: primary.into(),
+            secondary: secondary.into(),
+            coupling,
         }
     }
 }
@@ -3460,7 +3491,10 @@ fn element_parameter(element: &Element) -> Option<(String, String, f64)> {
             "transresistance_ohms".to_string(),
             source.transresistance_ohms,
         )),
-        Element::BSource(_) | Element::Capacitor(_) | Element::Inductor(_) => None,
+        Element::BSource(_)
+        | Element::Capacitor(_)
+        | Element::Inductor(_)
+        | Element::MutualInductor(_) => None,
     }
 }
 
@@ -3481,7 +3515,10 @@ fn perturb_element_parameter(element: &mut Element, delta: f64) {
         Element::Vcvs(source) => source.gain += delta,
         Element::Cccs(source) => source.gain += delta,
         Element::Ccvs(source) => source.transresistance_ohms += delta,
-        Element::BSource(_) | Element::Capacitor(_) | Element::Inductor(_) => {}
+        Element::BSource(_)
+        | Element::Capacitor(_)
+        | Element::Inductor(_)
+        | Element::MutualInductor(_) => {}
     }
 }
 
@@ -3609,7 +3646,10 @@ fn randomized_element(
                 randomized_value(varied.transresistance_ohms, tolerance, distribution, rng);
             Element::Ccvs(varied)
         }
-        Element::BSource(_) | Element::Capacitor(_) | Element::Inductor(_) => element.clone(),
+        Element::BSource(_)
+        | Element::Capacitor(_)
+        | Element::Inductor(_)
+        | Element::MutualInductor(_) => element.clone(),
     }
 }
 
@@ -3899,6 +3939,7 @@ fn solve_linear_circuit_at_operating_point(
                 &mut matrix,
                 &mut rhs,
             )?,
+            Element::MutualInductor(_) => {}
             Element::VoltageSource(source) => stamp_voltage_source(
                 source,
                 node_indices,
@@ -4050,6 +4091,7 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
             Element::Resistor(_)
             | Element::Capacitor(_)
             | Element::Inductor(_)
+            | Element::MutualInductor(_)
             | Element::Diode(_)
             | Element::Jfet(_)
             | Element::Bjt(_)
@@ -4097,6 +4139,7 @@ fn build_ac_matrix(
             Element::Inductor(inductor) => {
                 stamp_ac_inductor(inductor, omega, node_indices, &mut matrix)?
             }
+            Element::MutualInductor(_) => {}
             Element::VoltageSource(source) => stamp_ac_voltage_source_matrix(
                 source,
                 node_indices,
@@ -4189,6 +4232,7 @@ fn build_small_signal_matrix(
                 let n2 = node_index(node_indices, &inductor.n2);
                 stamp_conductance(&mut matrix, n1, n2, 1.0e12);
             }
+            Element::MutualInductor(_) => {}
             Element::VoltageSource(source) => {
                 if !source.voltage.is_finite() {
                     return Err(SpiceError::InvalidElement {
@@ -4312,6 +4356,7 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
                 insert_node(&mut names, &inductor.n1);
                 insert_node(&mut names, &inductor.n2);
             }
+            Element::MutualInductor(_) => {}
             Element::VoltageSource(source) => {
                 insert_node(&mut names, &source.positive);
                 insert_node(&mut names, &source.negative);

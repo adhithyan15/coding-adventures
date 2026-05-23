@@ -15,6 +15,7 @@ from spice_engine import (
     Inductor,
     JFET,
     Mosfet,
+    MutualInductor,
     Resistor,
     VoltageSource,
     ac_sweep,
@@ -95,6 +96,23 @@ G1 out 0 in 0 2m
         DcAnalysis(source_name="Vstep", start=0.0, stop=1.0, step=0.5),
         AcAnalysis(mode="dec", points=10, start_hz=1.0e3, stop_hz=1.0e6),
     ]
+
+
+def test_parse_mutual_inductor_card() -> None:
+    parsed = parse_netlist(
+        """
+Lpri p 0 10m
+Lsec s 0 40m
+Kcouple Lpri Lsec 0.75
+"""
+    )
+
+    assert isinstance(parsed.circuit.elements[2], MutualInductor)
+    mutual = parsed.circuit.elements[2]
+    assert mutual.name == "Kcouple"
+    assert mutual.primary == "Lpri"
+    assert mutual.secondary == "Lsec"
+    assert mutual.coupling == 0.75
 
 
 def test_parse_options_analysis_card() -> None:
@@ -749,6 +767,26 @@ Xbuf out in 0 source_follower
     assert isinstance(resistor, Resistor)
     assert resistor.n_plus == "Xbuf.inner"
     assert resistor.n_minus == "0"
+
+
+def test_expands_subcircuit_mutual_inductor_refs_into_engine_elements() -> None:
+    parsed = parse_netlist(
+        """
+.subckt transformer p1 p2 s1 s2
+Lpri p1 p2 10m
+Lsec s1 s2 40m
+Kcore Lpri Lsec 0.9
+.ends transformer
+Xtx in 0 out 0 transformer
+"""
+    )
+
+    mutual = parsed.circuit.elements[2]
+    assert isinstance(mutual, MutualInductor)
+    assert mutual.name == "Xtx.Kcore"
+    assert mutual.primary == "Xtx.Lpri"
+    assert mutual.secondary == "Xtx.Lsec"
+    assert mutual.coupling == 0.9
 
 
 def test_expands_subcircuit_mosfet_nodes_into_engine_elements() -> None:

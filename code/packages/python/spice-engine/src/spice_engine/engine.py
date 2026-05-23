@@ -70,6 +70,7 @@ from spice_engine.elements import (
     Inductor,
     JFET,
     Mosfet,
+    MutualInductor,
     Resistor,
     SubcircuitDefinition,
     VoltageSource,
@@ -226,6 +227,8 @@ def _clone_subckt_element(element: object, instance_name: str, node_map: dict[st
         return Capacitor(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.capacitance, element.initial_voltage)
     if isinstance(element, Inductor):
         return Inductor(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.inductance, element.initial_current)
+    if isinstance(element, MutualInductor):
+        return MutualInductor(name, _map_subckt_source_ref(element.primary, instance_name), _map_subckt_source_ref(element.secondary, instance_name), element.coupling)
     if isinstance(element, VoltageSource):
         return VoltageSource(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.voltage, element.waveform, element.ac)
     if isinstance(element, CurrentSource):

@@ -16,6 +16,7 @@ import {
   inductorWithInitialCurrent,
   jfet,
   mosfet,
+  mutualInductor,
   resistor,
   vccs,
   vcvs,
@@ -451,6 +452,10 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       params.get("IC") ?? 0.0,
     );
   }
+  if (prefix === "K") {
+    requireFields(fields, 4, "mutual inductor");
+    return mutualInductor(name, fields[1], fields[2], parseValue(fields[3]));
+  }
   if (prefix === "V") {
     requireMinFields(fields, 4, "voltage source");
     const source = parseSourceValue(fields.slice(3));
@@ -713,6 +718,10 @@ function mapSubcktFields(
     mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
     mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
     mapped[3] = mapSubcktSourceRef(fields[3], instanceName);
+  } else if (prefix === "K") {
+    requireFields(fields, 4, "subcircuit mutual inductor");
+    mapped[1] = mapSubcktSourceRef(fields[1], instanceName);
+    mapped[2] = mapSubcktSourceRef(fields[2], instanceName);
   } else if (prefix === "X") {
     for (let index = 1; index < fields.length - 1; index++) {
       mapped[index] = mapSubcktNode(fields[index], instanceName, nodeMap);
