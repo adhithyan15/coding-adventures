@@ -2,6 +2,71 @@
 
 ## Unreleased
 
+### Added — MX10 benchmark / profiling script
+
+Adds `scripts/benchmark_mx10.py` — a standalone runnable script (not
+a pytest test) that times each MX10-dispatched op on both the Rust
+and pure-Python paths and reports a markdown table with per-op
+median wallclock and speedup ratio.
+
+#### Usage
+
+```bash
+# Compare both paths side-by-side (requires C extension):
+python scripts/benchmark_mx10.py
+
+# Pure-Python only (works without the extension):
+python scripts/benchmark_mx10.py --mode fallback
+
+# Rust only:
+python scripts/benchmark_mx10.py --mode rust
+
+# CI smoke-test mode (N=2 iterations, no warmup):
+python scripts/benchmark_mx10.py --quick
+```
+
+#### What gets benchmarked
+
+Every op that received an MX10 Rust fast path:
+
+- **Matmul**: 200×200 @ 200×200 = 8M multiply-adds (≫ 4096 threshold)
+- **Activations forward**: ReLU, Sigmoid, Tanh, GELU, Softmax — all
+  on `(500, 200) = 100_000`-cell tensors
+- **Activations forward+backward**: same five, full SGD-step cost
+- **Reductions forward**: Sum/Mean reduce-all + axis-specific
+- **Reductions forward+backward**: reduce-all and axis-specific
+- **Elementwise backward**: Mul, Div (the two with real arithmetic)
+- **PowFunction**: scalar exponent forward+backward
+
+#### Methodology
+
+- **Dispatch path toggled** via the same
+  `_rust_backend._RUST_AVAILABLE` flag the parity tests use, so the
+  two paths exercise the identical envelope/dispatch machinery they
+  do in production.
+- **`time.perf_counter()`** for monotonic high-resolution timing.
+- **2 warmup iterations** (discarded) + **10 timed iterations** by
+  default; `--quick` cuts to 2 iterations no warmup for CI.
+- **Median** of timed iterations to suppress GC-pause and
+  OS-scheduling outliers without needing a huge iteration count.
+
+#### Graceful degradation
+
+If `coding_adventures_matrix_rust_python` isn't installed, the script
+prints a warning to stderr and automatically falls back to
+`--mode fallback` so it produces useful output on any machine.  The
+table header adapts: single column for one-path runs, three columns
+(both + speedup) when both are measured.
+
+#### Smoke-tested on darwin-arm64
+
+The `--quick --mode fallback` smoke test runs all 20 benchmark cases
+in ~5 seconds total and produces a clean markdown table with no
+errors — confirms the dispatch hooks, autograd integration, and
+timing harness all work end-to-end without the C extension.  When
+the extension is available, the same invocation drops to `--mode
+both` and reports speedup ratios per op.
+
 ### Added — MX11 implementation: NumPy interop for `Tensor`
 
 Implements the spec from `code/specs/MX11-numpy-interop.md` (landed
