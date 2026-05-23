@@ -1155,6 +1155,46 @@ pub struct LanguageInputCallbackTransportOutcomeSummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportTraceKind {
+    CallbackRunnerHandoffTrace,
+    AdapterEventPublicationTrace,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportTraceSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub trace_label: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_trace: u8,
+    pub message: String,
+    pub outcome_summary: LanguageInputCallbackTransportOutcomeSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackDiagnosticStage {
     Plan,
     Event,
@@ -1694,6 +1734,19 @@ pub const fn input_callback_transport_outcome_kind_name(
         }
         LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded => {
             "adapter_event_publication_recorded"
+        }
+    }
+}
+
+pub const fn input_callback_transport_trace_kind_name(
+    kind: LanguageInputCallbackTransportTraceKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportTraceKind::CallbackRunnerHandoffTrace => {
+            "callback_runner_handoff_trace"
+        }
+        LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace => {
+            "adapter_event_publication_trace"
         }
     }
 }
@@ -3095,6 +3148,45 @@ pub fn input_callback_transport_outcome_summary(
         queue_depth_after_outcome: receipt_summary.queue_depth_after_receipt,
         message: input_callback_transport_outcome_message(outcome_kind).to_owned(),
         receipt_summary: receipt_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_trace_summary(
+    outcome_summary: &LanguageInputCallbackTransportOutcomeSummary,
+) -> LanguageInputCallbackTransportTraceSummary {
+    let trace_kind = input_callback_transport_trace_kind(outcome_summary.outcome_kind);
+
+    LanguageInputCallbackTransportTraceSummary {
+        endpoint: outcome_summary.endpoint.clone(),
+        connection_label: outcome_summary.connection_label.clone(),
+        trace_label: input_callback_transport_trace_label(outcome_summary, trace_kind),
+        trace_kind,
+        trace_name: input_callback_transport_trace_kind_name(trace_kind).to_owned(),
+        outcome_kind: outcome_summary.outcome_kind,
+        outcome_name: outcome_summary.outcome_name.clone(),
+        receipt_kind: outcome_summary.receipt_kind,
+        receipt_name: outcome_summary.receipt_name.clone(),
+        acknowledgement_kind: outcome_summary.acknowledgement_kind,
+        acknowledgement_name: outcome_summary.acknowledgement_name.clone(),
+        delivery_route: outcome_summary.delivery_route,
+        delivery_route_name: outcome_summary.delivery_route_name.clone(),
+        event_kind: outcome_summary.event_kind,
+        event_name: outcome_summary.event_name.clone(),
+        report_kind: outcome_summary.report_kind,
+        report_name: outcome_summary.report_name.clone(),
+        action: outcome_summary.action,
+        action_name: outcome_summary.action_name.clone(),
+        callback_runner_handoff: outcome_summary.callback_runner_handoff,
+        adapter_event_published: outcome_summary.adapter_event_published,
+        delivery_acknowledged: outcome_summary.delivery_acknowledged,
+        receipt_recorded: outcome_summary.receipt_recorded,
+        outcome_recorded: outcome_summary.outcome_recorded,
+        trace_recorded: true,
+        terminal: outcome_summary.terminal,
+        retryable: outcome_summary.retryable,
+        queue_depth_after_trace: outcome_summary.queue_depth_after_outcome,
+        message: input_callback_transport_trace_message(trace_kind).to_owned(),
+        outcome_summary: outcome_summary.clone(),
     }
 }
 
@@ -4534,6 +4626,44 @@ fn input_callback_transport_outcome_message(
         }
         LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded => {
             "Transport should report the recorded adapter event publication outcome."
+        }
+    }
+}
+
+fn input_callback_transport_trace_kind(
+    outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+) -> LanguageInputCallbackTransportTraceKind {
+    match outcome_kind {
+        LanguageInputCallbackTransportOutcomeKind::CallbackRunnerHandoffRecorded => {
+            LanguageInputCallbackTransportTraceKind::CallbackRunnerHandoffTrace
+        }
+        LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded => {
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        }
+    }
+}
+
+fn input_callback_transport_trace_label(
+    outcome_summary: &LanguageInputCallbackTransportOutcomeSummary,
+    trace_kind: LanguageInputCallbackTransportTraceKind,
+) -> String {
+    format!(
+        "{} transport_trace={} trace_recorded=true queue_depth_after_trace={}",
+        outcome_summary.outcome_label,
+        input_callback_transport_trace_kind_name(trace_kind),
+        outcome_summary.queue_depth_after_outcome
+    )
+}
+
+fn input_callback_transport_trace_message(
+    trace_kind: LanguageInputCallbackTransportTraceKind,
+) -> &'static str {
+    match trace_kind {
+        LanguageInputCallbackTransportTraceKind::CallbackRunnerHandoffTrace => {
+            "Transport should retain the callback-runner handoff trace."
+        }
+        LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace => {
+            "Transport should retain the adapter event publication trace."
         }
     }
 }
@@ -11088,6 +11218,269 @@ mod tests {
         assert_eq!(
             dropped.outcome_label,
             "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1 transport_acknowledgement=adapter_event_published delivery_acknowledged=true callback_runner_handoff=false adapter_event_published=true queue_depth_after_acknowledgement=1 transport_receipt=adapter_event_publication receipt_recorded=true queue_depth_after_receipt=1 transport_outcome=adapter_event_publication_recorded outcome_recorded=true queue_depth_after_outcome=1"
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_traces_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed_delivery = input_callback_transport_delivery_summary(&completed_event);
+        let completed_ack = input_callback_transport_acknowledgement_summary(&completed_delivery);
+        let completed_receipt = input_callback_transport_receipt_summary(&completed_ack);
+        let completed_outcome = input_callback_transport_outcome_summary(&completed_receipt);
+        let completed = input_callback_transport_trace_summary(&completed_outcome);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(completed.trace_name, "adapter_event_publication_trace");
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(completed.outcome_name, "adapter_event_publication_recorded");
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_trace, 2);
+        assert_eq!(
+            completed.message,
+            "Transport should retain the adapter event publication trace."
+        );
+        assert_eq!(completed.outcome_summary, completed_outcome);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending_delivery = input_callback_transport_delivery_summary(&pending_event);
+        let pending_ack = input_callback_transport_acknowledgement_summary(&pending_delivery);
+        let pending_receipt = input_callback_transport_receipt_summary(&pending_ack);
+        let pending_outcome = input_callback_transport_outcome_summary(&pending_receipt);
+        let pending = input_callback_transport_trace_summary(&pending_outcome);
+
+        assert_eq!(
+            pending.trace_kind,
+            LanguageInputCallbackTransportTraceKind::CallbackRunnerHandoffTrace
+        );
+        assert_eq!(pending.trace_name, "callback_runner_handoff_trace");
+        assert_eq!(
+            pending.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::CallbackRunnerHandoffRecorded
+        );
+        assert_eq!(
+            pending.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::CallbackRunnerHandoff
+        );
+        assert_eq!(
+            pending.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::CallbackRunnerAccepted
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_trace, 3);
+        assert_eq!(
+            pending.trace_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3 transport_delivery=callback_runner publish_event=false queue_depth_after_delivery=3 transport_acknowledgement=callback_runner_accepted delivery_acknowledged=true callback_runner_handoff=true adapter_event_published=false queue_depth_after_acknowledgement=3 transport_receipt=callback_runner_handoff receipt_recorded=true queue_depth_after_receipt=3 transport_outcome=callback_runner_handoff_recorded outcome_recorded=true queue_depth_after_outcome=3 transport_trace=callback_runner_handoff_trace trace_recorded=true queue_depth_after_trace=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport should retain the callback-runner handoff trace."
+        );
+
+        let running_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Running),
+            12,
+            4,
+        );
+        let running_action = input_callback_transport_action_summary(&running_lifecycle);
+        let running_effect = input_callback_transport_effect_summary(&running_action);
+        let running_report = input_callback_transport_report_summary(&running_effect);
+        let running_event = input_callback_transport_event_summary(&running_report);
+        let running_delivery = input_callback_transport_delivery_summary(&running_event);
+        let running_ack = input_callback_transport_acknowledgement_summary(&running_delivery);
+        let running_receipt = input_callback_transport_receipt_summary(&running_ack);
+        let running_outcome = input_callback_transport_outcome_summary(&running_receipt);
+        let running = input_callback_transport_trace_summary(&running_outcome);
+        assert_eq!(
+            running.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(
+            running.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackRunning
+        );
+        assert!(running.adapter_event_published);
+        assert!(running.retryable);
+
+        let budget_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::BudgetExceeded),
+            64,
+            9,
+        );
+        let budget_action = input_callback_transport_action_summary(&budget_lifecycle);
+        let budget_effect = input_callback_transport_effect_summary(&budget_action);
+        let budget_report = input_callback_transport_report_summary(&budget_effect);
+        let budget_event = input_callback_transport_event_summary(&budget_report);
+        let budget_delivery = input_callback_transport_delivery_summary(&budget_event);
+        let budget_ack = input_callback_transport_acknowledgement_summary(&budget_delivery);
+        let budget_receipt = input_callback_transport_receipt_summary(&budget_ack);
+        let budget_outcome = input_callback_transport_outcome_summary(&budget_receipt);
+        let budget = input_callback_transport_trace_summary(&budget_outcome);
+        assert_eq!(
+            budget.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackBudgetExceeded
+        );
+        assert!(budget.adapter_event_published);
+        assert!(budget.terminal);
+        assert!(budget.trace_recorded);
+
+        let stopped_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Stopped),
+            6,
+            2,
+        );
+        let stopped_action = input_callback_transport_action_summary(&stopped_lifecycle);
+        let stopped_effect = input_callback_transport_effect_summary(&stopped_action);
+        let stopped_report = input_callback_transport_report_summary(&stopped_effect);
+        let stopped_event = input_callback_transport_event_summary(&stopped_report);
+        let stopped_delivery = input_callback_transport_delivery_summary(&stopped_event);
+        let stopped_ack = input_callback_transport_acknowledgement_summary(&stopped_delivery);
+        let stopped_receipt = input_callback_transport_receipt_summary(&stopped_ack);
+        let stopped_outcome = input_callback_transport_outcome_summary(&stopped_receipt);
+        let stopped = input_callback_transport_trace_summary(&stopped_outcome);
+        assert_eq!(
+            stopped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackFailed
+        );
+        assert!(stopped.adapter_event_published);
+        assert!(stopped.terminal);
+        assert!(stopped.trace_recorded);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped_delivery = input_callback_transport_delivery_summary(&dropped_event);
+        let dropped_ack = input_callback_transport_acknowledgement_summary(&dropped_delivery);
+        let dropped_receipt = input_callback_transport_receipt_summary(&dropped_ack);
+        let dropped_outcome = input_callback_transport_outcome_summary(&dropped_receipt);
+        let dropped = input_callback_transport_trace_summary(&dropped_outcome);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_trace, 1);
+        assert_eq!(
+            dropped.trace_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1 transport_acknowledgement=adapter_event_published delivery_acknowledged=true callback_runner_handoff=false adapter_event_published=true queue_depth_after_acknowledgement=1 transport_receipt=adapter_event_publication receipt_recorded=true queue_depth_after_receipt=1 transport_outcome=adapter_event_publication_recorded outcome_recorded=true queue_depth_after_outcome=1 transport_trace=adapter_event_publication_trace trace_recorded=true queue_depth_after_trace=1"
         );
     }
 
