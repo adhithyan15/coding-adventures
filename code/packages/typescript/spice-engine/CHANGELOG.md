@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a public `TransmissionLine` element and `transmissionLine` factory as
+  the parser-facing SPICE `T` card foothold for future AC/transient delay-line
+  stamping.
 - Add transient analysis stamping for `MutualInductor` by coupling referenced
   inductor pairs through a two-winding companion conductance matrix.
 - Add AC analysis stamping for `MutualInductor` by coupling referenced

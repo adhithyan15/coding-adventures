@@ -3,7 +3,8 @@ use std::{collections::HashMap, fmt};
 use spice_engine::{
     Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element, ExpWaveform,
     Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor,
-    PulseWaveform, PwlWaveform, Resistor, SinWaveform, Vccs, Vcvs, VoltageSource, Waveform,
+    PulseWaveform, PwlWaveform, Resistor, SinWaveform, TransmissionLine, Vccs, Vcvs,
+    VoltageSource, Waveform,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -346,6 +347,7 @@ pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
         }
     }
     validate_mutual_inductors(&circuit)?;
+    validate_transmission_lines(&circuit)?;
 
     Ok(ParsedNetlist {
         circuit,
@@ -397,6 +399,40 @@ fn validate_mutual_inductors(circuit: &Circuit) -> Result<(), NetlistParseError>
             return Err(NetlistParseError::new(format!(
                 "{}: referenced inductor {:?} was not found",
                 mutual.name, mutual.secondary
+            )));
+        }
+    }
+
+    Ok(())
+}
+
+fn validate_transmission_lines(circuit: &Circuit) -> Result<(), NetlistParseError> {
+    for element in circuit.elements() {
+        let Element::TransmissionLine(line) = element else {
+            continue;
+        };
+        if !line.characteristic_impedance_ohms.is_finite() {
+            return Err(NetlistParseError::new(format!(
+                "{}: characteristic impedance must be finite",
+                line.name
+            )));
+        }
+        if line.characteristic_impedance_ohms <= 0.0 {
+            return Err(NetlistParseError::new(format!(
+                "{}: characteristic impedance must be positive",
+                line.name
+            )));
+        }
+        if !line.delay_seconds.is_finite() {
+            return Err(NetlistParseError::new(format!(
+                "{}: delay must be finite",
+                line.name
+            )));
+        }
+        if line.delay_seconds <= 0.0 {
+            return Err(NetlistParseError::new(format!(
+                "{}: delay must be positive",
+                line.name
             )));
         }
     }
@@ -608,6 +644,33 @@ fn parse_element(
                 &fields[1],
                 &fields[2],
                 parse_value(&fields[3])?,
+            )))
+        }
+        'T' => {
+            require_min_fields(fields, 6, "transmission line")?;
+            let params = parse_element_params(&fields[5..], "transmission line")?;
+            if let Some(param_name) = params
+                .keys()
+                .find(|name| name.as_str() != "Z0" && name.as_str() != "TD")
+            {
+                return Err(NetlistParseError::new(format!(
+                    "unsupported transmission line parameter {param_name:?}"
+                )));
+            }
+            let characteristic_impedance = params.get("Z0").ok_or_else(|| {
+                NetlistParseError::new(format!("{name}: transmission line requires Z0"))
+            })?;
+            let delay = params.get("TD").ok_or_else(|| {
+                NetlistParseError::new(format!("{name}: transmission line requires TD"))
+            })?;
+            Ok(Element::TransmissionLine(TransmissionLine::new(
+                name,
+                &fields[1],
+                &fields[2],
+                &fields[3],
+                &fields[4],
+                *characteristic_impedance,
+                *delay,
             )))
         }
         'V' => {
@@ -957,6 +1020,12 @@ fn map_subckt_fields(
             require_fields(fields, 4, "subcircuit mutual inductor")?;
             mapped[1] = map_subckt_source_ref(&fields[1], instance_name);
             mapped[2] = map_subckt_source_ref(&fields[2], instance_name);
+        }
+        'T' => {
+            require_min_fields(fields, 6, "subcircuit transmission line")?;
+            for index in 1..5 {
+                mapped[index] = map_subckt_node(&fields[index], instance_name, node_map);
+            }
         }
         'X' => {
             for index in 1..fields.len() - 1 {

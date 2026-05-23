@@ -17,6 +17,7 @@ from spice_engine import (
     Mosfet,
     MutualInductor,
     Resistor,
+    TransmissionLine,
     VoltageSource,
     ac_sweep,
     dc_op,
@@ -134,6 +135,41 @@ Lsec s 0 40m
 Kbad Lpri Lsec 1e999
 """
         )
+
+
+def test_parse_transmission_line_card() -> None:
+    parsed = parse_netlist(
+        """
+Tdelay in 0 out 0 Z0=50 TD=1n
+"""
+    )
+
+    assert isinstance(parsed.circuit.elements[0], TransmissionLine)
+    line = parsed.circuit.elements[0]
+    assert line.name == "Tdelay"
+    assert line.n1 == "in"
+    assert line.n2 == "0"
+    assert line.n3 == "out"
+    assert line.n4 == "0"
+    assert line.characteristic_impedance == 50.0
+    assert line.delay == 1.0e-9
+
+
+def test_transmission_line_rejects_unsupported_positional_form() -> None:
+    with pytest.raises(NetlistParseError, match="invalid transmission line parameter syntax"):
+        parse_netlist("Tdelay in 0 out 0 50 1n")
+
+
+def test_transmission_line_rejects_missing_parameters() -> None:
+    with pytest.raises(NetlistParseError, match="requires TD"):
+        parse_netlist("Tdelay in 0 out 0 Z0=50")
+
+
+def test_transmission_line_rejects_non_positive_parameters() -> None:
+    with pytest.raises(NetlistParseError, match="characteristic impedance must be positive"):
+        parse_netlist("Tdelay in 0 out 0 Z0=0 TD=1n")
+    with pytest.raises(NetlistParseError, match="delay must be positive"):
+        parse_netlist("Tdelay in 0 out 0 Z0=50 TD=0")
 
 
 def test_parse_options_analysis_card() -> None:
@@ -808,6 +844,27 @@ Xtx in 0 out 0 transformer
     assert mutual.primary == "Xtx.Lpri"
     assert mutual.secondary == "Xtx.Lsec"
     assert mutual.coupling == 0.9
+
+
+def test_expands_subcircuit_transmission_line_nodes_into_engine_elements() -> None:
+    parsed = parse_netlist(
+        """
+.subckt delay in out
+T1 in 0 out 0 Z0=75 TD=2n
+.ends delay
+Xdelay a b delay
+"""
+    )
+
+    line = parsed.circuit.elements[0]
+    assert isinstance(line, TransmissionLine)
+    assert line.name == "Xdelay.T1"
+    assert line.n1 == "a"
+    assert line.n2 == "0"
+    assert line.n3 == "b"
+    assert line.n4 == "0"
+    assert line.characteristic_impedance == 75.0
+    assert line.delay == 2.0e-9
 
 
 def test_expands_subcircuit_mosfet_nodes_into_engine_elements() -> None:

@@ -155,6 +155,54 @@ Kbad Lpri Lsec 1e999
 }
 
 #[test]
+fn parses_transmission_line_card() {
+    let parsed = parse_netlist(
+        r#"
+Tdelay in 0 out 0 Z0=50 TD=1n
+"#,
+    )
+    .unwrap();
+
+    let Element::TransmissionLine(line) = &parsed.circuit.elements()[0] else {
+        panic!("expected transmission line");
+    };
+    assert_eq!(line.name, "Tdelay");
+    assert_eq!(line.n1, "in");
+    assert_eq!(line.n2, "0");
+    assert_eq!(line.n3, "out");
+    assert_eq!(line.n4, "0");
+    assert_close(line.characteristic_impedance_ohms, 50.0);
+    assert_close(line.delay_seconds, 1.0e-9);
+}
+
+#[test]
+fn rejects_transmission_line_positional_form() {
+    let error = parse_netlist("Tdelay in 0 out 0 50 1n").unwrap_err();
+
+    assert!(error
+        .to_string()
+        .contains("invalid transmission line parameter syntax"));
+}
+
+#[test]
+fn rejects_transmission_line_missing_parameter() {
+    let error = parse_netlist("Tdelay in 0 out 0 Z0=50").unwrap_err();
+
+    assert!(error.to_string().contains("requires TD"));
+}
+
+#[test]
+fn rejects_transmission_line_non_positive_parameters() {
+    let impedance_error = parse_netlist("Tdelay in 0 out 0 Z0=0 TD=1n").unwrap_err();
+    assert!(impedance_error
+        .to_string()
+        .contains("characteristic impedance must be positive"));
+
+    let delay_error = parse_netlist("Tdelay in 0 out 0 Z0=50 TD=0").unwrap_err();
+    assert!(delay_error.to_string().contains("delay must be positive"));
+}
+
+#[test]
 fn parses_options_analysis_cards() {
     let parsed = parse_netlist(
         r#"
@@ -1009,6 +1057,30 @@ Xtx in 0 out 0 transformer
     assert_eq!(mutual.primary, "Xtx.Lpri");
     assert_eq!(mutual.secondary, "Xtx.Lsec");
     assert_close(mutual.coupling, 0.9);
+}
+
+#[test]
+fn expands_subcircuit_transmission_line_nodes_into_engine_elements() {
+    let parsed = parse_netlist(
+        r#"
+.subckt delay in out
+T1 in 0 out 0 Z0=75 TD=2n
+.ends delay
+Xdelay a b delay
+"#,
+    )
+    .unwrap();
+
+    let Element::TransmissionLine(line) = &parsed.circuit.elements()[0] else {
+        panic!("expected transmission line");
+    };
+    assert_eq!(line.name, "Xdelay.T1");
+    assert_eq!(line.n1, "a");
+    assert_eq!(line.n2, "0");
+    assert_eq!(line.n3, "b");
+    assert_eq!(line.n4, "0");
+    assert_close(line.characteristic_impedance_ohms, 75.0);
+    assert_close(line.delay_seconds, 2.0e-9);
 }
 
 #[test]

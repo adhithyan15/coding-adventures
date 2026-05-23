@@ -305,6 +305,19 @@ class MutualInductor:
 
 
 @dataclass(frozen=True, slots=True)
+class TransmissionLine:
+    """T<name> n1 n2 n3 n4 Z0=<ohms> TD=<seconds>"""
+
+    name: str
+    n1: str
+    n2: str
+    n3: str
+    n4: str
+    characteristic_impedance: float
+    delay: float
+
+
+@dataclass(frozen=True, slots=True)
 class VoltageSource:
     """V<name> n+ n- value [waveform] [ac]
 
@@ -740,6 +753,7 @@ Element = (
     | Capacitor
     | Inductor
     | MutualInductor
+    | TransmissionLine
     | VoltageSource
     | CurrentSource
     | BSource

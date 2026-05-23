@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Transmission-line element foothold** — `TransmissionLine` now exposes the
+  public `T`-card four-terminal delay-line shape for parser and future
+  AC/transient stamping work.
+
 - **Mutual-inductor transient stamping** — `MutualInductor` now couples
   referenced inductor pairs during transient analysis with a two-winding
   companion conductance matrix.
