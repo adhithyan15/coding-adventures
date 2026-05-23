@@ -1219,6 +1219,7 @@ impl ToolAuditSupervisorDrainRunReport {
         self.outcome_label_matches_outcome()
             && self.scheduler_action_label_matches_action()
             && self.count_drift_label_matches_kind()
+            && self.checkpoint_drift_label_matches_kind()
             && self.host_investigation_label_matches_kind()
     }
 
@@ -1480,6 +1481,14 @@ impl ToolAuditSupervisorDrainRunReport {
             count_drift_label: self.count_drift_label(),
             count_drift_label_matches_kind: self.count_drift_label_matches_kind(),
             is_no_count_drift: self.is_no_count_drift(),
+            has_planned_last_checkpoint_drift: self.has_planned_last_checkpoint_drift(),
+            has_checkpoint_advance_drift: self.has_checkpoint_advance_drift(),
+            has_checkpoint_plan_drift: self.has_checkpoint_plan_drift(),
+            checkpoint_drift_kind: self.checkpoint_drift_kind(),
+            checkpoint_drift_label: self.checkpoint_drift_label(),
+            checkpoint_drift_label_matches_kind: self.checkpoint_drift_label_matches_kind(),
+            is_no_checkpoint_drift: self.is_no_checkpoint_drift(),
+            requires_checkpoint_drift_investigation: self.requires_checkpoint_drift_investigation(),
             requires_plan_drift_investigation: self.requires_plan_drift_investigation(),
             requires_count_drift_investigation: self.requires_count_drift_investigation(),
             host_investigation_kind: self.host_investigation_kind(),
@@ -1645,6 +1654,50 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return whether count drift should be investigated by the host.
     pub fn requires_count_drift_investigation(&self) -> bool {
         self.count_drift_kind().requires_investigation()
+    }
+
+    /// Return whether planned and actual final checkpoints diverged.
+    pub fn has_planned_last_checkpoint_drift(&self) -> bool {
+        !self.planned_last_checkpoint_matches_last_checkpoint()
+    }
+
+    /// Return whether planned checkpoint movement diverged from the actual drain.
+    pub fn has_checkpoint_advance_drift(&self) -> bool {
+        !self.planned_checkpoint_advance_matches_drain()
+    }
+
+    /// Return whether any planned-vs-actual checkpoint drift was observed.
+    pub fn has_checkpoint_plan_drift(&self) -> bool {
+        self.has_planned_last_checkpoint_drift() || self.has_checkpoint_advance_drift()
+    }
+
+    /// Return whether planned and actual checkpoint boundaries stayed aligned.
+    pub fn is_no_checkpoint_drift(&self) -> bool {
+        self.checkpoint_drift_kind().is_no_drift()
+    }
+
+    /// Classify the observed planned-vs-actual checkpoint drift.
+    pub fn checkpoint_drift_kind(&self) -> ToolAuditSupervisorDrainCheckpointDriftKind {
+        ToolAuditSupervisorDrainCheckpointDriftKind::from_drift_flags(
+            self.has_planned_last_checkpoint_drift(),
+            self.has_checkpoint_advance_drift(),
+        )
+    }
+
+    /// Return the stable checkpoint-drift classification label.
+    pub fn checkpoint_drift_label(&self) -> &'static str {
+        self.checkpoint_drift_kind().as_str()
+    }
+
+    /// Return whether the checkpoint-drift label parses back to the typed classification.
+    pub fn checkpoint_drift_label_matches_kind(&self) -> bool {
+        ToolAuditSupervisorDrainCheckpointDriftKind::from_label(self.checkpoint_drift_label())
+            == Some(self.checkpoint_drift_kind())
+    }
+
+    /// Return whether checkpoint drift should be investigated by the host.
+    pub fn requires_checkpoint_drift_investigation(&self) -> bool {
+        self.checkpoint_drift_kind().requires_investigation()
     }
 
     /// Return whether no audit rows were replayed.
@@ -1946,6 +1999,22 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub count_drift_label_matches_kind: bool,
     /// Whether planned and replayed counts stayed aligned.
     pub is_no_count_drift: bool,
+    /// Whether planned and actual final checkpoints diverged.
+    pub has_planned_last_checkpoint_drift: bool,
+    /// Whether planned checkpoint movement diverged from the actual drain.
+    pub has_checkpoint_advance_drift: bool,
+    /// Whether any planned-vs-actual checkpoint drift was observed.
+    pub has_checkpoint_plan_drift: bool,
+    /// Stable classification of observed planned-vs-actual checkpoint drift.
+    pub checkpoint_drift_kind: ToolAuditSupervisorDrainCheckpointDriftKind,
+    /// Stable checkpoint-drift classification label for host logs.
+    pub checkpoint_drift_label: &'static str,
+    /// Whether the checkpoint-drift label parses back to the typed classification.
+    pub checkpoint_drift_label_matches_kind: bool,
+    /// Whether planned and actual checkpoint boundaries stayed aligned.
+    pub is_no_checkpoint_drift: bool,
+    /// Whether checkpoint drift should be investigated by the host.
+    pub requires_checkpoint_drift_investigation: bool,
     /// Whether preflight/drain drift should be investigated by the host.
     pub requires_plan_drift_investigation: bool,
     /// Whether count drift should be investigated by the host.
@@ -2330,6 +2399,26 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.is_no_count_drift
     }
 
+    /// Return whether planned and actual final checkpoints diverged.
+    pub fn has_planned_last_checkpoint_drift(&self) -> bool {
+        self.has_planned_last_checkpoint_drift
+    }
+
+    /// Return whether planned checkpoint movement diverged from the actual drain.
+    pub fn has_checkpoint_advance_drift(&self) -> bool {
+        self.has_checkpoint_advance_drift
+    }
+
+    /// Return whether any planned-vs-actual checkpoint drift was observed.
+    pub fn has_checkpoint_plan_drift(&self) -> bool {
+        self.has_checkpoint_plan_drift
+    }
+
+    /// Return whether planned and actual checkpoint boundaries stayed aligned.
+    pub fn is_no_checkpoint_drift(&self) -> bool {
+        self.is_no_checkpoint_drift
+    }
+
     /// Return the typed count-drift classification.
     pub fn count_drift_kind(&self) -> ToolAuditSupervisorDrainCountDriftKind {
         self.count_drift_kind
@@ -2348,6 +2437,26 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether count drift should be investigated by the host.
     pub fn requires_count_drift_investigation(&self) -> bool {
         self.requires_count_drift_investigation
+    }
+
+    /// Return the typed checkpoint-drift classification.
+    pub fn checkpoint_drift_kind(&self) -> ToolAuditSupervisorDrainCheckpointDriftKind {
+        self.checkpoint_drift_kind
+    }
+
+    /// Return the stable checkpoint-drift classification label.
+    pub fn checkpoint_drift_label(&self) -> &'static str {
+        self.checkpoint_drift_label
+    }
+
+    /// Return whether the checkpoint-drift label parses back to the typed classification.
+    pub fn checkpoint_drift_label_matches_kind(&self) -> bool {
+        self.checkpoint_drift_label_matches_kind
+    }
+
+    /// Return whether checkpoint drift should be investigated by the host.
+    pub fn requires_checkpoint_drift_investigation(&self) -> bool {
+        self.requires_checkpoint_drift_investigation
     }
 
     /// Return the typed host-investigation classification.
@@ -2844,6 +2953,99 @@ impl ToolAuditSupervisorDrainCountDriftKind {
 }
 
 impl Display for ToolAuditSupervisorDrainCountDriftKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable classification of planned-vs-actual checkpoint drift in a drain run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainCheckpointDriftKind {
+    /// Planned and actual checkpoint boundaries match.
+    NoDrift,
+    /// The final planned checkpoint and final replay checkpoint drifted.
+    PlannedLastCheckpointDrift,
+    /// Planned checkpoint movement and actual checkpoint advancement drifted.
+    CheckpointAdvanceDrift,
+    /// Both final checkpoint and checkpoint-advance signals drifted.
+    PlannedLastCheckpointAndAdvanceDrift,
+}
+
+impl ToolAuditSupervisorDrainCheckpointDriftKind {
+    /// Classify drift from final checkpoint and checkpoint-advance drift flags.
+    pub fn from_drift_flags(
+        has_planned_last_checkpoint_drift: bool,
+        has_checkpoint_advance_drift: bool,
+    ) -> Self {
+        match (
+            has_planned_last_checkpoint_drift,
+            has_checkpoint_advance_drift,
+        ) {
+            (false, false) => Self::NoDrift,
+            (true, false) => Self::PlannedLastCheckpointDrift,
+            (false, true) => Self::CheckpointAdvanceDrift,
+            (true, true) => Self::PlannedLastCheckpointAndAdvanceDrift,
+        }
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoDrift => "no_checkpoint_drift",
+            Self::PlannedLastCheckpointDrift => "planned_last_checkpoint_drift",
+            Self::CheckpointAdvanceDrift => "checkpoint_advance_drift",
+            Self::PlannedLastCheckpointAndAdvanceDrift => {
+                "planned_last_checkpoint_and_advance_drift"
+            }
+        }
+    }
+
+    /// Parse a stable snake_case checkpoint-drift label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_checkpoint_drift" => Some(Self::NoDrift),
+            "planned_last_checkpoint_drift" => Some(Self::PlannedLastCheckpointDrift),
+            "checkpoint_advance_drift" => Some(Self::CheckpointAdvanceDrift),
+            "planned_last_checkpoint_and_advance_drift" => {
+                Some(Self::PlannedLastCheckpointAndAdvanceDrift)
+            }
+            _ => None,
+        }
+    }
+
+    /// Return whether the final planned and actual checkpoints drifted.
+    pub fn has_planned_last_checkpoint_drift(self) -> bool {
+        matches!(
+            self,
+            Self::PlannedLastCheckpointDrift | Self::PlannedLastCheckpointAndAdvanceDrift
+        )
+    }
+
+    /// Return whether planned and actual checkpoint-advance signals drifted.
+    pub fn has_checkpoint_advance_drift(self) -> bool {
+        matches!(
+            self,
+            Self::CheckpointAdvanceDrift | Self::PlannedLastCheckpointAndAdvanceDrift
+        )
+    }
+
+    /// Return whether any planned-vs-actual checkpoint drift was observed.
+    pub fn has_checkpoint_plan_drift(self) -> bool {
+        !matches!(self, Self::NoDrift)
+    }
+
+    /// Return whether planned and actual checkpoint boundaries stayed aligned.
+    pub fn is_no_drift(self) -> bool {
+        matches!(self, Self::NoDrift)
+    }
+
+    /// Return whether this checkpoint drift classification needs investigation.
+    pub fn requires_investigation(self) -> bool {
+        self.has_checkpoint_plan_drift()
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainCheckpointDriftKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -5003,6 +5205,77 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_checkpoint_drift_kind_labels_are_stable_for_hosts() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainCheckpointDriftKind::NoDrift,
+                "no_checkpoint_drift",
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainCheckpointDriftKind::PlannedLastCheckpointDrift,
+                "planned_last_checkpoint_drift",
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainCheckpointDriftKind::CheckpointAdvanceDrift,
+                "checkpoint_advance_drift",
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainCheckpointDriftKind::PlannedLastCheckpointAndAdvanceDrift,
+                "planned_last_checkpoint_and_advance_drift",
+                true,
+                true,
+            ),
+        ];
+
+        for (kind, label, has_planned_last_checkpoint_drift, has_checkpoint_advance_drift) in cases
+        {
+            assert_eq!(kind.as_str(), label);
+            assert_eq!(kind.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainCheckpointDriftKind::from_label(label),
+                Some(kind)
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainCheckpointDriftKind::from_drift_flags(
+                    has_planned_last_checkpoint_drift,
+                    has_checkpoint_advance_drift
+                ),
+                kind
+            );
+            assert_eq!(
+                kind.has_planned_last_checkpoint_drift(),
+                has_planned_last_checkpoint_drift
+            );
+            assert_eq!(
+                kind.has_checkpoint_advance_drift(),
+                has_checkpoint_advance_drift
+            );
+            assert_eq!(
+                kind.has_checkpoint_plan_drift(),
+                has_planned_last_checkpoint_drift || has_checkpoint_advance_drift
+            );
+            assert_eq!(
+                kind.is_no_drift(),
+                !(has_planned_last_checkpoint_drift || has_checkpoint_advance_drift)
+            );
+            assert_eq!(
+                kind.requires_investigation(),
+                has_planned_last_checkpoint_drift || has_checkpoint_advance_drift
+            );
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainCheckpointDriftKind::from_label("checkpointish"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_host_investigation_kind_labels_are_stable_for_hosts() {
         let cases = [
             (
@@ -5111,6 +5384,17 @@ mod tests {
         assert!(!report.requires_host_investigation());
         assert!(report.is_no_count_drift());
         assert!(report.count_drift_label_matches_kind());
+        assert!(!report.has_planned_last_checkpoint_drift());
+        assert!(!report.has_checkpoint_advance_drift());
+        assert!(!report.has_checkpoint_plan_drift());
+        assert_eq!(
+            report.checkpoint_drift_kind(),
+            ToolAuditSupervisorDrainCheckpointDriftKind::NoDrift
+        );
+        assert_eq!(report.checkpoint_drift_label(), "no_checkpoint_drift");
+        assert!(report.checkpoint_drift_label_matches_kind());
+        assert!(report.is_no_checkpoint_drift());
+        assert!(!report.requires_checkpoint_drift_investigation());
         assert!(report.is_no_host_investigation());
         assert_eq!(
             report.scheduler_action(),
@@ -5283,6 +5567,28 @@ mod tests {
         assert!(summary.count_drift_label_matches_kind());
         assert!(!summary.requires_count_drift_investigation);
         assert!(!summary.requires_count_drift_investigation());
+        assert!(!summary.has_planned_last_checkpoint_drift);
+        assert!(!summary.has_planned_last_checkpoint_drift());
+        assert!(!summary.has_checkpoint_advance_drift);
+        assert!(!summary.has_checkpoint_advance_drift());
+        assert!(!summary.has_checkpoint_plan_drift);
+        assert!(!summary.has_checkpoint_plan_drift());
+        assert_eq!(
+            summary.checkpoint_drift_kind,
+            ToolAuditSupervisorDrainCheckpointDriftKind::NoDrift
+        );
+        assert_eq!(
+            summary.checkpoint_drift_kind(),
+            ToolAuditSupervisorDrainCheckpointDriftKind::NoDrift
+        );
+        assert_eq!(summary.checkpoint_drift_label, "no_checkpoint_drift");
+        assert_eq!(summary.checkpoint_drift_label(), "no_checkpoint_drift");
+        assert!(summary.checkpoint_drift_label_matches_kind);
+        assert!(summary.checkpoint_drift_label_matches_kind());
+        assert!(summary.is_no_checkpoint_drift);
+        assert!(summary.is_no_checkpoint_drift());
+        assert!(!summary.requires_checkpoint_drift_investigation);
+        assert!(!summary.requires_checkpoint_drift_investigation());
         assert_eq!(
             summary.host_investigation_kind,
             ToolAuditSupervisorDrainHostInvestigationKind::NoInvestigation
@@ -5751,6 +6057,17 @@ mod tests {
         assert!(idle_report.planned_last_checkpoint_matches_last_checkpoint());
         assert!(idle_report.planned_checkpoint_advance_matches_drain());
         assert!(idle_report.checkpoint_plan_matches_drain());
+        assert!(!idle_report.has_planned_last_checkpoint_drift());
+        assert!(!idle_report.has_checkpoint_advance_drift());
+        assert!(!idle_report.has_checkpoint_plan_drift());
+        assert_eq!(
+            idle_report.checkpoint_drift_kind(),
+            ToolAuditSupervisorDrainCheckpointDriftKind::NoDrift
+        );
+        assert_eq!(idle_report.checkpoint_drift_label(), "no_checkpoint_drift");
+        assert!(idle_report.checkpoint_drift_label_matches_kind());
+        assert!(idle_report.is_no_checkpoint_drift());
+        assert!(!idle_report.requires_checkpoint_drift_investigation());
         assert_eq!(
             idle_summary.planned_last_checkpoint,
             Some(ToolAuditReadCheckpoint::beginning())
@@ -5779,6 +6096,28 @@ mod tests {
         assert!(idle_summary.planned_checkpoint_advance_matches_drain());
         assert!(idle_summary.checkpoint_plan_matches_drain);
         assert!(idle_summary.checkpoint_plan_matches_drain());
+        assert!(!idle_summary.has_planned_last_checkpoint_drift);
+        assert!(!idle_summary.has_planned_last_checkpoint_drift());
+        assert!(!idle_summary.has_checkpoint_advance_drift);
+        assert!(!idle_summary.has_checkpoint_advance_drift());
+        assert!(!idle_summary.has_checkpoint_plan_drift);
+        assert!(!idle_summary.has_checkpoint_plan_drift());
+        assert_eq!(
+            idle_summary.checkpoint_drift_kind,
+            ToolAuditSupervisorDrainCheckpointDriftKind::NoDrift
+        );
+        assert_eq!(
+            idle_summary.checkpoint_drift_kind(),
+            ToolAuditSupervisorDrainCheckpointDriftKind::NoDrift
+        );
+        assert_eq!(idle_summary.checkpoint_drift_label, "no_checkpoint_drift");
+        assert_eq!(idle_summary.checkpoint_drift_label(), "no_checkpoint_drift");
+        assert!(idle_summary.checkpoint_drift_label_matches_kind);
+        assert!(idle_summary.checkpoint_drift_label_matches_kind());
+        assert!(idle_summary.is_no_checkpoint_drift);
+        assert!(idle_summary.is_no_checkpoint_drift());
+        assert!(!idle_summary.requires_checkpoint_drift_investigation);
+        assert!(!idle_summary.requires_checkpoint_drift_investigation());
 
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(store
@@ -5811,6 +6150,17 @@ mod tests {
         assert!(report.planned_checkpoint_advance_matches_drain());
         assert!(report.checkpoint_plan_matches_drain());
         assert!(report.checkpoint_boundary_fields_match());
+        assert!(!report.has_planned_last_checkpoint_drift());
+        assert!(!report.has_checkpoint_advance_drift());
+        assert!(!report.has_checkpoint_plan_drift());
+        assert_eq!(
+            report.checkpoint_drift_kind(),
+            ToolAuditSupervisorDrainCheckpointDriftKind::NoDrift
+        );
+        assert_eq!(report.checkpoint_drift_label(), "no_checkpoint_drift");
+        assert!(report.checkpoint_drift_label_matches_kind());
+        assert!(report.is_no_checkpoint_drift());
+        assert!(!report.requires_checkpoint_drift_investigation());
 
         let summary = report.summary();
         assert_eq!(
@@ -5848,17 +6198,60 @@ mod tests {
         assert!(summary.planned_checkpoint_advance_matches_drain());
         assert!(summary.checkpoint_plan_matches_drain);
         assert!(summary.checkpoint_plan_matches_drain());
+        assert!(!summary.has_planned_last_checkpoint_drift);
+        assert!(!summary.has_planned_last_checkpoint_drift());
+        assert!(!summary.has_checkpoint_advance_drift);
+        assert!(!summary.has_checkpoint_advance_drift());
+        assert!(!summary.has_checkpoint_plan_drift);
+        assert!(!summary.has_checkpoint_plan_drift());
+        assert_eq!(
+            summary.checkpoint_drift_kind,
+            ToolAuditSupervisorDrainCheckpointDriftKind::NoDrift
+        );
+        assert_eq!(
+            summary.checkpoint_drift_kind(),
+            ToolAuditSupervisorDrainCheckpointDriftKind::NoDrift
+        );
+        assert_eq!(summary.checkpoint_drift_label, "no_checkpoint_drift");
+        assert_eq!(summary.checkpoint_drift_label(), "no_checkpoint_drift");
+        assert!(summary.checkpoint_drift_label_matches_kind);
+        assert!(summary.checkpoint_drift_label_matches_kind());
+        assert!(summary.is_no_checkpoint_drift);
+        assert!(summary.is_no_checkpoint_drift());
+        assert!(!summary.requires_checkpoint_drift_investigation);
+        assert!(!summary.requires_checkpoint_drift_investigation());
 
         let mut stale_summary = summary.clone();
         stale_summary.planned_last_checkpoint_call_id = Some("stale".to_string());
         stale_summary.planned_last_checkpoint_call_id_matches_checkpoint = false;
         stale_summary.planned_last_checkpoint_fields_match_checkpoint = false;
         stale_summary.planned_last_checkpoint_matches_last_checkpoint = false;
+        stale_summary.has_planned_last_checkpoint_drift = true;
+        stale_summary.has_checkpoint_plan_drift = true;
+        stale_summary.checkpoint_drift_kind =
+            ToolAuditSupervisorDrainCheckpointDriftKind::PlannedLastCheckpointDrift;
+        stale_summary.checkpoint_drift_label = "planned_last_checkpoint_drift";
+        stale_summary.is_no_checkpoint_drift = false;
+        stale_summary.requires_checkpoint_drift_investigation = true;
         stale_summary.checkpoint_plan_matches_drain = false;
         stale_summary.checkpoint_boundary_fields_match = false;
         assert!(!stale_summary.planned_last_checkpoint_call_id_matches_checkpoint());
         assert!(!stale_summary.planned_last_checkpoint_fields_match_checkpoint());
         assert!(!stale_summary.planned_last_checkpoint_matches_last_checkpoint());
+        assert!(stale_summary.has_planned_last_checkpoint_drift());
+        assert!(!stale_summary.has_checkpoint_advance_drift());
+        assert!(stale_summary.has_checkpoint_plan_drift());
+        assert_eq!(
+            stale_summary.checkpoint_drift_kind(),
+            ToolAuditSupervisorDrainCheckpointDriftKind::PlannedLastCheckpointDrift
+        );
+        assert_eq!(
+            stale_summary.checkpoint_drift_label(),
+            "planned_last_checkpoint_drift"
+        );
+        assert!(stale_summary.checkpoint_drift_label_matches_kind());
+        assert!(!stale_summary.is_no_checkpoint_drift());
+        assert!(stale_summary.requires_checkpoint_drift_investigation());
         assert!(!stale_summary.checkpoint_plan_matches_drain());
         assert!(!stale_summary.checkpoint_boundary_fields_match());
 
@@ -5870,13 +6263,64 @@ mod tests {
         assert!(stale_checkpoint_report.planned_checkpoint_advance_matches_drain());
         assert!(!stale_checkpoint_report.checkpoint_plan_matches_drain());
         assert!(!stale_checkpoint_report.checkpoint_boundary_fields_match());
+        assert!(stale_checkpoint_report.has_planned_last_checkpoint_drift());
+        assert!(!stale_checkpoint_report.has_checkpoint_advance_drift());
+        assert!(stale_checkpoint_report.has_checkpoint_plan_drift());
+        assert_eq!(
+            stale_checkpoint_report.checkpoint_drift_kind(),
+            ToolAuditSupervisorDrainCheckpointDriftKind::PlannedLastCheckpointDrift
+        );
+        assert_eq!(
+            stale_checkpoint_report.checkpoint_drift_label(),
+            "planned_last_checkpoint_drift"
+        );
+        assert!(stale_checkpoint_report.checkpoint_drift_label_matches_kind());
+        assert!(!stale_checkpoint_report.is_no_checkpoint_drift());
+        assert!(stale_checkpoint_report.requires_checkpoint_drift_investigation());
 
-        let mut stale_advance_report = report;
+        let mut stale_advance_report = report.clone();
         stale_advance_report.plan.planned_records = 0;
         assert!(stale_advance_report.planned_last_checkpoint_matches_last_checkpoint());
         assert!(!stale_advance_report.planned_checkpoint_advance_matches_drain());
         assert!(!stale_advance_report.checkpoint_plan_matches_drain());
         assert!(!stale_advance_report.checkpoint_boundary_fields_match());
+        assert!(!stale_advance_report.has_planned_last_checkpoint_drift());
+        assert!(stale_advance_report.has_checkpoint_advance_drift());
+        assert!(stale_advance_report.has_checkpoint_plan_drift());
+        assert_eq!(
+            stale_advance_report.checkpoint_drift_kind(),
+            ToolAuditSupervisorDrainCheckpointDriftKind::CheckpointAdvanceDrift
+        );
+        assert_eq!(
+            stale_advance_report.checkpoint_drift_label(),
+            "checkpoint_advance_drift"
+        );
+        assert!(stale_advance_report.checkpoint_drift_label_matches_kind());
+        assert!(!stale_advance_report.is_no_checkpoint_drift());
+        assert!(stale_advance_report.requires_checkpoint_drift_investigation());
+
+        let mut combined_drift_report = report;
+        combined_drift_report.drain.ticks[0].replay.next_checkpoint =
+            ToolAuditReadCheckpoint::beginning();
+        combined_drift_report.plan.planned_records = 0;
+        assert!(!combined_drift_report.planned_last_checkpoint_matches_last_checkpoint());
+        assert!(!combined_drift_report.planned_checkpoint_advance_matches_drain());
+        assert!(!combined_drift_report.checkpoint_plan_matches_drain());
+        assert!(!combined_drift_report.checkpoint_boundary_fields_match());
+        assert!(combined_drift_report.has_planned_last_checkpoint_drift());
+        assert!(combined_drift_report.has_checkpoint_advance_drift());
+        assert!(combined_drift_report.has_checkpoint_plan_drift());
+        assert_eq!(
+            combined_drift_report.checkpoint_drift_kind(),
+            ToolAuditSupervisorDrainCheckpointDriftKind::PlannedLastCheckpointAndAdvanceDrift
+        );
+        assert_eq!(
+            combined_drift_report.checkpoint_drift_label(),
+            "planned_last_checkpoint_and_advance_drift"
+        );
+        assert!(combined_drift_report.checkpoint_drift_label_matches_kind());
+        assert!(!combined_drift_report.is_no_checkpoint_drift());
+        assert!(combined_drift_report.requires_checkpoint_drift_investigation());
     }
 
     #[test]

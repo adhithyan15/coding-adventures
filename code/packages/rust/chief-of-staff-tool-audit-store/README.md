@@ -76,6 +76,8 @@ The crate keeps the boundary narrow:
   flags that compare starting and last checkpoint movement for host logs
 - supervisor drain reports and summaries expose planned-vs-actual checkpoint
   alignment fields for preflight/drain boundary checks
+- supervisor drain reports and summaries expose stable checkpoint-drift
+  classifications and investigation flags for host logs
 - supervisor drain run summaries flatten planned and replayed follow-up row
   counts for host routing decisions
 - supervisor drain run summaries flag when planned and replayed follow-up

@@ -59,6 +59,8 @@ All notable changes to this package will be documented in this file.
   checkpoint movement in supervisor drain reports and summaries.
 - Planned-vs-actual checkpoint alignment fields for supervisor drain preflight
   and result boundary checks.
+- Stable checkpoint-drift classifications and investigation flags for
+  supervisor drain run reports and summaries.
 - Flattened planned and replayed follow-up row counts in supervisor drain run
   summaries.
 - Follow-up pressure drift flags in supervisor drain run reports and summaries.
