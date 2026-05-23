@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Transmission-line transient stamping** — `TransmissionLine` now participates
+  in transient analysis with a lossless Bergeron delay-line companion model,
+  including matched-load delayed step behavior.
+
 - **Transmission-line AC stamping** — `TransmissionLine` now contributes the
   lossless two-port admittance matrix in AC analysis, including matched-load
   phase-delay behavior.

@@ -1960,6 +1960,142 @@ def _node_voltage(name: str, node_voltages: dict[str, float]) -> float:
     return 0.0 if _is_ground(name) else node_voltages.get(name, 0.0)
 
 
+TransmissionLineSample = tuple[float, float, float, float, float]
+
+
+def _transmission_line_port_voltage(
+    line: TransmissionLine,
+    node_voltages: dict[str, float],
+    first_port: bool,
+) -> float:
+    if first_port:
+        return (
+            _node_voltage(line.n1, node_voltages)
+            - _node_voltage(line.n2, node_voltages)
+        )
+    return (
+        _node_voltage(line.n3, node_voltages)
+        - _node_voltage(line.n4, node_voltages)
+    )
+
+
+def _transmission_line_sample_at(
+    samples: list[TransmissionLineSample],
+    target_time: float,
+) -> tuple[float, float, float, float]:
+    if not samples or target_time < samples[0][0] - 1.0e-18:
+        return (0.0, 0.0, 0.0, 0.0)
+    if target_time <= samples[0][0]:
+        _, v1, i1, v2, i2 = samples[0]
+        return (v1, i1, v2, i2)
+    for left, right in zip(samples, samples[1:]):
+        if target_time <= right[0]:
+            t0, v10, i10, v20, i20 = left
+            t1, v11, i11, v21, i21 = right
+            if t1 <= t0:
+                return (v11, i11, v21, i21)
+            alpha = (target_time - t0) / (t1 - t0)
+            return (
+                v10 + alpha * (v11 - v10),
+                i10 + alpha * (i11 - i10),
+                v20 + alpha * (v21 - v20),
+                i20 + alpha * (i21 - i20),
+            )
+    _, v1, i1, v2, i2 = samples[-1]
+    return (v1, i1, v2, i2)
+
+
+def _transmission_line_history_terms(
+    line: TransmissionLine,
+    line_history: dict[str, list[TransmissionLineSample]],
+    time: float,
+) -> tuple[float, float]:
+    _validate_transmission_line(line)
+    v1_d, i1_d, v2_d, i2_d = _transmission_line_sample_at(
+        line_history.get(line.name, []),
+        time - line.delay,
+    )
+    z0 = line.characteristic_impedance
+    return (v2_d / z0 + i2_d, v1_d / z0 + i1_d)
+
+
+def _add_transmission_line_companion(
+    circuit: Circuit,
+    line: TransmissionLine,
+    history_1: float,
+    history_2: float,
+) -> None:
+    _validate_transmission_line(line)
+    circuit.add(Resistor(
+        name=f"_T_{line.name}_P1_R",
+        n_plus=line.n1,
+        n_minus=line.n2,
+        resistance=line.characteristic_impedance,
+    ))
+    circuit.add(Resistor(
+        name=f"_T_{line.name}_P2_R",
+        n_plus=line.n3,
+        n_minus=line.n4,
+        resistance=line.characteristic_impedance,
+    ))
+    circuit.add(CurrentSource(
+        name=f"_T_{line.name}_P1_I",
+        n_plus=line.n1,
+        n_minus=line.n2,
+        current=-history_1,
+    ))
+    circuit.add(CurrentSource(
+        name=f"_T_{line.name}_P2_I",
+        n_plus=line.n3,
+        n_minus=line.n4,
+        current=-history_2,
+    ))
+
+
+def _transmission_line_branch_currents(
+    circuit: Circuit,
+    line_history: dict[str, list[TransmissionLineSample]],
+    time: float,
+    node_voltages: dict[str, float],
+) -> dict[str, float]:
+    currents: dict[str, float] = {}
+    for el in circuit.elements:
+        if not isinstance(el, TransmissionLine):
+            continue
+        history_1, history_2 = _transmission_line_history_terms(el, line_history, time)
+        v1 = _transmission_line_port_voltage(el, node_voltages, True)
+        v2 = _transmission_line_port_voltage(el, node_voltages, False)
+        currents[f"I({el.name}:1)"] = v1 / el.characteristic_impedance - history_1
+        currents[f"I({el.name}:2)"] = v2 / el.characteristic_impedance - history_2
+    return currents
+
+
+def _append_transmission_line_history(
+    circuit: Circuit,
+    line_history: dict[str, list[TransmissionLineSample]],
+    time: float,
+    node_voltages: dict[str, float],
+) -> dict[str, float]:
+    currents = _transmission_line_branch_currents(
+        circuit,
+        line_history,
+        time,
+        node_voltages,
+    )
+    for el in circuit.elements:
+        if isinstance(el, TransmissionLine):
+            v1 = _transmission_line_port_voltage(el, node_voltages, True)
+            v2 = _transmission_line_port_voltage(el, node_voltages, False)
+            line_history.setdefault(el.name, []).append((
+                time,
+                v1,
+                currents[f"I({el.name}:1)"],
+                v2,
+                currents[f"I({el.name}:2)"],
+            ))
+    return currents
+
+
 def _build_transient_companions(
     circuit: Circuit,
     h: float,
@@ -1968,6 +2104,7 @@ def _build_transient_companions(
     cap_currents: dict[str, float],
     ind_currents: dict[str, float],
     ind_voltages: dict[str, float],
+    line_history: dict[str, list[TransmissionLineSample]],
     t: float = 0.0,
 ) -> Circuit:
     """Build the linearised companion circuit for one timestep.
@@ -2040,7 +2177,7 @@ def _build_transient_companions(
     # Capacitors and Inductors are always excluded (they get companion models).
     base_elements: list = []
     for e in circuit.elements:
-        if isinstance(e, (Capacitor, Inductor)):
+        if isinstance(e, (Capacitor, Inductor, TransmissionLine)):
             continue
         if isinstance(e, VoltageSource) and e.waveform is not None:
             # Evaluate the waveform at the current simulation time.
@@ -2062,6 +2199,14 @@ def _build_transient_companions(
         else:
             base_elements.append(e)
     aug = Circuit(elements=base_elements)
+    for el in circuit.elements:
+        if isinstance(el, TransmissionLine):
+            history_1, history_2 = _transmission_line_history_terms(
+                el,
+                line_history,
+                t,
+            )
+            _add_transmission_line_companion(aug, el, history_1, history_2)
 
     inductors = _inductor_by_name(circuit)
     for el in circuit.elements:
@@ -2415,7 +2560,7 @@ def transient(
     # are evaluated at t = 0 to obtain the correct initial bias.
     init_elements: list = []
     for e in circuit.elements:
-        if isinstance(e, (Capacitor, Inductor)):
+        if isinstance(e, (Capacitor, Inductor, TransmissionLine)):
             continue
         if isinstance(e, VoltageSource) and e.waveform is not None:
             init_elements.append(VoltageSource(
@@ -2463,15 +2608,26 @@ def transient(
                     n_minus=el.n_minus,
                     current=el.initial_current,
                 ))
+        elif isinstance(el, TransmissionLine):
+            _add_transmission_line_companion(init_circuit, el, 0.0, 0.0)
     op = dc_op(init_circuit, max_iterations=max_iterations, tol=tol)
     if not op.converged:
         return TransientResult(points=[], converged=False, method=method)
 
+    line_history: dict[str, list[TransmissionLineSample]] = {}
+    line_branch_currents = _append_transmission_line_history(
+        circuit,
+        line_history,
+        0.0,
+        op.node_voltages,
+    )
+    initial_branch_currents = dict(op.branch_currents)
+    initial_branch_currents.update(line_branch_currents)
     points: list[TransientPoint] = [
         TransientPoint(
             time=0.0,
             node_voltages=dict(op.node_voltages),
-            branch_currents=dict(op.branch_currents),
+            branch_currents=initial_branch_currents,
         )
     ]
 
@@ -2528,6 +2684,7 @@ def transient(
             circuit, h, method,
             cap_voltages, cap_currents,
             ind_currents, ind_voltages,
+            line_history,
             t=t,
         )
         op = dc_op(aug, max_iterations=max_iterations, tol=tol)
@@ -2560,11 +2717,19 @@ def transient(
                 circuit, h, method, op,
                 cap_voltages, cap_currents, ind_currents, ind_voltages,
             )
+            line_branch_currents = _append_transmission_line_history(
+                circuit,
+                line_history,
+                t_actual,
+                op.node_voltages,
+            )
+            branch_currents = dict(op.branch_currents)
+            branch_currents.update(line_branch_currents)
             cap_voltages_prev = dict(cap_voltages)
             points.append(TransientPoint(
                 time=t_actual,
                 node_voltages=dict(op.node_voltages),
-                branch_currents=dict(op.branch_currents),
+                branch_currents=branch_currents,
             ))
 
             if lte < tol_lte / 8.0:
@@ -2575,11 +2740,19 @@ def transient(
                 circuit, h, method, op,
                 cap_voltages, cap_currents, ind_currents, ind_voltages,
             )
+            line_branch_currents = _append_transmission_line_history(
+                circuit,
+                line_history,
+                t,
+                op.node_voltages,
+            )
+            branch_currents = dict(op.branch_currents)
+            branch_currents.update(line_branch_currents)
             cap_voltages_prev = dict(cap_voltages)
             points.append(TransientPoint(
                 time=t,
                 node_voltages=dict(op.node_voltages),
-                branch_currents=dict(op.branch_currents),
+                branch_currents=branch_currents,
             ))
 
         t += h

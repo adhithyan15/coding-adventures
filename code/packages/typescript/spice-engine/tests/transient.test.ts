@@ -25,6 +25,7 @@ import {
   pssResidual,
   resistor,
   transient,
+  transmissionLine,
   voltageSource,
   voltageSourceWithWaveform,
   waveformPeriod,
@@ -478,6 +479,32 @@ describe("transient", () => {
     expectClose(points[0].voltage("pri"), 8.75);
     expectClose(points[0].voltage("sec"), 2.5);
     expectClose(points[0].branchCurrent("Lsec"), -0.25);
+  });
+
+  it("delays a matched transmission-line step", () => {
+    const delay = 1.0e-9;
+    const circuit = new Circuit();
+    circuit.add(voltageSource("VIN", "in", "0", 1.0));
+    circuit.add(transmissionLine("T1", "in", "0", "out", "0", 50.0, delay));
+    circuit.add(resistor("RL", "out", "0", 50.0));
+
+    const points = transient(circuit, delay / 2.0, 2.0 * delay);
+
+    expectClose(points[0].voltage("out"), 0.0);
+    expectClose(points[1].voltage("out"), 1.0);
+    expectClose(points[1].branchCurrent("T1:2"), -0.02);
+  });
+
+  it("rejects invalid transmission-line transient parameters", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("VIN", "in", "0", 1.0));
+    circuit.add(transmissionLine("Tbad", "in", "0", "out", "0", 50.0, 0.0));
+    circuit.add(resistor("RL", "out", "0", 50.0));
+
+    expect(() => transient(circuit, 1.0e-9, 1.0e-9)).toThrowError(SpiceError);
+    expect(() => transient(circuit, 1.0e-9, 1.0e-9)).toThrowError(
+      "invalid element Tbad",
+    );
   });
 
   it("rejects non-positive capacitance", () => {

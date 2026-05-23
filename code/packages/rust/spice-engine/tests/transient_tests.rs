@@ -5,8 +5,8 @@ use spice_engine::{
     pss_with_tolerance, transient, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element,
     ExpWaveform, Inductor, MutualInductor, PssNewtonCandidateResult, PssNewtonIterationResult,
     PssNewtonSolveResult, PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult,
-    PssResult, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, VoltageSource,
-    Waveform,
+    PssResult, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, TransmissionLine,
+    VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -559,6 +559,42 @@ fn transient_mutual_inductor_couples_secondary_voltage() {
     assert_close(points[0].voltage("pri").unwrap(), 8.75);
     assert_close(points[0].voltage("sec").unwrap(), 2.5);
     assert_close(points[0].branch_current("Lsec").unwrap(), -0.25);
+}
+
+#[test]
+fn transient_transmission_line_delays_matched_step() {
+    let delay = 1.0e-9;
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "VIN", "in", "0", 1.0,
+    )));
+    circuit.add(Element::TransmissionLine(TransmissionLine::new(
+        "T1", "in", "0", "out", "0", 50.0, delay,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("RL", "out", "0", 50.0)));
+
+    let points = transient(&circuit, delay / 2.0, 2.0 * delay).unwrap();
+
+    assert_close(points[0].voltage("out").unwrap_or(0.0), 0.0);
+    assert_close(points[1].voltage("out").unwrap(), 1.0);
+    assert_close(points[1].branch_current("T1:2").unwrap(), -0.02);
+}
+
+#[test]
+fn transient_transmission_line_rejects_invalid_parameters() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "VIN", "in", "0", 1.0,
+    )));
+    circuit.add(Element::TransmissionLine(TransmissionLine::new(
+        "Tbad", "in", "0", "out", "0", 50.0, 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("RL", "out", "0", 50.0)));
+
+    assert!(matches!(
+        transient(&circuit, 1.0e-9, 1.0e-9),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "Tbad"
+    ));
 }
 
 #[test]
