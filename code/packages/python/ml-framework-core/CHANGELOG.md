@@ -2,6 +2,84 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 2-back: optional Rust fast path for `MulFunction.backward` + `DivFunction.backward`
+
+Wires the two elementwise backwards where the FFI round-trip is
+actually worth paying.  Add/Sub/Neg backwards are pass-through or
+negation only — pure-Python list comprehensions beat the dispatch
+for those.  Mul and Div are the two cases with real arithmetic
+per cell:
+
+- `MulFunction.backward`: `grad_a = g * b`, `grad_b = g * a` (2 muls per pair)
+- `DivFunction.backward`: `grad_a = g / b`, `grad_b = -g * a / b²` (1 div + 1 mul + 1 div + 1 mul + 1 neg)
+
+#### First helpers to use matrix-ir-json's multi-output graphs
+
+Both backwards need to produce **two** output tensors (grad_a and
+grad_b).  Earlier MX10 helpers all had single outputs.
+matrix-ir-json's `outputs` field is already a list — so both
+helpers ship a single envelope with two output tensor IDs and
+unpack them as a `(Tensor, Tensor)` tuple from one FFI call.  No
+schema change needed.
+
+#### Graph topologies
+
+```
+MulFunction.backward (2 ops, 5 tensors):
+  g ─┬─Mul(g, b)──> grad_a
+  b ─┘
+  Mul(g, a)──> grad_b
+
+DivFunction.backward (5 ops, 8 tensors):
+  Div(g, b)──> grad_a
+  Mul(b, b)──> b²
+  Div(g, b²)──> t1
+  Mul(t1, a)──> t2
+  Neg(t2)──> grad_b
+```
+
+#### `requires_grad` handling
+
+The dispatch still respects `requires_grad`: if only one of the
+two inputs needs a gradient, we still call the helper (cheaper to
+compute both grads in one FFI call than two), then return `None`
+for the side that doesn't need it.  Preserves the existing
+backward contract.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `numel ≥ 100_000`, either input requires grad | **Rust** (one 2-op or 5-op envelope, two outputs) |
+| Extension installed, `numel < 100_000` | Pure-Python list comp |
+| Extension NOT installed | Pure-Python list comp |
+| Neither input requires grad | Skip entirely (existing autograd behaviour) |
+
+#### What's NOT in Phase 2-back
+
+- **Add/Sub/Neg/Abs backwards**: trivial scalar arithmetic
+  (`grad`, `-grad`, `-grad`, `grad * sign(x)`).  Likely net-loss
+  vs the FFI overhead even at 100_000 cells — kept pure-Python.
+
+#### Tests (98 total MX10 tests, was 92)
+
+- **`ElementwiseBackwardParityTests`** (2 cases, skip if extension
+  missing): forward+backward parity for `(a * b).backward(grad)`
+  and `(a / b).backward(grad)` at `(500, 200) = 100_000` cells.
+  Both inputs require grad so we exercise the full two-output
+  envelope.  Standard `rtol=1e-3, atol=1e-4`.
+- **`ElementwiseBackwardFallbackTests`** (5 cases, always run):
+  defence-in-depth `RuntimeError` for both helpers, hand-computed
+  Mul backward (`a=[2,3], b=[4,5], grad=[1,1]` → `(4,5), (2,3)`),
+  hand-computed Div backward (`a=[1,2], b=[2,4], grad=[1,1]` →
+  `(0.5, 0.25), (-0.25, -0.125)`), plus a `requires_grad`
+  short-circuit test confirming the dispatch returns `None` for the
+  non-requiring side.
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**386 passed + 39 skipped + the pre-existing test_device.py failure
+on main**.
+
 ### Added — MX10 Phase 2b: optional Rust fast path for `PowFunction` scalar-exponent (forward + backward)
 
 Closes the only remaining forward op in the MX10 dispatch table.

@@ -389,6 +389,108 @@ class ElementwiseParityTests(unittest.TestCase):
     EXTENSION_AVAILABLE,
     "matrix_rust_python C extension not installed; see parity-tests skip-reason.",
 )
+class ElementwiseBackwardParityTests(unittest.TestCase):
+    """Compare Mul/Div backward Rust and pure-Python kernels.
+
+    Phase 2-back — both ops dispatch to a single FFI envelope that
+    computes both grad_a and grad_b in one call (matrix-ir-json's
+    multi-output graph support).
+    """
+
+    SHAPE = (500, 200)  # 100_000 cells
+
+    def _make_pair(self, seed: int):
+        import random
+
+        from ml_framework_core import Tensor
+
+        rng_a = random.Random(seed)
+        rng_b = random.Random(seed + 100)
+        # Bound b away from zero for Div backward.
+        a_data = [rng_a.uniform(-1.0, 1.0) for _ in range(500 * 200)]
+        b_data = [rng_b.uniform(0.3, 2.0) for _ in range(500 * 200)]
+        return Tensor(a_data, self.SHAPE), Tensor(b_data, self.SHAPE)
+
+    def _assert_close(
+        self,
+        actual: list[float],
+        expected: list[float],
+        rtol: float = 1e-3,
+        atol: float = 1e-4,
+    ) -> None:
+        self.assertEqual(len(actual), len(expected))
+        for i, (got, want) in enumerate(zip(actual, expected, strict=False)):
+            denom = max(abs(got), abs(want), atol)
+            err = abs(got - want) / denom
+            self.assertLess(
+                err,
+                rtol,
+                f"index {i}: rust={got!r}, python={want!r}, "
+                f"relative error {err:.2e}",
+            )
+
+    def test_mul_backward_parity(self) -> None:
+        """``(a * b).backward(grad)`` — both grads via Rust match
+        pure-Python.  Exact equality expected because Mul backward
+        is one f32 multiply per cell (no accumulation that would
+        diverge between f32 and double)."""
+        from ml_framework_core import Tensor, _rust_backend
+
+        a, b = self._make_pair(seed=11)
+        a.requires_grad = True
+        b.requires_grad = True
+        c = a * b
+        grad = Tensor([1.0] * (500 * 200), self.SHAPE)
+        c.backward(grad)
+        rust_grad_a = a.grad
+        rust_grad_b = b.grad
+
+        a2 = Tensor(list(a.data), self.SHAPE, requires_grad=True)
+        b2 = Tensor(list(b.data), self.SHAPE, requires_grad=True)
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            c2 = a2 * b2
+            c2.backward(Tensor([1.0] * (500 * 200), self.SHAPE))
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close(rust_grad_a.data, a2.grad.data)
+        self._assert_close(rust_grad_b.data, b2.grad.data)
+
+    def test_div_backward_parity(self) -> None:
+        """``(a / b).backward(grad)`` — both grads via Rust match
+        pure-Python.  Div backward has a Div + Mul + Div chain so
+        we use the standard rtol budget."""
+        from ml_framework_core import Tensor, _rust_backend
+
+        a, b = self._make_pair(seed=22)
+        a.requires_grad = True
+        b.requires_grad = True
+        c = a / b
+        grad = Tensor([1.0] * (500 * 200), self.SHAPE)
+        c.backward(grad)
+        rust_grad_a = a.grad
+        rust_grad_b = b.grad
+
+        a2 = Tensor(list(a.data), self.SHAPE, requires_grad=True)
+        b2 = Tensor(list(b.data), self.SHAPE, requires_grad=True)
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            c2 = a2 / b2
+            c2.backward(Tensor([1.0] * (500 * 200), self.SHAPE))
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        self._assert_close(rust_grad_a.data, a2.grad.data)
+        self._assert_close(rust_grad_b.data, b2.grad.data)
+
+
+@unittest.skipUnless(
+    EXTENSION_AVAILABLE,
+    "matrix_rust_python C extension not installed; see parity-tests skip-reason.",
+)
 class PowParityTests(unittest.TestCase):
     """Compare PowFunction Rust and pure-Python kernels.
 
