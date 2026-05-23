@@ -149,6 +149,10 @@ queue depth is after the effect.
 transport report kinds, names, labels, queue-depth metadata, and messages, so
 adapters can log or emit callback dispatch, drop, completion, running,
 budget-exhausted, and failure reports without owning that branching.
+`input_callback_transport_event_summary` maps those reports into adapter-facing
+event names, labels, queue-depth metadata, and messages, so language frontends
+can emit dispatch, dropped-callback, completed-callback, running-callback,
+budget-exceeded, and failed-callback events from Rust-owned transport policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
