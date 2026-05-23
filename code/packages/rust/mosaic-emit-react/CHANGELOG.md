@@ -4,6 +4,46 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `HostCheckbox.indeterminate` slot (UI29-2 follow-up)
+
+Closes the deferred work flagged in the previous `Added` block.
+React's `<input type="checkbox">` cannot reach the tri-state visual
+through HTML attributes — `indeterminate` is a JS DOM property on
+`HTMLInputElement`, not an HTML attribute. The fix mirrors
+`HostDialog`'s `dialog_nodes` infrastructure: a separate
+`indeterminate_checkbox_nodes` collection threads through the JSX
+walkers, and `emit_function` now emits one `useRef
+<HTMLInputElement>` + `useEffect` pair per indeterminate-tracking
+checkbox at the top of the function body. The emitted effect:
+
+```tsx
+const checkboxRef_0 = useRef<HTMLInputElement>(null);
+useEffect(() => {
+  if (checkboxRef_0.current) {
+    checkboxRef_0.current.indeterminate = !!isMixed;
+  }
+}, [isMixed]);
+```
+
+and the `<input>` lowering gains `ref={checkboxRef_0}` so React
+hands the DOM node to the effect. Multiple indeterminate
+checkboxes in the same component get distinct ref names
+(`checkboxRef_0`, `checkboxRef_1`, …) assigned in DFS source
+order — same pattern as `dialogRef_<n>`.
+
+`HostCheckbox` instances WITHOUT an `indeterminate:` slot stay at
+the pre-FU minimal shape (no ref, no effect, no hook import).
+Keyword-form `indeterminate: true/false` literals don't emit hooks
+either — only the runtime-driven SlotRef case does.
+
+3 new tests pin: the useRef/useEffect emission with correct slot
+binding, the negative-case "no hooks when slot absent" guard, and
+distinct-ref-names-when-multiple regression.
+
+The React backend now matches the indeterminate coverage already
+provided by the Qt / XAML / HTML / WebComponent backends. The
+spec-promised follow-up is closed.
+
 ### Added — `HostCheckbox` + `HostRadio` kernel primitives (UI29-2, U29-2-K-react)
 
 - New `HostCheckbox` lowering emits a native `<input type="checkbox" />`.
