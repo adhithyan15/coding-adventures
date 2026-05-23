@@ -325,17 +325,22 @@ fn msl_compiles_and_declares_three_parts() {
 /// `UnknownPrimitive("HostDialog")`, which the artifact builder wraps as
 /// `BuildError::PipelineError`.  The test below treats that as a
 /// **deferred** state rather than a failure.
-const ARTIFACT_BACKENDS: &[Backend] = &[Backend::React, Backend::SwiftUI, Backend::Qt];
+const ARTIFACT_BACKENDS: &[Backend] = &[
+    Backend::React,
+    Backend::SwiftUI,
+    Backend::Qt,
+    Backend::Html,
+    Backend::WebComponent,
+    Backend::Xaml,
+];
 
-/// Backends that the artifact builder knows about but does not yet wire
-/// at all (their `from_pipeline` entry points haven't landed).  These
-/// return `UnsupportedBackend` independent of whether HostDialog is
-/// implemented.
-///
-/// XAML is intentionally absent — it isn't a variant of `Backend` yet
-/// (its emitter is still landing under the `feat(mosaic-emit-xaml)` PR
-/// series), so we can't ask the builder about it.
-const UNWIRED_BACKENDS: &[Backend] = &[Backend::WebComponent, Backend::Html];
+/// All six UI29 §4.3 backends are now wired by
+/// `mosaic-package-artifact-builder` (UI29-2 follow-up). The
+/// `UNWIRED_BACKENDS` slice that used to track WebComponent/Html
+/// is empty, so the `skipped_backends_return_unsupported` test
+/// has been removed (it pinned the rejection path that no longer
+/// exists).
+const UNWIRED_BACKENDS: &[Backend] = &[];
 
 /// Distinguish an "unknown primitive: HostDialog" pipeline error (the
 /// expected "K-* PR hasn't landed yet" state) from any other failure
@@ -473,34 +478,13 @@ fn artifact_backends_either_build_or_defer_on_hostdialog() {
     }
 }
 
-/// Backends the builder knows about but does not yet wire (their
-/// `from_pipeline` entry points are landing in parallel PRs) must
-/// return `UnsupportedBackend`.  Identical to the v0.1.0 contract.
-///
-/// XAML is *not* exercised here because XAML is not yet a `Backend`
-/// enum variant — its emitter is still landing under
-/// `feat(mosaic-emit-xaml)`.  When that wiring lands, this test starts
-/// covering XAML automatically once the variant is added to
-/// `UNWIRED_BACKENDS` (or, after the K-xaml PR lands too, to
-/// `ARTIFACT_BACKENDS`).
-#[test]
-fn skipped_backends_return_unsupported() {
-    let out_root = package_root().join("target").join("dialog-artifacts-skip");
-    for backend in UNWIRED_BACKENDS {
-        let opts = BuildOptions {
-            package_root: package_root(),
-            output_root: out_root.clone(),
-            backend: *backend,
-        };
-        let err = build_package(&opts).unwrap_err();
-        assert!(
-            matches!(err, BuildError::UnsupportedBackend(b) if b == *backend),
-            "expected UnsupportedBackend({:?}), got {:?}",
-            backend,
-            err
-        );
-    }
-}
+/// (Removed.) The v0.1.0-era `skipped_backends_return_unsupported`
+/// test pinned the rejection path for WebComponent/Html. Those
+/// backends are now fully wired by the artifact builder, so the
+/// rejection path no longer exists for them. The `UNWIRED_BACKENDS`
+/// slice is intentionally empty above — if a NEW backend ever gets
+/// added to `Backend` but not wired in the artifact builder, populate
+/// `UNWIRED_BACKENDS` and reinstate this test against it.
 
 // ---------------------------------------------------------------------------
 // 6. Source-shape sanity
