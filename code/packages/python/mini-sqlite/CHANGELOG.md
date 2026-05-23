@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.84.0] - 2026-05-23
+
+### Added
+
+- ``expr COLLATE name`` postfix accepted on either operand of any
+  comparison operator (``=``, ``<>``, ``<``, ``<=``, ``>``, ``>=``,
+  ``BETWEEN`` / ``NOT BETWEEN``, ``IS DISTINCT FROM`` /
+  ``IS NOT DISTINCT FROM``, ``IN``).  Implements byte-identical
+  semantics with stdlib ``sqlite3``: ``'Foo' = 'foo' COLLATE NOCASE``
+  evaluates to TRUE, and a ``WHERE`` clause with a COLLATE postfix
+  filters rows case-insensitively.
+- 22 oracle tests in ``tests/test_tier3_collate_in_comparisons.py``
+  covering NOCASE equality (both LHS and RHS collation, both-sides
+  collation, default-BINARY behaviour), comparison ops, RTRIM,
+  BETWEEN / NOT BETWEEN, IS DISTINCT FROM, multi-predicate composition
+  with WHERE + ORDER BY, NULL propagation, integer operand regression
+  guard, and unknown-collation fallback.
+
+### Changed
+
+- Implementation is a pure adapter-level rewrite — no
+  planner / codegen / VM changes.  When ``_comparison`` builds a
+  comparison expression and either operand has a COLLATE clause, it
+  wraps **both** operands in ``lower()`` (for NOCASE) or ``rtrim()``
+  (for RTRIM).  ``BINARY`` and unknown names fall through to
+  identity, matching SQLite's "validate lazily" behaviour.
+- ``_order_item`` now also walks the inner ``collated`` subtree to
+  pick up COLLATE clauses that the PEG parser greedily consumed at
+  the inner level (which would otherwise leave the outer
+  ``order_item`` slot empty and silently drop the collation).  Both
+  ``ORDER BY x COLLATE NOCASE`` and direct comparisons now work
+  end-to-end.
+
 ## [1.83.0] - 2026-05-22
 
 ### Added
