@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.82.0] - 2026-05-22
+
+### Added
+
+- **Compound ORDER BY / LIMIT** — trailing ``ORDER BY`` and ``LIMIT``
+  on a ``UNION / INTERSECT / EXCEPT`` chain now apply to the whole
+  compound, matching SQLite (and the SQL standard).  Previously the
+  grammar parsed them into the rightmost SELECT, where the column
+  name from the leftmost SELECT's projection was invisible — the
+  result was a confusing ``unknown column: 'x'`` error on perfectly
+  valid SQL like::
+
+      SELECT 1 AS x UNION ALL SELECT 2 ORDER BY x
+
+  The fix hoists trailing ``ORDER BY``/``LIMIT`` from the rightmost
+  SELECT onto a wrapper ``SELECT * FROM (compound) ORDER BY … LIMIT
+  …``, which makes the compound's output column names (inherited
+  from the leftmost SELECT, matching SQLite) visible to the ORDER BY
+  clause.
+- 18 oracle tests in ``tests/test_tier3_compound_order_limit.py``
+  covering UNION ALL, UNION (dedup), INTERSECT, EXCEPT, ORDER BY by
+  name and by position, LIMIT, LIMIT/OFFSET, and the interaction
+  with VALUES (from PR #3968).
+
 ## [1.81.0] - 2026-05-22
 
 ### Added
