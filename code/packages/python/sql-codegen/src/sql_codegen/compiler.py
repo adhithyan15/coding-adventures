@@ -323,9 +323,17 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
         case EmptyResult(columns=cols):
             return [SetResultSchema(columns=cols)], cols
 
-        case PlanCreateTable(table=t, columns=cols, if_not_exists=ine):
-            ir_cols = tuple(_to_ir_col(c) for c in cols)
-            return [CreateTable(table=t, columns=ir_cols, if_not_exists=ine)], ()
+        case PlanCreateTable() as ct:
+            ir_cols = tuple(_to_ir_col(c) for c in ct.columns)
+            return (
+                [CreateTable(
+                    table=ct.table,
+                    columns=ir_cols,
+                    if_not_exists=ct.if_not_exists,
+                    strict=ct.strict,
+                )],
+                (),
+            )
 
         case PlanDropTable(table=t, if_exists=ie):
             return [DropTable(table=t, if_exists=ie)], ()

@@ -536,11 +536,18 @@ class Delete:
 
 @dataclass(frozen=True, slots=True)
 class CreateTable:
-    """CREATE TABLE. Column defs come from sql-backend unchanged."""
+    """CREATE TABLE. Column defs come from sql-backend unchanged.
+
+    ``strict`` carries the SQLite STRICT trailing-option through the plan
+    layer.  The codegen layer mirrors this field on its IR ``CreateTable``
+    instruction; the VM forwards it as a keyword arg to
+    :meth:`sql_backend.Backend.create_table`.
+    """
 
     table: str
     columns: tuple[ColumnDef, ...]
     if_not_exists: bool = False
+    strict: bool = False
 
 
 @dataclass(frozen=True, slots=True)

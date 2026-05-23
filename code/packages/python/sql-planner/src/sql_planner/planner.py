@@ -1646,6 +1646,7 @@ def _plan_create_table(stmt: CreateTableStmt) -> P.LogicalPlan:
         table=stmt.table,
         columns=stmt.columns,
         if_not_exists=stmt.if_not_exists,
+        strict=stmt.strict,
     )
 
 

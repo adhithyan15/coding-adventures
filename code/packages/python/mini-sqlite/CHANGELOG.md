@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.88.0] - 2026-05-23
+
+### Added
+
+- ``CREATE TABLE ... STRICT`` is now fully end-to-end:
+  * Parser already accepted ``table_options = table_option {","
+    table_option}`` and ``table_option = "STRICT" | "WITHOUT" NAME``;
+    the adapter now lifts the ``STRICT`` keyword into
+    ``CreateTableStmt.strict``.
+  * The in-memory backend rejects column types outside SQLite's
+    ``{INT, INTEGER, REAL, TEXT, BLOB, ANY}`` set at CREATE TABLE time,
+    and validates value types on every INSERT/UPDATE.  ``ANY`` columns
+    opt back into lenient typing inside a STRICT table — matching
+    SQLite's escape hatch.
+  * ``WITHOUT ROWID`` continues to be parsed and silently accepted —
+    mini-sqlite always uses a rowid table internally.
+
 ## [1.87.0] - 2026-05-23
 
 ### Added

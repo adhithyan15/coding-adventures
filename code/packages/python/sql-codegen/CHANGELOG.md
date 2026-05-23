@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.37.0] - 2026-05-23
+
+### Added
+
+- IR ``CreateTable`` gained a ``strict: bool = False`` field; the
+  compiler forwards ``PlanCreateTable.strict`` through unchanged so the
+  VM can forward it to ``Backend.create_table(strict=...)``.
+
 ## [1.36.0] - 2026-05-23
 
 ### Added

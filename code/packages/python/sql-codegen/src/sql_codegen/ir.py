@@ -858,10 +858,16 @@ class ColumnDef:
 
 @dataclass(frozen=True, slots=True)
 class CreateTable:
-    """Ask the backend to create a table."""
+    """Ask the backend to create a table.
+
+    ``strict`` mirrors the SQLite ``STRICT`` trailing table-option.  The VM
+    forwards it to ``Backend.create_table(strict=...)`` so the backend can
+    enforce strict per-column typing on subsequent INSERT/UPDATE.
+    """
     table: str
     columns: tuple[ColumnDef, ...]
     if_not_exists: bool = False
+    strict: bool = False
 
 
 @dataclass(frozen=True, slots=True)

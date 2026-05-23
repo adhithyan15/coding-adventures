@@ -1357,12 +1357,30 @@ def _create_table(node: ASTNode) -> CreateTableStmt:
     # create_table_stmt =
     #   "CREATE" "TABLE" ["IF" "NOT" "EXISTS"] NAME
     #   "(" col_def { "," col_def } ")"
+    #   [ table_options ]
+    #
+    # ``table_options = table_option {"," table_option}`` and
+    # ``table_option = "STRICT" | "WITHOUT" NAME``.  We currently honour
+    # ``STRICT`` (forwarded to the backend); ``WITHOUT ROWID`` is parsed
+    # but silently ignored — mini-sqlite always uses a rowid table.
     if_not_exists = _has_keyword_sequence(node, ("IF", "NOT", "EXISTS"))
     table_tok = _first_token(node, kind="NAME")
     assert table_tok is not None
     state = _PlaceholderCounter()
     cols = tuple(_col_def(c, state) for c in _child_nodes(node, "col_def"))
-    return CreateTableStmt(table=table_tok.value, columns=cols, if_not_exists=if_not_exists)
+    strict = False
+    opts_node = _maybe_child(node, "table_options")
+    if opts_node is not None:
+        for opt in _child_nodes(opts_node, "table_option"):
+            if _has_keyword_child(opt, "STRICT"):
+                strict = True
+                break
+    return CreateTableStmt(
+        table=table_tok.value,
+        columns=cols,
+        if_not_exists=if_not_exists,
+        strict=strict,
+    )
 
 
 def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> BackendColumnDef:

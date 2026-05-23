@@ -454,11 +454,16 @@ class CreateTableStmt:
     This reuse is why the planner depends on sql-backend: the schema shape
     is defined once, in the leaf package. Backend-level constraint
     enforcement and planner-level statement planning agree by construction.
+
+    ``strict`` mirrors the SQLite ``STRICT`` trailing table-option.  When
+    True the engine enforces strict per-column typing — see
+    :meth:`sql_backend.Backend.create_table` for the full rules.
     """
 
     table: str
     columns: tuple[ColumnDef, ...]
     if_not_exists: bool = False
+    strict: bool = False
 
 
 @dataclass(frozen=True, slots=True)

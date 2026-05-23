@@ -1239,11 +1239,20 @@ class SqliteFileBackend(Backend):
         table: str,
         columns: list[ColumnDef],
         if_not_exists: bool,
+        *,
+        strict: bool = False,
     ) -> None:
         """Create a new table.
 
         Generates the ``CREATE TABLE`` SQL, stores it in ``sqlite_schema``,
         and allocates a fresh root page for the new B-tree.
+
+        The ``strict`` flag is accepted for interface conformance but the
+        on-disk SQLite backend stores rows verbatim — type enforcement
+        would require the byte-encoder to validate every value on the way
+        in.  For now the flag is forwarded to the SQL text via a trailing
+        ``STRICT`` keyword so the schema round-trips correctly, but
+        runtime enforcement is a TODO for this backend.
 
         For every column with ``effective_unique()`` (i.e. ``UNIQUE`` or
         non-IPK ``PRIMARY KEY``), a UNIQUE auto-index is also created with
