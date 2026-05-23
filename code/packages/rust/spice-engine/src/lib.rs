@@ -1799,6 +1799,33 @@ pub enum TransientMethod {
     Gear2,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct AdaptiveTransientOptions {
+    pub method: TransientMethod,
+    pub tolerance: f64,
+    pub min_step: Option<f64>,
+    pub max_step: Option<f64>,
+}
+
+impl Default for AdaptiveTransientOptions {
+    fn default() -> Self {
+        Self {
+            method: TransientMethod::Trap,
+            tolerance: 1.0e-4,
+            min_step: None,
+            max_step: None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct AdaptiveTransientResult {
+    pub points: Vec<TransientPoint>,
+    pub method: TransientMethod,
+    pub steps_rejected: usize,
+    pub converged: bool,
+}
+
 impl TransientPoint {
     pub fn voltage(&self, node: &str) -> Option<f64> {
         if is_ground(node) {
@@ -2919,6 +2946,153 @@ pub fn transient_with_method(
         time += time_step;
     }
     Ok(points)
+}
+
+pub fn transient_adaptive(
+    circuit: &Circuit,
+    time_step: f64,
+    stop_time: f64,
+    options: AdaptiveTransientOptions,
+) -> Result<AdaptiveTransientResult, SpiceError> {
+    if !time_step.is_finite() || time_step <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "transient".to_string(),
+            reason: "time step must be finite and positive".to_string(),
+        });
+    }
+    if !stop_time.is_finite() || stop_time < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "transient".to_string(),
+            reason: "stop time must be finite and non-negative".to_string(),
+        });
+    }
+    if !options.tolerance.is_finite() || options.tolerance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "transient".to_string(),
+            reason: "adaptive tolerance must be finite and non-negative".to_string(),
+        });
+    }
+    let min_step = options.min_step.unwrap_or(time_step / 1_000.0);
+    let max_step = options.max_step.unwrap_or(time_step * 10.0);
+    if !min_step.is_finite() || min_step <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "transient".to_string(),
+            reason: "minimum step must be finite and positive".to_string(),
+        });
+    }
+    if !max_step.is_finite() || max_step < min_step {
+        return Err(SpiceError::InvalidElement {
+            name: "transient".to_string(),
+            reason: "maximum step must be finite and at least the minimum step".to_string(),
+        });
+    }
+
+    validate_reactive_elements(circuit)?;
+
+    let mut capacitor_states = initial_capacitor_states(circuit, time_step, options.method);
+    let mut inductor_states = initial_inductor_states(circuit, time_step, options.method);
+    let mut line_states = initial_transmission_line_states(circuit);
+    let initial_circuit = circuit_with_transmission_line_companions(circuit, &line_states, 0.0)?;
+    let initial_solution = solve_linear_circuit(
+        &initial_circuit,
+        &capacitor_states,
+        &inductor_states,
+        Some(0.0),
+    )?;
+    update_transmission_line_states(
+        circuit,
+        &initial_solution.node_voltages,
+        &mut line_states,
+        0.0,
+    )?;
+
+    let mut points = Vec::new();
+    let mut steps_rejected = 0;
+    let mut current_time = 0.0;
+    let mut step = time_step.min(max_step);
+    let mut previous_cap_voltages = capacitor_voltages(circuit, &initial_solution.node_voltages);
+    let mut previous_previous_cap_voltages = previous_cap_voltages.clone();
+
+    while current_time < stop_time - time_step * 1.0e-12 {
+        let remaining = stop_time - current_time;
+        let proposed_step = if remaining <= min_step {
+            remaining
+        } else {
+            step.min(remaining).max(min_step)
+        };
+        let proposed_time = current_time + proposed_step;
+        let step_method = if options.method == TransientMethod::Gear2 && points.is_empty() {
+            TransientMethod::Euler
+        } else {
+            options.method
+        };
+        set_reactive_state_method(&mut capacitor_states, &mut inductor_states, step_method);
+        set_reactive_state_step(&mut capacitor_states, &mut inductor_states, proposed_step);
+        let companion_circuit =
+            circuit_with_transmission_line_companions(circuit, &line_states, proposed_time)?;
+        let linear_solution = solve_linear_circuit(
+            &companion_circuit,
+            &capacitor_states,
+            &inductor_states,
+            Some(proposed_time),
+        )?;
+        let proposed_cap_voltages = capacitor_voltages(circuit, &linear_solution.node_voltages);
+        let can_estimate_lte = options.method != TransientMethod::Euler && !points.is_empty();
+        let lte = if can_estimate_lte {
+            transient_lte_estimate(
+                circuit,
+                &proposed_cap_voltages,
+                &previous_cap_voltages,
+                &previous_previous_cap_voltages,
+            )
+        } else {
+            0.0
+        };
+        if can_estimate_lte && lte > options.tolerance && proposed_step > min_step + 1.0e-20 {
+            step = (proposed_step / 2.0).max(min_step);
+            steps_rejected += 1;
+            continue;
+        }
+
+        update_capacitor_states(
+            circuit,
+            &linear_solution.node_voltages,
+            &mut capacitor_states,
+        );
+        update_inductor_states(
+            circuit,
+            &linear_solution.node_voltages,
+            &mut inductor_states,
+        );
+        let line_currents = update_transmission_line_states(
+            circuit,
+            &linear_solution.node_voltages,
+            &mut line_states,
+            proposed_time,
+        )?;
+        let mut branch_currents = linear_solution.branch_currents;
+        branch_currents.extend(line_currents);
+        points.push(TransientPoint {
+            time: proposed_time,
+            node_voltages: linear_solution.node_voltages,
+            branch_currents,
+        });
+        current_time = proposed_time;
+        previous_previous_cap_voltages = previous_cap_voltages;
+        previous_cap_voltages = proposed_cap_voltages;
+        step = if can_estimate_lte && lte < options.tolerance / 8.0 {
+            (proposed_step * 2.0).min(max_step)
+        } else {
+            proposed_step
+        };
+    }
+
+    Ok(AdaptiveTransientResult {
+        points,
+        method: options.method,
+        steps_rejected,
+        converged: true,
+    })
 }
 
 pub fn pss_residual(
@@ -5646,6 +5820,66 @@ fn set_reactive_state_method(
     for state in inductor_states {
         state.method = method;
     }
+}
+
+fn set_reactive_state_step(
+    capacitor_states: &mut [CapacitorState],
+    inductor_states: &mut [InductorState],
+    time_step: f64,
+) {
+    for state in capacitor_states {
+        state.time_step = time_step;
+    }
+    for state in inductor_states {
+        state.time_step = time_step;
+    }
+}
+
+fn capacitor_voltages(
+    circuit: &Circuit,
+    node_voltages: &BTreeMap<String, f64>,
+) -> BTreeMap<String, f64> {
+    circuit
+        .elements()
+        .iter()
+        .filter_map(|element| match element {
+            Element::Capacitor(capacitor) => Some((
+                capacitor.name.clone(),
+                voltage_at(node_voltages, &capacitor.n1) - voltage_at(node_voltages, &capacitor.n2),
+            )),
+            _ => None,
+        })
+        .collect()
+}
+
+fn transient_lte_estimate(
+    circuit: &Circuit,
+    current_voltages: &BTreeMap<String, f64>,
+    previous_voltages: &BTreeMap<String, f64>,
+    previous_previous_voltages: &BTreeMap<String, f64>,
+) -> f64 {
+    circuit
+        .elements()
+        .iter()
+        .filter_map(|element| match element {
+            Element::Capacitor(capacitor) => {
+                let current = current_voltages
+                    .get(&capacitor.name)
+                    .copied()
+                    .unwrap_or(capacitor.initial_voltage);
+                let previous = previous_voltages
+                    .get(&capacitor.name)
+                    .copied()
+                    .unwrap_or(capacitor.initial_voltage);
+                let previous_previous = previous_previous_voltages
+                    .get(&capacitor.name)
+                    .copied()
+                    .unwrap_or(capacitor.initial_voltage);
+                Some((current - 2.0 * previous + previous_previous).abs() / 2.0)
+            }
+            _ => None,
+        })
+        .fold(0.0, f64::max)
 }
 
 fn initial_transmission_line_states(circuit: &Circuit) -> Vec<TransmissionLineState> {

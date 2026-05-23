@@ -145,7 +145,9 @@ Status:
   trapezoidal integration. The parser packages now validate
   `.tran ... method=<euler|trap|gear2>`, preserve the method on transient
   analysis cards, and expose `.options method=<...>` as the fallback route.
-  Adaptive-step interaction remains follow-up work.
+  TypeScript and Rust now expose adaptive transient entry points with bounded
+  LTE-based step growth/shrinkage and method routing for Euler, trapezoidal,
+  and Gear-2. Phase 4 is complete for the current compatibility target.
 
 ### Phase 5 - Pseudo-Transient DC Continuation
 

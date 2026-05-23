@@ -630,6 +630,20 @@ export interface TransientPoint {
   branchCurrent(sourceName: string): number | undefined;
 }
 
+export interface AdaptiveTransientOptions {
+  readonly method?: TransientMethod;
+  readonly tolerance?: number;
+  readonly minStep?: number;
+  readonly maxStep?: number;
+}
+
+export interface AdaptiveTransientResult {
+  readonly points: readonly TransientPoint[];
+  readonly method: TransientMethod;
+  readonly stepsRejected: number;
+  readonly converged: boolean;
+}
+
 export interface PssResidualEntry {
   readonly kind: "node" | "branch_current";
   readonly name: string;
@@ -1897,6 +1911,114 @@ export function transient(
   return points;
 }
 
+export function transientAdaptive(
+  circuit: Circuit,
+  timeStep: number,
+  stopTime: number,
+  options: AdaptiveTransientOptions = {},
+): AdaptiveTransientResult {
+  if (!Number.isFinite(timeStep) || timeStep <= 0.0) {
+    throw invalidElement("transient", "time step must be finite and positive");
+  }
+  if (!Number.isFinite(stopTime) || stopTime < 0.0) {
+    throw invalidElement("transient", "stop time must be finite and non-negative");
+  }
+  const method = options.method ?? "trap";
+  if (method !== "euler" && method !== "trap" && method !== "gear2") {
+    throw invalidElement("transient", "method must be euler, trap, or gear2");
+  }
+  const tolerance = options.tolerance ?? 1.0e-4;
+  const minStep = options.minStep ?? timeStep / 1_000.0;
+  const maxStep = options.maxStep ?? timeStep * 10.0;
+  if (!Number.isFinite(tolerance) || tolerance < 0.0) {
+    throw invalidElement("transient", "adaptive tolerance must be finite and non-negative");
+  }
+  if (!Number.isFinite(minStep) || minStep <= 0.0) {
+    throw invalidElement("transient", "minimum step must be finite and positive");
+  }
+  if (!Number.isFinite(maxStep) || maxStep < minStep) {
+    throw invalidElement("transient", "maximum step must be finite and at least the minimum step");
+  }
+
+  validateReactiveElements(circuit);
+
+  const capacitorStates = initialCapacitorStates(circuit, timeStep, method);
+  const inductorStates = initialInductorStates(circuit, timeStep, method);
+  const lineStates = initialTransmissionLineStates(circuit);
+  const initialCircuit = circuitWithTransmissionLineCompanions(circuit, lineStates, 0.0);
+  const initialSolution = solveLinearCircuit(
+    initialCircuit,
+    capacitorStates,
+    inductorStates,
+    0.0,
+  );
+  updateTransmissionLineStates(circuit, initialSolution.nodeVoltages, lineStates, 0.0);
+
+  const points: TransientPoint[] = [];
+  let stepsRejected = 0;
+  let currentTime = 0.0;
+  let step = Math.min(timeStep, maxStep);
+  let previousCapVoltages = capacitorVoltages(circuit, initialSolution.nodeVoltages);
+  let previousPreviousCapVoltages = new Map(previousCapVoltages);
+
+  while (currentTime < stopTime - timeStep * 1.0e-12) {
+    const remaining = stopTime - currentTime;
+    const proposedStep = remaining <= minStep ? remaining : Math.max(minStep, Math.min(step, remaining));
+    const proposedTime = currentTime + proposedStep;
+    const stepMethod = method === "gear2" && points.length === 0 ? "euler" : method;
+    setReactiveStateMethod(capacitorStates, inductorStates, stepMethod);
+    setReactiveStateStep(capacitorStates, inductorStates, proposedStep);
+    const companionCircuit = circuitWithTransmissionLineCompanions(
+      circuit,
+      lineStates,
+      proposedTime,
+    );
+    const solution = solveLinearCircuit(
+      companionCircuit,
+      capacitorStates,
+      inductorStates,
+      proposedTime,
+    );
+    const proposedCapVoltages = capacitorVoltages(circuit, solution.nodeVoltages);
+    const canEstimateLte = method !== "euler" && points.length >= 1;
+    const lte = canEstimateLte
+      ? transientLteEstimate(
+        circuit,
+        proposedCapVoltages,
+        previousCapVoltages,
+        previousPreviousCapVoltages,
+      )
+      : 0.0;
+    if (canEstimateLte && lte > tolerance && proposedStep > minStep + 1.0e-20) {
+      step = Math.max(proposedStep / 2.0, minStep);
+      stepsRejected += 1;
+      continue;
+    }
+
+    updateCapacitorStates(circuit, solution.nodeVoltages, capacitorStates);
+    updateInductorStates(circuit, solution.nodeVoltages, inductorStates);
+    const lineCurrents = updateTransmissionLineStates(
+      circuit,
+      solution.nodeVoltages,
+      lineStates,
+      proposedTime,
+    );
+    const branchCurrents = new Map(solution.branchCurrents);
+    for (const [name, current] of lineCurrents) {
+      branchCurrents.set(name, current);
+    }
+    points.push(makeTransientPoint(proposedTime, solution.nodeVoltages, branchCurrents));
+    currentTime = proposedTime;
+    previousPreviousCapVoltages = previousCapVoltages;
+    previousCapVoltages = proposedCapVoltages;
+    step = canEstimateLte && lte < tolerance / 8.0
+      ? Math.min(proposedStep * 2.0, maxStep)
+      : proposedStep;
+  }
+
+  return { points, method, stepsRejected, converged: true };
+}
+
 export function pssResidual(
   circuit: Circuit,
   stepsPerPeriod = 64,
@@ -2758,7 +2880,7 @@ interface CapacitorState {
   previousVoltage: number;
   previousPreviousVoltage: number;
   previousCurrent: number;
-  readonly timeStep: number;
+  timeStep: number;
   method: TransientMethod;
 }
 
@@ -2767,7 +2889,7 @@ interface InductorState {
   previousCurrent: number;
   previousPreviousCurrent: number;
   previousVoltage: number;
-  readonly timeStep: number;
+  timeStep: number;
   method: TransientMethod;
 }
 
@@ -4667,6 +4789,55 @@ function setReactiveStateMethod(
   for (const state of inductorStates) {
     state.method = method;
   }
+}
+
+function setReactiveStateStep(
+  capacitorStates: CapacitorState[],
+  inductorStates: InductorState[],
+  timeStep: number,
+): void {
+  for (const state of capacitorStates) {
+    state.timeStep = timeStep;
+  }
+  for (const state of inductorStates) {
+    state.timeStep = timeStep;
+  }
+}
+
+function capacitorVoltages(
+  circuit: Circuit,
+  nodeVoltages: ReadonlyMap<string, number>,
+): Map<string, number> {
+  const voltages = new Map<string, number>();
+  for (const element of circuit.elements()) {
+    if (element.kind === "capacitor") {
+      voltages.set(
+        element.name,
+        voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2),
+      );
+    }
+  }
+  return voltages;
+}
+
+function transientLteEstimate(
+  circuit: Circuit,
+  currentVoltages: ReadonlyMap<string, number>,
+  previousVoltages: ReadonlyMap<string, number>,
+  previousPreviousVoltages: ReadonlyMap<string, number>,
+): number {
+  let maxLte = 0.0;
+  for (const element of circuit.elements()) {
+    if (element.kind !== "capacitor") {
+      continue;
+    }
+    const current = currentVoltages.get(element.name) ?? element.initialVoltage;
+    const previous = previousVoltages.get(element.name) ?? element.initialVoltage;
+    const previousPrevious =
+      previousPreviousVoltages.get(element.name) ?? element.initialVoltage;
+    maxLte = Math.max(maxLte, Math.abs(current - 2.0 * previous + previousPrevious) / 2.0);
+  }
+  return maxLte;
 }
 
 function initialTransmissionLineStates(circuit: Circuit): TransmissionLineState[] {
