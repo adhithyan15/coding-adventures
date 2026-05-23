@@ -100,13 +100,19 @@ const PRIMITIVES: &[&str] = &[
     // (currently both nodes coexist as siblings in `children`).
     "If",
     "Else",
-    // UI29 §2.1 / UI29-1 — host primitives. Each lowers to the host
-    // platform's native widget (DOM <input>, SwiftUI TextField, Qt
+    // UI29 §2.1 / UI29-1 / UI29-2 — host primitives. Each lowers to the
+    // host platform's native widget (DOM <input>, SwiftUI TextField, Qt
     // TextInput, etc.). HostDialog (UI29-1) is the 16th kernel
     // primitive, added after mosaic-pkg-dialog v0.1.0 exposed the need
     // for a native dialog primitive with modal/focus/top-layer/
     // accessibility semantics that composition cannot provide.
+    // HostCheckbox and HostRadio (UI29-2) are the 17th and 18th, added
+    // after mosaic-pkg-toolkit's Checkbox/Radio were found to be fake
+    // HostButton wrappers — losing native a11y role, checked-state
+    // visuals (tri-state, focus ring), and keyboard semantics that
+    // only the platform's real checkbox/radio widget provides.
     "HostInput", "HostButton", "HostTable", "HostScroll", "HostDialog",
+    "HostCheckbox", "HostRadio",
 ];
 
 fn is_primitive(tag: &str) -> bool {
@@ -2077,6 +2083,13 @@ mod tests {
     /// modal/focus/top-layer/accessibility semantics. PRIMITIVES is the
     /// canonical roster every backend looks at; pin the entry so future
     /// refactors that mistakenly drop it are caught at test time.
+    ///
+    /// UI29-2 — `HostCheckbox` and `HostRadio` joined as primitives 17 and
+    /// 18 after `mosaic-pkg-toolkit`'s Checkbox/Radio were found to be
+    /// fake `HostButton` wrappers. They lose the platform-native a11y
+    /// role, checked-state visuals, and keyboard semantics that only the
+    /// real checkbox/radio widget provides — composition can't recover
+    /// them. The kernel now stands at 18 primitives.
     #[test]
     fn host_dialog_and_friends_in_primitives() {
         assert!(PRIMITIVES.contains(&"HostInput"));
@@ -2086,6 +2099,14 @@ mod tests {
         assert!(
             PRIMITIVES.contains(&"HostDialog"),
             "UI29-1 added HostDialog as the 16th kernel primitive"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostCheckbox"),
+            "UI29-2 added HostCheckbox as the 17th kernel primitive"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostRadio"),
+            "UI29-2 added HostRadio as the 18th kernel primitive"
         );
     }
 
