@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.39.0] - 2026-05-23
+
+### Changed
+
+- ``_to_ir_col`` now uses the raw ``ColumnDef.not_null`` flag for the
+  IR's ``nullable`` field (was ``c.effective_not_null()`` which folded
+  in PRIMARY KEY's implicit NOT NULL).  Constraint enforcement at the
+  backend is unchanged — the backend's ``effective_not_null()``
+  reapplies the PK check at insert/update time.  Required for
+  ``PRAGMA table_info`` to distinguish explicit-vs-implicit NOT NULL
+  (matches sqlite3).
+
 ## [1.38.0] - 2026-05-23
 
 ### Added

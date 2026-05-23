@@ -1459,17 +1459,23 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
         if kw_seq == ("NOT", "NULL"):
             not_null = True
         elif kw_seq == ("PRIMARY", "KEY"):
+            # Don't set ``not_null = True`` here: ``primary_key=True``
+            # is already enough — ``ColumnDef.effective_not_null()``
+            # treats PK as implicit NOT NULL for constraint-validation
+            # purposes.  Leaving the raw ``not_null`` field False lets
+            # ``PRAGMA table_info`` distinguish PK-implied NULL-ness
+            # from explicit NOT NULL declarations (matching SQLite,
+            # which reports ``notnull = 0`` for ``id INTEGER PRIMARY
+            # KEY`` and ``notnull = 1`` only when the user wrote both
+            # ``PRIMARY KEY NOT NULL``).
             primary_key = True
-            not_null = True  # PRIMARY KEY implies NOT NULL.
         elif kw_seq == ("PRIMARY", "KEY", "AUTOINCREMENT"):
             # SQLite: AUTOINCREMENT is only valid after PRIMARY KEY on
-            # an INTEGER column.  We accept the keyword and mark the
-            # column; behaviour ("rowids never reuse after DELETE") is
-            # already true for the in-memory backend since
-            # ``_next_rowid`` is never decremented.
+            # an INTEGER column.  Same NOT NULL story as the
+            # PRIMARY-KEY-only branch: leave ``not_null`` False so the
+            # pragma surfaces the explicit-vs-implicit distinction.
             primary_key = True
             autoincrement = True
-            not_null = True  # PRIMARY KEY implies NOT NULL.
         elif kw_seq == ("UNIQUE",):
             unique = True
         elif kw_seq[0:1] == ("CHECK",):

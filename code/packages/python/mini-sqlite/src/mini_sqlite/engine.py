@@ -683,6 +683,34 @@ def _run_explain_query_plan(
 # ---------------------------------------------------------------------------
 
 
+def _format_pragma_default(value: object) -> str:
+    """Render a column's stored default value as the SQL-literal text that
+    ``PRAGMA table_info.dflt_value`` reports.
+
+    SQLite's ``dflt_value`` column returns the literal source text that
+    appeared after ``DEFAULT`` — so ``DEFAULT 'x'`` reads back as
+    ``"'x'"`` (with the single quotes!), ``DEFAULT 42`` reads back as
+    ``"42"``, ``DEFAULT NULL`` reads back as ``"NULL"``, and so on.
+    Mini-sqlite's adapter parses the literal into a Python value at
+    CREATE TABLE time; this helper re-encodes it back to source-text
+    form so the pragma surfaces the same string sqlite3 does.
+
+    Bytes get the ``X'hex...'`` blob-literal form; bools collapse to
+    ``'0'`` / ``'1'`` (SQLite stores booleans as integers internally).
+    """
+    if value is None:
+        return "NULL"
+    if isinstance(value, bool):
+        return "1" if value else "0"
+    if isinstance(value, (int, float)):
+        return repr(value)
+    if isinstance(value, (bytes, bytearray)):
+        return "X'" + bytes(value).hex().upper() + "'"
+    # Default: treat as text — escape embedded single quotes by doubling.
+    text = str(value).replace("'", "''")
+    return f"'{text}'"
+
+
 # Boolean PRAGMA value parser.  SQLite accepts a wide range of representations
 # for "true / false" — integers (1/0, also any non-zero), and the keywords
 # ON, OFF, TRUE, FALSE, YES, NO (case-insensitive).  Returns:
@@ -817,10 +845,17 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
         rows = []
         for i, col in enumerate(cols):
             if isinstance(col, BackendColumnDef):
-                not_null = int(col.effective_not_null())
+                # SQLite's ``notnull`` reports the *explicit* NOT NULL
+                # declaration, not the implicit one from PRIMARY KEY.
+                # ``id INTEGER PRIMARY KEY`` → notnull=0;
+                # ``id INTEGER PRIMARY KEY NOT NULL`` → notnull=1.
+                # The adapter (mini-sqlite 1.97+) only sets the raw
+                # ``not_null`` flag for explicit declarations, so the
+                # raw field is the correct source.
+                not_null = int(col.not_null)
                 pk = int(col.primary_key)
                 type_name = col.type_name
-                dflt = col.default if col.has_default() else None
+                dflt = _format_pragma_default(col.default) if col.has_default() else None
                 name_str = col.name
             else:
                 not_null = 0

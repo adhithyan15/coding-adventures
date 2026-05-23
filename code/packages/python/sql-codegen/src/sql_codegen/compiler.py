@@ -1857,7 +1857,13 @@ def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
     return IrColumnDef(
         name=c.name,
         type=c.type_name,
-        nullable=not c.effective_not_null(),
+        # Preserve the raw NOT NULL declaration (not the PK-implied one).
+        # The backend's ``effective_not_null()`` reapplies the PK check
+        # at constraint-validation time, so dropping the implicit bit
+        # here doesn't loosen enforcement.  Keeps PRAGMA table_info's
+        # ``notnull`` column matching real sqlite3, which distinguishes
+        # explicit-vs-implicit NOT NULL.
+        nullable=not c.not_null,
         primary_key=c.primary_key,
         autoincrement=c.autoincrement,
         unique=c.unique,
