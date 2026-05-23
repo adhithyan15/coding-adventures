@@ -165,6 +165,10 @@ delivery completion without duplicating route policy.
 stable transport receipts for callback-runner handoffs and adapter-event
 publications, letting adapters persist or display delivery completion without
 rebuilding receipt labels and messages.
+`input_callback_transport_outcome_summary` turns those receipts into final
+transport outcomes with Rust-owned names, labels, queue-depth metadata, and
+messages, keeping frontend outcome reporting thin over the shared transport
+policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
