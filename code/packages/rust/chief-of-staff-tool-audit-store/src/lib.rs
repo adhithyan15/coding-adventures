@@ -1525,6 +1525,59 @@ impl ToolAuditSupervisorDrainRunReport {
         self.host_decision_priority().requires_investigation()
     }
 
+    /// Classify whether the host decision can be queued, routed, or needs triage.
+    pub fn host_decision_readiness(&self) -> ToolAuditSupervisorDrainHostDecisionReadiness {
+        self.host_decision_kind().readiness()
+    }
+
+    /// Return the stable host-decision readiness label.
+    pub fn host_decision_readiness_label(&self) -> &'static str {
+        self.host_decision_readiness().as_str()
+    }
+
+    /// Return whether the host-decision readiness label parses back to its typed value.
+    pub fn host_decision_readiness_label_matches_kind(&self) -> bool {
+        ToolAuditSupervisorDrainHostDecisionReadiness::from_label(
+            self.host_decision_readiness_label(),
+        ) == Some(self.host_decision_readiness())
+    }
+
+    /// Return whether the host decision is settled and needs no queue entry.
+    pub fn host_decision_is_settled(&self) -> bool {
+        self.host_decision_readiness().is_settled()
+    }
+
+    /// Return whether the host decision should appear in an action queue.
+    pub fn host_decision_is_actionable(&self) -> bool {
+        self.host_decision_readiness().is_actionable()
+    }
+
+    /// Return whether the host decision can be routed without investigation triage.
+    pub fn host_decision_is_auto_routable(&self) -> bool {
+        self.host_decision_readiness().is_auto_routable()
+    }
+
+    /// Return whether the host decision needs manual review before routing.
+    pub fn host_decision_readiness_requires_manual_review(&self) -> bool {
+        self.host_decision_readiness().requires_manual_review()
+    }
+
+    /// Return whether the host decision readiness requires investigation.
+    pub fn host_decision_readiness_requires_investigation(&self) -> bool {
+        self.host_decision_readiness().requires_investigation()
+    }
+
+    /// Return whether the host decision readiness requires host-log integrity investigation.
+    pub fn host_decision_readiness_requires_integrity_investigation(&self) -> bool {
+        self.host_decision_readiness()
+            .requires_integrity_investigation()
+    }
+
+    /// Return whether multiple decision surfaces need human triage.
+    pub fn host_decision_needs_triage(&self) -> bool {
+        self.host_decision_readiness().requires_triage()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -1851,6 +1904,20 @@ impl ToolAuditSupervisorDrainRunReport {
             host_decision_has_mixed_priority: self.host_decision_has_mixed_priority(),
             host_decision_has_investigation_priority: self
                 .host_decision_has_investigation_priority(),
+            host_decision_readiness: self.host_decision_readiness(),
+            host_decision_readiness_label: self.host_decision_readiness_label(),
+            host_decision_readiness_label_matches_kind: self
+                .host_decision_readiness_label_matches_kind(),
+            host_decision_is_settled: self.host_decision_is_settled(),
+            host_decision_is_actionable: self.host_decision_is_actionable(),
+            host_decision_is_auto_routable: self.host_decision_is_auto_routable(),
+            host_decision_readiness_requires_manual_review: self
+                .host_decision_readiness_requires_manual_review(),
+            host_decision_readiness_requires_investigation: self
+                .host_decision_readiness_requires_investigation(),
+            host_decision_readiness_requires_integrity_investigation: self
+                .host_decision_readiness_requires_integrity_investigation(),
+            host_decision_needs_triage: self.host_decision_needs_triage(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -2566,6 +2633,26 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_decision_has_mixed_priority: bool,
     /// Whether the host decision priority is investigation-grade.
     pub host_decision_has_investigation_priority: bool,
+    /// Stable readiness classification for queueing or routing the host decision.
+    pub host_decision_readiness: ToolAuditSupervisorDrainHostDecisionReadiness,
+    /// Stable host-decision readiness label for host queues.
+    pub host_decision_readiness_label: &'static str,
+    /// Whether the host-decision readiness label parses back to its typed value.
+    pub host_decision_readiness_label_matches_kind: bool,
+    /// Whether the host decision is settled and needs no queue entry.
+    pub host_decision_is_settled: bool,
+    /// Whether the host decision should appear in an action queue.
+    pub host_decision_is_actionable: bool,
+    /// Whether the host decision can be routed without investigation triage.
+    pub host_decision_is_auto_routable: bool,
+    /// Whether host-decision readiness needs manual review before routing.
+    pub host_decision_readiness_requires_manual_review: bool,
+    /// Whether host-decision readiness requires investigation.
+    pub host_decision_readiness_requires_investigation: bool,
+    /// Whether host-decision readiness requires host-log integrity investigation.
+    pub host_decision_readiness_requires_integrity_investigation: bool,
+    /// Whether multiple decision surfaces need human triage.
+    pub host_decision_needs_triage: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -3328,6 +3415,56 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the host decision priority is investigation-grade.
     pub fn host_decision_has_investigation_priority(&self) -> bool {
         self.host_decision_has_investigation_priority
+    }
+
+    /// Return the typed host-decision readiness classification.
+    pub fn host_decision_readiness(&self) -> ToolAuditSupervisorDrainHostDecisionReadiness {
+        self.host_decision_readiness
+    }
+
+    /// Return the stable host-decision readiness label.
+    pub fn host_decision_readiness_label(&self) -> &'static str {
+        self.host_decision_readiness_label
+    }
+
+    /// Return whether the host-decision readiness label parses back to its typed value.
+    pub fn host_decision_readiness_label_matches_kind(&self) -> bool {
+        self.host_decision_readiness_label_matches_kind
+    }
+
+    /// Return whether the host decision is settled and needs no queue entry.
+    pub fn host_decision_is_settled(&self) -> bool {
+        self.host_decision_is_settled
+    }
+
+    /// Return whether the host decision should appear in an action queue.
+    pub fn host_decision_is_actionable(&self) -> bool {
+        self.host_decision_is_actionable
+    }
+
+    /// Return whether the host decision can be routed without investigation triage.
+    pub fn host_decision_is_auto_routable(&self) -> bool {
+        self.host_decision_is_auto_routable
+    }
+
+    /// Return whether host-decision readiness needs manual review before routing.
+    pub fn host_decision_readiness_requires_manual_review(&self) -> bool {
+        self.host_decision_readiness_requires_manual_review
+    }
+
+    /// Return whether host-decision readiness requires investigation.
+    pub fn host_decision_readiness_requires_investigation(&self) -> bool {
+        self.host_decision_readiness_requires_investigation
+    }
+
+    /// Return whether host-decision readiness requires host-log integrity investigation.
+    pub fn host_decision_readiness_requires_integrity_investigation(&self) -> bool {
+        self.host_decision_readiness_requires_integrity_investigation
+    }
+
+    /// Return whether multiple decision surfaces need human triage.
+    pub fn host_decision_needs_triage(&self) -> bool {
+        self.host_decision_needs_triage
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -4500,6 +4637,11 @@ impl ToolAuditSupervisorDrainHostDecisionKind {
     pub fn priority(self) -> ToolAuditSupervisorDrainHostDecisionPriority {
         ToolAuditSupervisorDrainHostDecisionPriority::from_decision_kind(self)
     }
+
+    /// Return the queue readiness classification for this host decision.
+    pub fn readiness(self) -> ToolAuditSupervisorDrainHostDecisionReadiness {
+        ToolAuditSupervisorDrainHostDecisionReadiness::from_decision_kind(self)
+    }
 }
 
 impl Display for ToolAuditSupervisorDrainHostDecisionKind {
@@ -4696,6 +4838,112 @@ impl ToolAuditSupervisorDrainHostDecisionPriority {
 }
 
 impl Display for ToolAuditSupervisorDrainHostDecisionPriority {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable queue readiness classification for host drain decisions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHostDecisionReadiness {
+    /// The run is settled and does not need a queue entry.
+    Settled,
+    /// Routine scheduler or follow-up work can be routed directly.
+    RoutineReady,
+    /// Drift investigation is ready for an investigator queue.
+    DriftInvestigationReady,
+    /// Host-log integrity investigation is ready for an investigator queue.
+    IntegrityInvestigationReady,
+    /// Multiple active decision surfaces need human triage before routing.
+    TriageRequired,
+}
+
+impl ToolAuditSupervisorDrainHostDecisionReadiness {
+    /// Classify host-decision queue readiness from a host decision.
+    pub fn from_decision_kind(decision: ToolAuditSupervisorDrainHostDecisionKind) -> Self {
+        match decision {
+            ToolAuditSupervisorDrainHostDecisionKind::TerminalReady => Self::Settled,
+            ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation
+            | ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp => Self::RoutineReady,
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigatePlanDrift
+            | ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift => {
+                Self::DriftInvestigationReady
+            }
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity => {
+                Self::IntegrityInvestigationReady
+            }
+            ToolAuditSupervisorDrainHostDecisionKind::MultipleActions => Self::TriageRequired,
+        }
+    }
+
+    /// Return a stable snake_case label for host queues and routing logs.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Settled => "settled",
+            Self::RoutineReady => "routine_ready",
+            Self::DriftInvestigationReady => "drift_investigation_ready",
+            Self::IntegrityInvestigationReady => "integrity_investigation_ready",
+            Self::TriageRequired => "triage_required",
+        }
+    }
+
+    /// Parse a stable snake_case host-decision readiness label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "settled" => Some(Self::Settled),
+            "routine_ready" => Some(Self::RoutineReady),
+            "drift_investigation_ready" => Some(Self::DriftInvestigationReady),
+            "integrity_investigation_ready" => Some(Self::IntegrityInvestigationReady),
+            "triage_required" => Some(Self::TriageRequired),
+            _ => None,
+        }
+    }
+
+    /// Return whether the run is settled and needs no queue entry.
+    pub fn is_settled(self) -> bool {
+        matches!(self, Self::Settled)
+    }
+
+    /// Return whether this readiness should appear in a host action queue.
+    pub fn is_actionable(self) -> bool {
+        !self.is_settled()
+    }
+
+    /// Return whether this readiness can be routed without investigation triage.
+    pub fn is_auto_routable(self) -> bool {
+        matches!(self, Self::RoutineReady)
+    }
+
+    /// Return whether this readiness requires manual host review before routing.
+    pub fn requires_manual_review(self) -> bool {
+        matches!(
+            self,
+            Self::DriftInvestigationReady
+                | Self::IntegrityInvestigationReady
+                | Self::TriageRequired
+        )
+    }
+
+    /// Return whether this readiness is already routed to an investigation queue.
+    pub fn requires_investigation(self) -> bool {
+        matches!(
+            self,
+            Self::DriftInvestigationReady | Self::IntegrityInvestigationReady
+        )
+    }
+
+    /// Return whether this readiness is already routed to host-log integrity investigation.
+    pub fn requires_integrity_investigation(self) -> bool {
+        matches!(self, Self::IntegrityInvestigationReady)
+    }
+
+    /// Return whether multiple active decision surfaces require triage.
+    pub fn requires_triage(self) -> bool {
+        matches!(self, Self::TriageRequired)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostDecisionReadiness {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -7727,6 +7975,131 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_decision_readiness_is_stable_for_queues() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::TerminalReady,
+                ToolAuditSupervisorDrainHostDecisionReadiness::Settled,
+                "settled",
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation,
+                ToolAuditSupervisorDrainHostDecisionReadiness::RoutineReady,
+                "routine_ready",
+                false,
+                true,
+                true,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp,
+                ToolAuditSupervisorDrainHostDecisionReadiness::RoutineReady,
+                "routine_ready",
+                false,
+                true,
+                true,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigatePlanDrift,
+                ToolAuditSupervisorDrainHostDecisionReadiness::DriftInvestigationReady,
+                "drift_investigation_ready",
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift,
+                ToolAuditSupervisorDrainHostDecisionReadiness::DriftInvestigationReady,
+                "drift_investigation_ready",
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity,
+                ToolAuditSupervisorDrainHostDecisionReadiness::IntegrityInvestigationReady,
+                "integrity_investigation_ready",
+                false,
+                true,
+                false,
+                true,
+                true,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::MultipleActions,
+                ToolAuditSupervisorDrainHostDecisionReadiness::TriageRequired,
+                "triage_required",
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+            ),
+        ];
+
+        for (
+            decision,
+            readiness,
+            label,
+            is_settled,
+            is_actionable,
+            is_auto_routable,
+            requires_manual_review,
+            requires_investigation,
+            requires_integrity_investigation,
+        ) in cases
+        {
+            assert_eq!(decision.readiness(), readiness);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostDecisionReadiness::from_decision_kind(decision),
+                readiness
+            );
+            assert_eq!(readiness.as_str(), label);
+            assert_eq!(readiness.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostDecisionReadiness::from_label(label),
+                Some(readiness)
+            );
+            assert_eq!(readiness.is_settled(), is_settled);
+            assert_eq!(readiness.is_actionable(), is_actionable);
+            assert_eq!(readiness.is_auto_routable(), is_auto_routable);
+            assert_eq!(readiness.requires_manual_review(), requires_manual_review);
+            assert_eq!(readiness.requires_investigation(), requires_investigation);
+            assert_eq!(
+                readiness.requires_integrity_investigation(),
+                requires_integrity_investigation
+            );
+            assert_eq!(
+                readiness.requires_triage(),
+                decision == ToolAuditSupervisorDrainHostDecisionKind::MultipleActions
+            );
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainHostDecisionReadiness::from_label("readyish"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_report_exposes_outcome_label_and_action_flag() {
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(store
@@ -9388,6 +9761,182 @@ mod tests {
         stale_integrity_summary.host_decision_priority_label = "someday";
         stale_integrity_summary.host_decision_priority_label_matches_kind = false;
         assert!(!stale_integrity_summary.host_decision_priority_label_matches_kind());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_flattens_host_decision_readiness_fields() {
+        let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut idle_sink = InMemoryToolAuditSink::new();
+        let idle_report = empty_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut idle_sink)
+            .unwrap();
+        let idle_summary = idle_report.summary();
+
+        assert_eq!(
+            idle_report.host_decision_readiness(),
+            ToolAuditSupervisorDrainHostDecisionReadiness::Settled
+        );
+        assert_eq!(idle_report.host_decision_readiness_label(), "settled");
+        assert!(idle_report.host_decision_readiness_label_matches_kind());
+        assert!(idle_report.host_decision_is_settled());
+        assert!(!idle_report.host_decision_is_actionable());
+        assert!(!idle_report.host_decision_is_auto_routable());
+        assert!(!idle_report.host_decision_readiness_requires_manual_review());
+        assert!(!idle_report.host_decision_readiness_requires_investigation());
+        assert!(!idle_report.host_decision_readiness_requires_integrity_investigation());
+        assert!(!idle_report.host_decision_needs_triage());
+        assert_eq!(
+            idle_summary.host_decision_readiness,
+            ToolAuditSupervisorDrainHostDecisionReadiness::Settled
+        );
+        assert_eq!(
+            idle_summary.host_decision_readiness(),
+            ToolAuditSupervisorDrainHostDecisionReadiness::Settled
+        );
+        assert_eq!(idle_summary.host_decision_readiness_label, "settled");
+        assert_eq!(idle_summary.host_decision_readiness_label(), "settled");
+        assert!(idle_summary.host_decision_readiness_label_matches_kind);
+        assert!(idle_summary.host_decision_readiness_label_matches_kind());
+        assert!(idle_summary.host_decision_is_settled);
+        assert!(idle_summary.host_decision_is_settled());
+        assert!(!idle_summary.host_decision_is_actionable);
+        assert!(!idle_summary.host_decision_is_actionable());
+        assert!(!idle_summary.host_decision_is_auto_routable);
+        assert!(!idle_summary.host_decision_is_auto_routable());
+        assert!(!idle_summary.host_decision_readiness_requires_manual_review);
+        assert!(!idle_summary.host_decision_readiness_requires_manual_review());
+        assert!(!idle_summary.host_decision_readiness_requires_investigation);
+        assert!(!idle_summary.host_decision_readiness_requires_investigation());
+        assert!(!idle_summary.host_decision_readiness_requires_integrity_investigation);
+        assert!(!idle_summary.host_decision_readiness_requires_integrity_investigation());
+        assert!(!idle_summary.host_decision_needs_triage);
+        assert!(!idle_summary.host_decision_needs_triage());
+
+        let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(continuation_store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+        let mut continuation_sink = InMemoryToolAuditSink::new();
+        let continuation_report = continuation_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 1, &mut continuation_sink)
+            .unwrap();
+        let continuation_summary = continuation_report.summary();
+
+        assert_eq!(
+            continuation_report.host_decision_readiness(),
+            ToolAuditSupervisorDrainHostDecisionReadiness::RoutineReady
+        );
+        assert_eq!(
+            continuation_report.host_decision_readiness_label(),
+            "routine_ready"
+        );
+        assert!(continuation_report.host_decision_readiness_label_matches_kind());
+        assert!(!continuation_report.host_decision_is_settled());
+        assert!(continuation_report.host_decision_is_actionable());
+        assert!(continuation_report.host_decision_is_auto_routable());
+        assert!(!continuation_report.host_decision_readiness_requires_manual_review());
+        assert!(!continuation_report.host_decision_readiness_requires_investigation());
+        assert!(!continuation_report.host_decision_needs_triage());
+        assert_eq!(
+            continuation_summary.host_decision_readiness(),
+            ToolAuditSupervisorDrainHostDecisionReadiness::RoutineReady
+        );
+        assert_eq!(
+            continuation_summary.host_decision_readiness_label(),
+            "routine_ready"
+        );
+        assert!(continuation_summary.host_decision_is_actionable());
+        assert!(continuation_summary.host_decision_is_auto_routable());
+        assert!(!continuation_summary.host_decision_readiness_requires_manual_review());
+        assert!(!continuation_summary.host_decision_needs_triage());
+
+        let mut integrity_report = continuation_report;
+        integrity_report.drain.ticks[0].replay.next_checkpoint =
+            ToolAuditReadCheckpoint::beginning();
+        let triage_summary = integrity_report.summary();
+
+        assert_eq!(
+            integrity_report.host_decision_readiness(),
+            ToolAuditSupervisorDrainHostDecisionReadiness::TriageRequired
+        );
+        assert_eq!(
+            integrity_report.host_decision_readiness_label(),
+            "triage_required"
+        );
+        assert!(integrity_report.host_decision_is_actionable());
+        assert!(!integrity_report.host_decision_is_auto_routable());
+        assert!(integrity_report.host_decision_readiness_requires_manual_review());
+        assert!(!integrity_report.host_decision_readiness_requires_investigation());
+        assert!(!integrity_report.host_decision_readiness_requires_integrity_investigation());
+        assert!(integrity_report.host_decision_needs_triage());
+        assert_eq!(
+            triage_summary.host_decision_readiness(),
+            ToolAuditSupervisorDrainHostDecisionReadiness::TriageRequired
+        );
+        assert_eq!(
+            triage_summary.host_decision_readiness_label(),
+            "triage_required"
+        );
+        assert!(triage_summary.host_decision_readiness_requires_manual_review());
+        assert!(!triage_summary.host_decision_readiness_requires_investigation());
+        assert!(!triage_summary.host_decision_readiness_requires_integrity_investigation());
+        assert!(triage_summary.host_decision_needs_triage());
+
+        let mut drift_summary = idle_summary.clone();
+        drift_summary.host_decision_readiness =
+            ToolAuditSupervisorDrainHostDecisionReadiness::DriftInvestigationReady;
+        drift_summary.host_decision_readiness_label = "drift_investigation_ready";
+        drift_summary.host_decision_is_settled = false;
+        drift_summary.host_decision_is_actionable = true;
+        drift_summary.host_decision_is_auto_routable = false;
+        drift_summary.host_decision_readiness_requires_manual_review = true;
+        drift_summary.host_decision_readiness_requires_investigation = true;
+        assert_eq!(
+            drift_summary.host_decision_readiness(),
+            ToolAuditSupervisorDrainHostDecisionReadiness::DriftInvestigationReady
+        );
+        assert_eq!(
+            drift_summary.host_decision_readiness_label(),
+            "drift_investigation_ready"
+        );
+        assert!(drift_summary.host_decision_readiness_label_matches_kind());
+        assert!(drift_summary.host_decision_is_actionable());
+        assert!(!drift_summary.host_decision_is_auto_routable());
+        assert!(drift_summary.host_decision_readiness_requires_manual_review());
+        assert!(drift_summary.host_decision_readiness_requires_investigation());
+        assert!(!drift_summary.host_decision_readiness_requires_integrity_investigation());
+        assert!(!drift_summary.host_decision_needs_triage());
+
+        let mut integrity_summary = idle_summary;
+        integrity_summary.host_decision_readiness =
+            ToolAuditSupervisorDrainHostDecisionReadiness::IntegrityInvestigationReady;
+        integrity_summary.host_decision_readiness_label = "integrity_investigation_ready";
+        integrity_summary.host_decision_is_settled = false;
+        integrity_summary.host_decision_is_actionable = true;
+        integrity_summary.host_decision_is_auto_routable = false;
+        integrity_summary.host_decision_readiness_requires_manual_review = true;
+        integrity_summary.host_decision_readiness_requires_investigation = true;
+        integrity_summary.host_decision_readiness_requires_integrity_investigation = true;
+        assert_eq!(
+            integrity_summary.host_decision_readiness(),
+            ToolAuditSupervisorDrainHostDecisionReadiness::IntegrityInvestigationReady
+        );
+        assert_eq!(
+            integrity_summary.host_decision_readiness_label(),
+            "integrity_investigation_ready"
+        );
+        assert!(integrity_summary.host_decision_readiness_requires_manual_review());
+        assert!(integrity_summary.host_decision_readiness_requires_investigation());
+        assert!(integrity_summary.host_decision_readiness_requires_integrity_investigation());
+        assert!(!integrity_summary.host_decision_needs_triage());
+
+        integrity_summary.host_decision_readiness_label = "readyish";
+        integrity_summary.host_decision_readiness_label_matches_kind = false;
+        assert!(!integrity_summary.host_decision_readiness_label_matches_kind());
     }
 
     #[test]
