@@ -57,6 +57,8 @@ All notable changes to this package will be documented in this file.
   consistency flags for supervisor drain reports and summaries.
 - Checkpoint-advance consistency flags that compare starting and last
   checkpoint movement in supervisor drain reports and summaries.
+- Planned-vs-actual checkpoint alignment fields for supervisor drain preflight
+  and result boundary checks.
 - Flattened planned and replayed follow-up row counts in supervisor drain run
   summaries.
 - Follow-up pressure drift flags in supervisor drain run reports and summaries.

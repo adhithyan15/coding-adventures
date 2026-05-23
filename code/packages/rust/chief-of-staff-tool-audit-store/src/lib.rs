@@ -1508,6 +1508,24 @@ impl ToolAuditSupervisorDrainRunReport {
             should_continue: self.should_continue(),
             requires_follow_up: self.requires_follow_up(),
             advanced_checkpoint: self.advanced_checkpoint(),
+            planned_last_checkpoint: self.planned_last_checkpoint().cloned(),
+            has_planned_last_checkpoint: self.has_planned_last_checkpoint(),
+            planned_last_checkpoint_timestamp_ms: self.planned_last_checkpoint_timestamp_ms(),
+            planned_last_checkpoint_call_id: self
+                .planned_last_checkpoint_call_id()
+                .map(str::to_owned),
+            planned_last_checkpoint_presence_matches_fields: self
+                .planned_last_checkpoint_presence_matches_fields(),
+            planned_last_checkpoint_timestamp_matches_checkpoint: self
+                .planned_last_checkpoint_timestamp_matches_checkpoint(),
+            planned_last_checkpoint_call_id_matches_checkpoint: self
+                .planned_last_checkpoint_call_id_matches_checkpoint(),
+            planned_last_checkpoint_fields_match_checkpoint: self
+                .planned_last_checkpoint_fields_match_checkpoint(),
+            planned_last_checkpoint_advanced_from_starting: self
+                .planned_last_checkpoint_advanced_from_starting(),
+            planned_last_checkpoint_matches_starting_checkpoint: self
+                .planned_last_checkpoint_matches_starting_checkpoint(),
             last_checkpoint: self.last_checkpoint().cloned(),
             has_last_checkpoint: self.has_last_checkpoint(),
             last_checkpoint_timestamp_ms: self.last_checkpoint_timestamp_ms(),
@@ -1523,6 +1541,11 @@ impl ToolAuditSupervisorDrainRunReport {
                 .last_checkpoint_matches_starting_checkpoint(),
             checkpoint_advance_matches_last_checkpoint: self
                 .checkpoint_advance_matches_last_checkpoint(),
+            planned_last_checkpoint_matches_last_checkpoint: self
+                .planned_last_checkpoint_matches_last_checkpoint(),
+            planned_checkpoint_advance_matches_drain: self
+                .planned_checkpoint_advance_matches_drain(),
+            checkpoint_plan_matches_drain: self.checkpoint_plan_matches_drain(),
             checkpoint_boundary_fields_match: self.checkpoint_boundary_fields_match(),
         }
     }
@@ -1659,6 +1682,68 @@ impl ToolAuditSupervisorDrainRunReport {
         self.drain.advanced_checkpoint()
     }
 
+    /// Return the last replay checkpoint the preflight plan expected to observe.
+    pub fn planned_last_checkpoint(&self) -> Option<&ToolAuditReadCheckpoint> {
+        self.plan.last_checkpoint()
+    }
+
+    /// Return whether the preflight plan observed a final replay checkpoint.
+    pub fn has_planned_last_checkpoint(&self) -> bool {
+        self.planned_last_checkpoint().is_some()
+    }
+
+    /// Return the timestamp for the final replay checkpoint planned before the run.
+    pub fn planned_last_checkpoint_timestamp_ms(&self) -> Option<u64> {
+        self.planned_last_checkpoint()
+            .map(|checkpoint| checkpoint.timestamp_ms)
+    }
+
+    /// Return the call id for the final replay checkpoint planned before the run.
+    pub fn planned_last_checkpoint_call_id(&self) -> Option<&str> {
+        self.planned_last_checkpoint()
+            .map(|checkpoint| checkpoint.call_id.as_str())
+    }
+
+    /// Return whether planned checkpoint presence agrees with flattened scalar fields.
+    pub fn planned_last_checkpoint_presence_matches_fields(&self) -> bool {
+        self.has_planned_last_checkpoint()
+            == (self.planned_last_checkpoint_timestamp_ms().is_some()
+                && self.planned_last_checkpoint_call_id().is_some())
+    }
+
+    /// Return whether the flattened planned timestamp matches the checkpoint object.
+    pub fn planned_last_checkpoint_timestamp_matches_checkpoint(&self) -> bool {
+        self.planned_last_checkpoint()
+            .map(|checkpoint| checkpoint.timestamp_ms)
+            == self.planned_last_checkpoint_timestamp_ms()
+    }
+
+    /// Return whether the flattened planned call id matches the checkpoint object.
+    pub fn planned_last_checkpoint_call_id_matches_checkpoint(&self) -> bool {
+        self.planned_last_checkpoint()
+            .map(|checkpoint| checkpoint.call_id.as_str())
+            == self.planned_last_checkpoint_call_id()
+    }
+
+    /// Return whether all flattened planned checkpoint fields agree with the object.
+    pub fn planned_last_checkpoint_fields_match_checkpoint(&self) -> bool {
+        self.planned_last_checkpoint_presence_matches_fields()
+            && self.planned_last_checkpoint_timestamp_matches_checkpoint()
+            && self.planned_last_checkpoint_call_id_matches_checkpoint()
+    }
+
+    /// Return whether the planned last checkpoint is after the starting checkpoint.
+    pub fn planned_last_checkpoint_advanced_from_starting(&self) -> bool {
+        self.planned_last_checkpoint()
+            .map(|checkpoint| checkpoint.is_after(self.starting_checkpoint()))
+            .unwrap_or(false)
+    }
+
+    /// Return whether the planned last checkpoint still matches the starting checkpoint.
+    pub fn planned_last_checkpoint_matches_starting_checkpoint(&self) -> bool {
+        self.planned_last_checkpoint() == Some(self.starting_checkpoint())
+    }
+
     /// Return the last replay checkpoint observed by the actual run.
     pub fn last_checkpoint(&self) -> Option<&ToolAuditReadCheckpoint> {
         self.drain.last_checkpoint()
@@ -1726,12 +1811,31 @@ impl ToolAuditSupervisorDrainRunReport {
         self.advanced_checkpoint() == self.last_checkpoint_advanced_from_starting()
     }
 
+    /// Return whether planned and actual final replay checkpoints match.
+    pub fn planned_last_checkpoint_matches_last_checkpoint(&self) -> bool {
+        self.planned_last_checkpoint() == self.last_checkpoint()
+    }
+
+    /// Return whether planned checkpoint movement agrees with the actual drain.
+    pub fn planned_checkpoint_advance_matches_drain(&self) -> bool {
+        self.plan.would_advance_checkpoint() == self.advanced_checkpoint()
+    }
+
+    /// Return whether the planned checkpoint boundary agrees with the actual drain.
+    pub fn checkpoint_plan_matches_drain(&self) -> bool {
+        self.planned_last_checkpoint_fields_match_checkpoint()
+            && self.last_checkpoint_fields_match_checkpoint()
+            && self.planned_last_checkpoint_matches_last_checkpoint()
+            && self.planned_checkpoint_advance_matches_drain()
+    }
+
     /// Return whether checkpoint-boundary fields agree with their source checkpoints.
     pub fn checkpoint_boundary_fields_match(&self) -> bool {
         self.stored_checkpoint_fields_match_checkpoint()
             && self.starting_checkpoint_matches_stored_checkpoint()
             && self.last_checkpoint_fields_match_checkpoint()
             && self.checkpoint_advance_matches_last_checkpoint()
+            && self.checkpoint_plan_matches_drain()
     }
 }
 
@@ -1898,6 +2002,26 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub requires_follow_up: bool,
     /// Whether any durable checkpoint advanced during the run.
     pub advanced_checkpoint: bool,
+    /// Last replay checkpoint the preflight plan expected to observe.
+    pub planned_last_checkpoint: Option<ToolAuditReadCheckpoint>,
+    /// Whether the preflight plan observed a final replay checkpoint.
+    pub has_planned_last_checkpoint: bool,
+    /// Timestamp for the final replay checkpoint planned before the run.
+    pub planned_last_checkpoint_timestamp_ms: Option<u64>,
+    /// Call id for the final replay checkpoint planned before the run.
+    pub planned_last_checkpoint_call_id: Option<String>,
+    /// Whether planned checkpoint presence agrees with flattened scalar fields.
+    pub planned_last_checkpoint_presence_matches_fields: bool,
+    /// Whether the flattened planned timestamp matches the checkpoint object.
+    pub planned_last_checkpoint_timestamp_matches_checkpoint: bool,
+    /// Whether the flattened planned call id matches the checkpoint object.
+    pub planned_last_checkpoint_call_id_matches_checkpoint: bool,
+    /// Whether all flattened planned checkpoint fields agree with the object.
+    pub planned_last_checkpoint_fields_match_checkpoint: bool,
+    /// Whether the planned last checkpoint is after the starting checkpoint.
+    pub planned_last_checkpoint_advanced_from_starting: bool,
+    /// Whether the planned last checkpoint still matches the starting checkpoint.
+    pub planned_last_checkpoint_matches_starting_checkpoint: bool,
     /// Last replay checkpoint observed by the actual run.
     pub last_checkpoint: Option<ToolAuditReadCheckpoint>,
     /// Whether the actual run observed a replay checkpoint.
@@ -1920,6 +2044,12 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub last_checkpoint_matches_starting_checkpoint: bool,
     /// Whether the durable-advance flag agrees with last-checkpoint movement.
     pub checkpoint_advance_matches_last_checkpoint: bool,
+    /// Whether planned and actual final replay checkpoints match.
+    pub planned_last_checkpoint_matches_last_checkpoint: bool,
+    /// Whether planned checkpoint movement agrees with the actual drain.
+    pub planned_checkpoint_advance_matches_drain: bool,
+    /// Whether the planned checkpoint boundary agrees with the actual drain.
+    pub checkpoint_plan_matches_drain: bool,
     /// Whether checkpoint-boundary fields agree with their source checkpoints.
     pub checkpoint_boundary_fields_match: bool,
 }
@@ -2325,6 +2455,56 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.advanced_checkpoint
     }
 
+    /// Return the last replay checkpoint the preflight plan expected to observe.
+    pub fn planned_last_checkpoint(&self) -> Option<&ToolAuditReadCheckpoint> {
+        self.planned_last_checkpoint.as_ref()
+    }
+
+    /// Return whether the preflight plan observed a final replay checkpoint.
+    pub fn has_planned_last_checkpoint(&self) -> bool {
+        self.has_planned_last_checkpoint
+    }
+
+    /// Return the timestamp for the final replay checkpoint planned before the run.
+    pub fn planned_last_checkpoint_timestamp_ms(&self) -> Option<u64> {
+        self.planned_last_checkpoint_timestamp_ms
+    }
+
+    /// Return the call id for the final replay checkpoint planned before the run.
+    pub fn planned_last_checkpoint_call_id(&self) -> Option<&str> {
+        self.planned_last_checkpoint_call_id.as_deref()
+    }
+
+    /// Return whether planned checkpoint presence agrees with flattened scalar fields.
+    pub fn planned_last_checkpoint_presence_matches_fields(&self) -> bool {
+        self.planned_last_checkpoint_presence_matches_fields
+    }
+
+    /// Return whether the flattened planned timestamp matches the checkpoint object.
+    pub fn planned_last_checkpoint_timestamp_matches_checkpoint(&self) -> bool {
+        self.planned_last_checkpoint_timestamp_matches_checkpoint
+    }
+
+    /// Return whether the flattened planned call id matches the checkpoint object.
+    pub fn planned_last_checkpoint_call_id_matches_checkpoint(&self) -> bool {
+        self.planned_last_checkpoint_call_id_matches_checkpoint
+    }
+
+    /// Return whether all flattened planned checkpoint fields agree with the object.
+    pub fn planned_last_checkpoint_fields_match_checkpoint(&self) -> bool {
+        self.planned_last_checkpoint_fields_match_checkpoint
+    }
+
+    /// Return whether the planned last checkpoint is after the starting checkpoint.
+    pub fn planned_last_checkpoint_advanced_from_starting(&self) -> bool {
+        self.planned_last_checkpoint_advanced_from_starting
+    }
+
+    /// Return whether the planned last checkpoint still matches the starting checkpoint.
+    pub fn planned_last_checkpoint_matches_starting_checkpoint(&self) -> bool {
+        self.planned_last_checkpoint_matches_starting_checkpoint
+    }
+
     /// Return the last replay checkpoint observed by the actual run.
     pub fn last_checkpoint(&self) -> Option<&ToolAuditReadCheckpoint> {
         self.last_checkpoint.as_ref()
@@ -2378,6 +2558,21 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the durable-advance flag agrees with last-checkpoint movement.
     pub fn checkpoint_advance_matches_last_checkpoint(&self) -> bool {
         self.checkpoint_advance_matches_last_checkpoint
+    }
+
+    /// Return whether planned and actual final replay checkpoints match.
+    pub fn planned_last_checkpoint_matches_last_checkpoint(&self) -> bool {
+        self.planned_last_checkpoint_matches_last_checkpoint
+    }
+
+    /// Return whether planned checkpoint movement agrees with the actual drain.
+    pub fn planned_checkpoint_advance_matches_drain(&self) -> bool {
+        self.planned_checkpoint_advance_matches_drain
+    }
+
+    /// Return whether the planned checkpoint boundary agrees with the actual drain.
+    pub fn checkpoint_plan_matches_drain(&self) -> bool {
+        self.checkpoint_plan_matches_drain
     }
 
     /// Return whether checkpoint-boundary fields agree with their source checkpoints.
@@ -5529,6 +5724,159 @@ mod tests {
         assert!(!stale_report.last_checkpoint_advanced_from_starting());
         assert!(!stale_report.checkpoint_advance_matches_last_checkpoint());
         assert!(!stale_report.checkpoint_boundary_fields_match());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_flattens_planned_checkpoint_fields() {
+        let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut idle_sink = InMemoryToolAuditSink::new();
+        let idle_report = empty_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut idle_sink)
+            .unwrap();
+        let idle_summary = idle_report.summary();
+
+        assert_eq!(
+            idle_report.planned_last_checkpoint(),
+            Some(&ToolAuditReadCheckpoint::beginning())
+        );
+        assert!(idle_report.has_planned_last_checkpoint());
+        assert_eq!(idle_report.planned_last_checkpoint_timestamp_ms(), Some(0));
+        assert_eq!(idle_report.planned_last_checkpoint_call_id(), Some(""));
+        assert!(idle_report.planned_last_checkpoint_presence_matches_fields());
+        assert!(idle_report.planned_last_checkpoint_timestamp_matches_checkpoint());
+        assert!(idle_report.planned_last_checkpoint_call_id_matches_checkpoint());
+        assert!(idle_report.planned_last_checkpoint_fields_match_checkpoint());
+        assert!(!idle_report.planned_last_checkpoint_advanced_from_starting());
+        assert!(idle_report.planned_last_checkpoint_matches_starting_checkpoint());
+        assert!(idle_report.planned_last_checkpoint_matches_last_checkpoint());
+        assert!(idle_report.planned_checkpoint_advance_matches_drain());
+        assert!(idle_report.checkpoint_plan_matches_drain());
+        assert_eq!(
+            idle_summary.planned_last_checkpoint,
+            Some(ToolAuditReadCheckpoint::beginning())
+        );
+        assert!(idle_summary.has_planned_last_checkpoint);
+        assert_eq!(idle_summary.planned_last_checkpoint_timestamp_ms, Some(0));
+        assert_eq!(
+            idle_summary.planned_last_checkpoint_call_id.as_deref(),
+            Some("")
+        );
+        assert!(idle_summary.planned_last_checkpoint_presence_matches_fields);
+        assert!(idle_summary.planned_last_checkpoint_presence_matches_fields());
+        assert!(idle_summary.planned_last_checkpoint_timestamp_matches_checkpoint);
+        assert!(idle_summary.planned_last_checkpoint_timestamp_matches_checkpoint());
+        assert!(idle_summary.planned_last_checkpoint_call_id_matches_checkpoint);
+        assert!(idle_summary.planned_last_checkpoint_call_id_matches_checkpoint());
+        assert!(idle_summary.planned_last_checkpoint_fields_match_checkpoint);
+        assert!(idle_summary.planned_last_checkpoint_fields_match_checkpoint());
+        assert!(!idle_summary.planned_last_checkpoint_advanced_from_starting);
+        assert!(!idle_summary.planned_last_checkpoint_advanced_from_starting());
+        assert!(idle_summary.planned_last_checkpoint_matches_starting_checkpoint);
+        assert!(idle_summary.planned_last_checkpoint_matches_starting_checkpoint());
+        assert!(idle_summary.planned_last_checkpoint_matches_last_checkpoint);
+        assert!(idle_summary.planned_last_checkpoint_matches_last_checkpoint());
+        assert!(idle_summary.planned_checkpoint_advance_matches_drain);
+        assert!(idle_summary.planned_checkpoint_advance_matches_drain());
+        assert!(idle_summary.checkpoint_plan_matches_drain);
+        assert!(idle_summary.checkpoint_plan_matches_drain());
+
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 1, &mut sink)
+            .unwrap();
+
+        assert_eq!(
+            report.planned_last_checkpoint(),
+            Some(&ToolAuditReadCheckpoint::new(120, "call_2"))
+        );
+        assert!(report.has_planned_last_checkpoint());
+        assert_eq!(report.planned_last_checkpoint_timestamp_ms(), Some(120));
+        assert_eq!(report.planned_last_checkpoint_call_id(), Some("call_2"));
+        assert!(report.planned_last_checkpoint_presence_matches_fields());
+        assert!(report.planned_last_checkpoint_timestamp_matches_checkpoint());
+        assert!(report.planned_last_checkpoint_call_id_matches_checkpoint());
+        assert!(report.planned_last_checkpoint_fields_match_checkpoint());
+        assert!(report.planned_last_checkpoint_advanced_from_starting());
+        assert!(!report.planned_last_checkpoint_matches_starting_checkpoint());
+        assert!(report.planned_last_checkpoint_matches_last_checkpoint());
+        assert!(report.planned_checkpoint_advance_matches_drain());
+        assert!(report.checkpoint_plan_matches_drain());
+        assert!(report.checkpoint_boundary_fields_match());
+
+        let summary = report.summary();
+        assert_eq!(
+            summary.planned_last_checkpoint,
+            Some(ToolAuditReadCheckpoint::new(120, "call_2"))
+        );
+        assert_eq!(
+            summary.planned_last_checkpoint(),
+            Some(&ToolAuditReadCheckpoint::new(120, "call_2"))
+        );
+        assert!(summary.has_planned_last_checkpoint);
+        assert!(summary.has_planned_last_checkpoint());
+        assert_eq!(summary.planned_last_checkpoint_timestamp_ms, Some(120));
+        assert_eq!(summary.planned_last_checkpoint_timestamp_ms(), Some(120));
+        assert_eq!(
+            summary.planned_last_checkpoint_call_id.as_deref(),
+            Some("call_2")
+        );
+        assert_eq!(summary.planned_last_checkpoint_call_id(), Some("call_2"));
+        assert!(summary.planned_last_checkpoint_presence_matches_fields);
+        assert!(summary.planned_last_checkpoint_presence_matches_fields());
+        assert!(summary.planned_last_checkpoint_timestamp_matches_checkpoint);
+        assert!(summary.planned_last_checkpoint_timestamp_matches_checkpoint());
+        assert!(summary.planned_last_checkpoint_call_id_matches_checkpoint);
+        assert!(summary.planned_last_checkpoint_call_id_matches_checkpoint());
+        assert!(summary.planned_last_checkpoint_fields_match_checkpoint);
+        assert!(summary.planned_last_checkpoint_fields_match_checkpoint());
+        assert!(summary.planned_last_checkpoint_advanced_from_starting);
+        assert!(summary.planned_last_checkpoint_advanced_from_starting());
+        assert!(!summary.planned_last_checkpoint_matches_starting_checkpoint);
+        assert!(!summary.planned_last_checkpoint_matches_starting_checkpoint());
+        assert!(summary.planned_last_checkpoint_matches_last_checkpoint);
+        assert!(summary.planned_last_checkpoint_matches_last_checkpoint());
+        assert!(summary.planned_checkpoint_advance_matches_drain);
+        assert!(summary.planned_checkpoint_advance_matches_drain());
+        assert!(summary.checkpoint_plan_matches_drain);
+        assert!(summary.checkpoint_plan_matches_drain());
+
+        let mut stale_summary = summary.clone();
+        stale_summary.planned_last_checkpoint_call_id = Some("stale".to_string());
+        stale_summary.planned_last_checkpoint_call_id_matches_checkpoint = false;
+        stale_summary.planned_last_checkpoint_fields_match_checkpoint = false;
+        stale_summary.planned_last_checkpoint_matches_last_checkpoint = false;
+        stale_summary.checkpoint_plan_matches_drain = false;
+        stale_summary.checkpoint_boundary_fields_match = false;
+        assert!(!stale_summary.planned_last_checkpoint_call_id_matches_checkpoint());
+        assert!(!stale_summary.planned_last_checkpoint_fields_match_checkpoint());
+        assert!(!stale_summary.planned_last_checkpoint_matches_last_checkpoint());
+        assert!(!stale_summary.checkpoint_plan_matches_drain());
+        assert!(!stale_summary.checkpoint_boundary_fields_match());
+
+        let mut stale_checkpoint_report = report.clone();
+        stale_checkpoint_report.drain.ticks[0]
+            .replay
+            .next_checkpoint = ToolAuditReadCheckpoint::beginning();
+        assert!(!stale_checkpoint_report.planned_last_checkpoint_matches_last_checkpoint());
+        assert!(stale_checkpoint_report.planned_checkpoint_advance_matches_drain());
+        assert!(!stale_checkpoint_report.checkpoint_plan_matches_drain());
+        assert!(!stale_checkpoint_report.checkpoint_boundary_fields_match());
+
+        let mut stale_advance_report = report;
+        stale_advance_report.plan.planned_records = 0;
+        assert!(stale_advance_report.planned_last_checkpoint_matches_last_checkpoint());
+        assert!(!stale_advance_report.planned_checkpoint_advance_matches_drain());
+        assert!(!stale_advance_report.checkpoint_plan_matches_drain());
+        assert!(!stale_advance_report.checkpoint_boundary_fields_match());
     }
 
     #[test]
