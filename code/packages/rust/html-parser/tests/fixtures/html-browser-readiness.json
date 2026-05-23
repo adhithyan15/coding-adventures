@@ -1,0 +1,79 @@
+{
+  "format": "venture-html-browser-readiness/v1",
+  "suite": "browser-readiness",
+  "description": "Browser-facing parser acceptance cases for broad document extraction, independent of a specific rendering era.",
+  "cases": [
+    {
+      "id": "legacy-directory-page",
+      "description": "Omitted shell, title/base metadata, anchors, image attributes, and implied list-item endings.",
+      "input": "<!doctype html><title>Example &amp; Links</title><base href=\"https://example.test/docs/\"><h1>Example Directory</h1><p>Welcome to <a href=\"intro.html\">Venture HTML</a>.<img src=\"logo.gif\" alt=\"Logo\" width=88 height=31><ul><li>One<li>Two",
+      "expected": {
+        "title": "Example & Links",
+        "base_href": "https://example.test/docs/",
+        "body_text": "Example Directory Welcome to Venture HTML. One Two",
+        "headings": [
+          { "level": 1, "text": "Example Directory" }
+        ],
+        "links": [
+          { "href": "intro.html", "name": null, "text": "Venture HTML" }
+        ],
+        "images": [
+          { "src": "logo.gif", "alt": "Logo", "width": "88", "height": "31" }
+        ],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "catalog-form-table-page",
+      "description": "Form controls, select options, textarea text, button text, and table summaries.",
+      "input": "<html><head><title>Search</title></head><body><h2>Catalog</h2><form action=\"/search\" method=POST><input name=q value=\"rust html\"><input type=hidden name=page value=1><select name=section><option>Books<option>Manuals</select><textarea name=notes>Line one\nLine two</textarea><button name=go>Search</button></form><table><caption>Results</caption><tr><th>Name<th>Kind<tr><td>Mosaic<td>Browser</table>",
+      "expected": {
+        "title": "Search",
+        "base_href": null,
+        "body_text": "Catalog Books Manuals Line one Line two Search Results Name Kind Mosaic Browser",
+        "headings": [
+          { "level": 2, "text": "Catalog" }
+        ],
+        "links": [],
+        "images": [],
+        "forms": [
+          {
+            "action": "/search",
+            "method": "post",
+            "controls": [
+              { "control_type": "text", "name": "q", "value": "rust html", "text": "", "options": [] },
+              { "control_type": "hidden", "name": "page", "value": "1", "text": "", "options": [] },
+              { "control_type": "select", "name": "section", "value": null, "text": "Books Manuals", "options": ["Books", "Manuals"] },
+              { "control_type": "textarea", "name": "notes", "value": null, "text": "Line one Line two", "options": [] },
+              { "control_type": "submit", "name": "go", "value": null, "text": "Search", "options": [] }
+            ]
+          }
+        ],
+        "tables": [
+          { "caption": "Results", "row_count": 2, "cell_count": 4, "header_cell_count": 2 }
+        ]
+      }
+    },
+    {
+      "id": "tag-soup-formatting-page",
+      "description": "Bad nesting, formatting reconstruction, named anchors, same-page links, pre text, and invisible script/style contents.",
+      "input": "<body><p>Alpha <b>bold<p>Beta <i>italic</b> tail</i><center><h3>Archive</h3><a name=top></a><a href=\"#top\">Back</a></center><pre>  spaced\n text</pre><script>document.write(\"x\")</script><style>p{color:red}</style>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "body_text": "Alpha bold Beta italic tail Archive Back spaced text",
+        "headings": [
+          { "level": 3, "text": "Archive" }
+        ],
+        "links": [
+          { "href": null, "name": "top", "text": "" },
+          { "href": "#top", "name": null, "text": "Back" }
+        ],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
+    }
+  ]
+}

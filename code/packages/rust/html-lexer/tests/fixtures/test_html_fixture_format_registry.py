@@ -34,6 +34,7 @@ class HtmlFixtureFormatRegistryTest(unittest.TestCase):
                 "lexer-numeric-reference",
                 "lexer-token",
                 "parser-audit",
+                "parser-browser-readiness",
             },
         )
 

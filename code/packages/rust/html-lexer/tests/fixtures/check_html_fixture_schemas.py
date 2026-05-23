@@ -15,6 +15,7 @@ FIXTURE_DIR = Path(__file__).resolve().parent
 RUST_DIR = FIXTURE_DIR.parents[2]
 PARSER_FIXTURE_DIR = RUST_DIR / "html-parser" / "tests" / "fixtures"
 PARSER_SOURCE_FIXTURE = "html5lib-tree-construction-smoke.dat"
+BROWSER_READINESS_FORMAT = "venture-html-browser-readiness/v1"
 NUMERIC_REFERENCE_FIXTURE = "whatwg-numeric-references.json"
 INPUT_STREAM_FIXTURE = "whatwg-input-stream.json"
 CHUNK_BOUNDARY_FIXTURE = "whatwg-chunk-boundaries.json"
@@ -78,7 +79,9 @@ def check_fixture_schemas() -> tuple[list[str], FixtureStats]:
             if not isinstance(case, dict):
                 errors.append(f"{relative_path}: cases[{index}] must be an object")
                 continue
-            if fixture_path.parent == PARSER_FIXTURE_DIR:
+            if data.get("format") == BROWSER_READINESS_FORMAT:
+                errors.extend(check_browser_readiness_case(relative_path, index, case))
+            elif fixture_path.parent == PARSER_FIXTURE_DIR:
                 errors.extend(check_parser_audit_case(relative_path, index, case))
             else:
                 errors.extend(check_lexer_case(relative_path, fixture_path.name, index, case))
@@ -115,7 +118,9 @@ def check_top_level_schema(relative_path: str, data: dict[str, Any]) -> list[str
     require_non_empty_string(relative_path, data, "format", errors)
     require_non_empty_string(relative_path, data, "description", errors)
 
-    if relative_path.startswith("html-parser/"):
+    if data.get("format") == BROWSER_READINESS_FORMAT:
+        require_non_empty_string(relative_path, data, "suite", errors)
+    elif relative_path.startswith("html-parser/"):
         if data.get("source_fixture") != PARSER_SOURCE_FIXTURE:
             errors.append(
                 f"{relative_path}: source_fixture must be {PARSER_SOURCE_FIXTURE!r}"
@@ -194,6 +199,35 @@ def check_parser_audit_case(
     return errors
 
 
+def check_browser_readiness_case(
+    relative_path: str,
+    index: int,
+    case: dict[str, Any],
+) -> list[str]:
+    errors: list[str] = []
+    case_path = f"{relative_path}: cases[{index}]"
+
+    require_non_empty_string(case_path, case, "id", errors)
+    require_optional_non_empty_string(case_path, case, "description", errors)
+    require_string(case_path, case, "input", errors)
+
+    expected = case.get("expected")
+    if not isinstance(expected, dict):
+        errors.append(f"{case_path}.expected must be an object")
+        return errors
+
+    require_optional_nullable_string(case_path, expected, "title", errors)
+    require_optional_nullable_string(case_path, expected, "base_href", errors)
+    require_string(f"{case_path}.expected", expected, "body_text", errors)
+    require_object_list(f"{case_path}.expected", expected, "headings", errors)
+    require_object_list(f"{case_path}.expected", expected, "links", errors)
+    require_object_list(f"{case_path}.expected", expected, "images", errors)
+    require_object_list(f"{case_path}.expected", expected, "forms", errors)
+    require_object_list(f"{case_path}.expected", expected, "tables", errors)
+
+    return errors
+
+
 def check_split_points(
     case_path: str,
     case: dict[str, Any],
@@ -258,6 +292,16 @@ def require_optional_string(
         require_string(path, data, field, errors)
 
 
+def require_optional_nullable_string(
+    path: str,
+    data: dict[str, Any],
+    field: str,
+    errors: list[str],
+) -> None:
+    if field in data and data[field] is not None and not isinstance(data[field], str):
+        errors.append(f"{path}.{field} must be a string or null")
+
+
 def require_integer(
     path: str,
     data: dict[str, Any],
@@ -277,6 +321,17 @@ def require_string_list(
     value = data.get(field)
     if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
         errors.append(f"{path}.{field} must be a list of strings")
+
+
+def require_object_list(
+    path: str,
+    data: dict[str, Any],
+    field: str,
+    errors: list[str],
+) -> None:
+    value = data.get(field)
+    if not isinstance(value, list) or not all(isinstance(item, dict) for item in value):
+        errors.append(f"{path}.{field} must be a list of objects")
 
 
 def require_optional_string_list(

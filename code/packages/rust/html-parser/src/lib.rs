@@ -621,6 +621,16 @@ pub fn parse_html(source: &str) -> Result<Document, ParseError> {
     Ok(parse_html_with_diagnostics(source)?.document)
 }
 
+/// Parse a complete HTML string and extract browser-facing document facts.
+pub fn parse_browser_document(source: &str) -> Result<BrowserDocument, ParseError> {
+    parse_html(source).map(|document| extract_browser_document(&document))
+}
+
+/// Extract browser-facing facts from a parsed DOM document.
+pub fn extract_browser_document(document: &Document) -> BrowserDocument {
+    BrowserDocument::from_document(document)
+}
+
 /// Parse a complete HTML string into a DOM document plus lexer/parser diagnostics.
 pub fn parse_html_with_diagnostics(source: &str) -> Result<ParseOutput, ParseError> {
     parse_html_with_diagnostics_and_options(source, HtmlParseOptions::default())
@@ -776,6 +786,93 @@ pub fn parse_html_fragment_for_context_with_diagnostics_and_options(
         lexer_diagnostics,
         parser_diagnostics: parser.diagnostics,
     })
+}
+
+/// Browser-facing summary of the parsed DOM.
+///
+/// This intentionally stays above raw DOM and below layout/CSS. It gives a
+/// browser pipeline stable document facts without forcing layout code to know
+/// every parser recovery detail.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct BrowserDocument {
+    pub title: Option<String>,
+    pub base_href: Option<String>,
+    pub body_text: String,
+    pub headings: Vec<BrowserHeading>,
+    pub links: Vec<BrowserLink>,
+    pub images: Vec<BrowserImage>,
+    pub forms: Vec<BrowserForm>,
+    pub tables: Vec<BrowserTable>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserHeading {
+    pub level: u8,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserLink {
+    pub href: Option<String>,
+    pub name: Option<String>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserImage {
+    pub src: Option<String>,
+    pub alt: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserForm {
+    pub action: Option<String>,
+    pub method: String,
+    pub controls: Vec<BrowserFormControl>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormControl {
+    pub control_type: String,
+    pub name: Option<String>,
+    pub value: Option<String>,
+    pub text: String,
+    pub options: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTable {
+    pub caption: Option<String>,
+    pub row_count: usize,
+    pub cell_count: usize,
+    pub header_cell_count: usize,
+}
+
+impl BrowserDocument {
+    pub fn from_document(document: &Document) -> Self {
+        let head = find_first_element_in_nodes(&document.children, "head");
+        let body = find_first_element_in_nodes(&document.children, "body");
+        let body_children = body
+            .map(|element| element.children.as_slice())
+            .unwrap_or(document.children.as_slice());
+
+        let mut summary = Self {
+            title: head
+                .and_then(|element| find_first_element_in_nodes(&element.children, "title"))
+                .map(element_text),
+            base_href: head
+                .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
+                .and_then(|element| element.attribute("href"))
+                .map(ToOwned::to_owned),
+            body_text: visible_text_for_nodes(body_children),
+            ..Self::default()
+        };
+
+        collect_browser_facts(body_children, &mut summary);
+        summary
+    }
 }
 
 /// Streaming-friendly parser core over already-tokenized HTML.
@@ -2665,10 +2762,7 @@ impl HtmlParser {
         if name == "b" && self.adopt_b_end_tag_across_cite_div() {
             return;
         }
-        if name == "body"
-            && self.has_open_element("body")
-            && self.current_element_is("bdy")
-        {
+        if name == "body" && self.has_open_element("body") && self.current_element_is("bdy") {
             return;
         }
         if name == "body" {
@@ -4872,16 +4966,18 @@ fn wrap_aside_bold_in_em(mut aside: Node) -> Node {
 
 fn element_has_em_with_foo_chain_depth(element: &Element, depth: usize) -> bool {
     element.children.iter().any(|child| match child {
-        Node::Element(child) if child.name == "em" => child
-            .children
-            .iter()
-            .find_map(|grandchild| match grandchild {
-                Node::Element(grandchild) if grandchild.name == "foo" => {
-                    Some(foo_chain_depth(grandchild))
-                }
-                _ => None,
-            })
-            == Some(depth),
+        Node::Element(child) if child.name == "em" => {
+            child
+                .children
+                .iter()
+                .find_map(|grandchild| match grandchild {
+                    Node::Element(grandchild) if grandchild.name == "foo" => {
+                        Some(foo_chain_depth(grandchild))
+                    }
+                    _ => None,
+                })
+                == Some(depth)
+        }
         Node::Element(child) => element_has_em_with_foo_chain_depth(child, depth),
         _ => false,
     })
@@ -5056,7 +5152,9 @@ fn repair_select_button_selectedcontent(nodes: &mut Vec<Node>) {
             })
             .or_else(|| {
                 select.children.iter().find_map(|child| match child {
-                    Node::Element(option) if option.name == "option" && !option.children.is_empty() => {
+                    Node::Element(option)
+                        if option.name == "option" && !option.children.is_empty() =>
+                    {
                         Some(option.children.clone())
                     }
                     _ => None,
@@ -5151,11 +5249,9 @@ fn repair_empty_formatting_paragraph_continuation(nodes: &mut Vec<Node>, index: 
     if !is_formatting_element(&inner_formatting.name) {
         return false;
     }
-    if !inner_formatting
-        .children
-        .last()
-        .is_some_and(|node| matches!(node, Node::Text(text) if text.data.ends_with(" Italic only.")))
-    {
+    if !inner_formatting.children.last().is_some_and(
+        |node| matches!(node, Node::Text(text) if text.data.ends_with(" Italic only.")),
+    ) {
         return false;
     }
 
@@ -5263,10 +5359,7 @@ fn split_tail_text(nodes: &mut [Node], tail: &str) -> Option<String> {
     Some(tail.to_string())
 }
 
-fn repair_paragraph_inside_previous_font_continuation(
-    nodes: &mut Vec<Node>,
-    index: usize,
-) -> bool {
+fn repair_paragraph_inside_previous_font_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
     if index == 0 {
         return false;
     }
@@ -5576,10 +5669,9 @@ fn repair_definition_list_bold_children(children: &mut [Node]) -> bool {
                     .any(|child| matches!(child, Node::Element(child) if child.name == "b"));
             }
             "dd" if previous_dt_had_bold => {
-                let already_bold = element
-                    .children
-                    .first()
-                    .is_some_and(|child| matches!(child, Node::Element(child) if child.name == "b"));
+                let already_bold = element.children.first().is_some_and(
+                    |child| matches!(child, Node::Element(child) if child.name == "b"),
+                );
                 if !already_bold {
                     let mut bold = Node::element("b".to_string(), Vec::new());
                     if let Node::Element(bold_element) = &mut bold {
@@ -5711,14 +5803,15 @@ fn repair_insanely_badly_nested_table_sequence(nodes: &mut Vec<Node>) {
     }) else {
         return;
     };
-    let Some(outer_table_index) = nodes
-        .iter()
-        .enumerate()
-        .skip(font_index + 1)
-        .find_map(|(index, node)| match node {
-            Node::Element(element) if element.name == "table" => Some(index),
-            _ => None,
-        })
+    let Some(outer_table_index) =
+        nodes
+            .iter()
+            .enumerate()
+            .skip(font_index + 1)
+            .find_map(|(index, node)| match node {
+                Node::Element(element) if element.name == "table" => Some(index),
+                _ => None,
+            })
     else {
         return;
     };
@@ -5771,7 +5864,9 @@ fn repair_insanely_badly_nested_table_sequence(nodes: &mut Vec<Node>) {
     }
     let mut anchor_with_font = Node::element("a".to_string(), Vec::new());
     if let Node::Element(element) = &mut anchor_with_font {
-        element.children.push(Node::element("font".to_string(), Vec::new()));
+        element
+            .children
+            .push(Node::element("font".to_string(), Vec::new()));
     }
 
     nodes.insert(font_index, font);
@@ -6078,10 +6173,7 @@ fn apply_scripted_id_mutation(nodes: &mut [Node]) {
             continue;
         };
         if element.attribute("id") == Some("A")
-            && element_contains_script_text(
-                element,
-                "document.getElementById(\"A\").id = \"B\"",
-            )
+            && element_contains_script_text(element, "document.getElementById(\"A\").id = \"B\"")
         {
             set_attribute_value(&mut element.attributes, "id", "B");
         }
@@ -6605,9 +6697,12 @@ fn fragment_context_shell(context_element: &str) -> (Document, Vec<Vec<usize>>) 
         let child_index = {
             let parent = element_at_path_mut(&mut document, &parent_path)
                 .expect("fragment shell parent must exist");
-            parent
-                .children
-                .push(marked_shell_element(element_name, marker, context_element, namespace));
+            parent.children.push(marked_shell_element(
+                element_name,
+                marker,
+                context_element,
+                namespace,
+            ));
             parent.children.len() - 1
         };
 
@@ -6659,7 +6754,11 @@ fn foreign_fragment_context(context_element: &str) -> Option<(&'static str, &str
     context_element
         .strip_prefix("svg ")
         .map(|name| ("svg", name))
-        .or_else(|| context_element.strip_prefix("math ").map(|name| ("math", name)))
+        .or_else(|| {
+            context_element
+                .strip_prefix("math ")
+                .map(|name| ("math", name))
+        })
 }
 
 fn is_fragment_table_shell_wrapper(element_name: &str, context_element: &str) -> bool {
@@ -7677,6 +7776,225 @@ fn is_void_element(name: &str) -> bool {
             | "source"
             | "track"
             | "wbr"
+    )
+}
+
+fn collect_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        match element.name.as_str() {
+            "a" => summary.links.push(BrowserLink {
+                href: element.attribute("href").map(ToOwned::to_owned),
+                name: element.attribute("name").map(ToOwned::to_owned),
+                text: visible_text_for_nodes(&element.children),
+            }),
+            "img" => summary.images.push(BrowserImage {
+                src: element.attribute("src").map(ToOwned::to_owned),
+                alt: element.attribute("alt").map(ToOwned::to_owned),
+                width: element.attribute("width").map(ToOwned::to_owned),
+                height: element.attribute("height").map(ToOwned::to_owned),
+            }),
+            "form" => summary.forms.push(BrowserForm {
+                action: element.attribute("action").map(ToOwned::to_owned),
+                method: element
+                    .attribute("method")
+                    .map(|method| method.to_ascii_lowercase())
+                    .unwrap_or_else(|| "get".to_string()),
+                controls: collect_form_controls(&element.children),
+            }),
+            "table" => summary.tables.push(BrowserTable {
+                caption: find_first_element_in_nodes(&element.children, "caption")
+                    .map(element_text),
+                row_count: count_elements_named(&element.children, "tr"),
+                cell_count: count_elements_matching(&element.children, |element| {
+                    matches!(element.name.as_str(), "td" | "th")
+                }),
+                header_cell_count: count_elements_named(&element.children, "th"),
+            }),
+            name if heading_level(name).is_some() => summary.headings.push(BrowserHeading {
+                level: heading_level(name).expect("heading level was checked above"),
+                text: visible_text_for_nodes(&element.children),
+            }),
+            _ => {}
+        }
+
+        collect_browser_facts(&element.children, summary);
+    }
+}
+
+fn collect_form_controls(nodes: &[Node]) -> Vec<BrowserFormControl> {
+    let mut controls = Vec::new();
+    collect_form_controls_into(nodes, &mut controls);
+    controls
+}
+
+fn collect_form_controls_into(nodes: &[Node], controls: &mut Vec<BrowserFormControl>) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        match element.name.as_str() {
+            "input" => controls.push(BrowserFormControl {
+                control_type: element
+                    .attribute("type")
+                    .map(|input_type| input_type.to_ascii_lowercase())
+                    .unwrap_or_else(|| "text".to_string()),
+                name: element.attribute("name").map(ToOwned::to_owned),
+                value: element.attribute("value").map(ToOwned::to_owned),
+                text: String::new(),
+                options: Vec::new(),
+            }),
+            "button" => controls.push(BrowserFormControl {
+                control_type: element
+                    .attribute("type")
+                    .map(|button_type| button_type.to_ascii_lowercase())
+                    .unwrap_or_else(|| "submit".to_string()),
+                name: element.attribute("name").map(ToOwned::to_owned),
+                value: element.attribute("value").map(ToOwned::to_owned),
+                text: visible_text_for_nodes(&element.children),
+                options: Vec::new(),
+            }),
+            "select" => controls.push(BrowserFormControl {
+                control_type: "select".to_string(),
+                name: element.attribute("name").map(ToOwned::to_owned),
+                value: None,
+                text: visible_text_for_nodes(&element.children),
+                options: collect_select_options(&element.children),
+            }),
+            "textarea" => controls.push(BrowserFormControl {
+                control_type: "textarea".to_string(),
+                name: element.attribute("name").map(ToOwned::to_owned),
+                value: None,
+                text: element_text(element),
+                options: Vec::new(),
+            }),
+            _ => collect_form_controls_into(&element.children, controls),
+        }
+    }
+}
+
+fn collect_select_options(nodes: &[Node]) -> Vec<String> {
+    let mut options = Vec::new();
+    collect_select_options_into(nodes, &mut options);
+    options
+}
+
+fn collect_select_options_into(nodes: &[Node], options: &mut Vec<String>) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if element.name == "option" {
+            options.push(visible_text_for_nodes(&element.children));
+        } else {
+            collect_select_options_into(&element.children, options);
+        }
+    }
+}
+
+fn visible_text_for_nodes(nodes: &[Node]) -> String {
+    let mut text = String::new();
+    collect_visible_text(nodes, &mut text);
+    collapse_html_whitespace(&text)
+}
+
+fn collect_visible_text(nodes: &[Node], text: &mut String) {
+    for node in nodes {
+        match node {
+            Node::Text(value) => text.push_str(&value.data),
+            Node::Element(element) if is_browser_invisible_element(&element.name) => {}
+            Node::Element(element) => {
+                collect_visible_text(&element.children, text);
+                text.push(' ');
+            }
+            Node::DocumentType(_) | Node::Comment(_) => {}
+        }
+    }
+}
+
+fn element_text(element: &Element) -> String {
+    let mut text = String::new();
+    collect_browser_text_content(&element.children, &mut text);
+    collapse_html_whitespace(&text)
+}
+
+fn collect_browser_text_content(nodes: &[Node], text: &mut String) {
+    for node in nodes {
+        match node {
+            Node::Text(value) => text.push_str(&value.data),
+            Node::Element(element) => collect_browser_text_content(&element.children, text),
+            Node::DocumentType(_) | Node::Comment(_) => {}
+        }
+    }
+}
+
+fn collapse_html_whitespace(text: &str) -> String {
+    let collapsed = text.split_whitespace().collect::<Vec<_>>().join(" ");
+    let mut normalized = String::with_capacity(collapsed.len());
+    for character in collapsed.chars() {
+        if matches!(character, '.' | ',' | ';' | ':' | '!' | '?' | ')' | ']')
+            && normalized.ends_with(' ')
+        {
+            normalized.pop();
+        }
+        normalized.push(character);
+    }
+    normalized
+}
+
+fn find_first_element_in_nodes<'a>(nodes: &'a [Node], name: &str) -> Option<&'a Element> {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if element.name == name {
+            return Some(element);
+        }
+        if let Some(found) = find_first_element_in_nodes(&element.children, name) {
+            return Some(found);
+        }
+    }
+    None
+}
+
+fn count_elements_named(nodes: &[Node], name: &str) -> usize {
+    count_elements_matching(nodes, |element| element.name == name)
+}
+
+fn count_elements_matching(nodes: &[Node], predicate: impl Fn(&Element) -> bool + Copy) -> usize {
+    let mut count = 0;
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if predicate(element) {
+            count += 1;
+        }
+        count += count_elements_matching(&element.children, predicate);
+    }
+    count
+}
+
+fn heading_level(name: &str) -> Option<u8> {
+    match name {
+        "h1" => Some(1),
+        "h2" => Some(2),
+        "h3" => Some(3),
+        "h4" => Some(4),
+        "h5" => Some(5),
+        "h6" => Some(6),
+        _ => None,
+    }
+}
+
+fn is_browser_invisible_element(name: &str) -> bool {
+    matches!(
+        name,
+        "base" | "link" | "meta" | "script" | "style" | "template" | "title"
     )
 }
 

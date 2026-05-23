@@ -126,6 +126,11 @@ FORMAT_REGISTRY: tuple[FixtureFormat, ...] = (
         "lexer-token",
     ),
     FixtureFormat(
+        "html-parser/tests/fixtures/html-browser-readiness.json",
+        "venture-html-browser-readiness/v1",
+        "parser-browser-readiness",
+    ),
+    FixtureFormat(
         "html-parser/tests/fixtures/whatwg-block-boundary-audit.json",
         "whatwg-html-block-boundary-audit/v1",
         "parser-audit",
@@ -364,6 +369,10 @@ def check_category_contract(
         require_cases(relative_path, data, errors)
         require_top_level(relative_path, data, "source_fixture", str, errors)
         require_top_level(relative_path, data, "case_count", int, errors)
+    elif category == "parser-browser-readiness":
+        require_cases(relative_path, data, errors)
+        require_top_level(relative_path, data, "suite", str, errors)
+        require_case_field(relative_path, data, "expected", dict, errors)
     else:
         errors.append(f"{relative_path}: unknown registry category {category!r}")
     return errors
