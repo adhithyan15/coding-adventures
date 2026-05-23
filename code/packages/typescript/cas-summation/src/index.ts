@@ -714,6 +714,52 @@ function sqrtEffectiveHalfDegree(node: IRNode, k: IRNode): number | undefined {
   return innerDeg / 2;
 }
 
+/**
+ * Phase 52 (TypeScript port): Return the effective polynomial degree of the
+ * polynomial part when ``node = Mul(bounded_factors, polynomial_factors)`` in
+ * ``k``; ``undefined`` otherwise.
+ *
+ * Used by :func:`gVanishesAtInfinity` to recognise that ``sin(k)·k/k³``
+ * vanishes (bounded × deg 1 over deg 3).  The bounded part must contain at
+ * least one non-constant-in-k factor — otherwise Phase 49 would catch the
+ * whole numerator as a single bounded expression.
+ *
+ * Algorithm:
+ *   1. Require ``node = Mul(...)``.
+ *   2. Partition each factor into bounded vs polynomial buckets.
+ *      Factors that are neither bounded nor polynomial → return undefined.
+ *   3. Require ≥ 1 non-constant-in-k bounded factor.
+ *   4. Sum the polynomial factors' degrees.
+ *   5. Return ``{ bounded: aggregate, polyDeg: summed }``.
+ */
+function splitBoundedPolynomialFactor(
+  node: IRNode,
+  k: IRNode
+): { bounded: IRNode; polyDeg: number } | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const boundedFactors: IRNode[] = [];
+  let polyDeg = 0;
+  let hasNonConstantBounded = false;
+  for (const arg of node.args) {
+    if (isBoundedInK(arg, k)) {
+      boundedFactors.push(arg);
+      if (!isConstantIn(arg, k)) hasNonConstantBounded = true;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg === undefined) return undefined;  // Unrecognised factor.
+    polyDeg += deg;
+  }
+  // Pure polynomial — Phase 42 will handle it; no non-constant bounded factor.
+  if (!hasNonConstantBounded) return undefined;
+  if (boundedFactors.length === 0) return undefined;
+  const bounded =
+    boundedFactors.length === 1
+      ? boundedFactors[0]
+      : app(MUL, boundedFactors);
+  return { bounded, polyDeg };
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -740,6 +786,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (sqrtHalfDeg !== undefined) {
     const denDegSqrt = polynomialDegreeInK(den, k);
     if (denDegSqrt !== undefined && denDegSqrt > sqrtHalfDeg) {
+      return true;
+    }
+  }
+  // Phase 52: Mul(bounded, polynomial) numerator pattern.  When the
+  // numerator factors as bounded × polynomial with positive poly degree,
+  // the quotient vanishes iff den_deg > poly_deg.  Catches shapes like
+  // sin(k)·k/k³ that Phase 49 misses (Mul isn't wholly bounded) and
+  // Phase 42 refuses (sin is not polynomial).
+  const bpResult = splitBoundedPolynomialFactor(num, k);
+  if (bpResult !== undefined) {
+    const denDegBp = polynomialDegreeInK(den, k);
+    if (denDegBp !== undefined && denDegBp > bpResult.polyDeg) {
       return true;
     }
   }

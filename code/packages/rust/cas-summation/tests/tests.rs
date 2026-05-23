@@ -949,3 +949,104 @@ fn phase51_sqrt_of_negative_polynomial_refused() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ---------------------------------------------------------------------------
+// Phase 52 (Rust port): Bounded × polynomial numerator.
+// ---------------------------------------------------------------------------
+// The numerator is Mul(bounded_factor, polynomial_in_k).  Phase 52 catches
+// shapes like sin(k)·k/k³ that Phase 49 misses (the whole Mul isn't bounded)
+// and Phase 42 refuses (sin is not polynomial).
+
+#[test]
+fn phase52_sin_k_times_k_over_k_cubed_closes() {
+    // Numerator = sin(k)·k: bounded × polynomial deg 1.
+    // Denominator = k³: polynomial deg 3.  3 > 1 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![sin_k, k.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![sin_kp1, kp1.clone()]);
+    let den_k = apply(sym(POW), vec![k.clone(), int(3)]);
+    let den_kp1 = apply(sym(POW), vec![kp1.clone(), int(3)]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, den_k]),
+        apply(sym(DIV), vec![num_kp1, den_kp1]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase52_k_times_cos_k_over_k_squared_closes() {
+    // Numerator = k·cos(k): polynomial deg 1 × bounded.  Factor order irrelevant.
+    // Denominator = k²: polynomial deg 2.  2 > 1 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let cos_k = apply(sym("Cos"), vec![k.clone()]);
+    let cos_kp1 = apply(sym("Cos"), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![k.clone(), cos_k]);
+    let num_kp1 = apply(sym(MUL), vec![kp1.clone(), cos_kp1]);
+    let den_k = apply(sym(POW), vec![k.clone(), int(2)]);
+    let den_kp1 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, den_k]),
+        apply(sym(DIV), vec![num_kp1, den_kp1]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase52_sin_k_times_k_squared_over_k_cubed_closes() {
+    // Numerator = sin(k)·k²: bounded × polynomial deg 2.
+    // Denominator = k³: polynomial deg 3.  3 > 2 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![sin_k, apply(sym(POW), vec![k.clone(), int(2)])]);
+    let num_kp1 = apply(sym(MUL), vec![sin_kp1, apply(sym(POW), vec![kp1.clone(), int(2)])]);
+    let den_k = apply(sym(POW), vec![k.clone(), int(3)]);
+    let den_kp1 = apply(sym(POW), vec![kp1.clone(), int(3)]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, den_k]),
+        apply(sym(DIV), vec![num_kp1, den_kp1]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase52_sin_k_times_k_squared_over_k_squared_stays() {
+    // Numerator = sin(k)·k²: bounded × polynomial deg 2.
+    // Denominator = k²: polynomial deg 2.  2 > 2 is false → stays unevaluated.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![sin_k, apply(sym(POW), vec![k.clone(), int(2)])]);
+    let num_kp1 = apply(sym(MUL), vec![sin_kp1, apply(sym(POW), vec![kp1.clone(), int(2)])]);
+    let den_k = apply(sym(POW), vec![k.clone(), int(2)]);
+    let den_kp1 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, den_k]),
+        apply(sym(DIV), vec![num_kp1, den_kp1]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase52_regression_k_over_k_squared_still_closes_via_phase42() {
+    // Numerator = k: pure polynomial deg 1.  No bounded factor → Phase 52 skips.
+    // Phase 42 closes it: deg 1 < deg 2.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![k.clone(), apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![kp1.clone(), apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}

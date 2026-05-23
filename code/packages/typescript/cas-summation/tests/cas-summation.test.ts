@@ -726,3 +726,103 @@ describe("summation: Phase 51 sqrt/polynomial growth-rate", () => {
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 52 (TypeScript port): Bounded × polynomial numerator.
+// ---------------------------------------------------------------------------
+// The numerator is Mul(bounded_factor, polynomial_in_k).  Phase 52 catches
+// shapes like sin(k)·k/k³ that Phase 49 misses (the whole Mul isn't bounded)
+// and Phase 42 refuses (sin is not polynomial).
+//
+// Tests mirror Python Phase 52 (cas-summation 1.0.0).
+
+describe("summation: Phase 52 bounded × polynomial numerator", () => {
+  it("∑ [sin(k)·k/k³ − sin(k+1)·(k+1)/(k+1)³] closes (bounded × deg 1 over deg 3)", () => {
+    // Numerator = sin(k)·k = Mul(sin(k), k): bounded × polynomial deg 1.
+    // Denominator = k³: polynomial deg 3.  3 > 1 → closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinK = app(sym("Sin"), [k]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const numK = app(MUL, [sinK, k]);
+    const numKp1 = app(MUL, [sinKp1, kp1]);
+    const denK = app(POW, [k, int(3)]);
+    const denKp1 = app(POW, [kp1, int(3)]);
+    const f = app(SUB, [
+      app(DIV, [numK, denK]),
+      app(DIV, [numKp1, denKp1]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [k·cos(k)/k² − ...] closes (factor order irrelevant: polynomial × bounded)", () => {
+    // Numerator = k·cos(k) = Mul(k, cos(k)): polynomial deg 1 × bounded.
+    // Denominator = k²: polynomial deg 2.  2 > 1 → closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const cosK = app(sym("Cos"), [k]);
+    const cosKp1 = app(sym("Cos"), [kp1]);
+    const numK = app(MUL, [k, cosK]);
+    const numKp1 = app(MUL, [kp1, cosKp1]);
+    const denK = app(POW, [k, int(2)]);
+    const denKp1 = app(POW, [kp1, int(2)]);
+    const f = app(SUB, [
+      app(DIV, [numK, denK]),
+      app(DIV, [numKp1, denKp1]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [sin(k)·k²/k³ − ...] closes (bounded × deg 2 over deg 3)", () => {
+    // Numerator = sin(k)·k²: bounded × polynomial deg 2.
+    // Denominator = k³: polynomial deg 3.  3 > 2 → closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinK = app(sym("Sin"), [k]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const numK = app(MUL, [sinK, app(POW, [k, int(2)])]);
+    const numKp1 = app(MUL, [sinKp1, app(POW, [kp1, int(2)])]);
+    const denK = app(POW, [k, int(3)]);
+    const denKp1 = app(POW, [kp1, int(3)]);
+    const f = app(SUB, [
+      app(DIV, [numK, denK]),
+      app(DIV, [numKp1, denKp1]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: sin(k)·k²/k² stays unevaluated (degrees tie: 2 > 2 is false)", () => {
+    // Numerator = sin(k)·k²: bounded × polynomial deg 2.
+    // Denominator = k²: polynomial deg 2.  2 > 2 is false → stays.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinK = app(sym("Sin"), [k]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const numK = app(MUL, [sinK, app(POW, [k, int(2)])]);
+    const numKp1 = app(MUL, [sinKp1, app(POW, [kp1, int(2)])]);
+    const denK = app(POW, [k, int(2)]);
+    const denKp1 = app(POW, [kp1, int(2)]);
+    const f = app(SUB, [
+      app(DIV, [numK, denK]),
+      app(DIV, [numKp1, denKp1]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+
+  it("regression: k/k² still closes via Phase 42 (no bounded factor in numerator)", () => {
+    // Numerator = k: pure polynomial deg 1.  No bounded factor → Phase 52 skips.
+    // Phase 42 closes it: deg 1 < deg 2.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const f = app(SUB, [
+      app(DIV, [k, app(POW, [k, int(2)])]),
+      app(DIV, [kp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+});

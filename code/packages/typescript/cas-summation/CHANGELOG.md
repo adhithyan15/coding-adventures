@@ -1,5 +1,45 @@
 # Changelog
 
+## 1.0.0 — 2026-05-23
+
+**Phase 52 — Bounded × polynomial numerator pattern (TypeScript port).**
+
+Ports Python ``cas-summation`` 1.0.0.  Extends ``gVanishesAtInfinity``
+to recognise that ``Mul(bounded, polynomial)`` numerators have effective
+growth equal to the polynomial part's degree.  Closes telescopes like
+``sin(k)·k/k³``, ``k·cos(k)/k²``, where the numerator mixes a bounded
+factor with a non-trivial polynomial factor.
+
+Bumps 0.9.0 → 1.0.0.
+
+### Added
+
+- **`splitBoundedPolynomialFactor(node, k)`** — partitions a ``Mul``
+  node's factors into a bounded aggregate and a summed polynomial degree;
+  returns ``undefined`` if any factor is neither bounded nor polynomial,
+  or if no non-constant-in-k bounded factor exists (those go through
+  Phase 42).
+
+### Changed
+
+- ``gVanishesAtInfinity`` now has a Phase 52 branch between Phase 51
+  (sqrt numerator) and Phase 42 (degree-aware): when the numerator
+  factors as ``bounded × polynomial`` with positive polynomial degree,
+  the quotient vanishes iff the denominator's polynomial degree strictly
+  exceeds the polynomial part's degree.
+
+### Added — tests
+
+`tests/cas-summation.test.ts`, `describe("summation: Phase 52 bounded × polynomial numerator")`:
+- ``sin(k)·k/k³`` closes (bounded × deg 1 / deg 3).
+- ``k·cos(k)/k²`` closes (factor order doesn't matter).
+- ``sin(k)·k²/k³`` closes (deg 2 < 3).
+- Regression: ``sin(k)·k²/k²`` stays unevaluated (degrees tie).
+- Regression: ``k/k²`` still closes via Phase 42 (Phase 52 doesn't
+  interfere when no bounded factor is present).
+
+Full suite: **51 passed** (was 46; +5 net new).
+
 ## 0.9.0 — 2026-05-22
 
 **Phase 51 — Sqrt(polynomial)/polynomial recogniser (TypeScript port).**
