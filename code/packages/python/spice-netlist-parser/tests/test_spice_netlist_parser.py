@@ -13,6 +13,7 @@ from spice_engine import (
     CurrentSource,
     Diode,
     Inductor,
+    JFET,
     Mosfet,
     Resistor,
     VoltageSource,
@@ -415,6 +416,47 @@ Qp col base emit slow
     assert isclose(bjt.Vt, 26.0e-3)
 
 
+def test_parse_jfet_model_into_operating_point_circuit() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)
+J1 drain gate source fast
+"""
+    )
+
+    assert parsed.models == {
+        "fast": ModelCard(
+            "fast",
+            "NJF",
+            {"BETA": 2.0e-3, "VTO": -3.0, "LAMBDA": 0.02},
+        )
+    }
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.drain == "drain"
+    assert jfet.gate == "gate"
+    assert jfet.source == "source"
+    assert jfet.polarity == "NJF"
+    assert jfet.beta == 2.0e-3
+    assert jfet.vto == -3.0
+    assert jfet.lambda_ == 0.02
+
+
+def test_parse_pjf_model_aliases_beta() -> None:
+    parsed = parse_netlist(
+        """
+.model pslow PJF(B=750u)
+Jp drain gate source pslow
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.polarity == "PJF"
+    assert isclose(jfet.beta, 750.0e-6)
+    assert jfet.vto == 2.0
+
+
 def test_parse_mosfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
@@ -679,6 +721,31 @@ Xbuf out in 0 follower
     assert bjt.base == "in"
     assert bjt.emitter == "Xbuf.inner"
     assert bjt.beta_f == 50.0
+    assert isinstance(resistor, Resistor)
+    assert resistor.n_plus == "Xbuf.inner"
+    assert resistor.n_minus == "0"
+
+
+def test_expands_subcircuit_jfet_nodes_into_engine_elements() -> None:
+    parsed = parse_netlist(
+        """
+.model nchan NJF(BETA=1m)
+.subckt source_follower d g s
+Jbuf d g inner nchan
+Rtail inner s 100
+.ends source_follower
+Xbuf out in 0 source_follower
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    resistor = parsed.circuit.elements[1]
+    assert isinstance(jfet, JFET)
+    assert jfet.name == "Xbuf.Jbuf"
+    assert jfet.drain == "out"
+    assert jfet.gate == "in"
+    assert jfet.source == "Xbuf.inner"
+    assert jfet.beta == 1.0e-3
     assert isinstance(resistor, Resistor)
     assert resistor.n_plus == "Xbuf.inner"
     assert resistor.n_minus == "0"

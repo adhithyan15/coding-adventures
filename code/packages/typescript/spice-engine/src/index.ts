@@ -11,6 +11,7 @@ export type Element =
   | CurrentSource
   | BSource
   | Diode
+  | Jfet
   | Bjt
   | Mosfet
   | Vccs
@@ -335,6 +336,20 @@ export interface Diode {
   readonly cathode: string;
   readonly saturationCurrent: number;
   readonly thermalVoltage: number;
+}
+
+export type JfetPolarity = "NJF" | "PJF";
+
+export interface Jfet {
+  readonly kind: "jfet";
+  readonly name: string;
+  readonly drain: string;
+  readonly gate: string;
+  readonly source: string;
+  readonly polarity: JfetPolarity;
+  readonly beta: number;
+  readonly thresholdVoltage: number;
+  readonly channelLengthModulation: number;
 }
 
 export type BjtPolarity = "NPN" | "PNP";
@@ -884,6 +899,8 @@ function cloneSubcktElement(
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap), voltageExpr: mapBSourceExprNodes(element.voltageExpr, instanceName, nodeMap), currentExpr: mapBSourceExprNodes(element.currentExpr, instanceName, nodeMap) };
     case "diode":
       return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage);
+    case "jfet":
+      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation);
     case "bjt":
       return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage);
     case "mosfet":
@@ -1102,6 +1119,29 @@ export function diode(
     cathode,
     saturationCurrent,
     thermalVoltage,
+  };
+}
+
+export function jfet(
+  name: string,
+  drain: string,
+  gate: string,
+  source: string,
+  polarity: JfetPolarity = "NJF",
+  beta = 1.0e-4,
+  thresholdVoltage = polarity === "NJF" ? -2.0 : 2.0,
+  channelLengthModulation = 0.0,
+): Jfet {
+  return {
+    kind: "jfet",
+    name,
+    drain,
+    gate,
+    source,
+    polarity,
+    beta,
+    thresholdVoltage,
+    channelLengthModulation,
   };
 }
 
@@ -2514,6 +2554,11 @@ function randomizedElement(
           rng,
         ),
       };
+    case "jfet":
+      return {
+        ...element,
+        beta: randomizedValue(element.beta, tolerance, distribution, rng),
+      };
     case "bjt":
       return {
         ...element,
@@ -3615,6 +3660,11 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
       case "diode":
         insertNode(names, element.anode);
         insertNode(names, element.cathode);
+        break;
+      case "jfet":
+        insertNode(names, element.drain);
+        insertNode(names, element.gate);
+        insertNode(names, element.source);
         break;
       case "bjt":
         insertNode(names, element.collector);

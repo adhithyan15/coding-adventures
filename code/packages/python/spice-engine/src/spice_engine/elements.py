@@ -401,6 +401,20 @@ class Diode:
 
 
 @dataclass(frozen=True, slots=True)
+class JFET:
+    """Junction FET instance parsed from a SPICE ``J`` card."""
+
+    name: str
+    drain: str
+    gate: str
+    source: str
+    polarity: str = "NJF"
+    beta: float = 1.0e-4
+    vto: float = -2.0
+    lambda_: float = 0.0
+
+
+@dataclass(frozen=True, slots=True)
 class Mosfet:
     """A MOSFET instance backed by a mosfet_models.MOSFET model."""
 
@@ -720,6 +734,7 @@ Element = (
     | BSource
     | XInstance
     | Diode
+    | JFET
     | Mosfet
     | BJT
     | VCVS

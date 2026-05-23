@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a public `Jfet` element and `JfetPolarity` as the parser-facing
+  three-terminal SPICE `J` card foothold; nonlinear analysis stamping follows
+  in a later compatibility slice.
 - Add `pss`, which runs the bounded shooting-Newton solve and returns one
   steady-state transient period from the solved circuit.
 - Add `pss_newton_solve`, which runs bounded accepted Newton iterations until

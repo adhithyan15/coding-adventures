@@ -14,6 +14,7 @@ import {
   diode,
   dcOp,
   inductorWithInitialCurrent,
+  jfet,
   mosfet,
   resistor,
   vccs,
@@ -22,6 +23,7 @@ import {
   voltageSourceWithAc,
   voltageSourceWithWaveform,
   type Element,
+  type JfetPolarity,
   type MosfetLevel1Params,
   type Waveform,
 } from "@coding-adventures/spice-engine";
@@ -540,6 +542,31 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("VT") ?? 0.02585,
     );
   }
+  if (prefix === "J") {
+    requireFields(fields, 5, "JFET");
+    const model = models.get(fields[4].toLowerCase());
+    if (model === undefined) {
+      throw new NetlistParseError(
+        `unknown model ${JSON.stringify(fields[4])} for JFET ${JSON.stringify(name)}`,
+      );
+    }
+    if (model.kind !== "NJF" && model.kind !== "PJF") {
+      throw new NetlistParseError(
+        `model ${JSON.stringify(model.name)} has kind ${JSON.stringify(model.kind)}, expected "NJF" or "PJF"`,
+      );
+    }
+    const polarity = model.kind as JfetPolarity;
+    return jfet(
+      name,
+      fields[1],
+      fields[2],
+      fields[3],
+      polarity,
+      model.params.get("BETA") ?? model.params.get("B") ?? 1.0e-4,
+      model.params.get("VTO") ?? (polarity === "NJF" ? -2.0 : 2.0),
+      model.params.get("LAMBDA") ?? 0.0,
+    );
+  }
   if (prefix === "M") {
     requireMinFields(fields, 6, "MOSFET");
     const model = models.get(fields[5].toLowerCase());
@@ -666,8 +693,8 @@ function mapSubcktFields(
     requireMinFields(fields, 3, "subcircuit element");
     mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
     mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
-  } else if (prefix === "Q") {
-    requireMinFields(fields, 4, "subcircuit BJT");
+  } else if (prefix === "Q" || prefix === "J") {
+    requireMinFields(fields, 4, prefix === "Q" ? "subcircuit BJT" : "subcircuit JFET");
     mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
     mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
     mapped[3] = mapSubcktNode(fields[3], instanceName, nodeMap);
