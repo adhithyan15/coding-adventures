@@ -5,6 +5,33 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.0] - 2026-05-23
+
+### Added
+
+- ``InMemoryBackend`` now synthesizes ``sqlite_master`` (and its alias
+  ``sqlite_schema``) on demand from current schema state.  The
+  synthesized table exposes the canonical five-column SQLite layout
+  (``type``, ``name``, ``tbl_name``, ``rootpage``, ``sql``) with one row
+  per user table, user-created index, and trigger.  ORMs and migration
+  tools that query ``SELECT name FROM sqlite_master WHERE type='table'``
+  now get correct results against ``:memory:`` databases.
+- ``rootpage`` is always 0 (the on-disk page-number concept is
+  meaningless for the in-memory backend).  Auto-generated indexes
+  (``sqlite_autoindex_*``) get ``NULL`` in the ``sql`` column, matching
+  real SQLite.
+
+### Changed
+
+- ``create_table('sqlite_master', ...)`` and the same for
+  ``sqlite_schema`` raise ``ConstraintViolation`` with the message
+  ``object name reserved for internal use``.  ``insert``,
+  ``drop_table``, and similar mutations also raise — the table is
+  read-only.
+- ``tables()`` listing continues to return *user* tables only;
+  ``sqlite_master`` is visible by name but not in the listing (matches
+  SQLite's ``.tables`` shell command).
+
 ## [0.15.0] - 2026-05-23
 
 ### Added
