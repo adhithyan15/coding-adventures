@@ -5586,6 +5586,26 @@ impl ToolAuditBatchWriteOutcome {
         matches!(self, Self::CompletedClean)
     }
 
+    /// Return whether no audit rows were attempted.
+    pub fn is_empty(self) -> bool {
+        matches!(self, Self::Empty)
+    }
+
+    /// Return whether this write completed with persisted follow-up pressure.
+    pub fn is_completed_with_follow_up(self) -> bool {
+        matches!(self, Self::CompletedWithFollowUp)
+    }
+
+    /// Return whether this write hit storage failures.
+    pub fn is_storage_failures(self) -> bool {
+        matches!(self, Self::StorageFailures)
+    }
+
+    /// Return whether this write has flattened count integrity drift.
+    pub fn is_count_integrity_drift(self) -> bool {
+        matches!(self, Self::CountIntegrityDrift)
+    }
+
     /// Return whether this write needs host follow-up.
     pub fn requires_follow_up(self) -> bool {
         matches!(
@@ -5658,6 +5678,16 @@ impl ToolAuditReplayOutcome {
         matches!(self, Self::ReplayedClean)
     }
 
+    /// Return whether no audit rows were replayed.
+    pub fn is_empty(self) -> bool {
+        matches!(self, Self::Empty)
+    }
+
+    /// Return whether replayed rows need host follow-up.
+    pub fn is_replayed_with_follow_up(self) -> bool {
+        matches!(self, Self::ReplayedWithFollowUp)
+    }
+
     /// Return whether this replay needs host follow-up.
     pub fn requires_follow_up(self) -> bool {
         matches!(self, Self::ReplayedWithFollowUp)
@@ -5722,6 +5752,21 @@ impl ToolAuditCheckpointReplayOutcome {
     /// Return whether this replay delivered rows without follow-up pressure.
     pub fn is_replayed_clean(self) -> bool {
         matches!(self, Self::ReplayedClean)
+    }
+
+    /// Return whether no audit rows were replayed from the checkpoint.
+    pub fn is_empty(self) -> bool {
+        matches!(self, Self::Empty)
+    }
+
+    /// Return whether replayed checkpoint rows need host follow-up.
+    pub fn is_replayed_with_follow_up(self) -> bool {
+        matches!(self, Self::ReplayedWithFollowUp)
+    }
+
+    /// Return whether this replay has flattened count integrity drift.
+    pub fn is_count_integrity_drift(self) -> bool {
+        matches!(self, Self::CountIntegrityDrift)
     }
 
     /// Return whether this replay needs host follow-up.
@@ -5814,6 +5859,36 @@ impl ToolAuditCheckpointPageOutcome {
                 | Self::PendingContinuation
                 | Self::PendingContinuationWithFollowUp
         )
+    }
+
+    /// Return whether no audit rows are waiting at this checkpoint.
+    pub fn is_idle(self) -> bool {
+        matches!(self, Self::Idle)
+    }
+
+    /// Return whether rows are waiting with no follow-up or continuation.
+    pub fn is_pending_clean(self) -> bool {
+        matches!(self, Self::PendingClean)
+    }
+
+    /// Return whether rows are waiting and need follow-up without continuation.
+    pub fn is_pending_with_follow_up(self) -> bool {
+        matches!(self, Self::PendingWithFollowUp)
+    }
+
+    /// Return whether rows are waiting with continuation and no follow-up.
+    pub fn is_pending_continuation(self) -> bool {
+        matches!(self, Self::PendingContinuation)
+    }
+
+    /// Return whether rows are waiting with continuation and follow-up.
+    pub fn is_pending_continuation_with_follow_up(self) -> bool {
+        matches!(self, Self::PendingContinuationWithFollowUp)
+    }
+
+    /// Return whether this page has flattened count integrity drift.
+    pub fn is_count_integrity_drift(self) -> bool {
+        matches!(self, Self::CountIntegrityDrift)
     }
 
     /// Return whether more pages should be inspected or drained after this page.
@@ -6142,6 +6217,31 @@ impl ToolAuditInventoryFollowUpKind {
     /// Return whether this inventory needs any host follow-up.
     pub fn requires_follow_up(self) -> bool {
         !matches!(self, Self::NoFollowUp)
+    }
+
+    /// Return whether no persisted row needs host follow-up.
+    pub fn is_no_follow_up(self) -> bool {
+        matches!(self, Self::NoFollowUp)
+    }
+
+    /// Return whether active rows are driving follow-up pressure.
+    pub fn is_active_records(self) -> bool {
+        matches!(self, Self::ActiveRecords)
+    }
+
+    /// Return whether failed rows are driving follow-up pressure.
+    pub fn is_failed_records(self) -> bool {
+        matches!(self, Self::FailedRecords)
+    }
+
+    /// Return whether approval state is driving follow-up pressure.
+    pub fn is_approval_pressure(self) -> bool {
+        matches!(self, Self::ApprovalPressure)
+    }
+
+    /// Return whether result errors are driving follow-up pressure.
+    pub fn is_result_errors(self) -> bool {
+        matches!(self, Self::ResultErrors)
     }
 
     /// Return whether multiple follow-up surfaces are active.
@@ -12520,6 +12620,62 @@ mod tests {
         );
         assert!(planned_page.checkpoint_page_outcome_label_matches_outcome());
         assert!(planned_page.inventory_follow_up_label_matches_kind());
+    }
+
+    #[test]
+    fn audit_event_flow_health_component_helpers_are_stable() {
+        assert!(ToolAuditInventoryFollowUpKind::NoFollowUp.is_no_follow_up());
+        assert!(ToolAuditInventoryFollowUpKind::ActiveRecords.is_active_records());
+        assert!(ToolAuditInventoryFollowUpKind::FailedRecords.is_failed_records());
+        assert!(ToolAuditInventoryFollowUpKind::ApprovalPressure.is_approval_pressure());
+        assert!(ToolAuditInventoryFollowUpKind::ResultErrors.is_result_errors());
+        assert!(ToolAuditInventoryFollowUpKind::MultipleFollowUp.has_multiple_follow_up_surfaces());
+        assert!(!ToolAuditInventoryFollowUpKind::NoFollowUp.requires_follow_up());
+        assert!(ToolAuditInventoryFollowUpKind::ResultErrors.requires_follow_up());
+
+        assert!(ToolAuditBatchWriteOutcome::Empty.is_empty());
+        assert!(ToolAuditBatchWriteOutcome::CompletedClean.is_completed_clean());
+        assert!(ToolAuditBatchWriteOutcome::CompletedWithFollowUp.is_completed_with_follow_up());
+        assert!(ToolAuditBatchWriteOutcome::StorageFailures.is_storage_failures());
+        assert!(ToolAuditBatchWriteOutcome::StorageFailures.requires_follow_up());
+        assert!(ToolAuditBatchWriteOutcome::StorageFailures.requires_storage_investigation());
+        assert!(ToolAuditBatchWriteOutcome::CountIntegrityDrift.is_count_integrity_drift());
+        assert!(ToolAuditBatchWriteOutcome::CountIntegrityDrift
+            .requires_count_integrity_investigation());
+
+        assert!(ToolAuditReplayOutcome::Empty.is_empty());
+        assert!(ToolAuditReplayOutcome::ReplayedClean.is_replayed_clean());
+        assert!(ToolAuditReplayOutcome::ReplayedWithFollowUp.is_replayed_with_follow_up());
+        assert!(ToolAuditReplayOutcome::ReplayedWithFollowUp.requires_follow_up());
+
+        assert!(ToolAuditCheckpointReplayOutcome::Empty.is_empty());
+        assert!(ToolAuditCheckpointReplayOutcome::ReplayedClean.is_replayed_clean());
+        assert!(ToolAuditCheckpointReplayOutcome::ReplayedWithFollowUp.is_replayed_with_follow_up());
+        assert!(ToolAuditCheckpointReplayOutcome::ReplayedWithFollowUp.requires_follow_up());
+        assert!(ToolAuditCheckpointReplayOutcome::CountIntegrityDrift.is_count_integrity_drift());
+        assert!(ToolAuditCheckpointReplayOutcome::CountIntegrityDrift
+            .requires_count_integrity_investigation());
+
+        assert!(ToolAuditCheckpointPageOutcome::Idle.is_idle());
+        assert!(ToolAuditCheckpointPageOutcome::PendingClean.is_pending_clean());
+        assert!(ToolAuditCheckpointPageOutcome::PendingClean.should_drain());
+        assert!(ToolAuditCheckpointPageOutcome::PendingWithFollowUp.is_pending_with_follow_up());
+        assert!(ToolAuditCheckpointPageOutcome::PendingWithFollowUp.requires_follow_up());
+        assert!(ToolAuditCheckpointPageOutcome::PendingContinuation.is_pending_continuation());
+        assert!(ToolAuditCheckpointPageOutcome::PendingContinuation.requires_continuation());
+        assert!(
+            ToolAuditCheckpointPageOutcome::PendingContinuationWithFollowUp
+                .is_pending_continuation_with_follow_up()
+        );
+        assert!(
+            ToolAuditCheckpointPageOutcome::PendingContinuationWithFollowUp.requires_continuation()
+        );
+        assert!(
+            ToolAuditCheckpointPageOutcome::PendingContinuationWithFollowUp.requires_follow_up()
+        );
+        assert!(ToolAuditCheckpointPageOutcome::CountIntegrityDrift.is_count_integrity_drift());
+        assert!(ToolAuditCheckpointPageOutcome::CountIntegrityDrift
+            .requires_count_integrity_investigation());
     }
 
     #[test]

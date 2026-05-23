@@ -21,6 +21,9 @@ The crate keeps the boundary narrow:
   checkpoint logs
 - checkpoint replay, checkpoint status, and planned drain pages expose stable
   health labels plus follow-up and count-integrity helpers for host logs
+- inventory, write, replay, checkpoint replay, and checkpoint page health
+  classifications expose typed component helpers for payload-free host
+  branching
 - supervisors can read deterministic checkpoint pages to resume audit replay
   after restarts without reprocessing the whole store
 - checkpoint pages expose next-checkpoint timestamp and call-id scalar

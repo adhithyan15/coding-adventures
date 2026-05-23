@@ -130,6 +130,8 @@ All notable changes to this package will be documented in this file.
   count-integrity helpers for host logs.
 - Stable checkpoint replay, checkpoint status, and planned page health labels
   with follow-up and count-integrity helpers for host logs.
+- Typed component helpers for inventory, write, replay, checkpoint replay, and
+  checkpoint page health classifications.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Report-level scheduler action labels for supervisor drain runs.
