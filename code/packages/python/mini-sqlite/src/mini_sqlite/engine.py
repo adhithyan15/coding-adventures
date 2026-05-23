@@ -683,6 +683,43 @@ def _run_explain_query_plan(
 # ---------------------------------------------------------------------------
 
 
+def _fk_find_pk(table: str, backend: Backend) -> str:
+    """Return the PRIMARY KEY column name for *table*, falling back to ``'id'``.
+
+    Used by ``PRAGMA foreign_key_check`` when a ``REFERENCES`` clause
+    omits the parent column (``REFERENCES p`` instead of
+    ``REFERENCES p(col)``).  Same algorithm sql-vm uses internally.
+    """
+    try:
+        cols = backend.columns(table)
+    except Exception:  # noqa: BLE001 — parent table missing → conventional fallback
+        return "id"
+    for c in cols:
+        if getattr(c, "primary_key", False):
+            return c.name
+    return "id"
+
+
+def _fk_row_exists(
+    table: str, col: str, value: object, backend: Backend
+) -> bool:
+    """Return True if any row in *table* has *col* == *value*.
+
+    Walks the table linearly via ``backend.scan`` — fine for diagnostic
+    PRAGMAs but ``O(N*M)`` for the full ``foreign_key_check`` sweep.
+    """
+    try:
+        cur = backend.scan(table)
+    except Exception:  # noqa: BLE001 — parent table missing → every row is a violation
+        return False
+    while True:
+        row = cur.next()
+        if row is None:
+            return False
+        if row.get(col) == value:
+            return True
+
+
 def _format_pragma_default(value: object) -> str:
     """Render a column's stored default value as the SQL-literal text that
     ``PRAGMA table_info.dflt_value`` reports.
@@ -958,6 +995,66 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
             rows=tuple(fk_rows),
         )
 
+    if name == "foreign_key_check":
+        # SQLite: scan every (or one named) child table; for each row,
+        # for each declared FOREIGN KEY, verify the referenced parent
+        # row exists.  Returns one row per violation::
+        #
+        #   table   TEXT    — the child table where the bad row lives
+        #   rowid   INTEGER — the bad row's rowid
+        #   parent  TEXT    — the referenced parent table
+        #   fkid    INTEGER — the FK's position in foreign_key_list (0-based)
+        #
+        # Rules:
+        #   * NULL child values pass unconditionally (SQL "unknown
+        #     reference is not an error" rule).
+        #   * If no ``parent_col`` was declared (i.e. ``REFERENCES p``),
+        #     resolve to the parent's first PRIMARY KEY column.
+        #   * If the parent table is missing, every non-NULL child row
+        #     is a violation.
+        viol_rows: list[tuple] = []
+        if fk_child:
+            # Optional table-name filter: ``PRAGMA foreign_key_check(t)``
+            # restricts scanning to one child table.
+            table_filter = arg or None
+            for child_table, fks in fk_child.items():
+                if table_filter and child_table != table_filter:
+                    continue
+                try:
+                    parent_pk_cache: dict[str, str] = {}
+                    cur = backend.scan(child_table)
+                except Exception:  # noqa: BLE001 — table missing → skip
+                    continue
+                while True:
+                    row = cur.next()
+                    if row is None:
+                        break
+                    rowid = getattr(cur, "rowid", lambda: None)()
+                    for fk_id, (child_col, parent_table, parent_col) in enumerate(fks):
+                        value = row.get(child_col)
+                        if value is None:
+                            continue
+                        # Resolve target column (cached per parent table
+                        # to avoid repeated PK lookups).
+                        if parent_col is None:
+                            if parent_table not in parent_pk_cache:
+                                parent_pk_cache[parent_table] = _fk_find_pk(
+                                    parent_table, backend
+                                )
+                            ref_col = parent_pk_cache[parent_table]
+                        else:
+                            ref_col = parent_col
+                        if not _fk_row_exists(
+                            parent_table, ref_col, value, backend
+                        ):
+                            viol_rows.append(
+                                (child_table, rowid, parent_table, fk_id)
+                            )
+        return QueryResult(
+            columns=("table", "rowid", "parent", "fkid"),
+            rows=tuple(viol_rows),
+        )
+
     if name == "table_list":
         tables = backend.tables()
         return QueryResult(
@@ -1077,6 +1174,7 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
             "compile_options",
             "data_version",
             "database_list",
+            "foreign_key_check",
             "foreign_key_list",
             "function_list",
             "index_info",
