@@ -64,6 +64,8 @@ The crate keeps the boundary narrow:
   fields for payload-free checkpoint logging
 - supervisor drain run summaries flatten last-checkpoint presence flags beside
   timestamp and call-id checkpoint fields
+- supervisor drain reports and summaries expose last-checkpoint consistency
+  flags for presence, timestamp, call-id, and aggregate checkpoint fields
 - supervisor drain run summaries flatten planned and replayed follow-up row
   counts for host routing decisions
 - supervisor drain run summaries flag when planned and replayed follow-up

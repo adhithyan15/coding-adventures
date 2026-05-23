@@ -1296,6 +1296,12 @@ impl ToolAuditSupervisorDrainRunReport {
             has_last_checkpoint: self.has_last_checkpoint(),
             last_checkpoint_timestamp_ms: self.last_checkpoint_timestamp_ms(),
             last_checkpoint_call_id: self.last_checkpoint_call_id().map(str::to_owned),
+            last_checkpoint_presence_matches_fields: self.last_checkpoint_presence_matches_fields(),
+            last_checkpoint_timestamp_matches_checkpoint: self
+                .last_checkpoint_timestamp_matches_checkpoint(),
+            last_checkpoint_call_id_matches_checkpoint: self
+                .last_checkpoint_call_id_matches_checkpoint(),
+            last_checkpoint_fields_match_checkpoint: self.last_checkpoint_fields_match_checkpoint(),
         }
     }
 
@@ -1452,6 +1458,34 @@ impl ToolAuditSupervisorDrainRunReport {
         self.last_checkpoint()
             .map(|checkpoint| checkpoint.call_id.as_str())
     }
+
+    /// Return whether checkpoint presence agrees with flattened scalar fields.
+    pub fn last_checkpoint_presence_matches_fields(&self) -> bool {
+        self.has_last_checkpoint()
+            == (self.last_checkpoint_timestamp_ms().is_some()
+                && self.last_checkpoint_call_id().is_some())
+    }
+
+    /// Return whether the flattened checkpoint timestamp matches the checkpoint object.
+    pub fn last_checkpoint_timestamp_matches_checkpoint(&self) -> bool {
+        self.last_checkpoint()
+            .map(|checkpoint| checkpoint.timestamp_ms)
+            == self.last_checkpoint_timestamp_ms()
+    }
+
+    /// Return whether the flattened checkpoint call id matches the checkpoint object.
+    pub fn last_checkpoint_call_id_matches_checkpoint(&self) -> bool {
+        self.last_checkpoint()
+            .map(|checkpoint| checkpoint.call_id.as_str())
+            == self.last_checkpoint_call_id()
+    }
+
+    /// Return whether all flattened checkpoint fields agree with the checkpoint object.
+    pub fn last_checkpoint_fields_match_checkpoint(&self) -> bool {
+        self.last_checkpoint_presence_matches_fields()
+            && self.last_checkpoint_timestamp_matches_checkpoint()
+            && self.last_checkpoint_call_id_matches_checkpoint()
+    }
 }
 
 /// Payload-free, flattened host summary for a bounded supervisor drain run.
@@ -1587,6 +1621,14 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub last_checkpoint_timestamp_ms: Option<u64>,
     /// Call id for the last replay checkpoint observed by the actual run.
     pub last_checkpoint_call_id: Option<String>,
+    /// Whether checkpoint presence agrees with flattened scalar fields.
+    pub last_checkpoint_presence_matches_fields: bool,
+    /// Whether the flattened checkpoint timestamp matches the checkpoint object.
+    pub last_checkpoint_timestamp_matches_checkpoint: bool,
+    /// Whether the flattened checkpoint call id matches the checkpoint object.
+    pub last_checkpoint_call_id_matches_checkpoint: bool,
+    /// Whether all flattened checkpoint fields agree with the checkpoint object.
+    pub last_checkpoint_fields_match_checkpoint: bool,
 }
 
 impl ToolAuditSupervisorDrainRunSummary {
@@ -1913,6 +1955,26 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return the call id for the last replay checkpoint observed by the actual run.
     pub fn last_checkpoint_call_id(&self) -> Option<&str> {
         self.last_checkpoint_call_id.as_deref()
+    }
+
+    /// Return whether checkpoint presence agrees with flattened scalar fields.
+    pub fn last_checkpoint_presence_matches_fields(&self) -> bool {
+        self.last_checkpoint_presence_matches_fields
+    }
+
+    /// Return whether the flattened checkpoint timestamp matches the checkpoint object.
+    pub fn last_checkpoint_timestamp_matches_checkpoint(&self) -> bool {
+        self.last_checkpoint_timestamp_matches_checkpoint
+    }
+
+    /// Return whether the flattened checkpoint call id matches the checkpoint object.
+    pub fn last_checkpoint_call_id_matches_checkpoint(&self) -> bool {
+        self.last_checkpoint_call_id_matches_checkpoint
+    }
+
+    /// Return whether all flattened checkpoint fields agree with the checkpoint object.
+    pub fn last_checkpoint_fields_match_checkpoint(&self) -> bool {
+        self.last_checkpoint_fields_match_checkpoint
     }
 }
 
@@ -4619,12 +4681,79 @@ mod tests {
         assert!(summary.has_last_checkpoint());
         assert_eq!(summary.last_checkpoint_timestamp_ms(), Some(120));
         assert_eq!(summary.last_checkpoint_call_id(), Some("call_2"));
+        assert!(report.last_checkpoint_presence_matches_fields());
+        assert!(report.last_checkpoint_timestamp_matches_checkpoint());
+        assert!(report.last_checkpoint_call_id_matches_checkpoint());
+        assert!(report.last_checkpoint_fields_match_checkpoint());
+        assert!(summary.last_checkpoint_presence_matches_fields);
+        assert!(summary.last_checkpoint_presence_matches_fields());
+        assert!(summary.last_checkpoint_timestamp_matches_checkpoint);
+        assert!(summary.last_checkpoint_timestamp_matches_checkpoint());
+        assert!(summary.last_checkpoint_call_id_matches_checkpoint);
+        assert!(summary.last_checkpoint_call_id_matches_checkpoint());
+        assert!(summary.last_checkpoint_fields_match_checkpoint);
+        assert!(summary.last_checkpoint_fields_match_checkpoint());
         assert!(!summary.is_idle);
         assert!(!summary.is_idle());
         assert!(summary.made_progress);
         assert!(summary.made_progress());
         assert!(summary.should_continue);
         assert!(summary.should_continue());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_flattens_checkpoint_consistency_flags() {
+        let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut idle_sink = InMemoryToolAuditSink::new();
+        let idle_report = empty_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut idle_sink)
+            .unwrap();
+        let idle_summary = idle_report.summary();
+
+        assert_eq!(
+            idle_report.last_checkpoint(),
+            Some(&ToolAuditReadCheckpoint::beginning())
+        );
+        assert!(idle_report.has_last_checkpoint());
+        assert_eq!(idle_report.last_checkpoint_timestamp_ms(), Some(0));
+        assert_eq!(idle_report.last_checkpoint_call_id(), Some(""));
+        assert!(idle_report.last_checkpoint_presence_matches_fields());
+        assert!(idle_report.last_checkpoint_timestamp_matches_checkpoint());
+        assert!(idle_report.last_checkpoint_call_id_matches_checkpoint());
+        assert!(idle_report.last_checkpoint_fields_match_checkpoint());
+        assert_eq!(
+            idle_summary.last_checkpoint,
+            Some(ToolAuditReadCheckpoint::beginning())
+        );
+        assert!(idle_summary.has_last_checkpoint);
+        assert_eq!(idle_summary.last_checkpoint_timestamp_ms, Some(0));
+        assert_eq!(idle_summary.last_checkpoint_call_id.as_deref(), Some(""));
+        assert!(idle_summary.last_checkpoint_presence_matches_fields);
+        assert!(idle_summary.last_checkpoint_presence_matches_fields());
+        assert!(idle_summary.last_checkpoint_timestamp_matches_checkpoint);
+        assert!(idle_summary.last_checkpoint_timestamp_matches_checkpoint());
+        assert!(idle_summary.last_checkpoint_call_id_matches_checkpoint);
+        assert!(idle_summary.last_checkpoint_call_id_matches_checkpoint());
+        assert!(idle_summary.last_checkpoint_fields_match_checkpoint);
+        assert!(idle_summary.last_checkpoint_fields_match_checkpoint());
+
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![sample_record("call_1")])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let mut summary = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut sink)
+            .unwrap()
+            .summary();
+        assert!(summary.last_checkpoint_fields_match_checkpoint());
+
+        summary.last_checkpoint_timestamp_ms = Some(999);
+        summary.last_checkpoint_timestamp_matches_checkpoint = false;
+        summary.last_checkpoint_fields_match_checkpoint = false;
+        assert!(!summary.last_checkpoint_timestamp_matches_checkpoint());
+        assert!(!summary.last_checkpoint_fields_match_checkpoint());
     }
 
     #[test]
