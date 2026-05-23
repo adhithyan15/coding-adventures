@@ -3,7 +3,7 @@ use spice_engine::{
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
     pss_with_tolerance, transient, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element,
-    ExpWaveform, Inductor, PssNewtonCandidateResult, PssNewtonIterationResult,
+    ExpWaveform, Inductor, MutualInductor, PssNewtonCandidateResult, PssNewtonIterationResult,
     PssNewtonSolveResult, PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult,
     PssResult, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, VoltageSource,
     Waveform,
@@ -539,6 +539,26 @@ fn transient_respects_inductor_initial_current() {
     assert_close(points[0].branch_current("L1").unwrap(), 0.5e-3);
     assert_close(points[1].voltage("out").unwrap(), -0.25);
     assert_close(points[1].branch_current("L1").unwrap(), 0.25e-3);
+}
+
+#[test]
+fn transient_mutual_inductor_couples_secondary_voltage() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::CurrentSource(CurrentSource::new(
+        "Istep", "0", "pri", 1.0,
+    )));
+    circuit.add(Element::Inductor(Inductor::new("Lpri", "pri", "0", 1.0)));
+    circuit.add(Element::Inductor(Inductor::new("Lsec", "sec", "0", 1.0)));
+    circuit.add(Element::MutualInductor(MutualInductor::new(
+        "K1", "Lpri", "Lsec", 0.5,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("Rload", "sec", "0", 10.0)));
+
+    let points = transient(&circuit, 0.1, 0.1).unwrap();
+
+    assert_close(points[0].voltage("pri").unwrap(), 8.75);
+    assert_close(points[0].voltage("sec").unwrap(), 2.5);
+    assert_close(points[0].branch_current("Lsec").unwrap(), -0.25);
 }
 
 #[test]

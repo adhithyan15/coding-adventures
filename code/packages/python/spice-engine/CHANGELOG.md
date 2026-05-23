@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Mutual-inductor transient stamping** — `MutualInductor` now couples
+  referenced inductor pairs during transient analysis with a two-winding
+  companion conductance matrix.
+
 - **Mutual-inductor AC stamping** — `MutualInductor` now couples referenced
   inductor pairs in AC analysis using the inverted two-winding inductance
   matrix.

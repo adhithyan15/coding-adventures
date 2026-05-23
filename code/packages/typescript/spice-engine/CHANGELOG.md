@@ -2,11 +2,12 @@
 
 ## Unreleased
 
+- Add transient analysis stamping for `MutualInductor` by coupling referenced
+  inductor pairs through a two-winding companion conductance matrix.
 - Add AC analysis stamping for `MutualInductor` by coupling referenced
   inductor pairs through the inverted two-winding inductance matrix.
 - Add a public `MutualInductor` element and `mutualInductor` factory as the
-  parser-facing SPICE `K` card foothold; coupled AC/transient stamping follows
-  in a later compatibility slice.
+  parser-facing SPICE `K` card foothold.
 - Add JFET nonlinear DC operating-point stamping and AC small-signal analysis
   from the solved DC bias point.
 - Add a public `Jfet` element and `jfet` factory as the parser-facing

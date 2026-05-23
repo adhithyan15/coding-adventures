@@ -10,10 +10,12 @@ import {
   capacitorWithInitialVoltage,
   cccs,
   ccvs,
+  currentSource,
   currentSourceWithWaveform,
   estimatePeriod,
   inductor,
   inductorWithInitialCurrent,
+  mutualInductor,
   pss,
   pssNewtonCandidate,
   pssNewtonIteration,
@@ -461,6 +463,21 @@ describe("transient", () => {
     expectClose(points[0].branchCurrent("L1"), 0.5e-3);
     expectClose(points[1].voltage("out"), -0.25);
     expectClose(points[1].branchCurrent("L1"), 0.25e-3);
+  });
+
+  it("couples secondary voltage through a mutual inductor", () => {
+    const circuit = new Circuit();
+    circuit.add(currentSource("Istep", "0", "pri", 1.0));
+    circuit.add(inductor("Lpri", "pri", "0", 1.0));
+    circuit.add(inductor("Lsec", "sec", "0", 1.0));
+    circuit.add(mutualInductor("K1", "Lpri", "Lsec", 0.5));
+    circuit.add(resistor("Rload", "sec", "0", 10.0));
+
+    const points = transient(circuit, 0.1, 0.1);
+
+    expectClose(points[0].voltage("pri"), 8.75);
+    expectClose(points[0].voltage("sec"), 2.5);
+    expectClose(points[0].branchCurrent("Lsec"), -0.25);
   });
 
   it("rejects non-positive capacitance", () => {
