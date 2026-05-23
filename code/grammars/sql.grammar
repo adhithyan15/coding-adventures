@@ -82,8 +82,21 @@ select_item       = expr [ "AS" NAME ] ;
 # ``(SELECT …)`` are accepted.  When no alias is given, the outer query
 # may still reference columns by their unqualified names.
 # NAME never matches SQL keywords, so WHERE, JOIN, ON etc. are never eaten.
-table_ref         = "(" query_stmt ")" [ [ "AS" ] NAME ] | table_name [ "AS" NAME | NAME ] ;
+#
+# An optional ``index_hint`` may follow the table name (not derived
+# tables — SQLite only allows the hint on base tables).  Two forms:
+#
+#   * ``INDEXED BY <index-name>`` — force the planner to use the named
+#     index.  Errors at plan time if the index doesn't exist on the
+#     table.
+#   * ``NOT INDEXED`` — instruct the planner to use a full table scan
+#     and ignore any matching indexes.
+#
+# Both forms are SQLite-only query hints; standard SQL ignores them.
+table_ref         = "(" query_stmt ")" [ [ "AS" ] NAME ]
+                  | table_name [ "AS" NAME | NAME ] [ index_hint ] ;
 table_name        = NAME [ "." NAME ] ;
+index_hint        = "INDEXED" "BY" NAME | "NOT" "INDEXED" ;
 
 # join_clause covers two forms:
 #   1. Explicit JOIN:  [ join_type ] "JOIN" table_ref [ "ON" expr | "USING" (...) ]

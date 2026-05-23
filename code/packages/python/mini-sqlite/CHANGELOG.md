@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.91.0] - 2026-05-23
+
+### Added
+
+- ``... FROM t INDEXED BY <name> ...`` and ``... FROM t NOT INDEXED
+  ...`` query hints are now wired end-to-end.  The adapter parses
+  the new ``index_hint`` grammar node and attaches it to ``TableRef``;
+  the planner forwards it to ``Scan``; the optimizer's
+  ``_try_index_scan`` honours both hints.
+- An unknown index in ``INDEXED BY <name>`` raises ``OperationalError``
+  with the message ``no such index on table <t>: <name>`` — mirrors
+  SQLite's behaviour.  Wired through ``mini_sqlite.errors.translate``
+  which now also maps ``sql_planner.errors.IndexNotFound``.
+
 ## [1.90.0] - 2026-05-23
 
 ### Added

@@ -2,6 +2,19 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.38.0] - 2026-05-23
+
+### Added
+
+- ``table_ref`` extended with an optional trailing ``index_hint``:
+  ```
+  index_hint = "INDEXED" "BY" NAME | "NOT" "INDEXED" ;
+  ```
+  Two SQLite-only query hints — ``INDEXED BY <name>`` (force the
+  named index) and ``NOT INDEXED`` (disable index substitution).
+- Regenerated ``_grammar.py`` and ``_tokens.py`` to include the new
+  rule and the ``INDEXED`` keyword.
+
 ## [0.37.0] - 2026-05-23
 
 ### Added

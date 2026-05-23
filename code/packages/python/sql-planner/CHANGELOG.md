@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.42.0] - 2026-05-23
+
+### Added
+
+- ``TableRef`` (AST) and ``Scan`` (plan node) gain ``index_hint:
+  str | None`` and ``not_indexed: bool`` fields carrying SQLite's
+  ``INDEXED BY`` / ``NOT INDEXED`` query hints from FROM through to
+  the optimizer.
+- ``_try_index_scan`` honours both hints: ``not_indexed=True``
+  short-circuits to a full scan; ``index_hint=<name>`` filters
+  candidate indexes to just the named one and raises
+  ``IndexNotFound`` if no such index exists on the table.
+- New error class ``IndexNotFound`` in ``sql_planner.errors``.
+
 ## [0.41.0] - 2026-05-23
 
 ### Added

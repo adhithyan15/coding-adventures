@@ -2,6 +2,15 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.26.0] - 2026-05-23
+
+### Added
+
+- ``INDEXED`` keyword recognised by the lexer.  Required by the new
+  ``INDEXED BY <name>`` and ``NOT INDEXED`` table-source query hints
+  parsed in sql-parser 0.38.
+- Regenerated `_grammar.py` to include the new keyword.
+
 ## [0.25.0] - 2026-05-23
 
 ### Added

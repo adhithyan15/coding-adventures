@@ -679,7 +679,33 @@ def _table_ref(
             alias=alias if alias is not None else table,
         )
 
-    return TableRef(table=table, alias=alias)
+    # Parse the optional ``index_hint`` child node.  The grammar:
+    #
+    #   index_hint = "INDEXED" "BY" NAME | "NOT" "INDEXED" ;
+    #
+    # Two mutually-exclusive forms.  ``INDEXED BY <name>`` pins the
+    # planner to the named index; ``NOT INDEXED`` disables index
+    # substitution for this scan.  Both flow through to :class:`TableRef`
+    # and ultimately the planner's ``_try_index_scan``.
+    index_hint: str | None = None
+    not_indexed = False
+    hint_node = _maybe_child(node, "index_hint")
+    if hint_node is not None:
+        if _has_keyword_child(hint_node, "NOT"):
+            not_indexed = True
+        else:
+            # INDEXED BY NAME — the NAME is the only NAME-typed token
+            # inside the hint node.
+            name_tok = next(
+                (c for c in hint_node.children
+                 if isinstance(c, Token) and _token_type(c) == "NAME"),
+                None,
+            )
+            if name_tok is not None:
+                index_hint = name_tok.value
+    return TableRef(
+        table=table, alias=alias, index_hint=index_hint, not_indexed=not_indexed,
+    )
 
 
 def _join_clause(
