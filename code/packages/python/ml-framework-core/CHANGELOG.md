@@ -2,6 +2,54 @@
 
 ## Unreleased
 
+### Added — MX11 spec: NumPy interop for `Tensor`
+
+Spec-only PR (`code/specs/MX11-numpy-interop.md`) defining the
+public API for round-tripping `ml-framework-core.Tensor` ↔ `numpy.ndarray`.
+Implementation follows in a separate MX11-impl PR.
+
+#### Public API surface
+
+- `Tensor.from_numpy(arr, *, requires_grad=False, device=None)` —
+  classmethod; copies the ndarray into a new Tensor; raises
+  `ImportError` if numpy isn't installed, `TypeError` for unsupported
+  dtypes, `ValueError` for empty arrays.
+- `Tensor.to_numpy()` — instance method; always returns a fresh
+  `np.float64` copy.
+- `Tensor.numpy()` — PyTorch-style alias for `to_numpy()`.
+
+#### Key design decisions
+
+- **Numpy is a soft dependency.**  Not in `install_requires`; resolved
+  via try/except `import numpy` at call time so the package imports
+  cleanly without numpy installed.
+- **Copying both directions.**  Zero-copy views would need a Tensor
+  storage rewrite (`list[float]` → `array.array('d')` or numpy-backed
+  buffer) — out of scope for MX11.  `O(numel)` copy cost is acceptable
+  at the dataset I/O boundary.
+- **Output dtype always f64** to match Tensor's internal precision;
+  callers cast with `arr.astype(np.float32)` if they want f32.
+- **0-d arrays → shape `(1,)`** to match the existing
+  `SumFunction.forward(dim=None)` scalar convention.
+- **Empty arrays → `ValueError`** because Tensor's `numel >= 1`
+  invariant.
+- **Unsupported dtypes** (complex, object, string): `TypeError` with
+  a message explaining the supported set.
+
+#### What's NOT in MX11
+
+- `Tensor.from_torch` / `Tensor.from_jax` — same pattern for other
+  frameworks; each gets its own spec/PR if useful.
+- Zero-copy / view semantics — Tensor storage redesign required.
+- Multi-dim shape with `(0,)` cells — empty tensors aren't a thing
+  in `ml-framework-core` today.
+- In-place numpy operations — doesn't fit the pure-Python
+  immutable-Tensor autograd contract.
+
+The full test plan (16 tests + the no-numpy `ImportError` test) is
+spelled out in the spec.  Implementation sketch in the spec is ~30
+LOC of straightforward Python.
+
 ### Added — MX10 Phase 2-back: optional Rust fast path for `MulFunction.backward` + `DivFunction.backward`
 
 Wires the two elementwise backwards where the FFI round-trip is
