@@ -4,6 +4,9 @@
 
 ### Added
 
+- **JFET DC/AC analysis foothold** — `JFET` now participates in nonlinear DC
+  operating-point solves and AC small-signal analysis using the DC bias point.
+
 - **JFET element foothold** — `JFET` now exposes the public three-terminal
   device shape needed by SPICE `J` cards; nonlinear analysis stamping follows
   in a later compatibility slice.

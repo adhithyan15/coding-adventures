@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add JFET nonlinear DC operating-point stamping and AC small-signal analysis
+  from the solved DC bias point.
 - Add a public `Jfet` element and `jfet` factory as the parser-facing
   three-terminal SPICE `J` card foothold; nonlinear analysis stamping follows
   in a later compatibility slice.

@@ -1446,7 +1446,17 @@ export function tf(
   const input = findInputSource(circuit, inputSource);
   const voltageSources = collectAcVoltageSources(circuit);
   const nodeCount = nodeIndices.size;
-  const matrix = buildSmallSignalMatrix(circuit, nodeIndices, voltageSources);
+  const operatingPoint = solveDcOperatingPointForSmallSignal(
+    circuit,
+    nodeIndices,
+    voltageSources,
+  );
+  const matrix = buildSmallSignalMatrix(
+    circuit,
+    nodeIndices,
+    voltageSources,
+    operatingPoint,
+  );
   const size = matrix.length;
   const outputIndex = nodeIndex(nodeIndices, outputNode);
 
@@ -1687,6 +1697,11 @@ export function noiseAc(
     nodeIndices,
     temperatureKelvin,
   );
+  const operatingPoint = solveDcOperatingPointForSmallSignal(
+    circuit,
+    nodeIndices,
+    voltageSources,
+  );
 
   const points = frequenciesHz.map((frequencyHz) => {
     if (outputIndex === undefined || matrixSize === 0) {
@@ -1698,6 +1713,7 @@ export function noiseAc(
       TWO_PI * frequencyHz,
       nodeIndices,
       voltageSources,
+      operatingPoint,
     );
     const rhs = Array.from({ length: matrixSize }, () => complex(0.0, 0.0));
     rhs[outputIndex] = complex(1.0, 0.0);
@@ -2351,6 +2367,12 @@ function elementParameter(element: Element): ElementParameter | undefined {
         parameter: "saturationCurrent",
         nominalValue: element.saturationCurrent,
       };
+    case "jfet":
+      return {
+        elementName: element.name,
+        parameter: "beta",
+        nominalValue: element.beta,
+      };
     case "bjt":
       return {
         elementName: element.name,
@@ -2427,6 +2449,9 @@ function circuitWithPerturbedElement(
           ...element,
           saturationCurrent: element.saturationCurrent + delta,
         });
+        break;
+      case "jfet":
+        perturbed.add({ ...element, beta: element.beta + delta });
         break;
       case "bjt":
         perturbed.add({
@@ -2718,6 +2743,38 @@ function solveDcNewton(
   );
 }
 
+function solveDcOperatingPointForSmallSignal(
+  circuit: Circuit,
+  nodeIndices: ReadonlyMap<string, number>,
+  voltageSources: ReadonlyMap<string, number>,
+): readonly number[] {
+  const matrixSize = nodeIndices.size + voltageSources.size;
+  if (matrixSize === 0 || !circuit.elements().some(isNonlinearElement)) {
+    return Array.from({ length: matrixSize }, () => 0.0);
+  }
+
+  const options = validatedDcOpOptions({});
+  const solution = solveDcNewton(circuit, options);
+  if (solution.converged || !options.convergenceAids) {
+    return solution.vector;
+  }
+
+  const aided =
+    solveDcWithGminStepping(circuit, options, solution.vector) ??
+    solveDcWithSourceStepping(circuit, options);
+  return (aided ?? solution).vector;
+}
+
+function isNonlinearElement(element: Element): boolean {
+  return (
+    element.kind === "diode" ||
+    element.kind === "jfet" ||
+    element.kind === "bjt" ||
+    element.kind === "mosfet" ||
+    element.kind === "b-source"
+  );
+}
+
 function solveLinearCircuitWithOptions(
   circuit: Circuit,
   capacitorStates: readonly CapacitorState[],
@@ -2741,15 +2798,7 @@ function solveLinearCircuitWithOptions(
     };
   }
 
-  const hasNonlinearElement = circuit
-    .elements()
-    .some(
-      (element) =>
-        element.kind === "diode" ||
-        element.kind === "bjt" ||
-        element.kind === "mosfet" ||
-        element.kind === "b-source",
-    );
+  const hasNonlinearElement = circuit.elements().some(isNonlinearElement);
   const returnSingularAsUnconverged =
     (options.returnSingularAsUnconverged ?? false) && hasNonlinearElement;
   let operatingPoint =
@@ -3160,6 +3209,9 @@ function solveLinearCircuitAtOperatingPoint(
       case "diode":
         stampDiode(element, nodeIndices, matrix, rhs, operatingPoint);
         break;
+      case "jfet":
+        stampJfet(element, nodeIndices, matrix, rhs, operatingPoint);
+        break;
       case "bjt":
         stampBjt(element, nodeIndices, matrix, rhs, operatingPoint);
         break;
@@ -3254,6 +3306,7 @@ function buildSmallSignalMatrix(
   circuit: Circuit,
   nodeIndices: ReadonlyMap<string, number>,
   voltageSources: ReadonlyMap<string, number>,
+  operatingPoint: readonly number[],
 ): number[][] {
   const nodeCount = nodeIndices.size;
   const matrixSize = nodeCount + voltageSources.size;
@@ -3304,11 +3357,14 @@ function buildSmallSignalMatrix(
           element.saturationCurrent / element.thermalVoltage,
         );
         break;
+      case "jfet":
+        stampJfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
+        break;
       case "bjt":
         stampBjtSmallSignal(element, nodeIndices, matrix);
         break;
       case "mosfet":
-        stampMosfetSmallSignal(element, nodeIndices, matrix);
+        stampMosfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
         break;
       case "vccs":
         stampVccs(element, nodeIndices, matrix);
@@ -3352,7 +3408,18 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
     return { nodeVoltages: new Map(), branchCurrents: new Map() };
   }
 
-  const matrix = buildAcMatrix(circuit, omega, nodeIndices, voltageSources);
+  const operatingPoint = solveDcOperatingPointForSmallSignal(
+    circuit,
+    nodeIndices,
+    voltageSources,
+  );
+  const matrix = buildAcMatrix(
+    circuit,
+    omega,
+    nodeIndices,
+    voltageSources,
+    operatingPoint,
+  );
   const rhs = Array.from({ length: matrixSize }, () => complex(0.0, 0.0));
 
   for (const element of circuit.elements()) {
@@ -3373,6 +3440,7 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
       case "capacitor":
       case "inductor":
       case "diode":
+      case "jfet":
       case "bjt":
       case "mosfet":
       case "vccs":
@@ -3404,6 +3472,7 @@ function buildAcMatrix(
   omega: number,
   nodeIndices: ReadonlyMap<string, number>,
   voltageSources: ReadonlyMap<string, number>,
+  operatingPoint: readonly number[],
 ): Complex[][] {
   const nodeCount = nodeIndices.size;
   const matrixSize = nodeCount + voltageSources.size;
@@ -3445,11 +3514,14 @@ function buildAcMatrix(
           complex(element.saturationCurrent / element.thermalVoltage, 0.0),
         );
         break;
+      case "jfet":
+        stampAcJfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
+        break;
       case "bjt":
         stampAcBjtSmallSignal(element, nodeIndices, matrix);
         break;
       case "mosfet":
-        stampAcMosfetSmallSignal(element, nodeIndices, matrix);
+        stampAcMosfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
         break;
       case "vccs":
         stampAcVccs(element, nodeIndices, matrix);
@@ -3768,6 +3840,7 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
         element.kind === "capacitor" ||
         element.kind === "inductor" ||
         element.kind === "diode" ||
+        element.kind === "jfet" ||
         element.kind === "bjt" ||
         element.kind === "mosfet" ||
         element.kind === "vccs" ||
@@ -4084,6 +4157,103 @@ interface MosfetDcResult {
   readonly gm: number;
   readonly gds: number;
   readonly gmb: number;
+}
+
+interface JfetDcResult {
+  readonly drainCurrent: number;
+  readonly gm: number;
+  readonly gds: number;
+}
+
+function validateJfet(element: Jfet): void {
+  if (!Number.isFinite(element.beta) || element.beta <= 0.0) {
+    throw invalidElement(element.name, "beta must be finite and positive");
+  }
+  if (!Number.isFinite(element.thresholdVoltage)) {
+    throw invalidElement(element.name, "threshold voltage must be finite");
+  }
+  if (!Number.isFinite(element.channelLengthModulation)) {
+    throw invalidElement(element.name, "channel length modulation must be finite");
+  }
+}
+
+function stampJfet(
+  element: Jfet,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+  operatingPoint: readonly number[],
+): void {
+  validateJfet(element);
+  const drain = nodeIndex(nodeIndices, element.drain);
+  const gate = nodeIndex(nodeIndices, element.gate);
+  const source = nodeIndex(nodeIndices, element.source);
+  const drainVoltage = vectorVoltage(operatingPoint, drain);
+  const gateVoltage = vectorVoltage(operatingPoint, gate);
+  const sourceVoltage = vectorVoltage(operatingPoint, source);
+  const vgs = gateVoltage - sourceVoltage;
+  const vds = drainVoltage - sourceVoltage;
+  const result = evaluateJfet(element, vgs, vds);
+  const equivalentCurrent =
+    result.drainCurrent - result.gm * vgs - result.gds * vds;
+
+  stampConductance(matrix, drain, source, result.gds);
+  stampTransconductance(matrix, drain, source, gate, source, result.gm);
+  stampCurrentSourceEquivalent(rhs, drain, source, equivalentCurrent);
+}
+
+function evaluateJfet(element: Jfet, vgs: number, vds: number): JfetDcResult {
+  if (element.polarity === "PJF") {
+    const result = evaluateNjf(
+      -vgs,
+      -vds,
+      -element.thresholdVoltage,
+      element.beta,
+      element.channelLengthModulation,
+    );
+    return {
+      drainCurrent: -result.drainCurrent,
+      gm: result.gm,
+      gds: result.gds,
+    };
+  }
+  return evaluateNjf(
+    vgs,
+    vds,
+    element.thresholdVoltage,
+    element.beta,
+    element.channelLengthModulation,
+  );
+}
+
+function evaluateNjf(
+  vgs: number,
+  vds: number,
+  thresholdVoltage: number,
+  beta: number,
+  channelLengthModulation: number,
+): JfetDcResult {
+  const overdrive = vgs - thresholdVoltage;
+  if (overdrive <= 0.0 || vds < 0.0) {
+    return { drainCurrent: 0.0, gm: 0.0, gds: 0.0 };
+  }
+  if (vds < overdrive) {
+    const channel = 2.0 * overdrive * vds - vds * vds;
+    const modulation = 1.0 + channelLengthModulation * vds;
+    return {
+      drainCurrent: beta * channel * modulation,
+      gm: 2.0 * beta * vds * modulation,
+      gds:
+        beta * (2.0 * overdrive - 2.0 * vds) * modulation +
+        beta * channel * channelLengthModulation,
+    };
+  }
+  return {
+    drainCurrent:
+      beta * overdrive * overdrive * (1.0 + channelLengthModulation * vds),
+    gm: 2.0 * beta * overdrive * (1.0 + channelLengthModulation * vds),
+    gds: beta * overdrive * overdrive * channelLengthModulation,
+  };
 }
 
 function stampMosfet(
@@ -4953,16 +5123,48 @@ function stampMosfetSmallSignal(
   element: Mosfet,
   nodeIndices: ReadonlyMap<string, number>,
   matrix: number[][],
+  operatingPoint: readonly number[],
 ): void {
   validateMosfet(element);
   const drain = nodeIndex(nodeIndices, element.drain);
   const gate = nodeIndex(nodeIndices, element.gate);
   const source = nodeIndex(nodeIndices, element.source);
   const body = nodeIndex(nodeIndices, element.body);
-  const result = evaluateMosfetLevel1(element, 0.0, 0.0, 0.0);
+  const drainVoltage = vectorVoltage(operatingPoint, drain);
+  const gateVoltage = vectorVoltage(operatingPoint, gate);
+  const sourceVoltage = vectorVoltage(operatingPoint, source);
+  const bodyVoltage = vectorVoltage(operatingPoint, body);
+  const result = evaluateMosfetLevel1(
+    element,
+    gateVoltage - sourceVoltage,
+    drainVoltage - sourceVoltage,
+    bodyVoltage - sourceVoltage,
+  );
   stampConductance(matrix, drain, source, result.gds);
   stampTransconductance(matrix, drain, source, gate, source, result.gm);
   stampTransconductance(matrix, drain, source, body, source, result.gmb);
+}
+
+function stampJfetSmallSignal(
+  element: Jfet,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  operatingPoint: readonly number[],
+): void {
+  validateJfet(element);
+  const drain = nodeIndex(nodeIndices, element.drain);
+  const gate = nodeIndex(nodeIndices, element.gate);
+  const source = nodeIndex(nodeIndices, element.source);
+  const drainVoltage = vectorVoltage(operatingPoint, drain);
+  const gateVoltage = vectorVoltage(operatingPoint, gate);
+  const sourceVoltage = vectorVoltage(operatingPoint, source);
+  const result = evaluateJfet(
+    element,
+    gateVoltage - sourceVoltage,
+    drainVoltage - sourceVoltage,
+  );
+  stampConductance(matrix, drain, source, result.gds);
+  stampTransconductance(matrix, drain, source, gate, source, result.gm);
 }
 
 function stampAcResistor(
@@ -5379,13 +5581,23 @@ function stampAcMosfetSmallSignal(
   element: Mosfet,
   nodeIndices: ReadonlyMap<string, number>,
   matrix: Complex[][],
+  operatingPoint: readonly number[],
 ): void {
   validateMosfet(element);
   const drain = nodeIndex(nodeIndices, element.drain);
   const gate = nodeIndex(nodeIndices, element.gate);
   const source = nodeIndex(nodeIndices, element.source);
   const body = nodeIndex(nodeIndices, element.body);
-  const result = evaluateMosfetLevel1(element, 0.0, 0.0, 0.0);
+  const drainVoltage = vectorVoltage(operatingPoint, drain);
+  const gateVoltage = vectorVoltage(operatingPoint, gate);
+  const sourceVoltage = vectorVoltage(operatingPoint, source);
+  const bodyVoltage = vectorVoltage(operatingPoint, body);
+  const result = evaluateMosfetLevel1(
+    element,
+    gateVoltage - sourceVoltage,
+    drainVoltage - sourceVoltage,
+    bodyVoltage - sourceVoltage,
+  );
   stampComplexConductance(matrix, drain, source, complex(result.gds, 0.0));
   stampComplexTransconductance(
     matrix,
@@ -5402,6 +5614,35 @@ function stampAcMosfetSmallSignal(
     body,
     source,
     complex(result.gmb, 0.0),
+  );
+}
+
+function stampAcJfetSmallSignal(
+  element: Jfet,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: Complex[][],
+  operatingPoint: readonly number[],
+): void {
+  validateJfet(element);
+  const drain = nodeIndex(nodeIndices, element.drain);
+  const gate = nodeIndex(nodeIndices, element.gate);
+  const source = nodeIndex(nodeIndices, element.source);
+  const drainVoltage = vectorVoltage(operatingPoint, drain);
+  const gateVoltage = vectorVoltage(operatingPoint, gate);
+  const sourceVoltage = vectorVoltage(operatingPoint, source);
+  const result = evaluateJfet(
+    element,
+    gateVoltage - sourceVoltage,
+    drainVoltage - sourceVoltage,
+  );
+  stampComplexConductance(matrix, drain, source, complex(result.gds, 0.0));
+  stampComplexTransconductance(
+    matrix,
+    drain,
+    source,
+    gate,
+    source,
+    complex(result.gm, 0.0),
   );
 }
 

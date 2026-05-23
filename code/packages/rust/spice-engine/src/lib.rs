@@ -3750,7 +3750,11 @@ fn solve_linear_circuit_with_options(
     let has_nonlinear = circuit.elements().iter().any(|element| {
         matches!(
             element,
-            Element::Diode(_) | Element::Bjt(_) | Element::Mosfet(_) | Element::BSource(_)
+            Element::Diode(_)
+                | Element::Jfet(_)
+                | Element::Bjt(_)
+                | Element::Mosfet(_)
+                | Element::BSource(_)
         )
     });
     let return_singular_as_unconverged = options.return_singular_as_unconverged && has_nonlinear;
@@ -3920,10 +3924,7 @@ fn solve_linear_circuit_at_operating_point(
                 stamp_diode(diode, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
             Element::Jfet(jfet) => {
-                return Err(SpiceError::InvalidElement {
-                    name: jfet.name.clone(),
-                    reason: "JFET analysis is not implemented yet".to_string(),
-                });
+                stamp_jfet(jfet, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
             Element::Bjt(bjt) => {
                 stamp_bjt(bjt, node_indices, &mut matrix, &mut rhs, operating_point)?
@@ -4132,10 +4133,7 @@ fn build_ac_matrix(
                 );
             }
             Element::Jfet(jfet) => {
-                return Err(SpiceError::InvalidElement {
-                    name: jfet.name.clone(),
-                    reason: "JFET analysis is not implemented yet".to_string(),
-                });
+                stamp_ac_jfet_small_signal(jfet, node_indices, &mut matrix, operating_point)?
             }
             Element::Bjt(bjt) => {
                 stamp_ac_bjt_small_signal(bjt, node_indices, &mut matrix, operating_point)?
@@ -4234,10 +4232,7 @@ fn build_small_signal_matrix(
                 );
             }
             Element::Jfet(jfet) => {
-                return Err(SpiceError::InvalidElement {
-                    name: jfet.name.clone(),
-                    reason: "JFET analysis is not implemented yet".to_string(),
-                });
+                stamp_jfet_small_signal(jfet, node_indices, &mut matrix, operating_point)?
             }
             Element::Bjt(bjt) => {
                 stamp_bjt_small_signal(bjt, node_indices, &mut matrix, operating_point)?
@@ -4891,6 +4886,95 @@ struct MosfetDcResult {
     gmb: f64,
 }
 
+struct JfetDcResult {
+    drain_current: f64,
+    gm: f64,
+    gds: f64,
+}
+
+fn stamp_jfet(
+    jfet: &Jfet,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+    operating_point: &[f64],
+) -> Result<(), SpiceError> {
+    validate_jfet(jfet)?;
+    let drain = node_index(node_indices, &jfet.drain);
+    let gate = node_index(node_indices, &jfet.gate);
+    let source = node_index(node_indices, &jfet.source);
+    let drain_voltage = vector_voltage(operating_point, drain);
+    let gate_voltage = vector_voltage(operating_point, gate);
+    let source_voltage = vector_voltage(operating_point, source);
+    let vgs = gate_voltage - source_voltage;
+    let vds = drain_voltage - source_voltage;
+    let result = evaluate_jfet(jfet, vgs, vds);
+    let equivalent_current = result.drain_current - result.gm * vgs - result.gds * vds;
+
+    stamp_conductance(matrix, drain, source, result.gds);
+    stamp_transconductance(matrix, drain, source, gate, source, result.gm);
+    stamp_equivalent_current_source(rhs, drain, source, equivalent_current);
+    Ok(())
+}
+
+fn evaluate_jfet(jfet: &Jfet, vgs: f64, vds: f64) -> JfetDcResult {
+    match jfet.polarity {
+        JfetPolarity::Pjf => {
+            let result = evaluate_njf(
+                -vgs,
+                -vds,
+                -jfet.threshold_voltage,
+                jfet.beta,
+                jfet.channel_length_modulation,
+            );
+            JfetDcResult {
+                drain_current: -result.drain_current,
+                gm: result.gm,
+                gds: result.gds,
+            }
+        }
+        JfetPolarity::Njf => evaluate_njf(
+            vgs,
+            vds,
+            jfet.threshold_voltage,
+            jfet.beta,
+            jfet.channel_length_modulation,
+        ),
+    }
+}
+
+fn evaluate_njf(
+    vgs: f64,
+    vds: f64,
+    threshold_voltage: f64,
+    beta: f64,
+    channel_length_modulation: f64,
+) -> JfetDcResult {
+    let overdrive = vgs - threshold_voltage;
+    if overdrive <= 0.0 || vds < 0.0 {
+        return JfetDcResult {
+            drain_current: 0.0,
+            gm: 0.0,
+            gds: 0.0,
+        };
+    }
+    if vds < overdrive {
+        let channel = 2.0 * overdrive * vds - vds * vds;
+        let modulation = 1.0 + channel_length_modulation * vds;
+        return JfetDcResult {
+            drain_current: beta * channel * modulation,
+            gm: 2.0 * beta * vds * modulation,
+            gds: beta * (2.0 * overdrive - 2.0 * vds) * modulation
+                + beta * channel * channel_length_modulation,
+        };
+    }
+    JfetDcResult {
+        drain_current: beta * overdrive * overdrive * (1.0 + channel_length_modulation * vds),
+        gm: 2.0 * beta * overdrive * (1.0 + channel_length_modulation * vds),
+        gds: beta * overdrive * overdrive * channel_length_modulation,
+    }
+}
+
 fn stamp_mosfet(
     mosfet: &Mosfet,
     node_indices: &HashMap<String, usize>,
@@ -5014,6 +5098,29 @@ fn stamp_mosfet_small_signal(
     Ok(())
 }
 
+fn stamp_jfet_small_signal(
+    jfet: &Jfet,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    operating_point: &[f64],
+) -> Result<(), SpiceError> {
+    validate_jfet(jfet)?;
+    let drain = node_index(node_indices, &jfet.drain);
+    let gate = node_index(node_indices, &jfet.gate);
+    let source = node_index(node_indices, &jfet.source);
+    let drain_voltage = vector_voltage(operating_point, drain);
+    let gate_voltage = vector_voltage(operating_point, gate);
+    let source_voltage = vector_voltage(operating_point, source);
+    let result = evaluate_jfet(
+        jfet,
+        gate_voltage - source_voltage,
+        drain_voltage - source_voltage,
+    );
+    stamp_conductance(matrix, drain, source, result.gds);
+    stamp_transconductance(matrix, drain, source, gate, source, result.gm);
+    Ok(())
+}
+
 fn stamp_ac_mosfet_small_signal(
     mosfet: &Mosfet,
     node_indices: &HashMap<String, usize>,
@@ -5049,6 +5156,36 @@ fn stamp_ac_mosfet_small_signal(
         body,
         source,
         Complex::new(result.gmb, 0.0),
+    );
+    Ok(())
+}
+
+fn stamp_ac_jfet_small_signal(
+    jfet: &Jfet,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<Complex>],
+    operating_point: &[f64],
+) -> Result<(), SpiceError> {
+    validate_jfet(jfet)?;
+    let drain = node_index(node_indices, &jfet.drain);
+    let gate = node_index(node_indices, &jfet.gate);
+    let source = node_index(node_indices, &jfet.source);
+    let drain_voltage = vector_voltage(operating_point, drain);
+    let gate_voltage = vector_voltage(operating_point, gate);
+    let source_voltage = vector_voltage(operating_point, source);
+    let result = evaluate_jfet(
+        jfet,
+        gate_voltage - source_voltage,
+        drain_voltage - source_voltage,
+    );
+    stamp_complex_conductance(matrix, drain, source, Complex::new(result.gds, 0.0));
+    stamp_complex_transconductance(
+        matrix,
+        drain,
+        source,
+        gate,
+        source,
+        Complex::new(result.gm, 0.0),
     );
     Ok(())
 }
@@ -5097,6 +5234,28 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "thermal voltage must be finite and positive".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
+    if !jfet.beta.is_finite() || jfet.beta <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "beta must be finite and positive".to_string(),
+        });
+    }
+    if !jfet.threshold_voltage.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "threshold voltage must be finite".to_string(),
+        });
+    }
+    if !jfet.channel_length_modulation.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "channel length modulation must be finite".to_string(),
         });
     }
     Ok(())

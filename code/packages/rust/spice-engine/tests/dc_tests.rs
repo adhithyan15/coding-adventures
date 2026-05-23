@@ -1,8 +1,9 @@
 use spice_engine::{
     dc_corners, dc_op, dc_op_with_options, dc_sweep, dc_sweep_corners, BSource, Bjt, BjtPolarity,
     Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, DcOpOptions, Diode, Element,
-    Inductor, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError,
-    SubcircuitDefinition, SubcircuitElement, Vccs, Vcvs, VoltageSource, Waveform, XInstance,
+    Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform,
+    SpiceError, SubcircuitDefinition, SubcircuitElement, Vccs, Vcvs, VoltageSource, Waveform,
+    XInstance,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -369,6 +370,39 @@ fn dc_mosfet_solves_nmos_source_follower_operating_point() {
     assert!(out < 2.5, "expected source below gate bias, got {out}");
     assert!(result.converged);
     assert!(result.iterations > 0);
+}
+
+#[test]
+fn dc_jfet_solves_n_channel_source_resistor_bias() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 10.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vg", "gate", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rd", "vdd", "drain", 2_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rs", "source", "0", 1_000.0,
+    )));
+    circuit.add(Element::Jfet(Jfet::with_model(
+        "J1",
+        "drain",
+        "gate",
+        "source",
+        JfetPolarity::Njf,
+        1.0e-3,
+        -2.0,
+        0.0,
+    )));
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert!(result.converged);
+    assert!((result.voltage("source").unwrap() - 1.0).abs() < 0.05);
+    assert!((result.voltage("drain").unwrap() - 8.0).abs() < 0.1);
 }
 
 #[test]

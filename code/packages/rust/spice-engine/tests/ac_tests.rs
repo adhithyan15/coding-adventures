@@ -1,7 +1,7 @@
 use spice_engine::{
     ac_sweep, ac_sweep_corners, s_parameters, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit,
-    CornerOverride, CornerSpec, CurrentSource, Element, Inductor, Mosfet, MosfetLevel1Params,
-    MosfetType, Resistor, SpiceError, Vcvs, VoltageSource,
+    CornerOverride, CornerSpec, CurrentSource, Element, Inductor, Jfet, JfetPolarity, Mosfet,
+    MosfetLevel1Params, MosfetType, Resistor, SpiceError, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -271,6 +271,38 @@ fn ac_mosfet_common_source_suppresses_dc_supplies_without_ac_spec() {
     assert_eq!(points.len(), 1);
     let out = points[0].voltage("out").unwrap();
     assert_close(out.real, -1.0);
+    assert_close(out.imag, 0.0);
+    assert_close(points[0].voltage("vdd").unwrap().abs(), 0.0);
+}
+
+#[test]
+fn ac_jfet_common_source_uses_dc_bias_for_small_signal_gain() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 10.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "Vin", "gate", "0", 0.0, 1.0, 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rd", "vdd", "drain", 1_000.0,
+    )));
+    circuit.add(Element::Jfet(Jfet::with_model(
+        "J1",
+        "drain",
+        "gate",
+        "0",
+        JfetPolarity::Njf,
+        1.0e-3,
+        -2.0,
+        0.0,
+    )));
+
+    let points = ac_sweep(&circuit, 1_000.0, 1_000.0, 10).unwrap();
+
+    assert_eq!(points.len(), 1);
+    let out = points[0].voltage("drain").unwrap();
+    assert_close(out.real, -4.0);
     assert_close(out.imag, 0.0);
     assert_close(points[0].voltage("vdd").unwrap().abs(), 0.0);
 }

@@ -101,6 +101,7 @@ from spice_engine import (
     Diode,
     ExpWaveform,
     Inductor,
+    JFET,
     McPoint,
     McResult,
     NoiseEntry,
@@ -1085,6 +1086,35 @@ def test_bjt_pnp_dataclass():
     """PNP BJT stores polarity correctly."""
     q = BJT("Q2", collector="c", base="b", emitter="vcc", polarity="PNP")
     assert q.polarity == "PNP"
+
+
+def test_jfet_n_channel_source_resistor_bias_dc() -> None:
+    c = Circuit()
+    c.add(VoltageSource("Vdd", "vdd", "0", voltage=10.0))
+    c.add(VoltageSource("Vg", "gate", "0", voltage=0.0))
+    c.add(Resistor("Rd", "vdd", "drain", 2_000.0))
+    c.add(Resistor("Rs", "source", "0", 1_000.0))
+    c.add(JFET("J1", "drain", "gate", "source", beta=1.0e-3, vto=-2.0))
+
+    result = dc_op(c)
+
+    assert result.converged
+    assert result.node_voltages["source"] == pytest.approx(1.0, abs=0.05)
+    assert result.node_voltages["drain"] == pytest.approx(8.0, abs=0.1)
+
+
+def test_jfet_common_source_ac_gain_from_bias_point() -> None:
+    c = Circuit()
+    c.add(VoltageSource("Vdd", "vdd", "0", voltage=10.0))
+    c.add(VoltageSource("Vin", "gate", "0", voltage=0.0, ac=AcSource(1.0)))
+    c.add(Resistor("Rd", "vdd", "drain", 1_000.0))
+    c.add(JFET("J1", "drain", "gate", "0", beta=1.0e-3, vto=-2.0))
+
+    result = ac_sweep(c, f_start=1_000.0, f_stop=1_000.0, n_points=1)
+
+    out = result.points[0].node_voltages["drain"]
+    assert out.real == pytest.approx(-4.0, abs=1.0e-6)
+    assert out.imag == pytest.approx(0.0, abs=1.0e-12)
 
 
 def test_bjt_npn_off():

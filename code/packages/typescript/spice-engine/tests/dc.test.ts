@@ -15,6 +15,7 @@ import {
   dcSweepCorners,
   diode,
   inductor,
+  jfet,
   mosfet,
   resistor,
   subcircuitDefinition,
@@ -260,6 +261,21 @@ describe("dcOp", () => {
     expect(result.voltage("out")).toBeLessThan(1.8);
     expect(result.converged).toBe(true);
     expect(result.iterations).toBeGreaterThan(0);
+  });
+
+  it("solves an N-channel JFET source-resistor bias point", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdd", "vdd", "0", 10.0));
+    circuit.add(voltageSource("Vg", "gate", "0", 0.0));
+    circuit.add(resistor("Rd", "vdd", "drain", 2_000.0));
+    circuit.add(resistor("Rs", "source", "0", 1_000.0));
+    circuit.add(jfet("J1", "drain", "gate", "source", "NJF", 1.0e-3, -2.0));
+
+    const result = dcOp(circuit);
+
+    expect(result.converged).toBe(true);
+    expect(result.voltage("source")).toBeCloseTo(1.0, 1);
+    expect(result.voltage("drain")).toBeCloseTo(8.0, 0);
   });
 
   it("reports unconverged nonlinear operating points when aids are disabled", () => {
