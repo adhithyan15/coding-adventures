@@ -128,6 +128,8 @@ All notable changes to this package will be documented in this file.
   supervisor drain run reports and summaries.
 - Stable batch-write, replay, and inventory health labels with write
   count-integrity helpers for host logs.
+- Stable checkpoint replay, checkpoint status, and planned page health labels
+  with follow-up and count-integrity helpers for host logs.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Report-level scheduler action labels for supervisor drain runs.

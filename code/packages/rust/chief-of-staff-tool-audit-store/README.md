@@ -19,6 +19,8 @@ The crate keeps the boundary narrow:
   follow-up labels plus count-integrity helpers for host logs
 - replay checkpoints expose timestamp and call-id scalar accessors for host
   checkpoint logs
+- checkpoint replay, checkpoint status, and planned drain pages expose stable
+  health labels plus follow-up and count-integrity helpers for host logs
 - supervisors can read deterministic checkpoint pages to resume audit replay
   after restarts without reprocessing the whole store
 - checkpoint pages expose next-checkpoint timestamp and call-id scalar

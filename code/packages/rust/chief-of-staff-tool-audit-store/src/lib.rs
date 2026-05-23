@@ -638,6 +638,11 @@ impl ToolAuditCheckpointReplaySummary {
         self.replayed_records == self.inventory.total_records
     }
 
+    /// Return whether replayed row count drifted from the payload-free inventory.
+    pub fn has_replay_count_integrity_drift(&self) -> bool {
+        !self.replayed_count_matches_inventory()
+    }
+
     /// Return the starting checkpoint timestamp for host replay logs.
     pub fn starting_checkpoint_timestamp_ms(&self) -> u64 {
         self.starting_checkpoint.timestamp_ms
@@ -656,6 +661,37 @@ impl ToolAuditCheckpointReplaySummary {
     /// Return the checkpoint call id saved after this replay page.
     pub fn next_checkpoint_call_id(&self) -> &str {
         &self.next_checkpoint.call_id
+    }
+
+    /// Classify follow-up pressure in the replayed row inventory.
+    pub fn inventory_follow_up_kind(&self) -> ToolAuditInventoryFollowUpKind {
+        self.inventory.follow_up_kind()
+    }
+
+    /// Return the stable follow-up label for the replayed row inventory.
+    pub fn inventory_follow_up_label(&self) -> &'static str {
+        self.inventory.follow_up_label()
+    }
+
+    /// Return whether the inventory follow-up label parses back to its typed value.
+    pub fn inventory_follow_up_label_matches_kind(&self) -> bool {
+        self.inventory.follow_up_label_matches_kind()
+    }
+
+    /// Classify this checkpoint replay for host logs.
+    pub fn checkpoint_replay_outcome(&self) -> ToolAuditCheckpointReplayOutcome {
+        ToolAuditCheckpointReplayOutcome::from_checkpoint_replay_summary(self)
+    }
+
+    /// Return the stable checkpoint-replay outcome label for host logs.
+    pub fn checkpoint_replay_outcome_label(&self) -> &'static str {
+        self.checkpoint_replay_outcome().as_str()
+    }
+
+    /// Return whether the checkpoint-replay label parses back to its typed outcome.
+    pub fn checkpoint_replay_outcome_label_matches_outcome(&self) -> bool {
+        ToolAuditCheckpointReplayOutcome::from_label(self.checkpoint_replay_outcome_label())
+            == Some(self.checkpoint_replay_outcome())
     }
 
     /// Return whether any replayed row needs follow-up.
@@ -694,6 +730,11 @@ impl ToolAuditSupervisorCheckpointStatus {
     /// Return whether pending row count agrees with the payload-free inventory.
     pub fn pending_count_matches_inventory(&self) -> bool {
         self.pending_records == self.inventory.total_records
+    }
+
+    /// Return whether pending row count drifted from the payload-free inventory.
+    pub fn has_checkpoint_page_count_integrity_drift(&self) -> bool {
+        !self.pending_count_matches_inventory()
     }
 
     /// Return whether a drain tick would deliver at least one row.
@@ -736,6 +777,42 @@ impl ToolAuditSupervisorCheckpointStatus {
         self.inventory.requires_follow_up()
     }
 
+    /// Classify follow-up pressure in the inspected pending inventory.
+    pub fn inventory_follow_up_kind(&self) -> ToolAuditInventoryFollowUpKind {
+        self.inventory.follow_up_kind()
+    }
+
+    /// Return the stable follow-up label for the inspected pending inventory.
+    pub fn inventory_follow_up_label(&self) -> &'static str {
+        self.inventory.follow_up_label()
+    }
+
+    /// Return whether the inventory follow-up label parses back to its typed value.
+    pub fn inventory_follow_up_label_matches_kind(&self) -> bool {
+        self.inventory.follow_up_label_matches_kind()
+    }
+
+    /// Classify this checkpoint page for host status logs.
+    pub fn checkpoint_page_outcome(&self) -> ToolAuditCheckpointPageOutcome {
+        ToolAuditCheckpointPageOutcome::from_page_flags(
+            self.pending_count_matches_inventory(),
+            self.is_idle(),
+            self.should_continue_after_page(),
+            self.requires_follow_up(),
+        )
+    }
+
+    /// Return the stable checkpoint-page outcome label for host status logs.
+    pub fn checkpoint_page_outcome_label(&self) -> &'static str {
+        self.checkpoint_page_outcome().as_str()
+    }
+
+    /// Return whether the checkpoint-page label parses back to its typed outcome.
+    pub fn checkpoint_page_outcome_label_matches_outcome(&self) -> bool {
+        ToolAuditCheckpointPageOutcome::from_label(self.checkpoint_page_outcome_label())
+            == Some(self.checkpoint_page_outcome())
+    }
+
     /// Return whether the next drain page would advance the durable checkpoint.
     pub fn would_advance_checkpoint(&self) -> bool {
         self.has_pending_records()
@@ -768,6 +845,11 @@ impl ToolAuditSupervisorDrainPlanPage {
     /// Return whether pending row count agrees with the payload-free inventory.
     pub fn pending_count_matches_inventory(&self) -> bool {
         self.pending_records == self.inventory.total_records
+    }
+
+    /// Return whether planned row count drifted from the payload-free inventory.
+    pub fn has_checkpoint_page_count_integrity_drift(&self) -> bool {
+        !self.pending_count_matches_inventory()
     }
 
     /// Return whether this planned page has rows to drain.
@@ -808,6 +890,42 @@ impl ToolAuditSupervisorDrainPlanPage {
     /// Return whether any inspected row needs follow-up.
     pub fn requires_follow_up(&self) -> bool {
         self.inventory.requires_follow_up()
+    }
+
+    /// Classify follow-up pressure in the planned page inventory.
+    pub fn inventory_follow_up_kind(&self) -> ToolAuditInventoryFollowUpKind {
+        self.inventory.follow_up_kind()
+    }
+
+    /// Return the stable follow-up label for the planned page inventory.
+    pub fn inventory_follow_up_label(&self) -> &'static str {
+        self.inventory.follow_up_label()
+    }
+
+    /// Return whether the inventory follow-up label parses back to its typed value.
+    pub fn inventory_follow_up_label_matches_kind(&self) -> bool {
+        self.inventory.follow_up_label_matches_kind()
+    }
+
+    /// Classify this planned checkpoint page for host preflight logs.
+    pub fn checkpoint_page_outcome(&self) -> ToolAuditCheckpointPageOutcome {
+        ToolAuditCheckpointPageOutcome::from_page_flags(
+            self.pending_count_matches_inventory(),
+            self.is_idle(),
+            self.should_continue_after_page(),
+            self.requires_follow_up(),
+        )
+    }
+
+    /// Return the stable checkpoint-page outcome label for host preflight logs.
+    pub fn checkpoint_page_outcome_label(&self) -> &'static str {
+        self.checkpoint_page_outcome().as_str()
+    }
+
+    /// Return whether the checkpoint-page label parses back to its typed outcome.
+    pub fn checkpoint_page_outcome_label_matches_outcome(&self) -> bool {
+        ToolAuditCheckpointPageOutcome::from_label(self.checkpoint_page_outcome_label())
+            == Some(self.checkpoint_page_outcome())
     }
 
     /// Return whether the matching drain tick would advance the durable checkpoint.
@@ -5547,6 +5665,182 @@ impl ToolAuditReplayOutcome {
 }
 
 impl Display for ToolAuditReplayOutcome {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Payload-free outcome for replaying one checkpoint page into a sink.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditCheckpointReplayOutcome {
+    /// No audit rows were replayed.
+    Empty,
+    /// Rows were replayed and none need follow-up.
+    ReplayedClean,
+    /// Rows were replayed and at least one needs follow-up.
+    ReplayedWithFollowUp,
+    /// Flattened replay count drifted from the replayed inventory.
+    CountIntegrityDrift,
+}
+
+impl ToolAuditCheckpointReplayOutcome {
+    /// Classify a checkpoint replay summary for host dashboards.
+    pub fn from_checkpoint_replay_summary(summary: &ToolAuditCheckpointReplaySummary) -> Self {
+        if summary.has_replay_count_integrity_drift() {
+            return Self::CountIntegrityDrift;
+        }
+        if summary.is_empty() {
+            return Self::Empty;
+        }
+        if summary.requires_follow_up() {
+            return Self::ReplayedWithFollowUp;
+        }
+        Self::ReplayedClean
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Empty => "empty",
+            Self::ReplayedClean => "replayed_clean",
+            Self::ReplayedWithFollowUp => "replayed_with_follow_up",
+            Self::CountIntegrityDrift => "count_integrity_drift",
+        }
+    }
+
+    /// Parse a stable snake_case checkpoint-replay outcome label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "empty" => Some(Self::Empty),
+            "replayed_clean" => Some(Self::ReplayedClean),
+            "replayed_with_follow_up" => Some(Self::ReplayedWithFollowUp),
+            "count_integrity_drift" => Some(Self::CountIntegrityDrift),
+            _ => None,
+        }
+    }
+
+    /// Return whether this replay delivered rows without follow-up pressure.
+    pub fn is_replayed_clean(self) -> bool {
+        matches!(self, Self::ReplayedClean)
+    }
+
+    /// Return whether this replay needs host follow-up.
+    pub fn requires_follow_up(self) -> bool {
+        matches!(self, Self::ReplayedWithFollowUp | Self::CountIntegrityDrift)
+    }
+
+    /// Return whether this replay needs flattened count integrity investigation.
+    pub fn requires_count_integrity_investigation(self) -> bool {
+        matches!(self, Self::CountIntegrityDrift)
+    }
+}
+
+impl Display for ToolAuditCheckpointReplayOutcome {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Payload-free outcome for a checkpoint status or planned drain page.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditCheckpointPageOutcome {
+    /// No audit rows are waiting at this checkpoint.
+    Idle,
+    /// Rows are waiting, this page reached the log end, and none need follow-up.
+    PendingClean,
+    /// Rows are waiting, this page reached the log end, and some need follow-up.
+    PendingWithFollowUp,
+    /// Rows are waiting, more pages remain, and none in this page need follow-up.
+    PendingContinuation,
+    /// Rows are waiting, more pages remain, and this page also needs follow-up.
+    PendingContinuationWithFollowUp,
+    /// Flattened pending count drifted from the page inventory.
+    CountIntegrityDrift,
+}
+
+impl ToolAuditCheckpointPageOutcome {
+    /// Classify a checkpoint page from count, continuation, and follow-up flags.
+    pub fn from_page_flags(
+        count_matches_inventory: bool,
+        is_idle: bool,
+        should_continue_after_page: bool,
+        requires_follow_up: bool,
+    ) -> Self {
+        if !count_matches_inventory {
+            return Self::CountIntegrityDrift;
+        }
+        if is_idle {
+            return Self::Idle;
+        }
+        match (should_continue_after_page, requires_follow_up) {
+            (false, false) => Self::PendingClean,
+            (false, true) => Self::PendingWithFollowUp,
+            (true, false) => Self::PendingContinuation,
+            (true, true) => Self::PendingContinuationWithFollowUp,
+        }
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Idle => "idle",
+            Self::PendingClean => "pending_clean",
+            Self::PendingWithFollowUp => "pending_with_follow_up",
+            Self::PendingContinuation => "pending_continuation",
+            Self::PendingContinuationWithFollowUp => "pending_continuation_with_follow_up",
+            Self::CountIntegrityDrift => "count_integrity_drift",
+        }
+    }
+
+    /// Parse a stable snake_case checkpoint-page outcome label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "idle" => Some(Self::Idle),
+            "pending_clean" => Some(Self::PendingClean),
+            "pending_with_follow_up" => Some(Self::PendingWithFollowUp),
+            "pending_continuation" => Some(Self::PendingContinuation),
+            "pending_continuation_with_follow_up" => Some(Self::PendingContinuationWithFollowUp),
+            "count_integrity_drift" => Some(Self::CountIntegrityDrift),
+            _ => None,
+        }
+    }
+
+    /// Return whether this page has rows that should be drained.
+    pub fn should_drain(self) -> bool {
+        matches!(
+            self,
+            Self::PendingClean
+                | Self::PendingWithFollowUp
+                | Self::PendingContinuation
+                | Self::PendingContinuationWithFollowUp
+        )
+    }
+
+    /// Return whether more pages should be inspected or drained after this page.
+    pub fn requires_continuation(self) -> bool {
+        matches!(
+            self,
+            Self::PendingContinuation | Self::PendingContinuationWithFollowUp
+        )
+    }
+
+    /// Return whether this page needs host follow-up.
+    pub fn requires_follow_up(self) -> bool {
+        matches!(
+            self,
+            Self::PendingWithFollowUp
+                | Self::PendingContinuationWithFollowUp
+                | Self::CountIntegrityDrift
+        )
+    }
+
+    /// Return whether this page needs flattened count integrity investigation.
+    pub fn requires_count_integrity_investigation(self) -> bool {
+        matches!(self, Self::CountIntegrityDrift)
+    }
+}
+
+impl Display for ToolAuditCheckpointPageOutcome {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -12030,6 +12324,202 @@ mod tests {
         assert_eq!(clean_replay.replay_outcome_label(), "replayed_clean");
         assert!(clean_replay.replay_outcome().is_replayed_clean());
         assert!(!clean_replay.replay_outcome().requires_follow_up());
+    }
+
+    #[test]
+    fn checkpoint_replay_and_page_health_labels_are_stable() {
+        let clean_inventory =
+            ToolAuditStoreInventorySummary::from_records(&[sample_record("call_clean")]);
+        let follow_up_inventory =
+            ToolAuditStoreInventorySummary::from_records(&[failed_record("call_failed")]);
+
+        let empty_replay = ToolAuditCheckpointReplaySummary {
+            checkpoint_name: "supervisor".to_string(),
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            stored_checkpoint: None,
+            replayed_records: 0,
+            inventory: ToolAuditStoreInventorySummary::empty(),
+        };
+        assert_eq!(
+            empty_replay.checkpoint_replay_outcome(),
+            ToolAuditCheckpointReplayOutcome::Empty
+        );
+        assert_eq!(empty_replay.checkpoint_replay_outcome_label(), "empty");
+        assert!(empty_replay.checkpoint_replay_outcome_label_matches_outcome());
+        assert!(!empty_replay.has_replay_count_integrity_drift());
+
+        let clean_replay = ToolAuditCheckpointReplaySummary {
+            checkpoint_name: "supervisor".to_string(),
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(120, "call_clean"),
+            stored_checkpoint: None,
+            replayed_records: 1,
+            inventory: clean_inventory,
+        };
+        assert_eq!(
+            clean_replay.checkpoint_replay_outcome(),
+            ToolAuditCheckpointReplayOutcome::ReplayedClean
+        );
+        assert_eq!(
+            clean_replay.checkpoint_replay_outcome_label(),
+            "replayed_clean"
+        );
+        assert!(clean_replay.checkpoint_replay_outcome().is_replayed_clean());
+        assert_eq!(
+            clean_replay.inventory_follow_up_kind(),
+            ToolAuditInventoryFollowUpKind::NoFollowUp
+        );
+        assert_eq!(clean_replay.inventory_follow_up_label(), "no_follow_up");
+        assert!(clean_replay.inventory_follow_up_label_matches_kind());
+
+        let follow_up_replay = ToolAuditCheckpointReplaySummary {
+            checkpoint_name: "supervisor".to_string(),
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(151, "call_failed"),
+            stored_checkpoint: None,
+            replayed_records: 1,
+            inventory: follow_up_inventory,
+        };
+        assert_eq!(
+            follow_up_replay.checkpoint_replay_outcome(),
+            ToolAuditCheckpointReplayOutcome::ReplayedWithFollowUp
+        );
+        assert_eq!(
+            follow_up_replay.checkpoint_replay_outcome_label(),
+            "replayed_with_follow_up"
+        );
+        assert!(follow_up_replay
+            .checkpoint_replay_outcome()
+            .requires_follow_up());
+        assert_eq!(
+            follow_up_replay.inventory_follow_up_kind(),
+            ToolAuditInventoryFollowUpKind::MultipleFollowUp
+        );
+
+        let mut stale_replay = clean_replay;
+        stale_replay.replayed_records = 2;
+        assert!(!stale_replay.replayed_count_matches_inventory());
+        assert!(stale_replay.has_replay_count_integrity_drift());
+        assert_eq!(
+            stale_replay.checkpoint_replay_outcome(),
+            ToolAuditCheckpointReplayOutcome::CountIntegrityDrift
+        );
+        assert!(stale_replay
+            .checkpoint_replay_outcome()
+            .requires_count_integrity_investigation());
+
+        let idle_status = ToolAuditSupervisorCheckpointStatus {
+            checkpoint_name: "supervisor".to_string(),
+            max_records: 10,
+            stored_checkpoint: None,
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            pending_records: 0,
+            inventory: ToolAuditStoreInventorySummary::empty(),
+            reached_end_of_log: true,
+        };
+        assert_eq!(
+            idle_status.checkpoint_page_outcome(),
+            ToolAuditCheckpointPageOutcome::Idle
+        );
+        assert_eq!(idle_status.checkpoint_page_outcome_label(), "idle");
+        assert!(idle_status.checkpoint_page_outcome_label_matches_outcome());
+        assert!(!idle_status.has_checkpoint_page_count_integrity_drift());
+
+        let pending_clean_status = ToolAuditSupervisorCheckpointStatus {
+            checkpoint_name: "supervisor".to_string(),
+            max_records: 10,
+            stored_checkpoint: None,
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(120, "call_clean"),
+            pending_records: 1,
+            inventory: clean_inventory,
+            reached_end_of_log: true,
+        };
+        assert_eq!(
+            pending_clean_status.checkpoint_page_outcome(),
+            ToolAuditCheckpointPageOutcome::PendingClean
+        );
+        assert!(pending_clean_status
+            .checkpoint_page_outcome()
+            .should_drain());
+        assert!(!pending_clean_status
+            .checkpoint_page_outcome()
+            .requires_follow_up());
+
+        let pending_follow_up_status = ToolAuditSupervisorCheckpointStatus {
+            checkpoint_name: "supervisor".to_string(),
+            max_records: 10,
+            stored_checkpoint: None,
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(151, "call_failed"),
+            pending_records: 1,
+            inventory: follow_up_inventory,
+            reached_end_of_log: true,
+        };
+        assert_eq!(
+            pending_follow_up_status.checkpoint_page_outcome(),
+            ToolAuditCheckpointPageOutcome::PendingWithFollowUp
+        );
+        assert!(pending_follow_up_status
+            .checkpoint_page_outcome()
+            .requires_follow_up());
+        assert_eq!(
+            pending_follow_up_status.inventory_follow_up_label(),
+            "multiple_follow_up"
+        );
+
+        let continuation_status = ToolAuditSupervisorCheckpointStatus {
+            reached_end_of_log: false,
+            ..pending_clean_status.clone()
+        };
+        assert_eq!(
+            continuation_status.checkpoint_page_outcome(),
+            ToolAuditCheckpointPageOutcome::PendingContinuation
+        );
+        assert!(continuation_status
+            .checkpoint_page_outcome()
+            .requires_continuation());
+
+        let continuation_follow_up_status = ToolAuditSupervisorCheckpointStatus {
+            reached_end_of_log: false,
+            ..pending_follow_up_status.clone()
+        };
+        assert_eq!(
+            continuation_follow_up_status.checkpoint_page_outcome(),
+            ToolAuditCheckpointPageOutcome::PendingContinuationWithFollowUp
+        );
+        assert_eq!(
+            continuation_follow_up_status.checkpoint_page_outcome_label(),
+            "pending_continuation_with_follow_up"
+        );
+
+        let mut stale_status = pending_clean_status;
+        stale_status.pending_records = 2;
+        assert!(stale_status.has_checkpoint_page_count_integrity_drift());
+        assert_eq!(
+            stale_status.checkpoint_page_outcome(),
+            ToolAuditCheckpointPageOutcome::CountIntegrityDrift
+        );
+        assert!(stale_status
+            .checkpoint_page_outcome()
+            .requires_count_integrity_investigation());
+
+        let planned_page = ToolAuditSupervisorDrainPlanPage {
+            max_records: 10,
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(151, "call_failed"),
+            pending_records: 1,
+            inventory: follow_up_inventory,
+            reached_end_of_log: false,
+        };
+        assert_eq!(
+            planned_page.checkpoint_page_outcome(),
+            ToolAuditCheckpointPageOutcome::PendingContinuationWithFollowUp
+        );
+        assert!(planned_page.checkpoint_page_outcome_label_matches_outcome());
+        assert!(planned_page.inventory_follow_up_label_matches_kind());
     }
 
     #[test]
