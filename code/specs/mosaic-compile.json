@@ -69,6 +69,13 @@
       "description": "For --backend xaml: also emit a full WinUI 3 host shell (csproj + App + MainWindow + manifest + build.ps1 + README) next to the component triple. Resulting directory is buildable as-is.",
       "type": "boolean",
       "required": false
+    },
+    {
+      "id": "package-manifest",
+      "long": "package-manifest",
+      "description": "Optional path to a `mosaic-package.toml` that the current .mil/.mll/.msl belongs to. When set, the backend's component-reference resolver auto-registers every name in `[components].exports` so the .mll can reference sibling components from the same package (e.g. Field referencing Input).",
+      "type": "string",
+      "required": false
     }
   ],
   "arguments": [
