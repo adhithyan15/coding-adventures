@@ -517,6 +517,46 @@ _PRAGMA_RE = re.compile(
 # ---------------------------------------------------------------------------
 
 
+def _format_index_bounds(node: object) -> str:
+    """Render an :class:`IndexScan`'s bounds as a SQLite-style detail suffix.
+
+    The output is a comma-free ``AND``-joined sequence of ``col<op>?``
+    fragments matching real SQLite's EXPLAIN QUERY PLAN format::
+
+        x = 5             → "x=?"
+        x = 1 AND y = 2   → "x=? AND y=?"
+        x > 5             → "x>?"
+        x BETWEEN 1 AND 5 → "x>? AND x<?"
+        x = 1 AND y > 2   → "x=? AND y>?"
+
+    Edge cases:
+
+    * Returns ``""`` if the IndexScan has no columns or no bounds at all
+      (e.g. a covering-index full scan with no WHERE constraints).
+    * The function probes ``lo`` / ``hi`` defensively because a future
+      planner may produce per-column tuples of varying length; missing
+      entries are treated as "no bound on this column".
+    """
+    cols = getattr(node, "columns", None) or ()
+    if not cols:
+        return ""
+    lo = getattr(node, "lo", None)
+    hi = getattr(node, "hi", None)
+    fragments: list[str] = []
+    for i, col in enumerate(cols):
+        lo_val = lo[i] if lo is not None and i < len(lo) else None
+        hi_val = hi[i] if hi is not None and i < len(hi) else None
+        if lo_val is not None and hi_val is not None and lo_val == hi_val:
+            # Both bounds equal → equality constraint.
+            fragments.append(f"{col}=?")
+        else:
+            if lo_val is not None:
+                fragments.append(f"{col}>?")
+            if hi_val is not None:
+                fragments.append(f"{col}<?")
+    return " AND ".join(fragments)
+
+
 def _explain_detail(node: LogicalPlan) -> str | None:
     """Return SQLite-style EXPLAIN QUERY PLAN detail text for *node*, or None.
 
@@ -562,13 +602,23 @@ def _explain_detail(node: LogicalPlan) -> str | None:
             return f"SCAN {node.table} AS {node.alias}"
         return f"SCAN {node.table}"
     if isinstance(node, _Ix):
-        # ``SEARCH <table> [AS <alias>] USING INDEX <name>`` — SQLite
-        # also appends ``(<col>=?)`` for each equality bound, but we keep
-        # the form minimal here.  Future work can expand the bound shape.
+        # ``SEARCH <table> [AS <alias>] USING INDEX <name> (col=?...)``
+        # mirroring SQLite's output:
+        #
+        #   x = 5            → "(x=?)"
+        #   x > 5            → "(x>?)"
+        #   x BETWEEN 1 AND 5 → "(x>? AND x<?)"
+        #   x = 1 AND y = 2  → "(x=? AND y=?)"
+        #   x = 1 AND y > 2  → "(x=? AND y>?)"
+        #
+        # SQLite's detail string omits inclusivity markers (``>=`` and
+        # ``<=`` both render as ``>`` and ``<`` here).
         base = f"SEARCH {node.table}"
         if node.alias and node.alias != node.table:
             base += f" AS {node.alias}"
-        return base + f" USING INDEX {node.index_name}"
+        base += f" USING INDEX {node.index_name}"
+        suffix = _format_index_bounds(node)
+        return base + (f" ({suffix})" if suffix else "")
     if isinstance(node, _Agg):
         return "USE TEMP B-TREE FOR GROUP BY"
     if isinstance(node, _Sort):

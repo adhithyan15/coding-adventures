@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.92.0] - 2026-05-23
+
+### Added
+
+- ``EXPLAIN QUERY PLAN`` SEARCH detail rows now include the matched
+  index bounds in SQLite's compact format::
+
+      SEARCH t USING INDEX ix_x (x=?)
+      SEARCH t USING INDEX ix_x (x>?)
+      SEARCH t USING INDEX ix_x (x>? AND x<?)
+      SEARCH t USING INDEX ix_xy (x=? AND y=?)
+      SEARCH t USING INDEX ix_xy (x=? AND y>?)
+
+  The previous format emitted just ``SEARCH t USING INDEX <name>``
+  without the bound suffix.  Inclusivity markers (``>=`` and ``<=``)
+  are collapsed to ``>`` and ``<`` for compactness — matches real
+  SQLite's behaviour.
+
 ## [1.91.0] - 2026-05-23
 
 ### Added

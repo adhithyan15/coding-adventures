@@ -74,7 +74,9 @@ class TestPlannerHonoursHints:
             "EXPLAIN QUERY PLAN SELECT * FROM t INDEXED BY ix_x WHERE x = 2"
         ).fetchall()
         # Single SEARCH row using the named index.
-        assert rows == [(1, 0, 0, "SEARCH t USING INDEX ix_x")]
+        # mini-sqlite 1.92+: detail includes the matched bound, mirroring
+        # SQLite's ``(x=?)`` format for equality predicates.
+        assert rows == [(1, 0, 0, "SEARCH t USING INDEX ix_x (x=?)")]
 
     def test_not_indexed_falls_back_to_scan(self) -> None:
         c = mini_sqlite.connect(":memory:", auto_index=False)
@@ -96,7 +98,9 @@ class TestPlannerHonoursHints:
         rows = c.execute(
             "EXPLAIN QUERY PLAN SELECT * FROM t WHERE x = 2"
         ).fetchall()
-        assert rows == [(1, 0, 0, "SEARCH t USING INDEX ix_x")]
+        # mini-sqlite 1.92+: detail includes the matched bound, mirroring
+        # SQLite's ``(x=?)`` format for equality predicates.
+        assert rows == [(1, 0, 0, "SEARCH t USING INDEX ix_x (x=?)")]
 
 
 class TestErrorOnMissingIndex:
