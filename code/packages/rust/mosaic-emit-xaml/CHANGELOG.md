@@ -1,5 +1,53 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — UI29-2 `HostCheckbox` + `HostRadio` (U29-2-K-xaml)
+
+Both new UI29-2 primitives lower to native WinUI / WPF widgets:
+
+- `HostCheckbox` → `<CheckBox>` with `IsChecked` / `IsEnabled` / `Content`
+  / `IsThreeState` / `Checked` + `Unchecked` events.
+- `HostRadio`    → `<RadioButton>` with `IsChecked` / `IsEnabled` /
+  `Content` / `GroupName` / `Checked` event (only — `Unchecked` is
+  silent per UI29-2 §2.2's "onSelect = this radio was chosen").
+
+Detailed prop handling:
+
+- `checked: slot: c` → `IsChecked="{x:Bind C, Mode=OneWay}"`.
+- `checked: true|false` → `IsChecked="True"` / `IsChecked="False"`.
+- `disabled: slot: d` → `IsEnabled="{x:Bind Not(D)}"` (reuses
+  HostButton's shared `Not(bool)` helper).
+- `disabled: true|false` → `IsEnabled="False"` / `IsEnabled="True"`.
+- `label: str|slot` → `Content="..."` / `Content="{x:Bind Label}"`.
+- `HostCheckbox.indeterminate: slot|true` → `IsThreeState="True"`.
+  The actual `IsChecked = null` transition is the host's job (WinUI
+  doesn't have a "show as indeterminate" attribute, only the
+  three-state-enabled flag).
+- `HostCheckbox.onToggle: emit: onX` → registers TWO code-behind
+  handlers — `<x>_Checked` dispatches `XEvent.X(true)` and
+  `<x>_Unchecked` dispatches `XEvent.X(false)`. WinUI has no
+  combined "toggled" event; the pair satisfies the kernel-canonical
+  `onToggle(checked: bool)` signature exactly.
+- `HostRadio.group: str|slot` → `GroupName="..."` / `GroupName="{x:Bind G}"`.
+  WinUI auto-deselects siblings sharing `GroupName` when one
+  `IsChecked` goes true — true radio-group behavior at the XAML
+  level, no userland RadioGroup needed for v1.
+- `HostRadio.value: str|slot` → flows into the C# dispatch payload
+  as a string literal (escaped) or `this.<Pascal>` property ref.
+- `HostRadio.onSelect: emit: onX` → registers ONLY a `<x>_Checked`
+  handler that dispatches `XEvent.X(<value>)`. The `Unchecked` event
+  is intentionally not wired so sibling-caused deselects don't
+  trigger `onSelect`.
+
+10 new tests cover: bare CheckBox / RadioButton blocks, checked-slot
+binding, string label → Content, disabled → Not(bool) helper,
+onToggle's Checked + Unchecked pair with matching bool payloads,
+indeterminate → IsThreeState, bare RadioButton, group → GroupName,
+onSelect with string-literal value, onSelect with slot-typed value.
+
+Internal: added `escape_csharp_string` helper for embedding string
+literals inside C# code-behind handler bodies (separate from
+`escape_xaml_attr`, which is for XML-attribute contexts).
+
 ## [Unreleased] — `--emit-project` (B1, B2, B3 from demo catalog)
 
 ### Added — full WinUI 3 host shell generation
