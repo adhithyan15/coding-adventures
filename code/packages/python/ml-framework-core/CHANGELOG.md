@@ -2,6 +2,63 @@
 
 ## Unreleased
 
+### Added — MX10 acceptance gate: end-to-end MLP training integration test
+
+Adds `tests/test_end_to_end_training.py` — **the broadest correctness
+test of the MX10 dispatch work**.  Per-op parity and fallback tests
+verify each helper in isolation, but they don't exercise a real
+training loop where forward and backward pass through *many*
+dispatch decisions in sequence (matmul → activation → loss →
+activation backward → matmul backward → parameter update → repeat).
+
+#### Architecture
+
+```
+X(n, d) ──MatMul(W1)──> h(n, hidden) ──ReLU──> h' ──MatMul(W2)──> z(n, 1) ──Sigmoid──> pred
+loss = mean((pred - y)²)
+```
+
+Synthetic binary-classification data with a sigmoidal teacher
+function so a 2-layer MLP can fit it perfectly (loss approaches
+zero rather than bouncing around a noisy floor).  SGD with manual
+parameter update.  Both test cases use **identical training loops**;
+only the sizes differ (and therefore which path is exercised).
+
+#### Two scenarios
+
+| Test | Sizes | Path exercised | Skip if no extension? |
+|------|-------|----------------|-----------------------|
+| `test_mlp_trains_via_fallback_path` | batch=16, d=8, hidden=8 | Pure-Python (all below threshold) | No |
+| `test_mlp_trains_via_rust_path` | batch=400, d=400, hidden=300 | **Rust** (matmul 48M ≫ 4096; activations 120k ≥ 100k) | Yes |
+
+Both assert **loss decreases monotonically** (the strict
+monotonicity proxy: final loss < 0.5 × initial loss for the
+small case; < 0.95 × initial loss for the larger case which gets
+fewer epochs to stay fast).  Either side mis-shaping a gradient,
+swapping operands, or off-by-one-ing a Broadcast envelope causes
+training to diverge / NaN / stall and the test fails.
+
+The Rust-path test also reports per-epoch wallclock so a future
+change that accidentally slows the dispatch (e.g. introducing a
+per-cell Python loop inside a helper) shows up in test output.
+
+#### Why this matters
+
+The per-op tests prove that, say, `sum_backward_axis_via_rust`
+produces the right gradient when called with a known input.  The
+end-to-end test proves that **the dispatch decisions across an
+entire SGD step compose correctly** — that
+`MatMulFunction.forward` followed by `SigmoidFunction.forward` then
+`backward` then `MatMulFunction.backward` produces gradients the
+optimiser can actually drive to a lower loss.  This is the
+acceptance gate for any future MX10 sub-phase: the integration
+test must continue to pass.
+
+All passing locally on darwin-arm64 py 3.10.6 (the fallback test
+runs; the Rust-path test skips cleanly when the extension isn't
+installed).  Full suite: **376 passed + 34 skipped + the same
+pre-existing `test_device.py` failure on main**.
+
 ### Added — MX10 Phase 4-back-relu: optional Rust fast path for `ReLUFunction.backward` via a 3-op composed graph
 
 **Closes the Phase 4 activation backward family.**  With this PR,
