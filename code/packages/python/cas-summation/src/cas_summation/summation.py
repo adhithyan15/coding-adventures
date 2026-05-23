@@ -690,6 +690,17 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     # divergence check used elsewhere.
     if _is_log_of_diverging_in_k(num, k) and _h_diverges_at_infinity(den, k):
         return True
+    # Phase 52: ``Mul(bounded, polynomial)`` numerator pattern.  When the
+    # numerator factorises as ``bounded × P(k)`` (with ``bounded`` non-
+    # constant — so Phase 49 missed it — and ``P`` a positive-degree
+    # polynomial in ``k``), the effective growth of the numerator is
+    # ``deg(P)``.  Vanishes when ``deg(den) > deg(P)``.
+    bounded_poly = _split_bounded_polynomial_factor(num, k)
+    if bounded_poly is not None:
+        _, poly_deg = bounded_poly
+        den_deg_bp = _polynomial_degree_in_k(den, k)
+        if den_deg_bp is not None and den_deg_bp > poly_deg:
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -698,6 +709,7 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     if den_degree is None:
         return False
     return num_degree < den_degree
+
 
 
 def _is_log_of_diverging_in_k(node: IRNode, k: IRSymbol) -> bool:
@@ -724,6 +736,59 @@ def _is_log_of_diverging_in_k(node: IRNode, k: IRSymbol) -> bool:
     # Log(negative-polynomial) shapes without us having to redo the
     # sign analysis.
     return _h_diverges_at_infinity(node, k)
+
+
+def _split_bounded_polynomial_factor(
+    node: IRNode, k: IRSymbol
+) -> tuple[IRNode, int] | None:
+    """Return ``(bounded_factor, poly_degree)`` when ``node`` is a
+    ``Mul`` whose factors split into a bounded part and a polynomial
+    part in ``k``; ``None`` otherwise.
+
+    Phase 52 — Used by :func:`_g_vanishes_at_infinity` to recognise
+    that ``sin(k)·k/k³`` vanishes (bounded × deg 1 over deg 3).  The
+    bounded factor must contain at least one non-constant-in-k
+    expression (otherwise Phase 49 would have caught the whole
+    numerator).
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. Partition each factor into bounded vs polynomial buckets.
+         (Factors that are neither bounded nor polynomial → bail.)
+      3. Require at least one non-constant-in-k bounded factor
+         (otherwise we'd just be re-applying Phase 42).
+      4. Sum the polynomial factors' degrees.
+      5. Return ``(bounded_aggregate, summed_poly_degree)``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    bounded_factors: list[IRNode] = []
+    poly_degree = 0
+    has_non_constant_bounded = False
+    for arg in node.args:
+        if _is_bounded_in_k(arg, k):
+            bounded_factors.append(arg)
+            if not _is_constant_in(arg, k):
+                has_non_constant_bounded = True
+            continue
+        # Try as polynomial.
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is None:
+            return None  # Unrecognised factor.
+        poly_degree += deg
+    if not has_non_constant_bounded:
+        # Pure polynomial — Phase 42 will handle it.
+        return None
+    # Aggregate the bounded factors into a single representative node.
+    # (Caller only uses the second return value; aggregate kept for
+    # API parity with future extensions.)
+    if not bounded_factors:
+        return None
+    if len(bounded_factors) == 1:
+        bounded_aggregate = bounded_factors[0]
+    else:
+        bounded_aggregate = IRApply(MUL, tuple(bounded_factors))
+    return (bounded_aggregate, poly_degree)
 
 
 def _try_power_of_k(

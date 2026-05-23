@@ -1196,3 +1196,97 @@ class TestEvaluateSumPhase50LogOverPolynomial:
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         # Must stay unevaluated.
         assert isinstance(result, IRApply) and result.head == SUM
+
+
+# ---------------------------------------------------------------------------
+# Phase 52 — Bounded × polynomial numerator pattern.
+#
+# Extends Phase 49 to recognise that Mul(bounded, polynomial)
+# numerators have effective growth = polynomial part's degree.
+# Closes shapes like sin(k)·k/k³, k·cos(k)/k², (sin(k)+1)·k/k².
+# ---------------------------------------------------------------------------
+
+
+class TestEvaluateSumPhase52BoundedTimesPolynomial:
+    def test_sin_times_k_over_k_cubed_closes(self):
+        """``sin(k)·k/k³``: bounded × deg 1, denominator deg 3 → vanishes."""
+        from symbolic_ir import POW, SIN, SUB
+
+        sin_k = IRApply(SIN, (_k,))
+        num_k = IRApply(MUL, (sin_k, _k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sin_kp1 = IRApply(SIN, (kp1,))
+        num_kp1 = IRApply(MUL, (sin_kp1, kp1))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 52 should close; got {result!r}"
+        )
+
+    def test_k_times_cos_over_k_squared_closes(self):
+        """``k·cos(k)/k²``: deg 1 × bounded over deg 2 → vanishes."""
+        from symbolic_ir import COS, POW, SUB
+
+        cos_k = IRApply(COS, (_k,))
+        num_k = IRApply(MUL, (_k, cos_k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        cos_kp1 = IRApply(COS, (kp1,))
+        num_kp1 = IRApply(MUL, (kp1, cos_kp1))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(2)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sin_times_k_squared_over_k_cubed_closes(self):
+        """``sin(k)·k²/k³``: bounded × deg 2 / deg 3 → vanishes (deg 2 < 3)."""
+        from symbolic_ir import POW, SIN, SUB
+
+        sin_k = IRApply(SIN, (_k,))
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        num_k = IRApply(MUL, (sin_k, k_sq))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sin_kp1 = IRApply(SIN, (kp1,))
+        kp1_sq = IRApply(POW, (kp1, IRInteger(2)))
+        num_kp1 = IRApply(MUL, (sin_kp1, kp1_sq))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sin_times_k_equal_degrees_refused(self):
+        """``sin(k)·k²/k²``: bounded × deg 2 / deg 2 — degrees tie.
+        Could be anywhere in [-1, 1]; doesn't vanish.  Phase 52 must
+        refuse.
+        """
+        from symbolic_ir import POW, SIN, SUB
+
+        sin_k = IRApply(SIN, (_k,))
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        num_k = IRApply(MUL, (sin_k, k_sq))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sin_kp1 = IRApply(SIN, (kp1,))
+        kp1_sq = IRApply(POW, (kp1, IRInteger(2)))
+        num_kp1 = IRApply(MUL, (sin_kp1, kp1_sq))
+        g_k = IRApply(DIV, (num_k, k_sq))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_sq))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # deg(num) = 2, deg(den) = 2 → can't decide, stay unevaluated.
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_pure_polynomial_still_phase_42(self):
+        """Regression: ``k/k²`` should still close via Phase 42
+        (no bounded factor — Phase 52 shouldn't interfere).
+        """
+        from symbolic_ir import POW, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        g_k = IRApply(DIV, (_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(DIV, (kp1, IRApply(POW, (kp1, IRInteger(2)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
