@@ -798,6 +798,43 @@ function sqrtPolyNumeratorEffectiveDegree(
   return sqrtHalfDeg + polyDegSum;
 }
 
+/**
+ * Phase 54 (TypeScript port): Return the effective polynomial degree of a
+ * ``Mul(Log(diverging), polynomial_factors)`` numerator, or ``undefined``
+ * when the shape isn't recognised.
+ *
+ * ``log(h(k))`` grows sub-polynomially — ``log(h) = o(k^ε)`` for any
+ * ``ε > 0`` — so the effective growth degree of ``log(h) · P(k)``
+ * equals ``deg(P)`` alone.  The quotient vanishes when
+ * ``den_deg > poly_deg`` (strictly).
+ *
+ * Requirements:
+ *   - ``node = Mul(...)`` — a bare ``Log(h)`` numerator goes via Phase 50.
+ *   - Exactly one factor passes ``isLogOfDivergingInK``.
+ *   - All remaining factors are polynomials in ``k``.
+ */
+function splitLogPolynomialFactor(
+  node: IRNode,
+  k: IRNode
+): { logFactor: IRNode; polyDeg: number } | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logFactor: IRNode | undefined;
+  let polyDegSum = 0;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      // Only one Log(diverging) factor allowed; bail on a second.
+      if (logFactor !== undefined) return undefined;
+      logFactor = arg;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg === undefined) return undefined; // Neither Log(diverging) nor polynomial.
+    polyDegSum += deg;
+  }
+  if (logFactor === undefined) return undefined; // No Log factor found.
+  return { logFactor, polyDeg: polyDegSum };
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -847,6 +884,17 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (sqrtPolyEff !== undefined) {
     const denDegSp = polynomialDegreeInK(den, k);
     if (denDegSp !== undefined && denDegSp > sqrtPolyEff) {
+      return true;
+    }
+  }
+  // Phase 54: Mul(Log(diverging), polynomial_factors) numerator pattern.
+  // log(h(k)) grows sub-polynomially so the effective growth degree is just
+  // deg(poly_part).  Vanishes when den_deg > poly_deg (strictly).
+  // Equal degrees are refused: log(k)*constant diverges to ±∞.
+  const logPolyResult = splitLogPolynomialFactor(num, k);
+  if (logPolyResult !== undefined) {
+    const denDegLp = polynomialDegreeInK(den, k);
+    if (denDegLp !== undefined && denDegLp > logPolyResult.polyDeg) {
       return true;
     }
   }

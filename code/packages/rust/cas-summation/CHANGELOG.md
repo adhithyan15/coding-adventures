@@ -1,5 +1,40 @@
 # Changelog
 
+## 1.2.0 — 2026-05-23
+
+**Phase 54 — Log×polynomial numerator pattern (Rust port).**
+
+Ports Python `cas-summation` 1.2.0 Phase 54 to Rust.  Adds
+`split_log_polynomial_factor` helper and a Phase 54 branch in
+`g_vanishes_at_infinity`.  Uses the same sub-polynomial growth argument
+as the Python/TS ports: `log(h(k)) = o(k^ε)` for any `ε > 0`.
+
+Bumps 1.1.0 → 1.2.0.
+
+### Added
+
+- **`split_log_polynomial_factor<'a>(node, k)`** — Phase 54 helper.
+  Splits a `Mul` node into exactly one `Log(diverging)` factor (by ref)
+  and a summed polynomial degree; returns `Some((&IRNode, i64))` or
+  `None`.
+
+- **Phase 54 branch in `g_vanishes_at_infinity`** — inserted after
+  Phase 53 and before Phase 42.  Closes
+  `Div(Mul(Log(diverging), P), Q)` when `den_deg > poly_deg`.
+
+- **5 new tests** (`#[test] fn phase54_*`):
+  - `phase54_log_k_times_k_over_k_cubed_closes` — poly_deg=1 < 3
+  - `phase54_log_k_times_k_squared_over_k_cubed_closes` — poly_deg=2 < 3
+  - `phase54_log_k_times_k_over_k_squared_closes` — poly_deg=1 < 2
+  - `phase54_log_k_times_k_squared_over_k_squared_stays` — equal degrees
+  - `phase54_regression_log_k_over_k_cubed_still_closes_via_phase50`
+
+### Tests
+
+61 passed (was 56; +5 net new — Phase 54).
+
+---
+
 ## 1.1.0 — 2026-05-23
 
 **Phase 53 — Sqrt × polynomial numerator pattern (Rust port).**
