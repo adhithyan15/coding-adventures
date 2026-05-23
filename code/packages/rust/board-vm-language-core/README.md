@@ -133,6 +133,10 @@ Rust-owned action and queue-depth update.
 callback result label, completion action, and queue follow-up into one
 transport-aware record for language adapters to log or present without
 rebuilding callback lifecycle policy.
+`input_callback_session_lifecycle_summary` stitches queue admission, optional
+dispatch, optional runner result, and completion follow-up into one
+endpoint-aware Rust-owned record, so adapters can render the callback lifecycle
+without reimplementing queue, dispatch, or completion branching.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends

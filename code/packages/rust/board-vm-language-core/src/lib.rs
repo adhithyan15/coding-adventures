@@ -890,6 +890,22 @@ pub struct LanguageInputCallbackSessionCompletionSummary {
     pub result: LanguageInputCallbackResultSummary,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackSessionLifecycleSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub lifecycle_label: String,
+    pub queued: bool,
+    pub dispatch_required: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_summary: LanguageInputCallbackSessionQueueSummary,
+    pub dispatch_summary: Option<LanguageInputCallbackSessionDispatchSummary>,
+    pub result: Option<LanguageInputCallbackResultSummary>,
+    pub completion_summary: Option<LanguageInputCallbackSessionCompletionSummary>,
+    pub message: String,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackDiagnosticStage {
     Plan,
@@ -2429,6 +2445,60 @@ pub fn input_callback_session_completion_summary(
     }
 }
 
+pub fn input_callback_session_lifecycle_summary(
+    session: &LanguageHostEndpointSessionSummary,
+    queue_plan: &LanguageInputCallbackQueuePlan,
+    run_status: Option<RunStatus>,
+    instructions_executed: u32,
+    elapsed_ms: u32,
+) -> LanguageInputCallbackSessionLifecycleSummary {
+    let queue_summary = input_callback_session_queue_summary(session, queue_plan);
+    let dispatch_plan = input_callback_dispatch_plan_for_queue_plan(queue_plan);
+    let dispatch_summary = dispatch_plan
+        .as_ref()
+        .map(|dispatch| input_callback_session_dispatch_summary(session, dispatch));
+    let result = dispatch_plan.as_ref().and_then(|dispatch| {
+        run_status.map(|status| {
+            input_callback_result_for_dispatch_plan(
+                dispatch,
+                status,
+                instructions_executed,
+                elapsed_ms,
+            )
+        })
+    });
+    let completion_summary = result
+        .as_ref()
+        .map(|result| input_callback_session_completion_summary(session, result));
+    let terminal = completion_summary
+        .as_ref()
+        .map_or(!queue_plan.dispatch_required, |summary| summary.terminal);
+    let retryable = completion_summary
+        .as_ref()
+        .map_or(false, |summary| summary.retryable);
+    let message = input_callback_session_lifecycle_message(
+        queue_plan.queued,
+        queue_plan.dispatch_required,
+        completion_summary.as_ref().map(|summary| summary.action),
+    )
+    .to_owned();
+
+    LanguageInputCallbackSessionLifecycleSummary {
+        endpoint: session.endpoint.clone(),
+        connection_label: session.connection_label.clone(),
+        lifecycle_label: input_callback_session_lifecycle_label(session, queue_plan, terminal),
+        queued: queue_plan.queued,
+        dispatch_required: queue_plan.dispatch_required,
+        terminal,
+        retryable,
+        queue_summary,
+        dispatch_summary,
+        result,
+        completion_summary,
+        message,
+    }
+}
+
 pub fn input_callback_plan_diagnostic(
     error: &LanguageInputCallbackPlanError,
 ) -> LanguageInputCallbackPlanDiagnostic {
@@ -3346,6 +3416,38 @@ fn input_callback_session_completion_label(
         "{callback_label} action={} queue_depth_after_completion={queue_depth_after_completion}",
         input_callback_completion_action_name(action)
     )
+}
+
+fn input_callback_session_lifecycle_label(
+    session: &LanguageHostEndpointSessionSummary,
+    queue_plan: &LanguageInputCallbackQueuePlan,
+    terminal: bool,
+) -> String {
+    format!(
+        "{} callback={}:{} sequence={} queued={} dispatch_required={} terminal={}",
+        session.connection_label,
+        queue_plan.board_id,
+        queue_plan.label,
+        queue_plan.sequence,
+        queue_plan.queued,
+        queue_plan.dispatch_required,
+        terminal
+    )
+}
+
+fn input_callback_session_lifecycle_message(
+    queued: bool,
+    dispatch_required: bool,
+    completion_action: Option<LanguageInputCallbackCompletionAction>,
+) -> &'static str {
+    if let Some(action) = completion_action {
+        return input_callback_completion_message(action);
+    }
+    if queued && dispatch_required {
+        "Input callback is queued for cooperative dispatch."
+    } else {
+        "Input callback was not queued; lifecycle ended before dispatch."
+    }
 }
 
 fn language_i2c_bus(bus: &TargetI2cBus) -> LanguageI2cBus {
@@ -8064,6 +8166,146 @@ mod tests {
         assert!(!tcp.terminal);
         assert!(tcp.retryable);
         assert_eq!(tcp.queue_depth_after_completion, 3);
+    }
+
+    #[test]
+    fn input_callback_session_lifecycle_summaries_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.lifecycle_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 queued=true dispatch_required=true terminal=true"
+        );
+        assert!(completed.queued);
+        assert!(completed.dispatch_required);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(
+            completed.queue_summary.queue_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 queue_action=enqueue queue_depth_before=2 queue_depth_after=3"
+        );
+        let dispatch = completed
+            .dispatch_summary
+            .as_ref()
+            .expect("dispatch summary");
+        assert_eq!(
+            dispatch.dispatch_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 dispatch_reason=queued_input_event queue_action=enqueue queue_depth_after=3 instruction_budget=64"
+        );
+        let result = completed.result.as_ref().expect("callback result");
+        assert_eq!(result.run_status, "halted");
+        assert_eq!(
+            result.result_kind,
+            LanguageInputCallbackResultKind::Completed
+        );
+        let completion = completed
+            .completion_summary
+            .as_ref()
+            .expect("completion summary");
+        assert_eq!(
+            completion.action,
+            LanguageInputCallbackCompletionAction::Complete
+        );
+        assert_eq!(
+            completed.message,
+            "Input callback completed; remove it from the cooperative queue."
+        );
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        assert_eq!(pending.endpoint.endpoint, "tcp://board-vm.local:4170");
+        assert_eq!(
+            pending.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(
+            pending.connection_label,
+            "endpoint=tcp://board-vm.local:4170"
+        );
+        assert_eq!(
+            pending.lifecycle_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 queued=true dispatch_required=true terminal=false"
+        );
+        assert!(pending.queued);
+        assert!(pending.dispatch_required);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert!(pending.dispatch_summary.is_some());
+        assert!(pending.result.is_none());
+        assert!(pending.completion_summary.is_none());
+        assert_eq!(
+            pending.message,
+            "Input callback is queued for cooperative dispatch."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &newest_drop,
+            Some(RunStatus::Halted),
+            1,
+            1,
+        );
+        assert_eq!(
+            dropped.lifecycle_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 queued=false dispatch_required=false terminal=true"
+        );
+        assert_eq!(
+            dropped.queue_summary.action,
+            LanguageInputCallbackQueueAction::DropNewest
+        );
+        assert!(!dropped.queued);
+        assert!(!dropped.dispatch_required);
+        assert!(dropped.terminal);
+        assert!(!dropped.retryable);
+        assert!(dropped.dispatch_summary.is_none());
+        assert!(dropped.result.is_none());
+        assert!(dropped.completion_summary.is_none());
+        assert_eq!(
+            dropped.message,
+            "Input callback was not queued; lifecycle ended before dispatch."
+        );
     }
 
     #[test]
