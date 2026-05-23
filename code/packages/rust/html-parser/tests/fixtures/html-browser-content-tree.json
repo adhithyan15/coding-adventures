@@ -1,0 +1,209 @@
+{
+  "format": "venture-html-browser-content-tree/v1",
+  "suite": "browser-content-tree",
+  "description": "Browser-facing parser acceptance cases for extracting a renderable, CSS-independent body content tree.",
+  "cases": [
+    {
+      "id": "classic-document-flow",
+      "description": "Head metadata is skipped while headings, paragraphs, links, images, line breaks, and lists stay renderable.",
+      "input": "<!doctype html><title>Example</title><link rel=stylesheet href=style.css><h1 id=top>Example Directory</h1><p>Welcome to <a href=intro.html>Venture HTML</a>.<br><img src=logo.gif alt=Logo><ul><li>One<li>Two",
+      "expected": {
+        "children": [
+          {
+            "role": "heading",
+            "name": "h1",
+            "text": "Example Directory",
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              { "role": "text", "name": null, "text": "Example Directory", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+            ]
+          },
+          {
+            "role": "block",
+            "name": "p",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              { "role": "text", "name": null, "text": "Welcome to", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              {
+                "role": "link",
+                "name": "a",
+                "text": "Venture HTML",
+                "href": "intro.html",
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  { "role": "text", "name": null, "text": "Venture HTML", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+                ]
+              },
+              { "role": "text", "name": null, "text": ".", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "role": "line_break", "name": "br", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "role": "image", "name": "img", "text": null, "href": null, "src": "logo.gif", "alt": "Logo", "control_type": null, "children": [] }
+            ]
+          },
+          {
+            "role": "list",
+            "name": "ul",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              {
+                "role": "list_item",
+                "name": "li",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  { "role": "text", "name": null, "text": "One", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+                ]
+              },
+              {
+                "role": "list_item",
+                "name": "li",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  { "role": "text", "name": null, "text": "Two", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "forms-and-tables",
+      "description": "Forms and tables are preserved as browser-facing structural nodes without exposing raw parser shell nodes.",
+      "input": "<body><h2>Catalog</h2><form action=/search><input name=q value=html><select name=section><option>Books<option>Manuals</select><button>Search</button></form><table><caption>Results</caption><tr><th>Name<th>Kind<tr><td>Mosaic<td>Browser</table>",
+      "expected": {
+        "children": [
+          {
+            "role": "heading",
+            "name": "h2",
+            "text": "Catalog",
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              { "role": "text", "name": null, "text": "Catalog", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+            ]
+          },
+          {
+            "role": "form",
+            "name": "form",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              { "role": "control", "name": "input", "text": "html", "href": null, "src": null, "alt": null, "control_type": "text", "children": [] },
+              { "role": "control", "name": "select", "text": "Books Manuals", "href": null, "src": null, "alt": null, "control_type": "select", "children": [] },
+              { "role": "control", "name": "button", "text": "Search", "href": null, "src": null, "alt": null, "control_type": "submit", "children": [] }
+            ]
+          },
+          {
+            "role": "table",
+            "name": "table",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              {
+                "role": "table_caption",
+                "name": "caption",
+                "text": "Results",
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  { "role": "text", "name": null, "text": "Results", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+                ]
+              },
+              {
+                "role": "table_section",
+                "name": "tbody",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  {
+                    "role": "table_row",
+                    "name": "tr",
+                    "text": null,
+                    "href": null,
+                    "src": null,
+                    "alt": null,
+                    "control_type": null,
+                    "children": [
+                      { "role": "table_cell", "name": "th", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Name", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                      { "role": "table_cell", "name": "th", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Kind", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                    ]
+                  },
+                  {
+                    "role": "table_row",
+                    "name": "tr",
+                    "text": null,
+                    "href": null,
+                    "src": null,
+                    "alt": null,
+                    "control_type": null,
+                    "children": [
+                      { "role": "table_cell", "name": "td", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Mosaic", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                      { "role": "table_cell", "name": "td", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Browser", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "invisible-and-inline-content",
+      "description": "Script, style, template, comments, and head metadata disappear while inline formatting keeps its rendered text.",
+      "input": "<title>Skip</title><p>Alpha <b>bold</b> <i>italic</i><script>bad()</script><style>p{}</style><template><p>hidden</p></template><!--comment--> tail",
+      "expected": {
+        "children": [
+          {
+            "role": "block",
+            "name": "p",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              { "role": "text", "name": null, "text": "Alpha", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "role": "inline", "name": "b", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "bold", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+              { "role": "inline", "name": "i", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "italic", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+              { "role": "text", "name": null, "text": "tail", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

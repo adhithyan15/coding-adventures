@@ -182,6 +182,8 @@ documented in this file.
   loadable resources, anchor targets, richer link attributes, form encodings,
   form targets, and basic control disabled/checked state for browser pipeline
   consumers.
+- Browser-facing content tree extraction now projects parsed body content into
+  CSS-independent structural nodes for early browser rendering pipelines.
 - Void end tags such as `</img>`, `</input>`, and `</hr>` are now ignored with a
   parser diagnostic, while self-closing syntax on void start tags remains
   acknowledged.

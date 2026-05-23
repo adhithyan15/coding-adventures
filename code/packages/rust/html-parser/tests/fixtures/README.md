@@ -15,6 +15,12 @@ title, base URL/target, metadata, resource, anchor, body text, heading, link,
 image, form, and table facts that a browser pipeline can consume before layout
 and Paint VM rendering.
 
+`html-browser-content-tree.json` is a checked parser acceptance corpus for the
+browser-facing content-tree projection. It verifies that broad HTML body
+content can be filtered into renderable structural nodes such as headings,
+blocks, inline runs, links, images, form controls, lists, and tables while
+skipping parser shell, head metadata, comments, scripts, styles, and templates.
+
 Validate the checked-in smoke fixture's case boundaries and metadata with:
 
 ```bash

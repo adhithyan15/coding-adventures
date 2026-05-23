@@ -16,6 +16,7 @@ RUST_DIR = FIXTURE_DIR.parents[2]
 PARSER_FIXTURE_DIR = RUST_DIR / "html-parser" / "tests" / "fixtures"
 PARSER_SOURCE_FIXTURE = "html5lib-tree-construction-smoke.dat"
 BROWSER_READINESS_FORMAT = "venture-html-browser-readiness/v1"
+BROWSER_CONTENT_TREE_FORMAT = "venture-html-browser-content-tree/v1"
 NUMERIC_REFERENCE_FIXTURE = "whatwg-numeric-references.json"
 INPUT_STREAM_FIXTURE = "whatwg-input-stream.json"
 CHUNK_BOUNDARY_FIXTURE = "whatwg-chunk-boundaries.json"
@@ -81,6 +82,8 @@ def check_fixture_schemas() -> tuple[list[str], FixtureStats]:
                 continue
             if data.get("format") == BROWSER_READINESS_FORMAT:
                 errors.extend(check_browser_readiness_case(relative_path, index, case))
+            elif data.get("format") == BROWSER_CONTENT_TREE_FORMAT:
+                errors.extend(check_browser_content_tree_case(relative_path, index, case))
             elif fixture_path.parent == PARSER_FIXTURE_DIR:
                 errors.extend(check_parser_audit_case(relative_path, index, case))
             else:
@@ -118,7 +121,7 @@ def check_top_level_schema(relative_path: str, data: dict[str, Any]) -> list[str
     require_non_empty_string(relative_path, data, "format", errors)
     require_non_empty_string(relative_path, data, "description", errors)
 
-    if data.get("format") == BROWSER_READINESS_FORMAT:
+    if data.get("format") in (BROWSER_READINESS_FORMAT, BROWSER_CONTENT_TREE_FORMAT):
         require_non_empty_string(relative_path, data, "suite", errors)
     elif relative_path.startswith("html-parser/"):
         if data.get("source_fixture") != PARSER_SOURCE_FIXTURE:
@@ -296,6 +299,50 @@ def check_browser_expected_lists(
         require_optional_nullable_string(table_path, table, "caption", errors)
         for field in ("row_count", "cell_count", "header_cell_count"):
             require_integer(table_path, table, field, errors)
+
+
+def check_browser_content_tree_case(
+    relative_path: str,
+    index: int,
+    case: dict[str, Any],
+) -> list[str]:
+    errors: list[str] = []
+    case_path = f"{relative_path}: cases[{index}]"
+
+    require_non_empty_string(case_path, case, "id", errors)
+    require_optional_non_empty_string(case_path, case, "description", errors)
+    require_string(case_path, case, "input", errors)
+
+    expected = case.get("expected")
+    if not isinstance(expected, dict):
+        errors.append(f"{case_path}.expected must be an object")
+        return errors
+    require_object_list(f"{case_path}.expected", expected, "children", errors)
+    for node_index, node in enumerate(object_list_items(expected, "children")):
+        check_browser_content_node(
+            f"{case_path}.expected.children[{node_index}]",
+            node,
+            errors,
+        )
+
+    return errors
+
+
+def check_browser_content_node(
+    node_path: str,
+    node: dict[str, Any],
+    errors: list[str],
+) -> None:
+    require_string(node_path, node, "role", errors)
+    for field in ("name", "text", "href", "src", "alt", "control_type"):
+        require_optional_nullable_string(node_path, node, field, errors)
+    require_object_list(node_path, node, "children", errors)
+    for child_index, child in enumerate(object_list_items(node, "children")):
+        check_browser_content_node(
+            f"{node_path}.children[{child_index}]",
+            child,
+            errors,
+        )
 
 
 def check_split_points(
