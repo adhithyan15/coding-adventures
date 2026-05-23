@@ -993,6 +993,64 @@ fn sqrt_effective_half_degree_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
     Some(inner_deg) // = 2 * (inner_deg / 2)
 }
 
+/// Phase 52 (Rust port): Return ``Some((bounded_aggregate, poly_degree))``
+/// when ``node = Mul(bounded_factors, polynomial_factors)`` in ``k``;
+/// ``None`` otherwise.
+///
+/// Used by ``g_vanishes_at_infinity`` to recognise that ``sin(k)·k/k³``
+/// vanishes (bounded × deg 1 over deg 3).  The bounded part must contain
+/// at least one non-constant-in-k factor — otherwise Phase 49 would catch
+/// the whole numerator as a single bounded expression.
+///
+/// Algorithm:
+///   1. Require ``node = Mul(...)``.
+///   2. Partition each factor into bounded vs polynomial buckets.
+///      Factors that are neither bounded nor polynomial → ``None``.
+///   3. Require ≥ 1 non-constant-in-k bounded factor.
+///   4. Sum the polynomial factors' degrees.
+///   5. Return ``Some((aggregate, summed_poly_degree))``.
+fn split_bounded_polynomial_factor(
+    node: &IRNode,
+    k: &IRNode,
+) -> Option<(IRNode, i64)> {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return None,
+    };
+    if !head_is(&apply_node.head, MUL) {
+        return None;
+    }
+    let mut bounded_factors: Vec<IRNode> = Vec::new();
+    let mut poly_deg: i64 = 0;
+    let mut has_non_constant_bounded = false;
+    for arg in &apply_node.args {
+        if is_bounded_in_k(arg, k) {
+            if !is_constant_in(arg, k) {
+                has_non_constant_bounded = true;
+            }
+            bounded_factors.push(arg.clone());
+            continue;
+        }
+        match polynomial_degree_in_k(arg, k) {
+            Some(d) => poly_deg += d,
+            None => return None,   // Unrecognised factor.
+        }
+    }
+    // Pure polynomial — Phase 42 will handle it; no non-constant bounded factor.
+    if !has_non_constant_bounded {
+        return None;
+    }
+    if bounded_factors.is_empty() {
+        return None;
+    }
+    let bounded_aggregate = if bounded_factors.len() == 1 {
+        bounded_factors.remove(0)
+    } else {
+        apply(sym(MUL), bounded_factors)
+    };
+    Some((bounded_aggregate, poly_deg))
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -1024,6 +1082,18 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     if let Some(inner_deg) = sqrt_effective_half_degree_x2(num, k) {
         if let Some(den_deg) = polynomial_degree_in_k(den, k) {
             if 2 * den_deg > inner_deg {
+                return true;
+            }
+        }
+    }
+    // Phase 52: Mul(bounded, polynomial) numerator pattern.  When the
+    // numerator factors as bounded × polynomial with positive poly degree,
+    // the quotient vanishes iff den_deg > poly_deg.  Catches shapes like
+    // sin(k)·k/k³ that Phase 49 misses (Mul isn't wholly bounded) and
+    // Phase 42 refuses (sin is not polynomial).
+    if let Some((_bounded, poly_deg)) = split_bounded_polynomial_factor(num, k) {
+        if let Some(den_deg_bp) = polynomial_degree_in_k(den, k) {
+            if den_deg_bp > poly_deg {
                 return true;
             }
         }

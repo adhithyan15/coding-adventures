@@ -1,5 +1,44 @@
 # Changelog
 
+## 1.0.0 — 2026-05-23
+
+**Phase 52 — Bounded × polynomial numerator pattern (Rust port).**
+
+Ports Python ``cas-summation`` 1.0.0.  Extends ``g_vanishes_at_infinity``
+to recognise that ``Mul(bounded, polynomial)`` numerators have effective
+growth equal to the polynomial part's degree.  Closes telescopes like
+``sin(k)·k/k³``, ``k·cos(k)/k²``, where the numerator mixes a bounded
+factor with a non-trivial polynomial factor.
+
+Bumps 0.9.0 → 1.0.0.
+
+### Added
+
+- **`split_bounded_polynomial_factor(node, k)`** — partitions a ``Mul``
+  node's factors into a bounded aggregate and a summed polynomial degree;
+  returns ``None`` if any factor is neither bounded nor polynomial,
+  or if no non-constant-in-k bounded factor exists (those go through
+  Phase 42).
+
+### Changed
+
+- ``g_vanishes_at_infinity`` now has a Phase 52 branch between Phase 51
+  (sqrt numerator) and Phase 42 (degree-aware): when the numerator
+  factors as ``bounded × polynomial`` with positive polynomial degree,
+  the quotient vanishes iff the denominator's polynomial degree strictly
+  exceeds the polynomial part's degree.
+
+### Added — tests
+
+5 new ``phase52_*`` cases:
+- ``phase52_sin_k_times_k_over_k_cubed_closes``
+- ``phase52_k_times_cos_k_over_k_squared_closes``
+- ``phase52_sin_k_times_k_squared_over_k_cubed_closes``
+- ``phase52_sin_k_times_k_squared_over_k_squared_stays`` (regression)
+- ``phase52_regression_k_over_k_squared_still_closes_via_phase42`` (regression)
+
+Full suite: **51 passed** (was 46; +5 net new).
+
 ## 0.9.0 — 2026-05-22
 
 **Phase 51 — Sqrt(polynomial)/polynomial recogniser (Rust port).**
