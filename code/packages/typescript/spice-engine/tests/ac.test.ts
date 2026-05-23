@@ -16,6 +16,7 @@ import {
   mutualInductor,
   resistor,
   sParameters,
+  transmissionLine,
   vcvs,
   voltageSource,
   voltageSourceWithAc,
@@ -163,6 +164,32 @@ describe("acSweep", () => {
     circuit.add(voltageSource("Vin", "pri", "0", 1.0));
     circuit.add(inductor("Lpri", "pri", "0", 1.0e-3));
     circuit.add(mutualInductor("Kbad", "Lpri", "Lmissing", 0.9));
+
+    expect(() => acSweep(circuit, 1_000.0, 1_000.0, 10)).toThrowError(SpiceError);
+  });
+
+  it("applies transmission-line matched-load phase delay", () => {
+    const frequency = 1_000_000.0;
+    const delay = 1.0 / (4.0 * frequency);
+    const circuit = new Circuit();
+    circuit.add(voltageSourceWithAc("Vin", "src", "0", 0.0, 1.0));
+    circuit.add(resistor("Rsrc", "src", "in", 50.0));
+    circuit.add(transmissionLine("T1", "in", "0", "out", "0", 50.0, delay));
+    circuit.add(resistor("Rload", "out", "0", 50.0));
+
+    const points = acSweep(circuit, frequency, frequency, 10);
+    const out = points[0].voltage("out");
+
+    expect(out).not.toBeUndefined();
+    expectClose(out!.real, 0.0);
+    expectClose(out!.imag, -0.5);
+  });
+
+  it("rejects invalid transmission-line AC parameters", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSourceWithAc("Vin", "src", "0", 0.0, 1.0));
+    circuit.add(transmissionLine("Tbad", "src", "0", "out", "0", 0.0, 1.0e-9));
+    circuit.add(resistor("Rload", "out", "0", 50.0));
 
     expect(() => acSweep(circuit, 1_000.0, 1_000.0, 10)).toThrowError(SpiceError);
   });

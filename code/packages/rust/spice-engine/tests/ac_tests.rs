@@ -1,7 +1,8 @@
 use spice_engine::{
     ac_sweep, ac_sweep_corners, s_parameters, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit,
     CornerOverride, CornerSpec, CurrentSource, Element, Inductor, Jfet, JfetPolarity, Mosfet,
-    MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError, Vcvs, VoltageSource,
+    MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError, TransmissionLine, Vcvs,
+    VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -189,6 +190,44 @@ fn ac_mutual_inductor_rejects_missing_reference() {
     assert!(matches!(
         ac_sweep(&circuit, 1_000.0, 1_000.0, 10),
         Err(SpiceError::InvalidElement { name, .. }) if name == "Kbad"
+    ));
+}
+
+#[test]
+fn ac_transmission_line_matched_load_phase_delay() {
+    let frequency: f64 = 1_000_000.0;
+    let delay = 1.0 / (4.0 * frequency);
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "Vin", "src", "0", 0.0, 1.0, 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("Rsrc", "src", "in", 50.0)));
+    circuit.add(Element::TransmissionLine(TransmissionLine::new(
+        "T1", "in", "0", "out", "0", 50.0, delay,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("Rload", "out", "0", 50.0)));
+
+    let points = ac_sweep(&circuit, frequency, frequency, 10).unwrap();
+
+    let out = points[0].voltage("out").unwrap();
+    assert_close(out.real, 0.0);
+    assert_close(out.imag, -0.5);
+}
+
+#[test]
+fn ac_transmission_line_rejects_invalid_parameters() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "Vin", "src", "0", 0.0, 1.0, 0.0,
+    )));
+    circuit.add(Element::TransmissionLine(TransmissionLine::new(
+        "Tbad", "src", "0", "out", "0", 0.0, 1.0e-9,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("Rload", "out", "0", 50.0)));
+
+    assert!(matches!(
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 10),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "Tbad"
     ));
 }
 

@@ -3588,6 +3588,7 @@ function buildAcMatrix(
         stampAcMutualInductor(element, inductors, omega, nodeIndices, matrix);
         break;
       case "transmission-line":
+        stampAcTransmissionLine(element, omega, nodeIndices, matrix);
         break;
       case "voltage-source":
         stampAcVoltageSourceMatrix(
@@ -5501,6 +5502,42 @@ function stampAcMutualInductor(
   stampComplexConductance(matrix, s1, s2, y22);
   stampComplexTransconductance(matrix, p1, p2, s1, s2, y12);
   stampComplexTransconductance(matrix, s1, s2, p1, p2, y12);
+}
+
+function stampAcTransmissionLine(
+  element: TransmissionLine,
+  omega: number,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: Complex[][],
+): void {
+  if (!Number.isFinite(element.characteristicImpedanceOhms)) {
+    throw invalidElement(element.name, "characteristic impedance must be finite");
+  }
+  if (element.characteristicImpedanceOhms <= 0.0) {
+    throw invalidElement(element.name, "characteristic impedance must be positive");
+  }
+  if (!Number.isFinite(element.delaySeconds)) {
+    throw invalidElement(element.name, "delay must be finite");
+  }
+  if (element.delaySeconds <= 0.0) {
+    throw invalidElement(element.name, "delay must be positive");
+  }
+  const phase = omega * element.delaySeconds;
+  const sinPhase = Math.sin(phase);
+  if (Math.abs(sinPhase) < 1.0e-12) {
+    throw invalidElement(element.name, "transmission line phase is singular at this frequency");
+  }
+  const cosPhase = Math.cos(phase);
+  const y11 = complex(0.0, -cosPhase / (element.characteristicImpedanceOhms * sinPhase));
+  const y12 = complex(0.0, 1.0 / (element.characteristicImpedanceOhms * sinPhase));
+  const n1 = nodeIndex(nodeIndices, element.n1);
+  const n2 = nodeIndex(nodeIndices, element.n2);
+  const n3 = nodeIndex(nodeIndices, element.n3);
+  const n4 = nodeIndex(nodeIndices, element.n4);
+  stampComplexConductance(matrix, n1, n2, y11);
+  stampComplexConductance(matrix, n3, n4, y11);
+  stampComplexTransconductance(matrix, n1, n2, n3, n4, y12);
+  stampComplexTransconductance(matrix, n3, n4, n1, n2, y12);
 }
 
 function stampComplexConductance(

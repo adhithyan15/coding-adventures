@@ -4212,7 +4212,9 @@ fn build_ac_matrix(
             Element::MutualInductor(mutual) => {
                 stamp_ac_mutual_inductor(mutual, &inductors, omega, node_indices, &mut matrix)?
             }
-            Element::TransmissionLine(_) => {}
+            Element::TransmissionLine(line) => {
+                stamp_ac_transmission_line(line, omega, node_indices, &mut matrix)?
+            }
             Element::VoltageSource(source) => stamp_ac_voltage_source_matrix(
                 source,
                 node_indices,
@@ -6573,6 +6575,61 @@ fn stamp_ac_mutual_inductor(
     stamp_complex_conductance(matrix, s1, s2, y22);
     stamp_complex_transconductance(matrix, p1, p2, s1, s2, y12);
     stamp_complex_transconductance(matrix, s1, s2, p1, p2, y12);
+    Ok(())
+}
+
+fn stamp_ac_transmission_line(
+    line: &TransmissionLine,
+    omega: f64,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<Complex>],
+) -> Result<(), SpiceError> {
+    if !line.characteristic_impedance_ohms.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: line.name.clone(),
+            reason: "characteristic impedance must be finite".to_string(),
+        });
+    }
+    if line.characteristic_impedance_ohms <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: line.name.clone(),
+            reason: "characteristic impedance must be positive".to_string(),
+        });
+    }
+    if !line.delay_seconds.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: line.name.clone(),
+            reason: "delay must be finite".to_string(),
+        });
+    }
+    if line.delay_seconds <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: line.name.clone(),
+            reason: "delay must be positive".to_string(),
+        });
+    }
+    let phase = omega * line.delay_seconds;
+    let sin_phase = phase.sin();
+    if sin_phase.abs() < 1.0e-12 {
+        return Err(SpiceError::InvalidElement {
+            name: line.name.clone(),
+            reason: "transmission line phase is singular at this frequency".to_string(),
+        });
+    }
+    let cos_phase = phase.cos();
+    let y11 = Complex::new(
+        0.0,
+        -cos_phase / (line.characteristic_impedance_ohms * sin_phase),
+    );
+    let y12 = Complex::new(0.0, 1.0 / (line.characteristic_impedance_ohms * sin_phase));
+    let n1 = node_index(node_indices, &line.n1);
+    let n2 = node_index(node_indices, &line.n2);
+    let n3 = node_index(node_indices, &line.n3);
+    let n4 = node_index(node_indices, &line.n4);
+    stamp_complex_conductance(matrix, n1, n2, y11);
+    stamp_complex_conductance(matrix, n3, n4, y11);
+    stamp_complex_transconductance(matrix, n1, n2, n3, n4, y12);
+    stamp_complex_transconductance(matrix, n3, n4, n1, n2, y12);
     Ok(())
 }
 
