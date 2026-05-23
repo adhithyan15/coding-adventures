@@ -76,6 +76,8 @@ The crate keeps the boundary narrow:
   follow-up pressure
 - supervisor drain reports and summaries expose row-count match helpers for
   host scheduler checks
+- supervisor drain run summaries flatten row-count and follow-up-pressure match
+  alias flags for host scheduler checks
 - supervisor drain run summaries expose exact planned-count match and drift
   flag accessors for host branching
 - supervisor drain run summaries expose typed run-status accessors for

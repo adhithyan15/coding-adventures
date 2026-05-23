@@ -1246,7 +1246,9 @@ impl ToolAuditSupervisorDrainRunReport {
             requires_host_plan_drift_investigation: self.requires_host_plan_drift_investigation(),
             requires_host_count_drift_investigation: self.requires_host_count_drift_investigation(),
             matches_planned_record_count: self.matches_planned_record_count(),
+            matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
+            matches_follow_up_pressure: self.matches_follow_up_pressure(),
             reached_end_of_log: self.reached_end_of_log(),
             exhausted_tick_budget: self.exhausted_tick_budget(),
             is_idle: self.is_idle(),
@@ -1503,8 +1505,12 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub requires_host_count_drift_investigation: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
+    /// Whether planned and replayed row counts match.
+    pub matches_record_count: bool,
     /// Whether the actual run preserved the planned follow-up pressure count.
     pub matches_planned_follow_up_record_count: bool,
+    /// Whether planned and replayed follow-up pressure counts match.
+    pub matches_follow_up_pressure: bool,
     /// Whether the actual run reached the current end of the audit log.
     pub reached_end_of_log: bool,
     /// Whether the actual run used every allowed tick.
@@ -1662,12 +1668,12 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether planned and replayed row counts match.
     pub fn matches_record_count(&self) -> bool {
-        self.matches_planned_record_count()
+        self.matches_record_count
     }
 
     /// Return whether planned and replayed follow-up pressure counts match.
     pub fn matches_follow_up_pressure(&self) -> bool {
-        self.matches_planned_follow_up_record_count()
+        self.matches_follow_up_pressure
     }
 
     /// Return whether the actual run delivered the planned number of rows.
@@ -4489,9 +4495,11 @@ mod tests {
         assert!(summary.is_no_host_investigation());
         assert!(summary.matches_planned_record_count);
         assert!(summary.matches_planned_record_count());
+        assert!(summary.matches_record_count);
         assert!(summary.matches_record_count());
         assert!(summary.matches_planned_follow_up_record_count);
         assert!(summary.matches_planned_follow_up_record_count());
+        assert!(summary.matches_follow_up_pressure);
         assert!(summary.matches_follow_up_pressure());
         assert!(!summary.reached_end_of_log);
         assert!(!summary.reached_end_of_log());
@@ -4670,6 +4678,7 @@ mod tests {
         assert!(!summary.replayed_extra_records());
         assert!(summary.missed_planned_records);
         assert!(summary.missed_planned_records());
+        assert!(!summary.matches_record_count);
         assert!(!summary.matches_record_count());
         assert!(summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
@@ -4794,6 +4803,7 @@ mod tests {
         assert!(summary.matches_planned_record_count());
         assert!(!summary.matches_planned_follow_up_record_count);
         assert!(!summary.matches_planned_follow_up_record_count());
+        assert!(!summary.matches_follow_up_pressure);
         assert!(!summary.matches_follow_up_pressure());
         assert!(!summary.replayed_extra_follow_up_records());
         assert!(summary.missed_planned_follow_up_records());

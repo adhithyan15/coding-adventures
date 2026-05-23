@@ -58,6 +58,8 @@ All notable changes to this package will be documented in this file.
   summaries.
 - Status aliases for supervisor drain run reports.
 - Row-count match helpers for supervisor drain run reports and summaries.
+- Flattened row-count and follow-up-pressure match alias flags for supervisor
+  drain run summaries.
 - Planned-count match and drift flag accessors for supervisor drain run
   summaries.
 - Run-status accessors for supervisor drain run summaries.
