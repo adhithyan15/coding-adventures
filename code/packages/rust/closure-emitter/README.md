@@ -1,0 +1,101 @@
+# coding-adventures-closure-emitter
+
+JavaScript code emitter for the Closure Compiler clone. The back
+end: takes a finalized `Program` + sidecar and produces output
+JavaScript text + a companion source-map blob. Per
+[CLOC07](../../../specs/CLOC07-emit-and-source-map.md).
+
+## Where this sits
+
+```text
+lexer → parser → AST ──┐
+                       ├─► passes ──► Program' ──► emitter ──► .js
+               sidecar ─┘                                       .js.map
+```
+
+The emitter runs **after** every optimization pass. It links
+against `javascript-ast` (the data it reads) and `type-sidecar`
+(for per-node emit hints), but **not** against any pass crate
+or `closure-pass-pipeline` — the emitter doesn't know or care
+what passes ran, only that the program it receives is the final
+shape.
+
+## API
+
+```rust
+pub fn emit(
+    program: &Program,
+    sidecar: &Sidecar,
+    cv: &mut CVLog,
+    opts: &EmitOptions,
+) -> Result<EmitOutput, EmitError>;
+```
+
+```rust
+pub struct EmitOptions {
+    pub ascii_only: bool,   // default false (UTF-8 output)
+    pub pretty: bool,       // default false (minified output)
+    pub source_map: bool,   // default true  (companion .js.map)
+}
+```
+
+```rust
+pub struct EmitOutput {
+    pub code: String,                       // JavaScript bytes
+    pub source_map: Option<String>,         // source-map v3 blob
+    pub contributions: Vec<Contribution>,   // per-token CV trail
+}
+```
+
+```rust
+#[non_exhaustive]
+pub enum EmitError {
+    UnknownCvId { id: String, site: &'static str },
+    UnsupportedSidecarType { id: String, kind: String },
+}
+```
+
+## What's here (v1)
+
+- The `emit()` function signature — locked.
+- `EmitOptions` struct + sensible production defaults (UTF-8,
+  minified, source-map on).
+- `EmitOutput` struct — `code`, `source_map`, `contributions`.
+- `EmitError` enum with `Display` + `std::error::Error` impls.
+- v1 body: emits empty `code`, an empty source-map placeholder
+  when `source_map = true`, no contributions. Real walk lands
+  once `javascript-ast` grows `Statement` / `Expression` /
+  `Declaration` variants.
+
+## What this PR locks down even as identity
+
+1. The function signature — `emit(program, sidecar, cv, opts)`.
+   Once the AST grows, the body fills in; call sites in the
+   future `closurec` CLI don't change.
+2. The three CLOC07 options — `ascii_only`, `pretty`,
+   `source_map` — with the production-safe defaults.
+3. The `Result<EmitOutput, EmitError>` shape so the CLI can
+   `?` against a concrete error type.
+
+## What's coming
+
+- v2: emit actual JavaScript text. Walks the AST, consults the
+  sidecar for per-node hints (numeric base, quote style,
+  template-literal vs. concat, etc.), writes per-token
+  "emitted" `Contribution`s to `cv`.
+- CLOC07 Phase 2: real source-map v3 generation in the
+  companion `closure-source-map` crate. This crate's
+  `source_map` field becomes the actual map blob.
+- CLOC08: `closurec` CLI that wires `emit()` up to file IO.
+
+## Dependency whitelist
+
+- `coding-adventures-javascript-ast` — `Program` input.
+- `coding-adventures-type-sidecar` — per-node emit hints.
+- `coding_adventures_correlation_vector` — per-token
+  `Contribution` per CLOC03; receives a mutable `CVLog`.
+- `serde` + `serde_json` — required for future `Contribution`
+  meta payloads and source-map serialization.
+
+Dev-deps:
+- `coding-adventures-javascript-tokens` for `EsVersion` in tests.
