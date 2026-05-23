@@ -2,6 +2,18 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.39.0] - 2026-05-23
+
+### Added
+
+- ``col_constraint`` extended to accept optional ``AUTOINCREMENT``
+  after ``PRIMARY KEY``::
+
+      col_constraint = ("PRIMARY" "KEY" ["AUTOINCREMENT"]) | ... ;
+
+  Required for SQLite-style ``id INTEGER PRIMARY KEY AUTOINCREMENT``
+  column declarations.  Regenerated ``_grammar.py`` and ``_tokens.py``.
+
 ## [0.38.0] - 2026-05-23
 
 ### Added

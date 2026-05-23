@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.54.0 — 2026-05-23
+
+### Added
+
+- ``_do_create_table`` now forwards the IR's ``autoincrement`` flag
+  to ``BackendColumnDef.autoincrement``.  End-to-end this means
+  ``CREATE TABLE t (id INTEGER PRIMARY KEY AUTOINCREMENT)`` flows
+  through grammar → adapter → planner → codegen → VM → backend with
+  the flag preserved, and ``sqlite_master.sql`` round-trips with
+  ``AUTOINCREMENT`` in the reconstructed CREATE statement.
+
 ## 1.53.0 — 2026-05-23
 
 ### Added

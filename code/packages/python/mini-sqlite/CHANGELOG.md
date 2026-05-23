@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.94.0] - 2026-05-23
+
+### Added
+
+- ``CREATE TABLE t (id INTEGER PRIMARY KEY AUTOINCREMENT, ...)`` is
+  now fully end-to-end.  The adapter parses the ``AUTOINCREMENT``
+  keyword and forwards ``autoincrement=True`` to the backend
+  ``ColumnDef``.  The in-memory backend's ``_next_rowid`` counter is
+  never decremented (already monotonic), so SQLite's "deleted rowids
+  never reuse" guarantee holds.  The keyword round-trips through
+  ``sqlite_master.sql``.
+
 ## [1.93.0] - 2026-05-23
 
 ### Added

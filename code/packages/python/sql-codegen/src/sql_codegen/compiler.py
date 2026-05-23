@@ -1859,6 +1859,7 @@ def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
         type=c.type_name,
         nullable=not c.effective_not_null(),
         primary_key=c.primary_key,
+        autoincrement=c.autoincrement,
         unique=c.unique,
         default=ir_default,
         check_instrs=check_instrs,

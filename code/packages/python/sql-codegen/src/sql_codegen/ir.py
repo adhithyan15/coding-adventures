@@ -844,6 +844,13 @@ class ColumnDef:
     type: str
     nullable: bool = True
     primary_key: bool = False
+    # ``autoincrement`` mirrors SQLite's ``AUTOINCREMENT`` clause that
+    # may follow ``PRIMARY KEY`` on an INTEGER column.  When True, the
+    # backend treats deleted rowids as permanently retired (monotonic
+    # rowid sequence).  The in-memory backend always behaves this way
+    # because ``_next_rowid`` is never decremented, so the flag is
+    # mostly informational and round-tripped into ``sqlite_master.sql``.
+    autoincrement: bool = False
     unique: bool = False
     default: object = NO_COLUMN_DEFAULT
     check_instrs: tuple[Instruction, ...] = ()

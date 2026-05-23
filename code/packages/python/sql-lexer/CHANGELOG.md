@@ -2,6 +2,15 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.27.0] - 2026-05-23
+
+### Added
+
+- ``AUTOINCREMENT`` keyword recognised by the lexer.  Used by SQLite's
+  ``CREATE TABLE t (id INTEGER PRIMARY KEY AUTOINCREMENT)`` form,
+  which previously failed to parse.
+- Regenerated `_grammar.py` to include the new keyword.
+
 ## [0.26.0] - 2026-05-23
 
 ### Added

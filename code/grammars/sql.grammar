@@ -221,11 +221,16 @@ col_def           = NAME col_type { col_constraint } ;
 # (VARCHAR(8), DECIMAL(10,2)) — the length/precision arguments are parsed
 # but ignored; the engine uses SQLite's type-affinity rules internally.
 col_type          = NAME [ "(" NUMBER { "," NUMBER } ")" ] ;
-col_constraint    = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" )
+col_constraint    = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" [ "AUTOINCREMENT" ] )
                   | "UNIQUE" | ( "DEFAULT" primary )
                   | ( "CHECK" "(" expr ")" )
                   | ( "COLLATE" NAME )
                   | ( "REFERENCES" NAME [ "(" NAME ")" ] ) ;
+# AUTOINCREMENT (SQLite-only): only valid immediately after PRIMARY KEY on
+# an INTEGER column.  The engine recognises the keyword and sets
+# ``ColumnDef.autoincrement = True``; behaviour is "rowids monotonically
+# increase, never reuse a deleted id" — already true in our in-memory
+# backend because _next_rowid is never decremented.
 
 drop_table_stmt   = "DROP" "TABLE" [ "IF" "EXISTS" ] NAME ;
 
