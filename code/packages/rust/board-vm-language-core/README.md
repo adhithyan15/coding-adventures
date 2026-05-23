@@ -181,6 +181,10 @@ paths without rebuilding the trace chain.
 transport log records with Rust-owned log names, labels, queue-depth metadata,
 and messages, so adapters can persist or display callback transport logs
 without rebuilding audit policy.
+`input_callback_transport_journal_summary` indexes those logs into stable
+transport journal records with Rust-owned journal names, labels, queue-depth
+metadata, and messages, so adapters can maintain transport journal views
+without rebuilding log routing policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
