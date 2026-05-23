@@ -1,379 +1,182 @@
 //! `closurec` — CLI driver for the Closure Compiler clone.
 //!
-//! Per [CLOC08](../../../../specs/CLOC08-closurec-cli.md). The
-//! binary that ties the whole pipeline together: reads input
+//! Per [CLOC08](../../../../specs/CLOC08-closurec-cli-surface.md).
+//! The binary that ties the whole pipeline together: reads input
 //! JavaScript, runs the configured optimization pass pipeline,
 //! emits output JavaScript plus an optional source-map blob.
 //!
-//! # Stage 4 wrap-up: the role this binary plays
+//! # Drop-in compatibility with the Java Closure Compiler
 //!
-//! ```text
-//!   ┌──────────────────────────────────────────────────────────┐
-//!   │ closurec                                                 │
-//!   │                                                          │
-//!   │  args ─► parse ──► [lex] ──► [parse] ──► [typecheck] ──► │
-//!   │                                                          │
-//!   │   ──► [pass pipeline] ──► [emit] ──► (out.js, out.js.map)│
-//!   └──────────────────────────────────────────────────────────┘
-//! ```
+//! The CLI flag surface mirrors the upstream Java Closure Compiler
+//! (`google/closure-compiler`, see `CommandLineRunner.java`) flag
+//! for flag. The goal is **drop-in compatibility**: a script
+//! written against `java -jar closure-compiler.jar --js foo.js
+//! --js_output_file out.js --compilation_level ADVANCED` should
+//! work unchanged when the `java -jar …` invocation is swapped for
+//! `closurec`.
 //!
-//! Each `[bracketed]` stage is one of the crates we've scaffolded
-//! in Stages 1–4. This binary is just the glue.
+//! The flag set is declared in [`cli.spec.json`](../cli.spec.json),
+//! a [cli-builder](../../../packages/rust/cli-builder) JSON
+//! spec. The spec is embedded into the binary via
+//! `include_str!` at compile time — no runtime file lookup is
+//! required for the parser to come up.
 //!
 //! # Scope (v1)
 //!
 //! `javascript-ast` ships only `Program` / `SourceType` today and
 //! every pass + the emitter are identity. So v1 of `closurec`:
 //!
-//! - parses the CLI surface so users can already script against
-//!   the binary,
-//! - validates argument combinations and errors out clearly on
-//!   bad input,
-//! - prints `closurec v0.1.0 - identity pipeline` to stdout on
-//!   the happy path,
-//! - exits with status 0 on success, 2 on usage error
-//!   (per POSIX's "command-line usage" convention).
+//! - parses every Closure Compiler flag (validation, type
+//!   checking, repeatable handling, enum values) so users can
+//!   already script against the binary the same way they would
+//!   the Java tool,
+//! - returns clear errors on misuse (cli-builder collects every
+//!   error in a single pass and offers fuzzy "did you mean?"
+//!   suggestions on unknown flags),
+//! - on a valid invocation, prints
+//!   `closurec v0.1.0 - identity pipeline\n` and exits 0,
+//! - exits with status 1 on parse error (cli-builder convention;
+//!   matches what users expect from a CLI parser).
 //!
 //! The actual lex/parse/typecheck/passes/emit wiring lands when
-//! the AST grows nodes. Pinning the CLI now lets shell scripts,
-//! build systems, and the test harness all link against a
-//! stable surface today.
+//! the AST grows nodes. Pinning the CLI surface now lets shell
+//! scripts and CI configs link against a stable, Closure-Compiler-
+//! compatible surface today.
 //!
-//! # The CLI surface (frozen here)
+//! # Architecture
 //!
 //! ```text
-//! closurec [OPTIONS] --input PATH
-//!
-//! Required:
-//!   --input PATH            Path to the input JavaScript file.
-//!
-//! Optional:
-//!   --output PATH           Path to write compiled output.
-//!                           Defaults to stdout when omitted.
-//!   --source-map BOOL       Emit a companion source-map blob.
-//!                           Default: true.
-//!   --ascii-only BOOL       Escape non-ASCII characters in output.
-//!                           Default: false (UTF-8 output).
-//!   --pretty BOOL           Emit human-readable output with
-//!                           whitespace. Default: false (minified).
-//!   --disable NAME          Disable a pass by canonical name.
-//!                           Repeatable.
-//!   --help, -h              Print this help text and exit 0.
-//!   --version, -V           Print "closurec 0.1.0" and exit 0.
+//!   args ─► cli_builder::Parser::parse ──► ParserOutput
+//!                                            │
+//!                                            ├─ Parse(r)   ──► run_pipeline(r)   (v1: banner)
+//!                                            ├─ Help(h)    ──► h.text
+//!                                            └─ Version(v) ──► v.version
 //! ```
 //!
-//! BOOL values accept `true|false|1|0|yes|no` (case-insensitive).
-//!
-//! No third-party clap dependency in v1 — `std::env::args` plus
-//! the small parser in [`parse_args`] is enough to cover this
-//! surface and stays cheap on cold-start.
+//! `parse_and_run(args)` is a pure function returning
+//! `(text, ExitCode)` so tests can exercise the whole pipeline
+//! without spawning the binary. `main` is a thin wrapper.
 
+use cli_builder::types::ParserOutput;
+use cli_builder::{load_spec_from_str, Parser};
 use std::process::ExitCode;
 
-/// Canonical pass names for `--disable`. Mirrors the pass set
-/// from CLOC06. We don't strictly validate the list (the user
-/// can disable a pass that doesn't exist; that's a no-op rather
-/// than an error) but the list is the documented input.
-const KNOWN_PASSES: &[&str] = &[
-    "constant-fold",
-    "fold-control-flow",
-    "dce",
-    "inline",
-    "rename",
-    "treeshake",
-    "collapse-properties",
-    "remove-unused-vars",
-];
+/// The cli-builder JSON spec, embedded at compile time. This is
+/// the single source of truth for closurec's flag surface; it
+/// declares every flag from `CommandLineRunner.java` plus their
+/// types, enum values, defaults, and conflict rules.
+const CLI_SPEC_JSON: &str = include_str!("../cli.spec.json");
 
-/// Result of parsing `argv`. Either we have a coherent
-/// invocation ([`Action`]) or the user did something wrong
-/// ([`UsageError`] — exit code 2).
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum ParseResult {
-    Run(Action),
-    UsageError(String),
-}
-
-/// What `closurec` was asked to do.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Action {
-    /// `--help` / `-h`: print usage and exit 0.
-    PrintHelp,
-    /// `--version` / `-V`: print version and exit 0.
-    PrintVersion,
-    /// Compile a file. v1 still just prints the identity-pipeline
-    /// banner; the fields here are what v2+ will consume.
-    Compile(CompileArgs),
-}
-
-/// Fully-resolved compile invocation. Validation has already
-/// happened (input path is set, BOOL flags parsed, etc.).
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct CompileArgs {
-    /// Path to the input file. Required.
-    pub input: String,
-    /// Path to the output file, or `None` for stdout.
-    pub output: Option<String>,
-    /// Emit a source-map blob alongside the output.
-    pub source_map: bool,
-    /// Escape non-ASCII characters in the emitted JavaScript.
-    pub ascii_only: bool,
-    /// Emit human-readable whitespace.
-    pub pretty: bool,
-    /// Passes the user explicitly disabled (subset of
-    /// [`KNOWN_PASSES`], but we don't validate; unknown names
-    /// no-op).
-    pub disabled_passes: Vec<String>,
-}
-
-impl Default for CompileArgs {
-    fn default() -> Self {
-        Self {
-            input: String::new(),
-            output: None,
-            source_map: true,
-            ascii_only: false,
-            pretty: false,
-            disabled_passes: Vec::new(),
-        }
-    }
-}
-
-/// Parse `argv[1..]` (i.e., the args *without* the program
-/// name) into a [`ParseResult`].
+/// Run the CLI from a fresh `argv` (without the program name).
 ///
-/// Pure function: no I/O, no global state. Tests drive it
-/// directly without touching `std::env::args`.
-pub fn parse_args(args: &[String]) -> ParseResult {
-    // Handle --help / --version up front. They short-circuit
-    // even if there are other args, matching `gcc --help`,
-    // `cargo --help`, etc.
-    for a in args.iter() {
-        if a == "--help" || a == "-h" {
-            return ParseResult::Run(Action::PrintHelp);
-        }
-        if a == "--version" || a == "-V" {
-            return ParseResult::Run(Action::PrintVersion);
-        }
-    }
-
-    let mut compile = CompileArgs::default();
-    let mut input_seen = false;
-
-    let mut i = 0;
-    while i < args.len() {
-        let a = &args[i];
-        match a.as_str() {
-            "--input" => {
-                let value = match args.get(i + 1) {
-                    Some(v) => v,
-                    None => {
-                        return ParseResult::UsageError(
-                            "--input requires a path argument".to_string(),
-                        );
-                    }
-                };
-                compile.input = value.clone();
-                input_seen = true;
-                i += 2;
-            }
-            "--output" => {
-                let value = match args.get(i + 1) {
-                    Some(v) => v,
-                    None => {
-                        return ParseResult::UsageError(
-                            "--output requires a path argument".to_string(),
-                        );
-                    }
-                };
-                compile.output = Some(value.clone());
-                i += 2;
-            }
-            "--source-map" => {
-                let value = match args.get(i + 1) {
-                    Some(v) => v,
-                    None => {
-                        return ParseResult::UsageError(
-                            "--source-map requires a bool argument".to_string(),
-                        );
-                    }
-                };
-                match parse_bool(value) {
-                    Some(b) => compile.source_map = b,
-                    None => {
-                        return ParseResult::UsageError(format!(
-                            "--source-map expects a bool (true|false|1|0|yes|no), got {:?}",
-                            value
-                        ));
-                    }
-                }
-                i += 2;
-            }
-            "--ascii-only" => {
-                let value = match args.get(i + 1) {
-                    Some(v) => v,
-                    None => {
-                        return ParseResult::UsageError(
-                            "--ascii-only requires a bool argument".to_string(),
-                        );
-                    }
-                };
-                match parse_bool(value) {
-                    Some(b) => compile.ascii_only = b,
-                    None => {
-                        return ParseResult::UsageError(format!(
-                            "--ascii-only expects a bool (true|false|1|0|yes|no), got {:?}",
-                            value
-                        ));
-                    }
-                }
-                i += 2;
-            }
-            "--pretty" => {
-                let value = match args.get(i + 1) {
-                    Some(v) => v,
-                    None => {
-                        return ParseResult::UsageError(
-                            "--pretty requires a bool argument".to_string(),
-                        );
-                    }
-                };
-                match parse_bool(value) {
-                    Some(b) => compile.pretty = b,
-                    None => {
-                        return ParseResult::UsageError(format!(
-                            "--pretty expects a bool (true|false|1|0|yes|no), got {:?}",
-                            value
-                        ));
-                    }
-                }
-                i += 2;
-            }
-            "--disable" => {
-                let value = match args.get(i + 1) {
-                    Some(v) => v,
-                    None => {
-                        return ParseResult::UsageError(
-                            "--disable requires a pass name".to_string(),
-                        );
-                    }
-                };
-                compile.disabled_passes.push(value.clone());
-                i += 2;
-            }
-            other => {
-                return ParseResult::UsageError(format!("unknown argument {:?}", other));
-            }
-        }
-    }
-
-    if !input_seen {
-        return ParseResult::UsageError(
-            "--input is required (use --help for usage)".to_string(),
-        );
-    }
-
-    ParseResult::Run(Action::Compile(compile))
-}
-
-/// Parse a flag value into a `bool`. Accepts the common
-/// shell-friendly synonyms. Returns `None` on anything else so
-/// the caller can produce a sensible error.
-fn parse_bool(s: &str) -> Option<bool> {
-    match s.to_ascii_lowercase().as_str() {
-        "true" | "1" | "yes" | "on" => Some(true),
-        "false" | "0" | "no" | "off" => Some(false),
-        _ => None,
-    }
-}
-
-/// The help text printed for `--help`. Pulled out so tests can
-/// assert on it and so the format string is in exactly one
-/// place.
-pub fn help_text() -> &'static str {
-    "closurec — Closure Compiler clone (CLOC08)\n\
-     \n\
-     Usage:\n  closurec [OPTIONS] --input PATH\n\
-     \n\
-     Required:\n  --input PATH            Path to the input JavaScript file.\n\
-     \n\
-     Optional:\n  --output PATH           Path to write compiled output (default: stdout).\n  \
-     --source-map BOOL       Emit a companion source-map blob (default: true).\n  \
-     --ascii-only BOOL       Escape non-ASCII characters in output (default: false).\n  \
-     --pretty BOOL           Emit human-readable output with whitespace (default: false).\n  \
-     --disable NAME          Disable a pass by canonical name (repeatable).\n  \
-     --help, -h              Print this help text and exit 0.\n  \
-     --version, -V           Print version and exit 0.\n\
-     \n\
-     Known passes (per CLOC06 canonical order):\n  \
-     constant-fold, fold-control-flow, dce, inline, rename, treeshake,\n  \
-     collapse-properties, remove-unused-vars.\n\
-     \n\
-     v0.1.0 is scaffolding — the pipeline is identity until the AST grows nodes.\n"
-}
-
-/// Returns the bin's canonical version string. Single source of
-/// truth so the test, the `--version` handler, and any future
-/// telemetry agree.
-pub fn version_string() -> &'static str {
-    concat!("closurec ", env!("CARGO_PKG_VERSION"))
-}
-
-/// Render a [`ParseResult`] into stdout text + exit code.
+/// Returns the text that should go to stdout (or stderr in the
+/// error case — caller decides) and the exit code. Pure function:
+/// no I/O, no global state, no `std::env::args()` access. Tests
+/// drive it directly.
 ///
-/// Pure function: no real I/O. Tests can call it directly and
-/// inspect both outputs. `main` is a thin wrapper that just
-/// prints + exits.
-pub fn run(result: ParseResult) -> (String, ExitCode) {
-    match result {
-        ParseResult::Run(Action::PrintHelp) => (help_text().to_string(), ExitCode::SUCCESS),
-        ParseResult::Run(Action::PrintVersion) => {
-            (format!("{}\n", version_string()), ExitCode::SUCCESS)
+/// Exit codes follow standard CLI convention:
+/// - `0` for success (Parse, Help, Version).
+/// - `1` for parse errors (unknown flag, invalid value, missing
+///   required flag, conflicting flags, etc.).
+///
+/// We don't use the Closure Java tool's exit code 2 / 3 / 4
+/// distinctions in v1 — `2` is reserved for usage error,
+/// `3` for compilation error, `4` for IO error once those paths
+/// actually exist. Stick with 0/1 for now.
+pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
+    // Step 1: load the spec. This is cheap (serde_json parses the
+    // ~9 KB spec in microseconds) and runs once per invocation.
+    // We could lazy_static it for repeated CLI loops, but the
+    // binary only ever processes one argv per run.
+    let spec = match load_spec_from_str(CLI_SPEC_JSON) {
+        Ok(s) => s,
+        Err(e) => {
+            // A malformed cli.spec.json is a bug in *us*, not
+            // user error. Still surface it so users have a hope
+            // of reporting it.
+            return (
+                format!("internal error: cli.spec.json failed to load: {}\n", e),
+                ExitCode::from(70), // EX_SOFTWARE per sysexits.h
+            );
         }
-        ParseResult::Run(Action::Compile(_args)) => {
-            // v1: identity pipeline. Print the banner so users
-            // know the binary loaded and parsed its args; real
-            // compilation lands when the AST grows nodes.
+    };
+
+    // Step 2: parse argv. cli-builder collects every error in a
+    // single pass and produces fuzzy "did you mean?" suggestions
+    // on unknown flags.
+    //
+    // cli-builder expects argv-style input (program name first),
+    // so prepend it. The program name we pass in is the canonical
+    // one from the spec; cli-builder uses it for help generation.
+    let mut argv = Vec::with_capacity(args.len() + 1);
+    argv.push("closurec".to_string());
+    argv.extend(args.iter().cloned());
+
+    let parser = Parser::new(spec);
+    match parser.parse(&argv) {
+        Ok(ParserOutput::Parse(_result)) => {
+            // v1: identity pipeline. The args parsed cleanly; we
+            // accept every Closure Compiler flag the user threw
+            // at us, but the body that would actually compile
+            // them is still scaffolding.
             //
-            // We deliberately don't read `_args.input` yet —
-            // there'd be no point opening a file we can't
-            // actually compile. Refusing now would also mean
-            // every test had to set up a real file path.
-            //
-            // Once compilation lands, `_args.input` becomes the
-            // first thing we touch and a missing-file error will
-            // surface here.
+            // When the AST grows nodes, this branch becomes:
+            //   1. resolve --js inputs into a Vec<PathBuf>
+            //   2. lex/parse each into a Program
+            //   3. seed the sidecar from JSDoc / .i.js
+            //   4. typecheck
+            //   5. configure PassPipeline from _result.flags
+            //      (compilation_level, jscomp_off, --define, etc.)
+            //   6. run the pipeline
+            //   7. emit() + source-map generation
+            //   8. write outputs
+            // The CLI surface this PR locks in doesn't change.
             (
                 "closurec v0.1.0 - identity pipeline\n".to_string(),
                 ExitCode::SUCCESS,
             )
         }
-        ParseResult::UsageError(msg) => {
-            // Conventional POSIX exit for misuse is 2 (1 is
-            // reserved for compilation failure, etc.).
-            (
-                format!("error: {}\nuse --help for usage\n", msg),
-                ExitCode::from(2),
-            )
+        Ok(ParserOutput::Help(h)) => (h.text, ExitCode::SUCCESS),
+        Ok(ParserOutput::Version(v)) => (format!("{}\n", v.version), ExitCode::SUCCESS),
+        Err(e) => {
+            // cli-builder's Display for CliBuilderError already
+            // formats nicely (multi-line if there are multiple
+            // errors, with "did you mean?" suggestions).
+            (format!("{}\n", e), ExitCode::from(1))
         }
     }
 }
 
 /// Binary entry point.
+///
+/// `std::env::args` includes `argv[0]` (the program name); we
+/// strip it so [`parse_and_run`] receives only the user-supplied
+/// args. cli-builder will re-add the canonical program name from
+/// the spec.
 fn main() -> ExitCode {
-    let argv: Vec<String> = std::env::args().skip(1).collect();
-    let result = parse_args(&argv);
-    let (text, code) = run(result);
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    let (text, code) = parse_and_run(&args);
     print!("{}", text);
     code
 }
 
 #[cfg(test)]
 mod tests {
-    //! These tests cover the parser and the renderer. The
-    //! parser is a pure function over `&[String]`, so we can
-    //! drive it directly without spawning the binary. That
-    //! keeps tests fast and deterministic.
+    //! Tests drive `parse_and_run` directly — no spawning the
+    //! binary, no temp files. Each test asserts on the `(text,
+    //! exit_code)` pair.
+    //!
+    //! The bar these tests are setting is *not* "every flag has a
+    //! dedicated test" (cli-builder itself has thousands of
+    //! tests on its own behavior). It's:
+    //!   - the spec loads at all,
+    //!   - --help and --version work,
+    //!   - the canonical Closure Compiler invocation patterns
+    //!     (--js / --js_output_file / --compilation_level /
+    //!     --create_source_map) parse cleanly,
+    //!   - unknown flags fail loudly with a useful suggestion,
+    //!   - enums reject invalid values,
+    //!   - repeatable flags accumulate.
     use super::*;
 
     fn args(items: &[&str]) -> Vec<String> {
@@ -381,225 +184,194 @@ mod tests {
     }
 
     #[test]
-    fn help_short_flag_returns_print_help() {
-        assert_eq!(
-            parse_args(&args(&["-h"])),
-            ParseResult::Run(Action::PrintHelp)
+    fn spec_json_loads_cleanly() {
+        // If the embedded spec is malformed, this fails — and we
+        // know about it before users see it.
+        let spec = load_spec_from_str(CLI_SPEC_JSON).expect("cli.spec.json must load");
+        assert_eq!(spec.name, "closurec");
+        assert_eq!(spec.cli_builder_spec_version, "1.0");
+        // 100 user-visible flag entries (some are alias variants
+        // of the same logical flag — see jscomp_dev_mode /
+        // dev_mode, checks_only / checks_only_alias,
+        // warnings_allowlist_file / warnings_whitelist_file_alias).
+        assert!(
+            spec.flags.len() >= 90,
+            "expected ~100 Closure-Compiler flags; got {}",
+            spec.flags.len()
         );
     }
 
     #[test]
-    fn help_long_flag_returns_print_help() {
-        assert_eq!(
-            parse_args(&args(&["--help"])),
-            ParseResult::Run(Action::PrintHelp)
-        );
+    fn help_long_flag_returns_help_text() {
+        let (text, _code) = parse_and_run(&args(&["--help"]));
+        // cli-builder generates help that mentions the program
+        // name and at least some of the flags. Don't pin exact
+        // wording (it might evolve); pin structure.
+        assert!(text.contains("closurec"));
+        assert!(text.contains("--js"));
+        assert!(text.contains("--js_output_file"));
     }
 
     #[test]
-    fn version_short_flag_returns_print_version() {
-        assert_eq!(
-            parse_args(&args(&["-V"])),
-            ParseResult::Run(Action::PrintVersion)
-        );
-    }
-
-    #[test]
-    fn version_long_flag_returns_print_version() {
-        assert_eq!(
-            parse_args(&args(&["--version"])),
-            ParseResult::Run(Action::PrintVersion)
-        );
-    }
-
-    #[test]
-    fn help_short_circuits_even_with_other_args() {
-        // `gcc --help` etc. all short-circuit; matching that.
-        assert_eq!(
-            parse_args(&args(&["--input", "a.js", "--help"])),
-            ParseResult::Run(Action::PrintHelp)
-        );
-    }
-
-    #[test]
-    fn missing_input_is_usage_error() {
-        match parse_args(&args(&["--pretty", "true"])) {
-            ParseResult::UsageError(msg) => {
-                assert!(
-                    msg.contains("--input"),
-                    "expected --input mention in error; got {:?}",
-                    msg
-                );
-            }
-            other => panic!("expected UsageError; got {:?}", other),
-        }
-    }
-
-    #[test]
-    fn unknown_flag_is_usage_error() {
-        match parse_args(&args(&["--input", "a.js", "--bogus"])) {
-            ParseResult::UsageError(msg) => {
-                assert!(
-                    msg.contains("--bogus"),
-                    "expected --bogus mention in error; got {:?}",
-                    msg
-                );
-            }
-            other => panic!("expected UsageError; got {:?}", other),
-        }
-    }
-
-    #[test]
-    fn input_only_sets_defaults() {
-        // Minimum legal invocation: just --input.
-        let r = parse_args(&args(&["--input", "src.js"]));
-        match r {
-            ParseResult::Run(Action::Compile(a)) => {
-                assert_eq!(a.input, "src.js");
-                assert_eq!(a.output, None);
-                assert!(a.source_map); // default true
-                assert!(!a.ascii_only); // default false
-                assert!(!a.pretty); // default false
-                assert!(a.disabled_passes.is_empty());
-            }
-            other => panic!("expected Compile; got {:?}", other),
-        }
-    }
-
-    #[test]
-    fn all_options_round_trip() {
-        let r = parse_args(&args(&[
-            "--input",
-            "in.js",
-            "--output",
-            "out.js",
-            "--source-map",
-            "false",
-            "--ascii-only",
-            "true",
-            "--pretty",
-            "yes",
-            "--disable",
-            "dce",
-            "--disable",
-            "rename",
-        ]));
-        match r {
-            ParseResult::Run(Action::Compile(a)) => {
-                assert_eq!(a.input, "in.js");
-                assert_eq!(a.output.as_deref(), Some("out.js"));
-                assert!(!a.source_map);
-                assert!(a.ascii_only);
-                assert!(a.pretty); // "yes" parses true
-                assert_eq!(a.disabled_passes, vec!["dce", "rename"]);
-            }
-            other => panic!("expected Compile; got {:?}", other),
-        }
-    }
-
-    #[test]
-    fn bool_synonyms_all_parse() {
-        // Lock the synonym set so a future refactor doesn't
-        // accidentally drop one.
-        for v in &["true", "True", "TRUE", "1", "yes", "on"] {
-            assert_eq!(parse_bool(v), Some(true), "true synonym {:?}", v);
-        }
-        for v in &["false", "False", "FALSE", "0", "no", "off"] {
-            assert_eq!(parse_bool(v), Some(false), "false synonym {:?}", v);
-        }
-        assert_eq!(parse_bool("nope"), None);
-        assert_eq!(parse_bool(""), None);
-    }
-
-    #[test]
-    fn invalid_bool_is_usage_error() {
-        match parse_args(&args(&["--input", "a.js", "--pretty", "maybe"])) {
-            ParseResult::UsageError(msg) => {
-                assert!(msg.contains("--pretty"));
-                assert!(msg.contains("\"maybe\""));
-            }
-            other => panic!("expected UsageError; got {:?}", other),
-        }
-    }
-
-    #[test]
-    fn flag_without_value_is_usage_error() {
-        // --input at end of argv.
-        match parse_args(&args(&["--input"])) {
-            ParseResult::UsageError(msg) => {
-                assert!(msg.contains("--input"));
-            }
-            other => panic!("expected UsageError; got {:?}", other),
-        }
-    }
-
-    #[test]
-    fn empty_argv_is_usage_error_missing_input() {
-        match parse_args(&args(&[])) {
-            ParseResult::UsageError(msg) => {
-                assert!(msg.contains("--input"));
-            }
-            other => panic!("expected UsageError; got {:?}", other),
-        }
-    }
-
-    #[test]
-    fn help_text_mentions_all_known_passes() {
-        // The known-pass list is documented; if a pass is added
-        // to KNOWN_PASSES but missed in the help text, this
-        // catches it.
-        let h = help_text();
-        for p in KNOWN_PASSES {
-            assert!(
-                h.contains(p),
-                "help text should mention pass {:?}; got:\n{}",
-                p,
-                h
-            );
-        }
-    }
-
-    #[test]
-    fn version_string_includes_crate_version() {
-        // env!("CARGO_PKG_VERSION") matches Cargo.toml's
-        // version = "0.1.0" today; if Cargo.toml moves to 0.2.0
-        // this test re-evaluates against the new value.
-        let v = version_string();
-        assert!(v.starts_with("closurec "));
-        assert!(v.contains(env!("CARGO_PKG_VERSION")));
-    }
-
-    #[test]
-    fn run_print_help_returns_success_and_help() {
-        let (text, _code) = run(ParseResult::Run(Action::PrintHelp));
-        assert!(text.contains("Usage:"));
-        // Can't easily assert on ExitCode equality (it doesn't
-        // impl PartialEq), but ExitCode::SUCCESS is what we
-        // return.
-    }
-
-    #[test]
-    fn run_print_version_returns_success_and_version() {
-        let (text, _code) = run(ParseResult::Run(Action::PrintVersion));
-        assert!(text.contains("0.1.0"));
+    fn help_short_flag_returns_help_text() {
+        let (text, _code) = parse_and_run(&args(&["-h"]));
         assert!(text.contains("closurec"));
     }
 
     #[test]
-    fn run_compile_v1_prints_identity_banner() {
-        let (text, _code) = run(ParseResult::Run(Action::Compile(CompileArgs {
-            input: "x.js".to_string(),
-            ..Default::default()
-        })));
-        assert!(text.contains("identity pipeline"));
-        assert!(text.contains("v0.1.0"));
+    fn version_long_flag_returns_version() {
+        let (text, _code) = parse_and_run(&args(&["--version"]));
+        assert!(text.contains("0.1.0"));
+    }
+
+    // Note: the upstream Java Closure Compiler exposes only `--version`
+    // (no `-V` short form), so there's no equivalent test here.
+    // cli-builder's auto-injected builtin only adds `--version` long.
+
+    #[test]
+    fn canonical_closure_invocation_parses_cleanly() {
+        // The single most common Closure Compiler CLI call —
+        // mirror it.
+        let (text, _code) = parse_and_run(&args(&[
+            "--js",
+            "src/in.js",
+            "--js_output_file",
+            "out/out.js",
+            "--compilation_level",
+            "ADVANCED",
+            "--create_source_map",
+            "out/out.js.map",
+        ]));
+        assert!(
+            text.contains("identity pipeline"),
+            "expected v1 identity banner; got: {}",
+            text
+        );
     }
 
     #[test]
-    fn run_usage_error_returns_nonzero_and_message() {
+    fn js_flag_is_repeatable() {
+        // --js takes multiple values in real Closure invocations.
+        let (text, _code) = parse_and_run(&args(&[
+            "--js", "a.js", "--js", "b.js", "--js", "c.js",
+        ]));
+        assert!(text.contains("identity pipeline"));
+    }
+
+    #[test]
+    fn unknown_flag_returns_error() {
         let (text, _code) =
-            run(ParseResult::UsageError("--input is required".to_string()));
-        assert!(text.contains("--input"));
-        assert!(text.contains("use --help"));
+            parse_and_run(&args(&["--js", "in.js", "--definitely_not_a_flag"]));
+        // cli-builder produces a "Unknown flag" error and may
+        // include "did you mean?" suggestion. Either way the
+        // bad flag name should be mentioned.
+        assert!(
+            text.contains("definitely_not_a_flag")
+                || text.to_lowercase().contains("unknown"),
+            "expected unknown-flag error; got: {}",
+            text
+        );
+    }
+
+    #[test]
+    fn invalid_enum_value_returns_error() {
+        // ADVANCED, SIMPLE, WHITESPACE_ONLY, TRANSPILE_ONLY,
+        // BUNDLE are valid; BOGUS is not.
+        let (text, _code) = parse_and_run(&args(&[
+            "--js", "in.js", "--compilation_level", "BOGUS",
+        ]));
+        assert!(
+            text.to_lowercase().contains("bogus")
+                || text.to_lowercase().contains("invalid"),
+            "expected enum-value error; got: {}",
+            text
+        );
+    }
+
+    #[test]
+    fn short_compilation_level_alias_works() {
+        // -O is the Closure Compiler's short alias for
+        // --compilation_level. Spec sets it up via `short: "O"`.
+        let (text, _code) =
+            parse_and_run(&args(&["--js", "in.js", "-O", "SIMPLE"]));
+        assert!(text.contains("identity pipeline"));
+    }
+
+    #[test]
+    fn short_warning_level_alias_works() {
+        let (text, _code) =
+            parse_and_run(&args(&["--js", "in.js", "-W", "VERBOSE"]));
+        assert!(text.contains("identity pipeline"));
+    }
+
+    #[test]
+    fn define_short_alias_works() {
+        // -D NAME=value is Closure's short for --define NAME=value.
+        let (text, _code) = parse_and_run(&args(&[
+            "--js", "in.js", "-D", "FLAG_DEBUG=true", "-D", "VERSION=1",
+        ]));
+        assert!(text.contains("identity pipeline"));
+    }
+
+    #[test]
+    fn formatting_flag_is_repeatable_with_enum_values() {
+        // --formatting is a repeatable enum (PRETTY_PRINT,
+        // PRINT_INPUT_DELIMITER, SINGLE_QUOTES).
+        let (text, _code) = parse_and_run(&args(&[
+            "--js",
+            "in.js",
+            "--formatting",
+            "PRETTY_PRINT",
+            "--formatting",
+            "SINGLE_QUOTES",
+        ]));
+        assert!(text.contains("identity pipeline"));
+    }
+
+    #[test]
+    fn deprecated_hyphenated_alias_is_rejected() {
+        // The Java tool accepts `--checks-only` (hyphenated) as
+        // an alias for `--checks_only` (underscored canonical).
+        // cli-builder doesn't natively support multiple long-form
+        // aliases per flag, so v0.1.0 implements only the
+        // canonical underscored names. Passing the hyphenated
+        // form should fail with a useful "unknown flag" error
+        // pointing the user at the canonical name.
+        //
+        // This locks in the limitation as a *known* behavior
+        // rather than an accident — future versions may add
+        // hyphenated aliases via cli-builder enhancements
+        // (tracked in CLOC08 known-gaps).
+        let (text, _code) =
+            parse_and_run(&args(&["--checks-only"]));
+        assert!(
+            text.to_lowercase().contains("unknown")
+                || text.to_lowercase().contains("checks-only"),
+            "expected unknown-flag error for hyphenated alias; got: {}",
+            text
+        );
+    }
+
+    #[test]
+    fn empty_argv_runs_with_defaults() {
+        // No flags = no required flags missing = identity banner.
+        // (--js is not marked required in the spec; the Java tool
+        // accepts an empty invocation too.)
+        let (text, _code) = parse_and_run(&args(&[]));
+        assert!(text.contains("identity pipeline"));
+    }
+
+    #[test]
+    fn version_string_matches_crate_version() {
+        // env!("CARGO_PKG_VERSION") matches Cargo.toml's
+        // version field, which must in turn match the spec's
+        // "version" field. If they drift, this catches it.
+        let (text, _code) = parse_and_run(&args(&["--version"]));
+        assert!(
+            text.contains(env!("CARGO_PKG_VERSION")),
+            "version output {:?} should contain crate version {:?}",
+            text,
+            env!("CARGO_PKG_VERSION")
+        );
     }
 }
