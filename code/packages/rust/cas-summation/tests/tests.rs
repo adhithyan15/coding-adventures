@@ -1236,3 +1236,113 @@ fn phase54_regression_log_k_over_k_cubed_still_closes_via_phase50() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ---------------------------------------------------------------------------
+// Phase 55 — Bounded×Log(diverging) numerator (Rust port).
+// ---------------------------------------------------------------------------
+// sin(k)·log(k)/Q(k) vanishes at infinity when Q(k) diverges.
+// The numerator grows sub-polynomially (bounded × log); any polynomial
+// or faster-growing denominator dominates.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase55_sin_k_times_log_k_over_k_squared_closes() {
+    // sin(k)·log(k) / k²: bounded×log / poly-2 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let log_k = apply(sym("Log"), vec![k.clone()]);
+    let log_kp1 = apply(sym("Log"), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![sin_k, log_k]);
+    let num_kp1 = apply(sym(MUL), vec![sin_kp1, log_kp1]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase55_cos_k_times_log_k_over_k_closes() {
+    // cos(k)·log(k) / k: bounded×log / poly-1 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let cos_k = apply(sym("Cos"), vec![k.clone()]);
+    let cos_kp1 = apply(sym("Cos"), vec![kp1.clone()]);
+    let log_k = apply(sym("Log"), vec![k.clone()]);
+    let log_kp1 = apply(sym("Log"), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![cos_k, log_k]);
+    let num_kp1 = apply(sym(MUL), vec![cos_kp1, log_kp1]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, k.clone()]),
+        apply(sym(DIV), vec![num_kp1, kp1]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase55_sin_cos_times_log_over_k_cubed_closes() {
+    // sin(k)·cos(k)·log(k) / k³: two bounded factors × log / poly-3 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let cos_k = apply(sym("Cos"), vec![k.clone()]);
+    let log_k = apply(sym("Log"), vec![k.clone()]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let cos_kp1 = apply(sym("Cos"), vec![kp1.clone()]);
+    let log_kp1 = apply(sym("Log"), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![sin_k, cos_k, log_k]);
+    let num_kp1 = apply(sym(MUL), vec![sin_kp1, cos_kp1, log_kp1]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![k.clone(), int(3)])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![kp1, int(3)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase55_sin_times_log_k_squared_over_k_cubed_closes() {
+    // sin(k)·log(k²) / k³: log of k² diverges (positive-degree poly inner).
+    // After k→k+1 substitution: log((k+1)²) matches structurally. → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let k_sq = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_sq = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let log_ksq = apply(sym("Log"), vec![k_sq]);
+    let log_kp1_sq = apply(sym("Log"), vec![kp1_sq]);
+    let num_k = apply(sym(MUL), vec![sin_k, log_ksq]);
+    let num_kp1 = apply(sym(MUL), vec![sin_kp1, log_kp1_sq]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![k.clone(), int(3)])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![kp1, int(3)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase55_bounded_times_log_constant_denominator_stays() {
+    // sin(k)·log(k) / 1: constant denominator does not diverge.
+    // h_diverges_at_infinity(1) = false → Phase 55 refuses.
+    // No other phase closes this. Must stay unevaluated.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let log_k = apply(sym("Log"), vec![k.clone()]);
+    let log_kp1 = apply(sym("Log"), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![sin_k, log_k]);
+    let num_kp1 = apply(sym(MUL), vec![sin_kp1, log_kp1]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, int(1)]),
+        apply(sym(DIV), vec![num_kp1, int(1)]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}

@@ -1,6 +1,6 @@
 [package]
 name = "cas-summation"
-version = "1.2.0"
+version = "1.3.0"
 edition = "2021"
 description = "Symbolic summation and product evaluation over symbolic IR"
 license = "MIT"

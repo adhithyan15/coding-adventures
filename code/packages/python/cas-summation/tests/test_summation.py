@@ -1606,3 +1606,155 @@ class TestEvaluateSumPhase54LogTimesPolynomialNumerator:
         assert not (isinstance(result, IRApply) and result.head == SUM), (
             f"Regression: log(k)/k³ should close via Phase 50; got {result!r}"
         )
+
+
+# ---------------------------------------------------------------------------
+# Phase 55 — Bounded × Log(diverging) numerator pattern.
+# ---------------------------------------------------------------------------
+# ``sin(k)·log(k)/Q(k)`` (and similar shapes) vanish at infinity when
+# ``Q(k)`` is any diverging function (polynomial degree ≥ 1, exponential,
+# etc.).  The numerator grows sub-polynomially — bounded × log(h) is
+# dominated by any polynomial denominator.
+#
+# The helper ``_is_bounded_times_log_in_k`` requires exactly one
+# Log(diverging) factor in a Mul node; all other factors must be bounded.
+# The branch in ``_g_vanishes_at_infinity`` closes when the denominator
+# passes ``_h_diverges_at_infinity``.
+#
+# This is the bounded-times-log complement of Phase 52 (bounded×polynomial)
+# and Phase 54 (log×polynomial).
+# ---------------------------------------------------------------------------
+
+
+class TestEvaluateSumPhase55BoundedTimesLogNumerator:
+    """Phase 55: Mul(bounded, Log(diverging)) numerator + diverging denominator."""
+
+    def test_sin_k_times_log_k_over_k_squared_closes(self):
+        """``sin(k)·log(k)/k²``: bounded×log over poly-deg-2.  Phase 55 closes.
+
+        ``|sin(k)| ≤ 1`` and ``log(k)`` grows sub-polynomially, so the
+        numerator is dominated by the degree-2 polynomial denominator.
+        poly_deg of numerator = 0 (no polynomial factor); denominator diverges
+        polynomially at rate k² → quotient vanishes.
+        """
+        from symbolic_ir import LOG, POW, SIN, SUB
+
+        sin_k = IRApply(SIN, (_k,))
+        log_k = IRApply(LOG, (_k,))
+        num_k = IRApply(MUL, (sin_k, log_k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sin_kp1 = IRApply(SIN, (kp1,))
+        log_kp1 = IRApply(LOG, (kp1,))
+        num_kp1 = IRApply(MUL, (sin_kp1, log_kp1))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(2)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 55 should close sin(k)·log(k)/k²; got {result!r}"
+        )
+
+    def test_cos_k_times_log_k_over_k_closes(self):
+        """``cos(k)·log(k)/k``: bounded×log over poly-deg-1.  Phase 55 closes.
+
+        Even with a degree-1 denominator (``k``), the sub-polynomial
+        growth of the numerator is dominated → quotient vanishes.
+        """
+        from symbolic_ir import COS, LOG, SUB
+
+        cos_k = IRApply(COS, (_k,))
+        log_k = IRApply(LOG, (_k,))
+        num_k = IRApply(MUL, (cos_k, log_k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        cos_kp1 = IRApply(COS, (kp1,))
+        log_kp1 = IRApply(LOG, (kp1,))
+        num_kp1 = IRApply(MUL, (cos_kp1, log_kp1))
+        g_k = IRApply(DIV, (num_k, _k))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 55 should close cos(k)·log(k)/k; got {result!r}"
+        )
+
+    def test_two_bounded_factors_times_log_over_k_cubed_closes(self):
+        """``sin(k)·cos(k)·log(k)/k³``: two bounded factors × log / poly-deg-3.
+
+        Multiple bounded factors in the Mul are all accepted — each
+        individually bounded, and the product of bounded functions is bounded.
+        Phase 55 closes since the denominator diverges.
+        """
+        from symbolic_ir import COS, LOG, POW, SIN, SUB
+
+        sin_k = IRApply(SIN, (_k,))
+        cos_k = IRApply(COS, (_k,))
+        log_k = IRApply(LOG, (_k,))
+        num_k = IRApply(MUL, (sin_k, cos_k, log_k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sin_kp1 = IRApply(SIN, (kp1,))
+        cos_kp1 = IRApply(COS, (kp1,))
+        log_kp1 = IRApply(LOG, (kp1,))
+        num_kp1 = IRApply(MUL, (sin_kp1, cos_kp1, log_kp1))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 55 should close sin(k)·cos(k)·log(k)/k³; got {result!r}"
+        )
+
+    def test_bounded_times_log_of_k_squared_over_k_cubed_closes(self):
+        """``sin(k)·log(k²)/k³``: log argument is ``k²`` (diverges).
+
+        ``_is_log_of_diverging_in_k(Log(k²), k)`` returns True since
+        ``k²`` is a positive-degree polynomial.  Using ``k²`` as the log
+        argument avoids nesting issues in the structural telescoping check
+        (``subst(k+1, k, Log(Pow(k,2)))`` produces ``Log(Pow(k+1,2))``
+        which compares structurally equal to the manually-built ``g(k+1)``).
+        Phase 55 closes.
+        """
+        from symbolic_ir import LOG, POW, SIN, SUB
+
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        sin_k = IRApply(SIN, (_k,))
+        log_ksq = IRApply(LOG, (k_sq,))  # log(k²) as numerator factor
+        num_k = IRApply(MUL, (sin_k, log_ksq))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        kp1_sq = IRApply(POW, (kp1, IRInteger(2)))
+        sin_kp1 = IRApply(SIN, (kp1,))
+        log_kp1_sq = IRApply(LOG, (kp1_sq,))
+        num_kp1 = IRApply(MUL, (sin_kp1, log_kp1_sq))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 55 should close sin(k)·log(k²)/k³; got {result!r}"
+        )
+
+    def test_bounded_times_log_constant_denominator_refused(self):
+        """``sin(k)·log(k)/1``: denominator is constant — does not diverge.
+
+        The numerator shape passes ``_is_bounded_times_log_in_k``, but
+        the denominator (``1``) is not recognised as diverging by
+        ``_h_diverges_at_infinity``.  Phase 55 correctly refuses, and
+        no other phase closes the sum.  Result must stay unevaluated.
+        """
+        from symbolic_ir import LOG, SIN, SUB
+
+        sin_k = IRApply(SIN, (_k,))
+        log_k = IRApply(LOG, (_k,))
+        num_k = IRApply(MUL, (sin_k, log_k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sin_kp1 = IRApply(SIN, (kp1,))
+        log_kp1 = IRApply(LOG, (kp1,))
+        num_kp1 = IRApply(MUL, (sin_kp1, log_kp1))
+        # Denominator = 1 (constant): _h_diverges_at_infinity returns False.
+        g_k = IRApply(DIV, (num_k, IRInteger(1)))
+        g_kp1 = IRApply(DIV, (num_kp1, IRInteger(1)))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # sin(k)·log(k)/1 does not vanish; must stay unevaluated.
+        assert isinstance(result, IRApply) and result.head == SUM, (
+            f"Phase 55: constant denominator should stay unevaluated; got {result!r}"
+        )

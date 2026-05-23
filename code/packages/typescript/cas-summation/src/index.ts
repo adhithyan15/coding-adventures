@@ -835,6 +835,40 @@ function splitLogPolynomialFactor(
   return { logFactor, polyDeg: polyDegSum };
 }
 
+/**
+ * Phase 55 (TypeScript port): Return true when ``node`` is a ``Mul`` with
+ * exactly one ``Log(diverging)`` factor and all remaining factors bounded
+ * in ``k``.
+ *
+ * The bounded part is uniformly bounded by some constant ``C`` and
+ * ``log(h(k))`` grows sub-polynomially, so their product is dominated by
+ * any polynomial or faster-growing denominator.  This is the
+ * bounded-times-log complement of Phase 52 (bounded × polynomial) and
+ * Phase 54 (log × polynomial).
+ *
+ * Requirements:
+ *   - ``node = Mul(...)`` — a bare ``Log(h)`` numerator goes via Phase 50.
+ *   - Exactly one factor passes ``isLogOfDivergingInK``.
+ *   - All remaining factors pass ``isBoundedInK``.
+ *   - Any factor that is neither → return false.
+ */
+function isBoundedTimesLogInK(node: IRNode, k: IRNode): boolean {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return false;
+  let logCount = 0;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      continue;
+    }
+    if (isBoundedInK(arg, k)) {
+      continue;
+    }
+    // Factor is neither Log(diverging) nor bounded — unrecognised.
+    return false;
+  }
+  return logCount === 1;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -897,6 +931,12 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     if (denDegLp !== undefined && denDegLp > logPolyResult.polyDeg) {
       return true;
     }
+  }
+  // Phase 55: Mul(bounded, Log(diverging)) numerator + diverging denominator.
+  // bounded × log(h(k)) grows sub-polynomially (log dominates bounded part,
+  // but log itself is dominated by any polynomial or faster-growing denominator).
+  if (isBoundedTimesLogInK(num, k) && hDivergesAtInfinity(den, k)) {
+    return true;
   }
   // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
   const numDeg = polynomialDegreeInK(num, k);

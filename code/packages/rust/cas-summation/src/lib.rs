@@ -1135,6 +1135,42 @@ fn split_log_polynomial_factor<'a>(node: &'a IRNode, k: &IRNode) -> Option<(&'a 
     Some((lf, poly_deg_sum))
 }
 
+/// Phase 55 helper: return true when `node` is a `Mul` with exactly one
+/// `Log(diverging)` factor and all remaining factors bounded in `k`.
+///
+/// The bounded part is uniformly bounded (|f| ≤ C) and `log(h(k))` grows
+/// sub-polynomially, so their product is dominated by any polynomial or
+/// faster-growing denominator.  This is the bounded-times-log complement
+/// of Phase 52 (bounded × polynomial) and Phase 54 (log × polynomial).
+///
+/// Requirements:
+///   - `node = Mul(...)`
+///   - Exactly one factor passes `is_log_of_diverging_in_k`
+///   - All remaining factors pass `is_bounded_in_k`
+///   - Any other factor → return false
+fn is_bounded_times_log_in_k(node: &IRNode, k: &IRNode) -> bool {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return false,
+    };
+    if !head_is(&apply_node.head, MUL) {
+        return false;
+    }
+    let mut log_count = 0usize;
+    for arg in &apply_node.args {
+        if is_log_of_diverging_in_k(arg, k) {
+            log_count += 1;
+            continue;
+        }
+        if is_bounded_in_k(arg, k) {
+            continue;
+        }
+        // Factor is neither Log(diverging) nor bounded — unrecognised.
+        return false;
+    }
+    log_count == 1
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -1203,6 +1239,14 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
                 return true;
             }
         }
+    }
+    // Phase 55: Mul(bounded, Log(diverging)) numerator + diverging denominator.
+    // bounded × log(h(k)) grows sub-polynomially — dominated by any
+    // polynomial or faster-growing denominator.  Unlike Phase 54, we compare
+    // against `h_diverges_at_infinity` (not a strict degree inequality) because
+    // the numerator's effective polynomial degree is 0 (no polynomial factor).
+    if is_bounded_times_log_in_k(num, k) && h_diverges_at_infinity(den, k) {
+        return true;
     }
     // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
     let num_deg = match polynomial_degree_in_k(num, k) {

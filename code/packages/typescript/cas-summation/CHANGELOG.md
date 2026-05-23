@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.3.0 — 2026-05-23
+
+**Phase 55 — Bounded×Log(diverging) numerator pattern (TypeScript port).**
+
+Ports Python `cas-summation` 1.3.0 Phase 55 to TypeScript.  Adds
+`isBoundedTimesLogInK` helper and a Phase 55 branch in `gVanishesAtInfinity`.
+`bounded(k) × log(h(k))` grows sub-polynomially — dominated by any
+polynomial or faster-growing denominator.
+
+Bumps 1.2.0 → 1.3.0.
+
+### Added
+
+- **`isBoundedTimesLogInK(node, k)`** — Phase 55 helper. Returns true when
+  `node` is a `Mul` with exactly one `Log(diverging)` factor and all remaining
+  factors pass `isBoundedInK`. Requires exactly one log factor; two+ → false.
+
+- **Phase 55 branch in `gVanishesAtInfinity`** — after Phase 54, before Phase 42.
+  Closes `Div(Mul(bounded, Log(diverging)), den)` when `den` diverges.
+
+- **5 new tests** in `describe("Phase 55 Bounded×Log(diverging) numerator")`:
+  - `sin(k)·log(k) / k² closes`
+  - `cos(k)·log(k) / k closes`
+  - `sin(k)·cos(k)·log(k) / k³ closes`
+  - `sin(k)·log(k²) / k³ closes`
+  - `sin(k)·log(k) / 1 stays unevaluated` (constant denominator refused)
+
+Total: 66 tests (was 61).
+
 ## 1.2.0 — 2026-05-23
 
 **Phase 54 — Log×polynomial numerator pattern (TypeScript port).**
