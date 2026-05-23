@@ -205,13 +205,11 @@ IC parameters for C/L; AC phasor specs for V/I sources.
 
 ### What is in flight
 
-- PSS analysis helpers across Python, TypeScript, and Rust SPICE
-  engines: ordered residual vectors, L2/RMS norms, finite-difference residual
-  Jacobians, reactive initial-condition update deltas, and Newton candidate
-  circuits have landed. One-step Newton iteration acceptance and bounded
-  Newton solves have landed; this follow-up wraps the solve in a direct PSS
-  analysis result that returns one steady-state transient period from the
-  solved circuit.
+- 1970s SPICE compatibility planning: the next workstream is tracked in
+  `spice-1970s-compatibility.md`, starting with JFET device/model-card support,
+  then mutual inductors, ideal transmission lines, Gear-2 transient integration,
+  pseudo-transient DC continuation, model-card depth, classic text output cards,
+  and the remaining SPICE2 small-signal analysis surface.
 
 ---
 
@@ -237,6 +235,14 @@ and the sparse real solver path landed in PR #3391.
 | **Multi-corner parallel sweep** | Run the same analysis at N PVT corners in parallel goroutines / subprocesses. Mostly an orchestration problem once the core engine is solid. DC operating-point corners shipped in PR #3495; DC source sweep corners shipped in PR #3501; AC frequency sweep corners shipped in PR #3511; transfer-function corners shipped in PR #3516. |
 | **Mixed-signal coupling with `hardware-vm`** | AMS simulation — digital events feed into analog SPICE nodes and vice versa. Long-range project; `hardware-vm.md` spec describes the interface. |
 | **Verilog-A compact models** | Custom device models. Requires a Verilog-A parser (`code/specs/verilog-a-parser.md` is referenced but not written). |
+
+#### SPICE 1970s compatibility
+
+The compatibility workstream is now split into concrete phases in
+`code/specs/spice-1970s-compatibility.md`. This is the plan to move the current
+solver from a strong SPICE-compatible educational engine toward a recognizable
+Berkeley SPICE1/SPICE2-era simulator surface. The first implementation phase is
+JFET device and `.model` / `J` card support.
 
 ---
 
