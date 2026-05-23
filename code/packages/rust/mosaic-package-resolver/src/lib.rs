@@ -86,13 +86,20 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     "Text", "Image", "Spacer", "Divider", "Icon",
     // Control flow (§3)
     "If", "Else", "For",
-    // Host primitives (§2.1 "Host*" rows + UI29-1's HostDialog).
+    // Host primitives (§2.1 "Host*" rows + UI29-1's HostDialog +
+    // UI29-2's HostCheckbox/HostRadio).
     // HostDialog was added in UI29-1 after mosaic-pkg-dialog v0.1.0
     // demonstrated that composing a dialog from Box+Column+Text loses
     // modal/focus/top-layer/accessibility semantics that only the
     // host's native dialog primitive (DOM <dialog>, Qt Popup, SwiftUI
     // .sheet, XAML ContentDialog) provides.
+    // HostCheckbox + HostRadio were added in UI29-2 after a
+    // mosaic-pkg-toolkit audit found Checkbox/Radio were fake
+    // HostButton wrappers, losing the platform-native a11y role,
+    // checked-state visuals (tri-state, focus ring), and keyboard
+    // semantics that only the real checkbox/radio widget provides.
     "HostInput", "HostButton", "HostTable", "HostScroll", "HostDialog",
+    "HostCheckbox", "HostRadio",
 ];
 
 // ---------------------------------------------------------------------------
@@ -650,16 +657,18 @@ version = "1"
 
     #[test]
     fn kernel_set_covers_ui29_section_2_1() {
-        // The sixteen primitives — fifteen from UI29 §2.1 plus
-        // HostDialog added in UI29-1 (#3846).
-        let expected_16 = [
+        // The eighteen primitives — fifteen from UI29 §2.1, plus
+        // HostDialog added in UI29-1 (#3846), plus HostCheckbox and
+        // HostRadio added in UI29-2 (#3978).
+        let expected_18 = [
             "Box", "Row", "Column", "Stack", "Text", "Image",
             "Spacer", "Divider", "Icon",
             "If", "For",
             "HostInput", "HostButton", "HostTable", "HostScroll",
             "HostDialog",
+            "HostCheckbox", "HostRadio",
         ];
-        for name in &expected_16 {
+        for name in &expected_18 {
             assert!(
                 KERNEL_PRIMITIVES.contains(name),
                 "kernel must include `{name}`"
