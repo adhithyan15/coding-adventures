@@ -166,6 +166,7 @@ members = [
     "java-lexer",
     "java-parser",
     "jit-compiler",
+    "jsdoc-comment-extractor",
     "jsdoc-lexer",
     "jsdoc-parser",
     "json-lexer",
