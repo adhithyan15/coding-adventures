@@ -138,6 +138,10 @@ The crate keeps the boundary narrow:
   helpers for plan-drift and count-drift branches
 - supervisor drain run summaries flatten host-investigation component flags for
   payload-free host logs
+- supervisor drain reports and summaries expose host-attention classifications
+  that combine scheduler action, host investigation, and run-integrity signals
+- supervisor drain run summaries flatten host-attention component flags for
+  payload-free host dashboards
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
@@ -158,6 +162,8 @@ The crate keeps the boundary narrow:
   checkpoint drift, and host-investigation logs
 - supervisor drain run-integrity classifications expose their own
   label-to-classifier match flags for host-log integrity dashboards
+- host-attention classifications expose their own label-to-classifier match
+  flags for host-log routing dashboards
 - supervisor drain run summaries flatten outcome status flags for host logs and
   terminal scheduler dashboards
 - supervisor drain reports and summaries expose no-action scheduler helpers for

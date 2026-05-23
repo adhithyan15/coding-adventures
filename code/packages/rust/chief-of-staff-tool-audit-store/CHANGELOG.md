@@ -106,6 +106,9 @@ All notable changes to this package will be documented in this file.
   summaries.
 - Flattened host-investigation component flags for supervisor drain run
   summaries.
+- Stable host-attention classifications for supervisor drain run reports and
+  summaries.
+- Flattened host-attention component flags for supervisor drain run summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Report-level scheduler action labels for supervisor drain runs.
