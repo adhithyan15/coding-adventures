@@ -12,6 +12,7 @@ import {
   currentSource,
   currentSourceWithAc,
   inductor,
+  jfet,
   resistor,
   sParameters,
   vcvs,
@@ -169,6 +170,23 @@ describe("acSweep", () => {
     expectClose(bias!.imag, 0.0);
     expectClose(out!.real, 0.0);
     expectClose(out!.imag, 0.5);
+  });
+
+  it("uses JFET common-source gain from the DC bias point", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdd", "vdd", "0", 10.0));
+    circuit.add(voltageSourceWithAc("Vin", "gate", "0", 0.0, 1.0, 0.0));
+    circuit.add(resistor("Rd", "vdd", "drain", 1_000.0));
+    circuit.add(jfet("J1", "drain", "gate", "0", "NJF", 1.0e-3, -2.0));
+
+    const points = acSweep(circuit, 1_000.0, 1_000.0, 10);
+
+    expect(points).toHaveLength(1);
+    const out = points[0].voltage("drain");
+    expect(out).not.toBeUndefined();
+    expectClose(out!.real, -4.0);
+    expectClose(out!.imag, 0.0);
+    expectClose(complexAbs(points[0].voltage("vdd")!), 0.0);
   });
 
   it("applies VCVS gain in AC analysis", () => {

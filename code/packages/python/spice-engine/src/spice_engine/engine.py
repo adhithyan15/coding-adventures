@@ -1190,6 +1190,8 @@ def _stamp_dc(
         _stamp_bsource(G, b, x, node_to_idx, branch_srcs, el)
     elif isinstance(el, Diode):
         _stamp_diode(G, b, x, node_to_idx, el)
+    elif isinstance(el, JFET):
+        _stamp_jfet(G, b, x, node_to_idx, el)
     elif isinstance(el, Mosfet):
         _stamp_mosfet(G, b, x, node_to_idx, el)
     elif isinstance(el, BJT):
@@ -1619,6 +1621,74 @@ def _stamp_mosfet(
             G[s][node_to_idx[el.source]] += gm
     # Companion current source for Id at this operating point
     Ieq = Id - gm * V_GS - gds * V_DS
+    if not _is_ground(el.drain):
+        b[node_to_idx[el.drain]] -= Ieq
+    if not _is_ground(el.source):
+        b[node_to_idx[el.source]] += Ieq
+
+
+def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
+    if not math.isfinite(el.beta) or el.beta <= 0.0:
+        raise ValueError(f"JFET '{el.name}' beta must be finite and positive")
+    if not math.isfinite(el.vto):
+        raise ValueError(f"JFET '{el.name}' VTO must be finite")
+    if not math.isfinite(el.lambda_):
+        raise ValueError(f"JFET '{el.name}' LAMBDA must be finite")
+    if el.polarity == "PJF":
+        ids, gm, gds = _eval_njf(-vgs, -vds, -el.vto, el.beta, el.lambda_)
+        return -ids, gm, gds
+    if el.polarity != "NJF":
+        raise ValueError(f"JFET '{el.name}' polarity must be 'NJF' or 'PJF'")
+    return _eval_njf(vgs, vds, el.vto, el.beta, el.lambda_)
+
+
+def _eval_njf(
+    vgs: float, vds: float, vto: float, beta: float, lambda_: float
+) -> tuple[float, float, float]:
+    overdrive = vgs - vto
+    if overdrive <= 0.0 or vds < 0.0:
+        return (0.0, 0.0, 0.0)
+    if vds < overdrive:
+        channel = 2.0 * overdrive * vds - vds * vds
+        modulation = 1.0 + lambda_ * vds
+        ids = beta * channel * modulation
+        gm = 2.0 * beta * vds * modulation
+        gds = beta * (2.0 * overdrive - 2.0 * vds) * modulation + beta * channel * lambda_
+        return (ids, gm, gds)
+    ids = beta * overdrive * overdrive * (1.0 + lambda_ * vds)
+    gm = 2.0 * beta * overdrive * (1.0 + lambda_ * vds)
+    gds = beta * overdrive * overdrive * lambda_
+    return (ids, gm, gds)
+
+
+def _stamp_jfet(
+    G: list[list[float]],
+    b: list[float],
+    x: list[float],
+    node_to_idx: dict[str, int],
+    el: JFET,
+) -> None:
+    Vd = 0.0 if _is_ground(el.drain) else x[node_to_idx[el.drain]]
+    Vg = 0.0 if _is_ground(el.gate) else x[node_to_idx[el.gate]]
+    Vs = 0.0 if _is_ground(el.source) else x[node_to_idx[el.source]]
+    vgs = Vg - Vs
+    vds = Vd - Vs
+    ids, gm, gds = _eval_jfet(el, vgs, vds)
+
+    _stamp_g(G, node_to_idx, el.drain, el.source, gds)
+    if not _is_ground(el.drain):
+        d = node_to_idx[el.drain]
+        if not _is_ground(el.gate):
+            G[d][node_to_idx[el.gate]] += gm
+        if not _is_ground(el.source):
+            G[d][node_to_idx[el.source]] -= gm
+    if not _is_ground(el.source):
+        s = node_to_idx[el.source]
+        if not _is_ground(el.gate):
+            G[s][node_to_idx[el.gate]] -= gm
+        if not _is_ground(el.source):
+            G[s][node_to_idx[el.source]] += gm
+    Ieq = ids - gm * vgs - gds * vds
     if not _is_ground(el.drain):
         b[node_to_idx[el.drain]] -= Ieq
     if not _is_ground(el.source):
@@ -3185,6 +3255,25 @@ def _stamp_ac(
         gd = (el.Is / el.Vt) * math.exp(Vd / el.Vt)
         _stamp_g_c(G, node_to_idx, el.anode, el.cathode, gd + 0j)
 
+    elif isinstance(el, JFET):
+        Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
+        Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
+        Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+        _, gm_j, gds_j = _eval_jfet(el, Vg - Vs, Vd - Vs)
+        _stamp_g_c(G, node_to_idx, el.drain, el.source, gds_j + 0j)
+        if not _is_ground(el.drain):
+            d = node_to_idx[el.drain]
+            if not _is_ground(el.gate):
+                G[d][node_to_idx[el.gate]] += gm_j + 0j
+            if not _is_ground(el.source):
+                G[d][node_to_idx[el.source]] -= gm_j + 0j
+        if not _is_ground(el.source):
+            s = node_to_idx[el.source]
+            if not _is_ground(el.gate):
+                G[s][node_to_idx[el.gate]] -= gm_j + 0j
+            if not _is_ground(el.source):
+                G[s][node_to_idx[el.source]] += gm_j + 0j
+
     elif isinstance(el, Mosfet):
         # Small-signal model: gds (output conductance) + gm (transconductance).
         # The gm VCCS is stamped as off-diagonal conductance entries.
@@ -3725,6 +3814,25 @@ def _build_ss_matrix(
             Vd = min(Va - Vk, 0.7)
             gd = (el.Is / el.Vt) * math.exp(Vd / el.Vt)
             _stamp_g(G, node_to_idx, el.anode, el.cathode, gd)
+
+        elif isinstance(el, JFET):
+            Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
+            Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
+            Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+            _, gm_j, gds_j = _eval_jfet(el, Vg - Vs, Vd - Vs)
+            _stamp_g(G, node_to_idx, el.drain, el.source, gds_j)
+            if not _is_ground(el.drain):
+                d = node_to_idx[el.drain]
+                if not _is_ground(el.gate):
+                    G[d][node_to_idx[el.gate]] += gm_j
+                if not _is_ground(el.source):
+                    G[d][node_to_idx[el.source]] -= gm_j
+            if not _is_ground(el.source):
+                s = node_to_idx[el.source]
+                if not _is_ground(el.gate):
+                    G[s][node_to_idx[el.gate]] -= gm_j
+                if not _is_ground(el.source):
+                    G[s][node_to_idx[el.source]] += gm_j
 
         elif isinstance(el, Mosfet):
             # Small-signal model: gds (drain–source) + gm VCCS (gate–source
