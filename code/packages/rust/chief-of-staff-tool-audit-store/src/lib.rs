@@ -1495,6 +1495,16 @@ impl ToolAuditSupervisorDrainRunReport {
             host_investigation_label: self.host_investigation_label(),
             host_investigation_label_matches_kind: self.host_investigation_label_matches_kind(),
             all_classifier_labels_match: self.all_classifier_labels_match(),
+            has_inventory_count_integrity_drift: self.has_inventory_count_integrity_drift(),
+            has_run_status_integrity_drift: self.has_run_status_integrity_drift(),
+            has_checkpoint_boundary_integrity_drift: self.has_checkpoint_boundary_integrity_drift(),
+            has_classifier_label_integrity_drift: self.has_classifier_label_integrity_drift(),
+            has_run_integrity_drift: self.has_run_integrity_drift(),
+            run_integrity_kind: self.run_integrity_kind(),
+            run_integrity_label: self.run_integrity_label(),
+            run_integrity_label_matches_kind: self.run_integrity_label_matches_kind(),
+            is_run_integrity_clean: self.is_run_integrity_clean(),
+            requires_run_integrity_investigation: self.requires_run_integrity_investigation(),
             requires_host_investigation: self.requires_host_investigation(),
             is_no_host_investigation: self.is_no_host_investigation(),
             requires_host_plan_drift_investigation: self.requires_host_plan_drift_investigation(),
@@ -1890,6 +1900,65 @@ impl ToolAuditSupervisorDrainRunReport {
             && self.checkpoint_advance_matches_last_checkpoint()
             && self.checkpoint_plan_matches_drain()
     }
+
+    /// Return whether planned or replayed inventory counts drifted from payloads.
+    pub fn has_inventory_count_integrity_drift(&self) -> bool {
+        !self.inventory_counts_match()
+    }
+
+    /// Return whether flattened run-status flags drifted from source counts.
+    pub fn has_run_status_integrity_drift(&self) -> bool {
+        !self.run_status_flags_match()
+    }
+
+    /// Return whether checkpoint-boundary fields drifted from source checkpoints.
+    pub fn has_checkpoint_boundary_integrity_drift(&self) -> bool {
+        !self.checkpoint_boundary_fields_match()
+    }
+
+    /// Return whether any stable classifier label drifted from its typed value.
+    pub fn has_classifier_label_integrity_drift(&self) -> bool {
+        !self.all_classifier_labels_match()
+    }
+
+    /// Return whether any flattened host-log integrity drift was observed.
+    pub fn has_run_integrity_drift(&self) -> bool {
+        self.has_inventory_count_integrity_drift()
+            || self.has_run_status_integrity_drift()
+            || self.has_checkpoint_boundary_integrity_drift()
+            || self.has_classifier_label_integrity_drift()
+    }
+
+    /// Return whether all flattened host-log integrity checks are clean.
+    pub fn is_run_integrity_clean(&self) -> bool {
+        self.run_integrity_kind().is_no_drift()
+    }
+
+    /// Classify flattened host-log integrity drift.
+    pub fn run_integrity_kind(&self) -> ToolAuditSupervisorDrainRunIntegrityKind {
+        ToolAuditSupervisorDrainRunIntegrityKind::from_integrity_flags(
+            self.has_inventory_count_integrity_drift(),
+            self.has_run_status_integrity_drift(),
+            self.has_checkpoint_boundary_integrity_drift(),
+            self.has_classifier_label_integrity_drift(),
+        )
+    }
+
+    /// Return the stable run-integrity classification label.
+    pub fn run_integrity_label(&self) -> &'static str {
+        self.run_integrity_kind().as_str()
+    }
+
+    /// Return whether the run-integrity label parses back to the typed classification.
+    pub fn run_integrity_label_matches_kind(&self) -> bool {
+        ToolAuditSupervisorDrainRunIntegrityKind::from_label(self.run_integrity_label())
+            == Some(self.run_integrity_kind())
+    }
+
+    /// Return whether host-log integrity drift should be investigated.
+    pub fn requires_run_integrity_investigation(&self) -> bool {
+        self.run_integrity_kind().requires_investigation()
+    }
 }
 
 /// Payload-free, flattened host summary for a bounded supervisor drain run.
@@ -2027,6 +2096,26 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_investigation_label_matches_kind: bool,
     /// Whether every stable classifier label parses back to its typed value.
     pub all_classifier_labels_match: bool,
+    /// Whether planned or replayed inventory counts drifted from payloads.
+    pub has_inventory_count_integrity_drift: bool,
+    /// Whether flattened run-status flags drifted from source counts.
+    pub has_run_status_integrity_drift: bool,
+    /// Whether checkpoint-boundary fields drifted from source checkpoints.
+    pub has_checkpoint_boundary_integrity_drift: bool,
+    /// Whether any stable classifier label drifted from its typed value.
+    pub has_classifier_label_integrity_drift: bool,
+    /// Whether any flattened host-log integrity drift was observed.
+    pub has_run_integrity_drift: bool,
+    /// Stable classification of flattened host-log integrity drift.
+    pub run_integrity_kind: ToolAuditSupervisorDrainRunIntegrityKind,
+    /// Stable run-integrity classification label for host logs.
+    pub run_integrity_label: &'static str,
+    /// Whether the run-integrity label parses back to the typed classification.
+    pub run_integrity_label_matches_kind: bool,
+    /// Whether all flattened host-log integrity checks are clean.
+    pub is_run_integrity_clean: bool,
+    /// Whether host-log integrity drift should be investigated.
+    pub requires_run_integrity_investigation: bool,
     /// Whether the host should investigate any run divergence.
     pub requires_host_investigation: bool,
     /// Whether the host can skip drain-run investigation.
@@ -2477,6 +2566,56 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether every stable classifier label parses back to its typed value.
     pub fn all_classifier_labels_match(&self) -> bool {
         self.all_classifier_labels_match
+    }
+
+    /// Return whether planned or replayed inventory counts drifted from payloads.
+    pub fn has_inventory_count_integrity_drift(&self) -> bool {
+        self.has_inventory_count_integrity_drift
+    }
+
+    /// Return whether flattened run-status flags drifted from source counts.
+    pub fn has_run_status_integrity_drift(&self) -> bool {
+        self.has_run_status_integrity_drift
+    }
+
+    /// Return whether checkpoint-boundary fields drifted from source checkpoints.
+    pub fn has_checkpoint_boundary_integrity_drift(&self) -> bool {
+        self.has_checkpoint_boundary_integrity_drift
+    }
+
+    /// Return whether any stable classifier label drifted from its typed value.
+    pub fn has_classifier_label_integrity_drift(&self) -> bool {
+        self.has_classifier_label_integrity_drift
+    }
+
+    /// Return whether any flattened host-log integrity drift was observed.
+    pub fn has_run_integrity_drift(&self) -> bool {
+        self.has_run_integrity_drift
+    }
+
+    /// Return the typed run-integrity classification.
+    pub fn run_integrity_kind(&self) -> ToolAuditSupervisorDrainRunIntegrityKind {
+        self.run_integrity_kind
+    }
+
+    /// Return the stable run-integrity classification label.
+    pub fn run_integrity_label(&self) -> &'static str {
+        self.run_integrity_label
+    }
+
+    /// Return whether the run-integrity label parses back to the typed classification.
+    pub fn run_integrity_label_matches_kind(&self) -> bool {
+        self.run_integrity_label_matches_kind
+    }
+
+    /// Return whether all flattened host-log integrity checks are clean.
+    pub fn is_run_integrity_clean(&self) -> bool {
+        self.is_run_integrity_clean
+    }
+
+    /// Return whether host-log integrity drift should be investigated.
+    pub fn requires_run_integrity_investigation(&self) -> bool {
+        self.requires_run_integrity_investigation
     }
 
     /// Return whether the host should investigate any run divergence.
@@ -3046,6 +3185,103 @@ impl ToolAuditSupervisorDrainCheckpointDriftKind {
 }
 
 impl Display for ToolAuditSupervisorDrainCheckpointDriftKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable classification of flattened host-log integrity drift.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainRunIntegrityKind {
+    /// All flattened host-log integrity checks are clean.
+    NoDrift,
+    /// Planned or replayed inventory counts drifted from payloads.
+    InventoryCountDrift,
+    /// Flattened run-status flags drifted from source counts.
+    RunStatusDrift,
+    /// Checkpoint-boundary fields drifted from source checkpoints.
+    CheckpointBoundaryDrift,
+    /// Stable classifier labels drifted from their typed values.
+    ClassifierLabelDrift,
+    /// More than one host-log integrity surface drifted.
+    MultipleIntegrityDrift,
+}
+
+impl ToolAuditSupervisorDrainRunIntegrityKind {
+    /// Classify host-log integrity drift from component drift flags.
+    pub fn from_integrity_flags(
+        has_inventory_count_integrity_drift: bool,
+        has_run_status_integrity_drift: bool,
+        has_checkpoint_boundary_integrity_drift: bool,
+        has_classifier_label_integrity_drift: bool,
+    ) -> Self {
+        let drift_count = [
+            has_inventory_count_integrity_drift,
+            has_run_status_integrity_drift,
+            has_checkpoint_boundary_integrity_drift,
+            has_classifier_label_integrity_drift,
+        ]
+        .into_iter()
+        .filter(|has_drift| *has_drift)
+        .count();
+
+        match drift_count {
+            0 => Self::NoDrift,
+            1 if has_inventory_count_integrity_drift => Self::InventoryCountDrift,
+            1 if has_run_status_integrity_drift => Self::RunStatusDrift,
+            1 if has_checkpoint_boundary_integrity_drift => Self::CheckpointBoundaryDrift,
+            1 if has_classifier_label_integrity_drift => Self::ClassifierLabelDrift,
+            _ => Self::MultipleIntegrityDrift,
+        }
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoDrift => "no_run_integrity_drift",
+            Self::InventoryCountDrift => "inventory_count_integrity_drift",
+            Self::RunStatusDrift => "run_status_integrity_drift",
+            Self::CheckpointBoundaryDrift => "checkpoint_boundary_integrity_drift",
+            Self::ClassifierLabelDrift => "classifier_label_integrity_drift",
+            Self::MultipleIntegrityDrift => "multiple_run_integrity_drift",
+        }
+    }
+
+    /// Parse a stable snake_case run-integrity label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_run_integrity_drift" => Some(Self::NoDrift),
+            "inventory_count_integrity_drift" => Some(Self::InventoryCountDrift),
+            "run_status_integrity_drift" => Some(Self::RunStatusDrift),
+            "checkpoint_boundary_integrity_drift" => Some(Self::CheckpointBoundaryDrift),
+            "classifier_label_integrity_drift" => Some(Self::ClassifierLabelDrift),
+            "multiple_run_integrity_drift" => Some(Self::MultipleIntegrityDrift),
+            _ => None,
+        }
+    }
+
+    /// Return whether any host-log integrity drift was observed.
+    pub fn has_run_integrity_drift(self) -> bool {
+        !matches!(self, Self::NoDrift)
+    }
+
+    /// Return whether more than one host-log integrity surface drifted.
+    pub fn has_multiple_integrity_drift(self) -> bool {
+        matches!(self, Self::MultipleIntegrityDrift)
+    }
+
+    /// Return whether all flattened host-log integrity checks are clean.
+    pub fn is_no_drift(self) -> bool {
+        matches!(self, Self::NoDrift)
+    }
+
+    /// Return whether host-log integrity drift should be investigated.
+    pub fn requires_investigation(self) -> bool {
+        self.has_run_integrity_drift()
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainRunIntegrityKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -5276,6 +5512,131 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_run_integrity_kind_labels_are_stable_for_hosts() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainRunIntegrityKind::NoDrift,
+                "no_run_integrity_drift",
+                false,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainRunIntegrityKind::InventoryCountDrift,
+                "inventory_count_integrity_drift",
+                true,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainRunIntegrityKind::RunStatusDrift,
+                "run_status_integrity_drift",
+                false,
+                true,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainRunIntegrityKind::CheckpointBoundaryDrift,
+                "checkpoint_boundary_integrity_drift",
+                false,
+                false,
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainRunIntegrityKind::ClassifierLabelDrift,
+                "classifier_label_integrity_drift",
+                false,
+                false,
+                false,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainRunIntegrityKind::MultipleIntegrityDrift,
+                "multiple_run_integrity_drift",
+                true,
+                true,
+                false,
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainRunIntegrityKind::MultipleIntegrityDrift,
+                "multiple_run_integrity_drift",
+                false,
+                true,
+                true,
+                true,
+                true,
+            ),
+        ];
+
+        for (
+            kind,
+            label,
+            has_inventory_count_integrity_drift,
+            has_run_status_integrity_drift,
+            has_checkpoint_boundary_integrity_drift,
+            has_classifier_label_integrity_drift,
+            has_multiple_integrity_drift,
+        ) in cases
+        {
+            assert_eq!(kind.as_str(), label);
+            assert_eq!(kind.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainRunIntegrityKind::from_label(label),
+                Some(kind)
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainRunIntegrityKind::from_integrity_flags(
+                    has_inventory_count_integrity_drift,
+                    has_run_status_integrity_drift,
+                    has_checkpoint_boundary_integrity_drift,
+                    has_classifier_label_integrity_drift,
+                ),
+                kind
+            );
+            assert_eq!(
+                kind.has_run_integrity_drift(),
+                has_inventory_count_integrity_drift
+                    || has_run_status_integrity_drift
+                    || has_checkpoint_boundary_integrity_drift
+                    || has_classifier_label_integrity_drift
+            );
+            assert_eq!(
+                kind.is_no_drift(),
+                !(has_inventory_count_integrity_drift
+                    || has_run_status_integrity_drift
+                    || has_checkpoint_boundary_integrity_drift
+                    || has_classifier_label_integrity_drift)
+            );
+            assert_eq!(
+                kind.has_multiple_integrity_drift(),
+                has_multiple_integrity_drift
+            );
+            assert_eq!(
+                kind.requires_investigation(),
+                has_inventory_count_integrity_drift
+                    || has_run_status_integrity_drift
+                    || has_checkpoint_boundary_integrity_drift
+                    || has_classifier_label_integrity_drift
+            );
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainRunIntegrityKind::from_label("integrityish"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_host_investigation_kind_labels_are_stable_for_hosts() {
         let cases = [
             (
@@ -5403,6 +5764,19 @@ mod tests {
         assert_eq!(report.scheduler_action_label(), "schedule_continuation");
         assert!(report.scheduler_action_label_matches_action());
         assert!(report.all_classifier_labels_match());
+        assert!(!report.has_inventory_count_integrity_drift());
+        assert!(!report.has_run_status_integrity_drift());
+        assert!(!report.has_checkpoint_boundary_integrity_drift());
+        assert!(!report.has_classifier_label_integrity_drift());
+        assert!(!report.has_run_integrity_drift());
+        assert_eq!(
+            report.run_integrity_kind(),
+            ToolAuditSupervisorDrainRunIntegrityKind::NoDrift
+        );
+        assert_eq!(report.run_integrity_label(), "no_run_integrity_drift");
+        assert!(report.run_integrity_label_matches_kind());
+        assert!(report.is_run_integrity_clean());
+        assert!(!report.requires_run_integrity_investigation());
     }
 
     #[test]
@@ -5603,6 +5977,32 @@ mod tests {
         assert!(summary.host_investigation_label_matches_kind());
         assert!(summary.all_classifier_labels_match);
         assert!(summary.all_classifier_labels_match());
+        assert!(!summary.has_inventory_count_integrity_drift);
+        assert!(!summary.has_inventory_count_integrity_drift());
+        assert!(!summary.has_run_status_integrity_drift);
+        assert!(!summary.has_run_status_integrity_drift());
+        assert!(!summary.has_checkpoint_boundary_integrity_drift);
+        assert!(!summary.has_checkpoint_boundary_integrity_drift());
+        assert!(!summary.has_classifier_label_integrity_drift);
+        assert!(!summary.has_classifier_label_integrity_drift());
+        assert!(!summary.has_run_integrity_drift);
+        assert!(!summary.has_run_integrity_drift());
+        assert_eq!(
+            summary.run_integrity_kind,
+            ToolAuditSupervisorDrainRunIntegrityKind::NoDrift
+        );
+        assert_eq!(
+            summary.run_integrity_kind(),
+            ToolAuditSupervisorDrainRunIntegrityKind::NoDrift
+        );
+        assert_eq!(summary.run_integrity_label, "no_run_integrity_drift");
+        assert_eq!(summary.run_integrity_label(), "no_run_integrity_drift");
+        assert!(summary.run_integrity_label_matches_kind);
+        assert!(summary.run_integrity_label_matches_kind());
+        assert!(summary.is_run_integrity_clean);
+        assert!(summary.is_run_integrity_clean());
+        assert!(!summary.requires_run_integrity_investigation);
+        assert!(!summary.requires_run_integrity_investigation());
         assert!(!summary.requires_host_investigation);
         assert!(!summary.requires_host_investigation());
         assert!(!summary.requires_host_plan_drift_investigation);
@@ -5889,6 +6289,215 @@ mod tests {
         assert!(!drain_mismatch_summary.drain_inventory_counts_match());
         assert!(!drain_mismatch_summary.inventory_counts_match);
         assert!(!drain_mismatch_summary.inventory_counts_match());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_flattens_run_integrity_fields() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 1, &mut sink)
+            .unwrap();
+        let summary = report.summary();
+
+        assert!(!report.has_inventory_count_integrity_drift());
+        assert!(!report.has_run_status_integrity_drift());
+        assert!(!report.has_checkpoint_boundary_integrity_drift());
+        assert!(!report.has_classifier_label_integrity_drift());
+        assert!(!report.has_run_integrity_drift());
+        assert_eq!(
+            report.run_integrity_kind(),
+            ToolAuditSupervisorDrainRunIntegrityKind::NoDrift
+        );
+        assert_eq!(report.run_integrity_label(), "no_run_integrity_drift");
+        assert!(report.run_integrity_label_matches_kind());
+        assert!(report.is_run_integrity_clean());
+        assert!(!report.requires_run_integrity_investigation());
+        assert!(!summary.has_inventory_count_integrity_drift);
+        assert!(!summary.has_inventory_count_integrity_drift());
+        assert!(!summary.has_run_status_integrity_drift);
+        assert!(!summary.has_run_status_integrity_drift());
+        assert!(!summary.has_checkpoint_boundary_integrity_drift);
+        assert!(!summary.has_checkpoint_boundary_integrity_drift());
+        assert!(!summary.has_classifier_label_integrity_drift);
+        assert!(!summary.has_classifier_label_integrity_drift());
+        assert!(!summary.has_run_integrity_drift);
+        assert!(!summary.has_run_integrity_drift());
+        assert_eq!(
+            summary.run_integrity_kind,
+            ToolAuditSupervisorDrainRunIntegrityKind::NoDrift
+        );
+        assert_eq!(
+            summary.run_integrity_kind(),
+            ToolAuditSupervisorDrainRunIntegrityKind::NoDrift
+        );
+        assert_eq!(summary.run_integrity_label, "no_run_integrity_drift");
+        assert_eq!(summary.run_integrity_label(), "no_run_integrity_drift");
+        assert!(summary.run_integrity_label_matches_kind);
+        assert!(summary.run_integrity_label_matches_kind());
+        assert!(summary.is_run_integrity_clean);
+        assert!(summary.is_run_integrity_clean());
+        assert!(!summary.requires_run_integrity_investigation);
+        assert!(!summary.requires_run_integrity_investigation());
+
+        let mut inventory_report = report.clone();
+        inventory_report.plan.pages[0].inventory.total_records += 1;
+        let inventory_summary = inventory_report.summary();
+        assert!(inventory_report.has_inventory_count_integrity_drift());
+        assert!(!inventory_report.has_run_status_integrity_drift());
+        assert!(!inventory_report.has_checkpoint_boundary_integrity_drift());
+        assert!(!inventory_report.has_classifier_label_integrity_drift());
+        assert!(inventory_report.has_run_integrity_drift());
+        assert_eq!(
+            inventory_report.run_integrity_kind(),
+            ToolAuditSupervisorDrainRunIntegrityKind::InventoryCountDrift
+        );
+        assert_eq!(
+            inventory_report.run_integrity_label(),
+            "inventory_count_integrity_drift"
+        );
+        assert!(!inventory_report.is_run_integrity_clean());
+        assert!(inventory_report.requires_run_integrity_investigation());
+        assert!(inventory_summary.has_inventory_count_integrity_drift);
+        assert!(!inventory_summary.has_run_status_integrity_drift);
+        assert!(!inventory_summary.has_checkpoint_boundary_integrity_drift);
+        assert!(!inventory_summary.has_classifier_label_integrity_drift);
+        assert!(inventory_summary.has_run_integrity_drift);
+        assert_eq!(
+            inventory_summary.run_integrity_kind(),
+            ToolAuditSupervisorDrainRunIntegrityKind::InventoryCountDrift
+        );
+        assert_eq!(
+            inventory_summary.run_integrity_label(),
+            "inventory_count_integrity_drift"
+        );
+        assert!(inventory_summary.run_integrity_label_matches_kind());
+        assert!(!inventory_summary.is_run_integrity_clean());
+        assert!(inventory_summary.requires_run_integrity_investigation());
+
+        let mut boundary_report = report.clone();
+        boundary_report.drain.ticks[0].replay.next_checkpoint =
+            ToolAuditReadCheckpoint::beginning();
+        let boundary_summary = boundary_report.summary();
+        assert!(!boundary_report.has_inventory_count_integrity_drift());
+        assert!(!boundary_report.has_run_status_integrity_drift());
+        assert!(boundary_report.has_checkpoint_boundary_integrity_drift());
+        assert!(!boundary_report.has_classifier_label_integrity_drift());
+        assert!(boundary_report.has_run_integrity_drift());
+        assert_eq!(
+            boundary_report.run_integrity_kind(),
+            ToolAuditSupervisorDrainRunIntegrityKind::CheckpointBoundaryDrift
+        );
+        assert_eq!(
+            boundary_report.run_integrity_label(),
+            "checkpoint_boundary_integrity_drift"
+        );
+        assert!(boundary_report.run_integrity_label_matches_kind());
+        assert!(!boundary_report.is_run_integrity_clean());
+        assert!(boundary_report.requires_run_integrity_investigation());
+        assert!(!boundary_summary.has_inventory_count_integrity_drift);
+        assert!(!boundary_summary.has_run_status_integrity_drift);
+        assert!(boundary_summary.has_checkpoint_boundary_integrity_drift);
+        assert!(!boundary_summary.has_classifier_label_integrity_drift);
+        assert!(boundary_summary.has_run_integrity_drift);
+        assert_eq!(
+            boundary_summary.run_integrity_kind(),
+            ToolAuditSupervisorDrainRunIntegrityKind::CheckpointBoundaryDrift
+        );
+        assert_eq!(
+            boundary_summary.run_integrity_label(),
+            "checkpoint_boundary_integrity_drift"
+        );
+        assert!(boundary_summary.requires_run_integrity_investigation());
+
+        let mut combined_report = report.clone();
+        combined_report.plan.pages[0].inventory.total_records += 1;
+        combined_report.drain.ticks[0].replay.next_checkpoint =
+            ToolAuditReadCheckpoint::beginning();
+        let combined_summary = combined_report.summary();
+        assert!(combined_report.has_inventory_count_integrity_drift());
+        assert!(combined_report.has_checkpoint_boundary_integrity_drift());
+        assert!(combined_report.has_run_integrity_drift());
+        assert_eq!(
+            combined_report.run_integrity_kind(),
+            ToolAuditSupervisorDrainRunIntegrityKind::MultipleIntegrityDrift
+        );
+        assert_eq!(
+            combined_report.run_integrity_label(),
+            "multiple_run_integrity_drift"
+        );
+        assert!(combined_report.requires_run_integrity_investigation());
+        assert!(combined_summary.has_inventory_count_integrity_drift);
+        assert!(combined_summary.has_checkpoint_boundary_integrity_drift);
+        assert!(combined_summary.has_run_integrity_drift);
+        assert_eq!(
+            combined_summary.run_integrity_kind(),
+            ToolAuditSupervisorDrainRunIntegrityKind::MultipleIntegrityDrift
+        );
+        assert_eq!(
+            combined_summary.run_integrity_label(),
+            "multiple_run_integrity_drift"
+        );
+        assert!(combined_summary.requires_run_integrity_investigation());
+
+        let mut stale_status_summary = summary.clone();
+        stale_status_summary.run_status_flags_match = false;
+        stale_status_summary.has_run_status_integrity_drift = true;
+        stale_status_summary.has_run_integrity_drift = true;
+        stale_status_summary.run_integrity_kind =
+            ToolAuditSupervisorDrainRunIntegrityKind::RunStatusDrift;
+        stale_status_summary.run_integrity_label = "run_status_integrity_drift";
+        stale_status_summary.is_run_integrity_clean = false;
+        stale_status_summary.requires_run_integrity_investigation = true;
+        assert!(!stale_status_summary.run_status_flags_match());
+        assert!(stale_status_summary.has_run_status_integrity_drift());
+        assert!(stale_status_summary.has_run_integrity_drift());
+        assert_eq!(
+            stale_status_summary.run_integrity_kind(),
+            ToolAuditSupervisorDrainRunIntegrityKind::RunStatusDrift
+        );
+        assert_eq!(
+            stale_status_summary.run_integrity_label(),
+            "run_status_integrity_drift"
+        );
+        assert!(!stale_status_summary.is_run_integrity_clean());
+        assert!(stale_status_summary.requires_run_integrity_investigation());
+
+        let mut stale_label_summary = summary;
+        stale_label_summary.all_classifier_labels_match = false;
+        stale_label_summary.has_classifier_label_integrity_drift = true;
+        stale_label_summary.has_run_integrity_drift = true;
+        stale_label_summary.run_integrity_kind =
+            ToolAuditSupervisorDrainRunIntegrityKind::ClassifierLabelDrift;
+        stale_label_summary.run_integrity_label = "classifier_label_integrity_drift";
+        stale_label_summary.is_run_integrity_clean = false;
+        stale_label_summary.requires_run_integrity_investigation = true;
+        assert!(!stale_label_summary.all_classifier_labels_match());
+        assert!(stale_label_summary.has_classifier_label_integrity_drift());
+        assert!(stale_label_summary.has_run_integrity_drift());
+        assert_eq!(
+            stale_label_summary.run_integrity_kind(),
+            ToolAuditSupervisorDrainRunIntegrityKind::ClassifierLabelDrift
+        );
+        assert_eq!(
+            stale_label_summary.run_integrity_label(),
+            "classifier_label_integrity_drift"
+        );
+        assert!(stale_label_summary.run_integrity_label_matches_kind());
+        assert!(!stale_label_summary.is_run_integrity_clean());
+        assert!(stale_label_summary.requires_run_integrity_investigation());
+
+        stale_label_summary.run_integrity_label = "integrityish";
+        stale_label_summary.run_integrity_label_matches_kind = false;
+        assert!(!stale_label_summary.run_integrity_label_matches_kind());
     }
 
     #[test]

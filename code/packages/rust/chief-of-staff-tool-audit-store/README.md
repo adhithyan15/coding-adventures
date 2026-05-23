@@ -70,6 +70,8 @@ The crate keeps the boundary narrow:
   inventory count consistency flags for host-log integrity checks
 - supervisor drain reports and summaries expose budget and run-status
   consistency flags for flattened host-log fields
+- supervisor drain reports and summaries expose aggregate run-integrity drift
+  flags and stable classifications for host-log integrity checks
 - supervisor drain reports and summaries expose starting and stored checkpoint
   boundary fields plus stored-checkpoint consistency flags for host logs
 - supervisor drain reports and summaries expose checkpoint-advance consistency
@@ -153,7 +155,9 @@ The crate keeps the boundary narrow:
   status for host logs
 - supervisor drain reports and summaries expose per-classifier and aggregate
   label-to-classifier match flags for outcome, scheduler action, count drift,
-  and host-investigation logs
+  checkpoint drift, and host-investigation logs
+- supervisor drain run-integrity classifications expose their own
+  label-to-classifier match flags for host-log integrity dashboards
 - supervisor drain run summaries flatten outcome status flags for host logs and
   terminal scheduler dashboards
 - supervisor drain reports and summaries expose no-action scheduler helpers for

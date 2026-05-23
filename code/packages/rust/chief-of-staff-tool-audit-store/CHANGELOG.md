@@ -53,6 +53,8 @@ All notable changes to this package will be documented in this file.
   reports, and summaries.
 - Budget and run-status consistency flags for supervisor drain reports and
   summaries.
+- Aggregate run-integrity drift flags and stable classifications for supervisor
+  drain run reports and summaries.
 - Starting and stored checkpoint boundary fields plus stored-checkpoint
   consistency flags for supervisor drain reports and summaries.
 - Checkpoint-advance consistency flags that compare starting and last
