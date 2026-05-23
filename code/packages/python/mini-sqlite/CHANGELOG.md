@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.81.0] - 2026-05-22
+
+### Added
+
+- **VALUES clause** support, end-to-end and byte-identical with
+  stdlib `sqlite3`.  ``VALUES (a, b), (c, d), …`` now works anywhere
+  a SELECT does:
+  - **Standalone**: ``VALUES (1, 'a'), (2, 'b')`` is a top-level
+    statement that returns a rowset.
+  - **Derived table**: ``SELECT * FROM (VALUES (1), (2))``.
+  - **CTE body** (with or without column alias list):
+    ``WITH t(n) AS (VALUES (1), (2)) SELECT n FROM t``.
+  - **Set-op operand**, either side: ``SELECT 1 UNION ALL VALUES (2)``
+    and the symmetric ``VALUES (1) UNION SELECT 2``.
+- Default column names are ``column1``, ``column2``, … (1-indexed)
+  when no explicit alias list is given — matching SQLite.
+- 21 oracle tests in ``tests/test_tier3_values_clause.py``.
+
+### Changed
+
+- Adapter desugars VALUES into a left-deep ``UNION ALL`` chain of
+  single-row SELECTs, so the planner, codegen, and VM see only
+  constructs they already handle.
+- ``_set_op_clause`` now returns a 4-tuple ``(op, all_flag, body_node,
+  body_rule)`` so callers can dispatch on whether the operand is a
+  SELECT or a VALUES list.  Recursive-CTE callers reject VALUES as
+  the recursive step with a clear error (the standard requires the
+  step to be a SELECT referencing the CTE's working set).
+
 ## [1.80.0] - 2026-05-22
 
 ### Added
