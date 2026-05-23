@@ -1048,6 +1048,11 @@ impl ToolAuditSupervisorDrainRunReport {
         self.outcome().as_str()
     }
 
+    /// Return whether this run outcome leaves the scheduler idle.
+    pub fn outcome_is_idle(&self) -> bool {
+        self.outcome().is_idle()
+    }
+
     /// Return whether rows were replayed and this run reached the current log end.
     pub fn is_caught_up(&self) -> bool {
         self.outcome().is_caught_up()
@@ -1204,6 +1209,7 @@ impl ToolAuditSupervisorDrainRunReport {
             checkpoint_name: self.checkpoint_name().to_owned(),
             outcome: self.outcome(),
             outcome_label: self.outcome_label(),
+            outcome_is_idle: self.outcome_is_idle(),
             is_caught_up: self.is_caught_up(),
             needs_continuation: self.needs_continuation(),
             needs_follow_up: self.needs_follow_up(),
@@ -1421,6 +1427,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub outcome: ToolAuditSupervisorDrainRunOutcome,
     /// Stable scheduler-facing outcome label for host logs.
     pub outcome_label: &'static str,
+    /// Whether the scheduler-facing outcome is idle.
+    pub outcome_is_idle: bool,
     /// Whether rows were replayed and this run reached the current log end.
     pub is_caught_up: bool,
     /// Whether this run needs another drain pass.
@@ -1549,6 +1557,11 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return the stable scheduler-facing label for this run outcome.
     pub fn outcome_label(&self) -> &'static str {
         self.outcome_label
+    }
+
+    /// Return whether the scheduler-facing outcome is idle.
+    pub fn outcome_is_idle(&self) -> bool {
+        self.outcome_is_idle
     }
 
     /// Return whether rows were replayed and this run reached the current log end.
@@ -4342,6 +4355,7 @@ mod tests {
             ToolAuditSupervisorDrainRunOutcome::NeedsContinuation
         );
         assert_eq!(report.outcome_label(), "needs_continuation");
+        assert!(!report.outcome_is_idle());
         assert!(!report.is_caught_up());
         assert!(report.needs_continuation());
         assert!(!report.needs_follow_up());
@@ -4395,6 +4409,8 @@ mod tests {
         );
         assert_eq!(summary.outcome_label, "needs_continuation");
         assert_eq!(summary.outcome_label(), "needs_continuation");
+        assert!(!summary.outcome_is_idle);
+        assert!(!summary.outcome_is_idle());
         assert!(!summary.is_caught_up);
         assert!(!summary.is_caught_up());
         assert!(summary.needs_continuation);
@@ -4523,6 +4539,50 @@ mod tests {
         assert!(summary.made_progress());
         assert!(summary.should_continue);
         assert!(summary.should_continue());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_distinguishes_idle_outcome_from_idle_drain() {
+        let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut idle_sink = InMemoryToolAuditSink::new();
+        let idle_report = empty_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut idle_sink)
+            .unwrap();
+        let idle_summary = idle_report.summary();
+
+        assert_eq!(
+            idle_report.outcome(),
+            ToolAuditSupervisorDrainRunOutcome::Idle
+        );
+        assert!(idle_report.outcome_is_idle());
+        assert!(idle_summary.outcome_is_idle);
+        assert!(idle_summary.outcome_is_idle());
+        assert!(idle_summary.is_idle);
+        assert!(idle_summary.is_idle());
+
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![sample_record("call_1"), sample_record("call_2")])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let mut report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut sink)
+            .unwrap();
+        report.drain.drained_records = 0;
+        let summary = report.summary();
+
+        assert_eq!(
+            report.outcome(),
+            ToolAuditSupervisorDrainRunOutcome::PlanDiverged
+        );
+        assert!(!report.outcome_is_idle());
+        assert!(!summary.outcome_is_idle);
+        assert!(!summary.outcome_is_idle());
+        assert!(summary.is_idle);
+        assert!(summary.is_idle());
+        assert!(summary.plan_diverged);
+        assert!(summary.plan_diverged());
     }
 
     #[test]
