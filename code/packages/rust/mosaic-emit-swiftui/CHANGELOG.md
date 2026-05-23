@@ -4,6 +4,34 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — UI29-4 `HostLink` + `HostTooltip` + `HostNumberInput` (U29-4-K-swiftui)
+
+Three new UI29-4 kernel primitives lower to native SwiftUI views:
+
+- **`HostLink` → `Link(label, destination: URL(string: href)!)`**
+  (iOS 14+/macOS 11+). OS-managed URL open by default. When
+  `external: false` + `onActivate` are bound, the lowering swaps
+  to a `Button(action: { dispatch(.x(href: "...")) }) { Text(label) }`
+  so the host's in-app router takes over instead of opening
+  externally. When `external != false` but `onActivate` is bound,
+  the v1 emitter currently drops the dispatch (SwiftUI's `Link`
+  has no click-hook closure); documented as a v2 follow-up.
+- **`HostTooltip` → `VStack { child(ren) }.help("text")`** (macOS
+  / iOS 16+). Hovering (macOS) or long-pressing (iOS) the wrapped
+  view shows the tooltip; screen readers read it via
+  `accessibilityHint`.
+- **`HostNumberInput` → `TextField(placeholder, value: .constant(slot),
+  format: .number)`** (iOS 15+/macOS 12+). `disabled` adds a
+  trailing `.disabled(...)` modifier; `onChange` adds an
+  `.onChange(of: slot) { dispatch(.x(value: slot)) }` modifier
+  (pre-iOS-17 closure shape — host can adapt to the new
+  `(old, new)` shape if needed).
+
+5 new tests cover: bare HostLink with Link + URL, the
+external-false + onActivate Button swap, HostTooltip's VStack +
+.help wrapper, HostNumberInput's TextField + .number format, and
+the .onChange modifier wiring.
+
 ### Added — UI29-2 `HostCheckbox` + `HostRadio` kernel primitives (U29-2-K-swiftui)
 
 Both new primitives lower to SwiftUI `Toggle` with the platform's
