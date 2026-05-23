@@ -2,6 +2,21 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.33.0] - 2026-05-22
+
+### Added
+
+- New `values_stmt` production handling SQLite's ``VALUES (a,b),(c,d),…``
+  expression:
+
+      values_stmt = "VALUES" row_value { "," row_value } ;
+
+  `query_stmt` now accepts `values_stmt` as an alternative to
+  `select_stmt`, and `set_op_clause` accepts it as a right operand —
+  so VALUES works anywhere a SELECT does (top-level, derived table,
+  CTE body, set-op operand).
+- Regenerated `_grammar.py` to embed the new production.
+
 ## [0.32.0] - 2026-05-21
 
 ### Added

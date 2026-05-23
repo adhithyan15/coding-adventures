@@ -35,7 +35,24 @@ detach_stmt       = "DETACH" [ "DATABASE" ] NAME ;
 # UNION/EXCEPT.  For the educational subset we treat all three as left-
 # associative equals; ANSI-compliant precedence can be added later.
 
-query_stmt        = [ with_clause ] select_stmt { set_op_clause } ;
+# A query_stmt is either (a) the usual SELECT-plus-set-op-tails form, or
+# (b) a bare VALUES list.  SQLite accepts ``VALUES (1,2), (3,4)`` as a
+# standalone query and inside any context that takes a query_stmt
+# (derived tables, CTE bodies, set-op operands).  We model VALUES as a
+# parallel branch here so it plugs into all those slots without each
+# call site having to special-case the keyword.
+#
+# The two branches are mutually exclusive: a real SELECT always starts
+# with SELECT or WITH, while VALUES starts with the eponymous keyword,
+# so the parser can pick deterministically (no backtracking pain).
+query_stmt        = [ with_clause ] ( values_stmt | select_stmt ) { set_op_clause } ;
+# VALUES list: one or more parenthesised tuples of expressions,
+# comma-separated.  SQLite names the output columns ``column1``,
+# ``column2``, … (1-indexed) when no explicit alias list is given.  The
+# adapter desugars the VALUES into a left-deep UNION-ALL chain of
+# single-row SELECTs so downstream layers (planner, codegen, VM) see
+# only constructs they already handle.
+values_stmt       = "VALUES" row_value { "," row_value } ;
 with_clause       = "WITH" [ "RECURSIVE" ] cte_def { "," cte_def } ;
 # The optional [NOT] MATERIALIZED hint (SQLite 3.35+) tells the planner
 # whether to materialise the CTE result set.  Mini-sqlite has no
@@ -44,7 +61,8 @@ with_clause       = "WITH" [ "RECURSIVE" ] cte_def { "," cte_def } ;
 cte_def           = NAME [ "(" NAME { "," NAME } ")" ] "AS"
                     [ [ "NOT" ] "MATERIALIZED" ]
                     "(" query_stmt ")" ;
-set_op_clause     = ( "UNION" | "INTERSECT" | "EXCEPT" ) [ "ALL" ] select_stmt ;
+set_op_clause     = ( "UNION" | "INTERSECT" | "EXCEPT" ) [ "ALL" ]
+                    ( values_stmt | select_stmt ) ;
 
 # ── SELECT ───────────────────────────────────────────────────────────────────
 
