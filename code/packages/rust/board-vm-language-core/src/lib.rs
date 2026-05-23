@@ -810,6 +810,26 @@ pub struct LanguageInputCallbackTransportResultSummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackCompletionAction {
+    Complete,
+    KeepRunning,
+    DropAfterBudgetExceeded,
+    DropAfterFailure,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackCompletionPlan {
+    pub action: LanguageInputCallbackCompletionAction,
+    pub remove_from_queue: bool,
+    pub keep_dispatch_scheduled: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_completion: u8,
+    pub message: String,
+    pub result: LanguageInputCallbackResultSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackQueuePlanErrorKind {
     EmptyQueue,
     QueueDepthExceedsCapacity,
@@ -2136,6 +2156,31 @@ pub fn input_callback_transport_result_summary(
     }
 }
 
+pub fn input_callback_completion_plan_for_result(
+    result: &LanguageInputCallbackResultSummary,
+) -> LanguageInputCallbackCompletionPlan {
+    let action = input_callback_completion_action(result.result_kind);
+    let remove_from_queue = input_callback_completion_removes_queue_item(action);
+    let keep_dispatch_scheduled = action == LanguageInputCallbackCompletionAction::KeepRunning;
+    let terminal = remove_from_queue;
+    let queue_depth_after_completion = if remove_from_queue {
+        result.queue_depth_after.saturating_sub(1)
+    } else {
+        result.queue_depth_after
+    };
+
+    LanguageInputCallbackCompletionPlan {
+        action,
+        remove_from_queue,
+        keep_dispatch_scheduled,
+        terminal,
+        retryable: result.retryable,
+        queue_depth_after_completion,
+        message: input_callback_completion_message(action).to_owned(),
+        result: result.clone(),
+    }
+}
+
 pub fn parse_serial_endpoint(endpoint: &str) -> Option<LanguageSerialEndpoint> {
     let (scheme, port) = endpoint.split_once("://")?;
     if scheme != "serial" {
@@ -2735,6 +2780,50 @@ fn input_callback_transport_result_label(
         "{} callback={}:{} sequence={} status={}",
         session.connection_label, result.board_id, result.label, result.sequence, result.run_status
     )
+}
+
+fn input_callback_completion_action(
+    kind: LanguageInputCallbackResultKind,
+) -> LanguageInputCallbackCompletionAction {
+    match kind {
+        LanguageInputCallbackResultKind::Completed => {
+            LanguageInputCallbackCompletionAction::Complete
+        }
+        LanguageInputCallbackResultKind::BudgetExceeded => {
+            LanguageInputCallbackCompletionAction::DropAfterBudgetExceeded
+        }
+        LanguageInputCallbackResultKind::Incomplete => {
+            LanguageInputCallbackCompletionAction::KeepRunning
+        }
+        LanguageInputCallbackResultKind::Failed => {
+            LanguageInputCallbackCompletionAction::DropAfterFailure
+        }
+    }
+}
+
+fn input_callback_completion_removes_queue_item(
+    action: LanguageInputCallbackCompletionAction,
+) -> bool {
+    !matches!(action, LanguageInputCallbackCompletionAction::KeepRunning)
+}
+
+fn input_callback_completion_message(
+    action: LanguageInputCallbackCompletionAction,
+) -> &'static str {
+    match action {
+        LanguageInputCallbackCompletionAction::Complete => {
+            "Input callback completed; remove it from the cooperative queue."
+        }
+        LanguageInputCallbackCompletionAction::KeepRunning => {
+            "Input callback is still running; keep cooperative dispatch scheduled."
+        }
+        LanguageInputCallbackCompletionAction::DropAfterBudgetExceeded => {
+            "Input callback exhausted its budget; drop it from the cooperative queue after reporting."
+        }
+        LanguageInputCallbackCompletionAction::DropAfterFailure => {
+            "Input callback stopped before completion; remove it from the cooperative queue."
+        }
+    }
 }
 
 fn language_i2c_bus(bus: &TargetI2cBus) -> LanguageI2cBus {
@@ -6920,6 +7009,72 @@ mod tests {
             tcp.result.result_kind,
             LanguageInputCallbackResultKind::BudgetExceeded
         );
+    }
+
+    #[test]
+    fn input_callback_completion_plans_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let dispatch = input_callback_dispatch_plan_for_queue_plan(&queue_plan).unwrap();
+
+        let completed =
+            input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Halted, 11, 3);
+        let completed_plan = input_callback_completion_plan_for_result(&completed);
+        assert_eq!(
+            completed_plan.action,
+            LanguageInputCallbackCompletionAction::Complete
+        );
+        assert!(completed_plan.remove_from_queue);
+        assert!(!completed_plan.keep_dispatch_scheduled);
+        assert!(completed_plan.terminal);
+        assert!(!completed_plan.retryable);
+        assert_eq!(completed_plan.queue_depth_after_completion, 2);
+        assert_eq!(completed_plan.result, completed);
+        assert_eq!(
+            completed_plan.message,
+            "Input callback completed; remove it from the cooperative queue."
+        );
+
+        let running = input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Running, 12, 4);
+        let running_plan = input_callback_completion_plan_for_result(&running);
+        assert_eq!(
+            running_plan.action,
+            LanguageInputCallbackCompletionAction::KeepRunning
+        );
+        assert!(!running_plan.remove_from_queue);
+        assert!(running_plan.keep_dispatch_scheduled);
+        assert!(!running_plan.terminal);
+        assert!(running_plan.retryable);
+        assert_eq!(running_plan.queue_depth_after_completion, 3);
+
+        let budget =
+            input_callback_result_for_dispatch_plan(&dispatch, RunStatus::BudgetExceeded, 64, 9);
+        let budget_plan = input_callback_completion_plan_for_result(&budget);
+        assert_eq!(
+            budget_plan.action,
+            LanguageInputCallbackCompletionAction::DropAfterBudgetExceeded
+        );
+        assert!(budget_plan.remove_from_queue);
+        assert!(!budget_plan.keep_dispatch_scheduled);
+        assert!(budget_plan.terminal);
+        assert!(!budget_plan.retryable);
+        assert_eq!(budget_plan.queue_depth_after_completion, 2);
+
+        let stopped = input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Stopped, 6, 2);
+        let stopped_plan = input_callback_completion_plan_for_result(&stopped);
+        assert_eq!(
+            stopped_plan.action,
+            LanguageInputCallbackCompletionAction::DropAfterFailure
+        );
+        assert!(stopped_plan.remove_from_queue);
+        assert_eq!(stopped_plan.queue_depth_after_completion, 2);
+
+        let mut empty_queue = completed_plan.result.clone();
+        empty_queue.queue_depth_after = 0;
+        let empty_queue_plan = input_callback_completion_plan_for_result(&empty_queue);
+        assert_eq!(empty_queue_plan.queue_depth_after_completion, 0);
     }
 
     #[test]

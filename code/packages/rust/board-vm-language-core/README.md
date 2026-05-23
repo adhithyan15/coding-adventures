@@ -119,6 +119,10 @@ budget-exceeded, incomplete, or failure summary.
 record with the parsed host endpoint session and Rust-owned connection label,
 so transport-aware callback logs do not have to rebuild serial, TCP, or
 Bluetooth display policy in language adapters.
+`input_callback_completion_plan_for_result` maps that result into the
+cooperative event-queue follow-up: remove completed callbacks, keep incomplete
+callbacks scheduled, and drop budget-exhausted or failed callbacks with a
+Rust-owned action and queue-depth update.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
