@@ -173,6 +173,10 @@ policy.
 transport traces with Rust-owned trace names, labels, queue-depth metadata, and
 messages, so adapters can persist callback-runner and adapter-event transport
 paths without reconstructing the outcome chain.
+`input_callback_transport_audit_summary` turns those traces into stable
+transport audit records with Rust-owned audit names, labels, queue-depth
+metadata, and messages, so frontends can surface auditable callback transport
+paths without rebuilding the trace chain.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
