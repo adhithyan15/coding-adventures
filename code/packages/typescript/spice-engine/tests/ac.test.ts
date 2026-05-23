@@ -13,12 +13,15 @@ import {
   currentSourceWithAc,
   inductor,
   jfet,
+  mutualInductor,
   resistor,
   sParameters,
   vcvs,
   voltageSource,
   voltageSourceWithAc,
 } from "../src/index.js";
+
+const TWO_PI_FOR_TEST = 2.0 * Math.PI;
 
 function expectClose(actual: number | undefined, expected: number): void {
   expect(actual).not.toBeUndefined();
@@ -117,6 +120,51 @@ describe("acSweep", () => {
     expect(out).not.toBeUndefined();
     expectClose(complexAbs(out!), 1.0 / Math.sqrt(2.0));
     expectClose(complexPhase(out!), Math.PI / 4.0);
+  });
+
+  it("stamps mutual-inductor transformer coupling", () => {
+    const primaryL = 1.0e-3;
+    const secondaryL = 4.0e-3;
+    const coupling = 0.9;
+    const load = 1_000.0;
+    const frequency = 1_000.0;
+    const mutualL = coupling * Math.sqrt(primaryL * secondaryL);
+    const denominator = {
+      real: 1.0,
+      imag: (TWO_PI_FOR_TEST * frequency * secondaryL) / load,
+    };
+    const numerator = {
+      real: 0.0,
+      imag: TWO_PI_FOR_TEST * frequency * mutualL,
+    };
+    const scale = denominator.real ** 2 + denominator.imag ** 2;
+    const expected = {
+      real: (numerator.real * denominator.real + numerator.imag * denominator.imag) / scale,
+      imag: (numerator.imag * denominator.real - numerator.real * denominator.imag) / scale,
+    };
+
+    const circuit = new Circuit();
+    circuit.add(currentSourceWithAc("Iin", "0", "pri", 0.0, 1.0));
+    circuit.add(inductor("Lpri", "pri", "0", primaryL));
+    circuit.add(inductor("Lsec", "sec", "0", secondaryL));
+    circuit.add(mutualInductor("K1", "Lpri", "Lsec", coupling));
+    circuit.add(resistor("Rload", "sec", "0", load));
+
+    const points = acSweep(circuit, frequency, frequency, 10);
+
+    const secondary = points[0].voltage("sec");
+    expect(secondary).not.toBeUndefined();
+    expectClose(secondary!.real, expected.real);
+    expectClose(secondary!.imag, expected.imag);
+  });
+
+  it("rejects mutual-inductor missing references", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "pri", "0", 1.0));
+    circuit.add(inductor("Lpri", "pri", "0", 1.0e-3));
+    circuit.add(mutualInductor("Kbad", "Lpri", "Lmissing", 0.9));
+
+    expect(() => acSweep(circuit, 1_000.0, 1_000.0, 10)).toThrowError(SpiceError);
   });
 
   it("injects current-source phasors", () => {

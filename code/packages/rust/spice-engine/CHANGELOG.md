@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add AC analysis stamping for `MutualInductor` by coupling referenced
+  inductor pairs through the inverted two-winding inductance matrix.
 - Add a public `MutualInductor` element as the parser-facing SPICE `K` card
   foothold; coupled AC/transient stamping follows in a later compatibility
   slice.

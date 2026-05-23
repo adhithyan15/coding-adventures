@@ -128,6 +128,33 @@ Kcouple Lpri Lsec 0.75
 }
 
 #[test]
+fn rejects_mutual_inductor_missing_referenced_inductor() {
+    let error = parse_netlist(
+        r#"
+Lpri p 0 10m
+Kbad Lpri Lmissing 0.75
+"#,
+    )
+    .unwrap_err();
+
+    assert!(error.to_string().contains("referenced inductor"));
+}
+
+#[test]
+fn rejects_mutual_inductor_non_finite_coupling() {
+    let error = parse_netlist(
+        r#"
+Lpri p 0 10m
+Lsec s 0 40m
+Kbad Lpri Lsec 1e999
+"#,
+    )
+    .unwrap_err();
+
+    assert!(error.to_string().contains("coupling must be finite"));
+}
+
+#[test]
 fn parses_options_analysis_cards() {
     let parsed = parse_netlist(
         r#"

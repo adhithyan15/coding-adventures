@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::fmt;
 
 const PIVOT_EPSILON: f64 = 1.0e-12;
@@ -4129,6 +4129,8 @@ fn build_ac_matrix(
     let node_count = node_indices.len();
     let matrix_size = node_count + voltage_sources.len();
     let mut matrix = vec![vec![Complex::zero(); matrix_size]; matrix_size];
+    let inductors = inductor_by_name(circuit);
+    let coupled_inductor_names = coupled_inductor_names(circuit);
 
     for element in circuit.elements() {
         match element {
@@ -4137,9 +4139,13 @@ fn build_ac_matrix(
                 stamp_ac_capacitor(capacitor, omega, node_indices, &mut matrix)?
             }
             Element::Inductor(inductor) => {
-                stamp_ac_inductor(inductor, omega, node_indices, &mut matrix)?
+                if !coupled_inductor_names.contains(&inductor.name) {
+                    stamp_ac_inductor(inductor, omega, node_indices, &mut matrix)?
+                }
             }
-            Element::MutualInductor(_) => {}
+            Element::MutualInductor(mutual) => {
+                stamp_ac_mutual_inductor(mutual, &inductors, omega, node_indices, &mut matrix)?
+            }
             Element::VoltageSource(source) => stamp_ac_voltage_source_matrix(
                 source,
                 node_indices,
@@ -6244,6 +6250,130 @@ fn stamp_ac_inductor(
     let n1 = node_index(node_indices, &inductor.n1);
     let n2 = node_index(node_indices, &inductor.n2);
     stamp_complex_conductance(matrix, n1, n2, admittance);
+    Ok(())
+}
+
+fn inductor_by_name(circuit: &Circuit) -> HashMap<String, &Inductor> {
+    circuit
+        .elements()
+        .iter()
+        .filter_map(|element| match element {
+            Element::Inductor(inductor) => Some((inductor.name.clone(), inductor)),
+            _ => None,
+        })
+        .collect()
+}
+
+fn coupled_inductor_names(circuit: &Circuit) -> HashSet<String> {
+    let mut names = HashSet::new();
+    for element in circuit.elements() {
+        if let Element::MutualInductor(mutual) = element {
+            names.insert(mutual.primary.clone());
+            names.insert(mutual.secondary.clone());
+        }
+    }
+    names
+}
+
+fn validate_mutual_inductor<'a>(
+    mutual: &MutualInductor,
+    inductors: &'a HashMap<String, &Inductor>,
+) -> Result<(&'a Inductor, &'a Inductor, f64), SpiceError> {
+    if !mutual.coupling.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: mutual.name.clone(),
+            reason: "coupling must be finite".to_string(),
+        });
+    }
+    if mutual.coupling.abs() >= 1.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mutual.name.clone(),
+            reason: "coupling magnitude must be less than one".to_string(),
+        });
+    }
+    if mutual.primary == mutual.secondary {
+        return Err(SpiceError::InvalidElement {
+            name: mutual.name.clone(),
+            reason: "coupled inductors must be distinct".to_string(),
+        });
+    }
+    let primary =
+        inductors
+            .get(&mutual.primary)
+            .copied()
+            .ok_or_else(|| SpiceError::InvalidElement {
+                name: mutual.name.clone(),
+                reason: format!("referenced inductor {:?} was not found", mutual.primary),
+            })?;
+    let secondary =
+        inductors
+            .get(&mutual.secondary)
+            .copied()
+            .ok_or_else(|| SpiceError::InvalidElement {
+                name: mutual.name.clone(),
+                reason: format!("referenced inductor {:?} was not found", mutual.secondary),
+            })?;
+    validate_inductor(primary)?;
+    validate_inductor(secondary)?;
+    let mutual_inductance =
+        mutual.coupling * (primary.inductance_henrys * secondary.inductance_henrys).sqrt();
+    Ok((primary, secondary, mutual_inductance))
+}
+
+fn stamp_ac_mutual_inductor(
+    mutual: &MutualInductor,
+    inductors: &HashMap<String, &Inductor>,
+    omega: f64,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<Complex>],
+) -> Result<(), SpiceError> {
+    let (primary, secondary, mutual_inductance) = validate_mutual_inductor(mutual, inductors)?;
+    if omega == 0.0 {
+        stamp_complex_conductance(
+            matrix,
+            node_index(node_indices, &primary.n1),
+            node_index(node_indices, &primary.n2),
+            Complex::new(1.0e12, 0.0),
+        );
+        stamp_complex_conductance(
+            matrix,
+            node_index(node_indices, &secondary.n1),
+            node_index(node_indices, &secondary.n2),
+            Complex::new(1.0e12, 0.0),
+        );
+        return Ok(());
+    }
+
+    let determinant =
+        primary.inductance_henrys * secondary.inductance_henrys - mutual_inductance.powi(2);
+    if !determinant.is_finite() || determinant <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mutual.name.clone(),
+            reason: "coupled inductance matrix is singular".to_string(),
+        });
+    }
+
+    let scale = Complex::new(0.0, -1.0 / (omega * determinant));
+    let y11 = Complex::new(
+        scale.real * secondary.inductance_henrys,
+        scale.imag * secondary.inductance_henrys,
+    );
+    let y12 = Complex::new(
+        scale.real * -mutual_inductance,
+        scale.imag * -mutual_inductance,
+    );
+    let y22 = Complex::new(
+        scale.real * primary.inductance_henrys,
+        scale.imag * primary.inductance_henrys,
+    );
+    let p1 = node_index(node_indices, &primary.n1);
+    let p2 = node_index(node_indices, &primary.n2);
+    let s1 = node_index(node_indices, &secondary.n1);
+    let s2 = node_index(node_indices, &secondary.n2);
+    stamp_complex_conductance(matrix, p1, p2, y11);
+    stamp_complex_conductance(matrix, s1, s2, y22);
+    stamp_complex_transconductance(matrix, p1, p2, s1, s2, y12);
+    stamp_complex_transconductance(matrix, s1, s2, p1, p2, y12);
     Ok(())
 }
 

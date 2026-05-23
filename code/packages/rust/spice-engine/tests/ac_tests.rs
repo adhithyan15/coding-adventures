@@ -1,7 +1,7 @@
 use spice_engine::{
     ac_sweep, ac_sweep_corners, s_parameters, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit,
     CornerOverride, CornerSpec, CurrentSource, Element, Inductor, Jfet, JfetPolarity, Mosfet,
-    MosfetLevel1Params, MosfetType, Resistor, SpiceError, Vcvs, VoltageSource,
+    MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -133,6 +133,63 @@ fn ac_rl_high_pass_has_minus_three_db_corner() {
     let out = points[0].voltage("out").unwrap();
     assert_close(out.abs(), 1.0 / 2.0_f64.sqrt());
     assert_close(out.phase(), std::f64::consts::FRAC_PI_4);
+}
+
+#[test]
+fn ac_mutual_inductor_transformer_ratio() {
+    let primary_l: f64 = 1.0e-3;
+    let secondary_l: f64 = 4.0e-3;
+    let coupling: f64 = 0.9;
+    let load: f64 = 1_000.0;
+    let frequency: f64 = 1_000.0;
+    let mutual_l = coupling * (primary_l * secondary_l).sqrt();
+    let denom_real: f64 = 1.0;
+    let denom_imag = 2.0 * std::f64::consts::PI * frequency * secondary_l / load;
+    let numerator_imag = 2.0 * std::f64::consts::PI * frequency * mutual_l;
+    let scale = denom_real.powi(2) + denom_imag.powi(2);
+    let expected_real = numerator_imag * denom_imag / scale;
+    let expected_imag = numerator_imag * denom_real / scale;
+
+    let mut circuit = Circuit::new();
+    circuit.add(Element::CurrentSource(CurrentSource::with_ac(
+        "Iin", "0", "pri", 0.0, 1.0, 0.0,
+    )));
+    circuit.add(Element::Inductor(Inductor::new(
+        "Lpri", "pri", "0", primary_l,
+    )));
+    circuit.add(Element::Inductor(Inductor::new(
+        "Lsec",
+        "sec",
+        "0",
+        secondary_l,
+    )));
+    circuit.add(Element::MutualInductor(MutualInductor::new(
+        "K1", "Lpri", "Lsec", coupling,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("Rload", "sec", "0", load)));
+
+    let points = ac_sweep(&circuit, frequency, frequency, 10).unwrap();
+
+    let secondary = points[0].voltage("sec").unwrap();
+    assert_close(secondary.real, expected_real);
+    assert_close(secondary.imag, expected_imag);
+}
+
+#[test]
+fn ac_mutual_inductor_rejects_missing_reference() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "pri", "0", 1.0,
+    )));
+    circuit.add(Element::Inductor(Inductor::new("Lpri", "pri", "0", 1.0e-3)));
+    circuit.add(Element::MutualInductor(MutualInductor::new(
+        "Kbad", "Lpri", "Lmissing", 0.9,
+    )));
+
+    assert!(matches!(
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 10),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "Kbad"
+    ));
 }
 
 #[test]

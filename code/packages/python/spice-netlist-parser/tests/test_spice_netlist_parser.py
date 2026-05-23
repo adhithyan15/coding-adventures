@@ -115,6 +115,27 @@ Kcouple Lpri Lsec 0.75
     assert mutual.coupling == 0.75
 
 
+def test_mutual_inductor_rejects_missing_referenced_inductor() -> None:
+    with pytest.raises(NetlistParseError, match="referenced inductor"):
+        parse_netlist(
+            """
+Lpri p 0 10m
+Kbad Lpri Lmissing 0.75
+"""
+        )
+
+
+def test_mutual_inductor_rejects_non_finite_coupling() -> None:
+    with pytest.raises(NetlistParseError, match="coupling must be finite"):
+        parse_netlist(
+            """
+Lpri p 0 10m
+Lsec s 0 40m
+Kbad Lpri Lsec 1e999
+"""
+        )
+
+
 def test_parse_options_analysis_card() -> None:
     parsed = parse_netlist(
         """

@@ -77,6 +77,21 @@ Kcouple Lpri Lsec 0.75
     });
   });
 
+  it("rejects mutual-inductor cards with missing referenced inductors", () => {
+    expect(() => parseNetlist(`
+Lpri p 0 10m
+Kbad Lpri Lmissing 0.75
+`)).toThrow(NetlistParseError);
+  });
+
+  it("rejects mutual-inductor cards with non-finite coupling", () => {
+    expect(() => parseNetlist(`
+Lpri p 0 10m
+Lsec s 0 40m
+Kbad Lpri Lsec 1e999
+`)).toThrow(NetlistParseError);
+  });
+
   it("parses .options analysis cards", () => {
     const parsed = parseNetlist(`
 .options reltol=1m abstol=1n gmin=1p method=trap noopiter

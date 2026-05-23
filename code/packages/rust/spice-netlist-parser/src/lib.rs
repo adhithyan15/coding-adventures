@@ -345,6 +345,7 @@ pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
             circuit.add(element);
         }
     }
+    validate_mutual_inductors(&circuit)?;
 
     Ok(ParsedNetlist {
         circuit,
@@ -352,6 +353,55 @@ pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
         models,
         title,
     })
+}
+
+fn validate_mutual_inductors(circuit: &Circuit) -> Result<(), NetlistParseError> {
+    let inductors: std::collections::HashSet<String> = circuit
+        .elements()
+        .iter()
+        .filter_map(|element| match element {
+            Element::Inductor(inductor) => Some(inductor.name.clone()),
+            _ => None,
+        })
+        .collect();
+
+    for element in circuit.elements() {
+        let Element::MutualInductor(mutual) = element else {
+            continue;
+        };
+        if !mutual.coupling.is_finite() {
+            return Err(NetlistParseError::new(format!(
+                "{}: coupling must be finite",
+                mutual.name
+            )));
+        }
+        if mutual.coupling.abs() >= 1.0 {
+            return Err(NetlistParseError::new(format!(
+                "{}: coupling magnitude must be less than one",
+                mutual.name
+            )));
+        }
+        if mutual.primary == mutual.secondary {
+            return Err(NetlistParseError::new(format!(
+                "{}: coupled inductors must be distinct",
+                mutual.name
+            )));
+        }
+        if !inductors.contains(&mutual.primary) {
+            return Err(NetlistParseError::new(format!(
+                "{}: referenced inductor {:?} was not found",
+                mutual.name, mutual.primary
+            )));
+        }
+        if !inductors.contains(&mutual.secondary) {
+            return Err(NetlistParseError::new(format!(
+                "{}: referenced inductor {:?} was not found",
+                mutual.name, mutual.secondary
+            )));
+        }
+    }
+
+    Ok(())
 }
 
 pub fn parse(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
