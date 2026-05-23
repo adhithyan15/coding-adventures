@@ -1,5 +1,41 @@
 # Changelog
 
+## [1.86.0] - 2026-05-23
+
+### Added
+
+- **Implicit COLLATE in WHERE / UPDATE / DELETE**.  The column's
+  declared ``COLLATE`` clause now propagates into any comparison the
+  column participates in — matching SQLite's implicit collation
+  semantics.  So::
+
+      CREATE TABLE users(email TEXT COLLATE NOCASE);
+      INSERT INTO users VALUES ('Adhithya@example.com');
+      SELECT * FROM users WHERE email = 'adhithya@example.com';
+      -- ('Adhithya@example.com',)  ← case-insensitive match
+
+  works without an explicit ``COLLATE NOCASE`` on the WHERE.
+  Equally for ``UPDATE … WHERE name = 'X'`` and ``DELETE FROM …
+  WHERE name = 'X'`` against a NOCASE-declared column.
+- Same propagation applies to ``<``, ``<=``, ``>``, ``>=``,
+  ``<>``, ``IS [NOT] DISTINCT FROM``, and ``BETWEEN`` — every
+  comparison op whose value semantics depend on string ordering.
+- 18 oracle tests in
+  ``tests/test_tier3_collate_implicit_from_column.py``: basic
+  equality, ordering, multi-column independence, complex
+  predicates (AND / OR / NOT / BETWEEN / IS DISTINCT FROM),
+  RTRIM column, UPDATE / DELETE, and the explicit-override path.
+
+### Known limitations
+
+- Explicit ``COLLATE BINARY`` postfix does NOT override a
+  column-declared NOCASE (because the explicit-BINARY postfix is an
+  identity transform at the adapter, leaving no marker for the
+  propagation pass to recognise).  Override with ``COLLATE NOCASE``
+  or ``COLLATE RTRIM`` instead — those work as expected.
+- HAVING clauses don't currently propagate column collation through
+  GROUP BY.  Use explicit ``COLLATE NOCASE`` on the HAVING.
+
 ## [1.85.0] - 2026-05-23
 
 ### Added
