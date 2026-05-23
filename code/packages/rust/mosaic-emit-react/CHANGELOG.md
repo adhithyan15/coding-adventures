@@ -4,6 +4,54 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — UI29-4 `HostLink` + `HostTooltip` + `HostNumberInput` (U29-4-K-react)
+
+Three new kernel primitives lower to React widgets:
+
+- **`HostLink` → `<a href onClick>`**
+  - `href: str|slot` → `href="..."` / `href={slot}`
+  - `label: str|slot` → JSX text body
+  - `target: new-tab` → `target="_blank" rel="noopener noreferrer"`
+    (security default — prevents reverse-tabnabbing per the
+    HTML5 living-standard recommendation and the eslint-plugin-
+    react `react/jsx-no-target-blank` rule)
+  - `target: parent | top | same` → standard HTML `target=` values
+  - `external: false` keyword → onClick handler with
+    `e.preventDefault()` so the host's router takes over
+  - `onActivate: emit: onX` → dispatched as `{type:"x", href: ...}`
+    (combined with preventDefault when both are present)
+- **`HostTooltip` → `<span title={text}>{children}</span>`**
+  - `text: str|slot` → `title="..."` / `title={slot}`
+  - Single child (or all children) wraps inside the span
+  - Plain-text only in v1 per UI29-4 §3.2; rich-content tooltips
+    are reserved for UI29-5
+- **`HostNumberInput` → `<input type="number" inputMode="numeric">`**
+  - `value: slot` → controlled-input `value={slot}`
+  - `min` / `max` / `step` numeric literals → matching JSX
+    expression attributes
+  - `placeholder: str` → `placeholder="..."`
+  - `disabled: slot|bool`
+  - `onChange: emit: onX` → `dispatch({type:"x", value:
+    e.target.valueAsNumber})` — the DOM's standard numeric parser,
+    matching the kernel-canonical `value: number` payload
+  - `inputMode="numeric"` is always set — triggers the mobile
+    numeric keyboard, one of the "what composition loses" items
+    flagged in the UI29-4 survey
+
+8 new tests pin: HostLink href+label rendering, the
+target="_blank" security pin (rel="noopener noreferrer" pair),
+external: false + onActivate combined preventDefault+dispatch,
+HostTooltip string + slot text variants wrapping children,
+HostNumberInput bare shape (with inputMode), min/max/step
+literals, and the onChange valueAsNumber dispatch.
+
+Security review caught no findings. The `escape_for_jsx_double_
+quoted` + `validate_slot_or_field_name` / `validate_emit_name`
+helpers (added in earlier PRs) already cover the new
+interpolation sites; the `target="_blank"` + `rel="noopener
+noreferrer"` pairing is emitted as a single literal block so the
+two attrs can't be decoupled by future refactors.
+
 ### Added — `HostCheckbox.indeterminate` slot (UI29-2 follow-up)
 
 Closes the deferred work flagged in the previous `Added` block.
