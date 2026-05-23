@@ -784,6 +784,24 @@ pub struct LanguageInputCallbackDispatchPlan {
     pub dispatch_model: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackSessionDispatchSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub dispatch_label: String,
+    pub dispatch_reason: String,
+    pub callback_program_id: u16,
+    pub callback_instruction_budget: u32,
+    pub sequence: u32,
+    pub queue_depth_after: u8,
+    pub queue_action: LanguageInputCallbackQueueAction,
+    pub dropped_existing_event: bool,
+    pub interrupt_backed: bool,
+    pub dispatch_model: String,
+    pub message: String,
+    pub dispatch_plan: LanguageInputCallbackDispatchPlan,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackResultKind {
     Completed,
@@ -2183,6 +2201,28 @@ pub fn input_callback_dispatch_plan_for_queue_plan(
     })
 }
 
+pub fn input_callback_session_dispatch_summary(
+    session: &LanguageHostEndpointSessionSummary,
+    dispatch: &LanguageInputCallbackDispatchPlan,
+) -> LanguageInputCallbackSessionDispatchSummary {
+    LanguageInputCallbackSessionDispatchSummary {
+        endpoint: session.endpoint.clone(),
+        connection_label: session.connection_label.clone(),
+        dispatch_label: input_callback_session_dispatch_label(session, dispatch),
+        dispatch_reason: dispatch.dispatch_reason.clone(),
+        callback_program_id: dispatch.callback_program_id,
+        callback_instruction_budget: dispatch.callback_instruction_budget,
+        sequence: dispatch.sequence,
+        queue_depth_after: dispatch.queue_depth_after,
+        queue_action: dispatch.queue_action,
+        dropped_existing_event: dispatch.dropped_existing_event,
+        interrupt_backed: dispatch.interrupt_backed,
+        dispatch_model: dispatch.dispatch_model.clone(),
+        message: input_callback_dispatch_message(dispatch.dropped_existing_event).to_owned(),
+        dispatch_plan: dispatch.clone(),
+    }
+}
+
 pub fn input_callback_result_for_dispatch_plan(
     dispatch: &LanguageInputCallbackDispatchPlan,
     run_status: RunStatus,
@@ -2880,6 +2920,31 @@ fn input_callback_session_queue_label(
         input_callback_queue_action_name(queue_plan.action),
         queue_plan.queue_depth_before,
         queue_plan.queue_depth_after
+    )
+}
+
+fn input_callback_dispatch_message(dropped_existing_event: bool) -> &'static str {
+    if dropped_existing_event {
+        "Input callback dispatch replaces the oldest queued callback."
+    } else {
+        "Input callback dispatch is ready for the cooperative runner."
+    }
+}
+
+fn input_callback_session_dispatch_label(
+    session: &LanguageHostEndpointSessionSummary,
+    dispatch: &LanguageInputCallbackDispatchPlan,
+) -> String {
+    format!(
+        "{} callback={}:{} sequence={} dispatch_reason={} queue_action={} queue_depth_after={} instruction_budget={}",
+        session.connection_label,
+        dispatch.board_id,
+        dispatch.label,
+        dispatch.sequence,
+        dispatch.dispatch_reason,
+        input_callback_queue_action_name(dispatch.queue_action),
+        dispatch.queue_depth_after,
+        dispatch.callback_instruction_budget
     )
 }
 
@@ -7131,6 +7196,86 @@ mod tests {
             input_callback_invocation_for_event(&custom, &custom_event).unwrap();
         let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
         assert!(input_callback_dispatch_plan_for_queue_plan(&newest_drop).is_none());
+    }
+
+    #[test]
+    fn input_callback_session_dispatch_summaries_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let dispatch = input_callback_dispatch_plan_for_queue_plan(&queue_plan).unwrap();
+        let serial = input_callback_session_dispatch_summary(&serial_session, &dispatch);
+
+        assert_eq!(serial.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            serial.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            serial.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            serial.dispatch_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 dispatch_reason=queued_input_event queue_action=enqueue queue_depth_after=3 instruction_budget=64"
+        );
+        assert_eq!(
+            serial.dispatch_reason,
+            LANGUAGE_INPUT_CALLBACK_DISPATCH_REASON
+        );
+        assert_eq!(serial.callback_program_id, 7);
+        assert_eq!(serial.callback_instruction_budget, 64);
+        assert_eq!(serial.sequence, 42);
+        assert_eq!(serial.queue_depth_after, 3);
+        assert_eq!(
+            serial.queue_action,
+            LanguageInputCallbackQueueAction::Enqueue
+        );
+        assert!(!serial.dropped_existing_event);
+        assert!(serial.interrupt_backed);
+        assert_eq!(
+            serial.dispatch_model,
+            LANGUAGE_INPUT_CALLBACK_DISPATCH_MODEL
+        );
+        assert_eq!(
+            serial.message,
+            "Input callback dispatch is ready for the cooperative runner."
+        );
+        assert_eq!(serial.dispatch_plan, dispatch);
+
+        let full_queue =
+            input_callback_queue_plan_for_invocation(&invocation, invocation.queue_capacity)
+                .unwrap();
+        let full_dispatch = input_callback_dispatch_plan_for_queue_plan(&full_queue).unwrap();
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let tcp = input_callback_session_dispatch_summary(&tcp_session, &full_dispatch);
+
+        assert_eq!(tcp.endpoint.endpoint, "tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(tcp.connection_label, "endpoint=tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.dispatch_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 dispatch_reason=queued_input_event queue_action=drop_oldest_then_enqueue queue_depth_after=8 instruction_budget=64"
+        );
+        assert_eq!(
+            tcp.queue_action,
+            LanguageInputCallbackQueueAction::DropOldestThenEnqueue
+        );
+        assert!(tcp.dropped_existing_event);
+        assert!(tcp.interrupt_backed);
+        assert_eq!(
+            tcp.message,
+            "Input callback dispatch replaces the oldest queued callback."
+        );
+        assert_eq!(tcp.dispatch_plan, full_dispatch);
     }
 
     #[test]

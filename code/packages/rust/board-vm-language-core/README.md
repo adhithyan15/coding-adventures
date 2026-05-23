@@ -114,6 +114,9 @@ so adapters can present queue admission without rebuilding queue policy text.
 into the callback execution handoff: callback program id, instruction budget,
 event identity, queue action, and cooperative dispatch reason stay in Rust,
 while language adapters only schedule the native callback runner.
+`input_callback_session_dispatch_summary` adds the endpoint session, handoff
+label, queue action, instruction budget, and dispatch message for adapters that
+need to log or display the callback runner handoff.
 `input_callback_result_for_dispatch_plan` closes that loop by preserving the
 dispatch metadata while normalizing the callback runner status, executed
 instruction count, and elapsed time into a Rust-owned completion,
