@@ -1,0 +1,11 @@
+// Tooltip.dark.msl — dark-theme styling for Tooltip.
+
+style Tooltip {
+  part tooltip-label {
+    color     : "#f1f5f9" ;
+    font-size : 14 ;
+  }
+  part tooltip-wrapper {
+    padding : 0 ;
+  }
+}

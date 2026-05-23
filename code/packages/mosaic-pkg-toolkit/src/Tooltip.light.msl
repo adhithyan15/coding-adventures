@@ -1,0 +1,16 @@
+// Tooltip.light.msl — default light-theme styling for Tooltip.
+//
+// Most backends render tooltips via stock OS chrome (DOM `title=`
+// is browser-styled and uncustomisable; SwiftUI `.help` uses the
+// platform tooltip; Qt/XAML/Flutter expose limited custom chrome).
+// The label .msl is what we can safely customise.
+
+style Tooltip {
+  part tooltip-label {
+    color     : "#212529" ;
+    font-size : 14 ;
+  }
+  part tooltip-wrapper {
+    padding : 0 ;
+  }
+}

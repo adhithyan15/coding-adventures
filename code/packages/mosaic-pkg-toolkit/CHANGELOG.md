@@ -1,5 +1,96 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [0.4.0] — UI29-4 — HostLink wires Breadcrumb + Nav; Tooltip + NumberInput added
+
+UI29-4 added three new kernel primitives (`HostLink`, `HostTooltip`,
+`HostNumberInput` — positions 19/20/21). v0.4 takes advantage of all
+three: Breadcrumb + Nav move from `HostButton` to `HostLink`
+(internal rewrite — user-facing emits unchanged), and two new
+components (`Tooltip`, `NumberInput`) wrap `HostTooltip` and
+`HostNumberInput` respectively.
+
+### `Breadcrumb` — `HostLink` rewrite
+
+- **Layout:** each crumb now emits `HostLink[breadcrumb-link]`
+  instead of `HostButton[breadcrumb-link]`. The platform-native
+  link semantics — `role="link"` + visited-state styling on web,
+  `Link` widget on SwiftUI/Flutter, rich-text anchor on Qt,
+  `Hyperlink` on XAML — come from the kernel for free now.
+- **Internal change:** The wrapped `HostLink`'s click event is
+  `onActivate` (not `HostButton`'s `onClick`). The toolkit's
+  user-facing `Breadcrumb.onSelect(index)` is unchanged.
+- **`href: "#"` default + `external: false`:** the toolkit
+  doesn't know the host's routing scheme, so each crumb ships
+  with an inert anchor and `external: false` tells the kernel
+  to skip the `window.open`/`launchUrl` shape (host routes via
+  `onSelect`). A follow-up could add a `hrefs: list<text>`
+  slot for hosts that want true per-crumb URLs.
+
+### `Nav` — `HostLink` rewrite (same shape)
+
+- **Layout:** each item now emits `HostLink[nav-link]` instead of
+  `HostButton[nav-link]`. Same rationale + same `href: "#"` +
+  `external: false` choices as Breadcrumb.
+- **Interface:** unchanged — `Nav.onSelect(index)` still fires
+  on activation; internal wiring moved from `onClick` to
+  `onActivate`.
+
+### `Tooltip` — new component
+
+- **Layout:** `HostTooltip[tooltip-wrapper] { Text[tooltip-label] }`.
+  Wraps a visible label `Text` in a `HostTooltip` whose `text`
+  shows on hover (desktop / web) or long-press (mobile).
+- **Interface:** `message: text` (tooltip body — named `message`
+  rather than the kernel-side `text` because `text` is a
+  reserved keyword in the .mil grammar), `label: text` (visible
+  text). No emits — tooltips are display-only.
+- **Scope (v0.4):** plain-text tooltips only, per UI29-4
+  spec §3.2's scoping decision. Rich-content tooltips (icons,
+  multiline, formatted) wait for a follow-up `Popover`
+  component or for the kernel to grow children-pass-through.
+
+### `NumberInput` — new component
+
+- **Layout:** single `HostNumberInput[number-input]` with
+  toolkit-default border / padding chrome (matches `Input`).
+- **Interface:** `value: number`, `placeholder: text`,
+  `disabled: bool`, `onChange(value: number)`. Per spec §3.3,
+  `onChange` fires on commit (Enter / blur), not per-keystroke.
+- **Why a separate component (not just `Input`):** the kernel's
+  `HostNumberInput` lights up the numeric keypad on mobile
+  (iOS/Android), ± stepper buttons on Qt SpinBox / XAML
+  NumberBox, and decimal-format locale awareness — none of
+  which `Input` + manual validation can replicate per-backend.
+- **`min`/`max`/`step` omitted from the toolkit interface:**
+  these are compile-time numeric literals on the kernel
+  primitive rather than runtime slots. Authors who need range
+  constraints compose `HostNumberInput` directly.
+
+### Migration guide
+
+User-facing emits are unchanged across all four touched components:
+
+| Component   | Emit (v0.3) | Emit (v0.4) | Change           |
+|---|---|---|---|
+| Breadcrumb  | `onSelect(index)` | `onSelect(index)` | none (internal rewrite only)  |
+| Nav         | `onSelect(index)` | `onSelect(index)` | none (internal rewrite only)  |
+| Tooltip     | n/a (new)         | (no emits)        | new component                 |
+| NumberInput | n/a (new)         | `onChange(value)` | new component                 |
+
+Hosts using only the documented toolkit-component emits should
+see no behavioural difference beyond platform-native a11y /
+keyboard upgrades on Breadcrumb + Nav (link role, visited-state
+styling, Tab/Enter activation come from the kernel). The only
+breaking surface would be hosts that reached into generated
+artifact internals' `onClick` handlers — those need to migrate
+to `onActivate`.
+
+### Manifest
+
+- `version` bumped 0.3.0 → 0.4.0.
+- `exports` now lists 16 components (was 14): added `NumberInput`
+  and `Tooltip`.
+
 ## [0.3.0] — UI29-2 — Checkbox + Radio rewritten on native primitives
 
 **Breaking change.** `Checkbox` and `Radio` previously composed from
