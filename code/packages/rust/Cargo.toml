@@ -487,6 +487,7 @@ members = [
     "closure-pass-inline",
     "closure-pass-pipeline",
     "closure-pass-rename",
+    "closure-pass-treeshake",
     "closure-typechecker",
     "compiler-ir",
     "compiler-source-map",
