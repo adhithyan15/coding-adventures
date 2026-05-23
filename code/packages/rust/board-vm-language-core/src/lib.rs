@@ -681,6 +681,17 @@ pub struct LanguageInputCallbackPlanError {
     pub kind: LanguageInputCallbackPlanErrorKind,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackPlanDiagnostic {
+    pub selector: String,
+    pub pin: u8,
+    pub kind: LanguageInputCallbackPlanErrorKind,
+    pub kind_name: String,
+    pub diagnostic_label: String,
+    pub message: String,
+    pub error: LanguageInputCallbackPlanError,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackLevel {
     Low,
@@ -895,6 +906,20 @@ pub struct LanguageInputCallbackQueuePlanError {
     pub kind: LanguageInputCallbackQueuePlanErrorKind,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackQueuePlanDiagnostic {
+    pub board_id: String,
+    pub pin: u8,
+    pub callback_program_id: u16,
+    pub queue_capacity: u8,
+    pub queue_depth: u8,
+    pub kind: LanguageInputCallbackQueuePlanErrorKind,
+    pub kind_name: String,
+    pub diagnostic_label: String,
+    pub message: String,
+    pub error: LanguageInputCallbackQueuePlanError,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackEventErrorKind {
     BoardMismatch,
@@ -910,6 +935,20 @@ pub struct LanguageInputCallbackEventError {
     pub event_pin: u8,
     pub event_kind: String,
     pub kind: LanguageInputCallbackEventErrorKind,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackEventDiagnostic {
+    pub plan_board_id: String,
+    pub event_board_id: String,
+    pub plan_pin: u8,
+    pub event_pin: u8,
+    pub event_kind: String,
+    pub kind: LanguageInputCallbackEventErrorKind,
+    pub kind_name: String,
+    pub diagnostic_label: String,
+    pub message: String,
+    pub error: LanguageInputCallbackEventError,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1222,6 +1261,43 @@ pub const fn input_callback_queue_action_name(
         LanguageInputCallbackQueueAction::Enqueue => "enqueue",
         LanguageInputCallbackQueueAction::DropNewest => "drop_newest",
         LanguageInputCallbackQueueAction::DropOldestThenEnqueue => "drop_oldest_then_enqueue",
+    }
+}
+
+pub const fn input_callback_plan_error_kind_name(
+    kind: LanguageInputCallbackPlanErrorKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackPlanErrorKind::UnknownTarget => "unknown_target",
+        LanguageInputCallbackPlanErrorKind::UnknownPin => "unknown_pin",
+        LanguageInputCallbackPlanErrorKind::PinDoesNotSupportInput => "pin_does_not_support_input",
+        LanguageInputCallbackPlanErrorKind::PinDoesNotSupportInterrupt => {
+            "pin_does_not_support_interrupt"
+        }
+        LanguageInputCallbackPlanErrorKind::PinDoesNotSupportPull => "pin_does_not_support_pull",
+        LanguageInputCallbackPlanErrorKind::EmptyQueue => "empty_queue",
+        LanguageInputCallbackPlanErrorKind::EmptyCallbackBudget => "empty_callback_budget",
+    }
+}
+
+pub const fn input_callback_queue_plan_error_kind_name(
+    kind: LanguageInputCallbackQueuePlanErrorKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackQueuePlanErrorKind::EmptyQueue => "empty_queue",
+        LanguageInputCallbackQueuePlanErrorKind::QueueDepthExceedsCapacity => {
+            "queue_depth_exceeds_capacity"
+        }
+    }
+}
+
+pub const fn input_callback_event_error_kind_name(
+    kind: LanguageInputCallbackEventErrorKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackEventErrorKind::BoardMismatch => "board_mismatch",
+        LanguageInputCallbackEventErrorKind::PinMismatch => "pin_mismatch",
+        LanguageInputCallbackEventErrorKind::EventKindMismatch => "event_kind_mismatch",
     }
 }
 
@@ -2324,6 +2400,54 @@ pub fn input_callback_session_completion_summary(
     }
 }
 
+pub fn input_callback_plan_diagnostic(
+    error: &LanguageInputCallbackPlanError,
+) -> LanguageInputCallbackPlanDiagnostic {
+    LanguageInputCallbackPlanDiagnostic {
+        selector: error.selector.clone(),
+        pin: error.pin,
+        kind: error.kind,
+        kind_name: input_callback_plan_error_kind_name(error.kind).to_owned(),
+        diagnostic_label: input_callback_plan_diagnostic_label(error),
+        message: input_callback_plan_error_message(error.kind).to_owned(),
+        error: error.clone(),
+    }
+}
+
+pub fn input_callback_event_diagnostic(
+    error: &LanguageInputCallbackEventError,
+) -> LanguageInputCallbackEventDiagnostic {
+    LanguageInputCallbackEventDiagnostic {
+        plan_board_id: error.plan_board_id.clone(),
+        event_board_id: error.event_board_id.clone(),
+        plan_pin: error.plan_pin,
+        event_pin: error.event_pin,
+        event_kind: error.event_kind.clone(),
+        kind: error.kind,
+        kind_name: input_callback_event_error_kind_name(error.kind).to_owned(),
+        diagnostic_label: input_callback_event_diagnostic_label(error),
+        message: input_callback_event_error_message(error.kind).to_owned(),
+        error: error.clone(),
+    }
+}
+
+pub fn input_callback_queue_plan_diagnostic(
+    error: &LanguageInputCallbackQueuePlanError,
+) -> LanguageInputCallbackQueuePlanDiagnostic {
+    LanguageInputCallbackQueuePlanDiagnostic {
+        board_id: error.board_id.clone(),
+        pin: error.pin,
+        callback_program_id: error.callback_program_id,
+        queue_capacity: error.queue_capacity,
+        queue_depth: error.queue_depth,
+        kind: error.kind,
+        kind_name: input_callback_queue_plan_error_kind_name(error.kind).to_owned(),
+        diagnostic_label: input_callback_queue_plan_diagnostic_label(error),
+        message: input_callback_queue_plan_error_message(error.kind).to_owned(),
+        error: error.clone(),
+    }
+}
+
 pub fn parse_serial_endpoint(endpoint: &str) -> Option<LanguageSerialEndpoint> {
     let (scheme, port) = endpoint.split_once("://")?;
     if scheme != "serial" {
@@ -2891,6 +3015,92 @@ fn input_callback_queue_plan_error(
         queue_depth,
         kind,
     }
+}
+
+fn input_callback_plan_error_message(kind: LanguageInputCallbackPlanErrorKind) -> &'static str {
+    match kind {
+        LanguageInputCallbackPlanErrorKind::UnknownTarget => "Input callback target is not known.",
+        LanguageInputCallbackPlanErrorKind::UnknownPin => {
+            "Input callback pin is not available on the selected target."
+        }
+        LanguageInputCallbackPlanErrorKind::PinDoesNotSupportInput => {
+            "Input callback pin does not support digital input."
+        }
+        LanguageInputCallbackPlanErrorKind::PinDoesNotSupportInterrupt => {
+            "Input callback pin does not support interrupt-backed callbacks."
+        }
+        LanguageInputCallbackPlanErrorKind::PinDoesNotSupportPull => {
+            "Input callback pull mode is not supported by the pin."
+        }
+        LanguageInputCallbackPlanErrorKind::EmptyQueue => {
+            "Input callback queue capacity must be greater than zero."
+        }
+        LanguageInputCallbackPlanErrorKind::EmptyCallbackBudget => {
+            "Input callback instruction budget must be greater than zero."
+        }
+    }
+}
+
+fn input_callback_plan_diagnostic_label(error: &LanguageInputCallbackPlanError) -> String {
+    format!(
+        "input_callback_plan selector={} pin={} error={}",
+        error.selector,
+        error.pin,
+        input_callback_plan_error_kind_name(error.kind)
+    )
+}
+
+fn input_callback_event_error_message(kind: LanguageInputCallbackEventErrorKind) -> &'static str {
+    match kind {
+        LanguageInputCallbackEventErrorKind::BoardMismatch => {
+            "Input callback event board does not match the planned callback board."
+        }
+        LanguageInputCallbackEventErrorKind::PinMismatch => {
+            "Input callback event pin does not match the planned callback pin."
+        }
+        LanguageInputCallbackEventErrorKind::EventKindMismatch => {
+            "Input callback event kind is not supported by this callback planner."
+        }
+    }
+}
+
+fn input_callback_event_diagnostic_label(error: &LanguageInputCallbackEventError) -> String {
+    format!(
+        "input_callback_event plan_board={} event_board={} plan_pin={} event_pin={} event_kind={} error={}",
+        error.plan_board_id,
+        error.event_board_id,
+        error.plan_pin,
+        error.event_pin,
+        error.event_kind,
+        input_callback_event_error_kind_name(error.kind)
+    )
+}
+
+fn input_callback_queue_plan_error_message(
+    kind: LanguageInputCallbackQueuePlanErrorKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackQueuePlanErrorKind::EmptyQueue => {
+            "Input callback queue capacity must be greater than zero."
+        }
+        LanguageInputCallbackQueuePlanErrorKind::QueueDepthExceedsCapacity => {
+            "Input callback queue depth exceeds the configured queue capacity."
+        }
+    }
+}
+
+fn input_callback_queue_plan_diagnostic_label(
+    error: &LanguageInputCallbackQueuePlanError,
+) -> String {
+    format!(
+        "input_callback_queue board={} pin={} program={} queue_depth={} queue_capacity={} error={}",
+        error.board_id,
+        error.pin,
+        error.callback_program_id,
+        error.queue_depth,
+        error.queue_capacity,
+        input_callback_queue_plan_error_kind_name(error.kind)
+    )
 }
 
 fn input_callback_queue_message(action: LanguageInputCallbackQueueAction) -> &'static str {
@@ -7016,6 +7226,97 @@ mod tests {
             error.kind,
             LanguageInputCallbackQueuePlanErrorKind::EmptyQueue
         );
+    }
+
+    #[test]
+    fn input_callback_diagnostics_are_owned_by_rust_language_core() {
+        let plan_error = input_callback_plan_for_target("not-a-board", 3, 7, 64).unwrap_err();
+        let plan_diagnostic = input_callback_plan_diagnostic(&plan_error);
+        assert_eq!(
+            input_callback_plan_error_kind_name(plan_error.kind),
+            "unknown_target"
+        );
+        assert_eq!(plan_diagnostic.selector, "not-a-board");
+        assert_eq!(plan_diagnostic.pin, 3);
+        assert_eq!(plan_diagnostic.kind, plan_error.kind);
+        assert_eq!(plan_diagnostic.kind_name, "unknown_target");
+        assert_eq!(
+            plan_diagnostic.diagnostic_label,
+            "input_callback_plan selector=not-a-board pin=3 error=unknown_target"
+        );
+        assert_eq!(
+            plan_diagnostic.message,
+            "Input callback target is not known."
+        );
+        assert_eq!(plan_diagnostic.error, plan_error);
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let mut wrong_pin =
+            input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        wrong_pin.pin = 4;
+        let event_error = input_callback_invocation_for_event(&plan, &wrong_pin).unwrap_err();
+        let event_diagnostic = input_callback_event_diagnostic(&event_error);
+        assert_eq!(
+            input_callback_event_error_kind_name(event_error.kind),
+            "pin_mismatch"
+        );
+        assert_eq!(event_diagnostic.plan_board_id, "arduino-uno-r4-wifi");
+        assert_eq!(event_diagnostic.event_board_id, "arduino-uno-r4-wifi");
+        assert_eq!(event_diagnostic.plan_pin, 3);
+        assert_eq!(event_diagnostic.event_pin, 4);
+        assert_eq!(
+            event_diagnostic.event_kind,
+            LANGUAGE_INPUT_CALLBACK_EVENT_KIND
+        );
+        assert_eq!(event_diagnostic.kind_name, "pin_mismatch");
+        assert_eq!(
+            event_diagnostic.diagnostic_label,
+            "input_callback_event plan_board=arduino-uno-r4-wifi event_board=arduino-uno-r4-wifi plan_pin=3 event_pin=4 event_kind=digital_input_change error=pin_mismatch"
+        );
+        assert_eq!(
+            event_diagnostic.message,
+            "Input callback event pin does not match the planned callback pin."
+        );
+        assert_eq!(event_diagnostic.error, event_error);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let invocation = input_callback_invocation_for_event(&custom, &event).unwrap();
+        let queue_error = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap_err();
+        let queue_diagnostic = input_callback_queue_plan_diagnostic(&queue_error);
+        assert_eq!(
+            input_callback_queue_plan_error_kind_name(queue_error.kind),
+            "queue_depth_exceeds_capacity"
+        );
+        assert_eq!(queue_diagnostic.board_id, "arduino-uno-r4-wifi");
+        assert_eq!(queue_diagnostic.pin, 3);
+        assert_eq!(queue_diagnostic.callback_program_id, 9);
+        assert_eq!(queue_diagnostic.queue_capacity, 1);
+        assert_eq!(queue_diagnostic.queue_depth, 2);
+        assert_eq!(queue_diagnostic.kind_name, "queue_depth_exceeds_capacity");
+        assert_eq!(
+            queue_diagnostic.diagnostic_label,
+            "input_callback_queue board=arduino-uno-r4-wifi pin=3 program=9 queue_depth=2 queue_capacity=1 error=queue_depth_exceeds_capacity"
+        );
+        assert_eq!(
+            queue_diagnostic.message,
+            "Input callback queue depth exceeds the configured queue capacity."
+        );
+        assert_eq!(queue_diagnostic.error, queue_error);
     }
 
     #[test]

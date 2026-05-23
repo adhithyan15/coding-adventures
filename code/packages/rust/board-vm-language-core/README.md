@@ -133,6 +133,11 @@ Rust-owned action and queue-depth update.
 callback result label, completion action, and queue follow-up into one
 transport-aware record for language adapters to log or present without
 rebuilding callback lifecycle policy.
+`input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
+`input_callback_queue_plan_diagnostic` turn those planner, event, and queue
+errors into stable Rust-owned kind names, labels, and messages, so frontends
+can report callback lifecycle failures without carrying a parallel diagnostic
+taxonomy.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
