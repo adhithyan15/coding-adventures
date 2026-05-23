@@ -296,6 +296,15 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
         "HostInput" => return emit_host_input_qml(node, depth),
         "HostButton" => return emit_host_button_qml(node, depth),
         "HostDialog" => return emit_host_dialog_qml(node, depth),
+
+        // UI29-2 kernel — `HostCheckbox` and `HostRadio` lower to
+        // QtQuick.Controls 2 `CheckBox` and `RadioButton`. Both
+        // primitives carry full native a11y role, focus ring, and
+        // keyboard semantics (Space toggles, arrow keys navigate radio
+        // groups when wrapped in ButtonGroup) that composing from
+        // QtQuick basics couldn't replicate.
+        "HostCheckbox" => return emit_host_checkbox_qml(node, depth),
+        "HostRadio" => return emit_host_radio_qml(node, depth),
         "HostTable" => return emit_host_table_qml(node, depth),
         // UI29 §3.1 — `For` meta-primitive: lower to a `Repeater` with an
         // `Item` delegate that re-exports `modelData` / `index` under the
@@ -558,11 +567,12 @@ fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
             is_text: false,
             is_image: false,
         },
-        // `HostInput`, `HostButton`, and `HostDialog` are handled by
+        // `HostInput`, `HostButton`, `HostDialog`, `HostCheckbox`, and
+        // `HostRadio` are handled by
         // their own emitters earlier in `emit_qml_tree`; reaching this
         // branch would be an internal logic error.
-        "HostInput" | "HostButton" | "HostDialog" => unreachable!(
-            "HostInput/HostButton/HostDialog are handled by dedicated emitters; should not reach primitive_to_qml"
+        "HostInput" | "HostButton" | "HostDialog" | "HostCheckbox" | "HostRadio" => unreachable!(
+            "HostInput/HostButton/HostDialog/HostCheckbox/HostRadio are handled by dedicated emitters; should not reach primitive_to_qml"
         ),
         other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     })
@@ -898,6 +908,214 @@ fn emit_host_dialog_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipel
     Ok(out)
 }
 
+// =====================================================================
+// UI29-2 — HostCheckbox / HostRadio emitters
+// =====================================================================
+
+/// Lower a `HostCheckbox` node (UI29-2, 17th kernel primitive) to a
+/// QtQuick.Controls 2.15 `CheckBox { ... }` block.
+///
+/// ## Property handling
+///
+/// | moslayout prop          | QML output                                    |
+/// |---|---|
+/// | `checked: slot: c`      | `checked: c` (bare identifier binding)        |
+/// | `checked: true/false`   | `checked: true/false`                         |
+/// | `disabled: slot: d`     | `enabled: !d` (polarity flip)                 |
+/// | `disabled: true/false`  | `enabled: !true/!false`                       |
+/// | `indeterminate: slot:i` | `tristate: true; checkState: i ? Qt.PartiallyChecked : (checked ? Qt.Checked : Qt.Unchecked)` |
+/// | `label: "..."` / `slot:`| `text: "..."` / `text: <slot>`                |
+/// | `onToggle: emit: onX`   | `onToggled: x(checked)` — Qt's `toggled(bool)` signal |
+///
+/// ## `onToggled` carries the new state
+///
+/// QtQuick `AbstractButton` (CheckBox's parent) exposes a
+/// `toggled(bool checked)` signal. We forward the `checked` parameter
+/// into the Mosaic emit call so the host sees the new state, matching
+/// the kernel-canonical `onToggle(checked: bool)` payload.
+fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner_pad = "    ".repeat(depth + 1);
+    let mut out = String::new();
+    writeln!(out, "{pad}CheckBox {{").unwrap();
+
+    // text: <label> — same builder as HostButton's label attr.
+    if let Some(line) = build_label_attribute(node) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+
+    // checked: <slot or literal> — sourced from the `checked` prop.
+    if let Some(line) = build_checked_attribute(node) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+
+    // enabled: !<disabled> — same polarity flip HostButton uses.
+    if let Some(line) = build_disabled_to_enabled_attribute(node) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+
+    // tristate + checkState — only when the author wires `indeterminate`.
+    // Qt's tri-state checkbox uses `Qt.Checked` / `Qt.Unchecked` /
+    // `Qt.PartiallyChecked` for the three states. We rebuild the
+    // checkState ternary so the indeterminate slot wins when truthy,
+    // and the `checked` slot resolves the binary case otherwise.
+    if let Some(slot) = find_slot_ref_prop(node, "indeterminate") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_safe_identifier(&camel)
+            .map_err(PipelineEmitError::UnsafeSlotName)?;
+        writeln!(out, "{inner_pad}tristate: true").unwrap();
+        // The `checked` binding above is sufficient when indeterminate
+        // is false; when it's true we override via checkState. This
+        // matches Qt's documented behaviour for tri-state checkboxes.
+        writeln!(
+            out,
+            "{inner_pad}checkState: {camel} ? Qt.PartiallyChecked : (checked ? Qt.Checked : Qt.Unchecked)"
+        )
+        .unwrap();
+    }
+
+    // onToggled: x(checked) — Qt fires `toggled(bool checked)` whenever
+    // the user flips the checkbox.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
+        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        writeln!(out, "{inner_pad}onToggled: {camel}(checked)").unwrap();
+    }
+
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Lower a `HostRadio` node (UI29-2, 18th kernel primitive) to a
+/// QtQuick.Controls 2.15 `RadioButton { ... }` block.
+///
+/// ## Property handling
+///
+/// | moslayout prop          | QML output                                          |
+/// |---|---|
+/// | `checked: slot: c`      | `checked: c`                                        |
+/// | `group: "..."`          | `ButtonGroup.group: "..."` *(deferred — see notes)* |
+/// | `value: "..."`          | preserved as `// value: ...` annotation comment     |
+/// | `disabled: slot: d`     | `enabled: !d`                                       |
+/// | `label: ... / slot:`    | `text: "..."` / `text: <slot>`                      |
+/// | `onSelect: emit: onX`   | `onCheckedChanged: if (checked) x(<value>)`         |
+///
+/// ## `onSelect` fires only on positive transition
+///
+/// Per UI29-2 §2.2, `onSelect` represents "this radio was chosen", not
+/// "this radio was toggled". Qt's `RadioButton` exposes
+/// `checkedChanged()` (no payload) whenever its checked state flips;
+/// we gate the dispatch on `if (checked)` so a sibling-radio-caused
+/// deselect doesn't dispatch.
+///
+/// ## Group coordination — v1 limitation
+///
+/// QtQuick.Controls provides `ButtonGroup` for true radio-group
+/// behavior, but wiring it requires synthesising a `ButtonGroup { id: ... }`
+/// element at the enclosing scope and attaching every radio's
+/// `ButtonGroup.group: …` reference to it. That structural pass is
+/// reserved for UI29-2.1's `RadioGroup` userland component; v1
+/// preserves the `group:` prop as a `// group: ...` comment, identical
+/// to the SwiftUI backend's choice, so the metadata stays visible.
+fn emit_host_radio_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner_pad = "    ".repeat(depth + 1);
+    let mut out = String::new();
+
+    // `// group: ...` comment — preserves the group metadata for a
+    // future structural pass. SAME line-comment injection vector as
+    // the SwiftUI backend, so use the same newline-stripping fix.
+    fn escape_for_line_comment(s: &str) -> String {
+        let mut escaped = String::with_capacity(s.len());
+        for c in s.chars() {
+            match c {
+                '\n' | '\r' => escaped.push(' '),
+                other => escaped.push(other),
+            }
+        }
+        escaped
+    }
+    if let Some(g) = find_string_prop(node, "group") {
+        writeln!(out, "{pad}// group: {}", escape_for_line_comment(g)).unwrap();
+    } else if let Some(slot) = find_slot_ref_prop(node, "group") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_safe_identifier(&camel)
+            .map_err(PipelineEmitError::UnsafeSlotName)?;
+        writeln!(out, "{pad}// group: slot {camel}").unwrap();
+    }
+
+    // `// value: ...` annotation — Qt's RadioButton has no native
+    // `value` slot (ButtonGroup tracks the checkedButton instance, not
+    // an arbitrary value). The author's value: prop carries through as
+    // a payload to the dispatch call below; we also surface it as a
+    // comment so the metadata is visible in the generated source.
+    let value_for_dispatch: String = if let Some(v) = find_string_prop(node, "value") {
+        writeln!(out, "{pad}// value: {}", escape_for_line_comment(v)).unwrap();
+        format!("\"{}\"", escape_qml_string(v))
+    } else if let Some(slot) = find_slot_ref_prop(node, "value") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_safe_identifier(&camel)
+            .map_err(PipelineEmitError::UnsafeSlotName)?;
+        writeln!(out, "{pad}// value: slot {camel}").unwrap();
+        camel
+    } else {
+        "\"\"".to_string()
+    };
+
+    writeln!(out, "{pad}RadioButton {{").unwrap();
+
+    // text: <label>.
+    if let Some(line) = build_label_attribute(node) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+
+    // checked: <slot or literal>.
+    if let Some(line) = build_checked_attribute(node) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+
+    // enabled: !<disabled>.
+    if let Some(line) = build_disabled_to_enabled_attribute(node) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+
+    // onCheckedChanged: positive-transition-gated dispatch.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onSelect") {
+        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        writeln!(
+            out,
+            "{inner_pad}onCheckedChanged: if (checked) {camel}({value_for_dispatch})"
+        )
+        .unwrap();
+    }
+
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Build the `checked: <slot|literal>` attribute used by both
+/// `HostCheckbox` and `HostRadio`. Mirrors `build_open_attribute` for
+/// `HostDialog`'s `visible:` prop — same shape, just a different
+/// destination attribute name.
+fn build_checked_attribute(node: &LayoutNode) -> Option<String> {
+    let prop = node.props.iter().find(|p| p.name == "checked")?;
+    Some(match &prop.value {
+        LayoutPropValue::SlotRef(s) => {
+            let camel = to_camel_case_first_lower(s);
+            if is_safe_identifier(&camel) {
+                format!("checked: {camel}")
+            } else {
+                "checked: false".to_string()
+            }
+        }
+        LayoutPropValue::Keyword(k) if k == "true" || k == "false" => {
+            format!("checked: {k}")
+        }
+        _ => "checked: false".to_string(),
+    })
+}
+
 /// Build the `visible: ...` attribute for a `HostDialog` from its
 /// `open` prop. Same shape as `build_read_only_attribute` — accepts a
 /// slot ref or the `true`/`false` keyword literals. Returns `None`
@@ -948,12 +1166,13 @@ fn build_dialog_title_text_line(node: &LayoutNode) -> Option<String> {
 
 /// True iff any node in the layout tree lowers to a `QtQuick.Controls`
 /// element. Today: `HostButton` → `Button`, `HostScroll` →
-/// `ScrollView`, `HostDialog` → `Popup`. Used to decide whether to
-/// emit `import QtQuick.Controls 2.15` at the top of the file.
+/// `ScrollView`, `HostDialog` → `Popup`, `HostCheckbox` → `CheckBox`,
+/// `HostRadio` → `RadioButton`. Used to decide whether to emit
+/// `import QtQuick.Controls 2.15` at the top of the file.
 fn tree_needs_controls_import(node: &LayoutNode) -> bool {
     matches!(
         node.tag.as_str(),
-        "HostButton" | "HostScroll" | "HostDialog"
+        "HostButton" | "HostScroll" | "HostDialog" | "HostCheckbox" | "HostRadio"
     ) || node.children.iter().any(tree_needs_controls_import)
 }
 
@@ -1478,6 +1697,25 @@ fn find_string_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str
     node.props.iter().find_map(|p| {
         if p.name == prop_name {
             if let LayoutPropValue::String(s) = &p.value {
+                return Some(s.as_str());
+            }
+        }
+        None
+    })
+}
+
+/// Find a prop on `node` whose value is a `SlotRef`. Returns the
+/// slot's original (kebab-case) name; caller is responsible for
+/// camelCasing via `to_camel_case_first_lower` before interpolation.
+///
+/// Added in UI29-2 to support the `HostCheckbox.indeterminate` /
+/// `HostRadio.group` / `HostRadio.value` slot-typed props; existing
+/// emitters inline the match on `LayoutPropValue::SlotRef` so this
+/// helper is purely additive.
+fn find_slot_ref_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::SlotRef(s) = &p.value {
                 return Some(s.as_str());
             }
         }
@@ -3743,6 +3981,287 @@ mod tests {
         assert!(
             result.output.contains("onOpened: show()"),
             "missing onOpened signal call in:\n{}",
+            result.output
+        );
+    }
+
+    // =====================================================================
+    // UI29-2 — HostCheckbox / HostRadio (QtQuick.Controls CheckBox/RadioButton)
+    // =====================================================================
+
+    /// Helper: a one-component layout def rooted at a `HostCheckbox`
+    /// with the given props.
+    fn checkbox_layout(props: Vec<LayoutProp>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostCheckbox".to_string(),
+                part_name: None,
+                props,
+                children: Vec::new(),
+            },
+        }
+    }
+
+    /// Helper: a one-component layout def rooted at a `HostRadio` with
+    /// the given props.
+    fn radio_layout(props: Vec<LayoutProp>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostRadio".to_string(),
+                part_name: None,
+                props,
+                children: Vec::new(),
+            },
+        }
+    }
+
+    /// UI29-2 Qt test 1 — bare `HostCheckbox` emits a `CheckBox { }`
+    /// block. No checked/label/disabled lines because none are bound.
+    #[test]
+    fn host_checkbox_empty_emits_bare_checkbox_block() {
+        let m = component("X", vec![], vec![]);
+        let l = checkbox_layout(vec![]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("CheckBox {"),
+            "expected CheckBox block, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 Qt test 2 — bare `HostCheckbox` triggers the
+    /// QtQuick.Controls 2.15 import (CheckBox lives in Controls 2).
+    #[test]
+    fn host_checkbox_triggers_qtquick_controls_import() {
+        let m = component("X", vec![], vec![]);
+        let l = checkbox_layout(vec![]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("import QtQuick.Controls 2.15"),
+            "expected QtQuick.Controls import, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29-2 Qt test 3 — `checked: slot: c` binds to `checked: c`
+    /// (camelCased bare identifier per QML's property binding syntax).
+    #[test]
+    fn host_checkbox_checked_slot_binds_to_checked_attribute() {
+        let m = component("X", vec![slot("is-checked", SlotType::Bool, true)], vec![]);
+        let l = checkbox_layout(vec![LayoutProp {
+            name: "checked".to_string(),
+            value: LayoutPropValue::SlotRef("is-checked".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("checked: isChecked"),
+            "expected `checked: isChecked` binding, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29-2 Qt test 4 — `disabled: slot: d` produces `enabled: !d`
+    /// (polarity flip — same pattern HostButton uses).
+    #[test]
+    fn host_checkbox_disabled_slot_flips_to_enabled_negated() {
+        let m = component("X", vec![slot("locked", SlotType::Bool, true)], vec![]);
+        let l = checkbox_layout(vec![LayoutProp {
+            name: "disabled".to_string(),
+            value: LayoutPropValue::SlotRef("locked".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("enabled: !locked"),
+            "expected `enabled: !locked`, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29-2 Qt test 5 — `label: "Agree"` binds to `text: "Agree"`.
+    #[test]
+    fn host_checkbox_string_label_binds_to_text_attribute() {
+        let m = component("X", vec![], vec![]);
+        let l = checkbox_layout(vec![LayoutProp {
+            name: "label".to_string(),
+            value: LayoutPropValue::String("Agree".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("text: \"Agree\""),
+            "expected `text: \"Agree\"`, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29-2 Qt test 6 — `onToggle: emit: onChange` wires to Qt's
+    /// `toggled(bool)` signal as `onToggled: change(checked)`. The
+    /// `checked` parameter carries Qt's new-state value to the host.
+    #[test]
+    fn host_checkbox_on_toggle_emits_on_toggled_handler() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit_decl("onChange", vec![EmitParam {
+                name: "checked".to_string(),
+                r#type: EmitPayloadType::Bool,
+            }])],
+        );
+        let l = checkbox_layout(vec![LayoutProp {
+            name: "onToggle".to_string(),
+            value: LayoutPropValue::EmitRef("onChange".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("onToggled: change(checked)"),
+            "expected `onToggled: change(checked)` handler, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29-2 Qt test 7 — `indeterminate: slot: i` adds `tristate:
+    /// true` plus a `checkState:` ternary that resolves to
+    /// `Qt.PartiallyChecked` when the slot is truthy.
+    #[test]
+    fn host_checkbox_indeterminate_slot_adds_tristate_and_check_state() {
+        let m = component("X", vec![slot("is-mixed", SlotType::Bool, true)], vec![]);
+        let l = checkbox_layout(vec![LayoutProp {
+            name: "indeterminate".to_string(),
+            value: LayoutPropValue::SlotRef("is-mixed".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("tristate: true"),
+            "expected `tristate: true`, got:\n{out}"
+        );
+        assert!(
+            out.contains("checkState: isMixed ? Qt.PartiallyChecked"),
+            "expected `checkState:` ternary, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 Qt test 8 — bare `HostRadio` emits a `RadioButton { }`
+    /// block.
+    #[test]
+    fn host_radio_empty_emits_bare_radio_button_block() {
+        let m = component("X", vec![], vec![]);
+        let l = radio_layout(vec![]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("RadioButton {"),
+            "expected RadioButton block, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29-2 Qt test 9 — `group: "flavor"` is preserved as a
+    /// `// group: flavor` line comment ahead of the RadioButton (no
+    /// native QtQuick.Controls grouping in v1; reserved for UI29-2.1).
+    #[test]
+    fn host_radio_group_string_emits_comment() {
+        let m = component("X", vec![], vec![]);
+        let l = radio_layout(vec![LayoutProp {
+            name: "group".to_string(),
+            value: LayoutPropValue::String("flavor".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("// group: flavor"),
+            "expected `// group: flavor` comment, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29-2 Qt test 10 — regression: a `group:` string with a newline
+    /// must not break out of the `//` line comment. Mirrors the
+    /// SwiftUI backend's defense.
+    #[test]
+    fn host_radio_group_with_newline_is_neutralised_in_comment() {
+        let m = component("X", vec![], vec![]);
+        let l = radio_layout(vec![LayoutProp {
+            name: "group".to_string(),
+            value: LayoutPropValue::String("x\nimport Evil 1.0".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let comment_line = result
+            .output
+            .lines()
+            .find(|l| l.contains("// group:"))
+            .expect("group comment present");
+        assert!(
+            comment_line.contains("import Evil"),
+            "newline injection must be neutralised — `import Evil` must \
+             stay on the same line as `// group:`, got line:\n{comment_line}"
+        );
+        assert!(
+            !result.output.contains("\nimport Evil"),
+            "found raw newline + `import Evil` — vector still open:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29-2 Qt test 11 — `onSelect: emit: onPick` + `value:
+    /// "vanilla"` wires to Qt's `checkedChanged()` signal with a
+    /// positive-transition gate. The dispatch fires `pick("vanilla")`
+    /// only when `checked` is true.
+    #[test]
+    fn host_radio_on_select_wires_on_checked_changed_with_positive_gate() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit_decl("onPick", vec![EmitParam {
+                name: "value".to_string(),
+                r#type: EmitPayloadType::Text,
+            }])],
+        );
+        let l = radio_layout(vec![
+            LayoutProp {
+                name: "value".to_string(),
+                value: LayoutPropValue::String("vanilla".to_string()),
+            },
+            LayoutProp {
+                name: "onSelect".to_string(),
+                value: LayoutPropValue::EmitRef("onPick".to_string()),
+            },
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result
+                .output
+                .contains("onCheckedChanged: if (checked) pick(\"vanilla\")"),
+            "expected positive-gated dispatch, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29-2 Qt test 12 — `value: slot: v` flows the camelCased slot
+    /// identifier directly into the dispatch payload.
+    #[test]
+    fn host_radio_value_slot_flows_into_dispatch_payload() {
+        let m = component(
+            "X",
+            vec![slot("radio-value", SlotType::Text, true)],
+            vec![emit_decl("onPick", vec![EmitParam {
+                name: "value".to_string(),
+                r#type: EmitPayloadType::Text,
+            }])],
+        );
+        let l = radio_layout(vec![
+            LayoutProp {
+                name: "value".to_string(),
+                value: LayoutPropValue::SlotRef("radio-value".to_string()),
+            },
+            LayoutProp {
+                name: "onSelect".to_string(),
+                value: LayoutPropValue::EmitRef("onPick".to_string()),
+            },
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("if (checked) pick(radioValue)"),
+            "expected dispatch with bare `radioValue`, got:\n{}",
             result.output
         );
     }

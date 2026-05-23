@@ -4,6 +4,57 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — U29-2-K-qt — `HostCheckbox` + `HostRadio` kernel primitive lowerings
+
+Both new UI29-2 primitives lower to QtQuick.Controls 2.15 widgets,
+inheriting the native a11y role, focus ring, and keyboard semantics
+that composing from QtQuick basics would lose.
+
+`HostCheckbox` -> `CheckBox { ... }`:
+
+- `checked: slot|bool` -> `checked: c` / `checked: true|false`
+- `disabled: slot|bool` -> `enabled: !d` (polarity flip; same as
+  HostButton)
+- `label: str|slot` -> `text: "..."` / `text: <slot>`
+- `onToggle: emit: onX` -> `onToggled: x(checked)` (Qt's
+  `toggled(bool)` signal forwards the new state to the host)
+- `indeterminate: slot: i` -> `tristate: true` + a `checkState: i ?
+  Qt.PartiallyChecked : (checked ? Qt.Checked : Qt.Unchecked)`
+  ternary. Qt's tri-state checkbox is fully wired here (unlike the
+  React backend, which defers tri-state to a follow-up).
+
+`HostRadio` -> `RadioButton { ... }`:
+
+- `checked`, `disabled`, `label` -> same shape as HostCheckbox
+- `onSelect: emit: onX` -> `onCheckedChanged: if (checked)
+  x(<value>)`. Qt's `checkedChanged()` signal fires on every flip;
+  the `if (checked)` gate enforces the kernel-canonical "onSelect =
+  this radio was chosen" semantics (sibling-radio-caused deselects
+  are silently dropped).
+- `value: str|slot` -> `<value>` is interpolated into the dispatch
+  payload; string literals are escaped, slot refs are camelCased and
+  validated.
+- `group: str|slot` -> preserved as a `// group: ...` line comment
+  ahead of the RadioButton. QtQuick.Controls's `ButtonGroup` would
+  give true radio-group behavior, but wiring it requires a
+  structural pass that synthesises a `ButtonGroup` at the enclosing
+  scope; that pass is reserved for UI29-2.1's `RadioGroup` userland
+  component.
+
+Security: same line-comment-injection vector as the SwiftUI
+backend's `// group: ...` was caught and closed inline. A `group:
+"x\nimport Evil"` author string would terminate the `//` line
+comment and inject arbitrary QML on the next line. The fix replaces
+`\n` and `\r` with spaces inside the comment text. A regression test
+asserts the invariant.
+
+12 new tests cover: bare CheckBox/RadioButton blocks, the
+QtQuick.Controls import trigger, controlled `checked` slot,
+`disabled` polarity flip, string label, `onToggle` -> `onToggled`,
+indeterminate tri-state, `// group:` comment, the newline-injection
+regression, `onSelect`'s positive-gated dispatch, and the slot-typed
+`value:` payload flow.
+
 ### Added — U29-1-K-qt — `HostDialog` kernel primitive lowering
 
 Brings the 16th UI29 kernel primitive (`HostDialog`, UI29-1, spec
