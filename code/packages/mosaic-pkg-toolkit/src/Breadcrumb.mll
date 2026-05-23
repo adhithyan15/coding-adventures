@@ -1,28 +1,41 @@
-// Breadcrumb.mll — layout for the Breadcrumb.
+// Breadcrumb.mll — layout for the Breadcrumb (v0.4).
 //
 //   Row [ breadcrumb ]
 //     For (each: slot: crumbs, as: crumb, index: i)
-//       HostButton [ breadcrumb-link ] (label: crumb, onClick: emit: onSelect)
+//       HostLink [ breadcrumb-link ] (
+//         href: "#",
+//         label: crumb,
+//         external: false,
+//         onActivate: emit: onSelect
+//       )
 //
-// v0.1: every crumb renders as a HostButton; the .msl styles them
-// uniformly. The "current location" non-clickable distinction
-// (typically the last crumb) needs either a `For` body that
-// branches on `i == crumbs.length - 1` or a separate `current`
-// slot — both are kernel-doable but add complexity. Punting that
-// to a follow-up; v0.1 ships the uniform-clickable form.
+// v0.4 swaps the per-crumb HostButton for HostLink, the UI29-4
+// kernel primitive promoted from the toolkit. The platform-correct
+// a11y semantics (role="link" on web, Link on SwiftUI/Flutter,
+// rich-text anchor on Qt, Hyperlink on XAML) come from the kernel
+// for free now — no per-backend chrome in the toolkit.
 //
-// Separators (the `/` or `>` between crumbs) are intentionally
-// NOT in the .mll for v0.1 either — they'd require a similar
-// branching-on-index pattern. The .msl can simulate separators
-// via per-link right-margin + a `::after` pseudo-element on
-// platforms that support it.
+// href default `"#"`: the toolkit doesn't know the host's routing
+// scheme, so we ship an inert anchor and let the host's
+// `onActivate` handler resolve the destination from the crumb
+// index. A follow-up could add an `hrefs: list<text>` slot for
+// hosts that want true per-crumb URLs (enabling right-click
+// → Copy Link, middle-click → open-in-new-tab, etc.); v0.4 keeps
+// the interface backwards-compatible.
+//
+// `external: false` tells the kernel this is in-app navigation
+// (no browser-window opening) so the React/Flutter emitters skip
+// the `window.open` / `launchUrl` hint and route through
+// onActivate instead.
 
 layout Breadcrumb {
   Row [ breadcrumb ] {
     For ( each: slot: crumbs , as: crumb , index: i ) {
-      HostButton [ breadcrumb-link ] (
+      HostLink [ breadcrumb-link ] (
+        href : "#" ,
         label : crumb ,
-        onClick : emit: onSelect
+        external : false ,
+        onActivate : emit: onSelect
       )
     }
   }

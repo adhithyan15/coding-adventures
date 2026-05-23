@@ -37,7 +37,7 @@ use std::path::PathBuf;
 const COMPONENTS: &[&str] = &[
     "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
     "Checkbox", "Field", "Input", "ListGroup", "Modal", "Nav",
-    "Radio", "Spinner", "Toast",
+    "NumberInput", "Radio", "Spinner", "Toast", "Tooltip",
 ];
 
 /// Themes shipped per component. Both must compile.
@@ -82,8 +82,8 @@ fn manifest_declares_expected_exports() {
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
     assert_eq!(
-        version, "0.3.0",
-        "[package].version must be 0.3.0 for the UI29-2 Checkbox/Radio rewrite"
+        version, "0.4.0",
+        "[package].version must be 0.4.0 for the UI29-4 HostLink + Tooltip + NumberInput release"
     );
 
     let exports = value
