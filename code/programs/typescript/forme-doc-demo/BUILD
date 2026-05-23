@@ -1,6 +1,14 @@
+cd ../../../packages/typescript/directed-graph && npm ci --quiet
+cd ../../../packages/typescript/cli-builder && npm ci --quiet
+cd ../../../packages/typescript/grammar-tools && npm ci --quiet
+cd ../../../packages/typescript/lexer && npm ci --quiet
+cd ../../../packages/typescript/state-machine && npm ci --quiet
+cd ../../../packages/typescript/toml-lexer && npm ci --quiet
+cd ../../../packages/typescript/parser && npm ci --quiet
+cd ../../../packages/typescript/toml-parser && npm ci --quiet
 cd ../../../packages/typescript/document-ast && npm ci --quiet
-cd ../../../packages/typescript/commonmark-parser && npm ci --quiet
 cd ../../../packages/typescript/document-ast-to-html && npm ci --quiet
+cd ../../../packages/typescript/commonmark-parser && npm ci --quiet
 cd ../../../packages/typescript/forme-doc-frontmatter && npm ci --quiet
 cd ../../../packages/typescript/forme-doc-heading-anchors && npm ci --quiet
 cd ../../../packages/typescript/forme-doc-toc-extractor && npm ci --quiet
