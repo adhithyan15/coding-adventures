@@ -113,6 +113,11 @@ Acceptance:
 - AC phase-delay fixture.
 - Parser tests for supported and unsupported line parameter forms.
 
+Status:
+
+- Parser support and AC phase-shift behavior are on `main`; this slice adds
+  transient delayed-step behavior across Python, TypeScript, and Rust.
+
 ### Phase 4 - Gear-2 / BDF2 Transient Integration
 
 Complete the integration-method set expected by the spec.

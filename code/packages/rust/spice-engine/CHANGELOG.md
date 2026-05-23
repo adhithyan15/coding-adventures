@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add transient analysis stamping for `TransmissionLine` using a lossless
+  Bergeron delay-line companion model, including matched-load delayed step
+  behavior.
 - Add AC analysis stamping for `TransmissionLine` using the lossless two-port
   admittance matrix, including matched-load phase-delay behavior.
 - Add a public `TransmissionLine` element as the parser-facing SPICE `T` card

@@ -2846,11 +2846,31 @@ pub fn transient(
 
     let mut capacitor_states = initial_capacitor_states(circuit, time_step);
     let mut inductor_states = initial_inductor_states(circuit, time_step);
+    let mut line_states = initial_transmission_line_states(circuit);
+    let initial_circuit = circuit_with_transmission_line_companions(circuit, &line_states, 0.0)?;
+    let initial_solution = solve_linear_circuit(
+        &initial_circuit,
+        &capacitor_states,
+        &inductor_states,
+        Some(0.0),
+    )?;
+    update_transmission_line_states(
+        circuit,
+        &initial_solution.node_voltages,
+        &mut line_states,
+        0.0,
+    )?;
     let mut points = Vec::new();
     let mut time = time_step;
     while time <= stop_time + time_step * 1.0e-9 {
-        let linear_solution =
-            solve_linear_circuit(circuit, &capacitor_states, &inductor_states, Some(time))?;
+        let companion_circuit =
+            circuit_with_transmission_line_companions(circuit, &line_states, time)?;
+        let linear_solution = solve_linear_circuit(
+            &companion_circuit,
+            &capacitor_states,
+            &inductor_states,
+            Some(time),
+        )?;
         update_capacitor_states(
             circuit,
             &linear_solution.node_voltages,
@@ -2861,10 +2881,18 @@ pub fn transient(
             &linear_solution.node_voltages,
             &mut inductor_states,
         );
+        let line_currents = update_transmission_line_states(
+            circuit,
+            &linear_solution.node_voltages,
+            &mut line_states,
+            time,
+        )?;
+        let mut branch_currents = linear_solution.branch_currents;
+        branch_currents.extend(line_currents);
         points.push(TransientPoint {
             time,
             node_voltages: linear_solution.node_voltages,
-            branch_currents: linear_solution.branch_currents,
+            branch_currents,
         });
         time += time_step;
     }
@@ -3731,6 +3759,21 @@ struct InductorState {
     name: String,
     previous_current: f64,
     time_step: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct TransmissionLineSample {
+    time: f64,
+    port1_voltage: f64,
+    port1_current: f64,
+    port2_voltage: f64,
+    port2_current: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct TransmissionLineState {
+    name: String,
+    samples: Vec<TransmissionLineSample>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -5322,6 +5365,7 @@ fn validate_reactive_elements(circuit: &Circuit) -> Result<(), SpiceError> {
         match element {
             Element::Capacitor(capacitor) => validate_capacitor(capacitor)?,
             Element::Inductor(inductor) => validate_inductor(inductor)?,
+            Element::TransmissionLine(line) => validate_transmission_line(line)?,
             _ => {}
         }
     }
@@ -5468,6 +5512,34 @@ fn validate_inductor(inductor: &Inductor) -> Result<(), SpiceError> {
     Ok(())
 }
 
+fn validate_transmission_line(line: &TransmissionLine) -> Result<(), SpiceError> {
+    if !line.characteristic_impedance_ohms.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: line.name.clone(),
+            reason: "characteristic impedance must be finite".to_string(),
+        });
+    }
+    if line.characteristic_impedance_ohms <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: line.name.clone(),
+            reason: "characteristic impedance must be positive".to_string(),
+        });
+    }
+    if !line.delay_seconds.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: line.name.clone(),
+            reason: "delay must be finite".to_string(),
+        });
+    }
+    if line.delay_seconds <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: line.name.clone(),
+            reason: "delay must be positive".to_string(),
+        });
+    }
+    Ok(())
+}
+
 fn initial_capacitor_states(circuit: &Circuit, time_step: f64) -> Vec<CapacitorState> {
     circuit
         .elements()
@@ -5496,6 +5568,170 @@ fn initial_inductor_states(circuit: &Circuit, time_step: f64) -> Vec<InductorSta
             _ => None,
         })
         .collect()
+}
+
+fn initial_transmission_line_states(circuit: &Circuit) -> Vec<TransmissionLineState> {
+    circuit
+        .elements()
+        .iter()
+        .filter_map(|element| match element {
+            Element::TransmissionLine(line) => Some(TransmissionLineState {
+                name: line.name.clone(),
+                samples: Vec::new(),
+            }),
+            _ => None,
+        })
+        .collect()
+}
+
+fn transmission_line_state_at(
+    state: Option<&TransmissionLineState>,
+    target_time: f64,
+) -> TransmissionLineSample {
+    let Some(state) = state else {
+        return TransmissionLineSample {
+            time: target_time,
+            port1_voltage: 0.0,
+            port1_current: 0.0,
+            port2_voltage: 0.0,
+            port2_current: 0.0,
+        };
+    };
+    if state.samples.is_empty() || target_time < state.samples[0].time - 1.0e-18 {
+        return TransmissionLineSample {
+            time: target_time,
+            port1_voltage: 0.0,
+            port1_current: 0.0,
+            port2_voltage: 0.0,
+            port2_current: 0.0,
+        };
+    }
+    if target_time <= state.samples[0].time {
+        return state.samples[0].clone();
+    }
+    for window in state.samples.windows(2) {
+        let left = &window[0];
+        let right = &window[1];
+        if target_time <= right.time {
+            let span = right.time - left.time;
+            if span <= 0.0 {
+                return right.clone();
+            }
+            let alpha = (target_time - left.time) / span;
+            return TransmissionLineSample {
+                time: target_time,
+                port1_voltage: left.port1_voltage
+                    + alpha * (right.port1_voltage - left.port1_voltage),
+                port1_current: left.port1_current
+                    + alpha * (right.port1_current - left.port1_current),
+                port2_voltage: left.port2_voltage
+                    + alpha * (right.port2_voltage - left.port2_voltage),
+                port2_current: left.port2_current
+                    + alpha * (right.port2_current - left.port2_current),
+            };
+        }
+    }
+    state.samples[state.samples.len() - 1].clone()
+}
+
+fn transmission_line_history_terms(
+    line: &TransmissionLine,
+    line_states: &[TransmissionLineState],
+    time: f64,
+) -> Result<(f64, f64), SpiceError> {
+    validate_transmission_line(line)?;
+    let delayed = transmission_line_state_at(
+        line_states.iter().find(|state| state.name == line.name),
+        time - line.delay_seconds,
+    );
+    Ok((
+        delayed.port2_voltage / line.characteristic_impedance_ohms + delayed.port2_current,
+        delayed.port1_voltage / line.characteristic_impedance_ohms + delayed.port1_current,
+    ))
+}
+
+fn circuit_with_transmission_line_companions(
+    circuit: &Circuit,
+    line_states: &[TransmissionLineState],
+    time: f64,
+) -> Result<Circuit, SpiceError> {
+    let mut companion = Circuit::new();
+    for element in circuit.elements() {
+        match element {
+            Element::TransmissionLine(line) => {
+                let (history1, history2) =
+                    transmission_line_history_terms(line, line_states, time)?;
+                companion.add(Element::Resistor(Resistor::new(
+                    format!("_T_{}_P1_R", line.name),
+                    line.n1.clone(),
+                    line.n2.clone(),
+                    line.characteristic_impedance_ohms,
+                )));
+                companion.add(Element::Resistor(Resistor::new(
+                    format!("_T_{}_P2_R", line.name),
+                    line.n3.clone(),
+                    line.n4.clone(),
+                    line.characteristic_impedance_ohms,
+                )));
+                companion.add(Element::CurrentSource(CurrentSource::new(
+                    format!("_T_{}_P1_I", line.name),
+                    line.n1.clone(),
+                    line.n2.clone(),
+                    -history1,
+                )));
+                companion.add(Element::CurrentSource(CurrentSource::new(
+                    format!("_T_{}_P2_I", line.name),
+                    line.n3.clone(),
+                    line.n4.clone(),
+                    -history2,
+                )));
+            }
+            _ => companion.add(element.clone()),
+        }
+    }
+    Ok(companion)
+}
+
+fn transmission_line_port_voltage(
+    line: &TransmissionLine,
+    node_voltages: &BTreeMap<String, f64>,
+    first_port: bool,
+) -> f64 {
+    if first_port {
+        return voltage_at(node_voltages, &line.n1) - voltage_at(node_voltages, &line.n2);
+    }
+    voltage_at(node_voltages, &line.n3) - voltage_at(node_voltages, &line.n4)
+}
+
+fn update_transmission_line_states(
+    circuit: &Circuit,
+    node_voltages: &BTreeMap<String, f64>,
+    line_states: &mut [TransmissionLineState],
+    time: f64,
+) -> Result<BTreeMap<String, f64>, SpiceError> {
+    let mut currents = BTreeMap::new();
+    for element in circuit.elements() {
+        let Element::TransmissionLine(line) = element else {
+            continue;
+        };
+        let (history1, history2) = transmission_line_history_terms(line, line_states, time)?;
+        let port1_voltage = transmission_line_port_voltage(line, node_voltages, true);
+        let port2_voltage = transmission_line_port_voltage(line, node_voltages, false);
+        let port1_current = port1_voltage / line.characteristic_impedance_ohms - history1;
+        let port2_current = port2_voltage / line.characteristic_impedance_ohms - history2;
+        currents.insert(format!("I({}:1)", line.name), port1_current);
+        currents.insert(format!("I({}:2)", line.name), port2_current);
+        if let Some(state) = line_states.iter_mut().find(|state| state.name == line.name) {
+            state.samples.push(TransmissionLineSample {
+                time,
+                port1_voltage,
+                port1_current,
+                port2_voltage,
+                port2_current,
+            });
+        }
+    }
+    Ok(currents)
 }
 
 fn update_capacitor_states(

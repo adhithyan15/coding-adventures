@@ -975,6 +975,32 @@ def test_transient_mutual_inductor_couples_secondary_voltage():
     assert isclose(result.points[1].node_voltages["sec"], 2.5, rel_tol=1e-9)
 
 
+def test_transient_transmission_line_delays_matched_step():
+    delay = 1.0e-9
+    c = Circuit()
+    c.add(VoltageSource("VIN", "in", "0", 1.0))
+    c.add(TransmissionLine("T1", "in", "0", "out", "0", 50.0, delay))
+    c.add(Resistor("RL", "out", "0", 50.0))
+
+    result = transient(c, t_stop=2.0 * delay, t_step=delay / 2.0, method="euler")
+
+    assert result.converged
+    assert result.points[0].node_voltages.get("out", 0.0) == pytest.approx(0.0, abs=1e-12)
+    assert result.points[1].node_voltages.get("out", 0.0) == pytest.approx(0.0, abs=1e-12)
+    assert result.points[2].node_voltages["out"] == pytest.approx(1.0, rel=1e-9, abs=1e-9)
+    assert result.points[2].branch_currents["I(T1:2)"] == pytest.approx(-0.02, rel=1e-9)
+
+
+def test_transient_transmission_line_rejects_invalid_parameters():
+    c = Circuit()
+    c.add(VoltageSource("VIN", "in", "0", 1.0))
+    c.add(TransmissionLine("Tbad", "in", "0", "out", "0", 50.0, 0.0))
+    c.add(Resistor("RL", "out", "0", 50.0))
+
+    with pytest.raises(ValueError, match="delay must be positive"):
+        transient(c, t_stop=1.0e-9, t_step=1.0e-9, method="euler")
+
+
 # ---- Transient: TransientResult metadata ----
 
 

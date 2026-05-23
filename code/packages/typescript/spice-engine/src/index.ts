@@ -1852,18 +1852,38 @@ export function transient(
 
   const capacitorStates = initialCapacitorStates(circuit, timeStep);
   const inductorStates = initialInductorStates(circuit, timeStep);
+  const lineStates = initialTransmissionLineStates(circuit);
+  const initialCircuit = circuitWithTransmissionLineCompanions(circuit, lineStates, 0.0);
+  const initialSolution = solveLinearCircuit(
+    initialCircuit,
+    capacitorStates,
+    inductorStates,
+    0.0,
+  );
+  updateTransmissionLineStates(circuit, initialSolution.nodeVoltages, lineStates, 0.0);
   const points: TransientPoint[] = [];
   for (let time = timeStep; time <= stopTime + timeStep * 1.0e-9; time += timeStep) {
+    const companionCircuit = circuitWithTransmissionLineCompanions(circuit, lineStates, time);
     const solution = solveLinearCircuit(
-      circuit,
+      companionCircuit,
       capacitorStates,
       inductorStates,
       time,
     );
     updateCapacitorStates(circuit, solution.nodeVoltages, capacitorStates);
     updateInductorStates(circuit, solution.nodeVoltages, inductorStates);
+    const lineCurrents = updateTransmissionLineStates(
+      circuit,
+      solution.nodeVoltages,
+      lineStates,
+      time,
+    );
+    const branchCurrents = new Map(solution.branchCurrents);
+    for (const [name, current] of lineCurrents) {
+      branchCurrents.set(name, current);
+    }
     points.push(
-      makeTransientPoint(time, solution.nodeVoltages, solution.branchCurrents),
+      makeTransientPoint(time, solution.nodeVoltages, branchCurrents),
     );
   }
   return points;
@@ -2735,6 +2755,17 @@ interface InductorState {
   readonly name: string;
   previousCurrent: number;
   readonly timeStep: number;
+}
+
+interface TransmissionLineState {
+  readonly name: string;
+  samples: Array<{
+    readonly time: number;
+    readonly port1Voltage: number;
+    readonly port1Current: number;
+    readonly port2Voltage: number;
+    readonly port2Current: number;
+  }>;
 }
 
 interface LinearSolution {
@@ -4474,6 +4505,8 @@ function validateReactiveElements(circuit: Circuit): void {
       validateCapacitor(element);
     } else if (element.kind === "inductor") {
       validateInductor(element);
+    } else if (element.kind === "transmission-line") {
+      validateTransmissionLine(element);
     }
   }
 }
@@ -4576,6 +4609,137 @@ function initialInductorStates(
     }
   }
   return states;
+}
+
+function initialTransmissionLineStates(circuit: Circuit): TransmissionLineState[] {
+  return circuit
+    .elements()
+    .filter((element): element is TransmissionLine => element.kind === "transmission-line")
+    .map((element) => ({ name: element.name, samples: [] }));
+}
+
+function validateTransmissionLine(element: TransmissionLine): void {
+  if (!Number.isFinite(element.characteristicImpedanceOhms)) {
+    throw invalidElement(element.name, "characteristic impedance must be finite");
+  }
+  if (element.characteristicImpedanceOhms <= 0.0) {
+    throw invalidElement(element.name, "characteristic impedance must be positive");
+  }
+  if (!Number.isFinite(element.delaySeconds)) {
+    throw invalidElement(element.name, "delay must be finite");
+  }
+  if (element.delaySeconds <= 0.0) {
+    throw invalidElement(element.name, "delay must be positive");
+  }
+}
+
+function transmissionLineStateAt(
+  state: TransmissionLineState | undefined,
+  targetTime: number,
+): {
+  readonly port1Voltage: number;
+  readonly port1Current: number;
+  readonly port2Voltage: number;
+  readonly port2Current: number;
+} {
+  const samples = state?.samples ?? [];
+  if (samples.length === 0 || targetTime < samples[0].time - 1.0e-18) {
+    return { port1Voltage: 0.0, port1Current: 0.0, port2Voltage: 0.0, port2Current: 0.0 };
+  }
+  if (targetTime <= samples[0].time) {
+    return samples[0];
+  }
+  for (let index = 0; index + 1 < samples.length; index += 1) {
+    const left = samples[index];
+    const right = samples[index + 1];
+    if (targetTime <= right.time) {
+      const span = right.time - left.time;
+      if (span <= 0.0) {
+        return right;
+      }
+      const alpha = (targetTime - left.time) / span;
+      return {
+        port1Voltage: left.port1Voltage + alpha * (right.port1Voltage - left.port1Voltage),
+        port1Current: left.port1Current + alpha * (right.port1Current - left.port1Current),
+        port2Voltage: left.port2Voltage + alpha * (right.port2Voltage - left.port2Voltage),
+        port2Current: left.port2Current + alpha * (right.port2Current - left.port2Current),
+      };
+    }
+  }
+  return samples[samples.length - 1];
+}
+
+function transmissionLineHistoryTerms(
+  element: TransmissionLine,
+  lineStates: readonly TransmissionLineState[],
+  time: number,
+): readonly [number, number] {
+  validateTransmissionLine(element);
+  const delayed = transmissionLineStateAt(
+    lineStates.find((state) => state.name === element.name),
+    time - element.delaySeconds,
+  );
+  return [
+    delayed.port2Voltage / element.characteristicImpedanceOhms + delayed.port2Current,
+    delayed.port1Voltage / element.characteristicImpedanceOhms + delayed.port1Current,
+  ];
+}
+
+function circuitWithTransmissionLineCompanions(
+  circuit: Circuit,
+  lineStates: readonly TransmissionLineState[],
+  time: number,
+): Circuit {
+  const companion = new Circuit();
+  for (const element of circuit.elements()) {
+    if (element.kind !== "transmission-line") {
+      companion.add(element);
+      continue;
+    }
+    const [history1, history2] = transmissionLineHistoryTerms(element, lineStates, time);
+    companion.add(resistor(`_T_${element.name}_P1_R`, element.n1, element.n2, element.characteristicImpedanceOhms));
+    companion.add(resistor(`_T_${element.name}_P2_R`, element.n3, element.n4, element.characteristicImpedanceOhms));
+    companion.add(currentSource(`_T_${element.name}_P1_I`, element.n1, element.n2, -history1));
+    companion.add(currentSource(`_T_${element.name}_P2_I`, element.n3, element.n4, -history2));
+  }
+  return companion;
+}
+
+function transmissionLinePortVoltage(
+  element: TransmissionLine,
+  nodeVoltages: ReadonlyMap<string, number>,
+  firstPort: boolean,
+): number {
+  if (firstPort) {
+    return voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2);
+  }
+  return voltageAt(nodeVoltages, element.n3) - voltageAt(nodeVoltages, element.n4);
+}
+
+function updateTransmissionLineStates(
+  circuit: Circuit,
+  nodeVoltages: ReadonlyMap<string, number>,
+  lineStates: TransmissionLineState[],
+  time: number,
+): Map<string, number> {
+  const currents = new Map<string, number>();
+  for (const element of circuit.elements()) {
+    if (element.kind !== "transmission-line") {
+      continue;
+    }
+    const [history1, history2] = transmissionLineHistoryTerms(element, lineStates, time);
+    const port1Voltage = transmissionLinePortVoltage(element, nodeVoltages, true);
+    const port2Voltage = transmissionLinePortVoltage(element, nodeVoltages, false);
+    const port1Current = port1Voltage / element.characteristicImpedanceOhms - history1;
+    const port2Current = port2Voltage / element.characteristicImpedanceOhms - history2;
+    currents.set(`I(${element.name}:1)`, port1Current);
+    currents.set(`I(${element.name}:2)`, port2Current);
+    const state = lineStates.find((candidate) => candidate.name === element.name);
+    if (state !== undefined) {
+      state.samples.push({ time, port1Voltage, port1Current, port2Voltage, port2Current });
+    }
+  }
+  return currents;
 }
 
 function updateCapacitorStates(
