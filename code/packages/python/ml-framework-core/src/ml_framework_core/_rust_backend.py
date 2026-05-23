@@ -1941,3 +1941,100 @@ def gelu_backward_via_rust(
         )
     out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
     return _Tensor(out_floats, target_shape, device=device)
+
+
+def relu_backward_via_rust(
+    grad_data: list[float],
+    input_data: list[float],
+    target_shape: tuple[int, ...],
+    *,
+    device: str | None = None,
+) -> Tensor:
+    """``g * (x > 0)`` as a 3-op composed graph.
+
+    Topology::
+
+        x(0) ──Greater(x, c_zero(1))──> mask_u8(2)        dtype u8
+        Cast(mask_u8, f32)──> mask_f32(3)                  dtype f32
+        Mul(g(4), mask_f32(3))──> output(5)                dtype f32
+
+    3 ops, 6 tensors, 1 constant (full-shape zero tensor of dtype f32).
+
+    matrix-cpu's ``Greater`` op returns a u8 mask (0 or 1), so we
+    have to ``Cast`` it to f32 before the final ``Mul`` (which
+    requires matching dtypes on both operands).  The zero tensor
+    materialises at full shape because matrix-cpu's elementwise ops
+    don't broadcast scalars — same pattern as ReLU's forward
+    ``max(x, 0)`` graph.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "relu_backward_via_rust called but Rust backend is not available; "
+            "callers must check should_use_rust_for_activation() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(grad_data)
+    if len(input_data) != numel:
+        raise RuntimeError(
+            f"relu_backward_via_rust: grad has {numel} cells but input "
+            f"has {len(input_data)} cells — must match"
+        )
+
+    target_shape_list = list(target_shape)
+    grad_bytes = struct.pack(f"<{numel}f", *grad_data)
+    x_bytes = struct.pack(f"<{numel}f", *input_data)
+    # Zero constant of the same shape — bytes are all-zero.
+    zero_bytes_hex = "00" * numel * 4
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    # 0 = x (input)
+                    {"id": 0, "dtype": "f32", "shape": target_shape_list},
+                    # 1 = zero constant (f32, full shape — same as ReLU forward's)
+                    {"id": 1, "dtype": "f32", "shape": target_shape_list},
+                    # 2 = (x > 0) as u8 mask
+                    {"id": 2, "dtype": "u8", "shape": target_shape_list},
+                    # 3 = mask cast to f32 (0.0 or 1.0 per cell)
+                    {"id": 3, "dtype": "f32", "shape": target_shape_list},
+                    # 4 = g (grad input)
+                    {"id": 4, "dtype": "f32", "shape": target_shape_list},
+                    # 5 = g * mask_f32 (output)
+                    {"id": 5, "dtype": "f32", "shape": target_shape_list},
+                ],
+                "inputs": [0, 4],
+                "outputs": [5],
+                "ops": [
+                    {"kind": "Greater", "lhs": 0, "rhs": 1, "output": 2},
+                    {"kind": "Cast", "input": 2, "dtype": "f32", "output": 3},
+                    {"kind": "Mul", "lhs": 4, "rhs": 3, "output": 5},
+                ],
+                "constants": [
+                    {
+                        "tensor_id": 1,
+                        "dtype": "f32",
+                        "shape": target_shape_list,
+                        "bytes_hex": zero_bytes_hex,
+                    }
+                ],
+            },
+            "inputs": [x_bytes.hex(), grad_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_bytes = bytes.fromhex(result["outputs"][0])
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"relu_backward_via_rust: expected {expected_bytes} output "
+            f"bytes ({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+    return _Tensor(out_floats, target_shape, device=device)
