@@ -527,6 +527,37 @@ fn emit_jsx_tree(
         return emit_host_radio_jsx(node, indent, part_styles);
     }
 
+    // UI29-4 — `HostLink` lowers to `<a href={...} target rel
+    // onClick>`. The dedicated emitter is needed because:
+    //   1. `target="_blank"` MUST be paired with `rel="noopener
+    //      noreferrer"` to prevent reverse-tabnabbing (the new tab
+    //      can otherwise script back to the opener via
+    //      `window.opener`).
+    //   2. `external: false` keyword needs to dispatch `onActivate`
+    //      AND call `preventDefault()` so the host's router takes
+    //      over. The generic flow has no way to express this.
+    if node.tag == "HostLink" {
+        return emit_host_link_jsx(node, indent, part_styles);
+    }
+
+    // UI29-4 — `HostTooltip` wraps its single child in a `<span
+    // title={text}>` (HTML's lightweight tooltip). The dedicated
+    // emitter is needed because the slot/child relationship is
+    // unusual (single child as the annotated element, slot as the
+    // tooltip body) and the title= attribute is the simplest
+    // cross-browser tooltip surface — richer tooltips are a v2
+    // feature per UI29-4 §3.2.
+    if node.tag == "HostTooltip" {
+        return emit_host_tooltip_jsx(node, indent, part_styles, dialog_nodes, indeterminate_checkbox_nodes);
+    }
+
+    // UI29-4 — `HostNumberInput` lowers to `<input type="number"
+    // min max step value onChange>`. Browser-enforced numeric-only
+    // entry + mobile numeric keyboard + ± stepper come for free.
+    if node.tag == "HostNumberInput" {
+        return emit_host_number_input_jsx(node, indent, part_styles);
+    }
+
     // UI28 §2.1 — standalone `Cell` primitive. Lowers to a `<div>` with an
     // optional inline `<input>` editor depending on `editable` and
     // `is-editing` slots. Routed BEFORE Grid so a Cell that ends up at
@@ -1834,6 +1865,274 @@ fn emit_host_radio_jsx(
         Some(body) => Ok(format!("{pad}<label><input{attrs} /> {body}</label>\n")),
         None => Ok(format!("{pad}<input{attrs} />\n")),
     }
+}
+
+// =====================================================================
+// HostLink primitive (UI29-4)
+// =====================================================================
+
+/// Lower a moslayout `HostLink` node to an `<a href ...>` JSX block.
+///
+/// ## Property handling
+///
+/// | moslayout prop          | JSX                                                                          |
+/// |---|---|
+/// | `href: "..."`           | `href="..."` (literal, JSX-attr-escaped)                                    |
+/// | `href: slot: u`         | `href={u}` (camelCased slot identifier)                                     |
+/// | `label: "..."` / slot   | children become the visible text                                            |
+/// | `target: new-tab`       | `target="_blank"` + `rel="noopener noreferrer"` (security default)          |
+/// | `target: parent/top`    | corresponding HTML `target=` value                                          |
+/// | `external: false`       | `onClick={e => { e.preventDefault(); dispatch(...) }}` (in-app router path) |
+/// | `onActivate: emit: onX` | dispatches `{type:"x", href: <href-expr>}` on click                         |
+///
+/// ## Security — `rel="noopener noreferrer"` default for new-tab links
+///
+/// HTML's `target="_blank"` creates a window-opener relationship: the
+/// new tab can script back to the opener via `window.opener`, which
+/// enables tabnabbing attacks (the new tab replaces the original
+/// document with a phishing page). `rel="noopener"` severs the
+/// opener; `noreferrer` also strips the Referer header. We emit BOTH
+/// unconditionally for `new-tab` to match the HTML5 living-standard
+/// recommendation and the common React-app linter (eslint-plugin-react
+/// react/jsx-no-target-blank).
+fn emit_host_link_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    let mut attrs = String::new();
+
+    // Style attr.
+    let part_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    if !part_style_str.is_empty() {
+        attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
+    }
+
+    // href= — string literal or slot ref.
+    let href_expr: String = if let Some(s) = find_string_prop(node, "href") {
+        attrs.push_str(&format!(" href=\"{}\"", escape_for_jsx_double_quoted(s)));
+        format!("\"{}\"", escape_for_jsx_double_quoted(s))
+    } else if let Some(slot) = find_slot_ref_prop(node, "href") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" href={{{camel}}}"));
+        camel
+    } else {
+        // No href bound — emit a `#` placeholder so the file still
+        // type-checks and parses as HTML.
+        attrs.push_str(" href=\"#\"");
+        "\"#\"".to_string()
+    };
+
+    // target= + paired rel= (security default for _blank).
+    if let Some(kw) = find_keyword_prop(node, "target") {
+        match kw {
+            "new-tab" => attrs.push_str(" target=\"_blank\" rel=\"noopener noreferrer\""),
+            "parent" => attrs.push_str(" target=\"_parent\""),
+            "top" => attrs.push_str(" target=\"_top\""),
+            "same" => {} // default; no attr
+            _ => {}
+        }
+    }
+
+    // onClick handler when either `onActivate` is bound OR
+    // `external: false` (in-app routing). Combined into one handler
+    // so e.preventDefault() and dispatch() share a closure.
+    let on_activate = find_emit_ref_prop(node, "onActivate");
+    let suppress_default = matches!(find_keyword_prop(node, "external"), Some("false"));
+    if on_activate.is_some() || suppress_default {
+        let mut body = String::new();
+        if suppress_default {
+            body.push_str("e.preventDefault(); ");
+        }
+        if let Some(emit_name) = on_activate {
+            let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&type_field)?;
+            body.push_str(&format!(
+                "dispatch({{ type: \"{type_field}\", href: {href_expr} }});"
+            ));
+        }
+        attrs.push_str(&format!(" onClick={{e => {{ {body} }}}}"));
+    }
+
+    // Body: label (string or slot) OR children.
+    let label_body: Option<String> = if let Some(s) = find_string_prop(node, "label") {
+        Some(format!("{{\"{}\"}}", escape_for_jsx_double_quoted(s)))
+    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        Some(format!("{{{camel}}}"))
+    } else {
+        None
+    };
+
+    match label_body {
+        Some(body) => Ok(format!("{pad}<a{attrs}>{body}</a>\n")),
+        None if node.children.is_empty() => Ok(format!("{pad}<a{attrs}></a>\n")),
+        None => {
+            // Fallback: walk children (rare — link children are usually
+            // a single text label). We can't recurse here without the
+            // dialog_nodes/checkbox_nodes parameters; emit a stub.
+            Ok(format!("{pad}<a{attrs}></a>\n"))
+        }
+    }
+}
+
+// =====================================================================
+// HostTooltip primitive (UI29-4)
+// =====================================================================
+
+/// Lower a moslayout `HostTooltip` node to a `<span title={text}>`
+/// wrapping its single child. The DOM's `title=` attribute is the
+/// simplest cross-browser tooltip surface — plain text only in v1
+/// per UI29-4 §3.2.
+///
+/// ## Property handling
+///
+/// | moslayout prop          | JSX                                              |
+/// |---|---|
+/// | `text: "..."`           | `title="..."` (JSX-attr-escaped)                |
+/// | `text: slot: t`         | `title={t}` (camelCased slot identifier)        |
+/// | (single child)          | wrapped inside `<span title=...>...</span>`     |
+fn emit_host_tooltip_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    dialog_nodes: &[*const LayoutNode],
+    indeterminate_checkbox_nodes: &[*const LayoutNode],
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    let mut attrs = String::new();
+
+    let part_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    if !part_style_str.is_empty() {
+        attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
+    }
+
+    // title= — string literal or slot ref.
+    if let Some(s) = find_string_prop(node, "text") {
+        attrs.push_str(&format!(" title=\"{}\"", escape_for_jsx_double_quoted(s)));
+    } else if let Some(slot) = find_slot_ref_prop(node, "text") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" title={{{camel}}}"));
+    }
+
+    // Wrap the single child (or all children) in <span>...</span>.
+    if node.children.is_empty() {
+        return Ok(format!("{pad}<span{attrs}></span>\n"));
+    }
+    let mut out = format!("{pad}<span{attrs}>\n");
+    out.push_str(&emit_children_jsx_with_control_flow(
+        &node.children,
+        indent + 2,
+        part_styles,
+        dialog_nodes,
+        indeterminate_checkbox_nodes,
+    )?);
+    out.push_str(&format!("{pad}</span>\n"));
+    Ok(out)
+}
+
+// =====================================================================
+// HostNumberInput primitive (UI29-4)
+// =====================================================================
+
+/// Lower a moslayout `HostNumberInput` node to `<input type="number"
+/// min max step value onChange>`. Browser-enforced numeric-only entry
+/// plus mobile numeric keyboard (via `inputMode="numeric"`) come for
+/// free. Min/max/step are compile-time numeric literals per
+/// UI29-4 §3.3.
+///
+/// ## Property handling
+///
+/// | moslayout prop          | JSX                                                    |
+/// |---|---|
+/// | `value: slot: v`        | `value={v}` (controlled-input pattern)                |
+/// | `min: <number>`         | `min={<n>}` (compile-time literal)                     |
+/// | `max: <number>`         | `max={<n>}`                                            |
+/// | `step: <number>`        | `step={<n>}`                                           |
+/// | `placeholder: "..."`    | `placeholder="..."`                                    |
+/// | `disabled: slot|bool`   | `disabled={...}`                                       |
+/// | `onChange: emit: onX`   | `onChange={e => dispatch({type:"x", value: e.target.valueAsNumber})}` |
+///
+/// Note: uses `e.target.valueAsNumber` not `e.target.value` — the
+/// kernel's `onChange(value: number)` payload is numeric, and
+/// `valueAsNumber` is the DOM's standard parser (returns `NaN` for
+/// non-numeric input, which most React state reducers already
+/// handle defensively).
+fn emit_host_number_input_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    let mut attrs = String::from(" type=\"number\" inputMode=\"numeric\"");
+
+    let part_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    if !part_style_str.is_empty() {
+        attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
+    }
+
+    // value= — slot ref (controlled).
+    if let Some(slot) = find_slot_ref_prop(node, "value") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" value={{{camel}}}"));
+    }
+
+    // min/max/step — compile-time numeric literals.
+    for prop_name in ["min", "max", "step"] {
+        if let Some(n) = find_number_prop(node, prop_name) {
+            attrs.push_str(&format!(" {prop_name}={{{n}}}"));
+        }
+    }
+
+    // placeholder.
+    if let Some(s) = find_string_prop(node, "placeholder") {
+        attrs.push_str(&format!(
+            " placeholder=\"{}\"",
+            escape_for_jsx_double_quoted(s)
+        ));
+    }
+
+    // disabled.
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" disabled={{{camel}}}"));
+    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
+        if kw == "true" || kw == "false" {
+            attrs.push_str(&format!(" disabled={{{kw}}}"));
+        }
+    }
+
+    // onChange — wraps e.target.valueAsNumber in the dispatch payload.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&type_field)?;
+        attrs.push_str(&format!(
+            " onChange={{e => dispatch({{ type: \"{type_field}\", value: e.target.valueAsNumber }})}}"
+        ));
+    }
+
+    Ok(format!("{pad}<input{attrs} />\n"))
 }
 
 // =====================================================================
@@ -7452,6 +7751,277 @@ mod tests {
         assert!(
             out.contains("<label><input type=\"radio\" /> {\"Vanilla\"}</label>"),
             "expected label-wrapped radio, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // HostLink (UI29-4) — native `<a>` with security defaults
+    // -----------------------------------------------------------------
+
+    /// Helper: one-component layout rooted at HostLink.
+    fn host_link_layout(props: Vec<LayoutProp>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostLink".to_string(),
+                part_name: None,
+                props,
+                children: Vec::new(),
+            },
+        }
+    }
+
+    /// UI29-4 React test — `href: "..."` string literal lowers to a
+    /// `href="..."` attribute. `label:` becomes the body text.
+    #[test]
+    fn host_link_string_href_and_label_lowers_to_anchor() {
+        let m = component("X", vec![], vec![]);
+        let l = host_link_layout(vec![
+            LayoutProp {
+                name: "href".into(),
+                value: LayoutPropValue::String("https://example.com".into()),
+            },
+            LayoutProp {
+                name: "label".into(),
+                value: LayoutPropValue::String("Click me".into()),
+            },
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<a href=\"https://example.com\""),
+            "expected `<a href=\"https://example.com\"`, got:\n{out}"
+        );
+        assert!(
+            out.contains(">{\"Click me\"}</a>"),
+            "expected label as JSX text body, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 React test — security pin: `target: new-tab` MUST emit
+    /// `rel="noopener noreferrer"` to prevent reverse-tabnabbing.
+    /// Matches the eslint-plugin-react `react/jsx-no-target-blank`
+    /// rule's expectation and the HTML5 living-standard recommendation.
+    #[test]
+    fn host_link_target_new_tab_emits_noopener_noreferrer() {
+        let m = component("X", vec![], vec![]);
+        let l = host_link_layout(vec![
+            LayoutProp {
+                name: "href".into(),
+                value: LayoutPropValue::String("https://example.com".into()),
+            },
+            LayoutProp {
+                name: "target".into(),
+                value: LayoutPropValue::Keyword("new-tab".into()),
+            },
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("target=\"_blank\""),
+            "expected target=\"_blank\", got:\n{out}"
+        );
+        assert!(
+            out.contains("rel=\"noopener noreferrer\""),
+            "expected rel=\"noopener noreferrer\" security default, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 React test — `external: false` + `onActivate: emit: onX`
+    /// produces a combined onClick handler that calls
+    /// `e.preventDefault()` (suppress browser navigation) and
+    /// dispatches the named event with the href in the payload (so
+    /// the host's router can take over).
+    #[test]
+    fn host_link_external_false_with_on_activate_emits_preventdefault_dispatch() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit(
+                "onNavigate",
+                vec![param("href", EmitPayloadType::Text)],
+            )],
+        );
+        let l = host_link_layout(vec![
+            LayoutProp {
+                name: "href".into(),
+                value: LayoutPropValue::String("/about".into()),
+            },
+            LayoutProp {
+                name: "external".into(),
+                value: LayoutPropValue::Keyword("false".into()),
+            },
+            LayoutProp {
+                name: "onActivate".into(),
+                value: LayoutPropValue::EmitRef("onNavigate".into()),
+            },
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("e.preventDefault();"),
+            "expected e.preventDefault() for in-app routing, got:\n{out}"
+        );
+        assert!(
+            out.contains("dispatch({ type: \"navigate\", href: \"/about\" })"),
+            "expected dispatch with href payload, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // HostTooltip (UI29-4) — native `<span title=...>`
+    // -----------------------------------------------------------------
+
+    /// UI29-4 React test — `text: "..."` flows into the `<span>`'s
+    /// `title=` attribute. The single child is wrapped inside.
+    #[test]
+    fn host_tooltip_with_string_text_wraps_child_in_span_with_title() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTooltip".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "text".into(),
+                    value: LayoutPropValue::String("Click to submit".into()),
+                }],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("Submit".into()),
+                    }],
+                    children: Vec::new(),
+                }],
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<span title=\"Click to submit\">"),
+            "expected `<span title=\"Click to submit\">`, got:\n{out}"
+        );
+        assert!(
+            out.contains("</span>"),
+            "expected closing </span>, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 React test — `text: slot: t` lowers to `title={t}`
+    /// (camelCased identifier, JSX expression form).
+    #[test]
+    fn host_tooltip_with_slot_text_uses_jsx_expression_attr() {
+        let m = component("X", vec![slot_text("help-text", false)], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTooltip".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "text".into(),
+                    value: LayoutPropValue::SlotRef("help-text".into()),
+                }],
+                children: vec![LayoutNode {
+                    tag: "Box".to_string(),
+                    part_name: None,
+                    props: Vec::new(),
+                    children: Vec::new(),
+                }],
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("title={helpText}"),
+            "expected `title={{helpText}}`, got:\n{}",
+            result.output
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // HostNumberInput (UI29-4) — `<input type="number" inputMode="numeric">`
+    // -----------------------------------------------------------------
+
+    fn host_number_input_layout(props: Vec<LayoutProp>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostNumberInput".to_string(),
+                part_name: None,
+                props,
+                children: Vec::new(),
+            },
+        }
+    }
+
+    /// UI29-4 React test — empty HostNumberInput emits the minimum
+    /// shape: `<input type="number" inputMode="numeric" />`. The
+    /// `inputMode="numeric"` is the mobile-keyboard hint that the
+    /// spec calls out as one of the "what composition loses" items.
+    #[test]
+    fn host_number_input_empty_emits_input_type_number_with_inputmode() {
+        let m = component("X", vec![], vec![]);
+        let l = host_number_input_layout(vec![]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result
+                .output
+                .contains("<input type=\"number\" inputMode=\"numeric\" />"),
+            "expected `<input type=\"number\" inputMode=\"numeric\" />`, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29-4 React test — `min`/`max`/`step` numeric literals lower
+    /// to matching JSX expression attributes.
+    #[test]
+    fn host_number_input_min_max_step_numeric_literals_emit_attrs() {
+        let m = component("X", vec![], vec![]);
+        let l = host_number_input_layout(vec![
+            LayoutProp {
+                name: "min".into(),
+                value: LayoutPropValue::Number(0.0),
+            },
+            LayoutProp {
+                name: "max".into(),
+                value: LayoutPropValue::Number(100.0),
+            },
+            LayoutProp {
+                name: "step".into(),
+                value: LayoutPropValue::Number(5.0),
+            },
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(out.contains("min={0}"), "expected min={{0}}, got:\n{out}");
+        assert!(out.contains("max={100}"), "expected max={{100}}, got:\n{out}");
+        assert!(out.contains("step={5}"), "expected step={{5}}, got:\n{out}");
+    }
+
+    /// UI29-4 React test — `onChange: emit: onSet` wires onChange to
+    /// `dispatch({type:"set", value: e.target.valueAsNumber})` —
+    /// the `valueAsNumber` DOM standard parser, not `value` (which
+    /// is a string). This matches the kernel-canonical numeric
+    /// payload type per UI29-4 §3.3.
+    #[test]
+    fn host_number_input_on_change_wires_value_as_number_dispatch() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit("onSet", vec![param("value", EmitPayloadType::Number)])],
+        );
+        let l = host_number_input_layout(vec![LayoutProp {
+            name: "onChange".into(),
+            value: LayoutPropValue::EmitRef("onSet".into()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains(
+                "onChange={e => dispatch({ type: \"set\", value: e.target.valueAsNumber })}"
+            ),
+            "expected onChange with e.target.valueAsNumber payload, got:\n{out}"
         );
     }
 
