@@ -1413,6 +1413,66 @@ impl ToolAuditSupervisorDrainRunReport {
         self.host_decision_kind().has_multiple_actions()
     }
 
+    /// Return how many exact host-decision actions are active.
+    pub fn host_decision_action_count(&self) -> usize {
+        [
+            self.host_decision_schedules_continuation(),
+            self.host_decision_routes_follow_up(),
+            self.host_decision_investigates_plan_drift(),
+            self.host_decision_investigates_count_drift(),
+            self.host_decision_investigates_run_integrity(),
+        ]
+        .into_iter()
+        .filter(|needs_action| *needs_action)
+        .count()
+    }
+
+    /// Return whether exactly one host-decision action is active.
+    pub fn host_decision_has_single_action(&self) -> bool {
+        self.host_decision_action_count() == 1
+    }
+
+    /// Classify the dashboard lane for the next host decision.
+    pub fn host_decision_lane(&self) -> ToolAuditSupervisorDrainHostDecisionLane {
+        self.host_decision_kind().lane()
+    }
+
+    /// Return the stable host-decision lane label.
+    pub fn host_decision_lane_label(&self) -> &'static str {
+        self.host_decision_lane().as_str()
+    }
+
+    /// Return whether the host-decision lane label parses back to the typed lane.
+    pub fn host_decision_lane_label_matches_kind(&self) -> bool {
+        ToolAuditSupervisorDrainHostDecisionLane::from_label(self.host_decision_lane_label())
+            == Some(self.host_decision_lane())
+    }
+
+    /// Return whether the host decision belongs on the terminal dashboard lane.
+    pub fn host_decision_uses_terminal_lane(&self) -> bool {
+        self.host_decision_lane().is_terminal()
+    }
+
+    /// Return whether the host decision belongs on the scheduler dashboard lane.
+    pub fn host_decision_uses_scheduler_lane(&self) -> bool {
+        self.host_decision_lane().is_scheduler()
+    }
+
+    /// Return whether the host decision belongs on the follow-up dashboard lane.
+    pub fn host_decision_uses_follow_up_lane(&self) -> bool {
+        self.host_decision_lane().is_follow_up()
+    }
+
+    /// Return whether the host decision belongs on the investigation dashboard lane.
+    pub fn host_decision_uses_investigation_lane(&self) -> bool {
+        self.host_decision_lane().is_investigation()
+    }
+
+    /// Return whether the host decision spans multiple dashboard lanes.
+    pub fn host_decision_uses_mixed_lane(&self) -> bool {
+        self.host_decision_lane().is_mixed()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -1715,6 +1775,16 @@ impl ToolAuditSupervisorDrainRunReport {
             host_decision_investigates_run_integrity: self
                 .host_decision_investigates_run_integrity(),
             host_decision_has_multiple_actions: self.host_decision_has_multiple_actions(),
+            host_decision_action_count: self.host_decision_action_count(),
+            host_decision_has_single_action: self.host_decision_has_single_action(),
+            host_decision_lane: self.host_decision_lane(),
+            host_decision_lane_label: self.host_decision_lane_label(),
+            host_decision_lane_label_matches_kind: self.host_decision_lane_label_matches_kind(),
+            host_decision_uses_terminal_lane: self.host_decision_uses_terminal_lane(),
+            host_decision_uses_scheduler_lane: self.host_decision_uses_scheduler_lane(),
+            host_decision_uses_follow_up_lane: self.host_decision_uses_follow_up_lane(),
+            host_decision_uses_investigation_lane: self.host_decision_uses_investigation_lane(),
+            host_decision_uses_mixed_lane: self.host_decision_uses_mixed_lane(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -2390,6 +2460,26 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_decision_investigates_run_integrity: bool,
     /// Whether multiple host decisions are active.
     pub host_decision_has_multiple_actions: bool,
+    /// Number of exact host-decision actions active.
+    pub host_decision_action_count: usize,
+    /// Whether exactly one host-decision action is active.
+    pub host_decision_has_single_action: bool,
+    /// Stable dashboard lane for the next host decision.
+    pub host_decision_lane: ToolAuditSupervisorDrainHostDecisionLane,
+    /// Stable host-decision lane label for dashboard grouping.
+    pub host_decision_lane_label: &'static str,
+    /// Whether the host-decision lane label parses back to the typed lane.
+    pub host_decision_lane_label_matches_kind: bool,
+    /// Whether the host decision belongs on the terminal dashboard lane.
+    pub host_decision_uses_terminal_lane: bool,
+    /// Whether the host decision belongs on the scheduler dashboard lane.
+    pub host_decision_uses_scheduler_lane: bool,
+    /// Whether the host decision belongs on the follow-up dashboard lane.
+    pub host_decision_uses_follow_up_lane: bool,
+    /// Whether the host decision belongs on the investigation dashboard lane.
+    pub host_decision_uses_investigation_lane: bool,
+    /// Whether the host decision spans multiple dashboard lanes.
+    pub host_decision_uses_mixed_lane: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -3052,6 +3142,56 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether multiple host decisions are active.
     pub fn host_decision_has_multiple_actions(&self) -> bool {
         self.host_decision_has_multiple_actions
+    }
+
+    /// Return how many exact host-decision actions are active.
+    pub fn host_decision_action_count(&self) -> usize {
+        self.host_decision_action_count
+    }
+
+    /// Return whether exactly one host-decision action is active.
+    pub fn host_decision_has_single_action(&self) -> bool {
+        self.host_decision_has_single_action
+    }
+
+    /// Return the typed host-decision dashboard lane.
+    pub fn host_decision_lane(&self) -> ToolAuditSupervisorDrainHostDecisionLane {
+        self.host_decision_lane
+    }
+
+    /// Return the stable host-decision lane label.
+    pub fn host_decision_lane_label(&self) -> &'static str {
+        self.host_decision_lane_label
+    }
+
+    /// Return whether the host-decision lane label parses back to the typed lane.
+    pub fn host_decision_lane_label_matches_kind(&self) -> bool {
+        self.host_decision_lane_label_matches_kind
+    }
+
+    /// Return whether the host decision belongs on the terminal dashboard lane.
+    pub fn host_decision_uses_terminal_lane(&self) -> bool {
+        self.host_decision_uses_terminal_lane
+    }
+
+    /// Return whether the host decision belongs on the scheduler dashboard lane.
+    pub fn host_decision_uses_scheduler_lane(&self) -> bool {
+        self.host_decision_uses_scheduler_lane
+    }
+
+    /// Return whether the host decision belongs on the follow-up dashboard lane.
+    pub fn host_decision_uses_follow_up_lane(&self) -> bool {
+        self.host_decision_uses_follow_up_lane
+    }
+
+    /// Return whether the host decision belongs on the investigation dashboard lane.
+    pub fn host_decision_uses_investigation_lane(&self) -> bool {
+        self.host_decision_uses_investigation_lane
+    }
+
+    /// Return whether the host decision spans multiple dashboard lanes.
+    pub fn host_decision_uses_mixed_lane(&self) -> bool {
+        self.host_decision_uses_mixed_lane
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -4214,9 +4354,100 @@ impl ToolAuditSupervisorDrainHostDecisionKind {
     pub fn has_multiple_actions(self) -> bool {
         matches!(self, Self::MultipleActions)
     }
+
+    /// Return the dashboard lane for this host decision.
+    pub fn lane(self) -> ToolAuditSupervisorDrainHostDecisionLane {
+        ToolAuditSupervisorDrainHostDecisionLane::from_decision_kind(self)
+    }
 }
 
 impl Display for ToolAuditSupervisorDrainHostDecisionKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable dashboard lane for host drain decisions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHostDecisionLane {
+    /// Terminal-ready runs that need no host action.
+    Terminal,
+    /// Scheduler work such as continuation.
+    Scheduler,
+    /// Follow-up routing work.
+    FollowUp,
+    /// Investigation work for drift or host-log integrity.
+    Investigation,
+    /// Multiple lanes are active and should be grouped together.
+    Mixed,
+}
+
+impl ToolAuditSupervisorDrainHostDecisionLane {
+    /// Classify the dashboard lane from a host decision.
+    pub fn from_decision_kind(decision: ToolAuditSupervisorDrainHostDecisionKind) -> Self {
+        match decision {
+            ToolAuditSupervisorDrainHostDecisionKind::TerminalReady => Self::Terminal,
+            ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation => Self::Scheduler,
+            ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp => Self::FollowUp,
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigatePlanDrift
+            | ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift
+            | ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity => {
+                Self::Investigation
+            }
+            ToolAuditSupervisorDrainHostDecisionKind::MultipleActions => Self::Mixed,
+        }
+    }
+
+    /// Return a stable snake_case label for logs and dashboard grouping.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Terminal => "terminal",
+            Self::Scheduler => "scheduler",
+            Self::FollowUp => "follow_up",
+            Self::Investigation => "investigation",
+            Self::Mixed => "mixed",
+        }
+    }
+
+    /// Parse a stable snake_case host-decision lane label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "terminal" => Some(Self::Terminal),
+            "scheduler" => Some(Self::Scheduler),
+            "follow_up" => Some(Self::FollowUp),
+            "investigation" => Some(Self::Investigation),
+            "mixed" => Some(Self::Mixed),
+            _ => None,
+        }
+    }
+
+    /// Return whether this is the terminal dashboard lane.
+    pub fn is_terminal(self) -> bool {
+        matches!(self, Self::Terminal)
+    }
+
+    /// Return whether this is the scheduler dashboard lane.
+    pub fn is_scheduler(self) -> bool {
+        matches!(self, Self::Scheduler)
+    }
+
+    /// Return whether this is the follow-up dashboard lane.
+    pub fn is_follow_up(self) -> bool {
+        matches!(self, Self::FollowUp)
+    }
+
+    /// Return whether this is the investigation dashboard lane.
+    pub fn is_investigation(self) -> bool {
+        matches!(self, Self::Investigation)
+    }
+
+    /// Return whether this is the mixed dashboard lane.
+    pub fn is_mixed(self) -> bool {
+        matches!(self, Self::Mixed)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostDecisionLane {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -7009,6 +7240,115 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_decision_lanes_are_stable_for_dashboards() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::TerminalReady,
+                ToolAuditSupervisorDrainHostDecisionLane::Terminal,
+                "terminal",
+                true,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation,
+                ToolAuditSupervisorDrainHostDecisionLane::Scheduler,
+                "scheduler",
+                false,
+                true,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp,
+                ToolAuditSupervisorDrainHostDecisionLane::FollowUp,
+                "follow_up",
+                false,
+                false,
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigatePlanDrift,
+                ToolAuditSupervisorDrainHostDecisionLane::Investigation,
+                "investigation",
+                false,
+                false,
+                false,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift,
+                ToolAuditSupervisorDrainHostDecisionLane::Investigation,
+                "investigation",
+                false,
+                false,
+                false,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity,
+                ToolAuditSupervisorDrainHostDecisionLane::Investigation,
+                "investigation",
+                false,
+                false,
+                false,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::MultipleActions,
+                ToolAuditSupervisorDrainHostDecisionLane::Mixed,
+                "mixed",
+                false,
+                false,
+                false,
+                false,
+                true,
+            ),
+        ];
+
+        for (
+            decision,
+            lane,
+            label,
+            is_terminal,
+            is_scheduler,
+            is_follow_up,
+            is_investigation,
+            is_mixed,
+        ) in cases
+        {
+            assert_eq!(decision.lane(), lane);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostDecisionLane::from_decision_kind(decision),
+                lane
+            );
+            assert_eq!(lane.as_str(), label);
+            assert_eq!(lane.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostDecisionLane::from_label(label),
+                Some(lane)
+            );
+            assert_eq!(lane.is_terminal(), is_terminal);
+            assert_eq!(lane.is_scheduler(), is_scheduler);
+            assert_eq!(lane.is_follow_up(), is_follow_up);
+            assert_eq!(lane.is_investigation(), is_investigation);
+            assert_eq!(lane.is_mixed(), is_mixed);
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainHostDecisionLane::from_label("parking_lot"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_report_exposes_outcome_label_and_action_flag() {
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(store
@@ -8237,6 +8577,19 @@ mod tests {
         assert!(!idle_report.host_decision_investigates_count_drift());
         assert!(!idle_report.host_decision_investigates_run_integrity());
         assert!(!idle_report.host_decision_has_multiple_actions());
+        assert_eq!(idle_report.host_decision_action_count(), 0);
+        assert!(!idle_report.host_decision_has_single_action());
+        assert_eq!(
+            idle_report.host_decision_lane(),
+            ToolAuditSupervisorDrainHostDecisionLane::Terminal
+        );
+        assert_eq!(idle_report.host_decision_lane_label(), "terminal");
+        assert!(idle_report.host_decision_lane_label_matches_kind());
+        assert!(idle_report.host_decision_uses_terminal_lane());
+        assert!(!idle_report.host_decision_uses_scheduler_lane());
+        assert!(!idle_report.host_decision_uses_follow_up_lane());
+        assert!(!idle_report.host_decision_uses_investigation_lane());
+        assert!(!idle_report.host_decision_uses_mixed_lane());
         assert!(!idle_summary.requires_host_decision);
         assert!(!idle_summary.requires_host_decision());
         assert_eq!(
@@ -8265,6 +8618,32 @@ mod tests {
         assert!(!idle_summary.host_decision_investigates_run_integrity());
         assert!(!idle_summary.host_decision_has_multiple_actions);
         assert!(!idle_summary.host_decision_has_multiple_actions());
+        assert_eq!(idle_summary.host_decision_action_count, 0);
+        assert_eq!(idle_summary.host_decision_action_count(), 0);
+        assert!(!idle_summary.host_decision_has_single_action);
+        assert!(!idle_summary.host_decision_has_single_action());
+        assert_eq!(
+            idle_summary.host_decision_lane,
+            ToolAuditSupervisorDrainHostDecisionLane::Terminal
+        );
+        assert_eq!(
+            idle_summary.host_decision_lane(),
+            ToolAuditSupervisorDrainHostDecisionLane::Terminal
+        );
+        assert_eq!(idle_summary.host_decision_lane_label, "terminal");
+        assert_eq!(idle_summary.host_decision_lane_label(), "terminal");
+        assert!(idle_summary.host_decision_lane_label_matches_kind);
+        assert!(idle_summary.host_decision_lane_label_matches_kind());
+        assert!(idle_summary.host_decision_uses_terminal_lane);
+        assert!(idle_summary.host_decision_uses_terminal_lane());
+        assert!(!idle_summary.host_decision_uses_scheduler_lane);
+        assert!(!idle_summary.host_decision_uses_scheduler_lane());
+        assert!(!idle_summary.host_decision_uses_follow_up_lane);
+        assert!(!idle_summary.host_decision_uses_follow_up_lane());
+        assert!(!idle_summary.host_decision_uses_investigation_lane);
+        assert!(!idle_summary.host_decision_uses_investigation_lane());
+        assert!(!idle_summary.host_decision_uses_mixed_lane);
+        assert!(!idle_summary.host_decision_uses_mixed_lane());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -8297,6 +8676,18 @@ mod tests {
         assert!(!continuation_report.host_decision_investigates_count_drift());
         assert!(!continuation_report.host_decision_investigates_run_integrity());
         assert!(!continuation_report.host_decision_has_multiple_actions());
+        assert_eq!(continuation_report.host_decision_action_count(), 1);
+        assert!(continuation_report.host_decision_has_single_action());
+        assert_eq!(
+            continuation_report.host_decision_lane(),
+            ToolAuditSupervisorDrainHostDecisionLane::Scheduler
+        );
+        assert_eq!(continuation_report.host_decision_lane_label(), "scheduler");
+        assert!(!continuation_report.host_decision_uses_terminal_lane());
+        assert!(continuation_report.host_decision_uses_scheduler_lane());
+        assert!(!continuation_report.host_decision_uses_follow_up_lane());
+        assert!(!continuation_report.host_decision_uses_investigation_lane());
+        assert!(!continuation_report.host_decision_uses_mixed_lane());
         assert!(continuation_summary.requires_host_decision);
         assert_eq!(
             continuation_summary.host_decision_kind(),
@@ -8310,6 +8701,15 @@ mod tests {
         assert!(!continuation_summary.host_decision_routes_follow_up());
         assert!(!continuation_summary.host_decision_investigates_run_integrity());
         assert!(!continuation_summary.host_decision_has_multiple_actions());
+        assert_eq!(continuation_summary.host_decision_action_count(), 1);
+        assert!(continuation_summary.host_decision_has_single_action());
+        assert_eq!(
+            continuation_summary.host_decision_lane(),
+            ToolAuditSupervisorDrainHostDecisionLane::Scheduler
+        );
+        assert_eq!(continuation_summary.host_decision_lane_label(), "scheduler");
+        assert!(continuation_summary.host_decision_uses_scheduler_lane());
+        assert!(!continuation_summary.host_decision_uses_mixed_lane());
 
         let follow_up_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(follow_up_store
@@ -8329,12 +8729,27 @@ mod tests {
         assert!(follow_up_report.host_decision_routes_follow_up());
         assert!(!follow_up_report.host_decision_schedules_continuation());
         assert!(!follow_up_report.host_decision_has_multiple_actions());
+        assert_eq!(follow_up_report.host_decision_action_count(), 1);
+        assert!(follow_up_report.host_decision_has_single_action());
+        assert_eq!(
+            follow_up_report.host_decision_lane(),
+            ToolAuditSupervisorDrainHostDecisionLane::FollowUp
+        );
+        assert_eq!(follow_up_report.host_decision_lane_label(), "follow_up");
+        assert!(follow_up_report.host_decision_uses_follow_up_lane());
         assert_eq!(
             follow_up_summary.host_decision_kind(),
             ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp
         );
         assert!(follow_up_summary.host_decision_routes_follow_up());
         assert!(!follow_up_summary.host_decision_schedules_continuation());
+        assert_eq!(follow_up_summary.host_decision_action_count(), 1);
+        assert!(follow_up_summary.host_decision_has_single_action());
+        assert_eq!(
+            follow_up_summary.host_decision_lane(),
+            ToolAuditSupervisorDrainHostDecisionLane::FollowUp
+        );
+        assert!(follow_up_summary.host_decision_uses_follow_up_lane());
 
         let mut integrity_report = continuation_report;
         integrity_report.drain.ticks[0].replay.next_checkpoint =
@@ -8351,6 +8766,15 @@ mod tests {
         assert!(!integrity_report.host_decision_investigates_count_drift());
         assert!(integrity_report.host_decision_investigates_run_integrity());
         assert!(integrity_report.host_decision_has_multiple_actions());
+        assert_eq!(integrity_report.host_decision_action_count(), 2);
+        assert!(!integrity_report.host_decision_has_single_action());
+        assert_eq!(
+            integrity_report.host_decision_lane(),
+            ToolAuditSupervisorDrainHostDecisionLane::Mixed
+        );
+        assert_eq!(integrity_report.host_decision_lane_label(), "mixed");
+        assert!(!integrity_report.host_decision_uses_scheduler_lane());
+        assert!(integrity_report.host_decision_uses_mixed_lane());
         assert_eq!(
             integrity_summary.host_decision_kind(),
             ToolAuditSupervisorDrainHostDecisionKind::MultipleActions
@@ -8360,6 +8784,13 @@ mod tests {
         assert!(!integrity_summary.host_decision_routes_follow_up());
         assert!(integrity_summary.host_decision_investigates_run_integrity());
         assert!(integrity_summary.host_decision_has_multiple_actions());
+        assert_eq!(integrity_summary.host_decision_action_count(), 2);
+        assert!(!integrity_summary.host_decision_has_single_action());
+        assert_eq!(
+            integrity_summary.host_decision_lane(),
+            ToolAuditSupervisorDrainHostDecisionLane::Mixed
+        );
+        assert!(integrity_summary.host_decision_uses_mixed_lane());
 
         let mut stale_plan_summary = idle_summary.clone();
         stale_plan_summary.requires_host_decision = true;
@@ -8368,6 +8799,13 @@ mod tests {
         stale_plan_summary.host_decision_label = "investigate_plan_drift";
         stale_plan_summary.host_decision_is_terminal_ready = false;
         stale_plan_summary.host_decision_investigates_plan_drift = true;
+        stale_plan_summary.host_decision_action_count = 1;
+        stale_plan_summary.host_decision_has_single_action = true;
+        stale_plan_summary.host_decision_lane =
+            ToolAuditSupervisorDrainHostDecisionLane::Investigation;
+        stale_plan_summary.host_decision_lane_label = "investigation";
+        stale_plan_summary.host_decision_uses_terminal_lane = false;
+        stale_plan_summary.host_decision_uses_investigation_lane = true;
         assert!(stale_plan_summary.requires_host_decision());
         assert_eq!(
             stale_plan_summary.host_decision_kind(),
@@ -8381,6 +8819,18 @@ mod tests {
         assert!(!stale_plan_summary.host_decision_is_terminal_ready());
         assert!(stale_plan_summary.host_decision_investigates_plan_drift());
         assert!(!stale_plan_summary.host_decision_has_multiple_actions());
+        assert_eq!(stale_plan_summary.host_decision_action_count(), 1);
+        assert!(stale_plan_summary.host_decision_has_single_action());
+        assert_eq!(
+            stale_plan_summary.host_decision_lane(),
+            ToolAuditSupervisorDrainHostDecisionLane::Investigation
+        );
+        assert_eq!(
+            stale_plan_summary.host_decision_lane_label(),
+            "investigation"
+        );
+        assert!(stale_plan_summary.host_decision_lane_label_matches_kind());
+        assert!(stale_plan_summary.host_decision_uses_investigation_lane());
 
         let mut stale_count_summary = idle_summary.clone();
         stale_count_summary.requires_host_decision = true;
@@ -8419,6 +8869,9 @@ mod tests {
         stale_integrity_summary.host_decision_label = "decisionish";
         stale_integrity_summary.host_decision_label_matches_kind = false;
         assert!(!stale_integrity_summary.host_decision_label_matches_kind());
+        stale_integrity_summary.host_decision_lane_label = "sidewalk";
+        stale_integrity_summary.host_decision_lane_label_matches_kind = false;
+        assert!(!stale_integrity_summary.host_decision_lane_label_matches_kind());
     }
 
     #[test]

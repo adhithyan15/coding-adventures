@@ -116,6 +116,8 @@ All notable changes to this package will be documented in this file.
 - Stable host-decision classifications for supervisor drain run reports and
   summaries.
 - Flattened host-decision component flags for supervisor drain run summaries.
+- Stable host-decision dashboard lanes and exact action counts for supervisor
+  drain run reports and summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Report-level scheduler action labels for supervisor drain runs.
