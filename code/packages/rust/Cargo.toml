@@ -169,6 +169,7 @@ members = [
     "jsdoc-comment-extractor",
     "jsdoc-lexer",
     "jsdoc-parser",
+    "jsdoc-types-extractor",
     "json-lexer",
     "json-parser",
     "json-serializer",
