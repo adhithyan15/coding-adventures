@@ -137,6 +137,10 @@ rebuilding callback lifecycle policy.
 dispatch, optional runner result, and completion follow-up into one
 endpoint-aware Rust-owned record, so adapters can render the callback lifecycle
 without reimplementing queue, dispatch, or completion branching.
+`input_callback_transport_action_summary` reduces that lifecycle into a
+transport-facing action name, label, queue depth, terminal/retry flags, and
+message, so adapters can route callback dispatch, completion, retry, and drop
+handling without duplicating lifecycle branching.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
