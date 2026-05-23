@@ -204,6 +204,9 @@ Status:
 - Diode `.model ... D(... BV=<voltage> IBV=<current>)` parsing and reverse
   breakdown current/conductance footholds are implemented across Python,
   TypeScript, and Rust.
+- Diode `.model ... D(... CJO=<capacitance>)` / `CJ0` parsing and AC
+  junction-capacitance admittance are implemented across Python, TypeScript,
+  and Rust.
 
 ### Phase 7 - Classic Text Output and Control Cards
 

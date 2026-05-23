@@ -2081,6 +2081,22 @@ def test_ac_diode_reverse_biased_acts_like_open():
         )
 
 
+def test_ac_diode_junction_capacitance_shunts_high_frequency():
+    """Reverse-biased diode junction capacitance is stamped in AC."""
+    c = Circuit()
+    c.add(VoltageSource("Vac", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "node", 1000.0))
+    # Reverse-biased at the DC operating point, so the AC drop is dominated by Cjo.
+    c.add(Diode("D1", anode="0", cathode="node", Cjo=1.0e-6))
+
+    result = ac_sweep(c, f_start=10.0, f_stop=100000.0, n_points=2)
+    low = abs(result.points[0].node_voltages["node"])
+    high = abs(result.points[-1].node_voltages["node"])
+
+    assert low > 0.9
+    assert high < low / 100.0
+
+
 def test_ac_bjt_npn_small_signal():
     """NPN BJT in forward-active: small-signal current gain > 1.
 

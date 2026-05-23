@@ -6,6 +6,8 @@
   and pass them into Rust `Diode` elements.
 - Parse diode model-card reverse-breakdown parameters with
   `.model ... D(... BV=<v> IBV=<i>)`.
+- Parse diode model-card junction capacitance with
+  `.model ... D(... CJO=<c>)` / `.model ... D(... CJ0=<c>)`.
 - Parse and validate transient integration methods from
   `.tran ... method=<euler|trap|gear2>`, and expose fallback routing from
   `.options method=<...>`.

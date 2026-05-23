@@ -6,6 +6,9 @@
   the effective thermal voltage in DC and small-signal diode conductance.
 - Add diode breakdown support through `breakdownVoltage` / `breakdownCurrent`,
   adding a bounded reverse-breakdown current and conductance foothold.
+- Add diode junction capacitance support through `junctionCapacitance`,
+  contributing small-signal AC susceptance in parallel with the linearized
+  diode conductance.
 - Add pseudo-transient DC continuation as a final bounded convergence aid after
   Newton, Gmin stepping, and source stepping; successful fallback results
   report `convergenceAid: "pseudo_transient"`.

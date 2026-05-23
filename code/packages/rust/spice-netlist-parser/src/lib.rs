@@ -736,6 +736,12 @@ fn parse_element(
                 *model.params.get("N").unwrap_or(&1.0),
                 model.params.get("BV").copied(),
                 *model.params.get("IBV").unwrap_or(&1.0e-3),
+                model
+                    .params
+                    .get("CJO")
+                    .or_else(|| model.params.get("CJ0"))
+                    .copied()
+                    .unwrap_or(0.0),
             )))
         }
         'Q' => {

@@ -362,6 +362,7 @@ export interface Diode {
   readonly emissionCoefficient: number;
   readonly breakdownVoltage?: number;
   readonly breakdownCurrent: number;
+  readonly junctionCapacitance: number;
 }
 
 export type JfetPolarity = "NJF" | "PJF";
@@ -948,7 +949,7 @@ function cloneSubcktElement(
     case "b-source":
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap), voltageExpr: mapBSourceExprNodes(element.voltageExpr, instanceName, nodeMap), currentExpr: mapBSourceExprNodes(element.currentExpr, instanceName, nodeMap) };
     case "diode":
-      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent);
+      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance);
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation);
     case "bjt":
@@ -1200,6 +1201,7 @@ export function diode(
   emissionCoefficient = 1.0,
   breakdownVoltage?: number,
   breakdownCurrent = 1.0e-3,
+  junctionCapacitance = 0.0,
 ): Diode {
   return {
     kind: "diode",
@@ -1211,6 +1213,7 @@ export function diode(
     emissionCoefficient,
     breakdownVoltage,
     breakdownCurrent,
+    junctionCapacitance,
   };
 }
 
@@ -3919,7 +3922,7 @@ function buildAcMatrix(
           matrix,
           nodeIndex(nodeIndices, element.anode),
           nodeIndex(nodeIndices, element.cathode),
-          complex(diodeConductance, 0.0),
+          complex(diodeConductance, omega * element.junctionCapacitance),
         );
         break;
       case "jfet":
@@ -4829,6 +4832,9 @@ function validateDiode(element: Diode): void {
   }
   if (!Number.isFinite(element.breakdownCurrent) || element.breakdownCurrent <= 0.0) {
     throw invalidElement(element.name, "breakdown current must be finite and positive");
+  }
+  if (!Number.isFinite(element.junctionCapacitance) || element.junctionCapacitance < 0.0) {
+    throw invalidElement(element.name, "junction capacitance must be finite and non-negative");
   }
 }
 
