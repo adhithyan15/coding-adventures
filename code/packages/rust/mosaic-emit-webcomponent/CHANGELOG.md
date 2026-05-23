@@ -6,6 +6,33 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- **U29-4-K-webcomp** — `HostLink` + `HostTooltip` + `HostNumberInput`
+  kernel primitives (UI29-4) lower to shadow-DOM-rendered HTML
+  elements with inline handlers reaching the Custom Element via
+  `this.getRootNode().host.dispatch(...)`:
+  - **`HostLink` → `<a href ...>label</a>`** with the same
+    `target="_blank"` + `rel="noopener noreferrer"` security default
+    the React and HTML backends ship (paired as one literal so
+    they can't be decoupled). `external: false` + `onActivate`
+    produces a combined onclick that calls `event.preventDefault()`
+    + shadow-DOM-aware dispatch with the href in the payload.
+  - **`HostTooltip` → `<span title="${text}">child(ren)</span>`**
+    (plain-text only in v1).
+  - **`HostNumberInput` → `<input type="number" inputmode="numeric"
+    ...>`** with `value`/`min`/`max`/`step` slot or literal
+    pass-through, `placeholder`, `disabled`, and onchange wiring
+    that dispatches with `event.target.valueAsNumber` (DOM standard
+    numeric parser, matching the kernel-canonical `value: number`
+    payload type).
+  - New `find_number` helper added alongside the existing
+    `find_string` / `find_slot_ref` / `find_keyword` /
+    `find_emit_ref` to look up numeric literal props.
+  - 7 new tests cover: HostLink href+label rendering, the
+    target=_blank security pin, the external+onActivate combined
+    preventDefault+dispatch, HostTooltip span+title wrapping,
+    HostNumberInput minimum shape, min/max/step numeric pass-
+    through, and the onchange valueAsNumber dispatch.
+
 - **U29-2-K-webcomp** — `HostCheckbox` + `HostRadio` kernel primitives
   (UI29-2) lower to native `<input type="checkbox|radio">` elements
   inside the shadow DOM:

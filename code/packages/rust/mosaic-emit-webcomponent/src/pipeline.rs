@@ -508,6 +508,25 @@ fn emit_html_tree(
         // other host primitives).
         "HostCheckbox" => return Ok(emit_host_checkbox(node)),
         "HostRadio" => return Ok(emit_host_radio(node)),
+
+        // UI29-4 — `HostLink` → `<a href onclick>` with the same
+        // `target="_blank"` + `rel="noopener noreferrer"` security
+        // default the React and HTML backends ship. The onclick
+        // handler reaches the Custom Element via
+        // `this.getRootNode().host.dispatch(...)`.
+        "HostLink" => return Ok(emit_host_link(node)),
+
+        // UI29-4 — `HostTooltip` wraps its child(ren) in `<span
+        // title="${text}">…</span>`. Plain-text only in v1 per
+        // UI29-4 §3.2; richer tooltips are reserved for UI29-5.
+        "HostTooltip" => return emit_host_tooltip(node, ctx),
+
+        // UI29-4 — `HostNumberInput` → `<input type="number"
+        // inputmode="numeric" ...>` with onchange wired through
+        // `this.getRootNode().host.dispatch({type, value:
+        // event.target.valueAsNumber})`.
+        "HostNumberInput" => return Ok(emit_host_number_input(node)),
+
         "If" => return emit_if(node, None, ctx),
         "For" => return emit_for(node, ctx),
         // `Else` appearing as a top-level walker target means it was NOT
@@ -1058,6 +1077,189 @@ fn emit_host_radio(node: &LayoutNode) -> String {
 }
 
 // ---------------------------------------------------------------------
+// UI29-4 — HostLink / HostTooltip / HostNumberInput
+//
+// All three lower to standard HTML elements inside the shadow root.
+// Inline event handlers reach the Custom Element via
+// `this.getRootNode().host.dispatch(...)`, matching the pattern the
+// other host primitives use.
+// ---------------------------------------------------------------------
+
+/// Lower a `HostLink` node to a shadow-DOM `<a href ...>label</a>`.
+///
+/// ## Property handling
+///
+/// | moslayout prop        | shadow-DOM `<a>` attribute / handler                                      |
+/// |---|---|
+/// | `href: "..."`         | `href="..."` (HTML-escaped)                                              |
+/// | `href: slot: u`       | `href="${camelSlot}"` template-literal interpolation                    |
+/// | `label: "..." / slot` | text body (escaped) / `${camelSlot}` template interpolation              |
+/// | `target: new-tab`     | `target="_blank" rel="noopener noreferrer"` (paired security default)    |
+/// | `target: parent/top`  | matching HTML `target=` values                                           |
+/// | `external: false` + `onActivate` | onclick handler calls `event.preventDefault()` then the dispatch |
+///
+/// Security: the `target="_blank"` + `rel="noopener noreferrer"`
+/// pair is emitted as a single literal string in one branch, so the
+/// two attributes can't be decoupled by future refactors. Same
+/// shape as the React and HTML backends ship.
+fn emit_host_link(node: &LayoutNode) -> String {
+    let mut attrs = String::new();
+
+    // href= — string literal or `${slot}` template marker
+    if let Some(s) = find_string(node, "href") {
+        attrs.push_str(&format!(r#" href="{}""#, escape_html_attribute(s)));
+    } else if let Some(slot) = find_slot_ref(node, "href") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#" href="${{{camel}}}""#));
+        } else {
+            attrs.push_str(" href=\"#\"");
+        }
+    } else {
+        attrs.push_str(" href=\"#\"");
+    }
+
+    // target= + paired rel= (security default for _blank)
+    if let Some(k) = find_keyword(node, "target") {
+        match k {
+            "new-tab" => attrs.push_str(r#" target="_blank" rel="noopener noreferrer""#),
+            "parent" => attrs.push_str(r#" target="_parent""#),
+            "top" => attrs.push_str(r#" target="_top""#),
+            "same" => {}
+            _ => {}
+        }
+    }
+
+    // onclick: combined preventDefault + dispatch when in-app routing.
+    let on_activate = find_emit_ref(node, "onActivate");
+    let suppress_default = matches!(find_keyword(node, "external"), Some("false"));
+    if on_activate.is_some() || suppress_default {
+        let mut body = String::new();
+        if suppress_default {
+            body.push_str("event.preventDefault();");
+        }
+        if let Some(emit_name) = on_activate {
+            let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            if is_safe_identifier(&type_field) {
+                body.push_str(&format!(
+                    "this.getRootNode().host.dispatch({{type:'{type_field}',href:this.getAttribute('href')}})"
+                ));
+            }
+        }
+        attrs.push_str(&format!(r#" onclick="{body}""#));
+    }
+
+    // Body: label (string or slot).
+    let body: String = if let Some(s) = find_string(node, "label") {
+        escape_html_text(s)
+    } else if let Some(slot) = find_slot_ref(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            format!("${{{camel}}}")
+        } else {
+            String::new()
+        }
+    } else {
+        String::new()
+    };
+
+    format!("<a{attrs}>{body}</a>")
+}
+
+/// Lower a `HostTooltip` node to `<span title="${text}">child(ren)
+/// </span>`. The DOM's `title=` attribute is the simplest cross-
+/// browser tooltip surface; plain-text only in v1.
+fn emit_host_tooltip(
+    node: &LayoutNode,
+    ctx: &mut RenderCtx,
+) -> Result<String, PipelineEmitError> {
+    let mut attrs = String::new();
+
+    if let Some(s) = find_string(node, "text") {
+        attrs.push_str(&format!(r#" title="{}""#, escape_html_attribute(s)));
+    } else if let Some(slot) = find_slot_ref(node, "text") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#" title="${{{camel}}}""#));
+        }
+    }
+
+    if node.children.is_empty() {
+        return Ok(format!("<span{attrs}></span>"));
+    }
+
+    let mut inner = String::new();
+    for child in &node.children {
+        inner.push_str(&emit_html_tree(child, 0, ctx)?);
+    }
+    Ok(format!("<span{attrs}>{inner}</span>"))
+}
+
+/// Lower a `HostNumberInput` node to `<input type="number"
+/// inputmode="numeric" ...>`. The inputmode triggers the mobile
+/// numeric keyboard; the onchange handler dispatches with
+/// `event.target.valueAsNumber` (DOM standard numeric parser) to
+/// match the kernel-canonical `value: number` payload type.
+fn emit_host_number_input(node: &LayoutNode) -> String {
+    let mut attrs = String::from(r#"<input type="number" inputmode="numeric""#);
+
+    // value: slot ref via template, or number literal as bare value
+    if let Some(slot) = find_slot_ref(node, "value") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#" value="${{{camel}}}""#));
+        }
+    } else if let Some(n) = find_number(node, "value") {
+        attrs.push_str(&format!(r#" value="{n}""#));
+    }
+
+    // min / max / step: numeric literals only.
+    for prop in ["min", "max", "step"] {
+        if let Some(n) = find_number(node, prop) {
+            attrs.push_str(&format!(r#" {prop}="{n}""#));
+        }
+    }
+
+    // placeholder: string or slot.
+    if let Some(s) = find_string(node, "placeholder") {
+        attrs.push_str(&format!(
+            r#" placeholder="{}""#,
+            escape_html_attribute(s)
+        ));
+    } else if let Some(slot) = find_slot_ref(node, "placeholder") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#" placeholder="${{{camel}}}""#));
+        }
+    }
+
+    // disabled (slot/keyword).
+    if let Some(slot) = find_slot_ref(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#"${{{camel} ? " disabled" : ""}}"#));
+        }
+    } else if let Some(kw) = find_keyword(node, "disabled") {
+        if kw == "true" {
+            attrs.push_str(" disabled");
+        }
+    }
+
+    // onchange: dispatch with valueAsNumber payload.
+    if let Some(emit_name) = find_emit_ref(node, "onChange") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        if is_safe_identifier(&type_field) {
+            attrs.push_str(&format!(
+                r#" onchange="this.getRootNode().host.dispatch({{type:'{type_field}',value:event.target.valueAsNumber}})""#
+            ));
+        }
+    }
+
+    attrs.push_str(" />");
+    attrs
+}
+
+// ---------------------------------------------------------------------
 // U29-1 — HostDialog
 //
 // Unlike the other host primitives, `HostDialog` needs *imperative*
@@ -1272,6 +1474,16 @@ fn find_keyword<'a>(node: &'a LayoutNode, name: &str) -> Option<&'a str> {
 fn find_emit_ref<'a>(node: &'a LayoutNode, name: &str) -> Option<&'a str> {
     node.props.iter().find_map(|p| match (&p.name, &p.value) {
         (n, LayoutPropValue::EmitRef(s)) if n == name => Some(s.as_str()),
+        _ => None,
+    })
+}
+
+/// Find a numeric prop on `node`. Used by `HostNumberInput` for
+/// `value` (literal initial), `min` / `max` / `step` numeric
+/// compile-time literals.
+fn find_number(node: &LayoutNode, name: &str) -> Option<f64> {
+    node.props.iter().find_map(|p| match (&p.name, &p.value) {
+        (n, LayoutPropValue::Number(v)) if n == name => Some(*v),
         _ => None,
     })
 }
@@ -3298,6 +3510,246 @@ mod tests {
                 "onchange=\"if(event.target.checked)this.getRootNode().host.dispatch({type:'pick',value:event.target.value})\""
             ),
             "expected positive-gated dispatch with value payload, got:\n{}",
+            r.output
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // UI29-4 — HostLink / HostTooltip / HostNumberInput
+    // ---------------------------------------------------------------------
+
+    /// UI29-4 webcomp test 1 — `href` string + `label` string lowers
+    /// to `<a href="..."> label</a>` inside the shadow innerHTML.
+    #[test]
+    fn host_link_string_href_and_label_emits_anchor() {
+        let m = component("X", vec![], vec![]);
+        let l = root_layout(
+            "X",
+            leaf_with_props(
+                "HostLink",
+                vec![
+                    LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String("https://example.com".to_string()),
+                    },
+                    LayoutProp {
+                        name: "label".to_string(),
+                        value: LayoutPropValue::String("Click me".to_string()),
+                    },
+                ],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains(r#"<a href="https://example.com">Click me</a>"#),
+            "expected anchor with href + label body, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-4 webcomp test 2 — SECURITY PIN: `target: new-tab` must
+    /// emit `rel="noopener noreferrer"`. Same shape as the React +
+    /// HTML backends.
+    #[test]
+    fn host_link_target_new_tab_emits_noopener_noreferrer() {
+        let m = component("X", vec![], vec![]);
+        let l = root_layout(
+            "X",
+            leaf_with_props(
+                "HostLink",
+                vec![
+                    LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String("https://example.com".to_string()),
+                    },
+                    LayoutProp {
+                        name: "target".to_string(),
+                        value: LayoutPropValue::Keyword("new-tab".to_string()),
+                    },
+                ],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains(r#"target="_blank""#),
+            "expected target=_blank, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains(r#"rel="noopener noreferrer""#),
+            "expected rel=noopener noreferrer security default, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-4 webcomp test 3 — `external: false` + `onActivate: emit`
+    /// produces a shadow-DOM-aware onclick that calls
+    /// `event.preventDefault()` then `this.getRootNode().host.dispatch
+    /// ({type:..., href: this.getAttribute('href')})`.
+    #[test]
+    fn host_link_external_false_with_on_activate_emits_combined_handler() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit_decl(
+                "onNavigate",
+                vec![EmitParam {
+                    name: "href".to_string(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            )],
+        );
+        let l = root_layout(
+            "X",
+            leaf_with_props(
+                "HostLink",
+                vec![
+                    LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String("/about".to_string()),
+                    },
+                    LayoutProp {
+                        name: "external".to_string(),
+                        value: LayoutPropValue::Keyword("false".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onActivate".to_string(),
+                        value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+                    },
+                ],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains("event.preventDefault()"),
+            "expected preventDefault, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains(
+                "this.getRootNode().host.dispatch({type:'navigate',href:this.getAttribute('href')})"
+            ),
+            "expected shadow-DOM-aware dispatch with href payload, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-4 webcomp test 4 — `HostTooltip` with `text` and a
+    /// single child wraps the child in a `<span title="...">`.
+    #[test]
+    fn host_tooltip_wraps_child_in_span_with_title() {
+        let m = component("X", vec![], vec![]);
+        let l = root_layout(
+            "X",
+            LayoutNode {
+                tag: "HostTooltip".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "text".to_string(),
+                    value: LayoutPropValue::String("Submit the form".to_string()),
+                }],
+                children: vec![leaf_with_props(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("Submit".to_string()),
+                    }],
+                )],
+            },
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains(r#"<span title="Submit the form">"#),
+            "expected <span title=...>, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("</span>"),
+            "expected closing </span>, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-4 webcomp test 5 — bare HostNumberInput emits the
+    /// minimum shape: `<input type="number" inputmode="numeric" />`.
+    #[test]
+    fn host_number_input_empty_emits_minimum_shape() {
+        let m = component("X", vec![], vec![]);
+        let l = root_layout("X", leaf_with_props("HostNumberInput", vec![]));
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output
+                .contains(r#"<input type="number" inputmode="numeric" />"#),
+            "expected bare numeric input, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-4 webcomp test 6 — min/max/step numeric literals lower
+    /// to the matching HTML attribute values.
+    #[test]
+    fn host_number_input_min_max_step_emit_attrs() {
+        let m = component("X", vec![], vec![]);
+        let l = root_layout(
+            "X",
+            leaf_with_props(
+                "HostNumberInput",
+                vec![
+                    LayoutProp {
+                        name: "min".to_string(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    LayoutProp {
+                        name: "max".to_string(),
+                        value: LayoutPropValue::Number(100.0),
+                    },
+                    LayoutProp {
+                        name: "step".to_string(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                ],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(out.contains(r#"min="0""#), "expected min=0, got:\n{out}");
+        assert!(out.contains(r#"max="100""#), "expected max=100, got:\n{out}");
+        assert!(out.contains(r#"step="5""#), "expected step=5, got:\n{out}");
+    }
+
+    /// UI29-4 webcomp test 7 — `onChange: emit: onSet` wires
+    /// `onchange` with `event.target.valueAsNumber` in the dispatch
+    /// payload (DOM standard numeric parser, matching the kernel-
+    /// canonical numeric payload type).
+    #[test]
+    fn host_number_input_on_change_wires_value_as_number_dispatch() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit_decl(
+                "onSet",
+                vec![EmitParam {
+                    name: "value".to_string(),
+                    r#type: EmitPayloadType::Number,
+                }],
+            )],
+        );
+        let l = root_layout(
+            "X",
+            leaf_with_props(
+                "HostNumberInput",
+                vec![LayoutProp {
+                    name: "onChange".to_string(),
+                    value: LayoutPropValue::EmitRef("onSet".to_string()),
+                }],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains(
+                "onchange=\"this.getRootNode().host.dispatch({type:'set',value:event.target.valueAsNumber})\""
+            ),
+            "expected dispatch with valueAsNumber, got:\n{}",
             r.output
         );
     }
