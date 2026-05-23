@@ -2579,7 +2579,12 @@ def _do_create_table(ins: CreateTable, st: _VmState) -> None:
         for c in ins.columns
     ]
     try:
-        st.backend.create_table(ins.table, col_defs, ins.if_not_exists)
+        st.backend.create_table(
+            ins.table,
+            col_defs,
+            ins.if_not_exists,
+            strict=ins.strict,
+        )
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
     # Register CHECK constraints.

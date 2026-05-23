@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.53.0 — 2026-05-23
+
+### Added
+
+- ``_do_create_table`` now forwards the IR's ``strict`` flag as a
+  keyword arg to ``Backend.create_table(strict=...)``.  End-to-end this
+  means ``CREATE TABLE t (x INTEGER) STRICT`` now triggers
+  SQLite-compatible type enforcement on subsequent INSERT/UPDATE.
+
 ## 1.52.0 — 2026-05-23
 
 ### Added

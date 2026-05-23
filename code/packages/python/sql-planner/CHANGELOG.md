@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.41.0] - 2026-05-23
+
+### Added
+
+- ``CreateTableStmt`` (AST) and ``CreateTable`` (plan node) gained a
+  ``strict: bool = False`` field carrying SQLite's STRICT trailing
+  table-option through the plan layer.  Forwarded to the codegen IR and
+  ultimately to ``Backend.create_table(strict=...)``.
+
 ## [0.40.0] - 2026-05-23
 
 ### Added

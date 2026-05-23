@@ -159,11 +159,28 @@ class Backend(ABC):
         table: str,
         columns: list[ColumnDef],
         if_not_exists: bool,
+        *,
+        strict: bool = False,
     ) -> None:
         """Create a new table.
 
         If ``if_not_exists`` is True and the table already exists, this is a
         no-op. Otherwise, raise :class:`TableAlreadyExists`.
+
+        When ``strict`` is True, the table is a SQLite STRICT table:
+
+        * Every column's declared type must be one of ``INT``, ``INTEGER``,
+          ``REAL``, ``TEXT``, ``BLOB``, or ``ANY`` (case-insensitive).
+          Any other declared type causes a :class:`ConstraintViolation`
+          at CREATE TABLE time.
+        * Values inserted or updated must match the column's declared type.
+          ``NULL`` is always allowed unless the column is ``NOT NULL``.
+          ``ANY`` columns opt back into lenient typing for that column.
+
+        The ``strict`` parameter is keyword-only so existing call sites stay
+        valid and only opt in explicitly.  Backends that don't implement
+        strict typing should ignore the flag (lenient affinity matches
+        legacy SQLite behaviour).
         """
 
     @abstractmethod

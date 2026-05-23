@@ -5,6 +5,36 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0] - 2026-05-23
+
+### Added
+
+- ``Backend.create_table`` now takes a keyword-only ``strict: bool = False``
+  parameter mirroring SQLite's ``CREATE TABLE ... STRICT`` trailing option.
+  When ``strict=True``:
+  * Every column's declared type must be one of ``INT``, ``INTEGER``,
+    ``REAL``, ``TEXT``, ``BLOB``, or ``ANY`` (case-insensitive).  Anything
+    else raises ``ConstraintViolation`` at CREATE TABLE time with the
+    SQLite-compatible message ``unknown datatype for t.col: "XYZ"``.
+  * Subsequent ``insert`` / ``update`` calls validate each value against
+    the column's declared type, applying SQLite-style lossless coercion:
+    INT ↔ TEXT (decimal), whole REAL → INT, numeric TEXT → REAL, INT → REAL
+    (promotion).  Pinned against ``sqlite3`` 3.50 via oracle tests.
+    ``NULL`` is always permitted unless the column is ``NOT NULL``
+    (enforced separately).  Mismatches raise ``ConstraintViolation`` with
+    the SQLite-compatible message ``cannot store TYPE value in TYPE column
+    t.col`` (value labels use ``INT``, column labels use the declared
+    name).
+- ``InMemoryBackend._Table`` gains a ``strict: bool`` flag; ``ANY``
+  columns inside a STRICT table opt back into lenient typing.
+
+### Changed
+
+- ``Backend.create_table`` signature widened with a default-False kwarg;
+  all existing call sites remain valid.  ``SqliteFileBackend.create_table``
+  accepts the flag for interface conformance but does not yet enforce
+  strict typing on disk — documented as a known limitation.
+
 ## [0.14.0] - 2026-05-23
 
 ### Added

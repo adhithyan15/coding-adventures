@@ -133,15 +133,134 @@ def _sql_sort_key(v: SqlValue) -> tuple[int, object]:
 _ROWID_KEY: Final[str] = "\x00rowid"
 
 
+def _strict_type_label(value: object) -> str:
+    """Return the SQLite type-name for *value*, used in STRICT-mode error messages.
+
+    SQLite uses ``INT`` (abbreviated) for integer *values* in the STRICT
+    error message — different from ``INTEGER`` which it uses for the
+    *column* declared type.  Matching this exactly keeps the message
+    byte-identical to real ``sqlite3``::
+
+        cannot store INT value in BLOB column t.x
+        cannot store REAL value in INTEGER column t.x
+        cannot store TEXT value in INTEGER column t.x
+    """
+    if isinstance(value, bool):
+        return "INT"
+    if isinstance(value, int):
+        return "INT"
+    if isinstance(value, float):
+        return "REAL"
+    if isinstance(value, str):
+        return "TEXT"
+    if isinstance(value, (bytes, bytearray)):
+        return "BLOB"
+    # Fallback for unknown Python types — surfaces the Python class name
+    # so the message remains diagnostic instead of opaque.
+    return type(value).__name__
+
+
+def _strict_coerce(value: object, declared: str) -> tuple[object, bool]:
+    """Attempt SQLite-STRICT lossless coercion of *value* to column *declared*.
+
+    Returns ``(coerced_value, True)`` if coercion succeeded (the
+    coerced value may be identical to *value* when no promotion was
+    needed), or ``(value, False)`` if the value cannot be stored in a
+    column of type *declared*.
+
+    The promotion rules mirror real SQLite 3.37+ behaviour and were
+    pinned by oracle tests against ``sqlite3`` 3.50.
+    """
+    # bool is a Python subclass of int; SQLite stores it as INTEGER 0/1.
+    if declared in ("INT", "INTEGER"):
+        if isinstance(value, bool):
+            return int(value), True
+        if isinstance(value, int):
+            return value, True
+        if isinstance(value, float):
+            # Only whole-number REALs are losslessly representable as INT.
+            if value.is_integer():
+                return int(value), True
+            return value, False
+        if isinstance(value, str):
+            # SQLite parses leading whitespace and integer literals only —
+            # we keep the same shape by going through ``int()``.  Floats
+            # like '1.5' are rejected (would lose precision).
+            try:
+                return int(value, 10), True
+            except (TypeError, ValueError):
+                return value, False
+        return value, False
+
+    if declared == "REAL":
+        if isinstance(value, bool):
+            return float(value), True
+        if isinstance(value, (int, float)):
+            return float(value), True
+        if isinstance(value, str):
+            try:
+                return float(value), True
+            except (TypeError, ValueError):
+                return value, False
+        return value, False
+
+    if declared == "TEXT":
+        if isinstance(value, str):
+            return value, True
+        if isinstance(value, bool):
+            # SQLite renders booleans through their integer form: 0/1.
+            return str(int(value)), True
+        if isinstance(value, int):
+            return str(value), True
+        if isinstance(value, float):
+            # SQLite's TEXT-cast of REAL uses ``%.17g``-ish formatting;
+            # Python's ``str(float)`` is close enough for our purposes
+            # and keeps round-trip parsing intact.
+            return str(value), True
+        # BLOB → TEXT is forbidden by SQLite STRICT.
+        return value, False
+
+    if declared == "BLOB":
+        if isinstance(value, (bytes, bytearray)):
+            return bytes(value), True
+        return value, False
+
+    # Unknown declared type — defensive: refuse the value so the error
+    # message points at the column.  In practice this branch is
+    # unreachable because ``create_table`` validates the type-name set.
+    return value, False
+
+
+#: The set of column types SQLite allows in a STRICT table.  When a table
+#: is created with the ``STRICT`` option, every column's declared type must
+#: be one of these (case-insensitive) — anything else raises a
+#: ``ConstraintViolation`` at CREATE TABLE time.  ``ANY`` is a special
+#: SQLite-only type meaning "no type-check", used inside STRICT tables to
+#: opt back into lenient typing on a per-column basis.
+_STRICT_ALLOWED_TYPES: Final[frozenset[str]] = frozenset({
+    "INT",
+    "INTEGER",
+    "REAL",
+    "TEXT",
+    "BLOB",
+    "ANY",
+})
+
+
 class _Table:
     """Storage for one table — schema plus rows, in insertion order."""
 
-    def __init__(self, columns: list[ColumnDef]) -> None:
+    def __init__(self, columns: list[ColumnDef], strict: bool = False) -> None:
         self.columns: list[ColumnDef] = list(columns)
         self.rows: list[Row] = []
         # Monotonically increasing rowid counter.  Starts at 1 to match
         # real SQLite; never decremented even after DELETE.
         self._next_rowid: int = 1
+        # SQLite STRICT-table flag.  When True, ``insert`` / ``update``
+        # type-check each value against the column's declared type — see
+        # ``_check_strict_types``.  When False (the default), type
+        # affinity is lenient, matching legacy SQLite.
+        self.strict: bool = strict
 
     def column_def(self, name: str) -> ColumnDef | None:
         """Return the ColumnDef for ``name``, or None if no such column."""
@@ -280,6 +399,8 @@ class InMemoryBackend(Backend):
         full_row = self._apply_defaults(t, row)
         self._check_unknown_columns(table, t, full_row)
         self._check_not_null(table, t, full_row)
+        if t.strict:
+            self._check_strict_types(table, t, full_row)
         self._check_unique(table, t, full_row, ignore_index=None)
         # Stamp the row with its stable integer rowid AFTER constraint
         # checks pass.  The key ``_ROWID_KEY`` (null-prefixed, not a valid
@@ -319,6 +440,8 @@ class InMemoryBackend(Backend):
         proposed = dict(t.rows[idx])
         proposed.update(assignments)
         self._check_not_null(table, t, proposed)
+        if t.strict:
+            self._check_strict_types(table, t, proposed)
         self._check_unique(table, t, proposed, ignore_index=idx)
 
         t.rows[idx] = proposed
@@ -346,12 +469,29 @@ class InMemoryBackend(Backend):
         table: str,
         columns: list[ColumnDef],
         if_not_exists: bool,
+        *,
+        strict: bool = False,
     ) -> None:
         if table in self._tables:
             if if_not_exists:
                 return
             raise TableAlreadyExists(table=table)
-        self._tables[table] = _Table(columns)
+        # SQLite STRICT enforcement applies *first* at CREATE TABLE time:
+        # every column must declare a type from the small allowed set.
+        # Without this check, ``CREATE TABLE t(x BANANA) STRICT`` would
+        # succeed; in real SQLite it errors immediately.
+        if strict:
+            for col in columns:
+                if col.type_name.upper() not in _STRICT_ALLOWED_TYPES:
+                    raise ConstraintViolation(
+                        table=table,
+                        column=col.name,
+                        message=(
+                            f"unknown datatype for {table}.{col.name}: "
+                            f"\"{col.type_name}\""
+                        ),
+                    )
+        self._tables[table] = _Table(columns, strict=strict)
         self._schema_version += 1
 
     def drop_table(self, table: str, if_exists: bool) -> None:
@@ -805,6 +945,65 @@ class InMemoryBackend(Backend):
                     column=col.name,
                     message=f"NOT NULL constraint failed: {table}.{col.name}",
                 )
+
+    def _check_strict_types(self, table: str, t: _Table, row: Row) -> None:
+        """Enforce STRICT-table per-column type rules with SQLite-style coercion.
+
+        SQLite's STRICT mode is *not* a pure isinstance check — it permits
+        lossless type promotions and parses TEXT values that look like a
+        number when the column wants a number.  Verified by oracle against
+        real ``sqlite3`` 3.50+:
+
+        ======  ======================================================
+        Column  Accepts (with possible coercion-in-place)
+        ======  ======================================================
+        INT     int → int
+        INTEGER float → int  *only if whole* (1.0 → 1; 1.5 rejected)
+                str → int    *only if it parses as int* ('42' → 42)
+        REAL    int → float (promotion)
+                float → float
+                str → float  *only if it parses as numeric*
+        TEXT    str → str
+                int → str (canonical decimal)
+                float → str (canonical decimal)
+        BLOB    bytes/bytearray → bytes
+                everything else rejected
+        ANY     value stored verbatim (the STRICT escape hatch)
+        ======  ======================================================
+
+        NULL is always permitted; NOT NULL is a separate check handled by
+        :meth:`_check_not_null`.  Mismatches raise :class:`ConstraintViolation`
+        with the SQLite-compatible message ``cannot store TYPE value in TYPE
+        column table.col``.
+
+        This method MUTATES *row* in place: when a coercion is permitted
+        (e.g. INT 1 → REAL 1.0), the stored value is the promoted form.
+        Callers already pass a fresh dict (``_apply_defaults`` or
+        ``dict(t.rows[idx])``) so the caller's input isn't aliased.
+        """
+        for col in t.columns:
+            val = row.get(col.name)
+            if val is None:
+                # NULL is exempt — NOT NULL handles required-ness separately.
+                continue
+            declared = col.type_name.upper()
+            if declared == "ANY":
+                continue
+            coerced, ok = _strict_coerce(val, declared)
+            if not ok:
+                actual = _strict_type_label(val)
+                raise ConstraintViolation(
+                    table=table,
+                    column=col.name,
+                    message=(
+                        f"cannot store {actual} value in {declared} column "
+                        f"{table}.{col.name}"
+                    ),
+                )
+            if coerced is not val:
+                # Apply the promotion to the proposed row so the stored
+                # form matches the column's declared type.
+                row[col.name] = coerced
 
     def _check_unique(
         self,
