@@ -1245,6 +1245,57 @@ impl ToolAuditSupervisorDrainRunReport {
         self.host_investigation_kind().is_no_investigation()
     }
 
+    /// Return whether any host attention is needed for this run.
+    pub fn requires_host_attention(&self) -> bool {
+        self.host_attention_kind().requires_attention()
+    }
+
+    /// Return whether no host attention is needed for this run.
+    pub fn is_no_host_attention(&self) -> bool {
+        self.host_attention_kind().is_no_attention()
+    }
+
+    /// Classify why the host should pay attention to this run.
+    pub fn host_attention_kind(&self) -> ToolAuditSupervisorDrainHostAttentionKind {
+        ToolAuditSupervisorDrainHostAttentionKind::from_attention_flags(
+            self.requires_scheduler_action(),
+            self.requires_host_investigation(),
+            self.requires_run_integrity_investigation(),
+        )
+    }
+
+    /// Return the stable host-attention classification label.
+    pub fn host_attention_label(&self) -> &'static str {
+        self.host_attention_kind().as_str()
+    }
+
+    /// Return whether the host-attention label parses back to the typed classification.
+    pub fn host_attention_label_matches_kind(&self) -> bool {
+        ToolAuditSupervisorDrainHostAttentionKind::from_label(self.host_attention_label())
+            == Some(self.host_attention_kind())
+    }
+
+    /// Return whether host attention includes a scheduler action.
+    pub fn host_attention_includes_scheduler_action(&self) -> bool {
+        self.host_attention_kind().includes_scheduler_action()
+    }
+
+    /// Return whether host attention includes run-divergence investigation.
+    pub fn host_attention_includes_host_investigation(&self) -> bool {
+        self.host_attention_kind().includes_host_investigation()
+    }
+
+    /// Return whether host attention includes host-log integrity investigation.
+    pub fn host_attention_includes_run_integrity_investigation(&self) -> bool {
+        self.host_attention_kind()
+            .includes_run_integrity_investigation()
+    }
+
+    /// Return whether more than one host-attention surface is active.
+    pub fn has_multiple_host_attention(&self) -> bool {
+        self.host_attention_kind().has_multiple_attention()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -1509,6 +1560,18 @@ impl ToolAuditSupervisorDrainRunReport {
             is_no_host_investigation: self.is_no_host_investigation(),
             requires_host_plan_drift_investigation: self.requires_host_plan_drift_investigation(),
             requires_host_count_drift_investigation: self.requires_host_count_drift_investigation(),
+            requires_host_attention: self.requires_host_attention(),
+            is_no_host_attention: self.is_no_host_attention(),
+            host_attention_kind: self.host_attention_kind(),
+            host_attention_label: self.host_attention_label(),
+            host_attention_label_matches_kind: self.host_attention_label_matches_kind(),
+            host_attention_includes_scheduler_action: self
+                .host_attention_includes_scheduler_action(),
+            host_attention_includes_host_investigation: self
+                .host_attention_includes_host_investigation(),
+            host_attention_includes_run_integrity_investigation: self
+                .host_attention_includes_run_integrity_investigation(),
+            has_multiple_host_attention: self.has_multiple_host_attention(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -2124,6 +2187,24 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub requires_host_plan_drift_investigation: bool,
     /// Whether the host investigation includes count drift.
     pub requires_host_count_drift_investigation: bool,
+    /// Whether any host attention is needed for this run.
+    pub requires_host_attention: bool,
+    /// Whether no host attention is needed for this run.
+    pub is_no_host_attention: bool,
+    /// Stable classification of why the host should pay attention to this run.
+    pub host_attention_kind: ToolAuditSupervisorDrainHostAttentionKind,
+    /// Stable host-attention classification label for host logs.
+    pub host_attention_label: &'static str,
+    /// Whether the host-attention label parses back to the typed classification.
+    pub host_attention_label_matches_kind: bool,
+    /// Whether host attention includes a scheduler action.
+    pub host_attention_includes_scheduler_action: bool,
+    /// Whether host attention includes run-divergence investigation.
+    pub host_attention_includes_host_investigation: bool,
+    /// Whether host attention includes host-log integrity investigation.
+    pub host_attention_includes_run_integrity_investigation: bool,
+    /// Whether more than one host-attention surface is active.
+    pub has_multiple_host_attention: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -2636,6 +2717,51 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the host can skip drain-run investigation.
     pub fn is_no_host_investigation(&self) -> bool {
         self.is_no_host_investigation
+    }
+
+    /// Return whether any host attention is needed for this run.
+    pub fn requires_host_attention(&self) -> bool {
+        self.requires_host_attention
+    }
+
+    /// Return whether no host attention is needed for this run.
+    pub fn is_no_host_attention(&self) -> bool {
+        self.is_no_host_attention
+    }
+
+    /// Return the typed host-attention classification.
+    pub fn host_attention_kind(&self) -> ToolAuditSupervisorDrainHostAttentionKind {
+        self.host_attention_kind
+    }
+
+    /// Return the stable host-attention classification label.
+    pub fn host_attention_label(&self) -> &'static str {
+        self.host_attention_label
+    }
+
+    /// Return whether the host-attention label parses back to the typed classification.
+    pub fn host_attention_label_matches_kind(&self) -> bool {
+        self.host_attention_label_matches_kind
+    }
+
+    /// Return whether host attention includes a scheduler action.
+    pub fn host_attention_includes_scheduler_action(&self) -> bool {
+        self.host_attention_includes_scheduler_action
+    }
+
+    /// Return whether host attention includes run-divergence investigation.
+    pub fn host_attention_includes_host_investigation(&self) -> bool {
+        self.host_attention_includes_host_investigation
+    }
+
+    /// Return whether host attention includes host-log integrity investigation.
+    pub fn host_attention_includes_run_integrity_investigation(&self) -> bool {
+        self.host_attention_includes_run_integrity_investigation
+    }
+
+    /// Return whether more than one host-attention surface is active.
+    pub fn has_multiple_host_attention(&self) -> bool {
+        self.has_multiple_host_attention
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -3360,6 +3486,150 @@ impl ToolAuditSupervisorDrainHostInvestigationKind {
 }
 
 impl Display for ToolAuditSupervisorDrainHostInvestigationKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable classification of why a host should pay attention to a drain run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHostAttentionKind {
+    /// No scheduler action, investigation, or integrity investigation is needed.
+    NoAttention,
+    /// A scheduler action is needed without other host-attention surfaces.
+    SchedulerAction,
+    /// Run-divergence investigation is needed without other host-attention surfaces.
+    HostInvestigation,
+    /// Host-log integrity investigation is needed without other host-attention surfaces.
+    RunIntegrityInvestigation,
+    /// Scheduler action and run-divergence investigation are both needed.
+    SchedulerActionAndHostInvestigation,
+    /// Scheduler action and host-log integrity investigation are both needed.
+    SchedulerActionAndRunIntegrityInvestigation,
+    /// Run-divergence and host-log integrity investigations are both needed.
+    HostAndRunIntegrityInvestigation,
+    /// Scheduler action, run-divergence investigation, and integrity investigation are needed.
+    SchedulerActionHostAndRunIntegrityInvestigation,
+}
+
+impl ToolAuditSupervisorDrainHostAttentionKind {
+    /// Classify host attention from scheduler, investigation, and integrity flags.
+    pub fn from_attention_flags(
+        requires_scheduler_action: bool,
+        requires_host_investigation: bool,
+        requires_run_integrity_investigation: bool,
+    ) -> Self {
+        match (
+            requires_scheduler_action,
+            requires_host_investigation,
+            requires_run_integrity_investigation,
+        ) {
+            (false, false, false) => Self::NoAttention,
+            (true, false, false) => Self::SchedulerAction,
+            (false, true, false) => Self::HostInvestigation,
+            (false, false, true) => Self::RunIntegrityInvestigation,
+            (true, true, false) => Self::SchedulerActionAndHostInvestigation,
+            (true, false, true) => Self::SchedulerActionAndRunIntegrityInvestigation,
+            (false, true, true) => Self::HostAndRunIntegrityInvestigation,
+            (true, true, true) => Self::SchedulerActionHostAndRunIntegrityInvestigation,
+        }
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoAttention => "no_attention",
+            Self::SchedulerAction => "scheduler_action",
+            Self::HostInvestigation => "host_investigation",
+            Self::RunIntegrityInvestigation => "run_integrity_investigation",
+            Self::SchedulerActionAndHostInvestigation => "scheduler_action_and_host_investigation",
+            Self::SchedulerActionAndRunIntegrityInvestigation => {
+                "scheduler_action_and_run_integrity_investigation"
+            }
+            Self::HostAndRunIntegrityInvestigation => "host_and_run_integrity_investigation",
+            Self::SchedulerActionHostAndRunIntegrityInvestigation => {
+                "scheduler_action_host_and_run_integrity_investigation"
+            }
+        }
+    }
+
+    /// Parse a stable snake_case host-attention label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_attention" => Some(Self::NoAttention),
+            "scheduler_action" => Some(Self::SchedulerAction),
+            "host_investigation" => Some(Self::HostInvestigation),
+            "run_integrity_investigation" => Some(Self::RunIntegrityInvestigation),
+            "scheduler_action_and_host_investigation" => {
+                Some(Self::SchedulerActionAndHostInvestigation)
+            }
+            "scheduler_action_and_run_integrity_investigation" => {
+                Some(Self::SchedulerActionAndRunIntegrityInvestigation)
+            }
+            "host_and_run_integrity_investigation" => Some(Self::HostAndRunIntegrityInvestigation),
+            "scheduler_action_host_and_run_integrity_investigation" => {
+                Some(Self::SchedulerActionHostAndRunIntegrityInvestigation)
+            }
+            _ => None,
+        }
+    }
+
+    /// Return whether any host attention is needed.
+    pub fn requires_attention(self) -> bool {
+        !matches!(self, Self::NoAttention)
+    }
+
+    /// Return whether no host attention is needed.
+    pub fn is_no_attention(self) -> bool {
+        matches!(self, Self::NoAttention)
+    }
+
+    /// Return whether host attention includes a scheduler action.
+    pub fn includes_scheduler_action(self) -> bool {
+        matches!(
+            self,
+            Self::SchedulerAction
+                | Self::SchedulerActionAndHostInvestigation
+                | Self::SchedulerActionAndRunIntegrityInvestigation
+                | Self::SchedulerActionHostAndRunIntegrityInvestigation
+        )
+    }
+
+    /// Return whether host attention includes run-divergence investigation.
+    pub fn includes_host_investigation(self) -> bool {
+        matches!(
+            self,
+            Self::HostInvestigation
+                | Self::SchedulerActionAndHostInvestigation
+                | Self::HostAndRunIntegrityInvestigation
+                | Self::SchedulerActionHostAndRunIntegrityInvestigation
+        )
+    }
+
+    /// Return whether host attention includes host-log integrity investigation.
+    pub fn includes_run_integrity_investigation(self) -> bool {
+        matches!(
+            self,
+            Self::RunIntegrityInvestigation
+                | Self::SchedulerActionAndRunIntegrityInvestigation
+                | Self::HostAndRunIntegrityInvestigation
+                | Self::SchedulerActionHostAndRunIntegrityInvestigation
+        )
+    }
+
+    /// Return whether more than one host-attention surface is active.
+    pub fn has_multiple_attention(self) -> bool {
+        matches!(
+            self,
+            Self::SchedulerActionAndHostInvestigation
+                | Self::SchedulerActionAndRunIntegrityInvestigation
+                | Self::HostAndRunIntegrityInvestigation
+                | Self::SchedulerActionHostAndRunIntegrityInvestigation
+        )
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostAttentionKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -5705,6 +5975,129 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_attention_kind_labels_are_stable_for_hosts() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainHostAttentionKind::NoAttention,
+                "no_attention",
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostAttentionKind::SchedulerAction,
+                "scheduler_action",
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostAttentionKind::HostInvestigation,
+                "host_investigation",
+                false,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostAttentionKind::RunIntegrityInvestigation,
+                "run_integrity_investigation",
+                false,
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionAndHostInvestigation,
+                "scheduler_action_and_host_investigation",
+                true,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionAndRunIntegrityInvestigation,
+                "scheduler_action_and_run_integrity_investigation",
+                true,
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainHostAttentionKind::HostAndRunIntegrityInvestigation,
+                "host_and_run_integrity_investigation",
+                false,
+                true,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionHostAndRunIntegrityInvestigation,
+                "scheduler_action_host_and_run_integrity_investigation",
+                true,
+                true,
+                true,
+            ),
+        ];
+
+        for (
+            kind,
+            label,
+            requires_scheduler_action,
+            requires_host_investigation,
+            requires_run_integrity_investigation,
+        ) in cases
+        {
+            assert_eq!(kind.as_str(), label);
+            assert_eq!(kind.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostAttentionKind::from_label(label),
+                Some(kind)
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainHostAttentionKind::from_attention_flags(
+                    requires_scheduler_action,
+                    requires_host_investigation,
+                    requires_run_integrity_investigation,
+                ),
+                kind
+            );
+            assert_eq!(
+                kind.requires_attention(),
+                requires_scheduler_action
+                    || requires_host_investigation
+                    || requires_run_integrity_investigation
+            );
+            assert_eq!(
+                kind.is_no_attention(),
+                !(requires_scheduler_action
+                    || requires_host_investigation
+                    || requires_run_integrity_investigation)
+            );
+            assert_eq!(kind.includes_scheduler_action(), requires_scheduler_action);
+            assert_eq!(
+                kind.includes_host_investigation(),
+                requires_host_investigation
+            );
+            assert_eq!(
+                kind.includes_run_integrity_investigation(),
+                requires_run_integrity_investigation
+            );
+            assert_eq!(
+                kind.has_multiple_attention(),
+                [
+                    requires_scheduler_action,
+                    requires_host_investigation,
+                    requires_run_integrity_investigation,
+                ]
+                .into_iter()
+                .filter(|requires_attention| *requires_attention)
+                .count()
+                    > 1
+            );
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainHostAttentionKind::from_label("pay_attention"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_report_exposes_outcome_label_and_action_flag() {
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(store
@@ -5777,6 +6170,18 @@ mod tests {
         assert!(report.run_integrity_label_matches_kind());
         assert!(report.is_run_integrity_clean());
         assert!(!report.requires_run_integrity_investigation());
+        assert!(report.requires_host_attention());
+        assert!(!report.is_no_host_attention());
+        assert_eq!(
+            report.host_attention_kind(),
+            ToolAuditSupervisorDrainHostAttentionKind::SchedulerAction
+        );
+        assert_eq!(report.host_attention_label(), "scheduler_action");
+        assert!(report.host_attention_label_matches_kind());
+        assert!(report.host_attention_includes_scheduler_action());
+        assert!(!report.host_attention_includes_host_investigation());
+        assert!(!report.host_attention_includes_run_integrity_investigation());
+        assert!(!report.has_multiple_host_attention());
     }
 
     #[test]
@@ -6003,6 +6408,30 @@ mod tests {
         assert!(summary.is_run_integrity_clean());
         assert!(!summary.requires_run_integrity_investigation);
         assert!(!summary.requires_run_integrity_investigation());
+        assert!(summary.requires_host_attention);
+        assert!(summary.requires_host_attention());
+        assert!(!summary.is_no_host_attention);
+        assert!(!summary.is_no_host_attention());
+        assert_eq!(
+            summary.host_attention_kind,
+            ToolAuditSupervisorDrainHostAttentionKind::SchedulerAction
+        );
+        assert_eq!(
+            summary.host_attention_kind(),
+            ToolAuditSupervisorDrainHostAttentionKind::SchedulerAction
+        );
+        assert_eq!(summary.host_attention_label, "scheduler_action");
+        assert_eq!(summary.host_attention_label(), "scheduler_action");
+        assert!(summary.host_attention_label_matches_kind);
+        assert!(summary.host_attention_label_matches_kind());
+        assert!(summary.host_attention_includes_scheduler_action);
+        assert!(summary.host_attention_includes_scheduler_action());
+        assert!(!summary.host_attention_includes_host_investigation);
+        assert!(!summary.host_attention_includes_host_investigation());
+        assert!(!summary.host_attention_includes_run_integrity_investigation);
+        assert!(!summary.host_attention_includes_run_integrity_investigation());
+        assert!(!summary.has_multiple_host_attention);
+        assert!(!summary.has_multiple_host_attention());
         assert!(!summary.requires_host_investigation);
         assert!(!summary.requires_host_investigation());
         assert!(!summary.requires_host_plan_drift_investigation);
@@ -6498,6 +6927,187 @@ mod tests {
         stale_label_summary.run_integrity_label = "integrityish";
         stale_label_summary.run_integrity_label_matches_kind = false;
         assert!(!stale_label_summary.run_integrity_label_matches_kind());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_flattens_host_attention_fields() {
+        let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut idle_sink = InMemoryToolAuditSink::new();
+        let idle_report = empty_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut idle_sink)
+            .unwrap();
+        let idle_summary = idle_report.summary();
+
+        assert!(!idle_report.requires_host_attention());
+        assert!(idle_report.is_no_host_attention());
+        assert_eq!(
+            idle_report.host_attention_kind(),
+            ToolAuditSupervisorDrainHostAttentionKind::NoAttention
+        );
+        assert_eq!(idle_report.host_attention_label(), "no_attention");
+        assert!(idle_report.host_attention_label_matches_kind());
+        assert!(!idle_report.host_attention_includes_scheduler_action());
+        assert!(!idle_report.host_attention_includes_host_investigation());
+        assert!(!idle_report.host_attention_includes_run_integrity_investigation());
+        assert!(!idle_report.has_multiple_host_attention());
+        assert!(!idle_summary.requires_host_attention);
+        assert!(!idle_summary.requires_host_attention());
+        assert!(idle_summary.is_no_host_attention);
+        assert!(idle_summary.is_no_host_attention());
+        assert_eq!(
+            idle_summary.host_attention_kind(),
+            ToolAuditSupervisorDrainHostAttentionKind::NoAttention
+        );
+        assert_eq!(idle_summary.host_attention_label(), "no_attention");
+        assert!(idle_summary.host_attention_label_matches_kind());
+        assert!(!idle_summary.host_attention_includes_scheduler_action());
+        assert!(!idle_summary.host_attention_includes_host_investigation());
+        assert!(!idle_summary.host_attention_includes_run_integrity_investigation());
+        assert!(!idle_summary.has_multiple_host_attention());
+
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 1, &mut sink)
+            .unwrap();
+        let summary = report.summary();
+
+        assert!(report.requires_host_attention());
+        assert!(!report.is_no_host_attention());
+        assert_eq!(
+            report.host_attention_kind(),
+            ToolAuditSupervisorDrainHostAttentionKind::SchedulerAction
+        );
+        assert_eq!(report.host_attention_label(), "scheduler_action");
+        assert!(report.host_attention_label_matches_kind());
+        assert!(report.host_attention_includes_scheduler_action());
+        assert!(!report.host_attention_includes_host_investigation());
+        assert!(!report.host_attention_includes_run_integrity_investigation());
+        assert!(!report.has_multiple_host_attention());
+        assert!(summary.requires_host_attention);
+        assert!(!summary.is_no_host_attention);
+        assert_eq!(
+            summary.host_attention_kind(),
+            ToolAuditSupervisorDrainHostAttentionKind::SchedulerAction
+        );
+        assert_eq!(summary.host_attention_label(), "scheduler_action");
+        assert!(summary.host_attention_label_matches_kind());
+        assert!(summary.host_attention_includes_scheduler_action());
+        assert!(!summary.host_attention_includes_host_investigation());
+        assert!(!summary.host_attention_includes_run_integrity_investigation());
+        assert!(!summary.has_multiple_host_attention());
+
+        let mut integrity_report = report.clone();
+        integrity_report.drain.ticks[0].replay.next_checkpoint =
+            ToolAuditReadCheckpoint::beginning();
+        let integrity_summary = integrity_report.summary();
+        assert!(integrity_report.requires_scheduler_action());
+        assert!(!integrity_report.requires_host_investigation());
+        assert!(integrity_report.requires_run_integrity_investigation());
+        assert_eq!(
+            integrity_report.host_attention_kind(),
+            ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionAndRunIntegrityInvestigation
+        );
+        assert_eq!(
+            integrity_report.host_attention_label(),
+            "scheduler_action_and_run_integrity_investigation"
+        );
+        assert!(integrity_report.host_attention_includes_scheduler_action());
+        assert!(!integrity_report.host_attention_includes_host_investigation());
+        assert!(integrity_report.host_attention_includes_run_integrity_investigation());
+        assert!(integrity_report.has_multiple_host_attention());
+        assert_eq!(
+            integrity_summary.host_attention_kind(),
+            ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionAndRunIntegrityInvestigation
+        );
+        assert!(integrity_summary.host_attention_includes_scheduler_action());
+        assert!(!integrity_summary.host_attention_includes_host_investigation());
+        assert!(integrity_summary.host_attention_includes_run_integrity_investigation());
+        assert!(integrity_summary.has_multiple_host_attention());
+
+        let mut stale_investigation_summary = idle_summary.clone();
+        stale_investigation_summary.requires_host_investigation = true;
+        stale_investigation_summary.requires_host_attention = true;
+        stale_investigation_summary.is_no_host_attention = false;
+        stale_investigation_summary.host_attention_kind =
+            ToolAuditSupervisorDrainHostAttentionKind::HostInvestigation;
+        stale_investigation_summary.host_attention_label = "host_investigation";
+        stale_investigation_summary.host_attention_includes_host_investigation = true;
+        assert!(stale_investigation_summary.requires_host_attention());
+        assert!(!stale_investigation_summary.is_no_host_attention());
+        assert_eq!(
+            stale_investigation_summary.host_attention_kind(),
+            ToolAuditSupervisorDrainHostAttentionKind::HostInvestigation
+        );
+        assert_eq!(
+            stale_investigation_summary.host_attention_label(),
+            "host_investigation"
+        );
+        assert!(stale_investigation_summary.host_attention_label_matches_kind());
+        assert!(!stale_investigation_summary.host_attention_includes_scheduler_action());
+        assert!(stale_investigation_summary.host_attention_includes_host_investigation());
+        assert!(!stale_investigation_summary.host_attention_includes_run_integrity_investigation());
+        assert!(!stale_investigation_summary.has_multiple_host_attention());
+
+        let mut stale_integrity_summary = idle_summary.clone();
+        stale_integrity_summary.requires_run_integrity_investigation = true;
+        stale_integrity_summary.requires_host_attention = true;
+        stale_integrity_summary.is_no_host_attention = false;
+        stale_integrity_summary.host_attention_kind =
+            ToolAuditSupervisorDrainHostAttentionKind::RunIntegrityInvestigation;
+        stale_integrity_summary.host_attention_label = "run_integrity_investigation";
+        stale_integrity_summary.host_attention_includes_run_integrity_investigation = true;
+        assert!(stale_integrity_summary.requires_host_attention());
+        assert_eq!(
+            stale_integrity_summary.host_attention_kind(),
+            ToolAuditSupervisorDrainHostAttentionKind::RunIntegrityInvestigation
+        );
+        assert_eq!(
+            stale_integrity_summary.host_attention_label(),
+            "run_integrity_investigation"
+        );
+        assert!(stale_integrity_summary.host_attention_label_matches_kind());
+        assert!(!stale_integrity_summary.host_attention_includes_scheduler_action());
+        assert!(!stale_integrity_summary.host_attention_includes_host_investigation());
+        assert!(stale_integrity_summary.host_attention_includes_run_integrity_investigation());
+        assert!(!stale_integrity_summary.has_multiple_host_attention());
+
+        let mut stale_multiple_summary = summary.clone();
+        stale_multiple_summary.requires_host_investigation = true;
+        stale_multiple_summary.requires_run_integrity_investigation = true;
+        stale_multiple_summary.host_attention_kind =
+            ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionHostAndRunIntegrityInvestigation;
+        stale_multiple_summary.host_attention_label =
+            "scheduler_action_host_and_run_integrity_investigation";
+        stale_multiple_summary.host_attention_includes_host_investigation = true;
+        stale_multiple_summary.host_attention_includes_run_integrity_investigation = true;
+        stale_multiple_summary.has_multiple_host_attention = true;
+        assert!(stale_multiple_summary.requires_host_attention());
+        assert_eq!(
+            stale_multiple_summary.host_attention_kind(),
+            ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionHostAndRunIntegrityInvestigation
+        );
+        assert_eq!(
+            stale_multiple_summary.host_attention_label(),
+            "scheduler_action_host_and_run_integrity_investigation"
+        );
+        assert!(stale_multiple_summary.host_attention_label_matches_kind());
+        assert!(stale_multiple_summary.host_attention_includes_scheduler_action());
+        assert!(stale_multiple_summary.host_attention_includes_host_investigation());
+        assert!(stale_multiple_summary.host_attention_includes_run_integrity_investigation());
+        assert!(stale_multiple_summary.has_multiple_host_attention());
+
+        stale_multiple_summary.host_attention_label = "attentionish";
+        stale_multiple_summary.host_attention_label_matches_kind = false;
+        assert!(!stale_multiple_summary.host_attention_label_matches_kind());
     }
 
     #[test]
