@@ -3188,6 +3188,9 @@ function solveLinearCircuitAtOperatingPoint(
     Array.from({ length: matrixSize }, () => 0.0),
   );
   const rhs = Array.from({ length: matrixSize }, () => 0.0);
+  const inductors = inductorByName(circuit);
+  const coupledNames = coupledInductorNames(circuit);
+  const hasTransientInductorStates = inductorStates.length > 0;
 
   for (const element of circuit.elements()) {
     switch (element.kind) {
@@ -3198,15 +3201,29 @@ function solveLinearCircuitAtOperatingPoint(
         stampCapacitor(element, capacitorStates, nodeIndices, matrix, rhs);
         break;
       case "inductor":
-        stampInductor(
-          element,
-          inductorStates,
-          nodeIndices,
-          voltageSources,
-          nodeCount,
-          matrix,
-          rhs,
-        );
+        if (!hasTransientInductorStates || !coupledNames.has(element.name)) {
+          stampInductor(
+            element,
+            inductorStates,
+            nodeIndices,
+            voltageSources,
+            nodeCount,
+            matrix,
+            rhs,
+          );
+        }
+        break;
+      case "mutual-inductor":
+        if (hasTransientInductorStates) {
+          stampTransientMutualInductor(
+            element,
+            inductors,
+            inductorStates,
+            nodeIndices,
+            matrix,
+            rhs,
+          );
+        }
         break;
       case "voltage-source":
         stampVoltageSource(
@@ -4531,6 +4548,13 @@ function updateInductorStates(
   nodeVoltages: ReadonlyMap<string, number>,
   inductorStates: InductorState[],
 ): void {
+  const inductors = inductorByName(circuit);
+  const coupledCurrents = coupledTransientInductorCurrents(
+    circuit,
+    inductors,
+    inductorStates,
+    nodeVoltages,
+  );
   for (const state of inductorStates) {
     const element = circuit
       .elements()
@@ -4541,7 +4565,8 @@ function updateInductorStates(
     if (element === undefined) {
       continue;
     }
-    state.previousCurrent = inductorCurrent(element, state, nodeVoltages);
+    state.previousCurrent =
+      coupledCurrents.get(element.name) ?? inductorCurrent(element, state, nodeVoltages);
   }
 }
 
@@ -4551,6 +4576,13 @@ function insertTransientInductorCurrents(
   nodeVoltages: ReadonlyMap<string, number>,
   branchCurrents: Map<string, number>,
 ): void {
+  const inductors = inductorByName(circuit);
+  const coupledCurrents = coupledTransientInductorCurrents(
+    circuit,
+    inductors,
+    inductorStates,
+    nodeVoltages,
+  );
   for (const state of inductorStates) {
     const element = circuit
       .elements()
@@ -4563,7 +4595,7 @@ function insertTransientInductorCurrents(
     }
     branchCurrents.set(
       `I(${element.name})`,
-      inductorCurrent(element, state, nodeVoltages),
+      coupledCurrents.get(element.name) ?? inductorCurrent(element, state, nodeVoltages),
     );
   }
 }
@@ -4576,6 +4608,96 @@ function inductorCurrent(
   const conductance = state.timeStep / element.inductanceHenrys;
   const voltage = voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2);
   return state.previousCurrent + conductance * voltage;
+}
+
+function stampTransientMutualInductor(
+  element: MutualInductor,
+  inductors: ReadonlyMap<string, Inductor>,
+  inductorStates: readonly InductorState[],
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+): void {
+  const { primary, secondary, mutualInductance } = validateMutualInductor(element, inductors);
+  const primaryState = inductorStates.find((state) => state.name === primary.name);
+  const secondaryState = inductorStates.find((state) => state.name === secondary.name);
+  if (primaryState === undefined || secondaryState === undefined) {
+    return;
+  }
+  const { g11, g12, g22 } = transientMutualConductances(
+    element,
+    primary,
+    secondary,
+    mutualInductance,
+    primaryState.timeStep,
+  );
+  const p1 = nodeIndex(nodeIndices, primary.n1);
+  const p2 = nodeIndex(nodeIndices, primary.n2);
+  const s1 = nodeIndex(nodeIndices, secondary.n1);
+  const s2 = nodeIndex(nodeIndices, secondary.n2);
+  stampConductance(matrix, p1, p2, g11);
+  stampConductance(matrix, s1, s2, g22);
+  stampTransconductance(matrix, p1, p2, s1, s2, g12);
+  stampTransconductance(matrix, s1, s2, p1, p2, g12);
+  stampCurrentSourceEquivalent(rhs, p1, p2, primaryState.previousCurrent);
+  stampCurrentSourceEquivalent(rhs, s1, s2, secondaryState.previousCurrent);
+}
+
+function coupledTransientInductorCurrents(
+  circuit: Circuit,
+  inductors: ReadonlyMap<string, Inductor>,
+  inductorStates: readonly InductorState[],
+  nodeVoltages: ReadonlyMap<string, number>,
+): Map<string, number> {
+  const currents = new Map<string, number>();
+  for (const element of circuit.elements()) {
+    if (element.kind !== "mutual-inductor") {
+      continue;
+    }
+    const { primary, secondary, mutualInductance } = validateMutualInductor(element, inductors);
+    const primaryState = inductorStates.find((state) => state.name === primary.name);
+    const secondaryState = inductorStates.find((state) => state.name === secondary.name);
+    if (primaryState === undefined || secondaryState === undefined) {
+      continue;
+    }
+    const { g11, g12, g22 } = transientMutualConductances(
+      element,
+      primary,
+      secondary,
+      mutualInductance,
+      primaryState.timeStep,
+    );
+    const primaryVoltage = voltageAt(nodeVoltages, primary.n1) - voltageAt(nodeVoltages, primary.n2);
+    const secondaryVoltage = voltageAt(nodeVoltages, secondary.n1) - voltageAt(nodeVoltages, secondary.n2);
+    currents.set(
+      primary.name,
+      primaryState.previousCurrent + g11 * primaryVoltage + g12 * secondaryVoltage,
+    );
+    currents.set(
+      secondary.name,
+      secondaryState.previousCurrent + g12 * primaryVoltage + g22 * secondaryVoltage,
+    );
+  }
+  return currents;
+}
+
+function transientMutualConductances(
+  element: MutualInductor,
+  primary: Inductor,
+  secondary: Inductor,
+  mutualInductance: number,
+  timeStep: number,
+): { g11: number; g12: number; g22: number } {
+  const determinant = primary.inductanceHenrys * secondary.inductanceHenrys - mutualInductance ** 2;
+  if (!Number.isFinite(determinant) || determinant <= 0.0) {
+    throw invalidElement(element.name, "coupled inductance matrix is singular");
+  }
+  const scale = timeStep / determinant;
+  return {
+    g11: secondary.inductanceHenrys * scale,
+    g12: -mutualInductance * scale,
+    g22: primary.inductanceHenrys * scale,
+  };
 }
 
 function voltageAt(

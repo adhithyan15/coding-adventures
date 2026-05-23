@@ -959,6 +959,21 @@ def test_transient_inductor_respects_initial_current():
     assert isclose(result.points[2].node_voltages["out"], -0.25, abs_tol=1e-9)
 
 
+def test_transient_mutual_inductor_couples_secondary_voltage():
+    c = Circuit()
+    c.add(CurrentSource("Istep", "0", "pri", 1.0))
+    c.add(Inductor("Lpri", "pri", "0", 1.0))
+    c.add(Inductor("Lsec", "sec", "0", 1.0))
+    c.add(MutualInductor("K1", "Lpri", "Lsec", 0.5))
+    c.add(Resistor("Rload", "sec", "0", 10.0))
+
+    result = transient(c, t_stop=0.1, t_step=0.1, method="euler")
+
+    assert result.converged
+    assert isclose(result.points[1].node_voltages["pri"], 8.75, rel_tol=1e-9)
+    assert isclose(result.points[1].node_voltages["sec"], 2.5, rel_tol=1e-9)
+
+
 # ---- Transient: TransientResult metadata ----
 
 

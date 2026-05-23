@@ -2027,6 +2027,8 @@ def _build_transient_companions(
         G_eq = h/L
         I_eq = I_n                (parallel current source from n+ to n-)
     """
+    coupled_names = _coupled_inductor_names(circuit)
+
     # Build the base element list, substituting time-varying source values.
     # VoltageSource / CurrentSource elements that carry a waveform callable
     # are replaced here with a plain static copy at the current time t.
@@ -2055,6 +2057,80 @@ def _build_transient_companions(
         else:
             base_elements.append(e)
     aug = Circuit(elements=base_elements)
+
+    inductors = _inductor_by_name(circuit)
+    for el in circuit.elements:
+        if isinstance(el, MutualInductor):
+            primary, secondary, mutual_inductance = _validate_mutual_inductor(
+                el,
+                inductors,
+            )
+            determinant = primary.inductance * secondary.inductance - mutual_inductance**2
+            if determinant <= 0.0 or not math.isfinite(determinant):
+                raise ValueError(f"{el.name}: coupled inductance matrix is singular")
+
+            if method == "trap":
+                scale = h / (2.0 * determinant)
+                v_primary_prev = ind_voltages.get(primary.name, 0.0)
+                v_secondary_prev = ind_voltages.get(secondary.name, 0.0)
+            else:
+                scale = h / determinant
+                v_primary_prev = 0.0
+                v_secondary_prev = 0.0
+            g11 = secondary.inductance * scale
+            g12 = -mutual_inductance * scale
+            g22 = primary.inductance * scale
+            i_primary_eq = (
+                ind_currents.get(primary.name, primary.initial_current)
+                + g11 * v_primary_prev
+                + g12 * v_secondary_prev
+            )
+            i_secondary_eq = (
+                ind_currents.get(secondary.name, secondary.initial_current)
+                + g12 * v_primary_prev
+                + g22 * v_secondary_prev
+            )
+
+            aug.elements.append(Resistor(
+                name=f"_K_{el.name}_{primary.name}_R",
+                n_plus=primary.n_plus,
+                n_minus=primary.n_minus,
+                resistance=1.0 / g11,
+            ))
+            aug.elements.append(Resistor(
+                name=f"_K_{el.name}_{secondary.name}_R",
+                n_plus=secondary.n_plus,
+                n_minus=secondary.n_minus,
+                resistance=1.0 / g22,
+            ))
+            aug.elements.append(VCCS(
+                name=f"_K_{el.name}_{primary.name}_from_{secondary.name}",
+                n_plus=primary.n_plus,
+                n_minus=primary.n_minus,
+                ctrl_plus=secondary.n_plus,
+                ctrl_minus=secondary.n_minus,
+                gm=g12,
+            ))
+            aug.elements.append(VCCS(
+                name=f"_K_{el.name}_{secondary.name}_from_{primary.name}",
+                n_plus=secondary.n_plus,
+                n_minus=secondary.n_minus,
+                ctrl_plus=primary.n_plus,
+                ctrl_minus=primary.n_minus,
+                gm=g12,
+            ))
+            aug.elements.append(CurrentSource(
+                name=f"_K_{el.name}_{primary.name}_I",
+                n_plus=primary.n_plus,
+                n_minus=primary.n_minus,
+                current=i_primary_eq,
+            ))
+            aug.elements.append(CurrentSource(
+                name=f"_K_{el.name}_{secondary.name}_I",
+                n_plus=secondary.n_plus,
+                n_minus=secondary.n_minus,
+                current=i_secondary_eq,
+            ))
 
     for el in circuit.elements:
         # ---- Capacitor companion ------------------------------------------
@@ -2086,7 +2162,7 @@ def _build_transient_companions(
             ))
 
         # ---- Inductor companion ------------------------------------------
-        elif isinstance(el, Inductor):
+        elif isinstance(el, Inductor) and el.name not in coupled_names:
             I_prev = ind_currents.get(el.name, 0.0)
             if method == "trap":
                 g_eq = h / (2.0 * el.inductance)
@@ -2142,6 +2218,52 @@ def _update_reactive_state(
     Inductor voltage update (trapezoidal):
         V_{n+1} = V_{n+1,+} - V_{n+1,-}   (for use in the next companion build)
     """
+    coupled_names = _coupled_inductor_names(circuit)
+    inductors = _inductor_by_name(circuit)
+    for el in circuit.elements:
+        if isinstance(el, MutualInductor):
+            primary, secondary, mutual_inductance = _validate_mutual_inductor(
+                el,
+                inductors,
+            )
+            determinant = primary.inductance * secondary.inductance - mutual_inductance**2
+            if determinant <= 0.0 or not math.isfinite(determinant):
+                raise ValueError(f"{el.name}: coupled inductance matrix is singular")
+
+            v_primary = (
+                _node_voltage(primary.n_plus, op.node_voltages)
+                - _node_voltage(primary.n_minus, op.node_voltages)
+            )
+            v_secondary = (
+                _node_voltage(secondary.n_plus, op.node_voltages)
+                - _node_voltage(secondary.n_minus, op.node_voltages)
+            )
+            if method == "trap":
+                scale = h / (2.0 * determinant)
+                v_primary_prev = ind_voltages.get(primary.name, 0.0)
+                v_secondary_prev = ind_voltages.get(secondary.name, 0.0)
+            else:
+                scale = h / determinant
+                v_primary_prev = 0.0
+                v_secondary_prev = 0.0
+            g11 = secondary.inductance * scale
+            g12 = -mutual_inductance * scale
+            g22 = primary.inductance * scale
+            i_primary_eq = (
+                ind_currents.get(primary.name, primary.initial_current)
+                + g11 * v_primary_prev
+                + g12 * v_secondary_prev
+            )
+            i_secondary_eq = (
+                ind_currents.get(secondary.name, secondary.initial_current)
+                + g12 * v_primary_prev
+                + g22 * v_secondary_prev
+            )
+            ind_currents[primary.name] = g11 * v_primary + g12 * v_secondary + i_primary_eq
+            ind_currents[secondary.name] = g12 * v_primary + g22 * v_secondary + i_secondary_eq
+            ind_voltages[primary.name] = v_primary
+            ind_voltages[secondary.name] = v_secondary
+
     for el in circuit.elements:
         if isinstance(el, Capacitor):
             v_plus = _node_voltage(el.n_plus, op.node_voltages)
@@ -2159,7 +2281,7 @@ def _update_reactive_state(
 
             cap_voltages[el.name] = v_new
 
-        elif isinstance(el, Inductor):
+        elif isinstance(el, Inductor) and el.name not in coupled_names:
             v_plus = _node_voltage(el.n_plus, op.node_voltages)
             v_minus = _node_voltage(el.n_minus, op.node_voltages)
             v_new = v_plus - v_minus

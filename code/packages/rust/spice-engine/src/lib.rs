@@ -3919,6 +3919,9 @@ fn solve_linear_circuit_at_operating_point(
 ) -> Result<LinearSolution, SpiceError> {
     let mut matrix = vec![vec![0.0; matrix_size]; matrix_size];
     let mut rhs = vec![0.0; matrix_size];
+    let inductors = inductor_by_name(circuit);
+    let coupled_names = coupled_inductor_names(circuit);
+    let has_transient_inductor_states = !inductor_states.is_empty();
 
     for element in circuit.elements() {
         match element {
@@ -3930,16 +3933,31 @@ fn solve_linear_circuit_at_operating_point(
                 &mut matrix,
                 &mut rhs,
             )?,
-            Element::Inductor(inductor) => stamp_inductor(
-                inductor,
-                inductor_states,
-                node_indices,
-                &voltage_sources,
-                node_count,
-                &mut matrix,
-                &mut rhs,
-            )?,
-            Element::MutualInductor(_) => {}
+            Element::Inductor(inductor) => {
+                if !has_transient_inductor_states || !coupled_names.contains(&inductor.name) {
+                    stamp_inductor(
+                        inductor,
+                        inductor_states,
+                        node_indices,
+                        &voltage_sources,
+                        node_count,
+                        &mut matrix,
+                        &mut rhs,
+                    )?
+                }
+            }
+            Element::MutualInductor(mutual) => {
+                if has_transient_inductor_states {
+                    stamp_transient_mutual_inductor(
+                        mutual,
+                        &inductors,
+                        inductor_states,
+                        node_indices,
+                        &mut matrix,
+                        &mut rhs,
+                    )?
+                }
+            }
             Element::VoltageSource(source) => stamp_voltage_source(
                 source,
                 node_indices,
@@ -5444,6 +5462,10 @@ fn update_inductor_states(
     node_voltages: &BTreeMap<String, f64>,
     inductor_states: &mut [InductorState],
 ) {
+    let inductors = inductor_by_name(circuit);
+    let coupled_currents =
+        coupled_transient_inductor_currents(circuit, &inductors, inductor_states, node_voltages)
+            .unwrap_or_default();
     for state in inductor_states {
         let Some(inductor) = circuit.elements().iter().find_map(|element| match element {
             Element::Inductor(inductor) if inductor.name == state.name => Some(inductor),
@@ -5451,7 +5473,10 @@ fn update_inductor_states(
         }) else {
             continue;
         };
-        state.previous_current = inductor_current(inductor, state, node_voltages);
+        state.previous_current = coupled_currents
+            .get(&inductor.name)
+            .copied()
+            .unwrap_or_else(|| inductor_current(inductor, state, node_voltages));
     }
 }
 
@@ -5461,6 +5486,10 @@ fn insert_transient_inductor_currents(
     node_voltages: &BTreeMap<String, f64>,
     branch_currents: &mut BTreeMap<String, f64>,
 ) {
+    let inductors = inductor_by_name(circuit);
+    let coupled_currents =
+        coupled_transient_inductor_currents(circuit, &inductors, inductor_states, node_voltages)
+            .unwrap_or_default();
     for state in inductor_states {
         let Some(inductor) = circuit.elements().iter().find_map(|element| match element {
             Element::Inductor(inductor) if inductor.name == state.name => Some(inductor),
@@ -5470,7 +5499,10 @@ fn insert_transient_inductor_currents(
         };
         branch_currents.insert(
             format!("I({})", inductor.name),
-            inductor_current(inductor, state, node_voltages),
+            coupled_currents
+                .get(&inductor.name)
+                .copied()
+                .unwrap_or_else(|| inductor_current(inductor, state, node_voltages)),
         );
     }
 }
@@ -5483,6 +5515,117 @@ fn inductor_current(
     let conductance = state.time_step / inductor.inductance_henrys;
     let voltage = voltage_at(node_voltages, &inductor.n1) - voltage_at(node_voltages, &inductor.n2);
     state.previous_current + conductance * voltage
+}
+
+fn stamp_transient_mutual_inductor(
+    mutual: &MutualInductor,
+    inductors: &HashMap<String, &Inductor>,
+    inductor_states: &[InductorState],
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) -> Result<(), SpiceError> {
+    let (primary, secondary, mutual_inductance) = validate_mutual_inductor(mutual, inductors)?;
+    let Some(primary_state) = inductor_states
+        .iter()
+        .find(|state| state.name == primary.name)
+    else {
+        return Ok(());
+    };
+    let Some(secondary_state) = inductor_states
+        .iter()
+        .find(|state| state.name == secondary.name)
+    else {
+        return Ok(());
+    };
+    let (g11, g12, g22) = transient_mutual_conductances(
+        mutual,
+        primary,
+        secondary,
+        mutual_inductance,
+        primary_state.time_step,
+    )?;
+    let p1 = node_index(node_indices, &primary.n1);
+    let p2 = node_index(node_indices, &primary.n2);
+    let s1 = node_index(node_indices, &secondary.n1);
+    let s2 = node_index(node_indices, &secondary.n2);
+    stamp_conductance(matrix, p1, p2, g11);
+    stamp_conductance(matrix, s1, s2, g22);
+    stamp_transconductance(matrix, p1, p2, s1, s2, g12);
+    stamp_transconductance(matrix, s1, s2, p1, p2, g12);
+    stamp_equivalent_current_source(rhs, p1, p2, primary_state.previous_current);
+    stamp_equivalent_current_source(rhs, s1, s2, secondary_state.previous_current);
+    Ok(())
+}
+
+fn coupled_transient_inductor_currents(
+    circuit: &Circuit,
+    inductors: &HashMap<String, &Inductor>,
+    inductor_states: &[InductorState],
+    node_voltages: &BTreeMap<String, f64>,
+) -> Result<HashMap<String, f64>, SpiceError> {
+    let mut currents = HashMap::new();
+    for element in circuit.elements() {
+        let Element::MutualInductor(mutual) = element else {
+            continue;
+        };
+        let (primary, secondary, mutual_inductance) = validate_mutual_inductor(mutual, inductors)?;
+        let Some(primary_state) = inductor_states
+            .iter()
+            .find(|state| state.name == primary.name)
+        else {
+            continue;
+        };
+        let Some(secondary_state) = inductor_states
+            .iter()
+            .find(|state| state.name == secondary.name)
+        else {
+            continue;
+        };
+        let (g11, g12, g22) = transient_mutual_conductances(
+            mutual,
+            primary,
+            secondary,
+            mutual_inductance,
+            primary_state.time_step,
+        )?;
+        let primary_voltage =
+            voltage_at(node_voltages, &primary.n1) - voltage_at(node_voltages, &primary.n2);
+        let secondary_voltage =
+            voltage_at(node_voltages, &secondary.n1) - voltage_at(node_voltages, &secondary.n2);
+        currents.insert(
+            primary.name.clone(),
+            primary_state.previous_current + g11 * primary_voltage + g12 * secondary_voltage,
+        );
+        currents.insert(
+            secondary.name.clone(),
+            secondary_state.previous_current + g12 * primary_voltage + g22 * secondary_voltage,
+        );
+    }
+    Ok(currents)
+}
+
+fn transient_mutual_conductances(
+    mutual: &MutualInductor,
+    primary: &Inductor,
+    secondary: &Inductor,
+    mutual_inductance: f64,
+    time_step: f64,
+) -> Result<(f64, f64, f64), SpiceError> {
+    let determinant =
+        primary.inductance_henrys * secondary.inductance_henrys - mutual_inductance.powi(2);
+    if !determinant.is_finite() || determinant <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mutual.name.clone(),
+            reason: "coupled inductance matrix is singular".to_string(),
+        });
+    }
+    let scale = time_step / determinant;
+    Ok((
+        secondary.inductance_henrys * scale,
+        -mutual_inductance * scale,
+        primary.inductance_henrys * scale,
+    ))
 }
 
 fn voltage_at(node_voltages: &BTreeMap<String, f64>, node: &str) -> f64 {
