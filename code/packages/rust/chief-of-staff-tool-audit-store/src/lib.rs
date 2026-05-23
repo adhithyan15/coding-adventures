@@ -1255,6 +1255,7 @@ impl ToolAuditSupervisorDrainRunReport {
             requires_follow_up: self.requires_follow_up(),
             advanced_checkpoint: self.advanced_checkpoint(),
             last_checkpoint: self.last_checkpoint().cloned(),
+            has_last_checkpoint: self.has_last_checkpoint(),
             last_checkpoint_timestamp_ms: self.last_checkpoint_timestamp_ms(),
             last_checkpoint_call_id: self.last_checkpoint_call_id().map(str::to_owned),
         }
@@ -1520,6 +1521,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub advanced_checkpoint: bool,
     /// Last replay checkpoint observed by the actual run.
     pub last_checkpoint: Option<ToolAuditReadCheckpoint>,
+    /// Whether the actual run observed a replay checkpoint.
+    pub has_last_checkpoint: bool,
     /// Timestamp for the last replay checkpoint observed by the actual run.
     pub last_checkpoint_timestamp_ms: Option<u64>,
     /// Call id for the last replay checkpoint observed by the actual run.
@@ -1809,7 +1812,7 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether the actual run observed a replay checkpoint.
     pub fn has_last_checkpoint(&self) -> bool {
-        self.last_checkpoint().is_some()
+        self.has_last_checkpoint
     }
 
     /// Return the timestamp for the last replay checkpoint observed by the actual run.
@@ -4500,6 +4503,7 @@ mod tests {
         assert!(summary.advanced_checkpoint());
         assert_eq!(summary.last_checkpoint, report.last_checkpoint().cloned());
         assert_eq!(summary.last_checkpoint(), report.last_checkpoint());
+        assert!(summary.has_last_checkpoint);
         assert_eq!(summary.last_checkpoint_timestamp_ms, Some(120));
         assert_eq!(summary.last_checkpoint_call_id.as_deref(), Some("call_2"));
         assert!(summary.has_last_checkpoint());
