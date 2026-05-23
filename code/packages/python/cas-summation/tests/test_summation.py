@@ -1484,3 +1484,125 @@ class TestEvaluateSumPhase53SqrtTimesPolynomialNumerator:
         assert not (isinstance(result, IRApply) and result.head == SUM), (
             f"Regression: Sqrt(k)/k² should close via Phase 51; got {result!r}"
         )
+
+
+# ---------------------------------------------------------------------------
+# Phase 54 — Log × polynomial numerator pattern.
+# ---------------------------------------------------------------------------
+# ``log(h(k)) · P(k) / Q(k)`` vanishes at infinity when ``deg(Q) > deg(P)``
+# (strictly).  The log factor grows sub-polynomially — slower than any
+# positive power of k — so the effective growth degree is just ``deg(P)``.
+#
+# The helper ``_split_log_polynomial_factor`` requires exactly one
+# Log(diverging) factor in a Mul node; all other factors must be polynomial.
+# It returns ``(log_factor, poly_deg_sum)``.  The branch in
+# ``_g_vanishes_at_infinity`` closes when ``den_deg > poly_deg_sum``.
+#
+# Equal degrees are refused because ``log(k) * constant`` diverges to ±∞.
+# ---------------------------------------------------------------------------
+
+
+class TestEvaluateSumPhase54LogTimesPolynomialNumerator:
+    """Phase 54: Mul(Log(diverging), polynomial_factors) numerator."""
+
+    def test_log_k_times_k_over_k_cubed_closes(self):
+        """``log(k)·k/k³``: log×poly_deg_1 over deg_3.  Phase 54 closes.
+
+        The summand comes from a telescoping difference
+        ``g(k) − g(k+1)`` where ``g(k) = log(k)·k/k³ = log(k)/k²``.
+        poly_deg=1, den_deg=3, so 3 > 1 → vanishes.
+        """
+        from symbolic_ir import LOG, POW, SUB
+
+        log_k = IRApply(LOG, (_k,))
+        num_k = IRApply(MUL, (log_k, _k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        log_kp1 = IRApply(LOG, (kp1,))
+        num_kp1 = IRApply(MUL, (log_kp1, kp1))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 54 should close log(k)·k/k³; got {result!r}"
+        )
+
+    def test_log_k_times_k_squared_over_k_cubed_closes(self):
+        """``log(k)·k²/k³``: log×poly_deg_2 over deg_3.  3 > 2 → closes."""
+        from symbolic_ir import LOG, POW, SUB
+
+        log_k = IRApply(LOG, (_k,))
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        num_k = IRApply(MUL, (log_k, k_sq))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        log_kp1 = IRApply(LOG, (kp1,))
+        kp1_sq = IRApply(POW, (kp1, IRInteger(2)))
+        num_kp1 = IRApply(MUL, (log_kp1, kp1_sq))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 54 should close log(k)·k²/k³; got {result!r}"
+        )
+
+    def test_log_k_times_k_over_k_squared_closes(self):
+        """``log(k)·k/k²``: log×poly_deg_1 over deg_2.  2 > 1 → closes."""
+        from symbolic_ir import LOG, POW, SUB
+
+        log_k = IRApply(LOG, (_k,))
+        num_k = IRApply(MUL, (log_k, _k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        log_kp1 = IRApply(LOG, (kp1,))
+        num_kp1 = IRApply(MUL, (log_kp1, kp1))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(2)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 54 should close log(k)·k/k²; got {result!r}"
+        )
+
+    def test_log_k_times_k_squared_over_k_squared_refused(self):
+        """``log(k)·k²/k²`` reduces to ``log(k)`` — diverges.
+
+        poly_deg=2, den_deg=2.  Equality means the expression is
+        ``log(k) * constant``, which grows without bound.  Phase 54
+        must refuse (equal degrees are not strictly greater).
+        """
+        from symbolic_ir import LOG, POW, SUB
+
+        log_k = IRApply(LOG, (_k,))
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        num_k = IRApply(MUL, (log_k, k_sq))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        log_kp1 = IRApply(LOG, (kp1,))
+        kp1_sq = IRApply(POW, (kp1, IRInteger(2)))
+        num_kp1 = IRApply(MUL, (log_kp1, kp1_sq))
+        g_k = IRApply(DIV, (num_k, k_sq))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_sq))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # log(k)*k²/k² = log(k) → diverges; must stay unevaluated.
+        assert isinstance(result, IRApply) and result.head == SUM, (
+            f"Phase 54: equal degrees should stay unevaluated; got {result!r}"
+        )
+
+    def test_regression_log_k_over_k_cubed_still_phase50(self):
+        """Regression: plain ``log(k)/k³`` still closes via Phase 50.
+
+        Phase 54 requires a Mul node; a bare Log(k) numerator goes via
+        Phase 50's ``_is_log_of_diverging_in_k`` fast path.
+        """
+        from symbolic_ir import LOG, POW, SUB
+
+        log_k = IRApply(LOG, (_k,))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        log_kp1 = IRApply(LOG, (kp1,))
+        g_k = IRApply(DIV, (log_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (log_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Regression: log(k)/k³ should close via Phase 50; got {result!r}"
+        )
