@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.93.0] - 2026-05-23
+
+### Added
+
+- ``INSERT INTO t(other_col) VALUES (...)`` and ``INSERT INTO t
+  VALUES (NULL, ...)`` now work end-to-end on a table with an
+  ``INTEGER PRIMARY KEY`` column.  The id auto-assigns to the next
+  rowid — SQLite's "INTEGER PRIMARY KEY is an alias for rowid"
+  semantics.  Previously these forms failed with a NOT NULL
+  violation, blocking ORM patterns.
+- The rowid pseudo-column now aliases the INTEGER PRIMARY KEY
+  column when one exists: ``SELECT rowid, id FROM t`` returns
+  identical values per row.
+- ``last_insert_rowid()`` correctly reports the auto-assigned id
+  (or the explicit id when one was supplied).
+
+### Changed
+
+- ``SELECT *`` on a table with a partially-omitted INSERT now
+  returns columns in declaration order rather than insertion order
+  (where the omitted columns previously moved to the end).  See
+  ``sql-backend`` 0.18 for the underlying ``_apply_defaults`` fix.
+
 ## [1.92.0] - 2026-05-23
 
 ### Added

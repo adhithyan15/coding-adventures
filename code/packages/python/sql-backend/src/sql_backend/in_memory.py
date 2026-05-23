@@ -134,6 +134,22 @@ def _sql_sort_key(v: SqlValue) -> tuple[int, object]:
 _ROWID_KEY: Final[str] = "\x00rowid"
 
 
+def _find_ipk_column(t: _Table) -> ColumnDef | None:
+    """Return the table's INTEGER PRIMARY KEY column, or None.
+
+    In SQLite an INTEGER PRIMARY KEY column is an alias for the rowid.
+    We recognise it as ``primary_key=True`` plus a type-name in
+    ``{INT, INTEGER}`` (case-insensitive).  Composite primary keys
+    (which currently can't be expressed in the in-memory backend
+    because each column has its own ``primary_key`` flag) do not get
+    rowid-alias treatment — the user must supply explicit values.
+    """
+    for col in t.columns:
+        if col.primary_key and col.type_name.upper() in ("INT", "INTEGER"):
+            return col
+    return None
+
+
 def _strict_type_label(value: object) -> str:
     """Return the SQLite type-name for *value*, used in STRICT-mode error messages.
 
@@ -680,6 +696,13 @@ class InMemoryBackend(Backend):
         t = self._require_table(table)
         full_row = self._apply_defaults(t, row)
         self._check_unknown_columns(table, t, full_row)
+        # INTEGER PRIMARY KEY auto-assign: SQLite treats an INTEGER PRIMARY
+        # KEY column as an alias for the rowid.  When the user omits the
+        # column or passes NULL, SQLite assigns the next rowid; when the
+        # user supplies an explicit value, ``_next_rowid`` is bumped past
+        # it so a subsequent auto-assign doesn't collide.  Done before
+        # ``_check_not_null`` because PRIMARY KEY implies NOT NULL.
+        self._autoassign_ipk(t, full_row)
         self._check_not_null(table, t, full_row)
         if t.strict:
             self._check_strict_types(table, t, full_row)
@@ -687,11 +710,42 @@ class InMemoryBackend(Backend):
         # Stamp the row with its stable integer rowid AFTER constraint
         # checks pass.  The key ``_ROWID_KEY`` (null-prefixed, not a valid
         # SQL identifier) is invisible to normal column resolution and is
-        # skipped by ScanAllColumns.  The counter starts at 1 and is never
-        # reused, matching real-SQLite behaviour.
-        full_row[_ROWID_KEY] = t._next_rowid
-        t._next_rowid += 1
+        # skipped by ScanAllColumns.  When an INTEGER PRIMARY KEY column
+        # exists, the stamp matches that column's value (rowid is the IPK)
+        # so ``SELECT rowid`` and ``SELECT id`` return identical results.
+        ipk_col = _find_ipk_column(t)
+        if ipk_col is not None and full_row.get(ipk_col.name) is not None:
+            full_row[_ROWID_KEY] = full_row[ipk_col.name]
+        else:
+            full_row[_ROWID_KEY] = t._next_rowid
+            t._next_rowid += 1
         t.rows.append(full_row)
+
+    def _autoassign_ipk(self, t: _Table, row: Row) -> None:
+        """Fill in the INTEGER PRIMARY KEY column with the next rowid.
+
+        Three cases:
+
+        * Column absent or value is ``None`` → assign ``t._next_rowid``
+          and bump the counter.
+        * Column value is an explicit integer → bump the counter past
+          that value so subsequent auto-assigns don't collide.
+        * No INTEGER PRIMARY KEY column on the table → no-op (the
+          ``_ROWID_KEY`` stamp still uses ``_next_rowid``).
+        """
+        ipk_col = _find_ipk_column(t)
+        if ipk_col is None:
+            return
+        val = row.get(ipk_col.name)
+        if val is None:
+            row[ipk_col.name] = t._next_rowid
+            t._next_rowid += 1
+        elif isinstance(val, int) and not isinstance(val, bool):
+            # User supplied an explicit id; bump the counter so the next
+            # auto-assigned rowid doesn't collide.  SQLite's behaviour:
+            # ``_next_rowid = max(_next_rowid, supplied_id + 1)``.
+            if val >= t._next_rowid:
+                t._next_rowid = val + 1
 
     def update(
         self,
@@ -1213,16 +1267,31 @@ class InMemoryBackend(Backend):
         the default value. If the column is absent and has no default, we
         leave it absent — NOT NULL / UNIQUE checks downstream will decide
         whether that's an error. (Absent columns produce NULL on read.)
+
+        Column ordering: the returned dict's iteration order matches the
+        table's declared column order, NOT the caller-supplied dict's
+        order.  This matters because ``SELECT *`` walks the row dict in
+        insertion order — if a user INSERT omitted a column (common with
+        INTEGER PRIMARY KEY auto-assign), that column would otherwise
+        end up at the END of the dict and surface in the wrong position.
         """
-        out: Row = dict(row)
+        out: Row = {}
         for col in t.columns:
-            if col.name not in out and col.has_default():
+            if col.name in row:
+                out[col.name] = row[col.name]
+            elif col.has_default():
                 # col.default is ColumnDefault = SqlValue | _NoDefault.
                 # has_default() ruled out the sentinel, so this cast is safe.
                 out[col.name] = col.default  # type: ignore[assignment]
-            elif col.name not in out:
+            else:
                 # Missing + no default → NULL, so NOT NULL checks can see it.
                 out[col.name] = None
+        # Preserve any extra keys the caller passed (typically only the
+        # hidden ``_ROWID_KEY``; unknown column names are rejected by
+        # ``_check_unknown_columns`` immediately after this returns).
+        for key, value in row.items():
+            if key not in out:
+                out[key] = value
         return out
 
     def _check_unknown_columns(self, table: str, t: _Table, row: Row) -> None:
