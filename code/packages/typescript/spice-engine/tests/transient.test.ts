@@ -479,6 +479,19 @@ describe("transient", () => {
     expectClose(points[2].voltage("vc"), 0.94);
   });
 
+  it("uses trapezoidal capacitor companions", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "vc", 1_000.0));
+    circuit.add(capacitor("C1", "vc", "0", 1.0e-6));
+
+    const points = transient(circuit, 1.0e-3, 3.0e-3, "trap");
+
+    expectClose(points[0].voltage("vc"), 1.0 / 3.0);
+    expectClose(points[1].voltage("vc"), 7.0 / 9.0);
+    expectClose(points[2].voltage("vc"), 25.0 / 27.0);
+  });
+
   it("uses Gear-2 BDF2 inductor companions after an Euler bootstrap step", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("V1", "in", "0", 1.0));
@@ -490,6 +503,32 @@ describe("transient", () => {
     expectClose(points[0].branchCurrent("L1"), 0.5e-3);
     expectClose(points[1].branchCurrent("L1"), 0.8e-3);
     expectClose(points[2].branchCurrent("L1"), 0.94e-3);
+  });
+
+  it("uses trapezoidal inductor companions", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+    circuit.add(inductor("L1", "out", "0", 1.0));
+
+    const points = transient(circuit, 1.0e-3, 3.0e-3, "trap");
+
+    expectClose(points[0].branchCurrent("L1"), 1.0e-3 / 3.0);
+    expectClose(points[1].branchCurrent("L1"), 7.0e-3 / 9.0);
+    expectClose(points[2].branchCurrent("L1"), 25.0e-3 / 27.0);
+  });
+
+  it("shows Gear-2 damping a coarse LC oscillator more than trap", () => {
+    const circuit = new Circuit();
+    circuit.add(capacitorWithInitialVoltage("C1", "tank", "0", 1.0, 1.0));
+    circuit.add(inductor("L1", "tank", "0", 1.0));
+
+    const trapPoints = transient(circuit, 1.0, 10.0, "trap");
+    const gearPoints = transient(circuit, 1.0, 10.0, "gear2");
+    const trapTail = Math.max(...trapPoints.slice(-4).map((point) => Math.abs(point.voltage("tank") ?? 0.0)));
+    const gearTail = Math.max(...gearPoints.slice(-4).map((point) => Math.abs(point.voltage("tank") ?? 0.0)));
+
+    expect(gearTail).toBeLessThan(trapTail * 0.75);
   });
 
   it("couples secondary voltage through a mutual inductor", () => {

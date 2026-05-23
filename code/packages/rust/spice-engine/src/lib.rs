@@ -1795,6 +1795,7 @@ pub struct TransientPoint {
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum TransientMethod {
     Euler,
+    Trap,
     Gear2,
 }
 
@@ -3773,6 +3774,7 @@ struct CapacitorState {
     name: String,
     previous_voltage: f64,
     previous_previous_voltage: f64,
+    previous_current: f64,
     time_step: f64,
     method: TransientMethod,
 }
@@ -3782,6 +3784,7 @@ struct InductorState {
     name: String,
     previous_current: f64,
     previous_previous_current: f64,
+    previous_voltage: f64,
     time_step: f64,
     method: TransientMethod,
 }
@@ -4838,21 +4841,23 @@ fn stamp_capacitor(
         return Ok(());
     };
 
-    let conductance = if state.method == TransientMethod::Gear2 {
-        3.0 * capacitor.capacitance_farads / (2.0 * state.time_step)
-    } else {
-        capacitor.capacitance_farads / state.time_step
+    let conductance = match state.method {
+        TransientMethod::Trap => 2.0 * capacitor.capacitance_farads / state.time_step,
+        TransientMethod::Gear2 => 3.0 * capacitor.capacitance_farads / (2.0 * state.time_step),
+        TransientMethod::Euler => capacitor.capacitance_farads / state.time_step,
     };
     let n1 = node_index(node_indices, &capacitor.n1);
     let n2 = node_index(node_indices, &capacitor.n2);
     stamp_conductance(matrix, n1, n2, conductance);
 
-    let history_current = if state.method == TransientMethod::Gear2 {
-        capacitor.capacitance_farads
-            * (4.0 * state.previous_voltage - state.previous_previous_voltage)
-            / (2.0 * state.time_step)
-    } else {
-        conductance * state.previous_voltage
+    let history_current = match state.method {
+        TransientMethod::Trap => conductance * state.previous_voltage + state.previous_current,
+        TransientMethod::Gear2 => {
+            capacitor.capacitance_farads
+                * (4.0 * state.previous_voltage - state.previous_previous_voltage)
+                / (2.0 * state.time_step)
+        }
+        TransientMethod::Euler => conductance * state.previous_voltage,
     };
     if let Some(i) = n1 {
         rhs[i] += history_current;
@@ -4883,16 +4888,18 @@ fn stamp_inductor(
         return Ok(());
     };
 
-    let conductance = if state.method == TransientMethod::Gear2 {
-        2.0 * state.time_step / (3.0 * inductor.inductance_henrys)
-    } else {
-        state.time_step / inductor.inductance_henrys
+    let conductance = match state.method {
+        TransientMethod::Trap => state.time_step / (2.0 * inductor.inductance_henrys),
+        TransientMethod::Gear2 => 2.0 * state.time_step / (3.0 * inductor.inductance_henrys),
+        TransientMethod::Euler => state.time_step / inductor.inductance_henrys,
     };
     stamp_conductance(matrix, n1, n2, conductance);
-    let history_current = if state.method == TransientMethod::Gear2 {
-        (4.0 * state.previous_current - state.previous_previous_current) / 3.0
-    } else {
-        state.previous_current
+    let history_current = match state.method {
+        TransientMethod::Trap => state.previous_current + conductance * state.previous_voltage,
+        TransientMethod::Gear2 => {
+            (4.0 * state.previous_current - state.previous_previous_current) / 3.0
+        }
+        TransientMethod::Euler => state.previous_current,
     };
     if let Some(i) = n1 {
         rhs[i] -= history_current;
@@ -5597,6 +5604,7 @@ fn initial_capacitor_states(
                 name: capacitor.name.clone(),
                 previous_voltage: capacitor.initial_voltage,
                 previous_previous_voltage: capacitor.initial_voltage,
+                previous_current: 0.0,
                 time_step,
                 method,
             }),
@@ -5618,6 +5626,7 @@ fn initial_inductor_states(
                 name: inductor.name.clone(),
                 previous_current: inductor.initial_current,
                 previous_previous_current: inductor.initial_current,
+                previous_voltage: 0.0,
                 time_step,
                 method,
             }),
@@ -5816,8 +5825,24 @@ fn update_capacitor_states(
             continue;
         };
         let previous_voltage = state.previous_voltage;
-        state.previous_voltage =
+        let previous_current = state.previous_current;
+        let voltage =
             voltage_at(node_voltages, &capacitor.n1) - voltage_at(node_voltages, &capacitor.n2);
+        state.previous_current = match state.method {
+            TransientMethod::Trap => {
+                let conductance = 2.0 * capacitor.capacitance_farads / state.time_step;
+                conductance * (voltage - previous_voltage) - previous_current
+            }
+            TransientMethod::Gear2 => {
+                capacitor.capacitance_farads
+                    * (3.0 * voltage - 4.0 * previous_voltage + state.previous_previous_voltage)
+                    / (2.0 * state.time_step)
+            }
+            TransientMethod::Euler => {
+                capacitor.capacitance_farads * (voltage - previous_voltage) / state.time_step
+            }
+        };
+        state.previous_voltage = voltage;
         state.previous_previous_voltage = previous_voltage;
     }
 }
@@ -5839,11 +5864,14 @@ fn update_inductor_states(
             continue;
         };
         let previous_current = state.previous_current;
+        let voltage =
+            voltage_at(node_voltages, &inductor.n1) - voltage_at(node_voltages, &inductor.n2);
         state.previous_current = coupled_currents
             .get(&inductor.name)
             .copied()
             .unwrap_or_else(|| inductor_current(inductor, state, node_voltages));
         state.previous_previous_current = previous_current;
+        state.previous_voltage = voltage;
     }
 }
 
@@ -5880,11 +5908,18 @@ fn inductor_current(
     node_voltages: &BTreeMap<String, f64>,
 ) -> f64 {
     let voltage = voltage_at(node_voltages, &inductor.n1) - voltage_at(node_voltages, &inductor.n2);
-    if state.method == TransientMethod::Gear2 {
-        2.0 * state.time_step * voltage / (3.0 * inductor.inductance_henrys)
-            + (4.0 * state.previous_current - state.previous_previous_current) / 3.0
-    } else {
-        state.previous_current + (state.time_step / inductor.inductance_henrys) * voltage
+    match state.method {
+        TransientMethod::Trap => {
+            let conductance = state.time_step / (2.0 * inductor.inductance_henrys);
+            state.previous_current + conductance * state.previous_voltage + conductance * voltage
+        }
+        TransientMethod::Gear2 => {
+            2.0 * state.time_step * voltage / (3.0 * inductor.inductance_henrys)
+                + (4.0 * state.previous_current - state.previous_previous_current) / 3.0
+        }
+        TransientMethod::Euler => {
+            state.previous_current + (state.time_step / inductor.inductance_henrys) * voltage
+        }
     }
 }
 
@@ -5915,6 +5950,7 @@ fn stamp_transient_mutual_inductor(
         secondary,
         mutual_inductance,
         primary_state.time_step,
+        primary_state.method,
     )?;
     let p1 = node_index(node_indices, &primary.n1);
     let p2 = node_index(node_indices, &primary.n2);
@@ -5924,8 +5960,16 @@ fn stamp_transient_mutual_inductor(
     stamp_conductance(matrix, s1, s2, g22);
     stamp_transconductance(matrix, p1, p2, s1, s2, g12);
     stamp_transconductance(matrix, s1, s2, p1, p2, g12);
-    stamp_equivalent_current_source(rhs, p1, p2, primary_state.previous_current);
-    stamp_equivalent_current_source(rhs, s1, s2, secondary_state.previous_current);
+    let mut primary_history_current = primary_state.previous_current;
+    let mut secondary_history_current = secondary_state.previous_current;
+    if primary_state.method == TransientMethod::Trap {
+        primary_history_current +=
+            g11 * primary_state.previous_voltage + g12 * secondary_state.previous_voltage;
+        secondary_history_current +=
+            g12 * primary_state.previous_voltage + g22 * secondary_state.previous_voltage;
+    }
+    stamp_equivalent_current_source(rhs, p1, p2, primary_history_current);
+    stamp_equivalent_current_source(rhs, s1, s2, secondary_history_current);
     Ok(())
 }
 
@@ -5959,18 +6003,27 @@ fn coupled_transient_inductor_currents(
             secondary,
             mutual_inductance,
             primary_state.time_step,
+            primary_state.method,
         )?;
         let primary_voltage =
             voltage_at(node_voltages, &primary.n1) - voltage_at(node_voltages, &primary.n2);
         let secondary_voltage =
             voltage_at(node_voltages, &secondary.n1) - voltage_at(node_voltages, &secondary.n2);
+        let mut primary_history_current = primary_state.previous_current;
+        let mut secondary_history_current = secondary_state.previous_current;
+        if primary_state.method == TransientMethod::Trap {
+            primary_history_current +=
+                g11 * primary_state.previous_voltage + g12 * secondary_state.previous_voltage;
+            secondary_history_current +=
+                g12 * primary_state.previous_voltage + g22 * secondary_state.previous_voltage;
+        }
         currents.insert(
             primary.name.clone(),
-            primary_state.previous_current + g11 * primary_voltage + g12 * secondary_voltage,
+            primary_history_current + g11 * primary_voltage + g12 * secondary_voltage,
         );
         currents.insert(
             secondary.name.clone(),
-            secondary_state.previous_current + g12 * primary_voltage + g22 * secondary_voltage,
+            secondary_history_current + g12 * primary_voltage + g22 * secondary_voltage,
         );
     }
     Ok(currents)
@@ -5982,6 +6035,7 @@ fn transient_mutual_conductances(
     secondary: &Inductor,
     mutual_inductance: f64,
     time_step: f64,
+    method: TransientMethod,
 ) -> Result<(f64, f64, f64), SpiceError> {
     let determinant =
         primary.inductance_henrys * secondary.inductance_henrys - mutual_inductance.powi(2);
@@ -5991,7 +6045,11 @@ fn transient_mutual_conductances(
             reason: "coupled inductance matrix is singular".to_string(),
         });
     }
-    let scale = time_step / determinant;
+    let scale = if method == TransientMethod::Trap {
+        time_step / (2.0 * determinant)
+    } else {
+        time_step / determinant
+    };
     Ok((
         secondary.inductance_henrys * scale,
         -mutual_inductance * scale,

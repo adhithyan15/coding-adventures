@@ -989,6 +989,21 @@ def test_transient_gear2_rl_current_buildup_bootstraps_then_uses_bdf2():
     assert result.points[3].branch_currents["L1"] == pytest.approx(0.94e-3, abs=1e-12)
 
 
+def test_transient_gear2_damps_coarse_lc_oscillator_more_than_trap():
+    c = Circuit()
+    c.add(Capacitor("C1", "tank", "0", 1.0, initial_voltage=1.0))
+    c.add(Inductor("L1", "tank", "0", 1.0))
+
+    trap = transient(c, t_stop=10.0, t_step=1.0, method="trap")
+    gear2 = transient(c, t_stop=10.0, t_step=1.0, method="gear2")
+
+    assert trap.converged
+    assert gear2.converged
+    trap_tail = max(abs(point.node_voltages["tank"]) for point in trap.points[-4:])
+    gear2_tail = max(abs(point.node_voltages["tank"]) for point in gear2.points[-4:])
+    assert gear2_tail < trap_tail * 0.75
+
+
 def test_transient_mutual_inductor_couples_secondary_voltage():
     c = Circuit()
     c.add(CurrentSource("Istep", "0", "pri", 1.0))

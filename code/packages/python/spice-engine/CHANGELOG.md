@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Gear-2 damping fixture** — transient tests now cover a coarse LC oscillator
+  where Gear-2 damps numerical ringing more aggressively than trapezoidal
+  integration.
+
 - **Gear-2 transient companions** — transient analysis now accepts
   `method="gear2"` and uses BDF2 capacitor/inductor companion histories after
   bootstrapping with one backward-Euler step.

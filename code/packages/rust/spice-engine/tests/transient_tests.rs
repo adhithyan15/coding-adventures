@@ -509,6 +509,25 @@ fn transient_gear2_rc_charging_bootstraps_then_uses_bdf2() {
 }
 
 #[test]
+fn transient_trap_rc_charging_uses_trapezoidal_companion() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "out", 1_000.0,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new("C1", "out", "0", 1.0e-6)));
+
+    let points = transient_with_method(&circuit, 1.0e-3, 3.0e-3, TransientMethod::Trap).unwrap();
+
+    assert_eq!(points.len(), 3);
+    assert_close(points[0].voltage("out").unwrap(), 1.0 / 3.0);
+    assert_close(points[1].voltage("out").unwrap(), 7.0 / 9.0);
+    assert_close(points[2].voltage("out").unwrap(), 25.0 / 27.0);
+}
+
+#[test]
 fn transient_respects_capacitor_initial_voltage() {
     let mut circuit = Circuit::new();
     circuit.add(Element::Resistor(Resistor::new("R1", "out", "0", 1_000.0)));
@@ -561,6 +580,51 @@ fn transient_gear2_rl_current_buildup_bootstraps_then_uses_bdf2() {
     assert_close(points[0].branch_current("L1").unwrap(), 0.5e-3);
     assert_close(points[1].branch_current("L1").unwrap(), 0.8e-3);
     assert_close(points[2].branch_current("L1").unwrap(), 0.94e-3);
+}
+
+#[test]
+fn transient_trap_rl_current_buildup_uses_trapezoidal_companion() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "out", 1_000.0,
+    )));
+    circuit.add(Element::Inductor(Inductor::new("L1", "out", "0", 1.0)));
+
+    let points = transient_with_method(&circuit, 1.0e-3, 3.0e-3, TransientMethod::Trap).unwrap();
+
+    assert_eq!(points.len(), 3);
+    assert_close(points[0].branch_current("L1").unwrap(), 1.0e-3 / 3.0);
+    assert_close(points[1].branch_current("L1").unwrap(), 7.0e-3 / 9.0);
+    assert_close(points[2].branch_current("L1").unwrap(), 25.0e-3 / 27.0);
+}
+
+#[test]
+fn transient_gear2_damps_coarse_lc_oscillator_more_than_trap() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Capacitor(Capacitor::with_initial_voltage(
+        "C1", "tank", "0", 1.0, 1.0,
+    )));
+    circuit.add(Element::Inductor(Inductor::new("L1", "tank", "0", 1.0)));
+
+    let trap_points = transient_with_method(&circuit, 1.0, 10.0, TransientMethod::Trap).unwrap();
+    let gear_points = transient_with_method(&circuit, 1.0, 10.0, TransientMethod::Gear2).unwrap();
+    let trap_tail = trap_points
+        .iter()
+        .rev()
+        .take(4)
+        .map(|point| point.voltage("tank").unwrap().abs())
+        .fold(0.0_f64, f64::max);
+    let gear_tail = gear_points
+        .iter()
+        .rev()
+        .take(4)
+        .map(|point| point.voltage("tank").unwrap().abs())
+        .fold(0.0_f64, f64::max);
+
+    assert!(gear_tail < trap_tail * 0.75);
 }
 
 #[test]
