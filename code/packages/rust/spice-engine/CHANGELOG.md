@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add Gear-2 transient integration with BDF2 capacitor/inductor companion
+  histories after bootstrapping with one backward-Euler step.
 - Add transient analysis stamping for `TransmissionLine` using a lossless
   Bergeron delay-line companion model, including matched-load delayed step
   behavior.

@@ -136,6 +136,13 @@ Acceptance:
 - LC damped fixture showing Gear-2 suppresses trapezoidal ringing better than
   trap at the same coarse step.
 
+Status:
+
+- Fixed-step Gear-2 / BDF2 capacitor and inductor companions are implemented
+  across Python, TypeScript, and Rust, with one backward-Euler bootstrap step
+  before two-step history is available. Adaptive-step interaction, netlist
+  option routing, and LC damping comparison remain follow-up work.
+
 ### Phase 5 - Pseudo-Transient DC Continuation
 
 Finish the convergence-aid chain named in `spice-engine.md`.

@@ -466,6 +466,32 @@ describe("transient", () => {
     expectClose(points[1].branchCurrent("L1"), 0.25e-3);
   });
 
+  it("uses Gear-2 BDF2 capacitor companions after an Euler bootstrap step", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "vc", 1_000.0));
+    circuit.add(capacitor("C1", "vc", "0", 1.0e-6));
+
+    const points = transient(circuit, 1.0e-3, 3.0e-3, "gear2");
+
+    expectClose(points[0].voltage("vc"), 0.5);
+    expectClose(points[1].voltage("vc"), 0.8);
+    expectClose(points[2].voltage("vc"), 0.94);
+  });
+
+  it("uses Gear-2 BDF2 inductor companions after an Euler bootstrap step", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+    circuit.add(inductor("L1", "out", "0", 1.0));
+
+    const points = transient(circuit, 1.0e-3, 3.0e-3, "gear2");
+
+    expectClose(points[0].branchCurrent("L1"), 0.5e-3);
+    expectClose(points[1].branchCurrent("L1"), 0.8e-3);
+    expectClose(points[2].branchCurrent("L1"), 0.94e-3);
+  });
+
   it("couples secondary voltage through a mutual inductor", () => {
     const circuit = new Circuit();
     circuit.add(currentSource("Istep", "0", "pri", 1.0));

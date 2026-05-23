@@ -960,6 +960,35 @@ def test_transient_inductor_respects_initial_current():
     assert isclose(result.points[2].node_voltages["out"], -0.25, abs_tol=1e-9)
 
 
+def test_transient_gear2_rc_charging_bootstraps_then_uses_bdf2():
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "vc", 1000.0))
+    c.add(Capacitor("C1", "vc", "0", 1.0e-6))
+
+    result = transient(c, t_stop=3.0e-3, t_step=1.0e-3, method="gear2")
+
+    assert result.converged
+    assert result.method == "gear2"
+    assert result.points[1].node_voltages["vc"] == pytest.approx(0.5, abs=1e-12)
+    assert result.points[2].node_voltages["vc"] == pytest.approx(0.8, abs=1e-12)
+    assert result.points[3].node_voltages["vc"] == pytest.approx(0.94, abs=1e-12)
+
+
+def test_transient_gear2_rl_current_buildup_bootstraps_then_uses_bdf2():
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Inductor("L1", "out", "0", 1.0))
+
+    result = transient(c, t_stop=3.0e-3, t_step=1.0e-3, method="gear2")
+
+    assert result.converged
+    assert result.points[1].branch_currents["L1"] == pytest.approx(0.5e-3, abs=1e-12)
+    assert result.points[2].branch_currents["L1"] == pytest.approx(0.8e-3, abs=1e-12)
+    assert result.points[3].branch_currents["L1"] == pytest.approx(0.94e-3, abs=1e-12)
+
+
 def test_transient_mutual_inductor_couples_secondary_voltage():
     c = Circuit()
     c.add(CurrentSource("Istep", "0", "pri", 1.0))

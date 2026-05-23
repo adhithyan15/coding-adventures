@@ -12,7 +12,7 @@ reactive elements with complex admittances (Y_C = jωC, Y_L = 1/jωL);
 solve the resulting complex linear system at each frequency.  See
 :func:`ac_sweep` and the Section 3 comment block below.
 
-For transient: two integration methods are supported:
+For transient: three integration methods are supported:
 
 1. **Backward Euler** (``method="euler"``):
    Simple first-order method.  For a capacitor::
@@ -32,6 +32,11 @@ For transient: two integration methods are supported:
 
        Companion: G_eq = h/(2L), I_eq = I_n + G_eq * V_n  (parallel current)
        Post-step update:  I_{n+1} = G_eq * (V_{n+1} - V_n_... ) + I_eq
+
+3. **Gear-2 / BDF2** (``method="gear2"``):
+   Second-order, numerically damped method.  The first step bootstraps with
+   backward Euler, then capacitor and inductor companions use two-step
+   history.
 
 **Adaptive timestep** (``adaptive=True``):
    After each trapezoidal step the Local Truncation Error (LTE) is
@@ -317,7 +322,8 @@ class TransientResult:
     converged:
         ``False`` if any DC solve diverged (integration stopped early).
     method:
-        Integration method that was used: ``"trap"`` or ``"euler"``.
+        Integration method that was used: ``"trap"``, ``"euler"``, or
+        ``"gear2"``.
     steps_rejected:
         Number of timesteps rejected by the LTE adaptive controller.
         Always 0 when ``adaptive=False``.
@@ -2101,8 +2107,10 @@ def _build_transient_companions(
     h: float,
     method: str,
     cap_voltages: dict[str, float],
+    cap_voltages_older: dict[str, float],
     cap_currents: dict[str, float],
     ind_currents: dict[str, float],
+    ind_currents_older: dict[str, float],
     ind_voltages: dict[str, float],
     line_history: dict[str, list[TransmissionLineSample]],
     t: float = 0.0,
@@ -2121,7 +2129,8 @@ def _build_transient_companions(
     h:
         Current timestep size (seconds).
     method:
-        ``"trap"`` (trapezoidal) or ``"euler"`` (backward Euler).
+        ``"trap"`` (trapezoidal), ``"euler"`` (backward Euler), or
+        ``"gear2"`` (BDF2).
     cap_voltages, cap_currents, ind_currents, ind_voltages:
         Reactive-element history dictionaries from the previous timestep.
     t:
@@ -2289,6 +2298,10 @@ def _build_transient_companions(
             if method == "trap":
                 g_eq = 2.0 * el.capacitance / h
                 I_eq = g_eq * v_prev + cap_currents.get(el.name, 0.0)
+            elif method == "gear2":
+                v_older = cap_voltages_older.get(el.name, el.initial_voltage)
+                g_eq = 3.0 * el.capacitance / (2.0 * h)
+                I_eq = el.capacitance * (4.0 * v_prev - v_older) / (2.0 * h)
             else:  # backward Euler
                 g_eq = el.capacitance / h
                 I_eq = g_eq * v_prev
@@ -2318,6 +2331,10 @@ def _build_transient_companions(
                 g_eq = h / (2.0 * el.inductance)
                 V_prev = ind_voltages.get(el.name, 0.0)
                 I_eq = I_prev + g_eq * V_prev
+            elif method == "gear2":
+                I_older = ind_currents_older.get(el.name, el.initial_current)
+                g_eq = 2.0 * h / (3.0 * el.inductance)
+                I_eq = (4.0 * I_prev - I_older) / 3.0
             else:  # backward Euler
                 g_eq = h / el.inductance
                 I_eq = I_prev
@@ -2346,8 +2363,10 @@ def _update_reactive_state(
     method: str,
     op: DcResult,
     cap_voltages: dict[str, float],
+    cap_voltages_older: dict[str, float],
     cap_currents: dict[str, float],
     ind_currents: dict[str, float],
+    ind_currents_older: dict[str, float],
     ind_voltages: dict[str, float],
 ) -> None:
     """Update capacitor and inductor history in-place after a successful step.
@@ -2420,15 +2439,22 @@ def _update_reactive_state(
             v_minus = _node_voltage(el.n_minus, op.node_voltages)
             v_new = v_plus - v_minus
             v_prev = cap_voltages.get(el.name, el.initial_voltage)
+            v_older = cap_voltages_older.get(el.name, el.initial_voltage)
 
             if method == "trap":
                 g_eq = 2.0 * el.capacitance / h
                 I_prev = cap_currents.get(el.name, 0.0)
                 cap_currents[el.name] = g_eq * (v_new - v_prev) - I_prev
+            elif method == "gear2":
+                cap_currents[el.name] = (
+                    el.capacitance * (3.0 * v_new - 4.0 * v_prev + v_older)
+                    / (2.0 * h)
+                )
             else:
                 g_eq = el.capacitance / h
                 cap_currents[el.name] = g_eq * (v_new - v_prev)
 
+            cap_voltages_older[el.name] = v_prev
             cap_voltages[el.name] = v_new
 
         elif isinstance(el, Inductor) and el.name not in coupled_names:
@@ -2436,16 +2462,23 @@ def _update_reactive_state(
             v_minus = _node_voltage(el.n_minus, op.node_voltages)
             v_new = v_plus - v_minus
             I_prev = ind_currents.get(el.name, 0.0)
+            I_older = ind_currents_older.get(el.name, el.initial_current)
             V_prev = ind_voltages.get(el.name, 0.0)
 
             if method == "trap":
                 g_eq = h / (2.0 * el.inductance)
                 I_eq = I_prev + g_eq * V_prev
                 ind_currents[el.name] = g_eq * v_new + I_eq
+            elif method == "gear2":
+                ind_currents[el.name] = (
+                    2.0 * h * v_new / (3.0 * el.inductance)
+                    + (4.0 * I_prev - I_older) / 3.0
+                )
             else:
                 g_eq = h / el.inductance
                 ind_currents[el.name] = g_eq * v_new + I_prev
 
+            ind_currents_older[el.name] = I_prev
             ind_voltages[el.name] = v_new
 
 
@@ -2501,7 +2534,7 @@ def transient(
     max_iterations: int = 50,
     tol: float = 1e-6,
 ) -> TransientResult:
-    """Transient (time-domain) analysis with trapezoidal or backward-Euler integration.
+    """Transient (time-domain) analysis with trapezoidal, backward-Euler, or Gear-2 integration.
 
     Replaces each reactive element (capacitor, inductor) with its Norton
     companion model at every timestep and solves the resulting DC problem
@@ -2517,7 +2550,8 @@ def transient(
         Initial (or fixed) timestep (seconds).  Must be > 0.
     method:
         ``"trap"`` (trapezoidal, default — 2nd-order accurate) or
-        ``"euler"`` (backward Euler — 1st-order, unconditionally stable).
+        ``"euler"`` (backward Euler — 1st-order, unconditionally stable), or
+        ``"gear2"`` (BDF2 after one backward-Euler bootstrap step).
     adaptive:
         When ``True``, enable LTE-based adaptive timestepping.  Only
         meaningful with ``method="trap"``.
@@ -2623,6 +2657,9 @@ def transient(
     )
     initial_branch_currents = dict(op.branch_currents)
     initial_branch_currents.update(line_branch_currents)
+    for el in circuit.elements:
+        if isinstance(el, Inductor):
+            initial_branch_currents[el.name] = el.initial_current
     points: list[TransientPoint] = [
         TransientPoint(
             time=0.0,
@@ -2640,10 +2677,12 @@ def transient(
         el.name: 0.0
         for el in circuit.elements if isinstance(el, Capacitor)
     }
+    cap_voltages_older: dict[str, float] = dict(cap_voltages)
     ind_currents: dict[str, float] = {
         el.name: el.initial_current
         for el in circuit.elements if isinstance(el, Inductor)
     }
+    ind_currents_older: dict[str, float] = dict(ind_currents)
     ind_voltages: dict[str, float] = {
         el.name: 0.0
         for el in circuit.elements if isinstance(el, Inductor)
@@ -2675,15 +2714,16 @@ def transient(
     t = t_step
     h = t_step  # current step size
     while t <= t_stop + 1e-12 * t_stop:
+        step_method = "euler" if method == "gear2" and len(points) < 2 else method
         # Clamp last step to land exactly on t_stop.
         h = min(h, t_stop - (t - h) + 1e-12 * t_stop)
         if h < _min_step:
             h = _min_step  # floor; stop shrinking
 
         aug = _build_transient_companions(
-            circuit, h, method,
-            cap_voltages, cap_currents,
-            ind_currents, ind_voltages,
+            circuit, h, step_method,
+            cap_voltages, cap_voltages_older, cap_currents,
+            ind_currents, ind_currents_older, ind_voltages,
             line_history,
             t=t,
         )
@@ -2714,8 +2754,9 @@ def transient(
             # Accept step; consider doubling h for the next step.
             t_actual = t  # the time we are committing to
             _update_reactive_state(
-                circuit, h, method, op,
-                cap_voltages, cap_currents, ind_currents, ind_voltages,
+                circuit, h, step_method, op,
+                cap_voltages, cap_voltages_older, cap_currents,
+                ind_currents, ind_currents_older, ind_voltages,
             )
             line_branch_currents = _append_transmission_line_history(
                 circuit,
@@ -2725,6 +2766,7 @@ def transient(
             )
             branch_currents = dict(op.branch_currents)
             branch_currents.update(line_branch_currents)
+            branch_currents.update(ind_currents)
             cap_voltages_prev = dict(cap_voltages)
             points.append(TransientPoint(
                 time=t_actual,
@@ -2737,8 +2779,9 @@ def transient(
         else:
             # Non-adaptive or backward Euler or not enough history yet.
             _update_reactive_state(
-                circuit, h, method, op,
-                cap_voltages, cap_currents, ind_currents, ind_voltages,
+                circuit, h, step_method, op,
+                cap_voltages, cap_voltages_older, cap_currents,
+                ind_currents, ind_currents_older, ind_voltages,
             )
             line_branch_currents = _append_transmission_line_history(
                 circuit,
@@ -2748,6 +2791,7 @@ def transient(
             )
             branch_currents = dict(op.branch_currents)
             branch_currents.update(line_branch_currents)
+            branch_currents.update(ind_currents)
             cap_voltages_prev = dict(cap_voltages)
             points.append(TransientPoint(
                 time=t,

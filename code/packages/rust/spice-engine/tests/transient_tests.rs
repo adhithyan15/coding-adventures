@@ -2,11 +2,11 @@ use spice_engine::{
     estimate_period, pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, transient, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Element,
-    ExpWaveform, Inductor, MutualInductor, PssNewtonCandidateResult, PssNewtonIterationResult,
-    PssNewtonSolveResult, PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult,
-    PssResult, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, TransmissionLine,
-    VoltageSource, Waveform,
+    pss_with_tolerance, transient, transient_with_method, Capacitor, Cccs, Ccvs, Circuit,
+    CurrentSource, Element, ExpWaveform, Inductor, MutualInductor, PssNewtonCandidateResult,
+    PssNewtonIterationResult, PssNewtonSolveResult, PssNewtonUpdateResult,
+    PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform, PwlWaveform, Resistor,
+    SinWaveform, SpiceError, TransientMethod, TransmissionLine, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -490,6 +490,25 @@ fn transient_rc_step_uses_backward_euler_capacitor_companion() {
 }
 
 #[test]
+fn transient_gear2_rc_charging_bootstraps_then_uses_bdf2() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "out", 1_000.0,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new("C1", "out", "0", 1.0e-6)));
+
+    let points = transient_with_method(&circuit, 1.0e-3, 3.0e-3, TransientMethod::Gear2).unwrap();
+
+    assert_eq!(points.len(), 3);
+    assert_close(points[0].voltage("out").unwrap(), 0.5);
+    assert_close(points[1].voltage("out").unwrap(), 0.8);
+    assert_close(points[2].voltage("out").unwrap(), 0.94);
+}
+
+#[test]
 fn transient_respects_capacitor_initial_voltage() {
     let mut circuit = Circuit::new();
     circuit.add(Element::Resistor(Resistor::new("R1", "out", "0", 1_000.0)));
@@ -523,6 +542,25 @@ fn transient_rl_step_uses_backward_euler_inductor_companion() {
     assert_close(points[1].branch_current("L1").unwrap(), 0.75e-3);
     assert_close(points[2].voltage("out").unwrap(), 0.125);
     assert_close(points[2].branch_current("L1").unwrap(), 0.875e-3);
+}
+
+#[test]
+fn transient_gear2_rl_current_buildup_bootstraps_then_uses_bdf2() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "out", 1_000.0,
+    )));
+    circuit.add(Element::Inductor(Inductor::new("L1", "out", "0", 1.0)));
+
+    let points = transient_with_method(&circuit, 1.0e-3, 3.0e-3, TransientMethod::Gear2).unwrap();
+
+    assert_eq!(points.len(), 3);
+    assert_close(points[0].branch_current("L1").unwrap(), 0.5e-3);
+    assert_close(points[1].branch_current("L1").unwrap(), 0.8e-3);
+    assert_close(points[2].branch_current("L1").unwrap(), 0.94e-3);
 }
 
 #[test]

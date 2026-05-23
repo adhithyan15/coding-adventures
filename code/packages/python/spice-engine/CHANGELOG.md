@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Gear-2 transient companions** — transient analysis now accepts
+  `method="gear2"` and uses BDF2 capacitor/inductor companion histories after
+  bootstrapping with one backward-Euler step.
+
 - **Transmission-line transient stamping** — `TransmissionLine` now participates
   in transient analysis with a lossless Bergeron delay-line companion model,
   including matched-load delayed step behavior.

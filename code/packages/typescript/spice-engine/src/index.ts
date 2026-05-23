@@ -21,6 +21,8 @@ export type Element =
   | Cccs
   | Ccvs;
 
+export type TransientMethod = "euler" | "gear2";
+
 export interface Resistor {
   readonly kind: "resistor";
   readonly name: string;
@@ -1840,6 +1842,7 @@ export function transient(
   circuit: Circuit,
   timeStep: number,
   stopTime: number,
+  method: TransientMethod = "euler",
 ): TransientPoint[] {
   if (!Number.isFinite(timeStep) || timeStep <= 0.0) {
     throw invalidElement("transient", "time step must be finite and positive");
@@ -1847,11 +1850,14 @@ export function transient(
   if (!Number.isFinite(stopTime) || stopTime < 0.0) {
     throw invalidElement("transient", "stop time must be finite and non-negative");
   }
+  if (method !== "euler" && method !== "gear2") {
+    throw invalidElement("transient", "method must be euler or gear2");
+  }
 
   validateReactiveElements(circuit);
 
-  const capacitorStates = initialCapacitorStates(circuit, timeStep);
-  const inductorStates = initialInductorStates(circuit, timeStep);
+  const capacitorStates = initialCapacitorStates(circuit, timeStep, method);
+  const inductorStates = initialInductorStates(circuit, timeStep, method);
   const lineStates = initialTransmissionLineStates(circuit);
   const initialCircuit = circuitWithTransmissionLineCompanions(circuit, lineStates, 0.0);
   const initialSolution = solveLinearCircuit(
@@ -1863,6 +1869,8 @@ export function transient(
   updateTransmissionLineStates(circuit, initialSolution.nodeVoltages, lineStates, 0.0);
   const points: TransientPoint[] = [];
   for (let time = timeStep; time <= stopTime + timeStep * 1.0e-9; time += timeStep) {
+    const stepMethod = method === "gear2" && points.length === 0 ? "euler" : method;
+    setReactiveStateMethod(capacitorStates, inductorStates, stepMethod);
     const companionCircuit = circuitWithTransmissionLineCompanions(circuit, lineStates, time);
     const solution = solveLinearCircuit(
       companionCircuit,
@@ -1915,8 +1923,8 @@ export function pssResidual(
   validateReactiveElements(circuit);
   const initialSolution = solveLinearCircuit(
     circuit,
-    initialCapacitorStates(circuit, timeStep),
-    initialInductorStates(circuit, timeStep),
+    initialCapacitorStates(circuit, timeStep, "euler"),
+    initialInductorStates(circuit, timeStep, "euler"),
     0.0,
   );
   const points = transient(circuit, timeStep, period);
@@ -2748,13 +2756,17 @@ function sampleStdDev(values: readonly number[]): number {
 interface CapacitorState {
   readonly name: string;
   previousVoltage: number;
+  previousPreviousVoltage: number;
   readonly timeStep: number;
+  method: TransientMethod;
 }
 
 interface InductorState {
   readonly name: string;
   previousCurrent: number;
+  previousPreviousCurrent: number;
   readonly timeStep: number;
+  method: TransientMethod;
 }
 
 interface TransmissionLineState {
@@ -4144,12 +4156,20 @@ function stampCapacitor(
     return;
   }
 
-  const conductance = element.capacitanceFarads / state.timeStep;
+  const conductance =
+    state.method === "gear2"
+      ? (3.0 * element.capacitanceFarads) / (2.0 * state.timeStep)
+      : element.capacitanceFarads / state.timeStep;
   const n1 = nodeIndex(nodeIndices, element.n1);
   const n2 = nodeIndex(nodeIndices, element.n2);
   stampConductance(matrix, n1, n2, conductance);
 
-  const historyCurrent = conductance * state.previousVoltage;
+  const historyCurrent =
+    state.method === "gear2"
+      ? element.capacitanceFarads *
+        (4.0 * state.previousVoltage - state.previousPreviousVoltage) /
+        (2.0 * state.timeStep)
+      : conductance * state.previousVoltage;
   if (n1 !== undefined) {
     rhs[n1] += historyCurrent;
   }
@@ -4176,13 +4196,20 @@ function stampInductor(
     return;
   }
 
-  const conductance = state.timeStep / element.inductanceHenrys;
+  const conductance =
+    state.method === "gear2"
+      ? (2.0 * state.timeStep) / (3.0 * element.inductanceHenrys)
+      : state.timeStep / element.inductanceHenrys;
   stampConductance(matrix, n1, n2, conductance);
+  const historyCurrent =
+    state.method === "gear2"
+      ? (4.0 * state.previousCurrent - state.previousPreviousCurrent) / 3.0
+      : state.previousCurrent;
   if (n1 !== undefined) {
-    rhs[n1] -= state.previousCurrent;
+    rhs[n1] -= historyCurrent;
   }
   if (n2 !== undefined) {
-    rhs[n2] += state.previousCurrent;
+    rhs[n2] += historyCurrent;
   }
 }
 
@@ -4580,6 +4607,7 @@ function validateInductor(element: Inductor): void {
 function initialCapacitorStates(
   circuit: Circuit,
   timeStep: number,
+  method: TransientMethod,
 ): CapacitorState[] {
   const states: CapacitorState[] = [];
   for (const element of circuit.elements()) {
@@ -4587,7 +4615,9 @@ function initialCapacitorStates(
       states.push({
         name: element.name,
         previousVoltage: element.initialVoltage,
+        previousPreviousVoltage: element.initialVoltage,
         timeStep,
+        method,
       });
     }
   }
@@ -4597,6 +4627,7 @@ function initialCapacitorStates(
 function initialInductorStates(
   circuit: Circuit,
   timeStep: number,
+  method: TransientMethod,
 ): InductorState[] {
   const states: InductorState[] = [];
   for (const element of circuit.elements()) {
@@ -4604,11 +4635,26 @@ function initialInductorStates(
       states.push({
         name: element.name,
         previousCurrent: element.initialCurrent,
+        previousPreviousCurrent: element.initialCurrent,
         timeStep,
+        method,
       });
     }
   }
   return states;
+}
+
+function setReactiveStateMethod(
+  capacitorStates: CapacitorState[],
+  inductorStates: InductorState[],
+  method: TransientMethod,
+): void {
+  for (const state of capacitorStates) {
+    state.method = method;
+  }
+  for (const state of inductorStates) {
+    state.method = method;
+  }
 }
 
 function initialTransmissionLineStates(circuit: Circuit): TransmissionLineState[] {
@@ -4757,8 +4803,10 @@ function updateCapacitorStates(
     if (element === undefined) {
       continue;
     }
+    const previousVoltage = state.previousVoltage;
     state.previousVoltage =
       voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2);
+    state.previousPreviousVoltage = previousVoltage;
   }
 }
 
@@ -4784,8 +4832,10 @@ function updateInductorStates(
     if (element === undefined) {
       continue;
     }
+    const previousCurrent = state.previousCurrent;
     state.previousCurrent =
       coupledCurrents.get(element.name) ?? inductorCurrent(element, state, nodeVoltages);
+    state.previousPreviousCurrent = previousCurrent;
   }
 }
 
@@ -4824,9 +4874,14 @@ function inductorCurrent(
   state: InductorState,
   nodeVoltages: ReadonlyMap<string, number>,
 ): number {
-  const conductance = state.timeStep / element.inductanceHenrys;
   const voltage = voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2);
-  return state.previousCurrent + conductance * voltage;
+  if (state.method === "gear2") {
+    return (
+      (2.0 * state.timeStep * voltage) / (3.0 * element.inductanceHenrys) +
+      (4.0 * state.previousCurrent - state.previousPreviousCurrent) / 3.0
+    );
+  }
+  return state.previousCurrent + (state.timeStep / element.inductanceHenrys) * voltage;
 }
 
 function stampTransientMutualInductor(

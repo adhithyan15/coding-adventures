@@ -1792,6 +1792,12 @@ pub struct TransientPoint {
     pub branch_currents: BTreeMap<String, f64>,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum TransientMethod {
+    Euler,
+    Gear2,
+}
+
 impl TransientPoint {
     pub fn voltage(&self, node: &str) -> Option<f64> {
         if is_ground(node) {
@@ -2829,6 +2835,15 @@ pub fn transient(
     time_step: f64,
     stop_time: f64,
 ) -> Result<Vec<TransientPoint>, SpiceError> {
+    transient_with_method(circuit, time_step, stop_time, TransientMethod::Euler)
+}
+
+pub fn transient_with_method(
+    circuit: &Circuit,
+    time_step: f64,
+    stop_time: f64,
+    method: TransientMethod,
+) -> Result<Vec<TransientPoint>, SpiceError> {
     if !time_step.is_finite() || time_step <= 0.0 {
         return Err(SpiceError::InvalidElement {
             name: "transient".to_string(),
@@ -2844,8 +2859,8 @@ pub fn transient(
 
     validate_reactive_elements(circuit)?;
 
-    let mut capacitor_states = initial_capacitor_states(circuit, time_step);
-    let mut inductor_states = initial_inductor_states(circuit, time_step);
+    let mut capacitor_states = initial_capacitor_states(circuit, time_step, method);
+    let mut inductor_states = initial_inductor_states(circuit, time_step, method);
     let mut line_states = initial_transmission_line_states(circuit);
     let initial_circuit = circuit_with_transmission_line_companions(circuit, &line_states, 0.0)?;
     let initial_solution = solve_linear_circuit(
@@ -2863,6 +2878,12 @@ pub fn transient(
     let mut points = Vec::new();
     let mut time = time_step;
     while time <= stop_time + time_step * 1.0e-9 {
+        let step_method = if method == TransientMethod::Gear2 && points.is_empty() {
+            TransientMethod::Euler
+        } else {
+            method
+        };
+        set_reactive_state_method(&mut capacitor_states, &mut inductor_states, step_method);
         let companion_circuit =
             circuit_with_transmission_line_companions(circuit, &line_states, time)?;
         let linear_solution = solve_linear_circuit(
@@ -2931,8 +2952,8 @@ pub fn pss_residual_with_tolerance(
     validate_reactive_elements(circuit)?;
     let initial_solution = solve_linear_circuit(
         circuit,
-        &initial_capacitor_states(circuit, time_step),
-        &initial_inductor_states(circuit, time_step),
+        &initial_capacitor_states(circuit, time_step, TransientMethod::Euler),
+        &initial_inductor_states(circuit, time_step, TransientMethod::Euler),
         Some(0.0),
     )?;
     let points = transient(circuit, time_step, period)?;
@@ -3751,14 +3772,18 @@ fn sample_std_dev(values: &[f64]) -> f64 {
 struct CapacitorState {
     name: String,
     previous_voltage: f64,
+    previous_previous_voltage: f64,
     time_step: f64,
+    method: TransientMethod,
 }
 
 #[derive(Debug, Clone, PartialEq)]
 struct InductorState {
     name: String,
     previous_current: f64,
+    previous_previous_current: f64,
     time_step: f64,
+    method: TransientMethod,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -4813,12 +4838,22 @@ fn stamp_capacitor(
         return Ok(());
     };
 
-    let conductance = capacitor.capacitance_farads / state.time_step;
+    let conductance = if state.method == TransientMethod::Gear2 {
+        3.0 * capacitor.capacitance_farads / (2.0 * state.time_step)
+    } else {
+        capacitor.capacitance_farads / state.time_step
+    };
     let n1 = node_index(node_indices, &capacitor.n1);
     let n2 = node_index(node_indices, &capacitor.n2);
     stamp_conductance(matrix, n1, n2, conductance);
 
-    let history_current = conductance * state.previous_voltage;
+    let history_current = if state.method == TransientMethod::Gear2 {
+        capacitor.capacitance_farads
+            * (4.0 * state.previous_voltage - state.previous_previous_voltage)
+            / (2.0 * state.time_step)
+    } else {
+        conductance * state.previous_voltage
+    };
     if let Some(i) = n1 {
         rhs[i] += history_current;
     }
@@ -4848,13 +4883,22 @@ fn stamp_inductor(
         return Ok(());
     };
 
-    let conductance = state.time_step / inductor.inductance_henrys;
+    let conductance = if state.method == TransientMethod::Gear2 {
+        2.0 * state.time_step / (3.0 * inductor.inductance_henrys)
+    } else {
+        state.time_step / inductor.inductance_henrys
+    };
     stamp_conductance(matrix, n1, n2, conductance);
+    let history_current = if state.method == TransientMethod::Gear2 {
+        (4.0 * state.previous_current - state.previous_previous_current) / 3.0
+    } else {
+        state.previous_current
+    };
     if let Some(i) = n1 {
-        rhs[i] -= state.previous_current;
+        rhs[i] -= history_current;
     }
     if let Some(j) = n2 {
-        rhs[j] += state.previous_current;
+        rhs[j] += history_current;
     }
     Ok(())
 }
@@ -5540,7 +5584,11 @@ fn validate_transmission_line(line: &TransmissionLine) -> Result<(), SpiceError>
     Ok(())
 }
 
-fn initial_capacitor_states(circuit: &Circuit, time_step: f64) -> Vec<CapacitorState> {
+fn initial_capacitor_states(
+    circuit: &Circuit,
+    time_step: f64,
+    method: TransientMethod,
+) -> Vec<CapacitorState> {
     circuit
         .elements()
         .iter()
@@ -5548,14 +5596,20 @@ fn initial_capacitor_states(circuit: &Circuit, time_step: f64) -> Vec<CapacitorS
             Element::Capacitor(capacitor) => Some(CapacitorState {
                 name: capacitor.name.clone(),
                 previous_voltage: capacitor.initial_voltage,
+                previous_previous_voltage: capacitor.initial_voltage,
                 time_step,
+                method,
             }),
             _ => None,
         })
         .collect()
 }
 
-fn initial_inductor_states(circuit: &Circuit, time_step: f64) -> Vec<InductorState> {
+fn initial_inductor_states(
+    circuit: &Circuit,
+    time_step: f64,
+    method: TransientMethod,
+) -> Vec<InductorState> {
     circuit
         .elements()
         .iter()
@@ -5563,11 +5617,26 @@ fn initial_inductor_states(circuit: &Circuit, time_step: f64) -> Vec<InductorSta
             Element::Inductor(inductor) => Some(InductorState {
                 name: inductor.name.clone(),
                 previous_current: inductor.initial_current,
+                previous_previous_current: inductor.initial_current,
                 time_step,
+                method,
             }),
             _ => None,
         })
         .collect()
+}
+
+fn set_reactive_state_method(
+    capacitor_states: &mut [CapacitorState],
+    inductor_states: &mut [InductorState],
+    method: TransientMethod,
+) {
+    for state in capacitor_states {
+        state.method = method;
+    }
+    for state in inductor_states {
+        state.method = method;
+    }
 }
 
 fn initial_transmission_line_states(circuit: &Circuit) -> Vec<TransmissionLineState> {
@@ -5746,8 +5815,10 @@ fn update_capacitor_states(
         }) else {
             continue;
         };
+        let previous_voltage = state.previous_voltage;
         state.previous_voltage =
             voltage_at(node_voltages, &capacitor.n1) - voltage_at(node_voltages, &capacitor.n2);
+        state.previous_previous_voltage = previous_voltage;
     }
 }
 
@@ -5767,10 +5838,12 @@ fn update_inductor_states(
         }) else {
             continue;
         };
+        let previous_current = state.previous_current;
         state.previous_current = coupled_currents
             .get(&inductor.name)
             .copied()
             .unwrap_or_else(|| inductor_current(inductor, state, node_voltages));
+        state.previous_previous_current = previous_current;
     }
 }
 
@@ -5806,9 +5879,13 @@ fn inductor_current(
     state: &InductorState,
     node_voltages: &BTreeMap<String, f64>,
 ) -> f64 {
-    let conductance = state.time_step / inductor.inductance_henrys;
     let voltage = voltage_at(node_voltages, &inductor.n1) - voltage_at(node_voltages, &inductor.n2);
-    state.previous_current + conductance * voltage
+    if state.method == TransientMethod::Gear2 {
+        2.0 * state.time_step * voltage / (3.0 * inductor.inductance_henrys)
+            + (4.0 * state.previous_current - state.previous_previous_current) / 3.0
+    } else {
+        state.previous_current + (state.time_step / inductor.inductance_henrys) * voltage
+    }
 }
 
 fn stamp_transient_mutual_inductor(
