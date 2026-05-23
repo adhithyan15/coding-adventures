@@ -486,6 +486,22 @@ fn emit_jsx_tree(
         return emit_host_button_jsx(node, indent, part_styles);
     }
 
+    // UI29-2 — `HostCheckbox` lowers to `<input type="checkbox" />` with
+    // controlled `checked` / `onChange` wiring. Routed before the generic
+    // primitive flow because the general flow can't express the controlled-
+    // input invariant or the optional `<label>` wrapping.
+    if node.tag == "HostCheckbox" {
+        return emit_host_checkbox_jsx(node, indent, part_styles);
+    }
+
+    // UI29-2 — `HostRadio` lowers to `<input type="radio" />` with
+    // `name=<group>`, `value=<value>`, and controlled `checked`. The
+    // browser enforces the group mutex visually when multiple radios
+    // share a `name`; the React state is host-managed per UI29-2 §2.2.
+    if node.tag == "HostRadio" {
+        return emit_host_radio_jsx(node, indent, part_styles);
+    }
+
     // UI28 §2.1 — standalone `Cell` primitive. Lowers to a `<div>` with an
     // optional inline `<input>` editor depending on `editable` and
     // `is-editing` slots. Routed BEFORE Grid so a Cell that ends up at
@@ -1445,6 +1461,225 @@ fn emit_host_dialog_jsx(
     )?);
     out.push_str(&format!("{pad}</dialog>\n"));
     Ok(out)
+}
+
+// =====================================================================
+// HostCheckbox primitive (UI29-2)
+// =====================================================================
+
+/// Lower a moslayout `HostCheckbox` node to a native `<input type="checkbox" />`
+/// JSX block, optionally wrapped in a `<label>` element when a `label:` slot
+/// is supplied.
+///
+/// ## Property handling
+///
+/// | moslayout prop          | JSX                                                              |
+/// |---|---|
+/// | `checked: slot: c`      | `checked={c}` (controlled-input pattern; React requires onChange) |
+/// | `disabled: slot: d`     | `disabled={d}`                                                   |
+/// | `disabled: true/false`  | `disabled={true}` / `disabled={false}` literal                   |
+/// | `label: "..."` / `slot:l` | wraps `<input/>` in `<label>` … {label} </label>`              |
+/// | `onToggle: emit: onX`   | `onChange={e => dispatch({ type: "x", checked: e.target.checked })}` |
+///
+/// ## Indeterminate state (deferred)
+///
+/// The DOM's `indeterminate` is JS-API-only (it is not an HTML attribute),
+/// so wiring an `indeterminate:` slot requires a `useRef` + `useEffect`
+/// pair that imperatively sets `el.indeterminate = …`. That plumbing
+/// mirrors HostDialog's `dialog_nodes` machinery and is deferred to a
+/// follow-up PR to keep this first cut reviewable. Authors who declare
+/// `indeterminate:` today get a working two-state checkbox; the third
+/// state is silently dropped (no error, no warning) until the follow-up.
+///
+/// ## Why a dedicated emitter
+///
+/// The general primitive flow can't express:
+/// 1. the `onToggle` → `onChange` rename plus the `checked: e.target.checked`
+///    payload extraction (kernel emit takes a `checked: bool` parameter
+///    that React must derive from the event);
+/// 2. the optional `<label>` wrapping (children come from a prop, not a
+///    child node);
+/// 3. the controlled-input invariant (React warns if `checked` is set
+///    without a matching `onChange`).
+fn emit_host_checkbox_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    let mut attrs = String::from(" type=\"checkbox\"");
+
+    // Style attr (part-name lookup, same as everywhere else).
+    let part_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    if !part_style_str.is_empty() {
+        attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
+    }
+
+    // `checked={slot}` — drives the controlled-input behavior.
+    if let Some(slot) = find_slot_ref_prop(node, "checked") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" checked={{{camel}}}"));
+    }
+
+    // `disabled={slot}` OR `disabled={true|false}` literal.
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" disabled={{{camel}}}"));
+    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
+        if kw == "true" || kw == "false" {
+            attrs.push_str(&format!(" disabled={{{kw}}}"));
+        }
+    }
+
+    // `onChange={e => dispatch({ type: "...", checked: e.target.checked })}`.
+    // The moslayout author writes this as `onToggle: emit: onX` and the
+    // kernel-canonical event carries a `checked: bool` payload (per UI29-2
+    // §2). React's `<input>` exposes the new state via `e.target.checked`,
+    // so we destructure that into the dispatch payload directly.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&type_field)?;
+        attrs.push_str(&format!(
+            " onChange={{e => dispatch({{ type: \"{type_field}\", checked: e.target.checked }})}}"
+        ));
+    }
+
+    // Optional `<label>` wrapping. When `label:` is present we render
+    // `<label><input ... /> {labelText}</label>`. Wrapping (rather than
+    // `<input id="…" />` + sibling `<label for="…">`) sidesteps the need
+    // to generate stable unique IDs and is the idiomatic React shape for
+    // a single-line checkbox-with-text.
+    let label_body: Option<String> = if let Some(s) = find_string_prop(node, "label") {
+        Some(format!("{{\"{}\"}}", escape_for_jsx_double_quoted(s)))
+    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        Some(format!("{{{camel}}}"))
+    } else {
+        None
+    };
+
+    match label_body {
+        Some(body) => Ok(format!("{pad}<label><input{attrs} /> {body}</label>\n")),
+        None => Ok(format!("{pad}<input{attrs} />\n")),
+    }
+}
+
+// =====================================================================
+// HostRadio primitive (UI29-2)
+// =====================================================================
+
+/// Lower a moslayout `HostRadio` node to a native `<input type="radio" />`
+/// JSX block, optionally wrapped in a `<label>` element.
+///
+/// ## Property handling
+///
+/// | moslayout prop          | JSX                                                                |
+/// |---|---|
+/// | `checked: slot: c`      | `checked={c}` (controlled input — pairs with onChange)             |
+/// | `group: "name"` / `slot:g` | `name="name"` / `name={g}` — couples radios into a mutex set    |
+/// | `value: "v"` / `slot:v` | `value="v"` / `value={v}` — the form-submit value                  |
+/// | `disabled: slot: d`     | `disabled={d}`                                                     |
+/// | `disabled: true/false`  | `disabled={true}` / `disabled={false}` literal                     |
+/// | `label: "..."` / `slot:l` | wraps `<input/>` in `<label>` … {label} </label>`                |
+/// | `onSelect: emit: onX`   | `onChange={e => dispatch({ type: "x", value: e.target.value })}`   |
+///
+/// ## Group coordination
+///
+/// Per UI29-2 §2.2, v1 keeps each `HostRadio` as a standalone primitive
+/// with its own `checked: bool` slot — the host code is responsible for
+/// the mutex (set exactly one radio's `checked` to true at a time). The
+/// `group:` prop lowers to `name="…"`, which lets the *browser* enforce
+/// the mutex visually (DOM radios with the same `name` deselect each
+/// other automatically), but the React state is still author-managed.
+/// A proper `RadioGroup` userland component is reserved for UI29-2.1.
+fn emit_host_radio_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    let mut attrs = String::from(" type=\"radio\"");
+
+    let part_style_str = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    if !part_style_str.is_empty() {
+        attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
+    }
+
+    // `checked={slot}`.
+    if let Some(slot) = find_slot_ref_prop(node, "checked") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" checked={{{camel}}}"));
+    }
+
+    // `name="group"` (string literal) or `name={group}` (slot ref).
+    if let Some(g) = find_string_prop(node, "group") {
+        attrs.push_str(&format!(" name=\"{}\"", escape_for_jsx_double_quoted(g)));
+    } else if let Some(slot) = find_slot_ref_prop(node, "group") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" name={{{camel}}}"));
+    }
+
+    // `value="v"` (string literal) or `value={v}` (slot ref).
+    if let Some(v) = find_string_prop(node, "value") {
+        attrs.push_str(&format!(" value=\"{}\"", escape_for_jsx_double_quoted(v)));
+    } else if let Some(slot) = find_slot_ref_prop(node, "value") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" value={{{camel}}}"));
+    }
+
+    // `disabled={slot}` OR `disabled={true|false}` literal.
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" disabled={{{camel}}}"));
+    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
+        if kw == "true" || kw == "false" {
+            attrs.push_str(&format!(" disabled={{{kw}}}"));
+        }
+    }
+
+    // `onChange={e => dispatch({ type: "...", value: e.target.value })}`.
+    // The kernel-canonical event payload is `value: text` (UI29-2 §2.2),
+    // which React exposes via `e.target.value` on the changed `<input>`.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onSelect") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&type_field)?;
+        attrs.push_str(&format!(
+            " onChange={{e => dispatch({{ type: \"{type_field}\", value: e.target.value }})}}"
+        ));
+    }
+
+    // Optional `<label>` wrapping — same idiom as HostCheckbox.
+    let label_body: Option<String> = if let Some(s) = find_string_prop(node, "label") {
+        Some(format!("{{\"{}\"}}", escape_for_jsx_double_quoted(s)))
+    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        Some(format!("{{{camel}}}"))
+    } else {
+        None
+    };
+
+    match label_body {
+        Some(body) => Ok(format!("{pad}<label><input{attrs} /> {body}</label>\n")),
+        None => Ok(format!("{pad}<input{attrs} />\n")),
+    }
 }
 
 // =====================================================================
@@ -6687,6 +6922,257 @@ mod tests {
         assert!(
             dispatch_pos < close_branch_pos,
             "expected dispatch BEFORE the else branch, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // HostCheckbox (UI29-2) — native `<input type="checkbox" />`
+    // -----------------------------------------------------------------
+
+    /// Helper: a one-component layout def rooted at a `HostCheckbox`.
+    fn host_checkbox_layout(props: Vec<LayoutProp>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostCheckbox".to_string(),
+                part_name: None,
+                props,
+                children: Vec::new(),
+            },
+        }
+    }
+
+    /// UI29-2 React test 1 — a bare `HostCheckbox` emits the smallest
+    /// valid shape: `<input type="checkbox" />`. No useRef/useEffect, no
+    /// label wrapper — those only appear when the corresponding slot or
+    /// `indeterminate` flag is wired up by the author.
+    #[test]
+    fn host_checkbox_empty_emits_bare_input_type_checkbox() {
+        let m = component("X", vec![], vec![]);
+        let l = host_checkbox_layout(vec![]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<input type=\"checkbox\" />"),
+            "expected bare `<input type=\"checkbox\" />`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 React test 2 — `checked: slot: c` lowers to `checked={c}`,
+    /// with the slot name camelCased per the standard rule.
+    #[test]
+    fn host_checkbox_checked_slot_lowers_to_controlled_attr() {
+        let m = component("X", vec![slot("is-checked", SlotType::Bool, true)], vec![]);
+        let l = host_checkbox_layout(vec![LayoutProp {
+            name: "checked".to_string(),
+            value: LayoutPropValue::SlotRef("is-checked".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("checked={isChecked}"),
+            "expected `checked={{isChecked}}`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 React test 3 — `disabled: slot: d` lowers to `disabled={d}`.
+    /// Keyword `true` / `false` literal forms are also accepted.
+    #[test]
+    fn host_checkbox_disabled_slot_lowers_to_attr() {
+        let m = component("X", vec![slot("locked", SlotType::Bool, true)], vec![]);
+        let l = host_checkbox_layout(vec![LayoutProp {
+            name: "disabled".to_string(),
+            value: LayoutPropValue::SlotRef("locked".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("disabled={locked}"),
+            "expected disabled={{locked}}, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29-2 React test 4 — `onToggle: emit: onChange` lowers to an
+    /// `onChange={e => dispatch({ type: "change", checked: e.target.checked })}`
+    /// handler. The `checked: bool` payload field matches the kernel-
+    /// canonical emit signature (UI29-2 §2.2).
+    #[test]
+    fn host_checkbox_on_toggle_emits_on_change_with_checked_payload() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit("onChange", vec![param("checked", EmitPayloadType::Bool)])],
+        );
+        let l = host_checkbox_layout(vec![LayoutProp {
+            name: "onToggle".to_string(),
+            value: LayoutPropValue::EmitRef("onChange".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("onChange={e => dispatch({ type: \"change\", checked: e.target.checked })}"),
+            "expected onChange handler with checked: e.target.checked payload, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 React test 5 — `label: "Remember me"` wraps the input in a
+    /// `<label>` element. JSX-wrapping (vs. id+`<label for=…>`) sidesteps
+    /// the need to invent a stable unique id and is the idiomatic React
+    /// pattern for a single-row checkbox-with-text.
+    #[test]
+    fn host_checkbox_string_label_wraps_input_in_label_element() {
+        let m = component("X", vec![], vec![]);
+        let l = host_checkbox_layout(vec![LayoutProp {
+            name: "label".to_string(),
+            value: LayoutPropValue::String("Remember me".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<label><input type=\"checkbox\" /> {\"Remember me\"}</label>"),
+            "expected `<label><input … /> {{\"Remember me\"}}</label>` wrap, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 React test 6 — `label: slot: l` wraps the input in a
+    /// `<label>` with `{l}` text content.
+    #[test]
+    fn host_checkbox_slot_label_wraps_input_in_label_element() {
+        let m = component("X", vec![slot_text("label-text", false)], vec![]);
+        let l = host_checkbox_layout(vec![LayoutProp {
+            name: "label".to_string(),
+            value: LayoutPropValue::SlotRef("label-text".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<label><input type=\"checkbox\" /> {labelText}</label>"),
+            "expected `<label><input … /> {{labelText}}</label>`, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // HostRadio (UI29-2) — native `<input type="radio" />`
+    // -----------------------------------------------------------------
+
+    /// Helper: a one-component layout def rooted at a `HostRadio`.
+    fn host_radio_layout(props: Vec<LayoutProp>) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostRadio".to_string(),
+                part_name: None,
+                props,
+                children: Vec::new(),
+            },
+        }
+    }
+
+    /// UI29-2 React test 7 — a bare `HostRadio` emits `<input type="radio" />`.
+    /// Without `group:` the browser doesn't enforce mutex; that's an
+    /// author-level choice we don't fight here.
+    #[test]
+    fn host_radio_empty_emits_bare_input_type_radio() {
+        let m = component("X", vec![], vec![]);
+        let l = host_radio_layout(vec![]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<input type=\"radio\" />"),
+            "expected bare `<input type=\"radio\" />`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 React test 8 — `group: "flavor"` (string literal) lowers to
+    /// `name="flavor"`. Two radios sharing the same `name` form a browser-
+    /// enforced mutex set (the browser auto-deselects the previous radio
+    /// when one in the set is checked).
+    #[test]
+    fn host_radio_group_string_lowers_to_name_attr() {
+        let m = component("X", vec![], vec![]);
+        let l = host_radio_layout(vec![LayoutProp {
+            name: "group".to_string(),
+            value: LayoutPropValue::String("flavor".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("name=\"flavor\""),
+            "expected name=\"flavor\", got:\n{out}"
+        );
+    }
+
+    /// UI29-2 React test 9 — `value: "vanilla"` (string literal) lowers
+    /// to `value="vanilla"`. This is the value the host receives in the
+    /// `onSelect` emit when the radio becomes checked.
+    #[test]
+    fn host_radio_value_string_lowers_to_value_attr() {
+        let m = component("X", vec![], vec![]);
+        let l = host_radio_layout(vec![LayoutProp {
+            name: "value".to_string(),
+            value: LayoutPropValue::String("vanilla".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("value=\"vanilla\""),
+            "expected value=\"vanilla\", got:\n{out}"
+        );
+    }
+
+    /// UI29-2 React test 10 — `checked: slot: c` lowers to `checked={c}`,
+    /// same controlled-input wiring as HostCheckbox.
+    #[test]
+    fn host_radio_checked_slot_lowers_to_controlled_attr() {
+        let m = component("X", vec![slot("is-selected", SlotType::Bool, true)], vec![]);
+        let l = host_radio_layout(vec![LayoutProp {
+            name: "checked".to_string(),
+            value: LayoutPropValue::SlotRef("is-selected".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("checked={isSelected}"),
+            "expected `checked={{isSelected}}`, got:\n{}",
+            result.output
+        );
+    }
+
+    /// UI29-2 React test 11 — `onSelect: emit: onPick` lowers to an
+    /// `onChange={e => dispatch({ type: "pick", value: e.target.value })}`
+    /// handler. The `value: text` payload field is canonical per spec.
+    #[test]
+    fn host_radio_on_select_emits_on_change_with_value_payload() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit("onPick", vec![param("value", EmitPayloadType::Text)])],
+        );
+        let l = host_radio_layout(vec![LayoutProp {
+            name: "onSelect".to_string(),
+            value: LayoutPropValue::EmitRef("onPick".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("onChange={e => dispatch({ type: \"pick\", value: e.target.value })}"),
+            "expected onChange handler with value: e.target.value payload, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 React test 12 — `label: "Vanilla"` wraps the radio input in
+    /// a `<label>` element, matching HostCheckbox's pattern exactly.
+    #[test]
+    fn host_radio_string_label_wraps_input_in_label_element() {
+        let m = component("X", vec![], vec![]);
+        let l = host_radio_layout(vec![LayoutProp {
+            name: "label".to_string(),
+            value: LayoutPropValue::String("Vanilla".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &result.output;
+        assert!(
+            out.contains("<label><input type=\"radio\" /> {\"Vanilla\"}</label>"),
+            "expected label-wrapped radio, got:\n{out}"
         );
     }
 

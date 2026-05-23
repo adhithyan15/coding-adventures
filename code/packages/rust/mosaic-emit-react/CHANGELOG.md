@@ -4,6 +4,40 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `HostCheckbox` + `HostRadio` kernel primitives (UI29-2, U29-2-K-react)
+
+- New `HostCheckbox` lowering emits a native `<input type="checkbox" />`.
+  - `checked: slot: c` → `checked={c}` (controlled-input pattern).
+  - `disabled: slot: d` / `disabled: true|false` → `disabled={d|true|false}`.
+  - `label: "..."` / `label: slot: l` → wraps the input in a
+    `<label><input … /> {label}</label>` element (idiomatic React
+    single-row pattern, no id-juggling needed).
+  - `onToggle: emit: onX` → `onChange={e => dispatch({ type: "x",
+    checked: e.target.checked })}`, matching the kernel-canonical
+    `checked: bool` payload (UI29-2 §2.2).
+  - The `indeterminate` slot is **deferred to a follow-up PR**: it
+    requires a `useRef` + `useEffect` pair (DOM's `indeterminate` is
+    JS-API-only, not an HTML attribute), and that plumbing is left out
+    of this first cut to keep the diff reviewable. Authors who declare
+    `indeterminate:` today get a working two-state checkbox; the third
+    state is silently dropped until the follow-up.
+- New `HostRadio` lowering emits a native `<input type="radio" />`.
+  - `checked: slot: c` → `checked={c}` (controlled-input).
+  - `group: "name"` / `group: slot: g` → `name="name"` / `name={g}`,
+    which couples radios into a browser-enforced mutex set (DOM radios
+    with the same `name` deselect each other automatically).
+  - `value: "v"` / `value: slot: v` → `value="v"` / `value={v}`, the
+    form-submit value the host receives in `onSelect`'s payload.
+  - `disabled` and `label` mirror HostCheckbox exactly.
+  - `onSelect: emit: onX` → `onChange={e => dispatch({ type: "x",
+    value: e.target.value })}` per UI29-2's `value: text` payload.
+- v1 keeps each `HostRadio` standalone with its own `checked` slot —
+  the host is responsible for the React-state mutex. The proper
+  `RadioGroup` userland component is reserved for UI29-2.1.
+- 12 new unit tests cover the bare-input shape, controlled-input
+  wiring, `disabled`, `label` wrapping, group/value/checked, and the
+  onToggle/onSelect dispatch payloads.
+
 ### Added — `HostDialog` kernel primitive (UI29-1, U29-1-K-react)
 
 - New `HostDialog` lowering emits React's native `<dialog>` element with
