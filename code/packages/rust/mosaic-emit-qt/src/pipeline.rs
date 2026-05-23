@@ -305,6 +305,18 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
         // QtQuick basics couldn't replicate.
         "HostCheckbox" => return emit_host_checkbox_qml(node, depth),
         "HostRadio" => return emit_host_radio_qml(node, depth),
+
+        // UI29-4 kernel — `HostLink` lowers to a rich-text `Text`
+        // with `onLinkActivated` (Qt has no first-class hyperlink
+        // widget; `Text { textFormat: Text.RichText; text: "<a
+        // href='...'>label</a>" }` is the idiomatic shape).
+        // `HostTooltip` lowers to the `ToolTip.text` attached
+        // property on any child. `HostNumberInput` lowers to
+        // QtQuick.Controls 2 `SpinBox` (built-in ± stepper).
+        "HostLink" => return emit_host_link_qml(node, depth),
+        "HostTooltip" => return emit_host_tooltip_qml(node, depth),
+        "HostNumberInput" => return emit_host_number_input_qml(node, depth),
+
         "HostTable" => return emit_host_table_qml(node, depth),
         // UI29 §3.1 — `For` meta-primitive: lower to a `Repeater` with an
         // `Item` delegate that re-exports `modelData` / `index` under the
@@ -571,8 +583,9 @@ fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
         // `HostRadio` are handled by
         // their own emitters earlier in `emit_qml_tree`; reaching this
         // branch would be an internal logic error.
-        "HostInput" | "HostButton" | "HostDialog" | "HostCheckbox" | "HostRadio" => unreachable!(
-            "HostInput/HostButton/HostDialog/HostCheckbox/HostRadio are handled by dedicated emitters; should not reach primitive_to_qml"
+        "HostInput" | "HostButton" | "HostDialog" | "HostCheckbox" | "HostRadio"
+        | "HostLink" | "HostTooltip" | "HostNumberInput" => unreachable!(
+            "HostInput/HostButton/HostDialog/HostCheckbox/HostRadio/HostLink/HostTooltip/HostNumberInput are handled by dedicated emitters; should not reach primitive_to_qml"
         ),
         other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     })
@@ -1094,6 +1107,202 @@ fn emit_host_radio_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
     Ok(out)
 }
 
+// =====================================================================
+// UI29-4 — HostLink / HostTooltip / HostNumberInput emitters
+// =====================================================================
+
+/// Lower a `HostLink` node (UI29-4, 19th kernel primitive) to a QML
+/// rich-text `Text` element with `onLinkActivated`.
+///
+/// ## Why `Text` with rich-text, not a control
+///
+/// QtQuick has no first-class hyperlink widget. The idiomatic
+/// pattern is `Text { textFormat: Text.RichText; text: "<a href='...'>
+/// label</a>"; onLinkActivated: Qt.openUrlExternally(link) }`. We
+/// emit exactly that shape, with the `<a>` tag built from the
+/// author's `href:` and `label:` props.
+///
+/// ## Property handling
+///
+/// | moslayout prop      | QML output                                                 |
+/// |---|---|
+/// | `href: "..."`       | embedded in the rich-text as `<a href="...">`             |
+/// | `label: "..."`      | the visible link text inside `<a>...</a>`                 |
+/// | `target: new-tab`   | `onLinkActivated: Qt.openUrlExternally(link)` (always external — Qt has no in-window tab concept; new-tab and same map to the same external-browser call) |
+/// | `external: false`   | `onLinkActivated: x()` — dispatches the emit instead of opening, letting the host route in-app |
+/// | `onActivate: emit`  | dispatched on link activation                             |
+fn emit_host_link_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let mut out = String::new();
+
+    let href = find_string_prop(node, "href").unwrap_or("#");
+    let label = find_string_prop(node, "label").unwrap_or(href);
+    // Two-layer escaping. The author's strings are embedded inside
+    // an HTML payload that is itself embedded inside a QML double-
+    // quoted string literal. Each layer needs its own escaping:
+    //
+    //   layer 1: HTML — `&` `<` `>` and (for href/label both, since
+    //                     label may contain `"` that closes inner
+    //                     attrs in future tag additions) `"` -> entities
+    //   layer 2: QML  — backslash and double-quote -> `\\` and `\"`
+    //
+    // Skipping either layer is exploitable. A bare `\` in the
+    // author's string would otherwise eat the closing QML quote.
+    // A bare `"` in label would otherwise break out of an inner
+    // HTML attribute. Both vectors caught by security review.
+    fn html_entity_encode(s: &str) -> String {
+        s.replace('&', "&amp;")
+            .replace('<', "&lt;")
+            .replace('>', "&gt;")
+            .replace('"', "&quot;")
+    }
+    let href_html = html_entity_encode(href);
+    let label_html = html_entity_encode(label);
+    // Build the rich-text payload first, then QML-escape the WHOLE
+    // thing (which neutralises any `\` and the `"` we emit around
+    // the inner href attr).
+    let rich_text_raw = format!(r#"<a href="{href_html}">{label_html}</a>"#);
+    let rich_text = escape_qml_string(&rich_text_raw);
+
+    writeln!(out, "{pad}Text {{").unwrap();
+    writeln!(out, "{inner}textFormat: Text.RichText").unwrap();
+    writeln!(out, "{inner}text: \"{rich_text}\"").unwrap();
+
+    // onLinkActivated wiring:
+    //   - external: false + onActivate -> dispatch emit, don't open
+    //   - onActivate alone               -> dispatch AND open externally
+    //   - bare (no onActivate)            -> open externally
+    let external_false = matches!(find_keyword_prop(node, "external"), Some("false"));
+    let on_activate = find_emit_ref_prop(node, "onActivate");
+
+    let handler_body: String = match (external_false, on_activate) {
+        (true, Some(emit)) => {
+            // Pure in-app routing — dispatch only.
+            let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
+            validate_safe_identifier(&camel)
+                .map_err(PipelineEmitError::UnsafeEmitName)?;
+            format!("{camel}()")
+        }
+        (false, Some(emit)) => {
+            let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
+            validate_safe_identifier(&camel)
+                .map_err(PipelineEmitError::UnsafeEmitName)?;
+            // Dispatch AND open externally.
+            format!("{{ {camel}(); Qt.openUrlExternally(link); }}")
+        }
+        (_, None) => "Qt.openUrlExternally(link)".to_string(),
+    };
+    writeln!(out, "{inner}onLinkActivated: {handler_body}").unwrap();
+
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Lower a `HostTooltip` node (UI29-4, 20th kernel primitive) to a
+/// QML wrapping `Item` with `ToolTip.text` + `ToolTip.visible` on
+/// hover. The single child is the wrapped element.
+///
+/// ## Generated shape
+///
+/// ```qml
+/// Item {
+///     ToolTip.text: "..."
+///     ToolTip.visible: hoverHandler.hovered
+///     HoverHandler { id: hoverHandler }
+///     /* child(ren) here */
+/// }
+/// ```
+///
+/// `HoverHandler` (QtQuick 2.12+) gives the hover state without
+/// needing a `MouseArea` (which would intercept clicks on the child).
+fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let mut out = String::new();
+
+    let text = find_string_prop(node, "text").unwrap_or("");
+    let escaped = escape_qml_string(text);
+
+    writeln!(out, "{pad}Item {{").unwrap();
+    writeln!(out, "{inner}ToolTip.text: \"{escaped}\"").unwrap();
+    writeln!(out, "{inner}ToolTip.visible: hoverHandler.hovered").unwrap();
+    writeln!(out, "{inner}HoverHandler {{ id: hoverHandler }}").unwrap();
+
+    // Walk children (the wrapped element) through the standard children
+    // walker so nested kernel primitives lower normally.
+    out.push_str(&emit_qml_children(&node.children, depth + 1, false)?);
+
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Lower a `HostNumberInput` node (UI29-4, 21st kernel primitive)
+/// to a QtQuick.Controls 2.15 `SpinBox`. SpinBox ships built-in ±
+/// stepper buttons and direct text entry, plus integer-only
+/// validation by default.
+///
+/// ## Property handling
+///
+/// | moslayout prop  | QML output                                |
+/// |---|---|
+/// | `value: slot|n` | `value: <bare-identifier>` or numeric literal |
+/// | `min: <n>`      | `from: <n>` (Qt calls it "from")              |
+/// | `max: <n>`      | `to: <n>`                                      |
+/// | `step: <n>`     | `stepSize: <n>`                                |
+/// | `disabled: …`   | `enabled: !d` (polarity flip)                  |
+/// | `onChange: emit`| `onValueModified: x(value)` (user-initiated changes only — `valueChanged` fires on programmatic changes too) |
+///
+/// Note: SpinBox holds integers only. The kernel's `number` slot
+/// type is f64; the int↔f64 cast is documented as a v1 limitation,
+/// to be revisited when a `DoubleSpinBox` shape lands (it'd need
+/// QtQuick.Controls 2.15's `Tumbler` or a custom Component).
+fn emit_host_number_input_qml(
+    node: &LayoutNode,
+    depth: usize,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let mut out = String::new();
+    writeln!(out, "{pad}SpinBox {{").unwrap();
+
+    // value:
+    if let Some(slot) = find_slot_ref_prop(node, "value") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            writeln!(out, "{inner}value: {camel}").unwrap();
+        }
+    } else if let Some(n) = find_number_prop(node, "value") {
+        writeln!(out, "{inner}value: {n}").unwrap();
+    }
+
+    // min -> from, max -> to, step -> stepSize.
+    if let Some(n) = find_number_prop(node, "min") {
+        writeln!(out, "{inner}from: {n}").unwrap();
+    }
+    if let Some(n) = find_number_prop(node, "max") {
+        writeln!(out, "{inner}to: {n}").unwrap();
+    }
+    if let Some(n) = find_number_prop(node, "step") {
+        writeln!(out, "{inner}stepSize: {n}").unwrap();
+    }
+
+    // disabled -> enabled: !d (polarity flip; same shape as HostButton).
+    if let Some(line) = build_disabled_to_enabled_attribute(node) {
+        writeln!(out, "{inner}{line}").unwrap();
+    }
+
+    // onChange -> onValueModified.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
+        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        writeln!(out, "{inner}onValueModified: {camel}(value)").unwrap();
+    }
+
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
 /// Build the `checked: <slot|literal>` attribute used by both
 /// `HostCheckbox` and `HostRadio`. Mirrors `build_open_attribute` for
 /// `HostDialog`'s `visible:` prop — same shape, just a different
@@ -1167,12 +1376,20 @@ fn build_dialog_title_text_line(node: &LayoutNode) -> Option<String> {
 /// True iff any node in the layout tree lowers to a `QtQuick.Controls`
 /// element. Today: `HostButton` → `Button`, `HostScroll` →
 /// `ScrollView`, `HostDialog` → `Popup`, `HostCheckbox` → `CheckBox`,
-/// `HostRadio` → `RadioButton`. Used to decide whether to emit
-/// `import QtQuick.Controls 2.15` at the top of the file.
+/// `HostRadio` → `RadioButton`, `HostTooltip` → `ToolTip` attached
+/// property, `HostNumberInput` → `SpinBox`. `HostLink` is intentionally
+/// NOT here because it lowers to a plain `Text` element with rich-
+/// text + onLinkActivated, not a QtQuick.Controls widget.
 fn tree_needs_controls_import(node: &LayoutNode) -> bool {
     matches!(
         node.tag.as_str(),
-        "HostButton" | "HostScroll" | "HostDialog" | "HostCheckbox" | "HostRadio"
+        "HostButton"
+            | "HostScroll"
+            | "HostDialog"
+            | "HostCheckbox"
+            | "HostRadio"
+            | "HostTooltip"
+            | "HostNumberInput"
     ) || node.children.iter().any(tree_needs_controls_import)
 }
 
@@ -1730,6 +1947,19 @@ fn find_emit_ref_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a s
         if p.name == prop_name {
             if let LayoutPropValue::EmitRef(s) = &p.value {
                 return Some(s.as_str());
+            }
+        }
+        None
+    })
+}
+
+/// Find a numeric prop on `node`. Used by `HostNumberInput` for
+/// `min`/`max`/`step` compile-time numeric literals.
+fn find_number_prop(node: &LayoutNode, prop_name: &str) -> Option<f64> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::Number(n) = &p.value {
+                return Some(*n);
             }
         }
         None
@@ -4263,6 +4493,283 @@ mod tests {
             result.output.contains("if (checked) pick(radioValue)"),
             "expected dispatch with bare `radioValue`, got:\n{}",
             result.output
+        );
+    }
+
+    // =====================================================================
+    // UI29-4 — HostLink / HostTooltip / HostNumberInput (Qt)
+    // =====================================================================
+
+    /// UI29-4 Qt test 1 — bare `HostLink href + label` lowers to a
+    /// rich-text `Text` element with an `<a>` tag in the body and an
+    /// onLinkActivated handler that opens the URL externally.
+    #[test]
+    fn host_link_string_href_and_label_emits_rich_text_anchor() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostLink".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String("https://example.com".to_string()),
+                    },
+                    LayoutProp {
+                        name: "label".to_string(),
+                        value: LayoutPropValue::String("Click me".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(out.contains("Text {"), "expected `Text {{`, got:\n{out}");
+        assert!(
+            out.contains("textFormat: Text.RichText"),
+            "expected `textFormat: Text.RichText`, got:\n{out}"
+        );
+        assert!(
+            out.contains("<a href="),
+            "expected anchor in rich-text body, got:\n{out}"
+        );
+        assert!(out.contains("Click me"));
+        assert!(
+            out.contains("Qt.openUrlExternally(link)"),
+            "expected open-external handler, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 Qt test 1a — SECURITY REGRESSION: a `\` or `"` in the
+    /// author's `label` must not break out of the QML string literal
+    /// or the inner HTML attribute. The 2-layer escape (HTML
+    /// entities for `&<>"`, then escape_qml_string for backslash +
+    /// double-quote at the QML layer) closes both vectors.
+    #[test]
+    fn host_link_with_backslash_and_quote_in_label_is_escaped() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostLink".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String("https://example.com".to_string()),
+                    },
+                    LayoutProp {
+                        name: "label".to_string(),
+                        value: LayoutPropValue::String("x\"\\evil".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        // The label's `"` must be HTML-entity-encoded as `&quot;`
+        // (not left as `"` which would break the inner attribute
+        // OR be QML-escaped as `\"` which would silently introduce
+        // a literal `"` into the rendered text).
+        assert!(
+            out.contains("&quot;"),
+            "expected `\"` to be HTML-entity encoded as &quot;, got:\n{out}"
+        );
+        // The label's `\` must be QML-escaped as `\\` to avoid
+        // eating the closing quote of the QML literal.
+        assert!(
+            out.contains("\\\\"),
+            "expected backslash to be QML-escaped as \\\\, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 Qt test 2 — `external: false` + `onActivate: emit:
+    /// onNavigate` makes `onLinkActivated` dispatch the emit only
+    /// (no external open), so the host's QML router takes over.
+    #[test]
+    fn host_link_external_false_with_on_activate_dispatches_only() {
+        let m = component("X", vec![], vec![emit_decl("onNavigate", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostLink".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "href".to_string(),
+                        value: LayoutPropValue::String("/about".to_string()),
+                    },
+                    LayoutProp {
+                        name: "external".to_string(),
+                        value: LayoutPropValue::Keyword("false".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onActivate".to_string(),
+                        value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains("onLinkActivated: navigate()"),
+            "expected dispatch-only handler, got:\n{}",
+            r.output
+        );
+        assert!(
+            !r.output.contains("Qt.openUrlExternally"),
+            "external open must NOT be present in in-app routing mode, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-4 Qt test 3 — `HostTooltip` lowers to an `Item` wrapping
+    /// the child with `ToolTip.text` + `HoverHandler` to drive
+    /// visibility. The wrapped child (a Text in this fixture) is
+    /// recursed-through normally.
+    #[test]
+    fn host_tooltip_wraps_child_in_item_with_tooltip_text() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTooltip".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "text".to_string(),
+                    value: LayoutPropValue::String("Click to submit".to_string()),
+                }],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("Submit".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(out.contains("Item {"), "expected `Item {{`, got:\n{out}");
+        assert!(
+            out.contains("ToolTip.text: \"Click to submit\""),
+            "expected ToolTip.text, got:\n{out}"
+        );
+        assert!(
+            out.contains("ToolTip.visible: hoverHandler.hovered"),
+            "expected hover-driven visibility, got:\n{out}"
+        );
+        assert!(
+            out.contains("HoverHandler { id: hoverHandler }"),
+            "expected HoverHandler, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 Qt test 4 — bare `HostNumberInput` lowers to a `SpinBox
+    /// { }` (QtQuick.Controls 2.15 widget with built-in ± stepper
+    /// buttons and direct text entry).
+    #[test]
+    fn host_number_input_empty_emits_spinbox_block() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostNumberInput".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains("SpinBox {"),
+            "expected SpinBox block, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("import QtQuick.Controls 2.15"),
+            "expected QtQuick.Controls import, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-4 Qt test 5 — `min`/`max`/`step` numeric literals map
+    /// to Qt's `from`/`to`/`stepSize` SpinBox properties.
+    #[test]
+    fn host_number_input_min_max_step_map_to_qt_spinbox_props() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostNumberInput".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "min".to_string(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    LayoutProp {
+                        name: "max".to_string(),
+                        value: LayoutPropValue::Number(100.0),
+                    },
+                    LayoutProp {
+                        name: "step".to_string(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(out.contains("from: 0"), "expected from: 0, got:\n{out}");
+        assert!(out.contains("to: 100"), "expected to: 100, got:\n{out}");
+        assert!(
+            out.contains("stepSize: 5"),
+            "expected stepSize: 5, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 Qt test 6 — `onChange: emit: onSet` wires
+    /// `onValueModified` (user-initiated only, NOT `valueChanged`
+    /// which also fires on programmatic value-set). Dispatches the
+    /// emit with the SpinBox's current `value`.
+    #[test]
+    fn host_number_input_on_change_wires_on_value_modified() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit_decl(
+                "onSet",
+                vec![EmitParam {
+                    name: "value".to_string(),
+                    r#type: EmitPayloadType::Number,
+                }],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostNumberInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onChange".to_string(),
+                    value: LayoutPropValue::EmitRef("onSet".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains("onValueModified: set(value)"),
+            "expected `onValueModified: set(value)` (user-only event), got:\n{}",
+            r.output
         );
     }
 }
