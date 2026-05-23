@@ -1,5 +1,71 @@
 # Changelog
 
+## 1.1.0 — 2026-05-23
+
+**Phase 51 + Phase 53 — Sqrt numerator patterns (Python port).**
+
+Ports Rust/TypeScript ``cas-summation`` Phase 51 (0.9.0) and introduces
+Phase 53 in all three languages simultaneously.  Extends
+``_g_vanishes_at_infinity`` with two new branches for square-root
+numerator shapes, both using ×2 integer arithmetic to avoid floating-point
+comparisons.
+
+Bumps 1.0.0 → 1.1.0.
+
+### Added
+
+- **``_sqrt_effective_half_degree_x2(node, k)``** — Phase 51 helper.
+  Returns ``deg(P)`` (= 2 × effective half-degree) for ``Sqrt(P(k))``
+  with a positive-leading-coefficient polynomial inner ``P``.  Returns
+  ``None`` for non-Sqrt nodes, non-polynomial inners, and negative-leading-
+  coefficient polynomials (those produce complex values for large ``k``).
+
+- **``_sqrt_poly_numerator_effective_degree_x2(node, k)``** — Phase 53
+  helper.  For a ``Mul`` node containing exactly one ``Sqrt(P)`` factor
+  and any number of polynomial-in-``k`` factors, returns
+  ``deg(P) + 2·deg(Q)`` (= 2 × the combined effective growth degree).
+  Returns ``None`` for plain ``Sqrt`` nodes (handled by Phase 51),
+  non-Mul nodes, or Mul nodes with more than one Sqrt factor, non-
+  polynomial non-Sqrt factors, or negative-leading-coefficient inner
+  polynomials.
+
+### Changed
+
+- ``_g_vanishes_at_infinity`` adds two new branches after Phase 50 (log
+  numerator) and Phase 49/52 (bounded / bounded×poly):
+
+  **Phase 51 branch** — fires when ``num = Sqrt(P)`` with
+  ``_sqrt_effective_half_degree_x2(num, k) = d``.  Closes when
+  ``2 * deg(den) > d`` (i.e. denominator degree strictly exceeds the
+  sqrt half-degree).
+
+  **Phase 53 branch** — fires when ``num = Mul(Sqrt(P), polynomial)``
+  with ``_sqrt_poly_numerator_effective_degree_x2(num, k) = e``.
+  Closes when ``2 * deg(den) > e``.
+
+  Both branches insert between Phase 52 (bounded × polynomial) and
+  Phase 42 (pure rational degree comparison).
+
+### Added — tests
+
+``tests/test_summation.py``
+
+**``TestEvaluateSumPhase51SqrtNumerator``** — 4 new cases:
+- ``phase51_sqrt_k_over_k_squared_closes`` — eff deg ½ < 2.
+- ``phase51_sqrt_k_squared_over_k_cubed_closes`` — eff deg 1 < 3.
+- ``phase51_sqrt_k_over_k_equal_degrees_refused`` — eff deg 1 = 1.
+- ``phase51_sqrt_of_negative_polynomial_refused`` — Sqrt(−k) refused.
+
+**``TestEvaluateSumPhase53SqrtTimesPolynomialNumerator``** — 5 new cases:
+- ``phase53_sqrt_k_times_k_over_k_cubed_closes`` — eff deg 3/2 < 3.
+- ``phase53_sqrt_k_squared_times_k_over_k_cubed_closes`` — eff 2 < 3.
+- ``phase53_sqrt_k_times_k_squared_over_k_cubed_closes`` — eff 5/2 < 3.
+- ``phase53_sqrt_k_times_k_squared_over_k_squared_stays`` — eff 5/2 > 2.
+- ``phase53_regression_sqrt_k_over_k_squared_still_via_phase51`` — plain
+  Sqrt bypasses Phase 53 and closes via Phase 51.
+
+Full suite: **116 passed** (was 107; +9 net new — 4 Phase 51 + 5 Phase 53).
+
 ## 1.0.0 — 2026-05-22
 
 **Phase 52 — Bounded × polynomial numerator pattern.**
