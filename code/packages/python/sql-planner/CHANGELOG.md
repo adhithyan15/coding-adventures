@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.39.0] - 2026-05-23
+
+### Added
+
+- **Implicit COLLATE propagation** from a column's declared collation
+  into comparison operators referencing that column.  Mirrors SQLite::
+
+      CREATE TABLE users(email TEXT COLLATE NOCASE);
+      SELECT * FROM users WHERE email = 'Adhithya@example.com';
+      -- ↑ implicitly NOCASE — case-insensitive match
+
+  Implementation: new ``_propagate_column_collation`` pass runs after
+  ``_resolve`` on WHERE / HAVING / UPDATE-WHERE / DELETE-WHERE
+  predicates.  For each ``BinaryExpr`` comparison whose operand is a
+  resolved ``Column`` with a declared collation (looked up via
+  ``SchemaProvider.column_collation`` introduced in 0.38), both
+  operands get wrapped in the matching scalar function
+  (``lower()`` for NOCASE, ``rtrim()`` for RTRIM).  ``Between``
+  predicates propagate the same way (collation flows to all three
+  operands).
+
+- Known limitations:
+  - Explicit ``COLLATE BINARY`` postfix does NOT override a
+    column-declared NOCASE (because the explicit-BINARY postfix
+    becomes an identity transform at the adapter, leaving no marker
+    for this pass to recognise).  Override with ``COLLATE NOCASE``
+    or ``COLLATE RTRIM`` instead — those work as expected.
+  - HAVING clauses don't propagate column collation through GROUP BY
+    (the column reference there is to the grouped value, not the
+    underlying table column).  Use explicit ``COLLATE NOCASE`` on
+    the HAVING.
+
 ## [0.38.0] - 2026-05-23
 
 ### Added
