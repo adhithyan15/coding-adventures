@@ -66,6 +66,8 @@ The crate keeps the boundary narrow:
   timestamp and call-id checkpoint fields
 - supervisor drain reports and summaries expose last-checkpoint consistency
   flags for presence, timestamp, call-id, and aggregate checkpoint fields
+- supervisor drain pages, plans, loops, reports, and summaries expose
+  inventory count consistency flags for host-log integrity checks
 - supervisor drain run summaries flatten planned and replayed follow-up row
   counts for host routing decisions
 - supervisor drain run summaries flag when planned and replayed follow-up

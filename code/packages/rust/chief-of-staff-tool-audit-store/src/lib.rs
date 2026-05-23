@@ -571,6 +571,11 @@ impl ToolAuditCheckpointPage {
         self.records.len()
     }
 
+    /// Return whether the page row count agrees with the payload-free inventory.
+    pub fn record_count_matches_inventory(&self) -> bool {
+        self.len() == self.inventory.total_records
+    }
+
     /// Return the checkpoint timestamp to use for the next read.
     pub fn next_checkpoint_timestamp_ms(&self) -> u64 {
         self.next_checkpoint.checkpoint_timestamp_ms()
@@ -628,6 +633,11 @@ impl ToolAuditCheckpointReplaySummary {
         self.replayed_records == 0
     }
 
+    /// Return whether replayed row count agrees with the payload-free inventory.
+    pub fn replayed_count_matches_inventory(&self) -> bool {
+        self.replayed_records == self.inventory.total_records
+    }
+
     /// Return the starting checkpoint timestamp for host replay logs.
     pub fn starting_checkpoint_timestamp_ms(&self) -> u64 {
         self.starting_checkpoint.timestamp_ms
@@ -679,6 +689,11 @@ impl ToolAuditSupervisorCheckpointStatus {
     /// Return whether no rows are waiting after this checkpoint.
     pub fn is_idle(&self) -> bool {
         self.pending_records == 0
+    }
+
+    /// Return whether pending row count agrees with the payload-free inventory.
+    pub fn pending_count_matches_inventory(&self) -> bool {
+        self.pending_records == self.inventory.total_records
     }
 
     /// Return whether a drain tick would deliver at least one row.
@@ -748,6 +763,11 @@ impl ToolAuditSupervisorDrainPlanPage {
     /// Return whether this planned page has no rows.
     pub fn is_idle(&self) -> bool {
         self.pending_records == 0
+    }
+
+    /// Return whether pending row count agrees with the payload-free inventory.
+    pub fn pending_count_matches_inventory(&self) -> bool {
+        self.pending_records == self.inventory.total_records
     }
 
     /// Return whether this planned page has rows to drain.
@@ -843,6 +863,35 @@ impl ToolAuditSupervisorDrainPlanSummary {
         self.planned_records == 0
     }
 
+    /// Return whether planned row count agrees with the aggregate inventory.
+    pub fn planned_count_matches_inventory(&self) -> bool {
+        self.planned_records == self.inventory.total_records
+    }
+
+    /// Return whether planned row count agrees with the sum of planned pages.
+    pub fn planned_count_matches_pages(&self) -> bool {
+        self.planned_records
+            == self
+                .pages
+                .iter()
+                .map(|page| page.pending_records)
+                .sum::<usize>()
+    }
+
+    /// Return whether every planned page count agrees with its inventory.
+    pub fn page_inventory_counts_match(&self) -> bool {
+        self.pages
+            .iter()
+            .all(ToolAuditSupervisorDrainPlanPage::pending_count_matches_inventory)
+    }
+
+    /// Return whether all planned row counts agree with their inventories.
+    pub fn plan_inventory_counts_match(&self) -> bool {
+        self.planned_count_matches_inventory()
+            && self.planned_count_matches_pages()
+            && self.page_inventory_counts_match()
+    }
+
     /// Return whether a matching drain run would replay at least one row.
     pub fn has_pending_records(&self) -> bool {
         !self.is_idle()
@@ -902,6 +951,11 @@ impl ToolAuditSupervisorDrainSummary {
     /// Return whether the drain tick delivered no rows.
     pub fn is_idle(&self) -> bool {
         self.replay.is_empty()
+    }
+
+    /// Return whether replayed row count agrees with the payload-free inventory.
+    pub fn replayed_count_matches_inventory(&self) -> bool {
+        self.replay.replayed_count_matches_inventory()
     }
 
     /// Return whether the drain tick delivered at least one row.
@@ -967,6 +1021,28 @@ impl ToolAuditSupervisorDrainLoopSummary {
     /// Return whether no audit rows were replayed.
     pub fn is_idle(&self) -> bool {
         self.drained_records == 0
+    }
+
+    /// Return whether drained row count agrees with the sum of drain ticks.
+    pub fn drained_count_matches_ticks(&self) -> bool {
+        self.drained_records
+            == self
+                .ticks
+                .iter()
+                .map(|tick| tick.replay.replayed_records)
+                .sum::<usize>()
+    }
+
+    /// Return whether every drain tick count agrees with its inventory.
+    pub fn tick_inventory_counts_match(&self) -> bool {
+        self.ticks
+            .iter()
+            .all(ToolAuditSupervisorDrainSummary::replayed_count_matches_inventory)
+    }
+
+    /// Return whether all drained row counts agree with their inventories.
+    pub fn drain_inventory_counts_match(&self) -> bool {
+        self.drained_count_matches_ticks() && self.tick_inventory_counts_match()
     }
 
     /// Return whether at least one audit row was replayed.
@@ -1228,6 +1304,21 @@ impl ToolAuditSupervisorDrainRunReport {
         self.drain.follow_up_record_count()
     }
 
+    /// Return whether planned row counts agree with their inventories.
+    pub fn plan_inventory_counts_match(&self) -> bool {
+        self.plan.plan_inventory_counts_match()
+    }
+
+    /// Return whether replayed row counts agree with their inventories.
+    pub fn drain_inventory_counts_match(&self) -> bool {
+        self.drain.drain_inventory_counts_match()
+    }
+
+    /// Return whether every planned and replayed row count agrees with inventory.
+    pub fn inventory_counts_match(&self) -> bool {
+        self.plan_inventory_counts_match() && self.drain_inventory_counts_match()
+    }
+
     /// Return a payload-free, flattened summary for host logs and schedulers.
     pub fn summary(&self) -> ToolAuditSupervisorDrainRunSummary {
         ToolAuditSupervisorDrainRunSummary {
@@ -1285,6 +1376,9 @@ impl ToolAuditSupervisorDrainRunReport {
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
             matches_follow_up_pressure: self.matches_follow_up_pressure(),
+            plan_inventory_counts_match: self.plan_inventory_counts_match(),
+            drain_inventory_counts_match: self.drain_inventory_counts_match(),
+            inventory_counts_match: self.inventory_counts_match(),
             reached_end_of_log: self.reached_end_of_log(),
             exhausted_tick_budget: self.exhausted_tick_budget(),
             is_idle: self.is_idle(),
@@ -1599,6 +1693,12 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub matches_planned_follow_up_record_count: bool,
     /// Whether planned and replayed follow-up pressure counts match.
     pub matches_follow_up_pressure: bool,
+    /// Whether planned row counts agree with their inventories.
+    pub plan_inventory_counts_match: bool,
+    /// Whether replayed row counts agree with their inventories.
+    pub drain_inventory_counts_match: bool,
+    /// Whether every planned and replayed row count agrees with inventory.
+    pub inventory_counts_match: bool,
     /// Whether the actual run reached the current end of the audit log.
     pub reached_end_of_log: bool,
     /// Whether the actual run used every allowed tick.
@@ -1790,6 +1890,21 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the actual run preserved the planned follow-up pressure count.
     pub fn matches_planned_follow_up_record_count(&self) -> bool {
         self.matches_planned_follow_up_record_count
+    }
+
+    /// Return whether planned row counts agree with their inventories.
+    pub fn plan_inventory_counts_match(&self) -> bool {
+        self.plan_inventory_counts_match
+    }
+
+    /// Return whether replayed row counts agree with their inventories.
+    pub fn drain_inventory_counts_match(&self) -> bool {
+        self.drain_inventory_counts_match
+    }
+
+    /// Return whether every planned and replayed row count agrees with inventory.
+    pub fn inventory_counts_match(&self) -> bool {
+        self.inventory_counts_match
     }
 
     /// Return whether row count drift was observed.
@@ -4665,6 +4780,15 @@ mod tests {
         assert!(summary.matches_planned_follow_up_record_count());
         assert!(summary.matches_follow_up_pressure);
         assert!(summary.matches_follow_up_pressure());
+        assert!(report.plan_inventory_counts_match());
+        assert!(report.drain_inventory_counts_match());
+        assert!(report.inventory_counts_match());
+        assert!(summary.plan_inventory_counts_match);
+        assert!(summary.plan_inventory_counts_match());
+        assert!(summary.drain_inventory_counts_match);
+        assert!(summary.drain_inventory_counts_match());
+        assert!(summary.inventory_counts_match);
+        assert!(summary.inventory_counts_match());
         assert!(!summary.reached_end_of_log);
         assert!(!summary.reached_end_of_log());
         assert!(summary.exhausted_tick_budget);
@@ -4699,6 +4823,83 @@ mod tests {
         assert!(summary.made_progress());
         assert!(summary.should_continue);
         assert!(summary.should_continue());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_flattens_inventory_count_flags() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+
+        let page = store
+            .query_audits_after_checkpoint(&ToolAuditReadCheckpoint::beginning(), Some(2))
+            .unwrap();
+        assert!(page.record_count_matches_inventory());
+
+        let status = store
+            .inspect_supervisor_checkpoint("supervisor", 2)
+            .unwrap();
+        assert!(status.pending_count_matches_inventory());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 2, &mut sink)
+            .unwrap();
+
+        assert!(report.plan.plan_inventory_counts_match());
+        assert!(report.plan.planned_count_matches_inventory());
+        assert!(report.plan.planned_count_matches_pages());
+        assert!(report.plan.page_inventory_counts_match());
+        assert!(report.plan.pages[0].pending_count_matches_inventory());
+        assert!(report.drain.drain_inventory_counts_match());
+        assert!(report.drain.drained_count_matches_ticks());
+        assert!(report.drain.tick_inventory_counts_match());
+        assert!(report.drain.ticks[0].replayed_count_matches_inventory());
+        assert!(report.drain.ticks[0]
+            .replay
+            .replayed_count_matches_inventory());
+        assert!(report.plan_inventory_counts_match());
+        assert!(report.drain_inventory_counts_match());
+        assert!(report.inventory_counts_match());
+
+        let summary = report.summary();
+        assert!(summary.plan_inventory_counts_match);
+        assert!(summary.plan_inventory_counts_match());
+        assert!(summary.drain_inventory_counts_match);
+        assert!(summary.drain_inventory_counts_match());
+        assert!(summary.inventory_counts_match);
+        assert!(summary.inventory_counts_match());
+
+        let mut plan_mismatch = report.clone();
+        plan_mismatch.plan.pages[0].inventory.total_records += 1;
+        let plan_mismatch_summary = plan_mismatch.summary();
+        assert!(!plan_mismatch.plan.page_inventory_counts_match());
+        assert!(!plan_mismatch.plan_inventory_counts_match());
+        assert!(plan_mismatch.drain_inventory_counts_match());
+        assert!(!plan_mismatch.inventory_counts_match());
+        assert!(!plan_mismatch_summary.plan_inventory_counts_match);
+        assert!(!plan_mismatch_summary.plan_inventory_counts_match());
+        assert!(plan_mismatch_summary.drain_inventory_counts_match);
+        assert!(!plan_mismatch_summary.inventory_counts_match);
+        assert!(!plan_mismatch_summary.inventory_counts_match());
+
+        let mut drain_mismatch = report;
+        drain_mismatch.drain.ticks[0].replay.inventory.total_records += 1;
+        let drain_mismatch_summary = drain_mismatch.summary();
+        assert!(drain_mismatch.plan_inventory_counts_match());
+        assert!(!drain_mismatch.drain.tick_inventory_counts_match());
+        assert!(!drain_mismatch.drain_inventory_counts_match());
+        assert!(!drain_mismatch.inventory_counts_match());
+        assert!(drain_mismatch_summary.plan_inventory_counts_match);
+        assert!(!drain_mismatch_summary.drain_inventory_counts_match);
+        assert!(!drain_mismatch_summary.drain_inventory_counts_match());
+        assert!(!drain_mismatch_summary.inventory_counts_match);
+        assert!(!drain_mismatch_summary.inventory_counts_match());
     }
 
     #[test]
