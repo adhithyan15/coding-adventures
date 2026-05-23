@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.90.0] - 2026-05-23
+
+### Added
+
+- ``EXPLAIN QUERY PLAN <stmt>`` is now implemented end-to-end.  The
+  engine parses and plans the inner statement (without executing it),
+  walks the optimised ``LogicalPlan``, and emits a four-column row set
+  (``id``, ``parent``, ``notused``, ``detail``) that mirrors SQLite's
+  output shape.  Detail strings cover the common plan shapes:
+  ``SCAN <table>``, ``SEARCH <table> USING INDEX <name>``, ``USE TEMP
+  B-TREE FOR ORDER BY / GROUP BY / DISTINCT / WINDOW FUNCTION``, and
+  ``SCAN SUBQUERY <alias>``.  Pure transforms (Filter, Project, Limit,
+  Having, Join) are elided so children reparent to the elided node's
+  parent — matching SQLite's output topology.
+- Bare ``EXPLAIN`` (without ``QUERY PLAN``) continues to return an
+  empty result — mini-sqlite does not expose its internal IR as VDBE
+  bytecode.
+
+### Changed
+
+- ``sqlite_master.rootpage`` now reports a stable non-zero monotonic
+  integer for tables and indexes (matching SQLite's convention) instead
+  of always returning 0.  Triggers still report 0 (not a b-tree
+  object).  See ``sql-backend`` 0.17 for the underlying change.
+
 ## [1.89.0] - 2026-05-23
 
 ### Added

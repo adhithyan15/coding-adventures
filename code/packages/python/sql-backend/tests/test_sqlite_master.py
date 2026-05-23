@@ -78,7 +78,9 @@ class TestMasterRows:
         assert r["type"] == "table"
         assert r["name"] == "t"
         assert r["tbl_name"] == "t"
-        assert r["rootpage"] == 0
+        # The first b-tree object gets rootpage 1; non-zero is SQLite's
+        # convention for "exists in the b-tree".
+        assert r["rootpage"] == 1
         # Identifiers are quoted to prevent second-order SQL injection
         # when a downstream consumer re-executes sqlite_master.sql.
         assert 'CREATE TABLE "t"' in r["sql"]
@@ -339,6 +341,34 @@ class TestReadOnly:
                 "rootpage": 0,
                 "sql": "CREATE TABLE fake (x INT)",
             })
+
+
+class TestRootpage:
+    """Non-zero rootpage for tables and indexes; 0 for triggers."""
+
+    def test_first_table_gets_rootpage_1(self) -> None:
+        b = InMemoryBackend()
+        b.create_table(
+            "t", [ColumnDef(name="x", type_name="INTEGER")], if_not_exists=False
+        )
+        r = _collect(b.scan("sqlite_master"))[0]
+        assert r["rootpage"] == 1
+
+    def test_pages_monotonic_in_creation_order(self) -> None:
+        # SQLite assigns page numbers in creation order for fresh tables;
+        # we mirror that by enumerating tables then indexes in dict order.
+        b = _make_backend()
+        rows = _collect(b.scan("sqlite_master"))
+        pages = [r["rootpage"] for r in rows]
+        assert pages == sorted(pages)  # monotonic
+        assert all(p > 0 for p in pages)  # all positive (b-tree objects)
+
+    def test_index_gets_distinct_page_from_table(self) -> None:
+        b = _make_backend()  # users (table) + ix_name (index)
+        rows = _collect(b.scan("sqlite_master"))
+        table_pages = {r["rootpage"] for r in rows if r["type"] == "table"}
+        index_pages = {r["rootpage"] for r in rows if r["type"] == "index"}
+        assert not (table_pages & index_pages)
 
 
 class TestTablesListingIsClean:

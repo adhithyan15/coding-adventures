@@ -5,6 +5,19 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.0] - 2026-05-23
+
+### Changed
+
+- ``InMemoryBackend._synthesize_master_rows`` now assigns stable
+  monotonic positive integers to the ``rootpage`` column for tables
+  and indexes (matching SQLite's convention that ``rootpage > 0``
+  means the object exists in the b-tree).  Triggers continue to get
+  ``rootpage = 0`` since they're not b-tree objects.  Page numbers
+  are assigned in iteration order at synthesis time and are not
+  stable across schema mutations (matches SQLite's documented
+  behaviour for fresh databases).
+
 ## [0.16.0] - 2026-05-23
 
 ### Added

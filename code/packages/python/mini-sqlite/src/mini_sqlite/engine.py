@@ -62,6 +62,9 @@ from sql_planner.plan import (
 from sql_planner.plan import (
     Limit as PlanLimit,
 )
+from sql_planner.plan import (
+    children as _plan_children,
+)
 from sql_vm import QueryEvent, QueryResult, execute  # noqa: F401 — QueryEvent re-exported
 
 from .adapter import to_statement
@@ -114,13 +117,28 @@ def run(
         # metadata and return formatted rows without going through the planner.
         if re.match(r"\s*PRAGMA\b", bound, re.IGNORECASE):
             return _run_pragma(backend, bound, fk_child=fk_child)
+        # EXPLAIN QUERY PLAN <stmt>: parse + plan the inner statement and
+        # return a four-column row set (id, parent, notused, detail) that
+        # mirrors SQLite's output format.  Walked here instead of inside
+        # the normal pipeline so we never code-generate or execute the
+        # underlying statement.
+        if re.match(r"\s*EXPLAIN\s+QUERY\s+PLAN\b", bound, re.IGNORECASE):
+            inner = re.sub(
+                r"^\s*EXPLAIN\s+QUERY\s+PLAN\s+",
+                "",
+                bound,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+            return _run_explain_query_plan(backend, inner, view_defs=view_defs)
         # VACUUM / ANALYZE / REINDEX are no-ops in mini-sqlite.  SQLite uses
         # VACUUM to rebuild the database file and ANALYZE to collect statistics
         # for the query planner; neither concept applies to our in-memory /
         # file-backed stack.  We silently succeed so migration scripts and ORM
         # setup routines that call these statements don't crash.
-        # EXPLAIN / EXPLAIN QUERY PLAN are similarly intercepted — we return an
-        # empty result rather than trying to expose our internal IR.
+        # Bare EXPLAIN (without QUERY PLAN) emits SQLite's VDBE bytecode —
+        # we don't expose our internal IR, so we silently return an empty
+        # result rather than crash.
         if re.match(
             r"\s*(VACUUM|ANALYZE|REINDEX|EXPLAIN\b)\b",
             bound,
@@ -480,6 +498,139 @@ _PRAGMA_RE = re.compile(
     """,
     re.IGNORECASE | re.VERBOSE,
 )
+
+
+# ---------------------------------------------------------------------------
+# EXPLAIN QUERY PLAN — walk the optimised LogicalPlan and emit one row per
+# "interesting" plan node.  The output mirrors SQLite's four-column layout:
+#
+#   id      | parent  | notused | detail
+#   --------+---------+---------+--------------------------------
+#   integer | integer | always  | human-readable description, e.g.
+#           |         | 0       | "SCAN t" or "SEARCH t USING INDEX ix"
+#
+# We deliberately do NOT emit a row for every plan node — SQLite skips
+# pure transforms (Filter, Project) and only surfaces the data-source and
+# big algorithmic choices (sorts, group-by, distinct).  Our detail-string
+# generator returns ``None`` for nodes we want to elide; the walker then
+# passes the elided node's parent_id down to its children.
+# ---------------------------------------------------------------------------
+
+
+def _explain_detail(node: LogicalPlan) -> str | None:
+    """Return SQLite-style EXPLAIN QUERY PLAN detail text for *node*, or None.
+
+    Returning None means the node is a pure transform (e.g. Filter,
+    Project, Limit, Having) that doesn't appear as its own row in
+    SQLite's output; its children are reparented to the elided node's
+    parent so the id/parent topology still matches.
+    """
+    # Late-imported to avoid a top-level cycle with the planner module.
+    from sql_planner.plan import (
+        Aggregate as _Agg,
+    )
+    from sql_planner.plan import (
+        Delete as _Del,
+    )
+    from sql_planner.plan import (
+        Distinct as _Dist,
+    )
+    from sql_planner.plan import (
+        IndexScan as _Ix,
+    )
+    from sql_planner.plan import (
+        Insert as _Ins,
+    )
+    from sql_planner.plan import (
+        Scan as _Scan,
+    )
+    from sql_planner.plan import (
+        Sort as _Sort,
+    )
+    from sql_planner.plan import (
+        Update as _Upd,
+    )
+    from sql_planner.plan import (
+        WindowAgg as _Win,
+    )
+
+    if isinstance(node, _Scan):
+        # ``SCAN <table>`` or ``SCAN <table> AS <alias>`` — the alias is
+        # included when distinct from the table name so the user can tell
+        # apart self-joins.
+        if node.alias and node.alias != node.table:
+            return f"SCAN {node.table} AS {node.alias}"
+        return f"SCAN {node.table}"
+    if isinstance(node, _Ix):
+        # ``SEARCH <table> [AS <alias>] USING INDEX <name>`` — SQLite
+        # also appends ``(<col>=?)`` for each equality bound, but we keep
+        # the form minimal here.  Future work can expand the bound shape.
+        base = f"SEARCH {node.table}"
+        if node.alias and node.alias != node.table:
+            base += f" AS {node.alias}"
+        return base + f" USING INDEX {node.index_name}"
+    if isinstance(node, _Agg):
+        return "USE TEMP B-TREE FOR GROUP BY"
+    if isinstance(node, _Sort):
+        return "USE TEMP B-TREE FOR ORDER BY"
+    if isinstance(node, _Dist):
+        return "USE TEMP B-TREE FOR DISTINCT"
+    if isinstance(node, _Win):
+        return "USE TEMP B-TREE FOR WINDOW FUNCTION"
+    if isinstance(node, DerivedTable):
+        alias = node.alias or "subq"
+        return f"SCAN SUBQUERY {alias}"
+    if isinstance(node, (_Ins, _Upd, _Del)):
+        # DML uses the target table directly; SQLite shows the table
+        # name (no row for the action itself, but we approximate).
+        return f"SCAN {node.table}"
+    # All other nodes (Filter, Project, Join, Having, Limit, Union/Intersect/
+    # Except, Begin/Commit/Rollback, CreateTable, etc.) elided.
+    return None
+
+
+def _run_explain_query_plan(
+    backend: Backend,
+    sql: str,
+    *,
+    view_defs: dict | None = None,
+) -> QueryResult:
+    """Plan *sql* and return a ``(id, parent, notused, detail)`` row set.
+
+    The inner statement is parsed and planned but never executed.  No
+    side effects on the backend.  Designed for the ``EXPLAIN QUERY PLAN``
+    diagnostic path, not for general query handling.
+    """
+    ast = parse_sql(sql)
+    stmt = to_statement(ast, view_defs=view_defs)
+    logical = plan(stmt, backend_as_schema_provider(backend))
+    optimized = optimize(logical)
+
+    rows: list[tuple[int, int, int, str]] = []
+    counter = [0]  # mutable in closure — pre-increment to get the next id
+
+    def walk(node: LogicalPlan, parent_id: int) -> None:
+        detail = _explain_detail(node)
+        if detail is not None:
+            counter[0] += 1
+            my_id = counter[0]
+            rows.append((my_id, parent_id, 0, detail))
+            child_parent = my_id
+        else:
+            # Elided node: children inherit this node's parent.
+            child_parent = parent_id
+        for child in _plan_children(node):
+            walk(child, child_parent)
+
+    walk(optimized, 0)
+
+    return QueryResult(
+        columns=("id", "parent", "notused", "detail"),
+        rows=tuple(rows),
+    )
+
+
+# ---------------------------------------------------------------------------
 
 
 # Boolean PRAGMA value parser.  SQLite accepts a wide range of representations
