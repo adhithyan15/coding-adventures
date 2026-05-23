@@ -1428,12 +1428,21 @@ impl Ccvs {
     }
 }
 
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum DcConvergenceAid {
+    Newton,
+    Gmin,
+    Source,
+    None,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct DcResult {
     pub node_voltages: BTreeMap<String, f64>,
     pub branch_currents: BTreeMap<String, f64>,
     pub iterations: usize,
     pub converged: bool,
+    pub convergence_aid: DcConvergenceAid,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1979,19 +1988,31 @@ pub fn dc_op(circuit: &Circuit) -> Result<DcResult, SpiceError> {
 pub fn dc_op_with_options(circuit: &Circuit, options: DcOpOptions) -> Result<DcResult, SpiceError> {
     validate_dc_op_options(options)?;
     let solution = solve_dc_newton(circuit, options, None)?;
-    if solution.converged || !options.convergence_aids {
-        return Ok(dc_result_from_linear_solution(solution));
+    if solution.converged {
+        return Ok(dc_result_from_linear_solution(
+            solution,
+            DcConvergenceAid::Newton,
+        ));
+    }
+    if !options.convergence_aids {
+        return Ok(dc_result_from_linear_solution(
+            solution,
+            DcConvergenceAid::None,
+        ));
     }
 
-    let final_solution =
+    let (final_solution, convergence_aid) =
         if let Some(aided) = solve_dc_with_gmin_stepping(circuit, options, &solution.vector)? {
-            aided
+            (aided, DcConvergenceAid::Gmin)
         } else if let Some(aided) = solve_dc_with_source_stepping(circuit, options)? {
-            aided
+            (aided, DcConvergenceAid::Source)
         } else {
-            solution
+            (solution, DcConvergenceAid::None)
         };
-    Ok(dc_result_from_linear_solution(final_solution))
+    Ok(dc_result_from_linear_solution(
+        final_solution,
+        convergence_aid,
+    ))
 }
 
 pub fn dc_corners(
@@ -2116,12 +2137,16 @@ fn apply_corner_override(
     }
 }
 
-fn dc_result_from_linear_solution(solution: LinearSolution) -> DcResult {
+fn dc_result_from_linear_solution(
+    solution: LinearSolution,
+    convergence_aid: DcConvergenceAid,
+) -> DcResult {
     DcResult {
         node_voltages: solution.node_voltages,
         branch_currents: solution.branch_currents,
         iterations: solution.iterations,
         converged: solution.converged,
+        convergence_aid,
     }
 }
 

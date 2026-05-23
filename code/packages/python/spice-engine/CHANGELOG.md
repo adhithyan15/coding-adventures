@@ -4,6 +4,10 @@
 
 ### Added
 
+- **DC convergence-aid metadata** — `DcResult` now reports whether the
+  operating point came from plain Newton, Gmin stepping, source stepping, or no
+  successful convergence aid.
+
 - **Gear-2 damping fixture** — transient tests now cover a coarse LC oscillator
   where Gear-2 damps numerical ringing more aggressively than trapezoidal
   integration.
