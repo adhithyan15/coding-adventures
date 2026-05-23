@@ -70,7 +70,7 @@ class TestSimpleScan:
 
 
 class TestIndexSearch:
-    """Predicates matched by an index produce ``SEARCH ... USING INDEX``."""
+    """Predicates matched by an index produce ``SEARCH ... USING INDEX (<col>...)``."""
 
     def test_index_search_on_equality_predicate(self) -> None:
         # auto_index=False so the advisor doesn't add its own index;
@@ -81,8 +81,57 @@ class TestIndexSearch:
         rows = c.execute(
             "EXPLAIN QUERY PLAN SELECT * FROM t WHERE x = 5"
         ).fetchall()
-        # One row; detail names the index.
-        assert rows == [(1, 0, 0, "SEARCH t USING INDEX ix_x")]
+        # One row; detail names the index and the equality bound, matching
+        # real SQLite's ``(x=?)`` format.
+        assert rows == [(1, 0, 0, "SEARCH t USING INDEX ix_x (x=?)")]
+
+    def test_index_search_with_gt_bound(self) -> None:
+        c = mini_sqlite.connect(":memory:", auto_index=False)
+        c.execute("CREATE TABLE t (x INTEGER)")
+        c.execute("CREATE INDEX ix_x ON t (x)")
+        rows = c.execute(
+            "EXPLAIN QUERY PLAN SELECT * FROM t WHERE x > 5"
+        ).fetchall()
+        assert rows == [(1, 0, 0, "SEARCH t USING INDEX ix_x (x>?)")]
+
+    def test_index_search_with_lt_bound(self) -> None:
+        c = mini_sqlite.connect(":memory:", auto_index=False)
+        c.execute("CREATE TABLE t (x INTEGER)")
+        c.execute("CREATE INDEX ix_x ON t (x)")
+        rows = c.execute(
+            "EXPLAIN QUERY PLAN SELECT * FROM t WHERE x < 5"
+        ).fetchall()
+        assert rows == [(1, 0, 0, "SEARCH t USING INDEX ix_x (x<?)")]
+
+    def test_index_search_between_bounds(self) -> None:
+        # BETWEEN is inclusive on both ends in SQL, but SQLite's EXPLAIN
+        # text uses ``>`` / ``<`` (no inclusivity markers).
+        c = mini_sqlite.connect(":memory:", auto_index=False)
+        c.execute("CREATE TABLE t (x INTEGER)")
+        c.execute("CREATE INDEX ix_x ON t (x)")
+        rows = c.execute(
+            "EXPLAIN QUERY PLAN SELECT * FROM t WHERE x BETWEEN 1 AND 5"
+        ).fetchall()
+        assert rows == [(1, 0, 0, "SEARCH t USING INDEX ix_x (x>? AND x<?)")]
+
+    def test_composite_index_two_equality_bounds(self) -> None:
+        c = mini_sqlite.connect(":memory:", auto_index=False)
+        c.execute("CREATE TABLE t (x INTEGER, y INTEGER)")
+        c.execute("CREATE INDEX ix_xy ON t (x, y)")
+        rows = c.execute(
+            "EXPLAIN QUERY PLAN SELECT * FROM t WHERE x = 1 AND y = 2"
+        ).fetchall()
+        # Two-column composite equality.
+        assert rows == [(1, 0, 0, "SEARCH t USING INDEX ix_xy (x=? AND y=?)")]
+
+    def test_composite_index_mixed_eq_and_range(self) -> None:
+        c = mini_sqlite.connect(":memory:", auto_index=False)
+        c.execute("CREATE TABLE t (x INTEGER, y INTEGER)")
+        c.execute("CREATE INDEX ix_xy ON t (x, y)")
+        rows = c.execute(
+            "EXPLAIN QUERY PLAN SELECT * FROM t WHERE x = 1 AND y > 2"
+        ).fetchall()
+        assert rows == [(1, 0, 0, "SEARCH t USING INDEX ix_xy (x=? AND y>?)")]
 
 
 class TestTempBTreeNodes:
