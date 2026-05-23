@@ -4,6 +4,48 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — U29-4-K-qt — `HostLink` + `HostTooltip` + `HostNumberInput` kernel primitive lowerings
+
+Three new UI29-4 kernel primitives lower to QML widgets:
+
+- **`HostLink` → `Text { textFormat: Text.RichText; text:
+  "<a href='...'>label</a>"; onLinkActivated: ... }`**. QtQuick
+  has no first-class hyperlink widget; rich-text `Text` is the
+  idiomatic shape. `external: false` + `onActivate` dispatches the
+  emit without opening the URL externally (host's router handles
+  it). Default behavior is `Qt.openUrlExternally(link)`; `external:
+  false` + `onActivate` switches to dispatch-only; bare
+  `onActivate` does BOTH (dispatch + external open).
+- **`HostTooltip` → `Item { ToolTip.text: "..."; ToolTip.visible:
+  hoverHandler.hovered; HoverHandler { id: hoverHandler }; child(ren) }`**.
+  Wraps the child(ren) so the tooltip activates on hover via
+  `HoverHandler` (QtQuick 2.12+). `HoverHandler` is used instead of
+  `MouseArea` so clicks still reach the wrapped child unimpeded.
+- **`HostNumberInput` → `SpinBox { value; from; to; stepSize;
+  enabled; onValueModified }`**. QtQuick.Controls 2.15 SpinBox has
+  built-in ± stepper buttons and direct text entry with integer-
+  only validation. `onValueModified` fires only on user-initiated
+  changes (not programmatic value-set), matching the kernel-
+  canonical `onChange` semantics. Note: SpinBox is integer-only in
+  v1; the f64 → int cast is a documented limitation pending a
+  DoubleSpinBox shape.
+
+Infrastructure:
+
+- `tree_needs_controls_import` now also fires on `HostTooltip` and
+  `HostNumberInput` (both lower to QtQuick.Controls widgets).
+  `HostLink` is intentionally NOT in the list — it lowers to plain
+  `Text`, not a Controls widget.
+- New `find_number_prop` helper alongside the existing
+  `find_string_prop` / `find_slot_ref_prop` / `find_emit_ref_prop`
+  for `HostNumberInput`'s numeric-literal min/max/step props.
+
+6 new tests cover: HostLink rich-text rendering with
+openUrlExternally, the external-false + onActivate dispatch-only
+mode, HostTooltip Item wrapper with HoverHandler, bare
+HostNumberInput SpinBox emission, min/max/step → from/to/stepSize
+mapping, and `onValueModified` (user-only) dispatch wiring.
+
 ### Added — U29-2-K-qt — `HostCheckbox` + `HostRadio` kernel primitive lowerings
 
 Both new UI29-2 primitives lower to QtQuick.Controls 2.15 widgets,
