@@ -31,6 +31,28 @@ class HtmlFixtureSchemasTest(unittest.TestCase):
 
         self.assertEqual(errors, [])
 
+    def test_browser_readiness_cases_require_browser_expected_shape(self) -> None:
+        errors = schema_check.check_browser_readiness_case(
+            "html-parser/tests/fixtures/html-browser-readiness.json",
+            0,
+            {
+                "id": "example",
+                "input": "<title>x</title><p>body",
+                "expected": {
+                    "title": "x",
+                    "base_href": None,
+                    "body_text": "body",
+                    "headings": [],
+                    "links": [],
+                    "images": [],
+                    "forms": [],
+                    "tables": [],
+                },
+            },
+        )
+
+        self.assertEqual(errors, [])
+
     def test_chunk_split_points_must_stay_inside_input(self) -> None:
         errors = schema_check.check_lexer_case(
             "html-lexer/tests/fixtures/whatwg-chunk-boundaries.json",

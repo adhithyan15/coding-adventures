@@ -58,6 +58,8 @@ The current parser surface includes:
 - parser diagnostics for unmatched end tags
 - body-fragment parsing that returns DOM nodes without the implied
   `html/head/body` shell while preserving lexer/parser diagnostics
+- browser-facing document extraction for title, base URL, body text, headings,
+  links, image attributes, form controls, and table summaries
 
 The checked-in html5lib tree-construction smoke corpus now covers every case in
 the currently audited upstream `html5lib-tests/tree-construction/*.dat` sources
@@ -319,12 +321,18 @@ audit report and pinned-count checks into the same local guard.
 ```rust
 use coding_adventures_html_lexer::HtmlScriptingMode;
 use coding_adventures_html_parser::{
-    parse_html, parse_html_fragment, parse_html_with_options, HtmlInitialTokenizerContext,
-    HtmlParseOptions,
+    parse_browser_document, parse_html, parse_html_fragment, parse_html_with_options,
+    HtmlInitialTokenizerContext, HtmlParseOptions,
 };
 use dom_core::Node;
 
 let document = parse_html("<p>Hello <strong>Venture</strong></p>").unwrap();
+let browser_document = parse_browser_document(
+    "<title>Example</title><h1>Example</h1><p><a href=next.html>Next</a></p>"
+).unwrap();
+
+assert_eq!(browser_document.title.as_deref(), Some("Example"));
+assert_eq!(browser_document.links[0].href.as_deref(), Some("next.html"));
 
 match &document.children[0] {
     Node::Element(element) => assert_eq!(element.name, "html"),
