@@ -115,6 +115,10 @@ while language adapters only schedule the native callback runner.
 dispatch metadata while normalizing the callback runner status, executed
 instruction count, and elapsed time into a Rust-owned completion,
 budget-exceeded, incomplete, or failure summary.
+`input_callback_transport_result_summary` combines that callback completion
+record with the parsed host endpoint session and Rust-owned connection label,
+so transport-aware callback logs do not have to rebuild serial, TCP, or
+Bluetooth display policy in language adapters.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves

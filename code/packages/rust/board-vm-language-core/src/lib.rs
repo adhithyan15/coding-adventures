@@ -801,6 +801,14 @@ pub struct LanguageInputCallbackResultSummary {
     pub message: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportResultSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub callback_label: String,
+    pub result: LanguageInputCallbackResultSummary,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackQueuePlanErrorKind {
     EmptyQueue,
@@ -2116,6 +2124,18 @@ pub fn input_callback_result_for_dispatch_plan(
     }
 }
 
+pub fn input_callback_transport_result_summary(
+    session: &LanguageHostEndpointSessionSummary,
+    result: &LanguageInputCallbackResultSummary,
+) -> LanguageInputCallbackTransportResultSummary {
+    LanguageInputCallbackTransportResultSummary {
+        endpoint: session.endpoint.clone(),
+        connection_label: session.connection_label.clone(),
+        callback_label: input_callback_transport_result_label(session, result),
+        result: result.clone(),
+    }
+}
+
 pub fn parse_serial_endpoint(endpoint: &str) -> Option<LanguageSerialEndpoint> {
     let (scheme, port) = endpoint.split_once("://")?;
     if scheme != "serial" {
@@ -2705,6 +2725,16 @@ fn input_callback_result_message(kind: LanguageInputCallbackResultKind) -> &'sta
         }
         LanguageInputCallbackResultKind::Failed => "Input callback stopped before completion.",
     }
+}
+
+fn input_callback_transport_result_label(
+    session: &LanguageHostEndpointSessionSummary,
+    result: &LanguageInputCallbackResultSummary,
+) -> String {
+    format!(
+        "{} callback={}:{} sequence={} status={}",
+        session.connection_label, result.board_id, result.label, result.sequence, result.run_status
+    )
 }
 
 fn language_i2c_bus(bus: &TargetI2cBus) -> LanguageI2cBus {
@@ -6834,6 +6864,62 @@ mod tests {
         let faulted = input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Faulted, 6, 2);
         assert_eq!(faulted.run_status, "faulted");
         assert_eq!(faulted.result_kind, LanguageInputCallbackResultKind::Failed);
+    }
+
+    #[test]
+    fn input_callback_transport_results_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let dispatch = input_callback_dispatch_plan_for_queue_plan(&queue_plan).unwrap();
+
+        let completed =
+            input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Halted, 11, 3);
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let serial = input_callback_transport_result_summary(&serial_session, &completed);
+
+        assert_eq!(serial.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            serial.endpoint.transport,
+            LanguageConnectionTransport::Serial
+        );
+        assert_eq!(
+            serial.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            serial.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            serial.callback_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 status=halted"
+        );
+        assert_eq!(serial.result, completed);
+
+        let budget =
+            input_callback_result_for_dispatch_plan(&dispatch, RunStatus::BudgetExceeded, 64, 9);
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let tcp = input_callback_transport_result_summary(&tcp_session, &budget);
+
+        assert_eq!(tcp.endpoint.endpoint, "tcp://board-vm.local:4170");
+        assert_eq!(tcp.endpoint.transport, LanguageConnectionTransport::Wifi);
+        assert_eq!(
+            tcp.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(tcp.connection_label, "endpoint=tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.callback_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 status=budget_exceeded"
+        );
+        assert_eq!(
+            tcp.result.result_kind,
+            LanguageInputCallbackResultKind::BudgetExceeded
+        );
     }
 
     #[test]
