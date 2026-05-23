@@ -53,6 +53,8 @@ All notable changes to this package will be documented in this file.
   reports, and summaries.
 - Budget and run-status consistency flags for supervisor drain reports and
   summaries.
+- Starting and stored checkpoint boundary fields plus stored-checkpoint
+  consistency flags for supervisor drain reports and summaries.
 - Flattened planned and replayed follow-up row counts in supervisor drain run
   summaries.
 - Follow-up pressure drift flags in supervisor drain run reports and summaries.

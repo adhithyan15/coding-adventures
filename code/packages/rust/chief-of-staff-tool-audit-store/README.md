@@ -70,6 +70,8 @@ The crate keeps the boundary narrow:
   inventory count consistency flags for host-log integrity checks
 - supervisor drain reports and summaries expose budget and run-status
   consistency flags for flattened host-log fields
+- supervisor drain reports and summaries expose starting and stored checkpoint
+  boundary fields plus stored-checkpoint consistency flags for host logs
 - supervisor drain run summaries flatten planned and replayed follow-up row
   counts for host routing decisions
 - supervisor drain run summaries flag when planned and replayed follow-up
