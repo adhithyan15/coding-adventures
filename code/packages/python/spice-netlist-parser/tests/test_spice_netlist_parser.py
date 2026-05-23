@@ -193,6 +193,35 @@ def test_parse_options_analysis_card() -> None:
     assert parsed.options_cards() == parsed.analyses
 
 
+def test_parse_transient_method_from_tran_card() -> None:
+    parsed = parse_netlist(".tran 1n 20n method=gear2")
+
+    assert parsed.tran_cards() == [
+        TranAnalysis(t_step=1.0e-9, t_stop=20.0e-9, method="gear2")
+    ]
+    assert parsed.transient_method(parsed.tran_cards()[0]) == "gear2"
+
+
+def test_transient_method_falls_back_to_options_and_tran_takes_precedence() -> None:
+    parsed = parse_netlist(
+        """
+.options method=trap
+.tran 1n 20n method=euler
+"""
+    )
+
+    assert parsed.options_cards()[0].values["method"] == "trap"
+    assert parsed.transient_method() == "trap"
+    assert parsed.transient_method(parsed.tran_cards()[0]) == "euler"
+
+
+def test_transient_method_rejects_unsupported_values() -> None:
+    with pytest.raises(NetlistParseError, match="must be euler, trap, or gear2"):
+        parse_netlist(".tran 1n 20n method=bogus")
+    with pytest.raises(NetlistParseError, match="must be euler, trap, or gear2"):
+        parse_netlist(".options method=bogus")
+
+
 def test_options_card_rejects_empty_values() -> None:
     with pytest.raises(NetlistParseError, match=r"\.options 'gmin' requires a value"):
         parse_netlist(".options gmin=")
