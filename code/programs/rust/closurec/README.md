@@ -1,108 +1,159 @@
 # closurec
 
 `closurec` is the CLI driver for the Closure Compiler clone.
-Per [CLOC08](../../../specs/CLOC08-closurec-cli.md).
-
-```text
-closurec [OPTIONS] --input PATH
-```
+**Drop-in compatible with the upstream Java Closure Compiler at
+the command-line surface** — a script written against
+`java -jar closure-compiler.jar --js foo.js --js_output_file
+out.js --compilation_level ADVANCED` works unchanged when the
+`java -jar …` invocation is swapped for `closurec`. Per
+[CLOC08](../../../specs/CLOC08-closurec-cli-surface.md).
 
 The binary ties together every crate in Stages 1–4: lexer,
 parser, type sidecar, JSDoc extractor, type-checker, pass
 pipeline + every canonical pass per CLOC06, emitter, and
 source-map generator. This crate is just the glue.
 
-## CLI surface (frozen in v0.1.0)
+## How the CLI is built
 
-| Flag | Value | Default | Meaning |
-|---|---|---|---|
-| `--input PATH` | path | *(required)* | Input JavaScript file. |
-| `--output PATH` | path | stdout | Where to write compiled output. |
-| `--source-map BOOL` | bool | `true` | Emit companion source-map blob. |
-| `--ascii-only BOOL` | bool | `false` | Escape non-ASCII characters in output. |
-| `--pretty BOOL` | bool | `false` | Emit human-readable whitespace. |
-| `--disable NAME` | pass name | — | Disable a pass. Repeatable. |
-| `--help`, `-h` | — | — | Print usage and exit 0. |
-| `--version`, `-V` | — | — | Print version and exit 0. |
+`closurec` uses [`cli-builder`](../../../packages/rust/cli-builder)
+for argument parsing. The flag surface is declared **declaratively**
+in [`cli.spec.json`](./cli.spec.json), a cli-builder JSON spec
+that mirrors `CommandLineRunner.java` upstream. The spec is
+embedded into the binary via `include_str!` at compile time —
+no runtime file lookup is required for the parser to come up.
 
-BOOL values accept `true | false | 1 | 0 | yes | no | on | off`
-(case-insensitive).
+```rust
+const CLI_SPEC_JSON: &str = include_str!("../cli.spec.json");
+let spec = load_spec_from_str(CLI_SPEC_JSON)?;
+let parser = Parser::new(spec);
+let output = parser.parse(&argv)?;
+```
 
-Known pass names (`--disable`):
+cli-builder handles:
+
+- multi-token flags (`--js file.js`),
+- enum-value validation (`--compilation_level ADVANCED`),
+- repeatable flags (`--js a.js --js b.js --js c.js`),
+- short aliases (`-O ADVANCED` ↔ `--compilation_level ADVANCED`),
+- type validation (integers, booleans, paths, enums),
+- conflict checking,
+- fuzzy "did you mean?" suggestions on unknown flags,
+- `--help` and `--version` auto-injection.
+
+When upstream Closure Compiler adds a flag, we update
+`cli.spec.json` and the binary picks it up — no code changes.
+
+## CLI surface
+
+The full ~100-flag surface is in `cli.spec.json`. Highlights:
 
 ```
-constant-fold, fold-control-flow, dce, inline, rename, treeshake,
-collapse-properties, remove-unused-vars
+closurec --js src/foo.js --js src/bar.js \
+         --js_output_file out/bundle.js \
+         --compilation_level ADVANCED \
+         --language_in ECMASCRIPT_2021 \
+         --language_out ECMASCRIPT_2015 \
+         --create_source_map out/bundle.js.map \
+         --warning_level VERBOSE \
+         --jscomp_off lintChecks \
+         --define DEBUG=false \
+         --formatting PRETTY_PRINT \
+         --formatting SINGLE_QUOTES
 ```
+
+Short aliases the Java tool ships:
+
+| Short | Long |
+|-------|------|
+| `-O`  | `--compilation_level` |
+| `-W`  | `--warning_level` |
+| `-D`  | `--define` |
 
 ## Exit codes
 
 | Code | Meaning |
-|---|---|
-| `0` | Success. |
-| `2` | Usage error (POSIX convention). |
+|------|---------|
+| 0    | Success. |
+| 1    | Parse error (unknown flag, invalid value, missing required flag, conflicting flags). |
+| 70   | Internal error (`cli.spec.json` malformed — bug in *us*). `EX_SOFTWARE` per `sysexits.h`. |
 
-(Future `1` will mean compilation failure, once compilation
-actually does anything.)
+Future v2 codes:
+- 2 reserved for usage error.
+- 3 reserved for compilation error.
+- 4 reserved for I/O error.
+
+## Known compatibility gaps in v0.1.0
+
+cli-builder doesn't currently support multiple long-form aliases
+per flag. These deprecated upstream aliases are **not
+implemented** in v0.1.0 — use the canonical name instead:
+
+| Deprecated alias    | Use instead              |
+|---------------------|--------------------------|
+| `--checks-only`     | `--checks_only`          |
+| `--dev_mode`        | `--jscomp_dev_mode`      |
+| `--warnings_whitelist_file` | `--warnings_allowlist_file` |
+| `--D` (long form)   | `--define` or `-D`       |
+
+Real-world Closure Compiler invocations use the canonical
+underscored names; these deprecated forms are rarely seen.
 
 ## Scope (v1)
 
 The whole pipeline is **identity** today — `javascript-ast`
-ships only `Program` / `SourceType` (CLOC02 Phase 1), so every
-pass is a no-op and the emitter returns empty output. v1 of
-`closurec` therefore:
+ships only `Program` / `SourceType` per CLOC02 Phase 1. v1 of
+`closurec`:
 
-- parses the full CLI surface (so users can already script
-  against it),
-- validates argument combinations and exits 2 on misuse,
-- prints `closurec v0.1.0 - identity pipeline\n` on the happy
-  path,
-- exits 0 on success.
+- parses every Closure Compiler flag (validation, type
+  checking, repeatable handling, enum values),
+- returns clear errors on misuse (cli-builder collects every
+  error in a single pass and offers "did you mean?" suggestions),
+- on a valid invocation, prints
+  `closurec v0.1.0 - identity pipeline\n` and exits 0.
 
-The point of locking the CLI surface this early is that build
-systems and CI configs can wire up `closurec invocations` now,
-and they won't need to change when the body fills in.
+The actual lex/parse/typecheck/passes/emit wiring lands when
+the AST grows nodes. **Pinning the Closure-compatible CLI
+surface now means scripts and CI configs that invoke the Java
+tool today can target `closurec` with no flag changes when the
+body fills in.**
 
 ## Architecture
 
 ```text
-  args ─► parse_args ──► ParseResult
-                            │
-                            ├─ Run(Action::PrintHelp)    ──► help_text()
-                            ├─ Run(Action::PrintVersion) ──► version_string()
-                            ├─ Run(Action::Compile(args)) ──► (v2+) pipeline
-                            └─ UsageError(msg)            ──► "error: …" + exit 2
+  args ─► cli_builder::Parser::parse ──► ParserOutput
+                                            │
+                                            ├─ Parse(r)   ──► run_pipeline(r)   (v1: banner)
+                                            ├─ Help(h)    ──► h.text
+                                            └─ Version(v) ──► v.version
 ```
 
-`parse_args` is a **pure function** of `&[String]` — no I/O, no
-global state. Tests drive it directly without spawning the
-binary, which keeps the test suite fast and deterministic.
-
-`run(result)` is similarly pure: it converts a `ParseResult`
-into `(text_to_print, ExitCode)`. `main` is a thin wrapper that
-just prints + exits.
+`parse_and_run(args)` is a **pure function** returning
+`(text, ExitCode)` so tests can exercise the whole pipeline
+without spawning the binary. `main` is a thin wrapper.
 
 ## What's coming
 
 - v2: real lex → parse → typecheck → pipeline → emit wiring
-  once the AST grows variants. `--input` actually reads a
-  file; `--output` actually writes one. Compilation failures
-  surface as exit code 1.
-- A `--debug-cv` flag that dumps the CV log for tracing how
-  each output byte came from which input byte.
-- `--config FILE` for project-level defaults.
+  once the AST grows variants. `--js` actually reads files;
+  `--js_output_file` actually writes one. Compilation failures
+  surface as exit code 3.
+- v2: route specific flags to pass configuration —
+  `--jscomp_off`/`--jscomp_warning`/`--jscomp_error` populate
+  the warning level map; `--define` populates a value map the
+  passes consult; `--compilation_level` selects a canonical
+  pass preset.
+- v0.2 alias enhancement: hyphenated long-form aliases when
+  cli-builder grows alias support.
 
 ## Dependency whitelist
 
-Front end: `javascript-tokens`, `javascript-ast`.
-Type checker: `closure-typechecker`.
-Pass pipeline: `closure-pass-pipeline` + every pass crate
-(`constant-fold`, `fold-control-flow`, `dce`, `inline`, `rename`,
-`treeshake`, `collapse-properties`, `remove-unused-vars`).
-Back end: `closure-emitter`, `closure-source-map`.
-Shared: `correlation-vector`, `type-sidecar`, `serde`,
-`serde_json`.
-
-No third-party CLI parser — `std::env::args` plus the tiny
-parser in `parse_args` covers v1's surface and keeps cold-start
-cheap.
+- `cli-builder` — declarative CLI parsing.
+- Front end: `javascript-tokens`, `javascript-ast`.
+- Type checker: `closure-typechecker`.
+- Pass pipeline: `closure-pass-pipeline` + every pass crate
+  (`constant-fold`, `fold-control-flow`, `dce`, `inline`,
+  `rename`, `treeshake`, `collapse-properties`,
+  `remove-unused-vars`).
+- Back end: `closure-emitter`, `closure-source-map`.
+- Shared: `correlation-vector`, `type-sidecar`, `serde`,
+  `serde_json`.
