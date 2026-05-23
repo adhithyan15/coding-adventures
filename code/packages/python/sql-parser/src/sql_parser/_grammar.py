@@ -1,6 +1,6 @@
 # AUTO-GENERATED FILE — DO NOT EDIT
 # ruff: noqa: E501, F401
-# Source: code/grammars/sql.grammar
+# Source: /Users/adhithya/Documents/coding-adventures/.claude/worktrees/nice-wing-09855c/code/grammars/sql.grammar
 # Regenerate with: grammar-tools compile-grammar <source.grammar>
 #
 # This file embeds a ParserGrammar as native Python data structures.
@@ -306,9 +306,12 @@ PARSER_GRAMMAR = ParserGrammar(
                             RuleReference(name='NAME', is_token=True),
                         ]),
                     ),
+                    Optional(element=
+                        RuleReference(name='index_hint', is_token=False),
+                    ),
                 ]),
             ]),
-            line_number=85,
+            line_number=96,
         ),
         GrammarRule(
             name='table_name',
@@ -322,7 +325,23 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=86,
+            line_number=98,
+        ),
+        GrammarRule(
+            name='index_hint',
+            body=
+            Alternation(choices=[
+                Sequence(elements=[
+                    Literal(value='INDEXED'),
+                    Literal(value='BY'),
+                    RuleReference(name='NAME', is_token=True),
+                ]),
+                Sequence(elements=[
+                    Literal(value='NOT'),
+                    Literal(value='INDEXED'),
+                ]),
+            ]),
+            line_number=99,
         ),
         GrammarRule(
             name='join_clause',
@@ -364,7 +383,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=94,
+            line_number=107,
         ),
         GrammarRule(
             name='join_type',
@@ -398,7 +417,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=96,
+            line_number=109,
         ),
         GrammarRule(
             name='where_clause',
@@ -407,7 +426,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='WHERE'),
                 RuleReference(name='expr', is_token=False),
             ]),
-            line_number=100,
+            line_number=113,
         ),
         GrammarRule(
             name='group_clause',
@@ -423,7 +442,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=101,
+            line_number=114,
         ),
         GrammarRule(
             name='having_clause',
@@ -432,7 +451,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='HAVING'),
                 RuleReference(name='expr', is_token=False),
             ]),
-            line_number=102,
+            line_number=115,
         ),
         GrammarRule(
             name='order_clause',
@@ -448,7 +467,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=103,
+            line_number=116,
         ),
         GrammarRule(
             name='order_item',
@@ -474,7 +493,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=124,
+            line_number=137,
         ),
         GrammarRule(
             name='limit_clause',
@@ -489,7 +508,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=126,
+            line_number=139,
         ),
         GrammarRule(
             name='conflict_clause',
@@ -506,7 +525,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=148,
+            line_number=161,
         ),
         GrammarRule(
             name='insert_stmt',
@@ -539,7 +558,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='returning_clause', is_token=False),
                 ),
             ]),
-            line_number=150,
+            line_number=163,
         ),
         GrammarRule(
             name='upsert_clause',
@@ -584,7 +603,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=167,
+            line_number=180,
         ),
         GrammarRule(
             name='upsert_assignment',
@@ -594,7 +613,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='='),
                 RuleReference(name='expr', is_token=False),
             ]),
-            line_number=173,
+            line_number=186,
         ),
         GrammarRule(
             name='replace_stmt',
@@ -621,7 +640,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='returning_clause', is_token=False),
                 ),
             ]),
-            line_number=174,
+            line_number=187,
         ),
         GrammarRule(
             name='insert_body',
@@ -639,7 +658,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ]),
                 RuleReference(name='query_stmt', is_token=False),
             ]),
-            line_number=178,
+            line_number=191,
         ),
         GrammarRule(
             name='row_value',
@@ -655,7 +674,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 Literal(value=')'),
             ]),
-            line_number=179,
+            line_number=192,
         ),
         GrammarRule(
             name='update_stmt',
@@ -678,7 +697,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='returning_clause', is_token=False),
                 ),
             ]),
-            line_number=181,
+            line_number=194,
         ),
         GrammarRule(
             name='assignment',
@@ -688,7 +707,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='='),
                 RuleReference(name='expr', is_token=False),
             ]),
-            line_number=183,
+            line_number=196,
         ),
         GrammarRule(
             name='delete_stmt',
@@ -704,7 +723,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='returning_clause', is_token=False),
                 ),
             ]),
-            line_number=185,
+            line_number=198,
         ),
         GrammarRule(
             name='returning_clause',
@@ -719,7 +738,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=187,
+            line_number=200,
         ),
         GrammarRule(
             name='create_table_stmt',
@@ -748,7 +767,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='table_options', is_token=False),
                 ),
             ]),
-            line_number=191,
+            line_number=204,
         ),
         GrammarRule(
             name='table_options',
@@ -762,7 +781,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=200,
+            line_number=213,
         ),
         GrammarRule(
             name='table_option',
@@ -774,7 +793,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='NAME', is_token=True),
                 ]),
             ]),
-            line_number=201,
+            line_number=214,
         ),
         GrammarRule(
             name='col_def',
@@ -786,7 +805,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='col_constraint', is_token=False),
                 ),
             ]),
-            line_number=206,
+            line_number=219,
         ),
         GrammarRule(
             name='col_type',
@@ -807,7 +826,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=210,
+            line_number=223,
         ),
         GrammarRule(
             name='col_constraint',
@@ -861,7 +880,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=211,
+            line_number=224,
         ),
         GrammarRule(
             name='drop_table_stmt',
@@ -877,7 +896,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='NAME', is_token=True),
             ]),
-            line_number=217,
+            line_number=230,
         ),
         GrammarRule(
             name='alter_table_stmt',
@@ -919,7 +938,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=226,
+            line_number=239,
         ),
         GrammarRule(
             name='create_index_stmt',
@@ -953,7 +972,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='where_clause', is_token=False),
                 ),
             ]),
-            line_number=240,
+            line_number=253,
         ),
         GrammarRule(
             name='index_col',
@@ -973,7 +992,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=257,
+            line_number=270,
         ),
         GrammarRule(
             name='drop_index_stmt',
@@ -989,7 +1008,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='NAME', is_token=True),
             ]),
-            line_number=259,
+            line_number=272,
         ),
         GrammarRule(
             name='create_view_stmt',
@@ -1008,7 +1027,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='AS'),
                 RuleReference(name='query_stmt', is_token=False),
             ]),
-            line_number=267,
+            line_number=280,
         ),
         GrammarRule(
             name='drop_view_stmt',
@@ -1024,7 +1043,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='NAME', is_token=True),
             ]),
-            line_number=269,
+            line_number=282,
         ),
         GrammarRule(
             name='begin_stmt',
@@ -1035,7 +1054,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value='TRANSACTION'),
                 ),
             ]),
-            line_number=275,
+            line_number=288,
         ),
         GrammarRule(
             name='commit_stmt',
@@ -1046,7 +1065,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value='TRANSACTION'),
                 ),
             ]),
-            line_number=276,
+            line_number=289,
         ),
         GrammarRule(
             name='rollback_stmt',
@@ -1057,7 +1076,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value='TRANSACTION'),
                 ),
             ]),
-            line_number=277,
+            line_number=290,
         ),
         GrammarRule(
             name='savepoint_stmt',
@@ -1066,7 +1085,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='SAVEPOINT'),
                 RuleReference(name='NAME', is_token=True),
             ]),
-            line_number=293,
+            line_number=306,
         ),
         GrammarRule(
             name='release_stmt',
@@ -1078,7 +1097,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='NAME', is_token=True),
             ]),
-            line_number=294,
+            line_number=307,
         ),
         GrammarRule(
             name='rollback_to_stmt',
@@ -1091,13 +1110,13 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='NAME', is_token=True),
             ]),
-            line_number=295,
+            line_number=308,
         ),
         GrammarRule(
             name='expr',
             body=
             RuleReference(name='or_expr', is_token=False),
-            line_number=299,
+            line_number=312,
         ),
         GrammarRule(
             name='or_expr',
@@ -1111,7 +1130,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=300,
+            line_number=313,
         ),
         GrammarRule(
             name='and_expr',
@@ -1125,7 +1144,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=301,
+            line_number=314,
         ),
         GrammarRule(
             name='not_expr',
@@ -1137,7 +1156,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ]),
                 RuleReference(name='comparison', is_token=False),
             ]),
-            line_number=302,
+            line_number=315,
         ),
         GrammarRule(
             name='collated',
@@ -1151,7 +1170,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=315,
+            line_number=328,
         ),
         GrammarRule(
             name='comparison',
@@ -1249,7 +1268,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=316,
+            line_number=329,
         ),
         GrammarRule(
             name='in_expr',
@@ -1258,7 +1277,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='query_stmt', is_token=False),
                 RuleReference(name='value_list', is_token=False),
             ]),
-            line_number=332,
+            line_number=345,
         ),
         GrammarRule(
             name='cmp_op',
@@ -1271,7 +1290,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='<='),
                 Literal(value='>='),
             ]),
-            line_number=334,
+            line_number=347,
         ),
         GrammarRule(
             name='bitwise',
@@ -1292,7 +1311,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=348,
+            line_number=361,
         ),
         GrammarRule(
             name='additive',
@@ -1314,7 +1333,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=349,
+            line_number=362,
         ),
         GrammarRule(
             name='multiplicative',
@@ -1334,7 +1353,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=350,
+            line_number=363,
         ),
         GrammarRule(
             name='unary',
@@ -1351,7 +1370,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ]),
                 RuleReference(name='primary', is_token=False),
             ]),
-            line_number=351,
+            line_number=364,
         ),
         GrammarRule(
             name='primary',
@@ -1385,7 +1404,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value=')'),
                 ]),
             ]),
-            line_number=371,
+            line_number=384,
         ),
         GrammarRule(
             name='column_ref',
@@ -1399,7 +1418,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=381,
+            line_number=394,
         ),
         GrammarRule(
             name='function_call',
@@ -1429,7 +1448,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='filter_clause', is_token=False),
                 ),
             ]),
-            line_number=395,
+            line_number=408,
         ),
         GrammarRule(
             name='filter_clause',
@@ -1441,7 +1460,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='expr', is_token=False),
                 Literal(value=')'),
             ]),
-            line_number=399,
+            line_number=412,
         ),
         GrammarRule(
             name='cast_expr',
@@ -1454,7 +1473,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='NAME', is_token=True),
                 Literal(value=')'),
             ]),
-            line_number=405,
+            line_number=418,
         ),
         GrammarRule(
             name='window_func_call',
@@ -1476,7 +1495,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='window_spec', is_token=False),
                 Literal(value=')'),
             ]),
-            line_number=434,
+            line_number=447,
         ),
         GrammarRule(
             name='window_spec',
@@ -1492,7 +1511,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='frame_clause', is_token=False),
                 ),
             ]),
-            line_number=435,
+            line_number=448,
         ),
         GrammarRule(
             name='partition_clause',
@@ -1508,7 +1527,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=436,
+            line_number=449,
         ),
         GrammarRule(
             name='value_list',
@@ -1522,7 +1541,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=437,
+            line_number=450,
         ),
         GrammarRule(
             name='frame_clause',
@@ -1540,7 +1559,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='frame_bound', is_token=False),
                 ]),
             ]),
-            line_number=459,
+            line_number=472,
         ),
         GrammarRule(
             name='frame_unit',
@@ -1550,7 +1569,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='RANGE'),
                 Literal(value='GROUPS'),
             ]),
-            line_number=461,
+            line_number=474,
         ),
         GrammarRule(
             name='frame_bound',
@@ -1577,7 +1596,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value='FOLLOWING'),
                 ]),
             ]),
-            line_number=462,
+            line_number=475,
         ),
         GrammarRule(
             name='create_trigger_stmt',
@@ -1615,7 +1634,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 Literal(value='END'),
             ]),
-            line_number=488,
+            line_number=501,
         ),
         GrammarRule(
             name='trigger_body_stmt',
@@ -1627,7 +1646,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='delete_stmt', is_token=False),
                 RuleReference(name='query_stmt', is_token=False),
             ]),
-            line_number=493,
+            line_number=506,
         ),
         GrammarRule(
             name='drop_trigger_stmt',
@@ -1643,7 +1662,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='NAME', is_token=True),
             ]),
-            line_number=495,
+            line_number=508,
         ),
         GrammarRule(
             name='case_expr',
@@ -1665,13 +1684,13 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 Literal(value='END'),
             ]),
-            line_number=510,
+            line_number=523,
         ),
         GrammarRule(
             name='case_operand',
             body=
             RuleReference(name='expr', is_token=False),
-            line_number=511,
+            line_number=524,
         ),
         GrammarRule(
             name='case_when',
@@ -1682,7 +1701,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='THEN'),
                 RuleReference(name='expr', is_token=False),
             ]),
-            line_number=512,
+            line_number=525,
         ),
     ],
 )

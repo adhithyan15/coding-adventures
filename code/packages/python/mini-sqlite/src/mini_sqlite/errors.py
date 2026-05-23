@@ -107,6 +107,7 @@ def translate(exc: BaseException) -> Exception:
     try:
         from sql_planner.errors import (
             AmbiguousColumn,
+            IndexNotFound,
             InvalidAggregate,
             UnknownColumn,
             UnknownTable,
@@ -115,7 +116,7 @@ def translate(exc: BaseException) -> Exception:
 
         if isinstance(exc, AmbiguousColumn | InvalidAggregate):
             return ProgrammingError(str(exc))
-        if isinstance(exc, UnknownTable | UnknownColumn):
+        if isinstance(exc, UnknownTable | UnknownColumn | IndexNotFound):
             return OperationalError(str(exc))
         if isinstance(exc, UnsupportedStatement):
             return NotSupportedError(str(exc))

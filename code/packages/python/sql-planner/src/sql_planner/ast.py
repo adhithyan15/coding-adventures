@@ -74,10 +74,24 @@ class JoinKind:
 
 @dataclass(frozen=True, slots=True)
 class TableRef:
-    """A reference to a base table in FROM, optionally aliased."""
+    """A reference to a base table in FROM, optionally aliased.
+
+    SQLite supports two query hints on a base-table reference:
+
+    * ``INDEXED BY <name>`` forces the named index for the scan.  The
+      planner errors at plan time if the index doesn't exist on the
+      table.  Field: ``index_hint``.
+    * ``NOT INDEXED`` instructs the planner to use a full table scan,
+      ignoring any matching indexes.  Field: ``not_indexed``.
+
+    Exactly one of ``index_hint`` and ``not_indexed`` may be set; the
+    adapter is responsible for the mutual exclusion at parse time.
+    """
 
     table: str
     alias: str | None = None
+    index_hint: str | None = None
+    not_indexed: bool = False
 
 
 @dataclass(frozen=True, slots=True)

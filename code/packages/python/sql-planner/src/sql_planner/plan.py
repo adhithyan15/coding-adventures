@@ -50,6 +50,18 @@ class Scan:
     references using it — the codegen uses the alias (or table name if none)
     to look up column values on the row the scan yields.
 
+    SQLite query hints carried through from the FROM clause:
+
+    - ``index_hint`` — if set, the planner is required to use this index
+      via :class:`IndexScan` substitution.  An error is raised at plan
+      time if the named index doesn't exist on the table.  Mirrors
+      ``INDEXED BY <name>``.
+    - ``not_indexed`` — if True, the planner must NOT substitute an
+      :class:`IndexScan` for this scan.  Mirrors ``NOT INDEXED``.
+
+    Exactly one of ``index_hint`` and ``not_indexed`` may be set (the
+    adapter enforces mutual exclusion at parse time).
+
     Optimizer-added annotations (always None from the planner):
 
     - ``required_columns`` — if set, the column subset the query actually
@@ -63,6 +75,8 @@ class Scan:
     alias: str | None = None
     required_columns: tuple[str, ...] | None = None
     scan_limit: int | None = None
+    index_hint: str | None = None
+    not_indexed: bool = False
 
 
 @dataclass(frozen=True, slots=True)

@@ -594,7 +594,12 @@ def _build_from_tree(
         else:
             root_cols = schema.columns(root.table)
             _add_to_scope(scope, root.alias or root.table, root_cols)
-            tree = P.Scan(table=root.table, alias=root.alias)
+            tree = P.Scan(
+                table=root.table,
+                alias=root.alias,
+                index_hint=root.index_hint,
+                not_indexed=root.not_indexed,
+            )
 
     for j in joins:
         if isinstance(j.right, DerivedTableRef):
@@ -623,7 +628,12 @@ def _build_from_tree(
         else:
             right_cols = schema.columns(j.right.table)  # type: ignore[union-attr]
             _add_to_scope(scope, j.right.alias or j.right.table, right_cols)  # type: ignore[union-attr]
-            right_node = P.Scan(table=j.right.table, alias=j.right.alias)  # type: ignore[union-attr]
+            right_node = P.Scan(
+                table=j.right.table,  # type: ignore[union-attr]
+                alias=j.right.alias,  # type: ignore[union-attr]
+                index_hint=j.right.index_hint,  # type: ignore[union-attr]
+                not_indexed=j.right.not_indexed,  # type: ignore[union-attr]
+            )
             right_cols_list = list(right_cols)
 
         # NATURAL JOIN resolution:
@@ -1852,12 +1862,33 @@ def _try_index_scan(
     ``b`` is preferred over a single-column index on ``a`` alone when the
     predicate has constraints on both ``a`` and ``b``.
     """
+    # Honour SQLite query hints carried on the Scan.
+    #
+    # ``NOT INDEXED``: short-circuit — the user explicitly opted out of
+    # index substitution for this scan.  The planner will leave the
+    # ``Filter(Scan)`` shape in place and the VM will do a full scan.
+    if scan.not_indexed:
+        return None
+
     list_indexes_fn = getattr(schema, "list_indexes", None)
     if list_indexes_fn is None:
         return None
 
     alias = scan.alias or scan.table
     indexes = list_indexes_fn(scan.table)
+
+    # ``INDEXED BY <name>``: filter the candidate indexes to just the
+    # named one.  An empty filtered list means the index doesn't exist
+    # on this table — a plan-time error in SQLite, which we surface
+    # via ``IndexNotFound`` from the planner.errors module.
+    if scan.index_hint is not None:
+        wanted = scan.index_hint
+        indexes = [i for i in indexes if i.name == wanted]
+        if not indexes:
+            from .errors import IndexNotFound
+            raise IndexNotFound(
+                f"no such index on table {scan.table}: {wanted}"
+            )
 
     best_n: int = 0
     best_node: P.IndexScan | None = None
