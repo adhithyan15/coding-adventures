@@ -809,6 +809,14 @@ class GELUFallbackTests(unittest.TestCase):
             expected = 0.5 * x * (1.0 + math.tanh(inner))
             self.assertAlmostEqual(result.data[i], expected, places=12)
 
+    def test_gelu_backward_via_rust_raises_when_unavailable(self) -> None:
+        """``gelu_backward_via_rust`` must raise (defence-in-depth)."""
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.gelu_backward_via_rust(
+                [1.0, 1.0, 1.0], [0.0, 1.0, -1.0], (3,)
+            )
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
     def test_gelu_backward_via_fallback(self) -> None:
         """GELU's backward formula recomputes ``inner`` and
         ``tanh(inner)`` from the saved input (no metadata handshake
