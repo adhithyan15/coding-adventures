@@ -1249,6 +1249,79 @@ impl ToolAuditSupervisorDrainRunReport {
         &self.plan.checkpoint_name
     }
 
+    /// Return the checkpoint used to start the preflight plan.
+    pub fn starting_checkpoint(&self) -> &ToolAuditReadCheckpoint {
+        &self.plan.starting_checkpoint
+    }
+
+    /// Return the starting checkpoint timestamp for host run logs.
+    pub fn starting_checkpoint_timestamp_ms(&self) -> u64 {
+        self.starting_checkpoint().checkpoint_timestamp_ms()
+    }
+
+    /// Return the starting checkpoint call id for host run logs.
+    pub fn starting_checkpoint_call_id(&self) -> &str {
+        self.starting_checkpoint().checkpoint_call_id()
+    }
+
+    /// Return the durable checkpoint loaded before the run, if any.
+    pub fn stored_checkpoint(&self) -> Option<&ToolAuditStoredCheckpoint> {
+        self.plan.stored_checkpoint.as_ref()
+    }
+
+    /// Return whether a durable checkpoint existed before the run.
+    pub fn has_stored_checkpoint(&self) -> bool {
+        self.stored_checkpoint().is_some()
+    }
+
+    /// Return the durable checkpoint timestamp loaded before the run.
+    pub fn stored_checkpoint_timestamp_ms(&self) -> Option<u64> {
+        self.stored_checkpoint()
+            .map(ToolAuditStoredCheckpoint::checkpoint_timestamp_ms)
+    }
+
+    /// Return the durable checkpoint call id loaded before the run.
+    pub fn stored_checkpoint_call_id(&self) -> Option<&str> {
+        self.stored_checkpoint()
+            .map(ToolAuditStoredCheckpoint::checkpoint_call_id)
+    }
+
+    /// Return whether stored checkpoint presence agrees with flattened scalar fields.
+    pub fn stored_checkpoint_presence_matches_fields(&self) -> bool {
+        self.has_stored_checkpoint()
+            == (self.stored_checkpoint_timestamp_ms().is_some()
+                && self.stored_checkpoint_call_id().is_some())
+    }
+
+    /// Return whether the flattened stored checkpoint timestamp matches the object.
+    pub fn stored_checkpoint_timestamp_matches_checkpoint(&self) -> bool {
+        self.stored_checkpoint()
+            .map(ToolAuditStoredCheckpoint::checkpoint_timestamp_ms)
+            == self.stored_checkpoint_timestamp_ms()
+    }
+
+    /// Return whether the flattened stored checkpoint call id matches the object.
+    pub fn stored_checkpoint_call_id_matches_checkpoint(&self) -> bool {
+        self.stored_checkpoint()
+            .map(ToolAuditStoredCheckpoint::checkpoint_call_id)
+            == self.stored_checkpoint_call_id()
+    }
+
+    /// Return whether all flattened stored checkpoint fields agree with the object.
+    pub fn stored_checkpoint_fields_match_checkpoint(&self) -> bool {
+        self.stored_checkpoint_presence_matches_fields()
+            && self.stored_checkpoint_timestamp_matches_checkpoint()
+            && self.stored_checkpoint_call_id_matches_checkpoint()
+    }
+
+    /// Return whether the starting checkpoint matches the loaded durable checkpoint.
+    pub fn starting_checkpoint_matches_stored_checkpoint(&self) -> bool {
+        match self.stored_checkpoint() {
+            Some(stored) => stored.checkpoint == *self.starting_checkpoint(),
+            None => *self.starting_checkpoint() == ToolAuditReadCheckpoint::beginning(),
+        }
+    }
+
     /// Return the maximum rows each drain tick was allowed to replay.
     pub fn max_records_per_tick(&self) -> usize {
         self.plan.max_records_per_tick
@@ -1351,6 +1424,23 @@ impl ToolAuditSupervisorDrainRunReport {
     pub fn summary(&self) -> ToolAuditSupervisorDrainRunSummary {
         ToolAuditSupervisorDrainRunSummary {
             checkpoint_name: self.checkpoint_name().to_owned(),
+            starting_checkpoint: self.starting_checkpoint().clone(),
+            starting_checkpoint_timestamp_ms: self.starting_checkpoint_timestamp_ms(),
+            starting_checkpoint_call_id: self.starting_checkpoint_call_id().to_owned(),
+            stored_checkpoint: self.stored_checkpoint().cloned(),
+            has_stored_checkpoint: self.has_stored_checkpoint(),
+            stored_checkpoint_timestamp_ms: self.stored_checkpoint_timestamp_ms(),
+            stored_checkpoint_call_id: self.stored_checkpoint_call_id().map(str::to_owned),
+            stored_checkpoint_presence_matches_fields: self
+                .stored_checkpoint_presence_matches_fields(),
+            stored_checkpoint_timestamp_matches_checkpoint: self
+                .stored_checkpoint_timestamp_matches_checkpoint(),
+            stored_checkpoint_call_id_matches_checkpoint: self
+                .stored_checkpoint_call_id_matches_checkpoint(),
+            stored_checkpoint_fields_match_checkpoint: self
+                .stored_checkpoint_fields_match_checkpoint(),
+            starting_checkpoint_matches_stored_checkpoint: self
+                .starting_checkpoint_matches_stored_checkpoint(),
             outcome: self.outcome(),
             outcome_label: self.outcome_label(),
             outcome_label_matches_outcome: self.outcome_label_matches_outcome(),
@@ -1619,6 +1709,30 @@ impl ToolAuditSupervisorDrainRunReport {
 pub struct ToolAuditSupervisorDrainRunSummary {
     /// Reader or supervisor checkpoint name drained.
     pub checkpoint_name: String,
+    /// Checkpoint used to start the preflight plan.
+    pub starting_checkpoint: ToolAuditReadCheckpoint,
+    /// Starting checkpoint timestamp for host run logs.
+    pub starting_checkpoint_timestamp_ms: u64,
+    /// Starting checkpoint call id for host run logs.
+    pub starting_checkpoint_call_id: String,
+    /// Durable checkpoint loaded before the run, if any.
+    pub stored_checkpoint: Option<ToolAuditStoredCheckpoint>,
+    /// Whether a durable checkpoint existed before the run.
+    pub has_stored_checkpoint: bool,
+    /// Durable checkpoint timestamp loaded before the run.
+    pub stored_checkpoint_timestamp_ms: Option<u64>,
+    /// Durable checkpoint call id loaded before the run.
+    pub stored_checkpoint_call_id: Option<String>,
+    /// Whether stored checkpoint presence agrees with flattened scalar fields.
+    pub stored_checkpoint_presence_matches_fields: bool,
+    /// Whether the flattened stored checkpoint timestamp matches the object.
+    pub stored_checkpoint_timestamp_matches_checkpoint: bool,
+    /// Whether the flattened stored checkpoint call id matches the object.
+    pub stored_checkpoint_call_id_matches_checkpoint: bool,
+    /// Whether all flattened stored checkpoint fields agree with the object.
+    pub stored_checkpoint_fields_match_checkpoint: bool,
+    /// Whether the starting checkpoint matches the loaded durable checkpoint.
+    pub starting_checkpoint_matches_stored_checkpoint: bool,
     /// Scheduler-facing classification for this run.
     pub outcome: ToolAuditSupervisorDrainRunOutcome,
     /// Stable scheduler-facing outcome label for host logs.
@@ -1775,6 +1889,66 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.checkpoint_name
+    }
+
+    /// Return the checkpoint used to start the preflight plan.
+    pub fn starting_checkpoint(&self) -> &ToolAuditReadCheckpoint {
+        &self.starting_checkpoint
+    }
+
+    /// Return the starting checkpoint timestamp for host run logs.
+    pub fn starting_checkpoint_timestamp_ms(&self) -> u64 {
+        self.starting_checkpoint_timestamp_ms
+    }
+
+    /// Return the starting checkpoint call id for host run logs.
+    pub fn starting_checkpoint_call_id(&self) -> &str {
+        &self.starting_checkpoint_call_id
+    }
+
+    /// Return the durable checkpoint loaded before the run, if any.
+    pub fn stored_checkpoint(&self) -> Option<&ToolAuditStoredCheckpoint> {
+        self.stored_checkpoint.as_ref()
+    }
+
+    /// Return whether a durable checkpoint existed before the run.
+    pub fn has_stored_checkpoint(&self) -> bool {
+        self.has_stored_checkpoint
+    }
+
+    /// Return the durable checkpoint timestamp loaded before the run.
+    pub fn stored_checkpoint_timestamp_ms(&self) -> Option<u64> {
+        self.stored_checkpoint_timestamp_ms
+    }
+
+    /// Return the durable checkpoint call id loaded before the run.
+    pub fn stored_checkpoint_call_id(&self) -> Option<&str> {
+        self.stored_checkpoint_call_id.as_deref()
+    }
+
+    /// Return whether stored checkpoint presence agrees with flattened scalar fields.
+    pub fn stored_checkpoint_presence_matches_fields(&self) -> bool {
+        self.stored_checkpoint_presence_matches_fields
+    }
+
+    /// Return whether the flattened stored checkpoint timestamp matches the object.
+    pub fn stored_checkpoint_timestamp_matches_checkpoint(&self) -> bool {
+        self.stored_checkpoint_timestamp_matches_checkpoint
+    }
+
+    /// Return whether the flattened stored checkpoint call id matches the object.
+    pub fn stored_checkpoint_call_id_matches_checkpoint(&self) -> bool {
+        self.stored_checkpoint_call_id_matches_checkpoint
+    }
+
+    /// Return whether all flattened stored checkpoint fields agree with the object.
+    pub fn stored_checkpoint_fields_match_checkpoint(&self) -> bool {
+        self.stored_checkpoint_fields_match_checkpoint
+    }
+
+    /// Return whether the starting checkpoint matches the loaded durable checkpoint.
+    pub fn starting_checkpoint_matches_stored_checkpoint(&self) -> bool {
+        self.starting_checkpoint_matches_stored_checkpoint
     }
 
     /// Return the typed scheduler-facing classification for this run.
@@ -4713,6 +4887,51 @@ mod tests {
         assert_eq!(summary.checkpoint_name, "supervisor");
         assert_eq!(summary.checkpoint_name(), "supervisor");
         assert_eq!(
+            report.starting_checkpoint(),
+            &ToolAuditReadCheckpoint::beginning()
+        );
+        assert_eq!(
+            summary.starting_checkpoint,
+            ToolAuditReadCheckpoint::beginning()
+        );
+        assert_eq!(
+            summary.starting_checkpoint(),
+            &ToolAuditReadCheckpoint::beginning()
+        );
+        assert_eq!(report.starting_checkpoint_timestamp_ms(), 0);
+        assert_eq!(summary.starting_checkpoint_timestamp_ms, 0);
+        assert_eq!(summary.starting_checkpoint_timestamp_ms(), 0);
+        assert_eq!(report.starting_checkpoint_call_id(), "");
+        assert_eq!(summary.starting_checkpoint_call_id, "");
+        assert_eq!(summary.starting_checkpoint_call_id(), "");
+        assert!(report.stored_checkpoint().is_none());
+        assert!(!report.has_stored_checkpoint());
+        assert_eq!(report.stored_checkpoint_timestamp_ms(), None);
+        assert_eq!(report.stored_checkpoint_call_id(), None);
+        assert!(report.stored_checkpoint_presence_matches_fields());
+        assert!(report.stored_checkpoint_timestamp_matches_checkpoint());
+        assert!(report.stored_checkpoint_call_id_matches_checkpoint());
+        assert!(report.stored_checkpoint_fields_match_checkpoint());
+        assert!(report.starting_checkpoint_matches_stored_checkpoint());
+        assert!(summary.stored_checkpoint.is_none());
+        assert!(summary.stored_checkpoint().is_none());
+        assert!(!summary.has_stored_checkpoint);
+        assert!(!summary.has_stored_checkpoint());
+        assert_eq!(summary.stored_checkpoint_timestamp_ms, None);
+        assert_eq!(summary.stored_checkpoint_timestamp_ms(), None);
+        assert_eq!(summary.stored_checkpoint_call_id, None);
+        assert_eq!(summary.stored_checkpoint_call_id(), None);
+        assert!(summary.stored_checkpoint_presence_matches_fields);
+        assert!(summary.stored_checkpoint_presence_matches_fields());
+        assert!(summary.stored_checkpoint_timestamp_matches_checkpoint);
+        assert!(summary.stored_checkpoint_timestamp_matches_checkpoint());
+        assert!(summary.stored_checkpoint_call_id_matches_checkpoint);
+        assert!(summary.stored_checkpoint_call_id_matches_checkpoint());
+        assert!(summary.stored_checkpoint_fields_match_checkpoint);
+        assert!(summary.stored_checkpoint_fields_match_checkpoint());
+        assert!(summary.starting_checkpoint_matches_stored_checkpoint);
+        assert!(summary.starting_checkpoint_matches_stored_checkpoint());
+        assert_eq!(
             summary.outcome,
             ToolAuditSupervisorDrainRunOutcome::NeedsContinuation
         );
@@ -4895,6 +5114,85 @@ mod tests {
         assert!(summary.made_progress());
         assert!(summary.should_continue);
         assert!(summary.should_continue());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_flattens_checkpoint_boundary_fields() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+        let stored = store
+            .save_checkpoint("supervisor", ToolAuditReadCheckpoint::new(120, "call_1"))
+            .unwrap();
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut sink)
+            .unwrap();
+
+        assert_eq!(
+            report.starting_checkpoint(),
+            &ToolAuditReadCheckpoint::new(120, "call_1")
+        );
+        assert_eq!(report.starting_checkpoint_timestamp_ms(), 120);
+        assert_eq!(report.starting_checkpoint_call_id(), "call_1");
+        assert_eq!(report.stored_checkpoint(), Some(&stored));
+        assert!(report.has_stored_checkpoint());
+        assert_eq!(report.stored_checkpoint_timestamp_ms(), Some(120));
+        assert_eq!(report.stored_checkpoint_call_id(), Some("call_1"));
+        assert!(report.stored_checkpoint_presence_matches_fields());
+        assert!(report.stored_checkpoint_timestamp_matches_checkpoint());
+        assert!(report.stored_checkpoint_call_id_matches_checkpoint());
+        assert!(report.stored_checkpoint_fields_match_checkpoint());
+        assert!(report.starting_checkpoint_matches_stored_checkpoint());
+
+        let summary = report.summary();
+        assert_eq!(
+            summary.starting_checkpoint,
+            ToolAuditReadCheckpoint::new(120, "call_1")
+        );
+        assert_eq!(
+            summary.starting_checkpoint(),
+            &ToolAuditReadCheckpoint::new(120, "call_1")
+        );
+        assert_eq!(summary.starting_checkpoint_timestamp_ms, 120);
+        assert_eq!(summary.starting_checkpoint_timestamp_ms(), 120);
+        assert_eq!(summary.starting_checkpoint_call_id, "call_1");
+        assert_eq!(summary.starting_checkpoint_call_id(), "call_1");
+        assert_eq!(summary.stored_checkpoint, Some(stored.clone()));
+        assert_eq!(summary.stored_checkpoint(), Some(&stored));
+        assert!(summary.has_stored_checkpoint);
+        assert!(summary.has_stored_checkpoint());
+        assert_eq!(summary.stored_checkpoint_timestamp_ms, Some(120));
+        assert_eq!(summary.stored_checkpoint_timestamp_ms(), Some(120));
+        assert_eq!(summary.stored_checkpoint_call_id.as_deref(), Some("call_1"));
+        assert_eq!(summary.stored_checkpoint_call_id(), Some("call_1"));
+        assert!(summary.stored_checkpoint_presence_matches_fields);
+        assert!(summary.stored_checkpoint_presence_matches_fields());
+        assert!(summary.stored_checkpoint_timestamp_matches_checkpoint);
+        assert!(summary.stored_checkpoint_timestamp_matches_checkpoint());
+        assert!(summary.stored_checkpoint_call_id_matches_checkpoint);
+        assert!(summary.stored_checkpoint_call_id_matches_checkpoint());
+        assert!(summary.stored_checkpoint_fields_match_checkpoint);
+        assert!(summary.stored_checkpoint_fields_match_checkpoint());
+        assert!(summary.starting_checkpoint_matches_stored_checkpoint);
+        assert!(summary.starting_checkpoint_matches_stored_checkpoint());
+
+        let mut stale_summary = summary;
+        stale_summary.stored_checkpoint_call_id = Some("stale".to_string());
+        stale_summary.stored_checkpoint_call_id_matches_checkpoint = false;
+        stale_summary.stored_checkpoint_fields_match_checkpoint = false;
+        assert!(!stale_summary.stored_checkpoint_call_id_matches_checkpoint());
+        assert!(!stale_summary.stored_checkpoint_fields_match_checkpoint());
+
+        let mut stale_report = report;
+        stale_report.plan.starting_checkpoint = ToolAuditReadCheckpoint::beginning();
+        assert!(!stale_report.starting_checkpoint_matches_stored_checkpoint());
     }
 
     #[test]
