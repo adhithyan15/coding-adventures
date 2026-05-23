@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.99.0] - 2026-05-23
+
+### Added
+
+- ``PRAGMA foreign_keys`` is now honoured at INSERT/UPDATE/DELETE.
+  The engine reads the per-connection PRAGMA value and forwards it
+  to the VM's new ``fk_enabled`` flag.  Setting ``PRAGMA foreign_keys
+  = OFF`` disables FK enforcement for subsequent statements on the
+  same connection; ``PRAGMA foreign_keys = ON`` re-enables it.
+
+### Changed
+
+- ``_PRAGMA_DEFAULTS["foreign_keys"]`` flipped from ``0`` (OFF) to
+  ``1`` (ON) so the read value matches mini-sqlite's enforce-by-
+  default behaviour.  This is a *documented* deviation from SQLite,
+  which defaults the pragma to OFF.  ORMs and migration tools that
+  explicitly toggle the pragma get correct behaviour either way.
+- Two pragma-additions tests updated for the new default:
+  ``test_foreign_keys_default_off`` renamed/rewritten as
+  ``test_foreign_keys_default_on_in_mini_sqlite``;
+  ``test_foreign_keys_isolated_between_connections`` now toggles
+  c1 to OFF (rather than ON) so the isolation test still verifies
+  per-connection state.
+
 ## [1.98.0] - 2026-05-23
 
 ### Added

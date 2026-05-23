@@ -292,6 +292,14 @@ class _VmState:
     # parent_col=None means "the parent's PRIMARY KEY column".
     fk_child: dict[str, list[tuple[str, str, str | None]]] = field(default_factory=dict)
     fk_parent: dict[str, list[tuple[str, str, str | None]]] = field(default_factory=dict)
+    # Master switch for FOREIGN KEY enforcement.  When False, all
+    # ``_check_fk_child`` / ``_check_fk_parent`` calls short-circuit
+    # to a no-op.  Mirrors SQLite's ``PRAGMA foreign_keys = OFF``.
+    # Defaults to True (mini-sqlite enforces FKs by default — a
+    # documented deviation from SQLite's OFF default).  The mini-sqlite
+    # engine consults its per-connection PRAGMA state and forwards the
+    # value here on each ``execute()`` call.
+    fk_enabled: bool = True
     # Working-set rows for recursive CTEs.  Populated by _execute_with_cursors
     # before running the recursive sub-program; read by OpenWorkingSetScan to
     # create a fresh _SubqueryCursor on each loop entry (handles JOIN context).
@@ -383,6 +391,7 @@ def execute(
     check_registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] | None = None,
     fk_child: dict[str, list[tuple[str, str, str | None]]] | None = None,
     fk_parent: dict[str, list[tuple[str, str, str | None]]] | None = None,
+    fk_enabled: bool = True,
     event_cb: Callable[[QueryEvent], None] | None = None,
     filtered_columns: list[str] | None = None,
     trigger_executor: Callable | None = None,
@@ -433,6 +442,7 @@ def execute(
         check_registry=registry,
         fk_child=fk_c,
         fk_parent=fk_p,
+        fk_enabled=fk_enabled,
         trigger_executor=trigger_executor,
         trigger_depth=trigger_depth,
         user_functions=user_functions,
@@ -2664,7 +2674,12 @@ def _check_fk_child(table: str, row: dict, st: _VmState) -> None:
 
     NULL FK values pass unconditionally (SQL standard: unknown reference is
     not an error).  Non-NULL values must have a matching row in the parent.
+
+    Honours :attr:`_VmState.fk_enabled` — when False (mirrors SQLite's
+    ``PRAGMA foreign_keys = OFF``), all FK checks are skipped.
     """
+    if not st.fk_enabled:
+        return
     fks = st.fk_child.get(table)
     if not fks:
         return
@@ -2690,7 +2705,13 @@ def _check_fk_parent(table: str, row: dict, st: _VmState) -> None:
     Only the columns registered in ``fk_parent`` are checked.  NULL values in
     the parent's referenced column cannot be referenced by any child (because
     child NULL passes unconditionally in :func:`_check_fk_child`), so we skip.
+
+    Honours :attr:`_VmState.fk_enabled` — when False (mirrors SQLite's
+    ``PRAGMA foreign_keys = OFF``), DELETE is permitted even when child
+    rows reference the deleted parent.
     """
+    if not st.fk_enabled:
+        return
     refs = st.fk_parent.get(table)
     if not refs:
         return

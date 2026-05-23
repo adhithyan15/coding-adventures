@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.55.0 — 2026-05-23
+
+### Added
+
+- ``execute()`` accepts a new ``fk_enabled: bool = True`` keyword
+  forwarded to ``_VmState.fk_enabled``.  ``_check_fk_child`` and
+  ``_check_fk_parent`` short-circuit to a no-op when False, mirroring
+  SQLite's ``PRAGMA foreign_keys = OFF`` behaviour.  The default
+  preserves existing call sites: omitting the kwarg keeps FK
+  enforcement on.
+
 ## 1.54.0 — 2026-05-23
 
 ### Added

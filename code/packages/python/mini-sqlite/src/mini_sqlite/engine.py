@@ -270,12 +270,20 @@ def run(
                 view_defs=view_defs,
                 user_functions=user_functions,
             )
+        # Honour PRAGMA foreign_keys on this connection.  Mini-sqlite
+        # defaults to ON (deviation from SQLite, which defaults to OFF);
+        # the per-connection PRAGMA state can override.  When OFF, the
+        # VM's FK validation short-circuits for every INSERT/UPDATE/
+        # DELETE.
+        fk_setting = _pragma_get(backend, "foreign_keys")
+        fk_enabled = bool(fk_setting) if fk_setting is not None else True
         result = execute(
             program,
             backend,
             check_registry=check_registry,
             fk_child=fk_child,
             fk_parent=fk_parent,
+            fk_enabled=fk_enabled,
             event_cb=event_cb,
             filtered_columns=_filtered,
             trigger_executor=_trigger_executor,
@@ -779,7 +787,12 @@ def _parse_bool_pragma(s: str) -> bool | None:
 # unmodified PRAGMA returns the same value SQLite would.
 _PRAGMA_DEFAULTS: dict[str, tuple[object, str]] = {
     # name              (default_value,    column_type)
-    "foreign_keys":     (0,                "integer"),  # off by default in SQLite
+    # SQLite defaults this to 0 (FK enforcement OFF).  Mini-sqlite has
+    # historically enforced FKs unconditionally; rather than break that
+    # behaviour, we default to 1 (ON) so the pragma's read value matches
+    # the enforcement default.  ``PRAGMA foreign_keys = OFF`` still
+    # works — the VM consults this setting on every INSERT/UPDATE/DELETE.
+    "foreign_keys":     (1,                "integer"),  # ON by default in mini-sqlite
     "recursive_triggers": (0,              "integer"),
     "case_sensitive_like": (0,             "integer"),
     "legacy_alter_table": (0,              "integer"),
