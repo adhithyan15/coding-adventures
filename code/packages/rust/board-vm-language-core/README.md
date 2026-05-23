@@ -138,6 +138,11 @@ rebuilding callback lifecycle policy.
 errors into stable Rust-owned kind names, labels, and messages, so frontends
 can report callback lifecycle failures without carrying a parallel diagnostic
 taxonomy.
+`input_callback_session_plan_diagnostic`,
+`input_callback_session_event_diagnostic`, and
+`input_callback_session_queue_plan_diagnostic` add endpoint-session context to
+those diagnostics, preserving serial/TCP/Bluetooth display policy in Rust for
+transport-aware callback failure logs.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves

@@ -891,6 +891,25 @@ pub struct LanguageInputCallbackSessionCompletionSummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackDiagnosticStage {
+    Plan,
+    Event,
+    QueuePlan,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackSessionDiagnostic {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub diagnostic_stage: LanguageInputCallbackDiagnosticStage,
+    pub stage_name: String,
+    pub kind_name: String,
+    pub diagnostic_label: String,
+    pub source_diagnostic_label: String,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackQueuePlanErrorKind {
     EmptyQueue,
     QueueDepthExceedsCapacity,
@@ -1298,6 +1317,16 @@ pub const fn input_callback_event_error_kind_name(
         LanguageInputCallbackEventErrorKind::BoardMismatch => "board_mismatch",
         LanguageInputCallbackEventErrorKind::PinMismatch => "pin_mismatch",
         LanguageInputCallbackEventErrorKind::EventKindMismatch => "event_kind_mismatch",
+    }
+}
+
+pub const fn input_callback_diagnostic_stage_name(
+    stage: LanguageInputCallbackDiagnosticStage,
+) -> &'static str {
+    match stage {
+        LanguageInputCallbackDiagnosticStage::Plan => "plan",
+        LanguageInputCallbackDiagnosticStage::Event => "event",
+        LanguageInputCallbackDiagnosticStage::QueuePlan => "queue_plan",
     }
 }
 
@@ -2448,6 +2477,45 @@ pub fn input_callback_queue_plan_diagnostic(
     }
 }
 
+pub fn input_callback_session_plan_diagnostic(
+    session: &LanguageHostEndpointSessionSummary,
+    diagnostic: &LanguageInputCallbackPlanDiagnostic,
+) -> LanguageInputCallbackSessionDiagnostic {
+    input_callback_session_diagnostic(
+        session,
+        LanguageInputCallbackDiagnosticStage::Plan,
+        &diagnostic.kind_name,
+        &diagnostic.diagnostic_label,
+        &diagnostic.message,
+    )
+}
+
+pub fn input_callback_session_event_diagnostic(
+    session: &LanguageHostEndpointSessionSummary,
+    diagnostic: &LanguageInputCallbackEventDiagnostic,
+) -> LanguageInputCallbackSessionDiagnostic {
+    input_callback_session_diagnostic(
+        session,
+        LanguageInputCallbackDiagnosticStage::Event,
+        &diagnostic.kind_name,
+        &diagnostic.diagnostic_label,
+        &diagnostic.message,
+    )
+}
+
+pub fn input_callback_session_queue_plan_diagnostic(
+    session: &LanguageHostEndpointSessionSummary,
+    diagnostic: &LanguageInputCallbackQueuePlanDiagnostic,
+) -> LanguageInputCallbackSessionDiagnostic {
+    input_callback_session_diagnostic(
+        session,
+        LanguageInputCallbackDiagnosticStage::QueuePlan,
+        &diagnostic.kind_name,
+        &diagnostic.diagnostic_label,
+        &diagnostic.message,
+    )
+}
+
 pub fn parse_serial_endpoint(endpoint: &str) -> Option<LanguageSerialEndpoint> {
     let (scheme, port) = endpoint.split_once("://")?;
     if scheme != "serial" {
@@ -3100,6 +3168,41 @@ fn input_callback_queue_plan_diagnostic_label(
         error.queue_depth,
         error.queue_capacity,
         input_callback_queue_plan_error_kind_name(error.kind)
+    )
+}
+
+fn input_callback_session_diagnostic(
+    session: &LanguageHostEndpointSessionSummary,
+    stage: LanguageInputCallbackDiagnosticStage,
+    kind_name: &str,
+    source_diagnostic_label: &str,
+    message: &str,
+) -> LanguageInputCallbackSessionDiagnostic {
+    let stage_name = input_callback_diagnostic_stage_name(stage);
+    LanguageInputCallbackSessionDiagnostic {
+        endpoint: session.endpoint.clone(),
+        connection_label: session.connection_label.clone(),
+        diagnostic_stage: stage,
+        stage_name: stage_name.to_owned(),
+        kind_name: kind_name.to_owned(),
+        diagnostic_label: input_callback_session_diagnostic_label(
+            session,
+            stage_name,
+            source_diagnostic_label,
+        ),
+        source_diagnostic_label: source_diagnostic_label.to_owned(),
+        message: message.to_owned(),
+    }
+}
+
+fn input_callback_session_diagnostic_label(
+    session: &LanguageHostEndpointSessionSummary,
+    stage_name: &str,
+    source_diagnostic_label: &str,
+) -> String {
+    format!(
+        "{} callback_diagnostic_stage={} {}",
+        session.connection_label, stage_name, source_diagnostic_label
     )
 }
 
@@ -7317,6 +7420,118 @@ mod tests {
             "Input callback queue depth exceeds the configured queue capacity."
         );
         assert_eq!(queue_diagnostic.error, queue_error);
+    }
+
+    #[test]
+    fn input_callback_session_diagnostics_are_owned_by_rust_language_core() {
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+
+        let plan_error = input_callback_plan_for_target("not-a-board", 3, 7, 64).unwrap_err();
+        let plan_diagnostic = input_callback_plan_diagnostic(&plan_error);
+        let session_plan =
+            input_callback_session_plan_diagnostic(&serial_session, &plan_diagnostic);
+        assert_eq!(
+            input_callback_diagnostic_stage_name(session_plan.diagnostic_stage),
+            "plan"
+        );
+        assert_eq!(
+            session_plan.endpoint.endpoint,
+            "serial:///dev/cu.usbmodem1101"
+        );
+        assert_eq!(
+            session_plan.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            session_plan.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(session_plan.stage_name, "plan");
+        assert_eq!(session_plan.kind_name, "unknown_target");
+        assert_eq!(
+            session_plan.source_diagnostic_label,
+            "input_callback_plan selector=not-a-board pin=3 error=unknown_target"
+        );
+        assert_eq!(
+            session_plan.diagnostic_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback_diagnostic_stage=plan input_callback_plan selector=not-a-board pin=3 error=unknown_target"
+        );
+        assert_eq!(session_plan.message, "Input callback target is not known.");
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let mut wrong_pin =
+            input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        wrong_pin.pin = 4;
+        let event_error = input_callback_invocation_for_event(&plan, &wrong_pin).unwrap_err();
+        let event_diagnostic = input_callback_event_diagnostic(&event_error);
+        let session_event =
+            input_callback_session_event_diagnostic(&tcp_session, &event_diagnostic);
+        assert_eq!(session_event.endpoint.endpoint, "tcp://board-vm.local:4170");
+        assert_eq!(
+            session_event.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(
+            session_event.connection_label,
+            "endpoint=tcp://board-vm.local:4170"
+        );
+        assert_eq!(
+            session_event.diagnostic_stage,
+            LanguageInputCallbackDiagnosticStage::Event
+        );
+        assert_eq!(session_event.stage_name, "event");
+        assert_eq!(session_event.kind_name, "pin_mismatch");
+        assert_eq!(
+            session_event.source_diagnostic_label,
+            "input_callback_event plan_board=arduino-uno-r4-wifi event_board=arduino-uno-r4-wifi plan_pin=3 event_pin=4 event_kind=digital_input_change error=pin_mismatch"
+        );
+        assert_eq!(
+            session_event.diagnostic_label,
+            "endpoint=tcp://board-vm.local:4170 callback_diagnostic_stage=event input_callback_event plan_board=arduino-uno-r4-wifi event_board=arduino-uno-r4-wifi plan_pin=3 event_pin=4 event_kind=digital_input_change error=pin_mismatch"
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let invocation = input_callback_invocation_for_event(&custom, &event).unwrap();
+        let queue_error = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap_err();
+        let queue_diagnostic = input_callback_queue_plan_diagnostic(&queue_error);
+        let session_queue =
+            input_callback_session_queue_plan_diagnostic(&tcp_session, &queue_diagnostic);
+        assert_eq!(
+            session_queue.diagnostic_stage,
+            LanguageInputCallbackDiagnosticStage::QueuePlan
+        );
+        assert_eq!(session_queue.stage_name, "queue_plan");
+        assert_eq!(session_queue.kind_name, "queue_depth_exceeds_capacity");
+        assert_eq!(
+            session_queue.source_diagnostic_label,
+            "input_callback_queue board=arduino-uno-r4-wifi pin=3 program=9 queue_depth=2 queue_capacity=1 error=queue_depth_exceeds_capacity"
+        );
+        assert_eq!(
+            session_queue.diagnostic_label,
+            "endpoint=tcp://board-vm.local:4170 callback_diagnostic_stage=queue_plan input_callback_queue board=arduino-uno-r4-wifi pin=3 program=9 queue_depth=2 queue_capacity=1 error=queue_depth_exceeds_capacity"
+        );
+        assert_eq!(
+            session_queue.message,
+            "Input callback queue depth exceeds the configured queue capacity."
+        );
     }
 
     #[test]
