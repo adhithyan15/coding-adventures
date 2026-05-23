@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `DcResult::convergence_aid`, reporting whether the DC operating point
+  came from plain Newton, Gmin stepping, source stepping, or no successful
+  convergence aid.
 - Add `transient_adaptive`, an LTE-controlled transient surface with bounded
   step growth/shrinkage and `Euler` / `Trap` / `Gear2` method routing.
 - Add trapezoidal transient integration parity for capacitors and inductors,

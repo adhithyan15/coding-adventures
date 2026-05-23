@@ -5609,7 +5609,20 @@ def test_dc_op_convergence_aids_false_still_converges_linear() -> None:
     ])
     result = dc_op(c, convergence_aids=False)
     assert result.converged
+    assert result.convergence_aid == "newton"
     assert result.node_voltages["a"] == pytest.approx(10.0)
+
+
+def test_dc_op_reports_no_convergence_aid_when_disabled_solve_fails() -> None:
+    """dc_op(convergence_aids=False) reports that no fallback aid converged."""
+    c = Circuit([
+        VoltageSource("Vs", "in", "0", 10.0),
+        Diode("D1", anode="in", cathode="out", Is=1e-15, Vt=0.02585),
+        Resistor("Rload", "out", "0", 100.0),
+    ])
+    result = dc_op(c, max_iterations=1, convergence_aids=False)
+    assert not result.converged
+    assert result.convergence_aid == "none"
 
 
 # ---- _dc_gmin_step ---------------------------------------------------------
@@ -5793,6 +5806,7 @@ def test_dc_op_iterations_field_is_populated() -> None:
     ])
     result = dc_op(c)
     assert result.converged
+    assert result.convergence_aid == "newton"
     assert result.iterations >= 1
 
 

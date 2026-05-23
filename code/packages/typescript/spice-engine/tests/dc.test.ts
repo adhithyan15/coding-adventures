@@ -44,6 +44,7 @@ describe("dcOp", () => {
     expectClose(result.voltage("mid"), 5.0);
     expectClose(result.voltage("0"), 0.0);
     expect(result.converged).toBe(true);
+    expect(result.convergenceAid).toBe("newton");
     expect(result.iterations).toBe(1);
   });
 
@@ -297,6 +298,7 @@ describe("dcOp", () => {
     });
 
     expect(result.converged).toBe(false);
+    expect(result.convergenceAid).toBe("none");
     expect(result.iterations).toBe(1);
   });
 

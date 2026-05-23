@@ -166,6 +166,13 @@ Acceptance:
   converge through the full aid chain.
 - Tests proving pseudo-transient does not run when earlier aids succeed.
 
+Status:
+
+- DC operating-point results now report which convergence path produced the
+  result (`newton`, `gmin`, `source`, or `none`) across Python, TypeScript, and
+  Rust. Pseudo-transient continuation can extend the same result contract in
+  the next slice.
+
 ### Phase 6 - 1970s Model-Card Depth
 
 Deepen semiconductor models enough for SPICE2-style examples.

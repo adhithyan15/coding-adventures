@@ -270,6 +270,7 @@ class DcResult:
     branch_currents: dict[str, float]
     iterations: int
     converged: bool
+    convergence_aid: str = "newton"
 
 
 @dataclass(frozen=True)
@@ -1087,21 +1088,23 @@ def dc_op(
     """
     # Attempt 1: plain Newton-Raphson.
     result = _dc_newton(circuit, max_iterations=max_iterations, tol=tol)
-    if result.converged or not convergence_aids:
-        return result
+    if result.converged:
+        return replace(result, convergence_aid="newton")
+    if not convergence_aids:
+        return replace(result, convergence_aid="none")
 
     # Attempt 2: Gmin stepping.
     gmin_result = _dc_gmin_step(circuit, max_iterations=max_iterations, tol=tol)
     if gmin_result is not None and gmin_result.converged:
-        return gmin_result
+        return replace(gmin_result, convergence_aid="gmin")
 
     # Attempt 3: source stepping.
     src_result = _dc_source_step(circuit, max_iterations=max_iterations, tol=tol)
     if src_result is not None and src_result.converged:
-        return src_result
+        return replace(src_result, convergence_aid="source")
 
     # All methods exhausted — return the plain-Newton result (converged=False).
-    return result
+    return replace(result, convergence_aid="none")
 
 
 def _apply_corner_override(element: Element, override: CornerOverride) -> Element:

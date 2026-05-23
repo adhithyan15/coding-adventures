@@ -459,9 +459,12 @@ export interface DcResult {
   readonly branchCurrents: ReadonlyMap<string, number>;
   readonly iterations: number;
   readonly converged: boolean;
+  readonly convergenceAid: DcConvergenceAid;
   voltage(node: string): number | undefined;
   branchCurrent(sourceName: string): number | undefined;
 }
+
+export type DcConvergenceAid = "newton" | "gmin" | "source" | "none";
 
 export interface DcOpOptions {
   readonly maxIterations?: number;
@@ -1368,24 +1371,41 @@ export function dcOp(
 ): DcResult {
   const solveOptions = validatedDcOpOptions(options);
   const solution = solveDcNewton(circuit, solveOptions);
-  if (solution.converged || !solveOptions.convergenceAids) {
+  if (solution.converged) {
     return makeDcResult(
       solution.nodeVoltages,
       solution.branchCurrents,
       solution.iterations,
       solution.converged,
+      "newton",
+    );
+  }
+  if (!solveOptions.convergenceAids) {
+    return makeDcResult(
+      solution.nodeVoltages,
+      solution.branchCurrents,
+      solution.iterations,
+      false,
+      "none",
     );
   }
 
-  const aided =
-    solveDcWithGminStepping(circuit, solveOptions, solution.vector) ??
-    solveDcWithSourceStepping(circuit, solveOptions);
-  const finalSolution = aided ?? solution;
+  const gminSolution = solveDcWithGminStepping(circuit, solveOptions, solution.vector);
+  const sourceSolution =
+    gminSolution === undefined ? solveDcWithSourceStepping(circuit, solveOptions) : undefined;
+  const finalSolution = gminSolution ?? sourceSolution ?? solution;
+  const convergenceAid: DcConvergenceAid =
+    gminSolution !== undefined
+      ? "gmin"
+      : sourceSolution !== undefined
+        ? "source"
+        : "none";
   return makeDcResult(
     finalSolution.nodeVoltages,
     finalSolution.branchCurrents,
     finalSolution.iterations,
     finalSolution.converged,
+    convergenceAid,
   );
 }
 
@@ -3824,12 +3844,14 @@ function makeDcResult(
   branchCurrents: ReadonlyMap<string, number>,
   iterations = 1,
   converged = true,
+  convergenceAid: DcConvergenceAid = converged ? "newton" : "none",
 ): DcResult {
   return {
     nodeVoltages,
     branchCurrents,
     iterations,
     converged,
+    convergenceAid,
     voltage(node: string): number | undefined {
       return isGround(node) ? 0.0 : nodeVoltages.get(node);
     },

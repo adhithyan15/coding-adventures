@@ -1,9 +1,9 @@
 use spice_engine::{
     dc_corners, dc_op, dc_op_with_options, dc_sweep, dc_sweep_corners, BSource, Bjt, BjtPolarity,
-    Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, DcOpOptions, Diode, Element,
-    Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform,
-    SpiceError, SubcircuitDefinition, SubcircuitElement, Vccs, Vcvs, VoltageSource, Waveform,
-    XInstance,
+    Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, DcConvergenceAid, DcOpOptions,
+    Diode, Element, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, Resistor,
+    SinWaveform, SpiceError, SubcircuitDefinition, SubcircuitElement, Vccs, Vcvs, VoltageSource,
+    Waveform, XInstance,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -30,6 +30,7 @@ fn dc_voltage_divider_solves_midpoint_voltage() {
     assert_close(result.voltage("mid").unwrap(), 5.0);
     assert_close(result.voltage("0").unwrap(), 0.0);
     assert!(result.converged);
+    assert_eq!(result.convergence_aid, DcConvergenceAid::Newton);
     assert_eq!(result.iterations, 1);
 }
 
@@ -443,6 +444,7 @@ fn dc_op_reports_unconverged_nonlinear_result_when_aids_are_disabled() {
     .unwrap();
 
     assert!(!result.converged);
+    assert_eq!(result.convergence_aid, DcConvergenceAid::None);
     assert_eq!(result.iterations, 1);
 }
 
