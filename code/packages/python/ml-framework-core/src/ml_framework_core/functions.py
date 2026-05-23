@@ -56,6 +56,8 @@ from ._rust_backend import (
     mean_via_rust,
     mul_via_rust,
     neg_via_rust,
+    pow_backward_via_rust,
+    pow_via_rust,
     relu_backward_via_rust,
     relu_via_rust,
     should_use_rust_for_activation,
@@ -243,12 +245,26 @@ class PowFunction(Function):
     def forward(self, a: Tensor, exponent: float) -> Tensor:
         self.save_for_backward(a)
         self.saved_metadata["exponent"] = exponent
+        # MX10 Phase 2b — optional Rust fast path.  Broadcasts the
+        # scalar exponent to a full-shape constant tensor in Python
+        # then routes through matrix-cpu's binary Pow op.
+        if should_use_rust_for_elementwise(len(a.data)):
+            return pow_via_rust(a, exponent)
         data = [x**exponent for x in a.data]
         return Tensor(data, a.shape, device=a.device)
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         (a,) = self.saved_tensors
         n = self.saved_metadata["exponent"]
+        # MX10 Phase 2b — optional Rust fast path.  Power-rule
+        # backward composed as Pow → Mul → Mul with two scalar
+        # constants broadcast to full shape (n-1 and n).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return (
+                pow_backward_via_rust(
+                    grad_output.data, a.data, n, a.shape, device=a.device
+                ),
+            )
         pairs = zip(a.data, grad_output.data, strict=False)
         grad_a = Tensor(
             [n * (x ** (n - 1)) * g for x, g in pairs],

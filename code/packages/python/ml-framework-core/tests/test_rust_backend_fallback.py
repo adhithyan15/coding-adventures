@@ -259,6 +259,52 @@ class ElementwiseFallbackTests(unittest.TestCase):
 
 
 # ──────────────────────────────────────────────────────────────────
+# MX10 Phase 2b — Pow (scalar exponent) fallback tests
+# ──────────────────────────────────────────────────────────────────
+
+
+class PowFallbackTests(unittest.TestCase):
+    """Confirm PowFunction still works when the Rust path is disabled."""
+
+    def setUp(self) -> None:
+        self._saved_available = _rust_backend._RUST_AVAILABLE
+        _rust_backend._RUST_AVAILABLE = False
+
+    def tearDown(self) -> None:
+        _rust_backend._RUST_AVAILABLE = self._saved_available
+
+    def test_pow_via_rust_raises_when_unavailable(self) -> None:
+        a = Tensor([1.0, 2.0, 3.0], (3,))
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.pow_via_rust(a, 2.0)
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_pow_backward_via_rust_raises_when_unavailable(self) -> None:
+        with self.assertRaises(RuntimeError):
+            _rust_backend.pow_backward_via_rust(
+                [1.0, 1.0, 1.0], [1.0, 2.0, 3.0], 2.0, (3,)
+            )
+
+    def test_pow_correct_via_fallback(self) -> None:
+        """``[1, 2, 3].pow(2) == [1, 4, 9]`` (no f32 ops, exact equality)."""
+        from ml_framework_core import PowFunction
+        a = Tensor([1.0, 2.0, 3.0], (3,))
+        result = PowFunction.apply(a, 2.0)
+        self.assertEqual(result.shape, (3,))
+        self.assertEqual(result.data, [1.0, 4.0, 9.0])
+
+    def test_pow_backward_correct_via_fallback(self) -> None:
+        """Power rule: ``d(x²)/dx = 2x``.  For ``a = [1, 2, 3]``,
+        ``grad = [1, 1, 1]``, backward gives ``[2, 4, 6]``."""
+        from ml_framework_core import PowFunction
+        a = Tensor([1.0, 2.0, 3.0], (3,), requires_grad=True)
+        y = PowFunction.apply(a, 2.0)
+        y.backward(Tensor([1.0, 1.0, 1.0], (3,)))
+        self.assertIsNotNone(a.grad)
+        self.assertEqual(a.grad.data, [2.0, 4.0, 6.0])
+
+
+# ──────────────────────────────────────────────────────────────────
 # MX10 Phase 3 — reduction fallback tests
 #
 # Same pattern as elementwise: monkey-patch ``_RUST_AVAILABLE = False``

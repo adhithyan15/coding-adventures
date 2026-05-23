@@ -2,6 +2,47 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 2b: optional Rust fast path for `PowFunction` scalar-exponent (forward + backward)
+
+Closes the only remaining forward op in the MX10 dispatch table.
+Phase 2 had deferred `PowFunction` because matrix-cpu's `Pow` op
+is binary (`output[i] = lhs[i] ^ rhs[i]`, no scalar broadcast) and
+`PowFunction`'s public API takes a `float` exponent.
+
+This PR ships the **broadcast-the-scalar workaround**: materialise
+the scalar exponent as a full-shape constant tensor in Python before
+the FFI call, then route through matrix-cpu's binary `Pow`.  Costs
+`numel * 4` bytes per call to ship the broadcast scalar, dwarfed by
+the `numel` f32 exponentiations the Rust op then runs.
+
+Backward uses the **power rule** `grad_in = n * x^(n-1) * grad`
+composed as a 3-op graph (`Pow(x, c_(n-1)) → Mul(by c_n) →
+Mul(by grad)`) with two scalar constants broadcast to full shape.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `numel ≥ 100_000` | **Rust** (single binary `Pow` for forward; 3-op composed for backward) |
+| Extension installed, `numel < 100_000` | Pure-Python `x**n` loop |
+| Extension NOT installed | Pure-Python `x**n` loop |
+
+#### Tests (92 total MX10 tests, was 88)
+
+- **`PowParityTests`** (2 cases, skip if extension missing):
+  forward and backward parity for `a ** 2.5` (non-integer exponent
+  exercises the actual `Pow` op, not just trivial squaring) on a
+  `(500, 200)` tensor of positive values, with `rtol=1e-3,
+  atol=1e-4` tolerance.
+- **`PowFallbackTests`** (4 cases, always run): defence-in-depth
+  `RuntimeError` for both helpers, plus hand-computed forward
+  correctness (`[1,2,3].pow(2) == [1,4,9]`) and backward
+  correctness (`d(x²)/dx = 2x` on `[1,2,3]` → `[2,4,6]`).
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**381 passed + 37 skipped + the pre-existing test_device.py failure
+on main**.
+
 ### Added — MX10 acceptance gate: end-to-end MLP training integration test
 
 Adds `tests/test_end_to_end_training.py` — **the broadest correctness

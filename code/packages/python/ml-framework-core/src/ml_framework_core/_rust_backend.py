@@ -2038,3 +2038,172 @@ def relu_backward_via_rust(
         )
     out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
     return _Tensor(out_floats, target_shape, device=device)
+
+
+# ──────────────────────────────────────────────────────────────────
+# Pow scalar-exponent dispatch (MX10 Phase 2b)
+#
+# matrix-cpu's ``Pow`` is binary: ``output[i] = lhs[i] ^ rhs[i]``
+# with both operands the same shape, no broadcasting.  PowFunction
+# takes a *scalar* exponent at the Python API level, so we have to
+# materialise that scalar as a full-shape constant tensor before
+# dispatching.  Costs ``numel * 4`` bytes per call to ship the
+# constant, but the binary Pow op then does ``numel`` exponentiations
+# in optimised Rust which dominates for any non-trivial tensor.
+#
+# Backward uses the power rule ``grad_in = n * x^(n-1) * grad`` and
+# composes as a 3-op graph: Pow(x, c_(n-1)) → Mul(by c_n) → Mul(by
+# grad).  Two constants (``n`` and ``n-1``) materialised at full
+# shape.
+#
+# Same elementwise threshold as Phase 2 — Pow has lower per-cell
+# cost than matmul but comparable to other elementwise ops.
+# ──────────────────────────────────────────────────────────────────
+
+
+def pow_via_rust(a: Tensor, exponent: float) -> Tensor:
+    """``a ** exponent`` (elementwise scalar Pow) via matrix-cpu's
+    binary ``Pow`` op.
+
+    The scalar ``exponent`` is broadcast to a full-shape constant
+    tensor in Python before the FFI call (matrix-cpu's Pow doesn't
+    broadcast scalars).  Single-op graph: ``Pow(a, c_exp)`` where
+    ``c_exp`` is the broadcast scalar.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "pow_via_rust called but Rust backend is not available; "
+            "callers must check should_use_rust_for_elementwise() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(a.data)
+    shape_list = list(a.shape)
+
+    a_bytes = struct.pack(f"<{numel}f", *a.data)
+    # Broadcast scalar exponent to full-shape constant tensor.
+    exp_hex = struct.pack(f"<{numel}f", *([float(exponent)] * numel)).hex()
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    {"id": 0, "dtype": "f32", "shape": shape_list},  # a
+                    {"id": 1, "dtype": "f32", "shape": shape_list},  # c_exp
+                    {"id": 2, "dtype": "f32", "shape": shape_list},  # a ^ exp
+                ],
+                "inputs": [0],
+                "outputs": [2],
+                "ops": [
+                    {"kind": "Pow", "lhs": 0, "rhs": 1, "output": 2},
+                ],
+                "constants": [
+                    {
+                        "tensor_id": 1,
+                        "dtype": "f32",
+                        "shape": shape_list,
+                        "bytes_hex": exp_hex,
+                    }
+                ],
+            },
+            "inputs": [a_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_bytes = bytes.fromhex(result["outputs"][0])
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"pow_via_rust: expected {expected_bytes} output bytes "
+            f"({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+    return _Tensor(out_floats, a.shape, device=a.device)
+
+
+def pow_backward_via_rust(
+    grad_data: list[float],
+    input_data: list[float],
+    exponent: float,
+    target_shape: tuple[int, ...],
+    *,
+    device: str | None = None,
+) -> Tensor:
+    """``n * x^(n-1) * grad`` as a 3-op composed graph.
+
+    Topology::
+
+        x(0) ──Pow(x, c_(n-1)(1))──> x^(n-1)(2)
+        Mul(x^(n-1)(2), c_n(3)) ──> n * x^(n-1)(4)
+        Mul(n * x^(n-1)(4), g(5)) ──> output(6)
+
+    3 ops, 7 tensors, 2 constants (full-shape ``c_(n-1)`` and
+    ``c_n`` broadcast scalars).
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "pow_backward_via_rust called but Rust backend is not available; "
+            "callers must check should_use_rust_for_elementwise() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(grad_data)
+    if len(input_data) != numel:
+        raise RuntimeError(
+            f"pow_backward_via_rust: grad has {numel} cells but input "
+            f"has {len(input_data)} cells — must match"
+        )
+
+    target_shape_list = list(target_shape)
+    grad_bytes = struct.pack(f"<{numel}f", *grad_data)
+    x_bytes = struct.pack(f"<{numel}f", *input_data)
+    n_minus_1_hex = struct.pack(f"<{numel}f", *([float(exponent) - 1.0] * numel)).hex()
+    n_hex = struct.pack(f"<{numel}f", *([float(exponent)] * numel)).hex()
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    {"id": 0, "dtype": "f32", "shape": target_shape_list},  # x
+                    {"id": 1, "dtype": "f32", "shape": target_shape_list},  # c_(n-1)
+                    {"id": 2, "dtype": "f32", "shape": target_shape_list},  # x^(n-1)
+                    {"id": 3, "dtype": "f32", "shape": target_shape_list},  # c_n
+                    {"id": 4, "dtype": "f32", "shape": target_shape_list},  # n * x^(n-1)
+                    {"id": 5, "dtype": "f32", "shape": target_shape_list},  # g
+                    {"id": 6, "dtype": "f32", "shape": target_shape_list},  # output
+                ],
+                "inputs": [0, 5],
+                "outputs": [6],
+                "ops": [
+                    {"kind": "Pow", "lhs": 0, "rhs": 1, "output": 2},
+                    {"kind": "Mul", "lhs": 2, "rhs": 3, "output": 4},
+                    {"kind": "Mul", "lhs": 4, "rhs": 5, "output": 6},
+                ],
+                "constants": [
+                    {"tensor_id": 1, "dtype": "f32", "shape": target_shape_list, "bytes_hex": n_minus_1_hex},
+                    {"tensor_id": 3, "dtype": "f32", "shape": target_shape_list, "bytes_hex": n_hex},
+                ],
+            },
+            "inputs": [x_bytes.hex(), grad_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_bytes = bytes.fromhex(result["outputs"][0])
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"pow_backward_via_rust: expected {expected_bytes} output "
+            f"bytes ({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+    return _Tensor(out_floats, target_shape, device=device)
