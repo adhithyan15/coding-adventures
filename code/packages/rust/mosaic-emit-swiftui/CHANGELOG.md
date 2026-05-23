@@ -2,6 +2,49 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added — UI29-2 `HostCheckbox` + `HostRadio` kernel primitives (U29-2-K-swiftui)
+
+Both new primitives lower to SwiftUI `Toggle` with the platform's
+default toggle style. The semantic distinction is in the dispatched
+payload:
+
+- `HostCheckbox` dispatches `checked: Bool` on every flip via a
+  `Binding(get:set:)` whose setter calls `dispatch(.x(checked:
+  newValue))`. Without an `onToggle` emit the binding degrades to
+  `.constant(checked)` (read-only but type-checks).
+- `HostRadio` dispatches `value: String` only on positive transition
+  via a `Binding(get:set:)` whose setter wraps the call in `if
+  newValue { dispatch(.x(value: …)) }` — flips to `false` (a sibling
+  radio caused this one to deselect) are silently dropped to match
+  the kernel-canonical `onSelect = "this radio was chosen"`
+  semantics.
+- The `group:` prop on `HostRadio` is preserved as a `// group: …`
+  Swift comment ahead of the `Toggle`. SwiftUI has no implicit radio
+  grouping; the comment keeps the metadata visible for a future
+  structural pass that synthesises a `Picker` from sibling radios
+  sharing a `group:`.
+- `label:` becomes the first positional `Toggle(...)` argument
+  (string literal or slot identifier); `disabled:` becomes a trailing
+  `.disabled(...)` modifier.
+
+Deferred to a follow-up:
+
+- `HostCheckbox.indeterminate` slot. SwiftUI's `Toggle` has no
+  tri-state visual; rendering a "mixed" state needs a custom
+  `ToggleStyle` or an `Image` of `checkmark.square.fill`.
+- `.toggleStyle(.checkbox)` for an actual checkbox look on macOS.
+  That style is macOS-only and breaks iOS compilation; a follow-up
+  can add platform-conditional emission or move the choice to a
+  userland modifier.
+
+9 new tests cover the bare-toggle shape, slot-driven `.constant(…)`
+binding, the `Binding(get:set:)` setter for `onToggle`, string label,
+`.disabled(…)` modifier, the radio's `// group:` comment, the
+positive-transition setter for `onSelect`, and the slot-typed
+`value:` flowing into the dispatch payload.
+
 ## [0.5.0] - 2026-05-21
 
 ### Added — UI29-1 `HostDialog` kernel primitive (U29-1-K-swiftui)

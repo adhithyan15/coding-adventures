@@ -395,6 +395,17 @@ fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
         "HostInput" => emit_host_input(node, indent),
         "HostButton" => emit_host_button(node, indent),
 
+        // UI29-2 kernel — `HostCheckbox` and `HostRadio` both lower to
+        // SwiftUI `Toggle` with the platform's default toggle style.
+        // The semantic difference is in the dispatched payload:
+        //   - HostCheckbox dispatches `checked: Bool` (every flip).
+        //   - HostRadio    dispatches `value: String` (only on select).
+        // Style choice (`.checkbox` macOS / `.switch` cross-platform) is
+        // left to a userland modifier or a follow-up that adds
+        // platform-conditional emission; for v1 the default style ships.
+        "HostCheckbox" => emit_host_checkbox(node, indent),
+        "HostRadio" => emit_host_radio(node, indent),
+
         // UI29 kernel — `HostTable` is the semantic data-table primitive.
         // See [`emit_host_table`] for the lowering rationale (VStack +
         // HStack rows, not SwiftUI.Table — for now).
@@ -753,6 +764,256 @@ fn emit_host_button(node: &LayoutNode, indent: usize) -> Result<String, Pipeline
     }
     closing.push('\n');
     out.push_str(&closing);
+
+    Ok(out)
+}
+
+// =====================================================================
+// UI29-2 kernel — HostCheckbox and HostRadio emitters
+// =====================================================================
+
+/// Lower a UI29-2 `HostCheckbox` node to a SwiftUI `Toggle`.
+///
+/// ## Property handling
+///
+/// | Moslayout prop          | SwiftUI surface                                          |
+/// |---|---|
+/// | `checked: slot: c`      | `isOn:` reads `c`, writes through `dispatch` (if onToggle)|
+/// | `disabled: slot: d`     | `.disabled(d)` trailing modifier                         |
+/// | `disabled: true`/`false`| `.disabled(true)` / `.disabled(false)` literal           |
+/// | `label: "..."`          | `Toggle("...", isOn: …)` — string label argument         |
+/// | `label: slot: x`        | `Toggle(x, isOn: …)` — slot label argument               |
+/// | `onToggle: emit: onX`   | `Binding(get:set:)` form whose setter dispatches         |
+///
+/// ## Binding pattern
+///
+/// SwiftUI's `Toggle` expects a `Binding<Bool>`. Mosaic slots are read-
+/// only `let`s, so we synthesise the binding with a `Binding(get:set:)`
+/// closure pair:
+///
+/// ```swift
+/// Toggle("label", isOn: Binding(
+///     get: { isChecked },
+///     set: { newValue in dispatch(.toggle(checked: newValue)) }
+/// ))
+/// ```
+///
+/// When `onToggle` is unbound we fall back to `.constant(checked)` so
+/// the generated source still type-checks; the toggle then becomes
+/// effectively read-only (user taps have no effect — the host has no
+/// way to learn about them).
+///
+/// ## What is NOT in this first cut
+///
+/// - The `indeterminate` slot. SwiftUI's `Toggle` has no tri-state
+///   visual; rendering a "mixed" state requires either a custom
+///   `ToggleStyle` or a different primitive (e.g. `Image` of the
+///   `checkmark.square.fill` SF Symbol). Deferred to a follow-up that
+///   adds a custom checkbox style.
+/// - Explicit `.toggleStyle(.checkbox)`. That style is macOS-only; on
+///   iOS the same modifier fails to compile. Setting the default
+///   platform style works on both. Authors who want a checkbox visual
+///   on macOS can compose a userland wrapper that adds the modifier.
+fn emit_host_checkbox(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // Resolve the `checked:` slot. We need the camelCased name for the
+    // binding getter. Missing slot falls back to a `false` constant so
+    // the file compiles.
+    let checked_expr: String = match find_slot_ref_prop(node, "checked") {
+        Some(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            camel
+        }
+        None => "false".to_string(),
+    };
+
+    // Label argument — first positional argument to Toggle. String
+    // literal → `"..."`; slot ref → bare identifier (SwiftUI accepts
+    // any `StringProtocol`); missing → empty string literal.
+    let label_arg: String = if let Some(s) = find_string_prop(node, "label") {
+        format!("\"{}\"", escape_swift_string(s))
+    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        camel
+    } else {
+        "\"\"".to_string()
+    };
+
+    // Binding form. With onToggle: a Binding(get:set:) whose setter
+    // dispatches the new value. Without: a .constant() that makes the
+    // toggle read-only but still type-checks.
+    let binding_expr: String = match find_emit_ref_prop(node, "onToggle") {
+        Some(emit_name) => {
+            let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&case_name)?;
+            format!(
+                "Binding(get: {{ {checked_expr} }}, set: {{ newValue in dispatch(.{case_name}(checked: newValue)) }})"
+            )
+        }
+        None => format!(".constant({checked_expr})"),
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}Toggle({label_arg}, isOn: {binding_expr})").unwrap();
+
+    // `.disabled(...)` trailing modifier. Indented one Swift-source step
+    // beyond the Toggle so the modifier visually attaches to it.
+    let mod_pad = " ".repeat(indent + 4);
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        writeln!(out, "{mod_pad}.disabled({camel})").unwrap();
+    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
+        if kw == "true" || kw == "false" {
+            writeln!(out, "{mod_pad}.disabled({kw})").unwrap();
+        }
+    }
+
+    Ok(out)
+}
+
+/// Lower a UI29-2 `HostRadio` node to a SwiftUI `Toggle`.
+///
+/// ## Why also a `Toggle`?
+///
+/// SwiftUI exposes the canonical macOS radio-group via `Picker` with
+/// `.pickerStyle(.radioGroup)`, but that is a *multi-option* primitive
+/// driven from a single selection state — not a standalone radio
+/// button. UI29-2 §2.2 keeps each `HostRadio` as a standalone primitive
+/// in v1 (the proper `RadioGroup` userland composition is reserved for
+/// UI29-2.1), so the SwiftUI lowering uses `Toggle` for visual parity
+/// with `HostCheckbox` and surfaces the radio semantics through the
+/// emit payload: `onSelect` carries the radio's `value:` string.
+///
+/// ## Property handling
+///
+/// | Moslayout prop          | SwiftUI surface                                          |
+/// |---|---|
+/// | `checked: slot: c`      | `isOn:` reads `c`                                        |
+/// | `group: "..."` / `slot:`| recorded in source as a `// group: ...` comment for now  |
+/// | `value: "..." `         | dispatched payload literal in onSelect closure           |
+/// | `value: slot: v`        | dispatched payload reads `v` at dispatch time            |
+/// | `disabled: slot|bool`   | `.disabled(...)` modifier                                |
+/// | `label: ...`            | `Toggle(label, isOn: …)` argument                        |
+/// | `onSelect: emit: onX`   | `Binding(get:set:)` whose setter dispatches IF new state |
+///
+/// ## `onSelect` fires only on positive transition
+///
+/// The kernel-canonical `onSelect` event represents "this radio was
+/// chosen", not "this radio was toggled". When the user taps a checked
+/// radio (no-op), or a sibling radio causes this one to flip off, we
+/// must not dispatch. The setter wraps the dispatch in `if newValue`:
+///
+/// ```swift
+/// Binding(get: { isSelected }, set: { newValue in
+///     if newValue { dispatch(.select(value: "vanilla")) }
+/// })
+/// ```
+///
+/// ## Group coordination
+///
+/// SwiftUI radios have no implicit grouping. Host code is responsible
+/// for tracking which radio in a logical group is currently selected
+/// and toggling the others' `checked:` slot to `false`. The `group:`
+/// prop is preserved in the generated source as a `// group: ...`
+/// comment so it remains visible for future code that consumes it
+/// (e.g. a structural pass that synthesises a `Picker` from a sibling
+/// run of HostRadio with shared `group:`).
+fn emit_host_radio(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // Resolve `checked:` (identical to HostCheckbox).
+    let checked_expr: String = match find_slot_ref_prop(node, "checked") {
+        Some(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            camel
+        }
+        None => "false".to_string(),
+    };
+
+    // Resolve `value:` for the dispatch payload. String literal → JS
+    // string literal in the dispatch call; slot ref → bare identifier
+    // (host's responsibility to make the slot a `String`).
+    let value_expr: String = if let Some(s) = find_string_prop(node, "value") {
+        format!("\"{}\"", escape_swift_string(s))
+    } else if let Some(slot) = find_slot_ref_prop(node, "value") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        camel
+    } else {
+        // No value: bound — fall back to an empty string. The radio
+        // still works visually but the host can't distinguish it from
+        // any other valueless radio in the same group.
+        "\"\"".to_string()
+    };
+
+    // Label argument (same shape as HostCheckbox).
+    let label_arg: String = if let Some(s) = find_string_prop(node, "label") {
+        format!("\"{}\"", escape_swift_string(s))
+    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        camel
+    } else {
+        "\"\"".to_string()
+    };
+
+    let mut out = String::new();
+
+    // `// group: ...` comment — preserves the group: prop in the
+    // generated source for downstream tooling. Mirrors HostTable's
+    // `// part: ...` comment pattern.
+    //
+    // Security: a raw newline (or CR) in the author's `group:` string
+    // would terminate this `//` line comment and inject arbitrary Swift
+    // source on the next line. `escape_swift_string` only escapes `"`
+    // and `\` (it's tuned for string-literal contexts), so we have to
+    // strip line terminators here ourselves. Replacing with a space
+    // preserves the visible group name as best we can for human
+    // readers while keeping the line-comment scope intact.
+    fn escape_for_line_comment(s: &str) -> String {
+        let escaped = escape_swift_string(s);
+        escaped
+            .replace('\r', " ")
+            .replace('\n', " ")
+    }
+    if let Some(g) = find_string_prop(node, "group") {
+        writeln!(out, "{pad}// group: {}", escape_for_line_comment(g)).unwrap();
+    } else if let Some(slot) = find_slot_ref_prop(node, "group") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        writeln!(out, "{pad}// group: slot {camel}").unwrap();
+    }
+
+    // Binding form. With onSelect: dispatch only when newValue is true
+    // (this radio was chosen). Without: read-only constant.
+    let binding_expr: String = match find_emit_ref_prop(node, "onSelect") {
+        Some(emit_name) => {
+            let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&case_name)?;
+            format!(
+                "Binding(get: {{ {checked_expr} }}, set: {{ newValue in if newValue {{ dispatch(.{case_name}(value: {value_expr})) }} }})"
+            )
+        }
+        None => format!(".constant({checked_expr})"),
+    };
+
+    writeln!(out, "{pad}Toggle({label_arg}, isOn: {binding_expr})").unwrap();
+
+    let mod_pad = " ".repeat(indent + 4);
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        writeln!(out, "{mod_pad}.disabled({camel})").unwrap();
+    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
+        if kw == "true" || kw == "false" {
+            writeln!(out, "{mod_pad}.disabled({kw})").unwrap();
+        }
+    }
 
     Ok(out)
 }
@@ -3424,6 +3685,286 @@ mod tests {
         assert!(
             !out2.contains(".interactiveDismissDisabled("),
             "default backdrop behaviour must not emit modifier, got:\n{out2}"
+        );
+    }
+
+    // =====================================================================
+    // UI29-2 — HostCheckbox + HostRadio (SwiftUI Toggle)
+    // =====================================================================
+
+    /// UI29-2 SwiftUI test 1 — a bare `HostCheckbox` (no props) emits a
+    /// `Toggle("", isOn: .constant(false))` line. The empty label and
+    /// `.constant(false)` binding form is the type-checking degraded
+    /// shape; a real component will bind `checked:` and `onToggle:`.
+    #[test]
+    fn host_checkbox_empty_emits_toggle_with_constant_binding() {
+        let checkbox = leaf("HostCheckbox", vec![]);
+        let layout = layout_with("X", container_node("Box", vec![checkbox]));
+        let out = from_pipeline(
+            &component("X", vec![], vec![]),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("Toggle(\"\", isOn: .constant(false))"),
+            "expected `Toggle(\"\", isOn: .constant(false))`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 SwiftUI test 2 — `checked: slot: c` flows the camelCased
+    /// slot name into the `.constant(c)` getter when no onToggle is
+    /// bound. The toggle is read-only but type-checks.
+    #[test]
+    fn host_checkbox_checked_slot_drives_constant_binding() {
+        let checkbox = leaf(
+            "HostCheckbox",
+            vec![prop_slot_ref("checked", "is-checked")],
+        );
+        let layout = layout_with("X", container_node("Box", vec![checkbox]));
+        let out = from_pipeline(
+            &component("X", vec![slot("is-checked", SlotType::Bool, true)], vec![]),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".constant(isChecked)"),
+            "expected `.constant(isChecked)` binding, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 SwiftUI test 3 — `onToggle: emit: onChange` plus a
+    /// `checked:` slot produces the Binding(get:set:) pair whose setter
+    /// dispatches the new value. The `checked: bool` payload field is
+    /// kernel-canonical (UI29-2 §2.2).
+    #[test]
+    fn host_checkbox_on_toggle_dispatches_via_binding_setter() {
+        let checkbox = leaf(
+            "HostCheckbox",
+            vec![
+                prop_slot_ref("checked", "is-checked"),
+                prop_emit_ref("onToggle", "onChange"),
+            ],
+        );
+        let layout = layout_with("X", container_node("Box", vec![checkbox]));
+        let out = from_pipeline(
+            &component(
+                "X",
+                vec![slot("is-checked", SlotType::Bool, true)],
+                vec![emit("onChange", vec![param("checked", EmitPayloadType::Bool)])],
+            ),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(
+                "Binding(get: { isChecked }, set: { newValue in dispatch(.change(checked: newValue)) })"
+            ),
+            "expected Binding(get:set:) dispatching change(checked:), got:\n{out}"
+        );
+    }
+
+    /// UI29-2 SwiftUI test 4 — `label: "Remember me"` becomes the first
+    /// positional argument to `Toggle(...)` as a Swift string literal.
+    #[test]
+    fn host_checkbox_string_label_becomes_first_argument() {
+        let checkbox = leaf(
+            "HostCheckbox",
+            vec![prop_string("label", "Remember me")],
+        );
+        let layout = layout_with("X", container_node("Box", vec![checkbox]));
+        let out = from_pipeline(
+            &component("X", vec![], vec![]),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("Toggle(\"Remember me\", isOn:"),
+            "expected `Toggle(\"Remember me\", isOn: …)`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 SwiftUI test 5 — `disabled: slot: d` adds a trailing
+    /// `.disabled(d)` modifier to the Toggle.
+    #[test]
+    fn host_checkbox_disabled_slot_emits_disabled_modifier() {
+        let checkbox = leaf(
+            "HostCheckbox",
+            vec![prop_slot_ref("disabled", "locked")],
+        );
+        let layout = layout_with("X", container_node("Box", vec![checkbox]));
+        let out = from_pipeline(
+            &component("X", vec![slot("locked", SlotType::Bool, true)], vec![]),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".disabled(locked)"),
+            "expected `.disabled(locked)` modifier, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 SwiftUI test 6 — a bare `HostRadio` (no props) emits the
+    /// same degraded-but-compiling shape as a bare HostCheckbox:
+    /// `Toggle("", isOn: .constant(false))`.
+    #[test]
+    fn host_radio_empty_emits_toggle_with_constant_binding() {
+        let radio = leaf("HostRadio", vec![]);
+        let layout = layout_with("X", container_node("Box", vec![radio]));
+        let out = from_pipeline(
+            &component("X", vec![], vec![]),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("Toggle(\"\", isOn: .constant(false))"),
+            "expected bare Toggle shape, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 SwiftUI test 7 — `group: "flavor"` is preserved as a
+    /// `// group: flavor` comment ahead of the Toggle. SwiftUI has no
+    /// implicit radio grouping, so the comment is the canonical place
+    /// to keep the group metadata visible until a structural pass
+    /// synthesises a Picker from sibling radios.
+    #[test]
+    fn host_radio_group_string_emits_comment() {
+        let radio = leaf("HostRadio", vec![prop_string("group", "flavor")]);
+        let layout = layout_with("X", container_node("Box", vec![radio]));
+        let out = from_pipeline(
+            &component("X", vec![], vec![]),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("// group: flavor"),
+            "expected `// group: flavor` comment, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 SwiftUI test 8 — `onSelect: emit: onPick` + `value:
+    /// "vanilla"` produces the positive-transition Binding(get:set:)
+    /// whose setter dispatches `.pick(value: "vanilla")` only when
+    /// `newValue` is true (the radio was chosen, not deselected).
+    #[test]
+    fn host_radio_on_select_dispatches_only_on_positive_transition() {
+        let radio = leaf(
+            "HostRadio",
+            vec![
+                prop_slot_ref("checked", "is-selected"),
+                prop_string("value", "vanilla"),
+                prop_emit_ref("onSelect", "onPick"),
+            ],
+        );
+        let layout = layout_with("X", container_node("Box", vec![radio]));
+        let out = from_pipeline(
+            &component(
+                "X",
+                vec![slot("is-selected", SlotType::Bool, true)],
+                vec![emit("onPick", vec![param("value", EmitPayloadType::Text)])],
+            ),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(
+                "Binding(get: { isSelected }, set: { newValue in if newValue { dispatch(.pick(value: \"vanilla\")) } })"
+            ),
+            "expected positive-transition Binding, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 SwiftUI test 9a — regression: a `group:` string with an
+    /// embedded newline must not break out of the `//` line comment.
+    /// Pre-fix, `group: "x\nimport Foo"` would emit:
+    /// ```swift
+    /// // group: x
+    /// import Foo
+    /// Toggle(...)
+    /// ```
+    /// which lets an attacker-controlled group prop inject arbitrary
+    /// Swift code into the generated output. The fix replaces `\n` and
+    /// `\r` with spaces in the comment text only (the line-comment
+    /// scope ends at the next newline, so collapsing them is the
+    /// minimal change that closes the vector).
+    #[test]
+    fn host_radio_group_string_with_newline_is_neutralised_in_comment() {
+        let radio = leaf(
+            "HostRadio",
+            vec![prop_string("group", "x\nimport Foo\nstruct Evil {}")],
+        );
+        let layout = layout_with("X", container_node("Box", vec![radio]));
+        let out = from_pipeline(
+            &component("X", vec![], vec![]),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        // The line-comment scope ends at the FIRST \n in the output, so
+        // requiring `// group:` and `import Foo` on the SAME line is
+        // the tight invariant: there must be no newline between them.
+        let comment_line = out
+            .lines()
+            .find(|l| l.contains("// group:"))
+            .expect("group comment present");
+        assert!(
+            comment_line.contains("import Foo"),
+            "newline injection must be neutralised — `import Foo` must \
+             stay on the same line as `// group:`, got line:\n{comment_line}"
+        );
+        // Belt-and-suspenders: the literal `\nimport Foo` substring
+        // (real newline byte) must not appear anywhere in the output.
+        assert!(
+            !out.contains("\nimport Foo"),
+            "found a raw newline followed by `import Foo` — injection \
+             vector still open, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 SwiftUI test 9 — `value: slot: v` flows the slot
+    /// identifier into the dispatch payload, allowing the value to be
+    /// computed at runtime by the host rather than baked into the
+    /// generated source.
+    #[test]
+    fn host_radio_value_slot_flows_into_dispatch_payload() {
+        let radio = leaf(
+            "HostRadio",
+            vec![
+                prop_slot_ref("value", "radio-value"),
+                prop_emit_ref("onSelect", "onPick"),
+            ],
+        );
+        let layout = layout_with("X", container_node("Box", vec![radio]));
+        let out = from_pipeline(
+            &component(
+                "X",
+                vec![slot("radio-value", SlotType::Text, true)],
+                vec![emit("onPick", vec![param("value", EmitPayloadType::Text)])],
+            ),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("dispatch(.pick(value: radioValue))"),
+            "expected dispatch with `radioValue` bare identifier, got:\n{out}"
         );
     }
 }
