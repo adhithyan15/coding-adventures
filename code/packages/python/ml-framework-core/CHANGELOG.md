@@ -2,6 +2,54 @@
 
 ## Unreleased
 
+### Added — MX11 implementation: NumPy interop for `Tensor`
+
+Implements the spec from `code/specs/MX11-numpy-interop.md` (landed
+in a prior PR).  Three new methods on `Tensor`:
+
+- `Tensor.from_numpy(arr, *, requires_grad=False, device=None)` —
+  classmethod; copies the ndarray into a new Tensor.
+- `Tensor.to_numpy()` — instance method; returns a fresh `np.float64`
+  copy.
+- `Tensor.numpy()` — PyTorch-style alias for `to_numpy()`.
+
+#### Behaviour summary (full contract in the spec)
+
+- **Soft dependency on numpy.**  Try/except `import numpy as np` at
+  call time inside each method; on `ImportError` we re-raise with the
+  message `"numpy is required for Tensor.{from,to}_numpy; install it
+  with 'pip install numpy'"`.  The package itself imports cleanly
+  without numpy installed.
+- **Both directions copy.**  No view sharing; mutating the returned
+  ndarray does not affect the source Tensor and vice versa.
+- **Output dtype always f64.**  Callers cast with
+  `arr.astype(np.float32)` if they need f32.
+- **0-d arrays → shape `(1,)`** to match the
+  `SumFunction(dim=None)` scalar convention.
+- **Empty arrays → ValueError** (Tensor's `numel >= 1` invariant).
+- **Unsupported dtypes** (complex/object/string/structured) →
+  `TypeError` with a message listing the supported set
+  (floats/ints/uints/bool).
+- **Non-contiguous arrays** are copied via `np.ascontiguousarray`
+  before flattening — transposed/strided inputs round-trip with the
+  expected C-order layout.
+
+#### Tests
+
+- `tests/test_numpy_interop.py` — 17 round-trip and error-case tests
+  (skip if numpy isn't installed; matches the
+  `test_rust_backend_parity.py` skip pattern).  Covers each numpy
+  dtype in the spec's matrix, the unsupported-dtype error paths,
+  empty/scalar/non-contiguous edge cases, copy-not-view, dtype-is-f64,
+  and the `requires_grad`/`device` parameter propagation.
+- `tests/test_numpy_interop_no_numpy.py` — 2 tests that **always
+  run**.  Monkey-patch `sys.modules["numpy"] = None`, call
+  `Tensor.from_numpy(...)` and `t.to_numpy()`, confirm each raises
+  `ImportError` with `"pip install numpy"` in the message.
+
+Full suite locally: **388 passed + 57 skipped** + the pre-existing
+`test_device.py` failure that's on main throughout this work.
+
 ### Added — MX11 spec: NumPy interop for `Tensor`
 
 Spec-only PR (`code/specs/MX11-numpy-interop.md`) defining the
