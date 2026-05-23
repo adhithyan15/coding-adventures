@@ -2,6 +2,33 @@
 
 ## [Unreleased]
 
+### Added — U29-4-K-html — `HostLink` + `HostTooltip` + `HostNumberInput` kernel primitive lowerings
+
+Three new kernel primitives lower to native HTML elements:
+
+- **`HostLink` → `<a href ...>label</a>`**:
+  - `href: str|slot` → real `href=` attribute (string literal or `{{slot}}` template marker)
+  - `label: str|slot` → text body
+  - `target: new-tab` → `target="_blank"` paired with `rel="noopener noreferrer"` (security default — prevents reverse-tabnabbing; eslint react/jsx-no-target-blank parity)
+  - `target: parent|top|same` → standard HTML `target=` values
+  - `external: false` keyword → `data-external="false"` marker for hydration to intercept
+  - `onActivate: emit: onX` → `data-on-activate="onX"` marker
+
+- **`HostTooltip` → `<span title="text">{children}</span>`**:
+  - `text: str|slot` → real `title=` attribute (string literal or `{{slot}}` marker)
+  - Single child wraps inside; multi-child case walks recursively
+  - Plain-text only in v1 per UI29-4 §3.2
+
+- **`HostNumberInput` → `<input type="number" inputmode="numeric" ...>`**:
+  - `value: slot|number` → real `value=` attribute (slot template or literal)
+  - `min` / `max` / `step` numeric literals → matching HTML attribute values
+  - `placeholder: str|slot` → real `placeholder=` attribute
+  - `disabled: slot|bool` → bare `disabled` keyword OR `data-disabled` marker
+  - `onChange: emit: onX` → `data-on-change="onX"` marker
+  - `inputmode="numeric"` always set — triggers mobile numeric keyboard
+
+7 new tests pin: HostLink href+label rendering, the target=_blank security pin (rel="noopener noreferrer" paired emission), the external+onActivate data-* markers, HostTooltip span+title wrapping, HostNumberInput inputmode=numeric default, min/max/step numeric literal pass-through, and the onChange data marker.
+
 ### Added — U29-2-K-html — `HostCheckbox` + `HostRadio` kernel primitive lowerings
 
 Both new UI29-2 primitives lower to native HTML form controls:
