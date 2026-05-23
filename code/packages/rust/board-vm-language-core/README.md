@@ -123,6 +123,10 @@ Bluetooth display policy in language adapters.
 cooperative event-queue follow-up: remove completed callbacks, keep incomplete
 callbacks scheduled, and drop budget-exhausted or failed callbacks with a
 Rust-owned action and queue-depth update.
+`input_callback_session_completion_summary` packages the endpoint session,
+callback result label, completion action, and queue follow-up into one
+transport-aware record for language adapters to log or present without
+rebuilding callback lifecycle policy.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
