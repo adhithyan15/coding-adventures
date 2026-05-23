@@ -725,6 +725,22 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
         den_deg_sp = _polynomial_degree_in_k(den, k)
         if den_deg_sp is not None and 2 * den_deg_sp > sqrt_poly_eff:
             return True
+    # Phase 54: ``Mul(Log(diverging), polynomial_factors)`` numerator
+    # pattern.  ``log(h(k))`` grows sub-polynomially — slower than any
+    # positive power of ``k`` — so the effective growth degree of
+    # ``log(h) · P(k)`` equals ``deg(P)`` (the log factor is negligible
+    # for degree comparisons).  The quotient vanishes when
+    # ``deg(den) > deg(P)`` (strictly).
+    #
+    # Note: When ``deg(den) == deg(P)`` the expression reduces to
+    # ``log(h(k)) * constant``, which diverges to ±∞, so equality is
+    # correctly refused.
+    log_poly = _split_log_polynomial_factor(num, k)
+    if log_poly is not None:
+        _, poly_deg_lp = log_poly
+        den_deg_lp = _polynomial_degree_in_k(den, k)
+        if den_deg_lp is not None and den_deg_lp > poly_deg_lp:
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -924,6 +940,63 @@ def _sqrt_poly_numerator_effective_degree_x2(
     if sqrt_inner_deg is None:
         return None
     return sqrt_inner_deg + 2 * poly_deg_sum
+
+
+def _split_log_polynomial_factor(
+    node: IRNode, k: IRSymbol
+) -> tuple[IRNode, int] | None:
+    """Return ``(log_factor, poly_degree)`` when ``node`` is a ``Mul``
+    whose factors split into exactly one ``Log(diverging)`` part and a
+    polynomial part in ``k``; ``None`` otherwise.
+
+    Phase 54 — Used by :func:`_g_vanishes_at_infinity` to recognise that
+    ``log(k)·k/k³`` (and similar shapes) vanish at infinity.  The key
+    mathematical fact is that ``log(h(k)) = o(k^ε)`` for any ``ε > 0``,
+    so ``log(h) · P(k)`` has the same effective growth degree as ``P(k)``
+    alone — the log factor is negligible for degree comparisons.
+
+    +-----------------------------------+---------------------+
+    | Input                             | Return              |
+    +===================================+=====================+
+    | ``Mul(Log(k), k)``                | ``(Log(k), 1)``     |
+    | ``Mul(Log(k), k²)``               | ``(Log(k), 2)``     |
+    | ``Mul(Log(k+1), k³)``             | ``(Log(k+1), 3)``   |
+    | ``Mul(Log(k), Sin(k))``           | None (Sin not poly) |
+    | ``Mul(Log(k), Log(k))``           | None (two Log)      |
+    | ``Mul(Sin(k), k)``                | None (no Log factor)|
+    | ``Log(k)`` (plain, not Mul)       | None (→ Phase 50)   |
+    +-----------------------------------+---------------------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. Partition each factor:
+         - Exactly one :func:`_is_log_of_diverging_in_k` factor → ``log_factor``.
+         - All others must be polynomials in ``k``; sum their degrees.
+         - Any factor that is neither → bail.
+      3. Must find exactly one log factor; zero or two → return ``None``.
+      4. Return ``(log_factor, poly_deg_sum)``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    log_factor: IRNode | None = None
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        if _is_log_of_diverging_in_k(arg, k):
+            # Only one Log(diverging) factor is allowed.
+            if log_factor is not None:
+                return None
+            log_factor = arg
+            continue
+        # Otherwise it must be a polynomial in k.
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is None:
+            # Neither a Log(diverging) shape nor a polynomial — bail.
+            return None
+        poly_deg_sum += deg
+    # Must have found exactly one Log(diverging) factor.
+    if log_factor is None:
+        return None
+    return (log_factor, poly_deg_sum)
 
 
 def _try_power_of_k(

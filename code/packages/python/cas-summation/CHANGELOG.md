@@ -1,5 +1,46 @@
 # Changelog
 
+## 1.2.0 — 2026-05-23
+
+**Phase 54 — Log×polynomial numerator pattern (Python).**
+
+Extends ``_g_vanishes_at_infinity`` with a new branch for
+``Div(Mul(Log(diverging), P(k)), Q(k))`` shapes.  ``log(h(k))`` grows
+sub-polynomially — slower than any positive power of ``k`` — so the
+effective growth degree is just ``deg(P)``.  The quotient vanishes when
+``deg(Q) > deg(P)`` (strictly; equal degrees are refused because
+``log(k) × constant`` diverges).
+
+Bumps 1.1.0 → 1.2.0.
+
+### Added
+
+- **``_split_log_polynomial_factor(node, k)``** — Phase 54 helper.
+  Splits a ``Mul`` node into exactly one ``Log(diverging)`` factor and
+  a polynomial part in ``k``; returns ``(log_factor, poly_deg_sum)`` or
+  ``None`` when the shape isn't recognised (no Log factor, more than one
+  Log factor, or a non-polynomial non-Log factor).
+
+- **Phase 54 branch in ``_g_vanishes_at_infinity``** — inserted after
+  Phase 53 and before the Phase 42 polynomial widening.  Closes
+  ``Div(Mul(Log(diverging), P), Q)`` when ``deg(Q) > deg(poly_part)``.
+
+- **5 new tests** in ``TestEvaluateSumPhase54LogTimesPolynomialNumerator``
+  (``test_summation.py``):
+  - ``test_log_k_times_k_over_k_cubed_closes`` — log×k / k³ → closes
+  - ``test_log_k_times_k_squared_over_k_cubed_closes`` — log×k² / k³ → closes
+  - ``test_log_k_times_k_over_k_squared_closes`` — log×k / k² → closes
+  - ``test_log_k_times_k_squared_over_k_squared_refused`` — equal degrees
+    refused (log(k)*k²/k² = log(k) → diverges)
+  - ``test_regression_log_k_over_k_cubed_still_phase50`` — plain Log(k)/k³
+    still closes via Phase 50 (not Phase 54)
+
+### Tests
+
+121 passed (was 116; +5 net new — Phase 54).
+
+---
+
 ## 1.1.0 — 2026-05-23
 
 **Phase 51 + Phase 53 — Sqrt numerator patterns (Python port).**
