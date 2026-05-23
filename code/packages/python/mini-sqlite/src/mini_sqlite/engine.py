@@ -841,9 +841,71 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
             indexes = backend.list_indexes(table=arg)
         except Exception:  # noqa: BLE001
             indexes = []
+        # SQLite's index_list emits five columns:
+        #
+        #   seq      INTEGER  — 0-based position in the list
+        #   name     TEXT     — index name
+        #   unique   INTEGER  — 1 if UNIQUE, 0 otherwise
+        #   origin   TEXT     — 'c' (CREATE INDEX) | 'u' (UNIQUE column
+        #                       constraint) | 'pk' (PRIMARY KEY constraint).
+        #                       Mini-sqlite distinguishes user CREATE INDEX
+        #                       from auto-indexes by the ``sqlite_autoindex_``
+        #                       name prefix; we map ``sqlite_autoindex_*`` →
+        #                       'u' (UNIQUE column constraint) since the
+        #                       backend's auto-indexes back UNIQUE/PK
+        #                       columns interchangeably.
+        #   partial  INTEGER  — 1 if a WHERE clause; mini-sqlite does not
+        #                       support partial indexes, so always 0.
+        rows = []
+        for seq, idx in enumerate(indexes):
+            origin = "u" if idx.name.startswith("sqlite_autoindex_") else "c"
+            rows.append((seq, idx.name, int(idx.unique), origin, 0))
         return QueryResult(
-            columns=("seq", "name", "unique"),
-            rows=tuple((seq, idx.name, int(idx.unique)) for seq, idx in enumerate(indexes)),
+            columns=("seq", "name", "unique", "origin", "partial"),
+            rows=tuple(rows),
+        )
+
+    if name == "index_info":
+        # PRAGMA index_info(<index-name>) — for each column the index
+        # covers, return a row (seqno, cid, name):
+        #
+        #   seqno  INTEGER  — 0-based position in the index key
+        #   cid    INTEGER  — column id in the parent table (0-based)
+        #   name   TEXT     — column name
+        #
+        # Returns an empty result if the index doesn't exist (matches
+        # SQLite's behaviour — no error, just zero rows).
+        if not arg:
+            raise ProgrammingError("PRAGMA index_info requires an index name")
+        idx = None
+        try:
+            # list_indexes() without a table arg returns all indexes;
+            # we filter by name here.
+            for candidate in backend.list_indexes():
+                if candidate.name == arg:
+                    idx = candidate
+                    break
+        except Exception:  # noqa: BLE001 — backend may not implement
+            pass
+        if idx is None:
+            return QueryResult(columns=("seqno", "cid", "name"), rows=())
+        # Resolve each indexed column name to its 0-based cid in the
+        # parent table.  ``backend.columns`` returns ColumnDef objects
+        # in declaration order, so the position is the cid.
+        try:
+            parent_cols = backend.columns(idx.table)
+        except Exception:  # noqa: BLE001
+            parent_cols = []
+        col_to_cid = {
+            (getattr(c, "name", c)): i for i, c in enumerate(parent_cols)
+        }
+        info_rows = tuple(
+            (seqno, col_to_cid.get(col_name, -1), col_name)
+            for seqno, col_name in enumerate(idx.columns)
+        )
+        return QueryResult(
+            columns=("seqno", "cid", "name"),
+            rows=info_rows,
         )
 
     if name == "foreign_key_list":
@@ -982,6 +1044,7 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
             "database_list",
             "foreign_key_list",
             "function_list",
+            "index_info",
             "index_list",
             "integrity_check",
             "module_list",

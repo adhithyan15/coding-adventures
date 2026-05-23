@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.96.0] - 2026-05-23
+
+### Added
+
+- ``PRAGMA index_info(<index-name>)`` is now implemented.  Returns
+  one row per indexed column with the SQLite-standard triple
+  ``(seqno, cid, name)``: the position in the index key, the column
+  id in the parent table, and the column name.  Returns zero rows
+  (no error) for an unknown index — matches SQLite.
+
+### Changed
+
+- ``PRAGMA index_list(<table>)`` now returns the SQLite-standard
+  5-column shape ``(seq, name, unique, origin, partial)`` instead of
+  the previous 3-column ``(seq, name, unique)``.  ``origin`` is
+  ``'c'`` for user-created indexes and ``'u'`` for auto-created
+  ``sqlite_autoindex_*`` indexes.  ``partial`` is always 0 —
+  mini-sqlite doesn't support partial indexes.
+- ``index_info`` added to the ``PRAGMA pragma_list`` enumeration.
+
 ## [1.95.0] - 2026-05-23
 
 ### Added
