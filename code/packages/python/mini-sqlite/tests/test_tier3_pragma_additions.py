@@ -46,8 +46,14 @@ def test_database_list_main():
 # ---------------------------------------------------------------------------
 
 
-def test_foreign_keys_default_off():
-    _check("PRAGMA foreign_keys")
+def test_foreign_keys_default_on_in_mini_sqlite():
+    # Documented deviation from SQLite: mini-sqlite defaults FK
+    # enforcement to ON (real SQLite: OFF).  The pragma read value
+    # mirrors the enforcement default so the two stay consistent.
+    # We don't oracle-compare this one because the engines disagree
+    # on purpose — see PR for honoring PRAGMA foreign_keys.
+    mini = mini_sqlite.connect(":memory:")
+    assert mini.execute("PRAGMA foreign_keys").fetchall() == [(1,)]
 
 
 def test_recursive_triggers_default_off():
@@ -226,14 +232,19 @@ def test_locking_mode_exclusive():
 
 
 def test_foreign_keys_isolated_between_connections():
-    """Setting a PRAGMA on one connection does not leak into another."""
+    """Setting a PRAGMA on one connection does not leak into another.
+
+    Mini-sqlite defaults ``foreign_keys`` to ON (documented deviation
+    from SQLite).  This test exercises isolation by toggling OFF on
+    one connection and verifying the other keeps the default ON.
+    """
     c1 = mini_sqlite.connect(":memory:")
     c2 = mini_sqlite.connect(":memory:")
-    c1.execute("PRAGMA foreign_keys = ON")
-    # c1 reads back ON
-    assert c1.execute("PRAGMA foreign_keys").fetchall() == [(1,)]
-    # c2 still default OFF
-    assert c2.execute("PRAGMA foreign_keys").fetchall() == [(0,)]
+    c1.execute("PRAGMA foreign_keys = OFF")
+    # c1 reads back OFF
+    assert c1.execute("PRAGMA foreign_keys").fetchall() == [(0,)]
+    # c2 still default ON — the PRAGMA on c1 didn't leak across.
+    assert c2.execute("PRAGMA foreign_keys").fetchall() == [(1,)]
 
 
 # ---------------------------------------------------------------------------
