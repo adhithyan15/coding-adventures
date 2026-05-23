@@ -147,6 +147,35 @@ Tdelay in 0 out 0 Z0=50 TD=1n
     expect(parsed.optionsCards()).toEqual([card]);
   });
 
+  it("parses transient methods from .tran cards", () => {
+    const parsed = parseNetlist(".tran 1n 20n method=gear2");
+
+    expect(parsed.tranCards()).toEqual([
+      { kind: "tran", timeStep: 1.0e-9, stopTime: 20.0e-9, method: "gear2" },
+    ]);
+    expect(parsed.transientMethod(parsed.tranCards()[0])).toBe("gear2");
+  });
+
+  it("falls back to .options method and lets .tran take precedence", () => {
+    const parsed = parseNetlist(`
+.options method=trap
+.tran 1n 20n method=euler
+`);
+
+    expect(parsed.optionsCards()[0].values.get("method")).toBe("trap");
+    expect(parsed.transientMethod()).toBe("trap");
+    expect(parsed.transientMethod(parsed.tranCards()[0])).toBe("euler");
+  });
+
+  it("rejects unsupported transient method values", () => {
+    expect(() => parseNetlist(".tran 1n 20n method=bogus")).toThrow(
+      /must be euler, trap, or gear2/,
+    );
+    expect(() => parseNetlist(".options method=bogus")).toThrow(
+      /must be euler, trap, or gear2/,
+    );
+  });
+
   it("rejects .options cards with empty values", () => {
     expect(() => parseNetlist(".options gmin=")).toThrow(/\.options "gmin" requires a value/);
   });

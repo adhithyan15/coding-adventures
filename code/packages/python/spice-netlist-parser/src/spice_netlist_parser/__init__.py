@@ -14,6 +14,7 @@ from spice_netlist_parser.parser import (
     SensAnalysis,
     TfAnalysis,
     TranAnalysis,
+    TransientMethod,
     parse_netlist,
 )
 
@@ -34,6 +35,7 @@ __all__ = [
     "SensAnalysis",
     "TfAnalysis",
     "TranAnalysis",
+    "TransientMethod",
     "__version__",
     "parse",
     "parse_netlist",

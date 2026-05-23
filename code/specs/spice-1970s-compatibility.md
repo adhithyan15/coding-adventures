@@ -127,8 +127,7 @@ Scope:
 - `method="gear2"` / equivalent enum support across languages.
 - Capacitor and inductor BDF2 companion histories.
 - Adaptive-step interaction at the same surface as existing trap/euler.
-- Netlist `.options method=gear2` or `.tran ... method=gear2` route if already
-  supported by the parser shape.
+- Netlist `.options method=gear2` or `.tran ... method=gear2` routing.
 
 Acceptance:
 
@@ -143,8 +142,10 @@ Status:
   before two-step history is available. TypeScript and Rust now also expose
   trapezoidal transient companions for parity with Python, and all three
   packages include a coarse LC fixture showing Gear-2 damps ringing more than
-  trapezoidal integration. Adaptive-step interaction and netlist option
-  routing remain follow-up work.
+  trapezoidal integration. The parser packages now validate
+  `.tran ... method=<euler|trap|gear2>`, preserve the method on transient
+  analysis cards, and expose `.options method=<...>` as the fallback route.
+  Adaptive-step interaction remains follow-up work.
 
 ### Phase 5 - Pseudo-Transient DC Continuation
 

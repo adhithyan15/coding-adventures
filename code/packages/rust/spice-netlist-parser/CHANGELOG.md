@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Parse and validate transient integration methods from
+  `.tran ... method=<euler|trap|gear2>`, and expose fallback routing from
+  `.options method=<...>`.
 - Parse conservative SPICE `T` transmission-line cards of the form
   `Tname n1 n2 n3 n4 Z0=<ohms> TD=<seconds>`, including subcircuit node
   remapping and validation for unsupported, missing, non-finite, and

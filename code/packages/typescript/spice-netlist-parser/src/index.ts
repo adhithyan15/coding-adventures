@@ -27,6 +27,7 @@ import {
   type Element,
   type JfetPolarity,
   type MosfetLevel1Params,
+  type TransientMethod,
   type Waveform,
 } from "@coding-adventures/spice-engine";
 
@@ -45,6 +46,7 @@ export interface TranAnalysis {
   readonly kind: "tran";
   readonly timeStep: number;
   readonly stopTime: number;
+  readonly method?: TransientMethod;
 }
 
 export interface DcAnalysis {
@@ -159,6 +161,19 @@ export class ParsedNetlist {
 
   optionsCards(): OptionsAnalysis[] {
     return this.analyses.filter((analysis): analysis is OptionsAnalysis => analysis.kind === "options");
+  }
+
+  transientMethod(tran?: TranAnalysis): TransientMethod | undefined {
+    if (tran?.method !== undefined) {
+      return tran.method;
+    }
+    for (const options of this.optionsCards()) {
+      const value = options.values.get("method");
+      if (typeof value === "string") {
+        return parseTransientMethod(value, ".options method");
+      }
+    }
+    return undefined;
   }
 }
 
@@ -955,8 +970,14 @@ function parseDirective(fields: readonly string[]): Analysis {
     return { kind: "op" };
   }
   if (directive === ".tran") {
-    requireFields(fields, 3, ".tran");
-    return { kind: "tran", timeStep: parseValue(fields[1]), stopTime: parseValue(fields[2]) };
+    requireMinFields(fields, 3, ".tran");
+    const method = parseTranMethodOptions(fields.slice(3));
+    const card: TranAnalysis = {
+      kind: "tran",
+      timeStep: parseValue(fields[1]),
+      stopTime: parseValue(fields[2]),
+    };
+    return method === undefined ? card : { ...card, method };
   }
   if (directive === ".dc") {
     requireFields(fields, 5, ".dc");
@@ -1062,7 +1083,10 @@ function parseOptions(tokens: readonly string[]): ReadonlyMap<string, OptionValu
       if (rawValue === "") {
         throw new NetlistParseError(`.options ${JSON.stringify(key)} requires a value`);
       }
-      values.set(key, parseOptionValue(rawValue));
+      values.set(
+        key,
+        key === "method" ? parseTransientMethod(rawValue, ".options method") : parseOptionValue(rawValue),
+      );
     } else {
       const key = token.trim().toLowerCase();
       if (key.length === 0) {
@@ -1072,6 +1096,38 @@ function parseOptions(tokens: readonly string[]): ReadonlyMap<string, OptionValu
     }
   }
   return values;
+}
+
+function parseTranMethodOptions(tokens: readonly string[]): TransientMethod | undefined {
+  let method: TransientMethod | undefined;
+  for (const token of tokens) {
+    if (!token.includes("=")) {
+      throw new NetlistParseError(
+        `.tran unsupported trailing option ${JSON.stringify(token)}; use method=<euler|trap|gear2>`,
+      );
+    }
+    const equalsIndex = token.indexOf("=");
+    const key = token.slice(0, equalsIndex).trim().toLowerCase();
+    const rawValue = token.slice(equalsIndex + 1);
+    if (key !== "method") {
+      throw new NetlistParseError(`.tran unsupported option ${JSON.stringify(key)}`);
+    }
+    if (rawValue === "") {
+      throw new NetlistParseError(".tran method requires a value");
+    }
+    method = parseTransientMethod(rawValue, ".tran method");
+  }
+  return method;
+}
+
+function parseTransientMethod(rawValue: string, context: string): TransientMethod {
+  const method = rawValue.trim().toLowerCase();
+  if (method === "euler" || method === "trap" || method === "gear2") {
+    return method;
+  }
+  throw new NetlistParseError(
+    `${context} must be euler, trap, or gear2, got ${JSON.stringify(rawValue)}`,
+  );
 }
 
 function parseOptionValue(rawValue: string): OptionValue {

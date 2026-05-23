@@ -3,8 +3,8 @@ use std::{collections::HashMap, fmt};
 use spice_engine::{
     Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element, ExpWaveform,
     Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor,
-    PulseWaveform, PwlWaveform, Resistor, SinWaveform, TransmissionLine, Vccs, Vcvs,
-    VoltageSource, Waveform,
+    PulseWaveform, PwlWaveform, Resistor, SinWaveform, TransientMethod, TransmissionLine, Vccs,
+    Vcvs, VoltageSource, Waveform,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -35,6 +35,7 @@ pub struct OpAnalysis;
 pub struct TranAnalysis {
     pub time_step: f64,
     pub stop_time: f64,
+    pub method: Option<TransientMethod>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -210,6 +211,21 @@ impl ParsedNetlist {
                 _ => None,
             })
             .collect()
+    }
+
+    pub fn transient_method(
+        &self,
+        tran: Option<&TranAnalysis>,
+    ) -> Result<Option<TransientMethod>, NetlistParseError> {
+        if let Some(method) = tran.and_then(|card| card.method) {
+            return Ok(Some(method));
+        }
+        for options in self.options_cards() {
+            if let Some(OptionValue::Text(value)) = options.values.get("method") {
+                return Ok(Some(parse_transient_method(value, ".options method")?));
+            }
+        }
+        Ok(None)
     }
 }
 
@@ -1199,10 +1215,11 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
             Ok(Analysis::Op(OpAnalysis))
         }
         ".tran" => {
-            require_fields(fields, 3, ".tran")?;
+            require_min_fields(fields, 3, ".tran")?;
             Ok(Analysis::Tran(TranAnalysis {
                 time_step: parse_value(&fields[1])?,
                 stop_time: parse_value(&fields[2])?,
+                method: parse_tran_method_options(&fields[3..])?,
             }))
         }
         ".dc" => {
@@ -1324,7 +1341,13 @@ fn parse_options(tokens: &[String]) -> Result<HashMap<String, OptionValue>, Netl
                     ".options {key:?} requires a value"
                 )));
             }
-            values.insert(key, parse_option_value(raw_value));
+            let value = if key == "method" {
+                let method = parse_transient_method(raw_value, ".options method")?;
+                OptionValue::Text(transient_method_name(method).to_string())
+            } else {
+                parse_option_value(raw_value)
+            };
+            values.insert(key, value);
         } else {
             let key = token.trim().to_ascii_lowercase();
             if key.is_empty() {
@@ -1334,6 +1357,52 @@ fn parse_options(tokens: &[String]) -> Result<HashMap<String, OptionValue>, Netl
         }
     }
     Ok(values)
+}
+
+fn parse_tran_method_options(
+    tokens: &[String],
+) -> Result<Option<TransientMethod>, NetlistParseError> {
+    let mut method = None;
+    for token in tokens {
+        let Some((raw_key, raw_value)) = token.split_once('=') else {
+            return Err(NetlistParseError::new(format!(
+                ".tran unsupported trailing option {token:?}; use method=<euler|trap|gear2>"
+            )));
+        };
+        let key = raw_key.trim().to_ascii_lowercase();
+        if key != "method" {
+            return Err(NetlistParseError::new(format!(
+                ".tran unsupported option {key:?}"
+            )));
+        }
+        if raw_value.is_empty() {
+            return Err(NetlistParseError::new(".tran method requires a value"));
+        }
+        method = Some(parse_transient_method(raw_value, ".tran method")?);
+    }
+    Ok(method)
+}
+
+fn parse_transient_method(
+    raw_value: &str,
+    context: &str,
+) -> Result<TransientMethod, NetlistParseError> {
+    match raw_value.trim().to_ascii_lowercase().as_str() {
+        "euler" => Ok(TransientMethod::Euler),
+        "trap" => Ok(TransientMethod::Trap),
+        "gear2" => Ok(TransientMethod::Gear2),
+        _ => Err(NetlistParseError::new(format!(
+            "{context} must be euler, trap, or gear2, got {raw_value:?}"
+        ))),
+    }
+}
+
+fn transient_method_name(method: TransientMethod) -> &'static str {
+    match method {
+        TransientMethod::Euler => "euler",
+        TransientMethod::Trap => "trap",
+        TransientMethod::Gear2 => "gear2",
+    }
 }
 
 fn parse_option_value(raw_value: &str) -> OptionValue {

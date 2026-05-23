@@ -1,6 +1,6 @@
 use spice_engine::{
     ac_sweep, dc_op, mc_dc, noise_ac, sens_dc, tf, BjtPolarity, Element, JfetPolarity,
-    McDistribution, McOptions, MosfetType,
+    McDistribution, McOptions, MosfetType, TransientMethod,
 };
 use spice_netlist_parser::{
     parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, McAnalysis, NetlistParseError,
@@ -90,6 +90,7 @@ G1 out 0 in 0 2m
             Analysis::Tran(TranAnalysis {
                 time_step: 1.0e-9,
                 stop_time: 20.0e-9,
+                method: None,
             }),
             Analysis::Dc(DcAnalysis {
                 source_name: "Vstep".to_string(),
@@ -224,6 +225,65 @@ fn parses_options_analysis_cards() {
     );
     assert_eq!(card.values.get("noopiter"), Some(&OptionValue::Flag(true)));
     assert!(matches!(parsed.analyses.as_slice(), [Analysis::Options(_)]));
+}
+
+#[test]
+fn parses_transient_methods_from_tran_cards() {
+    let parsed = parse_netlist(".tran 1n 20n method=gear2").unwrap();
+
+    assert_eq!(
+        parsed.tran_cards(),
+        vec![&TranAnalysis {
+            time_step: 1.0e-9,
+            stop_time: 20.0e-9,
+            method: Some(TransientMethod::Gear2),
+        }]
+    );
+    assert_eq!(
+        parsed
+            .transient_method(parsed.tran_cards().first().copied())
+            .unwrap(),
+        Some(TransientMethod::Gear2)
+    );
+}
+
+#[test]
+fn transient_method_falls_back_to_options_and_tran_takes_precedence() {
+    let parsed = parse_netlist(
+        r#"
+.options method=trap
+.tran 1n 20n method=euler
+"#,
+    )
+    .unwrap();
+
+    assert_eq!(
+        parsed.options_cards()[0].values.get("method"),
+        Some(&OptionValue::Text("trap".to_string()))
+    );
+    assert_eq!(
+        parsed.transient_method(None).unwrap(),
+        Some(TransientMethod::Trap)
+    );
+    assert_eq!(
+        parsed
+            .transient_method(parsed.tran_cards().first().copied())
+            .unwrap(),
+        Some(TransientMethod::Euler)
+    );
+}
+
+#[test]
+fn rejects_unsupported_transient_methods() {
+    let tran_error = parse_netlist(".tran 1n 20n method=bogus").unwrap_err();
+    assert!(tran_error
+        .to_string()
+        .contains("must be euler, trap, or gear2"));
+
+    let option_error = parse_netlist(".options method=bogus").unwrap_err();
+    assert!(option_error
+        .to_string()
+        .contains("must be euler, trap, or gear2"));
 }
 
 fn assert_option_number(actual: Option<&OptionValue>, expected: f64) {

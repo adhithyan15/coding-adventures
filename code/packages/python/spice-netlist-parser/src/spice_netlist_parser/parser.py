@@ -6,6 +6,7 @@ import math
 import re
 from dataclasses import dataclass, field
 from dataclasses import fields as dataclass_fields
+from typing import Literal
 
 from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
 from spice_engine import (
@@ -45,10 +46,11 @@ class OpAnalysis:
 
 @dataclass(frozen=True, slots=True)
 class TranAnalysis:
-    """A `.tran tstep tstop` transient analysis card."""
+    """A `.tran tstep tstop [method=<euler|trap|gear2>]` transient card."""
 
     t_step: float
     t_stop: float
+    method: TransientMethod | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -108,6 +110,7 @@ class NoiseAnalysis:
 
 
 type OptionValue = float | str | bool
+type TransientMethod = Literal["euler", "trap", "gear2"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -195,6 +198,17 @@ class ParsedNetlist:
 
     def options_cards(self) -> list[OptionsAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, OptionsAnalysis)]
+
+    def transient_method(self, tran: TranAnalysis | None = None) -> TransientMethod | None:
+        """Return the explicit `.tran` method or fallback `.options method` value."""
+
+        if tran is not None and tran.method is not None:
+            return tran.method
+        for options in self.options_cards():
+            value = options.values.get("method")
+            if isinstance(value, str):
+                return _parse_transient_method(value, ".options method")
+        return None
 
 
 _VALUE_RE = re.compile(
@@ -715,8 +729,12 @@ def _parse_directive(fields: list[str]) -> Analysis:
         _require_fields(fields, 1, ".op")
         return OpAnalysis()
     if directive == ".tran":
-        _require_fields(fields, 3, ".tran")
-        return TranAnalysis(t_step=parse_value(fields[1]), t_stop=parse_value(fields[2]))
+        _require_min_fields(fields, 3, ".tran")
+        return TranAnalysis(
+            t_step=parse_value(fields[1]),
+            t_stop=parse_value(fields[2]),
+            method=_parse_tran_method_options(fields[3:]),
+        )
     if directive == ".dc":
         _require_fields(fields, 5, ".dc")
         return DcAnalysis(
@@ -799,13 +817,41 @@ def _parse_options(tokens: list[str]) -> dict[str, OptionValue]:
                 raise NetlistParseError(f".options contains empty option name in {token!r}")
             if raw_value == "":
                 raise NetlistParseError(f".options {key!r} requires a value")
-            values[key] = _parse_option_value(raw_value)
+            values[key] = (
+                _parse_transient_method(raw_value, ".options method")
+                if key == "method"
+                else _parse_option_value(raw_value)
+            )
         else:
             key = token.strip().lower()
             if not key:
                 raise NetlistParseError(".options contains an empty flag")
             values[key] = True
     return values
+
+
+def _parse_tran_method_options(tokens: list[str]) -> TransientMethod | None:
+    method: TransientMethod | None = None
+    for token in tokens:
+        if "=" not in token:
+            raise NetlistParseError(
+                f".tran unsupported trailing option {token!r}; use method=<euler|trap|gear2>"
+            )
+        key, raw_value = token.split("=", 1)
+        key = key.strip().lower()
+        if key != "method":
+            raise NetlistParseError(f".tran unsupported option {key!r}")
+        if raw_value == "":
+            raise NetlistParseError(".tran method requires a value")
+        method = _parse_transient_method(raw_value, ".tran method")
+    return method
+
+
+def _parse_transient_method(raw_value: str, context: str) -> TransientMethod:
+    method = raw_value.strip().lower()
+    if method in ("euler", "trap", "gear2"):
+        return method
+    raise NetlistParseError(f"{context} must be euler, trap, or gear2, got {raw_value!r}")
 
 
 def _parse_option_value(raw_value: str) -> OptionValue:
