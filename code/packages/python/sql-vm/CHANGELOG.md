@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.50.0 — 2026-05-22
+
+### Added
+
+- ``_do_sort`` honours the new ``SortKey.collation`` field by
+  transforming the value before the comparator sees it:
+  - ``BINARY`` (or ``None``): pass-through
+  - ``NOCASE``: ``str.lower()`` (ASCII case-insensitive)
+  - ``RTRIM``:  ``str.rstrip(' ')``
+  - Unknown name: pass-through (matches SQLite's lazy validation)
+  Non-string values (ints, floats, blobs, NULL) pass through
+  unchanged because SQLite's collations only affect TEXT
+  comparison.
+
 ## 1.49.0 — 2026-05-21
 
 ### Added

@@ -128,6 +128,11 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
                     # Preserve positional_index so ORDER BY N and ORDER BY alias
                     # continue to use index-based column lookup after folding.
                     positional_index=k.positional_index,
+                    # Preserve COLLATE name so the VM still applies the
+                    # right transform when building the sort key after
+                    # any expression folding (e.g. ``ORDER BY 'A' || x
+                    # COLLATE NOCASE``).
+                    collation=k.collation,
                 )
                 for k in keys
             )

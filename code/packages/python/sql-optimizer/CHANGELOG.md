@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.16.0] - 2026-05-22
+
+### Fixed
+
+- Constant-folding pass now preserves ``SortKey.collation`` when
+  rebuilding a Sort node.  Without this, the COLLATE clause from an
+  ``ORDER BY name COLLATE NOCASE`` query was silently dropped by the
+  optimizer before the codegen ever saw it, falling back to BINARY
+  comparison and producing wrong row ordering.
+
 ## [0.15.0] - 2026-05-21
 
 ### Added

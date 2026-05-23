@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.34.0] - 2026-05-22
+
+### Added
+
+- ``SortKey.collation: str | None`` IR field, mirroring the planner
+  side.  ``_to_ir_sort_key`` forwards the collation name from the
+  plan SortKey to the IR SortKey unchanged.  ``None`` means BINARY
+  (the default).
+
 ## [1.33.0] - 2026-05-21
 
 ### Added

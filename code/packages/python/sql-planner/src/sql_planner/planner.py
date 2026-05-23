@@ -372,6 +372,7 @@ def _plan_select(
             descending=k.descending,
             nulls_first=k.nulls_first,
             positional_index=positional_index,
+            collation=k.collation,
         )
 
     order_by = tuple(_resolve_order_key(k) for k in stmt.order_by)

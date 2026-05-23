@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.83.0] - 2026-05-22
+
+### Added
+
+- ``ORDER BY expr COLLATE name`` — collation-aware sorting,
+  byte-identical with stdlib ``sqlite3``.  Recognises SQLite's
+  three built-in collations:
+  - ``BINARY`` (default, what ``None`` means too): byte-for-byte
+  - ``NOCASE``: ASCII case-insensitive (``'A' == 'a'``)
+  - ``RTRIM``: strip trailing spaces before BINARY-comparing
+  Unknown collation names fall through to BINARY rather than
+  raising — matching SQLite's "validate lazily" approach (the user
+  may have registered a custom collation we don't know about).
+- 18 oracle tests in ``tests/test_tier3_order_by_collate.py``
+  covering all three collations, with/without DESC, with/without
+  NULLS FIRST/LAST, multi-column ORDER BY, positional
+  (``ORDER BY 1 COLLATE NOCASE``), aliased columns, mixed-case
+  word lists, NULL values, integer regression guard (collations
+  inert on non-strings), and the unknown-collation fallback.
+
+### Changed
+
+- Adapter ``_order_item`` parses the optional ``COLLATE name``
+  clause and stores it (upper-cased) on
+  ``SortKey.collation``.  The planner, optimizer, and codegen
+  thread it through unchanged; the VM ``_do_sort`` applies the
+  named transform when building the sort key.
+
 ## [1.82.0] - 2026-05-22
 
 ### Added

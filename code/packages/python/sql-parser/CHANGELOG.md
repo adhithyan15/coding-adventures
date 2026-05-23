@@ -2,6 +2,20 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.34.0] - 2026-05-22
+
+### Added
+
+- ``ORDER BY`` items accept an optional ``COLLATE name`` clause between
+  the expression and ``ASC`` / ``DESC``:
+
+      order_item = expr [ "COLLATE" NAME ] [ "ASC" | "DESC" ]
+                   [ "NULLS" NAME ] ;
+
+  The collation name is verbatim (any NAME token); validation happens
+  in downstream layers.  Regenerated ``_grammar.py`` to embed the new
+  production.
+
 ## [0.33.0] - 2026-05-22
 
 ### Added

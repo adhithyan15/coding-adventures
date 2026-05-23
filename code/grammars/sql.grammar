@@ -101,17 +101,27 @@ where_clause      = "WHERE" expr ;
 group_clause      = "GROUP" "BY" column_ref { "," column_ref } ;
 having_clause     = "HAVING" expr ;
 order_clause      = "ORDER" "BY" order_item { "," order_item } ;
-# order_item: expr followed by optional direction (ASC|DESC) and optional
-# null-placement clause (NULLS FIRST | NULLS LAST).  The null-placement
-# clause is SQLite 3.30+ syntax; mini-sqlite honours it via the planner's
-# ``SortKey.nulls_first`` field.  Omitting it falls back to SQLite's
-# defaults (NULLs first for ASC, NULLs last for DESC).
+# order_item: expr followed by optional ``COLLATE name`` clause,
+# optional direction (ASC|DESC), and optional null-placement clause
+# (NULLS FIRST | NULLS LAST).
 #
-# ``FIRST`` and ``LAST`` are intentionally NOT in the keyword list — they
-# are extremely common as column names (``first_name``, ``last``).  The
-# grammar accepts a generic NAME after NULLS; the adapter validates it
-# is one of those two literal tokens (case-insensitive).
-order_item        = expr [ "ASC" | "DESC" ]
+# The collation name (``BINARY`` / ``NOCASE`` / ``RTRIM`` in standard
+# SQLite, plus any user-registered ones) is a comparison transform
+# applied to each value before the sort comparator runs.  The
+# adapter stores the name on ``SortKey.collation`` and the VM
+# normalises values accordingly when building the sort key.
+#
+# The null-placement clause is SQLite 3.30+ syntax; mini-sqlite
+# honours it via the planner's ``SortKey.nulls_first`` field.
+# Omitting it falls back to SQLite's defaults (NULLs first for ASC,
+# NULLs last for DESC).
+#
+# ``FIRST`` and ``LAST`` are intentionally NOT in the keyword list —
+# they are extremely common as column names (``first_name``,
+# ``last``).  The grammar accepts a generic NAME after NULLS; the
+# adapter validates it is one of those two literal tokens
+# (case-insensitive).
+order_item        = expr [ "COLLATE" NAME ] [ "ASC" | "DESC" ]
                     [ "NULLS" NAME ] ;
 limit_clause      = "LIMIT" NUMBER [ "OFFSET" NUMBER ] ;
 

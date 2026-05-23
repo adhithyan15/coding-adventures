@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.37.0] - 2026-05-22
+
+### Added
+
+- ``SortKey.collation: str | None`` on both the AST
+  (``sql_planner.ast.SortKey``) and the plan
+  (``sql_planner.plan.SortKey``).  Carries SQLite's ``COLLATE name``
+  clause through to the codegen.  ``None`` means BINARY (default).
+- Planner threads ``collation`` from AST → plan SortKey unchanged.
+
 ## [0.36.0] - 2026-05-21
 
 ### Added
