@@ -484,6 +484,7 @@ members = [
     "closure-pass-constant-fold",
     "closure-pass-dce",
     "closure-pass-fold-control-flow",
+    "closure-pass-inline",
     "closure-pass-pipeline",
     "closure-pass-rename",
     "closure-typechecker",
