@@ -481,6 +481,7 @@ members = [
     "irc-server",
     "irc-net-stdlib",
     "url-parser",
+    "closure-pass-collapse-properties",
     "closure-pass-constant-fold",
     "closure-pass-dce",
     "closure-pass-fold-control-flow",
