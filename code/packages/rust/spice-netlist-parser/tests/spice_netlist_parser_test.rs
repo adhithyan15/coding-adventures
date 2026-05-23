@@ -108,6 +108,26 @@ G1 out 0 in 0 2m
 }
 
 #[test]
+fn parses_mutual_inductor_cards() {
+    let parsed = parse_netlist(
+        r#"
+Lpri p 0 10m
+Lsec s 0 40m
+Kcouple Lpri Lsec 0.75
+"#,
+    )
+    .unwrap();
+
+    let Element::MutualInductor(mutual) = &parsed.circuit.elements()[2] else {
+        panic!("expected mutual inductor");
+    };
+    assert_eq!(mutual.name, "Kcouple");
+    assert_eq!(mutual.primary, "Lpri");
+    assert_eq!(mutual.secondary, "Lsec");
+    assert_close(mutual.coupling, 0.75);
+}
+
+#[test]
 fn parses_options_analysis_cards() {
     let parsed = parse_netlist(
         r#"
@@ -939,6 +959,29 @@ Xbuf vdd in out source_follower
     assert_eq!(jfet.gate, "in");
     assert_eq!(jfet.source, "Xbuf.inner");
     assert_close(jfet.beta, 1.0e-3);
+}
+
+#[test]
+fn expands_subcircuit_mutual_inductor_refs_into_engine_elements() {
+    let parsed = parse_netlist(
+        r#"
+.subckt transformer p1 p2 s1 s2
+Lpri p1 p2 10m
+Lsec s1 s2 40m
+Kcore Lpri Lsec 0.9
+.ends transformer
+Xtx in 0 out 0 transformer
+"#,
+    )
+    .unwrap();
+
+    let Element::MutualInductor(mutual) = &parsed.circuit.elements()[2] else {
+        panic!("expected mutual inductor");
+    };
+    assert_eq!(mutual.name, "Xtx.Kcore");
+    assert_eq!(mutual.primary, "Xtx.Lpri");
+    assert_eq!(mutual.secondary, "Xtx.Lsec");
+    assert_close(mutual.coupling, 0.9);
 }
 
 #[test]

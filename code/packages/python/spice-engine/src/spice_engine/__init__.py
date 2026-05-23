@@ -16,6 +16,7 @@ from spice_engine.elements import (
     Inductor,
     JFET,
     Mosfet,
+    MutualInductor,
     PulseWaveform,
     PwlWaveform,
     Resistor,

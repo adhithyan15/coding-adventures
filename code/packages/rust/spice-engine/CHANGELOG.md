@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a public `MutualInductor` element as the parser-facing SPICE `K` card
+  foothold; coupled AC/transient stamping follows in a later compatibility
+  slice.
 - Add JFET nonlinear DC operating-point stamping and AC small-signal analysis
   from the solved DC bias point.
 - Add a public `Jfet` element and `JfetPolarity` as the parser-facing

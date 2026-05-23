@@ -2,8 +2,8 @@ use std::{collections::HashMap, fmt};
 
 use spice_engine::{
     Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element, ExpWaveform,
-    Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, Vccs, Vcvs, VoltageSource, Waveform,
+    Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor,
+    PulseWaveform, PwlWaveform, Resistor, SinWaveform, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -551,6 +551,15 @@ fn parse_element(
                 *params.get("IC").unwrap_or(&0.0),
             )))
         }
+        'K' => {
+            require_fields(fields, 4, "mutual inductor")?;
+            Ok(Element::MutualInductor(MutualInductor::new(
+                name,
+                &fields[1],
+                &fields[2],
+                parse_value(&fields[3])?,
+            )))
+        }
         'V' => {
             require_min_fields(fields, 4, "voltage source")?;
             let (voltage, waveform, ac) = parse_source_value(&fields[3..])?;
@@ -893,6 +902,11 @@ fn map_subckt_fields(
             mapped[1] = map_subckt_node(&fields[1], instance_name, node_map);
             mapped[2] = map_subckt_node(&fields[2], instance_name, node_map);
             mapped[3] = map_subckt_source_ref(&fields[3], instance_name);
+        }
+        'K' => {
+            require_fields(fields, 4, "subcircuit mutual inductor")?;
+            mapped[1] = map_subckt_source_ref(&fields[1], instance_name);
+            mapped[2] = map_subckt_source_ref(&fields[2], instance_name);
         }
         'X' => {
             for index in 1..fields.len() - 1 {

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Parse SPICE `K` mutual-inductor cards into `MutualInductor` elements,
+  including subcircuit-local inductor reference remapping.
+
 ## 0.2.0 — 2026-05-16
 
 - Parse SPICE `J` JFET elements via `.model <name> NJF(...)` and

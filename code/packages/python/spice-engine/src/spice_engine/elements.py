@@ -295,6 +295,16 @@ class Inductor:
 
 
 @dataclass(frozen=True, slots=True)
+class MutualInductor:
+    """K<name> L1 L2 coupling"""
+
+    name: str
+    primary: str
+    secondary: str
+    coupling: float
+
+
+@dataclass(frozen=True, slots=True)
 class VoltageSource:
     """V<name> n+ n- value [waveform] [ac]
 
@@ -729,6 +739,7 @@ Element = (
     Resistor
     | Capacitor
     | Inductor
+    | MutualInductor
     | VoltageSource
     | CurrentSource
     | BSource
