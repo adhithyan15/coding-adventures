@@ -254,8 +254,24 @@ def test_create_table_if_not_exists():
     assert stmt.if_not_exists is True
 
 
-def test_create_table_primary_key_implies_not_null():
+def test_create_table_primary_key_not_null_uses_effective():
+    # mini-sqlite 1.97+: PRIMARY KEY no longer forces the raw
+    # ``not_null`` flag to True — the adapter leaves it False so
+    # PRAGMA table_info's notnull column can distinguish explicit
+    # NOT NULL from PK-implied NOT NULL (matches SQLite).  The
+    # ``effective_not_null()`` helper reapplies the PK check at
+    # constraint-validation time, so behaviour is unchanged.
     stmt = adapt("CREATE TABLE t (id INTEGER PRIMARY KEY)")
+    col = stmt.columns[0]
+    assert col.primary_key is True
+    assert col.not_null is False  # raw flag — was True pre-1.97
+    assert col.effective_not_null() is True  # PK still implies NOT NULL
+
+
+def test_create_table_explicit_not_null_primary_key():
+    # When the user writes both PRIMARY KEY AND NOT NULL, the raw
+    # flag IS set — only the implicit case from PK alone was changed.
+    stmt = adapt("CREATE TABLE t (id INTEGER PRIMARY KEY NOT NULL)")
     col = stmt.columns[0]
     assert col.primary_key is True
     assert col.not_null is True

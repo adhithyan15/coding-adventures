@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.97.0] - 2026-05-23
+
+### Changed
+
+- ``PRAGMA table_info`` now matches real ``sqlite3`` exactly:
+
+  * ``notnull`` distinguishes explicit ``NOT NULL`` from the implicit
+    ``NOT NULL`` that ``PRIMARY KEY`` introduces — ``CREATE TABLE t
+    (id INTEGER PRIMARY KEY)`` reports ``notnull=0``, while
+    ``... PRIMARY KEY NOT NULL`` reports ``notnull=1``.  Runtime
+    NOT NULL enforcement is unchanged — the backend still treats PK
+    as implicit NOT NULL (TEXT PK still rejects ``INSERT VALUES
+    (NULL, ...)``, INTEGER PK still auto-assigns the next rowid).
+  * ``dflt_value`` returns the literal source text instead of the
+    parsed Python value: ``DEFAULT 42`` → ``'42'``, ``DEFAULT 'x'``
+    → ``"'x'"`` (single quotes preserved), ``DEFAULT NULL`` →
+    ``'NULL'``, ``DEFAULT 3.14`` → ``'3.14'``.  ``X'hex'`` BLOB
+    literals also round-trip.
+
+- The adapter no longer sets ``not_null=True`` for PRIMARY KEY columns
+  (the codegen now reads the raw flag through to the backend).
+  Internal ``effective_not_null()`` continues to OR the PK bit in for
+  constraint validation.
+
 ## [1.96.0] - 2026-05-23
 
 ### Added
