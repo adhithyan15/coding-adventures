@@ -480,6 +480,7 @@ members = [
     "irc-server",
     "irc-net-stdlib",
     "url-parser",
+    "closure-typechecker",
     "compiler-ir",
     "compiler-source-map",
     "brainfuck-ir-compiler",
