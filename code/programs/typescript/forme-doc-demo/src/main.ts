@@ -131,7 +131,25 @@ export function validateOutDir(outDir: string, cwd: string): void {
   // Strip trailing separators from BOTH sides so `c:\` matches
   // `C:\` matches `C:` — avoids accidentally allowing through a
   // trailing-separator variant of a banned path.
-  const stripTrailing = (s: string): string => s.replace(/[\\\/]+$/u, "");
+  //
+  // Explicit charCodeAt loop (no regex) to satisfy CodeQL's
+  // `js/polynomial-redos` rule, which flags `+`-quantified
+  // regexes on user input regardless of actual polynomial
+  // behaviour.  Matches the project-wide convention established
+  // by sidebar-builder/page-shell after the same rule fired
+  // there.
+  const stripTrailing = (s: string): string => {
+    let end = s.length;
+    while (end > 0) {
+      const c = s.charCodeAt(end - 1);
+      if (c === 0x2f /* "/" */ || c === 0x5c /* "\" */) {
+        end--;
+      } else {
+        break;
+      }
+    }
+    return end === s.length ? s : s.slice(0, end);
+  };
   const norm = stripTrailing(outDir);
   for (const b of bannedUnix) {
     if (norm === stripTrailing(b) || outDir === b) {
