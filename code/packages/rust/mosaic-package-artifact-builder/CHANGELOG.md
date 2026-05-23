@@ -3,6 +3,30 @@
 All notable changes to `mosaic-package-artifact-builder` will be documented
 in this file.
 
+## [Unreleased] — Flutter backend wired
+
+Adds `Backend::Flutter` so userland packages now compile to seven
+backends total (the new Flutter target alongside the existing six).
+
+### Added
+
+- `Backend::Flutter` enum variant.
+- Dispatch arm in `compile_one_component` calls
+  `mosaic_emit_flutter::pipeline::from_pipeline`.
+- `index.dart` aggregator that re-exports each component file
+  (`export 'X.dart';` per component).
+- Minimal `pubspec.yaml` so `flutter pub get` recognises the
+  generated directory as a Flutter package. Package name is the
+  kebab-case manifest name with `-` rewritten to `_` (Dart's
+  package-name convention).
+- `flutter_backend_writes_dart_per_component_with_pubspec` test.
+- `multi_component_builds_on_all_newer_backends` (renamed from
+  `_on_html_webcomponent_xaml`) now also exercises Flutter so a
+  regression in any of the four newer backends fails fast.
+- New `mosaic-emit-flutter` Cargo dep.
+
+Test count: 23 → 24 passing.
+
 ## [Unreleased] — full backend coverage (HTML, WebComponent, XAML)
 
 The first cut shipped React / SwiftUI / Qt and returned
