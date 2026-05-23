@@ -82,8 +82,8 @@ fn manifest_declares_expected_exports() {
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
     assert_eq!(
-        version, "0.1.0",
-        "[package].version must be 0.1.0 for the v0.1 PR-1 release"
+        version, "0.3.0",
+        "[package].version must be 0.3.0 for the UI29-2 Checkbox/Radio rewrite"
     );
 
     let exports = value
@@ -249,28 +249,45 @@ fn input_interface_matches_spec() {
     assert_eq!(emit_names, vec!["onChange", "onCommit"]);
 }
 
-/// Checkbox — toggle button + label, host-owned state.
+/// Checkbox v0.3 — native `HostCheckbox` wrapper with optional
+/// `indeterminate` slot. Breaking changes from v0.2 documented in
+/// CHANGELOG: `onChange` now carries `checked: bool`, and the slot
+/// roster grew an `indeterminate` slot.
 #[test]
 fn checkbox_interface_matches_spec() {
     let mil_src = read_source("Checkbox.mil");
     let out = mosmodel_compiler::compile(&mil_src).unwrap();
     let c = &out.component;
     let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
-    assert_eq!(slot_names, vec!["label", "checked", "disabled"]);
+    assert_eq!(slot_names, vec!["label", "checked", "disabled", "indeterminate"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onChange"]);
+    // v0.3 — onChange now carries a `checked: bool` parameter.
+    let on_change = c.emits.iter().find(|e| e.name == "onChange").unwrap();
+    let param_names: Vec<&str> = on_change.params.iter().map(|p| p.name.as_str()).collect();
+    assert_eq!(param_names, vec!["checked"]);
 }
 
-/// Radio — single-select toggle, host owns group state.
+/// Radio v0.3 — native `HostRadio` wrapper. Breaking changes from
+/// v0.2: `selected` renamed to `checked` (consistent with HostRadio
+/// and Checkbox); new `value` and `group` slots; `onSelect` carries
+/// `value: text` payload.
 #[test]
 fn radio_interface_matches_spec() {
     let mil_src = read_source("Radio.mil");
     let out = mosmodel_compiler::compile(&mil_src).unwrap();
     let c = &out.component;
     let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
-    assert_eq!(slot_names, vec!["label", "selected", "disabled"]);
+    assert_eq!(
+        slot_names,
+        vec!["label", "checked", "value", "group", "disabled"]
+    );
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onSelect"]);
+    // v0.3 — onSelect now carries a `value: text` parameter.
+    let on_select = c.emits.iter().find(|e| e.name == "onSelect").unwrap();
+    let param_names: Vec<&str> = on_select.params.iter().map(|p| p.name.as_str()).collect();
+    assert_eq!(param_names, vec!["value"]);
 }
 
 /// ListGroup — vertical list of selectable text rows. Iterates via For.
