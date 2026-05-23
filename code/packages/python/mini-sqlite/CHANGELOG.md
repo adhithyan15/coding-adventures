@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.95.0] - 2026-05-23
+
+### Added
+
+- ``SELECT ... FROM sqlite_sequence`` now returns the high-water
+  rowid for each AUTOINCREMENT table — completes the AUTOINCREMENT
+  story started in 1.94.  The table materializes lazily: ``SELECT
+  * FROM sqlite_sequence`` on a fresh database errors with
+  "no such table" until at least one AUTOINCREMENT table is created
+  (matches SQLite).
+- ``CREATE TABLE sqlite_sequence``, ``DROP TABLE sqlite_sequence``,
+  and ``INSERT INTO sqlite_sequence`` are rejected with the same
+  reserved-name guard as ``sqlite_master``.
+
 ## [1.94.0] - 2026-05-23
 
 ### Added
