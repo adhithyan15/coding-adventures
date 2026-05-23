@@ -1052,6 +1052,13 @@ fn emit_xaml_node(
         // PR-3: Host* primitives (single-element host-native controls).
         "HostInput" => emit_host_input(node, indent, part_styles, ctx),
         "HostButton" => emit_host_button(node, indent, part_styles, ctx),
+
+        // UI29-2 — `HostCheckbox` lowers to WinUI/WPF `<CheckBox>` and
+        // `HostRadio` lowers to `<RadioButton>`. Both controls share
+        // the `IsChecked` / `IsEnabled` / `Content` property surface
+        // with `<Button>`, plus their own checked-state events.
+        "HostCheckbox" => emit_host_checkbox(node, indent, part_styles, ctx),
+        "HostRadio" => emit_host_radio(node, indent, part_styles, ctx),
         "HostScroll" => emit_host_scroll(node, indent, part_styles, ctx),
 
         // PR-4: HostTable.
@@ -3303,6 +3310,315 @@ fn emit_host_button(
     Ok(format!(
         "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}/>\n"
     ))
+}
+
+/// `HostCheckbox` → WinUI / WPF `<CheckBox>` per UI29-2.
+///
+/// ## Property handling
+///
+/// | moslayout prop          | XAML                                                        |
+/// |---|---|
+/// | `checked: slot: c`      | `IsChecked="{x:Bind C, Mode=OneWay}"`                       |
+/// | `checked: true/false`   | `IsChecked="True"` / `IsChecked="False"`                    |
+/// | `disabled: slot: d`     | `IsEnabled="{x:Bind Not(D)}"` (shared Not(bool) helper)     |
+/// | `disabled: true/false`  | `IsEnabled="False"` / `IsEnabled="True"`                    |
+/// | `indeterminate: slot:i` | `IsThreeState="True"` + binding via code-behind             |
+/// | `label: str / slot`     | `Content="..."` / `Content="{x:Bind Label}"`                |
+/// | `onToggle: emit: onX`   | `Checked="X_Checked" Unchecked="X_Unchecked"` handler pair  |
+///
+/// ## Checked vs. Unchecked event split
+///
+/// WinUI's `<CheckBox>` has separate `Checked(object, RoutedEventArgs)`
+/// and `Unchecked(object, RoutedEventArgs)` events — there is no
+/// "toggled with new value" combined event. We register **two**
+/// code-behind handlers per `onToggle` binding: `<X>_Checked` fires
+/// `Dispatch(.x(checked: true))` and `<X>_Unchecked` fires
+/// `Dispatch(.x(checked: false))`. This matches the kernel-canonical
+/// `onToggle(checked: bool)` signature exactly.
+///
+/// (`Indeterminate` event is intentionally NOT wired — the tri-state
+/// case only fires `Indeterminate` when the user clicks through to the
+/// third state, which is a UX choice the host can drive via the
+/// `indeterminate:` slot. v1 ignores `Indeterminate` events.)
+fn emit_host_checkbox(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let style = part_style_attr(node, part_styles);
+    let x_name = host_x_name(node, "HostCheckbox", ctx);
+
+    let mut attrs = String::new();
+
+    // Content (label).
+    match find_prop_value(node, "label") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
+        }
+        Some(LayoutPropValue::String(s)) => {
+            attrs.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(s)));
+        }
+        Some(LayoutPropValue::Keyword(k)) => {
+            attrs.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(k)));
+        }
+        _ => {}
+    }
+
+    // IsChecked from `checked:`.
+    match find_prop_value(node, "checked") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            attrs.push_str(&format!(" IsChecked=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            attrs.push_str(" IsChecked=\"True\"");
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {
+            attrs.push_str(" IsChecked=\"False\"");
+        }
+        _ => {}
+    }
+
+    // IsEnabled from `disabled:` (polarity flip; reuses HostButton's
+    // Not(bool) helper).
+    match find_prop_value(node, "disabled") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            ctx.add_helper(HelperMethod {
+                name: "Not".to_string(),
+                parameters: vec![("b".to_string(), "bool".to_string())],
+                return_type: "bool".to_string(),
+                body: "!b".to_string(),
+            });
+            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind Not({pascal})}}\""));
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            attrs.push_str(" IsEnabled=\"False\"");
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {
+            attrs.push_str(" IsEnabled=\"True\"");
+        }
+        _ => {}
+    }
+
+    // IsThreeState + tri-state from `indeterminate:`. The visual
+    // tri-state is enabled by `IsThreeState="True"`; the actual
+    // "show as indeterminate" toggle is driven via code-behind reading
+    // the bound slot. v1 emits the bare IsThreeState attr; the host
+    // owns IsChecked transitions.
+    let enable_three_state = match find_prop_value(node, "indeterminate") {
+        Some(LayoutPropValue::SlotRef(_)) => true,
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => true,
+        _ => false,
+    };
+    if enable_three_state {
+        attrs.push_str(" IsThreeState=\"True\"");
+    }
+
+    // Checked + Unchecked handlers from `onToggle:`. WinUI splits the
+    // toggle into two events; we wire both to dispatch with the
+    // matching `checked: bool` payload value (true for Checked, false
+    // for Unchecked) so the kernel-canonical UI29-2 §2.2 emit signature
+    // is satisfied.
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onToggle") {
+        let emit_case = strip_on_prefix(emit_name);
+        let case_pascal = kebab_to_pascal_case(&emit_case);
+        let component = ctx.component_name;
+
+        let checked_handler = format!("{x_name}_Checked");
+        let checked_body = format!(
+            "    private void {checked_handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}(true));\n    }}"
+        );
+        ctx.add_host_handler(HostHandler {
+            name: checked_handler.clone(),
+            source: checked_body,
+        });
+
+        let unchecked_handler = format!("{x_name}_Unchecked");
+        let unchecked_body = format!(
+            "    private void {unchecked_handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}(false));\n    }}"
+        );
+        ctx.add_host_handler(HostHandler {
+            name: unchecked_handler.clone(),
+            source: unchecked_body,
+        });
+
+        attrs.push_str(&format!(
+            " Checked=\"{checked_handler}\" Unchecked=\"{unchecked_handler}\""
+        ));
+    }
+
+    Ok(format!(
+        "{pad}<CheckBox x:Name=\"{x_name}\"{attrs}{style}/>\n"
+    ))
+}
+
+/// `HostRadio` → WinUI / WPF `<RadioButton>` per UI29-2.
+///
+/// ## Property handling
+///
+/// | moslayout prop          | XAML                                                       |
+/// |---|---|
+/// | `checked: slot: c`      | `IsChecked="{x:Bind C, Mode=OneWay}"`                      |
+/// | `group: "..."`          | `GroupName="..."` — WinUI's native radio-mutex attribute   |
+/// | `group: slot: g`        | `GroupName="{x:Bind G}"`                                   |
+/// | `value: ... / slot:`    | recorded in source as a `<!-- value: ... -->` annotation   |
+/// | `disabled: ...`         | `IsEnabled` — same shape as HostCheckbox                   |
+/// | `label: ...`            | `Content=...` — same shape as HostCheckbox                 |
+/// | `onSelect: emit: onX`   | `Checked="X_Checked"` (only — Unchecked is silent)         |
+///
+/// ## Group mutex
+///
+/// WinUI's `<RadioButton GroupName="...">` provides true radio-group
+/// behavior at the XAML level: setting `IsChecked="True"` on any
+/// member automatically deselects the other members. This matches
+/// UI29-2's design exactly (browser-level mutex in HTML, ButtonGroup
+/// in QtQuick, etc.). No `RadioGroup` synthesis needed.
+///
+/// ## `onSelect` fires only on Checked
+///
+/// Per UI29-2 §2.2, `onSelect = "this radio was chosen"`. We wire
+/// **only** the `Checked` event — `Unchecked` (sibling-caused
+/// deselect) is intentionally not handled.
+///
+/// ## `value` is recorded as a comment for v1
+///
+/// WinUI's `<RadioButton>` has no built-in `Value` property. The
+/// emitted code-behind handler dispatches `.x(value: "<lit>")` (string
+/// literal) or `.x(value: this.<Pascal>)` (slot ref) directly — see
+/// the handler emission below.
+fn emit_host_radio(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let style = part_style_attr(node, part_styles);
+    let x_name = host_x_name(node, "HostRadio", ctx);
+
+    let mut attrs = String::new();
+
+    // Content (label).
+    match find_prop_value(node, "label") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
+        }
+        Some(LayoutPropValue::String(s)) => {
+            attrs.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(s)));
+        }
+        Some(LayoutPropValue::Keyword(k)) => {
+            attrs.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(k)));
+        }
+        _ => {}
+    }
+
+    // GroupName from `group:` — native WinUI radio-mutex.
+    match find_prop_value(node, "group") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            attrs.push_str(&format!(" GroupName=\"{{x:Bind {pascal}}}\""));
+        }
+        Some(LayoutPropValue::String(s)) => {
+            attrs.push_str(&format!(" GroupName=\"{}\"", escape_xaml_attr(s)));
+        }
+        _ => {}
+    }
+
+    // IsChecked from `checked:`.
+    match find_prop_value(node, "checked") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            attrs.push_str(&format!(" IsChecked=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            attrs.push_str(" IsChecked=\"True\"");
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {
+            attrs.push_str(" IsChecked=\"False\"");
+        }
+        _ => {}
+    }
+
+    // IsEnabled from `disabled:` (same as HostCheckbox / HostButton).
+    match find_prop_value(node, "disabled") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            ctx.add_helper(HelperMethod {
+                name: "Not".to_string(),
+                parameters: vec![("b".to_string(), "bool".to_string())],
+                return_type: "bool".to_string(),
+                body: "!b".to_string(),
+            });
+            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind Not({pascal})}}\""));
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            attrs.push_str(" IsEnabled=\"False\"");
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {
+            attrs.push_str(" IsEnabled=\"True\"");
+        }
+        _ => {}
+    }
+
+    // Checked handler from `onSelect:`. Pre-compute the value: payload
+    // (C# string literal or property reference) so the handler body
+    // dispatches the right shape.
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onSelect") {
+        let value_expr: String = match find_prop_value(node, "value") {
+            Some(LayoutPropValue::String(s)) => format!("\"{}\"", escape_csharp_string(s)),
+            Some(LayoutPropValue::SlotRef(slot)) => {
+                let pascal = kebab_to_pascal_case(slot);
+                format!("this.{pascal}")
+            }
+            _ => "\"\"".to_string(),
+        };
+
+        let emit_case = strip_on_prefix(emit_name);
+        let case_pascal = kebab_to_pascal_case(&emit_case);
+        let component = ctx.component_name;
+        let handler = format!("{x_name}_Checked");
+        let body = format!(
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}({value_expr}));\n    }}"
+        );
+        ctx.add_host_handler(HostHandler {
+            name: handler.clone(),
+            source: body,
+        });
+        attrs.push_str(&format!(" Checked=\"{handler}\""));
+    }
+
+    Ok(format!(
+        "{pad}<RadioButton x:Name=\"{x_name}\"{attrs}{style}/>\n"
+    ))
+}
+
+/// Escape a Rust string for embedding inside a C# double-quoted
+/// string literal. Same minimal rule as `escape_swift_string`:
+/// backslash and double-quote.
+///
+/// This is the C# escaper used by the HostRadio handler body
+/// generator; existing XAML emitters that escape for XML attributes
+/// (`escape_xaml_attr`) don't fit here because the target is a C#
+/// string literal in code-behind, not an XML attribute value.
+fn escape_csharp_string(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for c in s.chars() {
+        match c {
+            '\\' => out.push_str("\\\\"),
+            '"' => out.push_str("\\\""),
+            // C# string literals do allow embedded \n in non-verbatim
+            // strings, but they translate to actual newlines at runtime
+            // and don't pose an injection risk inside a string-literal
+            // context. We leave them alone.
+            other => out.push(other),
+        }
+    }
+    out
 }
 
 /// `HostScroll` → `<ScrollViewer>` per spec §4.3.
@@ -6709,5 +7025,299 @@ mod tests {
             r.xaml
         );
         assert!(r.xaml.contains("<ContentDialog"), "got:\n{}", r.xaml);
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // UI29-2 — HostCheckbox + HostRadio
+    // ─────────────────────────────────────────────────────────────────
+
+    /// Helper: a one-component layout def rooted at a `HostCheckbox`.
+    /// The HostCheckbox itself is wrapped in a `Box` root so the XAML
+    /// root-shape selector treats it as a normal in-flow widget (the
+    /// HostDialog-special-cased "root is dialog → ContentDialog" rule
+    /// doesn't fire).
+    fn checkbox_in_box(props: Vec<LayoutProp>) -> LayoutDef {
+        layout_with_root(
+            "X",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "HostCheckbox".to_string(),
+                    part_name: None,
+                    props,
+                    children: Vec::new(),
+                }],
+            },
+        )
+    }
+
+    /// Helper mirror for HostRadio.
+    fn radio_in_box(props: Vec<LayoutProp>) -> LayoutDef {
+        layout_with_root(
+            "X",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "HostRadio".to_string(),
+                    part_name: None,
+                    props,
+                    children: Vec::new(),
+                }],
+            },
+        )
+    }
+
+    /// UI29-2 XAML test 1 — bare HostCheckbox emits a `<CheckBox>`
+    /// self-closing element with only the auto-assigned x:Name.
+    #[test]
+    fn host_checkbox_empty_emits_checkbox_with_xname() {
+        let c = component("X", vec![], vec![]);
+        let l = checkbox_in_box(vec![]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml.contains("<CheckBox x:Name="),
+            "expected `<CheckBox x:Name=...>`, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// UI29-2 XAML test 2 — `checked: slot: c` emits
+    /// `IsChecked="{x:Bind C, Mode=OneWay}"` (PascalCased slot, OneWay
+    /// binding mirroring HostInput/HostButton's slot-binding form).
+    #[test]
+    fn host_checkbox_checked_slot_emits_xbind_isChecked() {
+        let c = component("X", vec![slot("is-checked", SlotType::Bool, true)], vec![]);
+        let l = checkbox_in_box(vec![LayoutProp {
+            name: "checked".to_string(),
+            value: LayoutPropValue::SlotRef("is-checked".to_string()),
+        }]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml.contains("IsChecked=\"{x:Bind IsChecked, Mode=OneWay}\""),
+            "expected `IsChecked=\"{{x:Bind IsChecked, Mode=OneWay}}\"`, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// UI29-2 XAML test 3 — `label: "Agree"` flows into the
+    /// `Content="..."` attribute (XAML's analog of children for
+    /// content controls).
+    #[test]
+    fn host_checkbox_string_label_emits_content_literal() {
+        let c = component("X", vec![], vec![]);
+        let l = checkbox_in_box(vec![LayoutProp {
+            name: "label".to_string(),
+            value: LayoutPropValue::String("Agree".to_string()),
+        }]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml.contains("Content=\"Agree\""),
+            "expected `Content=\"Agree\"`, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// UI29-2 XAML test 4 — `disabled: slot: d` reuses HostButton's
+    /// `Not(bool)` helper to flip polarity into the XAML-native
+    /// `IsEnabled` property.
+    #[test]
+    fn host_checkbox_disabled_slot_uses_not_helper_for_is_enabled() {
+        let c = component("X", vec![slot("locked", SlotType::Bool, true)], vec![]);
+        let l = checkbox_in_box(vec![LayoutProp {
+            name: "disabled".to_string(),
+            value: LayoutPropValue::SlotRef("locked".to_string()),
+        }]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml.contains("IsEnabled=\"{x:Bind Not(Locked)}\""),
+            "expected `IsEnabled=\"{{x:Bind Not(Locked)}}\"`, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// UI29-2 XAML test 5 — `onToggle: emit: onChange` wires BOTH the
+    /// `Checked` and `Unchecked` events to code-behind handlers that
+    /// dispatch with the matching `checked: bool` payload (true for
+    /// Checked, false for Unchecked). Matches UI29-2 §2.2's kernel-
+    /// canonical onToggle(checked: bool) signature.
+    #[test]
+    fn host_checkbox_on_toggle_emits_checked_and_unchecked_handler_pair() {
+        let c = component(
+            "X",
+            vec![],
+            vec![EmitDecl {
+                name: "onChange".to_string(),
+                params: vec![EmitParam {
+                    name: "checked".to_string(),
+                    r#type: EmitPayloadType::Bool,
+                }],
+            }],
+        );
+        let l = checkbox_in_box(vec![LayoutProp {
+            name: "onToggle".to_string(),
+            value: LayoutPropValue::EmitRef("onChange".to_string()),
+        }]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml.contains("Checked=\""),
+            "expected `Checked=...` attribute, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("Unchecked=\""),
+            "expected `Unchecked=...` attribute, got:\n{}",
+            r.xaml
+        );
+        // Both handlers should appear in the code-behind. The Checked
+        // handler dispatches true, the Unchecked handler dispatches
+        // false — matching the kernel-canonical checked: bool payload.
+        assert!(
+            r.code_behind.contains("XEvent.Change(true)"),
+            "expected `XEvent.Change(true)` in code-behind, got:\n{}",
+            r.code_behind
+        );
+        assert!(
+            r.code_behind.contains("XEvent.Change(false)"),
+            "expected `XEvent.Change(false)` in code-behind, got:\n{}",
+            r.code_behind
+        );
+    }
+
+    /// UI29-2 XAML test 6 — `indeterminate: true` (or any slot ref)
+    /// adds `IsThreeState="True"` so the visual tri-state mode is on.
+    /// The actual `IsChecked = null` toggle is the host's job via the
+    /// bound slot — WinUI doesn't have a "show as indeterminate"
+    /// attribute, only the tri-state-enabled flag.
+    #[test]
+    fn host_checkbox_indeterminate_keyword_enables_three_state() {
+        let c = component("X", vec![], vec![]);
+        let l = checkbox_in_box(vec![LayoutProp {
+            name: "indeterminate".to_string(),
+            value: LayoutPropValue::Keyword("true".to_string()),
+        }]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml.contains("IsThreeState=\"True\""),
+            "expected `IsThreeState=\"True\"`, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// UI29-2 XAML test 7 — bare HostRadio emits a `<RadioButton>`
+    /// self-closing element with only x:Name.
+    #[test]
+    fn host_radio_empty_emits_radio_button_with_xname() {
+        let c = component("X", vec![], vec![]);
+        let l = radio_in_box(vec![]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml.contains("<RadioButton x:Name="),
+            "expected `<RadioButton x:Name=...>`, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// UI29-2 XAML test 8 — `group: "flavor"` lowers to WinUI's native
+    /// `GroupName="flavor"` attribute. WinUI auto-deselects siblings
+    /// sharing GroupName when one IsChecked goes true — true radio-
+    /// group behavior at the XAML level (matches UI29-2's design).
+    #[test]
+    fn host_radio_group_string_emits_group_name_attribute() {
+        let c = component("X", vec![], vec![]);
+        let l = radio_in_box(vec![LayoutProp {
+            name: "group".to_string(),
+            value: LayoutPropValue::String("flavor".to_string()),
+        }]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml.contains("GroupName=\"flavor\""),
+            "expected `GroupName=\"flavor\"`, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// UI29-2 XAML test 9 — `onSelect: emit: onPick` + `value:
+    /// "vanilla"` wires ONLY the Checked event (Unchecked is silent —
+    /// sibling-caused deselects don't fire onSelect, per UI29-2 §2.2).
+    /// The code-behind dispatches XEvent.Pick("vanilla") via the
+    /// generated C# string-literal payload.
+    #[test]
+    fn host_radio_on_select_with_string_value_dispatches_literal() {
+        let c = component(
+            "X",
+            vec![],
+            vec![EmitDecl {
+                name: "onPick".to_string(),
+                params: vec![EmitParam {
+                    name: "value".to_string(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            }],
+        );
+        let l = radio_in_box(vec![
+            LayoutProp {
+                name: "value".to_string(),
+                value: LayoutPropValue::String("vanilla".to_string()),
+            },
+            LayoutProp {
+                name: "onSelect".to_string(),
+                value: LayoutPropValue::EmitRef("onPick".to_string()),
+            },
+        ]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml.contains("Checked=\""),
+            "expected Checked= attribute, got:\n{}",
+            r.xaml
+        );
+        // Onunchecked NOT wired — sibling deselects are silent.
+        assert!(
+            !r.xaml.contains("Unchecked=\""),
+            "Unchecked must NOT be wired for HostRadio onSelect, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind.contains("XEvent.Pick(\"vanilla\")"),
+            "expected `XEvent.Pick(\"vanilla\")` C# dispatch, got:\n{}",
+            r.code_behind
+        );
+    }
+
+    /// UI29-2 XAML test 10 — `value: slot: v` flows the camelCased
+    /// slot identifier into the dispatch as `this.<Pascal>` so the
+    /// runtime value drives the payload.
+    #[test]
+    fn host_radio_on_select_with_slot_value_dispatches_property_ref() {
+        let c = component(
+            "X",
+            vec![slot("radio-value", SlotType::Text, true)],
+            vec![EmitDecl {
+                name: "onPick".to_string(),
+                params: vec![EmitParam {
+                    name: "value".to_string(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            }],
+        );
+        let l = radio_in_box(vec![
+            LayoutProp {
+                name: "value".to_string(),
+                value: LayoutPropValue::SlotRef("radio-value".to_string()),
+            },
+            LayoutProp {
+                name: "onSelect".to_string(),
+                value: LayoutPropValue::EmitRef("onPick".to_string()),
+            },
+        ]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.code_behind.contains("XEvent.Pick(this.RadioValue)"),
+            "expected `XEvent.Pick(this.RadioValue)` runtime dispatch, got:\n{}",
+            r.code_behind
+        );
     }
 }
