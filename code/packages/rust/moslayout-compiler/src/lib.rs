@@ -100,19 +100,32 @@ const PRIMITIVES: &[&str] = &[
     // (currently both nodes coexist as siblings in `children`).
     "If",
     "Else",
-    // UI29 §2.1 / UI29-1 / UI29-2 — host primitives. Each lowers to the
-    // host platform's native widget (DOM <input>, SwiftUI TextField, Qt
-    // TextInput, etc.). HostDialog (UI29-1) is the 16th kernel
-    // primitive, added after mosaic-pkg-dialog v0.1.0 exposed the need
-    // for a native dialog primitive with modal/focus/top-layer/
-    // accessibility semantics that composition cannot provide.
-    // HostCheckbox and HostRadio (UI29-2) are the 17th and 18th, added
-    // after mosaic-pkg-toolkit's Checkbox/Radio were found to be fake
-    // HostButton wrappers — losing native a11y role, checked-state
-    // visuals (tri-state, focus ring), and keyboard semantics that
-    // only the platform's real checkbox/radio widget provides.
+    // UI29 §2.1 / UI29-1 / UI29-2 / UI29-4 — host primitives. Each
+    // lowers to the host platform's native widget (DOM <input>,
+    // SwiftUI TextField, Qt TextInput, etc.). HostDialog (UI29-1) is
+    // the 16th kernel primitive, added after mosaic-pkg-dialog v0.1.0
+    // exposed the need for a native dialog primitive with modal/focus/
+    // top-layer/accessibility semantics that composition cannot
+    // provide.
+    // HostCheckbox and HostRadio (UI29-2) are the 17th and 18th,
+    // added after mosaic-pkg-toolkit's Checkbox/Radio were found to
+    // be fake HostButton wrappers — losing native a11y role,
+    // checked-state visuals (tri-state, focus ring), and keyboard
+    // semantics that only the platform's real checkbox/radio widget
+    // provides.
+    // HostLink, HostTooltip, and HostNumberInput (UI29-4) are the
+    // 19th, 20th, and 21st. HostLink closes the only remaining fake-
+    // X pattern in the toolkit (Breadcrumb + Nav fake `<a>` via
+    // HostButton, losing role="link", Ctrl-click new-tab, visited-
+    // state). HostTooltip wraps a single child with a platform-native
+    // hover/long-press tooltip with proper aria-describedby wiring.
+    // HostNumberInput exposes numeric-only entry with mobile numeric
+    // keyboard, ± stepper buttons (Qt SpinBox / WinUI NumberBox), and
+    // min/max validation. See code/specs/UI29-4-form-and-nav-
+    // candidates-survey.md for the full inclusion-criteria audit.
     "HostInput", "HostButton", "HostTable", "HostScroll", "HostDialog",
     "HostCheckbox", "HostRadio",
+    "HostLink", "HostTooltip", "HostNumberInput",
 ];
 
 fn is_primitive(tag: &str) -> bool {
@@ -2086,10 +2099,17 @@ mod tests {
     ///
     /// UI29-2 — `HostCheckbox` and `HostRadio` joined as primitives 17 and
     /// 18 after `mosaic-pkg-toolkit`'s Checkbox/Radio were found to be
-    /// fake `HostButton` wrappers. They lose the platform-native a11y
-    /// role, checked-state visuals, and keyboard semantics that only the
-    /// real checkbox/radio widget provides — composition can't recover
-    /// them. The kernel now stands at 18 primitives.
+    /// fake `HostButton` wrappers.
+    ///
+    /// UI29-4 — `HostLink`, `HostTooltip`, and `HostNumberInput` joined as
+    /// primitives 19, 20, and 21 after the post-UI29-2 toolkit audit
+    /// identified Breadcrumb and Nav as the only remaining fake-X
+    /// patterns (both faking `<a>` via `HostButton`). HostTooltip and
+    /// HostNumberInput were promoted in the same batch because their
+    /// per-backend native-widget shape varies enough (e.g. Qt's `SpinBox`
+    /// with built-in ± buttons, mobile platforms' `inputmode="numeric"`
+    /// keyboard) that userland composition couldn't reach parity.
+    /// The kernel now stands at 21 primitives.
     #[test]
     fn host_dialog_and_friends_in_primitives() {
         assert!(PRIMITIVES.contains(&"HostInput"));
@@ -2107,6 +2127,18 @@ mod tests {
         assert!(
             PRIMITIVES.contains(&"HostRadio"),
             "UI29-2 added HostRadio as the 18th kernel primitive"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostLink"),
+            "UI29-4 added HostLink as the 19th kernel primitive"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostTooltip"),
+            "UI29-4 added HostTooltip as the 20th kernel primitive"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostNumberInput"),
+            "UI29-4 added HostNumberInput as the 21st kernel primitive"
         );
     }
 
