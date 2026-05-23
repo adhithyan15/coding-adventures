@@ -145,6 +145,10 @@ handling without duplicating lifecycle branching.
 transport effects: whether to dispatch a callback, emit a drop notice, emit a
 result, remove a queue item, keep cooperative dispatch scheduled, and what the
 queue depth is after the effect.
+`input_callback_transport_report_summary` turns those effects into stable
+transport report kinds, names, labels, queue-depth metadata, and messages, so
+adapters can log or emit callback dispatch, drop, completion, running,
+budget-exhausted, and failure reports without owning that branching.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
