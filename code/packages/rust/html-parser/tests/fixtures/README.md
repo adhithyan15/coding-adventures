@@ -11,8 +11,9 @@ without inventing a Rust-only test schema.
 
 `html-browser-readiness.json` is a checked parser acceptance corpus for
 browser-facing extraction. It verifies that broad HTML documents produce stable
-title, base URL, body text, heading, link, image, form, and table facts that a
-browser pipeline can consume before layout and Paint VM rendering.
+title, base URL/target, metadata, resource, anchor, body text, heading, link,
+image, form, and table facts that a browser pipeline can consume before layout
+and Paint VM rendering.
 
 Validate the checked-in smoke fixture's case boundaries and metadata with:
 

@@ -797,12 +797,44 @@ pub fn parse_html_fragment_for_context_with_diagnostics_and_options(
 pub struct BrowserDocument {
     pub title: Option<String>,
     pub base_href: Option<String>,
+    pub base_target: Option<String>,
     pub body_text: String,
+    pub metas: Vec<BrowserMeta>,
+    pub resources: Vec<BrowserResource>,
+    pub anchors: Vec<BrowserAnchor>,
     pub headings: Vec<BrowserHeading>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
     pub forms: Vec<BrowserForm>,
     pub tables: Vec<BrowserTable>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMeta {
+    pub name: Option<String>,
+    pub http_equiv: Option<String>,
+    pub property: Option<String>,
+    pub charset: Option<String>,
+    pub content: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserResource {
+    pub kind: String,
+    pub url: String,
+    pub rel: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub title: Option<String>,
+    pub async_script: bool,
+    pub defer_script: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAnchor {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub text: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -815,6 +847,9 @@ pub struct BrowserHeading {
 pub struct BrowserLink {
     pub href: Option<String>,
     pub name: Option<String>,
+    pub target: Option<String>,
+    pub rel: Option<String>,
+    pub title: Option<String>,
     pub text: String,
 }
 
@@ -830,6 +865,8 @@ pub struct BrowserImage {
 pub struct BrowserForm {
     pub action: Option<String>,
     pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
     pub controls: Vec<BrowserFormControl>,
 }
 
@@ -838,6 +875,8 @@ pub struct BrowserFormControl {
     pub control_type: String,
     pub name: Option<String>,
     pub value: Option<String>,
+    pub disabled: bool,
+    pub checked: bool,
     pub text: String,
     pub options: Vec<String>,
 }
@@ -866,10 +905,17 @@ impl BrowserDocument {
                 .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
                 .and_then(|element| element.attribute("href"))
                 .map(ToOwned::to_owned),
+            base_target: head
+                .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
+                .and_then(|element| element.attribute("target"))
+                .map(ToOwned::to_owned),
             body_text: visible_text_for_nodes(body_children),
             ..Self::default()
         };
 
+        if let Some(head) = head {
+            collect_head_browser_facts(&head.children, &mut summary);
+        }
         collect_browser_facts(body_children, &mut summary);
         summary
     }
@@ -7785,10 +7831,16 @@ fn collect_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
             continue;
         };
 
+        collect_anchor_target(element, summary);
+        collect_body_resource(element, summary);
+
         match element.name.as_str() {
             "a" => summary.links.push(BrowserLink {
                 href: element.attribute("href").map(ToOwned::to_owned),
                 name: element.attribute("name").map(ToOwned::to_owned),
+                target: element.attribute("target").map(ToOwned::to_owned),
+                rel: element.attribute("rel").map(ToOwned::to_owned),
+                title: element.attribute("title").map(ToOwned::to_owned),
                 text: visible_text_for_nodes(&element.children),
             }),
             "img" => summary.images.push(BrowserImage {
@@ -7803,6 +7855,8 @@ fn collect_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                     .attribute("method")
                     .map(|method| method.to_ascii_lowercase())
                     .unwrap_or_else(|| "get".to_string()),
+                enctype: element.attribute("enctype").map(ToOwned::to_owned),
+                target: element.attribute("target").map(ToOwned::to_owned),
                 controls: collect_form_controls(&element.children),
             }),
             "table" => summary.tables.push(BrowserTable {
@@ -7825,6 +7879,132 @@ fn collect_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
     }
 }
 
+fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        match element.name.as_str() {
+            "meta" => summary.metas.push(BrowserMeta {
+                name: element.attribute("name").map(ToOwned::to_owned),
+                http_equiv: element.attribute("http-equiv").map(ToOwned::to_owned),
+                property: element.attribute("property").map(ToOwned::to_owned),
+                charset: element.attribute("charset").map(ToOwned::to_owned),
+                content: element.attribute("content").map(ToOwned::to_owned),
+            }),
+            "link" => {
+                if let Some(href) = element.attribute("href") {
+                    summary.resources.push(BrowserResource {
+                        kind: link_resource_kind(element.attribute("rel")),
+                        url: href.to_string(),
+                        rel: element.attribute("rel").map(ToOwned::to_owned),
+                        type_hint: element.attribute("type").map(ToOwned::to_owned),
+                        media: element.attribute("media").map(ToOwned::to_owned),
+                        title: element.attribute("title").map(ToOwned::to_owned),
+                        async_script: false,
+                        defer_script: false,
+                    });
+                }
+            }
+            "script" => {
+                if let Some(src) = element.attribute("src") {
+                    summary.resources.push(BrowserResource {
+                        kind: "script".to_string(),
+                        url: src.to_string(),
+                        rel: None,
+                        type_hint: element.attribute("type").map(ToOwned::to_owned),
+                        media: None,
+                        title: None,
+                        async_script: element.attribute("async").is_some(),
+                        defer_script: element.attribute("defer").is_some(),
+                    });
+                }
+            }
+            _ => {}
+        }
+
+        collect_head_browser_facts(&element.children, summary);
+    }
+}
+
+fn collect_anchor_target(element: &Element, summary: &mut BrowserDocument) {
+    let id = element.attribute("id");
+    let name = element.attribute("name").filter(|_| element.name == "a");
+    if id.is_none() && name.is_none() {
+        return;
+    }
+
+    summary.anchors.push(BrowserAnchor {
+        id: id.map(ToOwned::to_owned),
+        name: name.map(ToOwned::to_owned),
+        text: visible_text_for_nodes(&element.children),
+    });
+}
+
+fn collect_body_resource(element: &Element, summary: &mut BrowserDocument) {
+    let Some((kind, url)) = body_resource(element) else {
+        return;
+    };
+
+    summary.resources.push(BrowserResource {
+        kind,
+        url,
+        rel: None,
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        async_script: element.name == "script" && element.attribute("async").is_some(),
+        defer_script: element.name == "script" && element.attribute("defer").is_some(),
+    });
+}
+
+fn body_resource(element: &Element) -> Option<(String, String)> {
+    match element.name.as_str() {
+        "img" => element
+            .attribute("src")
+            .map(|src| ("image".to_string(), src.to_string())),
+        "script" => element
+            .attribute("src")
+            .map(|src| ("script".to_string(), src.to_string())),
+        "iframe" | "frame" => element
+            .attribute("src")
+            .map(|src| ("frame".to_string(), src.to_string())),
+        "embed" => element
+            .attribute("src")
+            .map(|src| ("embed".to_string(), src.to_string())),
+        "object" => element
+            .attribute("data")
+            .map(|data| ("object".to_string(), data.to_string())),
+        "audio" | "video" => element
+            .attribute("src")
+            .map(|src| (element.name.clone(), src.to_string())),
+        "source" | "track" => element
+            .attribute("src")
+            .map(|src| (element.name.clone(), src.to_string())),
+        _ => None,
+    }
+}
+
+fn link_resource_kind(rel: Option<&str>) -> String {
+    let Some(rel) = rel else {
+        return "link".to_string();
+    };
+    let rel_tokens = rel.split_ascii_whitespace().map(str::to_ascii_lowercase);
+    for token in rel_tokens {
+        match token.as_str() {
+            "stylesheet" => return "stylesheet".to_string(),
+            "icon" | "shortcut" => return "icon".to_string(),
+            "preload" => return "preload".to_string(),
+            "modulepreload" => return "modulepreload".to_string(),
+            "manifest" => return "manifest".to_string(),
+            "alternate" => return "alternate".to_string(),
+            _ => {}
+        }
+    }
+    "link".to_string()
+}
+
 fn collect_form_controls(nodes: &[Node]) -> Vec<BrowserFormControl> {
     let mut controls = Vec::new();
     collect_form_controls_into(nodes, &mut controls);
@@ -7845,6 +8025,8 @@ fn collect_form_controls_into(nodes: &[Node], controls: &mut Vec<BrowserFormCont
                     .unwrap_or_else(|| "text".to_string()),
                 name: element.attribute("name").map(ToOwned::to_owned),
                 value: element.attribute("value").map(ToOwned::to_owned),
+                disabled: element.attribute("disabled").is_some(),
+                checked: element.attribute("checked").is_some(),
                 text: String::new(),
                 options: Vec::new(),
             }),
@@ -7855,6 +8037,8 @@ fn collect_form_controls_into(nodes: &[Node], controls: &mut Vec<BrowserFormCont
                     .unwrap_or_else(|| "submit".to_string()),
                 name: element.attribute("name").map(ToOwned::to_owned),
                 value: element.attribute("value").map(ToOwned::to_owned),
+                disabled: element.attribute("disabled").is_some(),
+                checked: false,
                 text: visible_text_for_nodes(&element.children),
                 options: Vec::new(),
             }),
@@ -7862,6 +8046,8 @@ fn collect_form_controls_into(nodes: &[Node], controls: &mut Vec<BrowserFormCont
                 control_type: "select".to_string(),
                 name: element.attribute("name").map(ToOwned::to_owned),
                 value: None,
+                disabled: element.attribute("disabled").is_some(),
+                checked: false,
                 text: visible_text_for_nodes(&element.children),
                 options: collect_select_options(&element.children),
             }),
@@ -7869,6 +8055,8 @@ fn collect_form_controls_into(nodes: &[Node], controls: &mut Vec<BrowserFormCont
                 control_type: "textarea".to_string(),
                 name: element.attribute("name").map(ToOwned::to_owned),
                 value: None,
+                disabled: element.attribute("disabled").is_some(),
+                checked: false,
                 text: element_text(element),
                 options: Vec::new(),
             }),

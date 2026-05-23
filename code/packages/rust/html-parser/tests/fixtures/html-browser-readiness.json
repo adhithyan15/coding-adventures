@@ -6,16 +6,27 @@
     {
       "id": "legacy-directory-page",
       "description": "Omitted shell, title/base metadata, anchors, image attributes, and implied list-item endings.",
-      "input": "<!doctype html><title>Example &amp; Links</title><base href=\"https://example.test/docs/\"><h1>Example Directory</h1><p>Welcome to <a href=\"intro.html\">Venture HTML</a>.<img src=\"logo.gif\" alt=\"Logo\" width=88 height=31><ul><li>One<li>Two",
+      "input": "<!doctype html><title>Example &amp; Links</title><base href=\"https://example.test/docs/\" target=_top><meta charset=utf-8><link rel=stylesheet href=\"style.css\" media=screen title=default><h1 id=index>Example Directory</h1><p>Welcome to <a href=\"intro.html\" target=main rel=next title=\"Intro\">Venture HTML</a>.<img src=\"logo.gif\" alt=\"Logo\" width=88 height=31><ul><li>One<li>Two",
       "expected": {
         "title": "Example & Links",
         "base_href": "https://example.test/docs/",
+        "base_target": "_top",
         "body_text": "Example Directory Welcome to Venture HTML. One Two",
+        "metas": [
+          { "name": null, "http_equiv": null, "property": null, "charset": "utf-8", "content": null }
+        ],
+        "resources": [
+          { "kind": "stylesheet", "url": "style.css", "rel": "stylesheet", "type_hint": null, "media": "screen", "title": "default", "async_script": false, "defer_script": false },
+          { "kind": "image", "url": "logo.gif", "rel": null, "type_hint": null, "media": null, "title": null, "async_script": false, "defer_script": false }
+        ],
+        "anchors": [
+          { "id": "index", "name": null, "text": "Example Directory" }
+        ],
         "headings": [
           { "level": 1, "text": "Example Directory" }
         ],
         "links": [
-          { "href": "intro.html", "name": null, "text": "Venture HTML" }
+          { "href": "intro.html", "name": null, "target": "main", "rel": "next", "title": "Intro", "text": "Venture HTML" }
         ],
         "images": [
           { "src": "logo.gif", "alt": "Logo", "width": "88", "height": "31" }
@@ -27,11 +38,17 @@
     {
       "id": "catalog-form-table-page",
       "description": "Form controls, select options, textarea text, button text, and table summaries.",
-      "input": "<html><head><title>Search</title></head><body><h2>Catalog</h2><form action=\"/search\" method=POST><input name=q value=\"rust html\"><input type=hidden name=page value=1><select name=section><option>Books<option>Manuals</select><textarea name=notes>Line one\nLine two</textarea><button name=go>Search</button></form><table><caption>Results</caption><tr><th>Name<th>Kind<tr><td>Mosaic<td>Browser</table>",
+      "input": "<html><head><title>Search</title><meta http-equiv=refresh content=\"30; url=/next\"></head><body><h2>Catalog</h2><form action=\"/search\" method=POST enctype=\"multipart/form-data\" target=results><input name=q value=\"rust html\"><input type=hidden name=page value=1><input type=checkbox name=in_stock value=yes checked><input type=text name=disabled value=no disabled><select name=section><option>Books<option>Manuals</select><textarea name=notes>Line one\nLine two</textarea><button name=go>Search</button></form><table><caption>Results</caption><tr><th>Name<th>Kind<tr><td>Mosaic<td>Browser</table>",
       "expected": {
         "title": "Search",
         "base_href": null,
+        "base_target": null,
         "body_text": "Catalog Books Manuals Line one Line two Search Results Name Kind Mosaic Browser",
+        "metas": [
+          { "name": null, "http_equiv": "refresh", "property": null, "charset": null, "content": "30; url=/next" }
+        ],
+        "resources": [],
+        "anchors": [],
         "headings": [
           { "level": 2, "text": "Catalog" }
         ],
@@ -41,12 +58,16 @@
           {
             "action": "/search",
             "method": "post",
+            "enctype": "multipart/form-data",
+            "target": "results",
             "controls": [
-              { "control_type": "text", "name": "q", "value": "rust html", "text": "", "options": [] },
-              { "control_type": "hidden", "name": "page", "value": "1", "text": "", "options": [] },
-              { "control_type": "select", "name": "section", "value": null, "text": "Books Manuals", "options": ["Books", "Manuals"] },
-              { "control_type": "textarea", "name": "notes", "value": null, "text": "Line one Line two", "options": [] },
-              { "control_type": "submit", "name": "go", "value": null, "text": "Search", "options": [] }
+              { "control_type": "text", "name": "q", "value": "rust html", "disabled": false, "checked": false, "text": "", "options": [] },
+              { "control_type": "hidden", "name": "page", "value": "1", "disabled": false, "checked": false, "text": "", "options": [] },
+              { "control_type": "checkbox", "name": "in_stock", "value": "yes", "disabled": false, "checked": true, "text": "", "options": [] },
+              { "control_type": "text", "name": "disabled", "value": "no", "disabled": true, "checked": false, "text": "", "options": [] },
+              { "control_type": "select", "name": "section", "value": null, "disabled": false, "checked": false, "text": "Books Manuals", "options": ["Books", "Manuals"] },
+              { "control_type": "textarea", "name": "notes", "value": null, "disabled": false, "checked": false, "text": "Line one Line two", "options": [] },
+              { "control_type": "submit", "name": "go", "value": null, "disabled": false, "checked": false, "text": "Search", "options": [] }
             ]
           }
         ],
@@ -58,17 +79,25 @@
     {
       "id": "tag-soup-formatting-page",
       "description": "Bad nesting, formatting reconstruction, named anchors, same-page links, pre text, and invisible script/style contents.",
-      "input": "<body><p>Alpha <b>bold<p>Beta <i>italic</b> tail</i><center><h3>Archive</h3><a name=top></a><a href=\"#top\">Back</a></center><pre>  spaced\n text</pre><script>document.write(\"x\")</script><style>p{color:red}</style>",
+      "input": "<body><p>Alpha <b>bold<p>Beta <i>italic</b> tail</i><center><h3>Archive</h3><a name=top></a><a href=\"#top\">Back</a></center><pre>  spaced\n text</pre><script src=app.js async defer>document.write(\"x\")</script><style>p{color:red}</style>",
       "expected": {
         "title": null,
         "base_href": null,
+        "base_target": null,
         "body_text": "Alpha bold Beta italic tail Archive Back spaced text",
+        "metas": [],
+        "resources": [
+          { "kind": "script", "url": "app.js", "rel": null, "type_hint": null, "media": null, "title": null, "async_script": true, "defer_script": true }
+        ],
+        "anchors": [
+          { "id": null, "name": "top", "text": "" }
+        ],
         "headings": [
           { "level": 3, "text": "Archive" }
         ],
         "links": [
-          { "href": null, "name": "top", "text": "" },
-          { "href": "#top", "name": null, "text": "Back" }
+          { "href": null, "name": "top", "target": null, "rel": null, "title": null, "text": "" },
+          { "href": "#top", "name": null, "target": null, "rel": null, "title": null, "text": "Back" }
         ],
         "images": [],
         "forms": [],

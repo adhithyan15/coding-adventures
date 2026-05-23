@@ -218,14 +218,84 @@ def check_browser_readiness_case(
 
     require_optional_nullable_string(case_path, expected, "title", errors)
     require_optional_nullable_string(case_path, expected, "base_href", errors)
+    require_optional_nullable_string(case_path, expected, "base_target", errors)
     require_string(f"{case_path}.expected", expected, "body_text", errors)
+    require_object_list(f"{case_path}.expected", expected, "metas", errors)
+    require_object_list(f"{case_path}.expected", expected, "resources", errors)
+    require_object_list(f"{case_path}.expected", expected, "anchors", errors)
     require_object_list(f"{case_path}.expected", expected, "headings", errors)
     require_object_list(f"{case_path}.expected", expected, "links", errors)
     require_object_list(f"{case_path}.expected", expected, "images", errors)
     require_object_list(f"{case_path}.expected", expected, "forms", errors)
     require_object_list(f"{case_path}.expected", expected, "tables", errors)
+    check_browser_expected_lists(case_path, expected, errors)
 
     return errors
+
+
+def check_browser_expected_lists(
+    case_path: str,
+    expected: dict[str, Any],
+    errors: list[str],
+) -> None:
+    for index, meta in enumerate(object_list_items(expected, "metas")):
+        meta_path = f"{case_path}.expected.metas[{index}]"
+        for field in ("name", "http_equiv", "property", "charset", "content"):
+            require_optional_nullable_string(meta_path, meta, field, errors)
+
+    for index, resource in enumerate(object_list_items(expected, "resources")):
+        resource_path = f"{case_path}.expected.resources[{index}]"
+        require_string(resource_path, resource, "kind", errors)
+        require_string(resource_path, resource, "url", errors)
+        for field in ("rel", "type_hint", "media", "title"):
+            require_optional_nullable_string(resource_path, resource, field, errors)
+        require_boolean(resource_path, resource, "async_script", errors)
+        require_boolean(resource_path, resource, "defer_script", errors)
+
+    for index, anchor in enumerate(object_list_items(expected, "anchors")):
+        anchor_path = f"{case_path}.expected.anchors[{index}]"
+        for field in ("id", "name"):
+            require_optional_nullable_string(anchor_path, anchor, field, errors)
+        require_string(anchor_path, anchor, "text", errors)
+
+    for index, heading in enumerate(object_list_items(expected, "headings")):
+        heading_path = f"{case_path}.expected.headings[{index}]"
+        require_integer(heading_path, heading, "level", errors)
+        require_string(heading_path, heading, "text", errors)
+
+    for index, link in enumerate(object_list_items(expected, "links")):
+        link_path = f"{case_path}.expected.links[{index}]"
+        for field in ("href", "name", "target", "rel", "title"):
+            require_optional_nullable_string(link_path, link, field, errors)
+        require_string(link_path, link, "text", errors)
+
+    for index, image in enumerate(object_list_items(expected, "images")):
+        image_path = f"{case_path}.expected.images[{index}]"
+        for field in ("src", "alt", "width", "height"):
+            require_optional_nullable_string(image_path, image, field, errors)
+
+    for index, form in enumerate(object_list_items(expected, "forms")):
+        form_path = f"{case_path}.expected.forms[{index}]"
+        require_optional_nullable_string(form_path, form, "action", errors)
+        require_string(form_path, form, "method", errors)
+        require_optional_nullable_string(form_path, form, "enctype", errors)
+        require_optional_nullable_string(form_path, form, "target", errors)
+        require_object_list(form_path, form, "controls", errors)
+        for control_index, control in enumerate(object_list_items(form, "controls")):
+            control_path = f"{form_path}.controls[{control_index}]"
+            require_string(control_path, control, "control_type", errors)
+            require_optional_nullable_string(control_path, control, "name", errors)
+            require_optional_nullable_string(control_path, control, "value", errors)
+            require_boolean(control_path, control, "disabled", errors)
+            require_boolean(control_path, control, "checked", errors)
+            require_string(control_path, control, "text", errors)
+            require_string_list(control_path, control, "options", errors)
+
+    for index, table in enumerate(object_list_items(expected, "tables")):
+        table_path = f"{case_path}.expected.tables[{index}]"
+        require_optional_nullable_string(table_path, table, "caption", errors)
+        for field in ("row_count", "cell_count", "header_cell_count"):
+            require_integer(table_path, table, field, errors)
 
 
 def check_split_points(
@@ -312,6 +382,16 @@ def require_integer(
         errors.append(f"{path}.{field} must be an integer")
 
 
+def require_boolean(
+    path: str,
+    data: dict[str, Any],
+    field: str,
+    errors: list[str],
+) -> None:
+    if not isinstance(data.get(field), bool):
+        errors.append(f"{path}.{field} must be a boolean")
+
+
 def require_string_list(
     path: str,
     data: dict[str, Any],
@@ -332,6 +412,13 @@ def require_object_list(
     value = data.get(field)
     if not isinstance(value, list) or not all(isinstance(item, dict) for item in value):
         errors.append(f"{path}.{field} must be a list of objects")
+
+
+def object_list_items(data: dict[str, Any], field: str) -> list[dict[str, Any]]:
+    value = data.get(field)
+    if not isinstance(value, list) or not all(isinstance(item, dict) for item in value):
+        return []
+    return value
 
 
 def require_optional_string_list(
