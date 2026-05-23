@@ -46,6 +46,7 @@ import math
 from ._rust_backend import (
     abs_via_rust,
     add_via_rust,
+    div_backward_via_rust,
     div_via_rust,
     gelu_backward_via_rust,
     gelu_via_rust,
@@ -54,6 +55,7 @@ from ._rust_backend import (
     mean_backward_axis_via_rust,
     mean_backward_reduce_all_via_rust,
     mean_via_rust,
+    mul_backward_via_rust,
     mul_via_rust,
     neg_via_rust,
     pow_backward_via_rust,
@@ -149,6 +151,24 @@ class MulFunction(Function):
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         a, b = self.saved_tensors
+        # MX10 Phase 2-back — optional Rust fast path.  Single FFI
+        # envelope with two outputs computes both ``g * b`` and
+        # ``g * a`` in one call.  Same threshold as forward.  We
+        # still respect ``requires_grad`` by returning ``None`` for
+        # sides that don't need a gradient — slightly wasteful (we
+        # compute both grads even when only one is needed), but the
+        # FFI round-trip cost dominates, so one round-trip > two
+        # round-trips even when half the work is discarded.
+        if (a.requires_grad or b.requires_grad) and should_use_rust_for_elementwise(
+            len(a.data)
+        ):
+            grad_a_rust, grad_b_rust = mul_backward_via_rust(
+                grad_output.data, a.data, b.data, a.shape, device=a.device
+            )
+            return (
+                grad_a_rust if a.requires_grad else None,
+                grad_b_rust if b.requires_grad else None,
+            )
         grad_a = (
             Tensor(
                 [g * bv for g, bv in zip(grad_output.data, b.data, strict=False)],
@@ -187,6 +207,20 @@ class DivFunction(Function):
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         a, b = self.saved_tensors
+        # MX10 Phase 2-back — optional Rust fast path.  Single FFI
+        # envelope with 5 ops and two outputs computes ``g/b`` and
+        # ``-g*a/b²`` together.  Same requires_grad handling as
+        # MulFunction.backward above.
+        if (a.requires_grad or b.requires_grad) and should_use_rust_for_elementwise(
+            len(a.data)
+        ):
+            grad_a_rust, grad_b_rust = div_backward_via_rust(
+                grad_output.data, a.data, b.data, a.shape, device=a.device
+            )
+            return (
+                grad_a_rust if a.requires_grad else None,
+                grad_b_rust if b.requires_grad else None,
+            )
         grad_a = (
             Tensor(
                 [g / bv for g, bv in zip(grad_output.data, b.data, strict=False)],

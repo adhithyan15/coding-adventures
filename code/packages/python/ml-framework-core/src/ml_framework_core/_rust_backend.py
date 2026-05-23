@@ -2207,3 +2207,202 @@ def pow_backward_via_rust(
         )
     out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
     return _Tensor(out_floats, target_shape, device=device)
+
+
+# ──────────────────────────────────────────────────────────────────
+# Elementwise backward dispatch (MX10 Phase 2-back)
+#
+# Most elementwise backwards are trivial scalar arithmetic
+# (Add → pass-through, Sub → negation, Neg → negation,
+# Abs → sign-multiply).  The FFI round-trip would lose vs the
+# pure-Python list comprehension for those.  Only **Mul** and
+# **Div** have real backward work:
+#
+#   Mul.backward: grad_a = g * b, grad_b = g * a   (2 muls per pair)
+#   Div.backward: grad_a = g / b, grad_b = -g * a / b²
+#                 (1 div, 1 mul, 1 div, 1 mul, 1 neg = 5 ops)
+#
+# Both are shipped as **single FFI envelopes with two outputs** —
+# matrix-ir-json's ``outputs`` field is a list, so one graph can
+# return both grad_a and grad_b in one call.  We then return a
+# tuple ``(Tensor, Tensor)`` from the helper.
+#
+# Dispatch in the callsite respects ``requires_grad``: if only one
+# of the two inputs needs a gradient, we still call the helper (it's
+# cheaper to compute both grads in one FFI call than to make the
+# dispatch logic conditional), but return ``None`` for the side
+# that doesn't need it — preserving the existing
+# ``MulFunction.backward`` / ``DivFunction.backward`` contract.
+# ──────────────────────────────────────────────────────────────────
+
+
+def mul_backward_via_rust(
+    grad_data: list[float],
+    a_data: list[float],
+    b_data: list[float],
+    target_shape: tuple[int, ...],
+    *,
+    device: str | None = None,
+) -> tuple[Tensor, Tensor]:
+    """``(g * b, g * a)`` as a single 2-op graph with two outputs.
+
+    Topology::
+
+        g(0) ─┬─Mul(g, b)──> grad_a(3)
+        b(2) ─┘
+        Mul(g(0), a(1))──> grad_b(4)
+
+    2 ops, 5 tensors, no constants.  Returns ``(grad_a, grad_b)``
+    as a tuple of new ``Tensor``s.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "mul_backward_via_rust called but Rust backend is not available; "
+            "callers must check should_use_rust_for_elementwise() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(grad_data)
+    if len(a_data) != numel or len(b_data) != numel:
+        raise RuntimeError(
+            f"mul_backward_via_rust: grad/a/b length mismatch "
+            f"({numel}/{len(a_data)}/{len(b_data)}) — all must match"
+        )
+
+    target_shape_list = list(target_shape)
+    grad_bytes = struct.pack(f"<{numel}f", *grad_data)
+    a_bytes = struct.pack(f"<{numel}f", *a_data)
+    b_bytes = struct.pack(f"<{numel}f", *b_data)
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    {"id": 0, "dtype": "f32", "shape": target_shape_list},  # g
+                    {"id": 1, "dtype": "f32", "shape": target_shape_list},  # a
+                    {"id": 2, "dtype": "f32", "shape": target_shape_list},  # b
+                    {"id": 3, "dtype": "f32", "shape": target_shape_list},  # grad_a = g * b
+                    {"id": 4, "dtype": "f32", "shape": target_shape_list},  # grad_b = g * a
+                ],
+                "inputs": [0, 1, 2],
+                "outputs": [3, 4],
+                "ops": [
+                    {"kind": "Mul", "lhs": 0, "rhs": 2, "output": 3},
+                    {"kind": "Mul", "lhs": 0, "rhs": 1, "output": 4},
+                ],
+                "constants": [],
+            },
+            "inputs": [grad_bytes.hex(), a_bytes.hex(), b_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    grad_a_bytes = bytes.fromhex(result["outputs"][0])
+    grad_b_bytes = bytes.fromhex(result["outputs"][1])
+
+    expected_bytes = numel * 4
+    if len(grad_a_bytes) != expected_bytes or len(grad_b_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"mul_backward_via_rust: expected {expected_bytes} bytes per output "
+            f"({numel} f32), got grad_a={len(grad_a_bytes)}, grad_b={len(grad_b_bytes)}"
+        )
+    grad_a_floats = list(struct.unpack(f"<{numel}f", grad_a_bytes))
+    grad_b_floats = list(struct.unpack(f"<{numel}f", grad_b_bytes))
+    return (
+        _Tensor(grad_a_floats, target_shape, device=device),
+        _Tensor(grad_b_floats, target_shape, device=device),
+    )
+
+
+def div_backward_via_rust(
+    grad_data: list[float],
+    a_data: list[float],
+    b_data: list[float],
+    target_shape: tuple[int, ...],
+    *,
+    device: str | None = None,
+) -> tuple[Tensor, Tensor]:
+    """``(g/b, -g*a/b²)`` as a single 5-op graph with two outputs.
+
+    Topology::
+
+        g(0) ─┬─Div(g, b)──────────> grad_a(4)
+        b(2) ─┤
+              │
+        b(2) ─┴─Mul(b, b)──> b²(5)
+        Div(g(0), b²(5))──> t1(6)
+        Mul(t1(6), a(1))──> t2(7)
+        Neg(t2(7))──> grad_b(8)
+
+    5 ops, 8 tensors, no constants.  Returns ``(grad_a, grad_b)``
+    as a tuple of new ``Tensor``s.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "div_backward_via_rust called but Rust backend is not available; "
+            "callers must check should_use_rust_for_elementwise() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(grad_data)
+    if len(a_data) != numel or len(b_data) != numel:
+        raise RuntimeError(
+            f"div_backward_via_rust: grad/a/b length mismatch "
+            f"({numel}/{len(a_data)}/{len(b_data)}) — all must match"
+        )
+
+    target_shape_list = list(target_shape)
+    grad_bytes = struct.pack(f"<{numel}f", *grad_data)
+    a_bytes = struct.pack(f"<{numel}f", *a_data)
+    b_bytes = struct.pack(f"<{numel}f", *b_data)
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    {"id": 0, "dtype": "f32", "shape": target_shape_list},  # g
+                    {"id": 1, "dtype": "f32", "shape": target_shape_list},  # a
+                    {"id": 2, "dtype": "f32", "shape": target_shape_list},  # b
+                    {"id": 4, "dtype": "f32", "shape": target_shape_list},  # grad_a = g / b
+                    {"id": 5, "dtype": "f32", "shape": target_shape_list},  # b²
+                    {"id": 6, "dtype": "f32", "shape": target_shape_list},  # t1 = g / b²
+                    {"id": 7, "dtype": "f32", "shape": target_shape_list},  # t2 = t1 * a
+                    {"id": 8, "dtype": "f32", "shape": target_shape_list},  # grad_b = -t2
+                ],
+                "inputs": [0, 1, 2],
+                "outputs": [4, 8],
+                "ops": [
+                    {"kind": "Div", "lhs": 0, "rhs": 2, "output": 4},
+                    {"kind": "Mul", "lhs": 2, "rhs": 2, "output": 5},
+                    {"kind": "Div", "lhs": 0, "rhs": 5, "output": 6},
+                    {"kind": "Mul", "lhs": 6, "rhs": 1, "output": 7},
+                    {"kind": "Neg", "input": 7, "output": 8},
+                ],
+                "constants": [],
+            },
+            "inputs": [grad_bytes.hex(), a_bytes.hex(), b_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    grad_a_bytes = bytes.fromhex(result["outputs"][0])
+    grad_b_bytes = bytes.fromhex(result["outputs"][1])
+
+    expected_bytes = numel * 4
+    if len(grad_a_bytes) != expected_bytes or len(grad_b_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"div_backward_via_rust: expected {expected_bytes} bytes per output "
+            f"({numel} f32), got grad_a={len(grad_a_bytes)}, grad_b={len(grad_b_bytes)}"
+        )
+    grad_a_floats = list(struct.unpack(f"<{numel}f", grad_a_bytes))
+    grad_b_floats = list(struct.unpack(f"<{numel}f", grad_b_bytes))
+    return (
+        _Tensor(grad_a_floats, target_shape, device=device),
+        _Tensor(grad_b_floats, target_shape, device=device),
+    )
