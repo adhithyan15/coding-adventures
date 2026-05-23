@@ -73,6 +73,7 @@ from spice_engine.elements import (
     MutualInductor,
     Resistor,
     SubcircuitDefinition,
+    TransmissionLine,
     VoltageSource,
     XInstance,
     waveform_period,
@@ -229,6 +230,8 @@ def _clone_subckt_element(element: object, instance_name: str, node_map: dict[st
         return Inductor(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.inductance, element.initial_current)
     if isinstance(element, MutualInductor):
         return MutualInductor(name, _map_subckt_source_ref(element.primary, instance_name), _map_subckt_source_ref(element.secondary, instance_name), element.coupling)
+    if isinstance(element, TransmissionLine):
+        return TransmissionLine(name, _map_subckt_node(element.n1, instance_name, node_map), _map_subckt_node(element.n2, instance_name, node_map), _map_subckt_node(element.n3, instance_name, node_map), _map_subckt_node(element.n4, instance_name, node_map), element.characteristic_impedance, element.delay)
     if isinstance(element, VoltageSource):
         return VoltageSource(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.voltage, element.waveform, element.ac)
     if isinstance(element, CurrentSource):
@@ -707,6 +710,8 @@ def _element_nodes(el: Element) -> list[str]:
         return [el.drain, el.gate, el.source, el.body]
     if isinstance(el, BJT):
         return [el.collector, el.base, el.emitter]
+    if isinstance(el, TransmissionLine):
+        return [el.n1, el.n2, el.n3, el.n4]
     if isinstance(el, (VCVS, VCCS)):
         # Both output nodes and controlling nodes become part of the circuit
         return [el.n_plus, el.n_minus, el.ctrl_plus, el.ctrl_minus]

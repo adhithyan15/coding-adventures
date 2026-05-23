@@ -28,6 +28,7 @@ from spice_engine import (
     PwlWaveform,
     Resistor,
     SinWaveform,
+    TransmissionLine,
     VoltageSource,
     Waveform,
 )
@@ -294,6 +295,7 @@ def parse_netlist(text: str) -> ParsedNetlist:
         except NetlistParseError as exc:
             raise NetlistParseError(f"line {statement.line_number}: {exc}") from exc
     _validate_mutual_inductors(parsed.circuit)
+    _validate_transmission_lines(parsed.circuit)
     return parsed
 
 
@@ -348,6 +350,27 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
     if prefix == "K":
         _require_fields(fields, 4, "mutual inductor")
         return MutualInductor(name, fields[1], fields[2], parse_value(fields[3]))
+    if prefix == "T":
+        _require_min_fields(fields, 6, "transmission line")
+        params = _parse_element_params(fields[5:], "transmission line")
+        unsupported = set(params) - {"Z0", "TD"}
+        if unsupported:
+            raise NetlistParseError(
+                f"unsupported transmission line parameter {sorted(unsupported)[0]!r}"
+            )
+        if "Z0" not in params:
+            raise NetlistParseError(f"{name}: transmission line requires Z0")
+        if "TD" not in params:
+            raise NetlistParseError(f"{name}: transmission line requires TD")
+        return TransmissionLine(
+            name,
+            fields[1],
+            fields[2],
+            fields[3],
+            fields[4],
+            params["Z0"],
+            params["TD"],
+        )
     if prefix == "V":
         _require_min_fields(fields, 4, "voltage source")
         source = _parse_source_value(fields[3:])
@@ -472,6 +495,20 @@ def _validate_mutual_inductors(circuit: Circuit) -> None:
             )
 
 
+def _validate_transmission_lines(circuit: Circuit) -> None:
+    for element in circuit.elements:
+        if not isinstance(element, TransmissionLine):
+            continue
+        if not math.isfinite(element.characteristic_impedance):
+            raise NetlistParseError(f"{element.name}: characteristic impedance must be finite")
+        if element.characteristic_impedance <= 0.0:
+            raise NetlistParseError(f"{element.name}: characteristic impedance must be positive")
+        if not math.isfinite(element.delay):
+            raise NetlistParseError(f"{element.name}: delay must be finite")
+        if element.delay <= 0.0:
+            raise NetlistParseError(f"{element.name}: delay must be positive")
+
+
 def _start_subckt(
     fields: list[str], line_number: int, subckts: dict[str, _SubcktDefinition]
 ) -> _SubcktDefinition:
@@ -566,6 +603,10 @@ def _map_subckt_fields(
         _require_fields(fields, 4, "subcircuit mutual inductor")
         mapped[1] = _map_subckt_source_ref(fields[1], instance_name)
         mapped[2] = _map_subckt_source_ref(fields[2], instance_name)
+    elif prefix == "T":
+        _require_min_fields(fields, 6, "subcircuit transmission line")
+        for index in range(1, 5):
+            mapped[index] = _map_subckt_node(fields[index], instance_name, node_map)
     elif prefix == "X":
         mapped[1:-1] = [
             _map_subckt_node(node, instance_name, node_map) for node in fields[1:-1]

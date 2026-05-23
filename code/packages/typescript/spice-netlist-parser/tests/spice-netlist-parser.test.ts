@@ -92,6 +92,42 @@ Kbad Lpri Lsec 1e999
 `)).toThrow(NetlistParseError);
   });
 
+  it("parses transmission-line T cards", () => {
+    const parsed = parseNetlist(`
+Tdelay in 0 out 0 Z0=50 TD=1n
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "transmission-line",
+      name: "Tdelay",
+      n1: "in",
+      n2: "0",
+      n3: "out",
+      n4: "0",
+      characteristicImpedanceOhms: 50.0,
+      delaySeconds: 1.0e-9,
+    });
+  });
+
+  it("rejects unsupported transmission-line positional forms", () => {
+    expect(() => parseNetlist("Tdelay in 0 out 0 50 1n")).toThrow(
+      /invalid transmission line parameter syntax/,
+    );
+  });
+
+  it("rejects transmission-line cards with missing parameters", () => {
+    expect(() => parseNetlist("Tdelay in 0 out 0 Z0=50")).toThrow(/requires TD/);
+  });
+
+  it("rejects transmission-line cards with non-positive parameters", () => {
+    expect(() => parseNetlist("Tdelay in 0 out 0 Z0=0 TD=1n")).toThrow(
+      /characteristic impedance must be positive/,
+    );
+    expect(() => parseNetlist("Tdelay in 0 out 0 Z0=50 TD=0")).toThrow(
+      /delay must be positive/,
+    );
+  });
+
   it("parses .options analysis cards", () => {
     const parsed = parseNetlist(`
 .options reltol=1m abstol=1n gmin=1p method=trap noopiter
@@ -757,6 +793,26 @@ Xtx in 0 out 0 transformer
       primary: "Xtx.Lpri",
       secondary: "Xtx.Lsec",
       coupling: 0.9,
+    });
+  });
+
+  it("expands subcircuit transmission-line nodes into engine elements", () => {
+    const parsed = parseNetlist(`
+.subckt delay in out
+T1 in 0 out 0 Z0=75 TD=2n
+.ends delay
+Xdelay a b delay
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "transmission-line",
+      name: "Xdelay.T1",
+      n1: "a",
+      n2: "0",
+      n3: "b",
+      n4: "0",
+      characteristicImpedanceOhms: 75.0,
+      delaySeconds: 2.0e-9,
     });
   });
 

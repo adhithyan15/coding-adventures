@@ -18,6 +18,7 @@ import {
   mosfet,
   mutualInductor,
   resistor,
+  transmissionLine,
   vccs,
   vcvs,
   voltageSource,
@@ -306,6 +307,7 @@ export function parseNetlist(text: string): ParsedNetlist {
     }
   }
   validateMutualInductors(circuit);
+  validateTransmissionLines(circuit);
 
   return new ParsedNetlist(circuit, analyses, models, title);
 }
@@ -456,6 +458,34 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
   if (prefix === "K") {
     requireFields(fields, 4, "mutual inductor");
     return mutualInductor(name, fields[1], fields[2], parseValue(fields[3]));
+  }
+  if (prefix === "T") {
+    requireMinFields(fields, 6, "transmission line");
+    const params = parseElementParams(fields.slice(5), "transmission line");
+    for (const paramName of params.keys()) {
+      if (paramName !== "Z0" && paramName !== "TD") {
+        throw new NetlistParseError(
+          `unsupported transmission line parameter ${JSON.stringify(paramName)}`,
+        );
+      }
+    }
+    const characteristicImpedance = params.get("Z0");
+    if (characteristicImpedance === undefined) {
+      throw new NetlistParseError(`${name}: transmission line requires Z0`);
+    }
+    const delay = params.get("TD");
+    if (delay === undefined) {
+      throw new NetlistParseError(`${name}: transmission line requires TD`);
+    }
+    return transmissionLine(
+      name,
+      fields[1],
+      fields[2],
+      fields[3],
+      fields[4],
+      characteristicImpedance,
+      delay,
+    );
   }
   if (prefix === "V") {
     requireMinFields(fields, 4, "voltage source");
@@ -644,6 +674,26 @@ function validateMutualInductors(circuit: Circuit): void {
   }
 }
 
+function validateTransmissionLines(circuit: Circuit): void {
+  for (const element of circuit.elements()) {
+    if (element.kind !== "transmission-line") {
+      continue;
+    }
+    if (!Number.isFinite(element.characteristicImpedanceOhms)) {
+      throw new NetlistParseError(`${element.name}: characteristic impedance must be finite`);
+    }
+    if (element.characteristicImpedanceOhms <= 0.0) {
+      throw new NetlistParseError(`${element.name}: characteristic impedance must be positive`);
+    }
+    if (!Number.isFinite(element.delaySeconds)) {
+      throw new NetlistParseError(`${element.name}: delay must be finite`);
+    }
+    if (element.delaySeconds <= 0.0) {
+      throw new NetlistParseError(`${element.name}: delay must be positive`);
+    }
+  }
+}
+
 function startSubckt(
   fields: readonly string[],
   lineNumber: number,
@@ -752,6 +802,11 @@ function mapSubcktFields(
     requireFields(fields, 4, "subcircuit mutual inductor");
     mapped[1] = mapSubcktSourceRef(fields[1], instanceName);
     mapped[2] = mapSubcktSourceRef(fields[2], instanceName);
+  } else if (prefix === "T") {
+    requireMinFields(fields, 6, "subcircuit transmission line");
+    for (let index = 1; index < 5; index++) {
+      mapped[index] = mapSubcktNode(fields[index], instanceName, nodeMap);
+    }
   } else if (prefix === "X") {
     for (let index = 1; index < fields.length - 1; index++) {
       mapped[index] = mapSubcktNode(fields[index], instanceName, nodeMap);

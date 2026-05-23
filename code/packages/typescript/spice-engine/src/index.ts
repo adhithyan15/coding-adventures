@@ -8,6 +8,7 @@ export type Element =
   | Capacitor
   | Inductor
   | MutualInductor
+  | TransmissionLine
   | VoltageSource
   | CurrentSource
   | BSource
@@ -52,6 +53,17 @@ export interface MutualInductor {
   readonly primary: string;
   readonly secondary: string;
   readonly coupling: number;
+}
+
+export interface TransmissionLine {
+  readonly kind: "transmission-line";
+  readonly name: string;
+  readonly n1: string;
+  readonly n2: string;
+  readonly n3: string;
+  readonly n4: string;
+  readonly characteristicImpedanceOhms: number;
+  readonly delaySeconds: number;
 }
 
 export type Waveform =
@@ -902,6 +914,8 @@ function cloneSubcktElement(
       return inductorWithInitialCurrent(name, mapSubcktNode(element.n1, instanceName, nodeMap), mapSubcktNode(element.n2, instanceName, nodeMap), element.inductanceHenrys, element.initialCurrent);
     case "mutual-inductor":
       return mutualInductor(name, mapSubcktSourceRef(element.primary, instanceName), mapSubcktSourceRef(element.secondary, instanceName), element.coupling);
+    case "transmission-line":
+      return transmissionLine(name, mapSubcktNode(element.n1, instanceName, nodeMap), mapSubcktNode(element.n2, instanceName, nodeMap), mapSubcktNode(element.n3, instanceName, nodeMap), mapSubcktNode(element.n4, instanceName, nodeMap), element.characteristicImpedanceOhms, element.delaySeconds);
     case "voltage-source":
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
     case "current-source":
@@ -1000,6 +1014,27 @@ export function mutualInductor(
     primary,
     secondary,
     coupling,
+  };
+}
+
+export function transmissionLine(
+  name: string,
+  n1: string,
+  n2: string,
+  n3: string,
+  n4: string,
+  characteristicImpedanceOhms: number,
+  delaySeconds: number,
+): TransmissionLine {
+  return {
+    kind: "transmission-line",
+    name,
+    n1,
+    n2,
+    n3,
+    n4,
+    characteristicImpedanceOhms,
+    delaySeconds,
   };
 }
 
@@ -2437,6 +2472,8 @@ function elementParameter(element: Element): ElementParameter | undefined {
       };
     case "capacitor":
     case "inductor":
+    case "mutual-inductor":
+    case "transmission-line":
       return undefined;
   }
 }
@@ -2511,6 +2548,8 @@ function circuitWithPerturbedElement(
         break;
       case "capacitor":
       case "inductor":
+      case "mutual-inductor":
+      case "transmission-line":
         perturbed.add(element);
         break;
     }
@@ -2663,6 +2702,7 @@ function randomizedElement(
     case "capacitor":
     case "inductor":
     case "mutual-inductor":
+    case "transmission-line":
       return element;
   }
 }
@@ -3225,6 +3265,8 @@ function solveLinearCircuitAtOperatingPoint(
           );
         }
         break;
+      case "transmission-line":
+        break;
       case "voltage-source":
         stampVoltageSource(
           element,
@@ -3483,6 +3525,8 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
       case "resistor":
       case "capacitor":
       case "inductor":
+      case "mutual-inductor":
+      case "transmission-line":
       case "diode":
       case "jfet":
       case "bjt":
@@ -3542,6 +3586,8 @@ function buildAcMatrix(
         break;
       case "mutual-inductor":
         stampAcMutualInductor(element, inductors, omega, nodeIndices, matrix);
+        break;
+      case "transmission-line":
         break;
       case "voltage-source":
         stampAcVoltageSourceMatrix(
@@ -3766,6 +3812,14 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
       case "inductor":
         insertNode(names, element.n1);
         insertNode(names, element.n2);
+        break;
+      case "transmission-line":
+        insertNode(names, element.n1);
+        insertNode(names, element.n2);
+        insertNode(names, element.n3);
+        insertNode(names, element.n4);
+        break;
+      case "mutual-inductor":
         break;
       case "voltage-source":
       case "current-source":
