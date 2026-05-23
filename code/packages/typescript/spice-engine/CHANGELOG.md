@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add pseudo-transient DC continuation as a final bounded convergence aid after
+  Newton, Gmin stepping, and source stepping; successful fallback results
+  report `convergenceAid: "pseudo_transient"`.
 - Add `DcResult.convergenceAid`, reporting whether the DC operating point came
   from plain Newton, Gmin stepping, source stepping, or no successful
   convergence aid.

@@ -449,6 +449,34 @@ fn dc_op_reports_unconverged_nonlinear_result_when_aids_are_disabled() {
 }
 
 #[test]
+fn dc_op_pseudo_transient_recovers_after_earlier_aids_fail() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vs", "in", "0", 10.0,
+    )));
+    circuit.add(Element::Diode(Diode::with_model(
+        "D1", "in", "out", 1.0e-15, 0.02585,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("Rload", "out", "0", 100.0)));
+
+    let result = dc_op_with_options(
+        &circuit,
+        DcOpOptions {
+            max_iterations: 1,
+            pseudo_transient_max_iterations: 500,
+            pseudo_transient_steps: 40,
+            ..DcOpOptions::default()
+        },
+    )
+    .unwrap();
+
+    assert!(result.converged);
+    assert_eq!(result.convergence_aid, DcConvergenceAid::PseudoTransient);
+    assert!(result.voltage("out").unwrap() > 0.0);
+    assert!(result.voltage("out").unwrap() < 10.0);
+}
+
+#[test]
 fn dc_mosfet_rejects_invalid_level1_params() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(

@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Pseudo-transient DC continuation** — `dc_op` now has a final bounded
+  artificial backward-Euler continuation aid after Newton, Gmin stepping, and
+  source stepping; successful fallback results report
+  `convergence_aid="pseudo_transient"`.
+
 - **DC convergence-aid metadata** — `DcResult` now reports whether the
   operating point came from plain Newton, Gmin stepping, source stepping, or no
   successful convergence aid.

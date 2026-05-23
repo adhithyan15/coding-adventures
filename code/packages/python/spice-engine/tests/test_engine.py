@@ -5625,6 +5625,24 @@ def test_dc_op_reports_no_convergence_aid_when_disabled_solve_fails() -> None:
     assert result.convergence_aid == "none"
 
 
+def test_dc_op_pseudo_transient_recovers_after_earlier_aids_fail() -> None:
+    """Pseudo-transient continuation is the final DC fallback aid."""
+    c = Circuit([
+        VoltageSource("Vs", "in", "0", 10.0),
+        Diode("D1", anode="in", cathode="out", Is=1e-15, Vt=0.02585),
+        Resistor("Rload", "out", "0", 100.0),
+    ])
+    result = dc_op(
+        c,
+        max_iterations=1,
+        pseudo_transient_max_iterations=500,
+        pseudo_transient_steps=40,
+    )
+    assert result.converged
+    assert result.convergence_aid == "pseudo_transient"
+    assert 0.0 < result.node_voltages["out"] < 10.0
+
+
 # ---- _dc_gmin_step ---------------------------------------------------------
 
 
