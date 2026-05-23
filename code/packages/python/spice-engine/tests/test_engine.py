@@ -2066,7 +2066,7 @@ def test_ac_diode_reverse_biased_acts_like_open():
     is determined only by the resistor divider.
     """
     c = Circuit()
-    c.add(VoltageSource("Vac", "in", "0", 1.0))
+    c.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
     c.add(Resistor("R1", "in", "anode", 1000.0))
     c.add(Resistor("R2", "anode", "0", 1000.0))   # load
     # Diode reverse-biased: cathode at Vin, anode at V_mid ≈ 0.5 V
@@ -2095,6 +2095,23 @@ def test_ac_diode_junction_capacitance_shunts_high_frequency():
 
     assert low > 0.9
     assert high < low / 100.0
+
+
+def test_ac_diode_transit_time_shunts_forward_bias_at_high_frequency():
+    """Forward-biased diode transit time contributes diffusion capacitance."""
+    def high_frequency_anode(tt: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 1.0, ac=AcSource(1.0)))
+        c.add(Resistor("R1", "in", "anode", 1.0e6))
+        c.add(Diode("D1", anode="anode", cathode="0", Tt=tt))
+        result = ac_sweep(c, f_start=100000000.0, f_stop=100000000.0, n_points=1)
+        return abs(result.points[0].node_voltages["anode"])
+
+    without_transit = high_frequency_anode(0.0)
+    with_transit = high_frequency_anode(1.0e-6)
+
+    assert without_transit > 0.01
+    assert with_transit < without_transit / 100.0
 
 
 def test_ac_bjt_npn_small_signal():

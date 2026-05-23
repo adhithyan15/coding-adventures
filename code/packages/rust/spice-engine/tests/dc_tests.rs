@@ -328,6 +328,7 @@ fn dc_diode_breakdown_voltage_increases_reverse_bias_current() {
         Some(5.0),
         1.0e-6,
         0.0,
+        0.0,
     )));
 
     let leakage_result = dc_op(&leakage).unwrap();

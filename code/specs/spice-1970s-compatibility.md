@@ -207,6 +207,9 @@ Status:
 - Diode `.model ... D(... CJO=<capacitance>)` / `CJ0` parsing and AC
   junction-capacitance admittance are implemented across Python, TypeScript,
   and Rust.
+- Diode `.model ... D(... TT=<time>)` parsing and forward-bias diffusion
+  capacitance are implemented in AC analysis across Python, TypeScript, and
+  Rust.
 
 ### Phase 7 - Classic Text Output and Control Cards
 

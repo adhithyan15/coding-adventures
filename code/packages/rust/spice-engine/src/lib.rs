@@ -301,6 +301,7 @@ fn clone_subckt_element(
             element.breakdown_voltage,
             element.breakdown_current,
             element.junction_capacitance,
+            element.transit_time,
         )),
         Element::Jfet(element) => Element::Jfet(Jfet::with_model(
             format!("{instance_name}.{}", element.name),
@@ -1086,6 +1087,7 @@ pub struct Diode {
     pub breakdown_voltage: Option<f64>,
     pub breakdown_current: f64,
     pub junction_capacitance: f64,
+    pub transit_time: f64,
 }
 
 impl Diode {
@@ -1132,6 +1134,7 @@ impl Diode {
             None,
             1.0e-3,
             0.0,
+            0.0,
         )
     }
 
@@ -1145,6 +1148,7 @@ impl Diode {
         breakdown_voltage: Option<f64>,
         breakdown_current: f64,
         junction_capacitance: f64,
+        transit_time: f64,
     ) -> Self {
         Self {
             name: name.into(),
@@ -1156,6 +1160,7 @@ impl Diode {
             breakdown_voltage,
             breakdown_current,
             junction_capacitance,
+            transit_time,
         }
     }
 }
@@ -4684,11 +4689,15 @@ fn build_ac_matrix(
                 let voltage = vector_voltage(operating_point, anode)
                     - vector_voltage(operating_point, cathode);
                 let (_, conductance) = diode_current_conductance(diode, voltage);
+                let diffusion_capacitance = diode.transit_time * conductance;
                 stamp_complex_conductance(
                     &mut matrix,
                     anode,
                     cathode,
-                    Complex::new(conductance, omega * diode.junction_capacitance),
+                    Complex::new(
+                        conductance,
+                        omega * (diode.junction_capacitance + diffusion_capacitance),
+                    ),
                 );
             }
             Element::Jfet(jfet) => {
@@ -5844,6 +5853,12 @@ fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: diode.name.clone(),
             reason: "junction capacitance must be finite and non-negative".to_string(),
+        });
+    }
+    if !diode.transit_time.is_finite() || diode.transit_time < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "transit time must be finite and non-negative".to_string(),
         });
     }
     Ok(())

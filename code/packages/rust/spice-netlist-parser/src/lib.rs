@@ -742,6 +742,7 @@ fn parse_element(
                     .or_else(|| model.params.get("CJ0"))
                     .copied()
                     .unwrap_or(0.0),
+                *model.params.get("TT").unwrap_or(&0.0),
             )))
         }
         'Q' => {

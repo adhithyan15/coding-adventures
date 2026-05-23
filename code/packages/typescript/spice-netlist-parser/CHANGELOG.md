@@ -8,6 +8,7 @@
   `.model ... D(... BV=<v> IBV=<i>)`.
 - Parse diode model-card junction capacitance with
   `.model ... D(... CJO=<c>)` / `.model ... D(... CJ0=<c>)`.
+- Parse diode model-card transit time with `.model ... D(... TT=<time>)`.
 - Parse and validate transient integration methods from
   `.tran ... method=<euler|trap|gear2>`, and expose fallback routing from
   `.options method=<...>`.

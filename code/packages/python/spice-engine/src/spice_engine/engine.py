@@ -254,6 +254,7 @@ def _clone_subckt_element(element: object, instance_name: str, node_map: dict[st
             element.BV,
             element.IBV,
             element.Cjo,
+            element.Tt,
         )
     if isinstance(element, JFET):
         return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_)
@@ -1718,6 +1719,8 @@ def _diode_effective_vt(el: Diode) -> float:
         raise ValueError(f"{el.name}: diode breakdown current must be finite and positive")
     if not math.isfinite(el.Cjo) or el.Cjo < 0.0:
         raise ValueError(f"{el.name}: diode junction capacitance must be finite and non-negative")
+    if not math.isfinite(el.Tt) or el.Tt < 0.0:
+        raise ValueError(f"{el.name}: diode transit time must be finite and non-negative")
     return el.Vt * el.N
 
 
@@ -3883,7 +3886,8 @@ def _stamp_ac(
         Vk = 0.0 if _is_ground(el.cathode) else dc_x[node_to_idx[el.cathode]]
         Vd = Va - Vk
         _, gd = _diode_current_conductance(el, Vd)
-        _stamp_g_c(G, node_to_idx, el.anode, el.cathode, gd + 1j * omega * el.Cjo)
+        diffusion_capacitance = el.Tt * gd
+        _stamp_g_c(G, node_to_idx, el.anode, el.cathode, gd + 1j * omega * (el.Cjo + diffusion_capacitance))
 
     elif isinstance(el, JFET):
         Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
@@ -5311,7 +5315,7 @@ def sens_dc(
             _make_entry(
                 "Is",
                 el.Is,
-                Diode(el.name, el.anode, el.cathode, el.Is + delta_is, el.Vt, el.N, el.BV, el.IBV, el.Cjo),
+                Diode(el.name, el.anode, el.cathode, el.Is + delta_is, el.Vt, el.N, el.BV, el.IBV, el.Cjo, el.Tt),
             )
 
         elif isinstance(el, BJT):
@@ -5537,7 +5541,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
         )
 
     if isinstance(el, Diode):
-        return Diode(el.name, el.anode, el.cathode, _draw(el.Is), el.Vt, el.N, el.BV, el.IBV, el.Cjo)
+        return Diode(el.name, el.anode, el.cathode, _draw(el.Is), el.Vt, el.N, el.BV, el.IBV, el.Cjo, el.Tt)
 
     if isinstance(el, BJT):
         return BJT(
