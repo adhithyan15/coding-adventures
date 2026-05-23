@@ -61,6 +61,8 @@ The current parser surface includes:
 - browser-facing document extraction for title, base URL/target, head metadata,
   resource inventory, anchor targets, body text, headings, richer links, image
   attributes, form controls, and table summaries
+- browser-facing content tree extraction that filters parser-only shell and
+  invisible nodes into a CSS-independent body structure for early rendering
 
 The checked-in html5lib tree-construction smoke corpus now covers every case in
 the currently audited upstream `html5lib-tests/tree-construction/*.dat` sources
@@ -322,8 +324,8 @@ audit report and pinned-count checks into the same local guard.
 ```rust
 use coding_adventures_html_lexer::HtmlScriptingMode;
 use coding_adventures_html_parser::{
-    parse_browser_document, parse_html, parse_html_fragment, parse_html_with_options,
-    HtmlInitialTokenizerContext, HtmlParseOptions,
+    parse_browser_content_tree, parse_browser_document, parse_html, parse_html_fragment,
+    parse_html_with_options, HtmlInitialTokenizerContext, HtmlParseOptions,
 };
 use dom_core::Node;
 
@@ -335,6 +337,10 @@ let browser_document = parse_browser_document(
 assert_eq!(browser_document.title.as_deref(), Some("Example"));
 assert_eq!(browser_document.links[0].href.as_deref(), Some("next.html"));
 assert!(browser_document.resources.is_empty());
+
+let content_tree = parse_browser_content_tree("<h1>Example</h1><p>Hello <b>there</b>").unwrap();
+assert_eq!(content_tree.children[0].role, "heading");
+assert_eq!(content_tree.children[1].role, "block");
 
 match &document.children[0] {
     Node::Element(element) => assert_eq!(element.name, "html"),

@@ -57,6 +57,43 @@ class HtmlFixtureSchemasTest(unittest.TestCase):
 
         self.assertEqual(errors, [])
 
+    def test_browser_content_tree_cases_require_recursive_node_shape(self) -> None:
+        errors = schema_check.check_browser_content_tree_case(
+            "html-parser/tests/fixtures/html-browser-content-tree.json",
+            0,
+            {
+                "id": "example",
+                "input": "<p>body",
+                "expected": {
+                    "children": [
+                        {
+                            "role": "block",
+                            "name": "p",
+                            "text": None,
+                            "href": None,
+                            "src": None,
+                            "alt": None,
+                            "control_type": None,
+                            "children": [
+                                {
+                                    "role": "text",
+                                    "name": None,
+                                    "text": "body",
+                                    "href": None,
+                                    "src": None,
+                                    "alt": None,
+                                    "control_type": None,
+                                    "children": [],
+                                }
+                            ],
+                        }
+                    ]
+                },
+            },
+        )
+
+        self.assertEqual(errors, [])
+
     def test_chunk_split_points_must_stay_inside_input(self) -> None:
         errors = schema_check.check_lexer_case(
             "html-lexer/tests/fixtures/whatwg-chunk-boundaries.json",

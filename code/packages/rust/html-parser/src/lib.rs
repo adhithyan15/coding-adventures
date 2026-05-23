@@ -631,6 +631,16 @@ pub fn extract_browser_document(document: &Document) -> BrowserDocument {
     BrowserDocument::from_document(document)
 }
 
+/// Parse a complete HTML string and extract a browser-facing content tree.
+pub fn parse_browser_content_tree(source: &str) -> Result<BrowserContentTree, ParseError> {
+    parse_html(source).map(|document| extract_browser_content_tree(&document))
+}
+
+/// Extract a browser-facing content tree from a parsed DOM document.
+pub fn extract_browser_content_tree(document: &Document) -> BrowserContentTree {
+    BrowserContentTree::from_document(document)
+}
+
 /// Parse a complete HTML string into a DOM document plus lexer/parser diagnostics.
 pub fn parse_html_with_diagnostics(source: &str) -> Result<ParseOutput, ParseError> {
     parse_html_with_diagnostics_and_options(source, HtmlParseOptions::default())
@@ -837,6 +847,23 @@ pub struct BrowserAnchor {
     pub text: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct BrowserContentTree {
+    pub children: Vec<BrowserContentNode>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserContentNode {
+    pub role: String,
+    pub name: Option<String>,
+    pub text: Option<String>,
+    pub href: Option<String>,
+    pub src: Option<String>,
+    pub alt: Option<String>,
+    pub control_type: Option<String>,
+    pub children: Vec<BrowserContentNode>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserHeading {
     pub level: u8,
@@ -918,6 +945,22 @@ impl BrowserDocument {
         }
         collect_browser_facts(body_children, &mut summary);
         summary
+    }
+}
+
+impl BrowserContentTree {
+    pub fn from_document(document: &Document) -> Self {
+        let body = find_first_element_in_nodes(&document.children, "body");
+        let body_children = body
+            .map(|element| element.children.as_slice())
+            .unwrap_or(document.children.as_slice());
+        Self::from_nodes(body_children)
+    }
+
+    pub fn from_nodes(nodes: &[Node]) -> Self {
+        let mut children = Vec::new();
+        collect_browser_content_nodes(nodes, &mut children);
+        Self { children }
     }
 }
 
@@ -8003,6 +8046,178 @@ fn link_resource_kind(rel: Option<&str>) -> String {
         }
     }
     "link".to_string()
+}
+
+fn collect_browser_content_nodes(nodes: &[Node], output: &mut Vec<BrowserContentNode>) {
+    for node in nodes {
+        match node {
+            Node::Text(value) => {
+                let text = collapse_html_whitespace(&value.data);
+                if !text.is_empty() {
+                    output.push(BrowserContentNode {
+                        role: "text".to_string(),
+                        name: None,
+                        text: Some(text),
+                        href: None,
+                        src: None,
+                        alt: None,
+                        control_type: None,
+                        children: Vec::new(),
+                    });
+                }
+            }
+            Node::Element(element) => {
+                if let Some(content_node) = browser_content_node_for_element(element) {
+                    output.push(content_node);
+                }
+            }
+            Node::DocumentType(_) | Node::Comment(_) => {}
+        }
+    }
+}
+
+fn browser_content_node_for_element(element: &Element) -> Option<BrowserContentNode> {
+    if is_browser_invisible_element(&element.name) {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name)?;
+    let mut children = Vec::new();
+    if should_collect_browser_content_children(&element.name) {
+        collect_browser_content_nodes(&element.children, &mut children);
+    }
+
+    let text = browser_content_text(element, role);
+    if role == "inline" && text.is_none() && children.is_empty() {
+        return None;
+    }
+
+    Some(BrowserContentNode {
+        role: role.to_string(),
+        name: Some(element.name.clone()),
+        text,
+        href: element.attribute("href").map(ToOwned::to_owned),
+        src: browser_content_src(element),
+        alt: element.attribute("alt").map(ToOwned::to_owned),
+        control_type: browser_content_control_type(element),
+        children,
+    })
+}
+
+fn browser_content_role(name: &str) -> Option<&'static str> {
+    match name {
+        "area" | "base" | "link" | "meta" | "param" | "script" | "style" | "template" | "title" => {
+            None
+        }
+        "a" => Some("link"),
+        "img" => Some("image"),
+        "br" | "wbr" => Some("line_break"),
+        "form" => Some("form"),
+        "input" | "button" | "select" | "textarea" => Some("control"),
+        "ul" | "ol" | "menu" | "dir" => Some("list"),
+        "li" | "dt" | "dd" => Some("list_item"),
+        "table" => Some("table"),
+        "caption" => Some("table_caption"),
+        "tbody" | "thead" | "tfoot" => Some("table_section"),
+        "tr" => Some("table_row"),
+        "td" | "th" => Some("table_cell"),
+        name if heading_level(name).is_some() => Some("heading"),
+        name if is_browser_block_element(name) => Some("block"),
+        _ => Some("inline"),
+    }
+}
+
+fn should_collect_browser_content_children(name: &str) -> bool {
+    !matches!(
+        name,
+        "area"
+            | "base"
+            | "br"
+            | "button"
+            | "img"
+            | "input"
+            | "link"
+            | "meta"
+            | "param"
+            | "select"
+            | "textarea"
+            | "wbr"
+    )
+}
+
+fn browser_content_text(element: &Element, role: &str) -> Option<String> {
+    let text = match role {
+        "control" if element.name == "input" => {
+            element.attribute("value").unwrap_or_default().to_string()
+        }
+        "control" | "heading" | "link" | "table_caption" => {
+            visible_text_for_nodes(&element.children)
+        }
+        _ => String::new(),
+    };
+    if text.is_empty() {
+        None
+    } else {
+        Some(text)
+    }
+}
+
+fn browser_content_src(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "object" => element.attribute("data").map(ToOwned::to_owned),
+        _ => element.attribute("src").map(ToOwned::to_owned),
+    }
+}
+
+fn browser_content_control_type(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "input" => Some(
+            element
+                .attribute("type")
+                .map(|input_type| input_type.to_ascii_lowercase())
+                .unwrap_or_else(|| "text".to_string()),
+        ),
+        "button" => Some(
+            element
+                .attribute("type")
+                .map(|button_type| button_type.to_ascii_lowercase())
+                .unwrap_or_else(|| "submit".to_string()),
+        ),
+        "select" | "textarea" => Some(element.name.clone()),
+        _ => None,
+    }
+}
+
+fn is_browser_block_element(name: &str) -> bool {
+    matches!(
+        name,
+        "address"
+            | "article"
+            | "aside"
+            | "blockquote"
+            | "body"
+            | "center"
+            | "details"
+            | "dialog"
+            | "div"
+            | "fieldset"
+            | "figcaption"
+            | "figure"
+            | "footer"
+            | "header"
+            | "hgroup"
+            | "hr"
+            | "html"
+            | "legend"
+            | "main"
+            | "nav"
+            | "p"
+            | "plaintext"
+            | "pre"
+            | "section"
+            | "summary"
+            | "xmp"
+    )
 }
 
 fn collect_form_controls(nodes: &[Node]) -> Vec<BrowserFormControl> {
