@@ -1,5 +1,37 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — UI29-4 `HostLink` + `HostTooltip` + `HostNumberInput` (U29-4-K-xaml)
+
+Three new UI29-4 kernel primitives lower to native WinUI 3 widgets:
+
+- **`HostLink` → `<HyperlinkButton NavigateUri="..." Content="..."/>`**.
+  WinUI 3 ships `HyperlinkButton` specifically for clickable
+  hyperlinks (vs `<Hyperlink>` which is the inline-text-flow
+  variant). When `external: false` + `onActivate` are both bound,
+  the lowering swaps to a `<Button Click="X_Click"/>` with a
+  code-behind handler that dispatches the named emit (`href` flows
+  into the dispatch payload as a string literal or `this.<Pascal>`
+  property reference) — host's in-app router takes over.
+- **`HostTooltip` → `<Border ToolTipService.ToolTip="text">child</Border>`**.
+  The attached property hooks the tooltip directly to the wrapped
+  element with native a11y wiring. `Border` is a layout pass-
+  through (no padding/margin/background by default).
+- **`HostNumberInput` → `<NumberBox Value="{x:Bind V, Mode=TwoWay}"
+  Minimum Maximum SmallChange PlaceholderText IsEnabled
+  ValueChanged>`**. WinUI 3's NumberBox is the native numeric
+  input with built-in ± stepper, min/max validation, and locale-
+  aware decimal parsing. `onChange` registers a `ValueChanged`
+  handler that dispatches `XEvent.X(args.NewValue)` — the standard
+  WinUI NumberBox event-arg shape (`args.NewValue` is the
+  validated `double`).
+
+6 new tests cover: HyperlinkButton with NavigateUri+Content, the
+external-false + onActivate Button swap with Click handler +
+href-in-payload dispatch, HostTooltip's Border + ToolTipService
+wrap, bare NumberBox emission, min/max/step → Minimum/Maximum/
+SmallChange mapping, and the ValueChanged code-behind handler
+emission.
+
 ## [Unreleased] — UI29-2 `HostCheckbox` + `HostRadio` (U29-2-K-xaml)
 
 Both new UI29-2 primitives lower to native WinUI / WPF widgets:

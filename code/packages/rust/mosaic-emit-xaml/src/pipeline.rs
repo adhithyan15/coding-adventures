@@ -1059,6 +1059,17 @@ fn emit_xaml_node(
         // with `<Button>`, plus their own checked-state events.
         "HostCheckbox" => emit_host_checkbox(node, indent, part_styles, ctx),
         "HostRadio" => emit_host_radio(node, indent, part_styles, ctx),
+
+        // UI29-4 — HostLink lowers to a `<HyperlinkButton NavigateUri=
+        // "..." Content="...">` (WinUI 3's first-class clickable
+        // hyperlink). HostTooltip uses the `ToolTipService.ToolTip`
+        // attached property on the wrapped child. HostNumberInput
+        // uses `<NumberBox>` (WinUI 3 numeric input with built-in ±
+        // stepper).
+        "HostLink" => emit_host_link(node, indent, part_styles, ctx),
+        "HostTooltip" => emit_host_tooltip(node, indent, part_styles, ctx),
+        "HostNumberInput" => emit_host_number_input(node, indent, part_styles, ctx),
+
         "HostScroll" => emit_host_scroll(node, indent, part_styles, ctx),
 
         // PR-4: HostTable.
@@ -3619,6 +3630,278 @@ fn escape_csharp_string(s: &str) -> String {
         }
     }
     out
+}
+
+// =====================================================================
+// UI29-4 — HostLink / HostTooltip / HostNumberInput emitters
+// =====================================================================
+
+/// `HostLink` → WinUI 3 `<HyperlinkButton>` per UI29-4.
+///
+/// WinUI 3 ships HyperlinkButton specifically for "clickable hyperlink"
+/// (vs `<Hyperlink>` which is the inline-text variant used inside
+/// `RichTextBlock`). HyperlinkButton has native a11y role + visited-
+/// state styling + Ctrl+click new-window support.
+///
+/// ## Property handling
+///
+/// | moslayout prop      | XAML                                                         |
+/// |---|---|
+/// | `href: "..."`       | `NavigateUri="..."` (XAML-attr-escaped)                     |
+/// | `href: slot: u`     | `NavigateUri="{x:Bind U}"`                                   |
+/// | `label: ..." / slot`| `Content="..."` / `Content="{x:Bind Label}"`                 |
+/// | `target: new-tab`   | (no extra attr — WinUI HyperlinkButton always opens via OS) |
+/// | `external: false` + `onActivate` | swaps to `<Button>` with `Click` handler so the host can route in-app |
+/// | `onActivate: emit`  | Click handler when external:false; otherwise dropped (v1) |
+///
+/// ## Generated shape
+///
+/// ```xml
+/// <HyperlinkButton x:Name="link0" NavigateUri="https://example.com" Content="Click me"/>
+/// ```
+///
+/// or, with `external: false`:
+///
+/// ```xml
+/// <Button x:Name="link0" Content="Click me" Click="link0_Click"/>
+/// ```
+/// + a `link0_Click` code-behind handler that dispatches the named emit.
+fn emit_host_link(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let style = part_style_attr(node, part_styles);
+    let x_name = host_x_name(node, "HostLink", ctx);
+
+    let external_false = matches!(find_prop_value(node, "external"), Some(LayoutPropValue::Keyword(k)) if k == "false");
+    let on_activate = match find_prop_value(node, "onActivate") {
+        Some(LayoutPropValue::EmitRef(s)) => Some(s.as_str()),
+        _ => None,
+    };
+
+    // Content (label) — shared between Button and HyperlinkButton.
+    let mut content_attr = String::new();
+    match find_prop_value(node, "label") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            content_attr.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
+        }
+        Some(LayoutPropValue::String(s)) => {
+            content_attr.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(s)));
+        }
+        _ => {
+            // No label — fall back to href as the visible text.
+            if let Some(LayoutPropValue::String(s)) = find_prop_value(node, "href") {
+                content_attr.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(s)));
+            }
+        }
+    }
+
+    if external_false {
+        // In-app routing path: Button + Click handler that dispatches.
+        let mut attrs = content_attr;
+        if let Some(emit_name) = on_activate {
+            let handler = format!("{x_name}_Click");
+            let case_pascal = kebab_to_pascal_case(&strip_on_prefix(emit_name));
+            let component = ctx.component_name;
+            let href_arg: String = match find_prop_value(node, "href") {
+                Some(LayoutPropValue::String(s)) => {
+                    format!("\"{}\"", escape_csharp_string(s))
+                }
+                Some(LayoutPropValue::SlotRef(slot)) => {
+                    let pascal = kebab_to_pascal_case(slot);
+                    format!("this.{pascal}")
+                }
+                _ => "\"\"".to_string(),
+            };
+            let body = format!(
+                "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}({href_arg}));\n    }}"
+            );
+            ctx.add_host_handler(HostHandler {
+                name: handler.clone(),
+                source: body,
+            });
+            attrs.push_str(&format!(" Click=\"{handler}\""));
+        }
+        Ok(format!(
+            "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}/>\n"
+        ))
+    } else {
+        // Default external-open path: HyperlinkButton with NavigateUri.
+        let mut attrs = String::new();
+        match find_prop_value(node, "href") {
+            Some(LayoutPropValue::String(s)) => {
+                attrs.push_str(&format!(" NavigateUri=\"{}\"", escape_xaml_attr(s)));
+            }
+            Some(LayoutPropValue::SlotRef(slot)) => {
+                let pascal = kebab_to_pascal_case(slot);
+                attrs.push_str(&format!(" NavigateUri=\"{{x:Bind {pascal}}}\""));
+            }
+            _ => {}
+        }
+        attrs.push_str(&content_attr);
+        Ok(format!(
+            "{pad}<HyperlinkButton x:Name=\"{x_name}\"{attrs}{style}/>\n"
+        ))
+    }
+}
+
+/// `HostTooltip` → wrap the single child with WinUI's
+/// `ToolTipService.ToolTip` attached property.
+///
+/// ## Generated shape
+///
+/// ```xml
+/// <Border ToolTipService.ToolTip="...">
+///   <!-- child(ren) -->
+/// </Border>
+/// ```
+///
+/// A `Border` wrapper (rather than e.g. a `Grid`) keeps the layout
+/// flat — Border with no padding/margin/background is functionally a
+/// pass-through. The ToolTipService attached property surfaces the
+/// tooltip on hover with proper a11y wiring.
+fn emit_host_tooltip(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 2);
+    let _ = part_styles;
+
+    let text = match find_prop_value(node, "text") {
+        Some(LayoutPropValue::String(s)) => format!(" ToolTipService.ToolTip=\"{}\"", escape_xaml_attr(s)),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            format!(" ToolTipService.ToolTip=\"{{x:Bind {pascal}}}\"")
+        }
+        _ => String::new(),
+    };
+
+    if node.children.is_empty() {
+        return Ok(format!("{pad}<Border{text}/>\n"));
+    }
+
+    let mut out = format!("{pad}<Border{text}>\n");
+    for child in &node.children {
+        out.push_str(&emit_xaml_node(child, indent + 2, part_styles, ctx)?);
+    }
+    out.push_str(&format!("{pad}</Border>\n"));
+    let _ = inner_pad;
+    Ok(out)
+}
+
+/// `HostNumberInput` → WinUI 3 `<NumberBox>` per UI29-4.
+///
+/// NumberBox is WinUI 3's native numeric input with built-in ±
+/// stepper buttons, min/max validation, and locale-aware decimal
+/// parsing. Perfect cross-mapping for HostNumberInput's slot
+/// surface.
+///
+/// ## Property handling
+///
+/// | moslayout prop  | XAML                                                      |
+/// |---|---|
+/// | `value: slot: v`| `Value="{x:Bind V, Mode=TwoWay}"`                         |
+/// | `min: <n>`      | `Minimum="<n>"`                                            |
+/// | `max: <n>`      | `Maximum="<n>"`                                            |
+/// | `step: <n>`     | `SmallChange="<n>"`                                        |
+/// | `placeholder`   | `PlaceholderText="..."` / bound                            |
+/// | `disabled`      | `IsEnabled="{x:Bind Not(D)}"` (polarity flip via Not helper) |
+/// | `onChange: emit`| `ValueChanged="X_ValueChanged"` (only fires on commit, not per-keystroke) |
+fn emit_host_number_input(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let style = part_style_attr(node, part_styles);
+    let x_name = host_x_name(node, "HostNumberInput", ctx);
+
+    let mut attrs = String::new();
+
+    // value: slot ref TwoWay binding; numeric literal as a Value attr.
+    match find_prop_value(node, "value") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            attrs.push_str(&format!(" Value=\"{{x:Bind {pascal}, Mode=TwoWay}}\""));
+        }
+        Some(LayoutPropValue::Number(n)) => {
+            attrs.push_str(&format!(" Value=\"{n}\""));
+        }
+        _ => {}
+    }
+
+    // min/max/step → Minimum/Maximum/SmallChange numeric literals.
+    if let Some(LayoutPropValue::Number(n)) = find_prop_value(node, "min") {
+        attrs.push_str(&format!(" Minimum=\"{n}\""));
+    }
+    if let Some(LayoutPropValue::Number(n)) = find_prop_value(node, "max") {
+        attrs.push_str(&format!(" Maximum=\"{n}\""));
+    }
+    if let Some(LayoutPropValue::Number(n)) = find_prop_value(node, "step") {
+        attrs.push_str(&format!(" SmallChange=\"{n}\""));
+    }
+
+    // placeholder: string or slot.
+    match find_prop_value(node, "placeholder") {
+        Some(LayoutPropValue::String(s)) => {
+            attrs.push_str(&format!(" PlaceholderText=\"{}\"", escape_xaml_attr(s)));
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            attrs.push_str(&format!(" PlaceholderText=\"{{x:Bind {pascal}}}\""));
+        }
+        _ => {}
+    }
+
+    // disabled: slot polarity-flip (Not helper) or literal keyword.
+    match find_prop_value(node, "disabled") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            ctx.add_helper(HelperMethod {
+                name: "Not".to_string(),
+                parameters: vec![("b".to_string(), "bool".to_string())],
+                return_type: "bool".to_string(),
+                body: "!b".to_string(),
+            });
+            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind Not({pascal})}}\""));
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            attrs.push_str(" IsEnabled=\"False\"");
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {
+            attrs.push_str(" IsEnabled=\"True\"");
+        }
+        _ => {}
+    }
+
+    // onChange → ValueChanged code-behind handler.
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onChange") {
+        let handler = format!("{x_name}_ValueChanged");
+        let case_pascal = kebab_to_pascal_case(&strip_on_prefix(emit_name));
+        let component = ctx.component_name;
+        // NumberBox.ValueChanged fires NumberBoxValueChangedEventArgs;
+        // the new value is at args.NewValue (double).
+        let body = format!(
+            "    private void {handler}(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}(args.NewValue));\n    }}"
+        );
+        ctx.add_host_handler(HostHandler {
+            name: handler.clone(),
+            source: body,
+        });
+        attrs.push_str(&format!(" ValueChanged=\"{handler}\""));
+    }
+
+    Ok(format!(
+        "{pad}<NumberBox x:Name=\"{x_name}\"{attrs}{style}/>\n"
+    ))
 }
 
 /// `HostScroll` → `<ScrollViewer>` per spec §4.3.
@@ -7317,6 +7600,242 @@ mod tests {
         assert!(
             r.code_behind.contains("XEvent.Pick(this.RadioValue)"),
             "expected `XEvent.Pick(this.RadioValue)` runtime dispatch, got:\n{}",
+            r.code_behind
+        );
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // UI29-4 — HostLink + HostTooltip + HostNumberInput
+    // ─────────────────────────────────────────────────────────────────
+
+    fn link_in_box(props: Vec<LayoutProp>) -> LayoutDef {
+        layout_with_root(
+            "X",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "HostLink".to_string(),
+                    part_name: None,
+                    props,
+                    children: Vec::new(),
+                }],
+            },
+        )
+    }
+
+    fn number_input_in_box(props: Vec<LayoutProp>) -> LayoutDef {
+        layout_with_root(
+            "X",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "HostNumberInput".to_string(),
+                    part_name: None,
+                    props,
+                    children: Vec::new(),
+                }],
+            },
+        )
+    }
+
+    /// UI29-4 XAML test 1 — bare `HostLink href + label` lowers to
+    /// `<HyperlinkButton NavigateUri="..." Content="..."/>`.
+    #[test]
+    fn host_link_string_href_and_label_emits_hyperlink_button() {
+        let c = component("X", vec![], vec![]);
+        let l = link_in_box(vec![
+            LayoutProp {
+                name: "href".to_string(),
+                value: LayoutPropValue::String("https://example.com".to_string()),
+            },
+            LayoutProp {
+                name: "label".to_string(),
+                value: LayoutPropValue::String("Click me".to_string()),
+            },
+        ]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml.contains("<HyperlinkButton x:Name="),
+            "expected `<HyperlinkButton x:Name=...>`, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("NavigateUri=\"https://example.com\""),
+            "expected `NavigateUri=\"https://example.com\"`, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("Content=\"Click me\""),
+            "expected `Content=\"Click me\"`, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// UI29-4 XAML test 2 — `external: false` + `onActivate` swaps
+    /// to a Button with a Click handler that dispatches the named
+    /// emit with the href in the payload (in-app routing path).
+    #[test]
+    fn host_link_external_false_with_on_activate_emits_button_with_click() {
+        let c = component(
+            "X",
+            vec![],
+            vec![EmitDecl {
+                name: "onNavigate".to_string(),
+                params: vec![EmitParam {
+                    name: "href".to_string(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            }],
+        );
+        let l = link_in_box(vec![
+            LayoutProp {
+                name: "href".to_string(),
+                value: LayoutPropValue::String("/about".to_string()),
+            },
+            LayoutProp {
+                name: "external".to_string(),
+                value: LayoutPropValue::Keyword("false".to_string()),
+            },
+            LayoutProp {
+                name: "onActivate".to_string(),
+                value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+            },
+        ]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml.contains("<Button x:Name="),
+            "expected Button (not HyperlinkButton) for external=false, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("Click=\""),
+            "expected Click handler attribute, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind.contains("XEvent.Navigate(\"/about\")"),
+            "expected dispatch with href in payload, got:\n{}",
+            r.code_behind
+        );
+    }
+
+    /// UI29-4 XAML test 3 — `HostTooltip` wraps its child in a
+    /// `Border` with the `ToolTipService.ToolTip` attached property.
+    #[test]
+    fn host_tooltip_wraps_child_in_border_with_tooltip_service() {
+        let c = component("X", vec![], vec![]);
+        let l = layout_with_root(
+            "X",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "HostTooltip".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "text".to_string(),
+                        value: LayoutPropValue::String("Click to submit".to_string()),
+                    }],
+                    children: vec![LayoutNode {
+                        tag: "HostButton".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::String("Submit".to_string()),
+                        }],
+                        children: Vec::new(),
+                    }],
+                }],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("X"));
+        let out = &r.xaml;
+        assert!(
+            out.contains("<Border ToolTipService.ToolTip=\"Click to submit\""),
+            "expected Border with ToolTipService.ToolTip, got:\n{out}"
+        );
+        assert!(out.contains("</Border>"), "expected closing </Border>, got:\n{out}");
+    }
+
+    /// UI29-4 XAML test 4 — bare `HostNumberInput` lowers to a
+    /// `<NumberBox x:Name="..."/>` self-closing element.
+    #[test]
+    fn host_number_input_empty_emits_numberbox() {
+        let c = component("X", vec![], vec![]);
+        let l = number_input_in_box(vec![]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml.contains("<NumberBox x:Name="),
+            "expected `<NumberBox x:Name=...>`, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// UI29-4 XAML test 5 — `min`/`max`/`step` numeric literals map
+    /// to WinUI's `Minimum`/`Maximum`/`SmallChange` NumberBox
+    /// properties.
+    #[test]
+    fn host_number_input_min_max_step_map_to_winui_numberbox_props() {
+        let c = component("X", vec![], vec![]);
+        let l = number_input_in_box(vec![
+            LayoutProp {
+                name: "min".to_string(),
+                value: LayoutPropValue::Number(0.0),
+            },
+            LayoutProp {
+                name: "max".to_string(),
+                value: LayoutPropValue::Number(100.0),
+            },
+            LayoutProp {
+                name: "step".to_string(),
+                value: LayoutPropValue::Number(5.0),
+            },
+        ]);
+        let r = compile(&c, &l, &empty_style("X"));
+        let out = &r.xaml;
+        assert!(out.contains("Minimum=\"0\""), "expected Minimum=0, got:\n{out}");
+        assert!(out.contains("Maximum=\"100\""), "expected Maximum=100, got:\n{out}");
+        assert!(
+            out.contains("SmallChange=\"5\""),
+            "expected SmallChange=5, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 XAML test 6 — `onChange: emit: onSet` registers a
+    /// `ValueChanged` handler in the code-behind that dispatches
+    /// `XEvent.Set(args.NewValue)` — WinUI's standard NumberBox
+    /// event-arg shape.
+    #[test]
+    fn host_number_input_on_change_emits_value_changed_handler() {
+        let c = component(
+            "X",
+            vec![],
+            vec![EmitDecl {
+                name: "onSet".to_string(),
+                params: vec![EmitParam {
+                    name: "value".to_string(),
+                    r#type: EmitPayloadType::Number,
+                }],
+            }],
+        );
+        let l = number_input_in_box(vec![LayoutProp {
+            name: "onChange".to_string(),
+            value: LayoutPropValue::EmitRef("onSet".to_string()),
+        }]);
+        let r = compile(&c, &l, &empty_style("X"));
+        assert!(
+            r.xaml.contains("ValueChanged=\""),
+            "expected ValueChanged attribute, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind.contains("XEvent.Set(args.NewValue)"),
+            "expected dispatch with args.NewValue payload, got:\n{}",
             r.code_behind
         );
     }
