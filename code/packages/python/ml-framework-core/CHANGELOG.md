@@ -2,6 +2,83 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 4-back-gelu: optional Rust fast path for `GELUFunction.backward` via an 18-op composed graph
+
+Closes the fourth activation backward.  Pairs with Phase 4c's
+forward GELU dispatch.  Together with Phase 4-back (Tanh + Sigmoid)
+and Phase 4-back-softmax, this means **four of the five classic
+activation backwards now have Rust fast paths**.  Only ReLU
+backward remains, which needs an upstream matrix-cpu primitive
+(`Greater` or similar comparison op) that the matrix-ir-json IR
+doesn't expose as a single op today.
+
+#### Why 18 ops
+
+GELU backward uses the closed-form chain-rule derivative of the
+tanh-approximation form:
+
+```
+inner    = sqrt(2/π) * x * (1 + 0.044715 * x²)
+tanh_v   = tanh(inner)
+sech²    = 1 - tanh_v²
+d_inner  = sqrt(2/π) * (1 + 3 * 0.044715 * x²)
+grad_in  = grad * (0.5 * (1 + tanh_v) + 0.5 * x * sech² * d_inner)
+```
+
+That's two parallel sub-graphs (one for `inner`/`tanh_v`/`1+tanh_v`,
+one for `d_inner`/`sech²`) that combine in the final
+`term1 + term2 → multiply by grad` step.  Forward used 9 ops; the
+backward adds the `sech²` derivative chain and the term combination,
+landing at 18.
+
+All 18 ops still ship in **one** FFI envelope.  Five constants are
+materialised at full target shape (`0.044715`, `3 * 0.044715 =
+0.134145`, `sqrt(2/π)`, `1.0`, `0.5`) because matrix-cpu's
+elementwise ops don't broadcast scalars.  The pre-multiplied
+`3 * 0.044715` constant saves one in-graph `Mul` vs computing it
+from `c_coeff` at runtime.
+
+#### Implementation
+
+- **`_rust_backend.py`** — adds `gelu_backward_via_rust(grad_data,
+  input_data, target_shape, device)` (~165 LOC).  Reuses the
+  module-level `_GELU_SQRT_2_PI` and `_GELU_COEFF` constants from
+  Phase 4c's forward helper.  Inner `_const_bytes(value)` helper
+  packs each constant tensor.
+- **`functions.py`** — `GELUFunction.backward` gains a 9-line
+  dispatch block before the existing per-cell loop.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `numel ≥ 100_000` | **Rust** (18-op composed graph in one FFI call) |
+| Extension installed, `numel < 100_000` | Pure-Python per-cell loop |
+| Extension NOT installed | Pure-Python per-cell loop |
+
+#### Tests (86 total MX10 tests, was 84)
+
+- **`ActivationParityTests.test_gelu_backward_parity`** (1 case,
+  skip if extension missing): builds a `(500, 200)` requires_grad
+  input in `[-3, 3]`, runs `GELU` forward + backward via Rust,
+  then via pure-Python, compares gradients at `rtol=1e-3,
+  atol=1e-4`.  Range `[-3, 3]` covers both the linear and
+  saturating regions of GELU.
+- **`GELUFallbackTests.test_gelu_backward_via_rust_raises_when_unavailable`**
+  (1 case, always run): defence-in-depth `RuntimeError`.
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**375 passed + 33 skipped (parity tests that need the extension)**;
+the pre-existing `test_device.py` failure on main is unrelated.
+
+### What's NOT in Phase 4-back-gelu
+
+- ReLU backward (`g * (x > 0)`).  Needs a `Greater` / `Step` /
+  `Where` op in matrix-cpu that's not exposed in matrix-ir-json
+  today.  Workarounds using `Max(x, 0) / x * g` hit div-by-zero on
+  the negative half.  **Deferred until matrix-cpu adds a comparison
+  primitive.**
+
 ### Added — MX10 Phase 4-back-softmax: optional Rust fast path for `SoftmaxFunction.backward` via a 5-op composed graph
 
 Closes the third activation backward.  After Phase 4-back's
