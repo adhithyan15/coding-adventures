@@ -1,5 +1,96 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [0.3.0] — UI29-2 — Checkbox + Radio rewritten on native primitives
+
+**Breaking change.** `Checkbox` and `Radio` previously composed from
+`HostButton` + an `If/Else` to fake checked/unchecked glyph states.
+That shape lost the platform-native a11y role, focus ring, tri-state
+visual, keyboard semantics, and (for radios) browser/platform-enforced
+group mutex. UI29-2 added `HostCheckbox` and `HostRadio` to the kernel
+as the 17th and 18th primitives; v0.3 makes both userland components
+thin wrappers around those primitives.
+
+### `Checkbox`
+
+- **Layout:** `Row[checkbox]{If/Else{HostButton},HostButton,Text[label]}`
+  collapses to a single `HostCheckbox[checkbox]` line.
+- **Interface changes:**
+  - `onChange` now carries `checked: bool` (was payloadless).
+  - New optional slot `indeterminate: bool` for tri-state. Fully
+    wired on Qt / XAML / HTML / WebComponent; React backend
+    silently ignores it pending the indeterminate follow-up PR.
+- **Parts removed:** `checkbox-box-checked`, `checkbox-box-unchecked`,
+  `checkbox-label`. The native widget renders its own glyph and the
+  label is wired internally; only the `checkbox` root part survives.
+- **.msl files trimmed** to just the root-part padding rule.
+
+### `Radio`
+
+- **Layout:** identical `Row{If/Else{HostButton},HostButton,Text}`
+  collapse to a single `HostRadio[radio]` line.
+- **Interface changes:**
+  - Slot `selected` renamed to `checked` for consistency with both
+    Checkbox and the kernel-canonical `HostRadio.checked`.
+  - `onSelect` now carries `value: text` (was payloadless).
+  - New slot `value: text` — the value this radio represents,
+    carried as the `onSelect` payload.
+  - New slot `group: text` — the radio-group name. Backends with
+    native group semantics (HTML `name=`, WinUI `GroupName=`) wire
+    this to the platform's mutex; backends without (SwiftUI / Qt v1)
+    preserve it as metadata.
+- **Parts removed:** `radio-box-selected`, `radio-box-unselected`,
+  `radio-label`. Only the `radio` root part survives.
+
+### Migration
+
+Pre-v0.3 hosts using `Checkbox`:
+
+```moslayout
+// Before (v0.2):
+Checkbox (
+  label    : "Remember me" ,
+  checked  : slot: remember ,
+  disabled : false ,
+  onChange : emit: onToggle      // host inverted slot manually
+)
+
+// After (v0.3): same usage; host receives the new value.
+Checkbox (
+  label    : "Remember me" ,
+  checked  : slot: remember ,
+  disabled : false ,
+  onChange : emit: onToggle      // payload: { checked: bool }
+)
+```
+
+Pre-v0.3 hosts using `Radio`:
+
+```moslayout
+// Before (v0.2):
+Radio (
+  label    : "Vanilla" ,
+  selected : slot: is-vanilla ,
+  disabled : false ,
+  onSelect : emit: onPick
+)
+
+// After (v0.3):
+Radio (
+  label    : "Vanilla" ,
+  checked  : slot: is-vanilla ,
+  value    : "vanilla" ,
+  group    : "flavor" ,
+  disabled : false ,
+  onSelect : emit: onPick        // payload: { value: text }
+)
+```
+
+### Tests
+
+Two existing tests (`checkbox_interface_matches_spec`,
+`radio_interface_matches_spec`) updated for the new slot rosters and
+emit payloads. Full test suite stays at 16 passing.
+
 ## [Unreleased] — v0.1 PR-5 — Field (form group)
 
 ### Added

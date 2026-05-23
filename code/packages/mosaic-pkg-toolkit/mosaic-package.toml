@@ -7,12 +7,12 @@
 #
 # See `code/specs/mosaic-pkg-toolkit.md` for the design.
 #
-# Phase: v0.1 (PR-1) — scaffold + Button + Alert.
-# The full v0.1 catalog (13 components) lands across follow-up PRs.
+# Phase: v0.3 — Checkbox + Radio rewritten on UI29-2 HostCheckbox /
+# HostRadio kernel primitives. Breaking changes; see CHANGELOG.
 
 [package]
 name        = "mosaic-pkg-toolkit"
-version     = "0.1.0"
+version     = "0.3.0"
 description = "Bootstrap-shaped Mosaic UI component library — ready-made components composed purely from UI29 kernel primitives"
 license     = "MIT OR Apache-2.0"
 

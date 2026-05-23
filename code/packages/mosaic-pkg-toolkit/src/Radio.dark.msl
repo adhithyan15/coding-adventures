@@ -1,30 +1,10 @@
-// Radio.dark.msl — dark-theme styling.
+// Radio.dark.msl — dark-theme styling (v0.3 trim).
+//
+// See Radio.light.msl header for the rewrite rationale. Only the
+// `radio` root part survives in v0.3.
 
 style Radio {
   part radio {
-    padding : 4 ;
-  }
-  part radio-box-selected {
-    width         : 18 ;
-    height        : 18 ;
-    border-radius : 9 ;
-    background    : "#1e293b" ;
-    color         : "#3b82f6" ;
-    border-width  : 1 ;
-    border-color  : "#3b82f6" ;
-    font-size     : 14 ;
-    padding       : 0 ;
-  }
-  part radio-box-unselected {
-    width         : 18 ;
-    height        : 18 ;
-    border-radius : 9 ;
-    background    : "#1e293b" ;
-    border-width  : 1 ;
-    border-color  : "#475569" ;
-    padding       : 0 ;
-  }
-  part radio-label {
     padding : 4 ;
   }
 }

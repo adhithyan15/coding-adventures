@@ -1,44 +1,25 @@
-// Checkbox.mll — layout for the Checkbox.
+// Checkbox.mll — layout for the Checkbox (v0.3 rewrite).
 //
-//   Row [ checkbox ]
-//     If (when: slot: checked) {
-//       HostButton [ checkbox-box-checked ]  ← styled square with check
-//     } Else {
-//       HostButton [ checkbox-box-unchecked ]  ← styled empty square
-//     }
-//     Text [ checkbox-label ]
+// Pre-v0.3 the layout fanned out into a `Row` containing two
+// `HostButton`s wrapped in an `If/Else` (one with a `✓` glyph, one
+// blank) plus a sibling `Text` for the label. That fake-checkbox
+// pattern lost native a11y role, focus ring, tri-state, and
+// keyboard semantics.
 //
-// The two HostButton instances allow the .msl to style each state
-// independently (different background, border, glyph). Both fire the
-// same `onChange` emit on click — the host inverts its slot value.
-//
-// Why two HostButtons via If/Else instead of one with a slot-bound label?
-// ----------------------------------------------------------------------
-// A single button with `label : "✓" if checked else ""` would work
-// IF the kernel supported expressions in label props. It accepts a
-// SlotRef OR a literal string, but not a conditional expression
-// directly. The If/Else block produces two distinct nodes that the
-// backend lowers into a runtime visibility-toggle (XAML's
-// BoolToVisibilityConverter, React's `cond ? ... : ...`).
+// v0.3 is a one-line wrapper: the layout root is the UI29-2 kernel
+// primitive `HostCheckbox`. Every backend lowers it to its
+// platform's actual checkbox widget. The `label:` slot lives on
+// the native widget so the input + label are wired together (DOM
+// `<label><input/> body</label>`, SwiftUI `Toggle(label, isOn:)`,
+// Qt `CheckBox { text: ... }`, WinUI `<CheckBox Content="..."/>`),
+// which means clicking the label toggles the box for free.
 
 layout Checkbox {
-  Row [ checkbox ] {
-    If ( when: slot: checked ) {
-      HostButton [ checkbox-box-checked ] (
-        label : "✓" ,
-        disabled : slot: disabled ,
-        onClick : emit: onChange
-      )
-    }
-    Else {
-      HostButton [ checkbox-box-unchecked ] (
-        label : "" ,
-        disabled : slot: disabled ,
-        onClick : emit: onChange
-      )
-    }
-    Text [ checkbox-label ] (
-      content : slot: label
-    )
-  }
+  HostCheckbox [ checkbox ] (
+    label         : slot: label ,
+    checked       : slot: checked ,
+    disabled      : slot: disabled ,
+    indeterminate : slot: indeterminate ,
+    onToggle      : emit: onChange
+  )
 }

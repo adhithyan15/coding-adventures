@@ -1,27 +1,22 @@
-// Radio.mll — layout for the Radio.
+// Radio.mll — layout for the Radio (v0.3 rewrite).
 //
-// Same If/Else swap pattern as Checkbox.mll. The .msl renders the
-// box as a circle and the selected indicator as a filled dot
-// rather than a checkmark.
+// Pre-v0.3 the layout fanned out into a `Row` containing two
+// `HostButton`s wrapped in an `If/Else` (one with a `•` glyph, one
+// blank) plus a sibling `Text` for the label. That fake-radio
+// pattern lost native a11y role, focus ring, group-mutex visual,
+// and arrow-key navigation.
+//
+// v0.3 is a one-line wrapper around the UI29-2 kernel primitive
+// `HostRadio`. The native widget owns label wiring and (where the
+// platform supports it) the group-mutex behaviour.
 
 layout Radio {
-  Row [ radio ] {
-    If ( when: slot: selected ) {
-      HostButton [ radio-box-selected ] (
-        label : "•" ,
-        disabled : slot: disabled ,
-        onClick : emit: onSelect
-      )
-    }
-    Else {
-      HostButton [ radio-box-unselected ] (
-        label : "" ,
-        disabled : slot: disabled ,
-        onClick : emit: onSelect
-      )
-    }
-    Text [ radio-label ] (
-      content : slot: label
-    )
-  }
+  HostRadio [ radio ] (
+    label    : slot: label ,
+    checked  : slot: checked ,
+    value    : slot: value ,
+    group    : slot: group ,
+    disabled : slot: disabled ,
+    onSelect : emit: onSelect
+  )
 }
