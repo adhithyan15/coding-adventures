@@ -49,6 +49,8 @@ All notable changes to this package will be documented in this file.
 - Flattened last-checkpoint presence flags in supervisor drain run summaries.
 - Last-checkpoint consistency flags for presence, timestamp, call-id, and
   aggregate checkpoint fields in supervisor drain reports and summaries.
+- Inventory count consistency flags for supervisor drain pages, plans, loops,
+  reports, and summaries.
 - Flattened planned and replayed follow-up row counts in supervisor drain run
   summaries.
 - Follow-up pressure drift flags in supervisor drain run reports and summaries.
