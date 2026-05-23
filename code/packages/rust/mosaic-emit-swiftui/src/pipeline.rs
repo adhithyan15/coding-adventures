@@ -406,6 +406,15 @@ fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
         "HostCheckbox" => emit_host_checkbox(node, indent),
         "HostRadio" => emit_host_radio(node, indent),
 
+        // UI29-4 kernel — `HostLink` lowers to SwiftUI's `Link`
+        // (iOS 14+/macOS 11+), `HostTooltip` to the `.help(...)`
+        // view modifier on the wrapped child (macOS / iOS 16+), and
+        // `HostNumberInput` to `TextField` with the `.number`
+        // format binding (iOS 15+/macOS 12+).
+        "HostLink" => emit_host_link(node, indent),
+        "HostTooltip" => emit_host_tooltip(node, indent),
+        "HostNumberInput" => emit_host_number_input(node, indent),
+
         // UI29 kernel — `HostTable` is the semantic data-table primitive.
         // See [`emit_host_table`] for the lowering rationale (VStack +
         // HStack rows, not SwiftUI.Table — for now).
@@ -1012,6 +1021,191 @@ fn emit_host_radio(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     } else if let Some(kw) = find_keyword_prop(node, "disabled") {
         if kw == "true" || kw == "false" {
             writeln!(out, "{mod_pad}.disabled({kw})").unwrap();
+        }
+    }
+
+    Ok(out)
+}
+
+// =====================================================================
+// UI29-4 — HostLink / HostTooltip / HostNumberInput emitters
+// =====================================================================
+
+/// Lower a `HostLink` node (UI29-4, 19th kernel primitive) to a
+/// SwiftUI `Link(label, destination:)` view.
+///
+/// `Link` is iOS 14+/macOS 11+. It uses the OS-default URL-open
+/// behavior (browser / Universal Links / scene-handler), which is
+/// the right default for `target: same` and `target: new-tab` (iOS
+/// has no in-window tab concept; both map to "open externally").
+///
+/// ## Property handling
+///
+/// | moslayout prop      | SwiftUI                                        |
+/// |---|---|
+/// | `href: "..."`       | `Link(label, destination: URL(string: "...")!)`|
+/// | `label: "..."`      | first positional argument to Link              |
+/// | `external: false`   | wrapped in `Button(action:)` instead, dispatches `onActivate` only (no URL open) |
+/// | `onActivate: emit`  | dispatch in the Button's action closure (only when external:false) |
+///
+/// ## When `external: true` + `onActivate` are BOTH bound
+///
+/// SwiftUI's `Link` doesn't expose an "also call this closure when
+/// clicked" hook. The host can observe environment changes if it
+/// really needs to track activation, but the v1 emitter drops the
+/// `onActivate` dispatch when `external != false` and documents
+/// the limitation. The far-more-common in-app routing path
+/// (`external: false`) gets the full Button-with-dispatch shape.
+fn emit_host_link(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 4);
+
+    let href = find_string_prop(node, "href").unwrap_or("#");
+    let label = find_string_prop(node, "label").unwrap_or(href);
+    let escaped_href = escape_swift_string(href);
+    let escaped_label = escape_swift_string(label);
+
+    let external_false = matches!(find_keyword_prop(node, "external"), Some("false"));
+    let on_activate = find_emit_ref_prop(node, "onActivate");
+
+    if external_false {
+        // In-app routing: Button + dispatch only, no URL open.
+        let mut out = String::new();
+        let action_body: String = match on_activate {
+            Some(emit_name) => {
+                let case = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+                validate_emit_name(&case)?;
+                // The href is passed through the dispatch payload as
+                // a String literal; downstream the host's router
+                // takes it and navigates in-app.
+                format!(
+                    "dispatch(.{case}(href: \"{escaped_href}\"))"
+                )
+            }
+            None => "{ }".to_string(),
+        };
+        writeln!(out, "{pad}Button(action: {{ {action_body} }}) {{").unwrap();
+        writeln!(out, "{inner_pad}Text(\"{escaped_label}\")").unwrap();
+        writeln!(out, "{pad}}}").unwrap();
+        Ok(out)
+    } else {
+        // Default: SwiftUI Link with OS-default open behaviour.
+        Ok(format!(
+            "{pad}Link(\"{escaped_label}\", destination: URL(string: \"{escaped_href}\")!)\n"
+        ))
+    }
+}
+
+/// Lower a `HostTooltip` node (UI29-4, 20th kernel primitive) to
+/// the SwiftUI `.help(...)` modifier on the wrapped child.
+///
+/// `.help(_:)` is macOS / iOS 16+. Hovering (macOS) or long-pressing
+/// (iOS 16+) the modified view shows the tooltip; screen readers
+/// announce it via `accessibilityHint`.
+///
+/// ## Generated shape
+///
+/// ```swift
+/// VStack {
+///     /* child(ren) */
+/// }
+/// .help("tooltip text")
+/// ```
+///
+/// We wrap in a `VStack` (zero-frame) so the `.help` modifier
+/// attaches to a single view even when multiple children are
+/// present. Empty-children case emits an empty `VStack { }`.
+fn emit_host_tooltip(
+    node: &LayoutNode,
+    indent: usize,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mod_pad = " ".repeat(indent + 4);
+
+    let text = find_string_prop(node, "text").unwrap_or("");
+    let escaped = escape_swift_string(text);
+
+    let mut out = String::new();
+    writeln!(out, "{pad}VStack {{").unwrap();
+    if !node.children.is_empty() {
+        out.push_str(&emit_children(&node.children, indent + 4)?);
+    }
+    writeln!(out, "{pad}}}").unwrap();
+    writeln!(out, "{mod_pad}.help(\"{escaped}\")").unwrap();
+    Ok(out)
+}
+
+/// Lower a `HostNumberInput` node (UI29-4, 21st kernel primitive)
+/// to a SwiftUI `TextField` with the `.number` format binding
+/// (iOS 15+/macOS 12+).
+///
+/// ## Generated shape
+///
+/// ```swift
+/// TextField("placeholder", value: .constant(value), format: .number)
+///     .disabled(disabled)
+/// ```
+///
+/// `.constant(value)` is the read-only binding pattern this
+/// backend uses (same caveat as HostInput's `.constant` choice).
+/// True two-way binding would need either a `@State` proxy in the
+/// host or moving to a `Binding(get:set:)` shape; both are v2.
+fn emit_host_number_input(
+    node: &LayoutNode,
+    indent: usize,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mod_pad = " ".repeat(indent + 4);
+
+    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
+    let escaped_placeholder = escape_swift_string(placeholder);
+
+    let value_expr: String = match find_slot_ref_prop(node, "value") {
+        Some(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel)
+                .map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!(".constant({camel})")
+        }
+        None => ".constant(0)".to_string(),
+    };
+
+    let mut out = String::new();
+    writeln!(
+        out,
+        "{pad}TextField(\"{escaped_placeholder}\", value: {value_expr}, format: .number)"
+    )
+    .unwrap();
+
+    // disabled — same shape HostInput uses.
+    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel)
+            .map_err(PipelineEmitError::UnsafeSlotName)?;
+        writeln!(out, "{mod_pad}.disabled({camel})").unwrap();
+    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
+        if kw == "true" || kw == "false" {
+            writeln!(out, "{mod_pad}.disabled({kw})").unwrap();
+        }
+    }
+
+    // onChange — `.onChange(of: value) { _ in dispatch(...) }`.
+    // SwiftUI's `.onChange(of:)` is iOS 14+; the closure shape
+    // changed in iOS 17 (now takes (old, new) — both deprecated form
+    // and new shape compile against modern SDKs). We emit the
+    // pre-17 single-arg shape; the host can adapt if needed.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
+        if let Some(slot) = find_slot_ref_prop(node, "value") {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel)
+                .map_err(PipelineEmitError::UnsafeSlotName)?;
+            let case = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&case)?;
+            writeln!(
+                out,
+                "{mod_pad}.onChange(of: {camel}) {{ dispatch(.{case}(value: {camel})) }}"
+            )
+            .unwrap();
         }
     }
 
@@ -3965,6 +4159,158 @@ mod tests {
         assert!(
             out.contains("dispatch(.pick(value: radioValue))"),
             "expected dispatch with `radioValue` bare identifier, got:\n{out}"
+        );
+    }
+
+    // =====================================================================
+    // UI29-4 — HostLink / HostTooltip / HostNumberInput (SwiftUI)
+    // =====================================================================
+
+    /// UI29-4 SwiftUI test 1 — bare `HostLink href + label` lowers
+    /// to SwiftUI's `Link(label, destination: URL(string: href)!)`.
+    /// Default behavior is OS-managed URL open.
+    #[test]
+    fn host_link_string_href_and_label_emits_swiftui_link() {
+        let m = component("X", vec![], vec![]);
+        let l = layout_with(
+            "X",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostLink",
+                    vec![
+                        prop_string("href", "https://example.com"),
+                        prop_string("label", "Click me"),
+                    ],
+                )],
+            ),
+        );
+        let r = from_pipeline(
+            &component("X", vec![], vec![]),
+            &l,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        let _ = m;
+        assert!(
+            r.contains("Link(\"Click me\", destination: URL(string: \"https://example.com\")!)"),
+            "expected SwiftUI Link with URL, got:\n{r}"
+        );
+    }
+
+    /// UI29-4 SwiftUI test 2 — `external: false` + `onActivate` swaps
+    /// to a Button wrapper that dispatches the named emit without
+    /// opening the URL (host's in-app router takes over). Pins the
+    /// in-app routing path.
+    #[test]
+    fn host_link_external_false_with_on_activate_emits_button_dispatch() {
+        let m = component("X", vec![], vec![emit("onNavigate", vec![])]);
+        let l = layout_with(
+            "X",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostLink",
+                    vec![
+                        prop_string("href", "/about"),
+                        prop_keyword("external", "false"),
+                        prop_emit_ref("onActivate", "onNavigate"),
+                    ],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            r.contains("Button(action: { dispatch(.navigate(href: \"/about\")) })"),
+            "expected Button + dispatch, got:\n{r}"
+        );
+        assert!(
+            !r.contains("URL(string:"),
+            "in-app routing path must NOT emit URL open, got:\n{r}"
+        );
+    }
+
+    /// UI29-4 SwiftUI test 3 — `HostTooltip` wraps its child in a
+    /// `VStack` and attaches `.help("text")` to it. The `.help`
+    /// modifier is macOS / iOS 16+.
+    #[test]
+    fn host_tooltip_wraps_child_in_vstack_with_help_modifier() {
+        let m = component("X", vec![], vec![]);
+        let l = layout_with(
+            "X",
+            container_node(
+                "Box",
+                vec![LayoutNode {
+                    tag: "HostTooltip".to_string(),
+                    part_name: None,
+                    props: vec![prop_string("text", "Click to submit")],
+                    children: vec![leaf("HostButton", vec![prop_string("label", "Submit")])],
+                }],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(r.contains("VStack {"), "expected VStack wrapper, got:\n{r}");
+        assert!(
+            r.contains(".help(\"Click to submit\")"),
+            "expected .help modifier, got:\n{r}"
+        );
+    }
+
+    /// UI29-4 SwiftUI test 4 — bare `HostNumberInput` with
+    /// `placeholder` + `value` slot lowers to `TextField(placeholder,
+    /// value: .constant(slot), format: .number)`.
+    #[test]
+    fn host_number_input_with_placeholder_and_value_slot_emits_textfield() {
+        let m = component("X", vec![slot("count", SlotType::Number, true)], vec![]);
+        let l = layout_with(
+            "X",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostNumberInput",
+                    vec![
+                        prop_string("placeholder", "Enter a number"),
+                        prop_slot_ref("value", "count"),
+                    ],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            r.contains("TextField(\"Enter a number\", value: .constant(count), format: .number)"),
+            "expected TextField with .number format, got:\n{r}"
+        );
+    }
+
+    /// UI29-4 SwiftUI test 5 — `onChange: emit: onSet` attaches an
+    /// `.onChange(of: value) { dispatch(.set(value: value)) }`
+    /// modifier (pre-iOS-17 closure shape; host can adapt to the
+    /// new (old, new) shape if needed).
+    #[test]
+    fn host_number_input_on_change_emits_on_change_modifier() {
+        let m = component(
+            "X",
+            vec![slot("count", SlotType::Number, true)],
+            vec![emit("onSet", vec![param("value", EmitPayloadType::Number)])],
+        );
+        let l = layout_with(
+            "X",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostNumberInput",
+                    vec![
+                        prop_slot_ref("value", "count"),
+                        prop_emit_ref("onChange", "onSet"),
+                    ],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            r.contains(".onChange(of: count) { dispatch(.set(value: count)) }"),
+            "expected .onChange modifier with dispatch, got:\n{r}"
         );
     }
 }
