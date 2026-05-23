@@ -94,11 +94,10 @@ use mosaic_package_manifest::{parse_path as parse_manifest, ManifestError};
 
 /// The set of backends this crate knows how to drive.
 ///
-/// We list every UI29 §4.3 backend even though only three are wired up
-/// today — that way callers (CLIs, IDE plugins) can build against the
-/// final shape of the enum and we can return `UnsupportedBackend` for
-/// the ones that aren't ready yet, instead of refusing to even compile
-/// against the symbol.
+/// All six UI29 §4.3 backends are wired (since this update). The HTML
+/// and WebComponent backends ship as part of UI29-2's follow-up; the
+/// XAML backend ships with WinUI3-compatible UserControls + per-
+/// component code-behind partials.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Backend {
     /// React functional components in `.tsx` files.
@@ -107,20 +106,24 @@ pub enum Backend {
     SwiftUI,
     /// Qt Quick (QML) elements in `.qml` files.
     Qt,
-    /// One self-registering JS file containing every component as a
-    /// `<custom-element>`. Not yet wired — pending UI29 kernel completion
-    /// for the WebComponent backend.
+    /// One `.js` file per component, defining a self-registering
+    /// `<custom-element>` against the shadow-DOM runtime.
     WebComponent,
-    /// A static-HTML snippet bundle. Not yet wired — pending UI29 kernel
-    /// completion for the HTML backend.
+    /// A `.html` fragment per component. Slot values resolve at the
+    /// host's template engine boundary via `{{handlebars}}` markers.
     Html,
+    /// WinUI 3 / UWP. Each component emits a triple:
+    /// `{Component}.xaml` (markup), `{Component}.xaml.cs`
+    /// (code-behind partial), and `{Component}.Event.cs`
+    /// (discriminated event union).
+    Xaml,
 }
 
 impl Backend {
     /// The on-disk subdirectory name beneath `output_root`.
     ///
     /// Conforms to the UI29 §4.3 layout: `dist/react/`, `dist/swiftui/`,
-    /// `dist/qt/`, `dist/webcomponent/`, `dist/html/`.
+    /// `dist/qt/`, `dist/webcomponent/`, `dist/html/`, `dist/xaml/`.
     fn dir_name(self) -> &'static str {
         match self {
             Backend::React => "react",
@@ -128,19 +131,27 @@ impl Backend {
             Backend::Qt => "qt",
             Backend::WebComponent => "webcomponent",
             Backend::Html => "html",
+            Backend::Xaml => "xaml",
         }
     }
 
-    /// The file extension for a single component file.
+    /// The file extension for the *primary* component file. Backends
+    /// that emit multiple files per component (currently only XAML —
+    /// `.xaml` + `.xaml.cs` + `.Event.cs`) use the extension of the
+    /// markup file as their "primary"; the secondary files are written
+    /// alongside with their own extensions.
     ///
-    /// `None` for the not-yet-wired backends so the type system reminds us
-    /// to handle them before adding a `<Component>.<ext>` write.
+    /// All six backends now return `Some(...)` since every backend has
+    /// a wired `from_pipeline`. The `Option` shape is preserved so a
+    /// future hypothetical "manifest-only" backend can still slot in.
     fn component_extension(self) -> Option<&'static str> {
         match self {
             Backend::React => Some("tsx"),
             Backend::SwiftUI => Some("swift"),
             Backend::Qt => Some("qml"),
-            Backend::WebComponent | Backend::Html => None,
+            Backend::WebComponent => Some("js"),
+            Backend::Html => Some("html"),
+            Backend::Xaml => Some("xaml"),
         }
     }
 }
@@ -188,8 +199,27 @@ pub enum BuildError {
     /// or was invalid. The wrapped string is the rendered `ManifestError`.
     Manifest(String),
     /// A backend was requested that this crate version does not yet wire.
-    /// Currently `WebComponent` and `Html`.
+    /// All six UI29 §4.3 backends are wired since v0.2; this variant
+    /// remains as a future-proof guard against new `Backend::Foo`
+    /// variants that forget to wire `compile_one_component`.
     UnsupportedBackend(Backend),
+    /// A component or package name in the manifest contains characters
+    /// that would be unsafe to interpolate into a path, an XML attribute,
+    /// or a JavaScript string literal. Filenames are derived directly
+    /// from the manifest, so a name like `../../etc/passwd` or
+    /// `X"; rm -rf "` would escape the dist directory or inject into
+    /// the generated index files. Validation runs up-front, before any
+    /// I/O, so a CLI sees the friendly error before partial output
+    /// hits the disk.
+    UnsafeName {
+        /// What we were validating (`"component"` or `"package"`).
+        kind: &'static str,
+        /// The offending string verbatim.
+        name: String,
+        /// A short explanation of what's allowed
+        /// (e.g. `[A-Za-z][A-Za-z0-9_]*` for components).
+        reason: &'static str,
+    },
     /// The manifest's `[components].exports` listed a component name that
     /// matched no source file. (We don't error from this directly today —
     /// we error from [`SourceNotFound`] instead — but the variant exists
@@ -242,6 +272,10 @@ impl std::fmt::Display for BuildError {
             BuildError::PipelineError { component, error } => {
                 write!(f, "pipeline error for component '{component}': {error}")
             }
+            BuildError::UnsafeName { kind, name, reason } => write!(
+                f,
+                "unsafe {kind} name '{name}': {reason} (would break path or output safety)"
+            ),
             BuildError::Io(e) => write!(f, "io error: {e}"),
         }
     }
@@ -275,10 +309,10 @@ impl From<ManifestError> for BuildError {
 pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     // ----- 1. Validate the backend up front --------------------------------
     //
-    // Returning `UnsupportedBackend` before any I/O happens means a CLI
-    // user can pass `--backend webcomponent` against any directory and
-    // see the actionable "backend not wired" message immediately instead
-    // of after the manifest parse succeeds.
+    // All six backends are wired since v0.2; `component_extension`
+    // returns `Some(...)` for every variant. The check is kept as a
+    // future-proof guard against new `Backend::Foo` variants that
+    // forget to wire `compile_one_component`.
     if opts.backend.component_extension().is_none() {
         return Err(BuildError::UnsupportedBackend(opts.backend));
     }
@@ -286,6 +320,26 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     // ----- 2. Read the manifest --------------------------------------------
     let manifest_path = opts.package_root.join("mosaic-package.toml");
     let manifest = parse_manifest(&manifest_path)?;
+
+    // ----- 2a. Validate names from the manifest ----------------------------
+    //
+    // The manifest is the threat boundary: a malicious or honestly-
+    // typo'd `[package].name` or `[components].exports` entry flows
+    // directly into filenames we write under `output_root`, into XML
+    // attributes in the XAML props fragment, into JS string literals
+    // in the WebComponent index, and into HTML comments in the HTML
+    // index. Without validation, a name like `../../etc/passwd` would
+    // escape the dist directory and a name like `Grid"; alert(1)//`
+    // would break out of the generated `import "./Grid.js"` line.
+    //
+    // We require strict alphanumeric-plus-underscore for component
+    // names (matches the PascalCase convention every existing example
+    // uses) and strict kebab-case for package names. Anything else is
+    // a hard error before any I/O happens.
+    validate_package_name(&manifest.package.name)?;
+    for component in &manifest.components.exports {
+        validate_component_name(component)?;
+    }
 
     // ----- 3. Prepare the output directory ---------------------------------
     //
@@ -381,51 +435,100 @@ fn compile_one_component(
         .map_err(|errs| pipeline_err(component, &errs[0]))?;
 
     // ----- 3. Hand the three IRs to the chosen backend ---------------------
-    let emitted = match backend {
+    //
+    // Each backend produces either:
+    //   - a single string (React/SwiftUI/Qt/HTML/WebComponent) → one file
+    //   - a multi-file triple (XAML) → three files written together
+    //
+    // For the single-file shape we write `{Component}.{ext}` and return
+    // its path. For XAML we write all three, return the primary `.xaml`
+    // path, and write the secondaries alongside.
+    let ext = backend
+        .component_extension()
+        .expect("every backend has an extension since the v0.2 wire-up");
+    let primary_path = out_dir.join(format!("{component}.{ext}"));
+
+    let primary_bytes: String = match backend {
         Backend::React => mosaic_emit_react::pipeline::from_pipeline(
             &mosmodel_out.component,
             &layout_out.def,
             &style_out.def,
         )
         .map(|r| r.output)
-        .map_err(|e| BuildError::PipelineError {
-            component: component.to_string(),
-            error: e.to_string(),
-        })?,
+        .map_err(|e| pipeline_emit_err(component, e))?,
         Backend::SwiftUI => mosaic_emit_swiftui::pipeline::from_pipeline(
             &mosmodel_out.component,
             &layout_out.def,
             &style_out.def,
         )
         .map(|r| r.output)
-        .map_err(|e| BuildError::PipelineError {
-            component: component.to_string(),
-            error: e.to_string(),
-        })?,
+        .map_err(|e| pipeline_emit_err(component, e))?,
         Backend::Qt => mosaic_emit_qt::pipeline::from_pipeline(
             &mosmodel_out.component,
             &layout_out.def,
             &style_out.def,
         )
         .map(|r| r.output)
-        .map_err(|e| BuildError::PipelineError {
-            component: component.to_string(),
-            error: e.to_string(),
-        })?,
-        // Unreachable because `build_package` rejects these up front, but
-        // we re-check defensively to keep this match exhaustive.
-        Backend::WebComponent | Backend::Html => {
-            return Err(BuildError::UnsupportedBackend(backend));
+        .map_err(|e| pipeline_emit_err(component, e))?,
+        Backend::Html => mosaic_emit_html::pipeline::from_pipeline(
+            &mosmodel_out.component,
+            &layout_out.def,
+            &style_out.def,
+        )
+        .map(|r| r.output)
+        .map_err(|e| pipeline_emit_err(component, e))?,
+        Backend::WebComponent => mosaic_emit_webcomponent::pipeline::from_pipeline(
+            &mosmodel_out.component,
+            &layout_out.def,
+            &style_out.def,
+        )
+        .map(|r| r.output)
+        .map_err(|e| pipeline_emit_err(component, e))?,
+        Backend::Xaml => {
+            // XAML produces three files per component. We do the full
+            // emit here (so the secondary writes happen alongside the
+            // primary), then return the primary body string for the
+            // shared single-file write at the end of the function.
+            //
+            // No registry / EmitOptions tweaks for v1: package-builder
+            // mode treats every component as a stand-alone UserControl
+            // (registry=None) and never emits the project shell
+            // (EmitOptions::default()).
+            let opts = mosaic_emit_xaml::pipeline::EmitOptions::default();
+            let result = mosaic_emit_xaml::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                None,
+                &opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+
+            // Write the secondaries alongside the primary `.xaml`.
+            // `.xaml.cs` is the code-behind partial; `.Event.cs` is
+            // the discriminated event union.
+            let code_behind_path = out_dir.join(format!("{component}.xaml.cs"));
+            write_file(&code_behind_path, result.code_behind.as_bytes())?;
+            let events_path = out_dir.join(format!("{component}.Event.cs"));
+            write_file(&events_path, result.events.as_bytes())?;
+
+            result.xaml
         }
     };
 
-    // ----- 4. Write the artifact -------------------------------------------
-    let ext = backend
-        .component_extension()
-        .expect("checked at function entry");
-    let artifact_path = out_dir.join(format!("{component}.{ext}"));
-    write_file(&artifact_path, emitted.as_bytes())?;
-    Ok(artifact_path)
+    // ----- 4. Write the primary artifact -----------------------------------
+    write_file(&primary_path, primary_bytes.as_bytes())?;
+    Ok(primary_path)
+}
+
+/// Convenience wrapper turning a backend's `PipelineEmitError` into a
+/// `BuildError::PipelineError` tagged with the component name. Lifted
+/// out of every backend arm so the dispatch above stays compact.
+fn pipeline_emit_err<E: std::fmt::Display>(component: &str, e: E) -> BuildError {
+    BuildError::PipelineError {
+        component: component.to_string(),
+        error: e.to_string(),
+    }
 }
 
 /// Render a sub-compiler's first error as a `BuildError::PipelineError`.
@@ -514,9 +617,81 @@ fn emit_index_file(
             write_file(&path, body.as_bytes())?;
             Ok(path)
         }
-        Backend::WebComponent | Backend::Html => {
-            // Already rejected up front, but the match must be exhaustive.
-            Err(BuildError::UnsupportedBackend(backend))
+        Backend::Html => {
+            // `index.html` aggregates every component fragment into one
+            // browsable file. Each component is wrapped in a
+            // `<section data-component="X">` block so a hosting tool can
+            // find and lift individual components. No JS, no styles — the
+            // index is itself an HTML fragment, not a full document.
+            let path = backend_dir.join("index.html");
+            let mut body = String::new();
+            body.push_str("<!-- Auto-generated by mosaic-package-artifact-builder. Do not edit. -->\n");
+            body.push_str(&format!("<!-- Package: {package_name} -->\n\n"));
+            for c in components {
+                body.push_str(&format!("<!-- Component: {c} (see {c}.html) -->\n"));
+            }
+            write_file(&path, body.as_bytes())?;
+            Ok(path)
+        }
+        Backend::WebComponent => {
+            // `index.js` re-exports each component's registration. The
+            // host imports this single file and every component
+            // self-registers as a `<mosaic-{name}>` custom element on
+            // module load. We use bare `import "./X.js"` (not
+            // `export *`) because the per-component file's side effect
+            // is the `customElements.define(...)` call — there's no
+            // named export to forward.
+            let path = backend_dir.join("index.js");
+            let mut body = String::new();
+            body.push_str("// Auto-generated by mosaic-package-artifact-builder. Do not edit.\n");
+            body.push_str(&format!("// Package: {package_name}\n\n"));
+            for c in components {
+                body.push_str(&format!("import \"./{c}.js\";\n"));
+            }
+            write_file(&path, body.as_bytes())?;
+            Ok(path)
+        }
+        Backend::Xaml => {
+            // XAML packages don't have a single "index" notion in the
+            // WinUI 3 world — hosts reference per-component XAML files
+            // and per-component code-behind partials individually. We
+            // emit a `MosaicPackage.props` MSBuild fragment that a
+            // host's `.csproj` can `<Import Project="..."/>` to pull
+            // every component's `.xaml` + `.xaml.cs` + `.Event.cs` into
+            // the build in one line.
+            //
+            // The format is the standard MSBuild item-group shape:
+            //
+            //   <Project xmlns="http://schemas.microsoft.com/...">
+            //     <ItemGroup>
+            //       <Page Include="Grid.xaml"><Generator>MSBuild:...</Generator></Page>
+            //       <Compile Include="Grid.xaml.cs"><DependentUpon>Grid.xaml</DependentUpon></Compile>
+            //       <Compile Include="Grid.Event.cs"/>
+            //     </ItemGroup>
+            //   </Project>
+            //
+            // Authoring this by hand for every package is error-prone;
+            // generating it gets the dependent-upon wiring right every
+            // time.
+            let path = backend_dir.join("MosaicPackage.props");
+            let mut body = String::new();
+            body.push_str("<!-- Auto-generated by mosaic-package-artifact-builder. Do not edit. -->\n");
+            body.push_str(&format!("<!-- Package: {package_name} -->\n"));
+            body.push_str("<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n");
+            body.push_str("  <ItemGroup>\n");
+            for c in components {
+                body.push_str(&format!(
+                    "    <Page Include=\"{c}.xaml\"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>\n"
+                ));
+                body.push_str(&format!(
+                    "    <Compile Include=\"{c}.xaml.cs\"><DependentUpon>{c}.xaml</DependentUpon></Compile>\n"
+                ));
+                body.push_str(&format!("    <Compile Include=\"{c}.Event.cs\"/>\n"));
+            }
+            body.push_str("  </ItemGroup>\n");
+            body.push_str("</Project>\n");
+            write_file(&path, body.as_bytes())?;
+            Ok(path)
         }
     }
 }
@@ -578,6 +753,84 @@ fn write_file(path: &Path, bytes: &[u8]) -> Result<(), BuildError> {
 fn create_dir_all(path: &Path) -> Result<(), BuildError> {
     fs::create_dir_all(path)
         .map_err(|e| BuildError::Io(format!("mkdir {}: {e}", path.display())))
+}
+
+// ===========================================================================
+// Name validation (security boundary — see `build_package` step 2a)
+// ===========================================================================
+
+/// Validate a component name from the manifest's `[components].exports`.
+///
+/// Required shape: `[A-Za-z][A-Za-z0-9_]*` — strict alphanumeric-plus-
+/// underscore, must lead with a letter. This is intentionally
+/// stricter than what most file systems would accept; component names
+/// flow into:
+///
+/// - Filenames: `out_dir.join(format!("{component}.{ext}"))`. Without
+///   validation, `../../etc/passwd` would escape the dist root.
+/// - XAML's MSBuild props XML: `<Page Include="{component}.xaml">`.
+///   Without validation, `Grid"><Exec Command="rm -rf /"/><Page Include="`
+///   would inject an MSBuild task.
+/// - WebComponent's index JS: `import "./{component}.js";`. Without
+///   validation, `Grid"; fetch(...)//`would break out of the string.
+/// - HTML's index comments: `<!-- Component: {component} -->`. Without
+///   validation, `Grid --><script>alert(1)</script><!--` would inject
+///   into the aggregated index.
+///
+/// Every existing component in the codebase follows PascalCase
+/// (`Grid`, `Cell`, `Button`, `HostInput`, `MosaicPkgDialog`, …)
+/// which trivially passes this filter; the validation is purely a
+/// hardening pass against malicious or accidentally-malformed
+/// manifests.
+fn validate_component_name(name: &str) -> Result<(), BuildError> {
+    let unsafe_err = || BuildError::UnsafeName {
+        kind: "component",
+        name: name.to_string(),
+        reason: "must match [A-Za-z][A-Za-z0-9_]* (PascalCase recommended)",
+    };
+
+    let mut chars = name.chars();
+    let first = chars.next().ok_or_else(unsafe_err)?;
+    if !first.is_ascii_alphabetic() {
+        return Err(unsafe_err());
+    }
+    for c in chars {
+        if !c.is_ascii_alphanumeric() && c != '_' {
+            return Err(unsafe_err());
+        }
+    }
+    Ok(())
+}
+
+/// Validate a package name from the manifest's `[package].name`.
+///
+/// Required shape: `[a-z][a-z0-9-]*` — strict lowercase-kebab-case,
+/// must lead with a letter. Package names flow into the generated
+/// index files' "Package: NAME" comments (HTML/JS/XML) and into the
+/// Qt qmldir's `module NAME` line. Same threat model as component
+/// names, plus the Qt `qmldir_module_name` helper relies on kebab-case
+/// to produce a valid `[A-Z][A-Za-z0-9]*` Qt module name.
+///
+/// Every existing `mosaic-pkg-*` package follows this convention; the
+/// validation is purely a hardening pass.
+fn validate_package_name(name: &str) -> Result<(), BuildError> {
+    let unsafe_err = || BuildError::UnsafeName {
+        kind: "package",
+        name: name.to_string(),
+        reason: "must match [a-z][a-z0-9-]* (kebab-case)",
+    };
+
+    let mut chars = name.chars();
+    let first = chars.next().ok_or_else(unsafe_err)?;
+    if !first.is_ascii_lowercase() {
+        return Err(unsafe_err());
+    }
+    for c in chars {
+        if !(c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-') {
+            return Err(unsafe_err());
+        }
+    }
+    Ok(())
 }
 
 // ===========================================================================
@@ -738,33 +991,290 @@ version = "1"
     }
 
     // -----------------------------------------------------------------------
-    // 5-6. Unsupported backends
+    // 5-7. Newly-wired backends (HTML, WebComponent, XAML). UI29-2 follow-up.
     // -----------------------------------------------------------------------
 
+    /// HTML backend: writes `{Component}.html` per component plus a
+    /// fragment-shaped `index.html` aggregator. Static-HTML fragments
+    /// hold `{{slot}}` template markers a host's template engine
+    /// substitutes at render time.
     #[test]
-    fn webcomponent_backend_is_unsupported() {
+    fn html_backend_writes_html_fragment_per_component() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
         let out = TempDir::new().unwrap();
-        let err = build_package(&BuildOptions {
-            package_root: pkg.path().to_path_buf(),
-            output_root: out.path().to_path_buf(),
-            backend: Backend::WebComponent,
-        })
-        .unwrap_err();
-        assert!(matches!(err, BuildError::UnsupportedBackend(Backend::WebComponent)));
-    }
-
-    #[test]
-    fn html_backend_is_unsupported() {
-        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
-        let out = TempDir::new().unwrap();
-        let err = build_package(&BuildOptions {
+        let result = build_package(&BuildOptions {
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::Html,
         })
+        .expect("html build");
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+        assert!(out.path().join("html").join("Grid.html").exists());
+        let idx = out.path().join("html").join("index.html");
+        assert!(idx.exists());
+        let body = fs::read_to_string(&idx).unwrap();
+        assert!(body.contains("Component: Grid"));
+        assert!(body.contains("Package: mosaic-pkg-grid"));
+    }
+
+    /// WebComponent backend: writes one `.js` per component (each
+    /// self-registers a `<custom-element>` on import) plus an
+    /// `index.js` that imports each one in turn.
+    #[test]
+    fn webcomponent_backend_writes_js_per_component() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::WebComponent,
+        })
+        .expect("webcomponent build");
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+        assert!(out.path().join("webcomponent").join("Grid.js").exists());
+        let idx = out.path().join("webcomponent").join("index.js");
+        assert!(idx.exists());
+        let body = fs::read_to_string(&idx).unwrap();
+        assert!(body.contains("import \"./Grid.js\""));
+    }
+
+    /// XAML backend: writes the three-file triple per component
+    /// (`.xaml` + `.xaml.cs` + `.Event.cs`) plus a
+    /// `MosaicPackage.props` MSBuild fragment that wires every
+    /// component into a host's `.csproj` via a single `<Import>`.
+    #[test]
+    fn xaml_backend_writes_triple_per_component_and_props_fragment() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Xaml,
+        })
+        .expect("xaml build");
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+        let xaml_dir = out.path().join("xaml");
+        assert!(xaml_dir.join("Grid.xaml").exists(), "primary .xaml present");
+        assert!(
+            xaml_dir.join("Grid.xaml.cs").exists(),
+            "code-behind .xaml.cs present"
+        );
+        assert!(
+            xaml_dir.join("Grid.Event.cs").exists(),
+            "event union .Event.cs present"
+        );
+        let props_path = xaml_dir.join("MosaicPackage.props");
+        assert!(props_path.exists(), "MSBuild fragment present");
+        let props = fs::read_to_string(&props_path).unwrap();
+        assert!(props.contains("<Page Include=\"Grid.xaml\""));
+        assert!(props.contains("<Compile Include=\"Grid.xaml.cs\""));
+        assert!(props.contains("DependentUpon>Grid.xaml<"));
+        assert!(props.contains("<Compile Include=\"Grid.Event.cs\""));
+    }
+
+    // -----------------------------------------------------------------------
+    // Security boundary — name validation (see `validate_*_name` helpers).
+    // Both vectors caught during security review of the backend-wiring PR.
+    // -----------------------------------------------------------------------
+
+    /// Helper: build a manifest with arbitrary `package.name` and
+    /// `components.exports`, allowing values that would normally fail
+    /// the validators. Used only by the security-boundary tests below.
+    fn make_package_raw(pkg_name: &str, components: &[&str]) -> TempDir {
+        let tmp = TempDir::new().expect("temp dir");
+        let root = tmp.path();
+        let exports = components
+            .iter()
+            .map(|c| format!("\"{c}\""))
+            .collect::<Vec<_>>()
+            .join(", ");
+        let manifest = format!(
+            r#"
+[package]
+name = "{pkg_name}"
+version = "0.1.0"
+description = "fixture"
+license = "MIT"
+
+[components]
+exports = [{exports}]
+
+[dependencies]
+
+[kernel]
+version = "1"
+"#
+        );
+        fs::write(root.join("mosaic-package.toml"), manifest).unwrap();
+        // Intentionally do NOT create src/ — validation must fire
+        // before any source-file lookup happens.
+        tmp
+    }
+
+    /// Path-traversal regression: a component name with `..` /  `/`
+    /// would let an attacker-controlled manifest write outside
+    /// `output_root`. Validation must reject the name up front before
+    /// any I/O happens.
+    #[test]
+    fn component_name_with_path_traversal_is_rejected() {
+        let pkg = make_package_raw("mosaic-pkg-evil", &["../../etc/passwd"]);
+        let out = TempDir::new().unwrap();
+        let err = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+        })
         .unwrap_err();
-        assert!(matches!(err, BuildError::UnsupportedBackend(Backend::Html)));
+        assert!(
+            matches!(err, BuildError::UnsafeName { kind, .. } if kind == "component")
+                || matches!(err, BuildError::Manifest(_)),
+            "expected UnsafeName(component, …) or Manifest(...), got {err:?}"
+        );
+    }
+
+    /// Component name containing a path separator alone (no `..`)
+    /// must also be rejected — the joined `out_dir.join("foo/bar")`
+    /// would silently create a subdirectory under the dist root.
+    #[test]
+    fn component_name_with_slash_is_rejected() {
+        let pkg = make_package_raw("mosaic-pkg-evil", &["foo/bar"]);
+        let out = TempDir::new().unwrap();
+        let err = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+        })
+        .unwrap_err();
+        // The manifest parser may catch some of these earlier as a
+        // `Manifest(...)` error (it does its own kebab/PascalCase
+        // sanity-check); we accept either error type as long as the
+        // build is rejected. The validator's role is to be the second
+        // line of defense if the manifest parser ever loosens its
+        // grammar.
+        assert!(
+            matches!(err, BuildError::UnsafeName { kind, .. } if kind == "component")
+                || matches!(err, BuildError::Manifest(_)),
+            "expected UnsafeName(component, …) or Manifest(...), got {err:?}"
+        );
+    }
+
+    /// HTML/JS/XML injection regression: a component name containing
+    /// quote / angle-bracket / `-->` characters would break out of
+    /// the generated `import "./X.js"`, `<Page Include="X.xaml">`,
+    /// or `<!-- Component: X -->` strings. The validator's strict
+    /// `[A-Za-z][A-Za-z0-9_]*` rule blocks every such character.
+    #[test]
+    fn component_name_with_injection_characters_is_rejected() {
+        // Some injection chars (`"`) trip the TOML parser before our
+        // validator runs — that's fine, both are rejection paths.
+        // The validator is the second line of defence; either error
+        // type counts.
+        for bad in [
+            "Grid<script>",
+            "Grid-->",
+            "Grid; rm -rf /",
+            "1Grid",        // must lead with a letter
+            "",             // empty
+            "Grid-Hi",      // hyphen not allowed in components (PascalCase only)
+            "Grid.evil",    // dot not allowed
+            "Grid$",        // special chars
+        ] {
+            let pkg = make_package_raw("mosaic-pkg-evil", &[bad]);
+            let out = TempDir::new().unwrap();
+            let err = build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Html,
+            })
+            .unwrap_err();
+            assert!(
+                matches!(err, BuildError::UnsafeName { kind, .. } if kind == "component")
+                    || matches!(err, BuildError::Manifest(_)),
+                "expected UnsafeName or Manifest error for {bad:?}, got {err:?}"
+            );
+        }
+    }
+
+    /// Package name validation: kebab-case only. Capitals, dots,
+    /// path separators, and injection characters must all be
+    /// rejected before reaching the qmldir / props / index files.
+    /// The manifest parser already enforces most of this (it does
+    /// its own kebab-case sanity check), so the assertion accepts
+    /// either error type. The validator's role is to be the second
+    /// line of defense if the manifest parser ever loosens its
+    /// grammar.
+    #[test]
+    fn package_name_validation_rejects_unsafe_shapes() {
+        for bad in [
+            "Mosaic-Pkg-Grid",  // capitals not allowed
+            "mosaic.pkg.grid",  // dots not allowed
+            "../escape",        // path traversal
+            "mosaic-pkg-grid\"",
+            "9starts-with-digit",
+            "",
+        ] {
+            let pkg = make_package_raw(bad, &["Grid"]);
+            let out = TempDir::new().unwrap();
+            let err = build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::React,
+            })
+            .unwrap_err();
+            assert!(
+                matches!(err, BuildError::UnsafeName { kind, .. } if kind == "package")
+                    || matches!(err, BuildError::Manifest(_)),
+                "expected UnsafeName(package, …) or Manifest(...) for {bad:?}, got {err:?}"
+            );
+        }
+    }
+
+    /// Positive case: the standard PascalCase component names that
+    /// every existing package uses must pass validation cleanly.
+    #[test]
+    fn standard_component_names_pass_validation() {
+        assert!(validate_component_name("Grid").is_ok());
+        assert!(validate_component_name("HostInput").is_ok());
+        assert!(validate_component_name("Component1").is_ok());
+        assert!(validate_component_name("A_b").is_ok());
+    }
+
+    /// Positive case: the standard `mosaic-pkg-*` package names that
+    /// every existing package uses must pass validation cleanly.
+    #[test]
+    fn standard_package_names_pass_validation() {
+        assert!(validate_package_name("mosaic-pkg-grid").is_ok());
+        assert!(validate_package_name("mosaic-pkg-dialog").is_ok());
+        assert!(validate_package_name("mosaic-pkg-toolkit").is_ok());
+        assert!(validate_package_name("a").is_ok());
+        assert!(validate_package_name("foo-bar-1").is_ok());
+    }
+
+    /// Cross-cutting: a multi-component package builds every component
+    /// on every newly-wired backend without losing any. Pins the
+    /// "no silent skip" invariant.
+    #[test]
+    fn multi_component_builds_on_html_webcomponent_xaml() {
+        let pkg = make_package("mosaic-pkg-multi", &["Alpha", "Beta"]);
+        let out = TempDir::new().unwrap();
+
+        for backend in [Backend::Html, Backend::WebComponent, Backend::Xaml] {
+            let result = build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend,
+            })
+            .unwrap_or_else(|e| panic!("{backend:?} build failed: {e:?}"));
+            assert_eq!(result.components_built.len(), 2);
+        }
+
+        // Both backends must have produced their per-component files.
+        assert!(out.path().join("html").join("Alpha.html").exists());
+        assert!(out.path().join("html").join("Beta.html").exists());
+        assert!(out.path().join("webcomponent").join("Alpha.js").exists());
+        assert!(out.path().join("webcomponent").join("Beta.js").exists());
+        assert!(out.path().join("xaml").join("Alpha.xaml").exists());
+        assert!(out.path().join("xaml").join("Beta.xaml").exists());
     }
 
     // -----------------------------------------------------------------------
