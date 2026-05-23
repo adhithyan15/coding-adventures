@@ -185,6 +185,10 @@ without rebuilding audit policy.
 transport journal records with Rust-owned journal names, labels, queue-depth
 metadata, and messages, so adapters can maintain transport journal views
 without rebuilding log routing policy.
+`input_callback_transport_archive_summary` retains those journals as stable
+transport archive records with Rust-owned archive names, labels, queue-depth
+metadata, and messages, so adapters can keep archive views thin over shared
+transport retention policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
