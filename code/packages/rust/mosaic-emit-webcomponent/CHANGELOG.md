@@ -6,6 +6,33 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- **U29-2-K-webcomp** — `HostCheckbox` + `HostRadio` kernel primitives
+  (UI29-2) lower to native `<input type="checkbox|radio">` elements
+  inside the shadow DOM:
+  - Inline handlers wire `onchange` to `this.getRootNode().host.dispatch(...)`
+    — the shadow-DOM-aware form used by HostInput/HostButton.
+  - `checked` / `disabled` slot refs use template-literal conditional
+    attributes: `${slot ? " checked" : ""}` / `${slot ? " disabled" : ""}`.
+  - `label` (string or slot) wraps the input in a `<label>` element.
+  - `HostCheckbox.onToggle: emit: onX` becomes
+    `onchange="…dispatch({type:'x',checked:event.target.checked})"`.
+  - `HostCheckbox.indeterminate: slot|true` becomes a
+    `data-indeterminate="${slot}"` / `data-indeterminate="true"`
+    marker; the host's post-render pass sets the DOM property
+    imperatively (no HTML attr exists for `indeterminate`).
+  - `HostRadio.group` lowers to the real HTML `name=` attribute
+    (browser-enforced mutex when multiple radios share `name`).
+  - `HostRadio.value` lowers to the real HTML `value=` attribute.
+  - `HostRadio.onSelect: emit: onX` becomes a positive-transition-
+    gated `onchange="if(event.target.checked)…dispatch({type:'x',
+    value:event.target.value})"` per UI29-2 §2.2 ("this radio was
+    chosen", not "was deselected by a sibling").
+  - 9 new unit tests cover: bare inputs, conditional checked, the
+    shadow-DOM-aware onchange dispatch with `checked:` payload,
+    label wrapping, indeterminate data marker, bare radio,
+    `group:` → `name=`, `value:` → `value=`, and the positive-
+    gated radio dispatch.
+
 - **U29-1-K-webcomp** — `HostDialog` kernel primitive (UI29-1) lowers
   to a `<dialog id="mos-dlg-N">…</dialog>` element inside the shadow
   root plus a post-`innerHTML` lifecycle block in `_render()` that

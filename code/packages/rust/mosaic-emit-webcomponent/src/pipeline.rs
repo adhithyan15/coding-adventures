@@ -500,6 +500,14 @@ fn emit_html_tree(
         "HostInput" => return Ok(emit_host_input(node)),
         "HostButton" => return Ok(emit_host_button(node)),
         "HostDialog" => return emit_host_dialog(node, ctx),
+
+        // UI29-2 — `HostCheckbox` and `HostRadio` lower to native
+        // `<input type="checkbox|radio">` elements with inline
+        // `onchange` handlers that route through `this.getRootNode().
+        // host.dispatch(...)` (the shadow-DOM-aware form used by the
+        // other host primitives).
+        "HostCheckbox" => return Ok(emit_host_checkbox(node)),
+        "HostRadio" => return Ok(emit_host_radio(node)),
         "If" => return emit_if(node, None, ctx),
         "For" => return emit_for(node, ctx),
         // `Else` appearing as a top-level walker target means it was NOT
@@ -860,6 +868,193 @@ fn emit_host_button(node: &LayoutNode) -> String {
     };
 
     format!("<button{attrs}>{body}</button>")
+}
+
+// ---------------------------------------------------------------------
+// UI29-2 — HostCheckbox / HostRadio
+//
+// Both lower to native `<input type="checkbox|radio">` elements inside
+// the shadow root. The pattern mirrors HostInput/HostButton:
+//
+// - boolean-slot props (`checked`, `disabled`) use template-literal
+//   conditional-attribute presence: `${slot ? " checked" : ""}`.
+// - emit refs (`onToggle`, `onSelect`) wire to inline `onchange`
+//   handlers that reach the Custom Element via `this.getRootNode().host`.
+// - `label:` wraps the input in a `<label>` element; same idiom as the
+//   React and HTML backends.
+//
+// The Custom Element's `_render()` rebuilds innerHTML on every state
+// change, so inputs render with their fresh `checked`/`disabled`
+// attribute values from the latest slot snapshot — no diff-merge
+// machinery needed.
+// ---------------------------------------------------------------------
+
+/// Lower a `HostCheckbox` node to a shadow-DOM `<input type="checkbox" …>`.
+///
+/// See module comment for the overall shape rationale.
+///
+/// ## Indeterminate slot — handled, with a caveat
+///
+/// `indeterminate` is a DOM property (not an HTML attribute), so it
+/// can't be set via `attrs`. We emit the input markup unchanged but
+/// append a `data-indeterminate="${slot}"` marker the surrounding
+/// `_render()` machinery (or a future hydration script) can read on
+/// each render to call `el.indeterminate = el.dataset.indeterminate
+/// === "true"` imperatively. The literal `indeterminate: true` keyword
+/// case gets the hardcoded `data-indeterminate="true"` so the same
+/// hydration pass sets the property on mount.
+fn emit_host_checkbox(node: &LayoutNode) -> String {
+    let mut attrs = String::from(r#"<input type="checkbox""#);
+
+    // checked — slot ref via template-literal conditional, keyword
+    // literal via bare attribute presence.
+    if let Some(slot) = find_slot_ref(node, "checked") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#"${{{camel} ? " checked" : ""}}"#));
+        }
+    } else if let Some(kw) = find_keyword(node, "checked") {
+        if kw == "true" {
+            attrs.push_str(" checked");
+        }
+    }
+
+    // disabled — same shape as HostButton/HostInput.
+    if let Some(slot) = find_slot_ref(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#"${{{camel} ? " disabled" : ""}}"#));
+        }
+    } else if let Some(kw) = find_keyword(node, "disabled") {
+        if kw == "true" {
+            attrs.push_str(" disabled");
+        }
+    }
+
+    // indeterminate — marker attribute the hydration pass reads to set
+    // the DOM property imperatively (no HTML attr exists for this).
+    if let Some(slot) = find_slot_ref(node, "indeterminate") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#" data-indeterminate="${{{camel}}}""#));
+        }
+    } else if let Some(kw) = find_keyword(node, "indeterminate") {
+        if kw == "true" {
+            attrs.push_str(r#" data-indeterminate="true""#);
+        }
+    }
+
+    // onchange — wraps `event.target.checked` into the dispatch payload.
+    if let Some(emit_name) = find_emit_ref(node, "onToggle") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        if is_safe_identifier(&type_field) {
+            attrs.push_str(&format!(
+                r#" onchange="this.getRootNode().host.dispatch({{type:'{type_field}',checked:event.target.checked}})""#
+            ));
+        }
+    }
+
+    attrs.push_str(" />");
+
+    // Optional <label> wrap — string literal or slot ref.
+    if let Some(s) = find_string(node, "label") {
+        format!("<label>{attrs} {body}</label>", body = escape_html_text(s))
+    } else if let Some(slot) = find_slot_ref(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            format!("<label>{attrs} ${{{camel}}}</label>")
+        } else {
+            attrs
+        }
+    } else {
+        attrs
+    }
+}
+
+/// Lower a `HostRadio` node to a shadow-DOM `<input type="radio" …>`.
+///
+/// Like HostCheckbox, but with:
+///
+/// - `group:` lowers to the real HTML `name=` attribute (browser-
+///   enforced radio-mutex when multiple radios share `name`).
+/// - `value:` lowers to the real HTML `value=` attribute.
+/// - `onSelect:` wires `onchange` with `event.target.value` in the
+///   payload, and gates the dispatch on `event.target.checked` so
+///   sibling-caused deselects don't fire `onSelect` ("this radio was
+///   chosen" semantics, UI29-2 §2.2).
+fn emit_host_radio(node: &LayoutNode) -> String {
+    let mut attrs = String::from(r#"<input type="radio""#);
+
+    // name="group" or name="${slot}".
+    if let Some(s) = find_string(node, "group") {
+        attrs.push_str(&format!(r#" name="{}""#, escape_html_attribute(s)));
+    } else if let Some(slot) = find_slot_ref(node, "group") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#" name="${{{camel}}}""#));
+        }
+    }
+
+    // value="v" or value="${slot}".
+    if let Some(s) = find_string(node, "value") {
+        attrs.push_str(&format!(r#" value="{}""#, escape_html_attribute(s)));
+    } else if let Some(slot) = find_slot_ref(node, "value") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#" value="${{{camel}}}""#));
+        }
+    }
+
+    // checked — same shape as HostCheckbox.
+    if let Some(slot) = find_slot_ref(node, "checked") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#"${{{camel} ? " checked" : ""}}"#));
+        }
+    } else if let Some(kw) = find_keyword(node, "checked") {
+        if kw == "true" {
+            attrs.push_str(" checked");
+        }
+    }
+
+    // disabled — same shape as HostCheckbox.
+    if let Some(slot) = find_slot_ref(node, "disabled") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            attrs.push_str(&format!(r#"${{{camel} ? " disabled" : ""}}"#));
+        }
+    } else if let Some(kw) = find_keyword(node, "disabled") {
+        if kw == "true" {
+            attrs.push_str(" disabled");
+        }
+    }
+
+    // onchange — positive-transition gated (`if(event.target.checked)`)
+    // dispatch carrying `value: event.target.value` per UI29-2 §2.2.
+    if let Some(emit_name) = find_emit_ref(node, "onSelect") {
+        let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        if is_safe_identifier(&type_field) {
+            attrs.push_str(&format!(
+                r#" onchange="if(event.target.checked)this.getRootNode().host.dispatch({{type:'{type_field}',value:event.target.value}})""#
+            ));
+        }
+    }
+
+    attrs.push_str(" />");
+
+    // Optional <label> wrap.
+    if let Some(s) = find_string(node, "label") {
+        format!("<label>{attrs} {body}</label>", body = escape_html_text(s))
+    } else if let Some(slot) = find_slot_ref(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            format!("<label>{attrs} ${{{camel}}}</label>")
+        } else {
+            attrs
+        }
+    } else {
+        attrs
+    }
 }
 
 // ---------------------------------------------------------------------
@@ -2871,5 +3066,239 @@ mod tests {
         // Both elements get distinct post-script variable bindings.
         assert!(r.output.contains("const _d0 ="));
         assert!(r.output.contains("const _d1 ="));
+    }
+
+    // ---------------------------------------------------------------------
+    // UI29-2 — HostCheckbox / HostRadio (shadow-DOM <input>)
+    // ---------------------------------------------------------------------
+
+    /// UI29-2 webcomp test 1 — bare HostCheckbox emits a minimal
+    /// `<input type="checkbox" />` inside the shadow innerHTML.
+    #[test]
+    fn host_checkbox_empty_lowers_to_bare_input() {
+        let m = component("X", vec![], vec![]);
+        let l = root_layout("X", leaf_with_props("HostCheckbox", vec![]));
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains(r#"<input type="checkbox" />"#),
+            "expected bare `<input type=\"checkbox\" />`, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-2 webcomp test 2 — `checked: slot: c` uses the
+    /// template-literal conditional pattern `${isChecked ? " checked" : ""}`.
+    /// Matches the HostButton `disabled` pattern exactly.
+    #[test]
+    fn host_checkbox_checked_slot_emits_conditional_attribute() {
+        let m = component(
+            "X",
+            vec![slot("is-checked", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = root_layout(
+            "X",
+            leaf_with_props(
+                "HostCheckbox",
+                vec![LayoutProp {
+                    name: "checked".to_string(),
+                    value: LayoutPropValue::SlotRef("is-checked".to_string()),
+                }],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains(r#"${isChecked ? " checked" : ""}"#),
+            "expected conditional checked attribute, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-2 webcomp test 3 — `onToggle: emit: onChange` wires an
+    /// inline `onchange="…dispatch({type:'change',checked:event.target.checked})"`
+    /// handler reaching the Custom Element via the shadow-DOM-aware
+    /// `this.getRootNode().host` form.
+    #[test]
+    fn host_checkbox_on_toggle_wires_on_change_with_checked_payload() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit_decl(
+                "onChange",
+                vec![EmitParam {
+                    name: "checked".to_string(),
+                    r#type: EmitPayloadType::Bool,
+                }],
+            )],
+        );
+        let l = root_layout(
+            "X",
+            leaf_with_props(
+                "HostCheckbox",
+                vec![LayoutProp {
+                    name: "onToggle".to_string(),
+                    value: LayoutPropValue::EmitRef("onChange".to_string()),
+                }],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains(
+                "onchange=\"this.getRootNode().host.dispatch({type:'change',checked:event.target.checked})\""
+            ),
+            "expected onchange with shadow-DOM dispatch + checked payload, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-2 webcomp test 4 — `label: "Agree"` wraps the input in a
+    /// `<label>` element. Same idiom the React and HTML backends use.
+    #[test]
+    fn host_checkbox_string_label_wraps_input() {
+        let m = component("X", vec![], vec![]);
+        let l = root_layout(
+            "X",
+            leaf_with_props(
+                "HostCheckbox",
+                vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::String("Agree".to_string()),
+                }],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output
+                .contains(r#"<label><input type="checkbox" /> Agree</label>"#),
+            "expected label-wrapped input, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-2 webcomp test 5 — `indeterminate: slot: i` adds a
+    /// `data-indeterminate="${isMixed}"` marker so the host's
+    /// post-render pass can set `el.indeterminate = …` imperatively
+    /// (no HTML attr exists for indeterminate).
+    #[test]
+    fn host_checkbox_indeterminate_slot_emits_data_marker() {
+        let m = component(
+            "X",
+            vec![slot("is-mixed", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = root_layout(
+            "X",
+            leaf_with_props(
+                "HostCheckbox",
+                vec![LayoutProp {
+                    name: "indeterminate".to_string(),
+                    value: LayoutPropValue::SlotRef("is-mixed".to_string()),
+                }],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains(r#"data-indeterminate="${isMixed}""#),
+            "expected `data-indeterminate=\"${{isMixed}}\"`, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-2 webcomp test 6 — bare HostRadio emits a minimal
+    /// `<input type="radio" />`.
+    #[test]
+    fn host_radio_empty_lowers_to_bare_input() {
+        let m = component("X", vec![], vec![]);
+        let l = root_layout("X", leaf_with_props("HostRadio", vec![]));
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains(r#"<input type="radio" />"#),
+            "expected bare `<input type=\"radio\" />`, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-2 webcomp test 7 — `group: "flavor"` becomes a real HTML
+    /// `name="flavor"` attribute. The browser enforces the radio-mutex
+    /// when multiple radios in the same shadow root share `name`.
+    #[test]
+    fn host_radio_group_string_lowers_to_name_attribute() {
+        let m = component("X", vec![], vec![]);
+        let l = root_layout(
+            "X",
+            leaf_with_props(
+                "HostRadio",
+                vec![LayoutProp {
+                    name: "group".to_string(),
+                    value: LayoutPropValue::String("flavor".to_string()),
+                }],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains(r#"name="flavor""#),
+            "expected `name=\"flavor\"`, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-2 webcomp test 8 — `value: "vanilla"` lowers to standard
+    /// HTML `value="vanilla"`.
+    #[test]
+    fn host_radio_value_string_lowers_to_value_attribute() {
+        let m = component("X", vec![], vec![]);
+        let l = root_layout(
+            "X",
+            leaf_with_props(
+                "HostRadio",
+                vec![LayoutProp {
+                    name: "value".to_string(),
+                    value: LayoutPropValue::String("vanilla".to_string()),
+                }],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains(r#"value="vanilla""#),
+            "expected `value=\"vanilla\"`, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-2 webcomp test 9 — `onSelect: emit: onPick` wires
+    /// `onchange` with a positive-transition gate
+    /// (`if(event.target.checked)`) so sibling-caused deselects don't
+    /// dispatch.
+    #[test]
+    fn host_radio_on_select_emits_positive_gated_dispatch() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit_decl(
+                "onPick",
+                vec![EmitParam {
+                    name: "value".to_string(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            )],
+        );
+        let l = root_layout(
+            "X",
+            leaf_with_props(
+                "HostRadio",
+                vec![LayoutProp {
+                    name: "onSelect".to_string(),
+                    value: LayoutPropValue::EmitRef("onPick".to_string()),
+                }],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains(
+                "onchange=\"if(event.target.checked)this.getRootNode().host.dispatch({type:'pick',value:event.target.value})\""
+            ),
+            "expected positive-gated dispatch with value payload, got:\n{}",
+            r.output
+        );
     }
 }
