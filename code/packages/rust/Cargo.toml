@@ -491,6 +491,7 @@ members = [
     "closure-pass-remove-unused-vars",
     "closure-pass-rename",
     "closure-pass-treeshake",
+    "closure-source-map",
     "closure-typechecker",
     "compiler-ir",
     "compiler-source-map",
