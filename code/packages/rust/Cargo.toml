@@ -487,6 +487,7 @@ members = [
     "closure-pass-fold-control-flow",
     "closure-pass-inline",
     "closure-pass-pipeline",
+    "closure-pass-remove-unused-vars",
     "closure-pass-rename",
     "closure-pass-treeshake",
     "closure-typechecker",
