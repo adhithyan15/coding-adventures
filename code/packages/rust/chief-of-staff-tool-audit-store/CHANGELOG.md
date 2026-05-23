@@ -122,6 +122,8 @@ All notable changes to this package will be documented in this file.
   drain run reports and summaries.
 - Stable host-decision readiness classifications and flattened routing flags
   for supervisor drain run reports and summaries.
+- Stable host-decision route targets for scheduler, follow-up, investigation,
+  triage, and no-route supervisor drain run queues.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Report-level scheduler action labels for supervisor drain runs.

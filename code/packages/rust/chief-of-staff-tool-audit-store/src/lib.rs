@@ -1578,6 +1578,57 @@ impl ToolAuditSupervisorDrainRunReport {
         self.host_decision_readiness().requires_triage()
     }
 
+    /// Classify the concrete queue route for the host decision.
+    pub fn host_decision_route(&self) -> ToolAuditSupervisorDrainHostDecisionRoute {
+        self.host_decision_kind().route()
+    }
+
+    /// Return the stable host-decision route label.
+    pub fn host_decision_route_label(&self) -> &'static str {
+        self.host_decision_route().as_str()
+    }
+
+    /// Return whether the host-decision route label parses back to its typed route.
+    pub fn host_decision_route_label_matches_kind(&self) -> bool {
+        ToolAuditSupervisorDrainHostDecisionRoute::from_label(self.host_decision_route_label())
+            == Some(self.host_decision_route())
+    }
+
+    /// Return whether the host decision has a concrete queue route.
+    pub fn host_decision_has_route(&self) -> bool {
+        self.host_decision_route().has_route()
+    }
+
+    /// Return whether the host decision routes to the scheduler queue.
+    pub fn host_decision_routes_to_scheduler(&self) -> bool {
+        self.host_decision_route().is_scheduler()
+    }
+
+    /// Return whether the host decision routes to the follow-up queue.
+    pub fn host_decision_routes_to_follow_up(&self) -> bool {
+        self.host_decision_route().is_follow_up()
+    }
+
+    /// Return whether the host decision routes to a drift-investigation queue.
+    pub fn host_decision_routes_to_drift_investigation(&self) -> bool {
+        self.host_decision_route().is_drift_investigation()
+    }
+
+    /// Return whether the host decision routes to a host-log integrity queue.
+    pub fn host_decision_routes_to_integrity_investigation(&self) -> bool {
+        self.host_decision_route().is_integrity_investigation()
+    }
+
+    /// Return whether the host decision routes to a triage queue.
+    pub fn host_decision_routes_to_triage(&self) -> bool {
+        self.host_decision_route().is_triage()
+    }
+
+    /// Return whether the host decision routes to any investigation queue.
+    pub fn host_decision_routes_to_investigation(&self) -> bool {
+        self.host_decision_route().is_investigation()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -1918,6 +1969,18 @@ impl ToolAuditSupervisorDrainRunReport {
             host_decision_readiness_requires_integrity_investigation: self
                 .host_decision_readiness_requires_integrity_investigation(),
             host_decision_needs_triage: self.host_decision_needs_triage(),
+            host_decision_route: self.host_decision_route(),
+            host_decision_route_label: self.host_decision_route_label(),
+            host_decision_route_label_matches_kind: self.host_decision_route_label_matches_kind(),
+            host_decision_has_route: self.host_decision_has_route(),
+            host_decision_routes_to_scheduler: self.host_decision_routes_to_scheduler(),
+            host_decision_routes_to_follow_up: self.host_decision_routes_to_follow_up(),
+            host_decision_routes_to_drift_investigation: self
+                .host_decision_routes_to_drift_investigation(),
+            host_decision_routes_to_integrity_investigation: self
+                .host_decision_routes_to_integrity_investigation(),
+            host_decision_routes_to_triage: self.host_decision_routes_to_triage(),
+            host_decision_routes_to_investigation: self.host_decision_routes_to_investigation(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -2653,6 +2716,26 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_decision_readiness_requires_integrity_investigation: bool,
     /// Whether multiple decision surfaces need human triage.
     pub host_decision_needs_triage: bool,
+    /// Stable concrete queue route for the host decision.
+    pub host_decision_route: ToolAuditSupervisorDrainHostDecisionRoute,
+    /// Stable host-decision route label for host queues.
+    pub host_decision_route_label: &'static str,
+    /// Whether the host-decision route label parses back to its typed route.
+    pub host_decision_route_label_matches_kind: bool,
+    /// Whether the host decision has a concrete queue route.
+    pub host_decision_has_route: bool,
+    /// Whether the host decision routes to the scheduler queue.
+    pub host_decision_routes_to_scheduler: bool,
+    /// Whether the host decision routes to the follow-up queue.
+    pub host_decision_routes_to_follow_up: bool,
+    /// Whether the host decision routes to a drift-investigation queue.
+    pub host_decision_routes_to_drift_investigation: bool,
+    /// Whether the host decision routes to a host-log integrity queue.
+    pub host_decision_routes_to_integrity_investigation: bool,
+    /// Whether the host decision routes to a triage queue.
+    pub host_decision_routes_to_triage: bool,
+    /// Whether the host decision routes to any investigation queue.
+    pub host_decision_routes_to_investigation: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -3465,6 +3548,56 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether multiple decision surfaces need human triage.
     pub fn host_decision_needs_triage(&self) -> bool {
         self.host_decision_needs_triage
+    }
+
+    /// Return the typed host-decision route.
+    pub fn host_decision_route(&self) -> ToolAuditSupervisorDrainHostDecisionRoute {
+        self.host_decision_route
+    }
+
+    /// Return the stable host-decision route label.
+    pub fn host_decision_route_label(&self) -> &'static str {
+        self.host_decision_route_label
+    }
+
+    /// Return whether the host-decision route label parses back to its typed route.
+    pub fn host_decision_route_label_matches_kind(&self) -> bool {
+        self.host_decision_route_label_matches_kind
+    }
+
+    /// Return whether the host decision has a concrete queue route.
+    pub fn host_decision_has_route(&self) -> bool {
+        self.host_decision_has_route
+    }
+
+    /// Return whether the host decision routes to the scheduler queue.
+    pub fn host_decision_routes_to_scheduler(&self) -> bool {
+        self.host_decision_routes_to_scheduler
+    }
+
+    /// Return whether the host decision routes to the follow-up queue.
+    pub fn host_decision_routes_to_follow_up(&self) -> bool {
+        self.host_decision_routes_to_follow_up
+    }
+
+    /// Return whether the host decision routes to a drift-investigation queue.
+    pub fn host_decision_routes_to_drift_investigation(&self) -> bool {
+        self.host_decision_routes_to_drift_investigation
+    }
+
+    /// Return whether the host decision routes to a host-log integrity queue.
+    pub fn host_decision_routes_to_integrity_investigation(&self) -> bool {
+        self.host_decision_routes_to_integrity_investigation
+    }
+
+    /// Return whether the host decision routes to a triage queue.
+    pub fn host_decision_routes_to_triage(&self) -> bool {
+        self.host_decision_routes_to_triage
+    }
+
+    /// Return whether the host decision routes to any investigation queue.
+    pub fn host_decision_routes_to_investigation(&self) -> bool {
+        self.host_decision_routes_to_investigation
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -4642,6 +4775,11 @@ impl ToolAuditSupervisorDrainHostDecisionKind {
     pub fn readiness(self) -> ToolAuditSupervisorDrainHostDecisionReadiness {
         ToolAuditSupervisorDrainHostDecisionReadiness::from_decision_kind(self)
     }
+
+    /// Return the concrete queue route for this host decision.
+    pub fn route(self) -> ToolAuditSupervisorDrainHostDecisionRoute {
+        ToolAuditSupervisorDrainHostDecisionRoute::from_decision_kind(self)
+    }
 }
 
 impl Display for ToolAuditSupervisorDrainHostDecisionKind {
@@ -4944,6 +5082,111 @@ impl ToolAuditSupervisorDrainHostDecisionReadiness {
 }
 
 impl Display for ToolAuditSupervisorDrainHostDecisionReadiness {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable concrete queue route for host drain decisions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHostDecisionRoute {
+    /// The run is terminal-ready and should not enter an action queue.
+    NoRoute,
+    /// Scheduler continuation work should enter the scheduler queue.
+    Scheduler,
+    /// Follow-up pressure should enter the follow-up queue.
+    FollowUp,
+    /// Plan or count drift should enter the drift-investigation queue.
+    DriftInvestigation,
+    /// Host-log integrity drift should enter the integrity-investigation queue.
+    IntegrityInvestigation,
+    /// Multiple active decision surfaces should enter the triage queue.
+    Triage,
+}
+
+impl ToolAuditSupervisorDrainHostDecisionRoute {
+    /// Classify the concrete queue route from a host decision.
+    pub fn from_decision_kind(decision: ToolAuditSupervisorDrainHostDecisionKind) -> Self {
+        match decision {
+            ToolAuditSupervisorDrainHostDecisionKind::TerminalReady => Self::NoRoute,
+            ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation => Self::Scheduler,
+            ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp => Self::FollowUp,
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigatePlanDrift
+            | ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift => {
+                Self::DriftInvestigation
+            }
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity => {
+                Self::IntegrityInvestigation
+            }
+            ToolAuditSupervisorDrainHostDecisionKind::MultipleActions => Self::Triage,
+        }
+    }
+
+    /// Return a stable snake_case label for host queue routing.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoRoute => "no_route",
+            Self::Scheduler => "scheduler",
+            Self::FollowUp => "follow_up",
+            Self::DriftInvestigation => "drift_investigation",
+            Self::IntegrityInvestigation => "integrity_investigation",
+            Self::Triage => "triage",
+        }
+    }
+
+    /// Parse a stable snake_case host-decision route label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_route" => Some(Self::NoRoute),
+            "scheduler" => Some(Self::Scheduler),
+            "follow_up" => Some(Self::FollowUp),
+            "drift_investigation" => Some(Self::DriftInvestigation),
+            "integrity_investigation" => Some(Self::IntegrityInvestigation),
+            "triage" => Some(Self::Triage),
+            _ => None,
+        }
+    }
+
+    /// Return whether this route points at a concrete host queue.
+    pub fn has_route(self) -> bool {
+        !matches!(self, Self::NoRoute)
+    }
+
+    /// Return whether this route points at the scheduler queue.
+    pub fn is_scheduler(self) -> bool {
+        matches!(self, Self::Scheduler)
+    }
+
+    /// Return whether this route points at the follow-up queue.
+    pub fn is_follow_up(self) -> bool {
+        matches!(self, Self::FollowUp)
+    }
+
+    /// Return whether this route points at the drift-investigation queue.
+    pub fn is_drift_investigation(self) -> bool {
+        matches!(self, Self::DriftInvestigation)
+    }
+
+    /// Return whether this route points at the integrity-investigation queue.
+    pub fn is_integrity_investigation(self) -> bool {
+        matches!(self, Self::IntegrityInvestigation)
+    }
+
+    /// Return whether this route points at the triage queue.
+    pub fn is_triage(self) -> bool {
+        matches!(self, Self::Triage)
+    }
+
+    /// Return whether this route points at an investigation queue.
+    pub fn is_investigation(self) -> bool {
+        matches!(
+            self,
+            Self::DriftInvestigation | Self::IntegrityInvestigation
+        )
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostDecisionRoute {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -8100,6 +8343,136 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_decision_routes_are_stable_for_queues() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::TerminalReady,
+                ToolAuditSupervisorDrainHostDecisionRoute::NoRoute,
+                "no_route",
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation,
+                ToolAuditSupervisorDrainHostDecisionRoute::Scheduler,
+                "scheduler",
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp,
+                ToolAuditSupervisorDrainHostDecisionRoute::FollowUp,
+                "follow_up",
+                true,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigatePlanDrift,
+                ToolAuditSupervisorDrainHostDecisionRoute::DriftInvestigation,
+                "drift_investigation",
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift,
+                ToolAuditSupervisorDrainHostDecisionRoute::DriftInvestigation,
+                "drift_investigation",
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity,
+                ToolAuditSupervisorDrainHostDecisionRoute::IntegrityInvestigation,
+                "integrity_investigation",
+                true,
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::MultipleActions,
+                ToolAuditSupervisorDrainHostDecisionRoute::Triage,
+                "triage",
+                true,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+            ),
+        ];
+
+        for (
+            decision,
+            route,
+            label,
+            has_route,
+            is_scheduler,
+            is_follow_up,
+            is_drift_investigation,
+            is_integrity_investigation,
+            is_triage,
+            is_investigation,
+        ) in cases
+        {
+            assert_eq!(decision.route(), route);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostDecisionRoute::from_decision_kind(decision),
+                route
+            );
+            assert_eq!(route.as_str(), label);
+            assert_eq!(route.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostDecisionRoute::from_label(label),
+                Some(route)
+            );
+            assert_eq!(route.has_route(), has_route);
+            assert_eq!(route.is_scheduler(), is_scheduler);
+            assert_eq!(route.is_follow_up(), is_follow_up);
+            assert_eq!(route.is_drift_investigation(), is_drift_investigation);
+            assert_eq!(
+                route.is_integrity_investigation(),
+                is_integrity_investigation
+            );
+            assert_eq!(route.is_triage(), is_triage);
+            assert_eq!(route.is_investigation(), is_investigation);
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainHostDecisionRoute::from_label("somewhere_else"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_report_exposes_outcome_label_and_action_flag() {
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(store
@@ -9937,6 +10310,179 @@ mod tests {
         integrity_summary.host_decision_readiness_label = "readyish";
         integrity_summary.host_decision_readiness_label_matches_kind = false;
         assert!(!integrity_summary.host_decision_readiness_label_matches_kind());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_flattens_host_decision_route_fields() {
+        let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut idle_sink = InMemoryToolAuditSink::new();
+        let idle_report = empty_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut idle_sink)
+            .unwrap();
+        let idle_summary = idle_report.summary();
+
+        assert_eq!(
+            idle_report.host_decision_route(),
+            ToolAuditSupervisorDrainHostDecisionRoute::NoRoute
+        );
+        assert_eq!(idle_report.host_decision_route_label(), "no_route");
+        assert!(idle_report.host_decision_route_label_matches_kind());
+        assert!(!idle_report.host_decision_has_route());
+        assert!(!idle_report.host_decision_routes_to_scheduler());
+        assert!(!idle_report.host_decision_routes_to_follow_up());
+        assert!(!idle_report.host_decision_routes_to_drift_investigation());
+        assert!(!idle_report.host_decision_routes_to_integrity_investigation());
+        assert!(!idle_report.host_decision_routes_to_triage());
+        assert!(!idle_report.host_decision_routes_to_investigation());
+        assert_eq!(
+            idle_summary.host_decision_route,
+            ToolAuditSupervisorDrainHostDecisionRoute::NoRoute
+        );
+        assert_eq!(
+            idle_summary.host_decision_route(),
+            ToolAuditSupervisorDrainHostDecisionRoute::NoRoute
+        );
+        assert_eq!(idle_summary.host_decision_route_label, "no_route");
+        assert_eq!(idle_summary.host_decision_route_label(), "no_route");
+        assert!(idle_summary.host_decision_route_label_matches_kind);
+        assert!(idle_summary.host_decision_route_label_matches_kind());
+        assert!(!idle_summary.host_decision_has_route);
+        assert!(!idle_summary.host_decision_has_route());
+        assert!(!idle_summary.host_decision_routes_to_scheduler);
+        assert!(!idle_summary.host_decision_routes_to_scheduler());
+        assert!(!idle_summary.host_decision_routes_to_follow_up);
+        assert!(!idle_summary.host_decision_routes_to_follow_up());
+        assert!(!idle_summary.host_decision_routes_to_drift_investigation);
+        assert!(!idle_summary.host_decision_routes_to_drift_investigation());
+        assert!(!idle_summary.host_decision_routes_to_integrity_investigation);
+        assert!(!idle_summary.host_decision_routes_to_integrity_investigation());
+        assert!(!idle_summary.host_decision_routes_to_triage);
+        assert!(!idle_summary.host_decision_routes_to_triage());
+        assert!(!idle_summary.host_decision_routes_to_investigation);
+        assert!(!idle_summary.host_decision_routes_to_investigation());
+
+        let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(continuation_store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+        let mut continuation_sink = InMemoryToolAuditSink::new();
+        let continuation_report = continuation_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 1, &mut continuation_sink)
+            .unwrap();
+        let continuation_summary = continuation_report.summary();
+
+        assert_eq!(
+            continuation_report.host_decision_route(),
+            ToolAuditSupervisorDrainHostDecisionRoute::Scheduler
+        );
+        assert_eq!(continuation_report.host_decision_route_label(), "scheduler");
+        assert!(continuation_report.host_decision_route_label_matches_kind());
+        assert!(continuation_report.host_decision_has_route());
+        assert!(continuation_report.host_decision_routes_to_scheduler());
+        assert!(!continuation_report.host_decision_routes_to_follow_up());
+        assert!(!continuation_report.host_decision_routes_to_investigation());
+        assert_eq!(
+            continuation_summary.host_decision_route(),
+            ToolAuditSupervisorDrainHostDecisionRoute::Scheduler
+        );
+        assert_eq!(
+            continuation_summary.host_decision_route_label(),
+            "scheduler"
+        );
+        assert!(continuation_summary.host_decision_has_route());
+        assert!(continuation_summary.host_decision_routes_to_scheduler());
+        assert!(!continuation_summary.host_decision_routes_to_follow_up());
+        assert!(!continuation_summary.host_decision_routes_to_investigation());
+
+        let follow_up_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(follow_up_store
+            .record_audit_batch(vec![failed_record("call_1")])
+            .completed_without_failures());
+        let mut follow_up_sink = InMemoryToolAuditSink::new();
+        let follow_up_report = follow_up_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut follow_up_sink)
+            .unwrap();
+        let follow_up_summary = follow_up_report.summary();
+
+        assert_eq!(
+            follow_up_report.host_decision_route(),
+            ToolAuditSupervisorDrainHostDecisionRoute::FollowUp
+        );
+        assert_eq!(follow_up_report.host_decision_route_label(), "follow_up");
+        assert!(follow_up_report.host_decision_has_route());
+        assert!(!follow_up_report.host_decision_routes_to_scheduler());
+        assert!(follow_up_report.host_decision_routes_to_follow_up());
+        assert!(!follow_up_report.host_decision_routes_to_investigation());
+        assert_eq!(
+            follow_up_summary.host_decision_route(),
+            ToolAuditSupervisorDrainHostDecisionRoute::FollowUp
+        );
+        assert!(follow_up_summary.host_decision_routes_to_follow_up());
+
+        let mut triage_report = continuation_report;
+        triage_report.drain.ticks[0].replay.next_checkpoint = ToolAuditReadCheckpoint::beginning();
+        let triage_summary = triage_report.summary();
+        assert_eq!(
+            triage_report.host_decision_route(),
+            ToolAuditSupervisorDrainHostDecisionRoute::Triage
+        );
+        assert_eq!(triage_report.host_decision_route_label(), "triage");
+        assert!(triage_report.host_decision_has_route());
+        assert!(triage_report.host_decision_routes_to_triage());
+        assert!(!triage_report.host_decision_routes_to_investigation());
+        assert_eq!(
+            triage_summary.host_decision_route(),
+            ToolAuditSupervisorDrainHostDecisionRoute::Triage
+        );
+        assert!(triage_summary.host_decision_routes_to_triage());
+        assert!(!triage_summary.host_decision_routes_to_investigation());
+
+        let mut drift_summary = idle_summary.clone();
+        drift_summary.host_decision_route =
+            ToolAuditSupervisorDrainHostDecisionRoute::DriftInvestigation;
+        drift_summary.host_decision_route_label = "drift_investigation";
+        drift_summary.host_decision_has_route = true;
+        drift_summary.host_decision_routes_to_drift_investigation = true;
+        drift_summary.host_decision_routes_to_investigation = true;
+        assert_eq!(
+            drift_summary.host_decision_route(),
+            ToolAuditSupervisorDrainHostDecisionRoute::DriftInvestigation
+        );
+        assert_eq!(
+            drift_summary.host_decision_route_label(),
+            "drift_investigation"
+        );
+        assert!(drift_summary.host_decision_route_label_matches_kind());
+        assert!(drift_summary.host_decision_has_route());
+        assert!(drift_summary.host_decision_routes_to_drift_investigation());
+        assert!(!drift_summary.host_decision_routes_to_integrity_investigation());
+        assert!(drift_summary.host_decision_routes_to_investigation());
+
+        let mut integrity_summary = idle_summary;
+        integrity_summary.host_decision_route =
+            ToolAuditSupervisorDrainHostDecisionRoute::IntegrityInvestigation;
+        integrity_summary.host_decision_route_label = "integrity_investigation";
+        integrity_summary.host_decision_has_route = true;
+        integrity_summary.host_decision_routes_to_integrity_investigation = true;
+        integrity_summary.host_decision_routes_to_investigation = true;
+        assert_eq!(
+            integrity_summary.host_decision_route(),
+            ToolAuditSupervisorDrainHostDecisionRoute::IntegrityInvestigation
+        );
+        assert_eq!(
+            integrity_summary.host_decision_route_label(),
+            "integrity_investigation"
+        );
+        assert!(integrity_summary.host_decision_routes_to_integrity_investigation());
+        assert!(integrity_summary.host_decision_routes_to_investigation());
+
+        integrity_summary.host_decision_route_label = "elsewhere";
+        integrity_summary.host_decision_route_label_matches_kind = false;
+        assert!(!integrity_summary.host_decision_route_label_matches_kind());
     }
 
     #[test]
