@@ -15,6 +15,8 @@ The crate keeps the boundary narrow:
   payload-free read-model rebuilds
 - hosts can flush batches of audit rows and get a payload-free write summary
   with call-id-level storage failures
+- batch write, replay, and inventory summaries expose stable health and
+  follow-up labels plus count-integrity helpers for host logs
 - replay checkpoints expose timestamp and call-id scalar accessors for host
   checkpoint logs
 - supervisors can read deterministic checkpoint pages to resume audit replay

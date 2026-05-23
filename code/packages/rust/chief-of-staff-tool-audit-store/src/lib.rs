@@ -5276,6 +5276,74 @@ impl ToolAuditBatchWriteSummary {
         self.attempted_records == 0
     }
 
+    /// Return whether any audit rows were persisted.
+    pub fn has_stored_records(&self) -> bool {
+        self.stored_records > 0
+    }
+
+    /// Return whether any audit row failed to persist.
+    pub fn has_storage_failures(&self) -> bool {
+        self.failed_records > 0 || !self.failures.is_empty()
+    }
+
+    /// Return whether the stored row count matches the payload-free inventory.
+    pub fn stored_count_matches_inventory(&self) -> bool {
+        self.stored_records == self.inventory.total_records
+    }
+
+    /// Return whether the failed row count matches the captured failures.
+    pub fn failed_count_matches_failures(&self) -> bool {
+        self.failed_records == self.failures.len()
+    }
+
+    /// Return whether attempted rows equal stored plus failed rows.
+    pub fn attempted_count_matches_results(&self) -> bool {
+        self.stored_records.checked_add(self.failed_records) == Some(self.attempted_records)
+    }
+
+    /// Return whether all flattened write counts agree with their sources.
+    pub fn write_counts_match(&self) -> bool {
+        self.attempted_count_matches_results()
+            && self.stored_count_matches_inventory()
+            && self.failed_count_matches_failures()
+    }
+
+    /// Return whether flattened write counts drifted from their sources.
+    pub fn has_write_count_integrity_drift(&self) -> bool {
+        !self.write_counts_match()
+    }
+
+    /// Classify follow-up pressure in the persisted row inventory.
+    pub fn inventory_follow_up_kind(&self) -> ToolAuditInventoryFollowUpKind {
+        self.inventory.follow_up_kind()
+    }
+
+    /// Return the stable follow-up label for the persisted row inventory.
+    pub fn inventory_follow_up_label(&self) -> &'static str {
+        self.inventory.follow_up_label()
+    }
+
+    /// Return whether the inventory follow-up label parses back to its typed value.
+    pub fn inventory_follow_up_label_matches_kind(&self) -> bool {
+        self.inventory.follow_up_label_matches_kind()
+    }
+
+    /// Classify the payload-free outcome of this batch write.
+    pub fn write_outcome(&self) -> ToolAuditBatchWriteOutcome {
+        ToolAuditBatchWriteOutcome::from_write_summary(self)
+    }
+
+    /// Return the stable batch-write outcome label for host logs.
+    pub fn write_outcome_label(&self) -> &'static str {
+        self.write_outcome().as_str()
+    }
+
+    /// Return whether the batch-write outcome label parses back to its typed value.
+    pub fn write_outcome_label_matches_outcome(&self) -> bool {
+        ToolAuditBatchWriteOutcome::from_label(self.write_outcome_label())
+            == Some(self.write_outcome())
+    }
+
     /// Return whether every attempted row was persisted.
     pub fn completed_without_failures(&self) -> bool {
         self.attempted_records == self.stored_records && self.failed_records == 0
@@ -5283,7 +5351,7 @@ impl ToolAuditBatchWriteSummary {
 
     /// Return whether any persisted row or storage failure needs follow-up.
     pub fn requires_follow_up(&self) -> bool {
-        self.failed_records > 0 || self.inventory.requires_follow_up()
+        self.has_storage_failures() || self.inventory.requires_follow_up()
     }
 }
 
@@ -5302,9 +5370,185 @@ impl ToolAuditReplaySummary {
         self.replayed_records == 0
     }
 
+    /// Classify follow-up pressure in the replayed row inventory.
+    pub fn inventory_follow_up_kind(&self) -> ToolAuditInventoryFollowUpKind {
+        self.inventory.follow_up_kind()
+    }
+
+    /// Return the stable follow-up label for the replayed row inventory.
+    pub fn inventory_follow_up_label(&self) -> &'static str {
+        self.inventory.follow_up_label()
+    }
+
+    /// Return whether the inventory follow-up label parses back to its typed value.
+    pub fn inventory_follow_up_label_matches_kind(&self) -> bool {
+        self.inventory.follow_up_label_matches_kind()
+    }
+
+    /// Classify the payload-free outcome of this replay.
+    pub fn replay_outcome(&self) -> ToolAuditReplayOutcome {
+        ToolAuditReplayOutcome::from_replay_summary(self)
+    }
+
+    /// Return the stable replay outcome label for host logs.
+    pub fn replay_outcome_label(&self) -> &'static str {
+        self.replay_outcome().as_str()
+    }
+
+    /// Return whether the replay outcome label parses back to its typed value.
+    pub fn replay_outcome_label_matches_outcome(&self) -> bool {
+        ToolAuditReplayOutcome::from_label(self.replay_outcome_label())
+            == Some(self.replay_outcome())
+    }
+
     /// Return whether any replayed row needs follow-up.
     pub fn requires_follow_up(&self) -> bool {
         self.inventory.requires_follow_up()
+    }
+}
+
+/// Payload-free outcome for a batch audit write.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditBatchWriteOutcome {
+    /// No audit rows were attempted.
+    Empty,
+    /// Every attempted row was persisted and no persisted row needs follow-up.
+    CompletedClean,
+    /// Every attempted row was persisted, but persisted rows need follow-up.
+    CompletedWithFollowUp,
+    /// One or more attempted rows failed to persist.
+    StorageFailures,
+    /// Flattened write counts drifted from their source values.
+    CountIntegrityDrift,
+}
+
+impl ToolAuditBatchWriteOutcome {
+    /// Classify a batch write summary for host dashboards.
+    pub fn from_write_summary(summary: &ToolAuditBatchWriteSummary) -> Self {
+        if summary.has_write_count_integrity_drift() {
+            return Self::CountIntegrityDrift;
+        }
+        if summary.is_empty() {
+            return Self::Empty;
+        }
+        if summary.has_storage_failures() {
+            return Self::StorageFailures;
+        }
+        if summary.inventory.requires_follow_up() {
+            return Self::CompletedWithFollowUp;
+        }
+        Self::CompletedClean
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Empty => "empty",
+            Self::CompletedClean => "completed_clean",
+            Self::CompletedWithFollowUp => "completed_with_follow_up",
+            Self::StorageFailures => "storage_failures",
+            Self::CountIntegrityDrift => "count_integrity_drift",
+        }
+    }
+
+    /// Parse a stable snake_case batch-write outcome label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "empty" => Some(Self::Empty),
+            "completed_clean" => Some(Self::CompletedClean),
+            "completed_with_follow_up" => Some(Self::CompletedWithFollowUp),
+            "storage_failures" => Some(Self::StorageFailures),
+            "count_integrity_drift" => Some(Self::CountIntegrityDrift),
+            _ => None,
+        }
+    }
+
+    /// Return whether this write completed without host follow-up.
+    pub fn is_completed_clean(self) -> bool {
+        matches!(self, Self::CompletedClean)
+    }
+
+    /// Return whether this write needs host follow-up.
+    pub fn requires_follow_up(self) -> bool {
+        matches!(
+            self,
+            Self::CompletedWithFollowUp | Self::StorageFailures | Self::CountIntegrityDrift
+        )
+    }
+
+    /// Return whether this write needs storage failure investigation.
+    pub fn requires_storage_investigation(self) -> bool {
+        matches!(self, Self::StorageFailures)
+    }
+
+    /// Return whether this write needs flattened count integrity investigation.
+    pub fn requires_count_integrity_investigation(self) -> bool {
+        matches!(self, Self::CountIntegrityDrift)
+    }
+}
+
+impl Display for ToolAuditBatchWriteOutcome {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Payload-free outcome for replaying audit rows into a sink.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditReplayOutcome {
+    /// No audit rows were replayed.
+    Empty,
+    /// Rows were replayed and none need follow-up.
+    ReplayedClean,
+    /// Rows were replayed and at least one needs follow-up.
+    ReplayedWithFollowUp,
+}
+
+impl ToolAuditReplayOutcome {
+    /// Classify a replay summary for host dashboards.
+    pub fn from_replay_summary(summary: &ToolAuditReplaySummary) -> Self {
+        if summary.is_empty() {
+            return Self::Empty;
+        }
+        if summary.requires_follow_up() {
+            return Self::ReplayedWithFollowUp;
+        }
+        Self::ReplayedClean
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Empty => "empty",
+            Self::ReplayedClean => "replayed_clean",
+            Self::ReplayedWithFollowUp => "replayed_with_follow_up",
+        }
+    }
+
+    /// Parse a stable snake_case replay outcome label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "empty" => Some(Self::Empty),
+            "replayed_clean" => Some(Self::ReplayedClean),
+            "replayed_with_follow_up" => Some(Self::ReplayedWithFollowUp),
+            _ => None,
+        }
+    }
+
+    /// Return whether this replay delivered rows without follow-up pressure.
+    pub fn is_replayed_clean(self) -> bool {
+        matches!(self, Self::ReplayedClean)
+    }
+
+    /// Return whether this replay needs host follow-up.
+    pub fn requires_follow_up(self) -> bool {
+        matches!(self, Self::ReplayedWithFollowUp)
+    }
+}
+
+impl Display for ToolAuditReplayOutcome {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
     }
 }
 
@@ -5472,6 +5716,54 @@ impl ToolAuditStoreInventorySummary {
         self.total_records == 0
     }
 
+    /// Return whether any row is still active.
+    pub fn has_active_records(&self) -> bool {
+        self.active_records > 0
+    }
+
+    /// Return whether any persisted row failed.
+    pub fn has_failed_records(&self) -> bool {
+        self.failed_records > 0
+    }
+
+    /// Return whether any persisted row has approval pressure.
+    pub fn has_approval_follow_up(&self) -> bool {
+        self.approval_pending_records > 0
+            || self.approval_denied_records > 0
+            || self.approval_expired_records > 0
+    }
+
+    /// Return whether any persisted row recorded result errors.
+    pub fn has_result_errors(&self) -> bool {
+        self.records_with_errors > 0
+    }
+
+    /// Classify why this inventory needs follow-up.
+    pub fn follow_up_kind(&self) -> ToolAuditInventoryFollowUpKind {
+        ToolAuditInventoryFollowUpKind::from_follow_up_flags(
+            self.has_active_records(),
+            self.has_failed_records(),
+            self.has_approval_follow_up(),
+            self.has_result_errors(),
+        )
+    }
+
+    /// Return the stable follow-up label for host logs.
+    pub fn follow_up_label(&self) -> &'static str {
+        self.follow_up_kind().as_str()
+    }
+
+    /// Return whether the follow-up label parses back to the typed classification.
+    pub fn follow_up_label_matches_kind(&self) -> bool {
+        ToolAuditInventoryFollowUpKind::from_label(self.follow_up_label())
+            == Some(self.follow_up_kind())
+    }
+
+    /// Return whether multiple follow-up surfaces are active.
+    pub fn has_multiple_follow_up_surfaces(&self) -> bool {
+        self.follow_up_kind().has_multiple_follow_up_surfaces()
+    }
+
     /// Return whether any row needs follow-up.
     pub fn requires_follow_up(&self) -> bool {
         self.follow_up_records > 0
@@ -5481,6 +5773,92 @@ impl ToolAuditStoreInventorySummary {
             || self.approval_denied_records > 0
             || self.approval_expired_records > 0
             || self.records_with_errors > 0
+    }
+}
+
+/// Stable classification for inventory follow-up pressure.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditInventoryFollowUpKind {
+    /// No persisted row needs host follow-up.
+    NoFollowUp,
+    /// At least one row is still active.
+    ActiveRecords,
+    /// At least one row failed.
+    FailedRecords,
+    /// At least one row is blocked by approval state.
+    ApprovalPressure,
+    /// At least one row reported a result error.
+    ResultErrors,
+    /// Multiple follow-up surfaces are active.
+    MultipleFollowUp,
+}
+
+impl ToolAuditInventoryFollowUpKind {
+    /// Classify inventory follow-up pressure from component flags.
+    pub fn from_follow_up_flags(
+        has_active_records: bool,
+        has_failed_records: bool,
+        has_approval_follow_up: bool,
+        has_result_errors: bool,
+    ) -> Self {
+        match [
+            has_active_records,
+            has_failed_records,
+            has_approval_follow_up,
+            has_result_errors,
+        ]
+        .into_iter()
+        .filter(|needs_follow_up| *needs_follow_up)
+        .count()
+        {
+            0 => Self::NoFollowUp,
+            1 if has_active_records => Self::ActiveRecords,
+            1 if has_failed_records => Self::FailedRecords,
+            1 if has_approval_follow_up => Self::ApprovalPressure,
+            1 if has_result_errors => Self::ResultErrors,
+            _ => Self::MultipleFollowUp,
+        }
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoFollowUp => "no_follow_up",
+            Self::ActiveRecords => "active_records",
+            Self::FailedRecords => "failed_records",
+            Self::ApprovalPressure => "approval_pressure",
+            Self::ResultErrors => "result_errors",
+            Self::MultipleFollowUp => "multiple_follow_up",
+        }
+    }
+
+    /// Parse a stable snake_case inventory follow-up label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_follow_up" => Some(Self::NoFollowUp),
+            "active_records" => Some(Self::ActiveRecords),
+            "failed_records" => Some(Self::FailedRecords),
+            "approval_pressure" => Some(Self::ApprovalPressure),
+            "result_errors" => Some(Self::ResultErrors),
+            "multiple_follow_up" => Some(Self::MultipleFollowUp),
+            _ => None,
+        }
+    }
+
+    /// Return whether this inventory needs any host follow-up.
+    pub fn requires_follow_up(self) -> bool {
+        !matches!(self, Self::NoFollowUp)
+    }
+
+    /// Return whether multiple follow-up surfaces are active.
+    pub fn has_multiple_follow_up_surfaces(self) -> bool {
+        matches!(self, Self::MultipleFollowUp)
+    }
+}
+
+impl Display for ToolAuditInventoryFollowUpKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
     }
 }
 
@@ -11411,11 +11789,45 @@ mod tests {
         assert_eq!(summary.failed_records, 1);
         assert!(!summary.completed_without_failures());
         assert!(summary.requires_follow_up());
+        assert!(summary.has_stored_records());
+        assert!(summary.has_storage_failures());
+        assert!(summary.stored_count_matches_inventory());
+        assert!(summary.failed_count_matches_failures());
+        assert!(summary.attempted_count_matches_results());
+        assert!(summary.write_counts_match());
+        assert!(!summary.has_write_count_integrity_drift());
+        assert_eq!(
+            summary.inventory_follow_up_kind(),
+            ToolAuditInventoryFollowUpKind::MultipleFollowUp
+        );
+        assert_eq!(summary.inventory_follow_up_label(), "multiple_follow_up");
+        assert!(summary.inventory_follow_up_label_matches_kind());
+        assert_eq!(
+            summary.write_outcome(),
+            ToolAuditBatchWriteOutcome::StorageFailures
+        );
+        assert_eq!(summary.write_outcome_label(), "storage_failures");
+        assert!(summary.write_outcome_label_matches_outcome());
+        assert!(summary.write_outcome().requires_follow_up());
+        assert!(summary.write_outcome().requires_storage_investigation());
         assert_eq!(summary.inventory.total_records, 2);
         assert_eq!(summary.inventory.failed_records, 1);
         assert_eq!(summary.inventory.follow_up_records, 1);
         assert_eq!(summary.failures.len(), 1);
         assert_eq!(summary.failures[0].call_id, "call_1");
+
+        let mut stale_summary = summary.clone();
+        stale_summary.stored_records = 3;
+        assert!(!stale_summary.stored_count_matches_inventory());
+        assert!(!stale_summary.write_counts_match());
+        assert!(stale_summary.has_write_count_integrity_drift());
+        assert_eq!(
+            stale_summary.write_outcome(),
+            ToolAuditBatchWriteOutcome::CountIntegrityDrift
+        );
+        assert!(stale_summary
+            .write_outcome()
+            .requires_count_integrity_investigation());
 
         assert_eq!(
             store
@@ -11449,6 +11861,16 @@ mod tests {
             }
         );
         assert!(inventory.requires_follow_up());
+        assert!(inventory.has_failed_records());
+        assert!(inventory.has_approval_follow_up());
+        assert!(inventory.has_result_errors());
+        assert_eq!(
+            inventory.follow_up_kind(),
+            ToolAuditInventoryFollowUpKind::MultipleFollowUp
+        );
+        assert_eq!(inventory.follow_up_label(), "multiple_follow_up");
+        assert!(inventory.follow_up_label_matches_kind());
+        assert!(inventory.has_multiple_follow_up_surfaces());
 
         let storage = store.storage_inventory_summary().unwrap();
         assert_eq!(storage.total_records, 2);
@@ -11478,6 +11900,10 @@ mod tests {
         assert_eq!(inventory.records_with_errors, 2);
         assert_eq!(inventory.follow_up_records, 2);
         assert!(inventory.requires_follow_up());
+        assert_eq!(
+            inventory.follow_up_kind(),
+            ToolAuditInventoryFollowUpKind::MultipleFollowUp
+        );
     }
 
     #[test]
@@ -11498,9 +11924,112 @@ mod tests {
 
         assert_eq!(summary.replayed_records, 1);
         assert!(summary.requires_follow_up());
+        assert_eq!(
+            summary.replay_outcome(),
+            ToolAuditReplayOutcome::ReplayedWithFollowUp
+        );
+        assert_eq!(summary.replay_outcome_label(), "replayed_with_follow_up");
+        assert!(summary.replay_outcome_label_matches_outcome());
+        assert_eq!(
+            summary.inventory_follow_up_kind(),
+            ToolAuditInventoryFollowUpKind::MultipleFollowUp
+        );
+        assert_eq!(summary.inventory_follow_up_label(), "multiple_follow_up");
+        assert!(summary.inventory_follow_up_label_matches_kind());
         assert_eq!(summary.inventory.failed_records, 1);
         assert_eq!(summary.inventory.follow_up_records, 1);
         assert_eq!(sink.records(), &[failed_record("call_2")]);
+    }
+
+    #[test]
+    fn inventory_write_and_replay_health_labels_are_stable() {
+        let clean_inventory =
+            ToolAuditStoreInventorySummary::from_records(&[sample_record("call_clean")]);
+        assert_eq!(
+            clean_inventory.follow_up_kind(),
+            ToolAuditInventoryFollowUpKind::NoFollowUp
+        );
+        assert_eq!(clean_inventory.follow_up_label(), "no_follow_up");
+        assert!(!clean_inventory.follow_up_kind().requires_follow_up());
+
+        let mut active = sample_record("call_active");
+        active.status = ToolCallStatus::Running;
+        let active_inventory = ToolAuditStoreInventorySummary::from_records(&[active]);
+        assert_eq!(
+            active_inventory.follow_up_kind(),
+            ToolAuditInventoryFollowUpKind::ActiveRecords
+        );
+        assert_eq!(active_inventory.follow_up_label(), "active_records");
+
+        let mut failed = sample_record("call_failed");
+        failed.status = ToolCallStatus::Failed;
+        let failed_inventory = ToolAuditStoreInventorySummary::from_records(&[failed]);
+        assert_eq!(
+            failed_inventory.follow_up_kind(),
+            ToolAuditInventoryFollowUpKind::FailedRecords
+        );
+        assert_eq!(failed_inventory.follow_up_label(), "failed_records");
+
+        let mut approval = sample_record("call_approval");
+        approval.approval_state = ApprovalState::Pending;
+        let approval_inventory = ToolAuditStoreInventorySummary::from_records(&[approval]);
+        assert_eq!(
+            approval_inventory.follow_up_kind(),
+            ToolAuditInventoryFollowUpKind::ApprovalPressure
+        );
+        assert_eq!(approval_inventory.follow_up_label(), "approval_pressure");
+
+        let mut error = sample_record("call_error");
+        error.result_summary.has_error = true;
+        let error_inventory = ToolAuditStoreInventorySummary::from_records(&[error]);
+        assert_eq!(
+            error_inventory.follow_up_kind(),
+            ToolAuditInventoryFollowUpKind::ResultErrors
+        );
+        assert_eq!(error_inventory.follow_up_label(), "result_errors");
+        assert_eq!(
+            ToolAuditInventoryFollowUpKind::from_label("result_errors"),
+            Some(ToolAuditInventoryFollowUpKind::ResultErrors)
+        );
+
+        let write_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let clean_write = write_store.record_audit_batch(vec![sample_record("write_clean")]);
+        assert_eq!(
+            clean_write.write_outcome(),
+            ToolAuditBatchWriteOutcome::CompletedClean
+        );
+        assert_eq!(clean_write.write_outcome_label(), "completed_clean");
+        assert!(clean_write.write_outcome().is_completed_clean());
+        assert!(!clean_write.write_outcome().requires_follow_up());
+
+        let follow_up_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let follow_up_write =
+            follow_up_store.record_audit_batch(vec![failed_record("write_follow_up")]);
+        assert_eq!(
+            follow_up_write.write_outcome(),
+            ToolAuditBatchWriteOutcome::CompletedWithFollowUp
+        );
+        assert_eq!(
+            follow_up_write.write_outcome_label(),
+            "completed_with_follow_up"
+        );
+        assert!(follow_up_write.write_outcome().requires_follow_up());
+
+        let empty_replay = ToolAuditReplaySummary::default();
+        assert_eq!(empty_replay.replay_outcome(), ToolAuditReplayOutcome::Empty);
+        assert_eq!(empty_replay.replay_outcome_label(), "empty");
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let clean_replay = write_store
+            .replay_audits(&ToolAuditRecordQuery::new(), &mut sink)
+            .unwrap();
+        assert_eq!(
+            clean_replay.replay_outcome(),
+            ToolAuditReplayOutcome::ReplayedClean
+        );
+        assert_eq!(clean_replay.replay_outcome_label(), "replayed_clean");
+        assert!(clean_replay.replay_outcome().is_replayed_clean());
+        assert!(!clean_replay.replay_outcome().requires_follow_up());
     }
 
     #[test]

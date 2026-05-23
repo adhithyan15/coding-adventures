@@ -126,6 +126,8 @@ All notable changes to this package will be documented in this file.
   triage, and no-route supervisor drain run queues.
 - Aggregate host-decision and host-routing classifier label-integrity flags for
   supervisor drain run reports and summaries.
+- Stable batch-write, replay, and inventory health labels with write
+  count-integrity helpers for host logs.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Report-level scheduler action labels for supervisor drain runs.
