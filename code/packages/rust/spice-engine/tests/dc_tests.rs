@@ -279,6 +279,32 @@ fn dc_diode_solves_forward_biased_operating_point() {
 }
 
 #[test]
+fn dc_diode_emission_coefficient_reduces_fixed_bias_current() {
+    let mut base = Circuit::new();
+    base.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "a", "0", 0.7,
+    )));
+    base.add(Element::Diode(Diode::with_model(
+        "D1", "a", "0", 1.0e-15, 0.02585,
+    )));
+
+    let mut high_n = Circuit::new();
+    high_n.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "a", "0", 0.7,
+    )));
+    high_n.add(Element::Diode(Diode::with_model_and_emission_coefficient(
+        "D1", "a", "0", 1.0e-15, 0.02585, 2.0,
+    )));
+
+    let base_result = dc_op(&base).unwrap();
+    let high_n_result = dc_op(&high_n).unwrap();
+    assert!(
+        high_n_result.branch_current("V1").unwrap().abs()
+            < base_result.branch_current("V1").unwrap().abs() * 1.0e-3
+    );
+}
+
+#[test]
 fn dc_bjt_solves_npn_emitter_follower_operating_point() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(

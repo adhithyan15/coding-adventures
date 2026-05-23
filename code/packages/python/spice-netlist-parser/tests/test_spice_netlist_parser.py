@@ -451,7 +451,7 @@ Rload out 0 500
 def test_parse_diode_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
-.model fast D(IS=1e-12 VT=25m)
+.model fast D(IS=1e-12 VT=25m N=2)
 V1 in 0 DC 0.7
 D1 in out fast
 Rload out 0 1k
@@ -460,7 +460,7 @@ Rload out 0 1k
     )
 
     assert parsed.models == {
-        "fast": ModelCard("fast", "D", {"IS": 1.0e-12, "VT": 25.0e-3})
+        "fast": ModelCard("fast", "D", {"IS": 1.0e-12, "VT": 25.0e-3, "N": 2.0})
     }
     diode = parsed.circuit.elements[1]
     assert isinstance(diode, Diode)
@@ -468,10 +468,11 @@ Rload out 0 1k
     assert diode.cathode == "out"
     assert diode.Is == 1.0e-12
     assert diode.Vt == 25.0e-3
+    assert diode.N == 2.0
 
     result = dc_op(parsed.circuit)
     assert result.converged
-    assert 0.1 < result.node_voltages["out"] < 0.7
+    assert 0.0 < result.node_voltages["out"] < 0.7
 
 
 def test_parse_bjt_model_into_operating_point_circuit() -> None:
@@ -789,7 +790,7 @@ Rload out 0 500
 def test_expands_subcircuit_diode_nodes_into_engine_elements() -> None:
     parsed = parse_netlist(
         """
-.model clamp D(IS=1e-12 VT=25m)
+.model clamp D(IS=1e-12 VT=25m N=2)
 .subckt limiter inp outp
 Dlim inp outp clamp
 .ends limiter
@@ -803,6 +804,7 @@ Xlim in out limiter
     assert diode.anode == "in"
     assert diode.cathode == "out"
     assert diode.Is == 1.0e-12
+    assert diode.N == 2.0
 
 
 def test_expands_subcircuit_bjt_nodes_into_engine_elements() -> None:

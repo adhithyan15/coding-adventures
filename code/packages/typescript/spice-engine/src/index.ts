@@ -359,6 +359,7 @@ export interface Diode {
   readonly cathode: string;
   readonly saturationCurrent: number;
   readonly thermalVoltage: number;
+  readonly emissionCoefficient: number;
 }
 
 export type JfetPolarity = "NJF" | "PJF";
@@ -945,7 +946,7 @@ function cloneSubcktElement(
     case "b-source":
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap), voltageExpr: mapBSourceExprNodes(element.voltageExpr, instanceName, nodeMap), currentExpr: mapBSourceExprNodes(element.currentExpr, instanceName, nodeMap) };
     case "diode":
-      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage);
+      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient);
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation);
     case "bjt":
@@ -1194,6 +1195,7 @@ export function diode(
   cathode: string,
   saturationCurrent = 1.0e-15,
   thermalVoltage = 0.02585,
+  emissionCoefficient = 1.0,
 ): Diode {
   return {
     kind: "diode",
@@ -1202,6 +1204,7 @@ export function diode(
     cathode,
     saturationCurrent,
     thermalVoltage,
+    emissionCoefficient,
   };
 }
 
@@ -3734,7 +3737,7 @@ function buildSmallSignalMatrix(
           matrix,
           nodeIndex(nodeIndices, element.anode),
           nodeIndex(nodeIndices, element.cathode),
-          element.saturationCurrent / element.thermalVoltage,
+          element.saturationCurrent / diodeEffectiveThermalVoltage(element),
         );
         break;
       case "jfet":
@@ -3904,7 +3907,7 @@ function buildAcMatrix(
           matrix,
           nodeIndex(nodeIndices, element.anode),
           nodeIndex(nodeIndices, element.cathode),
-          complex(element.saturationCurrent / element.thermalVoltage, 0.0),
+          complex(element.saturationCurrent / diodeEffectiveThermalVoltage(element), 0.0),
         );
         break;
       case "jfet":
@@ -4521,10 +4524,11 @@ function stampDiode(
   const voltage =
     (anode === undefined ? 0.0 : operatingPoint[anode]) -
     (cathode === undefined ? 0.0 : operatingPoint[cathode]);
-  const exponent = Math.max(-40.0, Math.min(40.0, voltage / element.thermalVoltage));
+  const vtEff = diodeEffectiveThermalVoltage(element);
+  const exponent = Math.max(-40.0, Math.min(40.0, voltage / vtEff));
   const expValue = Math.exp(exponent);
   const current = element.saturationCurrent * (expValue - 1.0);
-  const conductance = element.saturationCurrent / element.thermalVoltage * expValue;
+  const conductance = element.saturationCurrent / vtEff * expValue;
   const equivalentCurrent = current - conductance * voltage;
 
   stampConductance(matrix, anode, cathode, conductance);
@@ -4806,6 +4810,13 @@ function validateDiode(element: Diode): void {
   if (!Number.isFinite(element.thermalVoltage) || element.thermalVoltage <= 0.0) {
     throw invalidElement(element.name, "thermal voltage must be finite and positive");
   }
+  if (!Number.isFinite(element.emissionCoefficient) || element.emissionCoefficient <= 0.0) {
+    throw invalidElement(element.name, "emission coefficient must be finite and positive");
+  }
+}
+
+function diodeEffectiveThermalVoltage(element: Diode): number {
+  return element.thermalVoltage * element.emissionCoefficient;
 }
 
 function validateBjt(element: Bjt): void {

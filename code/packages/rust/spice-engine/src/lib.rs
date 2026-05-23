@@ -291,12 +291,13 @@ fn clone_subckt_element(
             voltage_expr: map_bsource_expr_nodes(&element.voltage_expr, instance_name, node_map),
             current_expr: map_bsource_expr_nodes(&element.current_expr, instance_name, node_map),
         }),
-        Element::Diode(element) => Element::Diode(Diode::with_model(
+        Element::Diode(element) => Element::Diode(Diode::with_model_and_emission_coefficient(
             format!("{instance_name}.{}", element.name),
             map_subckt_node(&element.anode, instance_name, node_map),
             map_subckt_node(&element.cathode, instance_name, node_map),
             element.saturation_current,
             element.thermal_voltage,
+            element.emission_coefficient,
         )),
         Element::Jfet(element) => Element::Jfet(Jfet::with_model(
             format!("{instance_name}.{}", element.name),
@@ -1078,6 +1079,7 @@ pub struct Diode {
     pub cathode: String,
     pub saturation_current: f64,
     pub thermal_voltage: f64,
+    pub emission_coefficient: f64,
 }
 
 impl Diode {
@@ -1096,12 +1098,31 @@ impl Diode {
         saturation_current: f64,
         thermal_voltage: f64,
     ) -> Self {
+        Self::with_model_and_emission_coefficient(
+            name,
+            anode,
+            cathode,
+            saturation_current,
+            thermal_voltage,
+            1.0,
+        )
+    }
+
+    pub fn with_model_and_emission_coefficient(
+        name: impl Into<String>,
+        anode: impl Into<String>,
+        cathode: impl Into<String>,
+        saturation_current: f64,
+        thermal_voltage: f64,
+        emission_coefficient: f64,
+    ) -> Self {
         Self {
             name: name.into(),
             anode: anode.into(),
             cathode: cathode.into(),
             saturation_current,
             thermal_voltage,
+            emission_coefficient,
         }
     }
 }
@@ -4625,19 +4646,17 @@ fn build_ac_matrix(
             )?,
             Element::Diode(diode) => {
                 validate_diode(diode)?;
+                let vt_eff = diode_effective_thermal_voltage(diode);
                 let anode = node_index(node_indices, &diode.anode);
                 let cathode = node_index(node_indices, &diode.cathode);
                 let voltage = vector_voltage(operating_point, anode)
                     - vector_voltage(operating_point, cathode);
-                let exponent = (voltage / diode.thermal_voltage).clamp(-40.0, 40.0);
+                let exponent = (voltage / vt_eff).clamp(-40.0, 40.0);
                 stamp_complex_conductance(
                     &mut matrix,
                     anode,
                     cathode,
-                    Complex::new(
-                        diode.saturation_current / diode.thermal_voltage * exponent.exp(),
-                        0.0,
-                    ),
+                    Complex::new(diode.saturation_current / vt_eff * exponent.exp(), 0.0),
                 );
             }
             Element::Jfet(jfet) => {
@@ -4729,16 +4748,17 @@ fn build_small_signal_matrix(
             )?,
             Element::Diode(diode) => {
                 validate_diode(diode)?;
+                let vt_eff = diode_effective_thermal_voltage(diode);
                 let anode = node_index(node_indices, &diode.anode);
                 let cathode = node_index(node_indices, &diode.cathode);
                 let voltage = vector_voltage(operating_point, anode)
                     - vector_voltage(operating_point, cathode);
-                let exponent = (voltage / diode.thermal_voltage).clamp(-40.0, 40.0);
+                let exponent = (voltage / vt_eff).clamp(-40.0, 40.0);
                 stamp_conductance(
                     &mut matrix,
                     anode,
                     cathode,
-                    diode.saturation_current / diode.thermal_voltage * exponent.exp(),
+                    diode.saturation_current / vt_eff * exponent.exp(),
                 );
             }
             Element::Jfet(jfet) => {
@@ -5278,10 +5298,11 @@ fn stamp_diode(
     let cathode = node_index(node_indices, &diode.cathode);
     let voltage = anode.map_or(0.0, |index| operating_point[index])
         - cathode.map_or(0.0, |index| operating_point[index]);
-    let exponent = (voltage / diode.thermal_voltage).clamp(-40.0, 40.0);
+    let vt_eff = diode_effective_thermal_voltage(diode);
+    let exponent = (voltage / vt_eff).clamp(-40.0, 40.0);
     let exp_value = exponent.exp();
     let current = diode.saturation_current * (exp_value - 1.0);
-    let conductance = diode.saturation_current / diode.thermal_voltage * exp_value;
+    let conductance = diode.saturation_current / vt_eff * exp_value;
     let equivalent_current = current - conductance * voltage;
 
     stamp_conductance(matrix, anode, cathode, conductance);
@@ -5742,6 +5763,10 @@ fn validate_reactive_elements(circuit: &Circuit) -> Result<(), SpiceError> {
     Ok(())
 }
 
+fn diode_effective_thermal_voltage(diode: &Diode) -> f64 {
+    diode.thermal_voltage * diode.emission_coefficient
+}
+
 fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
     if !diode.saturation_current.is_finite() || diode.saturation_current <= 0.0 {
         return Err(SpiceError::InvalidElement {
@@ -5753,6 +5778,12 @@ fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: diode.name.clone(),
             reason: "thermal voltage must be finite and positive".to_string(),
+        });
+    }
+    if !diode.emission_coefficient.is_finite() || diode.emission_coefficient <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "emission coefficient must be finite and positive".to_string(),
         });
     }
     Ok(())

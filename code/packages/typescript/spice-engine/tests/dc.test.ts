@@ -230,6 +230,25 @@ describe("dcOp", () => {
     expect(result.voltage("out")).toBeLessThan(0.7);
   });
 
+  it("uses diode emission coefficient in fixed-bias current", () => {
+    const base = new Circuit();
+    base.add(voltageSource("V1", "a", "0", 0.7));
+    base.add(diode("D1", "a", "0", 1.0e-15, 0.02585));
+
+    const highN = new Circuit();
+    highN.add(voltageSource("V1", "a", "0", 0.7));
+    highN.add(diode("D1", "a", "0", 1.0e-15, 0.02585, 2.0));
+
+    const baseResult = dcOp(base);
+    const highNResult = dcOp(highN);
+
+    expect(highNResult.branchCurrent("V1")).toBeDefined();
+    expect(baseResult.branchCurrent("V1")).toBeDefined();
+    expect(Math.abs(highNResult.branchCurrent("V1")!)).toBeLessThan(
+      Math.abs(baseResult.branchCurrent("V1")!) * 1.0e-3,
+    );
+  });
+
   it("solves an NPN BJT operating point", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vcc", "vcc", "0", 5.0));

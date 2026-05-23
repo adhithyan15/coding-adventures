@@ -4,6 +4,9 @@
 
 ### Added
 
+- **Diode emission coefficient models** — `Diode.N` now scales the effective
+  thermal voltage in DC and small-signal diode conductance calculations.
+
 - **Pseudo-transient DC continuation** — `dc_op` now has a final bounded
   artificial backward-Euler continuation aid after Newton, Gmin stepping, and
   source stepping; successful fallback results report

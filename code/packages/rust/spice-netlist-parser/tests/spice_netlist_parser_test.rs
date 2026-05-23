@@ -645,7 +645,7 @@ Rload out 0 500
 fn parses_diode_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model fast D(IS=1e-12 VT=25m)
+.model fast D(IS=1e-12 VT=25m N=2)
 V1 in 0 DC 0.7
 D1 in out fast
 Rload out 0 1k
@@ -659,6 +659,7 @@ Rload out 0 1k
     assert_eq!(model.kind, "D");
     assert_close(*model.params.get("IS").unwrap(), 1.0e-12);
     assert_close(*model.params.get("VT").unwrap(), 25.0e-3);
+    assert_close(*model.params.get("N").unwrap(), 2.0);
 
     let Element::Diode(diode) = &parsed.circuit.elements()[1] else {
         panic!("expected diode");
@@ -668,10 +669,11 @@ Rload out 0 1k
     assert_eq!(diode.cathode, "out");
     assert_close(diode.saturation_current, 1.0e-12);
     assert_close(diode.thermal_voltage, 25.0e-3);
+    assert_close(diode.emission_coefficient, 2.0);
 
     let result = dc_op(&parsed.circuit).unwrap();
     let out = result.voltage("out").unwrap();
-    assert!(out > 0.1, "expected forward-biased output, got {out}");
+    assert!(out > 0.0, "expected forward-biased output, got {out}");
     assert!(out < 0.7, "expected diode drop below source, got {out}");
 }
 
@@ -1033,7 +1035,7 @@ Rload out 0 500
 fn expands_subcircuit_diode_nodes_into_engine_elements() {
     let parsed = parse_netlist(
         r#"
-.model clamp D(IS=1e-12 VT=25m)
+.model clamp D(IS=1e-12 VT=25m N=2)
 .subckt limiter inp outp
 Dlim inp outp clamp
 .ends limiter
@@ -1048,6 +1050,7 @@ Xlim in out limiter
     assert_eq!(diode.name, "Xlim.Dlim");
     assert_eq!(diode.anode, "in");
     assert_eq!(diode.cathode, "out");
+    assert_close(diode.emission_coefficient, 2.0);
 }
 
 #[test]
