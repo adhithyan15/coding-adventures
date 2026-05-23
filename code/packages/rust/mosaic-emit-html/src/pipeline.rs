@@ -447,6 +447,23 @@ fn emit_html_tree(
         return Ok(out);
     }
 
+    // UI29-2 — `HostCheckbox` and `HostRadio` lower to native
+    // `<input type="checkbox|radio">` form controls, optionally wrapped
+    // in a `<label>` when a `label:` slot is supplied. Static HTML
+    // can't wire `onChange`-style emit handlers (no JS runtime), so
+    // emit-typed props become `data-on-*` markers the host's template
+    // engine can use to attach handlers after-the-fact. Mirrors how
+    // `read-only` and `disabled` are surfaced on `HostInput`/
+    // `HostButton`.
+    if node.tag == "HostCheckbox" {
+        out.push_str(&emit_host_checkbox(node, indent, part_styles));
+        return Ok(out);
+    }
+    if node.tag == "HostRadio" {
+        out.push_str(&emit_host_radio(node, indent, part_styles));
+        return Ok(out);
+    }
+
     // UI29-1 §3.5 — `HostDialog` lowers to HTML's native `<dialog>`
     // element. The browser provides modal blocking, focus trap,
     // top-layer rendering, and Esc-to-close for free; we only need a
@@ -709,6 +726,195 @@ fn emit_host_button(
                 Ok(out)
             }
         }
+    }
+}
+
+// =====================================================================
+// UI29-2 — HostCheckbox / HostRadio lowerings
+// =====================================================================
+
+/// Lower a UI29-2 `HostCheckbox` node to an `<input type="checkbox">`.
+/// Optionally wrap in a `<label>` element when `label:` is bound.
+///
+/// ## Prop handling
+///
+/// | Prop            | SlotRef                            | String / Keyword              |
+/// |---|---|---|
+/// | `checked`       | `data-checked="{{slot}}"` marker   | keyword `true` → `checked`; `false` → omit |
+/// | `disabled`      | `data-disabled="{{slot}}"` marker  | keyword `true` → `disabled`; `false` → omit |
+/// | `indeterminate` | `data-indeterminate="{{slot}}"` marker | keyword `true` → `data-indeterminate` (HTML has no `indeterminate` attr) |
+/// | `label`         | wraps input in `<label>{{slot}} </label>` | wraps in `<label>escaped-text</label>` |
+/// | `onToggle`      | `data-on-toggle="{{emit-name}}"` marker | (n/a)                  |
+///
+/// ## Why data-* markers
+///
+/// Static HTML can't attach JavaScript event handlers without a runtime.
+/// Mirrors how `HostInput` / `HostButton` surface their slot-driven
+/// `read-only` / `disabled` props — emit a neutral `data-*` marker the
+/// host's template engine or hydration pass can post-process to wire
+/// real `onchange` handlers if it wants to.
+///
+/// ## `indeterminate` is JS-API-only
+///
+/// There is no HTML attribute for `indeterminate` — it's a property on
+/// the DOM `HTMLInputElement` instance, set imperatively. Static HTML
+/// can't reach it. We emit `data-indeterminate` so the host knows the
+/// author wanted tri-state, and any hydration script can set
+/// `el.indeterminate = el.dataset.indeterminate === "true"` on mount.
+fn emit_host_checkbox(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::from(" type=\"checkbox\"");
+
+    match find_prop(node, "checked") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" checked"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-checked=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    match find_prop(node, "disabled") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" disabled"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-disabled=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    // `indeterminate` is a JS property, not an HTML attribute. We emit
+    // `data-indeterminate` (literal "true" for the keyword case, or a
+    // template marker for the slot case) so hydration scripts can set
+    // the imperative property on mount.
+    match find_prop(node, "indeterminate") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            attrs.push_str(" data-indeterminate=\"true\"");
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-indeterminate=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    // `onToggle` → `data-on-toggle` marker. The host's template engine
+    // (or a hydration pass) can read this and attach a real `onchange`
+    // listener that dispatches `{ type: <emit-name>, checked: el.checked }`.
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop(node, "onToggle") {
+        write!(attrs, " data-on-toggle=\"{}\"", escape_html_attr(emit_name)).unwrap();
+    }
+
+    let style_attr = build_style_attr(node, "", part_styles);
+
+    // Compute optional label wrapping. Same wrap pattern as the React
+    // backend: `<label><input … /> {labelText}</label>` keeps the
+    // visual association tight without inventing id+for couples.
+    let label_body: Option<String> = match find_prop(node, "label") {
+        Some(LayoutPropValue::String(lit)) => Some(escape_html_text(lit)),
+        Some(LayoutPropValue::SlotRef(s)) => Some(format!("{{{{{}}}}}", camel(s))),
+        _ => None,
+    };
+
+    match label_body {
+        Some(body) => format!(
+            "{pad}<label><input{attrs}{style_attr}> {body}</label>\n"
+        ),
+        None => format!("{pad}<input{attrs}{style_attr}>\n"),
+    }
+}
+
+/// Lower a UI29-2 `HostRadio` node to an `<input type="radio">`,
+/// optionally wrapped in a `<label>`.
+///
+/// ## Prop handling
+///
+/// | Prop       | SlotRef                          | String literal                  |
+/// |---|---|---|
+/// | `checked`  | `data-checked="{{slot}}"`        | keyword `true` → `checked`; `false` → omit |
+/// | `group`    | `name="{{slot}}"`                | `name="literal"` (escaped HTML attr) |
+/// | `value`    | `value="{{slot}}"`               | `value="literal"`                |
+/// | `disabled` | `data-disabled="{{slot}}"`       | keyword `true` → `disabled`      |
+/// | `label`    | wraps in `<label>{{slot}} </label>` | wraps in `<label>escaped</label>` |
+/// | `onSelect` | `data-on-select="{{emit-name}}"` | (n/a)                            |
+///
+/// ## Group coordination
+///
+/// HTML radios with the same `name` attribute form a browser-enforced
+/// mutex set automatically (the browser deselects the previously
+/// checked radio when a new one is checked). This matches UI29-2's v1
+/// design exactly: the `group:` prop maps to `name=`, and the browser
+/// does the visual coordination for free.
+fn emit_host_radio(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::from(" type=\"radio\"");
+
+    // name="group" or name="{{slot}}" — couples radios into a
+    // browser-enforced mutex set.
+    match find_prop(node, "group") {
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " name=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " name=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    // value="v" or value="{{slot}}".
+    match find_prop(node, "value") {
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " value=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " value=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    match find_prop(node, "checked") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" checked"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-checked=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    match find_prop(node, "disabled") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" disabled"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-disabled=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop(node, "onSelect") {
+        write!(attrs, " data-on-select=\"{}\"", escape_html_attr(emit_name)).unwrap();
+    }
+
+    let style_attr = build_style_attr(node, "", part_styles);
+
+    let label_body: Option<String> = match find_prop(node, "label") {
+        Some(LayoutPropValue::String(lit)) => Some(escape_html_text(lit)),
+        Some(LayoutPropValue::SlotRef(s)) => Some(format!("{{{{{}}}}}", camel(s))),
+        _ => None,
+    };
+
+    match label_body {
+        Some(body) => format!(
+            "{pad}<label><input{attrs}{style_attr}> {body}</label>\n"
+        ),
+        None => format!("{pad}<input{attrs}{style_attr}>\n"),
     }
 }
 
@@ -2460,5 +2666,199 @@ mod tests {
         .unwrap()
         .output;
         assert_eq!(first, second, "emits must be deterministic across calls");
+    }
+
+    // =====================================================================
+    // UI29-2 — HostCheckbox / HostRadio (static `<input>` lowerings)
+    // =====================================================================
+
+    /// UI29-2 HTML test 1 — bare HostCheckbox lowers to a minimal
+    /// `<input type="checkbox">`. No data-* markers, no `checked`, no
+    /// label wrap.
+    #[test]
+    fn host_checkbox_empty_lowers_to_bare_input() {
+        let out = from_pipeline(
+            &component("X", vec![]),
+            &layout("X", node("HostCheckbox")),
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("<input type=\"checkbox\">"),
+            "expected bare `<input type=\"checkbox\">`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 2 — `checked: true` keyword adds the bare
+    /// `checked` HTML attribute (the canonical static form).
+    #[test]
+    fn host_checkbox_checked_true_emits_bare_attr() {
+        let l = layout(
+            "X",
+            node_with_props("HostCheckbox", vec![prop_keyword("checked", "true")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<input type=\"checkbox\" checked>"),
+            "expected `<input type=\"checkbox\" checked>`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 3 — `checked: slot: c` emits a
+    /// `data-checked="{{c}}"` marker that the host template engine can
+    /// post-process. Static HTML has no JS to write a real `checked`
+    /// attribute from a runtime value.
+    #[test]
+    fn host_checkbox_checked_slot_emits_data_marker() {
+        let l = layout(
+            "X",
+            node_with_props("HostCheckbox", vec![prop_slot("checked", "is-checked")]),
+        );
+        let out = from_pipeline(
+            &component(
+                "X",
+                vec![SlotDecl {
+                    name: "is-checked".to_string(),
+                    r#type: SlotType::Bool,
+                    required: true,
+                    default: None,
+                }],
+            ),
+            &l,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("data-checked=\"{{isChecked}}\""),
+            "expected `data-checked=\"{{{{isChecked}}}}\"`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 4 — `label: "Agree"` wraps the input in a
+    /// `<label>…</label>`. Idiomatic HTML form pattern that doesn't
+    /// require unique id+for pairs.
+    #[test]
+    fn host_checkbox_string_label_wraps_in_label_element() {
+        let l = layout(
+            "X",
+            node_with_props("HostCheckbox", vec![prop_string("label", "Agree")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<label><input type=\"checkbox\"> Agree</label>"),
+            "expected label-wrapped input, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 5 — `onToggle: emit: onChange` surfaces as a
+    /// `data-on-toggle="onChange"` marker. Static HTML can't bind a
+    /// real listener; hydration scripts read the marker.
+    #[test]
+    fn host_checkbox_on_toggle_emits_data_marker() {
+        let l = layout(
+            "X",
+            node_with_props("HostCheckbox", vec![prop_emit("onToggle", "onChange")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("data-on-toggle=\"onChange\""),
+            "expected data-on-toggle marker, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 6 — `indeterminate: true` emits a
+    /// `data-indeterminate="true"` marker. HTML has no `indeterminate`
+    /// attribute (it's a JS DOM property only); hydration can read the
+    /// marker and set `el.indeterminate = true` imperatively.
+    #[test]
+    fn host_checkbox_indeterminate_keyword_emits_data_marker() {
+        let l = layout(
+            "X",
+            node_with_props("HostCheckbox", vec![prop_keyword("indeterminate", "true")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("data-indeterminate=\"true\""),
+            "expected data-indeterminate marker, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 7 — bare HostRadio lowers to a minimal
+    /// `<input type="radio">`.
+    #[test]
+    fn host_radio_empty_lowers_to_bare_input() {
+        let out = from_pipeline(
+            &component("X", vec![]),
+            &layout("X", node("HostRadio")),
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("<input type=\"radio\">"),
+            "expected bare `<input type=\"radio\">`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 8 — `group: "flavor"` becomes the real HTML
+    /// `name="flavor"` attribute. The browser enforces the radio-mutex
+    /// for free (no script needed) when multiple radios share `name`.
+    #[test]
+    fn host_radio_group_string_lowers_to_name_attribute() {
+        let l = layout(
+            "X",
+            node_with_props("HostRadio", vec![prop_string("group", "flavor")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("name=\"flavor\""),
+            "expected `name=\"flavor\"`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 9 — `value: "vanilla"` lowers to the standard
+    /// HTML `value="vanilla"` attribute (the form-submit value).
+    #[test]
+    fn host_radio_value_string_lowers_to_value_attribute() {
+        let l = layout(
+            "X",
+            node_with_props("HostRadio", vec![prop_string("value", "vanilla")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("value=\"vanilla\""),
+            "expected `value=\"vanilla\"`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 10 — `onSelect: emit: onPick` surfaces as a
+    /// `data-on-select="onPick"` marker.
+    #[test]
+    fn host_radio_on_select_emits_data_marker() {
+        let l = layout(
+            "X",
+            node_with_props("HostRadio", vec![prop_emit("onSelect", "onPick")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("data-on-select=\"onPick\""),
+            "expected data-on-select marker, got:\n{out}"
+        );
     }
 }

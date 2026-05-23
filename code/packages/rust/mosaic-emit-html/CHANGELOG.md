@@ -1,5 +1,47 @@
 # Changelog — mosaic-emit-html
 
+## [Unreleased]
+
+### Added — U29-2-K-html — `HostCheckbox` + `HostRadio` kernel primitive lowerings
+
+Both new UI29-2 primitives lower to native HTML form controls:
+
+- `HostCheckbox` → `<input type="checkbox" …>`
+- `HostRadio`    → `<input type="radio" …>`
+
+Static HTML has no JS runtime, so the standard pattern from
+`HostInput` and `HostButton` is reused — slot-typed props become
+`data-*` markers the host's template engine or hydration pass can
+post-process:
+
+- `checked: true|false` keyword → bare `checked` attribute or omitted.
+- `checked: slot: c` → `data-checked="{{c}}"` template marker.
+- `disabled: true|false` / `slot: d` → bare `disabled` / `data-disabled` marker.
+- `label: …` (string or slot) → wraps the input in `<label><input …> body</label>`
+  (idiomatic; no id+for pair to invent).
+- `onToggle`/`onSelect: emit: onX` → `data-on-toggle="onX"` /
+  `data-on-select="onX"` marker for hydration to bind real listeners.
+
+HostRadio-specific:
+
+- `group: "name"` / `slot: g` → real HTML `name=` attribute. The
+  browser enforces the radio-mutex for free when multiple radios
+  share a `name` — no script needed.
+- `value: "v"` / `slot: v` → real HTML `value=` attribute (the
+  form-submit value).
+
+HostCheckbox-specific:
+
+- `indeterminate: true` / `slot: i` → `data-indeterminate="true"` /
+  `data-indeterminate="{{i}}"`. There is no HTML attribute for
+  `indeterminate` — it's a JS DOM property — so the marker lets the
+  host's hydration script set `el.indeterminate = …` imperatively.
+
+10 new tests cover: bare inputs, `checked: true` keyword, `checked:
+slot` data marker, label wrapping, `onToggle` data marker,
+`indeterminate` data marker, bare radio, `group:` → `name=`,
+`value:` → `value=`, `onSelect:` data marker.
+
 ## 0.3.0 — 2026-05-19
 
 U29-K-html — UI29 kernel primitives in the pipeline emitter. Extends the
