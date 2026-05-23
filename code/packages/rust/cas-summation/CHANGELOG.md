@@ -1,5 +1,35 @@
 # Changelog
 
+## 1.3.0 — 2026-05-23
+
+**Phase 55 — Bounded×Log(diverging) numerator pattern (Rust port).**
+
+Ports Python `cas-summation` 1.3.0 Phase 55 to Rust.  Adds
+`is_bounded_times_log_in_k` helper and a Phase 55 branch in
+`g_vanishes_at_infinity`.  `bounded(k) × log(h(k))` grows sub-polynomially
+(log is dominated by any polynomial denominator).
+
+Bumps 1.2.0 → 1.3.0.
+
+### Added
+
+- **`is_bounded_times_log_in_k(node, k)`** — Phase 55 helper. Returns true
+  when `node` is a `Mul` with exactly one `Log(diverging)` factor and all
+  remaining factors pass `is_bounded_in_k`. Requires exactly one log factor.
+
+- **Phase 55 branch in `g_vanishes_at_infinity`** — after Phase 54, before
+  Phase 42. Closes `Div(Mul(bounded, Log(diverging)), den)` when `den`
+  diverges (`h_diverges_at_infinity` returns true).
+
+- **5 new tests**:
+  - `phase55_sin_k_times_log_k_over_k_squared_closes`
+  - `phase55_cos_k_times_log_k_over_k_closes`
+  - `phase55_sin_cos_times_log_over_k_cubed_closes`
+  - `phase55_sin_times_log_k_squared_over_k_cubed_closes`
+  - `phase55_bounded_times_log_constant_denominator_stays` (refused)
+
+Total: 66 tests (was 61).
+
 ## 1.2.0 — 2026-05-23
 
 **Phase 54 — Log×polynomial numerator pattern (Rust port).**

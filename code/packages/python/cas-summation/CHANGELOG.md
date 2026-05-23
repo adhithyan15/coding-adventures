@@ -1,5 +1,42 @@
 # Changelog
 
+## 1.3.0 — 2026-05-23
+
+**Phase 55 — Bounded×Log(diverging) numerator pattern (Python).**
+
+Extends ``_g_vanishes_at_infinity`` with a new branch for
+``Div(Mul(bounded, Log(diverging)), h(k))`` shapes.  The product of a
+uniformly bounded function (``|f| ≤ C``) and ``log(h(k))`` (sub-polynomial
+growth) is dominated by any polynomial or faster-growing denominator.
+
+This is the bounded-times-log complement of Phase 52
+(``Mul(bounded, polynomial)``) and Phase 54 (``Mul(Log, polynomial)``).
+
+Bumps 1.2.0 → 1.3.0.
+
+### Added
+
+- **``_is_bounded_times_log_in_k(node, k)``** — Phase 55 helper.
+  Returns True when ``node`` is a ``Mul`` with exactly one
+  ``Log(diverging)`` factor and all remaining factors bounded in ``k``
+  (via ``_is_log_of_diverging_in_k`` and ``_is_bounded_in_k``).  Requires
+  exactly one log factor; two or more → False.
+
+- **Phase 55 branch in ``_g_vanishes_at_infinity``** — inserted after
+  Phase 54 and before the Phase 42 polynomial widening.  Closes
+  ``Div(Mul(bounded, Log(diverging)), den)`` when ``den`` diverges
+  (``_h_diverges_at_infinity`` returns True).
+
+- **5 new tests** in ``TestEvaluateSumPhase55BoundedTimesLogNumerator``
+  (``test_summation.py``):
+  - ``test_sin_k_times_log_k_over_k_squared_closes`` — sin×log / k² → closes
+  - ``test_cos_k_times_log_k_over_k_closes`` — cos×log / k → closes
+  - ``test_two_bounded_factors_times_log_over_k_cubed_closes`` — sin·cos·log / k³
+  - ``test_bounded_times_log_of_k_squared_over_k_cubed_closes`` — sin·log(k²) / k³
+  - ``test_bounded_times_log_constant_denominator_refused`` — constant denominator refused
+
+Total: 126 tests (was 121), coverage 88.75%.
+
 ## 1.2.0 — 2026-05-23
 
 **Phase 54 — Log×polynomial numerator pattern (Python).**

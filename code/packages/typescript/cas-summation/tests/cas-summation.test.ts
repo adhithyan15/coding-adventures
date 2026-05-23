@@ -984,3 +984,86 @@ describe("summation: Phase 54 Log×polynomial numerator", () => {
     expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 55 — Bounded×Log(diverging) numerator (TS port).
+// ---------------------------------------------------------------------------
+// ``sin(k)·log(k)/Q(k)`` vanishes at infinity when Q(k) diverges.
+// The numerator is bounded×sub-polynomial — dominated by any polynomial
+// or faster-growing denominator.
+// isBoundedTimesLogInK requires exactly one Log(diverging) factor; all
+// other factors must pass isBoundedInK.
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 55 Bounded×Log(diverging) numerator", () => {
+  it("sin(k)·log(k) / k² closes (bounded×log / poly-2)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sin"), [k]), app(sym("Log"), [k])]);
+    const numKp1 = app(MUL, [app(sym("Sin"), [kp1]), app(sym("Log"), [kp1])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("cos(k)·log(k) / k closes (bounded×log / poly-1)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Cos"), [k]), app(sym("Log"), [k])]);
+    const numKp1 = app(MUL, [app(sym("Cos"), [kp1]), app(sym("Log"), [kp1])]);
+    const f = app(SUB, [
+      app(DIV, [numK, k]),
+      app(DIV, [numKp1, kp1]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("sin(k)·cos(k)·log(k) / k³ closes (two bounded×log / poly-3)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sin"), [k]), app(sym("Cos"), [k]), app(sym("Log"), [k])]);
+    const numKp1 = app(MUL, [app(sym("Sin"), [kp1]), app(sym("Cos"), [kp1]), app(sym("Log"), [kp1])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("sin(k)·log(k²) / k³ closes (log of k² diverges, bounded×log)", () => {
+    // log(k²) diverges (k² is a positive-degree polynomial).
+    // After substituting k→k+1: log((k+1)²) — structural equality holds.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const kSq = app(POW, [k, int(2)]);
+    const kp1Sq = app(POW, [kp1, int(2)]);
+    const numK = app(MUL, [app(sym("Sin"), [k]), app(sym("Log"), [kSq])]);
+    const numKp1 = app(MUL, [app(sym("Sin"), [kp1]), app(sym("Log"), [kp1Sq])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("sin(k)·log(k) / 1 stays unevaluated (constant denominator — does not diverge)", () => {
+    // Denominator = 1 (constant). hDivergesAtInfinity(1) = false.
+    // Phase 55 correctly refuses; no other phase closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sin"), [k]), app(sym("Log"), [k])]);
+    const numKp1 = app(MUL, [app(sym("Sin"), [kp1]), app(sym("Log"), [kp1])]);
+    const f = app(SUB, [
+      app(DIV, [numK, int(1)]),
+      app(DIV, [numKp1, int(1)]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});

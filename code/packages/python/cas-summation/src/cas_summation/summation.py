@@ -648,19 +648,22 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
         closes telescopes like ``k/((k+1)(k+2)(k+3))`` and any other
         proper rational shape Apart might emit.
 
-    +-------------------------------+--------------------------+
-    | ``g`` shape                   | Provably ``→ 0``?        |
-    +===============================+==========================+
-    | ``Div(constant, k+a)``        | yes (Phase 41)           |
-    | ``Div(constant, k²·(k+1))``   | yes (Phase 41)           |
-    | ``Div(k, k²+1)``              | yes (Phase 42)           |
-    | ``Div(k+1, k³−5)``            | yes (Phase 42)           |
-    | constant                      | no (limit is the const)  |
-    | ``k`` or ``k²+1``             | no (limit is ∞)          |
-    | ``1/sin(k)`` / ``log(k)/k``   | no (numerator is not a   |
-    |                               |    polynomial; transcend- |
-    |                               |    ental limits deferred) |
-    +-------------------------------+--------------------------+
+    +-----------------------------------+-----------------------------+
+    | ``g`` shape                       | Provably ``→ 0``?           |
+    +===================================+=============================+
+    | ``Div(constant, k+a)``            | yes (Phase 41)              |
+    | ``Div(constant, k²·(k+1))``       | yes (Phase 41)              |
+    | ``Div(k, k²+1)``                  | yes (Phase 42)              |
+    | ``Div(k+1, k³−5)``                | yes (Phase 42)              |
+    | ``Div(sin(k), k²)``               | yes (Phase 49)              |
+    | ``Div(log(k), k²)``               | yes (Phase 50)              |
+    | ``Div(sin(k)·log(k), k²)``        | yes (Phase 55)              |
+    | constant                          | no (limit is the const)     |
+    | ``k`` or ``k²+1``                 | no (limit is ∞)             |
+    | ``1/sin(k)`` / ``log(k)/k``       | no (numerator is not a      |
+    |                                   |    polynomial; transcend-   |
+    |                                   |    ental limits deferred)   |
+    +-----------------------------------+-----------------------------+
 
     Examples
     --------
@@ -741,6 +744,21 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
         den_deg_lp = _polynomial_degree_in_k(den, k)
         if den_deg_lp is not None and den_deg_lp > poly_deg_lp:
             return True
+    # Phase 55: ``Mul(bounded, Log(diverging))`` numerator + diverging
+    # denominator.  The numerator is the product of a uniformly bounded
+    # function (``|f| ≤ C``) and a logarithm that grows sub-polynomially.
+    # Because ``log(h(k)) = o(k^ε)`` for any ``ε > 0``, the whole
+    # numerator grows sub-polynomially — dominated by any polynomial
+    # (or faster-growing) denominator.  This is the bounded-times-log
+    # complement to Phase 52 (bounded × polynomial) and Phase 54
+    # (log × polynomial).
+    #
+    # Note: Unlike Phase 54, the comparison here is against the denominator's
+    # divergence (not a strict degree inequality), because the numerator's
+    # effective polynomial degree is 0 — it doesn't grow polynomially at all.
+    # Any strictly diverging denominator therefore dominates.
+    if _is_bounded_times_log_in_k(num, k) and _h_diverges_at_infinity(den, k):
+        return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -997,6 +1015,57 @@ def _split_log_polynomial_factor(
     if log_factor is None:
         return None
     return (log_factor, poly_deg_sum)
+
+
+def _is_bounded_times_log_in_k(node: IRNode, k: IRSymbol) -> bool:
+    """Return True when ``node`` is a ``Mul`` with exactly one
+    ``Log(diverging)`` factor and all remaining factors bounded in ``k``.
+
+    Phase 55 — Used by :func:`_g_vanishes_at_infinity` to recognise that
+    ``sin(k)·log(k)/k²`` (and similar shapes) vanish at infinity.  The
+    bounded part is uniformly bounded by some constant ``C``, and
+    ``log(h(k))`` grows sub-polynomially.  Therefore the numerator as a
+    whole grows sub-polynomially, which is dominated by any polynomial
+    denominator of degree ≥ 1 (or any other diverging denominator).
+
+    This is the bounded-times-log analog of Phase 52
+    (``Mul(bounded, polynomial)``) and Phase 54
+    (``Mul(Log(diverging), polynomial_factors)``).
+
+    +-------------------------------------+-----------------------+
+    | Input                               | Return                |
+    +=====================================+=======================+
+    | ``Mul(Sin(k), Log(k))``             | True                  |
+    | ``Mul(Cos(k), Log(k))``             | True                  |
+    | ``Mul(Sin(k), Cos(k), Log(k))``     | True (two bounded)    |
+    | ``Mul(Sin(k), Log(k+1))``           | True (log of k+1)     |
+    | ``Mul(k, Log(k))``                  | False (k not bounded) |
+    | ``Mul(Sin(k), Log(k), Log(k))``     | False (two Log)       |
+    | ``Mul(Sin(k), k, Log(k))``          | False (k not bounded) |
+    | ``Log(k)`` (plain, not Mul)         | False (→ Phase 50)    |
+    | ``Mul(Sin(k), k)`` (no Log)         | False (→ Phase 52)    |
+    +-------------------------------------+-----------------------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - If it is ``Log(diverging_in_k)`` → count as log factor.
+         - If it is ``bounded_in_k`` → accept as bounded factor.
+         - Otherwise → return False (unrecognised factor).
+      3. Require exactly one log factor; zero or two+ → return False.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return False
+    log_count = 0
+    for arg in node.args:
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        # Factor is neither Log(diverging) nor bounded — unrecognised.
+        return False
+    return log_count == 1
 
 
 def _try_power_of_k(
