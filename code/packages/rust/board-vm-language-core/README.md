@@ -107,6 +107,10 @@ event-queue decision in Rust too. Frontends still own queue storage and runtime
 scheduling, but Rust decides whether a callback invocation is enqueued, drops
 the incoming event, drops the oldest queued event first, and whether cooperative
 dispatch should be woken.
+`input_callback_dispatch_plan_for_queue_plan` then turns an admitted queue item
+into the callback execution handoff: callback program id, instruction budget,
+event identity, queue action, and cooperative dispatch reason stay in Rust,
+while language adapters only schedule the native callback runner.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
