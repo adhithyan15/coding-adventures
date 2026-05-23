@@ -1047,12 +1047,88 @@ def _dc_source_step(
     return result
 
 
+def _dc_pseudo_transient(
+    circuit: Circuit,
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    n_steps: int = 20,
+    shunt_conductance: float = 1e-3,
+) -> DcResult | None:
+    """DC continuation through artificial backward-Euler node capacitors."""
+    if n_steps <= 0 or not math.isfinite(shunt_conductance) or shunt_conductance <= 0.0:
+        return None
+
+    _, nodes = _node_index(circuit)
+    if not nodes:
+        return None
+
+    branch_srcs = _branch_sources(circuit)
+    previous_node_voltages = {node: 0.0 for node in nodes}
+    x_init: list[float] | None = None
+    last_result: DcResult | None = None
+
+    for step in range(n_steps):
+        pseudo_elements = list(circuit.elements)
+        for node in nodes:
+            pseudo_elements.append(Resistor(
+                f"_ptran_g_{step}_{node}",
+                node,
+                "0",
+                1.0 / shunt_conductance,
+            ))
+            history_current = shunt_conductance * previous_node_voltages[node]
+            if history_current != 0.0:
+                pseudo_elements.append(CurrentSource(
+                    f"_ptran_i_{step}_{node}",
+                    "0",
+                    node,
+                    history_current,
+                ))
+
+        result = _dc_newton(
+            Circuit(elements=pseudo_elements),
+            max_iterations=max_iterations,
+            tol=tol,
+            x_init=x_init,
+        )
+        if not result.converged:
+            return None
+
+        delta = max(
+            abs(result.node_voltages.get(node, 0.0) - previous_node_voltages[node])
+            for node in nodes
+        )
+        previous_node_voltages = {
+            node: result.node_voltages.get(node, 0.0)
+            for node in nodes
+        }
+        x_init = _x_from_result(result, nodes, branch_srcs)
+        last_result = result
+        if delta < tol:
+            break
+
+    if last_result is None:
+        return None
+
+    final = _dc_newton(
+        circuit,
+        max_iterations=max_iterations,
+        tol=tol,
+        x_init=x_init,
+    )
+    return final if final.converged else None
+
+
 def dc_op(
     circuit: Circuit,
     *,
     max_iterations: int = 50,
     tol: float = 1e-6,
     convergence_aids: bool = True,
+    pseudo_transient_steps: int = 20,
+    pseudo_transient_shunt_conductance: float = 1e-3,
+    pseudo_transient_max_iterations: int | None = None,
 ) -> DcResult:
     """Solve DC operating point via Newton-Raphson on a linearized MNA.
 
@@ -1085,6 +1161,16 @@ def dc_op(
         When ``True`` (default), automatically fall back to Gmin stepping
         then source stepping when plain Newton diverges.  Set to ``False``
         to force plain Newton only (faster for simple linear circuits).
+    pseudo_transient_steps:
+        Maximum artificial backward-Euler continuation steps after Newton,
+        Gmin stepping, and source stepping fail.  Set to 0 to disable this
+        final convergence aid.
+    pseudo_transient_shunt_conductance:
+        Artificial node-to-ground conductance (S) used by the continuation
+        companion.  Larger values damp Newton more aggressively.
+    pseudo_transient_max_iterations:
+        Optional Newton iteration cap for each pseudo-transient step and final
+        polish solve.  Defaults to ``max_iterations``.
     """
     # Attempt 1: plain Newton-Raphson.
     result = _dc_newton(circuit, max_iterations=max_iterations, tol=tol)
@@ -1102,6 +1188,21 @@ def dc_op(
     src_result = _dc_source_step(circuit, max_iterations=max_iterations, tol=tol)
     if src_result is not None and src_result.converged:
         return replace(src_result, convergence_aid="source")
+
+    # Attempt 4: artificial pseudo-transient continuation.
+    pseudo_result = _dc_pseudo_transient(
+        circuit,
+        max_iterations=(
+            pseudo_transient_max_iterations
+            if pseudo_transient_max_iterations is not None
+            else max_iterations
+        ),
+        tol=tol,
+        n_steps=pseudo_transient_steps,
+        shunt_conductance=pseudo_transient_shunt_conductance,
+    )
+    if pseudo_result is not None and pseudo_result.converged:
+        return replace(pseudo_result, convergence_aid="pseudo_transient")
 
     # All methods exhausted — return the plain-Newton result (converged=False).
     return replace(result, convergence_aid="none")

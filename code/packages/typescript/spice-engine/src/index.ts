@@ -464,12 +464,15 @@ export interface DcResult {
   branchCurrent(sourceName: string): number | undefined;
 }
 
-export type DcConvergenceAid = "newton" | "gmin" | "source" | "none";
+export type DcConvergenceAid = "newton" | "gmin" | "source" | "pseudo_transient" | "none";
 
 export interface DcOpOptions {
   readonly maxIterations?: number;
   readonly tolerance?: number;
   readonly convergenceAids?: boolean;
+  readonly pseudoTransientSteps?: number;
+  readonly pseudoTransientConductance?: number;
+  readonly pseudoTransientMaxIterations?: number;
 }
 
 export interface CornerOverride {
@@ -1393,13 +1396,19 @@ export function dcOp(
   const gminSolution = solveDcWithGminStepping(circuit, solveOptions, solution.vector);
   const sourceSolution =
     gminSolution === undefined ? solveDcWithSourceStepping(circuit, solveOptions) : undefined;
-  const finalSolution = gminSolution ?? sourceSolution ?? solution;
+  const pseudoSolution =
+    gminSolution === undefined && sourceSolution === undefined
+      ? solveDcWithPseudoTransient(circuit, solveOptions)
+      : undefined;
+  const finalSolution = gminSolution ?? sourceSolution ?? pseudoSolution ?? solution;
   const convergenceAid: DcConvergenceAid =
     gminSolution !== undefined
       ? "gmin"
       : sourceSolution !== undefined
         ? "source"
-        : "none";
+        : pseudoSolution !== undefined
+          ? "pseudo_transient"
+          : "none";
   return makeDcResult(
     finalSolution.nodeVoltages,
     finalSolution.branchCurrents,
@@ -2943,6 +2952,9 @@ interface ResolvedDcOpOptions {
   readonly maxIterations: number;
   readonly tolerance: number;
   readonly convergenceAids: boolean;
+  readonly pseudoTransientSteps: number;
+  readonly pseudoTransientConductance: number;
+  readonly pseudoTransientMaxIterations: number;
 }
 
 interface AcSolution {
@@ -3152,16 +3164,31 @@ function solveLinearCircuitAtOperatingPointOrFailure(
 function validatedDcOpOptions(options: DcOpOptions): ResolvedDcOpOptions {
   const maxIterations = options.maxIterations ?? 80;
   const tolerance = options.tolerance ?? 1.0e-9;
+  const pseudoTransientSteps = options.pseudoTransientSteps ?? 20;
+  const pseudoTransientConductance = options.pseudoTransientConductance ?? 1.0e-3;
+  const pseudoTransientMaxIterations = options.pseudoTransientMaxIterations ?? maxIterations;
   if (!Number.isInteger(maxIterations) || maxIterations < 1) {
     throw invalidElement("dcOp", "maxIterations must be a positive integer");
   }
   if (!Number.isFinite(tolerance) || tolerance <= 0.0) {
     throw invalidElement("dcOp", "tolerance must be finite and positive");
   }
+  if (!Number.isInteger(pseudoTransientSteps) || pseudoTransientSteps < 0) {
+    throw invalidElement("dcOp", "pseudoTransientSteps must be a non-negative integer");
+  }
+  if (!Number.isFinite(pseudoTransientConductance) || pseudoTransientConductance <= 0.0) {
+    throw invalidElement("dcOp", "pseudoTransientConductance must be finite and positive");
+  }
+  if (!Number.isInteger(pseudoTransientMaxIterations) || pseudoTransientMaxIterations < 1) {
+    throw invalidElement("dcOp", "pseudoTransientMaxIterations must be a positive integer");
+  }
   return {
     maxIterations,
     tolerance,
     convergenceAids: options.convergenceAids ?? true,
+    pseudoTransientSteps,
+    pseudoTransientConductance,
+    pseudoTransientMaxIterations,
   };
 }
 
@@ -3207,6 +3234,86 @@ function solveDcWithSourceStepping(
   }
 
   return finalSolution;
+}
+
+function solveDcWithPseudoTransient(
+  circuit: Circuit,
+  options: ResolvedDcOpOptions,
+): LinearSolution | undefined {
+  if (options.pseudoTransientSteps === 0) {
+    return undefined;
+  }
+
+  const nodeIndices = collectNodeIndices(circuit);
+  const nodesByIndex = Array.from(nodeIndices.entries()).sort(
+    ([, left], [, right]) => left - right,
+  );
+  if (nodesByIndex.length === 0) {
+    return undefined;
+  }
+
+  let previousNodeVoltages = new Map<string, number>(
+    nodesByIndex.map(([node]) => [node, 0.0]),
+  );
+  let warmStart: readonly number[] | undefined;
+  let lastSolution: LinearSolution | undefined;
+  const pseudoOptions: ResolvedDcOpOptions = {
+    ...options,
+    maxIterations: options.pseudoTransientMaxIterations,
+  };
+
+  for (let step = 0; step < options.pseudoTransientSteps; step++) {
+    const pseudoCircuit = circuitWithPseudoTransientCompanions(
+      circuit,
+      nodesByIndex.map(([node]) => node),
+      previousNodeVoltages,
+      options.pseudoTransientConductance,
+      step,
+    );
+    const solution = solveDcNewton(pseudoCircuit, pseudoOptions, warmStart);
+    if (!solution.converged) {
+      return undefined;
+    }
+
+    let delta = 0.0;
+    const nextNodeVoltages = new Map<string, number>();
+    for (const [node] of nodesByIndex) {
+      const next = solution.nodeVoltages.get(node) ?? 0.0;
+      delta = Math.max(delta, Math.abs(next - (previousNodeVoltages.get(node) ?? 0.0)));
+      nextNodeVoltages.set(node, next);
+    }
+    previousNodeVoltages = nextNodeVoltages;
+    warmStart = solution.vector;
+    lastSolution = solution;
+    if (delta < options.tolerance) {
+      break;
+    }
+  }
+
+  if (lastSolution === undefined) {
+    return undefined;
+  }
+
+  const finalSolution = solveDcNewton(circuit, pseudoOptions, warmStart);
+  return finalSolution.converged ? finalSolution : undefined;
+}
+
+function circuitWithPseudoTransientCompanions(
+  circuit: Circuit,
+  nodes: readonly string[],
+  previousNodeVoltages: ReadonlyMap<string, number>,
+  conductance: number,
+  step: number,
+): Circuit {
+  const pseudoCircuit = circuitFromElements(circuit.elements());
+  for (const node of nodes) {
+    pseudoCircuit.add(resistor(`__ptran_g_${step}_${node}`, node, "0", 1.0 / conductance));
+    const historyCurrent = conductance * (previousNodeVoltages.get(node) ?? 0.0);
+    if (historyCurrent !== 0.0) {
+      pseudoCircuit.add(currentSource(`__ptran_i_${step}_${node}`, "0", node, historyCurrent));
+    }
+  }
+  return pseudoCircuit;
 }
 
 function dcGminSequence(): number[] {

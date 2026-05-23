@@ -169,9 +169,12 @@ Acceptance:
 Status:
 
 - DC operating-point results now report which convergence path produced the
-  result (`newton`, `gmin`, `source`, or `none`) across Python, TypeScript, and
-  Rust. Pseudo-transient continuation can extend the same result contract in
-  the next slice.
+  result (`newton`, `gmin`, `source`, `pseudo_transient`, or `none`) across
+  Python, TypeScript, and Rust.
+- Python, TypeScript, and Rust now include a bounded pseudo-transient DC
+  continuation fallback after Newton, Gmin stepping, and source stepping. The
+  aid uses artificial backward-Euler node companions, has step/conductance and
+  per-step Newton caps, and reports `pseudo_transient` when it converges.
 
 ### Phase 6 - 1970s Model-Card Depth
 

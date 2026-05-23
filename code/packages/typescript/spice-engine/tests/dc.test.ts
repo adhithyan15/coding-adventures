@@ -302,6 +302,24 @@ describe("dcOp", () => {
     expect(result.iterations).toBe(1);
   });
 
+  it("recovers with pseudo-transient continuation after earlier aids fail", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vs", "in", "0", 10.0));
+    circuit.add(diode("D1", "in", "out", 1.0e-15, 0.02585));
+    circuit.add(resistor("Rload", "out", "0", 100.0));
+
+    const result = dcOp(circuit, {
+      maxIterations: 1,
+      pseudoTransientMaxIterations: 500,
+      pseudoTransientSteps: 40,
+    });
+
+    expect(result.converged).toBe(true);
+    expect(result.convergenceAid).toBe("pseudo_transient");
+    expect(result.voltage("out")).toBeGreaterThan(0.0);
+    expect(result.voltage("out")).toBeLessThan(10.0);
+  });
+
   it("rejects invalid MOSFET model parameters", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vdd", "vdd", "0", 1.8));

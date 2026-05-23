@@ -1433,6 +1433,7 @@ pub enum DcConvergenceAid {
     Newton,
     Gmin,
     Source,
+    PseudoTransient,
     None,
 }
 
@@ -1493,6 +1494,9 @@ pub struct DcOpOptions {
     pub max_iterations: usize,
     pub tolerance: f64,
     pub convergence_aids: bool,
+    pub pseudo_transient_steps: usize,
+    pub pseudo_transient_conductance: f64,
+    pub pseudo_transient_max_iterations: usize,
 }
 
 impl Default for DcOpOptions {
@@ -1501,6 +1505,9 @@ impl Default for DcOpOptions {
             max_iterations: 80,
             tolerance: 1.0e-9,
             convergence_aids: true,
+            pseudo_transient_steps: 20,
+            pseudo_transient_conductance: 1.0e-3,
+            pseudo_transient_max_iterations: 80,
         }
     }
 }
@@ -2006,6 +2013,8 @@ pub fn dc_op_with_options(circuit: &Circuit, options: DcOpOptions) -> Result<DcR
             (aided, DcConvergenceAid::Gmin)
         } else if let Some(aided) = solve_dc_with_source_stepping(circuit, options)? {
             (aided, DcConvergenceAid::Source)
+        } else if let Some(aided) = solve_dc_with_pseudo_transient(circuit, options)? {
+            (aided, DcConvergenceAid::PseudoTransient)
         } else {
             (solution, DcConvergenceAid::None)
         };
@@ -2163,6 +2172,20 @@ fn validate_dc_op_options(options: DcOpOptions) -> Result<(), SpiceError> {
             reason: "tolerance must be finite and positive".to_string(),
         });
     }
+    if !options.pseudo_transient_conductance.is_finite()
+        || options.pseudo_transient_conductance <= 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: "dc_op".to_string(),
+            reason: "pseudo_transient_conductance must be finite and positive".to_string(),
+        });
+    }
+    if options.pseudo_transient_max_iterations == 0 {
+        return Err(SpiceError::InvalidElement {
+            name: "dc_op".to_string(),
+            reason: "pseudo_transient_max_iterations must be positive".to_string(),
+        });
+    }
     Ok(())
 }
 
@@ -2214,6 +2237,103 @@ fn solve_dc_with_source_stepping(
     }
 
     Ok(final_solution)
+}
+
+fn solve_dc_with_pseudo_transient(
+    circuit: &Circuit,
+    options: DcOpOptions,
+) -> Result<Option<LinearSolution>, SpiceError> {
+    if options.pseudo_transient_steps == 0 {
+        return Ok(None);
+    }
+
+    let node_indices = collect_node_indices(circuit);
+    if node_indices.is_empty() {
+        return Ok(None);
+    }
+    let mut nodes_by_index: Vec<(&String, &usize)> = node_indices.iter().collect();
+    nodes_by_index.sort_by_key(|(_, index)| **index);
+    let nodes: Vec<String> = nodes_by_index
+        .into_iter()
+        .map(|(node, _)| node.clone())
+        .collect();
+
+    let mut previous_node_voltages: BTreeMap<String, f64> =
+        nodes.iter().map(|node| (node.clone(), 0.0)).collect();
+    let mut warm_start: Option<Vec<f64>> = None;
+    let mut last_solution = None;
+    let pseudo_options = DcOpOptions {
+        max_iterations: options.pseudo_transient_max_iterations,
+        ..options
+    };
+
+    for step in 0..options.pseudo_transient_steps {
+        let pseudo_circuit = circuit_with_pseudo_transient_companions(
+            circuit,
+            &nodes,
+            &previous_node_voltages,
+            options.pseudo_transient_conductance,
+            step,
+        );
+        let solution = solve_dc_newton(&pseudo_circuit, pseudo_options, warm_start.as_deref())?;
+        if !solution.converged {
+            return Ok(None);
+        }
+
+        let mut delta: f64 = 0.0;
+        let mut next_node_voltages = BTreeMap::new();
+        for node in &nodes {
+            let next = *solution.node_voltages.get(node).unwrap_or(&0.0);
+            let previous = *previous_node_voltages.get(node).unwrap_or(&0.0);
+            delta = delta.max((next - previous).abs());
+            next_node_voltages.insert(node.clone(), next);
+        }
+        previous_node_voltages = next_node_voltages;
+        warm_start = Some(solution.vector.clone());
+        last_solution = Some(solution);
+        if delta < options.tolerance {
+            break;
+        }
+    }
+
+    if last_solution.is_none() {
+        return Ok(None);
+    }
+
+    let final_solution = solve_dc_newton(circuit, pseudo_options, warm_start.as_deref())?;
+    if final_solution.converged {
+        Ok(Some(final_solution))
+    } else {
+        Ok(None)
+    }
+}
+
+fn circuit_with_pseudo_transient_companions(
+    circuit: &Circuit,
+    nodes: &[String],
+    previous_node_voltages: &BTreeMap<String, f64>,
+    conductance: f64,
+    step: usize,
+) -> Circuit {
+    let mut pseudo_circuit = circuit.clone();
+    for node in nodes {
+        pseudo_circuit.add(Element::Resistor(Resistor::new(
+            format!("__ptran_g_{step}_{node}"),
+            node.clone(),
+            "0",
+            1.0 / conductance,
+        )));
+        let history_current = conductance * previous_node_voltages.get(node).unwrap_or(&0.0);
+        if history_current != 0.0 {
+            pseudo_circuit.add(Element::CurrentSource(CurrentSource::new(
+                format!("__ptran_i_{step}_{node}"),
+                "0",
+                node.clone(),
+                history_current,
+            )));
+        }
+    }
+    pseudo_circuit
 }
 
 fn dc_gmin_sequence() -> Vec<f64> {
