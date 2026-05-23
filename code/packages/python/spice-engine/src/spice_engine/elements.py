@@ -422,6 +422,8 @@ class Diode:
     Is: float = 1e-15  # saturation current
     Vt: float = 0.02585  # thermal voltage
     N: float = 1.0  # emission coefficient
+    BV: float | None = None  # reverse breakdown voltage
+    IBV: float = 1e-3  # reverse current at breakdown voltage
 
 
 @dataclass(frozen=True, slots=True)

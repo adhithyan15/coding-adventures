@@ -421,7 +421,7 @@ Rload out 0 500
 
   it("parses diode models into operating-point circuits", () => {
     const parsed = parseNetlist(`
-.model fast D(IS=1e-12 VT=25m N=2)
+.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u)
 V1 in 0 DC 0.7
 D1 in out fast
 Rload out 0 1k
@@ -435,6 +435,8 @@ Rload out 0 1k
         ["IS", 1.0e-12],
         ["VT", 25.0e-3],
         ["N", 2.0],
+        ["BV", 5.0],
+        ["IBV", 1.0e-6],
       ]),
     });
     expect(parsed.circuit.elements()[1]).toMatchObject({
@@ -445,6 +447,8 @@ Rload out 0 1k
       saturationCurrent: 1.0e-12,
       thermalVoltage: 25.0e-3,
       emissionCoefficient: 2.0,
+      breakdownVoltage: 5.0,
+      breakdownCurrent: 1.0e-6,
     });
 
     const result = dcOp(parsed.circuit);
@@ -749,7 +753,7 @@ Rload out 0 500
 
   it("expands subcircuit diode nodes into engine elements", () => {
     const parsed = parseNetlist(`
-.model clamp D(IS=1e-12 VT=25m N=2)
+.model clamp D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u)
 .subckt limiter inp outp
 Dlim inp outp clamp
 .ends limiter
@@ -762,6 +766,8 @@ Xlim in out limiter
       anode: "in",
       cathode: "out",
       emissionCoefficient: 2.0,
+      breakdownVoltage: 5.0,
+      breakdownCurrent: 1.0e-6,
     });
   });
 

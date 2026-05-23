@@ -201,6 +201,9 @@ Status:
   plumbing are implemented across Python, TypeScript, and Rust. DC and
   small-signal AC diode conductance now use `N * Vt`, with subcircuit remapping
   preserving the parameter.
+- Diode `.model ... D(... BV=<voltage> IBV=<current>)` parsing and reverse
+  breakdown current/conductance footholds are implemented across Python,
+  TypeScript, and Rust.
 
 ### Phase 7 - Classic Text Output and Control Cards
 

@@ -7,6 +7,9 @@
 - **Diode emission coefficient models** — `Diode.N` now scales the effective
   thermal voltage in DC and small-signal diode conductance calculations.
 
+- **Diode breakdown models** — `Diode.BV` / `Diode.IBV` now add a bounded
+  reverse-breakdown current and conductance foothold.
+
 - **Pseudo-transient DC continuation** — `dc_op` now has a final bounded
   artificial backward-Euler continuation aid after Newton, Gmin stepping, and
   source stepping; successful fallback results report

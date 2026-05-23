@@ -716,6 +716,24 @@ def test_diode_emission_coefficient_reduces_forward_current():
     assert abs(high_n_result.branch_currents["I(V1)"]) < abs(base_result.branch_currents["I(V1)"]) * 1e-3
 
 
+def test_diode_breakdown_voltage_increases_reverse_current():
+    """BV/IBV adds a bounded reverse-breakdown current branch."""
+    leakage = Circuit()
+    leakage.add(VoltageSource("V1", "0", "a", voltage=5.0))
+    leakage.add(Diode("D1", anode="a", cathode="0", Is=1e-15, Vt=0.02585))
+    leakage_result = dc_op(leakage)
+
+    breakdown = Circuit()
+    breakdown.add(VoltageSource("V1", "0", "a", voltage=5.0))
+    breakdown.add(Diode("D1", anode="a", cathode="0", Is=1e-15, Vt=0.02585, BV=5.0, IBV=1e-6))
+    breakdown_result = dc_op(breakdown)
+
+    assert leakage_result.converged
+    assert breakdown_result.converged
+    assert abs(breakdown_result.branch_currents["I(V1)"]) > 1e6 * abs(leakage_result.branch_currents["I(V1)"])
+    assert abs(breakdown_result.branch_currents["I(V1)"]) == pytest.approx(1e-6, rel=1e-3)
+
+
 # ---- DC: Capacitor (open in DC) ----
 
 

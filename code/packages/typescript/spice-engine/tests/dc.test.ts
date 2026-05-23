@@ -249,6 +249,26 @@ describe("dcOp", () => {
     );
   });
 
+  it("uses diode breakdown voltage in reverse-bias current", () => {
+    const leakage = new Circuit();
+    leakage.add(voltageSource("V1", "0", "a", 5.0));
+    leakage.add(diode("D1", "a", "0", 1.0e-15, 0.02585));
+
+    const breakdown = new Circuit();
+    breakdown.add(voltageSource("V1", "0", "a", 5.0));
+    breakdown.add(diode("D1", "a", "0", 1.0e-15, 0.02585, 1.0, 5.0, 1.0e-6));
+
+    const leakageResult = dcOp(leakage);
+    const breakdownResult = dcOp(breakdown);
+
+    expect(leakageResult.branchCurrent("V1")).toBeDefined();
+    expect(breakdownResult.branchCurrent("V1")).toBeDefined();
+    expect(Math.abs(breakdownResult.branchCurrent("V1")!)).toBeGreaterThan(
+      Math.abs(leakageResult.branchCurrent("V1")!) * 1.0e6,
+    );
+    expect(Math.abs(breakdownResult.branchCurrent("V1")!)).toBeCloseTo(1.0e-6, 9);
+  });
+
   it("solves an NPN BJT operating point", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
