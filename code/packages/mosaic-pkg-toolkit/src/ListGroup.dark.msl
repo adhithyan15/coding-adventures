@@ -1,0 +1,18 @@
+// ListGroup.dark.msl — dark-theme styling.
+
+style ListGroup {
+  part list-group {
+    border-radius : 4 ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    background    : "#1e293b" ;
+  }
+  part list-group-item {
+    padding       : 12 ;
+    background    : "transparent" ;
+    color         : "#f1f5f9" ;
+    border-width  : 0 ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+}

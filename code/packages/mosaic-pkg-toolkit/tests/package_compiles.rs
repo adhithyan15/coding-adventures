@@ -28,9 +28,17 @@
 use std::fs;
 use std::path::PathBuf;
 
-/// The list of exported components in PR-1. Drives the per-component
-/// compile loop. Grows as each Tier-1 component lands.
-const COMPONENTS: &[&str] = &["Button", "Alert"];
+/// The list of exported components. Grows as each Tier-1 component
+/// lands. v0.1 PR-1: Button, Alert. PR-2: Badge, Spinner, Toast.
+/// PR-3: Checkbox, Input, Radio. PR-4 adds: ListGroup, Modal.
+///
+/// Alphabetical order matches the manifest's `[components].exports`
+/// list. Reorder both together if it ever changes.
+const COMPONENTS: &[&str] = &[
+    "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
+    "Checkbox", "Field", "Input", "ListGroup", "Modal", "Nav",
+    "Radio", "Spinner", "Toast",
+];
 
 /// Themes shipped per component. Both must compile.
 const THEMES: &[&str] = &["light", "dark"];
@@ -191,4 +199,154 @@ fn alert_interface_matches_spec() {
 
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onClose"]);
+}
+
+/// Badge — pill label, slot-driven variant. No emits.
+#[test]
+fn badge_interface_matches_spec() {
+    let mil_src = read_source("Badge.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["label", "variant"]);
+    assert!(c.emits.is_empty(), "Badge has no emits");
+}
+
+/// Spinner — display-only loading indicator. No emits.
+#[test]
+fn spinner_interface_matches_spec() {
+    let mil_src = read_source("Spinner.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["size", "variant", "aria-label"]);
+    assert!(c.emits.is_empty(), "Spinner has no emits");
+}
+
+/// Toast — bottom-anchored notification with title/message/open/variant
+/// slots and onClose emit. The `open` slot is a bool that drives an
+/// `If` block in the .mll.
+#[test]
+fn toast_interface_matches_spec() {
+    let mil_src = read_source("Toast.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["title", "message", "variant", "open"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onClose"]);
+}
+
+/// Input — text input with onChange (text payload) + onCommit.
+#[test]
+fn input_interface_matches_spec() {
+    let mil_src = read_source("Input.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["value", "placeholder", "disabled", "size"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onChange", "onCommit"]);
+}
+
+/// Checkbox — toggle button + label, host-owned state.
+#[test]
+fn checkbox_interface_matches_spec() {
+    let mil_src = read_source("Checkbox.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["label", "checked", "disabled"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onChange"]);
+}
+
+/// Radio — single-select toggle, host owns group state.
+#[test]
+fn radio_interface_matches_spec() {
+    let mil_src = read_source("Radio.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["label", "selected", "disabled"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// ListGroup — vertical list of selectable text rows. Iterates via For.
+#[test]
+fn listgroup_interface_matches_spec() {
+    let mil_src = read_source("ListGroup.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["items", "selected-index"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Modal — wraps HostDialog with title + message slots.
+#[test]
+fn modal_interface_matches_spec() {
+    let mil_src = read_source("Modal.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["title", "message", "open", "close-label"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onClose"]);
+}
+
+/// Field — label + HostInput + help/error. The label/help/error
+/// slots are text; value/placeholder are text; disabled is bool.
+#[test]
+fn field_interface_matches_spec() {
+    let mil_src = read_source("Field.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(
+        slot_names,
+        vec!["label", "value", "placeholder", "help", "error", "disabled"]
+    );
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onChange", "onCommit"]);
+}
+
+/// Nav — horizontal list of nav links. Same shape as ListGroup
+/// (items + selected-style index + onSelect with index payload),
+/// laid out horizontally via Row.
+#[test]
+fn nav_interface_matches_spec() {
+    let mil_src = read_source("Nav.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["items", "active-index"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// ButtonGroup — row of related buttons that visually share borders.
+#[test]
+fn button_group_interface_matches_spec() {
+    let mil_src = read_source("ButtonGroup.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["items"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Breadcrumb — hierarchical nav trail. Same For-over-list pattern.
+#[test]
+fn breadcrumb_interface_matches_spec() {
+    let mil_src = read_source("Breadcrumb.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["crumbs"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
 }

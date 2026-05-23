@@ -1246,7 +1246,9 @@ impl ToolAuditSupervisorDrainRunReport {
             requires_host_plan_drift_investigation: self.requires_host_plan_drift_investigation(),
             requires_host_count_drift_investigation: self.requires_host_count_drift_investigation(),
             matches_planned_record_count: self.matches_planned_record_count(),
+            matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
+            matches_follow_up_pressure: self.matches_follow_up_pressure(),
             reached_end_of_log: self.reached_end_of_log(),
             exhausted_tick_budget: self.exhausted_tick_budget(),
             is_idle: self.is_idle(),
@@ -1255,6 +1257,7 @@ impl ToolAuditSupervisorDrainRunReport {
             requires_follow_up: self.requires_follow_up(),
             advanced_checkpoint: self.advanced_checkpoint(),
             last_checkpoint: self.last_checkpoint().cloned(),
+            has_last_checkpoint: self.has_last_checkpoint(),
             last_checkpoint_timestamp_ms: self.last_checkpoint_timestamp_ms(),
             last_checkpoint_call_id: self.last_checkpoint_call_id().map(str::to_owned),
         }
@@ -1502,8 +1505,12 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub requires_host_count_drift_investigation: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
+    /// Whether planned and replayed row counts match.
+    pub matches_record_count: bool,
     /// Whether the actual run preserved the planned follow-up pressure count.
     pub matches_planned_follow_up_record_count: bool,
+    /// Whether planned and replayed follow-up pressure counts match.
+    pub matches_follow_up_pressure: bool,
     /// Whether the actual run reached the current end of the audit log.
     pub reached_end_of_log: bool,
     /// Whether the actual run used every allowed tick.
@@ -1520,6 +1527,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub advanced_checkpoint: bool,
     /// Last replay checkpoint observed by the actual run.
     pub last_checkpoint: Option<ToolAuditReadCheckpoint>,
+    /// Whether the actual run observed a replay checkpoint.
+    pub has_last_checkpoint: bool,
     /// Timestamp for the last replay checkpoint observed by the actual run.
     pub last_checkpoint_timestamp_ms: Option<u64>,
     /// Call id for the last replay checkpoint observed by the actual run.
@@ -1659,12 +1668,12 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether planned and replayed row counts match.
     pub fn matches_record_count(&self) -> bool {
-        self.matches_planned_record_count()
+        self.matches_record_count
     }
 
     /// Return whether planned and replayed follow-up pressure counts match.
     pub fn matches_follow_up_pressure(&self) -> bool {
-        self.matches_planned_follow_up_record_count()
+        self.matches_follow_up_pressure
     }
 
     /// Return whether the actual run delivered the planned number of rows.
@@ -1809,7 +1818,7 @@ impl ToolAuditSupervisorDrainRunSummary {
 
     /// Return whether the actual run observed a replay checkpoint.
     pub fn has_last_checkpoint(&self) -> bool {
-        self.last_checkpoint().is_some()
+        self.has_last_checkpoint
     }
 
     /// Return the timestamp for the last replay checkpoint observed by the actual run.
@@ -4486,9 +4495,11 @@ mod tests {
         assert!(summary.is_no_host_investigation());
         assert!(summary.matches_planned_record_count);
         assert!(summary.matches_planned_record_count());
+        assert!(summary.matches_record_count);
         assert!(summary.matches_record_count());
         assert!(summary.matches_planned_follow_up_record_count);
         assert!(summary.matches_planned_follow_up_record_count());
+        assert!(summary.matches_follow_up_pressure);
         assert!(summary.matches_follow_up_pressure());
         assert!(!summary.reached_end_of_log);
         assert!(!summary.reached_end_of_log());
@@ -4500,6 +4511,7 @@ mod tests {
         assert!(summary.advanced_checkpoint());
         assert_eq!(summary.last_checkpoint, report.last_checkpoint().cloned());
         assert_eq!(summary.last_checkpoint(), report.last_checkpoint());
+        assert!(summary.has_last_checkpoint);
         assert_eq!(summary.last_checkpoint_timestamp_ms, Some(120));
         assert_eq!(summary.last_checkpoint_call_id.as_deref(), Some("call_2"));
         assert!(summary.has_last_checkpoint());
@@ -4666,6 +4678,7 @@ mod tests {
         assert!(!summary.replayed_extra_records());
         assert!(summary.missed_planned_records);
         assert!(summary.missed_planned_records());
+        assert!(!summary.matches_record_count);
         assert!(!summary.matches_record_count());
         assert!(summary.has_record_count_drift);
         assert!(!summary.has_follow_up_record_count_drift);
@@ -4790,6 +4803,7 @@ mod tests {
         assert!(summary.matches_planned_record_count());
         assert!(!summary.matches_planned_follow_up_record_count);
         assert!(!summary.matches_planned_follow_up_record_count());
+        assert!(!summary.matches_follow_up_pressure);
         assert!(!summary.matches_follow_up_pressure());
         assert!(!summary.replayed_extra_follow_up_records());
         assert!(summary.missed_planned_follow_up_records());

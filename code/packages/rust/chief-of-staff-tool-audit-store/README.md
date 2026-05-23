@@ -62,6 +62,8 @@ The crate keeps the boundary narrow:
   for timestamp and call-id host logs
 - supervisor drain run summaries flatten last-checkpoint timestamp and call-id
   fields for payload-free checkpoint logging
+- supervisor drain run summaries flatten last-checkpoint presence flags beside
+  timestamp and call-id checkpoint fields
 - supervisor drain run summaries flatten planned and replayed follow-up row
   counts for host routing decisions
 - supervisor drain run summaries flag when planned and replayed follow-up
@@ -74,6 +76,8 @@ The crate keeps the boundary narrow:
   follow-up pressure
 - supervisor drain reports and summaries expose row-count match helpers for
   host scheduler checks
+- supervisor drain run summaries flatten row-count and follow-up-pressure match
+  alias flags for host scheduler checks
 - supervisor drain run summaries expose exact planned-count match and drift
   flag accessors for host branching
 - supervisor drain run summaries expose typed run-status accessors for

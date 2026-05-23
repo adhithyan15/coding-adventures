@@ -9,8 +9,7 @@ to recognise that ``sqrt(P(k))`` has effective polynomial degree
 ``deg(P)/2`` for large ``k``.  When the denominator's polynomial
 degree exceeds this half-degree, the quotient vanishes.
 
-Bumps 0.6.0 → 0.9.0 (skipping 0.7.0 / 0.8.0 reserved for the
-in-flight Phase 49 / Phase 50 TS+Rust ports).
+Bumps 0.8.0 → 0.9.0.
 
 ### Added
 
@@ -21,7 +20,85 @@ in-flight Phase 49 / Phase 50 TS+Rust ports).
 ### Tests
 
 3 new ``summation: Phase 51 sqrt/polynomial growth-rate`` cases.
-Full suite: **40 passed** (was 37; +3 net new).
+Full suite: **46 passed** (was 43; +3 net new).
+
+## 0.8.0 — 2026-05-22
+
+**Phase 50 — Log/polynomial growth-rate recogniser (TypeScript port).**
+
+Ports Python ``cas-summation`` 0.8.0.  Extends ``gVanishesAtInfinity``
+to accept ``Div(Log(diverging), diverging)`` shapes via the squeeze
+argument: ``log(h) → ∞`` at a logarithmic rate, denominator grows
+strictly faster, so the quotient vanishes.
+
+Builds on Phase 49 (0.7.0) which added ``isBoundedInK`` for bounded
+× vanishing shapes.
+
+### Added
+
+- **`isLogOfDivergingInK(node, k)`** — recognises ``Log(h(k))``
+  with ``h(k) → +∞``.  Sign-aware: delegates to
+  ``hDivergesAtInfinity`` on the full ``Log(...)`` node so
+  Phase 44's Log branch refuses ``Log(Mul(-1, k))``-style negative
+  shapes for free.
+
+### Changed
+
+- ``gVanishesAtInfinity`` now has a Phase 50 branch after the Phase 49
+  bounded check and before the Phase 42 degree-aware path.
+- The Phase 49 ``regression: log(k)/k² stays unevaluated`` test is
+  superseded and removed — ``log(k)/k²`` now closes via Phase 50.
+
+### Added — tests
+
+3 new ``summation: Phase 50 log/polynomial growth-rate`` cases:
+- ``log(k)/k²`` closes.
+- ``log(k²+1)/k³`` closes.
+- Regression: ``log(Mul(-1, k))/k²`` stays unevaluated.
+
+Full suite: **43 passed** (was 41; +2 net new — Phase 49 log regression
+superseded by Phase 50 log-closes case).
+
+## 0.7.0 — 2026-05-22
+
+**Phase 49 — Bounded × vanishing recogniser (TypeScript port).**
+
+Ports Python ``cas-summation`` 0.7.0.  Extends ``gVanishesAtInfinity``
+to accept ``Div(bounded, diverging)`` shapes where the numerator is
+uniformly bounded — covers telescopes like
+``∑ [sin(k)/k² − sin(k+1)/(k+1)²] = sin(1)`` that the Phase 42
+degree-aware path refused (``sin`` isn't a polynomial).
+
+### Added
+
+- **`isBoundedInK(node, k)`** — recogniser for uniformly bounded
+  shapes: constants in ``k``, ``Sin(...)``, ``Cos(...)``, closures
+  under ``Mul``/``Add``/``Neg``.
+
+### Changed
+
+- ``gVanishesAtInfinity`` now consults ``isBoundedInK`` on the
+  numerator between the Phase 41 fast-path and the Phase 42
+  degree-aware path.  If the numerator is bounded AND the
+  denominator diverges, the quotient vanishes.
+
+### Added — tests
+
+`tests/cas-summation.test.ts` — new
+``summation: Phase 49 bounded × vanishing`` block with 4 cases:
+
+- ``∑ [sin(k)/k² − sin(k+1)/(k+1)²]`` closes.
+- ``∑ [cos(k)/k³ − cos(k+1)/(k+1)³]`` closes.
+- ``sin(k)·cos(k)/k²`` closes (Mul closure of bounded factors).
+- Regression: ``log(k)/k²`` stays unevaluated (``Log`` isn't
+  bounded).
+
+Plus renamed
+``transcendental numerator … falls through`` →
+``transcendental numerator … closes via Phase 49`` (assertion
+flipped).
+
+Full suite: **41 passed** (was 37; +4 net new).
 
 ## 0.6.0 — 2026-05-22
 

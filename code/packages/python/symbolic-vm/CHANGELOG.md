@@ -1,5 +1,107 @@
 # Changelog
 
+## 0.72.0 — 2026-05-22
+
+**Phase 48 — Apart for repeated linear factors.**
+
+Closes the last Phase 45-documented gap (the repeated-factor case
+``∑_{k=1}^∞ (2k+1)/(k²(k+1)²) = 1``).  Extends ``_apart_proper`` to
+handle denominators of the form ``∏_r (x − r)^{m_r}`` where each
+``r`` is rational and ``m_r ≥ 1``.
+
+> Note: stacks on PR #3922 (Phase 47, version 0.71.0).  If PR #3922
+> merges first this PR needs no rebase; if this lands first PR #3922
+> needs the version-history reconciliation.
+
+### Algorithm
+
+For a proper rational ``P(x)/den(x)`` whose denominator factors over
+ℚ as ``∏_r (x − r)^{m_r}``, the partial-fraction expansion has the
+form
+
+    ∑_r ∑_{j=1..m_r}  A_{r,j} / (x − r)^j
+
+For each root ``r`` of multiplicity ``m``, define
+``Q(x) = den(x) / (x − r)^m`` and
+``φ(t) = P(r + t) / Q(r + t)``.  Then
+``A_{r, m − j} = φ_j`` (coefficient of ``t^j`` in φ's Taylor series).
+
+We compute φ to ``O(t^m)`` via:
+
+1. Taylor-expand ``P(r + t)`` and ``Q(r + t)`` around ``t = 0``
+   using the standard binomial identity
+   ``p(r + t)_j = ∑_{i≥j} p_i · C(i, j) · r^{i − j}``.
+2. Divide as power series via the recurrence
+   ``φ_j = (N_j − ∑_{k=1..j} D_k · φ_{j−k}) / D_0``.
+
+Everything stays exact (``Fraction`` arithmetic, arbitrary-precision
+``int``).
+
+### Added
+
+- **`_binomial(n, k)`** — exact integer binomial coefficient.
+- **`_taylor_expand_around_r(poly, r, length)`** — first
+  ``length`` Taylor coefficients of ``poly(r + t)``.
+- **`_series_div(N, D, length)`** — first ``length`` Taylor
+  coefficients of ``N(t) / D(t)`` (requires ``D(0) ≠ 0``).
+- **`_root_multiplicities(den, roots)`** — counts how many times
+  each rational root divides ``den``; returns ``None`` if
+  ``den`` has an irreducible non-linear factor on top.
+- **`_apart_simple_roots`** — Phase 1 distinct-root fast path,
+  factored out of ``_apart_proper`` to keep the simple-pole
+  output shape stable for the existing regression tests.
+- **`_build_apart_term(A, r, power, x)`** — emits one
+  ``A / (x − r)^power`` term, dropping explicit ±1 coefficients
+  to match the formatting choice of the simple-root path.
+
+### Changed
+
+- ``_apart_proper`` now:
+  1. Computes per-root multiplicities up-front.
+  2. Falls back to ``_apart_simple_roots`` when every multiplicity
+     is 1 (preserves Phase 1 output shape).
+  3. Otherwise applies the Taylor + series-division residue
+     formula to assemble all ``A_{r, j}/(x − r)^j`` terms.
+- The function still returns ``None`` when ``den`` has an
+  irreducible quadratic factor — those need an extension into
+  complex roots or a different algorithm (out of scope).
+
+### Added — tests
+
+`tests/test_phase25.py::TestPhase40_ApartTelescope` — 3 new cases
+(and the previously-skipped Phase-45 test renamed to
+``test_phase48_repeated_factor_closes``, now passing):
+
+- ``test_phase48_repeated_factor_closes`` — verifies
+  ``∑_{k=1}^∞ (2k+1)/(k²(k+1)²) = 1`` (closes the Phase 45 skip).
+- ``test_phase48_simple_repeated_root`` — ``Apart(1/k², k)`` no
+  longer bails out (regression for the bare-Pow case).
+- ``test_phase48_apart_higher_multiplicity`` — ``Apart(1/(k(k+1)²), k)``
+  produces a non-trivial decomposition (mixed simple + double
+  roots).
+- ``test_phase48_repeated_factor_higher_start`` — verifies
+  ``∑_{k=2}^∞ (2k+1)/(k²(k+1)²) = 1/4`` (arbitrary ``lo``).
+
+Test sweep: ``tests/test_phase25.py`` → **72 passed, 9 skipped**
+(was 68 passed + 10 skipped; +3 net new + 1 flipped from skip).
+Broader suite: **1499 passed** (was 1495; +4 new passes, -1
+flipped skip).  No new failures; the 59 pre-existing ``test_phase9``
+failures are unrelated.
+
+### What's left of the Phase 45 documented gaps
+
+All three Phase-45 ``pytest.skip`` markers are now closed:
+- Constant numerator → Phase 46
+- Shifted-only denominator → Phase 47 (PR #3922, in flight)
+- Repeated linear factors → Phase 48 (this PR)
+
+### Still deferred (genuinely future work)
+
+- ``Apart`` over irreducible quadratic factors (would need
+  complex-arithmetic support or an alternative decomposition).
+- Transcendental limit-finder for shapes the polynomial-degree
+  path doesn't cover (e.g. ``sin(k)/k²``).
+
 ## 0.71.0 — 2026-05-22
 
 **Phase 47 — Nested-Add flattening in the symbolic VM.**
@@ -70,6 +172,7 @@ match on ``Add(k, c)`` shapes also benefit immediately.
 
 - Apart Phase 2: repeated linear factors (``1/(k²(k+1)²)``) — Apart
   itself doesn't decompose these yet.
+
 
 ## 0.70.0 — 2026-05-22
 

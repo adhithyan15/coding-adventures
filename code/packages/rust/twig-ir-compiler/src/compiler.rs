@@ -186,6 +186,41 @@ fn is_builtin(name: &str) -> bool {
     BUILTINS.contains(&name)
 }
 
+/// Path-A increment 2: map an arithmetic / comparison builtin name to the
+/// typed CIR mnemonic that the IIR-to-* backends accept directly.
+///
+/// Returns `Some(&'static str)` when the builtin has a typed-CIR analog;
+/// `None` for builtins that have no direct typed equivalent yet
+/// (`cons`, `length`, `host/*`, the higher-order list ops, etc.).
+///
+/// The caller's responsibility is to verify that the operand types are
+/// concrete before substituting the typed mnemonic — see the
+/// `compile_apply` arm for `is_builtin(&v.name)`.  This table is the
+/// pure name → name lookup; type-check happens at the call site.
+///
+/// Mirrors the same pattern used by `nib-iir-compiler::cir_op_for`
+/// (PR #3903) and `oct-iir-compiler::compile_binary`.
+fn typed_arith_op_for(name: &str) -> Option<&'static str> {
+    match name {
+        // Arithmetic — all four basic operators map to typed CIR mnemonics.
+        "+" => Some("add"),
+        "-" => Some("sub"),
+        "*" => Some("mul"),
+        "/" => Some("div"),
+        // Comparison — Twig uses Scheme-style names; CIR uses C-style.
+        // `=` is Twig's equality (works on numbers, symbols, booleans,
+        // strings, etc.).  For increment 2 we only fire when both operands
+        // are `i64`, in which case `=` reduces to integer equality —
+        // which `cmp_eq` (with type `i64`) is exactly.
+        "="  => Some("cmp_eq"),
+        "<"  => Some("cmp_lt"),
+        ">"  => Some("cmp_gt"),
+        "<=" => Some("cmp_le"),
+        ">=" => Some("cmp_ge"),
+        _    => None,
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Per-function compilation context
 // ---------------------------------------------------------------------------
@@ -210,6 +245,21 @@ struct FnCtx {
     /// `compile_expr` and checked against [`MAX_COMPILE_DEPTH`] to
     /// guard against stack-overflow on adversarial input.
     depth: usize,
+    /// LANG-Twig increment-1 local type inference.
+    ///
+    /// Tracks the *statically-known* type of each destination variable
+    /// produced by the current function.  Populated only for sites where
+    /// the type is unambiguous from the source code alone (integer
+    /// literals → `"i64"`, boolean literals → `"bool"`, string literals
+    /// → `"str"`).  Dynamic / call_builtin destinations are intentionally
+    /// **not** recorded — the absence of an entry means "the type is
+    /// genuinely `any` at static-analysis time".
+    ///
+    /// Used by `ret` emission sites to upgrade their `type_hint` from
+    /// the legacy `"any"` to the precise type, which lets the IIR-to-*
+    /// backends (wasm/jvm/clr/beam) actually accept the result.
+    /// See [`crate::lib`]'s "Twig path A" notes for the larger story.
+    var_types: HashMap<String, String>,
 }
 
 impl FnCtx {
@@ -221,6 +271,7 @@ impl FnCtx {
             var_counter: 0,
             label_counter: 0,
             depth: 0,
+            var_types: HashMap::new(),
         }
     }
 
@@ -242,6 +293,58 @@ impl FnCtx {
     fn emit(&mut self, instr: IIRInstr, loc: SourceLoc) {
         self.instrs.push(instr);
         self.source_map.push(loc);
+    }
+
+    /// Record that `var` was statically inferred to have type `ty`.
+    ///
+    /// Only literal-defining sites (`IntLit`, `BoolLit`, `StrLit`) call
+    /// this; dynamically-typed sites (call_builtin, ret of unknown
+    /// register, etc.) leave the entry absent, signalling "type is
+    /// genuinely `any` at static-analysis time".
+    fn record_type(&mut self, var: &str, ty: &str) {
+        self.var_types.insert(var.to_string(), ty.to_string());
+    }
+
+    /// Look up the inferred type of `var`, returning the matching
+    /// `&'static str` if known.  Returns `"any"` when nothing was
+    /// inferred — which is the legacy default and a valid type hint
+    /// (just one that the IIR-to-* backends reject).
+    fn type_of(&self, var: &str) -> &str {
+        self.var_types.get(var).map(|s| s.as_str()).unwrap_or("any")
+    }
+
+    /// Path-A increment 3: emit a typed `mov dst = src` instruction,
+    /// propagating the source's inferred type to the destination.
+    ///
+    /// Replaces the legacy `call_builtin "_move" src` emission pattern
+    /// that the IIR-to-* backend validators all reject (because
+    /// `_move` is not in their `CALL_BUILTIN_SUPPORTED_NAMES` whitelist).
+    /// The typed `mov` IR opcode is accepted by every backend
+    /// (vm-core dispatch fix #3888, iir-to-beam mov lowering #3898,
+    /// and the iir-to-wasm / iir-to-jvm / iir-to-cil backends all
+    /// have native `"mov"` arms in their `lower.rs` match tables).
+    ///
+    /// The `type_hint` carried on the `mov` is the source variable's
+    /// type — `"any"` for dynamically-typed sources, `"i64"` / `"bool"`
+    /// for sources statically inferred by increments 1 and 2.
+    ///
+    /// When the source's type is known, the destination's type is
+    /// recorded so downstream consumers (e.g. the outer `ret` in
+    /// `main`) can propagate further.
+    fn emit_move(&mut self, dst: &str, src: &str, loc: SourceLoc) {
+        let ty = self.type_of(src).to_string();
+        self.emit(
+            IIRInstr::new(
+                "mov",
+                Some(dst.to_string()),
+                vec![Operand::Var(src.to_string())],
+                ty.as_str(),
+            ),
+            loc,
+        );
+        if ty != "any" {
+            self.record_type(dst, ty.as_str());
+        }
     }
 }
 
@@ -423,11 +526,16 @@ impl Compiler {
 
         // ── Synthesise `main` ────────────────────────────────────────
         if let Some(reg) = last_main_value {
+            // Twig path-A increment 1: propagate the source var's inferred
+            // type to the `ret` instruction.  `_n1` returned from `42`
+            // becomes `ret _n1 [i64]` instead of `ret _n1 [any]`, which
+            // every IIR-to-* backend validator now accepts.
+            let ret_ty = main_ctx.type_of(&reg).to_string();
             main_ctx.emit(IIRInstr::new(
                 "ret",
                 None,
                 vec![Operand::Var(reg)],
-                "any",
+                ret_ty.as_str(),
             ), SourceLoc::SYNTHETIC);
         } else {
             // No final value-producing expression → return nil.
@@ -446,10 +554,24 @@ impl Compiler {
             ), SourceLoc::SYNTHETIC);
         }
 
+        // Twig path-A increment 1: derive `main`'s `return_type` from
+        // the trailing `ret` instruction's `type_hint`.  This lets the
+        // IIR-to-* backends emit a typed return (`ret_i64`, `ret_bool`,
+        // …) instead of falling back to the untyped fallback path.
+        // Functions whose ret source is genuinely dynamic still carry
+        // `"any"` and continue to flow through the existing dynamic path.
+        let main_return_type = main_ctx
+            .instrs
+            .iter()
+            .rev()
+            .find(|i| i.op == "ret")
+            .map(|i| i.type_hint.clone())
+            .unwrap_or_else(|| "any".to_string());
+
         let main_fn = IIRFunction {
             name: "main".into(),
             params: vec![],
-            return_type: "any".into(),
+            return_type: main_return_type,
             register_count: count_registers(&main_ctx.instrs),
             instructions: main_ctx.instrs,
             type_status: FunctionTypeStatus::Untyped,
@@ -685,23 +807,36 @@ impl Compiler {
         match expr {
             Expr::IntLit(IntLit { value, .. }) => {
                 let v = ctx.fresh_var("n");
+                // Twig path-A increment 1: integer literals lower to typed
+                // `const_i64`-compatible IR by stamping `type_hint = "i64"`.
+                // The IIR-to-* validators (wasm/jvm/clr/beam) reject `"any"`,
+                // so this is the difference between "Twig compiles to a
+                // .wasm" and "Twig fails validation at every backend".
+                //
+                // `var_types[v]` is recorded so downstream `ret` emission
+                // can propagate the type instead of falling back to `"any"`.
                 ctx.emit(IIRInstr::new(
                     "const",
                     Some(v.clone()),
                     vec![Operand::Int(*value)],
-                    "any",
+                    "i64",
                 ), loc);
+                ctx.record_type(&v, "i64");
                 Ok(v)
             }
 
             Expr::BoolLit(BoolLit { value, .. }) => {
                 let v = ctx.fresh_var("b");
+                // Twig path-A increment 1: boolean literals lower with
+                // `type_hint = "bool"` (the IIR-to-* validators all accept
+                // it; the JVM/CLR backends map it to `i32` 0/1).
                 ctx.emit(IIRInstr::new(
                     "const",
                     Some(v.clone()),
                     vec![Operand::Bool(*value)],
-                    "any",
+                    "bool",
                 ), loc);
+                ctx.record_type(&v, "bool");
                 Ok(v)
             }
 
@@ -857,15 +992,16 @@ impl Compiler {
             "void",
         ), loc);
 
-        // Then branch — compile and copy into `result` via `_move`.
+        // Then branch — compile and copy into `result` via typed `mov`.
+        // Path-A increment 3: replaces the legacy `call_builtin "_move"`
+        // with a typed `mov` IR opcode.  If both arms produce the same
+        // statically-known type, `result` ends up typed and propagates
+        // through downstream `ret` instructions; programs like
+        // `(if (< x 0) -1 1)` now flow through every IIR-to-* backend.
         let then_v = self.compile_expr(&expr.then_branch, ctx)?;
+        let then_ty = ctx.type_of(&then_v).to_string();
         let then_loc = SourceLoc::new(expr.then_branch.pos().0, expr.then_branch.pos().1);
-        ctx.emit(IIRInstr::new(
-            "call_builtin",
-            Some(result.clone()),
-            vec![Operand::Var("_move".into()), Operand::Var(then_v)],
-            "any",
-        ), then_loc);
+        ctx.emit_move(&result, &then_v, then_loc);
         ctx.emit(IIRInstr::new(
             "jmp",
             None,
@@ -881,13 +1017,32 @@ impl Compiler {
             "void",
         ), loc);
         let else_v = self.compile_expr(&expr.else_branch, ctx)?;
+        let else_ty = ctx.type_of(&else_v).to_string();
         let else_loc = SourceLoc::new(expr.else_branch.pos().0, expr.else_branch.pos().1);
+        // `emit_move` for the else arm would overwrite `result`'s
+        // recorded type from the then-arm's `emit_move`.  Compute the
+        // consensus type up front so the recorded type reflects both
+        // arms' agreement (or `"any"` when they disagree).
         ctx.emit(IIRInstr::new(
-            "call_builtin",
+            "mov",
             Some(result.clone()),
-            vec![Operand::Var("_move".into()), Operand::Var(else_v)],
-            "any",
+            vec![Operand::Var(else_v)],
+            else_ty.as_str(),
         ), else_loc);
+        // Consensus: if both arms agree on a concrete type, that's the
+        // type of the `if` expression.  Otherwise it's `any`.
+        let consensus_ty = if then_ty == else_ty && then_ty != "any" {
+            then_ty
+        } else {
+            "any".to_string()
+        };
+        if consensus_ty != "any" {
+            ctx.record_type(&result, &consensus_ty);
+        } else {
+            // Clear any record from the then-arm's emit_move so
+            // downstream lookups don't return a stale type.
+            ctx.var_types.remove(&result);
+        }
 
         ctx.emit(IIRInstr::new(
             "label",
@@ -907,19 +1062,17 @@ impl Compiler {
             binding_values.push((name.clone(), v));
         }
 
-        // Bind each name into `locals_` via a `_move` copy so the
+        // Bind each name into `locals_` via a typed `mov` copy so the
         // binding name exists as a named register in the frame.
+        // Path-A increment 4: typed `mov` propagates the RHS's
+        // inferred type to the binding name, so subsequent expressions
+        // that reference `name` see the concrete type.
         let mut added: Vec<String> = Vec::new();
         for (name, src) in &binding_values {
             if ctx.locals.insert(name.clone()) {
                 added.push(name.clone());
             }
-            ctx.emit(IIRInstr::new(
-                "call_builtin",
-                Some(name.clone()),
-                vec![Operand::Var("_move".into()), Operand::Var(src.clone())],
-                "any",
-            ), loc);
+            ctx.emit_move(name, src, loc);
         }
 
         // Compile body — at least one expression (parser-enforced).
@@ -961,15 +1114,12 @@ impl Compiler {
             let v = self.compile_expr(rhs, ctx)?;
 
             // Bind the name into locals BEFORE compiling the next binding.
+            // Path-A increment 4: typed `mov` propagates the RHS's
+            // inferred type to the binding name (mirrors compile_let).
             if ctx.locals.insert(name.clone()) {
                 added.push(name.clone());
             }
-            ctx.emit(IIRInstr::new(
-                "call_builtin",
-                Some(name.clone()),
-                vec![Operand::Var("_move".into()), Operand::Var(v)],
-                "any",
-            ), loc);
+            ctx.emit_move(name, &v, loc);
         }
 
         // Compile body — parser-enforced at least one expression.
@@ -1027,18 +1177,23 @@ impl Compiler {
                     vec![Operand::Var(cond), Operand::Var(else_label.clone())],
                     "void"), loc);
 
-                // Then path: compile rest, copy to dest, jump to end.
+                // Then path: compile rest, copy to dest via typed `mov`,
+                // jump to end.  Path-A increment 4.
                 let then_val = self.compile_and(rest, ctx, loc)?;
-                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
-                    vec![Operand::Var("_move".into()), Operand::Var(then_val)], "any"), loc);
+                ctx.emit_move(&dest, &then_val, loc);
                 ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
 
-                // Else path: dest ← #f
+                // Else path: dest ← #f (typed `mov` from a `const_bool`-
+                // typed temporary so the dest carries `"bool"`).
                 ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(else_label)], "void"), loc);
                 let false_tmp = ctx.fresh_var("f");
-                ctx.emit(IIRInstr::new("const", Some(false_tmp.clone()), vec![Operand::Bool(false)], "any"), loc);
-                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
-                    vec![Operand::Var("_move".into()), Operand::Var(false_tmp)], "any"), loc);
+                // The false literal site uses the same typed `const`
+                // shape that `Expr::BoolLit` emits — see compile_expr
+                // path-A increment 1.
+                ctx.emit(IIRInstr::new("const", Some(false_tmp.clone()),
+                    vec![Operand::Bool(false)], "bool"), loc);
+                ctx.record_type(&false_tmp, "bool");
+                ctx.emit_move(&dest, &false_tmp, loc);
 
                 ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
                 Ok(dest)
@@ -1079,16 +1234,15 @@ impl Compiler {
                     vec![Operand::Var(cond.clone()), Operand::Var(falsy_label.clone())],
                     "void"), loc);
 
-                // Truthy path: dest ← cond, jump to end.
-                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
-                    vec![Operand::Var("_move".into()), Operand::Var(cond)], "any"), loc);
+                // Truthy path: dest ← cond via typed `mov`, jump to end.
+                // Path-A increment 4.
+                ctx.emit_move(&dest, &cond, loc);
                 ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
 
-                // Falsy path: evaluate rest.
+                // Falsy path: evaluate rest, copy via typed `mov`.
                 ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(falsy_label)], "void"), loc);
                 let rest_val = self.compile_or(rest, ctx, loc)?;
-                ctx.emit(IIRInstr::new("call_builtin", Some(dest.clone()),
-                    vec![Operand::Var("_move".into()), Operand::Var(rest_val)], "any"), loc);
+                ctx.emit_move(&dest, &rest_val, loc);
 
                 ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
                 Ok(dest)
@@ -1146,9 +1300,70 @@ impl Compiler {
             }
 
             if is_builtin(&v.name) {
-                let mut srcs: Vec<Operand> = vec![Operand::Var(v.name.clone())];
-                for a in &expr.args {
-                    let r = self.compile_expr(a, ctx)?;
+                // Resolve every argument before deciding the lowering path.
+                let arg_regs: Vec<String> = expr
+                    .args
+                    .iter()
+                    .map(|a| self.compile_expr(a, ctx))
+                    .collect::<Result<_, _>>()?;
+
+                // ── Twig path-A increment 2: typed binary arithmetic / cmp ───
+                //
+                // When every resolved argument has a statically-known type
+                // (recorded in `FnCtx::var_types` by literal-emission sites
+                // and by previous typed builds-up such as earlier `add`
+                // operations), and the builtin name is in the arithmetic /
+                // comparison set, we can lower the call to a *typed CIR
+                // mnemonic* (`add`, `cmp_lt`, …) that the IIR-to-* backends
+                // accept directly — instead of the legacy
+                // `call_builtin "<op>"` path which carries `type_hint = "any"`
+                // and gets rejected at every backend validator.
+                //
+                // The pattern mirrors PR #3903's fix for Nib
+                // (`compile_binary_chain` → typed CIR mnemonics).  See
+                // `typed_arith_op_for` below for the symbol → mnemonic table.
+                //
+                // Scoped to binary forms (`(+ a b)`).  Variadic forms
+                // (`(+ a b c)`), and any call where one arg has an unknown /
+                // dynamic type, continue to use the `call_builtin "any"`
+                // fallback — they remain rejected by the backend validators
+                // until a later increment lowers variadic folds and / or
+                // adds runtime type guards.
+                if arg_regs.len() == 2 {
+                    if let Some(typed_mnemonic) = typed_arith_op_for(&v.name) {
+                        let lhs_ty = ctx.type_of(&arg_regs[0]).to_string();
+                        let rhs_ty = ctx.type_of(&arg_regs[1]).to_string();
+                        if lhs_ty == "i64" && rhs_ty == "i64" {
+                            // Emit `<typed_mnemonic> dest = lhs, rhs [i64]`.
+                            // Result type depends on the family:
+                            //   add/sub/mul/div  → i64
+                            //   cmp_* / =        → bool
+                            let result_ty: &str =
+                                if typed_mnemonic.starts_with("cmp_") {
+                                    "bool"
+                                } else {
+                                    "i64"
+                                };
+                            let dest = ctx.fresh_var("r");
+                            ctx.emit(IIRInstr::new(
+                                typed_mnemonic,
+                                Some(dest.clone()),
+                                vec![
+                                    Operand::Var(arg_regs[0].clone()),
+                                    Operand::Var(arg_regs[1].clone()),
+                                ],
+                                result_ty,
+                            ), loc);
+                            ctx.record_type(&dest, result_ty);
+                            return Ok(dest);
+                        }
+                    }
+                }
+
+                // Fallback: legacy dynamic `call_builtin` path.
+                let mut srcs: Vec<Operand> =
+                    vec![Operand::Var(v.name.clone())];
+                for r in arg_regs {
                     srcs.push(Operand::Var(r));
                 }
                 let dest = ctx.fresh_var("r");
@@ -1208,15 +1423,18 @@ impl Compiler {
         let loc = SourceLoc::new(m.line, m.column);
 
         // Evaluate the scrutinee once.
+        // Path-A increment 5: convert all `call_builtin "_move"` sites
+        // in compile_match to typed `mov` via `FnCtx::emit_move`.  The
+        // `match` result's type is left as `"any"` for now — match
+        // arms can produce mixed types (variant constructors vs. raw
+        // values), so a consensus pass here is non-trivial.  Mechanical
+        // conversion of the move shape alone is enough to unblock the
+        // backend validators (which reject `call_builtin "_move"` but
+        // accept untyped `mov [any]`).
         let scrutinee_reg = self.compile_expr(&m.scrutinee, ctx)?;
         // Bind to a fresh stable register so arms can reference it freely.
         let matched = ctx.fresh_var("matched");
-        ctx.emit(IIRInstr::new(
-            "call_builtin",
-            Some(matched.clone()),
-            vec![Operand::Var("_move".into()), Operand::Var(scrutinee_reg)],
-            "any",
-        ), loc);
+        ctx.emit_move(&matched, &scrutinee_reg, loc);
 
         // Result register — each arm writes its value here.
         let result = ctx.fresh_var("match_result");
@@ -1228,12 +1446,7 @@ impl Compiler {
             vec![Operand::Var("make_nil".into())],
             "any",
         ), loc);
-        ctx.emit(IIRInstr::new(
-            "call_builtin",
-            Some(result.clone()),
-            vec![Operand::Var("_move".into()), Operand::Var(nil_init)],
-            "any",
-        ), loc);
+        ctx.emit_move(&result, &nil_init, loc);
 
         // Generate labels for the chain.
         // We build: if (test0) { arm0 } else { if (test1) { arm1 } else { … } }
@@ -1255,12 +1468,7 @@ impl Compiler {
                             // Unknown constructor — treat as bare binding.
                             let arm_result = self.compile_match_binding_arm(
                                 &matched, name, &arm.body, ctx, arm_loc)?;
-                            ctx.emit(IIRInstr::new(
-                                "call_builtin",
-                                Some(result.clone()),
-                                vec![Operand::Var("_move".into()), Operand::Var(arm_result)],
-                                "any",
-                            ), arm_loc);
+                            ctx.emit_move(&result, &arm_result, arm_loc);
                             ctx.emit(IIRInstr::new(
                                 "jmp",
                                 None,
@@ -1347,16 +1555,11 @@ impl Compiler {
                             "any",
                         ), arm_loc);
 
-                        // Bind field to name in ctx.locals
+                        // Bind field to name in ctx.locals via typed `mov`.
                         if ctx.locals.insert(binding.clone()) {
                             added_names.push(binding.clone());
                         }
-                        ctx.emit(IIRInstr::new(
-                            "call_builtin",
-                            Some(binding.clone()),
-                            vec![Operand::Var("_move".into()), Operand::Var(field_reg)],
-                            "any",
-                        ), arm_loc);
+                        ctx.emit_move(binding, &field_reg, arm_loc);
                     }
 
                     // Evaluate body
@@ -1366,13 +1569,8 @@ impl Compiler {
                     }
                     let body_v = body_result.expect("arm body non-empty (parser-enforced)");
 
-                    // Copy to result register
-                    ctx.emit(IIRInstr::new(
-                        "call_builtin",
-                        Some(result.clone()),
-                        vec![Operand::Var("_move".into()), Operand::Var(body_v)],
-                        "any",
-                    ), arm_loc);
+                    // Copy to result register via typed `mov`.
+                    ctx.emit_move(&result, &body_v, arm_loc);
 
                     // Unbind field names
                     for n in added_names {
@@ -1399,12 +1597,7 @@ impl Compiler {
                 MatchPat::Binding(name) => {
                     let arm_result = self.compile_match_binding_arm(
                         &matched, name, &arm.body, ctx, arm_loc)?;
-                    ctx.emit(IIRInstr::new(
-                        "call_builtin",
-                        Some(result.clone()),
-                        vec![Operand::Var("_move".into()), Operand::Var(arm_result)],
-                        "any",
-                    ), arm_loc);
+                    ctx.emit_move(&result, &arm_result, arm_loc);
                     // Binding arm always matches → jump to end immediately.
                     ctx.emit(IIRInstr::new(
                         "jmp",
@@ -1421,12 +1614,7 @@ impl Compiler {
                         body_result = Some(self.compile_expr(e, ctx)?);
                     }
                     let body_v = body_result.expect("arm body non-empty");
-                    ctx.emit(IIRInstr::new(
-                        "call_builtin",
-                        Some(result.clone()),
-                        vec![Operand::Var("_move".into()), Operand::Var(body_v)],
-                        "any",
-                    ), arm_loc);
+                    ctx.emit_move(&result, &body_v, arm_loc);
                     // Wildcard always matches → jump to end.
                     ctx.emit(IIRInstr::new(
                         "jmp",
@@ -1460,12 +1648,8 @@ impl Compiler {
         loc: SourceLoc,
     ) -> Result<String, TwigCompileError> {
         let was_new = ctx.locals.insert(name.to_string());
-        ctx.emit(IIRInstr::new(
-            "call_builtin",
-            Some(name.to_string()),
-            vec![Operand::Var("_move".into()), Operand::Var(matched_reg.to_string())],
-            "any",
-        ), loc);
+        // Path-A increment 5: typed `mov` for the binding-arm helper.
+        ctx.emit_move(name, matched_reg, loc);
         let mut last: Option<String> = None;
         for e in body {
             last = Some(self.compile_expr(e, ctx)?);

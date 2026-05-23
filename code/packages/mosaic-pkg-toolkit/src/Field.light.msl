@@ -1,0 +1,32 @@
+// Field.light.msl — default light-theme styling.
+
+style Field {
+  part field {
+    padding : 8 ;
+  }
+  part field-label {
+    color       : "#212529" ;
+    font-size   : 14 ;
+    font-weight : 500 ;
+    padding     : 0 ;
+  }
+  part field-input {
+    padding       : 8 ;
+    border-radius : 4 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#ced4da" ;
+    font-size     : 14 ;
+  }
+  part field-help {
+    color     : "#6c757d" ;
+    font-size : 12 ;
+    padding   : 0 ;
+  }
+  part field-error {
+    color     : "#dc3545" ;
+    font-size : 12 ;
+    padding   : 0 ;
+  }
+}

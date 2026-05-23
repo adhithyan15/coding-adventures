@@ -1,0 +1,33 @@
+// Toast.mil — interface for the toolkit's Toast component.
+//
+// A dismissible, bottom-anchored notification message. Bootstrap's
+// `<div class="toast">` equivalent. Looks similar to Alert but
+// semantically transient — appears, lives for a bit, dismisses
+// (either auto or on click).
+//
+// v0.1 ships the visual + structural surface only. The auto-dismiss
+// timer is the host's job; this component fires onClose when the
+// user clicks the close button. A future PR may add a `duration:
+// number` slot and let the backend's animation system drive
+// auto-dismissal.
+
+component Toast {
+  // Optional bolded title. When empty, only the message renders.
+  slot title : text ;
+
+  // The toast's message body. Required.
+  slot message : text ;
+
+  // Variant keyword. One of: primary, secondary, success, danger,
+  // warning, info, light, dark. Default: info.
+  slot variant : text ;
+
+  // Whether the toast is currently visible. Hosts flip this slot
+  // to control show/hide. (Auto-dismiss timers + show animations
+  // are out of scope for v0.1.)
+  slot open : bool ;
+
+  // Fired when the user clicks the inline close button. Hosts
+  // typically respond by setting `open: false`.
+  emit onClose ;
+}

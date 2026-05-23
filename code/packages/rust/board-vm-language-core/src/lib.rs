@@ -104,6 +104,7 @@ pub const LANGUAGE_INPUT_CALLBACK_DEFAULT_DEBOUNCE_MS: u16 = 25;
 pub const LANGUAGE_INPUT_CALLBACK_DEFAULT_QUEUE_CAPACITY: u8 = 8;
 pub const LANGUAGE_INPUT_CALLBACK_DISPATCH_MODEL: &str = "cooperative_event_queue";
 pub const LANGUAGE_INPUT_CALLBACK_EVENT_KIND: &str = "digital_input_change";
+pub const LANGUAGE_INPUT_CALLBACK_DISPATCH_REASON: &str = "queued_input_event";
 pub const ARDUINO_CLI_NATIVE_USB_BOOTLOADER_TOUCH_BAUD: u32 = 1_200;
 pub const ARDUINO_CLI_UPLOAD_PORT_PLACEHOLDER: &str = "<port>";
 pub const ARDUINO_CLI_UPLOAD_INPUT_FILE_PLACEHOLDER: &str = "<firmware-image>";
@@ -746,6 +747,58 @@ pub struct LanguageInputCallbackQueuePlan {
     pub dispatch_required: bool,
     pub interrupt_backed: bool,
     pub dispatch_model: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackDispatchPlan {
+    pub board_id: String,
+    pub pin: u8,
+    pub label: String,
+    pub event_kind: String,
+    pub dispatch_reason: String,
+    pub callback_program_id: u16,
+    pub callback_instruction_budget: u32,
+    pub sequence: u32,
+    pub timestamp_ms: u64,
+    pub queue_depth_after: u8,
+    pub queue_action: LanguageInputCallbackQueueAction,
+    pub dropped_existing_event: bool,
+    pub interrupt_backed: bool,
+    pub dispatch_model: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackResultKind {
+    Completed,
+    BudgetExceeded,
+    Incomplete,
+    Failed,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackResultSummary {
+    pub board_id: String,
+    pub pin: u8,
+    pub label: String,
+    pub event_kind: String,
+    pub dispatch_reason: String,
+    pub callback_program_id: u16,
+    pub callback_instruction_budget: u32,
+    pub sequence: u32,
+    pub timestamp_ms: u64,
+    pub queue_depth_after: u8,
+    pub queue_action: LanguageInputCallbackQueueAction,
+    pub dropped_existing_event: bool,
+    pub interrupt_backed: bool,
+    pub dispatch_model: String,
+    pub run_status: String,
+    pub result_kind: LanguageInputCallbackResultKind,
+    pub instructions_executed: u32,
+    pub elapsed_ms: u32,
+    pub completed: bool,
+    pub budget_exceeded: bool,
+    pub retryable: bool,
+    pub message: String,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -2001,6 +2054,68 @@ pub fn input_callback_queue_plan_for_invocation(
     })
 }
 
+pub fn input_callback_dispatch_plan_for_queue_plan(
+    queue_plan: &LanguageInputCallbackQueuePlan,
+) -> Option<LanguageInputCallbackDispatchPlan> {
+    if !queue_plan.dispatch_required {
+        return None;
+    }
+
+    Some(LanguageInputCallbackDispatchPlan {
+        board_id: queue_plan.board_id.clone(),
+        pin: queue_plan.pin,
+        label: queue_plan.label.clone(),
+        event_kind: queue_plan.event_kind.clone(),
+        dispatch_reason: LANGUAGE_INPUT_CALLBACK_DISPATCH_REASON.to_owned(),
+        callback_program_id: queue_plan.callback_program_id,
+        callback_instruction_budget: queue_plan.callback_instruction_budget,
+        sequence: queue_plan.sequence,
+        timestamp_ms: queue_plan.timestamp_ms,
+        queue_depth_after: queue_plan.queue_depth_after,
+        queue_action: queue_plan.action,
+        dropped_existing_event: queue_plan.dropped_existing_event,
+        interrupt_backed: queue_plan.interrupt_backed,
+        dispatch_model: queue_plan.dispatch_model.clone(),
+    })
+}
+
+pub fn input_callback_result_for_dispatch_plan(
+    dispatch: &LanguageInputCallbackDispatchPlan,
+    run_status: RunStatus,
+    instructions_executed: u32,
+    elapsed_ms: u32,
+) -> LanguageInputCallbackResultSummary {
+    let result_kind = input_callback_result_kind(run_status);
+    let budget_exceeded = result_kind == LanguageInputCallbackResultKind::BudgetExceeded;
+    let completed = result_kind == LanguageInputCallbackResultKind::Completed;
+    let retryable = result_kind == LanguageInputCallbackResultKind::Incomplete;
+
+    LanguageInputCallbackResultSummary {
+        board_id: dispatch.board_id.clone(),
+        pin: dispatch.pin,
+        label: dispatch.label.clone(),
+        event_kind: dispatch.event_kind.clone(),
+        dispatch_reason: dispatch.dispatch_reason.clone(),
+        callback_program_id: dispatch.callback_program_id,
+        callback_instruction_budget: dispatch.callback_instruction_budget,
+        sequence: dispatch.sequence,
+        timestamp_ms: dispatch.timestamp_ms,
+        queue_depth_after: dispatch.queue_depth_after,
+        queue_action: dispatch.queue_action,
+        dropped_existing_event: dispatch.dropped_existing_event,
+        interrupt_backed: dispatch.interrupt_backed,
+        dispatch_model: dispatch.dispatch_model.clone(),
+        run_status: run_status_name(run_status).to_owned(),
+        result_kind,
+        instructions_executed,
+        elapsed_ms,
+        completed,
+        budget_exceeded,
+        retryable,
+        message: input_callback_result_message(result_kind).to_owned(),
+    }
+}
+
 pub fn parse_serial_endpoint(endpoint: &str) -> Option<LanguageSerialEndpoint> {
     let (scheme, port) = endpoint.split_once("://")?;
     if scheme != "serial" {
@@ -2567,6 +2682,28 @@ fn input_callback_queue_plan_error(
         queue_capacity: invocation.queue_capacity,
         queue_depth,
         kind,
+    }
+}
+
+fn input_callback_result_kind(run_status: RunStatus) -> LanguageInputCallbackResultKind {
+    match run_status {
+        RunStatus::Halted => LanguageInputCallbackResultKind::Completed,
+        RunStatus::BudgetExceeded => LanguageInputCallbackResultKind::BudgetExceeded,
+        RunStatus::Running => LanguageInputCallbackResultKind::Incomplete,
+        RunStatus::Stopped | RunStatus::Faulted => LanguageInputCallbackResultKind::Failed,
+    }
+}
+
+fn input_callback_result_message(kind: LanguageInputCallbackResultKind) -> &'static str {
+    match kind {
+        LanguageInputCallbackResultKind::Completed => "Input callback completed.",
+        LanguageInputCallbackResultKind::BudgetExceeded => {
+            "Input callback exhausted its instruction budget."
+        }
+        LanguageInputCallbackResultKind::Incomplete => {
+            "Input callback is still running; keep cooperative dispatch scheduled."
+        }
+        LanguageInputCallbackResultKind::Failed => "Input callback stopped before completion.",
     }
 }
 
@@ -6551,6 +6688,152 @@ mod tests {
             error.kind,
             LanguageInputCallbackQueuePlanErrorKind::EmptyQueue
         );
+    }
+
+    #[test]
+    fn input_callback_dispatch_plans_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let dispatch = input_callback_dispatch_plan_for_queue_plan(&queue_plan).unwrap();
+        assert_eq!(dispatch.board_id, "arduino-uno-r4-wifi");
+        assert_eq!(dispatch.pin, 3);
+        assert_eq!(dispatch.label, "D3");
+        assert_eq!(dispatch.event_kind, LANGUAGE_INPUT_CALLBACK_EVENT_KIND);
+        assert_eq!(
+            dispatch.dispatch_reason,
+            LANGUAGE_INPUT_CALLBACK_DISPATCH_REASON
+        );
+        assert_eq!(dispatch.callback_program_id, 7);
+        assert_eq!(dispatch.callback_instruction_budget, 64);
+        assert_eq!(dispatch.sequence, 42);
+        assert_eq!(dispatch.timestamp_ms, 9001);
+        assert_eq!(dispatch.queue_depth_after, 3);
+        assert_eq!(
+            dispatch.queue_action,
+            LanguageInputCallbackQueueAction::Enqueue
+        );
+        assert!(!dispatch.dropped_existing_event);
+        assert!(dispatch.interrupt_backed);
+        assert_eq!(
+            dispatch.dispatch_model,
+            LANGUAGE_INPUT_CALLBACK_DISPATCH_MODEL
+        );
+
+        let full_queue =
+            input_callback_queue_plan_for_invocation(&invocation, invocation.queue_capacity)
+                .unwrap();
+        let dispatch = input_callback_dispatch_plan_for_queue_plan(&full_queue).unwrap();
+        assert_eq!(
+            dispatch.queue_action,
+            LanguageInputCallbackQueueAction::DropOldestThenEnqueue
+        );
+        assert_eq!(
+            dispatch.queue_depth_after,
+            LANGUAGE_INPUT_CALLBACK_DEFAULT_QUEUE_CAPACITY
+        );
+        assert!(dispatch.dropped_existing_event);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        assert!(input_callback_dispatch_plan_for_queue_plan(&newest_drop).is_none());
+    }
+
+    #[test]
+    fn input_callback_results_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let dispatch = input_callback_dispatch_plan_for_queue_plan(&queue_plan).unwrap();
+
+        let completed =
+            input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Halted, 11, 3);
+        assert_eq!(completed.board_id, "arduino-uno-r4-wifi");
+        assert_eq!(completed.pin, 3);
+        assert_eq!(completed.label, "D3");
+        assert_eq!(completed.event_kind, LANGUAGE_INPUT_CALLBACK_EVENT_KIND);
+        assert_eq!(
+            completed.dispatch_reason,
+            LANGUAGE_INPUT_CALLBACK_DISPATCH_REASON
+        );
+        assert_eq!(completed.callback_program_id, 7);
+        assert_eq!(completed.callback_instruction_budget, 64);
+        assert_eq!(completed.sequence, 42);
+        assert_eq!(completed.timestamp_ms, 9001);
+        assert_eq!(completed.queue_depth_after, 3);
+        assert_eq!(
+            completed.queue_action,
+            LanguageInputCallbackQueueAction::Enqueue
+        );
+        assert!(!completed.dropped_existing_event);
+        assert!(completed.interrupt_backed);
+        assert_eq!(
+            completed.dispatch_model,
+            LANGUAGE_INPUT_CALLBACK_DISPATCH_MODEL
+        );
+        assert_eq!(completed.run_status, "halted");
+        assert_eq!(
+            completed.result_kind,
+            LanguageInputCallbackResultKind::Completed
+        );
+        assert_eq!(completed.instructions_executed, 11);
+        assert_eq!(completed.elapsed_ms, 3);
+        assert!(completed.completed);
+        assert!(!completed.budget_exceeded);
+        assert!(!completed.retryable);
+        assert_eq!(completed.message, "Input callback completed.");
+
+        let budget =
+            input_callback_result_for_dispatch_plan(&dispatch, RunStatus::BudgetExceeded, 64, 9);
+        assert_eq!(budget.run_status, "budget_exceeded");
+        assert_eq!(
+            budget.result_kind,
+            LanguageInputCallbackResultKind::BudgetExceeded
+        );
+        assert!(!budget.completed);
+        assert!(budget.budget_exceeded);
+        assert!(!budget.retryable);
+
+        let running = input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Running, 12, 4);
+        assert_eq!(running.run_status, "running");
+        assert_eq!(
+            running.result_kind,
+            LanguageInputCallbackResultKind::Incomplete
+        );
+        assert!(!running.completed);
+        assert!(!running.budget_exceeded);
+        assert!(running.retryable);
+
+        let stopped = input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Stopped, 6, 2);
+        assert_eq!(stopped.run_status, "stopped");
+        assert_eq!(stopped.result_kind, LanguageInputCallbackResultKind::Failed);
+        assert!(!stopped.completed);
+        assert!(!stopped.budget_exceeded);
+        assert!(!stopped.retryable);
+
+        let faulted = input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Faulted, 6, 2);
+        assert_eq!(faulted.run_status, "faulted");
+        assert_eq!(faulted.result_kind, LanguageInputCallbackResultKind::Failed);
     }
 
     #[test]

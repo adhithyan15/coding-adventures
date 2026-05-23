@@ -567,6 +567,14 @@ class ActivationFallbackTests(unittest.TestCase):
         self.assertEqual(result.shape, (5,))
         self.assertEqual(result.data, [0.0, 0.0, 0.0, 1.0, 2.0])
 
+    def test_relu_backward_via_rust_raises_when_unavailable(self) -> None:
+        """``relu_backward_via_rust`` must raise (defence-in-depth)."""
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.relu_backward_via_rust(
+                [1.0, 1.0, 1.0], [-1.0, 0.5, -0.5], (3,)
+            )
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
     def test_tanh_backward_via_rust_raises_when_unavailable(self) -> None:
         """``tanh_backward_via_rust`` must raise (defence-in-depth)."""
         with self.assertRaises(RuntimeError) as ctx:
@@ -808,6 +816,14 @@ class GELUFallbackTests(unittest.TestCase):
             inner = sqrt_2_pi * (x + coeff * x * x * x)
             expected = 0.5 * x * (1.0 + math.tanh(inner))
             self.assertAlmostEqual(result.data[i], expected, places=12)
+
+    def test_gelu_backward_via_rust_raises_when_unavailable(self) -> None:
+        """``gelu_backward_via_rust`` must raise (defence-in-depth)."""
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.gelu_backward_via_rust(
+                [1.0, 1.0, 1.0], [0.0, 1.0, -1.0], (3,)
+            )
+        self.assertIn("Rust backend is not available", str(ctx.exception))
 
     def test_gelu_backward_via_fallback(self) -> None:
         """GELU's backward formula recomputes ``inner`` and

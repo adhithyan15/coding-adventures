@@ -1,0 +1,33 @@
+// Toast.dark.msl — dark-theme styling for Toast.
+
+style Toast {
+  part toast {
+    padding       : 12 ;
+    border-radius : 6 ;
+    background    : "#1e293b" ;
+    color         : "#f1f5f9" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    width         : 320 ;
+  }
+  part toast-column {
+    padding : 0 ;
+  }
+  part toast-header {
+    padding : 0 ;
+  }
+  part toast-title {
+    font-weight : 600 ;
+  }
+  part toast-close-btn {
+    padding      : 2 ;
+    background   : "transparent" ;
+    border-width : 0 ;
+    color        : "#94a3b8" ;
+  }
+  part toast-body {
+    padding : 8 ;
+  }
+  part toast-message {
+  }
+}

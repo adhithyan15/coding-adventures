@@ -1,5 +1,300 @@
 # Changelog — twig-ir-compiler
 
+## [0.19.0] — 2026-05-22 (Path A — typed `match` arm merges)
+
+### Added — Typed `mov` for the 7 remaining `compile_match` sites
+
+Increment 5 of the Twig → IIR-to-* end-to-end story.  Converts all
+remaining `call_builtin "_move"` emission sites in `compile_match`
+to typed `mov` via `FnCtx::emit_move`.
+
+After this PR, **zero `call_builtin "_move"` emission sites** remain
+in twig-ir-compiler.  Every value-copy goes through the typed `mov`
+opcode.
+
+#### Sites converted
+
+| Site                           | Description                                      |
+|--------------------------------|--------------------------------------------------|
+| Scrutinee → matched (initial)  | Bind scrutinee to a stable register              |
+| nil_init → result              | Default fallthrough value                         |
+| arm_result → result (unknown variant) | Bare-binding arm result merge               |
+| field_reg → binding            | Field extraction in variant arms                  |
+| body_v → result (variant arm)  | Variant-arm body result merge                     |
+| arm_result → result (binding arm) | Binding-arm result merge                       |
+| body_v → result (wildcard arm) | Wildcard-arm body result merge                    |
+| matched_reg → name (helper)    | Binding-arm helper's name binding                 |
+
+#### What's not in this PR
+
+Match arms produce mixed types in general (variant constructors vs.
+raw values), so the match expression's result type stays `"any"` —
+no consensus pass across arms.  Adding that is a separate increment
+(would need a Hindley–Milner-style unifier over the arm types).
+
+#### What this unlocks
+
+The IR is now structurally valid for the backends: no
+`call_builtin "_move"` survives in compile_match's output.
+Backend acceptance of full match programs is bottlenecked on
+`make_nil`, `car`, `cdr`, `=` over reference types — which all
+still emit `call_builtin "<op>"` with `type_hint "any"`.  Those are
+the next increments.
+
+#### Tests
+
+- New e2e test `twig_typed_match_wildcard_accepted_by_every_backend`
+  asserts the IR no longer contains `call_builtin "_move"` and
+  contains at least one typed `mov`.  Full backend acceptance for
+  `(match 1 (_ 42))` is deferred — the `make_nil` initialiser still
+  emits an untyped `call_builtin`.
+- 73 lib + 10 backend e2e tests pass (was 73 + 9).
+- 179 twig-vm tests pass.
+
+## [0.18.0] — 2026-05-22 (Path A — typed `let` / `let*` / `and` / `or`)
+
+### Added — Typed `mov` at the remaining branch-merge sites
+
+Increment 4 of the Twig → IIR-to-* end-to-end story.  Extends the
+`FnCtx::emit_move` helper from increment 3 to the four other
+control-flow sites that previously emitted `call_builtin "_move"`:
+`compile_let`, `compile_let_star`, `compile_and`, `compile_or`.
+
+#### What changed
+
+- `compile_let` — each binding's RHS-to-name copy uses `emit_move`.
+  Type propagates from RHS to binding.
+- `compile_let_star` — same.  Each subsequent RHS sees the previous
+  binding's type, so chains like `(let* ((a 1) (b (+ a 1))) b)` end
+  up fully typed.
+- `compile_and` — both the then-merge and the constant-`#f` else-merge
+  use `emit_move`.  The `#f` literal is emitted with `type_hint "bool"`
+  (matching `Expr::BoolLit`'s increment-1 behaviour).
+- `compile_or` — both the truthy-merge and the falsy-merge use
+  `emit_move`.
+
+`compile_match` (variant arms, binding arms, wildcard arms) still
+uses `call_builtin "_move"` at 7 sites.  Match programs are deferred
+to increment 5+ — the lowering is more complex (variant tag checks,
+field extraction, fallthrough) and needs separate review.
+
+#### What this unlocks
+
+| Program                              | wasm | jvm | clr | beam |
+|--------------------------------------|------|-----|-----|------|
+| `(let ((x 5)) x)`                    | ✅ (was ❌) | ✅ | ✅ | ✅ |
+| `(let* ((a 1) (b (+ a 1))) b)`       | ✅ (was ❌) | ✅ | ✅ | ✅ |
+| `(let ((x 5) (y 10)) (+ x y))`       | ✅ (was ❌) | ✅ | ✅ | ✅ |
+| `(and #t #t)`                        | ✅ (was ❌) | ✅ | ✅ | ✅ |
+| `(or #f 42)`                         | ✅ (was ❌) | ✅ | ✅ | ✅ |
+| `(match x ((Some v) v))`             | ❌ still rejected — match arm `_move`s | ❌ | ❌ | ❌ |
+
+#### Tests
+
+- Existing `let_binds_via_move` test renamed → `let_binds_via_typed_mov`
+  and updated to assert `mov x [i64]`, not `call_builtin "_move"`.
+- 2 new e2e tests in `tests/backend_compat.rs`:
+  - `twig_typed_let_accepted_by_every_backend` — `(let ((x 5)) x)`
+  - `twig_typed_let_star_with_arithmetic` — `(let* ((a 1) (b (+ a 1))) b)`
+- 73 lib + 9 backend e2e tests pass (was 73 + 7).
+
+## [0.17.0] — 2026-05-22 (Path A — typed `if` + typed `mov`)
+
+### Added — Typed `mov` for branch-merge sites
+
+Increment 3 of the Twig → IIR-to-* end-to-end story.  Replaces the
+legacy `call_builtin "_move"` emission pattern with the **typed `mov`
+IR opcode** at branch-merge sites in `compile_if`.  When both arms
+of an `(if cond then else)` expression produce a value of the same
+statically-known type, the if's result type is recorded so
+downstream `ret` instructions propagate it cleanly.
+
+#### What changed
+
+- New `FnCtx::emit_move(dst, src, loc)` helper that emits a typed
+  `mov dst = src [type]` instruction.  Type is sourced from
+  `var_types[src]` (or `"any"` when unknown).  When the type is
+  concrete, the destination is also recorded.
+- `compile_if` now uses `emit_move` for both then-branch and
+  else-branch merge sites.  After both arms are emitted, the
+  compiler computes a *consensus type*: if both arms produce the
+  same concrete type, that becomes the if's result type; otherwise
+  the result stays `"any"` (matching the existing dynamic semantics).
+- `compile_if` no longer emits any `call_builtin "_move"` form.
+
+#### What this unlocks
+
+| Program                          | wasm | jvm | clr | beam |
+|----------------------------------|------|-----|-----|------|
+| `(if #t 1 2)`                    | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) |
+| `(if (< 1 2) (+ 10 20) (- 10 20))` | ✅ (combined typed cmp+arith+if) | ✅ | ✅ | ✅ |
+| `(if cond 1 "hello")`            | ❌ still rejected — disagreeing arm types (any) | ❌ | ❌ | ❌ |
+
+Programs where both arms produce the same concrete type now flow
+through every backend.  Programs whose if branches return different
+types still hit the dynamic fallback.
+
+#### twig-vm regression fix
+
+Path-A increments 2 (PR #3949) and this PR break twig-vm runtime
+execution by emitting typed CIR mnemonics that twig-vm's dispatch
+table doesn't recognise.  PR #3949 includes the corresponding
+twig-vm patch (`twig-vm` 0.19.0) — typed CIR mnemonics now
+synthesise the equivalent `call_builtin "<runtime_name>"` form and
+delegate to the existing builtin dispatch.
+
+#### Tests
+
+- Existing `if_emits_jmp_if_false_and_two_labels` test renamed
+  and updated to assert two typed `mov` instructions (zero legacy
+  `_move`).
+- 2 new e2e tests in `tests/backend_compat.rs`:
+  - `twig_typed_if_accepted_by_every_backend` — `(if #t 1 2)`
+  - `twig_typed_arithmetic_in_if_accepted_by_every_backend` —
+    `(if (< 1 2) (+ 10 20) (- 10 20))`
+- 73 lib + 7 backend e2e tests pass.
+
+#### Compatibility
+
+- Non-Twig callers unaffected.
+- twig-vm 0.19.0 (this stack, base #3949) handles the typed `mov`
+  natively — no Twig program changes runtime behaviour.
+
+## [0.16.0] — 2026-05-22 (Path A — typed binary arithmetic + comparison)
+
+### Added — Typed CIR mnemonics for binary arithmetic / comparison
+
+Increment 2 of the Twig → IIR-to-* end-to-end story.  Builds on
+0.15.0's typed-literals work to lower **binary arithmetic** (`+ - * /`)
+and **comparisons** (`= < > <= >=`) on i64 arguments to typed CIR
+mnemonics (`add`, `sub`, `mul`, `div`, `cmp_eq`, `cmp_lt`, `cmp_gt`,
+`cmp_le`, `cmp_ge`) instead of the legacy `call_builtin "<op>"`
+dispatch.
+
+Mirrors the same pattern PR #3903 used for Nib
+(`compile_binary_chain` → typed CIR mnemonics).
+
+#### What changed
+
+- New `typed_arith_op_for(name) -> Option<&'static str>` table maps
+  Twig builtin names to the typed-CIR mnemonic.  9 entries:
+  `+ - * /` → `add sub mul div`; `= < > <= >=` → `cmp_eq cmp_lt
+  cmp_gt cmp_le cmp_ge`.
+- `compile_apply`'s `is_builtin` branch now:
+  1. Resolves all argument expressions first (existing behaviour).
+  2. For binary forms (n=2) where both args have statically-known
+     `i64` type, emits the typed mnemonic with `type_hint = "i64"`
+     (arithmetic) or `"bool"` (comparison), records the dest's type,
+     and short-circuits the legacy `call_builtin` path.
+  3. Otherwise falls back to the existing `call_builtin "<op>"`
+     dispatch.
+- Result types:
+  - `add` / `sub` / `mul` / `div` over `i64` → `i64`.  Recorded so a
+    chained expression like `(+ (* 2 3) 4)` flows through the typed
+    path for the outer `+` too (the `*` dest is `i64`).
+  - `cmp_*` → `bool`.
+
+#### What this unlocks
+
+| Program             | wasm | jvm | clr | beam |
+|---------------------|------|-----|-----|------|
+| `(+ 1 2)`           | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) |
+| `(< 1 2)`           | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) |
+| `(+ (* 2 3) 4)`     | ✅ (typed chain) | ✅ | ✅ | ✅ |
+| `(+ (car (cons 1 2)) 3)` | ❌ still rejected (left arg is `any`) | ❌ | ❌ | ❌ |
+
+Variadic forms (`(+ a b c)`, n>2) and arithmetic over dynamically-typed
+sources (results of `car` / `length` / user-defined functions) still
+flow through `call_builtin`.  Subsequent increments will lower
+variadic folds and inject runtime type guards.
+
+#### Tests
+
+- Existing `builtin_call_uses_call_builtin_directly` test renamed
+  → `builtin_call_uses_typed_add_for_i64_args` and updated to assert
+  the typed path.
+- New `builtin_call_falls_back_to_call_builtin_for_dynamic_args`
+  asserts the fallback path still fires when an arg is `any`.
+- `builtins_recognised` narrowed to non-typed builtins (cons / car /
+  cdr / predicates / print) — typed arithmetic moved to its own
+  dedicated test.
+- 2 new e2e tests in `tests/backend_compat.rs`:
+  - `twig_typed_arithmetic_accepted_by_every_backend` — `(+ 1 2)`
+  - `twig_typed_comparison_accepted_by_every_backend` — `(< 1 2)`
+- The "still rejected" boundary marker from increment 1 has flipped
+  to `twig_arithmetic_over_dynamic_args_still_rejected`, pinning the
+  current boundary one step further along.
+- 73 lib + 5 backend e2e tests pass.
+
+## [0.15.0] — 2026-05-22 (Path A — typed literals + typed return)
+
+### Added — Local type inference for integer / boolean literals
+
+Increment 1 of the Twig → IIR-to-* end-to-end story (the LANG VM
+"any frontend, any backend" promise).  A probe against
+`iir-to-{wasm,jvm,clr,beam}` validators on the simplest possible Twig
+program (`42`) showed every backend rejected it — every instruction
+carried `type_hint = "any"`, which the validators all reject with
+`UntypedInstruction`.
+
+This release narrows the gap by stamping concrete `type_hint`s on
+integer / boolean literals and propagating those types through `ret`
+emission sites.
+
+#### What changed
+
+- New `var_types: HashMap<String, String>` on `FnCtx`, populated only
+  at sites where the type is statically obvious — literal-defining
+  expressions (`IntLit`, `BoolLit`).  Dynamic / `call_builtin`
+  destinations are intentionally not recorded; absence means
+  "genuinely `any`".
+- `Expr::IntLit` now emits `const Int(n)` with `type_hint = "i64"`
+  (was `"any"`) and records `var_types[dest] = "i64"`.
+- `Expr::BoolLit` now emits `const Bool(b)` with `type_hint = "bool"`.
+- `ret` emission sites propagate the source var's inferred type via
+  `FnCtx::type_of`.  Dynamic returns still emit `"any"` correctly.
+- `main`'s `return_type` is now derived from the last `ret`
+  instruction's `type_hint` rather than hard-coded to `"any"`.
+
+#### What this unlocks
+
+The simplest Twig programs flow through every IIR-to-* backend:
+
+| Program   | wasm | jvm | clr | beam |
+|-----------|------|-----|-----|------|
+| `42`      | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) |
+| `#t`      | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) | ✅ (was ❌) |
+| `(+ 1 2)` | ❌ still rejected — `call_builtin "any"` | ❌ | ❌ | ❌ |
+
+Arithmetic / list / closure programs still emit `call_builtin` with
+`type_hint = "any"` and stay rejected.  Subsequent path-A increments
+will lower `(+ 1 2)` to typed `add_i64`, then `cmp_*`, then non-trivial
+control flow.
+
+#### Tests
+
+- 3 new e2e tests in `tests/backend_compat.rs`:
+  - `twig_int_literal_accepted_by_every_backend` — `42` validates on
+    all four backends; `main.return_type == "i64"`.
+  - `twig_bool_literal_accepted_by_every_backend` — same for `#t`.
+  - `twig_arithmetic_still_rejected_in_increment_1` — pins down the
+    current boundary; a future increment that types arithmetic must
+    explicitly update this test.
+- The existing `every_instruction_has_any_or_void_type_hint` test
+  renamed to `every_instruction_has_known_type_hint` and updated to
+  accept `"i64"` / `"bool"` / `"str"` in addition to `"any"` / `"void"`.
+- 72 unit tests pass (was 71).
+
+#### Compatibility
+
+- Non-Twig callers unaffected.
+- Downstream Twig tooling (twig-aot, twig-vm) all continue to pass —
+  the new type hints are *stricter* than the old `"any"`, never
+  broader.
+- Pre-existing twig-module-driver `tw05*` self-compile tests fail on
+  this branch *and* on `main` (a Windows file-path issue in the test
+  fixture, unrelated to this PR).
+
 ## [0.14.0] — 2026-05-17
 
 ### Added (LANG72 — TW05-Q cross-module strict type checking)

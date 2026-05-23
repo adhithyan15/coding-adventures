@@ -282,9 +282,19 @@ def _query_stmt(
                 union_all = True
                 rec_stmt: SelectStmt | None = None
                 for sop in set_op_nodes:
-                    op, all_flag, right_sel_node = _set_op_clause(sop)
+                    op, all_flag, right_sel_node, right_rule = _set_op_clause(sop)
                     if op == "UNION":
                         union_all = all_flag
+                        # The recursive step is required to be a SELECT
+                        # (the grammar doesn't accept ``UNION ALL VALUES
+                        # (n+1) FROM cte`` because VALUES can't reference
+                        # row columns).  Reject the VALUES form with the
+                        # same error SQLite would.
+                        if right_rule == "values_stmt":
+                            raise ProgrammingError(
+                                f"RECURSIVE CTE '{cte_name}' recursive step "
+                                f"cannot be a VALUES expression"
+                            )
                         rec_stmt = _select(right_sel_node, ctes=ctes_without_self)
                 if rec_stmt is None:
                     raise ProgrammingError(
@@ -309,12 +319,23 @@ def _query_stmt(
                 # Make this CTE visible to subsequent CTEs and the main query.
                 active_ctes[cte_name] = inner_stmt
 
-    select_node = _child_node(node, "select_stmt")
-    left: Statement = _select(select_node, ctes=active_ctes, view_defs=view_defs)
+    # query_stmt branches: ( values_stmt | select_stmt ) { set_op_clause }
+    # Either branch produces a left-hand Statement; set_op_clauses chain
+    # additional SELECTs onto the right via UNION/INTERSECT/EXCEPT.
+    values_node = _maybe_child(node, "values_stmt")
+    left: Statement
+    if values_node is not None:
+        left = _values_stmt(values_node)
+    else:
+        select_node = _child_node(node, "select_stmt")
+        left = _select(select_node, ctes=active_ctes, view_defs=view_defs)
     set_ops = _child_nodes(node, "set_op_clause")
     for op_node in set_ops:
-        op, all_flag, right_select_node = _set_op_clause(op_node)
-        right_stmt = _select(right_select_node, ctes=active_ctes, view_defs=view_defs)
+        op, all_flag, right_node, right_rule = _set_op_clause(op_node)
+        if right_rule == "values_stmt":
+            right_stmt = _values_stmt(right_node)
+        else:
+            right_stmt = _select(right_node, ctes=active_ctes, view_defs=view_defs)
         # Build a left-associative tree: after the first iteration ``left``
         # will already be a UnionStmt/IntersectStmt/ExceptStmt.  The AST
         # types accept any set-op stmt on the left side, and the planner
@@ -329,11 +350,17 @@ def _query_stmt(
     return left
 
 
-def _set_op_clause(node: ASTNode) -> tuple[str, bool, ASTNode]:
-    """Extract (operator_name, all_flag, select_stmt_node) from a set_op_clause."""
+def _set_op_clause(node: ASTNode) -> tuple[str, bool, ASTNode, str]:
+    """Extract (operator_name, all_flag, body_node, body_rule) from a set_op_clause.
+
+    The body may be a ``select_stmt`` (the usual case) or a
+    ``values_stmt`` (``UNION ALL VALUES (1)``).  The caller dispatches
+    on ``body_rule`` to call the right translator.
+    """
     op: str | None = None
     all_flag = False
-    select_node: ASTNode | None = None
+    body_node: ASTNode | None = None
+    body_rule: str | None = None
     for c in node.children:
         if isinstance(c, Token) and _token_type(c) == "KEYWORD":
             kw = c.value.upper()
@@ -341,11 +368,80 @@ def _set_op_clause(node: ASTNode) -> tuple[str, bool, ASTNode]:
                 op = kw
             elif kw == "ALL":
                 all_flag = True
-        elif isinstance(c, ASTNode) and c.rule_name == "select_stmt":
-            select_node = c
-    if op is None or select_node is None:
+        elif isinstance(c, ASTNode) and c.rule_name in ("select_stmt", "values_stmt"):
+            body_node = c
+            body_rule = c.rule_name
+    if op is None or body_node is None or body_rule is None:
         raise ProgrammingError("malformed set_op_clause")
-    return op, all_flag, select_node
+    return op, all_flag, body_node, body_rule
+
+
+# --------------------------------------------------------------------------
+# VALUES — desugars a standalone ``VALUES (a,b),(c,d),…`` query into a
+# left-deep UNION-ALL chain of single-row SELECTs.  This lets downstream
+# layers see only constructs they already handle.
+# --------------------------------------------------------------------------
+
+
+def _values_stmt(node: ASTNode) -> Statement:
+    """Translate ``values_stmt = "VALUES" row_value { "," row_value }`` to a Statement.
+
+    SQLite's behaviour, which we match byte-for-byte:
+
+    * Output columns are named ``column1``, ``column2``, …
+      (1-indexed) when no explicit alias list is given.  Callers that
+      *do* give aliases — e.g. ``WITH x(a, b) AS (VALUES (1, 2))`` —
+      get the aliases applied by ``_apply_cte_col_aliases`` because
+      that helper already walks down the left spine of a set-op tree
+      to find the leftmost SELECT.  We only need to lay down the
+      default names here.
+    * UNION ALL (not plain UNION) so duplicate rows survive — matches
+      SQLite's ``VALUES (1),(1)`` returning two rows.
+    * Empty VALUES is rejected by the parser (the grammar requires at
+      least one ``row_value``), so we don't need to handle that case.
+
+    Implementation detail: we build a left-deep tree
+    ``UNION ALL(UNION ALL(SELECT row0, SELECT row1), SELECT row2)`` so
+    that the existing set-op tree machinery (column derivation, alias
+    application, planner descent) sees exactly the shape it already
+    handles.
+    """
+    row_nodes = _child_nodes(node, "row_value")
+    if not row_nodes:
+        raise ProgrammingError("VALUES list cannot be empty")
+
+    # Fresh placeholder counter — matches the convention every other
+    # top-level translator (_select, _insert, _update, _delete) uses:
+    # each statement-shaped node starts its own ``?`` indexing.  A
+    # nested VALUES inside a larger SELECT therefore can't share a
+    # counter with the surrounding statement; that's a pre-existing
+    # adapter-wide limitation, not specific to VALUES.
+    state = _PlaceholderCounter()
+
+    def _build_row(row_node: ASTNode) -> SelectStmt:
+        # row_value = "(" expr { "," expr } ")"
+        exprs = [
+            _expr(c, state)
+            for c in row_node.children
+            if isinstance(c, ASTNode) and c.rule_name == "expr"
+        ]
+        if not exprs:
+            raise ProgrammingError("VALUES row cannot be empty")
+        # Name columns column1, column2, ... 1-indexed, matching SQLite.
+        items = tuple(
+            SelectItem(expr=e, alias=f"column{i + 1}")
+            for i, e in enumerate(exprs)
+        )
+        return SelectStmt(items=items)
+
+    selects = [_build_row(r) for r in row_nodes]
+    if len(selects) == 1:
+        return selects[0]
+    # Fold left: ((s0 UNION ALL s1) UNION ALL s2) ...
+    left: Statement = selects[0]
+    for right in selects[1:]:
+        left = UnionStmt(left=left, right=right, all=True)  # type: ignore[arg-type]
+    return left
 
 
 # --------------------------------------------------------------------------

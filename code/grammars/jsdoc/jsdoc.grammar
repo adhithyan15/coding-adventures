@@ -1,0 +1,163 @@
+# JSDoc — Parser Grammar (minimal, v1)
+# @version 1
+#
+# This grammar parses the interior of a `/** ... */` block comment (with the
+# enclosing markers and the per-line `* ` prefixes stripped — see CLOC05
+# §"jsdoc-comment-extractor") into a tree of tags plus a leading free
+# description. v1 covers @type, @param, @returns/@return; deferred tags
+# (@throws, @template, @typedef, @callback, @property, @deprecated, …) get
+# their own follow-up PR.
+
+# ============================================================================
+# Document
+# ============================================================================
+#
+# A JSDoc document is an optional leading description (free-form prose
+# before any @tag) followed by zero or more tags. Each tag terminates with
+# a NEWLINE; the final tag may or may not have one (handled by the optional
+# trailing NEWLINE).
+
+document = [ description_line ] { tag } ;
+
+# A description line is a single DESCRIPTION_TEXT chunk followed by a
+# NEWLINE. v1 keeps descriptions one-line; multi-line descriptions are a
+# follow-up.
+description_line = DESCRIPTION_TEXT NEWLINE ;
+
+# ============================================================================
+# Tags
+# ============================================================================
+#
+# Every tag starts with an `@tag-name` token. The shape of what follows
+# depends on which tag it is. v1 recognises three tag shapes:
+#
+#   @type {T}                        — type only
+#   @param {T} name [description]    — type + name + optional description
+#   @returns {T} [description]       — type + optional description
+#   @return  {T} [description]       — alias for @returns
+#
+# Tags whose AT_TAG name doesn't match any of those fall through to
+# `unknown_tag`, which captures the raw payload until the next NEWLINE.
+# This is the CLOC05 contract: unknown tags survive and round-trip.
+
+tag = type_tag
+    | param_tag
+    | returns_tag
+    | unknown_tag ;
+
+# @type {T}
+#
+# Just a type expression — no name path, no description.
+type_tag = AT_TAG type_expression NEWLINE ;
+
+# @param {T} name [description]
+#
+# Note: v1 requires the type expression. @param without `{T}` is real
+# JSDoc but lands in a follow-up; for now we treat it as an unknown_tag.
+param_tag = AT_TAG type_expression name_path [ description_line_trailing ] NEWLINE ;
+
+# @returns {T} [description] / @return {T} [description]
+returns_tag = AT_TAG type_expression [ description_line_trailing ] NEWLINE ;
+
+# An unknown tag: AT_TAG plus everything up to the next NEWLINE.
+unknown_tag = AT_TAG { tag_payload_token } NEWLINE ;
+
+# A tag payload is the union of every token that can appear after an
+# @tag besides NEWLINE. The parser groups them into one production so the
+# unknown_tag rule can sweep them all up.
+tag_payload_token = LBRACE
+                  | RBRACE
+                  | LBRACKET
+                  | RBRACKET
+                  | LPAREN
+                  | RPAREN
+                  | ANGLE_OPEN
+                  | ANGLE_CLOSE
+                  | PIPE
+                  | AMP
+                  | COMMA
+                  | COLON
+                  | EQUALS
+                  | ELLIPSIS
+                  | QUESTION
+                  | BANG
+                  | STAR
+                  | ARROW
+                  | DOT
+                  | NAME
+                  | NUMBER
+                  | STRING
+                  | DESCRIPTION_TEXT ;
+
+# A description fragment immediately following a typed/named tag head.
+# Lifted to its own rule so the optional flag composes cleanly.
+description_line_trailing = DESCRIPTION_TEXT ;
+
+# ============================================================================
+# Type expressions
+# ============================================================================
+#
+# v1 type expressions only appear inside `{ ... }`. The full lattice from
+# CLOC05 (object records, type parameters, unions, intersections, function
+# types) is reachable here as `unknown_type_payload` — a catch-all that
+# captures every token between the matching braces and lets the
+# jsdoc-types-extractor (follow-up PR) lower as much as it can.
+
+type_expression = LBRACE type RBRACE ;
+
+# A type is one of the v1 shapes the type-extractor will recognise
+# explicitly, with a fallback to the catch-all unknown type for anything
+# the v1 grammar doesn't model yet.
+type = nullable_type
+     | non_nullable_type
+     | variadic_type
+     | optional_type
+     | primary_type ;
+
+# `?Foo` — nullable wrapper.
+nullable_type = QUESTION primary_type ;
+
+# `!Foo` — non-nullable wrapper.
+non_nullable_type = BANG primary_type ;
+
+# `...Foo` — rest/variadic (only legal inside @param, but parsed
+# everywhere; semantic enforcement is a typechecker concern).
+variadic_type = ELLIPSIS primary_type ;
+
+# `Foo=` — optional (only legal inside @param). Same enforcement note.
+optional_type = primary_type EQUALS ;
+
+# Primary type — anything that can serve as the base of the wrappers
+# above.
+primary_type = array_type
+             | nominal_type
+             | parenthesized_type
+             | wildcard_type ;
+
+# `Foo` or `Foo.Bar.Baz` — a dotted nominal reference.
+nominal_type = NAME { DOT NAME } ;
+
+# `Foo[]` — array of Foo. The `[]` is greedy: `Foo[][]` is parsed as
+# `Array<Array<Foo>>`.
+array_type = nominal_type LBRACKET RBRACKET { LBRACKET RBRACKET } ;
+
+# `(T)` — parenthesised grouping. v1 only allows another type inside;
+# function-arrow syntax `(A, B) => T` is deferred to a follow-up.
+parenthesized_type = LPAREN type RPAREN ;
+
+# `*` — JSDoc's catch-all "any" type.
+wildcard_type = STAR ;
+
+# Name path used by @param: `foo`, `foo.bar`, or `[foo]` / `[foo=default]`
+# for optional bracket-wrapped params.
+name_path = bracket_name | dotted_name ;
+
+dotted_name = NAME { DOT NAME } ;
+
+bracket_name = LBRACKET NAME [ EQUALS default_expr ] RBRACKET ;
+
+# Defaults inside `[foo=DEFAULT]` are restricted to literals plus bare
+# identifiers in v1.
+default_expr = NAME
+             | NUMBER
+             | STRING ;

@@ -133,6 +133,49 @@ assert!(bytecode_len.unwrap() >= 15);   // ~30-40 bytes for `+++.`
 (pure interpreter), once with `jit=true` (CIR-bytecode JIT) — and
 asserts byte-identical output.  If they ever diverge, the JIT is wrong.
 
+## Cross-backend compilation status
+
+Brainfuck flows through every universal IIR-to-* backend except BEAM:
+
+| Target  | Status | Lowering                                                                  | Test |
+|---------|--------|---------------------------------------------------------------------------|------|
+| WASM    | ✅     | `i32.load8_u` / `i32.store8` + `env.putchar` / `env.getchar` host imports | `tests/wasm_e2e.rs` |
+| JVM     | ✅     | `baload` / `bastore` + `invokestatic env/BFRuntime.{put,get}char`         | `tests/jvm_e2e.rs`  |
+| CLR     | ✅     | `ldelem.u1` / `stelem.i1` + `call env.BFRuntime::{put,get}char`           | `tests/clr_e2e.rs`  |
+| BEAM    | ❌     | *intentionally not supported — see below*                                 | —    |
+
+### Why no BEAM target?
+
+BEAM's substrate is **purely functional**.  Tuples, binaries, and process
+dictionary entries are all immutable — every write produces a fresh copy
+of the surrounding container.  Brainfuck's tape is the opposite shape:
+mutable byte cells in random-access addressing, with one write per cell
+per iteration of the program's main loop.
+
+Compiled to vanilla BEAM bytecode, every `store_mem` would have to
+allocate a fresh copy of the entire 30,000-byte tape with the one byte
+changed.  That's O(N) per cell write × N cells × M loop iterations =
+O(N²·M).  A `,[.,]` `cat` over a 30 KB input would copy a 30 KB tape on
+every loop iteration — wall-clock seconds for a program that runs in
+microseconds on every other target.
+
+Alternative shapes do exist:
+
+- **ETS** (Erlang Term Storage): mutable side-store, but every read/write
+  is a function call with microsecond latency.  Defeats the point of a
+  compiled target.
+- **Process dictionary**: same shape; same problem.
+- **NIF** (Native Implemented Function): write the tape ops in C, link
+  the `.so` at load time.  This is C code wearing a BEAM costume —
+  you're not "compiling BF to BEAM bytecode" anymore.
+
+Each of those would technically work, but none honor the LANG VM
+promise of "any frontend compiles to vanilla code on any backend."
+Brainfuck's mutable byte cells are anti-BEAM, and the right call is a
+**documented rejection** — readers reach this section instead of
+silence, and future work that wants to revisit this has a clear starting
+point.
+
 ## Running tests
 
 ```bash

@@ -85,14 +85,17 @@ use interpreter_ir::{IIRModule, Operand};
 //   Exception: i64/u64/f32/f64 captures produce a ClosureOpcode error.
 
 const UNSUPPORTED_OPS: &[&str] = &[
-    "call_builtin",
+    // `call_builtin` is *conditionally* unsupported — handled below.
+    // See [`CALL_BUILTIN_SUPPORTED_NAMES`] for the whitelist.  Whitelisting
+    // specific builtins (today: `putchar`, `getchar`) lets Brainfuck flow
+    // through this backend while still rejecting unknown / unsafe names.
     "io_in",
     // "io_out"       — LANG32: now supported (Console.WriteLine).
     // "global_store" — returns UnsupportedOp from lower.rs, not rejected by validator.
     // "global_load"  — returns UnsupportedOp from lower.rs, not rejected by validator.
     "cast",
-    "load_mem",
-    "store_mem",
+    // "load_mem"   — Brainfuck: now supported (ldelem.u1 over env.BFRuntime::__tape).
+    // "store_mem"  — Brainfuck: now supported (stelem.i1 over env.BFRuntime::__tape).
     // "alloc"      — promoted in Phase 2 (ref<LispyPair> only)
     "box",
     "unbox",
@@ -101,6 +104,25 @@ const UNSUPPORTED_OPS: &[&str] = &[
     // "is_null"    — promoted in Phase 2
     "safepoint",
 ];
+
+/// Builtin names that the CLR backend can lower via `call` to a
+/// host-provided helper class.
+///
+/// Each entry maps to a `(class, name, signature)` triple resolved at
+/// lowering time via reserved metadata tokens (MemberRef table rows on
+/// the simulated `env.BFRuntime` class):
+///
+/// | Builtin     | CIL call                                            |
+/// |-------------|------------------------------------------------------|
+/// | `"putchar"` | `call void env.BFRuntime::putchar(int32)`            |
+/// | `"getchar"` | `call int32 env.BFRuntime::getchar()`                |
+///
+/// Adding a new builtin requires:
+///   1. Listing the name here so the validator accepts it.
+///   2. Reserving a new metadata-token constant in `lower.rs`.
+///   3. Adding a matching `case` to lower.rs's `call_builtin` arm
+///      that emits the right `call <token>` sequence.
+pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &["putchar", "getchar"];
 
 // ---------------------------------------------------------------------------
 // Heap ops that need special validation (type-restricted)
@@ -387,12 +409,42 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
             // (they were removed in Phase 2); they are handled by the lowerer.
             // `alloc` is also removed — it is accepted for ref<LispyPair> and
             // the type-check above handles unsupported alloc types.
+            //
+            // `call_builtin` is conditionally accepted: the builtin name
+            // carried in `srcs[0]` as `Operand::Var` must be in
+            // [`CALL_BUILTIN_SUPPORTED_NAMES`].  This lets Brainfuck's
+            // `putchar` / `getchar` flow through while still rejecting
+            // unknown / unsafe builtins.
             if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
                      the CLR backend; it requires a P/Invoke or .NET BCL call",
                     func.name, instr.op
                 ));
+            } else if instr.op == "call_builtin" {
+                // Inspect srcs[0] for the builtin name.  IIR carries it as
+                // `Operand::Var(name)` (Rust's IIR has no separate string
+                // operand kind for builtin lookup — names share the Var variant).
+                let name: Option<&str> = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => Some(s.as_str()),
+                    _ => None,
+                };
+                match name {
+                    Some(n) if CALL_BUILTIN_SUPPORTED_NAMES.contains(&n) => {
+                        // Accepted — lower.rs emits the corresponding
+                        // `call <token>` to env.BFRuntime::<name>.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"call_builtin\" with \
+                             builtin name {:?} is not in the CLR backend's host-class \
+                             whitelist (supported: {:?}); add the builtin to \
+                             CALL_BUILTIN_SUPPORTED_NAMES and the lowering rule in \
+                             lower.rs to extend coverage",
+                            func.name, name, CALL_BUILTIN_SUPPORTED_NAMES
+                        ));
+                    }
+                }
             }
         }
     }
@@ -573,5 +625,81 @@ mod tests {
             IIRInstr::new("ret_void", None, vec![], "void"),
         ]));
         assert!(errs.is_empty(), "const nil ref<LispyPair> should pass: {:?}", errs);
+    }
+
+    // ─── BF lowering: load_mem / store_mem now pass ─────────────────────────
+
+    #[test]
+    fn load_mem_accepted_for_bf() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new("load_mem", Some("v".into()),
+                vec![Operand::Var("ptr".into())], "u8"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "load_mem should be accepted by CLR validator after BF→CLR PR; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn store_mem_accepted_for_bf() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new("store_mem", None::<String>,
+                vec![Operand::Var("ptr".into()), Operand::Var("v".into())], "u8"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "store_mem should be accepted by CLR validator; got: {:?}",
+            errs
+        );
+    }
+
+    // ─── BF lowering: call_builtin whitelist (putchar / getchar) ─────────────
+
+    #[test]
+    fn call_builtin_putchar_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new("call_builtin", None::<String>,
+                vec![Operand::Var("putchar".into()), Operand::Var("v".into())],
+                "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "call_builtin \"putchar\" should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn call_builtin_getchar_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new("call_builtin", Some("v".into()),
+                vec![Operand::Var("getchar".into())], "u8"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter().all(|e| !e.contains("UnsupportedOp")),
+            "call_builtin \"getchar\" should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn call_builtin_unknown_name_rejected() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new("call_builtin", None::<String>,
+                vec![Operand::Var("system_exec".into())], "void"),
+        ]));
+        assert!(
+            errs.iter().any(|e| e.contains("UnsupportedOp")
+                && e.contains("system_exec")),
+            "unknown call_builtin name should be rejected with surfaced \
+             whitelist; got: {:?}",
+            errs
+        );
     }
 }

@@ -579,17 +579,31 @@ mod tests {
     }
 
     #[test]
-    fn every_instruction_has_any_or_void_type_hint() {
+    fn every_instruction_has_known_type_hint() {
+        // Twig path-A increment 1: integer / boolean / string literals
+        // and the `ret` instructions that consume them now carry
+        // concrete type hints (`"i64"`, `"bool"`, `"str"`), not just
+        // `"any"`.  The valid set is therefore broader than before but
+        // still strictly known — no `"polymorphic"` or unknown strings.
+        //
+        // This test guards against accidental regressions where a new
+        // emission site uses some ad-hoc / typo'd type hint.
         let src = "(define (f x) (if (= x 0) 1 (* x 2))) (f 3)";
         let m = module(src);
+        let allowed = [
+            "any", "void",
+            "i64", "bool", "str",  // path-A increment 1 — literals
+        ];
         for f in &m.functions {
             for i in &f.instructions {
                 assert!(
-                    i.type_hint == "any" || i.type_hint == "void",
-                    "fn {} instr {} has unexpected type_hint {:?}",
+                    allowed.contains(&i.type_hint.as_str()),
+                    "fn {} instr {} has unexpected type_hint {:?} \
+                     (allowed: {:?})",
                     f.name,
                     i.op,
-                    i.type_hint
+                    i.type_hint,
+                    allowed,
                 );
             }
         }
@@ -637,23 +651,58 @@ mod tests {
     // ---- Builtin calls --------------------------------------------------
 
     #[test]
-    fn builtin_call_uses_call_builtin_directly() {
+    fn builtin_call_uses_typed_add_for_i64_args() {
+        // Path-A increment 2: `(+ 1 2)` with two i64-literal arguments
+        // lowers to a typed `add` instruction (not `call_builtin "+"`).
+        // The typed path bypasses the legacy call_builtin runtime
+        // dispatch and lets the IIR-to-* backends accept the resulting
+        // module directly.
         let i = main_instrs("(+ 1 2)");
-        let call = i.iter().find(|x| x.op == "call_builtin").unwrap();
-        // First src is the builtin name; remaining are arg registers.
-        assert_eq!(call.srcs[0], Operand::Var("+".into()));
-        // (+ 1 2) takes two args, so total srcs = 1 (builtin) + 2 (args)
-        assert_eq!(call.srcs.len(), 3);
+        let add = i.iter().find(|x| x.op == "add").expect(
+            "(+ 1 2) with i64 literals must lower to typed `add`",
+        );
+        assert_eq!(add.type_hint, "i64",
+            "typed add must carry type_hint = \"i64\"");
+        assert_eq!(add.srcs.len(), 2,
+            "typed add takes 2 source operands (lhs, rhs)");
+        // Confirm there is NO `call_builtin` for `+` in the typed path.
+        assert!(
+            !i.iter().any(|x| x.op == "call_builtin"
+                && x.srcs.first() == Some(&Operand::Var("+".into()))),
+            "typed `+` must not also emit call_builtin",
+        );
+    }
+
+    #[test]
+    fn builtin_call_falls_back_to_call_builtin_for_dynamic_args() {
+        // When at least one arg has a dynamic type (e.g. comes from a
+        // call_builtin like `car` whose result is `any`), the typed
+        // path must NOT fire — we fall back to the legacy
+        // `call_builtin "+"` path so runtime dispatch still works.
+        //
+        // (+ (car (cons 1 2)) 3)
+        //   ^^^ car/cons result is type `any` — typed path skipped
+        let i = main_instrs("(+ (car (cons 1 2)) 3)");
+        let plus_call = i.iter().find(|x| x.op == "call_builtin"
+            && x.srcs.first() == Some(&Operand::Var("+".into())));
+        assert!(plus_call.is_some(),
+            "`+` over a dynamic source must fall back to call_builtin");
     }
 
     #[test]
     fn builtins_recognised() {
-        for op in ["+", "-", "*", "/", "=", "<", ">", "cons", "car", "cdr",
+        // Path-A increment 2 narrowed the set that lowers to
+        // `call_builtin`: arithmetic / comparison binaries on i64 args
+        // now lower to typed CIR mnemonics.  This test still verifies
+        // that NON-typed builtins (cons/car/cdr/predicates/print)
+        // continue to lower through `call_builtin`.
+        for op in ["cons", "car", "cdr",
                    "null?", "pair?", "number?", "symbol?", "print"] {
             let src = format!("({op} 1)");
             let i = main_instrs(&src);
             let call = i.iter().find(|x| x.op == "call_builtin").unwrap();
-            assert_eq!(call.srcs[0], Operand::Var(op.into()), "{op} should dispatch to call_builtin");
+            assert_eq!(call.srcs[0], Operand::Var(op.into()),
+                "{op} should still dispatch to call_builtin");
         }
     }
 
@@ -745,26 +794,44 @@ mod tests {
     fn if_emits_jmp_if_false_and_two_labels() {
         let i = main_instrs("(if #t 1 2)");
         let ops = op_names(&i);
-        // jmp_if_false ... call_builtin _move ... jmp ... label ... call_builtin _move ... label ... ret
+        // jmp_if_false ... mov ... jmp ... label ... mov ... label ... ret
         assert!(ops.contains(&"jmp_if_false"));
         assert!(ops.contains(&"jmp"));
         assert_eq!(ops.iter().filter(|&&o| o == "label").count(), 2);
-        // Both arms use _move (preserves type, doesn't coerce booleans).
-        let moves: Vec<_> = i.iter().filter(|x| {
-            x.op == "call_builtin"
-                && matches!(&x.srcs[0], Operand::Var(s) if s == "_move")
-        }).collect();
-        assert_eq!(moves.len(), 2);
+        // Path-A increment 3: both arms use typed `mov` (not the legacy
+        // `call_builtin "_move"`).  This is what makes the if's result
+        // flow through the IIR-to-* backend validators — they all
+        // accept `mov` but reject unknown `call_builtin` names.
+        let moves: Vec<_> = i.iter().filter(|x| x.op == "mov").collect();
+        assert_eq!(moves.len(), 2,
+            "compile_if should emit two typed `mov` instructions \
+             (one per branch); got ops: {ops:?}");
+        // The legacy `_move` shape must NOT appear anywhere.
+        assert!(
+            !i.iter().any(|x| x.op == "call_builtin"
+                && matches!(&x.srcs[0], Operand::Var(s) if s == "_move")),
+            "compile_if must not emit the legacy call_builtin \"_move\" form",
+        );
     }
 
     #[test]
-    fn let_binds_via_move() {
+    fn let_binds_via_typed_mov() {
+        // Path-A increment 4: let-bindings now use typed `mov` instead
+        // of `call_builtin "_move"`.  The type of the RHS (`1` → `i64`)
+        // propagates to the binding name `x`.
         let i = main_instrs("(let ((x 1)) x)");
-        // Should have a _move into a register named "x".
-        let mv = i.iter().find(|x| x.op == "call_builtin"
-            && matches!(&x.srcs[0], Operand::Var(s) if s == "_move")
-            && x.dest.as_deref() == Some("x"));
-        assert!(mv.is_some(), "expected (let ((x 1)) ...) to _move into x");
+        let mv = i.iter().find(|x| x.op == "mov"
+            && x.dest.as_deref() == Some("x")).expect(
+            "expected (let ((x 1)) ...) to emit `mov x = <rhs>`",
+        );
+        assert_eq!(mv.type_hint, "i64",
+            "typed mov must carry the RHS's inferred type");
+        // The legacy `call_builtin "_move"` shape must NOT appear.
+        assert!(
+            !i.iter().any(|x| x.op == "call_builtin"
+                && matches!(&x.srcs[0], Operand::Var(s) if s == "_move")),
+            "compile_let must not emit legacy call_builtin \"_move\"",
+        );
     }
 
     #[test]

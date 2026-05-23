@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-jsdoc-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "JSDoc lexer — tokenizes the interior of a /** ... */ block comment using the grammar-driven lexer and the jsdoc.tokens grammar. Per CLOC05."
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

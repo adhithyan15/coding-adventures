@@ -1,0 +1,13 @@
+// ButtonGroup.mil — interface for the toolkit's ButtonGroup.
+//
+// A row of related buttons that visually group together (shared
+// border, rounded only at the outer edges). Bootstrap's
+// `<div class="btn-group">` equivalent.
+
+component ButtonGroup {
+  // Button labels in order. Each becomes a clickable button.
+  slot items : list<text> ;
+
+  // Fired when the user clicks a button. Payload is the index.
+  emit onSelect ( index : number ) ;
+}

@@ -2,6 +2,51 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.12.0] - 2026-05-22
+
+### Added (Phase 6k — unary minus lowering)
+- `lower_expression` dispatches `unary_minus` to a new arm emitting `Expr::BuiltinCall { name: "neg", args: [inner], effects: PURE }`.
+
+### Tests (+5 new, total 59)
+- `unary_minus_on_number_lowers_to_neg_builtin`, `unary_minus_on_name_carries_scope`, `double_unary_minus_nests_correctly`, `unary_minus_with_binary_plus_resolves_precedence_correctly`, `unary_minus_module_passes_sir_validator`.
+
+## [0.11.0] - 2026-05-22
+
+### Added (Phase 6j — `return` / `break` / `next` lowering)
+- `lower_statement_inner` dispatches `return_statement` / `break_statement` / `next_statement` to a common arm that emits `Expr::BuiltinCall` with the keyword name, the optional trailing expression as the sole argument (or `NilLit` when absent), and `Effect::Divergent` declared.
+
+### Tests (+5 new, total 54)
+- `return_with_value_lowers_to_divergent_builtin_call`, `bare_return_lowers_with_nil_arg`, `break_and_next_lower_to_their_respective_builtins`, `return_inside_def_body`, `return_module_passes_sir_validator`.
+
+## [0.10.0] - 2026-05-22
+
+### Added (Phase 6i — comparison operator lowering)
+- `lower_expression` now dispatches the renamed `sum` rule via the existing `lower_binary_chain(..., ["PLUS", "MINUS"])`.
+- New `lower_comparison_chain` helper — left-associative reduce of comparison operators into `BuiltinCall("==", [lhs, rhs])` (and similarly for `!=`, `<`, `>`, `<=`, `>=`).
+
+### Tests (+5 new, total 49)
+- `equality_op_lowers_to_builtin_call`, `less_than_op_lowers_to_builtin_call`, `all_six_comparison_operators_lower_with_correct_names`, `comparison_has_lower_precedence_than_arithmetic`, `comparison_used_in_if_condition_passes_validator`.
+
+## [0.9.0] - 2026-05-22
+
+### Added (Phase 6h — no-paren method call lowering)
+- `lower_statement_inner` dispatches `method_call_no_paren` to the existing `lower_method_call` helper.
+
+### Tests (+5 new, total 44)
+- `no_paren_call_with_single_arg_lowers_to_builtin_call`, `no_paren_call_with_multiple_args`, `no_paren_call_with_binary_expr_arg_groups_correctly`, `no_paren_call_module_passes_sir_validator`, `paren_form_still_lowers_unchanged`.
+
+## [0.8.0] - 2026-05-22
+
+### Added (Phase 6g — method-with-block lowering)
+- `lower_method_with_block` lowers the `method_with_block` rule node into:
+  1. A `BuiltinCall` / `DirectCall` for the method dispatch.
+  2. A hoisted top-level `Function` named `__block_<n>` for the block body.
+  3. An `Expr::MakeClosure { fn_name, captures: [] }` appended as the call's trailing argument.
+- New `Lowerer.block_counter: usize` field, new `hoist_block_to_function` helper, `Feature::Closures` declared, expanded builtin iterator table.
+
+### Tests (+5 new, total 39)
+- `brace_block_hoists_to_synthetic_function_and_make_closure`, `do_block_with_pipe_params_lowers_to_function_with_params`, `multiple_blocks_get_distinct_synthetic_names`, `block_module_declares_closures_feature`, `block_lowering_passes_sir_validator`.
+
 ## [0.7.0] - 2026-05-22
 
 ### Added (Phase 6f — class/module lowering with nested-def hoisting)
