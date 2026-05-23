@@ -596,36 +596,45 @@ class InMemoryBackend(Backend):
 
             type      | name        | tbl_name    | rootpage | sql
             ----------+-------------+-------------+----------+------------------
-            'table'   | <user-name> | <user-name> | 0        | CREATE TABLE ...
-            'index'   | <idx-name>  | <tbl-name>  | 0        | CREATE INDEX ...
+            'table'   | <user-name> | <user-name> | <n>      | CREATE TABLE ...
+            'index'   | <idx-name>  | <tbl-name>  | <n>      | CREATE INDEX ...
             'trigger' | <trg-name>  | <tbl-name>  | 0        | CREATE TRIGGER ...
 
         Auto-generated indexes (``sqlite_autoindex_*``) get NULL in the
         ``sql`` column, matching real SQLite.  ``rootpage`` is meaningful
-        only on disk; the in-memory backend returns 0 for every row.
+        only on disk; the in-memory backend assigns a stable monotonic
+        positive integer per table/index (matching SQLite's convention
+        that ``rootpage > 0`` means "exists in the b-tree").  Triggers
+        and views have ``rootpage = 0`` — they're not b-tree objects.
+        Page numbers are not stable across schema mutations: they're
+        assigned in iteration order at synthesis time.
         """
         rows: list[Row] = []
+        next_page = 1  # tables and indexes start at 1; triggers stay at 0
         # Tables in insertion order.
         for name, tbl in self._tables.items():
             rows.append({
                 "type": "table",
                 "name": name,
                 "tbl_name": name,
-                "rootpage": 0,
+                "rootpage": next_page,
                 "sql": _reconstruct_create_table(name, tbl.columns, tbl.strict),
             })
+            next_page += 1
         # Indexes in insertion order.
         for idx_name, idx in self._indexes.items():
             rows.append({
                 "type": "index",
                 "name": idx_name,
                 "tbl_name": idx.table,
-                "rootpage": 0,
+                "rootpage": next_page,
                 "sql": _reconstruct_create_index(idx),
             })
+            next_page += 1
         # Triggers in creation order (per table).  ``_triggers`` is keyed
         # by name; iterate ``_triggers_by_table`` to preserve per-table
         # creation order (matches SQLite's ordering inside sqlite_master).
+        # Triggers do not have a b-tree root; ``rootpage`` is always 0.
         for tbl_name, trigs in self._triggers_by_table.items():
             for trg in trigs:
                 rows.append({
