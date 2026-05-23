@@ -300,6 +300,7 @@ fn clone_subckt_element(
             element.emission_coefficient,
             element.breakdown_voltage,
             element.breakdown_current,
+            element.junction_capacitance,
         )),
         Element::Jfet(element) => Element::Jfet(Jfet::with_model(
             format!("{instance_name}.{}", element.name),
@@ -1084,6 +1085,7 @@ pub struct Diode {
     pub emission_coefficient: f64,
     pub breakdown_voltage: Option<f64>,
     pub breakdown_current: f64,
+    pub junction_capacitance: f64,
 }
 
 impl Diode {
@@ -1129,6 +1131,7 @@ impl Diode {
             emission_coefficient,
             None,
             1.0e-3,
+            0.0,
         )
     }
 
@@ -1141,6 +1144,7 @@ impl Diode {
         emission_coefficient: f64,
         breakdown_voltage: Option<f64>,
         breakdown_current: f64,
+        junction_capacitance: f64,
     ) -> Self {
         Self {
             name: name.into(),
@@ -1151,6 +1155,7 @@ impl Diode {
             emission_coefficient,
             breakdown_voltage,
             breakdown_current,
+            junction_capacitance,
         }
     }
 }
@@ -4683,7 +4688,7 @@ fn build_ac_matrix(
                     &mut matrix,
                     anode,
                     cathode,
-                    Complex::new(conductance, 0.0),
+                    Complex::new(conductance, omega * diode.junction_capacitance),
                 );
             }
             Element::Jfet(jfet) => {
@@ -5833,6 +5838,12 @@ fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: diode.name.clone(),
             reason: "breakdown current must be finite and positive".to_string(),
+        });
+    }
+    if !diode.junction_capacitance.is_finite() || diode.junction_capacitance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "junction capacitance must be finite and non-negative".to_string(),
         });
     }
     Ok(())

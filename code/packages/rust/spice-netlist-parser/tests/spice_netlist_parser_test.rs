@@ -645,7 +645,7 @@ Rload out 0 500
 fn parses_diode_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u)
+.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJO=2p)
 V1 in 0 DC 0.7
 D1 in out fast
 Rload out 0 1k
@@ -662,6 +662,7 @@ Rload out 0 1k
     assert_close(*model.params.get("N").unwrap(), 2.0);
     assert_close(*model.params.get("BV").unwrap(), 5.0);
     assert_close(*model.params.get("IBV").unwrap(), 1.0e-6);
+    assert_close(*model.params.get("CJO").unwrap(), 2.0e-12);
 
     let Element::Diode(diode) = &parsed.circuit.elements()[1] else {
         panic!("expected diode");
@@ -674,6 +675,7 @@ Rload out 0 1k
     assert_close(diode.emission_coefficient, 2.0);
     assert_close(diode.breakdown_voltage.unwrap(), 5.0);
     assert_close(diode.breakdown_current, 1.0e-6);
+    assert_close(diode.junction_capacitance, 2.0e-12);
 
     let result = dc_op(&parsed.circuit).unwrap();
     let out = result.voltage("out").unwrap();
@@ -1039,7 +1041,7 @@ Rload out 0 500
 fn expands_subcircuit_diode_nodes_into_engine_elements() {
     let parsed = parse_netlist(
         r#"
-.model clamp D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u)
+.model clamp D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJ0=3p)
 .subckt limiter inp outp
 Dlim inp outp clamp
 .ends limiter
@@ -1057,6 +1059,7 @@ Xlim in out limiter
     assert_close(diode.emission_coefficient, 2.0);
     assert_close(diode.breakdown_voltage.unwrap(), 5.0);
     assert_close(diode.breakdown_current, 1.0e-6);
+    assert_close(diode.junction_capacitance, 3.0e-12);
 }
 
 #[test]

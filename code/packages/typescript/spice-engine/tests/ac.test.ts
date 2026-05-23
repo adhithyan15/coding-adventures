@@ -11,6 +11,7 @@ import {
   complexPhase,
   currentSource,
   currentSourceWithAc,
+  diode,
   inductor,
   jfet,
   mutualInductor,
@@ -65,6 +66,20 @@ describe("acSweep", () => {
     expect(out).not.toBeUndefined();
     expectClose(complexAbs(out!), 1.0 / Math.sqrt(2.0));
     expectClose(complexPhase(out!), -Math.PI / 4.0);
+  });
+
+  it("stamps reverse-biased diode junction capacitance", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vac", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "node", 1_000.0));
+    circuit.add(diode("D1", "0", "node", 1.0e-15, 0.02585, 1.0, undefined, 1.0e-3, 1.0e-6));
+
+    const points = acSweep(circuit, 10.0, 100_000.0, 2);
+    const low = complexAbs(points[0].voltage("node")!);
+    const high = complexAbs(points[points.length - 1].voltage("node")!);
+
+    expect(low).toBeGreaterThan(0.9);
+    expect(high).toBeLessThan(low / 100.0);
   });
 
   it("runs frequency sweeps at each named corner", () => {

@@ -1,8 +1,8 @@
 use spice_engine::{
     ac_sweep, ac_sweep_corners, s_parameters, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit,
-    CornerOverride, CornerSpec, CurrentSource, Element, Inductor, Jfet, JfetPolarity, Mosfet,
-    MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError, TransmissionLine, Vcvs,
-    VoltageSource,
+    CornerOverride, CornerSpec, CurrentSource, Diode, Element, Inductor, Jfet, JfetPolarity,
+    Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError, TransmissionLine,
+    Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -60,6 +60,30 @@ fn ac_rc_low_pass_has_minus_three_db_corner() {
     let out = points[0].voltage("out").unwrap();
     assert_close(out.abs(), 1.0 / 2.0_f64.sqrt());
     assert_close(out.phase(), -std::f64::consts::FRAC_PI_4);
+}
+
+#[test]
+fn ac_diode_junction_capacitance_shunts_high_frequency() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vac", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "in", "node", 1_000.0,
+    )));
+    circuit.add(Element::Diode(Diode::with_model_and_breakdown(
+        "D1", "0", "node", 1.0e-15, 0.02585, 1.0, None, 1.0e-3, 1.0e-6,
+    )));
+
+    let points = ac_sweep(&circuit, 10.0, 100_000.0, 2).unwrap();
+    let low = points[0].voltage("node").unwrap().abs();
+    let high = points[points.len() - 1].voltage("node").unwrap().abs();
+
+    assert!(low > 0.9, "expected low-frequency pass, got {low}");
+    assert!(
+        high < low / 100.0,
+        "expected high-frequency shunt, got low={low} high={high}"
+    );
 }
 
 #[test]

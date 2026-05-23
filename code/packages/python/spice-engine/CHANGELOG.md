@@ -10,6 +10,10 @@
 - **Diode breakdown models** — `Diode.BV` / `Diode.IBV` now add a bounded
   reverse-breakdown current and conductance foothold.
 
+- **Diode junction capacitance models** — `Diode.Cjo` now contributes a
+  small-signal AC susceptance in parallel with the linearized diode
+  conductance.
+
 - **Pseudo-transient DC continuation** — `dc_op` now has a final bounded
   artificial backward-Euler continuation aid after Newton, Gmin stepping, and
   source stepping; successful fallback results report
