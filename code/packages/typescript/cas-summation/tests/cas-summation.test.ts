@@ -680,3 +680,49 @@ describe("summation: Phase 50 log/polynomial growth-rate", () => {
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 51 (TypeScript port): Sqrt/polynomial growth-rate.
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 51 sqrt/polynomial growth-rate", () => {
+  it("∑ [sqrt(k)/k² − sqrt(k+1)/(k+1)²] closes (1/2 < 2)", () => {
+    const k = sym("k");
+    const sqrtK = app(sym("Sqrt"), [k]);
+    const kPlus1 = app(ADD, [k, int(1)]);
+    const sqrtKp1 = app(sym("Sqrt"), [kPlus1]);
+    const f = app(SUB, [
+      app(DIV, [sqrtK, app(POW, [k, int(2)])]),
+      app(DIV, [sqrtKp1, app(POW, [kPlus1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [sqrt(k³)/k² − ...] closes (3/2 < 2)", () => {
+    const k = sym("k");
+    const sqrtK3 = app(sym("Sqrt"), [app(POW, [k, int(3)])]);
+    const kPlus1 = app(ADD, [k, int(1)]);
+    const sqrtKp1_3 = app(sym("Sqrt"), [app(POW, [kPlus1, int(3)])]);
+    const f = app(SUB, [
+      app(DIV, [sqrtK3, app(POW, [k, int(2)])]),
+      app(DIV, [sqrtKp1_3, app(POW, [kPlus1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: sqrt(Mul(-1, k))/k² stays unevaluated", () => {
+    const k = sym("k");
+    const negK = app(MUL, [int(-1), k]);
+    const sqrtNegK = app(sym("Sqrt"), [negK]);
+    const kPlus1 = app(ADD, [k, int(1)]);
+    const sqrtNegKp1 = app(sym("Sqrt"), [app(MUL, [int(-1), kPlus1])]);
+    const f = app(SUB, [
+      app(DIV, [sqrtNegK, app(POW, [k, int(2)])]),
+      app(DIV, [sqrtNegKp1, app(POW, [kPlus1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});

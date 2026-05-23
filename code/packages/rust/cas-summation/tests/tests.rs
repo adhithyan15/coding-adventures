@@ -901,3 +901,51 @@ fn phase50_log_of_negative_argument_refused() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ---------------------------------------------------------------------------
+// Phase 51 (Rust port): Sqrt/polynomial growth-rate.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase51_sqrt_k_over_k_squared_closes() {
+    let k = sym("k");
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![sqrt_k, apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![sqrt_kp1, apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase51_sqrt_k_cubed_over_k_squared_closes() {
+    let k = sym("k");
+    let k_cubed = apply(sym(POW), vec![k.clone(), int(3)]);
+    let sqrt_k3 = apply(sym("Sqrt"), vec![k_cubed]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_kp1_3 = apply(sym("Sqrt"), vec![apply(sym(POW), vec![kp1.clone(), int(3)])]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![sqrt_k3, apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![sqrt_kp1_3, apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase51_sqrt_of_negative_polynomial_refused() {
+    let k = sym("k");
+    let neg_k = apply(sym(MUL), vec![int(-1), k.clone()]);
+    let sqrt_neg_k = apply(sym("Sqrt"), vec![neg_k]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_neg_kp1 = apply(sym("Sqrt"), vec![apply(sym(MUL), vec![int(-1), kp1.clone()])]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![sqrt_neg_k, apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![sqrt_neg_kp1, apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}

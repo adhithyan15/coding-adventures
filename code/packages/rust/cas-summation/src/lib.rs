@@ -967,6 +967,32 @@ fn is_log_of_diverging_in_k(node: &IRNode, k: &IRNode) -> bool {
     h_diverges_at_infinity(node, k)
 }
 
+/// Phase 51 (Rust port): Return the effective polynomial half-degree
+/// of ``Sqrt(P(k))`` when ``P`` is a positive-degree polynomial with
+/// positive leading coefficient.  Returns ``None`` otherwise.
+///
+/// Returns ``deg(P) * 2`` (twice the half-degree) as an i64 to avoid
+/// fractional arithmetic.  Callers compare with ``2 * den_deg`` to
+/// preserve the inequality ``den_deg > deg(P)/2``.
+fn sqrt_effective_half_degree_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return None,
+    };
+    if !matches!(&apply_node.head, IRNode::Symbol(s) if s == "Sqrt") || apply_node.args.len() != 1 {
+        return None;
+    }
+    let inner = &apply_node.args[0];
+    let inner_deg = polynomial_degree_in_k(inner, k)?;
+    if inner_deg < 1 {
+        return None;
+    }
+    if polynomial_leading_coeff_sign_in_k(inner, k) != Some(1) {
+        return None;
+    }
+    Some(inner_deg) // = 2 * (inner_deg / 2)
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -991,6 +1017,16 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     // log/poly → 0 always (log grows slower than any positive power).
     if is_log_of_diverging_in_k(num, k) && h_diverges_at_infinity(den, k) {
         return true;
+    }
+    // Phase 51: Sqrt(positive-poly) numerator + polynomial denominator
+    // with deg(den) > deg(P)/2.  Compare ``2 * den_deg`` against
+    // ``inner_deg`` (which is ``2 * (deg/2)``) to avoid float arithmetic.
+    if let Some(inner_deg) = sqrt_effective_half_degree_x2(num, k) {
+        if let Some(den_deg) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg > inner_deg {
+                return true;
+            }
+        }
     }
     // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
     let num_deg = match polynomial_degree_in_k(num, k) {
