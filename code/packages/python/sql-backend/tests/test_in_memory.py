@@ -134,10 +134,59 @@ class TestInsert:
         b = make_backend()
         b.insert("t", {"id": 3, "val": None})
 
-    def test_not_null_from_primary_key(self) -> None:
-        b = make_backend()
+    def test_not_null_from_primary_key_text_type(self) -> None:
+        # NOT NULL is implied by PRIMARY KEY.  For NON-integer PK types,
+        # the auto-rowid-assign path doesn't fire (only INTEGER PRIMARY
+        # KEY is an alias for rowid), so explicit NULL still violates.
+        b = InMemoryBackend()
+        b.create_table(
+            "u",
+            [
+                ColumnDef(name="name", type_name="TEXT", primary_key=True),
+                ColumnDef(name="val", type_name="TEXT"),
+            ],
+            if_not_exists=False,
+        )
         with pytest.raises(ConstraintViolation):
-            b.insert("t", {"id": None, "val": "x"})
+            b.insert("u", {"name": None, "val": "x"})
+
+    def test_integer_pk_auto_assigns_when_null(self) -> None:
+        # The complement of the test above: an INTEGER PRIMARY KEY column
+        # auto-assigns the next rowid when the supplied value is NULL —
+        # mirrors SQLite's "INTEGER PRIMARY KEY is an alias for rowid"
+        # semantics.  No ConstraintViolation here.
+        b = make_backend()
+        b.insert("t", {"id": None, "val": "x"})
+        # The next rowid after the make_backend preloads (id=1, id=2) is 3.
+        rows = []
+        it = b.scan("t")
+        while (r := it.next()) is not None:
+            rows.append(r)
+        assert any(r.get("id") == 3 and r.get("val") == "x" for r in rows)
+
+    def test_integer_pk_auto_assigns_when_omitted(self) -> None:
+        # Same behaviour when the column is omitted entirely from the
+        # INSERT row dict — the common ORM pattern.
+        b = make_backend()
+        b.insert("t", {"val": "y"})
+        rows = []
+        it = b.scan("t")
+        while (r := it.next()) is not None:
+            rows.append(r)
+        assert any(r.get("id") == 3 and r.get("val") == "y" for r in rows)
+
+    def test_integer_pk_explicit_value_bumps_next_rowid(self) -> None:
+        # When the user supplies an explicit id, ``_next_rowid`` should
+        # advance past it so a subsequent auto-assign doesn't collide.
+        b = make_backend()  # preloads id=1, id=2 → _next_rowid is now 3
+        b.insert("t", {"id": 100, "val": "explicit"})
+        b.insert("t", {"val": "auto"})
+        rows = []
+        it = b.scan("t")
+        while (r := it.next()) is not None:
+            rows.append(r)
+        ids = sorted(r["id"] for r in rows)
+        assert ids == [1, 2, 100, 101]
 
     def test_unique_violation(self) -> None:
         b = InMemoryBackend()

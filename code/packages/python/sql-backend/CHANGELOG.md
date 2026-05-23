@@ -5,6 +5,39 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.0] - 2026-05-23
+
+### Added
+
+- ``InMemoryBackend.insert`` now auto-assigns the next rowid to an
+  ``INTEGER PRIMARY KEY`` column when the supplied value is ``None``
+  or the column is missing from the input row — mirrors SQLite's
+  "INTEGER PRIMARY KEY is an alias for rowid" semantics.  Unblocks
+  ORM-style ``INSERT INTO t(name) VALUES ('alice')`` patterns that
+  previously failed with a NOT NULL violation.
+- When the user supplies an explicit integer id, ``_next_rowid``
+  advances past it so a subsequent auto-assign doesn't collide
+  (SQLite's ``_next_rowid = max(_next_rowid, supplied_id + 1)``).
+- The hidden ``_ROWID_KEY`` stamp is now sourced from the IPK
+  column's value when one exists, so ``SELECT rowid`` and ``SELECT
+  id`` return identical results — required for SQLite compat.
+
+### Changed
+
+- ``_apply_defaults`` now builds the row dict in *column-declaration
+  order* rather than caller-supplied order.  Previously a user
+  insert that omitted a column (now common with IPK auto-assign)
+  would yield a row dict ordered ``(supplied_cols, then_defaults)``,
+  which surfaced as wrong-order ``SELECT *`` output.  Existing
+  callers that supplied all columns are unaffected — only the
+  iteration order of the returned dict changed.
+- ``test_not_null_from_primary_key`` renamed to
+  ``test_not_null_from_primary_key_text_type`` and changed to use a
+  ``TEXT PRIMARY KEY`` column (which still violates NOT NULL on
+  explicit NULL — only ``INTEGER PRIMARY KEY`` gets the rowid-alias
+  exemption).  Added three new tests covering the new auto-assign
+  paths.
+
 ## [0.17.0] - 2026-05-23
 
 ### Changed
