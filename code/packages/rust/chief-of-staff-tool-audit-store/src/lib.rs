@@ -1351,6 +1351,68 @@ impl ToolAuditSupervisorDrainRunReport {
         self.terminal_readiness_kind().is_caught_up_ready()
     }
 
+    /// Return whether the host has a pending decision to make for this run.
+    pub fn requires_host_decision(&self) -> bool {
+        self.host_decision_kind().requires_decision()
+    }
+
+    /// Classify the next host decision for this run.
+    pub fn host_decision_kind(&self) -> ToolAuditSupervisorDrainHostDecisionKind {
+        ToolAuditSupervisorDrainHostDecisionKind::from_decision_flags(
+            self.requests_continuation(),
+            self.routes_follow_up(),
+            self.requires_host_plan_drift_investigation(),
+            self.requires_host_count_drift_investigation(),
+            self.requires_run_integrity_investigation(),
+        )
+    }
+
+    /// Return the stable host-decision classification label.
+    pub fn host_decision_label(&self) -> &'static str {
+        self.host_decision_kind().as_str()
+    }
+
+    /// Return whether the host-decision label parses back to the typed classification.
+    pub fn host_decision_label_matches_kind(&self) -> bool {
+        ToolAuditSupervisorDrainHostDecisionKind::from_label(self.host_decision_label())
+            == Some(self.host_decision_kind())
+    }
+
+    /// Return whether the host decision is that the run is terminal-ready.
+    pub fn host_decision_is_terminal_ready(&self) -> bool {
+        self.host_decision_kind().is_terminal_ready()
+    }
+
+    /// Return whether the next host decision is to schedule continuation.
+    pub fn host_decision_schedules_continuation(&self) -> bool {
+        self.requests_continuation()
+    }
+
+    /// Return whether the next host decision is to route follow-up pressure.
+    pub fn host_decision_routes_follow_up(&self) -> bool {
+        self.routes_follow_up()
+    }
+
+    /// Return whether the next host decision is to investigate plan drift.
+    pub fn host_decision_investigates_plan_drift(&self) -> bool {
+        self.requires_host_plan_drift_investigation()
+    }
+
+    /// Return whether the next host decision is to investigate count drift.
+    pub fn host_decision_investigates_count_drift(&self) -> bool {
+        self.requires_host_count_drift_investigation()
+    }
+
+    /// Return whether the next host decision is to investigate run integrity.
+    pub fn host_decision_investigates_run_integrity(&self) -> bool {
+        self.requires_run_integrity_investigation()
+    }
+
+    /// Return whether multiple host decisions are active.
+    pub fn host_decision_has_multiple_actions(&self) -> bool {
+        self.host_decision_kind().has_multiple_actions()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -1641,6 +1703,18 @@ impl ToolAuditSupervisorDrainRunReport {
                 .terminal_readiness_has_multiple_attention(),
             terminal_readiness_is_idle: self.terminal_readiness_is_idle(),
             terminal_readiness_is_caught_up: self.terminal_readiness_is_caught_up(),
+            requires_host_decision: self.requires_host_decision(),
+            host_decision_kind: self.host_decision_kind(),
+            host_decision_label: self.host_decision_label(),
+            host_decision_label_matches_kind: self.host_decision_label_matches_kind(),
+            host_decision_is_terminal_ready: self.host_decision_is_terminal_ready(),
+            host_decision_schedules_continuation: self.host_decision_schedules_continuation(),
+            host_decision_routes_follow_up: self.host_decision_routes_follow_up(),
+            host_decision_investigates_plan_drift: self.host_decision_investigates_plan_drift(),
+            host_decision_investigates_count_drift: self.host_decision_investigates_count_drift(),
+            host_decision_investigates_run_integrity: self
+                .host_decision_investigates_run_integrity(),
+            host_decision_has_multiple_actions: self.host_decision_has_multiple_actions(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -2294,6 +2368,28 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub terminal_readiness_is_idle: bool,
     /// Whether this run is terminal-ready because it caught up to the log end.
     pub terminal_readiness_is_caught_up: bool,
+    /// Whether the host has a pending decision to make for this run.
+    pub requires_host_decision: bool,
+    /// Stable classification of the next host decision for this run.
+    pub host_decision_kind: ToolAuditSupervisorDrainHostDecisionKind,
+    /// Stable host-decision classification label for host logs.
+    pub host_decision_label: &'static str,
+    /// Whether the host-decision label parses back to the typed classification.
+    pub host_decision_label_matches_kind: bool,
+    /// Whether the host decision is that the run is terminal-ready.
+    pub host_decision_is_terminal_ready: bool,
+    /// Whether the next host decision is to schedule continuation.
+    pub host_decision_schedules_continuation: bool,
+    /// Whether the next host decision is to route follow-up pressure.
+    pub host_decision_routes_follow_up: bool,
+    /// Whether the next host decision is to investigate plan drift.
+    pub host_decision_investigates_plan_drift: bool,
+    /// Whether the next host decision is to investigate count drift.
+    pub host_decision_investigates_count_drift: bool,
+    /// Whether the next host decision is to investigate run integrity.
+    pub host_decision_investigates_run_integrity: bool,
+    /// Whether multiple host decisions are active.
+    pub host_decision_has_multiple_actions: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -2901,6 +2997,61 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether this run is terminal-ready because it caught up to the log end.
     pub fn terminal_readiness_is_caught_up(&self) -> bool {
         self.terminal_readiness_is_caught_up
+    }
+
+    /// Return whether the host has a pending decision to make for this run.
+    pub fn requires_host_decision(&self) -> bool {
+        self.requires_host_decision
+    }
+
+    /// Return the typed host-decision classification.
+    pub fn host_decision_kind(&self) -> ToolAuditSupervisorDrainHostDecisionKind {
+        self.host_decision_kind
+    }
+
+    /// Return the stable host-decision classification label.
+    pub fn host_decision_label(&self) -> &'static str {
+        self.host_decision_label
+    }
+
+    /// Return whether the host-decision label parses back to the typed classification.
+    pub fn host_decision_label_matches_kind(&self) -> bool {
+        self.host_decision_label_matches_kind
+    }
+
+    /// Return whether the host decision is that the run is terminal-ready.
+    pub fn host_decision_is_terminal_ready(&self) -> bool {
+        self.host_decision_is_terminal_ready
+    }
+
+    /// Return whether the next host decision is to schedule continuation.
+    pub fn host_decision_schedules_continuation(&self) -> bool {
+        self.host_decision_schedules_continuation
+    }
+
+    /// Return whether the next host decision is to route follow-up pressure.
+    pub fn host_decision_routes_follow_up(&self) -> bool {
+        self.host_decision_routes_follow_up
+    }
+
+    /// Return whether the next host decision is to investigate plan drift.
+    pub fn host_decision_investigates_plan_drift(&self) -> bool {
+        self.host_decision_investigates_plan_drift
+    }
+
+    /// Return whether the next host decision is to investigate count drift.
+    pub fn host_decision_investigates_count_drift(&self) -> bool {
+        self.host_decision_investigates_count_drift
+    }
+
+    /// Return whether the next host decision is to investigate run integrity.
+    pub fn host_decision_investigates_run_integrity(&self) -> bool {
+        self.host_decision_investigates_run_integrity
+    }
+
+    /// Return whether multiple host decisions are active.
+    pub fn host_decision_has_multiple_actions(&self) -> bool {
+        self.host_decision_has_multiple_actions
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -3943,6 +4094,129 @@ impl ToolAuditSupervisorDrainTerminalReadinessKind {
 }
 
 impl Display for ToolAuditSupervisorDrainTerminalReadinessKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable classification of the next host decision for a drain run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHostDecisionKind {
+    /// The run is terminal-ready and no host decision is pending.
+    TerminalReady,
+    /// The host should schedule another drain pass.
+    ScheduleContinuation,
+    /// The host should route follow-up pressure.
+    RouteFollowUp,
+    /// The host should investigate preflight/drain plan drift.
+    InvestigatePlanDrift,
+    /// The host should investigate planned-vs-replayed count drift.
+    InvestigateCountDrift,
+    /// The host should investigate flattened host-log integrity drift.
+    InvestigateRunIntegrity,
+    /// More than one host decision surface is active.
+    MultipleActions,
+}
+
+impl ToolAuditSupervisorDrainHostDecisionKind {
+    /// Classify the next host decision from scheduler, investigation, and integrity flags.
+    pub fn from_decision_flags(
+        schedules_continuation: bool,
+        routes_follow_up: bool,
+        investigates_plan_drift: bool,
+        investigates_count_drift: bool,
+        investigates_run_integrity: bool,
+    ) -> Self {
+        match [
+            schedules_continuation,
+            routes_follow_up,
+            investigates_plan_drift,
+            investigates_count_drift,
+            investigates_run_integrity,
+        ]
+        .into_iter()
+        .filter(|needs_decision| *needs_decision)
+        .count()
+        {
+            0 => Self::TerminalReady,
+            1 if schedules_continuation => Self::ScheduleContinuation,
+            1 if routes_follow_up => Self::RouteFollowUp,
+            1 if investigates_plan_drift => Self::InvestigatePlanDrift,
+            1 if investigates_count_drift => Self::InvestigateCountDrift,
+            1 if investigates_run_integrity => Self::InvestigateRunIntegrity,
+            _ => Self::MultipleActions,
+        }
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::TerminalReady => "terminal_ready",
+            Self::ScheduleContinuation => "schedule_continuation",
+            Self::RouteFollowUp => "route_follow_up",
+            Self::InvestigatePlanDrift => "investigate_plan_drift",
+            Self::InvestigateCountDrift => "investigate_count_drift",
+            Self::InvestigateRunIntegrity => "investigate_run_integrity",
+            Self::MultipleActions => "multiple_actions",
+        }
+    }
+
+    /// Parse a stable snake_case host-decision label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "terminal_ready" => Some(Self::TerminalReady),
+            "schedule_continuation" => Some(Self::ScheduleContinuation),
+            "route_follow_up" => Some(Self::RouteFollowUp),
+            "investigate_plan_drift" => Some(Self::InvestigatePlanDrift),
+            "investigate_count_drift" => Some(Self::InvestigateCountDrift),
+            "investigate_run_integrity" => Some(Self::InvestigateRunIntegrity),
+            "multiple_actions" => Some(Self::MultipleActions),
+            _ => None,
+        }
+    }
+
+    /// Return whether the host has a pending decision to make.
+    pub fn requires_decision(self) -> bool {
+        !matches!(self, Self::TerminalReady)
+    }
+
+    /// Return whether the run is terminal-ready and no host decision is pending.
+    pub fn is_terminal_ready(self) -> bool {
+        matches!(self, Self::TerminalReady)
+    }
+
+    /// Return whether this is the single schedule-continuation decision.
+    pub fn schedules_continuation(self) -> bool {
+        matches!(self, Self::ScheduleContinuation)
+    }
+
+    /// Return whether this is the single route-follow-up decision.
+    pub fn routes_follow_up(self) -> bool {
+        matches!(self, Self::RouteFollowUp)
+    }
+
+    /// Return whether this is the single plan-drift investigation decision.
+    pub fn investigates_plan_drift(self) -> bool {
+        matches!(self, Self::InvestigatePlanDrift)
+    }
+
+    /// Return whether this is the single count-drift investigation decision.
+    pub fn investigates_count_drift(self) -> bool {
+        matches!(self, Self::InvestigateCountDrift)
+    }
+
+    /// Return whether this is the single run-integrity investigation decision.
+    pub fn investigates_run_integrity(self) -> bool {
+        matches!(self, Self::InvestigateRunIntegrity)
+    }
+
+    /// Return whether more than one host decision surface is active.
+    pub fn has_multiple_actions(self) -> bool {
+        matches!(self, Self::MultipleActions)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostDecisionKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -6587,6 +6861,154 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_decision_kind_labels_are_stable_for_hosts() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::TerminalReady,
+                "terminal_ready",
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation,
+                "schedule_continuation",
+                true,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp,
+                "route_follow_up",
+                false,
+                true,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigatePlanDrift,
+                "investigate_plan_drift",
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift,
+                "investigate_count_drift",
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity,
+                "investigate_run_integrity",
+                false,
+                false,
+                false,
+                false,
+                true,
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::MultipleActions,
+                "multiple_actions",
+                true,
+                false,
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+            ),
+        ];
+
+        for (
+            kind,
+            label,
+            schedules_continuation,
+            routes_follow_up,
+            investigates_plan_drift,
+            investigates_count_drift,
+            investigates_run_integrity,
+            requires_decision,
+            is_terminal_ready,
+            has_multiple_actions,
+        ) in cases
+        {
+            assert_eq!(kind.as_str(), label);
+            assert_eq!(kind.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostDecisionKind::from_label(label),
+                Some(kind)
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainHostDecisionKind::from_decision_flags(
+                    schedules_continuation,
+                    routes_follow_up,
+                    investigates_plan_drift,
+                    investigates_count_drift,
+                    investigates_run_integrity,
+                ),
+                kind
+            );
+            assert_eq!(kind.requires_decision(), requires_decision);
+            assert_eq!(kind.is_terminal_ready(), is_terminal_ready);
+            assert_eq!(
+                kind.schedules_continuation(),
+                kind == ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation
+            );
+            assert_eq!(
+                kind.routes_follow_up(),
+                kind == ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp
+            );
+            assert_eq!(
+                kind.investigates_plan_drift(),
+                kind == ToolAuditSupervisorDrainHostDecisionKind::InvestigatePlanDrift
+            );
+            assert_eq!(
+                kind.investigates_count_drift(),
+                kind == ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift
+            );
+            assert_eq!(
+                kind.investigates_run_integrity(),
+                kind == ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity
+            );
+            assert_eq!(kind.has_multiple_actions(), has_multiple_actions);
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainHostDecisionKind::from_label("choose_again"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_report_exposes_outcome_label_and_action_flag() {
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(store
@@ -7790,6 +8212,213 @@ mod tests {
         stale_multiple_summary.terminal_readiness_label = "readinessish";
         stale_multiple_summary.terminal_readiness_label_matches_kind = false;
         assert!(!stale_multiple_summary.terminal_readiness_label_matches_kind());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_flattens_host_decision_fields() {
+        let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut idle_sink = InMemoryToolAuditSink::new();
+        let idle_report = empty_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut idle_sink)
+            .unwrap();
+        let idle_summary = idle_report.summary();
+
+        assert!(!idle_report.requires_host_decision());
+        assert_eq!(
+            idle_report.host_decision_kind(),
+            ToolAuditSupervisorDrainHostDecisionKind::TerminalReady
+        );
+        assert_eq!(idle_report.host_decision_label(), "terminal_ready");
+        assert!(idle_report.host_decision_label_matches_kind());
+        assert!(idle_report.host_decision_is_terminal_ready());
+        assert!(!idle_report.host_decision_schedules_continuation());
+        assert!(!idle_report.host_decision_routes_follow_up());
+        assert!(!idle_report.host_decision_investigates_plan_drift());
+        assert!(!idle_report.host_decision_investigates_count_drift());
+        assert!(!idle_report.host_decision_investigates_run_integrity());
+        assert!(!idle_report.host_decision_has_multiple_actions());
+        assert!(!idle_summary.requires_host_decision);
+        assert!(!idle_summary.requires_host_decision());
+        assert_eq!(
+            idle_summary.host_decision_kind,
+            ToolAuditSupervisorDrainHostDecisionKind::TerminalReady
+        );
+        assert_eq!(
+            idle_summary.host_decision_kind(),
+            ToolAuditSupervisorDrainHostDecisionKind::TerminalReady
+        );
+        assert_eq!(idle_summary.host_decision_label, "terminal_ready");
+        assert_eq!(idle_summary.host_decision_label(), "terminal_ready");
+        assert!(idle_summary.host_decision_label_matches_kind);
+        assert!(idle_summary.host_decision_label_matches_kind());
+        assert!(idle_summary.host_decision_is_terminal_ready);
+        assert!(idle_summary.host_decision_is_terminal_ready());
+        assert!(!idle_summary.host_decision_schedules_continuation);
+        assert!(!idle_summary.host_decision_schedules_continuation());
+        assert!(!idle_summary.host_decision_routes_follow_up);
+        assert!(!idle_summary.host_decision_routes_follow_up());
+        assert!(!idle_summary.host_decision_investigates_plan_drift);
+        assert!(!idle_summary.host_decision_investigates_plan_drift());
+        assert!(!idle_summary.host_decision_investigates_count_drift);
+        assert!(!idle_summary.host_decision_investigates_count_drift());
+        assert!(!idle_summary.host_decision_investigates_run_integrity);
+        assert!(!idle_summary.host_decision_investigates_run_integrity());
+        assert!(!idle_summary.host_decision_has_multiple_actions);
+        assert!(!idle_summary.host_decision_has_multiple_actions());
+
+        let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(continuation_store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+        let mut continuation_sink = InMemoryToolAuditSink::new();
+        let continuation_report = continuation_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 1, &mut continuation_sink)
+            .unwrap();
+        let continuation_summary = continuation_report.summary();
+
+        assert!(continuation_report.requires_host_decision());
+        assert_eq!(
+            continuation_report.host_decision_kind(),
+            ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation
+        );
+        assert_eq!(
+            continuation_report.host_decision_label(),
+            "schedule_continuation"
+        );
+        assert!(continuation_report.host_decision_label_matches_kind());
+        assert!(!continuation_report.host_decision_is_terminal_ready());
+        assert!(continuation_report.host_decision_schedules_continuation());
+        assert!(!continuation_report.host_decision_routes_follow_up());
+        assert!(!continuation_report.host_decision_investigates_plan_drift());
+        assert!(!continuation_report.host_decision_investigates_count_drift());
+        assert!(!continuation_report.host_decision_investigates_run_integrity());
+        assert!(!continuation_report.host_decision_has_multiple_actions());
+        assert!(continuation_summary.requires_host_decision);
+        assert_eq!(
+            continuation_summary.host_decision_kind(),
+            ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation
+        );
+        assert_eq!(
+            continuation_summary.host_decision_label(),
+            "schedule_continuation"
+        );
+        assert!(continuation_summary.host_decision_schedules_continuation());
+        assert!(!continuation_summary.host_decision_routes_follow_up());
+        assert!(!continuation_summary.host_decision_investigates_run_integrity());
+        assert!(!continuation_summary.host_decision_has_multiple_actions());
+
+        let follow_up_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(follow_up_store
+            .record_audit_batch(vec![failed_record("call_1")])
+            .completed_without_failures());
+        let mut follow_up_sink = InMemoryToolAuditSink::new();
+        let follow_up_report = follow_up_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut follow_up_sink)
+            .unwrap();
+        let follow_up_summary = follow_up_report.summary();
+
+        assert_eq!(
+            follow_up_report.host_decision_kind(),
+            ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp
+        );
+        assert_eq!(follow_up_report.host_decision_label(), "route_follow_up");
+        assert!(follow_up_report.host_decision_routes_follow_up());
+        assert!(!follow_up_report.host_decision_schedules_continuation());
+        assert!(!follow_up_report.host_decision_has_multiple_actions());
+        assert_eq!(
+            follow_up_summary.host_decision_kind(),
+            ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp
+        );
+        assert!(follow_up_summary.host_decision_routes_follow_up());
+        assert!(!follow_up_summary.host_decision_schedules_continuation());
+
+        let mut integrity_report = continuation_report;
+        integrity_report.drain.ticks[0].replay.next_checkpoint =
+            ToolAuditReadCheckpoint::beginning();
+        let integrity_summary = integrity_report.summary();
+        assert_eq!(
+            integrity_report.host_decision_kind(),
+            ToolAuditSupervisorDrainHostDecisionKind::MultipleActions
+        );
+        assert_eq!(integrity_report.host_decision_label(), "multiple_actions");
+        assert!(integrity_report.host_decision_schedules_continuation());
+        assert!(!integrity_report.host_decision_routes_follow_up());
+        assert!(!integrity_report.host_decision_investigates_plan_drift());
+        assert!(!integrity_report.host_decision_investigates_count_drift());
+        assert!(integrity_report.host_decision_investigates_run_integrity());
+        assert!(integrity_report.host_decision_has_multiple_actions());
+        assert_eq!(
+            integrity_summary.host_decision_kind(),
+            ToolAuditSupervisorDrainHostDecisionKind::MultipleActions
+        );
+        assert_eq!(integrity_summary.host_decision_label(), "multiple_actions");
+        assert!(integrity_summary.host_decision_schedules_continuation());
+        assert!(!integrity_summary.host_decision_routes_follow_up());
+        assert!(integrity_summary.host_decision_investigates_run_integrity());
+        assert!(integrity_summary.host_decision_has_multiple_actions());
+
+        let mut stale_plan_summary = idle_summary.clone();
+        stale_plan_summary.requires_host_decision = true;
+        stale_plan_summary.host_decision_kind =
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigatePlanDrift;
+        stale_plan_summary.host_decision_label = "investigate_plan_drift";
+        stale_plan_summary.host_decision_is_terminal_ready = false;
+        stale_plan_summary.host_decision_investigates_plan_drift = true;
+        assert!(stale_plan_summary.requires_host_decision());
+        assert_eq!(
+            stale_plan_summary.host_decision_kind(),
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigatePlanDrift
+        );
+        assert_eq!(
+            stale_plan_summary.host_decision_label(),
+            "investigate_plan_drift"
+        );
+        assert!(stale_plan_summary.host_decision_label_matches_kind());
+        assert!(!stale_plan_summary.host_decision_is_terminal_ready());
+        assert!(stale_plan_summary.host_decision_investigates_plan_drift());
+        assert!(!stale_plan_summary.host_decision_has_multiple_actions());
+
+        let mut stale_count_summary = idle_summary.clone();
+        stale_count_summary.requires_host_decision = true;
+        stale_count_summary.host_decision_kind =
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift;
+        stale_count_summary.host_decision_label = "investigate_count_drift";
+        stale_count_summary.host_decision_is_terminal_ready = false;
+        stale_count_summary.host_decision_investigates_count_drift = true;
+        assert_eq!(
+            stale_count_summary.host_decision_kind(),
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift
+        );
+        assert_eq!(
+            stale_count_summary.host_decision_label(),
+            "investigate_count_drift"
+        );
+        assert!(stale_count_summary.host_decision_investigates_count_drift());
+
+        let mut stale_integrity_summary = idle_summary;
+        stale_integrity_summary.requires_host_decision = true;
+        stale_integrity_summary.host_decision_kind =
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity;
+        stale_integrity_summary.host_decision_label = "investigate_run_integrity";
+        stale_integrity_summary.host_decision_is_terminal_ready = false;
+        stale_integrity_summary.host_decision_investigates_run_integrity = true;
+        assert_eq!(
+            stale_integrity_summary.host_decision_kind(),
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity
+        );
+        assert_eq!(
+            stale_integrity_summary.host_decision_label(),
+            "investigate_run_integrity"
+        );
+        assert!(stale_integrity_summary.host_decision_investigates_run_integrity());
+
+        stale_integrity_summary.host_decision_label = "decisionish";
+        stale_integrity_summary.host_decision_label_matches_kind = false;
+        assert!(!stale_integrity_summary.host_decision_label_matches_kind());
     }
 
     #[test]

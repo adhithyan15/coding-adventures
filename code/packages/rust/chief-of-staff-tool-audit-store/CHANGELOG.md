@@ -113,6 +113,9 @@ All notable changes to this package will be documented in this file.
   and summaries.
 - Flattened terminal-readiness component flags for supervisor drain run
   summaries.
+- Stable host-decision classifications for supervisor drain run reports and
+  summaries.
+- Flattened host-decision component flags for supervisor drain run summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Report-level scheduler action labels for supervisor drain runs.

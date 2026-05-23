@@ -147,6 +147,10 @@ The crate keeps the boundary narrow:
   host-attention states
 - supervisor drain run summaries flatten terminal-readiness component flags for
   payload-free terminal dashboards
+- supervisor drain reports and summaries expose host-decision classifications
+  that pick the next scheduler, follow-up, drift, or integrity action
+- supervisor drain run summaries flatten exact host-decision component flags for
+  payload-free host action dashboards
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
