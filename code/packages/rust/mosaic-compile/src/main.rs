@@ -153,14 +153,18 @@ fn run(result: cli_builder::types::ParseResult) {
             process::exit(1);
         });
 
-    if backend != "webcomponent"
-        && backend != "html"
-        && backend != "react"
-        && backend != "paint"
-        && backend != "xaml"
-    {
+    // UI30: pipeline mode now supports every emit-only backend
+    // (react, html, webcomponent, swiftui, qt, xaml, flutter). The
+    // legacy "paint" backend is single-file SOURCE mode only and is
+    // also kept here for back-compat.
+    let allowed_backends = [
+        "webcomponent", "html", "react", "paint", "xaml",
+        "swiftui", "qt", "flutter",
+    ];
+    if !allowed_backends.contains(&backend) {
         eprintln!(
-            "mosaic-compile: --backend must be 'webcomponent', 'html', 'react', 'paint', or 'xaml', got '{backend}'"
+            "mosaic-compile: --backend must be one of {allowed:?}, got '{backend}'",
+            allowed = allowed_backends,
         );
         process::exit(1);
     }
@@ -584,11 +588,17 @@ fn run_pipeline(
     emit_project: bool,
     package_manifest_path: Option<&str>,
 ) {
-    if backend != "react" && backend != "xaml" {
+    // Pipeline mode supports every backend with a `pipeline::from_pipeline`
+    // entry point. The mosaic-package-artifact-builder crate calls each
+    // backend through the same surface, so they're all wire-compatible
+    // here. The `match backend` below dispatches to each. Reject only
+    // genuinely-unwired backends ("paint", which is legacy single-file
+    // only) with a clear "use legacy SOURCE mode" error.
+    if backend == "paint" {
         eprintln!(
-            "mosaic-compile: pipeline mode (--interface/--layout/--style) \
-             currently supports --backend react or --backend xaml (got '{backend}'). \
-             Use legacy SOURCE mode for other backends."
+            "mosaic-compile: pipeline mode does not support --backend paint \
+             (raster output flows through the legacy single-file pipeline). \
+             Use SOURCE mode with a .mosaic file."
         );
         process::exit(1);
     }
@@ -757,12 +767,103 @@ fn run_pipeline(
                 eprintln!("Written: {readme_path}");
             }
         }
+        // -------- HTML / WebComponent / SwiftUI / Qt / Flutter -------------
+        //
+        // All five share the same "single-file output" shape: each
+        // backend's `pipeline::from_pipeline` returns one string, we
+        // write it to `output_path` (or `<Component>.<ext>` if omitted).
+        // Output extensions per backend match the artifact-builder.
+        "html" => emit_single_file(
+            backend,
+            output_path,
+            &mosmodel_out.component.component,
+            "html",
+            mosaic_emit_html::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+            )
+            .map(|r| r.output),
+        ),
+        "webcomponent" => emit_single_file(
+            backend,
+            output_path,
+            &mosmodel_out.component.component,
+            "js",
+            mosaic_emit_webcomponent::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+            )
+            .map(|r| r.output),
+        ),
+        "swiftui" => emit_single_file(
+            backend,
+            output_path,
+            &mosmodel_out.component.component,
+            "swift",
+            mosaic_emit_swiftui::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+            )
+            .map(|r| r.output),
+        ),
+        "qt" => emit_single_file(
+            backend,
+            output_path,
+            &mosmodel_out.component.component,
+            "qml",
+            mosaic_emit_qt::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+            )
+            .map(|r| r.output),
+        ),
+        "flutter" => emit_single_file(
+            backend,
+            output_path,
+            &mosmodel_out.component.component,
+            "dart",
+            mosaic_emit_flutter::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+            )
+            .map(|r| r.output),
+        ),
         _ => {
-            // Already validated above; defensive.
             eprintln!("mosaic-compile: unsupported pipeline backend '{backend}'");
             process::exit(1);
         }
     }
+}
+
+/// Shared helper for backends whose pipeline emit produces a single
+/// output file. Resolves the output path (override or default
+/// `<Component>.<ext>`), writes the bytes, and logs to stderr.
+///
+/// Splitting this out keeps the per-backend match arms one-liner-like
+/// — pre-UI30 the React arm was the only single-file path, but with
+/// HTML/WebComponent/SwiftUI/Qt/Flutter all wired the same way, a
+/// shared helper avoids five copies of the same write+log boilerplate.
+fn emit_single_file<E: std::fmt::Display>(
+    backend: &str,
+    output_path: Option<&str>,
+    component_name: &str,
+    ext: &str,
+    result: Result<String, E>,
+) {
+    let body = result.unwrap_or_else(|e| {
+        eprintln!("mosaic-compile: {backend} pipeline emit error: {e}");
+        process::exit(1);
+    });
+    let out = output_path
+        .map(str::to_string)
+        .unwrap_or_else(|| format!("{component_name}.{ext}"));
+    write_file_or_die(&out, &body);
+    eprintln!("Written: {out}");
 }
 
 // ===========================================================================

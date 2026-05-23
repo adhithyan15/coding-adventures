@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+### Added — pipeline mode for HTML / WebComponent / SwiftUI / Qt / Flutter (VC2-html bonus)
+
+Pre-existing: pipeline mode (`--interface --layout --style`) only
+supported `--backend react` and `--backend xaml`. The other five
+backends required the legacy single-file `.mosaic` mode.
+
+This release wires every emit-crate's `pipeline::from_pipeline()`
+into the CLI dispatch, so `mosaic-compile --backend html|
+webcomponent|swiftui|qt|flutter` now works in pipeline mode:
+
+```
+mosaic-compile --backend html \
+  --interface demo/visicalc/mosaic/FormulaBar.mil \
+  --layout    demo/visicalc/mosaic/FormulaBar.desktop.mll \
+  --style     demo/visicalc/mosaic/FormulaBar.dark.msl \
+  -o FormulaBar.html
+```
+
+The `paint` backend stays single-file only — it's a raster pipeline
+that bypasses the three-IR compile chain.
+
+A new shared `emit_single_file()` helper unifies the
+"write-and-log" code for every single-file backend (HTML / Webcomp /
+SwiftUI / Qt / Flutter all produce one string per compile). XAML
+still has its own arm because it emits a multi-file triple
+(.xaml + .xaml.cs + .Event.cs) plus per-For RowVm side files.
+
+This unblocks the VisiCalc Phase 2 visual-demo cycle — VC2-html
+needs `mosaic-compile --backend html` to land before it can wire
+its build.sh; VC2-flutter / VC2-qt / VC2-swiftui / VC2-webcomp
+will exercise the same path.
+
 ### Added — `--variant` flag for multi-layout pipelines (UI30 / ML1)
 
 New `--variant <name>` flag plus directory-mode resolution on
