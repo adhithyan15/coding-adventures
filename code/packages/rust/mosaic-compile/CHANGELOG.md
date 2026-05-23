@@ -2,6 +2,43 @@
 
 ## Unreleased
 
+### Added — `--variant` flag for multi-layout pipelines (UI30 / ML1)
+
+New `--variant <name>` flag plus directory-mode resolution on
+`--layout` implements the UI30 multi-layout spec:
+
+- **File-path mode (unchanged):** `--layout path/to/Grid.desktop.mll`
+  uses the file verbatim. Every existing build script keeps working
+  byte-for-byte. Passing `--variant` in this mode logs a warning
+  (the flag is ignored) but doesn't fail.
+- **Directory mode (new):** `--layout path/to/src/ --variant touch`
+  reads the `.mil`'s component declaration to learn the component
+  name C, then resolves `path/to/src/C.touch.mll`. If that file
+  doesn't exist, falls back to bare `path/to/src/C.mll` (the
+  default variant). If neither exists, prints a clear "looked
+  for: <list>" error and exits 1.
+- **Default-variant semantics:** omitting `--variant` is equivalent
+  to `--variant default`, which after the variant-file probe falls
+  through directly to bare `<C>.mll`. The string `default` is
+  reserved and cannot appear in a filename.
+
+The implementation is a single new `resolve_layout_path()` helper
+called once at the top of `run_pipeline()`. The rest of the
+pipeline is unaware of variants — every downstream stage just sees
+the resolved file path. This keeps the diff small and the
+backwards-compatibility surface narrow.
+
+Smoke verified end-to-end against the VisiCalc sources:
+- `--layout demo/visicalc/mosaic/FormulaBar.desktop.mll` (file
+  mode) and `--layout demo/visicalc/mosaic/ --variant desktop`
+  (directory mode) produce **byte-identical** `.tsx` output.
+- Fallback path: a tempdir with only `FormulaBar.mll` (no
+  `.touch.mll`) compiles cleanly with `--variant touch`,
+  matching the bare-default output exactly.
+- Error path: a directory with neither `FormulaBar.touch.mll`
+  nor `FormulaBar.mll` exits 1 with `looked for:
+  FormulaBar.touch.mll, FormulaBar.mll`.
+
 ### Added — `pkg` subcommand (UI29 §4.3 / U29-R3)
 
 `mosaic-compile pkg <PACKAGE_ROOT> --backend <name> --output <DIR>` compiles

@@ -52,7 +52,7 @@
     {
       "id": "layout",
       "long": "layout",
-      "description": "Path to a .mll moslayout file (three-file pipeline mode)",
+      "description": "Path to a .mll moslayout file (three-file pipeline mode). If this points at a DIRECTORY (UI30 multi-layout), the file is resolved as <Component>.<variant>.mll inside it, with fallback to bare <Component>.mll. The component name comes from the --interface file's component declaration; --variant picks the variant.",
       "type": "string",
       "required": false
     },
@@ -60,6 +60,13 @@
       "id": "style",
       "long": "style",
       "description": "Path to a .msl mosstyle file (three-file pipeline mode)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "variant",
+      "long": "variant",
+      "description": "UI30 layout variant name (e.g. desktop, touch, tablet, tv, print). Only meaningful when --layout points at a directory — resolves <Component>.<variant>.mll inside. Falls back to bare <Component>.mll if the variant file isn't found. Omitting --variant is equivalent to --variant default (= bare <Component>.mll). Ignored with a warning when --layout points at a file.",
       "type": "string",
       "required": false
     },

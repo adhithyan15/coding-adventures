@@ -182,6 +182,9 @@ fn run(result: cli_builder::types::ParseResult) {
     let style_path = flags.get("style").and_then(|v| v.as_str());
     let source_path = args.get("source").and_then(|v| v.as_str());
     let output_path = flags.get("output").and_then(|v| v.as_str());
+    // UI30 --variant: layout-variant selector. Only used when --layout
+    // points at a directory; resolved via resolve_layout_path() below.
+    let variant = flags.get("variant").and_then(|v| v.as_str());
     // --emit-project: when set on a pipeline xaml build, emit a full
     // WinUI 3 host shell (csproj + App + MainWindow + manifest +
     // build.ps1 + README) alongside the component triple. Fix B1.
@@ -220,6 +223,7 @@ fn run(result: cli_builder::types::ParseResult) {
             interface,
             layout,
             style,
+            variant,
             output_path,
             emit_project,
             package_manifest_path.as_deref(),
@@ -441,11 +445,141 @@ fn build_self_package_registry(
 /// other backends (swiftui, qt) will follow when they're added. The legacy
 /// `--backend X SOURCE.mosaic` path continues to work unchanged for any of
 /// the four backends.
+/// UI30 multi-layout — resolve `--layout` to a concrete file path.
+///
+/// **Decision table:**
+///
+/// | `--layout` is | `--variant` is | Result                                                        |
+/// |---|---|---|
+/// | file path     | any / none     | unchanged (back-compat; warn if variant is set)               |
+/// | directory     | None           | `<dir>/<Component>.mll`                                       |
+/// | directory     | `Some("desktop")` | `<dir>/<Component>.desktop.mll`, fallback `<Component>.mll`|
+/// | directory     | `Some("touch")`   | `<dir>/<Component>.touch.mll`, fallback `<Component>.mll`  |
+///
+/// **Fallback rationale.** Per UI30 §3.1, a missing variant file falls
+/// back to the bare `<Component>.mll` (the default variant). This lets
+/// a touch host gracefully degrade to the desktop layout when no
+/// touch-specific layout was authored. If BOTH the variant file AND
+/// the bare default are missing, this function `process::exit(1)`s
+/// with a clear error listing both paths tried.
+///
+/// **Why not just always exit on missing variant.** The fallback rule
+/// is the multi-layout equivalent of CSS's `@media` cascade — most
+/// components don't need every form factor, and forcing authors to
+/// duplicate the desktop layout into every variant would defeat the
+/// purpose. Authors who DO want strict-mode behavior can omit the
+/// bare `<Component>.mll` and ship only the variant files; the
+/// fallback then provably can't fire.
+fn resolve_layout_path(
+    layout_arg: &str,
+    component_name: &str,
+    variant: Option<&str>,
+) -> String {
+    // Defense-in-depth: validate component_name + variant against a
+    // strict identifier shape before interpolating into path joins.
+    // The mosmodel grammar already enforces PascalCase on component
+    // declarations (`NAME` token = `[A-Za-z_][A-Za-z0-9_]*`) and the
+    // CLI spec describes variant as a kebab-case identifier. Re-
+    // checking here costs essentially nothing and would catch:
+    //   - a grammar regression that admitted slashes / `..`
+    //   - a future codepath that passed a synthetic component name
+    //   - hostile `.mil` files in a hypothetical multi-tenant build
+    //     server (out of scope today but cheap to guard against)
+    // The shape we accept: ASCII letters, digits, `_`, `-`. No `/`,
+    // no `.`, no null bytes, no `..`, no shell metacharacters.
+    fn is_safe_segment(s: &str) -> bool {
+        !s.is_empty()
+            && s.chars()
+                .all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '-')
+    }
+    if !is_safe_segment(component_name) {
+        eprintln!(
+            "mosaic-compile: refusing to resolve layout for component name \
+             '{component_name}' — must be ASCII alphanumeric / _ / -. This \
+             usually means the .mil grammar admitted a name it shouldn't \
+             have; please file a bug."
+        );
+        process::exit(1);
+    }
+    if let Some(v) = variant {
+        if v != "default" && !is_safe_segment(v) {
+            eprintln!(
+                "mosaic-compile: --variant '{v}' contains characters outside \
+                 the allowed ASCII alphanumeric / _ / - set"
+            );
+            process::exit(1);
+        }
+    }
+
+    let path = Path::new(layout_arg);
+
+    // File-path mode — unchanged behavior. If --variant is set we warn
+    // (it's ignored when --layout points at a file) but proceed normally.
+    if path.is_file() {
+        if variant.is_some() {
+            eprintln!(
+                "mosaic-compile: warning: --variant is ignored when --layout \
+                 points at a file (only meaningful with directory --layout); \
+                 using {layout_arg} verbatim"
+            );
+        }
+        return layout_arg.to_string();
+    }
+
+    // Directory mode — UI30 resolution.
+    if !path.is_dir() {
+        eprintln!(
+            "mosaic-compile: --layout '{layout_arg}' is neither a file nor a \
+             directory (does it exist?)"
+        );
+        process::exit(1);
+    }
+
+    // The reserved variant string `default` is the same as omitting
+    // --variant entirely; per spec §3.2 it cannot appear in a filename
+    // (`Grid.default.mll` would be redundant with `Grid.mll`).
+    let want_variant = variant.filter(|v| *v != "default");
+
+    // Try `<dir>/<Component>.<variant>.mll` first.
+    if let Some(v) = want_variant {
+        let candidate = path.join(format!("{component_name}.{v}.mll"));
+        if candidate.is_file() {
+            return candidate.to_string_lossy().into_owned();
+        }
+    }
+
+    // Fallback: bare `<dir>/<Component>.mll`.
+    let bare = path.join(format!("{component_name}.mll"));
+    if bare.is_file() {
+        return bare.to_string_lossy().into_owned();
+    }
+
+    // Neither found — error with a clear "looked for these paths" message.
+    let tried: Vec<String> = match want_variant {
+        Some(v) => vec![
+            format!("{component_name}.{v}.mll"),
+            format!("{component_name}.mll"),
+        ],
+        None => vec![format!("{component_name}.mll")],
+    };
+    eprintln!(
+        "mosaic-compile: no layout file for component '{component_name}'\
+         {variant_suffix} in {layout_arg}\n  looked for: {tried}",
+        variant_suffix = match want_variant {
+            Some(v) => format!(" with variant '{v}'"),
+            None => String::new(),
+        },
+        tried = tried.join(", "),
+    );
+    process::exit(1);
+}
+
 fn run_pipeline(
     backend: &str,
     interface_path: &str,
     layout_path: &str,
     style_path: &str,
+    variant: Option<&str>,
     output_path: Option<&str>,
     emit_project: bool,
     package_manifest_path: Option<&str>,
@@ -472,10 +606,23 @@ fn run_pipeline(
         process::exit(1);
     });
 
+    // -- 1b. Resolve the layout file (UI30 multi-layout) -------------------
+    //
+    // When `--layout` is a file path, this is a no-op (back-compat with
+    // every existing build script). When it's a directory, we resolve
+    // <Component>.<variant>.mll inside it with fallback to bare
+    // <Component>.mll. See `resolve_layout_path` for the rules.
+    let resolved_layout_path = resolve_layout_path(
+        layout_path,
+        &mosmodel_out.component.component,
+        variant,
+    );
+
     // -- 2. Compile the moslayout file --------------------------------------
     //
     // We pass the descriptor JSON so the moslayout compiler can check that
     // every `@slot` and `emit onX` reference resolves correctly.
+    let layout_path = resolved_layout_path.as_str();
     let layout_src = read_file_or_die(layout_path);
     let layout_out =
         moslayout_compiler::compile(&layout_src, Some(&mosmodel_out.descriptor_json))
@@ -862,5 +1009,101 @@ version = "1"
             "Mosaic.Generated",
         );
         assert!(r.is_none());
+    }
+
+    // -- UI30 multi-layout — resolve_layout_path tests ----------------------
+    //
+    // The error paths in resolve_layout_path() call process::exit(1)
+    // which would terminate the test runner. We only cover the happy
+    // paths here; error behaviour is verified in CHANGELOG via manual
+    // smoke tests + would deserve an integration-test harness using
+    // std::process::Command in a follow-up if we wanted full coverage.
+
+    fn unique_tmpdir(label: &str) -> std::path::PathBuf {
+        let p = std::env::temp_dir().join(format!(
+            "ui30-resolve-{label}-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir_all(&p).unwrap();
+        p
+    }
+
+    /// File-path mode: `resolve_layout_path` returns the path
+    /// unchanged regardless of variant. This is the back-compat
+    /// guarantee for every existing build script.
+    #[test]
+    fn resolve_file_path_returns_unchanged() {
+        let dir = unique_tmpdir("file-mode");
+        let file = dir.join("Grid.desktop.mll");
+        std::fs::write(&file, "layout Grid { Box }").unwrap();
+        let s = file.to_str().unwrap();
+
+        // Without --variant.
+        let r1 = resolve_layout_path(s, "Grid", None);
+        assert_eq!(r1, s);
+
+        // With --variant (warning logged; flag ignored).
+        let r2 = resolve_layout_path(s, "Grid", Some("touch"));
+        assert_eq!(r2, s);
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// Directory mode with the requested variant file present: the
+    /// variant file is preferred over the bare default.
+    #[test]
+    fn resolve_directory_picks_variant_file_when_present() {
+        let dir = unique_tmpdir("variant-present");
+        std::fs::write(dir.join("Grid.touch.mll"), "layout Grid { Box }").unwrap();
+        std::fs::write(dir.join("Grid.mll"), "layout Grid { Box }").unwrap();
+
+        let r = resolve_layout_path(dir.to_str().unwrap(), "Grid", Some("touch"));
+        assert!(
+            r.ends_with("Grid.touch.mll"),
+            "expected variant-suffixed path, got {r}"
+        );
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// Directory mode with no variant file: falls back to bare
+    /// `<Component>.mll` (the default variant). Mirrors CSS's
+    /// `@media` cascade — touch host gracefully degrades to desktop.
+    #[test]
+    fn resolve_directory_falls_back_to_bare_default() {
+        let dir = unique_tmpdir("fallback");
+        std::fs::write(dir.join("Grid.mll"), "layout Grid { Box }").unwrap();
+
+        let r = resolve_layout_path(dir.to_str().unwrap(), "Grid", Some("touch"));
+        // Path should end with `/Grid.mll` (not `Grid.touch.mll`).
+        let pb = std::path::PathBuf::from(&r);
+        assert_eq!(
+            pb.file_name().unwrap().to_str().unwrap(),
+            "Grid.mll",
+            "expected fallback to bare Grid.mll, got {r}"
+        );
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// Directory mode without `--variant` looks only at the bare
+    /// default file. The string `default` is reserved per spec §3.2
+    /// — supplying it explicitly is equivalent to omitting the flag.
+    #[test]
+    fn resolve_directory_no_variant_uses_bare_default() {
+        let dir = unique_tmpdir("no-variant");
+        std::fs::write(dir.join("Grid.mll"), "layout Grid { Box }").unwrap();
+        // Decoy: a variant file exists but isn't requested.
+        std::fs::write(dir.join("Grid.touch.mll"), "layout Grid { Box }").unwrap();
+
+        let r1 = resolve_layout_path(dir.to_str().unwrap(), "Grid", None);
+        let r2 = resolve_layout_path(dir.to_str().unwrap(), "Grid", Some("default"));
+        assert!(r1.ends_with("Grid.mll") && !r1.ends_with("Grid.touch.mll"));
+        assert_eq!(r1, r2, "--variant default must equal omitting --variant");
+
+        std::fs::remove_dir_all(&dir).ok();
     }
 }
