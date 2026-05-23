@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-doc-demo",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "./corpus/**/*.md",
+      "justification": "Read the bundled Markdown corpus that the DOC00 pipeline transforms.  Scoped to the program's own corpus subdirectory (relative path); never reads anything outside its working directory."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "./corpus/**",
+      "justification": "Walk the corpus directory to discover .md pages.  Same scope as read above."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "./dist/**",
+      "justification": "Write the rendered static site (HTML pages, sidebar.json, search/manifest.json, search/<key>.json) to a dist/ directory.  Output path is the second CLI arg, defaulting to ./dist; the writer rejects absolute targets and paths containing .. segments before opening any file handle."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "./dist/**",
+      "justification": "Create the dist/ output directory and any nested subdirectories (search/, guide/, api/) the route layout requires."
+    }
+  ],
+  "justification": "Demo driver program — the ONE end-to-end runnable in the DOC00 v0 cluster.  Reads a small Markdown corpus, runs it through the eleven forme-doc-* packages plus the FM00 page-bundle-emitter, writes a static site to dist/.  Every forme-doc-* package this driver depends on remains capabilities []; the I/O capability is owned here, at the leaf, exactly as the DOC00 spec intends.  Capabilities are tightly scoped: corpus reads are bounded to ./corpus/**; writes are bounded to ./dist/**; no net, no proc, no env, no shell."
+}
