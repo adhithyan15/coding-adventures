@@ -5,6 +5,28 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.19.0] - 2026-05-23
+
+### Added
+
+- ``InMemoryBackend`` synthesizes ``sqlite_sequence`` (name, seq) on
+  demand for AUTOINCREMENT tables.  Matches SQLite's lazy-
+  materialization contract: querying ``sqlite_sequence`` on a fresh
+  database (or one with no AUTOINCREMENT tables) raises
+  ``TableNotFound``; once at least one AUTOINCREMENT table exists,
+  the table appears with one row per AUTOINCREMENT table.
+- The ``seq`` column reports the high-water rowid for each table
+  (``_next_rowid - 1``).  Since the counter is never decremented,
+  the value persists across DELETE operations — matching SQLite's
+  "deleted rowids never reuse" guarantee.
+
+### Changed
+
+- ``create_table('sqlite_sequence', ...)``, ``drop_table('sqlite_sequence')``,
+  and ``insert('sqlite_sequence', ...)`` raise ``ConstraintViolation`` with
+  the same "reserved name" / "may not be modified" messages as the
+  ``sqlite_master`` guards.
+
 ## [0.18.0] - 2026-05-23
 
 ### Added

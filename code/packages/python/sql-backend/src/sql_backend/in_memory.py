@@ -256,6 +256,28 @@ def _strict_coerce(value: object, declared: str) -> tuple[object, bool]:
 #: error.
 _MASTER_NAMES: Final[frozenset[str]] = frozenset({"sqlite_master", "sqlite_schema"})
 
+#: The SQLite-managed table that tracks per-table AUTOINCREMENT
+#: high-water rowids.  Only materialises (in real SQLite) when at least
+#: one ``AUTOINCREMENT`` table exists; querying it on a fresh database
+#: returns ``no such table``.  Mini-sqlite mirrors that contract: the
+#: synthesizer returns rows iff at least one user table has an
+#: AUTOINCREMENT column; otherwise ``scan('sqlite_sequence')`` raises
+#: ``TableNotFound`` so the caller sees the same error sqlite3 produces.
+_SEQUENCE_NAME: Final[str] = "sqlite_sequence"
+
+
+def _sequence_columns() -> list[ColumnDef]:
+    """Return a fresh copy of the ``sqlite_sequence`` column schema.
+
+    Two columns: ``name`` (the AUTOINCREMENT table's name) and ``seq``
+    (the high-water rowid — the largest value ever assigned to the
+    INTEGER PRIMARY KEY column, even after the row was deleted).
+    """
+    return [
+        ColumnDef(name="name", type_name="TEXT"),
+        ColumnDef(name="seq", type_name="INTEGER"),
+    ]
+
 #: Fixed column schema for ``sqlite_master`` (matches SQLite 3).
 #:
 #: =========  =======  =====================================================
@@ -566,7 +588,45 @@ class InMemoryBackend(Backend):
         # return it directly without touching ``_tables``.
         if table in _MASTER_NAMES:
             return _master_columns()
+        if table == _SEQUENCE_NAME:
+            return _sequence_columns()
         return list(self._require_table(table).columns)
+
+    def _has_autoincrement_table(self) -> bool:
+        """True iff at least one user table has an AUTOINCREMENT column.
+
+        Matches SQLite's "sqlite_sequence materialises lazily" contract:
+        the table only exists once an AUTOINCREMENT table has been
+        declared.  Used by ``scan('sqlite_sequence')`` and friends to
+        decide between synthesising rows or raising ``TableNotFound``.
+        """
+        for tbl in self._tables.values():
+            for col in tbl.columns:
+                if col.autoincrement:
+                    return True
+        return False
+
+    def _synthesize_sequence_rows(self) -> list[Row]:
+        """Build the ``sqlite_sequence`` row list.
+
+        One row per AUTOINCREMENT user table.  The ``seq`` value is the
+        high-water rowid for that table — ``_next_rowid - 1`` in our
+        in-memory backend, since the counter starts at 1 and is never
+        decremented (SQLite's AUTOINCREMENT guarantee).  Tables with no
+        AUTOINCREMENT column are excluded — they're tracked via the
+        normal rowid path which can reuse ids.
+        """
+        rows: list[Row] = []
+        for name, tbl in self._tables.items():
+            if not any(col.autoincrement for col in tbl.columns):
+                continue
+            # ``_next_rowid`` is the *next* value to assign, so the
+            # high-water value is one less.  On a freshly-created
+            # AUTOINCREMENT table with no inserts yet, ``_next_rowid``
+            # is still 1, so ``seq`` is 0 — matches SQLite.
+            seq = tbl._next_rowid - 1  # noqa: SLF001 — backend internals
+            rows.append({"name": name, "seq": seq})
+        return rows
 
     # --- Header fields (PRAGMA user_version / schema_version) -------------
 
@@ -599,6 +659,13 @@ class InMemoryBackend(Backend):
         # names route to the same synthesizer.
         if table in _MASTER_NAMES:
             return ListRowIterator(self._synthesize_master_rows())
+        # sqlite_sequence materialises lazily — only when at least one
+        # user table has an AUTOINCREMENT column.  Otherwise raise
+        # TableNotFound to match SQLite's "no such table" error.
+        if table == _SEQUENCE_NAME:
+            if not self._has_autoincrement_table():
+                raise TableNotFound(table=table)
+            return ListRowIterator(self._synthesize_sequence_rows())
         t = self._require_table(table)
         # Return a snapshot view — hand out shallow copies of rows so the
         # VM can mutate freely without corrupting our state. ListRowIterator
@@ -681,13 +748,17 @@ class InMemoryBackend(Backend):
         """
         if table in _MASTER_NAMES:
             return ListCursor(self._synthesize_master_rows())
+        if table == _SEQUENCE_NAME:
+            if not self._has_autoincrement_table():
+                raise TableNotFound(table=table)
+            return ListCursor(self._synthesize_sequence_rows())
         t = self._require_table(table)
         return ListCursor(t.rows)
 
     # --- Write ------------------------------------------------------------
 
     def insert(self, table: str, row: Row) -> None:
-        if table in _MASTER_NAMES:
+        if table in _MASTER_NAMES or table == _SEQUENCE_NAME:
             raise ConstraintViolation(
                 table=table,
                 column=None,
@@ -808,11 +879,11 @@ class InMemoryBackend(Backend):
         *,
         strict: bool = False,
     ) -> None:
-        if table in _MASTER_NAMES:
-            # SQLite reserves the ``sqlite_*`` prefix; the master/schema
-            # names in particular cannot be redeclared.  Surface a clear
-            # ConstraintViolation rather than letting a row get inserted
-            # into a fictitious table.
+        if table in _MASTER_NAMES or table == _SEQUENCE_NAME:
+            # SQLite reserves the ``sqlite_*`` prefix; the
+            # master/schema/sequence names in particular cannot be
+            # redeclared.  Surface a clear ConstraintViolation rather
+            # than letting a row get inserted into a fictitious table.
             raise ConstraintViolation(
                 table=table,
                 column=None,
@@ -841,11 +912,11 @@ class InMemoryBackend(Backend):
         self._schema_version += 1
 
     def drop_table(self, table: str, if_exists: bool) -> None:
-        if table in _MASTER_NAMES:
-            # ``DROP TABLE [IF EXISTS] sqlite_master`` is always wrong; the
-            # IF EXISTS branch would otherwise silently succeed because the
-            # name isn't in ``_tables``.  Explicit guard surfaces a clear
-            # error matching SQLite's behaviour.
+        if table in _MASTER_NAMES or table == _SEQUENCE_NAME:
+            # ``DROP TABLE [IF EXISTS] sqlite_master`` (and friends) is
+            # always wrong; the IF EXISTS branch would otherwise silently
+            # succeed because the name isn't in ``_tables``.  Explicit
+            # guard surfaces a clear error matching SQLite's behaviour.
             raise ConstraintViolation(
                 table=table,
                 column=None,
