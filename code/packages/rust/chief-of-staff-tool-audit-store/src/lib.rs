@@ -1473,6 +1473,58 @@ impl ToolAuditSupervisorDrainRunReport {
         self.host_decision_lane().is_mixed()
     }
 
+    /// Classify the dashboard priority for the next host decision.
+    pub fn host_decision_priority(&self) -> ToolAuditSupervisorDrainHostDecisionPriority {
+        self.host_decision_kind().priority()
+    }
+
+    /// Return the stable host-decision priority label.
+    pub fn host_decision_priority_label(&self) -> &'static str {
+        self.host_decision_priority().as_str()
+    }
+
+    /// Return whether the host-decision priority label parses back to the typed priority.
+    pub fn host_decision_priority_label_matches_kind(&self) -> bool {
+        ToolAuditSupervisorDrainHostDecisionPriority::from_label(
+            self.host_decision_priority_label(),
+        ) == Some(self.host_decision_priority())
+    }
+
+    /// Return the sortable host-decision priority rank.
+    pub fn host_decision_priority_rank(&self) -> u8 {
+        self.host_decision_priority().rank()
+    }
+
+    /// Return whether the host decision has settled priority.
+    pub fn host_decision_has_settled_priority(&self) -> bool {
+        self.host_decision_priority().is_settled()
+    }
+
+    /// Return whether the host decision has routine-action priority.
+    pub fn host_decision_has_routine_priority(&self) -> bool {
+        self.host_decision_priority().is_routine_action()
+    }
+
+    /// Return whether the host decision has drift-investigation priority.
+    pub fn host_decision_has_drift_investigation_priority(&self) -> bool {
+        self.host_decision_priority().is_drift_investigation()
+    }
+
+    /// Return whether the host decision has integrity-investigation priority.
+    pub fn host_decision_has_integrity_investigation_priority(&self) -> bool {
+        self.host_decision_priority().is_integrity_investigation()
+    }
+
+    /// Return whether the host decision has mixed-action priority.
+    pub fn host_decision_has_mixed_priority(&self) -> bool {
+        self.host_decision_priority().is_mixed_action()
+    }
+
+    /// Return whether the host decision priority is investigation-grade.
+    pub fn host_decision_has_investigation_priority(&self) -> bool {
+        self.host_decision_priority().requires_investigation()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -1785,6 +1837,20 @@ impl ToolAuditSupervisorDrainRunReport {
             host_decision_uses_follow_up_lane: self.host_decision_uses_follow_up_lane(),
             host_decision_uses_investigation_lane: self.host_decision_uses_investigation_lane(),
             host_decision_uses_mixed_lane: self.host_decision_uses_mixed_lane(),
+            host_decision_priority: self.host_decision_priority(),
+            host_decision_priority_label: self.host_decision_priority_label(),
+            host_decision_priority_label_matches_kind: self
+                .host_decision_priority_label_matches_kind(),
+            host_decision_priority_rank: self.host_decision_priority_rank(),
+            host_decision_has_settled_priority: self.host_decision_has_settled_priority(),
+            host_decision_has_routine_priority: self.host_decision_has_routine_priority(),
+            host_decision_has_drift_investigation_priority: self
+                .host_decision_has_drift_investigation_priority(),
+            host_decision_has_integrity_investigation_priority: self
+                .host_decision_has_integrity_investigation_priority(),
+            host_decision_has_mixed_priority: self.host_decision_has_mixed_priority(),
+            host_decision_has_investigation_priority: self
+                .host_decision_has_investigation_priority(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -2480,6 +2546,26 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_decision_uses_investigation_lane: bool,
     /// Whether the host decision spans multiple dashboard lanes.
     pub host_decision_uses_mixed_lane: bool,
+    /// Stable dashboard priority for the next host decision.
+    pub host_decision_priority: ToolAuditSupervisorDrainHostDecisionPriority,
+    /// Stable host-decision priority label for dashboard sorting.
+    pub host_decision_priority_label: &'static str,
+    /// Whether the host-decision priority label parses back to the typed priority.
+    pub host_decision_priority_label_matches_kind: bool,
+    /// Sortable host-decision priority rank.
+    pub host_decision_priority_rank: u8,
+    /// Whether the host decision has settled priority.
+    pub host_decision_has_settled_priority: bool,
+    /// Whether the host decision has routine-action priority.
+    pub host_decision_has_routine_priority: bool,
+    /// Whether the host decision has drift-investigation priority.
+    pub host_decision_has_drift_investigation_priority: bool,
+    /// Whether the host decision has integrity-investigation priority.
+    pub host_decision_has_integrity_investigation_priority: bool,
+    /// Whether the host decision has mixed-action priority.
+    pub host_decision_has_mixed_priority: bool,
+    /// Whether the host decision priority is investigation-grade.
+    pub host_decision_has_investigation_priority: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -3192,6 +3278,56 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the host decision spans multiple dashboard lanes.
     pub fn host_decision_uses_mixed_lane(&self) -> bool {
         self.host_decision_uses_mixed_lane
+    }
+
+    /// Return the typed host-decision dashboard priority.
+    pub fn host_decision_priority(&self) -> ToolAuditSupervisorDrainHostDecisionPriority {
+        self.host_decision_priority
+    }
+
+    /// Return the stable host-decision priority label.
+    pub fn host_decision_priority_label(&self) -> &'static str {
+        self.host_decision_priority_label
+    }
+
+    /// Return whether the host-decision priority label parses back to the typed priority.
+    pub fn host_decision_priority_label_matches_kind(&self) -> bool {
+        self.host_decision_priority_label_matches_kind
+    }
+
+    /// Return the sortable host-decision priority rank.
+    pub fn host_decision_priority_rank(&self) -> u8 {
+        self.host_decision_priority_rank
+    }
+
+    /// Return whether the host decision has settled priority.
+    pub fn host_decision_has_settled_priority(&self) -> bool {
+        self.host_decision_has_settled_priority
+    }
+
+    /// Return whether the host decision has routine-action priority.
+    pub fn host_decision_has_routine_priority(&self) -> bool {
+        self.host_decision_has_routine_priority
+    }
+
+    /// Return whether the host decision has drift-investigation priority.
+    pub fn host_decision_has_drift_investigation_priority(&self) -> bool {
+        self.host_decision_has_drift_investigation_priority
+    }
+
+    /// Return whether the host decision has integrity-investigation priority.
+    pub fn host_decision_has_integrity_investigation_priority(&self) -> bool {
+        self.host_decision_has_integrity_investigation_priority
+    }
+
+    /// Return whether the host decision has mixed-action priority.
+    pub fn host_decision_has_mixed_priority(&self) -> bool {
+        self.host_decision_has_mixed_priority
+    }
+
+    /// Return whether the host decision priority is investigation-grade.
+    pub fn host_decision_has_investigation_priority(&self) -> bool {
+        self.host_decision_has_investigation_priority
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -4359,6 +4495,11 @@ impl ToolAuditSupervisorDrainHostDecisionKind {
     pub fn lane(self) -> ToolAuditSupervisorDrainHostDecisionLane {
         ToolAuditSupervisorDrainHostDecisionLane::from_decision_kind(self)
     }
+
+    /// Return the dashboard priority for this host decision.
+    pub fn priority(self) -> ToolAuditSupervisorDrainHostDecisionPriority {
+        ToolAuditSupervisorDrainHostDecisionPriority::from_decision_kind(self)
+    }
 }
 
 impl Display for ToolAuditSupervisorDrainHostDecisionKind {
@@ -4448,6 +4589,113 @@ impl ToolAuditSupervisorDrainHostDecisionLane {
 }
 
 impl Display for ToolAuditSupervisorDrainHostDecisionLane {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable dashboard priority for host drain decisions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHostDecisionPriority {
+    /// The run is settled and needs no host action.
+    Settled,
+    /// Routine scheduler or follow-up routing action is needed.
+    RoutineAction,
+    /// Drift investigation is needed.
+    DriftInvestigation,
+    /// Host-log integrity investigation is needed.
+    IntegrityInvestigation,
+    /// Multiple action surfaces are active.
+    MixedAction,
+}
+
+impl ToolAuditSupervisorDrainHostDecisionPriority {
+    /// Classify dashboard priority from a host decision.
+    pub fn from_decision_kind(decision: ToolAuditSupervisorDrainHostDecisionKind) -> Self {
+        match decision {
+            ToolAuditSupervisorDrainHostDecisionKind::TerminalReady => Self::Settled,
+            ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation
+            | ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp => Self::RoutineAction,
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigatePlanDrift
+            | ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift => {
+                Self::DriftInvestigation
+            }
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity => {
+                Self::IntegrityInvestigation
+            }
+            ToolAuditSupervisorDrainHostDecisionKind::MultipleActions => Self::MixedAction,
+        }
+    }
+
+    /// Return a stable snake_case label for logs and dashboard sorting.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Settled => "settled",
+            Self::RoutineAction => "routine_action",
+            Self::DriftInvestigation => "drift_investigation",
+            Self::IntegrityInvestigation => "integrity_investigation",
+            Self::MixedAction => "mixed_action",
+        }
+    }
+
+    /// Parse a stable snake_case host-decision priority label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "settled" => Some(Self::Settled),
+            "routine_action" => Some(Self::RoutineAction),
+            "drift_investigation" => Some(Self::DriftInvestigation),
+            "integrity_investigation" => Some(Self::IntegrityInvestigation),
+            "mixed_action" => Some(Self::MixedAction),
+            _ => None,
+        }
+    }
+
+    /// Return a stable ascending priority rank for dashboards.
+    pub fn rank(self) -> u8 {
+        match self {
+            Self::Settled => 0,
+            Self::RoutineAction => 10,
+            Self::DriftInvestigation => 50,
+            Self::IntegrityInvestigation => 80,
+            Self::MixedAction => 90,
+        }
+    }
+
+    /// Return whether this is settled priority.
+    pub fn is_settled(self) -> bool {
+        matches!(self, Self::Settled)
+    }
+
+    /// Return whether this is routine-action priority.
+    pub fn is_routine_action(self) -> bool {
+        matches!(self, Self::RoutineAction)
+    }
+
+    /// Return whether this is drift-investigation priority.
+    pub fn is_drift_investigation(self) -> bool {
+        matches!(self, Self::DriftInvestigation)
+    }
+
+    /// Return whether this is integrity-investigation priority.
+    pub fn is_integrity_investigation(self) -> bool {
+        matches!(self, Self::IntegrityInvestigation)
+    }
+
+    /// Return whether this is mixed-action priority.
+    pub fn is_mixed_action(self) -> bool {
+        matches!(self, Self::MixedAction)
+    }
+
+    /// Return whether the priority requires investigation.
+    pub fn requires_investigation(self) -> bool {
+        matches!(
+            self,
+            Self::DriftInvestigation | Self::IntegrityInvestigation | Self::MixedAction
+        )
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostDecisionPriority {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -7349,6 +7597,136 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_decision_priorities_are_stable_for_dashboards() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::TerminalReady,
+                ToolAuditSupervisorDrainHostDecisionPriority::Settled,
+                "settled",
+                0,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation,
+                ToolAuditSupervisorDrainHostDecisionPriority::RoutineAction,
+                "routine_action",
+                10,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp,
+                ToolAuditSupervisorDrainHostDecisionPriority::RoutineAction,
+                "routine_action",
+                10,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigatePlanDrift,
+                ToolAuditSupervisorDrainHostDecisionPriority::DriftInvestigation,
+                "drift_investigation",
+                50,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift,
+                ToolAuditSupervisorDrainHostDecisionPriority::DriftInvestigation,
+                "drift_investigation",
+                50,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity,
+                ToolAuditSupervisorDrainHostDecisionPriority::IntegrityInvestigation,
+                "integrity_investigation",
+                80,
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::MultipleActions,
+                ToolAuditSupervisorDrainHostDecisionPriority::MixedAction,
+                "mixed_action",
+                90,
+                false,
+                false,
+                false,
+                false,
+                true,
+                true,
+            ),
+        ];
+
+        for (
+            decision,
+            priority,
+            label,
+            rank,
+            is_settled,
+            is_routine_action,
+            is_drift_investigation,
+            is_integrity_investigation,
+            is_mixed_action,
+            requires_investigation,
+        ) in cases
+        {
+            assert_eq!(decision.priority(), priority);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostDecisionPriority::from_decision_kind(decision),
+                priority
+            );
+            assert_eq!(priority.as_str(), label);
+            assert_eq!(priority.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostDecisionPriority::from_label(label),
+                Some(priority)
+            );
+            assert_eq!(priority.rank(), rank);
+            assert_eq!(priority.is_settled(), is_settled);
+            assert_eq!(priority.is_routine_action(), is_routine_action);
+            assert_eq!(priority.is_drift_investigation(), is_drift_investigation);
+            assert_eq!(
+                priority.is_integrity_investigation(),
+                is_integrity_investigation
+            );
+            assert_eq!(priority.is_mixed_action(), is_mixed_action);
+            assert_eq!(priority.requires_investigation(), requires_investigation);
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainHostDecisionPriority::from_label("eventually"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_report_exposes_outcome_label_and_action_flag() {
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(store
@@ -8590,6 +8968,19 @@ mod tests {
         assert!(!idle_report.host_decision_uses_follow_up_lane());
         assert!(!idle_report.host_decision_uses_investigation_lane());
         assert!(!idle_report.host_decision_uses_mixed_lane());
+        assert_eq!(
+            idle_report.host_decision_priority(),
+            ToolAuditSupervisorDrainHostDecisionPriority::Settled
+        );
+        assert_eq!(idle_report.host_decision_priority_label(), "settled");
+        assert!(idle_report.host_decision_priority_label_matches_kind());
+        assert_eq!(idle_report.host_decision_priority_rank(), 0);
+        assert!(idle_report.host_decision_has_settled_priority());
+        assert!(!idle_report.host_decision_has_routine_priority());
+        assert!(!idle_report.host_decision_has_drift_investigation_priority());
+        assert!(!idle_report.host_decision_has_integrity_investigation_priority());
+        assert!(!idle_report.host_decision_has_mixed_priority());
+        assert!(!idle_report.host_decision_has_investigation_priority());
         assert!(!idle_summary.requires_host_decision);
         assert!(!idle_summary.requires_host_decision());
         assert_eq!(
@@ -8644,6 +9035,32 @@ mod tests {
         assert!(!idle_summary.host_decision_uses_investigation_lane());
         assert!(!idle_summary.host_decision_uses_mixed_lane);
         assert!(!idle_summary.host_decision_uses_mixed_lane());
+        assert_eq!(
+            idle_summary.host_decision_priority,
+            ToolAuditSupervisorDrainHostDecisionPriority::Settled
+        );
+        assert_eq!(
+            idle_summary.host_decision_priority(),
+            ToolAuditSupervisorDrainHostDecisionPriority::Settled
+        );
+        assert_eq!(idle_summary.host_decision_priority_label, "settled");
+        assert_eq!(idle_summary.host_decision_priority_label(), "settled");
+        assert!(idle_summary.host_decision_priority_label_matches_kind);
+        assert!(idle_summary.host_decision_priority_label_matches_kind());
+        assert_eq!(idle_summary.host_decision_priority_rank, 0);
+        assert_eq!(idle_summary.host_decision_priority_rank(), 0);
+        assert!(idle_summary.host_decision_has_settled_priority);
+        assert!(idle_summary.host_decision_has_settled_priority());
+        assert!(!idle_summary.host_decision_has_routine_priority);
+        assert!(!idle_summary.host_decision_has_routine_priority());
+        assert!(!idle_summary.host_decision_has_drift_investigation_priority);
+        assert!(!idle_summary.host_decision_has_drift_investigation_priority());
+        assert!(!idle_summary.host_decision_has_integrity_investigation_priority);
+        assert!(!idle_summary.host_decision_has_integrity_investigation_priority());
+        assert!(!idle_summary.host_decision_has_mixed_priority);
+        assert!(!idle_summary.host_decision_has_mixed_priority());
+        assert!(!idle_summary.host_decision_has_investigation_priority);
+        assert!(!idle_summary.host_decision_has_investigation_priority());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -8688,6 +9105,19 @@ mod tests {
         assert!(!continuation_report.host_decision_uses_follow_up_lane());
         assert!(!continuation_report.host_decision_uses_investigation_lane());
         assert!(!continuation_report.host_decision_uses_mixed_lane());
+        assert_eq!(
+            continuation_report.host_decision_priority(),
+            ToolAuditSupervisorDrainHostDecisionPriority::RoutineAction
+        );
+        assert_eq!(
+            continuation_report.host_decision_priority_label(),
+            "routine_action"
+        );
+        assert!(continuation_report.host_decision_priority_label_matches_kind());
+        assert_eq!(continuation_report.host_decision_priority_rank(), 10);
+        assert!(!continuation_report.host_decision_has_settled_priority());
+        assert!(continuation_report.host_decision_has_routine_priority());
+        assert!(!continuation_report.host_decision_has_investigation_priority());
         assert!(continuation_summary.requires_host_decision);
         assert_eq!(
             continuation_summary.host_decision_kind(),
@@ -8710,6 +9140,17 @@ mod tests {
         assert_eq!(continuation_summary.host_decision_lane_label(), "scheduler");
         assert!(continuation_summary.host_decision_uses_scheduler_lane());
         assert!(!continuation_summary.host_decision_uses_mixed_lane());
+        assert_eq!(
+            continuation_summary.host_decision_priority(),
+            ToolAuditSupervisorDrainHostDecisionPriority::RoutineAction
+        );
+        assert_eq!(
+            continuation_summary.host_decision_priority_label(),
+            "routine_action"
+        );
+        assert_eq!(continuation_summary.host_decision_priority_rank(), 10);
+        assert!(continuation_summary.host_decision_has_routine_priority());
+        assert!(!continuation_summary.host_decision_has_investigation_priority());
 
         let follow_up_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(follow_up_store
@@ -8738,6 +9179,12 @@ mod tests {
         assert_eq!(follow_up_report.host_decision_lane_label(), "follow_up");
         assert!(follow_up_report.host_decision_uses_follow_up_lane());
         assert_eq!(
+            follow_up_report.host_decision_priority(),
+            ToolAuditSupervisorDrainHostDecisionPriority::RoutineAction
+        );
+        assert_eq!(follow_up_report.host_decision_priority_rank(), 10);
+        assert!(follow_up_report.host_decision_has_routine_priority());
+        assert_eq!(
             follow_up_summary.host_decision_kind(),
             ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp
         );
@@ -8750,6 +9197,11 @@ mod tests {
             ToolAuditSupervisorDrainHostDecisionLane::FollowUp
         );
         assert!(follow_up_summary.host_decision_uses_follow_up_lane());
+        assert_eq!(
+            follow_up_summary.host_decision_priority(),
+            ToolAuditSupervisorDrainHostDecisionPriority::RoutineAction
+        );
+        assert!(follow_up_summary.host_decision_has_routine_priority());
 
         let mut integrity_report = continuation_report;
         integrity_report.drain.ticks[0].replay.next_checkpoint =
@@ -8776,6 +9228,17 @@ mod tests {
         assert!(!integrity_report.host_decision_uses_scheduler_lane());
         assert!(integrity_report.host_decision_uses_mixed_lane());
         assert_eq!(
+            integrity_report.host_decision_priority(),
+            ToolAuditSupervisorDrainHostDecisionPriority::MixedAction
+        );
+        assert_eq!(
+            integrity_report.host_decision_priority_label(),
+            "mixed_action"
+        );
+        assert_eq!(integrity_report.host_decision_priority_rank(), 90);
+        assert!(integrity_report.host_decision_has_mixed_priority());
+        assert!(integrity_report.host_decision_has_investigation_priority());
+        assert_eq!(
             integrity_summary.host_decision_kind(),
             ToolAuditSupervisorDrainHostDecisionKind::MultipleActions
         );
@@ -8791,6 +9254,13 @@ mod tests {
             ToolAuditSupervisorDrainHostDecisionLane::Mixed
         );
         assert!(integrity_summary.host_decision_uses_mixed_lane());
+        assert_eq!(
+            integrity_summary.host_decision_priority(),
+            ToolAuditSupervisorDrainHostDecisionPriority::MixedAction
+        );
+        assert_eq!(integrity_summary.host_decision_priority_rank(), 90);
+        assert!(integrity_summary.host_decision_has_mixed_priority());
+        assert!(integrity_summary.host_decision_has_investigation_priority());
 
         let mut stale_plan_summary = idle_summary.clone();
         stale_plan_summary.requires_host_decision = true;
@@ -8806,6 +9276,13 @@ mod tests {
         stale_plan_summary.host_decision_lane_label = "investigation";
         stale_plan_summary.host_decision_uses_terminal_lane = false;
         stale_plan_summary.host_decision_uses_investigation_lane = true;
+        stale_plan_summary.host_decision_priority =
+            ToolAuditSupervisorDrainHostDecisionPriority::DriftInvestigation;
+        stale_plan_summary.host_decision_priority_label = "drift_investigation";
+        stale_plan_summary.host_decision_priority_rank = 50;
+        stale_plan_summary.host_decision_has_settled_priority = false;
+        stale_plan_summary.host_decision_has_drift_investigation_priority = true;
+        stale_plan_summary.host_decision_has_investigation_priority = true;
         assert!(stale_plan_summary.requires_host_decision());
         assert_eq!(
             stale_plan_summary.host_decision_kind(),
@@ -8831,6 +9308,18 @@ mod tests {
         );
         assert!(stale_plan_summary.host_decision_lane_label_matches_kind());
         assert!(stale_plan_summary.host_decision_uses_investigation_lane());
+        assert_eq!(
+            stale_plan_summary.host_decision_priority(),
+            ToolAuditSupervisorDrainHostDecisionPriority::DriftInvestigation
+        );
+        assert_eq!(
+            stale_plan_summary.host_decision_priority_label(),
+            "drift_investigation"
+        );
+        assert!(stale_plan_summary.host_decision_priority_label_matches_kind());
+        assert_eq!(stale_plan_summary.host_decision_priority_rank(), 50);
+        assert!(stale_plan_summary.host_decision_has_drift_investigation_priority());
+        assert!(stale_plan_summary.host_decision_has_investigation_priority());
 
         let mut stale_count_summary = idle_summary.clone();
         stale_count_summary.requires_host_decision = true;
@@ -8839,6 +9328,12 @@ mod tests {
         stale_count_summary.host_decision_label = "investigate_count_drift";
         stale_count_summary.host_decision_is_terminal_ready = false;
         stale_count_summary.host_decision_investigates_count_drift = true;
+        stale_count_summary.host_decision_priority =
+            ToolAuditSupervisorDrainHostDecisionPriority::DriftInvestigation;
+        stale_count_summary.host_decision_priority_label = "drift_investigation";
+        stale_count_summary.host_decision_priority_rank = 50;
+        stale_count_summary.host_decision_has_drift_investigation_priority = true;
+        stale_count_summary.host_decision_has_investigation_priority = true;
         assert_eq!(
             stale_count_summary.host_decision_kind(),
             ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift
@@ -8848,6 +9343,11 @@ mod tests {
             "investigate_count_drift"
         );
         assert!(stale_count_summary.host_decision_investigates_count_drift());
+        assert_eq!(
+            stale_count_summary.host_decision_priority(),
+            ToolAuditSupervisorDrainHostDecisionPriority::DriftInvestigation
+        );
+        assert!(stale_count_summary.host_decision_has_drift_investigation_priority());
 
         let mut stale_integrity_summary = idle_summary;
         stale_integrity_summary.requires_host_decision = true;
@@ -8856,6 +9356,12 @@ mod tests {
         stale_integrity_summary.host_decision_label = "investigate_run_integrity";
         stale_integrity_summary.host_decision_is_terminal_ready = false;
         stale_integrity_summary.host_decision_investigates_run_integrity = true;
+        stale_integrity_summary.host_decision_priority =
+            ToolAuditSupervisorDrainHostDecisionPriority::IntegrityInvestigation;
+        stale_integrity_summary.host_decision_priority_label = "integrity_investigation";
+        stale_integrity_summary.host_decision_priority_rank = 80;
+        stale_integrity_summary.host_decision_has_integrity_investigation_priority = true;
+        stale_integrity_summary.host_decision_has_investigation_priority = true;
         assert_eq!(
             stale_integrity_summary.host_decision_kind(),
             ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity
@@ -8865,6 +9371,13 @@ mod tests {
             "investigate_run_integrity"
         );
         assert!(stale_integrity_summary.host_decision_investigates_run_integrity());
+        assert_eq!(
+            stale_integrity_summary.host_decision_priority(),
+            ToolAuditSupervisorDrainHostDecisionPriority::IntegrityInvestigation
+        );
+        assert_eq!(stale_integrity_summary.host_decision_priority_rank(), 80);
+        assert!(stale_integrity_summary.host_decision_has_integrity_investigation_priority());
+        assert!(stale_integrity_summary.host_decision_has_investigation_priority());
 
         stale_integrity_summary.host_decision_label = "decisionish";
         stale_integrity_summary.host_decision_label_matches_kind = false;
@@ -8872,6 +9385,9 @@ mod tests {
         stale_integrity_summary.host_decision_lane_label = "sidewalk";
         stale_integrity_summary.host_decision_lane_label_matches_kind = false;
         assert!(!stale_integrity_summary.host_decision_lane_label_matches_kind());
+        stale_integrity_summary.host_decision_priority_label = "someday";
+        stale_integrity_summary.host_decision_priority_label_matches_kind = false;
+        assert!(!stale_integrity_summary.host_decision_priority_label_matches_kind());
     }
 
     #[test]
