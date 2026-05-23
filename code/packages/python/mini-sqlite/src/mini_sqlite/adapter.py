@@ -347,6 +347,57 @@ def _query_stmt(
             left = IntersectStmt(left=left, right=right_stmt, all=all_flag)  # type: ignore[arg-type]
         elif op == "EXCEPT":
             left = ExceptStmt(left=left, right=right_stmt, all=all_flag)  # type: ignore[arg-type]
+
+    # Compound ORDER BY / LIMIT — when the grammar parsed
+    # ``SELECT a UNION ALL SELECT b ORDER BY x LIMIT N``,
+    # the trailing ORDER BY/LIMIT got attached to the *rightmost*
+    # ``SELECT b`` (because select_stmt's grammar still allows them
+    # on every leg).  SQLite's documented semantics, though, is that
+    # ORDER BY and LIMIT after a compound apply to the whole
+    # compound, not just the last leg.  We reproduce that by:
+    #
+    #   1. detecting the rightmost SELECT's order_by/limit
+    #   2. stripping them off that SELECT
+    #   3. wrapping the entire compound in
+    #          SELECT * FROM (compound) ORDER BY ... LIMIT ...
+    #
+    # …which is exactly the SQL the user would write if they wanted
+    # to be explicit about the parenthesisation.  The wrapper makes
+    # column names of the compound (inherited from the leftmost
+    # SELECT) visible to the ORDER BY clause.
+    if set_ops and isinstance(left, (UnionStmt, IntersectStmt, ExceptStmt)):
+        rightmost = left.right
+        if rightmost.order_by or rightmost.limit:
+            # Strip order/limit from the rightmost SELECT.
+            stripped_right = SelectStmt(
+                items=rightmost.items,
+                from_=rightmost.from_,
+                joins=rightmost.joins,
+                where=rightmost.where,
+                group_by=rightmost.group_by,
+                having=rightmost.having,
+                # order_by and limit deliberately omitted — they get
+                # hoisted onto the wrapper SELECT below.
+                distinct=rightmost.distinct,
+            )
+            # Rebuild the compound with the stripped right operand.
+            if isinstance(left, UnionStmt):
+                compound = UnionStmt(left=left.left, right=stripped_right, all=left.all)
+            elif isinstance(left, IntersectStmt):
+                compound = IntersectStmt(left=left.left, right=stripped_right, all=left.all)
+            else:
+                compound = ExceptStmt(left=left.left, right=stripped_right, all=left.all)
+            # Wrap in SELECT * FROM (compound) AS <synthetic> ORDER BY ... LIMIT ...
+            # The sentinel alias starts with '<' so it cannot collide
+            # with a user identifier (which the lexer restricts to
+            # alphanumeric + underscore).
+            wrapper_alias = f"<compound #{id(compound):x}>"
+            left = SelectStmt(
+                items=(SelectItem(expr=Wildcard(), alias=None),),
+                from_=DerivedTableRef(select=compound, alias=wrapper_alias),
+                order_by=rightmost.order_by,
+                limit=rightmost.limit,
+            )
     return left
 
 
