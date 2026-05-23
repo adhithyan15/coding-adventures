@@ -141,6 +141,10 @@ without reimplementing queue, dispatch, or completion branching.
 transport-facing action name, label, queue depth, terminal/retry flags, and
 message, so adapters can route callback dispatch, completion, retry, and drop
 handling without duplicating lifecycle branching.
+`input_callback_transport_effect_summary` expands the action into concrete
+transport effects: whether to dispatch a callback, emit a drop notice, emit a
+result, remove a queue item, keep cooperative dispatch scheduled, and what the
+queue depth is after the effect.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends

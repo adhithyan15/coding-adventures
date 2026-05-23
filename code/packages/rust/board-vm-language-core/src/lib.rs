@@ -933,6 +933,25 @@ pub struct LanguageInputCallbackTransportActionSummary {
     pub lifecycle_summary: LanguageInputCallbackSessionLifecycleSummary,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportEffectSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub effect_label: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub dispatch_callback: bool,
+    pub emit_drop: bool,
+    pub emit_result: bool,
+    pub remove_from_queue: bool,
+    pub keep_dispatch_scheduled: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_effect: u8,
+    pub message: String,
+    pub action_summary: LanguageInputCallbackTransportActionSummary,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackDiagnosticStage {
     Plan,
@@ -2567,6 +2586,32 @@ pub fn input_callback_transport_action_summary(
     }
 }
 
+pub fn input_callback_transport_effect_summary(
+    action_summary: &LanguageInputCallbackTransportActionSummary,
+) -> LanguageInputCallbackTransportEffectSummary {
+    let action = action_summary.action;
+
+    LanguageInputCallbackTransportEffectSummary {
+        endpoint: action_summary.endpoint.clone(),
+        connection_label: action_summary.connection_label.clone(),
+        effect_label: input_callback_transport_effect_label(action_summary),
+        action,
+        action_name: action_summary.action_name.clone(),
+        dispatch_callback: input_callback_transport_effect_dispatches_callback(action),
+        emit_drop: input_callback_transport_effect_emits_drop(action),
+        emit_result: input_callback_transport_effect_emits_result(action),
+        remove_from_queue: input_callback_transport_effect_removes_queue_item(action),
+        keep_dispatch_scheduled: input_callback_transport_effect_keeps_dispatch_scheduled(action),
+        terminal: action_summary.terminal,
+        retryable: action_summary.retryable,
+        queue_depth_after_effect: action_summary
+            .queue_depth_after_completion
+            .unwrap_or(action_summary.queue_depth_after),
+        message: input_callback_transport_effect_message(action).to_owned(),
+        action_summary: action_summary.clone(),
+    }
+}
+
 pub fn input_callback_plan_diagnostic(
     error: &LanguageInputCallbackPlanError,
 ) -> LanguageInputCallbackPlanDiagnostic {
@@ -3583,6 +3628,99 @@ fn input_callback_transport_action_message(
         }
         LanguageInputCallbackTransportAction::DropAfterFailure => {
             "Transport should report the callback failure and remove the callback."
+        }
+    }
+}
+
+fn input_callback_transport_effect_dispatches_callback(
+    action: LanguageInputCallbackTransportAction,
+) -> bool {
+    matches!(
+        action,
+        LanguageInputCallbackTransportAction::DispatchCallback
+    )
+}
+
+fn input_callback_transport_effect_emits_drop(
+    action: LanguageInputCallbackTransportAction,
+) -> bool {
+    matches!(
+        action,
+        LanguageInputCallbackTransportAction::DropBeforeDispatch
+    )
+}
+
+fn input_callback_transport_effect_emits_result(
+    action: LanguageInputCallbackTransportAction,
+) -> bool {
+    matches!(
+        action,
+        LanguageInputCallbackTransportAction::CompleteCallback
+            | LanguageInputCallbackTransportAction::KeepCallbackRunning
+            | LanguageInputCallbackTransportAction::DropAfterBudgetExceeded
+            | LanguageInputCallbackTransportAction::DropAfterFailure
+    )
+}
+
+fn input_callback_transport_effect_removes_queue_item(
+    action: LanguageInputCallbackTransportAction,
+) -> bool {
+    matches!(
+        action,
+        LanguageInputCallbackTransportAction::CompleteCallback
+            | LanguageInputCallbackTransportAction::DropAfterBudgetExceeded
+            | LanguageInputCallbackTransportAction::DropAfterFailure
+    )
+}
+
+fn input_callback_transport_effect_keeps_dispatch_scheduled(
+    action: LanguageInputCallbackTransportAction,
+) -> bool {
+    matches!(
+        action,
+        LanguageInputCallbackTransportAction::DispatchCallback
+            | LanguageInputCallbackTransportAction::KeepCallbackRunning
+    )
+}
+
+fn input_callback_transport_effect_label(
+    action_summary: &LanguageInputCallbackTransportActionSummary,
+) -> String {
+    format!(
+        "{} dispatch_callback={} emit_drop={} emit_result={} remove_from_queue={} keep_dispatch_scheduled={} queue_depth_after_effect={}",
+        action_summary.action_label,
+        input_callback_transport_effect_dispatches_callback(action_summary.action),
+        input_callback_transport_effect_emits_drop(action_summary.action),
+        input_callback_transport_effect_emits_result(action_summary.action),
+        input_callback_transport_effect_removes_queue_item(action_summary.action),
+        input_callback_transport_effect_keeps_dispatch_scheduled(action_summary.action),
+        action_summary
+            .queue_depth_after_completion
+            .unwrap_or(action_summary.queue_depth_after)
+    )
+}
+
+fn input_callback_transport_effect_message(
+    action: LanguageInputCallbackTransportAction,
+) -> &'static str {
+    match action {
+        LanguageInputCallbackTransportAction::DropBeforeDispatch => {
+            "Transport should emit a drop notice without touching the existing queue."
+        }
+        LanguageInputCallbackTransportAction::DispatchCallback => {
+            "Transport should dispatch the queued callback and keep dispatch scheduled."
+        }
+        LanguageInputCallbackTransportAction::CompleteCallback => {
+            "Transport should emit the result and remove the completed callback from the queue."
+        }
+        LanguageInputCallbackTransportAction::KeepCallbackRunning => {
+            "Transport should emit the running result and keep dispatch scheduled."
+        }
+        LanguageInputCallbackTransportAction::DropAfterBudgetExceeded => {
+            "Transport should emit the budget result and remove the callback from the queue."
+        }
+        LanguageInputCallbackTransportAction::DropAfterFailure => {
+            "Transport should emit the failure result and remove the callback from the queue."
         }
     }
 }
@@ -8619,6 +8757,194 @@ mod tests {
         assert_eq!(
             dropped.message,
             "Transport should report the dropped input callback without dispatch."
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_effects_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed = input_callback_transport_effect_summary(&completed_action);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert_eq!(completed.action_name, "complete_callback");
+        assert_eq!(
+            completed.effect_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=complete_callback terminal=true retryable=false dispatch_callback=false emit_drop=false emit_result=true remove_from_queue=true keep_dispatch_scheduled=false queue_depth_after_effect=2"
+        );
+        assert!(!completed.dispatch_callback);
+        assert!(!completed.emit_drop);
+        assert!(completed.emit_result);
+        assert!(completed.remove_from_queue);
+        assert!(!completed.keep_dispatch_scheduled);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_effect, 2);
+        assert_eq!(
+            completed.message,
+            "Transport should emit the result and remove the completed callback from the queue."
+        );
+        assert_eq!(completed.action_summary, completed_action);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending = input_callback_transport_effect_summary(&pending_action);
+        assert_eq!(
+            pending.action,
+            LanguageInputCallbackTransportAction::DispatchCallback
+        );
+        assert_eq!(pending.action_name, "dispatch_callback");
+        assert!(pending.dispatch_callback);
+        assert!(!pending.emit_drop);
+        assert!(!pending.emit_result);
+        assert!(!pending.remove_from_queue);
+        assert!(pending.keep_dispatch_scheduled);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_effect, 3);
+        assert_eq!(
+            pending.message,
+            "Transport should dispatch the queued callback and keep dispatch scheduled."
+        );
+
+        let running_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Running),
+            12,
+            4,
+        );
+        let running_action = input_callback_transport_action_summary(&running_lifecycle);
+        let running = input_callback_transport_effect_summary(&running_action);
+        assert_eq!(
+            running.action,
+            LanguageInputCallbackTransportAction::KeepCallbackRunning
+        );
+        assert!(!running.dispatch_callback);
+        assert!(!running.emit_drop);
+        assert!(running.emit_result);
+        assert!(!running.remove_from_queue);
+        assert!(running.keep_dispatch_scheduled);
+        assert!(!running.terminal);
+        assert!(running.retryable);
+        assert_eq!(running.queue_depth_after_effect, 3);
+        assert_eq!(
+            running.message,
+            "Transport should emit the running result and keep dispatch scheduled."
+        );
+
+        let budget_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::BudgetExceeded),
+            64,
+            9,
+        );
+        let budget_action = input_callback_transport_action_summary(&budget_lifecycle);
+        let budget = input_callback_transport_effect_summary(&budget_action);
+        assert_eq!(
+            budget.action,
+            LanguageInputCallbackTransportAction::DropAfterBudgetExceeded
+        );
+        assert!(!budget.dispatch_callback);
+        assert!(!budget.emit_drop);
+        assert!(budget.emit_result);
+        assert!(budget.remove_from_queue);
+        assert!(!budget.keep_dispatch_scheduled);
+        assert!(budget.terminal);
+        assert!(!budget.retryable);
+        assert_eq!(budget.queue_depth_after_effect, 2);
+        assert_eq!(
+            budget.message,
+            "Transport should emit the budget result and remove the callback from the queue."
+        );
+
+        let stopped_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Stopped),
+            6,
+            2,
+        );
+        let stopped_action = input_callback_transport_action_summary(&stopped_lifecycle);
+        let stopped = input_callback_transport_effect_summary(&stopped_action);
+        assert_eq!(
+            stopped.action,
+            LanguageInputCallbackTransportAction::DropAfterFailure
+        );
+        assert!(stopped.emit_result);
+        assert!(stopped.remove_from_queue);
+        assert_eq!(stopped.queue_depth_after_effect, 2);
+        assert_eq!(
+            stopped.message,
+            "Transport should emit the failure result and remove the callback from the queue."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped = input_callback_transport_effect_summary(&dropped_action);
+        assert_eq!(
+            dropped.action,
+            LanguageInputCallbackTransportAction::DropBeforeDispatch
+        );
+        assert_eq!(
+            dropped.effect_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1"
+        );
+        assert!(!dropped.dispatch_callback);
+        assert!(dropped.emit_drop);
+        assert!(!dropped.emit_result);
+        assert!(!dropped.remove_from_queue);
+        assert!(!dropped.keep_dispatch_scheduled);
+        assert!(dropped.terminal);
+        assert!(!dropped.retryable);
+        assert_eq!(dropped.queue_depth_after_effect, 1);
+        assert_eq!(
+            dropped.message,
+            "Transport should emit a drop notice without touching the existing queue."
         );
     }
 
