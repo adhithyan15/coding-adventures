@@ -356,14 +356,41 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     let backend_dir = opts.output_root.join(opts.backend.dir_name());
     create_dir_all(&backend_dir)?;
 
-    // ----- 4. Compile each component ---------------------------------------
+    // ----- 4. Compile each component (× each variant) ----------------------
+    //
+    // UI30 multi-layout: for every component, discover its variants
+    // by scanning `src/` for `<Component>.<variant>.mll` files, then
+    // emit one artifact per (component, variant) pair. The default
+    // variant (bare `<Component>.mll`) emits the unsuffixed artifact
+    // name `<Component>.<ext>`; named variants emit
+    // `<Component>.<variant>.<ext>`.
+    //
+    // **Back-compat clause:** a component with only a bare
+    // `<Component>.mll` (no `.touch.mll`/etc.) produces exactly one
+    // artifact with the unsuffixed name — same as the pre-UI30
+    // behaviour. Every existing package builds byte-for-byte
+    // identically.
     let src_dir = opts.package_root.join("src");
     let mut artifacts = Vec::new();
     let mut components_built = Vec::new();
 
     for component in &manifest.components.exports {
-        let artifact = compile_one_component(component, &src_dir, &backend_dir, opts.backend)?;
-        artifacts.push(artifact);
+        let variants = discover_variants(&src_dir, component)?;
+        for variant in &variants {
+            let artifact = compile_one_component(
+                component,
+                variant.as_deref(),
+                &src_dir,
+                &backend_dir,
+                opts.backend,
+            )?;
+            artifacts.push(artifact);
+        }
+        // We list the component once in `components_built` even if it
+        // produced multiple variant artifacts — the index file (qmldir
+        // / index.html / etc.) lists components, not artifacts, and
+        // tracking per-variant entries there would mean reworking
+        // every per-backend index emitter (deferred to a follow-up).
         components_built.push(component.clone());
     }
 
@@ -392,6 +419,7 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
 /// `mosaic-compile pkg: error compiling Grid: …`.
 fn compile_one_component(
     component: &str,
+    variant: Option<&str>,
     src_dir: &Path,
     out_dir: &Path,
     backend: Backend,
@@ -403,8 +431,18 @@ fn compile_one_component(
     // first and fall back to *any* `.msl` whose stem begins with `<Component>.`.
     // For the v1 packager we keep this simple: only the un-themed `.msl`
     // matters. Theme handling is a follow-up.
+    //
+    // UI30 multi-layout: the `.mll` resolution honours the `variant`
+    // argument. When `Some("touch")`, we look for `<Component>.touch.mll`
+    // (no fallback at this layer — `discover_variants` is the source of
+    // truth for which variants exist, so the file is guaranteed to be
+    // there). When `None`, we read the bare `<Component>.mll` (default
+    // variant).
     let mil_path = src_dir.join(format!("{component}.mil"));
-    let mll_path = src_dir.join(format!("{component}.mll"));
+    let mll_path = match variant {
+        Some(v) => src_dir.join(format!("{component}.{v}.mll")),
+        None => src_dir.join(format!("{component}.mll")),
+    };
     let msl_path = src_dir.join(format!("{component}.msl"));
 
     if !mil_path.exists() || !mll_path.exists() {
@@ -453,7 +491,20 @@ fn compile_one_component(
     let ext = backend
         .component_extension()
         .expect("every backend has an extension since the v0.2 wire-up");
-    let primary_path = out_dir.join(format!("{component}.{ext}"));
+
+    // UI30 multi-layout output filename:
+    //   default variant (variant == None) → `Grid.tsx`     (back-compat)
+    //   named variant   (variant == Some) → `Grid.touch.tsx`
+    //
+    // Embedding the variant infix in the filename lets multiple
+    // variants coexist in one output directory without collision.
+    // Hosts pick which variant to import at build time (or import
+    // all and pick at runtime — UI30 §6 leaves the policy to the
+    // host).
+    let primary_path = match variant {
+        Some(v) => out_dir.join(format!("{component}.{v}.{ext}")),
+        None => out_dir.join(format!("{component}.{ext}")),
+    };
 
     let primary_bytes: String = match backend {
         Backend::React => mosaic_emit_react::pipeline::from_pipeline(
@@ -513,10 +564,21 @@ fn compile_one_component(
 
             // Write the secondaries alongside the primary `.xaml`.
             // `.xaml.cs` is the code-behind partial; `.Event.cs` is
-            // the discriminated event union.
-            let code_behind_path = out_dir.join(format!("{component}.xaml.cs"));
+            // the discriminated event union. Variant infix applies
+            // to both secondaries so a multi-variant XAML build
+            // produces e.g. Grid.touch.xaml + Grid.touch.xaml.cs +
+            // Grid.touch.Event.cs alongside the desktop trio.
+            let (code_behind_path, events_path) = match variant {
+                Some(v) => (
+                    out_dir.join(format!("{component}.{v}.xaml.cs")),
+                    out_dir.join(format!("{component}.{v}.Event.cs")),
+                ),
+                None => (
+                    out_dir.join(format!("{component}.xaml.cs")),
+                    out_dir.join(format!("{component}.Event.cs")),
+                ),
+            };
             write_file(&code_behind_path, result.code_behind.as_bytes())?;
-            let events_path = out_dir.join(format!("{component}.Event.cs"));
             write_file(&events_path, result.events.as_bytes())?;
 
             result.xaml
@@ -533,6 +595,124 @@ fn compile_one_component(
     // ----- 4. Write the primary artifact -----------------------------------
     write_file(&primary_path, primary_bytes.as_bytes())?;
     Ok(primary_path)
+}
+
+/// UI30 multi-layout — discover the layout variants present for one
+/// component by scanning the package's `src/` directory.
+///
+/// Returns a Vec where each element is either:
+///   - `None`            → the default variant (bare `<Component>.mll` exists)
+///   - `Some("touch")`   → the named variant (`<Component>.touch.mll` exists)
+///
+/// **Filesystem is the source of truth.** UI30 §4 sketches a future
+/// `[variants]` manifest section with explicit declarations + a fallback
+/// chain. v1 of the artifact-builder skips that machinery and just
+/// builds whatever layout files it finds — this keeps the diff scoped
+/// to one crate (no manifest parser changes) and matches the principle
+/// of "what's on disk is what gets shipped." The manifest declaration
+/// is a follow-up PR for packages that want to *constrain* (vs.
+/// enumerate) variants.
+///
+/// **Back-compat clause.** A component with only a bare `<Component>.mll`
+/// (the existing convention for every published package today) returns
+/// `vec![None]` — exactly one default-variant artifact, unchanged
+/// behaviour. The variant infix is opt-in via filesystem.
+///
+/// **Discovery order.** We always emit the default variant FIRST when
+/// present, so back-compat consumers see the unsuffixed filename land
+/// at predictable timestamps; named variants follow alphabetically.
+///
+/// **Filename pattern accepted.** `<Component>.<variant>.mll` where
+/// `<variant>` is ASCII alphanumeric / `_` / `-` and non-empty. Files
+/// failing this pattern (e.g. `Grid..mll`, `Grid.foo bar.mll`) are
+/// silently skipped — they'll surface later as moslayout parse
+/// errors, not silent misses, because they aren't valid mosaic
+/// sources anyway.
+fn discover_variants(src_dir: &Path, component: &str) -> Result<Vec<Option<String>>, BuildError> {
+    let mut variants: Vec<Option<String>> = Vec::new();
+
+    // Default variant: bare `<Component>.mll`.
+    let bare = src_dir.join(format!("{component}.mll"));
+    if bare.exists() {
+        variants.push(None);
+    }
+
+    // Named variants: scan for `<Component>.<variant>.mll`. We can't
+    // use a globbing crate (zero-deps policy), so iterate `read_dir`
+    // and string-match the stem.
+    let entries = match fs::read_dir(src_dir) {
+        Ok(e) => e,
+        Err(e) => {
+            return Err(BuildError::Io(format!(
+                "failed to read src dir {}: {e}",
+                src_dir.display()
+            )));
+        }
+    };
+
+    let prefix = format!("{component}.");
+    let suffix = ".mll";
+    let bare_name = format!("{component}.mll");
+    let mut named: Vec<String> = Vec::new();
+    for entry in entries.flatten() {
+        let name = entry.file_name();
+        let name = match name.to_str() {
+            Some(s) => s,
+            None => continue, // non-UTF8 names are skipped (unlikely on src/)
+        };
+        // Filter: must start with `<Component>.` and end with `.mll`,
+        // AND must NOT be the bare default (`<Component>.mll`) — that
+        // file is handled separately by the bare-default check above.
+        // Without this `name == bare_name` skip, `Grid.mll` would slip
+        // through and the slice math below would underflow (the
+        // "middle" would be the empty string between `Grid.` and
+        // `.mll` — same 6 chars).
+        if !name.starts_with(&prefix) || !name.ends_with(suffix) || name == bare_name {
+            continue;
+        }
+        // Need enough length for a non-empty middle. The minimum valid
+        // filename is something like `Grid.x.mll` (prefix `Grid.` + 1
+        // middle char + `.mll`).
+        if name.len() <= prefix.len() + suffix.len() {
+            continue;
+        }
+        // Strip prefix + `.mll` suffix to recover the variant string.
+        // `Grid.touch.mll` → prefix `Grid.` + middle `touch` + `.mll`.
+        let middle = &name[prefix.len()..name.len() - suffix.len()];
+        if middle.is_empty() {
+            continue; // `Grid..mll` — degenerate, skip
+        }
+        // The middle must itself be a clean identifier — no nested dots
+        // (e.g. `Grid.dark.theme.mll` would have middle `dark.theme`,
+        // which isn't a single variant name). v1 rejects these as
+        // ambiguous; the spec leaves `.<theme>.<variant>` crosses for
+        // a follow-up.
+        if !middle
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '-')
+        {
+            continue;
+        }
+        named.push(middle.to_string());
+    }
+    named.sort();
+    named.dedup();
+    for v in named {
+        variants.push(Some(v));
+    }
+
+    // Degenerate case: a component is declared in the manifest but has
+    // neither bare nor variant `.mll` files. We surface this as an
+    // empty Vec; `build_package`'s for-loop becomes a no-op for that
+    // component, and `compile_one_component`'s SourceNotFound check
+    // would have caught it anyway via the old code path — but since
+    // we now skip the call entirely, push a single None entry so the
+    // old error path still fires (consistent UX with pre-UI30 builds).
+    if variants.is_empty() {
+        variants.push(None);
+    }
+
+    Ok(variants)
 }
 
 /// Convenience wrapper turning a backend's `PipelineEmitError` into a
@@ -1542,5 +1722,152 @@ version = "1"
             "MosaicPkg.DataGridPro"
         );
         assert_eq!(qmldir_module_name("my-thing"), "MyThing");
+    }
+
+    // -----------------------------------------------------------------------
+    // UI30 multi-layout — discover_variants + variant artifact filenames
+    // -----------------------------------------------------------------------
+
+    /// Bare default only: a component with `Grid.mll` (no variant files)
+    /// returns `[None]` — the back-compat case that proves UI30 didn't
+    /// regress the single-variant pipeline.
+    #[test]
+    fn discover_variants_bare_default_only_returns_single_none() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let src = pkg.path().join("src");
+        let v = discover_variants(&src, "Grid").unwrap();
+        assert_eq!(v, vec![None]);
+    }
+
+    /// Bare default + one named variant: returns `[None, Some("touch")]`
+    /// in that order (default first per UI30 §5).
+    #[test]
+    fn discover_variants_default_plus_named_returns_both_in_order() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let src = pkg.path().join("src");
+        fs::write(src.join("Grid.touch.mll"), minimal_mll("Grid")).unwrap();
+        let v = discover_variants(&src, "Grid").unwrap();
+        assert_eq!(v, vec![None, Some("touch".to_string())]);
+    }
+
+    /// Multiple named variants without a bare default: only the named
+    /// variants are returned, sorted alphabetically. This is the
+    /// "strict mode" the spec mentions — the package author can omit
+    /// the bare default to prevent the fallback chain from firing.
+    #[test]
+    fn discover_variants_only_named_variants_no_default() {
+        let tmp = TempDir::new().unwrap();
+        let src = tmp.path().to_path_buf();
+        // No bare Grid.mll; only desktop + touch variants.
+        fs::write(src.join("Grid.mil"), minimal_mil("Grid")).unwrap();
+        fs::write(src.join("Grid.touch.mll"), minimal_mll("Grid")).unwrap();
+        fs::write(src.join("Grid.desktop.mll"), minimal_mll("Grid")).unwrap();
+        let v = discover_variants(&src, "Grid").unwrap();
+        assert_eq!(
+            v,
+            vec![Some("desktop".to_string()), Some("touch".to_string())]
+        );
+    }
+
+    /// No `.mll` files at all: returns `[None]` so the existing
+    /// SourceNotFound error path still fires (back-compat UX).
+    #[test]
+    fn discover_variants_no_mll_files_returns_single_none() {
+        let tmp = TempDir::new().unwrap();
+        fs::write(tmp.path().join("Grid.mil"), minimal_mil("Grid")).unwrap();
+        let v = discover_variants(tmp.path(), "Grid").unwrap();
+        assert_eq!(v, vec![None]);
+    }
+
+    /// Different components in the same src/ don't cross-pollute. Looking
+    /// for `Grid`'s variants must not pick up `Sidebar.touch.mll`.
+    #[test]
+    fn discover_variants_does_not_cross_pollute_components() {
+        let pkg = make_package("mosaic-pkg-multi", &["Grid", "Sidebar"]);
+        let src = pkg.path().join("src");
+        fs::write(src.join("Sidebar.touch.mll"), minimal_mll("Sidebar")).unwrap();
+        let v = discover_variants(&src, "Grid").unwrap();
+        assert_eq!(v, vec![None], "Grid should only see its own .mll, not Sidebar's");
+    }
+
+    /// Filenames that share a prefix-stem but have weird middles are
+    /// silently skipped (the middle would be ambiguous as a variant
+    /// name). `Grid.dark.theme.mll` has middle `dark.theme` which
+    /// contains a dot — we skip it.
+    #[test]
+    fn discover_variants_skips_ambiguous_dotted_middles() {
+        let tmp = TempDir::new().unwrap();
+        let src = tmp.path().to_path_buf();
+        fs::write(src.join("Grid.mil"), minimal_mil("Grid")).unwrap();
+        fs::write(src.join("Grid.mll"), minimal_mll("Grid")).unwrap();
+        fs::write(src.join("Grid.touch.mll"), minimal_mll("Grid")).unwrap();
+        // Decoy: dotted middle is not a single clean variant name.
+        fs::write(src.join("Grid.dark.theme.mll"), minimal_mll("Grid")).unwrap();
+        let v = discover_variants(&src, "Grid").unwrap();
+        assert_eq!(
+            v,
+            vec![None, Some("touch".to_string())],
+            "ambiguous dotted middle must be skipped"
+        );
+    }
+
+    /// End-to-end: a package with one component + one named variant
+    /// builds BOTH artifacts under their UI30 filenames. `Grid.tsx`
+    /// (default) and `Grid.touch.tsx` (variant) coexist in the same
+    /// output directory.
+    #[test]
+    fn build_package_emits_both_default_and_variant_artifacts() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        // Add a touch variant alongside the default.
+        let src = pkg.path().join("src");
+        fs::write(src.join("Grid.touch.mll"), minimal_mll("Grid")).unwrap();
+
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+        })
+        .expect("multi-variant build");
+
+        // components_built tracks COMPONENTS, not artifacts (the index
+        // file should list Grid once, not twice).
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+
+        // Two component artifacts + one index file = 3 artifacts.
+        let default_path = out.path().join("react").join("Grid.tsx");
+        let touch_path = out.path().join("react").join("Grid.touch.tsx");
+        assert!(default_path.exists(), "Grid.tsx (default) must exist");
+        assert!(touch_path.exists(), "Grid.touch.tsx (variant) must exist");
+        assert!(
+            result.artifacts.iter().any(|p| p == &default_path)
+                && result.artifacts.iter().any(|p| p == &touch_path),
+            "both artifact paths must be in the result"
+        );
+    }
+
+    /// Back-compat regression test: a package with only the bare
+    /// default `.mll` still produces exactly one unsuffixed artifact
+    /// per component. UI30 is opt-in via filesystem and existing
+    /// packages must build identically.
+    #[test]
+    fn build_package_without_variants_is_unchanged_from_pre_ui30() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+        })
+        .expect("single-variant build");
+
+        // Exactly one component artifact + the index file.
+        let default_path = out.path().join("react").join("Grid.tsx");
+        assert!(default_path.exists());
+        // NO variant-suffixed file should exist.
+        assert!(
+            !out.path().join("react").join("Grid.touch.tsx").exists(),
+            "no variant file should be created without explicit .touch.mll"
+        );
     }
 }

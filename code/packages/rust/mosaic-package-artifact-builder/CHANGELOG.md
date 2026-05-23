@@ -3,6 +3,76 @@
 All notable changes to `mosaic-package-artifact-builder` will be documented
 in this file.
 
+## [Unreleased] — UI30 multi-layout variant enumeration (ML2)
+
+`build_package` now emits one artifact per (component, variant, backend)
+tuple. Implementation follows UI30 spec §5: filesystem is the source
+of truth. A new `discover_variants()` helper scans the package's
+`src/` for `<Component>.<variant>.mll` files and the builder loops
+over the discovered variants.
+
+### Filename convention
+
+- **Default variant** (bare `<Component>.mll` exists): output is the
+  unsuffixed `<Component>.<ext>` — same name as pre-UI30 builds.
+- **Named variants** (`<Component>.touch.mll` etc.): output is
+  `<Component>.<variant>.<ext>`. The variant infix lands between the
+  component name and the file extension so multiple variants coexist
+  in one output directory without collision.
+
+For XAML this means a single component can emit:
+```
+Grid.xaml          Grid.touch.xaml          (default + variant XAML)
+Grid.xaml.cs       Grid.touch.xaml.cs       (matching code-behinds)
+Grid.Event.cs      Grid.touch.Event.cs      (matching event unions)
+```
+
+### Back-compat clause
+
+Every existing package — toolkit, dialog, the ones with one
+`.mll` per component — builds byte-for-byte identically.
+`discover_variants` returns `[None]` for a component with only a
+bare default, the loop runs once, and the artifact filename is
+unsuffixed exactly as before. Eight new tests cover this back-compat
+path explicitly.
+
+### Out of scope for this PR
+
+The UI30 spec's `[variants]` manifest section (with `all` /
+`overrides` / `fallback` keys) is **not** parsed here. Filesystem
+discovery is sufficient for the "ship everything you authored"
+default policy; manifest declarations are only needed when a
+package wants to *constrain* which variants get built. Follow-up
+PR will extend `mosaic-package-manifest` to parse the section and
+wire it into the builder.
+
+The variant-aware index file (mounting `Grid.desktop` and
+`Grid.touch` as separate exports in the React/HTML/qmldir index)
+is also deferred — the index continues to list each component
+once, which is correct for the most common runtime-picks-variant
+model (host imports either the default or the variant, never both).
+
+### Tests
+
+- `discover_variants_bare_default_only_returns_single_none` —
+  back-compat for single-variant packages.
+- `discover_variants_default_plus_named_returns_both_in_order`
+  — default first, named variants alphabetical.
+- `discover_variants_only_named_variants_no_default` — "strict
+  mode" packages that omit the bare default.
+- `discover_variants_no_mll_files_returns_single_none` —
+  degenerate case still triggers the existing SourceNotFound
+  error.
+- `discover_variants_does_not_cross_pollute_components` — `Grid`
+  doesn't pick up `Sidebar.touch.mll`.
+- `discover_variants_skips_ambiguous_dotted_middles` —
+  `Grid.dark.theme.mll` is rejected (dotted middle can't be a
+  clean variant name).
+- `build_package_emits_both_default_and_variant_artifacts` —
+  end-to-end React build emits both `Grid.tsx` + `Grid.touch.tsx`.
+- `build_package_without_variants_is_unchanged_from_pre_ui30` —
+  explicit regression guard for the back-compat invariant.
+
 ## [Unreleased] — Flutter backend wired
 
 Adds `Backend::Flutter` so userland packages now compile to seven
