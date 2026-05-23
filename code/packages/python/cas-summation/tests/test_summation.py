@@ -1290,3 +1290,197 @@ class TestEvaluateSumPhase52BoundedTimesPolynomial:
         f = IRApply(SUB, (g_k, g_kp1))
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert not (isinstance(result, IRApply) and result.head == SUM)
+
+
+class TestEvaluateSumPhase51SqrtNumerator:
+    """Phase 51 — ``Sqrt(P(k))`` as numerator: effective degree = deg(P)/2.
+
+    ``Sqrt(P(k)) / Q(k)`` vanishes at infinity when ``deg(Q) > deg(P)/2``,
+    i.e. when ``2*deg(Q) > deg(P)``.  Integer arithmetic keeps comparisons
+    exact.
+
+    Examples:
+    - ``Sqrt(k) / k``      — ½ < 1 → vanishes (2*1 = 2 > 1)
+    - ``Sqrt(k²) / k²``    — 1 = 1 → stays (2*2 = 4 > 2, wait: 2 = 2 exactly...
+      actually Sqrt(k²) = k, effective deg 1, den deg 2: 2*2=4>2 → vanishes)
+    """
+
+    def test_sqrt_k_over_k_squared_closes(self):
+        """``Sqrt(k)/k²``: effective degree ½ < 2 → vanishes.
+
+        ``2 * 2 = 4 > 1 = deg(k)`` → closes.
+        """
+        from symbolic_ir import POW, SQRT, SUB
+
+        g_k = IRApply(DIV, (IRApply(SQRT, (_k,)), IRApply(POW, (_k, IRInteger(2)))))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        g_kp1 = IRApply(DIV, (IRApply(SQRT, (kp1,)), IRApply(POW, (kp1, IRInteger(2)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 51: Sqrt(k)/k² should close; got {result!r}"
+        )
+
+    def test_sqrt_k_squared_over_k_cubed_closes(self):
+        """``Sqrt(k²)/k³``: effective degree 1 < 3 → vanishes.
+
+        ``Sqrt(k²)`` has inner deg 2; effective half-degree = 1.
+        ``2 * 3 = 6 > 2 = deg(k²)`` → closes.
+        """
+        from symbolic_ir import POW, SQRT, SUB
+
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        g_k = IRApply(DIV, (IRApply(SQRT, (k_sq,)), IRApply(POW, (_k, IRInteger(3)))))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        kp1_sq = IRApply(POW, (kp1, IRInteger(2)))
+        g_kp1 = IRApply(DIV, (IRApply(SQRT, (kp1_sq,)), IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_over_k_equal_degrees_refused(self):
+        """``Sqrt(k)/Sqrt(k)`` stays unevaluated — same effective degree
+        (but expressed as ``Sqrt(k)/k^{1/2}``, which we test via the
+        case ``Sqrt(k)/k``: effective deg ½ vs deg 1 → vanishes since ½ < 1).
+
+        Test the boundary: ``Sqrt(k) / 1`` is NOT a Div form → skip.
+        Test the tight case: ``Sqrt(k²) / k`` → effective deg 1 = den deg 1
+        → equal, should NOT close.
+        """
+        from symbolic_ir import SQRT, SUB
+
+        # Numerator effective degree 1 (= deg(k²)/2), denominator degree 1.
+        # 2*1 = 2 is NOT > 2 = deg(k²), so Phase 51 refuses.
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        g_k = IRApply(DIV, (IRApply(SQRT, (k_sq,)), _k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        kp1_sq = IRApply(POW, (kp1, IRInteger(2)))
+        g_kp1 = IRApply(DIV, (IRApply(SQRT, (kp1_sq,)), kp1))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # deg(Sqrt(k²)) effective = 1, deg(den) = 1 → tie → unevaluated.
+        assert isinstance(result, IRApply) and result.head == SUM, (
+            f"Phase 51: Sqrt(k²)/k has equal effective degree; should stay unevaluated; got {result!r}"
+        )
+
+    def test_sqrt_of_negative_polynomial_refused(self):
+        """``Sqrt(-k)/k²``: inner polynomial has negative leading coeff.
+
+        Phase 51 must refuse this shape (Sqrt of a negative-leading-coeff
+        polynomial is not real-valued for large k).
+        """
+        from symbolic_ir import POW, SQRT, SUB
+
+        neg_k = IRApply(MUL, (IRInteger(-1), _k))
+        g_k = IRApply(DIV, (IRApply(SQRT, (neg_k,)), IRApply(POW, (_k, IRInteger(2)))))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        neg_kp1 = IRApply(MUL, (IRInteger(-1), kp1))
+        g_kp1 = IRApply(DIV, (IRApply(SQRT, (neg_kp1,)), IRApply(POW, (kp1, IRInteger(2)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Phase 51 refuses Sqrt(-k); falls through to Phase 42 which also
+        # refuses (numerator is not polynomial) → stays unevaluated.
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestEvaluateSumPhase53SqrtTimesPolynomialNumerator:
+    """Phase 53 — ``Mul(Sqrt(P), polynomial_factors)`` as numerator.
+
+    Effective growth = ``deg(P)/2 + deg(Q)``.  The quotient vanishes when
+    ``deg(den) > deg(P)/2 + deg(Q)``, equivalently
+    ``2*deg(den) > deg(P) + 2*deg(Q)``.
+
+    Examples:
+    - ``Sqrt(k) · k / k³``:  eff = ½ + 1 = 3/2 < 3 → closes
+    - ``Sqrt(k²) · k / k³``: eff = 1 + 1 = 2 < 3 → closes
+    - ``Sqrt(k) · k² / k²``: eff = ½ + 2 = 5/2 > 2 → stays
+    """
+
+    def test_sqrt_k_times_k_over_k_cubed_closes(self):
+        """``Sqrt(k)·k/k³``: effective degree = ½+1 = 3/2, den deg 3 → vanishes.
+
+        ``2*3 = 6 > 1 + 2*1 = 3`` → closes.
+        """
+        from symbolic_ir import POW, SQRT, SUB
+
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), _k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), kp1))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 53: Sqrt(k)·k/k³ should close; got {result!r}"
+        )
+
+    def test_sqrt_k_squared_times_k_over_k_cubed_closes(self):
+        """``Sqrt(k²)·k/k³``: effective degree = 1+1 = 2, den deg 3 → vanishes.
+
+        ``2*3 = 6 > 2 + 2*1 = 4`` → closes.
+        """
+        from symbolic_ir import POW, SQRT, SUB
+
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (k_sq,)), _k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        kp1_sq = IRApply(POW, (kp1, IRInteger(2)))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1_sq,)), kp1))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_times_k_squared_over_k_cubed_closes(self):
+        """``Sqrt(k)·k²/k³``: effective degree = ½+2 = 5/2, den deg 3 → vanishes.
+
+        ``2*3 = 6 > 1 + 2*2 = 5`` → closes.
+        """
+        from symbolic_ir import POW, SQRT, SUB
+
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), k_sq))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        kp1_sq = IRApply(POW, (kp1, IRInteger(2)))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), kp1_sq))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_times_k_squared_over_k_squared_stays(self):
+        """``Sqrt(k)·k²/k²``: effective degree = ½+2 = 5/2 > 2 → stays.
+
+        ``2*2 = 4 NOT > 1 + 2*2 = 5`` → unevaluated.
+        """
+        from symbolic_ir import POW, SQRT, SUB
+
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), k_sq))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        kp1_sq = IRApply(POW, (kp1, IRInteger(2)))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), kp1_sq))
+        g_k = IRApply(DIV, (num_k, k_sq))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_sq))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Effective degree 5/2 > 2 → can't prove vanishing → unevaluated.
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_regression_sqrt_k_over_k_squared_still_via_phase51(self):
+        """Regression: plain ``Sqrt(k)/k²`` still closes via Phase 51.
+
+        Phase 53 requires a Mul node; plain Sqrt is handled by Phase 51.
+        """
+        from symbolic_ir import POW, SQRT, SUB
+
+        g_k = IRApply(DIV, (IRApply(SQRT, (_k,)), IRApply(POW, (_k, IRInteger(2)))))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        g_kp1 = IRApply(DIV, (IRApply(SQRT, (kp1,)), IRApply(POW, (kp1, IRInteger(2)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Regression: Sqrt(k)/k² should close via Phase 51; got {result!r}"
+        )

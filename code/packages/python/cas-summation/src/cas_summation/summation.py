@@ -58,6 +58,7 @@ from symbolic_ir import (
     NEG,
     POW,
     PRODUCT,
+    SQRT,
     SUB,
     SUM,
     IRApply,
@@ -690,6 +691,18 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     # divergence check used elsewhere.
     if _is_log_of_diverging_in_k(num, k) and _h_diverges_at_infinity(den, k):
         return True
+    # Phase 51: ``Sqrt(P(k))`` numerator pattern.  ``sqrt(P)`` has
+    # effective growth rate ``deg(P)/2``.  The quotient
+    # ``Sqrt(P)/Q`` vanishes when ``deg(Q) > deg(P)/2``, i.e. when
+    # ``2*deg(Q) > deg(P)``.  We use ×2 integer arithmetic throughout
+    # to avoid fractions.  ``_sqrt_effective_half_degree_x2`` returns
+    # ``deg(P)`` and requires the leading coefficient of ``P`` to be
+    # positive (so ``Sqrt(P)`` is real-valued and diverging).
+    sqrt_inner_deg = _sqrt_effective_half_degree_x2(num, k)
+    if sqrt_inner_deg is not None:
+        den_deg_sq = _polynomial_degree_in_k(den, k)
+        if den_deg_sq is not None and 2 * den_deg_sq > sqrt_inner_deg:
+            return True
     # Phase 52: ``Mul(bounded, polynomial)`` numerator pattern.  When the
     # numerator factorises as ``bounded × P(k)`` (with ``bounded`` non-
     # constant — so Phase 49 missed it — and ``P`` a positive-degree
@@ -700,6 +713,17 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
         _, poly_deg = bounded_poly
         den_deg_bp = _polynomial_degree_in_k(den, k)
         if den_deg_bp is not None and den_deg_bp > poly_deg:
+            return True
+    # Phase 53: ``Mul(Sqrt(P), polynomial_factors)`` numerator pattern.
+    # The effective growth rate is ``deg(P)/2 + deg(Q)``.  Using ×2
+    # integer arithmetic: vanishes when ``2*deg(den) > deg(P) + 2*deg(Q)``.
+    # ``_sqrt_poly_numerator_effective_degree_x2`` returns
+    # ``deg(P) + 2*deg(Q)`` and requires exactly one Sqrt factor with a
+    # positive-leading-coefficient polynomial inner.
+    sqrt_poly_eff = _sqrt_poly_numerator_effective_degree_x2(num, k)
+    if sqrt_poly_eff is not None:
+        den_deg_sp = _polynomial_degree_in_k(den, k)
+        if den_deg_sp is not None and 2 * den_deg_sp > sqrt_poly_eff:
             return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
@@ -789,6 +813,117 @@ def _split_bounded_polynomial_factor(
     else:
         bounded_aggregate = IRApply(MUL, tuple(bounded_factors))
     return (bounded_aggregate, poly_degree)
+
+
+def _sqrt_effective_half_degree_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Phase 51 helper: return 2× the effective half-degree of a ``Sqrt(P(k))``
+    node, or ``None`` when the shape isn't recognised.
+
+    For ``Sqrt(P(k))`` the effective growth rate is ``deg(P) / 2``.  To
+    avoid floating-point arithmetic, we return ``deg(P)`` (i.e., twice the
+    half-degree) and let the caller compare against ``2 * den_deg``
+    instead of against the fractional ``deg(P) / 2``.
+
+    Requirements:
+      - ``node = Sqrt(P)`` (exactly one argument under the Sqrt head).
+      - ``P`` is a polynomial in ``k``.
+      - The leading coefficient of ``P`` in ``k`` is positive (so
+        ``Sqrt(P(k))`` is real-valued and diverges to ``+∞``).  This
+        refuses shapes like ``Sqrt(Mul(-1, k))`` where ``P(k) = -k``
+        goes negative for large ``k``.
+
+    Returns ``deg(P)`` (a non-negative integer), which equals
+    ``2 * effective_half_degree``.
+
+    +------------------------+----------------------+
+    | Input                  | Return               |
+    +========================+======================+
+    | ``Sqrt(k)``            | 1 (deg 1 poly)       |
+    | ``Sqrt(k²)``           | 2                    |
+    | ``Sqrt(k² + k + 1)``   | 2                    |
+    | ``Sqrt(Mul(-1, k))``   | None (neg leading)   |
+    | ``k``                  | None (not Sqrt)      |
+    | ``Sqrt(Sin(k))``       | None (not poly)      |
+    +------------------------+----------------------+
+    """
+    if not isinstance(node, IRApply):
+        return None
+    if node.head != SQRT or len(node.args) != 1:
+        return None
+    inner = node.args[0]
+    # Inner must be a polynomial in k.
+    deg = _polynomial_degree_in_k(inner, k)
+    if deg is None:
+        return None
+    # Degree-0 inner (constant) means Sqrt(c) is a constant — no effective
+    # polynomial growth.  Return None so Phase 42 handles it.
+    if deg == 0:
+        return None
+    # Leading coefficient of the inner polynomial must be positive so that
+    # P(k) → +∞ (real-valued and diverging).  Reject if we can't confirm
+    # sign.
+    if _polynomial_leading_coeff_sign_in_k(inner, k) != 1:
+        return None
+    return deg  # = 2 × effective half-degree
+
+
+def _sqrt_poly_numerator_effective_degree_x2(
+    node: IRNode, k: IRSymbol
+) -> int | None:
+    """Phase 53 helper: return 2× the effective growth degree of a
+    ``Mul(Sqrt(P), polynomial_factors)`` numerator, or ``None`` when
+    the shape isn't recognised.
+
+    The numerator ``Sqrt(P(k)) · Q(k)`` grows at rate
+    ``deg(P)/2 + deg(Q)``.  To keep the comparison integral, we return
+    ``deg(P) + 2·deg(Q)`` (= 2 × the effective degree).  The caller
+    compares ``2 * den_deg > effective_x2`` to decide whether the
+    quotient vanishes.
+
+    Requirements:
+      - ``node = Mul(...)`` (Phase 51 handles the plain-Sqrt case).
+      - Exactly one factor is a ``Sqrt(P)`` with positive-leading-coeff
+        polynomial inner (via :func:`_sqrt_effective_half_degree_x2`).
+      - All other factors are polynomials in ``k``.
+
+    Returns ``deg(P) + 2·deg(Q)`` (a non-negative integer).
+
+    +----------------------------------+----------------+
+    | Input (numerator node)           | Return         |
+    +==================================+================+
+    | ``Mul(Sqrt(k²), k)``             | 2 + 2 = 4      |
+    | ``Mul(Sqrt(k), k²)``             | 1 + 4 = 5      |
+    | ``Mul(Sqrt(k), Sin(k))``         | None (Sin not  |
+    |                                  |  poly)         |
+    | ``Sqrt(k)`` (plain, not Mul)     | None (→ Ph 51) |
+    | ``Mul(Sqrt(k), Sqrt(k))``        | None (two Sqrt)|
+    +----------------------------------+----------------+
+    """
+    if not isinstance(node, IRApply):
+        return None
+    if node.head != MUL:
+        return None
+    sqrt_inner_deg: int | None = None
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        # Try to classify this factor as a Sqrt(P) shape.
+        eff = _sqrt_effective_half_degree_x2(arg, k)
+        if eff is not None:
+            # Only one Sqrt factor is allowed — if we see a second, bail.
+            if sqrt_inner_deg is not None:
+                return None
+            sqrt_inner_deg = eff
+            continue
+        # Otherwise it must be a polynomial in k.
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is None:
+            # Neither a Sqrt shape nor a polynomial — pattern rejected.
+            return None
+        poly_deg_sum += deg
+    # Must have found exactly one Sqrt factor.
+    if sqrt_inner_deg is None:
+        return None
+    return sqrt_inner_deg + 2 * poly_deg_sum
 
 
 def _try_power_of_k(
