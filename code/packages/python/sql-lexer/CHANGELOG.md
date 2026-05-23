@@ -2,6 +2,15 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.25.0] - 2026-05-23
+
+### Added
+
+- ``RENAME`` keyword recognised by the lexer.  Required by the new
+  ``ALTER TABLE … RENAME TO`` / ``RENAME [COLUMN]`` forms parsed in
+  sql-parser 0.37.
+- Regenerated `_grammar.py` to include the new keyword.
+
 ## [0.24.0] - 2026-05-21
 
 ### Added

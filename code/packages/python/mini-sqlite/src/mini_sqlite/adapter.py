@@ -1281,13 +1281,71 @@ def _delete(node: ASTNode) -> DeleteStmt:
 
 
 def _alter_table(node: ASTNode) -> AlterTableStmt:
-    # alter_table_stmt = "ALTER" "TABLE" NAME "ADD" [ "COLUMN" ] col_def ;
+    """Parse an ``alter_table_stmt`` node.
+
+    Grammar (one of four forms)::
+
+        alter_table_stmt = "ALTER" "TABLE" NAME (
+              "ADD" [ "COLUMN" ] col_def
+            | "RENAME" "TO" NAME
+            | "RENAME" [ "COLUMN" ] NAME "TO" NAME
+            | "DROP" [ "COLUMN" ] NAME
+        )
+
+    The first NAME is always the table being altered.  We dispatch on
+    the second keyword (ADD / RENAME / DROP).  For RENAME we further
+    dispatch on whether a ``TO`` keyword appears before any other NAME
+    (RENAME TO new_name) or after a NAME (RENAME [COLUMN] old TO new).
+    """
     table_tok = _first_token(node, kind="NAME")
     assert table_tok is not None
+    table_name = table_tok.value
+
+    # ADD [COLUMN] col_def — recognise via the col_def child.
     col_node = _maybe_child(node, "col_def")
-    assert col_node is not None, "alter_table_stmt: missing col_def"
-    col = _col_def(col_node, _PlaceholderCounter())
-    return AlterTableStmt(table=table_tok.value, column=col)
+    if col_node is not None:
+        col = _col_def(col_node, _PlaceholderCounter())
+        return AlterTableStmt(table=table_name, column=col)
+
+    # The remaining forms have no col_def — dispatch on keywords.
+    has_rename = _has_keyword_child(node, "RENAME")
+    has_drop = _has_keyword_child(node, "DROP")
+    has_to = _has_keyword_child(node, "TO")
+
+    # Collect the NAME tokens after the table name in source order.
+    names: list[str] = []
+    seen_table = False
+    for c in node.children:
+        if isinstance(c, Token) and _token_type(c) == "NAME":
+            if not seen_table:
+                seen_table = True  # this is the table-name token
+                continue
+            names.append(c.value)
+
+    if has_rename and has_to:
+        # Two flavours:
+        #   RENAME TO new_name           → exactly one extra NAME
+        #   RENAME [COLUMN] old TO new   → exactly two extra NAMEs
+        if len(names) == 1:
+            return AlterTableStmt(table=table_name, rename_to=names[0])
+        if len(names) == 2:
+            old, new = names
+            return AlterTableStmt(table=table_name, rename_column=(old, new))
+        raise ProgrammingError(
+            f"malformed ALTER TABLE RENAME: expected 1 or 2 NAMEs after "
+            f"table, got {len(names)}"
+        )
+
+    if has_drop:
+        # DROP [COLUMN] col_name — exactly one extra NAME.
+        if len(names) != 1:
+            raise ProgrammingError(
+                f"malformed ALTER TABLE DROP COLUMN: expected 1 NAME, "
+                f"got {len(names)}"
+            )
+        return AlterTableStmt(table=table_name, drop_column=names[0])
+
+    raise ProgrammingError("alter_table_stmt: unrecognised operation")
 
 
 # --------------------------------------------------------------------------

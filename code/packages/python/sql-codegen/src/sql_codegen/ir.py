@@ -873,9 +873,18 @@ class DropTable:
 
 @dataclass(frozen=True, slots=True)
 class AlterTable:
-    """Ask the backend to add a column to an existing table."""
+    """Ask the backend to mutate an existing table's schema.
+
+    Mirrors :class:`sql_planner.ast.AlterTableStmt`: exactly one of
+    ``column`` / ``rename_to`` / ``rename_column`` / ``drop_column``
+    is non-None per instance; the VM dispatches on whichever one is
+    set.
+    """
     table: str
-    column: ColumnDef
+    column: ColumnDef | None = None
+    rename_to: str | None = None
+    rename_column: tuple[str, str] | None = None  # (old, new)
+    drop_column: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

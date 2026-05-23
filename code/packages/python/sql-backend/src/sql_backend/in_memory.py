@@ -374,6 +374,114 @@ class InMemoryBackend(Backend):
         for row in tbl.rows:
             row[column.name] = fill_value
 
+    def rename_table(self, old_name: str, new_name: str) -> None:
+        if old_name not in self._tables:
+            raise TableNotFound(table=old_name)
+        if new_name in self._tables:
+            raise TableAlreadyExists(table=new_name)
+        # Move the _Table object under the new key.  dict order is
+        # preserved, so the table moves to the end — SQLite does the
+        # same when renaming (rename = drop + recreate in the
+        # underlying b-tree page order).
+        self._tables[new_name] = self._tables.pop(old_name)
+        # Rewrite the ``table`` field on any indexes that referenced
+        # the old name.  Indexes are keyed by their own name (not the
+        # table's), so we mutate in place.
+        for idx in list(self._indexes.values()):
+            if idx.table == old_name:
+                self._indexes[idx.name] = IndexDef(
+                    name=idx.name,
+                    table=new_name,
+                    columns=idx.columns,
+                    unique=idx.unique,
+                )
+        self._schema_version += 1
+
+    def rename_column(self, table: str, old_name: str, new_name: str) -> None:
+        if table not in self._tables:
+            raise TableNotFound(table=table)
+        tbl = self._tables[table]
+        # Find the column.
+        col_idx = next(
+            (i for i, c in enumerate(tbl.columns) if c.name == old_name),
+            None,
+        )
+        if col_idx is None:
+            raise ColumnNotFound(table=table, column=old_name)
+        # Reject duplicates BEFORE we mutate state.
+        if any(c.name == new_name for c in tbl.columns):
+            raise ColumnAlreadyExists(table=table, column=new_name)
+        # Build a fresh ColumnDef under the new name; ColumnDef is a
+        # dataclass without __init__ overrides so we use dataclasses.replace.
+        import dataclasses
+        tbl.columns[col_idx] = dataclasses.replace(tbl.columns[col_idx], name=new_name)
+        # Rewrite the per-row dict: pop the old key, set the new one.
+        for row in tbl.rows:
+            row[new_name] = row.pop(old_name, None)
+        # Rewrite any index whose ``columns`` list mentions the column.
+        for idx in list(self._indexes.values()):
+            if idx.table == table and old_name in idx.columns:
+                new_cols = tuple(
+                    new_name if c == old_name else c for c in idx.columns
+                )
+                self._indexes[idx.name] = IndexDef(
+                    name=idx.name,
+                    table=table,
+                    columns=new_cols,
+                    unique=idx.unique,
+                )
+        self._schema_version += 1
+
+    def drop_column(self, table: str, column_name: str) -> None:
+        if table not in self._tables:
+            raise TableNotFound(table=table)
+        tbl = self._tables[table]
+        col_idx = next(
+            (i for i, c in enumerate(tbl.columns) if c.name == column_name),
+            None,
+        )
+        if col_idx is None:
+            raise ColumnNotFound(table=table, column=column_name)
+        col = tbl.columns[col_idx]
+        # SQLite restrictions on DROP COLUMN:
+        #   * column cannot be PRIMARY KEY
+        #   * column cannot be referenced by an index
+        #   * cannot drop the only column in the table
+        if col.primary_key:
+            raise ConstraintViolation(
+                table=table,
+                column=column_name,
+                message=(
+                    f"cannot DROP COLUMN '{column_name}': it is the "
+                    f"PRIMARY KEY of '{table}'"
+                ),
+            )
+        if len(tbl.columns) == 1:
+            raise ConstraintViolation(
+                table=table,
+                column=column_name,
+                message=(
+                    f"cannot DROP COLUMN '{column_name}': it is the only "
+                    f"column of '{table}'"
+                ),
+            )
+        for idx in self._indexes.values():
+            if idx.table == table and column_name in idx.columns:
+                raise ConstraintViolation(
+                    table=table,
+                    column=column_name,
+                    message=(
+                        f"cannot DROP COLUMN '{column_name}': it is "
+                        f"referenced by index '{idx.name}'"
+                    ),
+                )
+        # Remove from the schema.
+        tbl.columns.pop(col_idx)
+        # Strip the column value from every existing row.
+        for row in tbl.rows:
+            row.pop(column_name, None)
+        self._schema_version += 1
+
     # --- Transactions -----------------------------------------------------
 
     def begin_transaction(self) -> TransactionHandle:

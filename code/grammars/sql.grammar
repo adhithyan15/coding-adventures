@@ -216,9 +216,19 @@ col_constraint    = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" )
 
 drop_table_stmt   = "DROP" "TABLE" [ "IF" "EXISTS" ] NAME ;
 
-# ALTER TABLE — only ADD [COLUMN] is supported.
-# The COLUMN keyword is optional (matches SQLite behaviour).
-alter_table_stmt  = "ALTER" "TABLE" NAME "ADD" [ "COLUMN" ] col_def ;
+# ALTER TABLE — four forms, matching SQLite:
+#   ALTER TABLE t ADD [COLUMN] col_def       (forever)
+#   ALTER TABLE t RENAME TO new_name         (forever)
+#   ALTER TABLE t RENAME [COLUMN] old TO new (SQLite 3.25+)
+#   ALTER TABLE t DROP [COLUMN] col_name     (SQLite 3.35+)
+#
+# The COLUMN keyword is optional everywhere (matches SQLite behaviour).
+alter_table_stmt  = "ALTER" "TABLE" NAME (
+                      "ADD" [ "COLUMN" ] col_def
+                    | "RENAME" "TO" NAME
+                    | "RENAME" [ "COLUMN" ] NAME "TO" NAME
+                    | "DROP" [ "COLUMN" ] NAME
+                    ) ;
 
 # ── CREATE INDEX / DROP INDEX ─────────────────────────────────────────────────
 #

@@ -553,10 +553,18 @@ class DropTable:
 
 @dataclass(frozen=True, slots=True)
 class AlterTable:
-    """ALTER TABLE t ADD [COLUMN] col_def."""
+    """ALTER TABLE — four flavours, mirroring :class:`AlterTableStmt`.
+
+    Exactly one of ``column`` / ``rename_to`` / ``rename_column`` /
+    ``drop_column`` is non-None per instance; the codegen forwards
+    whichever is set to the IR node, and the VM dispatches on it.
+    """
 
     table: str
-    column: ColumnDef
+    column: ColumnDef | None = None
+    rename_to: str | None = None
+    rename_column: tuple[str, str] | None = None  # (old, new)
+    drop_column: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

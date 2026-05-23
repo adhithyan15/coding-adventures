@@ -184,6 +184,47 @@ class Backend(ABC):
         :class:`ColumnAlreadyExists` if a column with that name already exists.
         """
 
+    def rename_table(self, old_name: str, new_name: str) -> None:
+        """Rename an existing table (``ALTER TABLE old RENAME TO new``).
+
+        Optional method — backends that don't implement it get a default
+        ``NotImplementedError``.  Raises :class:`TableNotFound` if
+        ``old_name`` doesn't exist or :class:`TableAlreadyExists` if
+        ``new_name`` already does.  Indexes on the table follow
+        automatically (their ``table`` field is rewritten).
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not support ALTER TABLE RENAME TO"
+        )
+
+    def rename_column(self, table: str, old_name: str, new_name: str) -> None:
+        """Rename a column (``ALTER TABLE t RENAME [COLUMN] old TO new``).
+
+        Optional method.  Raises :class:`TableNotFound` if the table
+        doesn't exist, :class:`UnknownColumn` if ``old_name`` is not a
+        column of the table, or :class:`ColumnAlreadyExists` if
+        ``new_name`` already is.  Indexes referencing the column have
+        their ``columns`` lists rewritten to use the new name.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not support ALTER TABLE RENAME COLUMN"
+        )
+
+    def drop_column(self, table: str, column_name: str) -> None:
+        """Drop a column (``ALTER TABLE t DROP [COLUMN] c``).
+
+        Optional method.  Raises :class:`TableNotFound` if the table
+        doesn't exist or :class:`UnknownColumn` if ``column_name`` is
+        not a column of the table.  Per SQLite, the column cannot be a
+        PRIMARY KEY column, cannot be referenced by an existing index,
+        and cannot be the only column in the table; backends should
+        raise an appropriate error in those cases.  All existing rows
+        lose their values for that column.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not support ALTER TABLE DROP COLUMN"
+        )
+
     # --- Indexes -----------------------------------------------------------
 
     @abstractmethod

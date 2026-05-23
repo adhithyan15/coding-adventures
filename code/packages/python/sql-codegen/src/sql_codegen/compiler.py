@@ -330,8 +330,20 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
         case PlanDropTable(table=t, if_exists=ie):
             return [DropTable(table=t, if_exists=ie)], ()
 
-        case PlanAlterTable(table=t, column=col):
-            return [AlterTable(table=t, column=_to_ir_col(col))], ()
+        case PlanAlterTable() as alt:
+            # One of column / rename_to / rename_column / drop_column
+            # is set; pass them all through.  IR AlterTable mirrors the
+            # plan node's optional-field shape.
+            ir_col = _to_ir_col(alt.column) if alt.column is not None else None
+            return [
+                AlterTable(
+                    table=alt.table,
+                    column=ir_col,
+                    rename_to=alt.rename_to,
+                    rename_column=alt.rename_column,
+                    drop_column=alt.drop_column,
+                ),
+            ], ()
 
         case PlanCreateIndex(name=name, table=table, columns=cols, unique=uniq, if_not_exists=ine):
             return [

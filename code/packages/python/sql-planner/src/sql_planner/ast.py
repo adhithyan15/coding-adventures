@@ -471,14 +471,23 @@ class DropTableStmt:
 
 @dataclass(frozen=True, slots=True)
 class AlterTableStmt:
-    """ALTER TABLE t ADD [COLUMN] col_def.
+    """ALTER TABLE — supports four operations:
 
-    Only ADD [COLUMN] is supported; the column definition uses the same
-    :class:`~sql_backend.schema.ColumnDef` as CREATE TABLE.
+    * ``ADD [COLUMN] col_def``     → ``column`` set, others None
+    * ``RENAME TO new_name``       → ``rename_to`` set, others None
+    * ``RENAME [COLUMN] old TO new`` → ``rename_column`` set to (old, new)
+    * ``DROP [COLUMN] name``       → ``drop_column`` set to the name
+
+    Exactly one of ``column`` / ``rename_to`` / ``rename_column`` /
+    ``drop_column`` is non-None per instance; the others are None.
+    The VM dispatches on whichever one is set.
     """
 
     table: str
-    column: ColumnDef
+    column: ColumnDef | None = None
+    rename_to: str | None = None
+    rename_column: tuple[str, str] | None = None  # (old, new)
+    drop_column: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

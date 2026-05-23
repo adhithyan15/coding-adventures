@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.87.0] - 2026-05-23
+
+### Added
+
+- **ALTER TABLE RENAME TO / RENAME COLUMN / DROP COLUMN** — three
+  new forms beyond the existing ADD COLUMN, matching SQLite 3.25+ /
+  3.35+ syntax::
+
+      ALTER TABLE old RENAME TO new
+      ALTER TABLE t RENAME [COLUMN] old_col TO new_col
+      ALTER TABLE t DROP [COLUMN] col_name
+
+  The ``COLUMN`` keyword is optional everywhere.  Rows survive the
+  rename intact; the dropped column's values are removed from each
+  row.  Indexes follow renames automatically (their ``table`` /
+  ``columns`` fields get rewritten).
+- 16 oracle tests in ``test_tier3_alter_table_extras.py`` covering
+  all three new forms (with and without the ``COLUMN`` keyword),
+  rename-then-query, index follow-along, dropped column
+  unavailability, and SQLite's restrictions (cannot drop the only
+  column, the PRIMARY KEY, or a column referenced by an index).
+- Adapter ``_alter_table`` now parses all four forms via keyword
+  dispatch, building an ``AlterTableStmt`` with exactly one of
+  ``column`` / ``rename_to`` / ``rename_column`` / ``drop_column``
+  set.
+
+### Fixed
+
+- ``ALTER TABLE … ADD COLUMN x TEXT DEFAULT 'foo'`` now backfills
+  existing rows with the DEFAULT value (``'foo'``) rather than NULL.
+  The bug was in sql-vm's ``_do_alter_table``, which constructed the
+  backend ColumnDef without forwarding ``default``.
+
 ## [1.86.0] - 2026-05-23
 
 ### Added

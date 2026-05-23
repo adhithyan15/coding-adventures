@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.52.0 — 2026-05-23
+
+### Added
+
+- ``_do_alter_table`` now dispatches on the new IR ``AlterTable``
+  optional fields: ``rename_to`` calls ``backend.rename_table``,
+  ``rename_column`` calls ``backend.rename_column``, ``drop_column``
+  calls ``backend.drop_column``.  The existing ``column`` (ADD COLUMN)
+  branch is unchanged in shape but now also forwards the column's
+  DEFAULT value to the backend (fixes a pre-existing bug where
+  ``ALTER TABLE … ADD COLUMN x TEXT DEFAULT 'foo'`` backfilled NULL
+  instead of ``'foo'``).
+- 5 new tests in ``test_dml_ddl.py`` cover the new branches plus the
+  error paths (RENAME on missing table, DROP unknown column).
+
 ## 1.51.0 — 2026-05-23
 
 ### Changed
