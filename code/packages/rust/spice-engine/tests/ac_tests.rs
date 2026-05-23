@@ -65,14 +65,14 @@ fn ac_rc_low_pass_has_minus_three_db_corner() {
 #[test]
 fn ac_diode_junction_capacitance_shunts_high_frequency() {
     let mut circuit = Circuit::new();
-    circuit.add(Element::VoltageSource(VoltageSource::new(
-        "Vac", "in", "0", 1.0,
+    circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "Vac", "in", "0", 0.0, 1.0, 0.0,
     )));
     circuit.add(Element::Resistor(Resistor::new(
         "R1", "in", "node", 1_000.0,
     )));
     circuit.add(Element::Diode(Diode::with_model_and_breakdown(
-        "D1", "0", "node", 1.0e-15, 0.02585, 1.0, None, 1.0e-3, 1.0e-6,
+        "D1", "0", "node", 1.0e-15, 0.02585, 1.0, None, 1.0e-3, 1.0e-6, 0.0,
     )));
 
     let points = ac_sweep(&circuit, 10.0, 100_000.0, 2).unwrap();
@@ -83,6 +83,45 @@ fn ac_diode_junction_capacitance_shunts_high_frequency() {
     assert!(
         high < low / 100.0,
         "expected high-frequency shunt, got low={low} high={high}"
+    );
+}
+
+#[test]
+fn ac_diode_transit_time_shunts_forward_bias_at_high_frequency() {
+    fn high_frequency_anode(transit_time: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 1.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new("R1", "in", "anode", 1.0e6)));
+        circuit.add(Element::Diode(Diode::with_model_and_breakdown(
+            "D1",
+            "anode",
+            "0",
+            1.0e-15,
+            0.02585,
+            1.0,
+            None,
+            1.0e-3,
+            0.0,
+            transit_time,
+        )));
+        ac_sweep(&circuit, 100_000_000.0, 100_000_000.0, 1).unwrap()[0]
+            .voltage("anode")
+            .unwrap()
+            .abs()
+    }
+
+    let without_transit = high_frequency_anode(0.0);
+    let with_transit = high_frequency_anode(1.0e-6);
+
+    assert!(
+        without_transit > 0.01,
+        "expected measurable high-frequency voltage without transit time, got {without_transit}"
+    );
+    assert!(
+        with_transit < without_transit / 100.0,
+        "expected transit-time high-frequency shunt, got no_tt={without_transit} tt={with_transit}"
     );
 }
 

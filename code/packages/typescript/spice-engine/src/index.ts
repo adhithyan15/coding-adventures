@@ -363,6 +363,7 @@ export interface Diode {
   readonly breakdownVoltage?: number;
   readonly breakdownCurrent: number;
   readonly junctionCapacitance: number;
+  readonly transitTime: number;
 }
 
 export type JfetPolarity = "NJF" | "PJF";
@@ -949,7 +950,7 @@ function cloneSubcktElement(
     case "b-source":
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap), voltageExpr: mapBSourceExprNodes(element.voltageExpr, instanceName, nodeMap), currentExpr: mapBSourceExprNodes(element.currentExpr, instanceName, nodeMap) };
     case "diode":
-      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance);
+      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime);
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation);
     case "bjt":
@@ -1202,6 +1203,7 @@ export function diode(
   breakdownVoltage?: number,
   breakdownCurrent = 1.0e-3,
   junctionCapacitance = 0.0,
+  transitTime = 0.0,
 ): Diode {
   return {
     kind: "diode",
@@ -1214,6 +1216,7 @@ export function diode(
     breakdownVoltage,
     breakdownCurrent,
     junctionCapacitance,
+    transitTime,
   };
 }
 
@@ -3918,11 +3921,12 @@ function buildAcMatrix(
         const diodeVoltage = vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.anode)) -
           vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.cathode));
         const [, diodeConductance] = diodeCurrentConductance(element, diodeVoltage);
+        const diffusionCapacitance = element.transitTime * diodeConductance;
         stampComplexConductance(
           matrix,
           nodeIndex(nodeIndices, element.anode),
           nodeIndex(nodeIndices, element.cathode),
-          complex(diodeConductance, omega * element.junctionCapacitance),
+          complex(diodeConductance, omega * (element.junctionCapacitance + diffusionCapacitance)),
         );
         break;
       case "jfet":
@@ -4835,6 +4839,9 @@ function validateDiode(element: Diode): void {
   }
   if (!Number.isFinite(element.junctionCapacitance) || element.junctionCapacitance < 0.0) {
     throw invalidElement(element.name, "junction capacitance must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.transitTime) || element.transitTime < 0.0) {
+    throw invalidElement(element.name, "transit time must be finite and non-negative");
   }
 }
 

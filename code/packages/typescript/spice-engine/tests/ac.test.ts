@@ -70,7 +70,7 @@ describe("acSweep", () => {
 
   it("stamps reverse-biased diode junction capacitance", () => {
     const circuit = new Circuit();
-    circuit.add(voltageSource("Vac", "in", "0", 1.0));
+    circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
     circuit.add(resistor("R1", "in", "node", 1_000.0));
     circuit.add(diode("D1", "0", "node", 1.0e-15, 0.02585, 1.0, undefined, 1.0e-3, 1.0e-6));
 
@@ -80,6 +80,22 @@ describe("acSweep", () => {
 
     expect(low).toBeGreaterThan(0.9);
     expect(high).toBeLessThan(low / 100.0);
+  });
+
+  it("stamps forward-biased diode transit-time diffusion capacitance", () => {
+    const highFrequencyAnode = (transitTime: number): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 1.0, 1.0));
+      circuit.add(resistor("R1", "in", "anode", 1.0e6));
+      circuit.add(diode("D1", "anode", "0", 1.0e-15, 0.02585, 1.0, undefined, 1.0e-3, 0.0, transitTime));
+      return complexAbs(acSweep(circuit, 100_000_000.0, 100_000_000.0, 1)[0].voltage("anode")!);
+    };
+
+    const withoutTransit = highFrequencyAnode(0.0);
+    const withTransit = highFrequencyAnode(1.0e-6);
+
+    expect(withoutTransit).toBeGreaterThan(0.01);
+    expect(withTransit).toBeLessThan(withoutTransit / 100.0);
   });
 
   it("runs frequency sweeps at each named corner", () => {

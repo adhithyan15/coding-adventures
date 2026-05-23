@@ -14,6 +14,9 @@
   small-signal AC susceptance in parallel with the linearized diode
   conductance.
 
+- **Diode transit-time models** — `Diode.Tt` now contributes forward-bias
+  diffusion capacitance to small-signal AC admittance.
+
 - **Pseudo-transient DC continuation** — `dc_op` now has a final bounded
   artificial backward-Euler continuation aid after Newton, Gmin stepping, and
   source stepping; successful fallback results report
