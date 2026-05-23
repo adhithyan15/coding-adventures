@@ -1654,7 +1654,13 @@ def _plan_drop_table(stmt: DropTableStmt) -> P.LogicalPlan:
 
 
 def _plan_alter_table(stmt: AlterTableStmt) -> P.LogicalPlan:
-    return P.AlterTable(table=stmt.table, column=stmt.column)
+    return P.AlterTable(
+        table=stmt.table,
+        column=stmt.column,
+        rename_to=stmt.rename_to,
+        rename_column=stmt.rename_column,
+        drop_column=stmt.drop_column,
+    )
 
 
 def _plan_create_index(stmt: CreateIndexStmt) -> P.LogicalPlan:

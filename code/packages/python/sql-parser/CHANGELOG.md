@@ -2,6 +2,23 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.37.0] - 2026-05-23
+
+### Added
+
+- ``alter_table_stmt`` extended to support all four SQLite forms,
+  not just ``ADD COLUMN``:
+
+      alter_table_stmt = "ALTER" "TABLE" NAME (
+            "ADD" [ "COLUMN" ] col_def
+          | "RENAME" "TO" NAME
+          | "RENAME" [ "COLUMN" ] NAME "TO" NAME
+          | "DROP" [ "COLUMN" ] NAME
+      ) ;
+
+  The ``COLUMN`` keyword is optional everywhere (matches SQLite).
+- Regenerated grammar tables.
+
 ## [0.36.0] - 2026-05-23
 
 ### Added

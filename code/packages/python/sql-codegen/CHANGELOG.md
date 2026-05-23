@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.36.0] - 2026-05-23
+
+### Added
+
+- IR ``AlterTable`` gained three new optional fields —
+  ``rename_to``, ``rename_column``, ``drop_column`` — mirroring the
+  planner side.  The compiler dispatches on the plan node and
+  forwards whichever is set to the IR node.
+
 ## [1.35.0] - 2026-05-23
 
 ### Added

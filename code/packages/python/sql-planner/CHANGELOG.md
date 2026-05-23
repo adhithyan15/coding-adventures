@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.40.0] - 2026-05-23
+
+### Added
+
+- ``AlterTableStmt`` and the plan-side ``AlterTable`` both gained
+  three new optional fields — ``rename_to``, ``rename_column``, and
+  ``drop_column`` — alongside the existing ``column`` field.  Exactly
+  one is non-None per instance; the codegen forwards whichever is
+  set.  The previous shape (only ``column``) is preserved when ADD
+  is used, so no breakage for callers that already construct
+  AlterTable nodes.
+- ``_plan_alter_table`` propagates all four optional fields from
+  the AST to the plan node.
+
 ## [0.39.0] - 2026-05-23
 
 ### Added

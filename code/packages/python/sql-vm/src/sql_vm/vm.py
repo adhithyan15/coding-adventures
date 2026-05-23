@@ -2776,17 +2776,48 @@ def _do_drop_trigger(ins: DropTriggerDef, st: _VmState) -> None:
 
 
 def _do_alter_table(ins: AlterTable, st: _VmState) -> None:
-    """Add a column to an existing table via ALTER TABLE … ADD COLUMN."""
+    """Dispatch one of the four ALTER TABLE forms.
+
+    The IR ``AlterTable`` instruction carries optional fields for each
+    flavour — exactly one of ``column`` / ``rename_to`` / ``rename_column``
+    / ``drop_column`` is set per instruction.  We check them in order
+    and call the matching backend method.
+    """
     from sql_backend.schema import ColumnDef as BackendColumnDef
 
-    col = BackendColumnDef(
-        name=ins.column.name,
-        type_name=ins.column.type,
-        not_null=not ins.column.nullable,
-        collation=ins.column.collation,
-    )
     try:
-        st.backend.add_column(ins.table, col)
+        if ins.column is not None:
+            # ALTER TABLE t ADD [COLUMN] col_def
+            from sql_backend.schema import NO_DEFAULT as _BE_NO_DEFAULT
+            from sql_codegen.ir import NO_COLUMN_DEFAULT as _IR_NO_DEFAULT
+
+            col = BackendColumnDef(
+                name=ins.column.name,
+                type_name=ins.column.type,
+                not_null=not ins.column.nullable,
+                # Convert the IR-layer sentinel to the backend-layer one so
+                # ``ALTER TABLE … ADD COLUMN x TEXT DEFAULT 'foo'`` backfills
+                # existing rows with 'foo' rather than NULL.
+                default=(
+                    _BE_NO_DEFAULT
+                    if ins.column.default is _IR_NO_DEFAULT
+                    else ins.column.default
+                ),
+                collation=ins.column.collation,
+            )
+            st.backend.add_column(ins.table, col)
+        elif ins.rename_to is not None:
+            # ALTER TABLE old RENAME TO new
+            st.backend.rename_table(ins.table, ins.rename_to)
+        elif ins.rename_column is not None:
+            # ALTER TABLE t RENAME [COLUMN] old TO new
+            old, new = ins.rename_column
+            st.backend.rename_column(ins.table, old, new)
+        elif ins.drop_column is not None:
+            # ALTER TABLE t DROP [COLUMN] c
+            st.backend.drop_column(ins.table, ins.drop_column)
+        else:
+            raise be.Unsupported(operation="ALTER TABLE with no operation field set")
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
     st.result.rows_affected = 0

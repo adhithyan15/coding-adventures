@@ -5,6 +5,23 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.0] - 2026-05-23
+
+### Added
+
+- ``Backend.rename_table(old_name, new_name)``,
+  ``Backend.rename_column(table, old, new)``, and
+  ``Backend.drop_column(table, column)`` — three new abstract methods
+  on the Backend interface to support the SQLite-3.25+ /
+  3.35+ ALTER TABLE forms.  Each has a default implementation that
+  raises ``NotImplementedError`` so existing backends that don't
+  implement them still compile.
+- ``InMemoryBackend`` implements all three.  Rename operations
+  rewrite any indexes that referenced the old table or column name.
+  ``drop_column`` rejects: PRIMARY KEY columns, the only column of a
+  table, and columns referenced by an index — matching SQLite's
+  restrictions.
+
 ## [0.13.0] - 2026-05-23
 
 ### Added
