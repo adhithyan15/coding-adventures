@@ -169,6 +169,10 @@ rebuilding receipt labels and messages.
 transport outcomes with Rust-owned names, labels, queue-depth metadata, and
 messages, keeping frontend outcome reporting thin over the shared transport
 policy.
+`input_callback_transport_trace_summary` records those outcomes as stable
+transport traces with Rust-owned trace names, labels, queue-depth metadata, and
+messages, so adapters can persist callback-runner and adapter-event transport
+paths without reconstructing the outcome chain.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
