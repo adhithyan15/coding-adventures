@@ -1629,6 +1629,32 @@ impl ToolAuditSupervisorDrainRunReport {
         self.host_decision_route().is_investigation()
     }
 
+    /// Return whether all host-decision classifier labels parse back to their typed values.
+    pub fn host_decision_classifier_labels_match(&self) -> bool {
+        self.host_decision_label_matches_kind()
+            && self.host_decision_lane_label_matches_kind()
+            && self.host_decision_priority_label_matches_kind()
+            && self.host_decision_readiness_label_matches_kind()
+            && self.host_decision_route_label_matches_kind()
+    }
+
+    /// Return whether any host-decision classifier label drifted from its typed value.
+    pub fn has_host_decision_label_integrity_drift(&self) -> bool {
+        !self.host_decision_classifier_labels_match()
+    }
+
+    /// Return whether all host-routing classifier labels parse back to their typed values.
+    pub fn host_routing_classifier_labels_match(&self) -> bool {
+        self.host_attention_label_matches_kind()
+            && self.terminal_readiness_label_matches_kind()
+            && self.host_decision_classifier_labels_match()
+    }
+
+    /// Return whether any host-routing classifier label drifted from its typed value.
+    pub fn has_host_routing_label_integrity_drift(&self) -> bool {
+        !self.host_routing_classifier_labels_match()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -1981,6 +2007,10 @@ impl ToolAuditSupervisorDrainRunReport {
                 .host_decision_routes_to_integrity_investigation(),
             host_decision_routes_to_triage: self.host_decision_routes_to_triage(),
             host_decision_routes_to_investigation: self.host_decision_routes_to_investigation(),
+            host_decision_classifier_labels_match: self.host_decision_classifier_labels_match(),
+            has_host_decision_label_integrity_drift: self.has_host_decision_label_integrity_drift(),
+            host_routing_classifier_labels_match: self.host_routing_classifier_labels_match(),
+            has_host_routing_label_integrity_drift: self.has_host_routing_label_integrity_drift(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -2736,6 +2766,14 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_decision_routes_to_triage: bool,
     /// Whether the host decision routes to any investigation queue.
     pub host_decision_routes_to_investigation: bool,
+    /// Whether all host-decision classifier labels parse back to their typed values.
+    pub host_decision_classifier_labels_match: bool,
+    /// Whether any host-decision classifier label drifted from its typed value.
+    pub has_host_decision_label_integrity_drift: bool,
+    /// Whether all host-routing classifier labels parse back to their typed values.
+    pub host_routing_classifier_labels_match: bool,
+    /// Whether any host-routing classifier label drifted from its typed value.
+    pub has_host_routing_label_integrity_drift: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -3598,6 +3636,26 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the host decision routes to any investigation queue.
     pub fn host_decision_routes_to_investigation(&self) -> bool {
         self.host_decision_routes_to_investigation
+    }
+
+    /// Return whether all host-decision classifier labels parse back to their typed values.
+    pub fn host_decision_classifier_labels_match(&self) -> bool {
+        self.host_decision_classifier_labels_match
+    }
+
+    /// Return whether any host-decision classifier label drifted from its typed value.
+    pub fn has_host_decision_label_integrity_drift(&self) -> bool {
+        self.has_host_decision_label_integrity_drift
+    }
+
+    /// Return whether all host-routing classifier labels parse back to their typed values.
+    pub fn host_routing_classifier_labels_match(&self) -> bool {
+        self.host_routing_classifier_labels_match
+    }
+
+    /// Return whether any host-routing classifier label drifted from its typed value.
+    pub fn has_host_routing_label_integrity_drift(&self) -> bool {
+        self.has_host_routing_label_integrity_drift
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -10483,6 +10541,53 @@ mod tests {
         integrity_summary.host_decision_route_label = "elsewhere";
         integrity_summary.host_decision_route_label_matches_kind = false;
         assert!(!integrity_summary.host_decision_route_label_matches_kind());
+    }
+
+    #[test]
+    fn supervisor_drain_summary_flattens_host_routing_label_integrity_flags() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut sink = InMemoryToolAuditSink::new();
+        let report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut sink)
+            .unwrap();
+        let clean_summary = report.summary();
+
+        assert!(report.host_decision_classifier_labels_match());
+        assert!(!report.has_host_decision_label_integrity_drift());
+        assert!(report.host_routing_classifier_labels_match());
+        assert!(!report.has_host_routing_label_integrity_drift());
+        assert!(clean_summary.host_decision_classifier_labels_match);
+        assert!(clean_summary.host_decision_classifier_labels_match());
+        assert!(!clean_summary.has_host_decision_label_integrity_drift);
+        assert!(!clean_summary.has_host_decision_label_integrity_drift());
+        assert!(clean_summary.host_routing_classifier_labels_match);
+        assert!(clean_summary.host_routing_classifier_labels_match());
+        assert!(!clean_summary.has_host_routing_label_integrity_drift);
+        assert!(!clean_summary.has_host_routing_label_integrity_drift());
+
+        let mut stale_decision_summary = clean_summary.clone();
+        stale_decision_summary.host_decision_route_label = "elsewhere";
+        stale_decision_summary.host_decision_route_label_matches_kind = false;
+        stale_decision_summary.host_decision_classifier_labels_match = false;
+        stale_decision_summary.has_host_decision_label_integrity_drift = true;
+        stale_decision_summary.host_routing_classifier_labels_match = false;
+        stale_decision_summary.has_host_routing_label_integrity_drift = true;
+        assert!(!stale_decision_summary.host_decision_route_label_matches_kind());
+        assert!(!stale_decision_summary.host_decision_classifier_labels_match());
+        assert!(stale_decision_summary.has_host_decision_label_integrity_drift());
+        assert!(!stale_decision_summary.host_routing_classifier_labels_match());
+        assert!(stale_decision_summary.has_host_routing_label_integrity_drift());
+
+        let mut stale_attention_summary = clean_summary;
+        stale_attention_summary.host_attention_label = "attentionish";
+        stale_attention_summary.host_attention_label_matches_kind = false;
+        stale_attention_summary.host_routing_classifier_labels_match = false;
+        stale_attention_summary.has_host_routing_label_integrity_drift = true;
+        assert!(stale_attention_summary.host_decision_classifier_labels_match());
+        assert!(!stale_attention_summary.has_host_decision_label_integrity_drift());
+        assert!(!stale_attention_summary.host_attention_label_matches_kind());
+        assert!(!stale_attention_summary.host_routing_classifier_labels_match());
+        assert!(stale_attention_summary.has_host_routing_label_integrity_drift());
     }
 
     #[test]

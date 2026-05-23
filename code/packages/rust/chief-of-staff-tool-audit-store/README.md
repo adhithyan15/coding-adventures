@@ -163,6 +163,8 @@ The crate keeps the boundary narrow:
 - supervisor drain reports and summaries expose host-decision route targets
   for scheduler, follow-up, drift-investigation, integrity-investigation,
   triage, and no-route queues
+- supervisor drain reports and summaries expose aggregate host-decision and
+  host-routing classifier label-integrity flags for payload-free dashboards
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
