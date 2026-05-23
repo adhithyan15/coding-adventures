@@ -157,6 +157,10 @@ budget-exceeded, and failed-callback events from Rust-owned transport policy.
 Rust-owned delivery route, publication flag, queue-depth metadata, and message,
 so adapters know whether to hand the callback to the runner or publish a native
 event without carrying transport delivery logic.
+`input_callback_transport_acknowledgement_summary` marks those deliveries as a
+callback-runner handoff or adapter-event publication with Rust-owned labels,
+queue-depth metadata, and acknowledgement messages, so frontends can report
+delivery completion without duplicating route policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
