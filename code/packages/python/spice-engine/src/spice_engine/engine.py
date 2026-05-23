@@ -3304,6 +3304,37 @@ def _stamp_ac_mutual_inductor(
     )
 
 
+def _validate_transmission_line(line: TransmissionLine) -> None:
+    if not math.isfinite(line.characteristic_impedance):
+        raise ValueError(f"{line.name}: characteristic impedance must be finite")
+    if line.characteristic_impedance <= 0.0:
+        raise ValueError(f"{line.name}: characteristic impedance must be positive")
+    if not math.isfinite(line.delay):
+        raise ValueError(f"{line.name}: delay must be finite")
+    if line.delay <= 0.0:
+        raise ValueError(f"{line.name}: delay must be positive")
+
+
+def _stamp_ac_transmission_line(
+    line: TransmissionLine,
+    G: list[list[complex]],
+    omega: float,
+    node_to_idx: dict[str, int],
+) -> None:
+    _validate_transmission_line(line)
+    phase = omega * line.delay
+    sin_phase = math.sin(phase)
+    if abs(sin_phase) < 1.0e-12:
+        raise ValueError(f"{line.name}: transmission line phase is singular at this frequency")
+    cos_phase = math.cos(phase)
+    y11 = complex(0.0, -cos_phase / (line.characteristic_impedance * sin_phase))
+    y12 = complex(0.0, 1.0 / (line.characteristic_impedance * sin_phase))
+    _stamp_g_c(G, node_to_idx, line.n1, line.n2, y11)
+    _stamp_g_c(G, node_to_idx, line.n3, line.n4, y11)
+    _stamp_vccs_c(G, node_to_idx, line.n1, line.n2, line.n3, line.n4, y12)
+    _stamp_vccs_c(G, node_to_idx, line.n3, line.n4, line.n1, line.n2, y12)
+
+
 def _has_explicit_ac_sources(circuit: Circuit) -> bool:
     """Return True when at least one independent source has an AC spec."""
 
@@ -3404,6 +3435,9 @@ def _stamp_ac(
 
     elif isinstance(el, MutualInductor):
         _stamp_ac_mutual_inductor(el, inductors, G, omega, node_to_idx)
+
+    elif isinstance(el, TransmissionLine):
+        _stamp_ac_transmission_line(el, G, omega, node_to_idx)
 
     elif isinstance(el, VoltageSource):
         # Ideal voltage source stamp: adds branch current as an unknown.

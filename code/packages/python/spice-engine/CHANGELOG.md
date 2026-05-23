@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Transmission-line AC stamping** — `TransmissionLine` now contributes the
+  lossless two-port admittance matrix in AC analysis, including matched-load
+  phase-delay behavior.
+
 - **Transmission-line element foothold** — `TransmissionLine` now exposes the
   public `T`-card four-terminal delay-line shape for parser and future
   AC/transient stamping work.

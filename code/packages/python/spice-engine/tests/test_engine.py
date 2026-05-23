@@ -125,6 +125,7 @@ from spice_engine import (
     SParameterResult,
     SubcircuitDefinition,
     TfResult,
+    TransmissionLine,
     VoltageSource,
     XInstance,
     ac_sweep,
@@ -1823,6 +1824,31 @@ def test_ac_mutual_inductor_rejects_missing_reference():
     c.add(MutualInductor("Kbad", "Lpri", "Lmissing", 0.9))
 
     with pytest.raises(ValueError, match="referenced inductor"):
+        ac_sweep(c, f_start=1_000.0, f_stop=1_000.0, n_points=1, sweep="lin")
+
+
+def test_ac_transmission_line_matched_load_phase_delay():
+    freq = 1_000_000.0
+    delay = 1.0 / (4.0 * freq)
+
+    c = Circuit()
+    c.add(VoltageSource("Vin", "src", "0", 0.0, ac=AcSource(1.0)))
+    c.add(Resistor("Rsrc", "src", "in", 50.0))
+    c.add(TransmissionLine("T1", "in", "0", "out", "0", 50.0, delay))
+    c.add(Resistor("Rload", "out", "0", 50.0))
+
+    point = ac_sweep(c, f_start=freq, f_stop=freq, n_points=1, sweep="lin").points[0]
+
+    assert point.node_voltages["out"] == pytest.approx(-0.5j)
+
+
+def test_ac_transmission_line_rejects_invalid_parameters():
+    c = Circuit()
+    c.add(VoltageSource("Vin", "src", "0", 0.0, ac=AcSource(1.0)))
+    c.add(TransmissionLine("Tbad", "src", "0", "out", "0", 0.0, 1.0e-9))
+    c.add(Resistor("Rload", "out", "0", 50.0))
+
+    with pytest.raises(ValueError, match="characteristic impedance must be positive"):
         ac_sweep(c, f_start=1_000.0, f_stop=1_000.0, n_points=1, sweep="lin")
 
 

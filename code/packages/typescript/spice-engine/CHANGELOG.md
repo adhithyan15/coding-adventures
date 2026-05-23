@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add AC analysis stamping for `TransmissionLine` using the lossless two-port
+  admittance matrix, including matched-load phase-delay behavior.
 - Add a public `TransmissionLine` element and `transmissionLine` factory as
   the parser-facing SPICE `T` card foothold for future AC/transient delay-line
   stamping.
