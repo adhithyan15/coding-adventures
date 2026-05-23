@@ -1423,15 +1423,18 @@ impl Compiler {
         let loc = SourceLoc::new(m.line, m.column);
 
         // Evaluate the scrutinee once.
+        // Path-A increment 5: convert all `call_builtin "_move"` sites
+        // in compile_match to typed `mov` via `FnCtx::emit_move`.  The
+        // `match` result's type is left as `"any"` for now — match
+        // arms can produce mixed types (variant constructors vs. raw
+        // values), so a consensus pass here is non-trivial.  Mechanical
+        // conversion of the move shape alone is enough to unblock the
+        // backend validators (which reject `call_builtin "_move"` but
+        // accept untyped `mov [any]`).
         let scrutinee_reg = self.compile_expr(&m.scrutinee, ctx)?;
         // Bind to a fresh stable register so arms can reference it freely.
         let matched = ctx.fresh_var("matched");
-        ctx.emit(IIRInstr::new(
-            "call_builtin",
-            Some(matched.clone()),
-            vec![Operand::Var("_move".into()), Operand::Var(scrutinee_reg)],
-            "any",
-        ), loc);
+        ctx.emit_move(&matched, &scrutinee_reg, loc);
 
         // Result register — each arm writes its value here.
         let result = ctx.fresh_var("match_result");
@@ -1443,12 +1446,7 @@ impl Compiler {
             vec![Operand::Var("make_nil".into())],
             "any",
         ), loc);
-        ctx.emit(IIRInstr::new(
-            "call_builtin",
-            Some(result.clone()),
-            vec![Operand::Var("_move".into()), Operand::Var(nil_init)],
-            "any",
-        ), loc);
+        ctx.emit_move(&result, &nil_init, loc);
 
         // Generate labels for the chain.
         // We build: if (test0) { arm0 } else { if (test1) { arm1 } else { … } }
@@ -1470,12 +1468,7 @@ impl Compiler {
                             // Unknown constructor — treat as bare binding.
                             let arm_result = self.compile_match_binding_arm(
                                 &matched, name, &arm.body, ctx, arm_loc)?;
-                            ctx.emit(IIRInstr::new(
-                                "call_builtin",
-                                Some(result.clone()),
-                                vec![Operand::Var("_move".into()), Operand::Var(arm_result)],
-                                "any",
-                            ), arm_loc);
+                            ctx.emit_move(&result, &arm_result, arm_loc);
                             ctx.emit(IIRInstr::new(
                                 "jmp",
                                 None,
@@ -1562,16 +1555,11 @@ impl Compiler {
                             "any",
                         ), arm_loc);
 
-                        // Bind field to name in ctx.locals
+                        // Bind field to name in ctx.locals via typed `mov`.
                         if ctx.locals.insert(binding.clone()) {
                             added_names.push(binding.clone());
                         }
-                        ctx.emit(IIRInstr::new(
-                            "call_builtin",
-                            Some(binding.clone()),
-                            vec![Operand::Var("_move".into()), Operand::Var(field_reg)],
-                            "any",
-                        ), arm_loc);
+                        ctx.emit_move(binding, &field_reg, arm_loc);
                     }
 
                     // Evaluate body
@@ -1581,13 +1569,8 @@ impl Compiler {
                     }
                     let body_v = body_result.expect("arm body non-empty (parser-enforced)");
 
-                    // Copy to result register
-                    ctx.emit(IIRInstr::new(
-                        "call_builtin",
-                        Some(result.clone()),
-                        vec![Operand::Var("_move".into()), Operand::Var(body_v)],
-                        "any",
-                    ), arm_loc);
+                    // Copy to result register via typed `mov`.
+                    ctx.emit_move(&result, &body_v, arm_loc);
 
                     // Unbind field names
                     for n in added_names {
@@ -1614,12 +1597,7 @@ impl Compiler {
                 MatchPat::Binding(name) => {
                     let arm_result = self.compile_match_binding_arm(
                         &matched, name, &arm.body, ctx, arm_loc)?;
-                    ctx.emit(IIRInstr::new(
-                        "call_builtin",
-                        Some(result.clone()),
-                        vec![Operand::Var("_move".into()), Operand::Var(arm_result)],
-                        "any",
-                    ), arm_loc);
+                    ctx.emit_move(&result, &arm_result, arm_loc);
                     // Binding arm always matches → jump to end immediately.
                     ctx.emit(IIRInstr::new(
                         "jmp",
@@ -1636,12 +1614,7 @@ impl Compiler {
                         body_result = Some(self.compile_expr(e, ctx)?);
                     }
                     let body_v = body_result.expect("arm body non-empty");
-                    ctx.emit(IIRInstr::new(
-                        "call_builtin",
-                        Some(result.clone()),
-                        vec![Operand::Var("_move".into()), Operand::Var(body_v)],
-                        "any",
-                    ), arm_loc);
+                    ctx.emit_move(&result, &body_v, arm_loc);
                     // Wildcard always matches → jump to end.
                     ctx.emit(IIRInstr::new(
                         "jmp",
@@ -1675,12 +1648,8 @@ impl Compiler {
         loc: SourceLoc,
     ) -> Result<String, TwigCompileError> {
         let was_new = ctx.locals.insert(name.to_string());
-        ctx.emit(IIRInstr::new(
-            "call_builtin",
-            Some(name.to_string()),
-            vec![Operand::Var("_move".into()), Operand::Var(matched_reg.to_string())],
-            "any",
-        ), loc);
+        // Path-A increment 5: typed `mov` for the binding-arm helper.
+        ctx.emit_move(name, matched_reg, loc);
         let mut last: Option<String> = None;
         for e in body {
             last = Some(self.compile_expr(e, ctx)?);
