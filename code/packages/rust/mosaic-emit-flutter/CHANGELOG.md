@@ -3,6 +3,52 @@
 All notable changes to `mosaic-emit-flutter` will be documented in
 this file.
 
+## [0.2.0] - 2026-05-23 — UI29-4 host primitives
+
+### Added
+
+- **`HostLink` (kernel primitive #19)** → `InkWell(onTap:, child:
+  Text(...))`. Flutter has no built-in URL launcher, so the
+  `onTap` body carries a `/* TODO: launchUrl(Uri.parse(href)) */`
+  comment that hosts wire to the `url_launcher` package. The
+  `external: false` keyword suppresses the `launchUrl` comment
+  for in-app routing (host handles via the `onActivate`
+  dispatch). The `target` keyword (`same`/`new-tab`/`parent`/
+  `top`) is preserved in the comment as a hint to the host.
+- **`HostTooltip` (kernel primitive #20)** → `Tooltip(message:,
+  child:)`. Flutter's built-in tooltip handles hover (web /
+  desktop) and long-press (mobile) automatically; the overlay
+  layer escapes parent clipping by default. Single-child shape
+  matches the spec exactly.
+- **`HostNumberInput` (kernel primitive #21)** → `TextField`
+  configured with `keyboardType: TextInputType.number`, which
+  surfaces the numeric keypad on iOS/Android. `min`/`max`/`step`
+  numeric literals are emitted as a `/* min: N, max: N, step: N
+  */` range hint; full `inputFormatters` clamping is a follow-up.
+  `onChange` wires `onSubmitted` (commit-on-Enter), matching the
+  UI29-4 spec's rejection of per-keystroke dispatch for numeric
+  fields.
+- New `find_number_prop` helper for fishing `LayoutPropValue::
+  Number(f64)` values out of a node's prop list. Used by
+  HostNumberInput for `min`/`max`/`step`.
+- 10 new tests covering all three primitives plus a security
+  regression test for Dart-string injection through HostLink's
+  `href` slot (`$`-interpolation and `"`-quote escaping).
+
+### Security notes
+
+- `href`, `label`, `text`, and `placeholder` slot/string values
+  all flow through `escape_dart_string`, which handles `\`, `"`,
+  `$` (critical: Dart interpolates `$ident` inside double-quoted
+  strings), `\n`, and `\r`.
+- `external`/`target` keywords are validated against allow-lists
+  before splicing into block comments — a malicious keyword like
+  `false*/dispatch(evil())/*` is impossible because the grammar
+  layer guarantees keywords are bare identifiers and we further
+  match against `same|new-tab|parent|top` / `false|true`.
+- `min`/`max`/`step` are `LayoutPropValue::Number(f64)` from the
+  IR, never strings — no injection possible by construction.
+
 ## [0.1.0] - 2026-05-23 — initial release
 
 Brand-new backend bringing Flutter (Dart) as the seventh supported
