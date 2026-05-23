@@ -1443,6 +1443,7 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
 
     not_null = False
     primary_key = False
+    autoincrement = False
     unique = False
     check_expression = None
     foreign_key: tuple[str, str | None] | None = None
@@ -1459,6 +1460,15 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
             not_null = True
         elif kw_seq == ("PRIMARY", "KEY"):
             primary_key = True
+            not_null = True  # PRIMARY KEY implies NOT NULL.
+        elif kw_seq == ("PRIMARY", "KEY", "AUTOINCREMENT"):
+            # SQLite: AUTOINCREMENT is only valid after PRIMARY KEY on
+            # an INTEGER column.  We accept the keyword and mark the
+            # column; behaviour ("rowids never reuse after DELETE") is
+            # already true for the in-memory backend since
+            # ``_next_rowid`` is never decremented.
+            primary_key = True
+            autoincrement = True
             not_null = True  # PRIMARY KEY implies NOT NULL.
         elif kw_seq == ("UNIQUE",):
             unique = True
@@ -1513,6 +1523,7 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
         type_name=type_name,
         not_null=not_null,
         primary_key=primary_key,
+        autoincrement=autoincrement,
         unique=unique,
         default=col_default,
         check_expr=check_expression,

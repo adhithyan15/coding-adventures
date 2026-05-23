@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.38.0] - 2026-05-23
+
+### Added
+
+- IR ``ColumnDef`` gains an ``autoincrement: bool = False`` field
+  carrying SQLite's ``AUTOINCREMENT`` clause through to the VM.
+  The compiler forwards ``c.autoincrement`` from the planner-layer
+  ColumnDef unchanged.
+
 ## [1.37.0] - 2026-05-23
 
 ### Added

@@ -2569,6 +2569,7 @@ def _do_create_table(ins: CreateTable, st: _VmState) -> None:
             type_name=c.type,
             not_null=not c.nullable,
             primary_key=c.primary_key,
+            autoincrement=c.autoincrement,
             unique=c.unique,
             # Convert the IR-layer sentinel back to the backend-layer sentinel.
             # Any other value (including None = SQL NULL) is a literal default
