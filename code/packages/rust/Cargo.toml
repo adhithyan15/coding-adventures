@@ -482,6 +482,7 @@ members = [
     "url-parser",
     "closure-pass-constant-fold",
     "closure-pass-dce",
+    "closure-pass-fold-control-flow",
     "closure-pass-pipeline",
     "closure-typechecker",
     "compiler-ir",
