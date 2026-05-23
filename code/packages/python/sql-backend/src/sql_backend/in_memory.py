@@ -50,6 +50,7 @@ Each case has its own error path. The helper methods ``_apply_defaults`` /
 from __future__ import annotations
 
 import copy
+import re
 from collections.abc import Iterator
 from typing import Final
 
@@ -231,6 +232,201 @@ def _strict_coerce(value: object, declared: str) -> tuple[object, bool]:
     return value, False
 
 
+#: Synthetic table names that expose the schema catalog.  Both names refer
+#: to the same data — SQLite added ``sqlite_schema`` in 3.33 as the
+#: preferred spelling while keeping ``sqlite_master`` for back-compat.
+#: Queries against either name go through the same synthesis path; CREATE
+#: TABLE, DROP TABLE, INSERT, UPDATE, and DELETE on either name raise an
+#: error.
+_MASTER_NAMES: Final[frozenset[str]] = frozenset({"sqlite_master", "sqlite_schema"})
+
+#: Fixed column schema for ``sqlite_master`` (matches SQLite 3).
+#:
+#: =========  =======  =====================================================
+#: name       type     meaning
+#: =========  =======  =====================================================
+#: type       TEXT     'table' | 'index' | 'view' | 'trigger'
+#: name       TEXT     name of the schema object
+#: tbl_name   TEXT     name of the table the object belongs to (= name for
+#:                     tables; the indexed table for indexes; the trigger's
+#:                     target table for triggers)
+#: rootpage   INTEGER  page number — meaningful only on disk; the in-memory
+#:                     backend returns 0
+#: sql        TEXT     the CREATE statement that defined the object;
+#:                     reconstructed from ColumnDef metadata.  NULL for
+#:                     auto-generated indexes (matches SQLite).
+#: =========  =======  =====================================================
+def _master_columns() -> list[ColumnDef]:
+    """Return a fresh copy of the ``sqlite_master`` column schema.
+
+    A fresh list per call keeps callers from accidentally aliasing the
+    same list and mutating the canonical schema.
+    """
+    return [
+        ColumnDef(name="type", type_name="TEXT"),
+        ColumnDef(name="name", type_name="TEXT"),
+        ColumnDef(name="tbl_name", type_name="TEXT"),
+        ColumnDef(name="rootpage", type_name="INTEGER"),
+        ColumnDef(name="sql", type_name="TEXT"),
+    ]
+
+
+#: Pattern that matches a safe bare SQL identifier, optionally followed by
+#: a parenthesized length/precision argument list (e.g. ``VARCHAR(64)`` or
+#: ``DECIMAL(10,2)``).  ``_sanitize_type_name`` uses this to decide whether
+#: a type-name string is safe to interpolate verbatim into the synthesized
+#: ``sqlite_master.sql`` column; anything that doesn't match is replaced
+#: with the SQLite NUMERIC affinity name to neutralize second-order
+#: injection.
+_SAFE_TYPE_NAME = re.compile(
+    r"[A-Za-z_][A-Za-z0-9_]*\s*(\(\s*\d+(\s*,\s*\d+)?\s*\))?\s*$"
+)
+
+#: Pattern that matches a safe bare collation name — exactly one
+#: identifier with no parentheses, separators, or punctuation.
+_SAFE_COLLATION_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*$")
+
+
+def _sanitize_type_name(s: str) -> str:
+    """Return *s* verbatim if it's a recognisable type name, else NUMERIC.
+
+    SQLite's CREATE TABLE grammar is famously lenient about the column-type
+    slot — it accepts any token sequence and maps via affinity rules.  But
+    when we round-trip the type into the synthesized ``sqlite_master.sql``
+    column, a string like ``"INTEGER); DROP TABLE users;--"`` would inject
+    SQL into a downstream consumer that re-executes our output.
+
+    We accept the standard shape ``IDENT`` or ``IDENT(N)`` or
+    ``IDENT(N,M)`` (case-insensitive).  Anything else is replaced with the
+    NUMERIC affinity name — preserves the table's semantics (NUMERIC is
+    the default affinity for unrecognised types in SQLite) while
+    neutralising the injection vector.
+    """
+    return s if _SAFE_TYPE_NAME.match(s) else "NUMERIC"
+
+
+def _sanitize_collation_name(s: str) -> str:
+    """Return *s* verbatim if it's a bare identifier, else BINARY.
+
+    Collation names in SQLite are bare identifiers (``BINARY``, ``NOCASE``,
+    ``RTRIM``, plus any user-registered ones).  Treating an unsafe name
+    as BINARY (the default) preserves correctness for ill-formed input
+    while preventing SQL injection through the synthesized
+    ``sqlite_master.sql`` column.
+    """
+    return s if _SAFE_COLLATION_NAME.match(s) else "BINARY"
+
+
+def _quote_identifier(name: str) -> str:
+    """Wrap *name* in SQLite-style double quotes, doubling any embedded quotes.
+
+    SQLite's identifier-quoting rule (per the manual): a double-quoted
+    identifier may contain any character except an unescaped ``"``;
+    embedded quotes are doubled.  We always emit quotes — even for
+    well-behaved bare identifiers — so the output is unambiguous when a
+    downstream consumer (ORM, migration tool) re-executes the
+    ``sqlite_master.sql`` column.  Without quoting, an identifier
+    crafted to contain SQL syntax (e.g. a column declared with the name
+    ``x); DROP TABLE users;--``) would render injectable SQL.
+    """
+    escaped = name.replace('"', '""')
+    return f'"{escaped}"'
+
+
+def _format_sql_literal(value: object) -> str:
+    """Render *value* as a SQL literal suitable for ``DEFAULT`` clauses.
+
+    Python's ``repr()`` is not a SQL literal serializer — for ``bytes``
+    it produces ``b'...'`` (invalid SQL), and for strings with embedded
+    quotes its escape rules don't match SQL's (which double the quote
+    rather than backslash-escape it).  This helper handles each storage
+    class explicitly so the synthesized ``sql`` column is round-trippable
+    through real SQLite.
+    """
+    if value is None:
+        return "NULL"
+    if isinstance(value, bool):
+        return "1" if value else "0"
+    if isinstance(value, float):
+        # ``repr()`` emits ``inf`` / ``-inf`` / ``nan`` for non-finite
+        # floats, which aren't valid SQL literals.  Real SQLite stores
+        # these as NULL when round-tripped through TEXT representation;
+        # NULL is the safest no-op here.
+        import math
+        if not math.isfinite(value):
+            return "NULL"
+        return repr(value)
+    if isinstance(value, int):
+        return repr(value)
+    if isinstance(value, (bytes, bytearray)):
+        # SQLite BLOB literal: X'hexdigits'
+        return "X'" + bytes(value).hex().upper() + "'"
+    # Default: treat as text — escape embedded single quotes by doubling.
+    text = str(value).replace("'", "''")
+    return f"'{text}'"
+
+
+def _reconstruct_create_table(table: str, columns: list[ColumnDef], strict: bool) -> str:
+    """Rebuild a ``CREATE TABLE`` statement from ColumnDef metadata.
+
+    The in-memory backend doesn't preserve the user's literal SQL text, so
+    the ``sql`` column of ``sqlite_master`` is regenerated from the
+    structured schema.  The output is valid SQL but may differ from the
+    user's original byte-for-byte (e.g. whitespace, keyword casing).
+    Tools that only care about ``type`` / ``name`` / ``tbl_name`` (the
+    common case for migration tools) don't notice.
+
+    All identifiers are double-quoted (via :func:`_quote_identifier`) and
+    default values go through :func:`_format_sql_literal` so a downstream
+    consumer that re-executes the synthesized statement (a common ORM
+    pattern) cannot be tricked into running attacker-shaped SQL even if
+    a table or column name contains quoting punctuation.
+    """
+    parts: list[str] = []
+    for col in columns:
+        toks: list[str] = [
+            _quote_identifier(col.name),
+            _sanitize_type_name(col.type_name),
+        ]
+        if col.primary_key:
+            toks.append("PRIMARY KEY")
+            if col.autoincrement:
+                toks.append("AUTOINCREMENT")
+        if col.not_null and not col.primary_key:
+            toks.append("NOT NULL")
+        if col.unique and not col.primary_key:
+            toks.append("UNIQUE")
+        if col.has_default():
+            toks.append(f"DEFAULT {_format_sql_literal(col.default)}")
+        if col.collation:
+            toks.append(f"COLLATE {_sanitize_collation_name(col.collation)}")
+        parts.append(" ".join(toks))
+    out = f"CREATE TABLE {_quote_identifier(table)} ({', '.join(parts)})"
+    if strict:
+        out += " STRICT"
+    return out
+
+
+def _reconstruct_create_index(index: IndexDef) -> str | None:
+    """Rebuild a ``CREATE INDEX`` statement from an IndexDef, or None.
+
+    Returns None for auto-generated indexes (those whose name starts with
+    ``sqlite_autoindex_``) — SQLite stores NULL in the ``sql`` column of
+    ``sqlite_master`` for those, since the user never wrote a literal
+    CREATE INDEX statement.  All identifiers are double-quoted via
+    :func:`_quote_identifier` so attacker-shaped names cannot inject SQL
+    when a downstream consumer re-executes the statement.
+    """
+    if index.name.startswith("sqlite_autoindex_"):
+        return None
+    unique = "UNIQUE " if index.unique else ""
+    cols = ", ".join(_quote_identifier(c) for c in index.columns)
+    return (
+        f"CREATE {unique}INDEX {_quote_identifier(index.name)} "
+        f"ON {_quote_identifier(index.table)} ({cols})"
+    )
+
+
 #: The set of column types SQLite allows in a STRICT table.  When a table
 #: is created with the ``STRICT`` option, every column's declared type must
 #: be one of these (case-insensitive) — anything else raises a
@@ -343,9 +539,17 @@ class InMemoryBackend(Backend):
     # --- Schema -----------------------------------------------------------
 
     def tables(self) -> list[str]:
+        # Mirror SQLite: ``.tables`` and ``SELECT name FROM sqlite_master``
+        # both return user tables only.  ``sqlite_master`` / ``sqlite_schema``
+        # are visible *by name* via direct query but don't appear in this
+        # listing.
         return list(self._tables.keys())
 
     def columns(self, table: str) -> list[ColumnDef]:
+        # sqlite_master / sqlite_schema have a fixed five-column schema —
+        # return it directly without touching ``_tables``.
+        if table in _MASTER_NAMES:
+            return _master_columns()
         return list(self._require_table(table).columns)
 
     # --- Header fields (PRAGMA user_version / schema_version) -------------
@@ -374,11 +578,64 @@ class InMemoryBackend(Backend):
     # --- Read -------------------------------------------------------------
 
     def scan(self, table: str) -> RowIterator:
+        # sqlite_master / sqlite_schema are synthesized at scan() time from
+        # the current schema state — no storage, no maintenance.  Both
+        # names route to the same synthesizer.
+        if table in _MASTER_NAMES:
+            return ListRowIterator(self._synthesize_master_rows())
         t = self._require_table(table)
         # Return a snapshot view — hand out shallow copies of rows so the
         # VM can mutate freely without corrupting our state. ListRowIterator
         # handles that copy on each next() call.
         return ListRowIterator(t.rows)
+
+    def _synthesize_master_rows(self) -> list[Row]:
+        """Build the ``sqlite_master`` row list from current schema state.
+
+        Layout matches SQLite::
+
+            type      | name        | tbl_name    | rootpage | sql
+            ----------+-------------+-------------+----------+------------------
+            'table'   | <user-name> | <user-name> | 0        | CREATE TABLE ...
+            'index'   | <idx-name>  | <tbl-name>  | 0        | CREATE INDEX ...
+            'trigger' | <trg-name>  | <tbl-name>  | 0        | CREATE TRIGGER ...
+
+        Auto-generated indexes (``sqlite_autoindex_*``) get NULL in the
+        ``sql`` column, matching real SQLite.  ``rootpage`` is meaningful
+        only on disk; the in-memory backend returns 0 for every row.
+        """
+        rows: list[Row] = []
+        # Tables in insertion order.
+        for name, tbl in self._tables.items():
+            rows.append({
+                "type": "table",
+                "name": name,
+                "tbl_name": name,
+                "rootpage": 0,
+                "sql": _reconstruct_create_table(name, tbl.columns, tbl.strict),
+            })
+        # Indexes in insertion order.
+        for idx_name, idx in self._indexes.items():
+            rows.append({
+                "type": "index",
+                "name": idx_name,
+                "tbl_name": idx.table,
+                "rootpage": 0,
+                "sql": _reconstruct_create_index(idx),
+            })
+        # Triggers in creation order (per table).  ``_triggers`` is keyed
+        # by name; iterate ``_triggers_by_table`` to preserve per-table
+        # creation order (matches SQLite's ordering inside sqlite_master).
+        for tbl_name, trigs in self._triggers_by_table.items():
+            for trg in trigs:
+                rows.append({
+                    "type": "trigger",
+                    "name": trg.name,
+                    "tbl_name": tbl_name,
+                    "rootpage": 0,
+                    "sql": getattr(trg, "sql", None),
+                })
+        return rows
 
     def _open_cursor(self, table: str) -> ListCursor:
         """Internal helper: produce a ListCursor the VM can use for UPDATE/DELETE.
@@ -388,13 +645,29 @@ class InMemoryBackend(Backend):
         flow is: open a scan, iterate with next(), then pass the iterator
         to ``update`` or ``delete`` — so in practice the VM never needs
         this helper. Tests do.
+
+        ``sqlite_master`` / ``sqlite_schema`` are special-cased: the
+        synthesized rows are wrapped in a ListCursor on the fly.  Cursors
+        opened against the master table cannot be used for UPDATE/DELETE
+        because the underlying rows are recomputed on every call —
+        positional mutation would have no persistent target.  The
+        existing TableNotFound from ``_require_table`` inside ``update``
+        / ``delete`` is what fires in that case.
         """
+        if table in _MASTER_NAMES:
+            return ListCursor(self._synthesize_master_rows())
         t = self._require_table(table)
         return ListCursor(t.rows)
 
     # --- Write ------------------------------------------------------------
 
     def insert(self, table: str, row: Row) -> None:
+        if table in _MASTER_NAMES:
+            raise ConstraintViolation(
+                table=table,
+                column=None,
+                message=f"table {table} may not be modified",
+            )
         t = self._require_table(table)
         full_row = self._apply_defaults(t, row)
         self._check_unknown_columns(table, t, full_row)
@@ -472,6 +745,16 @@ class InMemoryBackend(Backend):
         *,
         strict: bool = False,
     ) -> None:
+        if table in _MASTER_NAMES:
+            # SQLite reserves the ``sqlite_*`` prefix; the master/schema
+            # names in particular cannot be redeclared.  Surface a clear
+            # ConstraintViolation rather than letting a row get inserted
+            # into a fictitious table.
+            raise ConstraintViolation(
+                table=table,
+                column=None,
+                message=f"object name reserved for internal use: {table}",
+            )
         if table in self._tables:
             if if_not_exists:
                 return
@@ -495,6 +778,16 @@ class InMemoryBackend(Backend):
         self._schema_version += 1
 
     def drop_table(self, table: str, if_exists: bool) -> None:
+        if table in _MASTER_NAMES:
+            # ``DROP TABLE [IF EXISTS] sqlite_master`` is always wrong; the
+            # IF EXISTS branch would otherwise silently succeed because the
+            # name isn't in ``_tables``.  Explicit guard surfaces a clear
+            # error matching SQLite's behaviour.
+            raise ConstraintViolation(
+                table=table,
+                column=None,
+                message=f"table {table} may not be dropped",
+            )
         if table not in self._tables:
             if if_exists:
                 return

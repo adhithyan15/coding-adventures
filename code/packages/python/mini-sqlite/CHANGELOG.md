@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.89.0] - 2026-05-23
+
+### Added
+
+- ``SELECT ... FROM sqlite_master`` (and its alias ``sqlite_schema``)
+  now works on ``:memory:`` databases.  The in-memory backend
+  synthesizes the catalog rows from current schema state on every
+  scan — no storage, no maintenance, no DDL hook plumbing.  Common
+  migration-tool queries like ``SELECT name FROM sqlite_master WHERE
+  type='table'`` return rows identical to real ``sqlite3``.
+- ``INSERT`` / ``DROP TABLE`` / ``CREATE TABLE`` targeting the
+  reserved names ``sqlite_master`` / ``sqlite_schema`` are rejected
+  with ``IntegrityError``.
+
 ## [1.88.0] - 2026-05-23
 
 ### Added
