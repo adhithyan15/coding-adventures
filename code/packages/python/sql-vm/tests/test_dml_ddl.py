@@ -659,6 +659,7 @@ def test_alter_table_drop_column() -> None:
 def test_alter_table_drop_column_unknown_raises() -> None:
     """DROP COLUMN on a non-existent column raises ColumnNotFound (translated)."""
     from sql_planner.plan import AlterTable as PlanAlterTable
+
     from sql_vm.errors import ColumnNotFound
 
     be = InMemoryBackend()
