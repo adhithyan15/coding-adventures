@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.8.0 — 2026-05-22
+
+**Phase 50 — Log/polynomial growth-rate recogniser (Rust port).**
+
+Ports Python ``cas-summation`` 0.8.0.  Extends ``g_vanishes_at_infinity``
+to accept ``Div(Log(diverging), diverging)`` shapes via the squeeze
+argument: ``log(h) → ∞`` at a logarithmic rate, denominator grows
+strictly faster, so ``log/poly → 0``.
+
+Builds on Phase 49 (0.7.0) which added ``is_bounded_in_k`` for bounded
+× vanishing shapes.
+
+### Added
+
+- **`is_log_of_diverging_in_k(node, k)`** — recognises ``Log(h(k))``
+  with ``h(k) → +∞``.  Sign-aware via ``h_diverges_at_infinity``
+  (refuses ``Log(Mul(-1, k))``-style shapes).
+
+### Changed
+
+- ``g_vanishes_at_infinity`` adds the Phase 50 branch after the Phase 49
+  bounded check and before the Phase 42 degree-aware path.
+- The ``phase49_log_numerator_still_refused`` regression is superseded
+  and removed — ``log(k)/k²`` now closes via Phase 50.
+
+### Added — tests
+
+3 new ``phase50_*`` cases:
+- ``phase50_log_over_k_squared_closes``
+- ``phase50_log_of_polynomial_argument_closes``
+- ``phase50_log_of_negative_argument_refused`` (regression)
+
+Full suite: **43 passed** (was 41; +2 net new — Phase 49 log regression
+superseded by Phase 50 log-closes case).
+
 ## 0.7.0 — 2026-05-22
 
 **Phase 49 — Bounded × vanishing recogniser (Rust port).**

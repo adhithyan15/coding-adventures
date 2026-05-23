@@ -954,6 +954,19 @@ fn is_bounded_in_k(node: &IRNode, k: &IRNode) -> bool {
     false
 }
 
+/// Phase 50 (Rust port): True when ``node = Log(h(k))`` with
+/// ``h(k) → +∞``.  Sign-aware via ``h_diverges_at_infinity``.
+fn is_log_of_diverging_in_k(node: &IRNode, k: &IRNode) -> bool {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return false,
+    };
+    if !matches!(&apply_node.head, IRNode::Symbol(s) if s == LOG) || apply_node.args.len() != 1 {
+        return false;
+    }
+    h_diverges_at_infinity(node, k)
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -972,6 +985,11 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     // Phase 49: bounded numerator + diverging denominator.  Covers
     // shapes like sin(k)/k² and cos(k)·sin(k)/k³.
     if is_bounded_in_k(num, k) && h_diverges_at_infinity(den, k) {
+        return true;
+    }
+    // Phase 50: Log(diverging) numerator + diverging denominator.
+    // log/poly → 0 always (log grows slower than any positive power).
+    if is_log_of_diverging_in_k(num, k) && h_diverges_at_infinity(den, k) {
         return true;
     }
     // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
