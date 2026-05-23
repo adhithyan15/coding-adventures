@@ -464,6 +464,30 @@ fn emit_html_tree(
         return Ok(out);
     }
 
+    // UI29-4 — `HostLink` lowers to `<a href ...>label</a>`.
+    // `target="_blank"` always pairs with `rel="noopener
+    // noreferrer"` as a security default (HTML5 living-standard
+    // recommendation; same shape the React backend emits).
+    if node.tag == "HostLink" {
+        out.push_str(&emit_host_link(node, indent, part_styles));
+        return Ok(out);
+    }
+    // UI29-4 — `HostTooltip` wraps its single child in `<span
+    // title={text}>...</span>`. The DOM's `title=` attribute is the
+    // simplest cross-browser tooltip; rich content is v2.
+    if node.tag == "HostTooltip" {
+        out.push_str(&emit_host_tooltip(node, indent, part_styles)?);
+        return Ok(out);
+    }
+    // UI29-4 — `HostNumberInput` lowers to `<input type="number"
+    // inputmode="numeric" ...>`. The inputmode triggers the mobile
+    // numeric keyboard (one of the "what composition loses" items
+    // from the UI29-4 survey).
+    if node.tag == "HostNumberInput" {
+        out.push_str(&emit_host_number_input(node, indent, part_styles));
+        return Ok(out);
+    }
+
     // UI29-1 §3.5 — `HostDialog` lowers to HTML's native `<dialog>`
     // element. The browser provides modal blocking, focus trap,
     // top-layer rendering, and Esc-to-close for free; we only need a
@@ -916,6 +940,209 @@ fn emit_host_radio(
         ),
         None => format!("{pad}<input{attrs}{style_attr}>\n"),
     }
+}
+
+// =====================================================================
+// UI29-4 — HostLink / HostTooltip / HostNumberInput lowerings
+// =====================================================================
+
+/// Lower a UI29-4 `HostLink` node to a static `<a href ...>` element.
+///
+/// ## Property handling
+///
+/// | Prop             | SlotRef                       | String literal              | Keyword               |
+/// |---|---|---|---|
+/// | `href`           | `href="{{slot}}"` template    | `href="..."` (attr-escaped) | (n/a)                 |
+/// | `label`          | `{{slot}}` text body          | escaped text body           | (n/a)                 |
+/// | `target: new-tab`| (n/a)                         | (n/a)                       | `target="_blank" rel="noopener noreferrer"` (security default) |
+/// | `target: parent` | (n/a)                         | (n/a)                       | `target="_parent"`    |
+/// | `target: top`    | (n/a)                         | (n/a)                       | `target="_top"`       |
+/// | `target: same`   | (n/a)                         | (n/a)                       | (no attribute)        |
+/// | `external: false`| (n/a)                         | (n/a)                       | `data-external="false"` marker for the host's hydration to intercept |
+/// | `onActivate`     | (n/a)                         | (n/a)                       | `data-on-activate="<emit-name>"` marker |
+///
+/// ## Security — `rel="noopener noreferrer"` security default
+///
+/// HTML's `target="_blank"` opens a window-opener relationship that
+/// lets the new tab script back into the opener via `window.opener`
+/// (reverse-tabnabbing attack). `rel="noopener"` severs the opener;
+/// `noreferrer` also strips the Referer header. We emit BOTH for
+/// `target: new-tab` to match the HTML5 living-standard recommendation
+/// and every modern browser-security linter (eslint react/jsx-no-
+/// target-blank, html-validate, etc.).
+fn emit_host_link(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::new();
+
+    // href= — string literal or slot ref template marker.
+    match find_prop(node, "href") {
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " href=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " href=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {
+            // No href bound — emit `#` placeholder so the file
+            // still parses as HTML and renders as an inert anchor.
+            attrs.push_str(" href=\"#\"");
+        }
+    }
+
+    // target= + paired rel= (security default for _blank).
+    if let Some(LayoutPropValue::Keyword(k)) = find_prop(node, "target") {
+        match k.as_str() {
+            "new-tab" => attrs.push_str(" target=\"_blank\" rel=\"noopener noreferrer\""),
+            "parent" => attrs.push_str(" target=\"_parent\""),
+            "top" => attrs.push_str(" target=\"_top\""),
+            "same" => {} // default; no attr
+            _ => {}
+        }
+    }
+
+    // external: false → data-external="false" marker. The host's
+    // hydration pass reads this to intercept clicks and route in-app.
+    if let Some(LayoutPropValue::Keyword(k)) = find_prop(node, "external") {
+        if k == "false" {
+            attrs.push_str(" data-external=\"false\"");
+        }
+    }
+
+    // onActivate → data-on-activate marker (static-HTML pattern).
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop(node, "onActivate") {
+        write!(
+            attrs,
+            " data-on-activate=\"{}\"",
+            escape_html_attr(emit_name)
+        )
+        .unwrap();
+    }
+
+    let style_attr = build_style_attr(node, "", part_styles);
+
+    // Body: label string literal or slot template marker.
+    let body: String = match find_prop(node, "label") {
+        Some(LayoutPropValue::String(lit)) => escape_html_text(lit),
+        Some(LayoutPropValue::SlotRef(s)) => format!("{{{{{}}}}}", camel(s)),
+        _ => String::new(),
+    };
+
+    format!("{pad}<a{attrs}{style_attr}>{body}</a>\n")
+}
+
+/// Lower a UI29-4 `HostTooltip` node to `<span title="text">child(ren)
+/// </span>`. The DOM's `title=` attribute gives a hover/long-press
+/// tooltip on every browser for free. Plain-text only in v1.
+///
+/// ## Property handling
+///
+/// | Prop    | SlotRef                          | String literal              |
+/// |---|---|---|
+/// | `text`  | `title="{{slot}}"` template       | `title="..."` (attr-escaped)|
+fn emit_host_tooltip(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::new();
+
+    match find_prop(node, "text") {
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " title=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " title=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    let style_attr = build_style_attr(node, "", part_styles);
+
+    if node.children.is_empty() {
+        return Ok(format!("{pad}<span{attrs}{style_attr}></span>\n"));
+    }
+
+    let mut out = format!("{pad}<span{attrs}{style_attr}>\n");
+    out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
+    out.push_str(&format!("{pad}</span>\n"));
+    Ok(out)
+}
+
+/// Lower a UI29-4 `HostNumberInput` node to `<input type="number"
+/// inputmode="numeric" ...>`. The `inputmode="numeric"` triggers the
+/// mobile numeric keyboard.
+///
+/// ## Property handling
+///
+/// | Prop          | SlotRef                       | String / Number / Keyword                 |
+/// |---|---|---|
+/// | `value`       | `value="{{slot}}"` template   | number → `value="N"` literal              |
+/// | `min`         | (n/a)                         | number → `min="N"` literal                |
+/// | `max`         | (n/a)                         | number → `max="N"` literal                |
+/// | `step`        | (n/a)                         | number → `step="N"` literal               |
+/// | `placeholder` | `placeholder="{{slot}}"`      | string → `placeholder="..."` (escaped)    |
+/// | `disabled`    | `data-disabled="{{slot}}"` marker | keyword `true` → `disabled`           |
+/// | `onChange`    | (n/a)                         | emit ref → `data-on-change="<emit-name>"` |
+fn emit_host_number_input(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::from(" type=\"number\" inputmode=\"numeric\"");
+
+    // value: slot ref → template marker; number literal → literal value
+    match find_prop(node, "value") {
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " value=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        Some(LayoutPropValue::Number(n)) => {
+            write!(attrs, " value=\"{n}\"").unwrap();
+        }
+        _ => {}
+    }
+
+    // min / max / step: numeric literals only (per UI29-4 §3.3
+    // they're compile-time choices, not host-driven).
+    for prop_name in ["min", "max", "step"] {
+        if let Some(LayoutPropValue::Number(n)) = find_prop(node, prop_name) {
+            write!(attrs, " {prop_name}=\"{n}\"").unwrap();
+        }
+    }
+
+    // placeholder.
+    match find_prop(node, "placeholder") {
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " placeholder=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " placeholder=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    // disabled.
+    match find_prop(node, "disabled") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" disabled"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-disabled=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    // onChange → data-on-change hydration marker.
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop(node, "onChange") {
+        write!(attrs, " data-on-change=\"{}\"", escape_html_attr(emit_name)).unwrap();
+    }
+
+    let style_attr = build_style_attr(node, "", part_styles);
+    format!("{pad}<input{attrs}{style_attr}>\n")
 }
 
 // =====================================================================
@@ -2859,6 +3086,190 @@ mod tests {
         assert!(
             out.contains("data-on-select=\"onPick\""),
             "expected data-on-select marker, got:\n{out}"
+        );
+    }
+
+    // =====================================================================
+    // UI29-4 — HostLink / HostTooltip / HostNumberInput
+    // =====================================================================
+
+    /// UI29-4 HTML test 1 — `href: "..."` + `label: "..."` lowers to a
+    /// standard `<a href="..." style="">label</a>` element.
+    #[test]
+    fn host_link_string_href_and_label_emits_anchor() {
+        let l = layout(
+            "X",
+            node_with_props(
+                "HostLink",
+                vec![
+                    prop_string("href", "https://example.com"),
+                    prop_string("label", "Click me"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<a href=\"https://example.com\""),
+            "expected anchor with href, got:\n{out}"
+        );
+        assert!(
+            out.contains(">Click me</a>"),
+            "expected label as text body, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 HTML test 2 — SECURITY PIN: `target: new-tab` MUST emit
+    /// the paired `rel="noopener noreferrer"` to prevent reverse-
+    /// tabnabbing. Matches the React backend's identical guard.
+    #[test]
+    fn host_link_target_new_tab_emits_noopener_noreferrer() {
+        let l = layout(
+            "X",
+            node_with_props(
+                "HostLink",
+                vec![
+                    prop_string("href", "https://example.com"),
+                    prop_keyword("target", "new-tab"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("target=\"_blank\""),
+            "expected target=\"_blank\", got:\n{out}"
+        );
+        assert!(
+            out.contains("rel=\"noopener noreferrer\""),
+            "expected rel=\"noopener noreferrer\" security default, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 HTML test 3 — `external: false` + `onActivate: emit:
+    /// onX` emit `data-external="false"` and `data-on-activate="onX"`
+    /// markers for the host's hydration to intercept clicks and
+    /// route in-app. Pure static HTML can't do the click-handling
+    /// inline; the data-* markers are the established pattern.
+    #[test]
+    fn host_link_external_false_with_on_activate_emits_data_markers() {
+        let l = layout(
+            "X",
+            node_with_props(
+                "HostLink",
+                vec![
+                    prop_string("href", "/about"),
+                    prop_keyword("external", "false"),
+                    prop_emit("onActivate", "onNavigate"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("data-external=\"false\""),
+            "expected data-external=\"false\" marker, got:\n{out}"
+        );
+        assert!(
+            out.contains("data-on-activate=\"onNavigate\""),
+            "expected data-on-activate=\"onNavigate\" marker, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 HTML test 4 — bare HostTooltip wraps no child in
+    /// `<span title=...></span>` (empty span). The single-child
+    /// case wraps the child inside.
+    #[test]
+    fn host_tooltip_with_string_text_emits_span_title_attr() {
+        let l = layout(
+            "X",
+            node_with_props_and_children(
+                "HostTooltip",
+                vec![prop_string("text", "Click to submit")],
+                vec![node_with_props(
+                    "Text",
+                    vec![prop_string("content", "Submit")],
+                )],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<span title=\"Click to submit\""),
+            "expected `<span title=\"Click to submit\"`, got:\n{out}"
+        );
+        assert!(out.contains("</span>"), "expected closing </span>, got:\n{out}");
+    }
+
+    /// UI29-4 HTML test 5 — bare HostNumberInput emits `<input
+    /// type="number" inputmode="numeric" style="">`. The
+    /// `inputmode="numeric"` triggers the mobile numeric keyboard.
+    #[test]
+    fn host_number_input_empty_emits_input_with_inputmode_numeric() {
+        let l = layout("X", node("HostNumberInput"));
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<input type=\"number\" inputmode=\"numeric\""),
+            "expected input type=number with inputmode=numeric, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 HTML test 6 — numeric `min`/`max`/`step` literals
+    /// emit matching HTML attribute values.
+    #[test]
+    fn host_number_input_min_max_step_numeric_literals_emit_attrs() {
+        let l = layout(
+            "X",
+            node_with_props(
+                "HostNumberInput",
+                vec![
+                    LayoutProp {
+                        name: "min".to_string(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    LayoutProp {
+                        name: "max".to_string(),
+                        value: LayoutPropValue::Number(100.0),
+                    },
+                    LayoutProp {
+                        name: "step".to_string(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(out.contains("min=\"0\""), "expected min=\"0\", got:\n{out}");
+        assert!(out.contains("max=\"100\""), "expected max=\"100\", got:\n{out}");
+        assert!(out.contains("step=\"5\""), "expected step=\"5\", got:\n{out}");
+    }
+
+    /// UI29-4 HTML test 7 — `onChange: emit: onSet` surfaces as a
+    /// `data-on-change="onSet"` marker; hydration reads it and binds
+    /// a real listener that dispatches `{type:"set", value: ...}`.
+    #[test]
+    fn host_number_input_on_change_emits_data_marker() {
+        let l = layout(
+            "X",
+            node_with_props(
+                "HostNumberInput",
+                vec![prop_emit("onChange", "onSet")],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("data-on-change=\"onSet\""),
+            "expected data-on-change=\"onSet\" marker, got:\n{out}"
         );
     }
 }
