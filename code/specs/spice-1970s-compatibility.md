@@ -195,6 +195,13 @@ Acceptance:
 - DC/AC/transient fixtures that prove capacitance and temperature parameters
   change results in expected directions.
 
+Status:
+
+- Diode `.model ... D(... N=<emission coefficient>)` parsing and engine
+  plumbing are implemented across Python, TypeScript, and Rust. DC and
+  small-signal AC diode conductance now use `N * Vt`, with subcircuit remapping
+  preserving the parameter.
+
 ### Phase 7 - Classic Text Output and Control Cards
 
 Make deck-level output feel like SPICE rather than only package APIs.

@@ -727,12 +727,13 @@ fn parse_element(
                     model.name, model.kind
                 )));
             }
-            Ok(Element::Diode(Diode::with_model(
+            Ok(Element::Diode(Diode::with_model_and_emission_coefficient(
                 name,
                 &fields[1],
                 &fields[2],
                 *model.params.get("IS").unwrap_or(&1.0e-15),
                 *model.params.get("VT").unwrap_or(&0.02585),
+                *model.params.get("N").unwrap_or(&1.0),
             )))
         }
         'Q' => {

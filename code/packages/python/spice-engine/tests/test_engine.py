@@ -699,6 +699,23 @@ def test_diode_reverse_bias():
     assert r.converged
 
 
+def test_diode_emission_coefficient_reduces_forward_current():
+    """Larger N uses N*Vt in the exponential and lowers fixed-bias current."""
+    base = Circuit()
+    base.add(VoltageSource("V1", "a", "0", voltage=0.7))
+    base.add(Diode("D1", anode="a", cathode="0", Is=1e-15, Vt=0.02585))
+    base_result = dc_op(base)
+
+    high_n = Circuit()
+    high_n.add(VoltageSource("V1", "a", "0", voltage=0.7))
+    high_n.add(Diode("D1", anode="a", cathode="0", Is=1e-15, Vt=0.02585, N=2.0))
+    high_n_result = dc_op(high_n)
+
+    assert base_result.converged
+    assert high_n_result.converged
+    assert abs(high_n_result.branch_currents["I(V1)"]) < abs(base_result.branch_currents["I(V1)"]) * 1e-3
+
+
 # ---- DC: Capacitor (open in DC) ----
 
 

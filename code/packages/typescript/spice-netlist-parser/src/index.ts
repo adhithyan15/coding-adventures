@@ -567,6 +567,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       fields[2],
       model.params.get("IS") ?? 1.0e-15,
       model.params.get("VT") ?? 0.02585,
+      model.params.get("N") ?? 1.0,
     );
   }
   if (prefix === "Q") {

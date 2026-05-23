@@ -244,7 +244,14 @@ def _clone_subckt_element(element: object, instance_name: str, node_map: dict[st
     if isinstance(element, BSource):
         return BSource(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_bsource_expr_nodes(element.voltage_expr, instance_name, node_map), _map_bsource_expr_nodes(element.current_expr, instance_name, node_map))
     if isinstance(element, Diode):
-        return Diode(name, _map_subckt_node(element.anode, instance_name, node_map), _map_subckt_node(element.cathode, instance_name, node_map), element.Is, element.Vt)
+        return Diode(
+            name,
+            _map_subckt_node(element.anode, instance_name, node_map),
+            _map_subckt_node(element.cathode, instance_name, node_map),
+            element.Is,
+            element.Vt,
+            element.N,
+        )
     if isinstance(element, JFET):
         return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_)
     if isinstance(element, Mosfet):
@@ -1678,18 +1685,19 @@ def _stamp_diode(
     node_to_idx: dict[str, int],
     el: Diode,
 ) -> None:
-    """Linearized diode: I = Is*(exp(Vd/Vt) - 1).
+    """Linearized diode: I = Is*(exp(Vd/(N*Vt)) - 1).
 
-    Newton: I0 = Is*(exp(Vd0/Vt) - 1), gd = (Is/Vt)*exp(Vd0/Vt).
+    Newton: I0 = Is*(exp(Vd0/(N*Vt)) - 1), gd = (Is/(N*Vt))*exp(Vd0/(N*Vt)).
     Stamp gd as conductance + (gd*Vd0 - I0) as current source from cathode."""
+    vt_eff = _diode_effective_vt(el)
     Va = 0.0 if _is_ground(el.anode) else x[node_to_idx[el.anode]]
     Vk = 0.0 if _is_ground(el.cathode) else x[node_to_idx[el.cathode]]
     Vd = Va - Vk
     # Clamp to avoid exp overflow
-    Vd = min(Vd, 0.7)
-    exp_term = math.exp(Vd / el.Vt)
+    Vd = min(Vd, 0.7 * el.N)
+    exp_term = math.exp(Vd / vt_eff)
     I0 = el.Is * (exp_term - 1.0)
-    gd = (el.Is / el.Vt) * exp_term
+    gd = (el.Is / vt_eff) * exp_term
 
     _stamp_g(G, node_to_idx, el.anode, el.cathode, gd)
     Ieq = I0 - gd * Vd
@@ -1697,6 +1705,14 @@ def _stamp_diode(
         b[node_to_idx[el.anode]] -= Ieq
     if not _is_ground(el.cathode):
         b[node_to_idx[el.cathode]] += Ieq
+
+
+def _diode_effective_vt(el: Diode) -> float:
+    if not math.isfinite(el.N) or el.N <= 0.0:
+        raise ValueError(f"{el.name}: diode emission coefficient must be finite and positive")
+    if not math.isfinite(el.Vt) or el.Vt <= 0.0:
+        raise ValueError(f"{el.name}: diode thermal voltage must be finite and positive")
+    return el.Vt * el.N
 
 
 def _stamp_mosfet(
@@ -3841,13 +3857,14 @@ def _stamp_ac(
         b[branch] += 0j
 
     elif isinstance(el, Diode):
-        # Small-signal model: linearised conductance gd = (Is/Vt)·exp(Vd/Vt).
+        # Small-signal model: linearised conductance gd = (Is/(N*Vt))·exp(Vd/(N*Vt)).
         # The dynamic (differential) conductance is the derivative of
-        # I = Is*(exp(Vd/Vt) − 1) with respect to Vd, evaluated at the OP.
+        # I = Is*(exp(Vd/(N*Vt)) − 1) with respect to Vd, evaluated at the OP.
+        vt_eff = _diode_effective_vt(el)
         Va = 0.0 if _is_ground(el.anode) else dc_x[node_to_idx[el.anode]]
         Vk = 0.0 if _is_ground(el.cathode) else dc_x[node_to_idx[el.cathode]]
-        Vd = min(Va - Vk, 0.7)
-        gd = (el.Is / el.Vt) * math.exp(Vd / el.Vt)
+        Vd = min(Va - Vk, 0.7 * el.N)
+        gd = (el.Is / vt_eff) * math.exp(Vd / vt_eff)
         _stamp_g_c(G, node_to_idx, el.anode, el.cathode, gd + 0j)
 
     elif isinstance(el, JFET):
@@ -4407,11 +4424,12 @@ def _build_ss_matrix(
                         n_nodes + branch_srcs.index(el), ctrl_idx)
 
         elif isinstance(el, Diode):
-            # Small-signal conductance: gd = dI/dVd = (Is/Vt)·exp(Vd/Vt).
+            # Small-signal conductance: gd = dI/dVd = (Is/(N*Vt))·exp(Vd/(N*Vt)).
+            vt_eff = _diode_effective_vt(el)
             Va = 0.0 if _is_ground(el.anode) else dc_x[node_to_idx[el.anode]]
             Vk = 0.0 if _is_ground(el.cathode) else dc_x[node_to_idx[el.cathode]]
-            Vd = min(Va - Vk, 0.7)
-            gd = (el.Is / el.Vt) * math.exp(Vd / el.Vt)
+            Vd = min(Va - Vk, 0.7 * el.N)
+            gd = (el.Is / vt_eff) * math.exp(Vd / vt_eff)
             _stamp_g(G, node_to_idx, el.anode, el.cathode, gd)
 
         elif isinstance(el, JFET):
@@ -5276,7 +5294,7 @@ def sens_dc(
             _make_entry(
                 "Is",
                 el.Is,
-                Diode(el.name, el.anode, el.cathode, el.Is + delta_is, el.Vt),
+                Diode(el.name, el.anode, el.cathode, el.Is + delta_is, el.Vt, el.N),
             )
 
         elif isinstance(el, BJT):
@@ -5502,7 +5520,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
         )
 
     if isinstance(el, Diode):
-        return Diode(el.name, el.anode, el.cathode, _draw(el.Is), el.Vt)
+        return Diode(el.name, el.anode, el.cathode, _draw(el.Is), el.Vt, el.N)
 
     if isinstance(el, BJT):
         return BJT(
@@ -5896,7 +5914,7 @@ def _collect_noise_sources(
             Va = 0.0 if _is_ground(el.anode) else dc_x[node_to_idx[el.anode]]
             Vk = 0.0 if _is_ground(el.cathode) else dc_x[node_to_idx[el.cathode]]
             Vd = Va - Vk  # actual operating-point junction voltage
-            I_D = el.Is * (math.exp(Vd / el.Vt) - 1.0)
+            I_D = el.Is * (math.exp(Vd / _diode_effective_vt(el)) - 1.0)
             psd = q2 * abs(I_D)
             n_a = None if _is_ground(el.anode) else node_to_idx[el.anode]
             n_k = None if _is_ground(el.cathode) else node_to_idx[el.cathode]

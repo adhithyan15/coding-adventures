@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Parse diode model-card emission coefficients with `.model ... D(... N=<n>)`
+  and pass them into Rust `Diode` elements.
 - Parse and validate transient integration methods from
   `.tran ... method=<euler|trap|gear2>`, and expose fallback routing from
   `.options method=<...>`.

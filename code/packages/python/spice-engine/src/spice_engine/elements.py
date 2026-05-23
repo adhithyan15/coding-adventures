@@ -421,6 +421,7 @@ class Diode:
     cathode: str
     Is: float = 1e-15  # saturation current
     Vt: float = 0.02585  # thermal voltage
+    N: float = 1.0  # emission coefficient
 
 
 @dataclass(frozen=True, slots=True)
