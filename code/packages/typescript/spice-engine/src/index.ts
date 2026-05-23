@@ -21,7 +21,7 @@ export type Element =
   | Cccs
   | Ccvs;
 
-export type TransientMethod = "euler" | "gear2";
+export type TransientMethod = "euler" | "trap" | "gear2";
 
 export interface Resistor {
   readonly kind: "resistor";
@@ -1850,8 +1850,8 @@ export function transient(
   if (!Number.isFinite(stopTime) || stopTime < 0.0) {
     throw invalidElement("transient", "stop time must be finite and non-negative");
   }
-  if (method !== "euler" && method !== "gear2") {
-    throw invalidElement("transient", "method must be euler or gear2");
+  if (method !== "euler" && method !== "trap" && method !== "gear2") {
+    throw invalidElement("transient", "method must be euler, trap, or gear2");
   }
 
   validateReactiveElements(circuit);
@@ -2757,6 +2757,7 @@ interface CapacitorState {
   readonly name: string;
   previousVoltage: number;
   previousPreviousVoltage: number;
+  previousCurrent: number;
   readonly timeStep: number;
   method: TransientMethod;
 }
@@ -2765,6 +2766,7 @@ interface InductorState {
   readonly name: string;
   previousCurrent: number;
   previousPreviousCurrent: number;
+  previousVoltage: number;
   readonly timeStep: number;
   method: TransientMethod;
 }
@@ -4157,15 +4159,19 @@ function stampCapacitor(
   }
 
   const conductance =
-    state.method === "gear2"
-      ? (3.0 * element.capacitanceFarads) / (2.0 * state.timeStep)
-      : element.capacitanceFarads / state.timeStep;
+    state.method === "trap"
+      ? (2.0 * element.capacitanceFarads) / state.timeStep
+      : state.method === "gear2"
+        ? (3.0 * element.capacitanceFarads) / (2.0 * state.timeStep)
+        : element.capacitanceFarads / state.timeStep;
   const n1 = nodeIndex(nodeIndices, element.n1);
   const n2 = nodeIndex(nodeIndices, element.n2);
   stampConductance(matrix, n1, n2, conductance);
 
   const historyCurrent =
-    state.method === "gear2"
+    state.method === "trap"
+      ? conductance * state.previousVoltage + state.previousCurrent
+      : state.method === "gear2"
       ? element.capacitanceFarads *
         (4.0 * state.previousVoltage - state.previousPreviousVoltage) /
         (2.0 * state.timeStep)
@@ -4197,12 +4203,16 @@ function stampInductor(
   }
 
   const conductance =
-    state.method === "gear2"
-      ? (2.0 * state.timeStep) / (3.0 * element.inductanceHenrys)
-      : state.timeStep / element.inductanceHenrys;
+    state.method === "trap"
+      ? state.timeStep / (2.0 * element.inductanceHenrys)
+      : state.method === "gear2"
+        ? (2.0 * state.timeStep) / (3.0 * element.inductanceHenrys)
+        : state.timeStep / element.inductanceHenrys;
   stampConductance(matrix, n1, n2, conductance);
   const historyCurrent =
-    state.method === "gear2"
+    state.method === "trap"
+      ? state.previousCurrent + conductance * state.previousVoltage
+      : state.method === "gear2"
       ? (4.0 * state.previousCurrent - state.previousPreviousCurrent) / 3.0
       : state.previousCurrent;
   if (n1 !== undefined) {
@@ -4616,6 +4626,7 @@ function initialCapacitorStates(
         name: element.name,
         previousVoltage: element.initialVoltage,
         previousPreviousVoltage: element.initialVoltage,
+        previousCurrent: 0.0,
         timeStep,
         method,
       });
@@ -4636,6 +4647,7 @@ function initialInductorStates(
         name: element.name,
         previousCurrent: element.initialCurrent,
         previousPreviousCurrent: element.initialCurrent,
+        previousVoltage: 0.0,
         timeStep,
         method,
       });
@@ -4804,8 +4816,22 @@ function updateCapacitorStates(
       continue;
     }
     const previousVoltage = state.previousVoltage;
-    state.previousVoltage =
+    const previousCurrent = state.previousCurrent;
+    const voltage =
       voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2);
+    if (state.method === "trap") {
+      const conductance = (2.0 * element.capacitanceFarads) / state.timeStep;
+      state.previousCurrent = conductance * (voltage - previousVoltage) - previousCurrent;
+    } else if (state.method === "gear2") {
+      state.previousCurrent =
+        element.capacitanceFarads *
+        (3.0 * voltage - 4.0 * previousVoltage + state.previousPreviousVoltage) /
+        (2.0 * state.timeStep);
+    } else {
+      state.previousCurrent =
+        (element.capacitanceFarads / state.timeStep) * (voltage - previousVoltage);
+    }
+    state.previousVoltage = voltage;
     state.previousPreviousVoltage = previousVoltage;
   }
 }
@@ -4833,9 +4859,11 @@ function updateInductorStates(
       continue;
     }
     const previousCurrent = state.previousCurrent;
+    const voltage = voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2);
     state.previousCurrent =
       coupledCurrents.get(element.name) ?? inductorCurrent(element, state, nodeVoltages);
     state.previousPreviousCurrent = previousCurrent;
+    state.previousVoltage = voltage;
   }
 }
 
@@ -4875,6 +4903,10 @@ function inductorCurrent(
   nodeVoltages: ReadonlyMap<string, number>,
 ): number {
   const voltage = voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2);
+  if (state.method === "trap") {
+    const conductance = state.timeStep / (2.0 * element.inductanceHenrys);
+    return state.previousCurrent + conductance * state.previousVoltage + conductance * voltage;
+  }
   if (state.method === "gear2") {
     return (
       (2.0 * state.timeStep * voltage) / (3.0 * element.inductanceHenrys) +
@@ -4904,6 +4936,7 @@ function stampTransientMutualInductor(
     secondary,
     mutualInductance,
     primaryState.timeStep,
+    primaryState.method,
   );
   const p1 = nodeIndex(nodeIndices, primary.n1);
   const p2 = nodeIndex(nodeIndices, primary.n2);
@@ -4913,8 +4946,16 @@ function stampTransientMutualInductor(
   stampConductance(matrix, s1, s2, g22);
   stampTransconductance(matrix, p1, p2, s1, s2, g12);
   stampTransconductance(matrix, s1, s2, p1, p2, g12);
-  stampCurrentSourceEquivalent(rhs, p1, p2, primaryState.previousCurrent);
-  stampCurrentSourceEquivalent(rhs, s1, s2, secondaryState.previousCurrent);
+  let primaryHistoryCurrent = primaryState.previousCurrent;
+  let secondaryHistoryCurrent = secondaryState.previousCurrent;
+  if (primaryState.method === "trap") {
+    primaryHistoryCurrent +=
+      g11 * primaryState.previousVoltage + g12 * secondaryState.previousVoltage;
+    secondaryHistoryCurrent +=
+      g12 * primaryState.previousVoltage + g22 * secondaryState.previousVoltage;
+  }
+  stampCurrentSourceEquivalent(rhs, p1, p2, primaryHistoryCurrent);
+  stampCurrentSourceEquivalent(rhs, s1, s2, secondaryHistoryCurrent);
 }
 
 function coupledTransientInductorCurrents(
@@ -4940,16 +4981,25 @@ function coupledTransientInductorCurrents(
       secondary,
       mutualInductance,
       primaryState.timeStep,
+      primaryState.method,
     );
     const primaryVoltage = voltageAt(nodeVoltages, primary.n1) - voltageAt(nodeVoltages, primary.n2);
     const secondaryVoltage = voltageAt(nodeVoltages, secondary.n1) - voltageAt(nodeVoltages, secondary.n2);
+    let primaryHistoryCurrent = primaryState.previousCurrent;
+    let secondaryHistoryCurrent = secondaryState.previousCurrent;
+    if (primaryState.method === "trap") {
+      primaryHistoryCurrent +=
+        g11 * primaryState.previousVoltage + g12 * secondaryState.previousVoltage;
+      secondaryHistoryCurrent +=
+        g12 * primaryState.previousVoltage + g22 * secondaryState.previousVoltage;
+    }
     currents.set(
       primary.name,
-      primaryState.previousCurrent + g11 * primaryVoltage + g12 * secondaryVoltage,
+      primaryHistoryCurrent + g11 * primaryVoltage + g12 * secondaryVoltage,
     );
     currents.set(
       secondary.name,
-      secondaryState.previousCurrent + g12 * primaryVoltage + g22 * secondaryVoltage,
+      secondaryHistoryCurrent + g12 * primaryVoltage + g22 * secondaryVoltage,
     );
   }
   return currents;
@@ -4961,12 +5011,13 @@ function transientMutualConductances(
   secondary: Inductor,
   mutualInductance: number,
   timeStep: number,
+  method: TransientMethod,
 ): { g11: number; g12: number; g22: number } {
   const determinant = primary.inductanceHenrys * secondary.inductanceHenrys - mutualInductance ** 2;
   if (!Number.isFinite(determinant) || determinant <= 0.0) {
     throw invalidElement(element.name, "coupled inductance matrix is singular");
   }
-  const scale = timeStep / determinant;
+  const scale = method === "trap" ? timeStep / (2.0 * determinant) : timeStep / determinant;
   return {
     g11: secondary.inductanceHenrys * scale,
     g12: -mutualInductance * scale,

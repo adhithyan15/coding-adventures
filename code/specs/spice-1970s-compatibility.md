@@ -140,8 +140,11 @@ Status:
 
 - Fixed-step Gear-2 / BDF2 capacitor and inductor companions are implemented
   across Python, TypeScript, and Rust, with one backward-Euler bootstrap step
-  before two-step history is available. Adaptive-step interaction, netlist
-  option routing, and LC damping comparison remain follow-up work.
+  before two-step history is available. TypeScript and Rust now also expose
+  trapezoidal transient companions for parity with Python, and all three
+  packages include a coarse LC fixture showing Gear-2 damps ringing more than
+  trapezoidal integration. Adaptive-step interaction and netlist option
+  routing remain follow-up work.
 
 ### Phase 5 - Pseudo-Transient DC Continuation
 
