@@ -109,6 +109,10 @@ All notable changes to this package will be documented in this file.
 - Stable host-attention classifications for supervisor drain run reports and
   summaries.
 - Flattened host-attention component flags for supervisor drain run summaries.
+- Stable terminal-readiness classifications for supervisor drain run reports
+  and summaries.
+- Flattened terminal-readiness component flags for supervisor drain run
+  summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
   loops.
 - Report-level scheduler action labels for supervisor drain runs.

@@ -1296,6 +1296,61 @@ impl ToolAuditSupervisorDrainRunReport {
         self.host_attention_kind().has_multiple_attention()
     }
 
+    /// Return whether this run is terminal and needs no host attention.
+    pub fn is_terminal_ready(&self) -> bool {
+        self.terminal_readiness_kind().is_terminal_ready()
+    }
+
+    /// Classify whether this run is terminal-ready or still pending host work.
+    pub fn terminal_readiness_kind(&self) -> ToolAuditSupervisorDrainTerminalReadinessKind {
+        ToolAuditSupervisorDrainTerminalReadinessKind::from_outcome_and_attention(
+            self.outcome(),
+            self.host_attention_kind(),
+        )
+    }
+
+    /// Return the stable terminal-readiness classification label.
+    pub fn terminal_readiness_label(&self) -> &'static str {
+        self.terminal_readiness_kind().as_str()
+    }
+
+    /// Return whether the terminal-readiness label parses back to the typed classification.
+    pub fn terminal_readiness_label_matches_kind(&self) -> bool {
+        ToolAuditSupervisorDrainTerminalReadinessKind::from_label(self.terminal_readiness_label())
+            == Some(self.terminal_readiness_kind())
+    }
+
+    /// Return whether terminal readiness is blocked by scheduler action.
+    pub fn terminal_readiness_requires_scheduler_action(&self) -> bool {
+        self.terminal_readiness_kind().requires_scheduler_action()
+    }
+
+    /// Return whether terminal readiness is blocked by run-divergence investigation.
+    pub fn terminal_readiness_requires_host_investigation(&self) -> bool {
+        self.terminal_readiness_kind().requires_host_investigation()
+    }
+
+    /// Return whether terminal readiness is blocked by host-log integrity investigation.
+    pub fn terminal_readiness_requires_run_integrity_investigation(&self) -> bool {
+        self.terminal_readiness_kind()
+            .requires_run_integrity_investigation()
+    }
+
+    /// Return whether terminal readiness is blocked by more than one host-attention surface.
+    pub fn terminal_readiness_has_multiple_attention(&self) -> bool {
+        self.terminal_readiness_kind().has_multiple_attention()
+    }
+
+    /// Return whether this run is terminal-ready because no rows were waiting.
+    pub fn terminal_readiness_is_idle(&self) -> bool {
+        self.terminal_readiness_kind().is_idle_ready()
+    }
+
+    /// Return whether this run is terminal-ready because it caught up to the log end.
+    pub fn terminal_readiness_is_caught_up(&self) -> bool {
+        self.terminal_readiness_kind().is_caught_up_ready()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -1572,6 +1627,20 @@ impl ToolAuditSupervisorDrainRunReport {
             host_attention_includes_run_integrity_investigation: self
                 .host_attention_includes_run_integrity_investigation(),
             has_multiple_host_attention: self.has_multiple_host_attention(),
+            is_terminal_ready: self.is_terminal_ready(),
+            terminal_readiness_kind: self.terminal_readiness_kind(),
+            terminal_readiness_label: self.terminal_readiness_label(),
+            terminal_readiness_label_matches_kind: self.terminal_readiness_label_matches_kind(),
+            terminal_readiness_requires_scheduler_action: self
+                .terminal_readiness_requires_scheduler_action(),
+            terminal_readiness_requires_host_investigation: self
+                .terminal_readiness_requires_host_investigation(),
+            terminal_readiness_requires_run_integrity_investigation: self
+                .terminal_readiness_requires_run_integrity_investigation(),
+            terminal_readiness_has_multiple_attention: self
+                .terminal_readiness_has_multiple_attention(),
+            terminal_readiness_is_idle: self.terminal_readiness_is_idle(),
+            terminal_readiness_is_caught_up: self.terminal_readiness_is_caught_up(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -2205,6 +2274,26 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_attention_includes_run_integrity_investigation: bool,
     /// Whether more than one host-attention surface is active.
     pub has_multiple_host_attention: bool,
+    /// Whether this run is terminal and needs no host attention.
+    pub is_terminal_ready: bool,
+    /// Stable classification of terminal readiness or pending host work.
+    pub terminal_readiness_kind: ToolAuditSupervisorDrainTerminalReadinessKind,
+    /// Stable terminal-readiness classification label for host logs.
+    pub terminal_readiness_label: &'static str,
+    /// Whether the terminal-readiness label parses back to the typed classification.
+    pub terminal_readiness_label_matches_kind: bool,
+    /// Whether terminal readiness is blocked by scheduler action.
+    pub terminal_readiness_requires_scheduler_action: bool,
+    /// Whether terminal readiness is blocked by run-divergence investigation.
+    pub terminal_readiness_requires_host_investigation: bool,
+    /// Whether terminal readiness is blocked by host-log integrity investigation.
+    pub terminal_readiness_requires_run_integrity_investigation: bool,
+    /// Whether terminal readiness is blocked by more than one host-attention surface.
+    pub terminal_readiness_has_multiple_attention: bool,
+    /// Whether this run is terminal-ready because no rows were waiting.
+    pub terminal_readiness_is_idle: bool,
+    /// Whether this run is terminal-ready because it caught up to the log end.
+    pub terminal_readiness_is_caught_up: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -2762,6 +2851,56 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether more than one host-attention surface is active.
     pub fn has_multiple_host_attention(&self) -> bool {
         self.has_multiple_host_attention
+    }
+
+    /// Return whether this run is terminal and needs no host attention.
+    pub fn is_terminal_ready(&self) -> bool {
+        self.is_terminal_ready
+    }
+
+    /// Return the typed terminal-readiness classification.
+    pub fn terminal_readiness_kind(&self) -> ToolAuditSupervisorDrainTerminalReadinessKind {
+        self.terminal_readiness_kind
+    }
+
+    /// Return the stable terminal-readiness classification label.
+    pub fn terminal_readiness_label(&self) -> &'static str {
+        self.terminal_readiness_label
+    }
+
+    /// Return whether the terminal-readiness label parses back to the typed classification.
+    pub fn terminal_readiness_label_matches_kind(&self) -> bool {
+        self.terminal_readiness_label_matches_kind
+    }
+
+    /// Return whether terminal readiness is blocked by scheduler action.
+    pub fn terminal_readiness_requires_scheduler_action(&self) -> bool {
+        self.terminal_readiness_requires_scheduler_action
+    }
+
+    /// Return whether terminal readiness is blocked by run-divergence investigation.
+    pub fn terminal_readiness_requires_host_investigation(&self) -> bool {
+        self.terminal_readiness_requires_host_investigation
+    }
+
+    /// Return whether terminal readiness is blocked by host-log integrity investigation.
+    pub fn terminal_readiness_requires_run_integrity_investigation(&self) -> bool {
+        self.terminal_readiness_requires_run_integrity_investigation
+    }
+
+    /// Return whether terminal readiness is blocked by more than one host-attention surface.
+    pub fn terminal_readiness_has_multiple_attention(&self) -> bool {
+        self.terminal_readiness_has_multiple_attention
+    }
+
+    /// Return whether this run is terminal-ready because no rows were waiting.
+    pub fn terminal_readiness_is_idle(&self) -> bool {
+        self.terminal_readiness_is_idle
+    }
+
+    /// Return whether this run is terminal-ready because it caught up to the log end.
+    pub fn terminal_readiness_is_caught_up(&self) -> bool {
+        self.terminal_readiness_is_caught_up
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -3630,6 +3769,180 @@ impl ToolAuditSupervisorDrainHostAttentionKind {
 }
 
 impl Display for ToolAuditSupervisorDrainHostAttentionKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable classification of whether a host drain run is terminal-ready.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainTerminalReadinessKind {
+    /// No rows were waiting and no host attention is needed.
+    IdleReady,
+    /// Rows were replayed to the current log end and no host attention is needed.
+    CaughtUpReady,
+    /// A scheduler action is still pending before the run is terminal-ready.
+    SchedulerActionPending,
+    /// Run-divergence investigation is still pending before the run is terminal-ready.
+    HostInvestigationPending,
+    /// Host-log integrity investigation is still pending before the run is terminal-ready.
+    RunIntegrityInvestigationPending,
+    /// Scheduler action and run-divergence investigation are both pending.
+    SchedulerActionAndHostInvestigationPending,
+    /// Scheduler action and host-log integrity investigation are both pending.
+    SchedulerActionAndRunIntegrityInvestigationPending,
+    /// Run-divergence and host-log integrity investigations are both pending.
+    HostAndRunIntegrityInvestigationPending,
+    /// Scheduler action, run-divergence investigation, and integrity investigation are pending.
+    SchedulerActionHostAndRunIntegrityInvestigationPending,
+}
+
+impl ToolAuditSupervisorDrainTerminalReadinessKind {
+    /// Classify terminal readiness from the run outcome and host-attention state.
+    pub fn from_outcome_and_attention(
+        outcome: ToolAuditSupervisorDrainRunOutcome,
+        attention: ToolAuditSupervisorDrainHostAttentionKind,
+    ) -> Self {
+        match attention {
+            ToolAuditSupervisorDrainHostAttentionKind::NoAttention if outcome.is_idle() => {
+                Self::IdleReady
+            }
+            ToolAuditSupervisorDrainHostAttentionKind::NoAttention if outcome.is_caught_up() => {
+                Self::CaughtUpReady
+            }
+            ToolAuditSupervisorDrainHostAttentionKind::NoAttention => Self::SchedulerActionPending,
+            ToolAuditSupervisorDrainHostAttentionKind::SchedulerAction => {
+                Self::SchedulerActionPending
+            }
+            ToolAuditSupervisorDrainHostAttentionKind::HostInvestigation => {
+                Self::HostInvestigationPending
+            }
+            ToolAuditSupervisorDrainHostAttentionKind::RunIntegrityInvestigation => {
+                Self::RunIntegrityInvestigationPending
+            }
+            ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionAndHostInvestigation => {
+                Self::SchedulerActionAndHostInvestigationPending
+            }
+            ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionAndRunIntegrityInvestigation => {
+                Self::SchedulerActionAndRunIntegrityInvestigationPending
+            }
+            ToolAuditSupervisorDrainHostAttentionKind::HostAndRunIntegrityInvestigation => {
+                Self::HostAndRunIntegrityInvestigationPending
+            }
+            ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionHostAndRunIntegrityInvestigation => {
+                Self::SchedulerActionHostAndRunIntegrityInvestigationPending
+            }
+        }
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::IdleReady => "idle_ready",
+            Self::CaughtUpReady => "caught_up_ready",
+            Self::SchedulerActionPending => "scheduler_action_pending",
+            Self::HostInvestigationPending => "host_investigation_pending",
+            Self::RunIntegrityInvestigationPending => "run_integrity_investigation_pending",
+            Self::SchedulerActionAndHostInvestigationPending => {
+                "scheduler_action_and_host_investigation_pending"
+            }
+            Self::SchedulerActionAndRunIntegrityInvestigationPending => {
+                "scheduler_action_and_run_integrity_investigation_pending"
+            }
+            Self::HostAndRunIntegrityInvestigationPending => {
+                "host_and_run_integrity_investigation_pending"
+            }
+            Self::SchedulerActionHostAndRunIntegrityInvestigationPending => {
+                "scheduler_action_host_and_run_integrity_investigation_pending"
+            }
+        }
+    }
+
+    /// Parse a stable snake_case terminal-readiness label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "idle_ready" => Some(Self::IdleReady),
+            "caught_up_ready" => Some(Self::CaughtUpReady),
+            "scheduler_action_pending" => Some(Self::SchedulerActionPending),
+            "host_investigation_pending" => Some(Self::HostInvestigationPending),
+            "run_integrity_investigation_pending" => Some(Self::RunIntegrityInvestigationPending),
+            "scheduler_action_and_host_investigation_pending" => {
+                Some(Self::SchedulerActionAndHostInvestigationPending)
+            }
+            "scheduler_action_and_run_integrity_investigation_pending" => {
+                Some(Self::SchedulerActionAndRunIntegrityInvestigationPending)
+            }
+            "host_and_run_integrity_investigation_pending" => {
+                Some(Self::HostAndRunIntegrityInvestigationPending)
+            }
+            "scheduler_action_host_and_run_integrity_investigation_pending" => {
+                Some(Self::SchedulerActionHostAndRunIntegrityInvestigationPending)
+            }
+            _ => None,
+        }
+    }
+
+    /// Return whether the run is terminal and no host attention is needed.
+    pub fn is_terminal_ready(self) -> bool {
+        matches!(self, Self::IdleReady | Self::CaughtUpReady)
+    }
+
+    /// Return whether no rows were waiting and no host attention is needed.
+    pub fn is_idle_ready(self) -> bool {
+        matches!(self, Self::IdleReady)
+    }
+
+    /// Return whether rows replayed to the log end and no host attention is needed.
+    pub fn is_caught_up_ready(self) -> bool {
+        matches!(self, Self::CaughtUpReady)
+    }
+
+    /// Return whether terminal readiness is blocked by scheduler action.
+    pub fn requires_scheduler_action(self) -> bool {
+        matches!(
+            self,
+            Self::SchedulerActionPending
+                | Self::SchedulerActionAndHostInvestigationPending
+                | Self::SchedulerActionAndRunIntegrityInvestigationPending
+                | Self::SchedulerActionHostAndRunIntegrityInvestigationPending
+        )
+    }
+
+    /// Return whether terminal readiness is blocked by run-divergence investigation.
+    pub fn requires_host_investigation(self) -> bool {
+        matches!(
+            self,
+            Self::HostInvestigationPending
+                | Self::SchedulerActionAndHostInvestigationPending
+                | Self::HostAndRunIntegrityInvestigationPending
+                | Self::SchedulerActionHostAndRunIntegrityInvestigationPending
+        )
+    }
+
+    /// Return whether terminal readiness is blocked by host-log integrity investigation.
+    pub fn requires_run_integrity_investigation(self) -> bool {
+        matches!(
+            self,
+            Self::RunIntegrityInvestigationPending
+                | Self::SchedulerActionAndRunIntegrityInvestigationPending
+                | Self::HostAndRunIntegrityInvestigationPending
+                | Self::SchedulerActionHostAndRunIntegrityInvestigationPending
+        )
+    }
+
+    /// Return whether terminal readiness is blocked by more than one host-attention surface.
+    pub fn has_multiple_attention(self) -> bool {
+        matches!(
+            self,
+            Self::SchedulerActionAndHostInvestigationPending
+                | Self::SchedulerActionAndRunIntegrityInvestigationPending
+                | Self::HostAndRunIntegrityInvestigationPending
+                | Self::SchedulerActionHostAndRunIntegrityInvestigationPending
+        )
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainTerminalReadinessKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -6098,6 +6411,182 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_terminal_readiness_kind_labels_are_stable_for_hosts() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainTerminalReadinessKind::IdleReady,
+                "idle_ready",
+                ToolAuditSupervisorDrainRunOutcome::Idle,
+                ToolAuditSupervisorDrainHostAttentionKind::NoAttention,
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainTerminalReadinessKind::CaughtUpReady,
+                "caught_up_ready",
+                ToolAuditSupervisorDrainRunOutcome::CaughtUp,
+                ToolAuditSupervisorDrainHostAttentionKind::NoAttention,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainTerminalReadinessKind::SchedulerActionPending,
+                "scheduler_action_pending",
+                ToolAuditSupervisorDrainRunOutcome::NeedsContinuation,
+                ToolAuditSupervisorDrainHostAttentionKind::SchedulerAction,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainTerminalReadinessKind::HostInvestigationPending,
+                "host_investigation_pending",
+                ToolAuditSupervisorDrainRunOutcome::Idle,
+                ToolAuditSupervisorDrainHostAttentionKind::HostInvestigation,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainTerminalReadinessKind::RunIntegrityInvestigationPending,
+                "run_integrity_investigation_pending",
+                ToolAuditSupervisorDrainRunOutcome::Idle,
+                ToolAuditSupervisorDrainHostAttentionKind::RunIntegrityInvestigation,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainTerminalReadinessKind::SchedulerActionAndHostInvestigationPending,
+                "scheduler_action_and_host_investigation_pending",
+                ToolAuditSupervisorDrainRunOutcome::PlanDiverged,
+                ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionAndHostInvestigation,
+                false,
+                false,
+                false,
+                true,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainTerminalReadinessKind::SchedulerActionAndRunIntegrityInvestigationPending,
+                "scheduler_action_and_run_integrity_investigation_pending",
+                ToolAuditSupervisorDrainRunOutcome::NeedsContinuation,
+                ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionAndRunIntegrityInvestigation,
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainTerminalReadinessKind::HostAndRunIntegrityInvestigationPending,
+                "host_and_run_integrity_investigation_pending",
+                ToolAuditSupervisorDrainRunOutcome::Idle,
+                ToolAuditSupervisorDrainHostAttentionKind::HostAndRunIntegrityInvestigation,
+                false,
+                false,
+                false,
+                false,
+                true,
+                true,
+            ),
+            (
+                ToolAuditSupervisorDrainTerminalReadinessKind::SchedulerActionHostAndRunIntegrityInvestigationPending,
+                "scheduler_action_host_and_run_integrity_investigation_pending",
+                ToolAuditSupervisorDrainRunOutcome::PlanDiverged,
+                ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionHostAndRunIntegrityInvestigation,
+                false,
+                false,
+                false,
+                true,
+                true,
+                true,
+            ),
+        ];
+
+        for (
+            kind,
+            label,
+            outcome,
+            attention,
+            is_terminal_ready,
+            is_idle_ready,
+            is_caught_up_ready,
+            requires_scheduler_action,
+            requires_host_investigation,
+            requires_run_integrity_investigation,
+        ) in cases
+        {
+            assert_eq!(kind.as_str(), label);
+            assert_eq!(kind.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainTerminalReadinessKind::from_label(label),
+                Some(kind)
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainTerminalReadinessKind::from_outcome_and_attention(
+                    outcome, attention
+                ),
+                kind
+            );
+            assert_eq!(kind.is_terminal_ready(), is_terminal_ready);
+            assert_eq!(kind.is_idle_ready(), is_idle_ready);
+            assert_eq!(kind.is_caught_up_ready(), is_caught_up_ready);
+            assert_eq!(kind.requires_scheduler_action(), requires_scheduler_action);
+            assert_eq!(
+                kind.requires_host_investigation(),
+                requires_host_investigation
+            );
+            assert_eq!(
+                kind.requires_run_integrity_investigation(),
+                requires_run_integrity_investigation
+            );
+            assert_eq!(
+                kind.has_multiple_attention(),
+                [
+                    requires_scheduler_action,
+                    requires_host_investigation,
+                    requires_run_integrity_investigation,
+                ]
+                .into_iter()
+                .filter(|requires_attention| *requires_attention)
+                .count()
+                    > 1
+            );
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainTerminalReadinessKind::from_outcome_and_attention(
+                ToolAuditSupervisorDrainRunOutcome::NeedsFollowUp,
+                ToolAuditSupervisorDrainHostAttentionKind::NoAttention,
+            ),
+            ToolAuditSupervisorDrainTerminalReadinessKind::SchedulerActionPending
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTerminalReadinessKind::from_label("almost_ready"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_report_exposes_outcome_label_and_action_flag() {
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(store
@@ -7108,6 +7597,199 @@ mod tests {
         stale_multiple_summary.host_attention_label = "attentionish";
         stale_multiple_summary.host_attention_label_matches_kind = false;
         assert!(!stale_multiple_summary.host_attention_label_matches_kind());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_flattens_terminal_readiness_fields() {
+        let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut idle_sink = InMemoryToolAuditSink::new();
+        let idle_report = empty_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut idle_sink)
+            .unwrap();
+        let idle_summary = idle_report.summary();
+
+        assert!(idle_report.is_terminal_ready());
+        assert_eq!(
+            idle_report.terminal_readiness_kind(),
+            ToolAuditSupervisorDrainTerminalReadinessKind::IdleReady
+        );
+        assert_eq!(idle_report.terminal_readiness_label(), "idle_ready");
+        assert!(idle_report.terminal_readiness_label_matches_kind());
+        assert!(idle_report.terminal_readiness_is_idle());
+        assert!(!idle_report.terminal_readiness_is_caught_up());
+        assert!(!idle_report.terminal_readiness_requires_scheduler_action());
+        assert!(!idle_report.terminal_readiness_requires_host_investigation());
+        assert!(!idle_report.terminal_readiness_requires_run_integrity_investigation());
+        assert!(!idle_report.terminal_readiness_has_multiple_attention());
+        assert!(idle_summary.is_terminal_ready);
+        assert!(idle_summary.is_terminal_ready());
+        assert_eq!(
+            idle_summary.terminal_readiness_kind,
+            ToolAuditSupervisorDrainTerminalReadinessKind::IdleReady
+        );
+        assert_eq!(
+            idle_summary.terminal_readiness_kind(),
+            ToolAuditSupervisorDrainTerminalReadinessKind::IdleReady
+        );
+        assert_eq!(idle_summary.terminal_readiness_label, "idle_ready");
+        assert_eq!(idle_summary.terminal_readiness_label(), "idle_ready");
+        assert!(idle_summary.terminal_readiness_label_matches_kind);
+        assert!(idle_summary.terminal_readiness_label_matches_kind());
+        assert!(idle_summary.terminal_readiness_is_idle);
+        assert!(idle_summary.terminal_readiness_is_idle());
+        assert!(!idle_summary.terminal_readiness_is_caught_up);
+        assert!(!idle_summary.terminal_readiness_is_caught_up());
+        assert!(!idle_summary.terminal_readiness_requires_scheduler_action);
+        assert!(!idle_summary.terminal_readiness_requires_scheduler_action());
+        assert!(!idle_summary.terminal_readiness_requires_host_investigation);
+        assert!(!idle_summary.terminal_readiness_requires_host_investigation());
+        assert!(!idle_summary.terminal_readiness_requires_run_integrity_investigation);
+        assert!(!idle_summary.terminal_readiness_requires_run_integrity_investigation());
+        assert!(!idle_summary.terminal_readiness_has_multiple_attention);
+        assert!(!idle_summary.terminal_readiness_has_multiple_attention());
+
+        let ready_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(ready_store
+            .record_audit_batch(vec![sample_record("call_1"), sample_record("call_2")])
+            .completed_without_failures());
+        let mut ready_sink = InMemoryToolAuditSink::new();
+        let ready_report = ready_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut ready_sink)
+            .unwrap();
+        let ready_summary = ready_report.summary();
+        assert!(ready_report.is_terminal_ready());
+        assert_eq!(
+            ready_report.terminal_readiness_kind(),
+            ToolAuditSupervisorDrainTerminalReadinessKind::CaughtUpReady
+        );
+        assert_eq!(ready_report.terminal_readiness_label(), "caught_up_ready");
+        assert!(!ready_report.terminal_readiness_is_idle());
+        assert!(ready_report.terminal_readiness_is_caught_up());
+        assert!(ready_summary.is_terminal_ready);
+        assert_eq!(
+            ready_summary.terminal_readiness_kind(),
+            ToolAuditSupervisorDrainTerminalReadinessKind::CaughtUpReady
+        );
+        assert_eq!(ready_summary.terminal_readiness_label(), "caught_up_ready");
+        assert!(!ready_summary.terminal_readiness_is_idle());
+        assert!(ready_summary.terminal_readiness_is_caught_up());
+
+        let pending_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(pending_store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+        let mut pending_sink = InMemoryToolAuditSink::new();
+        let pending_report = pending_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 1, &mut pending_sink)
+            .unwrap();
+        let pending_summary = pending_report.summary();
+        assert!(!pending_report.is_terminal_ready());
+        assert_eq!(
+            pending_report.terminal_readiness_kind(),
+            ToolAuditSupervisorDrainTerminalReadinessKind::SchedulerActionPending
+        );
+        assert_eq!(
+            pending_report.terminal_readiness_label(),
+            "scheduler_action_pending"
+        );
+        assert!(pending_report.terminal_readiness_requires_scheduler_action());
+        assert!(!pending_report.terminal_readiness_requires_host_investigation());
+        assert!(!pending_report.terminal_readiness_requires_run_integrity_investigation());
+        assert!(!pending_report.terminal_readiness_has_multiple_attention());
+        assert!(!pending_summary.is_terminal_ready);
+        assert_eq!(
+            pending_summary.terminal_readiness_kind(),
+            ToolAuditSupervisorDrainTerminalReadinessKind::SchedulerActionPending
+        );
+        assert_eq!(
+            pending_summary.terminal_readiness_label(),
+            "scheduler_action_pending"
+        );
+        assert!(pending_summary.terminal_readiness_requires_scheduler_action());
+        assert!(!pending_summary.terminal_readiness_requires_host_investigation());
+        assert!(!pending_summary.terminal_readiness_requires_run_integrity_investigation());
+        assert!(!pending_summary.terminal_readiness_has_multiple_attention());
+
+        let mut integrity_report = pending_report.clone();
+        integrity_report.drain.ticks[0].replay.next_checkpoint =
+            ToolAuditReadCheckpoint::beginning();
+        let integrity_summary = integrity_report.summary();
+        assert_eq!(
+            integrity_report.terminal_readiness_kind(),
+            ToolAuditSupervisorDrainTerminalReadinessKind::SchedulerActionAndRunIntegrityInvestigationPending
+        );
+        assert_eq!(
+            integrity_report.terminal_readiness_label(),
+            "scheduler_action_and_run_integrity_investigation_pending"
+        );
+        assert!(integrity_report.terminal_readiness_requires_scheduler_action());
+        assert!(!integrity_report.terminal_readiness_requires_host_investigation());
+        assert!(integrity_report.terminal_readiness_requires_run_integrity_investigation());
+        assert!(integrity_report.terminal_readiness_has_multiple_attention());
+        assert_eq!(
+            integrity_summary.terminal_readiness_kind(),
+            ToolAuditSupervisorDrainTerminalReadinessKind::SchedulerActionAndRunIntegrityInvestigationPending
+        );
+        assert_eq!(
+            integrity_summary.terminal_readiness_label(),
+            "scheduler_action_and_run_integrity_investigation_pending"
+        );
+        assert!(integrity_summary.terminal_readiness_requires_scheduler_action());
+        assert!(!integrity_summary.terminal_readiness_requires_host_investigation());
+        assert!(integrity_summary.terminal_readiness_requires_run_integrity_investigation());
+        assert!(integrity_summary.terminal_readiness_has_multiple_attention());
+
+        let mut stale_host_summary = idle_summary.clone();
+        stale_host_summary.is_terminal_ready = false;
+        stale_host_summary.terminal_readiness_kind =
+            ToolAuditSupervisorDrainTerminalReadinessKind::HostInvestigationPending;
+        stale_host_summary.terminal_readiness_label = "host_investigation_pending";
+        stale_host_summary.terminal_readiness_requires_host_investigation = true;
+        stale_host_summary.terminal_readiness_is_idle = false;
+        assert!(!stale_host_summary.is_terminal_ready());
+        assert_eq!(
+            stale_host_summary.terminal_readiness_kind(),
+            ToolAuditSupervisorDrainTerminalReadinessKind::HostInvestigationPending
+        );
+        assert_eq!(
+            stale_host_summary.terminal_readiness_label(),
+            "host_investigation_pending"
+        );
+        assert!(stale_host_summary.terminal_readiness_label_matches_kind());
+        assert!(!stale_host_summary.terminal_readiness_requires_scheduler_action());
+        assert!(stale_host_summary.terminal_readiness_requires_host_investigation());
+        assert!(!stale_host_summary.terminal_readiness_requires_run_integrity_investigation());
+        assert!(!stale_host_summary.terminal_readiness_has_multiple_attention());
+
+        let mut stale_multiple_summary = pending_summary;
+        stale_multiple_summary.terminal_readiness_kind =
+            ToolAuditSupervisorDrainTerminalReadinessKind::SchedulerActionHostAndRunIntegrityInvestigationPending;
+        stale_multiple_summary.terminal_readiness_label =
+            "scheduler_action_host_and_run_integrity_investigation_pending";
+        stale_multiple_summary.terminal_readiness_requires_host_investigation = true;
+        stale_multiple_summary.terminal_readiness_requires_run_integrity_investigation = true;
+        stale_multiple_summary.terminal_readiness_has_multiple_attention = true;
+        assert_eq!(
+            stale_multiple_summary.terminal_readiness_kind(),
+            ToolAuditSupervisorDrainTerminalReadinessKind::SchedulerActionHostAndRunIntegrityInvestigationPending
+        );
+        assert_eq!(
+            stale_multiple_summary.terminal_readiness_label(),
+            "scheduler_action_host_and_run_integrity_investigation_pending"
+        );
+        assert!(stale_multiple_summary.terminal_readiness_requires_scheduler_action());
+        assert!(stale_multiple_summary.terminal_readiness_requires_host_investigation());
+        assert!(stale_multiple_summary.terminal_readiness_requires_run_integrity_investigation());
+        assert!(stale_multiple_summary.terminal_readiness_has_multiple_attention());
+        assert!(stale_multiple_summary.terminal_readiness_label_matches_kind());
+
+        stale_multiple_summary.terminal_readiness_label = "readinessish";
+        stale_multiple_summary.terminal_readiness_label_matches_kind = false;
+        assert!(!stale_multiple_summary.terminal_readiness_label_matches_kind());
     }
 
     #[test]

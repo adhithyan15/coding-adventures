@@ -142,6 +142,11 @@ The crate keeps the boundary narrow:
   that combine scheduler action, host investigation, and run-integrity signals
 - supervisor drain run summaries flatten host-attention component flags for
   payload-free host dashboards
+- supervisor drain reports and summaries expose terminal-readiness
+  classifications that distinguish idle-ready, caught-up-ready, and pending
+  host-attention states
+- supervisor drain run summaries flatten terminal-readiness component flags for
+  payload-free terminal dashboards
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
@@ -164,6 +169,8 @@ The crate keeps the boundary narrow:
   label-to-classifier match flags for host-log integrity dashboards
 - host-attention classifications expose their own label-to-classifier match
   flags for host-log routing dashboards
+- terminal-readiness classifications expose their own label-to-classifier match
+  flags for host-log terminal routing dashboards
 - supervisor drain run summaries flatten outcome status flags for host logs and
   terminal scheduler dashboards
 - supervisor drain reports and summaries expose no-action scheduler helpers for
