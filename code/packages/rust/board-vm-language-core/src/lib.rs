@@ -750,6 +750,23 @@ pub struct LanguageInputCallbackQueuePlan {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackSessionQueueSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub queue_label: String,
+    pub action: LanguageInputCallbackQueueAction,
+    pub queue_policy: LanguageInputCallbackQueuePolicy,
+    pub queued: bool,
+    pub dropped_existing_event: bool,
+    pub dropped_incoming_event: bool,
+    pub dispatch_required: bool,
+    pub queue_depth_before: u8,
+    pub queue_depth_after: u8,
+    pub message: String,
+    pub queue_plan: LanguageInputCallbackQueuePlan,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageInputCallbackDispatchPlan {
     pub board_id: String,
     pub pin: u8,
@@ -1177,6 +1194,16 @@ pub const fn run_status_name(status: RunStatus) -> &'static str {
         RunStatus::Stopped => "stopped",
         RunStatus::BudgetExceeded => "budget_exceeded",
         RunStatus::Faulted => "faulted",
+    }
+}
+
+pub const fn input_callback_queue_action_name(
+    action: LanguageInputCallbackQueueAction,
+) -> &'static str {
+    match action {
+        LanguageInputCallbackQueueAction::Enqueue => "enqueue",
+        LanguageInputCallbackQueueAction::DropNewest => "drop_newest",
+        LanguageInputCallbackQueueAction::DropOldestThenEnqueue => "drop_oldest_then_enqueue",
     }
 }
 
@@ -2110,6 +2137,27 @@ pub fn input_callback_queue_plan_for_invocation(
     })
 }
 
+pub fn input_callback_session_queue_summary(
+    session: &LanguageHostEndpointSessionSummary,
+    queue_plan: &LanguageInputCallbackQueuePlan,
+) -> LanguageInputCallbackSessionQueueSummary {
+    LanguageInputCallbackSessionQueueSummary {
+        endpoint: session.endpoint.clone(),
+        connection_label: session.connection_label.clone(),
+        queue_label: input_callback_session_queue_label(session, queue_plan),
+        action: queue_plan.action,
+        queue_policy: queue_plan.queue_policy,
+        queued: queue_plan.queued,
+        dropped_existing_event: queue_plan.dropped_existing_event,
+        dropped_incoming_event: queue_plan.dropped_incoming_event,
+        dispatch_required: queue_plan.dispatch_required,
+        queue_depth_before: queue_plan.queue_depth_before,
+        queue_depth_after: queue_plan.queue_depth_after,
+        message: input_callback_queue_message(queue_plan.action).to_owned(),
+        queue_plan: queue_plan.clone(),
+    }
+}
+
 pub fn input_callback_dispatch_plan_for_queue_plan(
     queue_plan: &LanguageInputCallbackQueuePlan,
 ) -> Option<LanguageInputCallbackDispatchPlan> {
@@ -2803,6 +2851,36 @@ fn input_callback_queue_plan_error(
         queue_depth,
         kind,
     }
+}
+
+fn input_callback_queue_message(action: LanguageInputCallbackQueueAction) -> &'static str {
+    match action {
+        LanguageInputCallbackQueueAction::Enqueue => {
+            "Input callback enqueued; wake cooperative dispatch."
+        }
+        LanguageInputCallbackQueueAction::DropNewest => {
+            "Input callback dropped because the queue is full and drop-newest policy is active."
+        }
+        LanguageInputCallbackQueueAction::DropOldestThenEnqueue => {
+            "Input callback enqueued after dropping the oldest queued callback."
+        }
+    }
+}
+
+fn input_callback_session_queue_label(
+    session: &LanguageHostEndpointSessionSummary,
+    queue_plan: &LanguageInputCallbackQueuePlan,
+) -> String {
+    format!(
+        "{} callback={}:{} sequence={} queue_action={} queue_depth_before={} queue_depth_after={}",
+        session.connection_label,
+        queue_plan.board_id,
+        queue_plan.label,
+        queue_plan.sequence,
+        input_callback_queue_action_name(queue_plan.action),
+        queue_plan.queue_depth_before,
+        queue_plan.queue_depth_after
+    )
 }
 
 fn input_callback_result_kind(run_status: RunStatus) -> LanguageInputCallbackResultKind {
@@ -6873,6 +6951,118 @@ mod tests {
             error.kind,
             LanguageInputCallbackQueuePlanErrorKind::EmptyQueue
         );
+    }
+
+    #[test]
+    fn input_callback_session_queue_summaries_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial = input_callback_session_queue_summary(&serial_session, &queue_plan);
+        assert_eq!(serial.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            serial.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            serial.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            serial.queue_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 queue_action=enqueue queue_depth_before=2 queue_depth_after=3"
+        );
+        assert_eq!(serial.action, LanguageInputCallbackQueueAction::Enqueue);
+        assert_eq!(
+            serial.queue_policy,
+            LanguageInputCallbackQueuePolicy::DropOldest
+        );
+        assert!(serial.queued);
+        assert!(!serial.dropped_existing_event);
+        assert!(!serial.dropped_incoming_event);
+        assert!(serial.dispatch_required);
+        assert_eq!(serial.queue_depth_before, 2);
+        assert_eq!(serial.queue_depth_after, 3);
+        assert_eq!(
+            serial.message,
+            "Input callback enqueued; wake cooperative dispatch."
+        );
+        assert_eq!(serial.queue_plan, queue_plan);
+
+        let full_queue =
+            input_callback_queue_plan_for_invocation(&invocation, invocation.queue_capacity)
+                .unwrap();
+        let full = input_callback_session_queue_summary(&serial_session, &full_queue);
+        assert_eq!(
+            full.queue_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 queue_action=drop_oldest_then_enqueue queue_depth_before=8 queue_depth_after=8"
+        );
+        assert_eq!(
+            full.action,
+            LanguageInputCallbackQueueAction::DropOldestThenEnqueue
+        );
+        assert!(full.queued);
+        assert!(full.dropped_existing_event);
+        assert!(!full.dropped_incoming_event);
+        assert!(full.dispatch_required);
+        assert_eq!(
+            full.message,
+            "Input callback enqueued after dropping the oldest queued callback."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let tcp = input_callback_session_queue_summary(&tcp_session, &newest_drop);
+
+        assert_eq!(tcp.endpoint.endpoint, "tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(tcp.connection_label, "endpoint=tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.queue_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 queue_action=drop_newest queue_depth_before=1 queue_depth_after=1"
+        );
+        assert_eq!(tcp.action, LanguageInputCallbackQueueAction::DropNewest);
+        assert_eq!(
+            tcp.queue_policy,
+            LanguageInputCallbackQueuePolicy::DropNewest
+        );
+        assert!(!tcp.queued);
+        assert!(!tcp.dropped_existing_event);
+        assert!(tcp.dropped_incoming_event);
+        assert!(!tcp.dispatch_required);
+        assert_eq!(tcp.queue_depth_before, 1);
+        assert_eq!(tcp.queue_depth_after, 1);
+        assert_eq!(
+            tcp.message,
+            "Input callback dropped because the queue is full and drop-newest policy is active."
+        );
+        assert_eq!(tcp.queue_plan, newest_drop);
     }
 
     #[test]

@@ -107,6 +107,9 @@ event-queue decision in Rust too. Frontends still own queue storage and runtime
 scheduling, but Rust decides whether a callback invocation is enqueued, drops
 the incoming event, drops the oldest queued event first, and whether cooperative
 dispatch should be woken.
+`input_callback_session_queue_summary` wraps those enqueue/drop decisions with
+the endpoint session, queue action label, depth change, and Rust-owned message
+so adapters can present queue admission without rebuilding queue policy text.
 `input_callback_dispatch_plan_for_queue_plan` then turns an admitted queue item
 into the callback execution handoff: callback program id, instruction budget,
 event identity, queue action, and cooperative dispatch reason stay in Rust,
