@@ -326,8 +326,10 @@ describe("summation: Phase 41+42 limit-aware infinite telescope", () => {
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
   });
 
-  it("transcendental numerator ∑_{k=1}^∞ [sin(k)/k² − sin(k+1)/(k+1)²] falls through", () => {
-    // sin(k)/k² is non-polynomial; conservative refuse.
+  it("transcendental numerator ∑_{k=1}^∞ [sin(k)/k² − sin(k+1)/(k+1)²] closes via Phase 49", () => {
+    // Phase 49 (bounded-numerator widening) recognises |sin(k)| ≤ 1 +
+    // k² → ∞, so the quotient vanishes and the antisymmetric telescope
+    // closes to g(1) = sin(1)/1² = sin(1).
     const k = sym("k");
     const sinK = app(sym("Sin"), [k]);
     const kPlus1 = app(ADD, [k, int(1)]);
@@ -337,7 +339,7 @@ describe("summation: Phase 41+42 limit-aware infinite telescope", () => {
       app(DIV, [sinKp1, app(POW, [kPlus1, int(2)])]),
     ]);
     const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
-    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
   });
 });
 
@@ -568,11 +570,68 @@ describe("summation: Phase 40+46 Add-with-negation normaliser", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Phase 49 (TypeScript port): Bounded × vanishing recogniser.
+//
+// Extends gVanishesAtInfinity to accept Div(bounded, diverging) shapes
+// where the numerator is uniformly bounded (Sin/Cos, closed under
+// Mul/Add/Neg, constants in k).  Closes telescopes like
+// ∑ [sin(k)/k² − sin(k+1)/(k+1)²] = sin(1) that the Phase 42 degree-
+// aware path refused (sin isn't a polynomial).
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 49 bounded × vanishing", () => {
+  it("∑_{k=1}^∞ [sin(k)/k² − sin(k+1)/(k+1)²] closes", () => {
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const kPlus1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kPlus1]);
+    const f = app(SUB, [
+      app(DIV, [sinK, app(POW, [k, int(2)])]),
+      app(DIV, [sinKp1, app(POW, [kPlus1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // Not the unevaluated Sum form.
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑_{k=1}^∞ [cos(k)/k³ − cos(k+1)/(k+1)³] closes", () => {
+    const k = sym("k");
+    const cosK = app(sym("Cos"), [k]);
+    const kPlus1 = app(ADD, [k, int(1)]);
+    const cosKp1 = app(sym("Cos"), [kPlus1]);
+    const f = app(SUB, [
+      app(DIV, [cosK, app(POW, [k, int(3)])]),
+      app(DIV, [cosKp1, app(POW, [kPlus1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("sin(k)·cos(k)/k² (Mul of bounded factors) closes", () => {
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const cosK = app(sym("Cos"), [k]);
+    const numK = app(MUL, [sinK, cosK]);
+    const kPlus1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kPlus1]);
+    const cosKp1 = app(sym("Cos"), [kPlus1]);
+    const numKp1 = app(MUL, [sinKp1, cosKp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kPlus1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Phase 50 (TypeScript port): Log/polynomial growth-rate recogniser.
 //
 // Closes Div(Log(diverging), diverging) telescopes via the squeeze
 // argument: log(h) → ∞ at a logarithmic rate, denominator grows
 // faster polynomially / exponentially, so log/poly → 0.
+// Phase 49 refused log(k)/k² (log isn't bounded); Phase 50 closes it.
 // ---------------------------------------------------------------------------
 
 describe("summation: Phase 50 log/polynomial growth-rate", () => {

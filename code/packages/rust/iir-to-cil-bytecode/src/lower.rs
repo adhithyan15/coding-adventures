@@ -70,6 +70,32 @@ use ir_to_cil_bytecode::{OBJECT_ARRAY_TYPE_TOKEN, INT32_ARRAY_TYPE_TOKEN};
 /// which by convention we reserve for `Console.WriteLine(int64)`.
 const CONSOLE_WRITELINE_I64_TOKEN: u32 = 0x0A00_0002;
 
+// ─── Brainfuck host-class metadata tokens ─────────────────────────────────────
+//
+// These sentinel tokens reference symbols on the simulated `env.BFRuntime`
+// host class.  In a real CLR PE file these would be resolved metadata tokens
+// (`FieldRef` table 0x04 for the tape, `MemberRef` table 0x0A for methods);
+// for simulation, backends that parse the token bytes emit the appropriate
+// `ldsfld` / `call` sequences.
+//
+// The numbering is contiguous starting from row 1 in their respective tables
+// to keep the simulated metadata small and deterministic.  Console.WriteLine
+// already occupies MemberRef row 2 — putchar / getchar take rows 3 and 4.
+//
+// Host contract: the CLR runtime / launcher (or PE packager) must provide
+// `env.BFRuntime` with:
+//
+//   * `public static byte[] __tape`                  ← the BF tape buffer
+//   * `public static void putchar(int32)`            ← write one byte to stdout
+//   * `public static int32 getchar()`                ← read one byte; -1/0 on EOF
+//
+// Same shape as the WASM (`env.putchar` / `env.getchar` + linear memory) and
+// JVM (`env/BFRuntime.__tape`, `putchar(I)V`, `getchar()I`) backends — same
+// model, different ABI surface.
+const BF_TAPE_TOKEN: u32     = 0x0400_0001; // FieldRef row 1
+const BF_PUTCHAR_TOKEN: u32  = 0x0A00_0003; // MemberRef row 3 (after WriteLine @ row 2)
+const BF_GETCHAR_TOKEN: u32  = 0x0A00_0004; // MemberRef row 4
+
 use crate::validate::validate_iir_for_clr;
 
 // ===========================================================================
@@ -1576,6 +1602,141 @@ pub fn lower_iir_to_cil(
                         }
                     })?.clone();
                     emit_store(&mut builder, &dest_info, fn_name)?;
+                }
+
+                // ── load_mem (Brainfuck) → ldsfld __tape; ldelem.u1 ─────────
+                //
+                // `load_mem v ptr u8`  → push tape[ptr] (zero-extended u8 → int32)
+                // into local `v`.
+                //
+                // CIL sequence emitted:
+                //
+                //   ldsfld     uint8[] env.BFRuntime::__tape   ; push array ref
+                //   ldloc      <ptr_slot>                       ; push index
+                //   ldelem.u1                                   ; pop[arr,idx], push byte
+                //   stloc      <dest_slot>                       ; store into v
+                //
+                // `ldelem.u1` (0x91) zero-extends the byte to int32 — exactly
+                // matching Brainfuck's u8 cell semantics (no sign-extension
+                // surgery needed, unlike JVM's `baload` which we have to mask
+                // with `& 0xFF`).
+                "load_mem" => {
+                    let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                        IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "load_mem must have a dest".to_string(),
+                        }
+                    })?;
+                    let addr_name = match instr.srcs.first() {
+                        Some(Operand::Var(v)) => v.clone(),
+                        _ => return Err(IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "load_mem src[0] must be Operand::Var(addr)".to_string(),
+                        }),
+                    };
+                    let addr_info = reg_info!(addr_name).clone();
+                    let dest_info = reg_info!(dest_name).clone();
+                    // Push tape ref + index, do the load, store.
+                    builder.emit_ldsfld(BF_TAPE_TOKEN);
+                    emit_load(&mut builder, &addr_info, fn_name)?;
+                    builder.emit_opcode(CILOpcode::LdElemU1);
+                    emit_store(&mut builder, &dest_info, fn_name)?;
+                }
+
+                // ── store_mem (Brainfuck) → ldsfld __tape; stelem.i1 ────────
+                //
+                // `store_mem ptr v u8`  → tape[ptr] = (byte) v.
+                //
+                // CIL sequence emitted:
+                //
+                //   ldsfld     uint8[] env.BFRuntime::__tape   ; push array ref
+                //   ldloc      <ptr_slot>                       ; push index
+                //   ldloc      <val_slot>                       ; push value (int32)
+                //   stelem.i1                                   ; pop[arr,idx,val]
+                //
+                // `stelem.i1` (0x9C) truncates the int32 to a byte automatically —
+                // matching BF's u8 wraparound (no explicit mask needed).
+                "store_mem" => {
+                    if instr.srcs.len() < 2 {
+                        return Err(IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "store_mem requires 2 srcs: [addr, val]".to_string(),
+                        });
+                    }
+                    let addr_name = match &instr.srcs[0] {
+                        Operand::Var(v) => v.clone(),
+                        _ => return Err(IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "store_mem src[0] must be Operand::Var(addr)".to_string(),
+                        }),
+                    };
+                    let val_name = match &instr.srcs[1] {
+                        Operand::Var(v) => v.clone(),
+                        _ => return Err(IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "store_mem src[1] must be Operand::Var(val)".to_string(),
+                        }),
+                    };
+                    let addr_info = reg_info!(addr_name).clone();
+                    let val_info  = reg_info!(val_name).clone();
+                    builder.emit_ldsfld(BF_TAPE_TOKEN);
+                    emit_load(&mut builder, &addr_info, fn_name)?;
+                    emit_load(&mut builder, &val_info, fn_name)?;
+                    builder.emit_opcode(CILOpcode::StElemI1);
+                }
+
+                // ── call_builtin (Brainfuck putchar / getchar) ──────────────
+                //
+                // The validator (validate.rs) enforces that `srcs[0]` is in
+                // [`CALL_BUILTIN_SUPPORTED_NAMES`], so the inner match here
+                // only handles whitelisted names.  Falling off the match
+                // indicates a validator/lowerer drift and returns
+                // `UnsupportedOp` as a safety net.
+                //
+                // | Builtin   | Operand layout                        | CIL emitted                                                  |
+                // |-----------|----------------------------------------|---------------------------------------------------------------|
+                // | `putchar` | srcs = [Var("putchar"), Var(val)]; no dest | `ldloc val; call <BF_PUTCHAR_TOKEN>`                          |
+                // | `getchar` | srcs = [Var("getchar")]; dest = byte slot  | `call <BF_GETCHAR_TOKEN>; stloc dest`                         |
+                "call_builtin" => {
+                    let builtin_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "call_builtin: srcs[0] must be the builtin name as Operand::Var".to_string(),
+                        }),
+                    };
+                    match builtin_name.as_str() {
+                        "putchar" => {
+                            let val_name = match instr.srcs.get(1) {
+                                Some(Operand::Var(v)) => v.clone(),
+                                _ => return Err(IIRClrError::InvalidOperand {
+                                    function: fn_name.clone(),
+                                    detail: "call_builtin \"putchar\" requires srcs[1] = Operand::Var(val)".to_string(),
+                                }),
+                            };
+                            let val_info = reg_info!(val_name).clone();
+                            emit_load(&mut builder, &val_info, fn_name)?;
+                            builder.emit_call(BF_PUTCHAR_TOKEN);
+                        }
+                        "getchar" => {
+                            let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                                IIRClrError::InvalidOperand {
+                                    function: fn_name.clone(),
+                                    detail: "call_builtin \"getchar\" requires a dest register".to_string(),
+                                }
+                            })?;
+                            let dest_info = reg_info!(dest_name).clone();
+                            builder.emit_call(BF_GETCHAR_TOKEN);
+                            emit_store(&mut builder, &dest_info, fn_name)?;
+                        }
+                        _ => {
+                            // Validator should have rejected this; defense in depth.
+                            return Err(IIRClrError::UnsupportedOp {
+                                function: fn_name.clone(),
+                                op: format!("call_builtin {:?}: not in CLR backend whitelist", builtin_name),
+                            });
+                        }
+                    }
                 }
 
                 // ── io_out → Console.WriteLine(int64) ───────────────────────

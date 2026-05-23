@@ -639,6 +639,368 @@ mod tests {
         );
     }
 
+    // -----------------------------------------------------------------
+    // Phase 6g — method-with-block lowering: `do … end` / `{ … }`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn brace_block_hoists_to_synthetic_function_and_make_closure() {
+        let m = lower("each { puts(1) }");
+        let block_fn = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("expected `__block_0` synthetic function");
+        assert!(block_fn.params.is_empty());
+        match &block_fn.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "puts");
+                assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected BuiltinCall(puts, …) tail, got {:?}", other),
+        }
+        let main = main_body(&m);
+        let call_args = main.stmts.iter().find_map(|s| match s {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { args, .. }, .. }
+            | Stmt::ExprStmt { expr: Expr::DirectCall { args, .. }, .. } => Some(args),
+            _ => None,
+        }).expect("expected ExprStmt(call)");
+        let last_arg = call_args.last().expect("call must have ≥1 arg (the closure)");
+        assert!(matches!(last_arg, Expr::MakeClosure { fn_name, .. } if fn_name == "__block_0"));
+    }
+
+    #[test]
+    fn do_block_with_pipe_params_lowers_to_function_with_params() {
+        let m = lower("each do |x|\n  puts(x)\nend\n");
+        let block_fn = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("expected __block_0");
+        assert_eq!(block_fn.params.len(), 1);
+        assert_eq!(block_fn.params[0].name, "x");
+        if let Expr::BuiltinCall { args, .. } = &block_fn.body.value {
+            assert!(matches!(&args[0], Expr::VarRef { name, scope, .. } if name == "x" && *scope == Scope::Param));
+        } else {
+            panic!("expected BuiltinCall body");
+        }
+    }
+
+    #[test]
+    fn multiple_blocks_get_distinct_synthetic_names() {
+        let m = lower("each { puts(1) }\nmap { puts(2) }\n");
+        assert!(m.functions.iter().any(|f| f.name == "__block_0"));
+        assert!(m.functions.iter().any(|f| f.name == "__block_1"));
+    }
+
+    #[test]
+    fn block_module_declares_closures_feature() {
+        let m = lower("each { puts(1) }\n");
+        let has_closures = format!("{:?}", m.manifest).contains("Closures");
+        assert!(has_closures);
+    }
+
+    #[test]
+    fn block_lowering_passes_sir_validator() {
+        let m = lower("each do |x|\n  puts(x)\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 6h — paren-less method calls (`puts 1`, `puts 1, 2`).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn no_paren_call_with_single_arg_lowers_to_builtin_call() {
+        let m = lower("puts 1");
+        let b = main_body(&m);
+        match &b.value {
+            Expr::BuiltinCall { name, args, effects, .. } => {
+                assert_eq!(name, "puts");
+                assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
+                assert!(effects.contains(Effect::MayPrint));
+            }
+            other => panic!("expected BuiltinCall(puts, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn no_paren_call_with_multiple_args() {
+        let m = lower("puts 1, 2, 3");
+        let b = main_body(&m);
+        match &b.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "puts");
+                assert_eq!(args.len(), 3);
+            }
+            other => panic!("expected BuiltinCall(puts, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn no_paren_call_with_binary_expr_arg_groups_correctly() {
+        let m = lower("puts 1 + 2");
+        let b = main_body(&m);
+        match &b.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "puts");
+                assert_eq!(args.len(), 1);
+                match &args[0] {
+                    Expr::BuiltinCall { name, args: inner, .. } => {
+                        assert_eq!(name, "+");
+                        assert_eq!(inner.len(), 2);
+                    }
+                    other => panic!("expected nested BuiltinCall(+, …), got {:?}", other),
+                }
+            }
+            other => panic!("expected BuiltinCall(puts, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn no_paren_call_module_passes_sir_validator() {
+        let m = lower("x = 1\nputs x, x + 1\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
+    #[test]
+    fn paren_form_still_lowers_unchanged() {
+        let m = lower("puts(42)");
+        let b = main_body(&m);
+        assert!(matches!(
+            &b.value,
+            Expr::BuiltinCall { name, args, .. } if name == "puts" && args.len() == 1
+        ));
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 6i — comparison operators (`==`, `!=`, `<`, `>`, `<=`, `>=`).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn equality_op_lowers_to_builtin_call() {
+        let m = lower("x = 1 == 2");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value, .. } => match value {
+                Expr::BuiltinCall { name, args, .. } => {
+                    assert_eq!(name, "==");
+                    assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
+                    assert!(matches!(args[1], Expr::IntLit { value: 2, .. }));
+                }
+                other => panic!("expected BuiltinCall(==), got {:?}", other),
+            },
+            other => panic!("expected LetBinding, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn less_than_op_lowers_to_builtin_call() {
+        let m = lower("5 < 10");
+        let b = main_body(&m);
+        match &b.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "<");
+                assert!(matches!(args[0], Expr::IntLit { value: 5, .. }));
+                assert!(matches!(args[1], Expr::IntLit { value: 10, .. }));
+            }
+            other => panic!("expected BuiltinCall(<), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn all_six_comparison_operators_lower_with_correct_names() {
+        for op in &["==", "!=", "<", ">", "<=", ">="] {
+            let src = format!("x = 1 {op} 2");
+            let m = lower(&src);
+            let b = main_body(&m);
+            if let Stmt::LetBinding { value: Expr::BuiltinCall { name, .. }, .. } =
+                &b.stmts[0]
+            {
+                assert_eq!(name, op);
+            } else {
+                panic!("expected LetBinding(BuiltinCall(`{op}`))");
+            }
+        }
+    }
+
+    #[test]
+    fn comparison_has_lower_precedence_than_arithmetic() {
+        let m = lower("1 + 2 < 5");
+        let b = main_body(&m);
+        match &b.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "<");
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner, .. } => assert_eq!(inner, "+"),
+                    other => panic!("expected `+` LHS, got {:?}", other),
+                }
+                assert!(matches!(args[1], Expr::IntLit { value: 5, .. }));
+            }
+            other => panic!("expected top-level `<`, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn comparison_used_in_if_condition_passes_validator() {
+        let m = lower("x = 5\nif x < 10\n  y = 1\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 6j — control-flow keywords: `return`, `break`, `next`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn return_with_value_lowers_to_divergent_builtin_call() {
+        let m = lower("return 42");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
+                assert_eq!(name, "return");
+                assert!(matches!(args[0], Expr::IntLit { value: 42, .. }));
+                assert!(effects.contains(Effect::Divergent));
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(return)), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn bare_return_lowers_with_nil_arg() {
+        let m = lower("return");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "return");
+                assert!(matches!(args[0], Expr::NilLit { .. }));
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(return, [nil])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn break_and_next_lower_to_their_respective_builtins() {
+        for kw in &["break", "next"] {
+            let src = format!("{kw} 1");
+            let m = lower(&src);
+            let b = main_body(&m);
+            match &b.stmts[0] {
+                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
+                    assert_eq!(name, kw);
+                    assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
+                    assert!(effects.contains(Effect::Divergent));
+                }
+                other => panic!("expected BuiltinCall({kw}), got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn return_inside_def_body() {
+        let m = lower("def f(x)\n  return x + 1\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "f").expect("expected fn f");
+        let has_return = f.body.stmts.iter().any(|s| matches!(
+            s,
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "return"
+        ));
+        assert!(has_return);
+    }
+
+    #[test]
+    fn return_module_passes_sir_validator() {
+        let m = lower("def f(x)\n  return x\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 6k — unary minus → BuiltinCall("neg", [x]).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn unary_minus_on_number_lowers_to_neg_builtin() {
+        let m = lower("x = -5");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value, .. } => match value {
+                Expr::BuiltinCall { name, args, .. } => {
+                    assert_eq!(name, "neg");
+                    assert!(matches!(args[0], Expr::IntLit { value: 5, .. }));
+                }
+                other => panic!("expected BuiltinCall(neg, [5]), got {:?}", other),
+            },
+            other => panic!("expected LetBinding, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn unary_minus_on_name_carries_scope() {
+        let m = lower("x = 1\ny = -x\n");
+        let b = main_body(&m);
+        match &b.stmts[1] {
+            Stmt::LetBinding { value: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "neg");
+                assert!(matches!(
+                    &args[0],
+                    Expr::VarRef { name, scope, .. } if name == "x" && *scope == Scope::Local
+                ));
+            }
+            other => panic!("expected LetBinding(BuiltinCall(neg, [VarRef(x)])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn double_unary_minus_nests_correctly() {
+        let m = lower("x = --5");
+        let b = main_body(&m);
+        if let Stmt::LetBinding {
+            value: Expr::BuiltinCall { name: outer, args: outer_args, .. },
+            ..
+        } = &b.stmts[0]
+        {
+            assert_eq!(outer, "neg");
+            match &outer_args[0] {
+                Expr::BuiltinCall { name: inner, args: inner_args, .. } => {
+                    assert_eq!(inner, "neg");
+                    assert!(matches!(inner_args[0], Expr::IntLit { value: 5, .. }));
+                }
+                other => panic!("expected inner neg, got {:?}", other),
+            }
+        } else {
+            panic!("expected outer LetBinding(BuiltinCall(neg, …))");
+        }
+    }
+
+    #[test]
+    fn unary_minus_with_binary_plus_resolves_precedence_correctly() {
+        let m = lower("x = -5 + 3");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value: Expr::BuiltinCall { name: outer, args, .. }, .. } => {
+                assert_eq!(outer, "+");
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner, args: inner_args, .. } => {
+                        assert_eq!(inner, "neg");
+                        assert!(matches!(inner_args[0], Expr::IntLit { value: 5, .. }));
+                    }
+                    other => panic!("expected LHS = neg(5), got {:?}", other),
+                }
+                assert!(matches!(args[1], Expr::IntLit { value: 3, .. }));
+            }
+            other => panic!("expected LetBinding(BuiltinCall(+, …)), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn unary_minus_module_passes_sir_validator() {
+        let m = lower("x = -5\ny = -(1 + 2)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
     #[test]
     fn module_with_def_passes_sir_validator() {
         // v0 grammar can't yet parse nested method calls in args

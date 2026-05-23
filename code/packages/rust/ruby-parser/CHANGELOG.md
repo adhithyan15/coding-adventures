@@ -2,6 +2,58 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.12.0] - 2026-05-22
+
+### Added (Phase 6k — unary minus `-5`, `-x`, `-(1+2)`)
+- New `factor` alternative `unary_minus = MINUS factor`.  Right-recursive (`--5` parses fine); precedence tighter than binary `+ -`.
+
+### Tests (+5 new, total 54)
+- `test_parse_unary_minus_on_number`, `test_parse_unary_minus_on_name`, `test_parse_unary_minus_on_parenthesised_expression`, `test_parse_double_unary_minus_nests`, `test_parse_unary_minus_with_binary_addition`.
+
+## [0.11.0] - 2026-05-22
+
+### Added (Phase 6j — control-flow keywords `return` / `break` / `next`)
+- `return_statement = "return" [ expression ] ;`
+- `break_statement  = "break"  [ expression ] ;`
+- `next_statement   = "next"   [ expression ] ;`
+
+### Tests (+5 new, total 49)
+- `test_parse_return_with_value`, `test_parse_bare_return`, `test_parse_break_with_value`, `test_parse_next_keyword`, `test_parse_return_inside_def_body`.
+
+## [0.10.0] - 2026-05-22
+
+### Added (Phase 6i — comparison operators `==`, `!=`, `<`, `>`, `<=`, `>=`)
+
+Inserted a new precedence level into the expression hierarchy:
+```
+expression  =  sum { ( "==" | "!=" | "<=" | ">=" | "<" | ">" ) sum } ;
+sum         =  term { ( PLUS | MINUS ) term } ;
+term        =  factor { ( STAR | SLASH ) factor } ;
+```
+
+### Tests (+5 new, total 44)
+- `test_parse_simple_comparison_has_sum_subnodes`, `test_parse_equality_in_assignment`, `test_parse_comparison_in_if_condition`, `test_parse_chained_inequality_left_associative`, `test_parse_plus_has_lower_precedence_than_comparison`.
+
+## [0.9.0] - 2026-05-22
+
+### Added (Phase 6h — no-paren method calls `puts 1` / `puts 1, 2`)
+- `method_call_no_paren = ( NAME | KEYWORD ) expression { COMMA expression } ;`
+
+### Tests (+5 new, total 39)
+- `test_parse_no_paren_single_arg`, `test_parse_no_paren_multiple_args`, `test_paren_form_still_wins_over_no_paren`, `test_bare_name_falls_through_to_expression_stmt`, `test_no_paren_with_binary_arg_is_single_call`.
+
+## [0.8.0] - 2026-05-22
+
+### Added (Phase 6g — blocks `do … end` and `method { … }`)
+- `method_with_block = ( NAME | KEYWORD ) [ LPAREN [ expression { COMMA expression } ] RPAREN ] block ;`
+- `block = do_block | brace_block ;`
+- `do_block = "do" [ block_params ] { !"end" statement } "end" ;`
+- `brace_block = LBRACE [ block_params ] { statement } RBRACE ;`
+- `block_params = "|" NAME { COMMA NAME } "|" ;`
+
+### Tests (+6 new, total 34)
+- `test_parse_method_with_do_block_no_params`, `test_parse_method_with_brace_block`, `test_parse_do_block_with_pipe_params`, `test_parse_brace_block_with_two_pipe_params`, `test_parse_method_call_with_args_and_block`, `test_parse_hash_literal_still_works_at_statement_position`.
+
 ## [0.7.0] - 2026-05-22
 
 ### Added (Phase 6f — `class Foo … end` / `module Foo … end` namespace declarations)

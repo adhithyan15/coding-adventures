@@ -484,5 +484,383 @@ mod tests {
             .count();
         assert!(body_count >= 1);
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6g — blocks `do … end` and brace-blocks `method { … }`
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_method_with_do_block_no_params() {
+        let ast = parse_ruby("each do\n  puts 1\nend");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        let block = mwb
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "block" => Some(n),
+                _ => None,
+            })
+            .expect("expected block subnode");
+        assert!(find_descendant(block, "do_block").is_some());
+    }
+
+    #[test]
+    fn test_parse_method_with_brace_block() {
+        let ast = parse_ruby("each { puts 1 }");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        assert!(find_descendant(mwb, "brace_block").is_some());
+    }
+
+    #[test]
+    fn test_parse_do_block_with_pipe_params() {
+        let ast = parse_ruby("each do |x|\n  puts x\nend");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        let bp = find_descendant(mwb, "block_params").expect("expected block_params");
+        let names: Vec<&str> = bp
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, lexer::token::TokenType::Name) && t.value != "|" =>
+                {
+                    Some(t.value.as_str())
+                }
+                _ => None,
+            })
+            .collect();
+        assert_eq!(names, vec!["x"]);
+    }
+
+    #[test]
+    fn test_parse_brace_block_with_two_pipe_params() {
+        let ast = parse_ruby("each { |x, y| x + y }");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        let bp = find_descendant(mwb, "block_params").expect("expected block_params");
+        let names: Vec<&str> = bp
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, lexer::token::TokenType::Name) && t.value != "|" =>
+                {
+                    Some(t.value.as_str())
+                }
+                _ => None,
+            })
+            .collect();
+        assert_eq!(names, vec!["x", "y"]);
+    }
+
+    #[test]
+    fn test_parse_method_call_with_args_and_block() {
+        let ast = parse_ruby("each(1, 2) { puts 1 }");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        let has_args = mwb
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression"));
+        let has_block = find_descendant(mwb, "brace_block").is_some();
+        assert!(has_args && has_block);
+    }
+
+    #[test]
+    fn test_parse_hash_literal_still_works_at_statement_position() {
+        let ast = parse_ruby("x = {a: 1}");
+        assert!(find_descendant(&ast, "hash_literal").is_some());
+        assert!(find_descendant(&ast, "brace_block").is_none());
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase 6h — no-paren method calls (`puts 1` / `puts 1, 2`)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_no_paren_single_arg() {
+        let ast = parse_ruby("puts 1");
+        let call = find_statement_inner(&ast, "method_call_no_paren")
+            .expect("expected method_call_no_paren");
+        let arg_count = call
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression"))
+            .count();
+        assert_eq!(arg_count, 1);
+    }
+
+    #[test]
+    fn test_parse_no_paren_multiple_args() {
+        let ast = parse_ruby("puts 1, 2, 3");
+        let call = find_statement_inner(&ast, "method_call_no_paren")
+            .expect("expected method_call_no_paren");
+        let arg_count = call
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression"))
+            .count();
+        assert_eq!(arg_count, 3);
+    }
+
+    #[test]
+    fn test_paren_form_still_wins_over_no_paren() {
+        let ast = parse_ruby("puts(1)");
+        assert!(find_statement_inner(&ast, "method_call").is_some());
+        assert!(find_statement_inner(&ast, "method_call_no_paren").is_none());
+    }
+
+    #[test]
+    fn test_bare_name_falls_through_to_expression_stmt() {
+        let ast = parse_ruby("puts");
+        assert!(find_statement_inner(&ast, "method_call_no_paren").is_none());
+        assert!(find_statement_inner(&ast, "expression_stmt").is_some());
+    }
+
+    #[test]
+    fn test_no_paren_with_binary_arg_is_single_call() {
+        let ast = parse_ruby("puts 1 + 2");
+        let call = find_statement_inner(&ast, "method_call_no_paren")
+            .expect("expected method_call_no_paren");
+        let arg_count = call
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression"))
+            .count();
+        assert_eq!(arg_count, 1);
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase 6i — comparison operators (`==`, `!=`, `<`, `>`, `<=`, `>=`)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_simple_comparison_has_sum_subnodes() {
+        let ast = parse_ruby("5 < 10");
+        let expr_stmt = find_statement_inner(&ast, "expression_stmt")
+            .expect("expected expression_stmt");
+        let expr = expr_stmt
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .expect("expected expression subnode");
+        let sum_count = expr
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "sum"))
+            .count();
+        assert_eq!(sum_count, 2);
+        let has_lt = expr
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "<"));
+        assert!(has_lt);
+    }
+
+    #[test]
+    fn test_parse_equality_in_assignment() {
+        let ast = parse_ruby("flag = x == y");
+        let asg = find_statement_inner(&ast, "assignment")
+            .expect("expected assignment");
+        let expr = asg
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .expect("expected expression");
+        let has_eq_eq = expr
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "=="));
+        assert!(has_eq_eq);
+    }
+
+    #[test]
+    fn test_parse_comparison_in_if_condition() {
+        let ast = parse_ruby("if x < 10\n  y = 1\nend");
+        let ifn = find_statement_inner(&ast, "if_statement")
+            .expect("expected if_statement");
+        let cond = ifn
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .expect("expected expression in if condition");
+        let has_lt = cond
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "<"));
+        assert!(has_lt);
+    }
+
+    #[test]
+    fn test_parse_chained_inequality_left_associative() {
+        let ast = parse_ruby("a < b < c");
+        fn count_lt(node: &GrammarASTNode) -> usize {
+            let mut n = 0;
+            for c in &node.children {
+                match c {
+                    ASTNodeOrToken::Token(t) if t.value == "<" => n += 1,
+                    ASTNodeOrToken::Node(sub) => n += count_lt(sub),
+                    _ => {}
+                }
+            }
+            n
+        }
+        assert!(count_lt(&ast) >= 1);
+    }
+
+    #[test]
+    fn test_parse_plus_has_lower_precedence_than_comparison() {
+        let ast = parse_ruby("1 + 2 < 5");
+        let expr_stmt = find_statement_inner(&ast, "expression_stmt")
+            .expect("expected expression_stmt");
+        let expr = expr_stmt
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .expect("expected expression");
+        let sums: Vec<&GrammarASTNode> = expr
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "sum" => Some(n),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(sums.len(), 2);
+        let lhs_has_plus = sums[0]
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Plus)));
+        assert!(lhs_has_plus);
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase 6j — control-flow keywords: `return`, `break`, `next`
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_return_with_value() {
+        let ast = parse_ruby("return 42");
+        let r = find_statement_inner(&ast, "return_statement")
+            .expect("expected return_statement");
+        assert!(r
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")));
+    }
+
+    #[test]
+    fn test_parse_bare_return() {
+        let ast = parse_ruby("return");
+        assert!(find_statement_inner(&ast, "return_statement").is_some());
+    }
+
+    #[test]
+    fn test_parse_break_with_value() {
+        let ast = parse_ruby("break 1 + 2");
+        let b = find_statement_inner(&ast, "break_statement")
+            .expect("expected break_statement");
+        assert!(b
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")));
+    }
+
+    #[test]
+    fn test_parse_next_keyword() {
+        let ast = parse_ruby("next");
+        assert!(find_statement_inner(&ast, "next_statement").is_some());
+    }
+
+    #[test]
+    fn test_parse_return_inside_def_body() {
+        let ast = parse_ruby("def f(x)\n  return x + 1\nend");
+        let def = find_def_statement(&ast).expect("expected def_statement");
+        let body_returns = def
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+                _ => None,
+            })
+            .any(|s| {
+                s.children.iter().any(|c| {
+                    matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "return_statement")
+                })
+            });
+        assert!(body_returns);
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase 6k — unary minus `-5`, `-x`, `-(1+2)`
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_unary_minus_on_number() {
+        let ast = parse_ruby("x = -5");
+        assert!(find_descendant(&ast, "unary_minus").is_some());
+    }
+
+    #[test]
+    fn test_parse_unary_minus_on_name() {
+        let ast = parse_ruby("x = -y");
+        let um = find_descendant(&ast, "unary_minus").expect("expected unary_minus");
+        let name_tok = um.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "factor" => {
+                n.children.iter().find_map(|cc| match cc {
+                    ASTNodeOrToken::Token(t)
+                        if matches!(t.type_, lexer::token::TokenType::Name) =>
+                    {
+                        Some(t.value.as_str())
+                    }
+                    _ => None,
+                })
+            }
+            _ => None,
+        });
+        assert_eq!(name_tok, Some("y"));
+    }
+
+    #[test]
+    fn test_parse_unary_minus_on_parenthesised_expression() {
+        let ast = parse_ruby("x = -(1 + 2)");
+        assert!(find_descendant(&ast, "unary_minus").is_some());
+    }
+
+    #[test]
+    fn test_parse_double_unary_minus_nests() {
+        let ast = parse_ruby("x = --5");
+        let outer = find_descendant(&ast, "unary_minus")
+            .expect("expected outer unary_minus");
+        assert!(find_descendant(outer, "unary_minus").is_some());
+    }
+
+    #[test]
+    fn test_parse_unary_minus_with_binary_addition() {
+        let ast = parse_ruby("x = -5 + 3");
+        assert!(find_descendant(&ast, "unary_minus").is_some());
+        // The expression also contains a PLUS somewhere in its tree.
+        fn has_plus(node: &GrammarASTNode) -> bool {
+            node.children.iter().any(|c| match c {
+                ASTNodeOrToken::Token(t) => matches!(t.type_, lexer::token::TokenType::Plus),
+                ASTNodeOrToken::Node(sub) => has_plus(sub),
+            })
+        }
+        assert!(has_plus(&ast));
+    }
 }
 

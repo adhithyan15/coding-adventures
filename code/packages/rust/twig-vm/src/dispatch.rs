@@ -1161,6 +1161,70 @@ fn dispatch(
                 exec_call_closure(module, instr, &mut frame, depth, budget, globals, ic_table, profile, debug)?;
                 pc += 1;
             }
+
+            // ── Typed CIR mnemonics (Twig path-A increments 2 & 3) ──────────
+            //
+            // The Twig IIR compiler increments 2/3 (PRs #3949, #3950) emit
+            // typed CIR mnemonics (`add` / `sub` / `mul` / `div` / `cmp_*`
+            // / `mov`) instead of the legacy `call_builtin "<op>"` dispatch.
+            // The IIR-to-* backends (wasm/jvm/clr/beam) only accept this
+            // typed form; vm-core handles it natively (PR #3888).
+            //
+            // twig-vm is the third runtime — it predates this convergence.
+            // We bring it up to parity by reconstructing the equivalent
+            // `call_builtin "<runtime_name>"` form and delegating to the
+            // existing builtin dispatch.  This keeps the (already-tested)
+            // arithmetic / comparison / move semantics intact at the
+            // runtime layer while satisfying the new IR shape.
+            //
+            // Each typed mnemonic maps to its Twig-builtin runtime name:
+            //
+            //   add → "+"      sub → "-"      mul → "*"      div → "/"
+            //   cmp_eq → "="   cmp_lt → "<"   cmp_gt → ">"
+            //   cmp_le → "<="  cmp_ge → ">="
+            //   mov → "_move"
+            //
+            // For `mov` specifically, the synthesised call_builtin form is
+            // `call_builtin "_move" src`, which the existing dispatch
+            // already handles correctly.
+            "add" | "sub" | "mul" | "div"
+            | "cmp_eq" | "cmp_lt" | "cmp_gt" | "cmp_le" | "cmp_ge"
+            | "mov" => {
+                let runtime_name = match instr.op.as_str() {
+                    "add"    => "+",
+                    "sub"    => "-",
+                    "mul"    => "*",
+                    "div"    => "/",
+                    "cmp_eq" => "=",
+                    "cmp_lt" => "<",
+                    "cmp_gt" => ">",
+                    "cmp_le" => "<=",
+                    "cmp_ge" => ">=",
+                    "mov"    => "_move",
+                    _ => unreachable!(),
+                };
+                // Synthesise the equivalent `call_builtin` form:
+                //   op = "call_builtin"
+                //   srcs = [Var(runtime_name)] ++ original srcs
+                //   dest / type_hint preserved
+                let mut synth_srcs: Vec<Operand> =
+                    Vec::with_capacity(instr.srcs.len() + 1);
+                synth_srcs.push(Operand::Var(runtime_name.to_string()));
+                synth_srcs.extend(instr.srcs.iter().cloned());
+                let synth = IIRInstr {
+                    op: "call_builtin".to_string(),
+                    dest: instr.dest.clone(),
+                    srcs: synth_srcs,
+                    type_hint: instr.type_hint.clone(),
+                    ..instr.clone()
+                };
+                exec_call_builtin(
+                    module, &synth, &mut frame, depth, budget, globals,
+                    ic_table, profile, debug,
+                )?;
+                pc += 1;
+            }
+
             other => {
                 return Err(RunError::UnsupportedOpcode(other.to_string()));
             }

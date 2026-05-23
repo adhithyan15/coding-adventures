@@ -2,6 +2,144 @@
 
 ## Unreleased
 
+### Added — MX10 Phase 4-back-relu: optional Rust fast path for `ReLUFunction.backward` via a 3-op composed graph
+
+**Closes the Phase 4 activation backward family.**  With this PR,
+**all five classic activations** (`ReLU`, `Sigmoid`, `Tanh`, `GELU`,
+`Softmax`) now have Rust fast paths for **both forward and
+backward**.
+
+#### The unblock
+
+Earlier sub-phases had deferred ReLU backward because the closed
+form `g * (x > 0)` needed a comparison primitive that I'd assumed
+matrix-cpu didn't expose.  On a closer read of the IR + dispatch
+code: `Greater` (returns u8 mask) and `Cast` (between dtypes) are
+**already implemented end-to-end** in matrix-ir → matrix-ir-json →
+matrix-cpu.  No upstream changes needed.
+
+#### Graph topology (3 ops, 6 tensors, 1 constant)
+
+```
+x(0) ──Greater(x, c_zero(1))──> mask_u8(2)        dtype u8
+Cast(mask_u8, f32) ──> mask_f32(3)                 dtype f32
+Mul(g(4), mask_f32(3)) ──> output(5)               dtype f32
+```
+
+The zero-constant tensor is the same shape as ReLU forward's (Phase
+4 used `Max(x, c_zero)`; backward uses `Greater(x, c_zero)`).  The
+`Cast` is essential because matrix-cpu's `Mul` requires matching
+dtypes on both operands — `g` is f32, the mask comes out of
+`Greater` as u8.
+
+3 ops makes this tied with Tanh/Sigmoid backward as the
+**lightest activation backward** by op count.  All three ship in
+one FFI envelope.
+
+#### Implementation
+
+- **`_rust_backend.py`** — adds `relu_backward_via_rust(grad_data,
+  input_data, target_shape, device)` (~100 LOC).  Inline
+  zero-bytes-hex (`"00" * numel * 4`) for the zero constant.
+  Validates `len(grad_data) == len(input_data)`.
+- **`functions.py`** — `ReLUFunction.backward` gains a 6-line
+  dispatch block before the existing per-cell list comprehension.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `numel ≥ 100_000` | **Rust** (3-op composed graph in one FFI call) |
+| Extension installed, `numel < 100_000` | Pure-Python `[g * (1 if x > 0 else 0)]` list comp |
+| Extension NOT installed | Pure-Python kernel |
+
+#### Tests (88 total MX10 tests, was 86)
+
+- **`ActivationParityTests.test_relu_backward_parity`** (1 case,
+  skip if extension missing): builds a `(500, 200)` requires_grad
+  input in `[-3, 3]`, runs `ReLU` forward + backward via Rust,
+  then via pure-Python, asserts **exact element-wise equality**
+  (ReLU backward is just a 0/1 mask multiply — no float
+  accumulation, so no f32 quantisation drift).
+- **`ActivationFallbackTests.test_relu_backward_via_rust_raises_when_unavailable`**
+  (1 case, always run): defence-in-depth `RuntimeError`.
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**375 passed + 33 skipped (parity tests that need the extension)**;
+the pre-existing `test_device.py` failure on main is unrelated.
+
+### MX10 Phase 4 status summary (all 10 sub-phases complete)
+
+| Sub-phase | Scope | Status |
+|-----------|-------|--------|
+| Phase 1 | Matmul forward + backward (via `_matmul_2d`) | ✅ shipped |
+| Phase 2 | Elementwise forward (Add/Sub/Mul/Div/Neg/Abs) | ✅ shipped |
+| Phase 3 | Sum/Mean reduce-all forward | ✅ shipped |
+| Phase 3b | Sum/Mean axis-specific forward | ✅ shipped |
+| Phase 3c | Sum/Mean reduce-all backward | ✅ shipped |
+| Phase 3d | Sum/Mean axis-specific backward | ✅ shipped |
+| Phase 4 | Tanh + ReLU forward | ✅ shipped |
+| Phase 4b | Sigmoid forward | ✅ shipped |
+| Phase 4c | GELU forward | ✅ shipped |
+| Phase 4d | Softmax forward | ✅ shipped |
+| Phase 4-back | Tanh + Sigmoid backward | ✅ shipped |
+| Phase 4-back-softmax | Softmax backward | ✅ shipped |
+| Phase 4-back-gelu | GELU backward | ✅ shipped |
+| Phase 4-back-relu | ReLU backward (this PR) | ✅ shipped |
+
+The only remaining items in the MX10 spec phase table that are
+**not** dispatched through Rust today are:
+- `PowFunction` (deferred from Phase 2 — needs scalar-exponent Pow
+  variant in matrix-cpu, or a broadcast-based workaround).
+- Backward paths for elementwise ops (most are trivial scalar
+  `* 1` / `* -1` / pass-through — likely net-loss vs FFI overhead;
+  not worth shipping unless profiling identifies otherwise).
+
+### Added — MX10 Phase 4-back-gelu: optional Rust fast path for `GELUFunction.backward` via an 18-op composed graph
+
+Closes the fourth activation backward.  Pairs with Phase 4c's
+forward GELU dispatch.  Together with Phase 4-back (Tanh + Sigmoid)
+and Phase 4-back-softmax, this means **four of the five classic
+activation backwards now have Rust fast paths**.  Only ReLU
+backward remains in this changelog era, which lands in the
+**Phase 4-back-relu** entry above.
+
+#### Why 18 ops
+
+GELU backward uses the closed-form chain-rule derivative of the
+tanh-approximation form:
+
+```
+inner    = sqrt(2/π) * x * (1 + 0.044715 * x²)
+tanh_v   = tanh(inner)
+sech²    = 1 - tanh_v²
+d_inner  = sqrt(2/π) * (1 + 3 * 0.044715 * x²)
+grad_in  = grad * (0.5 * (1 + tanh_v) + 0.5 * x * sech² * d_inner)
+```
+
+That's two parallel sub-graphs (one for `inner`/`tanh_v`/`1+tanh_v`,
+one for `d_inner`/`sech²`) that combine in the final
+`term1 + term2 → multiply by grad` step.  Forward used 9 ops; the
+backward adds the `sech²` derivative chain and the term combination,
+landing at 18.
+
+All 18 ops still ship in **one** FFI envelope.  Five constants are
+materialised at full target shape (`0.044715`, `3 * 0.044715 =
+0.134145`, `sqrt(2/π)`, `1.0`, `0.5`) because matrix-cpu's
+elementwise ops don't broadcast scalars.  The pre-multiplied
+`3 * 0.044715` constant saves one in-graph `Mul` vs computing it
+from `c_coeff` at runtime.
+
+#### Implementation
+
+- **`_rust_backend.py`** — adds `gelu_backward_via_rust(grad_data,
+  input_data, target_shape, device)` (~165 LOC).  Reuses the
+  module-level `_GELU_SQRT_2_PI` and `_GELU_COEFF` constants from
+  Phase 4c's forward helper.  Inner `_const_bytes(value)` helper
+  packs each constant tensor.
+- **`functions.py`** — `GELUFunction.backward` gains a 9-line
+  dispatch block before the existing per-cell loop.
+
 ### Added — MX10 Phase 4-back-softmax: optional Rust fast path for `SoftmaxFunction.backward` via a 5-op composed graph
 
 Closes the third activation backward.  After Phase 4-back's

@@ -1,5 +1,46 @@
 # Changelog — brainfuck-iir-compiler
 
+## [0.3.3] — 2026-05-22 (BF → CLR end-to-end + BEAM rejection doc)
+
+### Added — `tests/clr_e2e.rs`
+
+Stage 3 of 4 for the BF→{wasm,jvm,clr,beam} story.  Walks the new
+IIR-based chain through the CLR backend:
+
+```text
+BF source → IIRModule → iir-to-cil-bytecode validator → lower_iir_to_cil
+          → CILProgramArtifact (with reserved env.BFRuntime tokens)
+```
+
+Before iir-to-cil-bytecode 0.5.0, the validator rejected `load_mem` /
+`store_mem` and any `call_builtin`.  With 0.5.0 those are accepted,
+and this e2e test locks the path in for Brainfuck with byte-exact
+sequence assertions:
+
+- `brainfuck_three_increments_lowers_to_cil` — `+++.` lowers; the
+  main method's CIL body contains `[0x28, 0x03, 0x00, 0x00, 0x0A]`
+  (call BF_PUTCHAR_TOKEN at MemberRef row 3).
+- `brainfuck_loop_lowers_to_cil` — `++[-]` lowers; the body contains
+  `[0x7E, 0x01, 0x00, 0x00, 0x04]` (ldsfld BF_TAPE_TOKEN, FieldRef row 1).
+- `brainfuck_input_emits_getchar_call` — `,.` emits both
+  `call BF_GETCHAR_TOKEN` and `call BF_PUTCHAR_TOKEN`.
+- `brainfuck_empty_program_emits_minimal_cil` — the empty BF program
+  contains **none** of the BF runtime token sequences.
+
+### Added — README "Cross-backend compilation status" section
+
+Documents that BF flows through wasm/jvm/clr but **not** BEAM, with
+a full rationale:
+
+> BEAM's substrate is purely functional.  Brainfuck's tape is mutable
+> bytes in random-access addressing.  Compiled to vanilla BEAM
+> bytecode, every `store_mem` would copy the whole 30 KB tape — O(N²·M)
+> on a `,[.,]` cat over a non-trivial input.  Alternatives (ETS,
+> process dictionary, NIF) exist but each one abandons the "compile to
+> vanilla bytecode" promise.  Documented rejection is the right call.
+
+(Closes Stage 4 of the BF→{wasm,jvm,clr,beam} story.)
+
 ## [0.3.2] — 2026-05-22 (BF → JVM end-to-end test)
 
 ### Added — `tests/jvm_e2e.rs`
@@ -31,9 +72,6 @@ the path in for Brainfuck:
 
 No source-code changes in this crate — the test runs against the
 existing `compile_source`.  Only the JVM e2e test file is new.
-
-Stages 3 (CLR) and the BEAM-rejection doc are queued as follow-on
-work items.
 
 ## [0.3.1] — 2026-05-22 (BF → WASM end-to-end test)
 

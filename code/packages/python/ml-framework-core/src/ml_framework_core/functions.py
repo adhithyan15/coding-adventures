@@ -47,6 +47,7 @@ from ._rust_backend import (
     abs_via_rust,
     add_via_rust,
     div_via_rust,
+    gelu_backward_via_rust,
     gelu_via_rust,
     matmul_via_rust,
     mean_axis_via_rust,
@@ -55,6 +56,7 @@ from ._rust_backend import (
     mean_via_rust,
     mul_via_rust,
     neg_via_rust,
+    relu_backward_via_rust,
     relu_via_rust,
     should_use_rust_for_activation,
     should_use_rust_for_backward_broadcast,
@@ -792,6 +794,20 @@ class ReLUFunction(Function):
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         (a,) = self.saved_tensors
+        # MX10 Phase 4-back-relu — optional Rust fast path.  ReLU
+        # backward = ``g * (x > 0)``; composed as a 3-op graph
+        # (Greater → Cast → Mul) using matrix-cpu's u8-output
+        # comparison op plus a Cast back to f32.  Reuses Phase 4's
+        # activation predicate and 100_000-cell threshold.
+        if should_use_rust_for_activation(len(a.data)):
+            return (
+                relu_backward_via_rust(
+                    grad_output.data,
+                    a.data,
+                    a.shape,
+                    device=a.device,
+                ),
+            )
         return (
             Tensor(
                 [
@@ -944,6 +960,21 @@ class GELUFunction(Function):
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         (a,) = self.saved_tensors
+        # MX10 Phase 4-back-gelu — optional Rust fast path.  GELU
+        # backward = ``g * (0.5 * (1 + tanh_v) + 0.5 * x * sech² * d_inner)``
+        # with ``tanh_v = tanh(inner)``, ``sech² = 1 - tanh_v²``, and
+        # ``d_inner = sqrt(2/π) * (1 + 3 * 0.044715 * x²)``.  Composed
+        # as an 18-op graph (the heaviest activation backward by op
+        # count) with 5 full-shape constants; same threshold as forward.
+        if should_use_rust_for_activation(len(a.data)):
+            return (
+                gelu_backward_via_rust(
+                    grad_output.data,
+                    a.data,
+                    a.shape,
+                    device=a.device,
+                ),
+            )
         grad_data = []
         for x, g in zip(a.data, grad_output.data, strict=False):
             inner = self._SQRT_2_PI * (x + self._COEFF * x * x * x)

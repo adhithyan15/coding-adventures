@@ -6,10 +6,11 @@
 
 Ports Python ``cas-summation`` 0.8.0.  Extends ``g_vanishes_at_infinity``
 to accept ``Div(Log(diverging), diverging)`` shapes via the squeeze
-argument.
+argument: ``log(h) → ∞`` at a logarithmic rate, denominator grows
+strictly faster, so ``log/poly → 0``.
 
-> Bumps 0.6.0 → 0.8.0 (skipping 0.7.0, reserved for the in-flight
-> Phase 49 TS+Rust port PR #3936).
+Builds on Phase 49 (0.7.0) which added ``is_bounded_in_k`` for bounded
+× vanishing shapes.
 
 ### Added
 
@@ -19,8 +20,10 @@ argument.
 
 ### Changed
 
-- ``g_vanishes_at_infinity`` adds the Phase 50 branch between the
-  Phase 41 fast path and the Phase 42 degree-aware path.
+- ``g_vanishes_at_infinity`` adds the Phase 50 branch after the Phase 49
+  bounded check and before the Phase 42 degree-aware path.
+- The ``phase49_log_numerator_still_refused`` regression is superseded
+  and removed — ``log(k)/k²`` now closes via Phase 50.
 
 ### Added — tests
 
@@ -29,7 +32,44 @@ argument.
 - ``phase50_log_of_polynomial_argument_closes``
 - ``phase50_log_of_negative_argument_refused`` (regression)
 
-Full suite: **40 passed** (was 37; +3 net new).
+Full suite: **43 passed** (was 41; +2 net new — Phase 49 log regression
+superseded by Phase 50 log-closes case).
+
+## 0.7.0 — 2026-05-22
+
+**Phase 49 — Bounded × vanishing recogniser (Rust port).**
+
+Ports Python ``cas-summation`` 0.7.0.  Extends ``g_vanishes_at_infinity``
+to accept ``Div(bounded, diverging)`` shapes where the numerator is
+uniformly bounded.  Closes telescopes like
+``∑ [sin(k)/k² − sin(k+1)/(k+1)²] = sin(1)`` that the Phase 42
+degree-aware path refused.
+
+### Added
+
+- **`is_bounded_in_k(node, k)`** — recogniser for uniformly bounded
+  shapes: constants in ``k``, ``Sin(...)``, ``Cos(...)``, closures
+  under ``Mul``/``Add``/``Neg``.  Conservative — returns false for
+  anything else.
+
+### Changed
+
+- ``g_vanishes_at_infinity`` now consults ``is_bounded_in_k`` on
+  the numerator between the Phase 41 fast-path and the Phase 42
+  degree-aware path.
+
+### Added — tests
+
+`tests/tests.rs` — 4 new ``phase49_*`` cases plus the renamed
+``phase42_transcendental_numerator_closes_via_phase49`` (assertion
+flipped from "stays unevaluated" to "now closes"):
+
+- ``phase49_sin_over_k_squared_closes``
+- ``phase49_cos_over_k_cube_closes``
+- ``phase49_sin_cos_product_over_diverging``
+- ``phase49_log_numerator_still_refused`` (regression)
+
+Full suite: **41 passed** (was 37; +4 net new).
 
 ## 0.6.0 — 2026-05-22
 

@@ -1,5 +1,49 @@
 # Changelog — twig-vm
 
+## [0.19.0] — 2026-05-22 (Dispatch: typed CIR mnemonics — path A regression fix)
+
+### Added — Dispatch handlers for typed CIR mnemonics
+
+The Twig IIR compiler's path-A increments 2 & 3 (PRs #3949, #3950)
+lowered binary arithmetic / comparison / move to **typed CIR
+mnemonics** (`add`, `sub`, `mul`, `div`, `cmp_eq`, `cmp_lt`, `cmp_gt`,
+`cmp_le`, `cmp_ge`, `mov`) instead of the legacy `call_builtin "<op>"`
+dispatch.  That unblocked the IIR-to-* backends (which only accept
+the typed form) but broke twig-vm runtime execution
+(`UnsupportedOpcode`).
+
+This release brings twig-vm to parity with vm-core (which accepted
+typed mnemonics since PR #3888) and the IIR-to-* backends (PRs
+#3921 / #3928 / #3935).
+
+### What changed
+
+- New dispatch arms in `exec_function` for the 10 typed mnemonics
+  listed above.  Each arm synthesises the equivalent `call_builtin
+  "<runtime_name>"` form by prepending the builtin name to `srcs` and
+  delegates to the existing `exec_call_builtin` handler.  No
+  duplication of arithmetic / comparison logic — the runtime
+  semantics stay in one place.
+
+### Name → mnemonic mapping
+
+| Typed mnemonic | Synthesised builtin |
+|----------------|---------------------|
+| `add`          | `+`                 |
+| `sub`          | `-`                 |
+| `mul`          | `*`                 |
+| `div`          | `/`                 |
+| `cmp_eq`       | `=`                 |
+| `cmp_lt`       | `<`                 |
+| `cmp_gt`       | `>`                 |
+| `cmp_le`       | `<=`                |
+| `cmp_ge`       | `>=`                |
+| `mov`          | `_move`             |
+
+### Tests
+
+- All 179 existing twig-vm tests pass.
+
 ## [0.18.0] — 2026-05-17
 
 ### Changed (LANG66 — TW05-L: MAX_DISPATCH_DEPTH and MAX_INSTRUCTIONS_PER_RUN bumped)

@@ -1795,3 +1795,246 @@ def softmax_backward_via_rust(
         )
     out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
     return _Tensor(out_floats, target_shape, device=device)
+
+
+def gelu_backward_via_rust(
+    grad_data: list[float],
+    input_data: list[float],
+    target_shape: tuple[int, ...],
+    *,
+    device: str | None = None,
+) -> Tensor:
+    """GELU backward via the tanh-approximation chain rule, as an 18-op
+    composed graph.
+
+    Formula (matches ``GELUFunction.backward``'s pure-Python kernel)::
+
+        inner    = sqrt(2/π) * x * (1 + 0.044715 * x²)        # forward inner term
+        tanh_v   = tanh(inner)
+        sech²    = 1 - tanh_v²
+        d_inner  = sqrt(2/π) * (1 + 3 * 0.044715 * x²)        # d/dx of inner
+        grad_in  = grad * (0.5 * (1 + tanh_v) + 0.5 * x * sech² * d_inner)
+
+    GELU's backward is the heaviest activation backward by op count (18
+    ops vs 3 for Sigmoid/Tanh, 5 for Softmax) because the closed-form
+    derivative has two terms (the leading ``0.5 * (1 + tanh)`` from
+    differentiating ``x * sigmoid_like(x)`` plus the chain-rule
+    contribution from ``inner(x)``).  All 18 ops still ship in **one**
+    FFI envelope so per-call overhead is paid once.
+
+    Five constants (``0.044715``, ``3 * 0.044715 = 0.134145``,
+    ``sqrt(2/π)``, ``1.0``, ``0.5``) are each materialised at full
+    target_shape because matrix-cpu Mul/Add/Sub don't broadcast scalars.
+    The pre-multiplied ``3 * 0.044715`` constant avoids one in-graph
+    Mul vs computing it from ``c_coeff`` at runtime.
+
+    Caller saves ``a`` (the input tensor) in ``self.saved_tensors`` —
+    backward calls this helper with ``input_data = a.data``.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "gelu_backward_via_rust called but Rust backend is not available; "
+            "callers must check should_use_rust_for_activation() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(grad_data)
+    if len(input_data) != numel:
+        raise RuntimeError(
+            f"gelu_backward_via_rust: grad has {numel} cells but input "
+            f"has {len(input_data)} cells — must match"
+        )
+
+    target_shape_list = list(target_shape)
+
+    grad_bytes = struct.pack(f"<{numel}f", *grad_data)
+    x_bytes = struct.pack(f"<{numel}f", *input_data)
+
+    def _const_bytes(value: float) -> str:
+        return struct.pack(f"<{numel}f", *([value] * numel)).hex()
+
+    coeff_hex = _const_bytes(_GELU_COEFF)                    # 0.044715
+    three_coeff_hex = _const_bytes(3.0 * _GELU_COEFF)         # 0.134145
+    sqrt_2pi_hex = _const_bytes(_GELU_SQRT_2_PI)
+    ones_hex = _const_bytes(1.0)
+    half_hex = _const_bytes(0.5)
+
+    # Tensor ID layout (25 tensors total).
+    # Inputs:  0=g, 1=x
+    # Constants: 3=c_coeff, 5=c_1, 8=c_sqrt_2π, 12=c_half, 16=c_3coeff
+    # Intermediates and output: see ops list below for the data-flow.
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    {"id": 0, "dtype": "f32", "shape": target_shape_list},   # g
+                    {"id": 1, "dtype": "f32", "shape": target_shape_list},   # x
+                    {"id": 2, "dtype": "f32", "shape": target_shape_list},   # x²
+                    {"id": 3, "dtype": "f32", "shape": target_shape_list},   # c_coeff
+                    {"id": 4, "dtype": "f32", "shape": target_shape_list},   # 0.044715 · x²
+                    {"id": 5, "dtype": "f32", "shape": target_shape_list},   # c_1
+                    {"id": 6, "dtype": "f32", "shape": target_shape_list},   # 1 + 0.044715·x²
+                    {"id": 7, "dtype": "f32", "shape": target_shape_list},   # x · (1 + 0.044715·x²)
+                    {"id": 8, "dtype": "f32", "shape": target_shape_list},   # c_sqrt_2π
+                    {"id": 9, "dtype": "f32", "shape": target_shape_list},   # inner = sqrt(2/π) · x · (1 + 0.044715·x²)
+                    {"id": 10, "dtype": "f32", "shape": target_shape_list},  # tanh(inner)
+                    {"id": 11, "dtype": "f32", "shape": target_shape_list},  # 1 + tanh(inner)
+                    {"id": 12, "dtype": "f32", "shape": target_shape_list},  # c_half
+                    {"id": 13, "dtype": "f32", "shape": target_shape_list},  # term1 = 0.5 · (1 + tanh(inner))
+                    {"id": 14, "dtype": "f32", "shape": target_shape_list},  # tanh²
+                    {"id": 15, "dtype": "f32", "shape": target_shape_list},  # sech² = 1 - tanh²
+                    {"id": 16, "dtype": "f32", "shape": target_shape_list},  # c_3coeff = 0.134145
+                    {"id": 17, "dtype": "f32", "shape": target_shape_list},  # 0.134145 · x²
+                    {"id": 18, "dtype": "f32", "shape": target_shape_list},  # 1 + 0.134145·x²
+                    {"id": 19, "dtype": "f32", "shape": target_shape_list},  # d_inner = sqrt(2/π) · (1 + 0.134145·x²)
+                    {"id": 20, "dtype": "f32", "shape": target_shape_list},  # sech² · d_inner
+                    {"id": 21, "dtype": "f32", "shape": target_shape_list},  # x · sech² · d_inner
+                    {"id": 22, "dtype": "f32", "shape": target_shape_list},  # term2 = 0.5 · x · sech² · d_inner
+                    {"id": 23, "dtype": "f32", "shape": target_shape_list},  # term1 + term2
+                    {"id": 24, "dtype": "f32", "shape": target_shape_list},  # output = g · (term1 + term2)
+                ],
+                "inputs": [0, 1],
+                "outputs": [24],
+                "ops": [
+                    {"kind": "Mul", "lhs": 1, "rhs": 1, "output": 2},        # x²
+                    {"kind": "Mul", "lhs": 2, "rhs": 3, "output": 4},        # 0.044715·x²
+                    {"kind": "Add", "lhs": 4, "rhs": 5, "output": 6},        # 1 + 0.044715·x²
+                    {"kind": "Mul", "lhs": 1, "rhs": 6, "output": 7},        # x · (1 + 0.044715·x²)
+                    {"kind": "Mul", "lhs": 7, "rhs": 8, "output": 9},        # inner
+                    {"kind": "Tanh", "input": 9, "output": 10},              # tanh(inner)
+                    {"kind": "Add", "lhs": 10, "rhs": 5, "output": 11},      # 1 + tanh(inner)
+                    {"kind": "Mul", "lhs": 11, "rhs": 12, "output": 13},     # term1
+                    {"kind": "Mul", "lhs": 10, "rhs": 10, "output": 14},     # tanh²
+                    {"kind": "Sub", "lhs": 5, "rhs": 14, "output": 15},      # sech² = 1 - tanh²
+                    {"kind": "Mul", "lhs": 2, "rhs": 16, "output": 17},      # 0.134145·x²
+                    {"kind": "Add", "lhs": 17, "rhs": 5, "output": 18},      # 1 + 0.134145·x²
+                    {"kind": "Mul", "lhs": 18, "rhs": 8, "output": 19},      # d_inner
+                    {"kind": "Mul", "lhs": 15, "rhs": 19, "output": 20},     # sech² · d_inner
+                    {"kind": "Mul", "lhs": 1, "rhs": 20, "output": 21},      # x · sech² · d_inner
+                    {"kind": "Mul", "lhs": 21, "rhs": 12, "output": 22},     # term2 = 0.5 · x · sech² · d_inner
+                    {"kind": "Add", "lhs": 13, "rhs": 22, "output": 23},     # term1 + term2
+                    {"kind": "Mul", "lhs": 0, "rhs": 23, "output": 24},      # g · (term1 + term2)
+                ],
+                "constants": [
+                    {"tensor_id": 3, "dtype": "f32", "shape": target_shape_list, "bytes_hex": coeff_hex},
+                    {"tensor_id": 5, "dtype": "f32", "shape": target_shape_list, "bytes_hex": ones_hex},
+                    {"tensor_id": 8, "dtype": "f32", "shape": target_shape_list, "bytes_hex": sqrt_2pi_hex},
+                    {"tensor_id": 12, "dtype": "f32", "shape": target_shape_list, "bytes_hex": half_hex},
+                    {"tensor_id": 16, "dtype": "f32", "shape": target_shape_list, "bytes_hex": three_coeff_hex},
+                ],
+            },
+            "inputs": [grad_bytes.hex(), x_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_bytes = bytes.fromhex(result["outputs"][0])
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"gelu_backward_via_rust: expected {expected_bytes} output bytes "
+            f"({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+    return _Tensor(out_floats, target_shape, device=device)
+
+
+def relu_backward_via_rust(
+    grad_data: list[float],
+    input_data: list[float],
+    target_shape: tuple[int, ...],
+    *,
+    device: str | None = None,
+) -> Tensor:
+    """``g * (x > 0)`` as a 3-op composed graph.
+
+    Topology::
+
+        x(0) ──Greater(x, c_zero(1))──> mask_u8(2)        dtype u8
+        Cast(mask_u8, f32)──> mask_f32(3)                  dtype f32
+        Mul(g(4), mask_f32(3))──> output(5)                dtype f32
+
+    3 ops, 6 tensors, 1 constant (full-shape zero tensor of dtype f32).
+
+    matrix-cpu's ``Greater`` op returns a u8 mask (0 or 1), so we
+    have to ``Cast`` it to f32 before the final ``Mul`` (which
+    requires matching dtypes on both operands).  The zero tensor
+    materialises at full shape because matrix-cpu's elementwise ops
+    don't broadcast scalars — same pattern as ReLU's forward
+    ``max(x, 0)`` graph.
+    """
+    if not _RUST_AVAILABLE or _mxr is None:
+        raise RuntimeError(
+            "relu_backward_via_rust called but Rust backend is not available; "
+            "callers must check should_use_rust_for_activation() first"
+        )
+
+    from .tensor import Tensor as _Tensor
+
+    numel = len(grad_data)
+    if len(input_data) != numel:
+        raise RuntimeError(
+            f"relu_backward_via_rust: grad has {numel} cells but input "
+            f"has {len(input_data)} cells — must match"
+        )
+
+    target_shape_list = list(target_shape)
+    grad_bytes = struct.pack(f"<{numel}f", *grad_data)
+    x_bytes = struct.pack(f"<{numel}f", *input_data)
+    # Zero constant of the same shape — bytes are all-zero.
+    zero_bytes_hex = "00" * numel * 4
+
+    envelope = json.dumps(
+        {
+            "graph": {
+                "matrix_ir_version": 1,
+                "tensors": [
+                    # 0 = x (input)
+                    {"id": 0, "dtype": "f32", "shape": target_shape_list},
+                    # 1 = zero constant (f32, full shape — same as ReLU forward's)
+                    {"id": 1, "dtype": "f32", "shape": target_shape_list},
+                    # 2 = (x > 0) as u8 mask
+                    {"id": 2, "dtype": "u8", "shape": target_shape_list},
+                    # 3 = mask cast to f32 (0.0 or 1.0 per cell)
+                    {"id": 3, "dtype": "f32", "shape": target_shape_list},
+                    # 4 = g (grad input)
+                    {"id": 4, "dtype": "f32", "shape": target_shape_list},
+                    # 5 = g * mask_f32 (output)
+                    {"id": 5, "dtype": "f32", "shape": target_shape_list},
+                ],
+                "inputs": [0, 4],
+                "outputs": [5],
+                "ops": [
+                    {"kind": "Greater", "lhs": 0, "rhs": 1, "output": 2},
+                    {"kind": "Cast", "input": 2, "dtype": "f32", "output": 3},
+                    {"kind": "Mul", "lhs": 4, "rhs": 3, "output": 5},
+                ],
+                "constants": [
+                    {
+                        "tensor_id": 1,
+                        "dtype": "f32",
+                        "shape": target_shape_list,
+                        "bytes_hex": zero_bytes_hex,
+                    }
+                ],
+            },
+            "inputs": [x_bytes.hex(), grad_bytes.hex()],
+        }
+    )
+
+    out_envelope = _mxr.run_graph_on_cpu(envelope)
+    result = json.loads(out_envelope)
+    out_bytes = bytes.fromhex(result["outputs"][0])
+
+    expected_bytes = numel * 4
+    if len(out_bytes) != expected_bytes:
+        raise RuntimeError(
+            f"relu_backward_via_rust: expected {expected_bytes} output "
+            f"bytes ({numel} f32), got {len(out_bytes)}"
+        )
+    out_floats = list(struct.unpack(f"<{numel}f", out_bytes))
+    return _Tensor(out_floats, target_shape, device=device)

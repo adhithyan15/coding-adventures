@@ -761,6 +761,55 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
         return QueryResult(columns=("name",), rows=())
 
     # ------------------------------------------------------------------------
+    # pragma_list — the catalog of supported PRAGMA names.  Apps and ORMs
+    # probe this to learn what's safe to call; the rows are intentionally
+    # informational (the response shape is just ``(name,)`` per row), so
+    # mini-sqlite advertises only the PRAGMAs it actually implements
+    # rather than mirroring SQLite's full list (which would be a lie).
+    # The catalog is built from:
+    #   * the dedicated handlers above (table_info, table_list, …)
+    #   * the writable scalars in _PRAGMA_DEFAULTS (foreign_keys, …)
+    #   * the read-only health checks (integrity_check, quick_check)
+    # …and sorted alphabetically so iteration is stable across runs.
+    # ------------------------------------------------------------------------
+    if name == "pragma_list":
+        supported = {
+            "case_sensitive_like",
+            "collation_list",
+            "compile_options",
+            "data_version",
+            "database_list",
+            "foreign_key_list",
+            "function_list",
+            "index_list",
+            "integrity_check",
+            "module_list",
+            "optimize",
+            "pragma_list",
+            "quick_check",
+            "schema_version",
+            "table_info",
+            "table_list",
+            "user_version",
+        }
+        supported.update(_PRAGMA_DEFAULTS.keys())
+        return QueryResult(
+            columns=("name",),
+            rows=tuple((n,) for n in sorted(supported)),
+        )
+
+    # ------------------------------------------------------------------------
+    # data_version — a counter that bumps every time another *connection*
+    # writes to the database file.  Within a single connection it stays
+    # fixed.  Mini-sqlite has no shared backing file (each connection
+    # owns its in-memory store), so the counter has no real semantics —
+    # we return the SQLite baseline value of 1, which matches a freshly-
+    # opened ``:memory:`` connection in stdlib sqlite3.
+    # ------------------------------------------------------------------------
+    if name == "data_version":
+        return QueryResult(columns=("data_version",), rows=((1,),))
+
+    # ------------------------------------------------------------------------
     # Boolean / scalar settable PRAGMAs — read/write round-trip.
     #
     # Most of these have no real effect in mini-sqlite (we don't have pages,

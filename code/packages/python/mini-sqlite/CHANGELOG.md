@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.80.0] - 2026-05-22
+
+### Added
+
+- **PRAGMA pragma_list** — returns the alphabetical catalog of the
+  PRAGMAs mini-sqlite actually implements (39 names — the dedicated
+  handlers plus every writable scalar in ``_PRAGMA_DEFAULTS``).  Apps
+  and ORMs probe this to learn what's safe to call; until now we
+  returned an empty rowset, which made tools assume nothing was
+  supported.
+- **PRAGMA data_version** — returns ``(1,)`` matching stdlib
+  ``sqlite3`` on a fresh ``:memory:`` connection.  The PRAGMA is
+  defined as a counter that bumps when another *connection* writes
+  to the same database file; mini-sqlite has no shared backing file
+  so the counter has no real semantics, but the baseline value of 1
+  is what every well-behaved client expects on first read.
+- 23 new oracle-or-shape tests in
+  ``tests/test_tier3_pragma_introspection.py`` pinning the response
+  shape of every read-only introspection PRAGMA mini-sqlite supports.
+  Oracle-tested against stdlib ``sqlite3`` where the value is
+  meaningful (``database_list``, ``data_version``, ``page_size``,
+  ``encoding``, ``integrity_check``, ``quick_check``,
+  ``page_count``, ``freelist_count``).  For the inherently
+  implementation-dependent lists (``pragma_list``,
+  ``compile_options``, ``function_list``) we assert shape and
+  ordering rather than membership, since mini-sqlite advertises only
+  what it actually implements.
+
 ## [1.79.0] - 2026-05-21
 
 ### Added
