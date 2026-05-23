@@ -289,19 +289,32 @@ expr              = or_expr ;
 or_expr           = and_expr { "OR" and_expr } ;
 and_expr          = not_expr { "AND" not_expr } ;
 not_expr          = "NOT" not_expr | comparison ;
-comparison        = bitwise [ cmp_op bitwise
-                  | "BETWEEN" bitwise "AND" bitwise
-                  | "NOT" "BETWEEN" bitwise "AND" bitwise
+# ``collated`` wraps a ``bitwise`` expression with an optional
+# ``COLLATE name`` postfix.  SQLite places COLLATE one level higher
+# than every binary operator except unary prefix (-, ~, +): so
+# ``x * y COLLATE z`` is ``(x * y) COLLATE z`` (multiplicative binds
+# tighter than COLLATE — bitwise is inside multiplicative inside
+# collated), and ``x COLLATE y = z`` is ``(x COLLATE y) = z``
+# (COLLATE binds tighter than the comparison operators).
+#
+# Comparisons (and BETWEEN/IN/LIKE/GLOB/IS …) use ``collated`` as
+# their operand grammar so the postfix is accepted on either side
+# of any comparison.  The COLLATE clause is also accepted in ORDER
+# BY items separately (see ``order_item``).
+collated          = bitwise [ "COLLATE" NAME ] ;
+comparison        = collated [ cmp_op collated
+                  | "BETWEEN" collated "AND" collated
+                  | "NOT" "BETWEEN" collated "AND" collated
                   | "IN" "(" [ in_expr ] ")"
                   | "NOT" "IN" "(" [ in_expr ] ")"
-                  | "LIKE" bitwise [ "ESCAPE" bitwise ]
-                  | "NOT" "LIKE" bitwise [ "ESCAPE" bitwise ]
-                  | "GLOB" bitwise
-                  | "NOT" "GLOB" bitwise
+                  | "LIKE" collated [ "ESCAPE" collated ]
+                  | "NOT" "LIKE" collated [ "ESCAPE" collated ]
+                  | "GLOB" collated
+                  | "NOT" "GLOB" collated
                   | "IS" "NULL"
                   | "IS" "NOT" "NULL"
-                  | "IS" "DISTINCT" "FROM" bitwise
-                  | "IS" "NOT" "DISTINCT" "FROM" bitwise ] ;
+                  | "IS" "DISTINCT" "FROM" collated
+                  | "IS" "NOT" "DISTINCT" "FROM" collated ] ;
 
 # in_expr: a subquery takes priority (starts with SELECT); otherwise a
 # comma-separated value list is used.

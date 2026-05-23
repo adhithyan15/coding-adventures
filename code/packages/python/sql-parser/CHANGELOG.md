@@ -2,6 +2,25 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.35.0] - 2026-05-23
+
+### Added
+
+- New ``collated`` rule between ``bitwise`` and ``comparison`` so the
+  comparison-level operators (``=``, ``<``, ``BETWEEN``, ``LIKE``,
+  ``IS DISTINCT FROM``, …) accept an optional ``COLLATE name``
+  postfix on either side:
+
+      collated   = bitwise [ "COLLATE" NAME ] ;
+      comparison = collated [ cmp_op collated | "BETWEEN" collated
+                              "AND" collated | … ] ;
+
+  This matches SQLite's operator precedence: ``x * y COLLATE z`` is
+  ``(x * y) COLLATE z`` (multiplicative binds tighter than COLLATE),
+  and ``x COLLATE y = z`` is ``(x COLLATE y) = z`` (COLLATE binds
+  tighter than comparison).
+- Regenerated ``_grammar.py`` to embed the new rule.
+
 ## [0.34.0] - 2026-05-22
 
 ### Added

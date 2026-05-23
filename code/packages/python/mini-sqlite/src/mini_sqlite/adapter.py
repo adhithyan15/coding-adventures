@@ -797,6 +797,87 @@ def _order_clause(
     return tuple(keys)
 
 
+def _find_bare_collation(expr_node: ASTNode) -> str | None:
+    """Walk down a single-spine ``expr`` AST to find an inner COLLATE.
+
+    The grammar makes ``collated = bitwise [ "COLLATE" NAME ]`` the
+    operand to ``comparison``.  When ORDER BY is followed by a bare
+    expression like ``column1 COLLATE NOCASE``, the COLLATE is consumed
+    by that inner ``collated`` rule before reaching the outer
+    ``order_item``'s own COLLATE slot.  ``_comparison`` drops the
+    collation on the bare-collated branch (because applying it via
+    ``lower()``/``rtrim()`` there would change the column's display
+    name).  That's the right call for SELECT-list expressions, but for
+    ORDER BY we want the SortKey to carry the collation so the VM can
+    apply the transform when building the sort key.
+
+    This helper descends through the chain ``expr → or_expr → and_expr
+    → not_expr → comparison → collated`` looking for the COLLATE
+    keyword.  Stops at the first non-trivial wrapper (anything with
+    multiple expression children, or any cmp_op / IN / LIKE / BETWEEN
+    / IS / NOT keyword), since in those cases the collation belongs
+    to the comparison context, not to a bare sort expression.
+    """
+    # The chain of rules we expect to traverse on a "bare" expression
+    # (one with no binary operator, no comparison, no NOT, etc.).
+    # We descend one level at a time; if we ever see anything other
+    # than a single-child path, we bail.
+    chain = (
+        "expr",
+        "or_expr",
+        "and_expr",
+        "not_expr",
+        "comparison",
+        "collated",
+    )
+    cursor: ASTNode | None = expr_node
+    if cursor is None or cursor.rule_name != chain[0]:
+        return None
+    for next_rule in chain[1:]:
+        if cursor is None:
+            return None
+        # The bare-expression branch has exactly one child of the next
+        # rule.  If the comparison level has a cmp_op (etc.) we'd see
+        # extra children — bail out and let _comparison handle the
+        # collation as part of its rewrite.
+        if next_rule == "collated":
+            # At the comparison level: only descend to the inner
+            # collated if there are no comparison operators present.
+            has_op = (
+                any(isinstance(c, ASTNode) and c.rule_name == "cmp_op" for c in cursor.children)
+                or _has_keyword_child(cursor, "BETWEEN")
+                or _has_keyword_child(cursor, "IN")
+                or _has_keyword_child(cursor, "LIKE")
+                or _has_keyword_child(cursor, "GLOB")
+                or _has_keyword_child(cursor, "IS")
+            )
+            if has_op:
+                return None
+        # Look for an immediate child of next_rule.
+        nxt: ASTNode | None = None
+        for c in cursor.children:
+            if isinstance(c, ASTNode) and c.rule_name == next_rule:
+                if nxt is not None:
+                    # Multiple children of this rule means a binary op
+                    # at this level — not a bare expression.
+                    return None
+                nxt = c
+        cursor = nxt
+    # At ``collated``, look for the COLLATE keyword and the NAME after it.
+    if cursor is None:
+        return None
+    if not _has_keyword_child(cursor, "COLLATE"):
+        return None
+    seen_collate = False
+    for c in cursor.children:
+        if _is_keyword(c, "COLLATE"):
+            seen_collate = True
+            continue
+        if seen_collate and isinstance(c, Token) and _token_type(c) == "NAME":
+            return c.value.upper()
+    return None
+
+
 def _order_item(node: ASTNode, state: _PlaceholderCounter) -> SortKey:
     # order_item = expr [ "COLLATE" NAME ] [ "ASC" | "DESC" ] [ "NULLS" NAME ]
     #
@@ -820,9 +901,26 @@ def _order_item(node: ASTNode, state: _PlaceholderCounter) -> SortKey:
     expr = _expr(_child_node(node, "expr"), state)
     descending = _has_keyword_child(node, "DESC")
 
-    # Extract the COLLATE name (if any).  It appears between the expr and
-    # ASC/DESC/NULLS, so we scan for the COLLATE keyword and pick up the
-    # following NAME token.
+    # Extract the COLLATE name (if any).  Two paths to find it:
+    #
+    #   1. ``order_item`` may carry an outer COLLATE/NAME pair directly
+    #      (the grammar slot ``order_item = expr [ "COLLATE" NAME ] …``).
+    #      This is rare in practice because the inner ``collated`` rule
+    #      added in PR #3xxxx is matched greedily by the PEG parser, but
+    #      it can still happen if the inner ``collated`` already saw a
+    #      COLLATE and the user wrote a second one at the ORDER BY level
+    #      (uncommon but legal).
+    #
+    #   2. More commonly, the COLLATE was consumed by the inner
+    #      ``collated`` rule sitting under ``expr → … → comparison →
+    #      collated``.  Walk the expr subtree to find that inner
+    #      ``collated`` node and pull the COLLATE out of it.
+    #
+    # The latter path matters because ``_comparison`` drops the
+    # collation when the collated is bare (no surrounding cmp_op /
+    # BETWEEN / etc.).  That keeps the value semantics correct in
+    # SELECT-list contexts but loses the sort-collation signal — which
+    # we need to put back on the SortKey here.
     collation: str | None = None
     if _has_keyword_child(node, "COLLATE"):
         seen_collate = False
@@ -833,6 +931,8 @@ def _order_item(node: ASTNode, state: _PlaceholderCounter) -> SortKey:
             if seen_collate and isinstance(c, Token) and _token_type(c) == "NAME":
                 collation = c.value.upper()
                 break
+    if collation is None:
+        collation = _find_bare_collation(_child_node(node, "expr"))
 
     nulls_first: bool | None = None
     if _has_keyword_child(node, "NULLS"):
@@ -1626,42 +1726,130 @@ def _not_expr(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     return _comparison(_child_node(node, "comparison"), state)
 
 
-def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
-    """Comparison covers: bare bitwise, cmp_op, BETWEEN, IN, LIKE, IS NULL.
+def _collation_transform(expr: Expr, collation: str) -> Expr:
+    """Wrap *expr* in the scalar-function call that applies *collation*.
 
-    Grammar: ``comparison = bitwise [cmp_op bitwise | "BETWEEN" ... | ...]``.
-    If the only child is a ``bitwise``, we pass it through. Otherwise we
-    inspect the following children to pick the right expression shape.
+    SQLite's three built-in collations correspond exactly to mini-sqlite's
+    existing scalar functions:
+
+    * ``BINARY``  — no transform (identity)
+    * ``NOCASE``  — ``lower(expr)`` (ASCII case-insensitive)
+    * ``RTRIM``   — ``rtrim(expr)`` (strip trailing spaces)
+
+    Unknown collation names fall through to identity, matching SQLite's
+    "validate lazily" approach (the user may have registered a custom
+    collation we don't know about; the comparison just runs un-collated).
     """
-    additives = [c for c in node.children if isinstance(c, ASTNode) and c.rule_name == "bitwise"]
-    left = _bitwise(additives[0], state)
+    coll = collation.upper()
+    if coll == "NOCASE":
+        return FunctionCall(name="lower", args=(FuncArg(value=expr),))
+    if coll == "RTRIM":
+        return FunctionCall(name="rtrim", args=(FuncArg(value=expr),))
+    # BINARY (and any unknown name) → identity.
+    return expr
 
-    # Bare bitwise → nothing to combine.
-    if len(additives) == 1 and not any(
+
+def _collated(node: ASTNode, state: _PlaceholderCounter) -> tuple[Expr, str | None]:
+    """Translate ``collated = bitwise [ "COLLATE" NAME ]``.
+
+    Returns ``(expr, collation_name_or_None)``.  The collation name is
+    stripped from the result and returned separately so the caller (the
+    comparison rule) can propagate it across both operands — SQLite's
+    semantics is that a collation attached to either side of a
+    comparison applies to the *comparison*, not just to that operand.
+
+    For a bare ``bitwise`` (no COLLATE), this is equivalent to calling
+    ``_bitwise`` directly and returning ``None`` for the collation.
+    """
+    bw = _child_node(node, "bitwise")
+    expr = _bitwise(bw, state)
+    if not _has_keyword_child(node, "COLLATE"):
+        return expr, None
+    # Find the NAME token that follows COLLATE.
+    seen_collate = False
+    for c in node.children:
+        if _is_keyword(c, "COLLATE"):
+            seen_collate = True
+            continue
+        if seen_collate and isinstance(c, Token) and _token_type(c) == "NAME":
+            return expr, c.value.upper()
+    return expr, None
+
+
+def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
+    """Comparison covers: bare collated, cmp_op, BETWEEN, IN, LIKE, IS NULL.
+
+    Grammar: ``comparison = collated [cmp_op collated | "BETWEEN" ... | ...]``.
+    If the only child is a ``collated``, we pass through (after applying any
+    COLLATE transform).  Otherwise we inspect the following children to pick
+    the right expression shape, and propagate any COLLATE clause across the
+    operands.
+    """
+    collateds = [c for c in node.children if isinstance(c, ASTNode) and c.rule_name == "collated"]
+    left, left_coll = _collated(collateds[0], state)
+
+    # Bare collated → pass through.  A trailing COLLATE on a non-
+    # comparison expression is a no-op for value semantics (the value
+    # itself is unchanged); the collation only matters when used as a
+    # sort key or as a comparison operand.  ORDER BY captures the
+    # collation via its own ``[ "COLLATE" NAME ]`` slot in
+    # ``order_item`` (see ``_order_item``); the comparison forms below
+    # handle the collation as part of building the BinaryExpr.
+    #
+    # For the bare case, we drop the collation rather than wrapping in
+    # a scalar function call, because doing so would change the
+    # column's display name from ``column1`` to ``lower(column1)``,
+    # which then breaks any caller that looks up the column by its
+    # original name (notably the VM's sort key resolver).
+    if len(collateds) == 1 and not any(
         isinstance(c, ASTNode) and c.rule_name == "cmp_op" for c in node.children
     ) and not _has_keyword_child(node, "BETWEEN") and not _has_keyword_child(node, "IN") \
        and not _has_keyword_child(node, "LIKE") and not _has_keyword_child(node, "GLOB") \
        and not _has_keyword_child(node, "IS"):
         return left
 
-    # cmp_op form.
+    # cmp_op form.  SQLite says: a COLLATE attached to either side
+    # propagates to the comparison.  If neither side has an explicit
+    # collation, the comparison is BINARY.  If both sides have an
+    # explicit collation, the LEFT one wins (SQLite docs: "If both
+    # operands carry a COLLATE clause, the left one is used").
     cmp = _maybe_child(node, "cmp_op")
     if cmp is not None:
         op = _cmp_op_to_binop(cmp)
-        right = _bitwise(additives[1], state)
+        right, right_coll = _collated(collateds[1], state)
+        coll = left_coll if left_coll is not None else right_coll
+        if coll is not None:
+            left = _collation_transform(left, coll)
+            right = _collation_transform(right, coll)
         return BinaryExpr(op=op, left=left, right=right)
 
-    # BETWEEN / NOT BETWEEN.
+    # BETWEEN / NOT BETWEEN.  The collation propagates to *both* range
+    # bounds when attached to the operand; the bounds carry their own
+    # COLLATE separately if specified.  We use the leftmost non-None
+    # collation across the three operands.
     if _has_keyword_child(node, "BETWEEN"):
         negated = _has_keyword_child(node, "NOT")
-        low = _bitwise(additives[1], state)
-        high = _bitwise(additives[2], state)
+        low, low_coll = _collated(collateds[1], state)
+        high, high_coll = _collated(collateds[2], state)
+        coll = left_coll if left_coll is not None else (
+            low_coll if low_coll is not None else high_coll
+        )
+        if coll is not None:
+            left = _collation_transform(left, coll)
+            low = _collation_transform(low, coll)
+            high = _collation_transform(high, coll)
         expr: Expr = Between(operand=left, low=low, high=high)
         return UnaryExpr(op=UnaryOp.NOT, operand=expr) if negated else expr
 
     # IN / NOT IN.
     if _has_keyword_child(node, "IN"):
         negated = _has_keyword_child(node, "NOT")
+        # Apply any COLLATE attached to the LHS (the test operand).  We
+        # do *not* propagate it into the value list — that would change
+        # value semantics; if a user wants case-insensitive IN, the
+        # SQLite idiom is ``lower(x) IN ('a','b')`` directly.
+        if left_coll is not None:
+            left = _collation_transform(left, left_coll)
         # The grammar wraps the list in an optional in_expr node.
         # When in_expr is absent the parentheses are empty — `IN ()` — which
         # SQLite defines as always-false (IN) / always-true (NOT IN).
@@ -1697,18 +1885,18 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     # disables wildcard meaning for the following character in the pattern.
     if _has_keyword_child(node, "LIKE"):
         negated = _has_keyword_child(node, "NOT")
-        pat_expr = _bitwise(additives[1], state)
+        pat_expr, _ = _collated(collateds[1], state)
         # NULL pattern: LIKE NULL always yields NULL (no rows satisfy WHERE).
         if isinstance(pat_expr, Literal) and pat_expr.value is None:
             return Literal(value=None)
         if not isinstance(pat_expr, Literal) or not isinstance(pat_expr.value, str):
             raise ProgrammingError("LIKE pattern must be a string literal")
-        # ESCAPE 'c' — third bitwise is the escape character.  It must be a
+        # ESCAPE 'c' — third collated is the escape character.  It must be a
         # single-character string literal; SQLite raises "ESCAPE expression
         # must be a single character" otherwise.
         escape_char: str | None = None
-        if _has_keyword_child(node, "ESCAPE") and len(additives) >= 3:
-            esc_expr = _bitwise(additives[2], state)
+        if _has_keyword_child(node, "ESCAPE") and len(collateds) >= 3:
+            esc_expr, _ = _collated(collateds[2], state)
             if not isinstance(esc_expr, Literal) or not isinstance(esc_expr.value, str):
                 raise ProgrammingError("ESCAPE expression must be a string literal")
             if len(esc_expr.value) != 1:
@@ -1722,15 +1910,9 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     #
     # SQL:  string GLOB pattern
     # Internal: glob(pattern, string)  — same argument order as SQLite's C API.
-    #
-    # GLOB differs from LIKE in two ways:
-    #   1. Case-sensitive (* matches any sequence, ? matches one character).
-    #   2. The pattern argument is passed dynamically (not restricted to string
-    #      literals), so GLOB can be used with column references or expressions
-    #      as the pattern.  This is consistent with SQLite's behaviour.
     if _has_keyword_child(node, "GLOB"):
         negated = _has_keyword_child(node, "NOT")
-        pat_expr = _bitwise(additives[1], state)
+        pat_expr, _ = _collated(collateds[1], state)
         glob_call: Expr = FunctionCall(
             name="glob",
             args=(FuncArg(value=pat_expr), FuncArg(value=left)),
@@ -1740,22 +1922,14 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
         return glob_call
 
     # IS NULL / IS NOT NULL / IS DISTINCT FROM / IS NOT DISTINCT FROM.
-    #
-    # Grammar alternatives that reach here:
-    #   additive "IS" "NULL"                          → IsNull
-    #   additive "IS" "NOT" "NULL"                    → IsNotNull
-    #   additive "IS" "DISTINCT" "FROM" additive      → BinaryExpr(IS_DISTINCT_FROM)
-    #   additive "IS" "NOT" "DISTINCT" "FROM" additive → BinaryExpr(IS_NOT_DISTINCT_FROM)
-    #
-    # IS DISTINCT FROM is a NULL-safe comparison that never returns NULL.
-    # It is equivalent to NOT (left IS NOT DISTINCT FROM right), where:
-    #   x IS NOT DISTINCT FROM y  ≡  (x = y) OR (x IS NULL AND y IS NULL)
     if _has_keyword_child(node, "IS"):
         if _has_keyword_child(node, "DISTINCT"):
-            # "IS [NOT] DISTINCT FROM bitwise"
-            # The comparison node has two bitwise children: left (index 0,
-            # already parsed above as ``left``) and right (index 1).
-            right = _bitwise(additives[1], state)
+            # "IS [NOT] DISTINCT FROM collated"
+            right, right_coll = _collated(collateds[1], state)
+            coll = left_coll if left_coll is not None else right_coll
+            if coll is not None:
+                left = _collation_transform(left, coll)
+                right = _collation_transform(right, coll)
             if _has_keyword_child(node, "NOT"):
                 return BinaryExpr(op=BinaryOp.IS_NOT_DISTINCT_FROM, left=left, right=right)
             return BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, left=left, right=right)
