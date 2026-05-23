@@ -1,5 +1,38 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — v0.1 PR-5 — Field (form group)
+
+### Added
+
+**`Field`** — Bootstrap's "form group" pattern. Labelled text input
+with optional help text below (or error text in red when validation
+fails). Composition: `Column[field]` containing label `Text`, the
+`HostInput[field-input]`, and an `If error / Else help` pair of
+muted-vs-danger texts. Slots: `label`, `value`, `placeholder`,
+`help`, `error`, `disabled`. Emits: `onChange(value: text)`,
+`onCommit`.
+
+### Why HostInput inline, not Input via component reference
+
+Field would naturally reference the toolkit's `Input` component
+since both wrap HostInput similarly. But UI29 §4.4 routes
+component-reference resolution through the manifest's
+`[dependencies]` table — and a package can't depend on itself,
+so Field can't reference Input from the same package today.
+
+Inlining HostInput in Field.mll is the path of least resistance. A
+small follow-up can add self-reference support to the resolver
+(auto-register the active package's own `[components].exports`);
+until then the duplication is acceptable.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 13 (was 12). All pass.
+
+**11 of 13 Tier-1 components shipped.** Remaining: Card, Container
+— both still blocked on the UI29-2 children pass-through spec
+(#3947).
+
 ## [Unreleased] — v0.1 PR-4 — ListGroup / Modal
 
 ### Added — 2 more Tier-1 components

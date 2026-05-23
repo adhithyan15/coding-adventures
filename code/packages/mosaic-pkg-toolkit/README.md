@@ -10,7 +10,7 @@ for the architecture, component catalog, and phasing plan.
 
 ## v0.1 — exports so far
 
-**10 of 13 Tier-1 components shipped:**
+**11 of 13 Tier-1 components shipped:**
 
 - **`Alert`** — colored info banner with `variant`, optional inline
   dismiss button. Composed from `Box` + `Row` + `Text` + `If` +
@@ -22,6 +22,10 @@ for the architecture, component catalog, and phasing plan.
 - **`Checkbox`** — labeled checkbox. `Row { If checked HostButton[✓]
   Else HostButton[], Text }`. Slots: `label`, `checked`,
   `disabled`. Emit: `onChange`. Host owns the state.
+- **`Field`** — labelled text input + help/error pattern.
+  Bootstrap's "form group". Slots: `label`, `value`,
+  `placeholder`, `help`, `error`, `disabled`. Emits:
+  `onChange(value: text)`, `onCommit`.
 - **`Input`** — styled single-line text input. Wraps the kernel
   `HostInput`. Slots: `value`, `placeholder`, `disabled`, `size`.
   Emits: `onChange(value: text)`, `onCommit`.
@@ -54,8 +58,9 @@ Per spec §7:
 | v0.1 PR-1 | Button, Alert |
 | v0.1 PR-2 | Badge, Spinner, Toast |
 | v0.1 PR-3 | Input, Checkbox, Radio |
-| v0.1 PR-4 (this) | ListGroup, Modal |
-| v0.1 PR-5+ | Card, Container, Field — depend on the children-pass-through UI29 follow-up spec |
+| v0.1 PR-4 | ListGroup, Modal |
+| v0.1 PR-5 (this) | Field |
+| v0.1 PR-6 | Card, Container — depend on UI29-2 children pass-through |
 | v0.2 | Tier 2 — Nav, Navbar, Pagination, Breadcrumb, InputGroup, ButtonGroup, Tabs, DropdownMenu, Accordion, Select |
 | v0.3 | Bootstrap-aesthetic theme overlay |
 | v0.4 | Tier 3 — Tooltip, Popover, Carousel, Offcanvas (depends on kernel follow-ups) |

@@ -35,7 +35,7 @@ use std::path::PathBuf;
 /// Alphabetical order matches the manifest's `[components].exports`
 /// list. Reorder both together if it ever changes.
 const COMPONENTS: &[&str] = &[
-    "Alert", "Badge", "Button", "Checkbox", "Input",
+    "Alert", "Badge", "Button", "Checkbox", "Field", "Input",
     "ListGroup", "Modal", "Radio", "Spinner", "Toast",
 ];
 
@@ -294,4 +294,20 @@ fn modal_interface_matches_spec() {
     assert_eq!(slot_names, vec!["title", "message", "open", "close-label"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onClose"]);
+}
+
+/// Field — label + HostInput + help/error. The label/help/error
+/// slots are text; value/placeholder are text; disabled is bool.
+#[test]
+fn field_interface_matches_spec() {
+    let mil_src = read_source("Field.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(
+        slot_names,
+        vec!["label", "value", "placeholder", "help", "error", "disabled"]
+    );
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onChange", "onCommit"]);
 }
