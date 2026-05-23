@@ -72,6 +72,8 @@ The crate keeps the boundary narrow:
   consistency flags for flattened host-log fields
 - supervisor drain reports and summaries expose starting and stored checkpoint
   boundary fields plus stored-checkpoint consistency flags for host logs
+- supervisor drain reports and summaries expose checkpoint-advance consistency
+  flags that compare starting and last checkpoint movement for host logs
 - supervisor drain run summaries flatten planned and replayed follow-up row
   counts for host routing decisions
 - supervisor drain run summaries flag when planned and replayed follow-up
