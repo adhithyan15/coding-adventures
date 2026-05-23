@@ -2,6 +2,9 @@
 
 ## 0.2.0 — 2026-05-16
 
+- Parse SPICE `J` JFET elements via `.model <name> NJF(...)` and
+  `.model <name> PJF(...)` cards with `BETA` / `B`, `VTO`, and `LAMBDA`
+  parameters, including subcircuit drain/gate/source remapping.
 - Parse capacitor `IC=<voltage>` initial-voltage parameters.
 - Parse inductor `IC=<current>` initial-current parameters.
 - Parse SPICE independent source `AC <magnitude> [phase]` specifications for

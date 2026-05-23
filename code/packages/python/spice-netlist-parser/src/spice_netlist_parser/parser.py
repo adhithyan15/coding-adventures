@@ -20,6 +20,7 @@ from spice_engine import (
     Diode,
     ExpWaveform,
     Inductor,
+    JFET,
     Mosfet,
     PulseWaveform,
     PwlWaveform,
@@ -388,6 +389,25 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             beta_f=model.params.get("BETA_F", model.params.get("BF", 100.0)),
             Vt=model.params.get("VT", 0.02585),
         )
+    if prefix == "J":
+        _require_fields(fields, 5, "JFET")
+        model = models.get(fields[4].lower())
+        if model is None:
+            raise NetlistParseError(f"unknown model {fields[4]!r} for JFET {name!r}")
+        if model.kind not in {"NJF", "PJF"}:
+            raise NetlistParseError(
+                f"model {model.name!r} has kind {model.kind!r}, expected 'NJF' or 'PJF'"
+            )
+        return JFET(
+            name,
+            fields[1],
+            fields[2],
+            fields[3],
+            polarity=model.kind,
+            beta=model.params.get("BETA", model.params.get("B", 1.0e-4)),
+            vto=model.params.get("VTO", -2.0 if model.kind == "NJF" else 2.0),
+            lambda_=model.params.get("LAMBDA", 0.0),
+        )
     if prefix == "M":
         _require_min_fields(fields, 6, "MOSFET")
         model = models.get(fields[5].lower())
@@ -493,8 +513,8 @@ def _map_subckt_fields(
         _require_min_fields(fields, 3, "subcircuit element")
         mapped[1] = _map_subckt_node(fields[1], instance_name, node_map)
         mapped[2] = _map_subckt_node(fields[2], instance_name, node_map)
-    elif prefix == "Q":
-        _require_min_fields(fields, 4, "subcircuit BJT")
+    elif prefix in {"Q", "J"}:
+        _require_min_fields(fields, 4, "subcircuit BJT" if prefix == "Q" else "subcircuit JFET")
         mapped[1] = _map_subckt_node(fields[1], instance_name, node_map)
         mapped[2] = _map_subckt_node(fields[2], instance_name, node_map)
         mapped[3] = _map_subckt_node(fields[3], instance_name, node_map)

@@ -1,6 +1,6 @@
 use spice_engine::{
-    ac_sweep, dc_op, mc_dc, noise_ac, sens_dc, tf, BjtPolarity, Element, McDistribution, McOptions,
-    MosfetType,
+    ac_sweep, dc_op, mc_dc, noise_ac, sens_dc, tf, BjtPolarity, Element, JfetPolarity,
+    McDistribution, McOptions, MosfetType,
 };
 use spice_netlist_parser::{
     parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, McAnalysis, NetlistParseError,
@@ -579,6 +579,54 @@ Q1 vcc base out pullup
 }
 
 #[test]
+fn parses_jfet_model_cards() {
+    let parsed = parse_netlist(
+        r#"
+.model nch NJF(BETA=2m VTO=-3 LAMBDA=0.02)
+J1 drain gate source nch
+"#,
+    )
+    .unwrap();
+
+    let model = parsed.models.get("nch").unwrap();
+    assert_eq!(model.name, "nch");
+    assert_eq!(model.kind, "NJF");
+    assert_close(*model.params.get("BETA").unwrap(), 2.0e-3);
+    assert_close(*model.params.get("VTO").unwrap(), -3.0);
+    assert_close(*model.params.get("LAMBDA").unwrap(), 0.02);
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_eq!(jfet.name, "J1");
+    assert_eq!(jfet.drain, "drain");
+    assert_eq!(jfet.gate, "gate");
+    assert_eq!(jfet.source, "source");
+    assert_eq!(jfet.polarity, JfetPolarity::Njf);
+    assert_close(jfet.beta, 2.0e-3);
+    assert_close(jfet.threshold_voltage, -3.0);
+    assert_close(jfet.channel_length_modulation, 0.02);
+}
+
+#[test]
+fn parses_pjf_model_beta_aliases() {
+    let parsed = parse_netlist(
+        r#"
+.model pch PJF(B=750u)
+Jpull drain gate source pch
+"#,
+    )
+    .unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_eq!(jfet.polarity, JfetPolarity::Pjf);
+    assert_close(jfet.beta, 750.0e-6);
+    assert_close(jfet.threshold_voltage, 2.0);
+}
+
+#[test]
 fn parses_mosfet_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
@@ -867,6 +915,30 @@ Xbuf vcc in out follower
     assert_eq!(bjt.collector, "vcc");
     assert_eq!(bjt.base, "in");
     assert_eq!(bjt.emitter, "out");
+}
+
+#[test]
+fn expands_subcircuit_jfet_nodes_into_engine_elements() {
+    let parsed = parse_netlist(
+        r#"
+.model nch NJF(BETA=1m)
+.subckt source_follower d g s
+Jdrive d g inner nch
+Rtail inner s 100
+.ends source_follower
+Xbuf vdd in out source_follower
+"#,
+    )
+    .unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_eq!(jfet.name, "Xbuf.Jdrive");
+    assert_eq!(jfet.drain, "vdd");
+    assert_eq!(jfet.gate, "in");
+    assert_eq!(jfet.source, "Xbuf.inner");
+    assert_close(jfet.beta, 1.0e-3);
 }
 
 #[test]

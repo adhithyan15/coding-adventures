@@ -2,8 +2,8 @@ use std::{collections::HashMap, fmt};
 
 use spice_engine::{
     Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element, ExpWaveform,
-    Inductor, Mosfet, MosfetLevel1Params, MosfetType, PulseWaveform, PwlWaveform, Resistor,
-    SinWaveform, Vccs, Vcvs, VoltageSource, Waveform,
+    Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -629,6 +629,42 @@ fn parse_element(
                 *model.params.get("VT").unwrap_or(&0.02585),
             )))
         }
+        'J' => {
+            require_fields(fields, 5, "JFET")?;
+            let model = models.get(&fields[4].to_ascii_lowercase()).ok_or_else(|| {
+                NetlistParseError::new(format!("unknown model {:?} for JFET {:?}", fields[4], name))
+            })?;
+            let polarity = match model.kind.as_str() {
+                "NJF" => JfetPolarity::Njf,
+                "PJF" => JfetPolarity::Pjf,
+                _ => {
+                    return Err(NetlistParseError::new(format!(
+                        "model {:?} has kind {:?}, expected \"NJF\" or \"PJF\"",
+                        model.name, model.kind
+                    )));
+                }
+            };
+            let beta = model
+                .params
+                .get("BETA")
+                .or_else(|| model.params.get("B"))
+                .copied()
+                .unwrap_or(1.0e-4);
+            let threshold_voltage = model.params.get("VTO").copied().unwrap_or(match polarity {
+                JfetPolarity::Njf => -2.0,
+                JfetPolarity::Pjf => 2.0,
+            });
+            Ok(Element::Jfet(Jfet::with_model(
+                name,
+                &fields[1],
+                &fields[2],
+                &fields[3],
+                polarity,
+                beta,
+                threshold_voltage,
+                *model.params.get("LAMBDA").unwrap_or(&0.0),
+            )))
+        }
         'M' => {
             require_min_fields(fields, 6, "MOSFET")?;
             let model = models.get(&fields[5].to_ascii_lowercase()).ok_or_else(|| {
@@ -826,8 +862,16 @@ fn map_subckt_fields(
             mapped[1] = map_subckt_node(&fields[1], instance_name, node_map);
             mapped[2] = map_subckt_node(&fields[2], instance_name, node_map);
         }
-        'Q' => {
-            require_min_fields(fields, 4, "subcircuit BJT")?;
+        'Q' | 'J' => {
+            require_min_fields(
+                fields,
+                4,
+                if prefix == 'Q' {
+                    "subcircuit BJT"
+                } else {
+                    "subcircuit JFET"
+                },
+            )?;
             for index in 1..4 {
                 mapped[index] = map_subckt_node(&fields[index], instance_name, node_map);
             }

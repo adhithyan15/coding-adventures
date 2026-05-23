@@ -411,6 +411,50 @@ Q2 out base emit slow
     expect(element.thermalVoltage).toBeCloseTo(26.0e-3, 12);
   });
 
+  it("parses JFET models into operating-point circuits", () => {
+    const parsed = parseNetlist(`
+.model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)
+J1 drain gate source fast
+`);
+
+    expect(parsed.models.get("fast")).toEqual({
+      name: "fast",
+      kind: "NJF",
+      params: new Map([
+        ["BETA", 2.0e-3],
+        ["VTO", -3.0],
+        ["LAMBDA", 0.02],
+      ]),
+    });
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      name: "J1",
+      drain: "drain",
+      gate: "gate",
+      source: "source",
+      polarity: "NJF",
+      beta: 2.0e-3,
+      thresholdVoltage: -3.0,
+      channelLengthModulation: 0.02,
+    });
+  });
+
+  it("parses PJF model beta aliases", () => {
+    const parsed = parseNetlist(`
+.model pslow PJF(B=750u)
+Jp drain gate source pslow
+`);
+
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("jfet");
+    if (element.kind !== "jfet") {
+      throw new Error("unexpected element kind");
+    }
+    expect(element.polarity).toBe("PJF");
+    expect(element.beta).toBeCloseTo(750.0e-6, 12);
+    expect(element.thresholdVoltage).toBe(2.0);
+  });
+
   it("parses MOSFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model nfast NMOS(VT0=0.45 KP=200u LAMBDA=0.02)
@@ -638,6 +682,31 @@ Xstage out in 0 stage
       base: "in",
       emitter: "0",
       polarity: "NPN",
+    });
+  });
+
+  it("expands subcircuit JFET nodes into engine elements", () => {
+    const parsed = parseNetlist(`
+.model nchan NJF(BETA=1m)
+.subckt source_follower d g s
+Jbuf d g inner nchan
+Rtail inner s 100
+.ends source_follower
+Xbuf out in 0 source_follower
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      name: "Xbuf.Jbuf",
+      drain: "out",
+      gate: "in",
+      source: "Xbuf.inner",
+      beta: 1.0e-3,
+    });
+    expect(parsed.circuit.elements()[1]).toMatchObject({
+      kind: "resistor",
+      n1: "Xbuf.inner",
+      n2: "0",
     });
   });
 

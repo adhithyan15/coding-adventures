@@ -283,6 +283,16 @@ fn clone_subckt_element(
             element.saturation_current,
             element.thermal_voltage,
         )),
+        Element::Jfet(element) => Element::Jfet(Jfet::with_model(
+            format!("{instance_name}.{}", element.name),
+            map_subckt_node(&element.drain, instance_name, node_map),
+            map_subckt_node(&element.gate, instance_name, node_map),
+            map_subckt_node(&element.source, instance_name, node_map),
+            element.polarity,
+            element.beta,
+            element.threshold_voltage,
+            element.channel_length_modulation,
+        )),
         Element::Bjt(element) => Element::Bjt(Bjt::with_model(
             format!("{instance_name}.{}", element.name),
             map_subckt_node(&element.collector, instance_name, node_map),
@@ -663,6 +673,7 @@ pub enum Element {
     CurrentSource(CurrentSource),
     BSource(BSource),
     Diode(Diode),
+    Jfet(Jfet),
     Bjt(Bjt),
     Mosfet(Mosfet),
     Vccs(Vccs),
@@ -1017,6 +1028,66 @@ impl Diode {
             cathode: cathode.into(),
             saturation_current,
             thermal_voltage,
+        }
+    }
+}
+
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+pub enum JfetPolarity {
+    Njf,
+    Pjf,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Jfet {
+    pub name: String,
+    pub drain: String,
+    pub gate: String,
+    pub source: String,
+    pub polarity: JfetPolarity,
+    pub beta: f64,
+    pub threshold_voltage: f64,
+    pub channel_length_modulation: f64,
+}
+
+impl Jfet {
+    pub fn new(
+        name: impl Into<String>,
+        drain: impl Into<String>,
+        gate: impl Into<String>,
+        source: impl Into<String>,
+    ) -> Self {
+        Self::with_model(
+            name,
+            drain,
+            gate,
+            source,
+            JfetPolarity::Njf,
+            1.0e-4,
+            -2.0,
+            0.0,
+        )
+    }
+
+    pub fn with_model(
+        name: impl Into<String>,
+        drain: impl Into<String>,
+        gate: impl Into<String>,
+        source: impl Into<String>,
+        polarity: JfetPolarity,
+        beta: f64,
+        threshold_voltage: f64,
+        channel_length_modulation: f64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            drain: drain.into(),
+            gate: gate.into(),
+            source: source.into(),
+            polarity,
+            beta,
+            threshold_voltage,
+            channel_length_modulation,
         }
     }
 }
@@ -3370,6 +3441,7 @@ fn element_parameter(element: &Element) -> Option<(String, String, f64)> {
             "saturation_current".to_string(),
             diode.saturation_current,
         )),
+        Element::Jfet(jfet) => Some((jfet.name.clone(), "beta".to_string(), jfet.beta)),
         Element::Bjt(bjt) => Some((
             bjt.name.clone(),
             "saturation_current".to_string(),
@@ -3402,6 +3474,7 @@ fn perturb_element_parameter(element: &mut Element, delta: f64) {
         Element::VoltageSource(source) => source.voltage += delta,
         Element::CurrentSource(source) => source.current += delta,
         Element::Diode(diode) => diode.saturation_current += delta,
+        Element::Jfet(jfet) => jfet.beta += delta,
         Element::Bjt(bjt) => bjt.saturation_current += delta,
         Element::Mosfet(mosfet) => mosfet.params.kp += delta,
         Element::Vccs(source) => source.transconductance_siemens += delta,
@@ -3493,6 +3566,11 @@ fn randomized_element(
             varied.saturation_current =
                 randomized_value(varied.saturation_current, tolerance, distribution, rng);
             Element::Diode(varied)
+        }
+        Element::Jfet(jfet) => {
+            let mut varied = jfet.clone();
+            varied.beta = randomized_value(varied.beta, tolerance, distribution, rng);
+            Element::Jfet(varied)
         }
         Element::Bjt(bjt) => {
             let mut varied = bjt.clone();
@@ -3841,6 +3919,12 @@ fn solve_linear_circuit_at_operating_point(
             Element::Diode(diode) => {
                 stamp_diode(diode, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
+            Element::Jfet(jfet) => {
+                return Err(SpiceError::InvalidElement {
+                    name: jfet.name.clone(),
+                    reason: "JFET analysis is not implemented yet".to_string(),
+                });
+            }
             Element::Bjt(bjt) => {
                 stamp_bjt(bjt, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
@@ -3966,6 +4050,7 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
             | Element::Capacitor(_)
             | Element::Inductor(_)
             | Element::Diode(_)
+            | Element::Jfet(_)
             | Element::Bjt(_)
             | Element::Mosfet(_)
             | Element::Vccs(_)
@@ -4045,6 +4130,12 @@ fn build_ac_matrix(
                         0.0,
                     ),
                 );
+            }
+            Element::Jfet(jfet) => {
+                return Err(SpiceError::InvalidElement {
+                    name: jfet.name.clone(),
+                    reason: "JFET analysis is not implemented yet".to_string(),
+                });
             }
             Element::Bjt(bjt) => {
                 stamp_ac_bjt_small_signal(bjt, node_indices, &mut matrix, operating_point)?
@@ -4141,6 +4232,12 @@ fn build_small_signal_matrix(
                     cathode,
                     diode.saturation_current / diode.thermal_voltage * exponent.exp(),
                 );
+            }
+            Element::Jfet(jfet) => {
+                return Err(SpiceError::InvalidElement {
+                    name: jfet.name.clone(),
+                    reason: "JFET analysis is not implemented yet".to_string(),
+                });
             }
             Element::Bjt(bjt) => {
                 stamp_bjt_small_signal(bjt, node_indices, &mut matrix, operating_point)?
@@ -4243,6 +4340,11 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
             Element::Diode(diode) => {
                 insert_node(&mut names, &diode.anode);
                 insert_node(&mut names, &diode.cathode);
+            }
+            Element::Jfet(jfet) => {
+                insert_node(&mut names, &jfet.drain);
+                insert_node(&mut names, &jfet.gate);
+                insert_node(&mut names, &jfet.source);
             }
             Element::Bjt(bjt) => {
                 insert_node(&mut names, &bjt.collector);

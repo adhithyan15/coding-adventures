@@ -68,6 +68,7 @@ from spice_engine.elements import (
     Diode,
     Element,
     Inductor,
+    JFET,
     Mosfet,
     Resistor,
     SubcircuitDefinition,
@@ -233,6 +234,8 @@ def _clone_subckt_element(element: object, instance_name: str, node_map: dict[st
         return BSource(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_bsource_expr_nodes(element.voltage_expr, instance_name, node_map), _map_bsource_expr_nodes(element.current_expr, instance_name, node_map))
     if isinstance(element, Diode):
         return Diode(name, _map_subckt_node(element.anode, instance_name, node_map), _map_subckt_node(element.cathode, instance_name, node_map), element.Is, element.Vt)
+    if isinstance(element, JFET):
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
@@ -695,6 +698,8 @@ def _element_nodes(el: Element) -> list[str]:
         return nodes
     if isinstance(el, Diode):
         return [el.anode, el.cathode]
+    if isinstance(el, JFET):
+        return [el.drain, el.gate, el.source]
     if isinstance(el, Mosfet):
         return [el.drain, el.gate, el.source, el.body]
     if isinstance(el, BJT):

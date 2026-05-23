@@ -4,6 +4,10 @@
 
 ### Added
 
+- **JFET element foothold** — `JFET` now exposes the public three-terminal
+  device shape needed by SPICE `J` cards; nonlinear analysis stamping follows
+  in a later compatibility slice.
+
 - **PSS analysis foothold** — `pss` now runs the bounded shooting-Newton solve
   and returns one steady-state transient period from the solved circuit.
 
