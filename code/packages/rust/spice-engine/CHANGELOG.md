@@ -5,6 +5,9 @@
 - Add diode emission coefficient support through `emission_coefficient`,
   scaling the effective thermal voltage in DC and small-signal diode
   conductance.
+- Add diode breakdown support through `breakdown_voltage` /
+  `breakdown_current`, adding a bounded reverse-breakdown current and
+  conductance foothold.
 - Add pseudo-transient DC continuation as a final bounded convergence aid after
   Newton, Gmin stepping, and source stepping; successful fallback results
   report `DcConvergenceAid::PseudoTransient`.

@@ -413,6 +413,8 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Is=model.params.get("IS", 1e-15),
             Vt=model.params.get("VT", 0.02585),
             N=model.params.get("N", 1.0),
+            BV=model.params.get("BV"),
+            IBV=model.params.get("IBV", 1e-3),
         )
     if prefix == "Q":
         _require_fields(fields, 5, "BJT")

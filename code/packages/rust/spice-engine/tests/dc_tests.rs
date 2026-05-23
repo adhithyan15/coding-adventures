@@ -305,6 +305,40 @@ fn dc_diode_emission_coefficient_reduces_fixed_bias_current() {
 }
 
 #[test]
+fn dc_diode_breakdown_voltage_increases_reverse_bias_current() {
+    let mut leakage = Circuit::new();
+    leakage.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "0", "a", 5.0,
+    )));
+    leakage.add(Element::Diode(Diode::with_model(
+        "D1", "a", "0", 1.0e-15, 0.02585,
+    )));
+
+    let mut breakdown = Circuit::new();
+    breakdown.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "0", "a", 5.0,
+    )));
+    breakdown.add(Element::Diode(Diode::with_model_and_breakdown(
+        "D1",
+        "a",
+        "0",
+        1.0e-15,
+        0.02585,
+        1.0,
+        Some(5.0),
+        1.0e-6,
+    )));
+
+    let leakage_result = dc_op(&leakage).unwrap();
+    let breakdown_result = dc_op(&breakdown).unwrap();
+    assert!(
+        breakdown_result.branch_current("V1").unwrap().abs()
+            > leakage_result.branch_current("V1").unwrap().abs() * 1.0e6
+    );
+    assert!((breakdown_result.branch_current("V1").unwrap().abs() - 1.0e-6).abs() < 1.0e-9);
+}
+
+#[test]
 fn dc_bjt_solves_npn_emitter_follower_operating_point() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(
