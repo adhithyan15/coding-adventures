@@ -1319,6 +1319,34 @@ impl ToolAuditSupervisorDrainRunReport {
         self.plan_inventory_counts_match() && self.drain_inventory_counts_match()
     }
 
+    /// Return whether remaining tick budget agrees with max ticks and drain ticks.
+    pub fn remaining_tick_budget_matches_counts(&self) -> bool {
+        self.remaining_tick_budget() == self.max_ticks().saturating_sub(self.drain_ticks())
+    }
+
+    /// Return whether flattened tick-budget status flags agree with remaining budget.
+    pub fn tick_budget_status_flags_match(&self) -> bool {
+        self.used_all_ticks() == (self.remaining_tick_budget() == 0)
+            && self.has_remaining_tick_budget() == (self.remaining_tick_budget() > 0)
+    }
+
+    /// Return whether flattened drain status flags agree with source counts.
+    pub fn drain_status_flags_match(&self) -> bool {
+        self.is_idle() == (self.drained_records() == 0)
+            && self.made_progress() == (self.drained_records() > 0)
+            && self.should_continue() == !self.reached_end_of_log()
+            && self.exhausted_tick_budget()
+                == (self.drain_ticks() == self.max_ticks() && !self.reached_end_of_log())
+            && self.advanced_checkpoint() == self.made_progress()
+    }
+
+    /// Return whether all flattened budget and status flags agree with sources.
+    pub fn run_status_flags_match(&self) -> bool {
+        self.remaining_tick_budget_matches_counts()
+            && self.tick_budget_status_flags_match()
+            && self.drain_status_flags_match()
+    }
+
     /// Return a payload-free, flattened summary for host logs and schedulers.
     pub fn summary(&self) -> ToolAuditSupervisorDrainRunSummary {
         ToolAuditSupervisorDrainRunSummary {
@@ -1379,6 +1407,10 @@ impl ToolAuditSupervisorDrainRunReport {
             plan_inventory_counts_match: self.plan_inventory_counts_match(),
             drain_inventory_counts_match: self.drain_inventory_counts_match(),
             inventory_counts_match: self.inventory_counts_match(),
+            remaining_tick_budget_matches_counts: self.remaining_tick_budget_matches_counts(),
+            tick_budget_status_flags_match: self.tick_budget_status_flags_match(),
+            drain_status_flags_match: self.drain_status_flags_match(),
+            run_status_flags_match: self.run_status_flags_match(),
             reached_end_of_log: self.reached_end_of_log(),
             exhausted_tick_budget: self.exhausted_tick_budget(),
             is_idle: self.is_idle(),
@@ -1699,6 +1731,14 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub drain_inventory_counts_match: bool,
     /// Whether every planned and replayed row count agrees with inventory.
     pub inventory_counts_match: bool,
+    /// Whether remaining tick budget agrees with max ticks and drain ticks.
+    pub remaining_tick_budget_matches_counts: bool,
+    /// Whether tick-budget status flags agree with remaining budget.
+    pub tick_budget_status_flags_match: bool,
+    /// Whether drain status flags agree with source counts.
+    pub drain_status_flags_match: bool,
+    /// Whether all flattened budget and status flags agree with sources.
+    pub run_status_flags_match: bool,
     /// Whether the actual run reached the current end of the audit log.
     pub reached_end_of_log: bool,
     /// Whether the actual run used every allowed tick.
@@ -1905,6 +1945,26 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether every planned and replayed row count agrees with inventory.
     pub fn inventory_counts_match(&self) -> bool {
         self.inventory_counts_match
+    }
+
+    /// Return whether remaining tick budget agrees with max ticks and drain ticks.
+    pub fn remaining_tick_budget_matches_counts(&self) -> bool {
+        self.remaining_tick_budget_matches_counts
+    }
+
+    /// Return whether tick-budget status flags agree with remaining budget.
+    pub fn tick_budget_status_flags_match(&self) -> bool {
+        self.tick_budget_status_flags_match
+    }
+
+    /// Return whether drain status flags agree with source counts.
+    pub fn drain_status_flags_match(&self) -> bool {
+        self.drain_status_flags_match
+    }
+
+    /// Return whether all flattened budget and status flags agree with sources.
+    pub fn run_status_flags_match(&self) -> bool {
+        self.run_status_flags_match
     }
 
     /// Return whether row count drift was observed.
@@ -4789,6 +4849,18 @@ mod tests {
         assert!(summary.drain_inventory_counts_match());
         assert!(summary.inventory_counts_match);
         assert!(summary.inventory_counts_match());
+        assert!(report.remaining_tick_budget_matches_counts());
+        assert!(report.tick_budget_status_flags_match());
+        assert!(report.drain_status_flags_match());
+        assert!(report.run_status_flags_match());
+        assert!(summary.remaining_tick_budget_matches_counts);
+        assert!(summary.remaining_tick_budget_matches_counts());
+        assert!(summary.tick_budget_status_flags_match);
+        assert!(summary.tick_budget_status_flags_match());
+        assert!(summary.drain_status_flags_match);
+        assert!(summary.drain_status_flags_match());
+        assert!(summary.run_status_flags_match);
+        assert!(summary.run_status_flags_match());
         assert!(!summary.reached_end_of_log);
         assert!(!summary.reached_end_of_log());
         assert!(summary.exhausted_tick_budget);
@@ -4823,6 +4895,65 @@ mod tests {
         assert!(summary.made_progress());
         assert!(summary.should_continue);
         assert!(summary.should_continue());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_flattens_budget_status_consistency_flags() {
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 1, &mut sink)
+            .unwrap();
+
+        assert_eq!(report.max_ticks(), 1);
+        assert_eq!(report.drain_ticks(), 1);
+        assert_eq!(report.remaining_tick_budget(), 0);
+        assert!(report.remaining_tick_budget_matches_counts());
+        assert!(report.tick_budget_status_flags_match());
+        assert!(report.drain_status_flags_match());
+        assert!(report.run_status_flags_match());
+
+        let summary = report.summary();
+        assert_eq!(summary.max_ticks, 1);
+        assert_eq!(summary.drain_ticks, 1);
+        assert_eq!(summary.remaining_tick_budget, 0);
+        assert!(summary.remaining_tick_budget_matches_counts);
+        assert!(summary.remaining_tick_budget_matches_counts());
+        assert!(summary.tick_budget_status_flags_match);
+        assert!(summary.tick_budget_status_flags_match());
+        assert!(summary.drain_status_flags_match);
+        assert!(summary.drain_status_flags_match());
+        assert!(summary.run_status_flags_match);
+        assert!(summary.run_status_flags_match());
+
+        let mut stale_budget_summary = summary.clone();
+        stale_budget_summary.remaining_tick_budget = 1;
+        stale_budget_summary.remaining_tick_budget_matches_counts = false;
+        stale_budget_summary.tick_budget_status_flags_match = false;
+        stale_budget_summary.run_status_flags_match = false;
+        assert!(!stale_budget_summary.remaining_tick_budget_matches_counts());
+        assert!(!stale_budget_summary.tick_budget_status_flags_match());
+        assert!(!stale_budget_summary.run_status_flags_match());
+
+        let mut stale_status_summary = summary;
+        stale_status_summary.made_progress = false;
+        stale_status_summary.drain_status_flags_match = false;
+        stale_status_summary.run_status_flags_match = false;
+        assert!(!stale_status_summary.drain_status_flags_match());
+        assert!(!stale_status_summary.run_status_flags_match());
+
+        let mut inconsistent_report = report;
+        inconsistent_report.drain.drained_records = 0;
+        assert!(!inconsistent_report.drain_status_flags_match());
+        assert!(!inconsistent_report.run_status_flags_match());
     }
 
     #[test]
