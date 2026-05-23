@@ -17,8 +17,9 @@ from __future__ import annotations
 
 import sqlite3
 
-import mini_sqlite
 import pytest
+
+import mini_sqlite
 from mini_sqlite import errors as mini_errors
 
 
