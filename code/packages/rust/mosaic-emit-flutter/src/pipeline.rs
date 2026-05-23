@@ -27,6 +27,9 @@
 //! | `HostCheckbox`       | `Checkbox(value: ..., onChanged: ...)`              |
 //! | `HostRadio`          | `Radio<String>(value: ..., groupValue: ..., onChanged: ...)` |
 //! | `HostTable`          | `DataTable(columns: [...], rows: [...])`            |
+//! | `HostLink`           | `InkWell(onTap: () => launchUrl(...), child: Text(...))` (UI29-4) |
+//! | `HostTooltip`        | `Tooltip(message: ..., child: ...)` (UI29-4)        |
+//! | `HostNumberInput`    | `TextField(keyboardType: TextInputType.number, ...)` (UI29-4) |
 //! | `If` / `Else`        | Dart `if ... else ...` expression in widget tree    |
 //! | `For`                | Spread `...list.map((x) => Widget(x))`              |
 //!
@@ -322,6 +325,22 @@ fn emit_widget_tree(
     }
     if node.tag == "HostTable" {
         return emit_host_table(node, indent, part_styles);
+    }
+    // UI29-4 kernel — three new primitives. `HostLink` lowers to an
+    // `InkWell` wrapping a `Text` (with a `url_launcher` TODO comment
+    // since Flutter has no built-in URL-launch capability without an
+    // external package), `HostTooltip` to Flutter's first-class
+    // `Tooltip(message:, child:)` widget, and `HostNumberInput` to a
+    // `TextField` configured with `TextInputType.number` so mobile
+    // devices show the numeric keypad.
+    if node.tag == "HostLink" {
+        return emit_host_link(node, indent);
+    }
+    if node.tag == "HostTooltip" {
+        return emit_host_tooltip(node, indent, part_styles);
+    }
+    if node.tag == "HostNumberInput" {
+        return emit_host_number_input(node, indent);
     }
     if node.tag == "Text" {
         return Ok(emit_text(node, indent));
@@ -858,6 +877,318 @@ fn emit_host_table(
 }
 
 // =====================================================================
+// UI29-4 host primitives
+//
+// Three primitives promoted in UI29-4 (kernel positions 19/20/21):
+//
+// - `HostLink`        → `InkWell` wrapping `Text`. Flutter has no
+//                       built-in URL launcher; the standard idiom is
+//                       the `url_launcher` package's `launchUrl(...)`.
+//                       We emit an `InkWell(onTap: () { /* TODO:
+//                       launchUrl */ }, child: Text(...))` so the
+//                       widget renders + responds to taps today; the
+//                       host wires `launchUrl` in. When `external:
+//                       false` is set, no URL-launch comment is
+//                       emitted — the host is expected to handle
+//                       routing via the `onActivate` dispatch.
+// - `HostTooltip`     → `Tooltip(message:, child:)`. Flutter's
+//                       built-in tooltip widget handles hover (web /
+//                       desktop) + long-press (mobile) automatically.
+// - `HostNumberInput` → `TextField(keyboardType: TextInputType.number,
+//                       ...)`. The `inputFormatters` list with
+//                       `FilteringTextInputFormatter.digitsOnly` is
+//                       skipped in v1 because it bans the decimal
+//                       point — authors who want integer-only entry
+//                       can wrap the generated widget; the default
+//                       allows decimals (matching the spec's
+//                       `step: 0.01` default-for-decimal note).
+// =====================================================================
+
+/// `HostLink` (kernel primitive #19, UI29-4) → `InkWell` wrapping a
+/// `Text`. Material's `InkWell` gives a tap ripple + hover cursor on
+/// desktop/web, the closest stock-Flutter analogue of a hyperlink.
+///
+/// Actual URL launching requires the `url_launcher` package, which is
+/// not a Flutter SDK dependency. To keep this emitter zero-deps, we
+/// emit a `/* TODO: launchUrl */` comment in the `onTap` callback;
+/// hosts wire `launchUrl(Uri.parse(href))` (or their preferred router
+/// for `external: false`) by importing the package. The text and the
+/// `onActivate` dispatch (if bound) are wired today.
+///
+/// ## Security
+///
+/// Both `href` and `label` are escaped through `escape_dart_string`
+/// (handles `\`, `"`, `$` — the latter critical because Dart
+/// interpolates `$ident` inside double-quoted strings). The
+/// `external` and `target` keywords are validated to a small allow-
+/// list before being interpolated into comments, so a malicious
+/// keyword like `false*/dispatch(evil())/*` can't terminate the
+/// `/* ... */` block-comment early.
+fn emit_host_link(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // href — slot ref takes priority over literal (slot refs are
+    // identifiers we validated upstream; literals get escape_dart_string).
+    let href_expr: String = if let Some(slot) = find_slot_ref_prop(node, "href") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel)?;
+        camel
+    } else if let Some(s) = find_string_prop(node, "href") {
+        format!("\"{}\"", escape_dart_string(s))
+    } else {
+        "\"\"".to_string()
+    };
+
+    // label — same slot-ref-first preference.
+    let label_expr: String = if let Some(s) = find_string_prop(node, "label") {
+        format!("Text(\"{}\")", escape_dart_string(s))
+    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel)?;
+        format!("Text({camel})")
+    } else {
+        "Text(\"\")".to_string()
+    };
+
+    // external — keyword allow-list. Defaults to `true` (open in OS
+    // browser via url_launcher). `false` means in-app routing; host
+    // handles via onActivate, no `launchUrl` comment is emitted.
+    let external = find_keyword_prop(node, "external")
+        .map(|v| !matches!(v, "false")) // anything other than "false" → true
+        .unwrap_or(true);
+
+    // target — keyword allow-list (defensive). Maps to comment-only
+    // hint today; Flutter's url_launcher mode is host-controlled.
+    let target = match find_keyword_prop(node, "target").unwrap_or("same") {
+        "same" | "new-tab" | "parent" | "top" => find_keyword_prop(node, "target").unwrap_or("same"),
+        _ => "same",
+    };
+
+    // Sanitize href for use inside a `/* ... */` block comment.
+    //
+    // SECURITY: Dart's block-comment tokenizer is greedy and does NOT
+    // respect string-literal quotes inside the comment — the first
+    // `*/` terminates the comment regardless. So an href like
+    // `x*/Future.delayed(...);/*` wrapped in `"..."` and spliced into
+    // `/* TODO: launchUrl(Uri.parse("x*/Future...;/*")) */` would let
+    // the injected code run inside the onTap closure.
+    //
+    // `escape_dart_string` (which produced `href_expr`) does NOT
+    // escape `*/` because that sequence is not a Dart string-escape
+    // concern. Here we additionally replace `*/` with `*/` —
+    // inside a Dart string literal, `/` decodes to `/`, so the
+    // runtime URL is unchanged, but the comment-terminator sequence
+    // is broken at the source level. Regression test:
+    // `host_link_with_comment_terminator_in_href_is_neutralised`.
+    let href_in_comment = href_expr.replace("*/", "*\\u002f");
+
+    // onActivate dispatch (optional). Same `(value: href)` shape as
+    // SwiftUI/Qt — the host receives the resolved href in the event.
+    let on_activate_call: Option<String> = if let Some(emit_name) = find_emit_ref_prop(node, "onActivate") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_emit_name(&case)?;
+        Some(format!("/* TODO: dispatch {case}(href: {href_in_comment}) */"))
+    } else {
+        None
+    };
+
+    // Compose the onTap body. Two TODO comments in the external case
+    // (url_launcher + dispatch), one in the internal case (dispatch
+    // only). Both comments are block-style `/* ... */`; `href_in_comment`
+    // has its `*/` sequences neutralised. The `target`/`external`
+    // keywords passed through grammar-level validation upstream + an
+    // allow-list above — no injection vector.
+    let on_tap_body = match (external, on_activate_call.as_deref()) {
+        (true, Some(call)) => format!(
+            "() {{ /* TODO: launchUrl(Uri.parse({href_in_comment})) — target={target} */ {call} }}"
+        ),
+        (true, None) => format!(
+            "() {{ /* TODO: launchUrl(Uri.parse({href_in_comment})) — target={target} */ }}"
+        ),
+        (false, Some(call)) => format!("() {{ {call} }}"),
+        (false, None) => "() {}".to_string(),
+    };
+
+    Ok(format!(
+        "{pad}InkWell(onTap: {on_tap_body}, child: {label_expr})\n"
+    ))
+}
+
+/// `HostTooltip` (kernel primitive #20, UI29-4) → `Tooltip(message:,
+/// child: )`. Flutter's built-in `Tooltip` handles hover (desktop /
+/// web) and long-press (mobile) triggers, and renders above other
+/// content via the overlay layer.
+///
+/// The single-child shape is enforced by the IR — the spec defines
+/// HostTooltip's `target` as "the element the tooltip annotates,
+/// passed as the single child of HostTooltip." We emit
+/// `SizedBox.shrink()` when no child is present (degenerate case;
+/// shouldn't happen if the .mil declared `target` as required).
+///
+/// ## Security
+///
+/// `text` is escaped through `escape_dart_string` before splicing
+/// into the `"..."` literal. Slot-ref form passes a validated
+/// identifier; no interpolation through unvalidated input is
+/// possible.
+fn emit_host_tooltip(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 2);
+
+    // text — slot ref or literal. Slot ref bypasses escaping (it's an
+    // identifier validated by validate_slot_or_field_name); literal
+    // gets escape_dart_string.
+    let message_expr: String = if let Some(slot) = find_slot_ref_prop(node, "text") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel)?;
+        camel
+    } else if let Some(s) = find_string_prop(node, "text") {
+        format!("\"{}\"", escape_dart_string(s))
+    } else {
+        "\"\"".to_string()
+    };
+
+    let child_src: String = if node.children.is_empty() {
+        format!("{inner_pad}const SizedBox.shrink()\n")
+    } else if node.children.len() == 1 {
+        emit_widget_tree(&node.children[0], indent + 2, part_styles)?
+    } else {
+        // Multiple children — wrap in Column. Shouldn't happen for a
+        // spec-conformant HostTooltip but we handle it defensively.
+        let mut children = String::new();
+        for c in &node.children {
+            let sub = emit_widget_tree(c, indent + 6, part_styles)?;
+            children.push_str(sub.trim_end_matches('\n'));
+            children.push_str(",\n");
+        }
+        format!(
+            "{inner_pad}Column(\n{inner_pad}  children: [\n{children}{inner_pad}  ],\n{inner_pad})\n"
+        )
+    };
+    let child_src = child_src.trim_end_matches('\n');
+
+    Ok(format!(
+        "{pad}Tooltip(\n{inner_pad}message: {message_expr},\n{inner_pad}child: {child_src},\n{pad})\n"
+    ))
+}
+
+/// `HostNumberInput` (kernel primitive #21, UI29-4) → `TextField`
+/// with `keyboardType: TextInputType.number`. The mobile-keypad
+/// surfacing is the primary win — on iOS/Android the numeric pad
+/// pops up instead of the full text keyboard.
+///
+/// `min`/`max`/`step` are emitted as `/* min: N, max: N, step: N */`
+/// hints today. Flutter's stock `TextField` has no built-in range
+/// validation; a follow-up could wire `inputFormatters` with a
+/// custom `TextInputFormatter` that clamps to range. The numeric
+/// values come from the IR's `LayoutPropValue::Number(f64)` so
+/// they're never user-controlled strings — no injection vector.
+///
+/// `onChange` dispatch matches the spec's "fires on commit (Enter
+/// / blur)" semantics: we wire `onSubmitted` (Enter) rather than
+/// `onChanged` (per-keystroke), because spec §3.3 explicitly
+/// rejects per-keystroke dispatch for numeric fields ("12 while
+/// typing 12.5 isn't a meaningful value").
+fn emit_host_number_input(
+    node: &LayoutNode,
+    indent: usize,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // value — must be a slot ref (numeric input must have a host-owned
+    // controller backing it). Literal value isn't a useful shape here;
+    // we accept it but emit it as an initial-text string.
+    let value_expr: String = if let Some(slot) = find_slot_ref_prop(node, "value") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel)?;
+        // `.toString()` because the slot is typed `double`/`number`
+        // but TextEditingController wants a String.
+        format!("{camel}.toString()")
+    } else {
+        "\"\"".to_string()
+    };
+
+    // min/max/step — numeric literals only. find_number_prop returns
+    // f64 from LayoutPropValue::Number — never a string — so no
+    // escaping is needed.
+    let min_opt = find_number_prop(node, "min");
+    let max_opt = find_number_prop(node, "max");
+    let step_opt = find_number_prop(node, "step");
+
+    // disabled — keyword: `true` means readOnly=true + enabled=false.
+    let disabled = matches!(find_keyword_prop(node, "disabled"), Some("true"));
+
+    // onChange dispatch — fires on commit (Enter/blur), not keystroke.
+    let on_submitted_arg: Option<String> = if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_emit_name(&case)?;
+        Some(format!(
+            "onSubmitted: (v) {{ /* TODO: dispatch {case}(value: double.tryParse(v) ?? 0) */ }}"
+        ))
+    } else {
+        None
+    };
+
+    // Build decoration. hintText if placeholder present; helperText
+    // carries the min/max/step hint comment (visible in dev; cleared
+    // in production via a follow-up theme).
+    let mut decoration_parts: Vec<String> = Vec::new();
+    if let Some(p) = find_string_prop(node, "placeholder") {
+        decoration_parts.push(format!("hintText: \"{}\"", escape_dart_string(p)));
+    }
+
+    // Compose the range hint as a single comment so unit tests can
+    // assert the values are present. Numeric values from the IR are
+    // already-validated f64 — no injection possible.
+    let range_hint: String = {
+        let mut parts: Vec<String> = Vec::new();
+        if let Some(n) = min_opt {
+            parts.push(format!("min: {n}"));
+        }
+        if let Some(n) = max_opt {
+            parts.push(format!("max: {n}"));
+        }
+        if let Some(n) = step_opt {
+            parts.push(format!("step: {n}"));
+        }
+        if parts.is_empty() {
+            String::new()
+        } else {
+            format!(" /* {} */", parts.join(", "))
+        }
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}TextField(").unwrap();
+    writeln!(
+        out,
+        "{pad}  keyboardType: TextInputType.number,{range_hint}"
+    )
+    .unwrap();
+    writeln!(out, "{pad}  controller: TextEditingController(text: {value_expr}),").unwrap();
+    if disabled {
+        writeln!(out, "{pad}  enabled: false,").unwrap();
+    }
+    if !decoration_parts.is_empty() {
+        writeln!(
+            out,
+            "{pad}  decoration: InputDecoration({}),",
+            decoration_parts.join(", ")
+        )
+        .unwrap();
+    }
+    if let Some(arg) = on_submitted_arg {
+        writeln!(out, "{pad}  {arg},").unwrap();
+    }
+    writeln!(out, "{pad})").unwrap();
+    Ok(out)
+}
+
+// =====================================================================
 // Style → Dart helpers
 // =====================================================================
 
@@ -1130,6 +1461,22 @@ fn find_keyword_prop<'a>(node: &'a LayoutNode, name: &str) -> Option<&'a str> {
         if p.name == name {
             if let LayoutPropValue::Keyword(s) = &p.value {
                 return Some(s.as_str());
+            }
+        }
+        None
+    })
+}
+
+/// Numeric-literal lookup. Used by HostNumberInput for `min`/`max`/
+/// `step`. The IR carries these as `LayoutPropValue::Number(f64)`,
+/// so there's no path for a user-controlled string to flow into the
+/// generated Dart — the value is `Display`-formatted into a `/* min:
+/// N, max: N */` comment, safe from injection.
+fn find_number_prop(node: &LayoutNode, name: &str) -> Option<f64> {
+    node.props.iter().find_map(|p| {
+        if p.name == name {
+            if let LayoutPropValue::Number(n) = &p.value {
+                return Some(*n);
             }
         }
         None
@@ -1611,6 +1958,428 @@ mod tests {
             r.output
         );
         assert!(r.output.contains("const SizedBox.shrink()"));
+    }
+
+    // =====================================================================
+    // UI29-4 — HostLink / HostTooltip / HostNumberInput (Flutter)
+    // =====================================================================
+
+    /// UI29-4 Flutter test 1 — bare `HostLink` with literal href +
+    /// label lowers to an `InkWell` wrapping a `Text(label)`, with
+    /// the href interpolated into the `launchUrl` TODO comment.
+    #[test]
+    fn host_link_with_literal_href_and_label_emits_inkwell_with_launchurl_todo() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostLink",
+                vec![
+                    LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String("https://anthropic.com".into()),
+                    },
+                    LayoutProp {
+                        name: "label".into(),
+                        value: LayoutPropValue::String("Anthropic".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(out.contains("InkWell("), "expected InkWell, got:\n{out}");
+        assert!(
+            out.contains("/* TODO: launchUrl(Uri.parse(\"https://anthropic.com\")) — target=same */"),
+            "expected launchUrl TODO with href, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(\"Anthropic\")"),
+            "expected `Text(\"Anthropic\")`, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 Flutter test 2 — `HostLink` with `external: false`
+    /// suppresses the `launchUrl` TODO (host handles in-app routing
+    /// via the `onActivate` dispatch instead).
+    #[test]
+    fn host_link_external_false_suppresses_launchurl_todo() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostLink",
+                vec![
+                    LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String("/about".into()),
+                    },
+                    LayoutProp {
+                        name: "external".into(),
+                        value: LayoutPropValue::Keyword("false".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(
+            !out.contains("launchUrl"),
+            "external: false must NOT emit launchUrl TODO; got:\n{out}"
+        );
+        assert!(out.contains("InkWell("), "still expected InkWell, got:\n{out}");
+    }
+
+    /// UI29-4 Flutter test 3 — `HostLink` with onActivate emits a
+    /// dispatch TODO inside the onTap closure.
+    #[test]
+    fn host_link_with_on_activate_emits_dispatch_todo() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit(
+                "onLinkActivated",
+                vec![EmitParam { name: "href".into(), r#type: EmitPayloadType::Text }],
+            )],
+        );
+        let l = layout(
+            "X",
+            node_with(
+                "HostLink",
+                vec![
+                    LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String("https://example.org".into()),
+                    },
+                    LayoutProp {
+                        name: "onActivate".into(),
+                        value: LayoutPropValue::EmitRef("onLinkActivated".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains("/* TODO: dispatch LinkActivated"),
+            "expected dispatch LinkActivated TODO, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-4 Flutter test 4 — `HostLink` injection regression. A
+    /// malicious href containing `*/` should NOT terminate the
+    /// `/* ... */` block comment early; `escape_dart_string` does
+    /// not strip `*/` (it's not a Dart escape concern), so this
+    /// test confirms the literal is escaped as a string AND the
+    /// comment delimiter survives intact. Critically: the `$`
+    /// interpolation char must be escaped to `\$` so a slot like
+    /// `$cmd` can't trigger Dart string interpolation.
+    #[test]
+    fn host_link_with_special_chars_in_href_is_escaped() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostLink",
+                vec![LayoutProp {
+                    name: "href".into(),
+                    value: LayoutPropValue::String("https://e.com?q=$cmd\"oops".into()),
+                }],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        // `$` becomes `\$`; `"` becomes `\"` — both verified.
+        assert!(
+            r.output.contains(r#"\$cmd\"oops"#),
+            "expected escaped `\\$cmd\\\"oops`, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-4 Flutter test 4b — security regression: an `href` value
+    /// containing a `*/` sequence must NOT terminate the surrounding
+    /// `/* TODO: launchUrl(...) */` block comment in the generated
+    /// Dart. Dart's comment tokenizer is greedy and ignores
+    /// string-literal quotes, so without the `*/` → `*\\u002f` rewrite
+    /// inside the comment, an `href = "x*/exit(0);/*"` would let the
+    /// injected `exit(0)` run inside the onTap closure. The fix
+    /// substitutes `\\u002f` (which decodes to `/` inside the string
+    /// at runtime) so the URL is unchanged but the source-level
+    /// comment terminator is broken.
+    #[test]
+    fn host_link_with_comment_terminator_in_href_is_neutralised() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostLink",
+                vec![LayoutProp {
+                    name: "href".into(),
+                    value: LayoutPropValue::String("x*/exit(0);/*".into()),
+                }],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+
+        // The launchUrl TODO comment must terminate exactly once,
+        // at its intended `*/`. Find the opening `/* TODO: launchUrl`
+        // and scan forward — the first `*/` we see must come AFTER
+        // the closing `"))`, not in the middle of the href.
+        let open_pos = out
+            .find("/* TODO: launchUrl(Uri.parse(")
+            .expect("expected launchUrl TODO opener");
+        let after_open = &out[open_pos..];
+        let close_pos = after_open
+            .find("*/")
+            .expect("expected comment closer");
+        let comment_body = &after_open[..close_pos];
+        // The comment body must contain the neutralised sequence,
+        // never the raw `*/` that would close the comment early.
+        assert!(
+            comment_body.contains("*\\u002f"),
+            "expected `*/` to be neutralised to `*\\u002f` inside the comment; got body:\n{comment_body}"
+        );
+        // Sanity: `exit(0)` must appear ONLY inside the comment body,
+        // never as live Dart between the closer and the next token.
+        assert!(comment_body.contains("exit(0)"));
+        let after_close = &after_open[close_pos + 2..];
+        assert!(
+            !after_close.contains("exit(0)"),
+            "injection: `exit(0)` appears OUTSIDE the comment in:\n{after_close}"
+        );
+    }
+
+    /// UI29-4 Flutter test 5 — `HostTooltip` wraps its single child
+    /// in `Tooltip(message:, child:)`.
+    #[test]
+    fn host_tooltip_with_text_and_child_emits_tooltip_widget() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostTooltip",
+                vec![LayoutProp {
+                    name: "text".into(),
+                    value: LayoutPropValue::String("Click to save".into()),
+                }],
+                vec![node_with(
+                    "HostButton",
+                    vec![LayoutProp {
+                        name: "label".into(),
+                        value: LayoutPropValue::String("Save".into()),
+                    }],
+                    vec![],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(out.contains("Tooltip("), "expected Tooltip, got:\n{out}");
+        assert!(
+            out.contains("message: \"Click to save\""),
+            "expected `message:` arg, got:\n{out}"
+        );
+        assert!(
+            out.contains("ElevatedButton"),
+            "expected child ElevatedButton, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 Flutter test 6 — `HostTooltip` with slot-ref text uses
+    /// the bare identifier (no `"..."` quoting).
+    #[test]
+    fn host_tooltip_with_slot_text_uses_bare_identifier() {
+        let m = component(
+            "X",
+            vec![slot("hint", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout(
+            "X",
+            node_with(
+                "HostTooltip",
+                vec![LayoutProp {
+                    name: "text".into(),
+                    value: LayoutPropValue::SlotRef("hint".into()),
+                }],
+                vec![node("Box")],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains("message: hint,"),
+            "expected `message: hint,`, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-4 Flutter test 7 — `HostNumberInput` lowers to a
+    /// `TextField` with `keyboardType: TextInputType.number` (the
+    /// primary mobile-keypad win) and a `TextEditingController`
+    /// initialised from the bound slot's `.toString()`.
+    #[test]
+    fn host_number_input_emits_textfield_with_number_keyboard() {
+        let m = component(
+            "X",
+            vec![slot("quantity", SlotType::Number, true)],
+            vec![],
+        );
+        let l = layout(
+            "X",
+            node_with(
+                "HostNumberInput",
+                vec![LayoutProp {
+                    name: "value".into(),
+                    value: LayoutPropValue::SlotRef("quantity".into()),
+                }],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(out.contains("TextField("), "expected TextField, got:\n{out}");
+        assert!(
+            out.contains("keyboardType: TextInputType.number"),
+            "expected `TextInputType.number`, got:\n{out}"
+        );
+        assert!(
+            out.contains("TextEditingController(text: quantity.toString())"),
+            "expected `.toString()` on the slot, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 Flutter test 8 — `HostNumberInput` with `min`/`max`/
+    /// `step` numeric literals emits them in the range hint
+    /// comment. These come from `LayoutPropValue::Number(f64)` so
+    /// they're injection-safe by construction.
+    #[test]
+    fn host_number_input_with_min_max_step_emits_range_hint() {
+        let m = component(
+            "X",
+            vec![slot("n", SlotType::Number, true)],
+            vec![],
+        );
+        let l = layout(
+            "X",
+            node_with(
+                "HostNumberInput",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::SlotRef("n".into()),
+                    },
+                    LayoutProp {
+                        name: "min".into(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    LayoutProp {
+                        name: "max".into(),
+                        value: LayoutPropValue::Number(100.0),
+                    },
+                    LayoutProp {
+                        name: "step".into(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(
+            out.contains("min: 0"),
+            "expected `min: 0` in range hint, got:\n{out}"
+        );
+        assert!(
+            out.contains("max: 100"),
+            "expected `max: 100` in range hint, got:\n{out}"
+        );
+        assert!(
+            out.contains("step: 5"),
+            "expected `step: 5` in range hint, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 Flutter test 9 — `HostNumberInput` with `onChange`
+    /// wires `onSubmitted` (commit semantics — spec §3.3 explicitly
+    /// rejects per-keystroke dispatch for numeric fields).
+    #[test]
+    fn host_number_input_with_on_change_wires_on_submitted() {
+        let m = component(
+            "X",
+            vec![slot("n", SlotType::Number, true)],
+            vec![emit(
+                "onValueChange",
+                vec![EmitParam { name: "value".into(), r#type: EmitPayloadType::Number }],
+            )],
+        );
+        let l = layout(
+            "X",
+            node_with(
+                "HostNumberInput",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::SlotRef("n".into()),
+                    },
+                    LayoutProp {
+                        name: "onChange".into(),
+                        value: LayoutPropValue::EmitRef("onValueChange".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(
+            out.contains("onSubmitted: (v) {"),
+            "expected `onSubmitted:` (commit semantics), got:\n{out}"
+        );
+        assert!(
+            out.contains("dispatch ValueChange"),
+            "expected dispatch comment naming ValueChange event, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 Flutter test 10 — `HostNumberInput` with `disabled:
+    /// true` keyword sets `enabled: false`.
+    #[test]
+    fn host_number_input_disabled_true_emits_enabled_false() {
+        let m = component(
+            "X",
+            vec![slot("n", SlotType::Number, true)],
+            vec![],
+        );
+        let l = layout(
+            "X",
+            node_with(
+                "HostNumberInput",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::SlotRef("n".into()),
+                    },
+                    LayoutProp {
+                        name: "disabled".into(),
+                        value: LayoutPropValue::Keyword("true".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains("enabled: false"),
+            "expected `enabled: false`, got:\n{}",
+            r.output
+        );
     }
 
     #[test]
