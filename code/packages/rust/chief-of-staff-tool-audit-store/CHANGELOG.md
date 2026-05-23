@@ -99,6 +99,7 @@ All notable changes to this package will be documented in this file.
 - Flattened scheduler-action intent flags in supervisor drain run summaries.
 - Flattened scheduler-action labels in supervisor drain run summaries.
 - Flattened outcome labels in supervisor drain run summaries.
+- Flattened idle outcome flags in supervisor drain run summaries.
 - Flattened no-action scheduler flags in supervisor drain run summaries.
 - Report-level no-action scheduler helpers for supervisor drain runs.
 - Batch audit write summaries for host flush loops.
