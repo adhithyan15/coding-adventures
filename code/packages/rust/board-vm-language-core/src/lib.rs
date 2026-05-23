@@ -1019,6 +1019,38 @@ pub struct LanguageInputCallbackTransportEventSummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportDeliveryRoute {
+    CallbackRunner,
+    AdapterEvent,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportDeliverySummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub delivery_label: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub dispatch_callback: bool,
+    pub publish_event: bool,
+    pub emit_drop: bool,
+    pub emit_result: bool,
+    pub remove_from_queue: bool,
+    pub keep_dispatch_scheduled: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_delivery: u8,
+    pub message: String,
+    pub event_summary: LanguageInputCallbackTransportEventSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackDiagnosticStage {
     Plan,
     Event,
@@ -1511,6 +1543,15 @@ pub const fn input_callback_transport_event_kind_name(
             "callback_budget_exceeded"
         }
         LanguageInputCallbackTransportEventKind::CallbackFailed => "callback_failed",
+    }
+}
+
+pub const fn input_callback_transport_delivery_route_name(
+    route: LanguageInputCallbackTransportDeliveryRoute,
+) -> &'static str {
+    match route {
+        LanguageInputCallbackTransportDeliveryRoute::CallbackRunner => "callback_runner",
+        LanguageInputCallbackTransportDeliveryRoute::AdapterEvent => "adapter_event",
     }
 }
 
@@ -2762,6 +2803,42 @@ pub fn input_callback_transport_event_summary(
     }
 }
 
+pub fn input_callback_transport_delivery_summary(
+    event_summary: &LanguageInputCallbackTransportEventSummary,
+) -> LanguageInputCallbackTransportDeliverySummary {
+    let delivery_route = input_callback_transport_delivery_route(event_summary);
+
+    LanguageInputCallbackTransportDeliverySummary {
+        endpoint: event_summary.endpoint.clone(),
+        connection_label: event_summary.connection_label.clone(),
+        delivery_label: input_callback_transport_delivery_label(event_summary, delivery_route),
+        delivery_route,
+        delivery_route_name: input_callback_transport_delivery_route_name(delivery_route)
+            .to_owned(),
+        event_kind: event_summary.event_kind,
+        event_name: event_summary.event_name.clone(),
+        report_kind: event_summary.report_kind,
+        report_name: event_summary.report_name.clone(),
+        action: event_summary.action,
+        action_name: event_summary.action_name.clone(),
+        dispatch_callback: event_summary.dispatch_callback,
+        publish_event: input_callback_transport_delivery_publishes_event(event_summary),
+        emit_drop: event_summary.emit_drop,
+        emit_result: event_summary.emit_result,
+        remove_from_queue: event_summary.remove_from_queue,
+        keep_dispatch_scheduled: event_summary.keep_dispatch_scheduled,
+        terminal: event_summary.terminal,
+        retryable: event_summary.retryable,
+        queue_depth_after_delivery: event_summary.queue_depth_after_event,
+        message: input_callback_transport_delivery_message(
+            delivery_route,
+            event_summary.event_kind,
+        )
+        .to_owned(),
+        event_summary: event_summary.clone(),
+    }
+}
+
 pub fn input_callback_plan_diagnostic(
     error: &LanguageInputCallbackPlanError,
 ) -> LanguageInputCallbackPlanDiagnostic {
@@ -4002,6 +4079,74 @@ fn input_callback_transport_event_message(
         }
         LanguageInputCallbackTransportEventKind::CallbackFailed => {
             "Adapter should emit a failed input callback event."
+        }
+    }
+}
+
+fn input_callback_transport_delivery_route(
+    event_summary: &LanguageInputCallbackTransportEventSummary,
+) -> LanguageInputCallbackTransportDeliveryRoute {
+    if event_summary.dispatch_callback && !event_summary.emit_report {
+        LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+    } else {
+        LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+    }
+}
+
+fn input_callback_transport_delivery_publishes_event(
+    event_summary: &LanguageInputCallbackTransportEventSummary,
+) -> bool {
+    event_summary.emit_report
+}
+
+fn input_callback_transport_delivery_label(
+    event_summary: &LanguageInputCallbackTransportEventSummary,
+    delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+) -> String {
+    format!(
+        "{} transport_delivery={} publish_event={} queue_depth_after_delivery={}",
+        event_summary.event_label,
+        input_callback_transport_delivery_route_name(delivery_route),
+        input_callback_transport_delivery_publishes_event(event_summary),
+        event_summary.queue_depth_after_event
+    )
+}
+
+fn input_callback_transport_delivery_message(
+    delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    event_kind: LanguageInputCallbackTransportEventKind,
+) -> &'static str {
+    match delivery_route {
+        LanguageInputCallbackTransportDeliveryRoute::CallbackRunner => {
+            "Transport should deliver this event to the callback runner."
+        }
+        LanguageInputCallbackTransportDeliveryRoute::AdapterEvent => {
+            input_callback_transport_adapter_event_delivery_message(event_kind)
+        }
+    }
+}
+
+fn input_callback_transport_adapter_event_delivery_message(
+    event_kind: LanguageInputCallbackTransportEventKind,
+) -> &'static str {
+    match event_kind {
+        LanguageInputCallbackTransportEventKind::DispatchScheduled => {
+            "Transport should publish the dispatch event to the adapter."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackDropped => {
+            "Transport should publish the dropped-callback event to the adapter."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackCompleted => {
+            "Transport should publish the completed-callback event to the adapter."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackRunning => {
+            "Transport should publish the running-callback event to the adapter."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackBudgetExceeded => {
+            "Transport should publish the budget-exceeded event to the adapter."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackFailed => {
+            "Transport should publish the failed-callback event to the adapter."
         }
     }
 }
@@ -9641,6 +9786,231 @@ mod tests {
         assert_eq!(
             dropped.message,
             "Adapter should emit a dropped input callback event."
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_deliveries_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed = input_callback_transport_delivery_summary(&completed_event);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(completed.delivery_route_name, "adapter_event");
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(completed.event_name, "callback_completed");
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert_eq!(completed.action_name, "complete_callback");
+        assert!(!completed.dispatch_callback);
+        assert!(completed.publish_event);
+        assert!(!completed.emit_drop);
+        assert!(completed.emit_result);
+        assert!(completed.remove_from_queue);
+        assert!(!completed.keep_dispatch_scheduled);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_delivery, 2);
+        assert_eq!(
+            completed.message,
+            "Transport should publish the completed-callback event to the adapter."
+        );
+        assert_eq!(completed.event_summary, completed_event);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending = input_callback_transport_delivery_summary(&pending_event);
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(pending.delivery_route_name, "callback_runner");
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert_eq!(pending.event_name, "dispatch_scheduled");
+        assert!(pending.dispatch_callback);
+        assert!(!pending.publish_event);
+        assert!(!pending.emit_drop);
+        assert!(!pending.emit_result);
+        assert!(!pending.remove_from_queue);
+        assert!(pending.keep_dispatch_scheduled);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_delivery, 3);
+        assert_eq!(
+            pending.delivery_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3 transport_delivery=callback_runner publish_event=false queue_depth_after_delivery=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport should deliver this event to the callback runner."
+        );
+
+        let running_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Running),
+            12,
+            4,
+        );
+        let running_action = input_callback_transport_action_summary(&running_lifecycle);
+        let running_effect = input_callback_transport_effect_summary(&running_action);
+        let running_report = input_callback_transport_report_summary(&running_effect);
+        let running_event = input_callback_transport_event_summary(&running_report);
+        let running = input_callback_transport_delivery_summary(&running_event);
+        assert_eq!(
+            running.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            running.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackRunning
+        );
+        assert!(running.publish_event);
+        assert!(running.emit_result);
+        assert!(!running.remove_from_queue);
+        assert!(running.keep_dispatch_scheduled);
+        assert!(running.retryable);
+        assert_eq!(
+            running.message,
+            "Transport should publish the running-callback event to the adapter."
+        );
+
+        let budget_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::BudgetExceeded),
+            64,
+            9,
+        );
+        let budget_action = input_callback_transport_action_summary(&budget_lifecycle);
+        let budget_effect = input_callback_transport_effect_summary(&budget_action);
+        let budget_report = input_callback_transport_report_summary(&budget_effect);
+        let budget_event = input_callback_transport_event_summary(&budget_report);
+        let budget = input_callback_transport_delivery_summary(&budget_event);
+        assert_eq!(
+            budget.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackBudgetExceeded
+        );
+        assert_eq!(budget.delivery_route_name, "adapter_event");
+        assert!(budget.publish_event);
+        assert!(budget.emit_result);
+        assert!(budget.remove_from_queue);
+        assert!(budget.terminal);
+        assert_eq!(
+            budget.message,
+            "Transport should publish the budget-exceeded event to the adapter."
+        );
+
+        let stopped_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Stopped),
+            6,
+            2,
+        );
+        let stopped_action = input_callback_transport_action_summary(&stopped_lifecycle);
+        let stopped_effect = input_callback_transport_effect_summary(&stopped_action);
+        let stopped_report = input_callback_transport_report_summary(&stopped_effect);
+        let stopped_event = input_callback_transport_event_summary(&stopped_report);
+        let stopped = input_callback_transport_delivery_summary(&stopped_event);
+        assert_eq!(
+            stopped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackFailed
+        );
+        assert!(stopped.publish_event);
+        assert!(stopped.emit_result);
+        assert!(stopped.remove_from_queue);
+        assert_eq!(
+            stopped.message,
+            "Transport should publish the failed-callback event to the adapter."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped = input_callback_transport_delivery_summary(&dropped_event);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert!(!dropped.dispatch_callback);
+        assert!(dropped.publish_event);
+        assert!(dropped.emit_drop);
+        assert!(!dropped.emit_result);
+        assert!(!dropped.remove_from_queue);
+        assert!(!dropped.keep_dispatch_scheduled);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_delivery, 1);
+        assert_eq!(
+            dropped.delivery_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1"
+        );
+        assert_eq!(
+            dropped.message,
+            "Transport should publish the dropped-callback event to the adapter."
         );
     }
 
