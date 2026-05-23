@@ -1050,3 +1050,97 @@ fn phase52_regression_k_over_k_squared_still_closes_via_phase42() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ---------------------------------------------------------------------------
+// Phase 53 (Rust port): Sqrt × polynomial numerator.
+//
+// The numerator is Mul(Sqrt(P(k)), polynomial_in_k).  Phase 53 catches
+// shapes like sqrt(k)·k/k³ (eff deg x2 = 1+2 = 3, den deg = 3, 2*3 = 6 > 3)
+// that fall through all earlier phases.
+//
+// Uses ×2 integer arithmetic: effective_x2 = deg(P) + 2*deg(Q).
+// Closes when 2*den_deg > effective_x2.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase53_sqrt_k_times_k_over_k_cubed_closes() {
+    // Numerator = Sqrt(k)·k: eff deg x2 = 1 + 2*1 = 3.  Denominator = k³: deg 3.
+    // 2*3 = 6 > 3 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let num_k = apply(sym(MUL), vec![apply(sym("Sqrt"), vec![k.clone()]), k.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![apply(sym("Sqrt"), vec![kp1.clone()]), kp1.clone()]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![k.clone(), int(3)])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![kp1, int(3)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase53_sqrt_k_squared_times_k_over_k_cubed_closes() {
+    // Numerator = Sqrt(k²)·k: eff deg x2 = 2 + 2*1 = 4.  Denominator = k³: deg 3.
+    // 2*3 = 6 > 4 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let k_sq = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_sq = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let num_k = apply(sym(MUL), vec![apply(sym("Sqrt"), vec![k_sq]), k.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![apply(sym("Sqrt"), vec![kp1_sq]), kp1.clone()]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![k.clone(), int(3)])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![kp1, int(3)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase53_sqrt_k_times_k_squared_over_k_cubed_closes() {
+    // Numerator = Sqrt(k)·k²: eff deg x2 = 1 + 2*2 = 5.  Denominator = k³: deg 3.
+    // 2*3 = 6 > 5 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let k_sq = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_sq = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let num_k = apply(sym(MUL), vec![apply(sym("Sqrt"), vec![k.clone()]), k_sq]);
+    let num_kp1 = apply(sym(MUL), vec![apply(sym("Sqrt"), vec![kp1.clone()]), kp1_sq]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![k.clone(), int(3)])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![kp1, int(3)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase53_sqrt_k_times_k_squared_over_k_squared_stays() {
+    // Numerator = Sqrt(k)·k²: eff deg x2 = 1 + 2*2 = 5.  Denominator = k²: deg 2.
+    // 2*2 = 4 NOT > 5 → stays unevaluated.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let k_sq = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_sq = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let num_k = apply(sym(MUL), vec![apply(sym("Sqrt"), vec![k.clone()]), k_sq.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![apply(sym("Sqrt"), vec![kp1.clone()]), kp1_sq.clone()]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, k_sq]),
+        apply(sym(DIV), vec![num_kp1, kp1_sq]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase53_regression_sqrt_k_over_k_squared_still_closes_via_phase51() {
+    // Plain Sqrt(k)/k² — Phase 53 requires Mul; Phase 51 handles this.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![apply(sym("Sqrt"), vec![k.clone()]), apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![apply(sym("Sqrt"), vec![kp1.clone()]), apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}

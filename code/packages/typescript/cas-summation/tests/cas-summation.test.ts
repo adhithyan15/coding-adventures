@@ -826,3 +826,87 @@ describe("summation: Phase 52 bounded × polynomial numerator", () => {
     expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 53 (TypeScript port): Sqrt × polynomial numerator.
+//
+// The numerator is Mul(Sqrt(P(k)), polynomial_in_k).  Phase 53 catches
+// shapes like sqrt(k)·k/k³ (eff deg = ½+1 = 3/2 < 3) and
+// sqrt(k²)·k/k³ (eff deg = 1+1 = 2 < 3) that fall through all earlier phases.
+//
+// Effective degree = deg(P)/2 + deg(Q).  Closes when deg(den) > eff_deg.
+// Tests mirror Python Phase 53 (cas-summation 1.1.0).
+// ---------------------------------------------------------------------------
+describe("summation: Phase 53 Sqrt × polynomial numerator", () => {
+  it("Sqrt(k)·k/k³ closes (eff deg = ½+1 = 3/2 < 3)", () => {
+    // Numerator = Sqrt(k)·k: eff deg 1/2 + 1 = 3/2.  Denominator = k³: deg 3.
+    // 3 > 3/2 → closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sqrt"), [k]), k]);
+    const numKp1 = app(MUL, [app(sym("Sqrt"), [kp1]), kp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("Sqrt(k²)·k/k³ closes (eff deg = 1+1 = 2 < 3)", () => {
+    // Numerator = Sqrt(k²)·k: eff deg 2/2 + 1 = 2.  Denominator = k³: deg 3.
+    // 3 > 2 → closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sqrt"), [app(POW, [k, int(2)])]), k]);
+    const numKp1 = app(MUL, [app(sym("Sqrt"), [app(POW, [kp1, int(2)])]), kp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("Sqrt(k)·k²/k³ closes (eff deg = ½+2 = 5/2 < 3)", () => {
+    // Numerator = Sqrt(k)·k²: eff deg 1/2 + 2 = 5/2.  Denominator = k³: deg 3.
+    // 3 > 5/2 → closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sqrt"), [k]), app(POW, [k, int(2)])]);
+    const numKp1 = app(MUL, [app(sym("Sqrt"), [kp1]), app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: Sqrt(k)·k²/k² stays unevaluated (eff deg 5/2 > 2)", () => {
+    // Numerator = Sqrt(k)·k²: eff deg 1/2 + 2 = 5/2.  Denominator = k²: deg 2.
+    // 2 > 5/2 is false → stays unevaluated.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sqrt"), [k]), app(POW, [k, int(2)])]);
+    const numKp1 = app(MUL, [app(sym("Sqrt"), [kp1]), app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+
+  it("regression: plain Sqrt(k)/k² still closes via Phase 51 (not Phase 53)", () => {
+    // Phase 53 requires a Mul node; plain Sqrt(P) is handled by Phase 51.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const f = app(SUB, [
+      app(DIV, [app(sym("Sqrt"), [k]), app(POW, [k, int(2)])]),
+      app(DIV, [app(sym("Sqrt"), [kp1]), app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+});
