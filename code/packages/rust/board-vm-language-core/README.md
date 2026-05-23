@@ -111,6 +111,10 @@ dispatch should be woken.
 into the callback execution handoff: callback program id, instruction budget,
 event identity, queue action, and cooperative dispatch reason stay in Rust,
 while language adapters only schedule the native callback runner.
+`input_callback_result_for_dispatch_plan` closes that loop by preserving the
+dispatch metadata while normalizing the callback runner status, executed
+instruction count, and elapsed time into a Rust-owned completion,
+budget-exceeded, incomplete, or failure summary.
 
 Frontends that already have an Arduino CLI platform or FQBN should pass it back
 to Rust rather than carrying their own selector table. `detect_target` resolves
