@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.98.0] - 2026-05-23
+
+### Added
+
+- ``PRAGMA foreign_key_check`` is now implemented.  Walks every (or
+  one named) child table and reports one row per FK violation::
+
+      table   TEXT    — child table holding the bad row
+      rowid   INTEGER — the bad row's rowid
+      parent  TEXT    — referenced parent table
+      fkid    INTEGER — 0-based FK position (matches
+                        ``foreign_key_list.id``)
+
+  NULL child FK values pass unconditionally (SQL standard).  When the
+  ``REFERENCES`` clause omits a parent column, the parent's first
+  PRIMARY KEY column is used — matches the existing INSERT-time FK
+  validation.  ``foreign_key_check(<table>)`` restricts the scan to
+  one child table.
+- ``foreign_key_check`` added to ``PRAGMA pragma_list``.
+
 ## [1.97.0] - 2026-05-23
 
 ### Changed
