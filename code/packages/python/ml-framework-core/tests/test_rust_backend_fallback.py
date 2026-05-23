@@ -567,6 +567,14 @@ class ActivationFallbackTests(unittest.TestCase):
         self.assertEqual(result.shape, (5,))
         self.assertEqual(result.data, [0.0, 0.0, 0.0, 1.0, 2.0])
 
+    def test_relu_backward_via_rust_raises_when_unavailable(self) -> None:
+        """``relu_backward_via_rust`` must raise (defence-in-depth)."""
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.relu_backward_via_rust(
+                [1.0, 1.0, 1.0], [-1.0, 0.5, -0.5], (3,)
+            )
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
     def test_tanh_backward_via_rust_raises_when_unavailable(self) -> None:
         """``tanh_backward_via_rust`` must raise (defence-in-depth)."""
         with self.assertRaises(RuntimeError) as ctx:

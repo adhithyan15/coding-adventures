@@ -1066,6 +1066,43 @@ class ActivationParityTests(unittest.TestCase):
 
         self._assert_close(rust_result.data, python_result.data)
 
+    def test_relu_backward_parity(self) -> None:
+        """``ReLUFunction.backward`` Rust matches pure-Python.
+
+        Phase 4-back-relu — backward is ``g * (x > 0)`` composed as
+        a 3-op graph (Greater → Cast → Mul) using matrix-cpu's
+        u8-output comparison op.  Pure data movement (no
+        floating-point accumulation), so element-wise exact
+        equality is expected.
+
+        Random input in ``[-3, 3]`` exercises both halves of the
+        mask (positive cells pass through, negative cells get
+        zeroed).
+        """
+        from ml_framework_core import ReLUFunction, Tensor, _rust_backend
+
+        a = self._make_tensor(seed=333)
+        a.requires_grad = True
+        y = ReLUFunction.apply(a)
+        grad_data = [float((k % 5) - 2) for k in range(500 * 200)]
+        y.backward(Tensor(list(grad_data), self.SHAPE))
+        rust_grad = a.grad
+        self.assertIsNotNone(rust_grad)
+        self.assertEqual(rust_grad.shape, self.SHAPE)
+
+        a2 = Tensor(list(a.data), self.SHAPE, requires_grad=True)
+        saved = _rust_backend._RUST_AVAILABLE
+        try:
+            _rust_backend._RUST_AVAILABLE = False
+            y2 = ReLUFunction.apply(a2)
+            y2.backward(Tensor(list(grad_data), self.SHAPE))
+        finally:
+            _rust_backend._RUST_AVAILABLE = saved
+
+        # Exact equality — ReLU backward is just a multiply by 0 or 1
+        # mask, no float accumulation.
+        self.assertEqual(rust_grad.data, a2.grad.data)
+
     def test_sigmoid_parity(self) -> None:
         """``SigmoidFunction.apply(t)`` Rust matches pure-Python.
 

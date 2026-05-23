@@ -56,6 +56,7 @@ from ._rust_backend import (
     mean_via_rust,
     mul_via_rust,
     neg_via_rust,
+    relu_backward_via_rust,
     relu_via_rust,
     should_use_rust_for_activation,
     should_use_rust_for_backward_broadcast,
@@ -793,6 +794,20 @@ class ReLUFunction(Function):
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         (a,) = self.saved_tensors
+        # MX10 Phase 4-back-relu — optional Rust fast path.  ReLU
+        # backward = ``g * (x > 0)``; composed as a 3-op graph
+        # (Greater → Cast → Mul) using matrix-cpu's u8-output
+        # comparison op plus a Cast back to f32.  Reuses Phase 4's
+        # activation predicate and 100_000-cell threshold.
+        if should_use_rust_for_activation(len(a.data)):
+            return (
+                relu_backward_via_rust(
+                    grad_output.data,
+                    a.data,
+                    a.shape,
+                    device=a.device,
+                ),
+            )
         return (
             Tensor(
                 [
