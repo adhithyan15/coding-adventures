@@ -485,6 +485,7 @@ members = [
     "closure-pass-dce",
     "closure-pass-fold-control-flow",
     "closure-pass-pipeline",
+    "closure-pass-rename",
     "closure-typechecker",
     "compiler-ir",
     "compiler-source-map",
