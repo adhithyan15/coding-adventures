@@ -1,0 +1,12 @@
+[package]
+name = "coding-adventures-closure-source-map"
+version = "0.1.0"
+edition = "2021"
+description = "Source-map v3 generator for the Closure Compiler clone. Companion to closure-emitter — receives per-token mappings (generated position ↔ CV id) from the emitter and produces a source-map v3 JSON blob."
+
+[dependencies]
+coding_adventures_correlation_vector = { path = "../correlation-vector" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
