@@ -3074,6 +3074,109 @@ def _stamp_g_c(
         G[node_to_idx[n_minus]][node_to_idx[n_plus]] -= g
 
 
+def _stamp_vccs_c(
+    G: list[list[complex]],
+    node_to_idx: dict[str, int],
+    n_plus: str,
+    n_minus: str,
+    ctrl_plus: str,
+    ctrl_minus: str,
+    gm: complex,
+) -> None:
+    if not _is_ground(n_plus):
+        rp = node_to_idx[n_plus]
+        if not _is_ground(ctrl_plus):
+            G[rp][node_to_idx[ctrl_plus]] += gm
+        if not _is_ground(ctrl_minus):
+            G[rp][node_to_idx[ctrl_minus]] -= gm
+    if not _is_ground(n_minus):
+        rm = node_to_idx[n_minus]
+        if not _is_ground(ctrl_plus):
+            G[rm][node_to_idx[ctrl_plus]] -= gm
+        if not _is_ground(ctrl_minus):
+            G[rm][node_to_idx[ctrl_minus]] += gm
+
+
+def _inductor_by_name(circuit: Circuit) -> dict[str, Inductor]:
+    return {el.name: el for el in circuit.elements if isinstance(el, Inductor)}
+
+
+def _coupled_inductor_names(circuit: Circuit) -> set[str]:
+    names: set[str] = set()
+    for el in circuit.elements:
+        if isinstance(el, MutualInductor):
+            names.add(el.primary)
+            names.add(el.secondary)
+    return names
+
+
+def _validate_mutual_inductor(
+    mutual: MutualInductor,
+    inductors: dict[str, Inductor],
+) -> tuple[Inductor, Inductor, float]:
+    if not math.isfinite(mutual.coupling):
+        raise ValueError(f"{mutual.name}: coupling must be finite")
+    if abs(mutual.coupling) >= 1.0:
+        raise ValueError(f"{mutual.name}: coupling magnitude must be less than one")
+    if mutual.primary == mutual.secondary:
+        raise ValueError(f"{mutual.name}: coupled inductors must be distinct")
+    primary = inductors.get(mutual.primary)
+    if primary is None:
+        raise ValueError(f"{mutual.name}: referenced inductor {mutual.primary!r} was not found")
+    secondary = inductors.get(mutual.secondary)
+    if secondary is None:
+        raise ValueError(f"{mutual.name}: referenced inductor {mutual.secondary!r} was not found")
+    if primary.inductance <= 0.0 or not math.isfinite(primary.inductance):
+        raise ValueError(f"{primary.name}: inductance must be finite and positive")
+    if secondary.inductance <= 0.0 or not math.isfinite(secondary.inductance):
+        raise ValueError(f"{secondary.name}: inductance must be finite and positive")
+    mutual_inductance = mutual.coupling * math.sqrt(primary.inductance * secondary.inductance)
+    return primary, secondary, mutual_inductance
+
+
+def _stamp_ac_mutual_inductor(
+    mutual: MutualInductor,
+    inductors: dict[str, Inductor],
+    G: list[list[complex]],
+    omega: float,
+    node_to_idx: dict[str, int],
+) -> None:
+    primary, secondary, mutual_inductance = _validate_mutual_inductor(mutual, inductors)
+    if omega == 0.0:
+        _stamp_g_c(G, node_to_idx, primary.n_plus, primary.n_minus, 1e12 + 0j)
+        _stamp_g_c(G, node_to_idx, secondary.n_plus, secondary.n_minus, 1e12 + 0j)
+        return
+
+    determinant = primary.inductance * secondary.inductance - mutual_inductance**2
+    if determinant <= 0.0 or not math.isfinite(determinant):
+        raise ValueError(f"{mutual.name}: coupled inductance matrix is singular")
+
+    scale = 1.0 / (1j * omega * determinant)
+    y11 = secondary.inductance * scale
+    y12 = -mutual_inductance * scale
+    y22 = primary.inductance * scale
+    _stamp_g_c(G, node_to_idx, primary.n_plus, primary.n_minus, y11)
+    _stamp_g_c(G, node_to_idx, secondary.n_plus, secondary.n_minus, y22)
+    _stamp_vccs_c(
+        G,
+        node_to_idx,
+        primary.n_plus,
+        primary.n_minus,
+        secondary.n_plus,
+        secondary.n_minus,
+        y12,
+    )
+    _stamp_vccs_c(
+        G,
+        node_to_idx,
+        secondary.n_plus,
+        secondary.n_minus,
+        primary.n_plus,
+        primary.n_minus,
+        y12,
+    )
+
+
 def _has_explicit_ac_sources(circuit: Circuit) -> bool:
     """Return True when at least one independent source has an AC spec."""
 
@@ -3112,6 +3215,8 @@ def _stamp_ac(
     node_to_idx: dict[str, int],
     branch_srcs: list[VoltageSource | VCVS | CCVS],
     dc_x: list[float],
+    inductors: dict[str, Inductor],
+    coupled_inductor_names: set[str],
     *,
     explicit_ac_sources: bool = False,
 ) -> None:
@@ -3160,6 +3265,8 @@ def _stamp_ac(
         _stamp_g_c(G, node_to_idx, el.n_plus, el.n_minus, 1j * omega * el.capacitance)
 
     elif isinstance(el, Inductor):
+        if el.name in coupled_inductor_names:
+            return
         # Admittance Y_L = 1/(jωL).  At ω = 0, Y → ∞ (short circuit); model
         # as a very large conductance to keep the matrix non-singular.
         if omega == 0.0:
@@ -3167,6 +3274,9 @@ def _stamp_ac(
         else:
             y_l = 1.0 / (1j * omega * el.inductance)
         _stamp_g_c(G, node_to_idx, el.n_plus, el.n_minus, y_l)
+
+    elif isinstance(el, MutualInductor):
+        _stamp_ac_mutual_inductor(el, inductors, G, omega, node_to_idx)
 
     elif isinstance(el, VoltageSource):
         # Ideal voltage source stamp: adds branch current as an unknown.
@@ -3433,6 +3543,8 @@ def ac_sweep(
     n_branch = len(branch_srcs)
     size = n_nodes + n_branch
     explicit_ac_sources = _has_explicit_ac_sources(circuit)
+    inductors = _inductor_by_name(circuit)
+    coupled_inductor_names = _coupled_inductor_names(circuit)
 
     # Reconstruct the indexed dc_x vector from the DcResult dict.
     dc_x: list[float] = [0.0] * size
@@ -3475,6 +3587,8 @@ def ac_sweep(
                 node_to_idx,
                 branch_srcs,
                 dc_x,
+                inductors,
+                coupled_inductor_names,
                 explicit_ac_sources=explicit_ac_sources,
             )
 
@@ -5432,6 +5546,8 @@ def noise_ac(
     n_nodes = len(node_to_idx)
     n_branch_noise = len(branch_srcs_noise)
     size = n_nodes + n_branch_noise
+    inductors = _inductor_by_name(circuit)
+    coupled_inductor_names = _coupled_inductor_names(circuit)
 
     # Reconstruct dc_x solution vector for linearisation of nonlinear devices.
     dc_x: list[float] = [0.0] * size
@@ -5498,6 +5614,8 @@ def noise_ac(
                 node_to_idx,
                 branch_srcs_noise,
                 dc_x,
+                inductors,
+                coupled_inductor_names,
                 explicit_ac_sources=_has_explicit_ac_sources(circuit),
             )
 

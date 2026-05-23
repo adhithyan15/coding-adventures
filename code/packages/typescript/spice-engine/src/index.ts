@@ -3506,6 +3506,8 @@ function buildAcMatrix(
   const matrix = Array.from({ length: matrixSize }, () =>
     Array.from({ length: matrixSize }, () => complex(0.0, 0.0)),
   );
+  const inductors = inductorByName(circuit);
+  const coupledNames = coupledInductorNames(circuit);
 
   for (const element of circuit.elements()) {
     switch (element.kind) {
@@ -3516,7 +3518,13 @@ function buildAcMatrix(
         stampAcCapacitor(element, omega, nodeIndices, matrix);
         break;
       case "inductor":
+        if (coupledNames.has(element.name)) {
+          break;
+        }
         stampAcInductor(element, omega, nodeIndices, matrix);
+        break;
+      case "mutual-inductor":
+        stampAcMutualInductor(element, inductors, omega, nodeIndices, matrix);
         break;
       case "voltage-source":
         stampAcVoltageSourceMatrix(
@@ -5233,6 +5241,90 @@ function stampAcInductor(
   const n1 = nodeIndex(nodeIndices, element.n1);
   const n2 = nodeIndex(nodeIndices, element.n2);
   stampComplexConductance(matrix, n1, n2, admittance);
+}
+
+function inductorByName(circuit: Circuit): Map<string, Inductor> {
+  const inductors = new Map<string, Inductor>();
+  for (const element of circuit.elements()) {
+    if (element.kind === "inductor") {
+      inductors.set(element.name, element);
+    }
+  }
+  return inductors;
+}
+
+function coupledInductorNames(circuit: Circuit): Set<string> {
+  const names = new Set<string>();
+  for (const element of circuit.elements()) {
+    if (element.kind === "mutual-inductor") {
+      names.add(element.primary);
+      names.add(element.secondary);
+    }
+  }
+  return names;
+}
+
+function validateMutualInductor(
+  element: MutualInductor,
+  inductors: ReadonlyMap<string, Inductor>,
+): { primary: Inductor; secondary: Inductor; mutualInductance: number } {
+  if (!Number.isFinite(element.coupling)) {
+    throw invalidElement(element.name, "coupling must be finite");
+  }
+  if (Math.abs(element.coupling) >= 1.0) {
+    throw invalidElement(element.name, "coupling magnitude must be less than one");
+  }
+  if (element.primary === element.secondary) {
+    throw invalidElement(element.name, "coupled inductors must be distinct");
+  }
+  const primary = inductors.get(element.primary);
+  if (primary === undefined) {
+    throw invalidElement(element.name, `referenced inductor ${JSON.stringify(element.primary)} was not found`);
+  }
+  const secondary = inductors.get(element.secondary);
+  if (secondary === undefined) {
+    throw invalidElement(element.name, `referenced inductor ${JSON.stringify(element.secondary)} was not found`);
+  }
+  validateInductor(primary);
+  validateInductor(secondary);
+  return {
+    primary,
+    secondary,
+    mutualInductance: element.coupling * Math.sqrt(primary.inductanceHenrys * secondary.inductanceHenrys),
+  };
+}
+
+function stampAcMutualInductor(
+  element: MutualInductor,
+  inductors: ReadonlyMap<string, Inductor>,
+  omega: number,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: Complex[][],
+): void {
+  const { primary, secondary, mutualInductance } = validateMutualInductor(element, inductors);
+  if (omega === 0.0) {
+    stampComplexConductance(matrix, nodeIndex(nodeIndices, primary.n1), nodeIndex(nodeIndices, primary.n2), complex(1.0e12, 0.0));
+    stampComplexConductance(matrix, nodeIndex(nodeIndices, secondary.n1), nodeIndex(nodeIndices, secondary.n2), complex(1.0e12, 0.0));
+    return;
+  }
+
+  const determinant = primary.inductanceHenrys * secondary.inductanceHenrys - mutualInductance ** 2;
+  if (!Number.isFinite(determinant) || determinant <= 0.0) {
+    throw invalidElement(element.name, "coupled inductance matrix is singular");
+  }
+
+  const scale = complex(0.0, -1.0 / (omega * determinant));
+  const y11 = complexScale(scale, secondary.inductanceHenrys);
+  const y12 = complexScale(scale, -mutualInductance);
+  const y22 = complexScale(scale, primary.inductanceHenrys);
+  const p1 = nodeIndex(nodeIndices, primary.n1);
+  const p2 = nodeIndex(nodeIndices, primary.n2);
+  const s1 = nodeIndex(nodeIndices, secondary.n1);
+  const s2 = nodeIndex(nodeIndices, secondary.n2);
+  stampComplexConductance(matrix, p1, p2, y11);
+  stampComplexConductance(matrix, s1, s2, y22);
+  stampComplexTransconductance(matrix, p1, p2, s1, s2, y12);
+  stampComplexTransconductance(matrix, s1, s2, p1, p2, y12);
 }
 
 function stampComplexConductance(

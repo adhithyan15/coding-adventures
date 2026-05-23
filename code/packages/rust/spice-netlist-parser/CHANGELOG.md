@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject SPICE `K` mutual-inductor cards that reference missing inductors or
+  use non-finite coupling coefficients.
 - Parse SPICE `K` mutual-inductor cards into `MutualInductor` elements,
   including subcircuit-local inductor reference remapping.
 - Parse SPICE `J` JFET elements via `.model <name> NJF(...)` and

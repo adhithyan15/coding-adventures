@@ -305,6 +305,7 @@ export function parseNetlist(text: string): ParsedNetlist {
       throw lineError(statement.lineNumber, error);
     }
   }
+  validateMutualInductors(circuit);
 
   return new ParsedNetlist(circuit, analyses, models, title);
 }
@@ -612,6 +613,35 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
     return ccvs(name, fields[1], fields[2], fields[3], parseValue(fields[4]));
   }
   throw new NetlistParseError(`unsupported element ${JSON.stringify(name)}`);
+}
+
+function validateMutualInductors(circuit: Circuit): void {
+  const inductors = new Set<string>();
+  for (const element of circuit.elements()) {
+    if (element.kind === "inductor") {
+      inductors.add(element.name);
+    }
+  }
+  for (const element of circuit.elements()) {
+    if (element.kind !== "mutual-inductor") {
+      continue;
+    }
+    if (!Number.isFinite(element.coupling)) {
+      throw new NetlistParseError(`${element.name}: coupling must be finite`);
+    }
+    if (Math.abs(element.coupling) >= 1.0) {
+      throw new NetlistParseError(`${element.name}: coupling magnitude must be less than one`);
+    }
+    if (element.primary === element.secondary) {
+      throw new NetlistParseError(`${element.name}: coupled inductors must be distinct`);
+    }
+    if (!inductors.has(element.primary)) {
+      throw new NetlistParseError(`${element.name}: referenced inductor ${JSON.stringify(element.primary)} was not found`);
+    }
+    if (!inductors.has(element.secondary)) {
+      throw new NetlistParseError(`${element.name}: referenced inductor ${JSON.stringify(element.secondary)} was not found`);
+    }
+  }
 }
 
 function startSubckt(

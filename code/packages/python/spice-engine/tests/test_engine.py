@@ -102,6 +102,7 @@ from spice_engine import (
     ExpWaveform,
     Inductor,
     JFET,
+    MutualInductor,
     McPoint,
     McResult,
     NoiseEntry,
@@ -1775,6 +1776,39 @@ def test_ac_rl_highpass_3db_at_cutoff():
         f"RL high-pass gain at f_c={closest.freq:.0f} Hz: {gain:.5f},"
         f" expected {expected_gain:.5f}"
     )
+
+
+def test_ac_mutual_inductor_transformer_ratio():
+    primary_l = 1.0e-3
+    secondary_l = 4.0e-3
+    coupling = 0.9
+    load = 1_000.0
+    freq = 1_000.0
+    mutual_l = coupling * math.sqrt(primary_l * secondary_l)
+    expected = (1j * 2.0 * math.pi * freq * mutual_l) / (
+        1.0 + 1j * 2.0 * math.pi * freq * secondary_l / load
+    )
+
+    c = Circuit()
+    c.add(CurrentSource("Iin", "0", "pri", 0.0, ac=AcSource(1.0)))
+    c.add(Inductor("Lpri", "pri", "0", primary_l))
+    c.add(Inductor("Lsec", "sec", "0", secondary_l))
+    c.add(MutualInductor("K1", "Lpri", "Lsec", coupling))
+    c.add(Resistor("Rload", "sec", "0", load))
+
+    point = ac_sweep(c, f_start=freq, f_stop=freq, n_points=1, sweep="lin").points[0]
+
+    assert point.node_voltages["sec"] == pytest.approx(expected)
+
+
+def test_ac_mutual_inductor_rejects_missing_reference():
+    c = Circuit()
+    c.add(VoltageSource("Vin", "pri", "0", 1.0))
+    c.add(Inductor("Lpri", "pri", "0", 1.0e-3))
+    c.add(MutualInductor("Kbad", "Lpri", "Lmissing", 0.9))
+
+    with pytest.raises(ValueError, match="referenced inductor"):
+        ac_sweep(c, f_start=1_000.0, f_stop=1_000.0, n_points=1, sweep="lin")
 
 
 # ============================================================================

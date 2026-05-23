@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import re
 from dataclasses import dataclass, field
 from dataclasses import fields as dataclass_fields
@@ -292,6 +293,7 @@ def parse_netlist(text: str) -> ParsedNetlist:
                 parsed.circuit.add(_parse_element(statement.fields, parsed.models))
         except NetlistParseError as exc:
             raise NetlistParseError(f"line {statement.line_number}: {exc}") from exc
+    _validate_mutual_inductors(parsed.circuit)
     return parsed
 
 
@@ -443,6 +445,31 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
         _require_fields(fields, 5, "CCVS")
         return CCVS(name, fields[1], fields[2], fields[3], parse_value(fields[4]))
     raise NetlistParseError(f"unsupported element {name!r}")
+
+
+def _validate_mutual_inductors(circuit: Circuit) -> None:
+    inductors = {
+        element.name: element for element in circuit.elements if isinstance(element, Inductor)
+    }
+    for element in circuit.elements:
+        if not isinstance(element, MutualInductor):
+            continue
+        if not math.isfinite(element.coupling):
+            raise NetlistParseError(f"{element.name}: coupling must be finite")
+        if abs(element.coupling) >= 1.0:
+            raise NetlistParseError(
+                f"{element.name}: coupling magnitude must be less than one"
+            )
+        if element.primary == element.secondary:
+            raise NetlistParseError(f"{element.name}: coupled inductors must be distinct")
+        if element.primary not in inductors:
+            raise NetlistParseError(
+                f"{element.name}: referenced inductor {element.primary!r} was not found"
+            )
+        if element.secondary not in inductors:
+            raise NetlistParseError(
+                f"{element.name}: referenced inductor {element.secondary!r} was not found"
+            )
 
 
 def _start_subckt(

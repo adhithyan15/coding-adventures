@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Mutual-inductor AC stamping** — `MutualInductor` now couples referenced
+  inductor pairs in AC analysis using the inverted two-winding inductance
+  matrix.
+
 - **Mutual-inductor element foothold** — `MutualInductor` now exposes the
   public `K`-card coupling shape for future coupled-inductor AC/transient
   stamping.
