@@ -829,6 +829,21 @@ pub struct LanguageInputCallbackCompletionPlan {
     pub result: LanguageInputCallbackResultSummary,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackSessionCompletionSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub callback_label: String,
+    pub completion_label: String,
+    pub action: LanguageInputCallbackCompletionAction,
+    pub remove_from_queue: bool,
+    pub keep_dispatch_scheduled: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_completion: u8,
+    pub result: LanguageInputCallbackResultSummary,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackQueuePlanErrorKind {
     EmptyQueue,
@@ -1162,6 +1177,19 @@ pub const fn run_status_name(status: RunStatus) -> &'static str {
         RunStatus::Stopped => "stopped",
         RunStatus::BudgetExceeded => "budget_exceeded",
         RunStatus::Faulted => "faulted",
+    }
+}
+
+pub const fn input_callback_completion_action_name(
+    action: LanguageInputCallbackCompletionAction,
+) -> &'static str {
+    match action {
+        LanguageInputCallbackCompletionAction::Complete => "complete",
+        LanguageInputCallbackCompletionAction::KeepRunning => "keep_running",
+        LanguageInputCallbackCompletionAction::DropAfterBudgetExceeded => {
+            "drop_after_budget_exceeded"
+        }
+        LanguageInputCallbackCompletionAction::DropAfterFailure => "drop_after_failure",
     }
 }
 
@@ -2181,6 +2209,33 @@ pub fn input_callback_completion_plan_for_result(
     }
 }
 
+pub fn input_callback_session_completion_summary(
+    session: &LanguageHostEndpointSessionSummary,
+    result: &LanguageInputCallbackResultSummary,
+) -> LanguageInputCallbackSessionCompletionSummary {
+    let transport = input_callback_transport_result_summary(session, result);
+    let completion = input_callback_completion_plan_for_result(result);
+    let completion_label = input_callback_session_completion_label(
+        &transport.callback_label,
+        completion.action,
+        completion.queue_depth_after_completion,
+    );
+
+    LanguageInputCallbackSessionCompletionSummary {
+        endpoint: transport.endpoint,
+        connection_label: transport.connection_label,
+        callback_label: transport.callback_label,
+        completion_label,
+        action: completion.action,
+        remove_from_queue: completion.remove_from_queue,
+        keep_dispatch_scheduled: completion.keep_dispatch_scheduled,
+        terminal: completion.terminal,
+        retryable: completion.retryable,
+        queue_depth_after_completion: completion.queue_depth_after_completion,
+        result: completion.result,
+    }
+}
+
 pub fn parse_serial_endpoint(endpoint: &str) -> Option<LanguageSerialEndpoint> {
     let (scheme, port) = endpoint.split_once("://")?;
     if scheme != "serial" {
@@ -2824,6 +2879,17 @@ fn input_callback_completion_message(
             "Input callback stopped before completion; remove it from the cooperative queue."
         }
     }
+}
+
+fn input_callback_session_completion_label(
+    callback_label: &str,
+    action: LanguageInputCallbackCompletionAction,
+    queue_depth_after_completion: u8,
+) -> String {
+    format!(
+        "{callback_label} action={} queue_depth_after_completion={queue_depth_after_completion}",
+        input_callback_completion_action_name(action)
+    )
 }
 
 fn language_i2c_bus(bus: &TargetI2cBus) -> LanguageI2cBus {
@@ -7075,6 +7141,78 @@ mod tests {
         empty_queue.queue_depth_after = 0;
         let empty_queue_plan = input_callback_completion_plan_for_result(&empty_queue);
         assert_eq!(empty_queue_plan.queue_depth_after_completion, 0);
+    }
+
+    #[test]
+    fn input_callback_session_completions_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let dispatch = input_callback_dispatch_plan_for_queue_plan(&queue_plan).unwrap();
+
+        let completed =
+            input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Halted, 11, 3);
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let serial = input_callback_session_completion_summary(&serial_session, &completed);
+
+        assert_eq!(serial.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            serial.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            serial.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            serial.callback_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 status=halted"
+        );
+        assert_eq!(
+            serial.completion_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 status=halted action=complete queue_depth_after_completion=2"
+        );
+        assert_eq!(
+            serial.action,
+            LanguageInputCallbackCompletionAction::Complete
+        );
+        assert!(serial.remove_from_queue);
+        assert!(!serial.keep_dispatch_scheduled);
+        assert!(serial.terminal);
+        assert!(!serial.retryable);
+        assert_eq!(serial.queue_depth_after_completion, 2);
+        assert_eq!(serial.result, completed);
+
+        let running = input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Running, 12, 4);
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let tcp = input_callback_session_completion_summary(&tcp_session, &running);
+
+        assert_eq!(tcp.endpoint.endpoint, "tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(tcp.connection_label, "endpoint=tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.callback_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 status=running"
+        );
+        assert_eq!(
+            tcp.completion_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 status=running action=keep_running queue_depth_after_completion=3"
+        );
+        assert_eq!(
+            tcp.action,
+            LanguageInputCallbackCompletionAction::KeepRunning
+        );
+        assert!(!tcp.remove_from_queue);
+        assert!(tcp.keep_dispatch_scheduled);
+        assert!(!tcp.terminal);
+        assert!(tcp.retryable);
+        assert_eq!(tcp.queue_depth_after_completion, 3);
     }
 
     #[test]
