@@ -103,6 +103,11 @@ class ColumnDef:
     # (ref_table, ref_col_or_None) — None ref_col means "reference the PK".
     # Typed as object to avoid circular import with planner types.
     foreign_key: object = field(default=None, compare=False, hash=False)
+    # ``COLLATE name`` from CREATE TABLE — the column's declared default
+    # comparison-collation.  Used as the default when an ORDER BY clause
+    # references this column without an explicit COLLATE override.
+    # ``None`` means BINARY (the SQLite default).  Stored upper-cased.
+    collation: str | None = None
 
     def effective_not_null(self) -> bool:
         """PRIMARY KEY implies NOT NULL. Convenience for the constraint enforcer."""

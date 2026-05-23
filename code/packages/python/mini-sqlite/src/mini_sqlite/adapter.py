@@ -1345,6 +1345,7 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
     check_expression = None
     foreign_key: tuple[str, str | None] | None = None
     col_default = NO_DEFAULT   # "no DEFAULT clause" sentinel
+    collation: str | None = None  # COLLATE clause on the column def
     _state = state or _PlaceholderCounter()
     for c in _child_nodes(node, "col_constraint"):
         kw_seq = tuple(
@@ -1373,6 +1374,19 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
             ref_table = ref_names[0] if ref_names else ""
             ref_col: str | None = ref_names[1] if len(ref_names) > 1 else None
             foreign_key = (ref_table, ref_col)
+        elif kw_seq[0:1] == ("COLLATE",):
+            # col_constraint grammar: "COLLATE" NAME
+            # The NAME is the collation name (BINARY / NOCASE / RTRIM,
+            # or any user-defined name).  Stored upper-cased on the
+            # column definition; the planner consults it as the default
+            # collation when an ORDER BY references the column without
+            # an explicit COLLATE override.
+            name_token = next(
+                (t for t in c.children if isinstance(t, Token) and _token_type(t) == "NAME"),
+                None,
+            )
+            if name_token is not None:
+                collation = name_token.value.upper()
         elif kw_seq[0:1] == ("DEFAULT",):
             # col_constraint grammar: "DEFAULT" primary
             #
@@ -1401,6 +1415,7 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
         default=col_default,
         check_expr=check_expression,
         foreign_key=foreign_key,
+        collation=collation,
     )
 
 

@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.85.0] - 2026-05-23
+
+### Added
+
+- ``COLLATE name`` accepted as a column constraint in CREATE TABLE:
+
+      CREATE TABLE users(email TEXT COLLATE NOCASE);
+
+  Plays through the full pipeline (parser → adapter → codegen → VM
+  → backend) and is then read back by the planner when an ORDER BY
+  references the column without an explicit COLLATE override.  So::
+
+      CREATE TABLE t(name TEXT COLLATE NOCASE);
+      INSERT INTO t VALUES ('Banana'), ('apple'), ('CHERRY');
+      SELECT name FROM t ORDER BY name;
+      -- ('apple',), ('Banana',), ('CHERRY',)   ← NOCASE order
+
+  matches stdlib sqlite3 byte-for-byte.  Explicit ``COLLATE`` on the
+  ORDER BY clause still overrides the column's declared collation.
+
+- 15 oracle tests in ``tests/test_tier3_column_collate.py``: parsing
+  of COLLATE alongside every other column constraint (NOT NULL,
+  DEFAULT, UNIQUE, PRIMARY KEY), implicit / explicit / RTRIM
+  propagation, per-column independence, and ``ALTER TABLE ADD COLUMN
+  … COLLATE`` round-trip.
+
+### Changed
+
+- Adapter ``_col_def`` recognises the new ``COLLATE NAME``
+  ``col_constraint`` and stores the upper-cased name on the column's
+  ``BackendColumnDef.collation`` field.
+
 ## [1.84.0] - 2026-05-23
 
 ### Added

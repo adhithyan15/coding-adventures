@@ -367,12 +367,35 @@ def _plan_select(
                 k_expr = _substitute_aliases(k_expr, select_aliases)
             k_expr = _resolve(k_expr, scope, schema, outer_scope)
 
+        # If no explicit COLLATE on the ORDER BY clause itself, fall back
+        # to the column's declared collation (from CREATE TABLE's
+        # ``COLLATE name`` column constraint).  SQLite applies the
+        # column's collation in that situation; this keeps
+        # ``CREATE TABLE t(name TEXT COLLATE NOCASE); SELECT * FROM t
+        # ORDER BY name`` sorting case-insensitively without the user
+        # having to repeat the COLLATE clause.  Only the simple case
+        # ``ORDER BY column`` is handled here — when the sort expression
+        # is more complex (e.g. ``ORDER BY length(name)``), SQLite uses
+        # BINARY regardless.
+        effective_collation = k.collation
+        if effective_collation is None and isinstance(k_expr, Column):
+            table_name = k_expr.table
+            col_name = k_expr.col
+            # ``column_collation`` is an optional method on SchemaProvider —
+            # full backend-backed providers expose it; minimal test
+            # providers (e.g. InMemorySchemaProvider) don't.  Use
+            # ``getattr(...)`` so the missing case is silently treated
+            # as "no declared collation" rather than crashing.
+            lookup = getattr(schema, "column_collation", None)
+            if lookup is not None and table_name is not None:
+                effective_collation = lookup(table_name, col_name)
+
         return P.SortKey(
             expr=k_expr,
             descending=k.descending,
             nulls_first=k.nulls_first,
             positional_index=positional_index,
-            collation=k.collation,
+            collation=effective_collation,
         )
 
     order_by = tuple(_resolve_order_key(k) for k in stmt.order_by)

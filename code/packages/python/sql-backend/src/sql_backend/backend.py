@@ -431,6 +431,18 @@ class SchemaProvider(ABC):
     def columns(self, table: str) -> list[str]:
         """Return the column *names* of ``table`` (not full ColumnDefs)."""
 
+    def column_collation(self, table: str, column: str) -> str | None:
+        """Return the declared ``COLLATE name`` for a column, or ``None``.
+
+        Default implementation returns ``None`` for *every* column — minimal
+        :class:`SchemaProvider` implementations don't track collation.  Real
+        :class:`Backend`-backed providers override this to look up the
+        :class:`ColumnDef.collation` field on the underlying column metadata,
+        so that ``ORDER BY name`` against a column declared
+        ``name TEXT COLLATE NOCASE`` automatically sorts NOCASE.
+        """
+        return None
+
 
 class _BackendSchemaProvider(SchemaProvider):
     """Adapter: expose a Backend as a SchemaProvider.
@@ -446,6 +458,17 @@ class _BackendSchemaProvider(SchemaProvider):
 
     def columns(self, table: str) -> list[str]:
         return [col.name for col in self._backend.columns(table)]
+
+    def column_collation(self, table: str, column: str) -> str | None:
+        """Look up the declared collation for *table.column*, if any."""
+        try:
+            cols = self._backend.columns(table)
+        except Exception:  # noqa: BLE001 — unknown table → no collation info
+            return None
+        for col in cols:
+            if col.name == column:
+                return col.collation
+        return None
 
     def list_indexes(self, table: str) -> list[IndexDef]:
         """Proxy ``Backend.list_indexes`` filtered to *table*."""

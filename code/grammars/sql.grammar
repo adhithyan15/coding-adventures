@@ -211,6 +211,7 @@ col_type          = NAME [ "(" NUMBER { "," NUMBER } ")" ] ;
 col_constraint    = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" )
                   | "UNIQUE" | ( "DEFAULT" primary )
                   | ( "CHECK" "(" expr ")" )
+                  | ( "COLLATE" NAME )
                   | ( "REFERENCES" NAME [ "(" NAME ")" ] ) ;
 
 drop_table_stmt   = "DROP" "TABLE" [ "IF" "EXISTS" ] NAME ;

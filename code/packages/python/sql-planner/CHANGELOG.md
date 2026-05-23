@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.38.0] - 2026-05-23
+
+### Added
+
+- ``_resolve_order_key`` consults ``schema.column_collation(table,
+  column)`` when an ORDER BY references a column without an explicit
+  ``COLLATE`` override.  This lets ``CREATE TABLE t(name TEXT COLLATE
+  NOCASE); SELECT * FROM t ORDER BY name`` sort case-insensitively
+  without the user repeating the COLLATE clause on every query —
+  matching SQLite.  Lookup is via ``getattr(schema, 'column_collation',
+  None)`` so minimal schema providers (e.g. ``InMemorySchemaProvider``
+  used in unit tests) that don't expose the method are silently
+  treated as "no declared collation".
+
 ## [0.37.0] - 2026-05-22
 
 ### Added

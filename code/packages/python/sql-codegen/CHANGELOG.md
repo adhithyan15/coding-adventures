@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.35.0] - 2026-05-23
+
+### Added
+
+- ``ColumnDef.collation: str | None`` IR field — carries the column's
+  declared COLLATE clause from CREATE TABLE through to the VM.  The
+  codegen's column-def builder forwards
+  ``planner_col.collation → ir_col.collation`` unchanged.
+
 ## [1.34.0] - 2026-05-22
 
 ### Added
