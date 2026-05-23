@@ -2,6 +2,23 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.36.0] - 2026-05-23
+
+### Added
+
+- ``col_constraint`` now accepts ``COLLATE name`` as one of its
+  alternatives, matching SQLite's column-constraint grammar:
+
+      col_constraint = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" )
+                     | "UNIQUE" | ( "DEFAULT" primary )
+                     | ( "CHECK" "(" expr ")" )
+                     | ( "COLLATE" NAME )                            ← new
+                     | ( "REFERENCES" NAME [ "(" NAME ")" ] ) ;
+
+  This lets users declare a column's default comparison-collation at
+  CREATE TABLE time: ``CREATE TABLE users(email TEXT COLLATE NOCASE)``.
+- Regenerated ``_grammar.py`` to embed the new alternative.
+
 ## [0.35.0] - 2026-05-23
 
 ### Added

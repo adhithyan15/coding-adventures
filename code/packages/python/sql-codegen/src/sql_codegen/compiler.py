@@ -1843,6 +1843,7 @@ def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
         default=ir_default,
         check_instrs=check_instrs,
         foreign_key=fk,
+        collation=c.collation,
     )
 
 

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.51.0 — 2026-05-23
+
+### Changed
+
+- ``_do_create_table`` and ``_do_alter_table`` now forward the
+  ``collation`` field from the IR ``ColumnDef`` to the backend's
+  ``ColumnDef``.  This is the last hop on the journey from
+  ``CREATE TABLE t(name TEXT COLLATE NOCASE)`` SQL through to the
+  backend column metadata — the planner then reads it back via
+  ``SchemaProvider.column_collation`` when resolving an ORDER BY
+  clause.
+
 ## 1.50.0 — 2026-05-22
 
 ### Added

@@ -5,6 +5,22 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] - 2026-05-23
+
+### Added
+
+- ``ColumnDef.collation: str | None`` field — carries the column's
+  declared ``COLLATE name`` from ``CREATE TABLE``.  Stored upper-cased
+  (or ``None`` for BINARY / unspecified).  Used by the planner to set
+  the default sort collation when an ``ORDER BY`` references the
+  column without an explicit ``COLLATE`` override.
+- ``SchemaProvider.column_collation(table, column)`` — optional
+  method returning the declared collation for a column, or ``None``.
+  Default implementation returns ``None``; the ``_BackendSchemaProvider``
+  override reads the underlying ``ColumnDef.collation`` field, so
+  any Backend wired through ``backend_as_schema_provider`` advertises
+  its column-level collations to the planner automatically.
+
 ## [0.12.0] - 2026-05-12
 
 ### Added

@@ -849,6 +849,11 @@ class ColumnDef:
     check_instrs: tuple[Instruction, ...] = ()
     # (ref_table, ref_col_or_None) where None means "reference the parent PK".
     foreign_key: tuple[str, str | None] | None = None
+    # ``COLLATE name`` from the CREATE TABLE source.  Passed through to the
+    # backend's ColumnDef so the planner can consult it when an ORDER BY
+    # references this column without an explicit COLLATE override.
+    # ``None`` means BINARY (the SQLite default).
+    collation: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

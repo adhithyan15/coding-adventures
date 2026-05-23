@@ -2574,6 +2574,7 @@ def _do_create_table(ins: CreateTable, st: _VmState) -> None:
             # Any other value (including None = SQL NULL) is a literal default
             # that passes through unchanged.
             default=_BE_NO_DEFAULT if c.default is _IR_NO_DEFAULT else c.default,
+            collation=c.collation,
         )
         for c in ins.columns
     ]
@@ -2782,6 +2783,7 @@ def _do_alter_table(ins: AlterTable, st: _VmState) -> None:
         name=ins.column.name,
         type_name=ins.column.type,
         not_null=not ins.column.nullable,
+        collation=ins.column.collation,
     )
     try:
         st.backend.add_column(ins.table, col)
