@@ -230,6 +230,11 @@ class SortKey:
     descending: bool = False
     nulls_first: bool | None = None  # None = backend default
     positional_index: int | None = None  # 0-based; set when ORDER BY N
+    # COLLATE name from the SQL — carried through unchanged from the AST.
+    # ``None`` means BINARY (the default).  The VM applies the named
+    # transform when building the sort key (NOCASE → lowercase ASCII,
+    # RTRIM → strip trailing spaces).
+    collation: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

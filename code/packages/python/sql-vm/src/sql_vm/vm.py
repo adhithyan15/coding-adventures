@@ -1501,6 +1501,23 @@ def _do_sort(ins: SortResult, st: _VmState) -> None:
             # wrong results for ORDER BY 2, 3, …
             idx = k.column_idx if k.column_idx is not None else columns.index(k.column)
             v = row[idx]
+            # Apply COLLATE transform before the comparator sees the value.
+            # SQLite's three built-in collations:
+            #   * BINARY (default, or k.collation is None): pass through
+            #   * NOCASE: ASCII case-insensitive — lowercase strings
+            #   * RTRIM:  strip trailing spaces, then compare BINARY
+            # The transform only applies to strings; non-string values
+            # (ints, floats, blobs, NULL) pass through unchanged because
+            # SQLite's collations only affect TEXT comparison.
+            if isinstance(v, str) and k.collation is not None:
+                coll = k.collation.upper()
+                if coll == "NOCASE":
+                    v = v.lower()
+                elif coll == "RTRIM":
+                    v = v.rstrip(" ")
+                # Unknown collation names fall through unchanged, matching
+                # SQLite's "validate lazily" approach (the user might have
+                # registered a custom collation; we don't error here).
             is_null = v is None
             # NULL placement is *independent* of direction.  We encode it as a
             # rank prefix where 0=first / 2=last, with non-null=1 in the middle.

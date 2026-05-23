@@ -1906,7 +1906,13 @@ def _to_sort_key(k: object, agg_alias_map: dict[tuple, str] | None = None) -> So
 
     # Positional sort key (ORDER BY N): use column_idx for direct index lookup.
     if k.positional_index is not None:
-        return SortKey(column="", column_idx=k.positional_index, direction=direction, nulls=nulls)
+        return SortKey(
+            column="",
+            column_idx=k.positional_index,
+            direction=direction,
+            nulls=nulls,
+            collation=k.collation,
+        )
 
     col: str
     if isinstance(k.expr, PlanAggExpr) and agg_alias_map is not None:
@@ -1916,7 +1922,7 @@ def _to_sort_key(k: object, agg_alias_map: dict[tuple, str] | None = None) -> So
         col = agg_alias_map.get(agg_key) or k.expr.func.value.lower()
     else:
         col = _column_display_name(k.expr) or "?"
-    return SortKey(column=col, direction=direction, nulls=nulls)
+    return SortKey(column=col, direction=direction, nulls=nulls, collation=k.collation)
 
 
 # Map lower-case window function names to the IR WinFunc enum values.

@@ -171,11 +171,21 @@ class JoinClause:
 
 @dataclass(frozen=True, slots=True)
 class SortKey:
-    """One key in ORDER BY."""
+    """One key in ORDER BY.
+
+    ``collation`` carries the optional ``COLLATE name`` clause from
+    SQL: ``ORDER BY name COLLATE NOCASE``.  Mini-sqlite recognises
+    SQLite's three built-in collations (``BINARY`` — the default,
+    which is also what ``None`` means; ``NOCASE`` — case-insensitive
+    ASCII comparison; ``RTRIM`` — strips trailing spaces before
+    comparing).  Unknown collation names are accepted at the planner
+    level and validated by the VM.
+    """
 
     expr: Expr
     descending: bool = False
     nulls_first: bool | None = None  # None = backend default (nulls last for ASC)
+    collation: str | None = None     # None = BINARY (default)
 
 
 @dataclass(frozen=True, slots=True)

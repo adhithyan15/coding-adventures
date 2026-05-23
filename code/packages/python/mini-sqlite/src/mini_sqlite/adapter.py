@@ -798,7 +798,7 @@ def _order_clause(
 
 
 def _order_item(node: ASTNode, state: _PlaceholderCounter) -> SortKey:
-    # order_item = expr [ "ASC" | "DESC" ] [ "NULLS" NAME ]
+    # order_item = expr [ "COLLATE" NAME ] [ "ASC" | "DESC" ] [ "NULLS" NAME ]
     #
     # Direction defaults to ASC when no keyword is given.  NULL placement
     # defaults to ``None`` on SortKey, meaning "use SQLite default" (NULLs
@@ -810,8 +810,30 @@ def _order_item(node: ASTNode, state: _PlaceholderCounter) -> SortKey:
     # validated here — because making FIRST/LAST hard keywords would
     # forbid them as column names, which is impractical (``first_name``,
     # ``last`` are common identifiers).
+    #
+    # The optional ``COLLATE name`` clause names a comparison transform
+    # (``BINARY`` / ``NOCASE`` / ``RTRIM`` in standard SQLite, plus any
+    # user-registered ones).  We store the name verbatim on the SortKey
+    # (upper-cased for consistency); the VM picks the matching transform
+    # when building the sort key.  ``BINARY`` and ``None`` are
+    # equivalent (the default).
     expr = _expr(_child_node(node, "expr"), state)
     descending = _has_keyword_child(node, "DESC")
+
+    # Extract the COLLATE name (if any).  It appears between the expr and
+    # ASC/DESC/NULLS, so we scan for the COLLATE keyword and pick up the
+    # following NAME token.
+    collation: str | None = None
+    if _has_keyword_child(node, "COLLATE"):
+        seen_collate = False
+        for c in node.children:
+            if _is_keyword(c, "COLLATE"):
+                seen_collate = True
+                continue
+            if seen_collate and isinstance(c, Token) and _token_type(c) == "NAME":
+                collation = c.value.upper()
+                break
+
     nulls_first: bool | None = None
     if _has_keyword_child(node, "NULLS"):
         # Find the NAME token that follows the NULLS keyword.
@@ -832,7 +854,12 @@ def _order_item(node: ASTNode, state: _PlaceholderCounter) -> SortKey:
                         f"got {c.value!r}"
                     )
                 break
-    return SortKey(expr=expr, descending=descending, nulls_first=nulls_first)
+    return SortKey(
+        expr=expr,
+        descending=descending,
+        nulls_first=nulls_first,
+        collation=collation,
+    )
 
 
 def _limit_clause(node: ASTNode | None) -> Limit | None:

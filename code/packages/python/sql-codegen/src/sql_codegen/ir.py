@@ -477,6 +477,13 @@ class SortKey:
     direction: Direction = Direction.ASC
     nulls: NullsOrder = NullsOrder.LAST
     column_idx: int | None = None  # 0-based; set for positional ORDER BY N
+    # ``COLLATE name`` from the SQL: a comparison transform applied to
+    # the column value before the sort comparator runs.  ``None`` means
+    # SQLite's default ``BINARY`` (byte-for-byte comparison).
+    # Mini-sqlite recognises ``"NOCASE"`` (ASCII case-insensitive) and
+    # ``"RTRIM"`` (strip trailing spaces).  Unknown collations are
+    # ignored at runtime (matching SQLite, which validates lazily).
+    collation: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
