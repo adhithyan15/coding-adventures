@@ -1,0 +1,16 @@
+cd ../../../packages/typescript/document-ast && npm ci --quiet
+cd ../../../packages/typescript/commonmark-parser && npm ci --quiet
+cd ../../../packages/typescript/document-ast-to-html && npm ci --quiet
+cd ../../../packages/typescript/forme-doc-frontmatter && npm ci --quiet
+cd ../../../packages/typescript/forme-doc-heading-anchors && npm ci --quiet
+cd ../../../packages/typescript/forme-doc-toc-extractor && npm ci --quiet
+cd ../../../packages/typescript/forme-doc-code-block-decorator && npm ci --quiet
+cd ../../../packages/typescript/forme-doc-syntax-highlighter && npm ci --quiet
+cd ../../../packages/typescript/forme-doc-sidebar-builder && npm ci --quiet
+cd ../../../packages/typescript/forme-doc-page-shell && npm ci --quiet
+cd ../../../packages/typescript/forme-doc-search-tokenizer && npm ci --quiet
+cd ../../../packages/typescript/forme-doc-search-index-builder && npm ci --quiet
+cd ../../../packages/typescript/forme-aot-page-bundle-emitter && npm ci --quiet
+cd ../../../packages/typescript/forme-aot-html-doc-emitter && npm ci --quiet
+cd ../../../packages/typescript/forme-doc-site-emitter && npm ci --quiet
+npm install --silent && npx vitest run --coverage

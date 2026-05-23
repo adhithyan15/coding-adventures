@@ -1,0 +1,39 @@
+{
+  "name": "forme-doc-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "End-to-end demo of the DOC00 v0 documentation-site cluster: reads a small Markdown corpus, runs it through all 11 forme-doc-* packages plus the FM00 page-bundle-emitter, writes a static site to dist/.  Run with `npm start`, then serve dist/ with any static HTTP server.",
+  "type": "module",
+  "main": "src/main.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/main.ts corpus dist",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/commonmark-parser": "file:../../../packages/typescript/commonmark-parser",
+    "@coding-adventures/document-ast": "file:../../../packages/typescript/document-ast",
+    "@coding-adventures/document-ast-to-html": "file:../../../packages/typescript/document-ast-to-html",
+    "@coding-adventures/forme-doc-frontmatter": "file:../../../packages/typescript/forme-doc-frontmatter",
+    "@coding-adventures/forme-doc-heading-anchors": "file:../../../packages/typescript/forme-doc-heading-anchors",
+    "@coding-adventures/forme-doc-toc-extractor": "file:../../../packages/typescript/forme-doc-toc-extractor",
+    "@coding-adventures/forme-doc-code-block-decorator": "file:../../../packages/typescript/forme-doc-code-block-decorator",
+    "@coding-adventures/forme-doc-syntax-highlighter": "file:../../../packages/typescript/forme-doc-syntax-highlighter",
+    "@coding-adventures/forme-doc-sidebar-builder": "file:../../../packages/typescript/forme-doc-sidebar-builder",
+    "@coding-adventures/forme-doc-page-shell": "file:../../../packages/typescript/forme-doc-page-shell",
+    "@coding-adventures/forme-doc-search-tokenizer": "file:../../../packages/typescript/forme-doc-search-tokenizer",
+    "@coding-adventures/forme-doc-search-index-builder": "file:../../../packages/typescript/forme-doc-search-index-builder",
+    "@coding-adventures/forme-doc-site-emitter": "file:../../../packages/typescript/forme-doc-site-emitter",
+    "@coding-adventures/forme-aot-html-doc-emitter": "file:../../../packages/typescript/forme-aot-html-doc-emitter",
+    "@coding-adventures/forme-aot-page-bundle-emitter": "file:../../../packages/typescript/forme-aot-page-bundle-emitter"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "tsx": "^4.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
