@@ -1,0 +1,31 @@
+// ListGroup.mil — interface for the toolkit's ListGroup.
+//
+// A vertical list of selectable text rows. Bootstrap's
+// `<ul class="list-group">` equivalent, distilled down to a
+// `list<text>` slot + an onSelect emit carrying the clicked
+// index.
+//
+// Why `list<text>` and not `list<node>`?
+// --------------------------------------
+// `list<node>` would let each row be arbitrarily rich (icons,
+// secondary text, badges) but requires the children-pass-through
+// kernel feature that v0.1 doesn't have. A text-only list matches
+// the common case and keeps the surface stable. A future
+// `RichListGroup` can layer the node-children variant when the
+// kernel grows pass-through semantics.
+
+component ListGroup {
+  // The items to render, in order. Each becomes a clickable row.
+  slot items : list<text> ;
+
+  // The index of the currently-selected row (or -1 for none).
+  // Drives per-row selected styling when implemented; v0.1's PR
+  // doesn't yet style the selected row distinctly — that lands
+  // when state-block sub-parts get a syntax in mosstyle.
+  slot selected-index : number ;
+
+  // Fired when the user clicks a row. Payload is the row index.
+  // (The host typically responds by updating its selected-index
+  // slot to match.)
+  emit onSelect ( index : number ) ;
+}

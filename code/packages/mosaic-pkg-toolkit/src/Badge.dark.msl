@@ -1,0 +1,14 @@
+// Badge.dark.msl — dark-theme styling for Badge.
+
+style Badge {
+  part badge {
+    padding       : 6 ;
+    border-radius : 12 ;
+    background    : "#3b82f6" ;
+    color         : "#0f172a" ;
+    font-size     : 12 ;
+    font-weight   : 600 ;
+  }
+  part badge-text {
+  }
+}

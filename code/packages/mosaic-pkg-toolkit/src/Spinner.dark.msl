@@ -1,0 +1,12 @@
+// Spinner.dark.msl — dark-theme styling for Spinner.
+
+style Spinner {
+  part spinner {
+    width  : 24 ;
+    height : 24 ;
+  }
+  part spinner-glyph {
+    color     : "#3b82f6" ;
+    font-size : 24 ;
+  }
+}

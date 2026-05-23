@@ -8,19 +8,42 @@ per-backend code.
 See [`code/specs/mosaic-pkg-toolkit.md`](../../specs/mosaic-pkg-toolkit.md)
 for the architecture, component catalog, and phasing plan.
 
-## v0.1 — PR-1 (scaffold)
+## v0.1 — exports so far
 
-**Exports:**
+**10 of 13 Tier-1 components shipped:**
 
-- **`Button`** — styled push button with `variant` (primary /
-  secondary / success / danger / warning / info / light / dark),
-  `size` (sm / md / lg), and `disabled` slots. Wraps the kernel
-  `HostButton`.
 - **`Alert`** — colored info banner with `variant`, optional inline
   dismiss button. Composed from `Box` + `Row` + `Text` + `If` +
   `HostButton`.
+- **`Badge`** — small pill label. `Box[badge] { Text }`. Slots:
+  `label`, `variant`.
+- **`Button`** — styled push button with `variant`, `size`,
+  `disabled` slots. Wraps the kernel `HostButton`.
+- **`Checkbox`** — labeled checkbox. `Row { If checked HostButton[✓]
+  Else HostButton[], Text }`. Slots: `label`, `checked`,
+  `disabled`. Emit: `onChange`. Host owns the state.
+- **`Input`** — styled single-line text input. Wraps the kernel
+  `HostInput`. Slots: `value`, `placeholder`, `disabled`, `size`.
+  Emits: `onChange(value: text)`, `onCommit`.
+- **`ListGroup`** — vertical list of selectable text rows.
+  Iterates via `For`. Slots: `items` (`list<text>`),
+  `selected-index`. Emit: `onSelect(index: number)`.
+- **`Modal`** — titled modal dialog wrapping the kernel
+  `HostDialog`. Slots: `title`, `message`, `open`, `close-label`.
+  Emit: `onClose`. The XAML backend produces a ContentDialog
+  root; other backends use their native dialog primitives.
+- **`Radio`** — labeled radio (single-select). Same shape as
+  Checkbox with circular styling. Slots: `label`, `selected`,
+  `disabled`. Emit: `onSelect`.
+- **`Spinner`** — indeterminate loading indicator.
+  `Stack[spinner] { Icon[spinner-glyph] }`. Slots: `size`,
+  `variant`, `aria-label`.
+- **`Toast`** — bottom-anchored notification.
+  `If open { Box[toast] { Column { Row[toast-header],
+  Box[toast-body] } } }`. Slots: `title`, `message`, `variant`,
+  `open`. Emit: `onClose`.
 
-Both ship a `.light.msl` and `.dark.msl` theme.
+Every component ships `.light.msl` and `.dark.msl` themes.
 
 ## Roadmap
 
@@ -28,8 +51,11 @@ Per spec §7:
 
 | Phase | Components |
 |---|---|
-| v0.1 PR-1 (this) | Button, Alert |
-| v0.1 PR-2..N | Badge, Card, Checkbox, Container, Field, Input, ListGroup, Modal, Radio, Spinner, Toast — 11 more Tier-1 components |
+| v0.1 PR-1 | Button, Alert |
+| v0.1 PR-2 | Badge, Spinner, Toast |
+| v0.1 PR-3 | Input, Checkbox, Radio |
+| v0.1 PR-4 (this) | ListGroup, Modal |
+| v0.1 PR-5+ | Card, Container, Field — depend on the children-pass-through UI29 follow-up spec |
 | v0.2 | Tier 2 — Nav, Navbar, Pagination, Breadcrumb, InputGroup, ButtonGroup, Tabs, DropdownMenu, Accordion, Select |
 | v0.3 | Bootstrap-aesthetic theme overlay |
 | v0.4 | Tier 3 — Tooltip, Popover, Carousel, Offcanvas (depends on kernel follow-ups) |
