@@ -87,7 +87,8 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     // Control flow (§3)
     "If", "Else", "For",
     // Host primitives (§2.1 "Host*" rows + UI29-1's HostDialog +
-    // UI29-2's HostCheckbox/HostRadio).
+    // UI29-2's HostCheckbox/HostRadio + UI29-4's HostLink/HostTooltip/
+    // HostNumberInput).
     // HostDialog was added in UI29-1 after mosaic-pkg-dialog v0.1.0
     // demonstrated that composing a dialog from Box+Column+Text loses
     // modal/focus/top-layer/accessibility semantics that only the
@@ -98,8 +99,18 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     // HostButton wrappers, losing the platform-native a11y role,
     // checked-state visuals (tri-state, focus ring), and keyboard
     // semantics that only the real checkbox/radio widget provides.
+    // HostLink, HostTooltip, HostNumberInput were added in UI29-4
+    // after the post-UI29-2 audit found Breadcrumb and Nav still
+    // faked `<a>` via HostButton (losing role="link", Ctrl-click
+    // open-new-tab, visited-state styling). HostTooltip and
+    // HostNumberInput were promoted in the same batch — the
+    // tooltip's a11y wiring (aria-describedby + hover/long-press
+    // trigger heuristics) and the number-input's mobile-numeric-
+    // keyboard / SpinBox-with-stepper-buttons are not reachable
+    // via composition from existing kernel primitives.
     "HostInput", "HostButton", "HostTable", "HostScroll", "HostDialog",
     "HostCheckbox", "HostRadio",
+    "HostLink", "HostTooltip", "HostNumberInput",
 ];
 
 // ---------------------------------------------------------------------------
@@ -657,18 +668,21 @@ version = "1"
 
     #[test]
     fn kernel_set_covers_ui29_section_2_1() {
-        // The eighteen primitives — fifteen from UI29 §2.1, plus
+        // The twenty-one primitives — fifteen from UI29 §2.1, plus
         // HostDialog added in UI29-1 (#3846), plus HostCheckbox and
-        // HostRadio added in UI29-2 (#3978).
-        let expected_18 = [
+        // HostRadio added in UI29-2 (#3978), plus HostLink,
+        // HostTooltip, and HostNumberInput added in UI29-4 (this
+        // batch).
+        let expected_21 = [
             "Box", "Row", "Column", "Stack", "Text", "Image",
             "Spacer", "Divider", "Icon",
             "If", "For",
             "HostInput", "HostButton", "HostTable", "HostScroll",
             "HostDialog",
             "HostCheckbox", "HostRadio",
+            "HostLink", "HostTooltip", "HostNumberInput",
         ];
-        for name in &expected_18 {
+        for name in &expected_21 {
             assert!(
                 KERNEL_PRIMITIVES.contains(name),
                 "kernel must include `{name}`"
