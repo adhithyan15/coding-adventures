@@ -154,6 +154,9 @@ The crate keeps the boundary narrow:
 - supervisor drain reports and summaries expose host-decision dashboard lanes
   and action counts for grouping terminal, scheduler, follow-up, investigation,
   and mixed-action work
+- supervisor drain reports and summaries expose host-decision dashboard
+  priorities and sortable ranks for queueing routine action, drift
+  investigation, integrity investigation, and mixed-action work
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
