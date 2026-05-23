@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `transientAdaptive`, an LTE-controlled transient surface with bounded
+  step growth/shrinkage and `euler` / `trap` / `gear2` method routing.
 - Add trapezoidal transient integration parity for capacitors and inductors,
   enabling LC damping comparisons against Gear-2.
 - Add Gear-2 transient integration with BDF2 capacitor/inductor companion

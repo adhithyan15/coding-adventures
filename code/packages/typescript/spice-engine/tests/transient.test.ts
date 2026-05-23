@@ -25,6 +25,7 @@ import {
   pssResidual,
   resistor,
   transient,
+  transientAdaptive,
   transmissionLine,
   voltageSource,
   voltageSourceWithWaveform,
@@ -529,6 +530,48 @@ describe("transient", () => {
     const gearTail = Math.max(...gearPoints.slice(-4).map((point) => Math.abs(point.voltage("tank") ?? 0.0)));
 
     expect(gearTail).toBeLessThan(trapTail * 0.75);
+  });
+
+  it("matches fixed-step trap when adaptive bounds pin the step", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "vc", 1_000.0));
+    circuit.add(capacitor("C1", "vc", "0", 1.0e-6));
+
+    const fixed = transient(circuit, 1.0e-3, 3.0e-3, "trap");
+    const adaptive = transientAdaptive(circuit, 1.0e-3, 3.0e-3, {
+      method: "trap",
+      tolerance: 1.0,
+      minStep: 1.0e-3,
+      maxStep: 1.0e-3,
+    });
+
+    expect(adaptive.converged).toBe(true);
+    expect(adaptive.stepsRejected).toBe(0);
+    expect(adaptive.points.map((point) => point.time)).toEqual(
+      fixed.map((point) => point.time),
+    );
+    expectClose(adaptive.points.at(-1)?.voltage("vc"), fixed.at(-1)?.voltage("vc") ?? 0.0);
+  });
+
+  it("uses variable adaptive steps with Gear-2 after the bootstrap step", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "vc", 1_000.0));
+    circuit.add(capacitor("C1", "vc", "0", 1.0e-6));
+
+    const adaptive = transientAdaptive(circuit, 1.0e-4, 1.0e-3, {
+      method: "gear2",
+      tolerance: 1.0,
+      maxStep: 5.0e-4,
+    });
+
+    expect(adaptive.method).toBe("gear2");
+    expect(adaptive.converged).toBe(true);
+    expect(adaptive.stepsRejected).toBe(0);
+    expect(adaptive.points.length).toBeLessThan(transient(circuit, 1.0e-4, 1.0e-3, "gear2").length);
+    expectClose(adaptive.points.at(-1)?.time, 1.0e-3);
+    expect((adaptive.points.at(-1)?.voltage("vc") ?? 0.0)).toBeGreaterThan(0.0);
   });
 
   it("couples secondary voltage through a mutual inductor", () => {

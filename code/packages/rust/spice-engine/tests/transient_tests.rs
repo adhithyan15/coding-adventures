@@ -2,7 +2,8 @@ use spice_engine::{
     estimate_period, pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, transient, transient_with_method, Capacitor, Cccs, Ccvs, Circuit,
+    pss_with_tolerance, transient, transient_adaptive, transient_with_method,
+    AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
     CurrentSource, Element, ExpWaveform, Inductor, MutualInductor, PssNewtonCandidateResult,
     PssNewtonIterationResult, PssNewtonSolveResult, PssNewtonUpdateResult,
     PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform, PwlWaveform, Resistor,
@@ -625,6 +626,75 @@ fn transient_gear2_damps_coarse_lc_oscillator_more_than_trap() {
         .fold(0.0_f64, f64::max);
 
     assert!(gear_tail < trap_tail * 0.75);
+}
+
+#[test]
+fn adaptive_transient_matches_fixed_trap_when_bounds_pin_step() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "out", 1_000.0,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new("C1", "out", "0", 1.0e-6)));
+
+    let fixed = transient_with_method(&circuit, 1.0e-3, 3.0e-3, TransientMethod::Trap).unwrap();
+    let adaptive = transient_adaptive(
+        &circuit,
+        1.0e-3,
+        3.0e-3,
+        AdaptiveTransientOptions {
+            method: TransientMethod::Trap,
+            tolerance: 1.0,
+            min_step: Some(1.0e-3),
+            max_step: Some(1.0e-3),
+        },
+    )
+    .unwrap();
+
+    let _: AdaptiveTransientResult = adaptive.clone();
+    assert!(adaptive.converged);
+    assert_eq!(adaptive.steps_rejected, 0);
+    assert_eq!(adaptive.points.len(), fixed.len());
+    assert_close(adaptive.points[0].time, fixed[0].time);
+    assert_close(
+        adaptive.points.last().unwrap().voltage("out").unwrap(),
+        fixed.last().unwrap().voltage("out").unwrap(),
+    );
+}
+
+#[test]
+fn adaptive_transient_uses_variable_steps_with_gear2_after_bootstrap() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "out", 1_000.0,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new("C1", "out", "0", 1.0e-6)));
+
+    let fixed = transient_with_method(&circuit, 1.0e-4, 1.0e-3, TransientMethod::Gear2).unwrap();
+    let adaptive = transient_adaptive(
+        &circuit,
+        1.0e-4,
+        1.0e-3,
+        AdaptiveTransientOptions {
+            method: TransientMethod::Gear2,
+            tolerance: 1.0,
+            min_step: None,
+            max_step: Some(5.0e-4),
+        },
+    )
+    .unwrap();
+
+    assert_eq!(adaptive.method, TransientMethod::Gear2);
+    assert!(adaptive.converged);
+    assert_eq!(adaptive.steps_rejected, 0);
+    assert!(adaptive.points.len() < fixed.len());
+    assert_close(adaptive.points.last().unwrap().time, 1.0e-3);
+    assert!(adaptive.points.last().unwrap().voltage("out").unwrap() > 0.0);
 }
 
 #[test]

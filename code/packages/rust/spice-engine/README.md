@@ -18,7 +18,8 @@ The initial slices implement:
 - AC small-signal frequency sweeps for linear RC/RL circuits and explicit AC
   source phasors with DC-bias operating-point linearization for nonlinear
   devices.
-- Backward-Euler transient analysis for linear RC/RL circuits.
+- Backward-Euler, trapezoidal, Gear-2, and adaptive transient analysis for
+  linear RC/RL circuits.
 - Time-varying transient source waveforms: PWL, SIN, PULSE, and EXP.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,
@@ -27,7 +28,10 @@ current sources, optional AC source phasors, optional source waveforms, ground
 aliases, node voltages, and voltage source branch currents.
 
 ```rust
-use spice_engine::{Circuit, Element, PwlWaveform, Resistor, VoltageSource, Waveform};
+use spice_engine::{
+    transient_adaptive, AdaptiveTransientOptions, Circuit, Element, PwlWaveform, Resistor,
+    TransientMethod, VoltageSource, Waveform,
+};
 
 let mut circuit = Circuit::new();
 circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
@@ -38,4 +42,13 @@ circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
     Waveform::Pwl(PwlWaveform::new(vec![(0.0, 0.0), (1.0e-9, 1.8)])),
 )));
 circuit.add(Element::Resistor(Resistor::new("Rload", "in", "0", 1_000.0)));
+let result = transient_adaptive(
+    &circuit,
+    0.5e-9,
+    1.0e-9,
+    AdaptiveTransientOptions {
+        method: TransientMethod::Gear2,
+        ..Default::default()
+    },
+)?;
 ```
