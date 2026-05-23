@@ -1,0 +1,126 @@
+# JSDoc — Lexical Grammar (minimal, v1)
+# @version 1
+#
+# This grammar covers the JSDoc lexemes produced when reading the *interior*
+# of a `/** ... */` block comment — the leading `/**` and trailing `*/` are
+# stripped before this lexer runs, by the comment-extractor pipeline stage
+# defined in CLOC05.
+#
+# v1 coverage:
+#   - @type, @param, @returns/@return tags (the three the type-extractor
+#     needs first).
+#   - Type expressions: primitive names (`number`, `string`, `boolean`,
+#     `void`, `null`, `undefined`, `any`, `unknown`, `never`, `bigint`,
+#     `symbol`), generic-style nominal references (`Foo`, `Foo.Bar`),
+#     array-suffix `Foo[]`, optional `Foo=`, variadic `...Foo`, nullable
+#     `?Foo`, non-nullable `!Foo`, function types `function(...): T`, and
+#     grouping with parens.
+#
+# Deferred to follow-up PRs:
+#   - Object record types `{ k: T, l: U }`.
+#   - Type-parameter syntax `<T, U>`.
+#   - Union (`A|B`) and intersection (`A&B`) inside type expressions.
+#   - Template literal types.
+#   - All the remaining JSDoc tags (@throws, @template, @typedef, @callback,
+#     @property, @deprecated, @public/@protected/@private, @override,
+#     @readonly, @const, @nosideeffects, @suppress, @see, @example, etc.).
+#
+# Pattern groups:
+# ---------------
+# JSDoc has two lexing modes:
+#   - DEFAULT (the type/name area right after an @tag, plus type
+#     expressions inside `{...}`)
+#   - DESCRIPTION_MODE (the free-form prose chunk after the name path,
+#     until a NEWLINE)
+# v1 stays in DEFAULT mode only — descriptions ARE lexed but the parser
+# folds them into a generic DESCRIPTION_TEXT token via a single
+# everything-until-newline rule. Group switching can be added in a
+# follow-up once we need to enforce stricter description-vs-type
+# boundaries.
+
+# ============================================================================
+# Tags and structural tokens
+# ============================================================================
+
+AT_TAG = /@[a-zA-Z_$][a-zA-Z0-9_$-]*/
+
+# Type-expression brackets.
+LBRACE      = "{"
+RBRACE      = "}"
+LBRACKET    = "["
+RBRACKET    = "]"
+LPAREN      = "("
+RPAREN      = ")"
+ANGLE_OPEN  = "<"
+ANGLE_CLOSE = ">"
+
+# Type-expression punctuation.
+PIPE     = "|"
+AMP      = "&"
+COMMA    = ","
+COLON    = ":"
+EQUALS   = "="
+ELLIPSIS = "..."
+QUESTION = "?"
+BANG     = "!"
+STAR     = "*"
+ARROW    = "=>"
+DOT      = "."
+
+# Tag boundary — JSDoc tags are line-oriented. The parser uses NEWLINE
+# to know when a tag's payload ends.
+NEWLINE = /\n/
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+# Identifier / nominal type name.
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# Numbers (used in literal types like `42`).
+NUMBER = /-?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/
+
+# String literals (used in literal types like `"foo"`).
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# Free-form description text — anything between the name path and the next
+# newline that isn't another @tag start. Order matters: this must come
+# AFTER all the more-specific tokens above so they take precedence.
+#
+# v1 captures one line at a time as a single DESCRIPTION_TEXT token. The
+# parser folds these into tag descriptions; further tokenization is a
+# follow-up if/when we need to format embedded markdown.
+#
+# Excludes `@` and `\n` at the start so `@tag` on a fresh line wins, and
+# also excludes the type-expression structural characters so they
+# tokenize separately. This is intentionally narrow — anything inside a
+# type expression `{...}` won't fall into description text.
+DESCRIPTION_TEXT = /[a-zA-Z_$0-9 \t][^\n@{}\[\]()<>|&,:=?!*]*/
+
+# ============================================================================
+# Skipped trivia
+# ============================================================================
+#
+# Inter-token whitespace (but NOT newlines — those are tag boundaries).
+# Tab and space only.
+skip:
+  HSPACE = /[ \t]+/
+
+# A line that's just `* ` after a newline is the JSDoc convention for
+# continuation. We expect the comment-extractor stage to strip these
+# before invoking the lexer (see CLOC05 §"jsdoc-comment-extractor"); the
+# lexer here treats any leading `* ` as plain skipped whitespace as a
+# safety net.
+skip:
+  LEADING_STAR = /\n[ \t]*\*[ \t]?/
+
+# ============================================================================
+# Error tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"\n]*$/
+  BAD_STRING_SQ = /'[^'\n]*$/
+  UNTERMINATED_TYPE = /\{[^}]*$/
