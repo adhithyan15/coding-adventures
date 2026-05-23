@@ -1051,6 +1051,49 @@ fn split_bounded_polynomial_factor(
     Some((bounded_aggregate, poly_deg))
 }
 
+/// Phase 53 (Rust port): Return ``Some(sqrt_inner_deg + 2 * poly_deg_sum)``
+/// when ``node = Mul(Sqrt(P), polynomial_factors)``; ``None`` otherwise.
+///
+/// The numerator ``Sqrt(P(k)) · Q(k)`` has effective growth rate
+/// ``deg(P)/2 + deg(Q)``.  Returning ``deg(P) + 2·deg(Q)`` (= 2× the
+/// effective degree) lets the caller compare against ``2 * den_deg``
+/// to avoid float arithmetic.
+///
+/// Requirements:
+///   - ``node = Mul(...)`` — Phase 51 handles the plain ``Sqrt(P)`` case.
+///   - Exactly one factor passes ``sqrt_effective_half_degree_x2``.
+///   - All remaining factors are polynomials in ``k``.
+fn sqrt_poly_numerator_effective_degree_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return None,
+    };
+    if !head_is(&apply_node.head, MUL) {
+        return None;
+    }
+    let mut sqrt_inner_deg: Option<i64> = None;
+    let mut poly_deg_sum: i64 = 0;
+    for arg in &apply_node.args {
+        // Try the Sqrt(P) shape first.
+        if let Some(eff) = sqrt_effective_half_degree_x2(arg, k) {
+            // Only one Sqrt factor allowed — bail on a second.
+            if sqrt_inner_deg.is_some() {
+                return None;
+            }
+            sqrt_inner_deg = Some(eff);
+            continue;
+        }
+        // Otherwise must be polynomial in k.
+        match polynomial_degree_in_k(arg, k) {
+            Some(d) => poly_deg_sum += d,
+            None => return None, // Neither Sqrt shape nor polynomial.
+        }
+    }
+    // Must have found exactly one Sqrt factor.
+    let sid = sqrt_inner_deg?;
+    Some(sid + 2 * poly_deg_sum)
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -1094,6 +1137,16 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     if let Some((_bounded, poly_deg)) = split_bounded_polynomial_factor(num, k) {
         if let Some(den_deg_bp) = polynomial_degree_in_k(den, k) {
             if den_deg_bp > poly_deg {
+                return true;
+            }
+        }
+    }
+    // Phase 53: Mul(Sqrt(P), polynomial_factors) numerator pattern.
+    // Effective growth = deg(P)/2 + deg(Q).  Using ×2 integer arithmetic:
+    // vanishes when 2*den_deg > deg(P) + 2*deg(Q).
+    if let Some(sqrt_poly_eff) = sqrt_poly_numerator_effective_degree_x2(num, k) {
+        if let Some(den_deg_sp) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_sp > sqrt_poly_eff {
                 return true;
             }
         }

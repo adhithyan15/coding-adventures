@@ -1,5 +1,46 @@
 # Changelog
 
+## 1.1.0 — 2026-05-23
+
+**Phase 53 — Sqrt × polynomial numerator pattern (Rust port).**
+
+Extends ``g_vanishes_at_infinity`` to recognise that
+``Mul(Sqrt(P), polynomial_factors)`` numerators have effective growth
+equal to ``deg(P)/2 + deg(Q)``.  Closes telescopes like
+``sqrt(k)·k/k³`` and ``sqrt(k²)·k/k³`` that fall through all
+earlier phases.  Uses ×2 integer arithmetic to avoid float comparisons.
+
+Builds on Phase 51 (0.9.0) which added the plain-``Sqrt`` case.
+Bumps 1.0.0 → 1.1.0.
+
+### Added
+
+- **``sqrt_poly_numerator_effective_degree_x2(node, k)``** — returns
+  ``deg(P) + 2·deg(Q)`` (an ``i64``) when
+  ``node = Mul(Sqrt(P), polynomial_factors)`` with exactly one Sqrt
+  factor and all others polynomial.  Returns ``None`` for plain
+  ``Sqrt`` nodes (handled by Phase 51), non-Mul nodes, multiple Sqrt
+  factors, non-polynomial non-Sqrt factors, and negative-leading-coeff
+  inner polynomials.
+
+### Changed
+
+- ``g_vanishes_at_infinity`` adds a Phase 53 branch between Phase 52
+  (bounded × polynomial) and Phase 42 (pure rational degree comparison):
+  closes when ``2 * den_deg > sqrt_poly_numerator_effective_degree_x2(num, k)``.
+
+### Added — tests
+
+5 new ``phase53_*`` cases:
+- ``phase53_sqrt_k_times_k_over_k_cubed_closes`` — eff x2 = 3, 2·3 = 6 > 3.
+- ``phase53_sqrt_k_squared_times_k_over_k_cubed_closes`` — eff x2 = 4, 6 > 4.
+- ``phase53_sqrt_k_times_k_squared_over_k_cubed_closes`` — eff x2 = 5, 6 > 5.
+- ``phase53_sqrt_k_times_k_squared_over_k_squared_stays`` — eff x2 = 5, 4 not > 5.
+- ``phase53_regression_sqrt_k_over_k_squared_still_closes_via_phase51`` — plain
+  Sqrt bypasses Phase 53 and closes via Phase 51.
+
+Full suite: **56 passed** (was 51; +5 net new).
+
 ## 1.0.0 — 2026-05-23
 
 **Phase 52 — Bounded × polynomial numerator pattern (Rust port).**

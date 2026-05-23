@@ -760,6 +760,44 @@ function splitBoundedPolynomialFactor(
   return { bounded, polyDeg };
 }
 
+/**
+ * Phase 53 (TypeScript port): Return the effective growth degree of a
+ * ``Mul(Sqrt(P), polynomial_factors)`` numerator, or ``undefined`` when
+ * the shape isn't recognised.
+ *
+ * The numerator ``Sqrt(P(k)) · Q(k)`` grows at rate
+ * ``deg(P)/2 + deg(Q)``.  Returns that combined value (a possibly
+ * fractional number).  The caller compares against ``den_deg`` directly.
+ *
+ * Requirements:
+ *   - ``node = Mul(...)`` — the plain-``Sqrt`` case is handled by Phase 51.
+ *   - Exactly one factor is a ``Sqrt(P)`` with positive-leading-coeff poly inner.
+ *   - All remaining factors are polynomials in ``k``.
+ */
+function sqrtPolyNumeratorEffectiveDegree(
+  node: IRNode,
+  k: IRNode
+): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let sqrtHalfDeg: number | undefined;
+  let polyDegSum = 0;
+  for (const arg of node.args) {
+    const sqrtDeg = sqrtEffectiveHalfDegree(arg, k);
+    if (sqrtDeg !== undefined) {
+      // Only one Sqrt factor is allowed; bail on a second.
+      if (sqrtHalfDeg !== undefined) return undefined;
+      sqrtHalfDeg = sqrtDeg;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg === undefined) return undefined; // Neither Sqrt nor polynomial.
+    polyDegSum += deg;
+  }
+  // Must have found exactly one Sqrt factor.
+  if (sqrtHalfDeg === undefined) return undefined;
+  return sqrtHalfDeg + polyDegSum;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -798,6 +836,17 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (bpResult !== undefined) {
     const denDegBp = polynomialDegreeInK(den, k);
     if (denDegBp !== undefined && denDegBp > bpResult.polyDeg) {
+      return true;
+    }
+  }
+  // Phase 53: Mul(Sqrt(P), polynomial_factors) numerator pattern.
+  // The effective growth rate is deg(P)/2 + deg(Q).  Vanishes when
+  // deg(den) > deg(P)/2 + deg(Q).  Handled by sqrtPolyNumeratorEffectiveDegree
+  // which requires exactly one Sqrt factor and all others polynomial.
+  const sqrtPolyEff = sqrtPolyNumeratorEffectiveDegree(num, k);
+  if (sqrtPolyEff !== undefined) {
+    const denDegSp = polynomialDegreeInK(den, k);
+    if (denDegSp !== undefined && denDegSp > sqrtPolyEff) {
       return true;
     }
   }
