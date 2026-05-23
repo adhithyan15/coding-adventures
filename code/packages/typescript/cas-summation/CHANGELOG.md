@@ -1,5 +1,40 @@
 # Changelog
 
+## 1.2.0 — 2026-05-23
+
+**Phase 54 — Log×polynomial numerator pattern (TypeScript port).**
+
+Ports Python `cas-summation` 1.2.0 Phase 54 to TypeScript.  Adds
+`splitLogPolynomialFactor` helper and a Phase 54 branch in
+`gVanishesAtInfinity`.  `log(h(k))` grows sub-polynomially so the
+effective growth degree of `log(h) · P(k)` equals `deg(P)`.  Vanishes
+when `den_deg > poly_deg` (strictly).
+
+Bumps 1.1.0 → 1.2.0.
+
+### Added
+
+- **`splitLogPolynomialFactor(node, k)`** — Phase 54 helper.  Splits a
+  `Mul` node into exactly one `Log(diverging)` factor and a polynomial
+  part; returns `{ logFactor, polyDeg }` or `undefined`.
+
+- **Phase 54 branch in `gVanishesAtInfinity`** — inserted after Phase 53
+  and before the Phase 42 polynomial widening.  Closes
+  `Div(Mul(Log(diverging), P), Q)` when `den_deg > poly_deg`.
+
+- **5 new tests** (`describe "summation: Phase 54 Log×polynomial numerator"`):
+  - `log(k)·k / k³ closes (poly_deg=1, den_deg=3)`
+  - `log(k)·k² / k³ closes (poly_deg=2, den_deg=3)`
+  - `log(k)·k / k² closes (poly_deg=1, den_deg=2)`
+  - `log(k)·k² / k² stays unevaluated (equal degrees — diverges)`
+  - `regression: plain log(k)/k³ still closes via Phase 50`
+
+### Tests
+
+61 passed (was 56; +5 net new — Phase 54).
+
+---
+
 ## 1.1.0 — 2026-05-23
 
 **Phase 53 — Sqrt × polynomial numerator pattern (TypeScript port).**

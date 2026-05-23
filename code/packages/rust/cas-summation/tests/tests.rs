@@ -1144,3 +1144,95 @@ fn phase53_regression_sqrt_k_over_k_squared_still_closes_via_phase51() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ---------------------------------------------------------------------------
+// Phase 54 — Log×polynomial numerator (Rust port).
+// ---------------------------------------------------------------------------
+// log(h(k))·P(k)/Q(k) vanishes when deg(Q) > deg(P) (strictly).
+// log grows sub-polynomially so its effective growth degree equals deg(P).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase54_log_k_times_k_over_k_cubed_closes() {
+    // log(k)·k / k³: poly_deg=1, den_deg=3.  3 > 1 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym("Log"), vec![k.clone()]);
+    let log_kp1 = apply(sym("Log"), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![log_k, k.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1, kp1.clone()]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![k.clone(), int(3)])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![kp1, int(3)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase54_log_k_times_k_squared_over_k_cubed_closes() {
+    // log(k)·k² / k³: poly_deg=2, den_deg=3.  3 > 2 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym("Log"), vec![k.clone()]);
+    let log_kp1 = apply(sym("Log"), vec![kp1.clone()]);
+    let k_sq = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_sq = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let num_k = apply(sym(MUL), vec![log_k, k_sq]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1, kp1_sq]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![k.clone(), int(3)])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![kp1, int(3)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase54_log_k_times_k_over_k_squared_closes() {
+    // log(k)·k / k²: poly_deg=1, den_deg=2.  2 > 1 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym("Log"), vec![k.clone()]);
+    let log_kp1 = apply(sym("Log"), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![log_k, k.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1, kp1.clone()]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase54_log_k_times_k_squared_over_k_squared_stays() {
+    // log(k)·k² / k² = log(k) → diverges.  Equal degrees must be refused.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym("Log"), vec![k.clone()]);
+    let log_kp1 = apply(sym("Log"), vec![kp1.clone()]);
+    let k_sq = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_sq = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let num_k = apply(sym(MUL), vec![log_k, k_sq.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1, kp1_sq.clone()]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, k_sq]),
+        apply(sym(DIV), vec![num_kp1, kp1_sq]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase54_regression_log_k_over_k_cubed_still_closes_via_phase50() {
+    // Plain Log(k)/k³ — Phase 54 requires Mul; Phase 50 handles this.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![apply(sym("Log"), vec![k.clone()]), apply(sym(POW), vec![k.clone(), int(3)])]),
+        apply(sym(DIV), vec![apply(sym("Log"), vec![kp1.clone()]), apply(sym(POW), vec![kp1, int(3)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}

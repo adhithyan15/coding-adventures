@@ -910,3 +910,77 @@ describe("summation: Phase 53 Sqrt × polynomial numerator", () => {
     expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 54 — Log×polynomial numerator (TS port).
+// ---------------------------------------------------------------------------
+// log(h(k))·P(k)/Q(k) vanishes when deg(Q) > deg(P) (strictly).
+// log grows sub-polynomially so its effective growth degree equals deg(P).
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 54 Log×polynomial numerator", () => {
+  it("log(k)·k / k³ closes (poly_deg=1, den_deg=3)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Log"), [k]), k]);
+    const numKp1 = app(MUL, [app(sym("Log"), [kp1]), kp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("log(k)·k² / k³ closes (poly_deg=2, den_deg=3)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Log"), [k]), app(POW, [k, int(2)])]);
+    const numKp1 = app(MUL, [app(sym("Log"), [kp1]), app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("log(k)·k / k² closes (poly_deg=1, den_deg=2)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Log"), [k]), k]);
+    const numKp1 = app(MUL, [app(sym("Log"), [kp1]), kp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("log(k)·k² / k² stays unevaluated (equal degrees — diverges)", () => {
+    // log(k)*k²/k² = log(k) → diverges; equal degrees must be refused.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Log"), [k]), app(POW, [k, int(2)])]);
+    const numKp1 = app(MUL, [app(sym("Log"), [kp1]), app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+
+  it("regression: plain log(k)/k³ still closes via Phase 50", () => {
+    // Phase 54 requires a Mul node; bare Log(k) is handled by Phase 50.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const f = app(SUB, [
+      app(DIV, [app(sym("Log"), [k]), app(POW, [k, int(3)])]),
+      app(DIV, [app(sym("Log"), [kp1]), app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+});

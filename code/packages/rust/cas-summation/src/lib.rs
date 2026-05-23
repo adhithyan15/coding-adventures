@@ -1094,6 +1094,47 @@ fn sqrt_poly_numerator_effective_degree_x2(node: &IRNode, k: &IRNode) -> Option<
     Some(sid + 2 * poly_deg_sum)
 }
 
+/// Phase 54 helper: split a `Mul` node into exactly one `Log(diverging)`
+/// factor and a polynomial part in `k`.
+///
+/// Returns `Some((log_factor_ref, poly_deg_sum))` when:
+///   - `node = Mul(...)`
+///   - Exactly one factor passes `is_log_of_diverging_in_k`
+///   - All remaining factors are polynomials in `k`
+///
+/// Returns `None` on any other shape (zero or two log factors, non-poly
+/// non-log factor, or non-Mul node).
+///
+/// Used by `g_vanishes_at_infinity` (Phase 54) to recognise that
+/// `log(h(k)) · P(k) / Q(k)` vanishes when `deg(Q) > deg(P)`.
+fn split_log_polynomial_factor<'a>(node: &'a IRNode, k: &IRNode) -> Option<(&'a IRNode, i64)> {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return None,
+    };
+    if !head_is(&apply_node.head, MUL) {
+        return None;
+    }
+    let mut log_factor: Option<&IRNode> = None;
+    let mut poly_deg_sum: i64 = 0;
+    for arg in &apply_node.args {
+        if is_log_of_diverging_in_k(arg, k) {
+            // Only one Log(diverging) factor is allowed.
+            if log_factor.is_some() {
+                return None;
+            }
+            log_factor = Some(arg);
+            continue;
+        }
+        match polynomial_degree_in_k(arg, k) {
+            Some(d) => poly_deg_sum += d,
+            None => return None, // Neither Log(diverging) nor polynomial — bail.
+        }
+    }
+    let lf = log_factor?; // Must have found exactly one Log(diverging) factor.
+    Some((lf, poly_deg_sum))
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -1147,6 +1188,18 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     if let Some(sqrt_poly_eff) = sqrt_poly_numerator_effective_degree_x2(num, k) {
         if let Some(den_deg_sp) = polynomial_degree_in_k(den, k) {
             if 2 * den_deg_sp > sqrt_poly_eff {
+                return true;
+            }
+        }
+    }
+    // Phase 54: Mul(Log(diverging), polynomial_factors) numerator pattern.
+    // log(h(k)) grows sub-polynomially (o(k^ε) for any ε > 0), so the
+    // effective growth degree of log(h) · P(k) equals deg(P).  Vanishes
+    // when den_deg > poly_deg (strictly).  Equal degrees are refused:
+    // log(k) * constant diverges to ±∞.
+    if let Some((_log_factor, poly_deg_lp)) = split_log_polynomial_factor(num, k) {
+        if let Some(den_deg_lp) = polynomial_degree_in_k(den, k) {
+            if den_deg_lp > poly_deg_lp {
                 return true;
             }
         }
