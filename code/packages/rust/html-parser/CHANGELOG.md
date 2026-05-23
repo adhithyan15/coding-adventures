@@ -178,6 +178,10 @@ documented in this file.
 - Self-closing flags on non-void HTML start tags are now ignored with a parser
   diagnostic, keeping elements such as `div`, `script`, `textarea`, and table
   cells open for their real content.
+- Browser-facing document extraction now includes base targets, head metadata,
+  loadable resources, anchor targets, richer link attributes, form encodings,
+  form targets, and basic control disabled/checked state for browser pipeline
+  consumers.
 - Void end tags such as `</img>`, `</input>`, and `</hr>` are now ignored with a
   parser diagnostic, while self-closing syntax on void start tags remains
   acknowledged.

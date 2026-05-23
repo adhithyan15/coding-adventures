@@ -1,6 +1,6 @@
 use coding_adventures_html_parser::{
-    parse_browser_document, BrowserDocument, BrowserForm, BrowserFormControl, BrowserHeading,
-    BrowserImage, BrowserLink, BrowserTable,
+    parse_browser_document, BrowserAnchor, BrowserDocument, BrowserForm, BrowserFormControl,
+    BrowserHeading, BrowserImage, BrowserLink, BrowserMeta, BrowserResource, BrowserTable,
 };
 use serde::Deserialize;
 
@@ -24,12 +24,44 @@ struct BrowserReadinessCase {
 struct ExpectedBrowserDocument {
     title: Option<String>,
     base_href: Option<String>,
+    base_target: Option<String>,
     body_text: String,
+    metas: Vec<ExpectedMeta>,
+    resources: Vec<ExpectedResource>,
+    anchors: Vec<ExpectedAnchor>,
     headings: Vec<ExpectedHeading>,
     links: Vec<ExpectedLink>,
     images: Vec<ExpectedImage>,
     forms: Vec<ExpectedForm>,
     tables: Vec<ExpectedTable>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedMeta {
+    name: Option<String>,
+    http_equiv: Option<String>,
+    property: Option<String>,
+    charset: Option<String>,
+    content: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedResource {
+    kind: String,
+    url: String,
+    rel: Option<String>,
+    type_hint: Option<String>,
+    media: Option<String>,
+    title: Option<String>,
+    async_script: bool,
+    defer_script: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedAnchor {
+    id: Option<String>,
+    name: Option<String>,
+    text: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -42,6 +74,9 @@ struct ExpectedHeading {
 struct ExpectedLink {
     href: Option<String>,
     name: Option<String>,
+    target: Option<String>,
+    rel: Option<String>,
+    title: Option<String>,
     text: String,
 }
 
@@ -57,6 +92,8 @@ struct ExpectedImage {
 struct ExpectedForm {
     action: Option<String>,
     method: String,
+    enctype: Option<String>,
+    target: Option<String>,
     controls: Vec<ExpectedFormControl>,
 }
 
@@ -65,6 +102,8 @@ struct ExpectedFormControl {
     control_type: String,
     name: Option<String>,
     value: Option<String>,
+    disabled: bool,
+    checked: bool,
     text: String,
     options: Vec<String>,
 }
@@ -104,7 +143,23 @@ impl ExpectedBrowserDocument {
         BrowserDocument {
             title: self.title,
             base_href: self.base_href,
+            base_target: self.base_target,
             body_text: self.body_text,
+            metas: self
+                .metas
+                .into_iter()
+                .map(ExpectedMeta::into_browser_meta)
+                .collect(),
+            resources: self
+                .resources
+                .into_iter()
+                .map(ExpectedResource::into_browser_resource)
+                .collect(),
+            anchors: self
+                .anchors
+                .into_iter()
+                .map(ExpectedAnchor::into_browser_anchor)
+                .collect(),
             headings: self
                 .headings
                 .into_iter()
@@ -134,6 +189,43 @@ impl ExpectedBrowserDocument {
     }
 }
 
+impl ExpectedMeta {
+    fn into_browser_meta(self) -> BrowserMeta {
+        BrowserMeta {
+            name: self.name,
+            http_equiv: self.http_equiv,
+            property: self.property,
+            charset: self.charset,
+            content: self.content,
+        }
+    }
+}
+
+impl ExpectedResource {
+    fn into_browser_resource(self) -> BrowserResource {
+        BrowserResource {
+            kind: self.kind,
+            url: self.url,
+            rel: self.rel,
+            type_hint: self.type_hint,
+            media: self.media,
+            title: self.title,
+            async_script: self.async_script,
+            defer_script: self.defer_script,
+        }
+    }
+}
+
+impl ExpectedAnchor {
+    fn into_browser_anchor(self) -> BrowserAnchor {
+        BrowserAnchor {
+            id: self.id,
+            name: self.name,
+            text: self.text,
+        }
+    }
+}
+
 impl ExpectedHeading {
     fn into_browser_heading(self) -> BrowserHeading {
         BrowserHeading {
@@ -148,6 +240,9 @@ impl ExpectedLink {
         BrowserLink {
             href: self.href,
             name: self.name,
+            target: self.target,
+            rel: self.rel,
+            title: self.title,
             text: self.text,
         }
     }
@@ -169,6 +264,8 @@ impl ExpectedForm {
         BrowserForm {
             action: self.action,
             method: self.method,
+            enctype: self.enctype,
+            target: self.target,
             controls: self
                 .controls
                 .into_iter()
@@ -184,6 +281,8 @@ impl ExpectedFormControl {
             control_type: self.control_type,
             name: self.name,
             value: self.value,
+            disabled: self.disabled,
+            checked: self.checked,
             text: self.text,
             options: self.options,
         }

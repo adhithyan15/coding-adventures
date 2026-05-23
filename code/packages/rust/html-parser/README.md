@@ -58,8 +58,9 @@ The current parser surface includes:
 - parser diagnostics for unmatched end tags
 - body-fragment parsing that returns DOM nodes without the implied
   `html/head/body` shell while preserving lexer/parser diagnostics
-- browser-facing document extraction for title, base URL, body text, headings,
-  links, image attributes, form controls, and table summaries
+- browser-facing document extraction for title, base URL/target, head metadata,
+  resource inventory, anchor targets, body text, headings, richer links, image
+  attributes, form controls, and table summaries
 
 The checked-in html5lib tree-construction smoke corpus now covers every case in
 the currently audited upstream `html5lib-tests/tree-construction/*.dat` sources
@@ -333,6 +334,7 @@ let browser_document = parse_browser_document(
 
 assert_eq!(browser_document.title.as_deref(), Some("Example"));
 assert_eq!(browser_document.links[0].href.as_deref(), Some("next.html"));
+assert!(browser_document.resources.is_empty());
 
 match &document.children[0] {
     Node::Element(element) => assert_eq!(element.name, "html"),

@@ -41,7 +41,11 @@ class HtmlFixtureSchemasTest(unittest.TestCase):
                 "expected": {
                     "title": "x",
                     "base_href": None,
+                    "base_target": None,
                     "body_text": "body",
+                    "metas": [],
+                    "resources": [],
+                    "anchors": [],
                     "headings": [],
                     "links": [],
                     "images": [],
