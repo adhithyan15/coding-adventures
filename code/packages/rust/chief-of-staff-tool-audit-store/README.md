@@ -137,6 +137,9 @@ The crate keeps the boundary narrow:
   run outcome
 - supervisor drain run summaries flatten idle outcome flags beside drain-idle
   status for host logs
+- supervisor drain reports and summaries expose per-classifier and aggregate
+  label-to-classifier match flags for outcome, scheduler action, count drift,
+  and host-investigation logs
 - supervisor drain run summaries flatten outcome status flags for host logs and
   terminal scheduler dashboards
 - supervisor drain reports and summaries expose no-action scheduler helpers for

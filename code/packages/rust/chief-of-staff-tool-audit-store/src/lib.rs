@@ -1048,6 +1048,11 @@ impl ToolAuditSupervisorDrainRunReport {
         self.outcome().as_str()
     }
 
+    /// Return whether the outcome label parses back to the typed outcome.
+    pub fn outcome_label_matches_outcome(&self) -> bool {
+        ToolAuditSupervisorDrainRunOutcome::from_label(self.outcome_label()) == Some(self.outcome())
+    }
+
     /// Return whether this run outcome leaves the scheduler idle.
     pub fn outcome_is_idle(&self) -> bool {
         self.outcome().is_idle()
@@ -1093,6 +1098,12 @@ impl ToolAuditSupervisorDrainRunReport {
         self.scheduler_action().as_str()
     }
 
+    /// Return whether the scheduler-action label parses back to the typed action.
+    pub fn scheduler_action_label_matches_action(&self) -> bool {
+        ToolAuditSupervisorDrainSchedulerAction::from_label(self.scheduler_action_label())
+            == Some(self.scheduler_action())
+    }
+
     /// Return whether the scheduler should run another drain pass.
     pub fn requests_continuation(&self) -> bool {
         self.scheduler_action().requests_continuation()
@@ -1119,6 +1130,20 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return the stable host-investigation classification label.
     pub fn host_investigation_label(&self) -> &'static str {
         self.host_investigation_kind().as_str()
+    }
+
+    /// Return whether the host-investigation label parses back to the typed classification.
+    pub fn host_investigation_label_matches_kind(&self) -> bool {
+        ToolAuditSupervisorDrainHostInvestigationKind::from_label(self.host_investigation_label())
+            == Some(self.host_investigation_kind())
+    }
+
+    /// Return whether every stable classifier label parses back to its typed value.
+    pub fn all_classifier_labels_match(&self) -> bool {
+        self.outcome_label_matches_outcome()
+            && self.scheduler_action_label_matches_action()
+            && self.count_drift_label_matches_kind()
+            && self.host_investigation_label_matches_kind()
     }
 
     /// Return whether the host should investigate any run divergence.
@@ -1209,6 +1234,7 @@ impl ToolAuditSupervisorDrainRunReport {
             checkpoint_name: self.checkpoint_name().to_owned(),
             outcome: self.outcome(),
             outcome_label: self.outcome_label(),
+            outcome_label_matches_outcome: self.outcome_label_matches_outcome(),
             outcome_is_idle: self.outcome_is_idle(),
             is_caught_up: self.is_caught_up(),
             needs_continuation: self.needs_continuation(),
@@ -1216,6 +1242,7 @@ impl ToolAuditSupervisorDrainRunReport {
             plan_diverged: self.plan_diverged(),
             scheduler_action: self.scheduler_action(),
             scheduler_action_label: self.scheduler_action_label(),
+            scheduler_action_label_matches_action: self.scheduler_action_label_matches_action(),
             is_no_scheduler_action: self.scheduler_action().is_no_action(),
             requires_scheduler_action: self.requires_scheduler_action(),
             requests_continuation: self.requests_continuation(),
@@ -1242,11 +1269,14 @@ impl ToolAuditSupervisorDrainRunReport {
             has_count_drift: self.has_count_drift(),
             count_drift_kind: self.count_drift_kind(),
             count_drift_label: self.count_drift_label(),
+            count_drift_label_matches_kind: self.count_drift_label_matches_kind(),
             is_no_count_drift: self.is_no_count_drift(),
             requires_plan_drift_investigation: self.requires_plan_drift_investigation(),
             requires_count_drift_investigation: self.requires_count_drift_investigation(),
             host_investigation_kind: self.host_investigation_kind(),
             host_investigation_label: self.host_investigation_label(),
+            host_investigation_label_matches_kind: self.host_investigation_label_matches_kind(),
+            all_classifier_labels_match: self.all_classifier_labels_match(),
             requires_host_investigation: self.requires_host_investigation(),
             is_no_host_investigation: self.is_no_host_investigation(),
             requires_host_plan_drift_investigation: self.requires_host_plan_drift_investigation(),
@@ -1355,6 +1385,12 @@ impl ToolAuditSupervisorDrainRunReport {
         self.count_drift_kind().as_str()
     }
 
+    /// Return whether the count-drift label parses back to the typed classification.
+    pub fn count_drift_label_matches_kind(&self) -> bool {
+        ToolAuditSupervisorDrainCountDriftKind::from_label(self.count_drift_label())
+            == Some(self.count_drift_kind())
+    }
+
     /// Return whether count drift should be investigated by the host.
     pub fn requires_count_drift_investigation(&self) -> bool {
         self.count_drift_kind().requires_investigation()
@@ -1427,6 +1463,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub outcome: ToolAuditSupervisorDrainRunOutcome,
     /// Stable scheduler-facing outcome label for host logs.
     pub outcome_label: &'static str,
+    /// Whether the outcome label parses back to the typed outcome.
+    pub outcome_label_matches_outcome: bool,
     /// Whether the scheduler-facing outcome is idle.
     pub outcome_is_idle: bool,
     /// Whether rows were replayed and this run reached the current log end.
@@ -1441,6 +1479,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub scheduler_action: ToolAuditSupervisorDrainSchedulerAction,
     /// Stable scheduler action label for host logs.
     pub scheduler_action_label: &'static str,
+    /// Whether the scheduler-action label parses back to the typed action.
+    pub scheduler_action_label_matches_action: bool,
     /// Whether this run intentionally leaves the scheduler idle.
     pub is_no_scheduler_action: bool,
     /// Whether this run asks the scheduler to take action.
@@ -1493,6 +1533,8 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub count_drift_kind: ToolAuditSupervisorDrainCountDriftKind,
     /// Stable count-drift classification label for host logs.
     pub count_drift_label: &'static str,
+    /// Whether the count-drift label parses back to the typed classification.
+    pub count_drift_label_matches_kind: bool,
     /// Whether planned and replayed counts stayed aligned.
     pub is_no_count_drift: bool,
     /// Whether preflight/drain drift should be investigated by the host.
@@ -1503,6 +1545,10 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_investigation_kind: ToolAuditSupervisorDrainHostInvestigationKind,
     /// Stable host-investigation classification label for host logs.
     pub host_investigation_label: &'static str,
+    /// Whether the host-investigation label parses back to the typed classification.
+    pub host_investigation_label_matches_kind: bool,
+    /// Whether every stable classifier label parses back to its typed value.
+    pub all_classifier_labels_match: bool,
     /// Whether the host should investigate any run divergence.
     pub requires_host_investigation: bool,
     /// Whether the host can skip drain-run investigation.
@@ -1557,6 +1603,11 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return the stable scheduler-facing label for this run outcome.
     pub fn outcome_label(&self) -> &'static str {
         self.outcome_label
+    }
+
+    /// Return whether the outcome label parses back to the typed outcome.
+    pub fn outcome_label_matches_outcome(&self) -> bool {
+        self.outcome_label_matches_outcome
     }
 
     /// Return whether the scheduler-facing outcome is idle.
@@ -1729,6 +1780,11 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.count_drift_label
     }
 
+    /// Return whether the count-drift label parses back to the typed classification.
+    pub fn count_drift_label_matches_kind(&self) -> bool {
+        self.count_drift_label_matches_kind
+    }
+
     /// Return whether count drift should be investigated by the host.
     pub fn requires_count_drift_investigation(&self) -> bool {
         self.requires_count_drift_investigation
@@ -1742,6 +1798,16 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return the stable host-investigation classification label.
     pub fn host_investigation_label(&self) -> &'static str {
         self.host_investigation_label
+    }
+
+    /// Return whether the host-investigation label parses back to the typed classification.
+    pub fn host_investigation_label_matches_kind(&self) -> bool {
+        self.host_investigation_label_matches_kind
+    }
+
+    /// Return whether every stable classifier label parses back to its typed value.
+    pub fn all_classifier_labels_match(&self) -> bool {
+        self.all_classifier_labels_match
     }
 
     /// Return whether the host should investigate any run divergence.
@@ -1787,6 +1853,11 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return the stable scheduler-action label for host logs.
     pub fn scheduler_action_label(&self) -> &'static str {
         self.scheduler_action_label
+    }
+
+    /// Return whether the scheduler-action label parses back to the typed action.
+    pub fn scheduler_action_label_matches_action(&self) -> bool {
+        self.scheduler_action_label_matches_action
     }
 
     /// Return whether no audit rows were replayed.
@@ -4355,6 +4426,7 @@ mod tests {
             ToolAuditSupervisorDrainRunOutcome::NeedsContinuation
         );
         assert_eq!(report.outcome_label(), "needs_continuation");
+        assert!(report.outcome_label_matches_outcome());
         assert!(!report.outcome_is_idle());
         assert!(!report.is_caught_up());
         assert!(report.needs_continuation());
@@ -4370,14 +4442,18 @@ mod tests {
             ToolAuditSupervisorDrainHostInvestigationKind::NoInvestigation
         );
         assert_eq!(report.host_investigation_label(), "no_investigation");
+        assert!(report.host_investigation_label_matches_kind());
         assert!(!report.requires_host_investigation());
         assert!(report.is_no_count_drift());
+        assert!(report.count_drift_label_matches_kind());
         assert!(report.is_no_host_investigation());
         assert_eq!(
             report.scheduler_action(),
             ToolAuditSupervisorDrainSchedulerAction::ScheduleContinuation
         );
         assert_eq!(report.scheduler_action_label(), "schedule_continuation");
+        assert!(report.scheduler_action_label_matches_action());
+        assert!(report.all_classifier_labels_match());
     }
 
     #[test]
@@ -4409,6 +4485,8 @@ mod tests {
         );
         assert_eq!(summary.outcome_label, "needs_continuation");
         assert_eq!(summary.outcome_label(), "needs_continuation");
+        assert!(summary.outcome_label_matches_outcome);
+        assert!(summary.outcome_label_matches_outcome());
         assert!(!summary.outcome_is_idle);
         assert!(!summary.outcome_is_idle());
         assert!(!summary.is_caught_up);
@@ -4429,6 +4507,8 @@ mod tests {
         );
         assert_eq!(summary.scheduler_action_label, "schedule_continuation");
         assert_eq!(summary.scheduler_action_label(), "schedule_continuation");
+        assert!(summary.scheduler_action_label_matches_action);
+        assert!(summary.scheduler_action_label_matches_action());
         assert!(!summary.is_no_scheduler_action);
         assert!(!summary.is_no_scheduler_action());
         assert!(summary.requires_scheduler_action);
@@ -4489,6 +4569,8 @@ mod tests {
         );
         assert_eq!(summary.count_drift_label, "no_count_drift");
         assert_eq!(summary.count_drift_label(), "no_count_drift");
+        assert!(summary.count_drift_label_matches_kind);
+        assert!(summary.count_drift_label_matches_kind());
         assert!(!summary.requires_count_drift_investigation);
         assert!(!summary.requires_count_drift_investigation());
         assert_eq!(
@@ -4501,6 +4583,10 @@ mod tests {
         );
         assert_eq!(summary.host_investigation_label, "no_investigation");
         assert_eq!(summary.host_investigation_label(), "no_investigation");
+        assert!(summary.host_investigation_label_matches_kind);
+        assert!(summary.host_investigation_label_matches_kind());
+        assert!(summary.all_classifier_labels_match);
+        assert!(summary.all_classifier_labels_match());
         assert!(!summary.requires_host_investigation);
         assert!(!summary.requires_host_investigation());
         assert!(!summary.requires_host_plan_drift_investigation);
@@ -4634,6 +4720,7 @@ mod tests {
             ToolAuditSupervisorDrainCountDriftKind::RecordCountDrift
         );
         assert_eq!(report.count_drift_label(), "record_count_drift");
+        assert!(report.count_drift_label_matches_kind());
         assert!(report.requires_count_drift_investigation());
         assert!(report.requires_plan_drift_investigation());
         assert_eq!(
@@ -4641,6 +4728,7 @@ mod tests {
             ToolAuditSupervisorDrainHostInvestigationKind::PlanAndCountDrift
         );
         assert_eq!(report.host_investigation_label(), "plan_and_count_drift");
+        assert!(report.host_investigation_label_matches_kind());
         assert!(report.requires_host_investigation());
         assert!(report.requires_host_plan_drift_investigation());
         assert!(report.requires_host_count_drift_investigation());
@@ -4666,6 +4754,8 @@ mod tests {
         );
         assert_eq!(summary.count_drift_label, "record_count_drift");
         assert_eq!(summary.count_drift_label(), "record_count_drift");
+        assert!(summary.count_drift_label_matches_kind);
+        assert!(summary.count_drift_label_matches_kind());
         assert!(summary.requires_count_drift_investigation);
         assert!(summary.requires_count_drift_investigation());
         assert_eq!(
@@ -4674,6 +4764,8 @@ mod tests {
         );
         assert_eq!(summary.host_investigation_label, "plan_and_count_drift");
         assert_eq!(summary.host_investigation_label(), "plan_and_count_drift");
+        assert!(summary.host_investigation_label_matches_kind);
+        assert!(summary.host_investigation_label_matches_kind());
         assert!(summary.requires_host_investigation);
         assert!(summary.requires_host_investigation());
         assert!(summary.requires_host_plan_drift_investigation);
