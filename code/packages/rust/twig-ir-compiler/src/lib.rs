@@ -544,19 +544,24 @@ mod tests {
     // ---- Module-level invariants -----------------------------------------
 
     #[test]
-    fn empty_program_returns_nil() {
+    fn empty_program_returns_typed_nil_const() {
+        // Path A increment 6a: the empty-program implicit nil return
+        // is emitted as a typed `const 0 [ref<LispyPair>]` instead of
+        // `call_builtin "make_nil" [any]`.  This matches the convention
+        // used by the IIR-to-{wasm,jvm,clr,beam} backends and the
+        // Phase 2 heap-lowering pass — nil is the null `LispyPair`
+        // reference, represented as 0.
         let m = module("");
         assert_eq!(m.entry_point.as_deref(), Some("main"));
         assert_eq!(m.language, "twig");
         assert_eq!(m.functions.len(), 1);
         let main = &m.functions[0];
         assert_eq!(main.name, "main");
-        // make_nil + ret is the empty-program shape.
-        assert_eq!(op_names(&main.instructions), vec!["call_builtin", "ret"]);
-        match &main.instructions[0].srcs[0] {
-            Operand::Var(s) => assert_eq!(s, "make_nil"),
-            other => panic!("expected Var(\"make_nil\"), got {other:?}"),
-        }
+        // const 0 [ref<LispyPair>] + ret is the empty-program shape.
+        assert_eq!(op_names(&main.instructions), vec!["const", "ret"]);
+        assert_eq!(main.instructions[0].srcs[0], Operand::Int(0));
+        assert_eq!(main.instructions[0].type_hint, "ref<LispyPair>");
+        assert_eq!(main.instructions[1].type_hint, "ref<LispyPair>");
     }
 
     #[test]
@@ -633,10 +638,14 @@ mod tests {
     }
 
     #[test]
-    fn nil_literal_emits_make_nil_builtin() {
+    fn nil_literal_emits_typed_const_ref_lispy_pair() {
+        // Path A increment 6a: `nil` now emits `const 0 [ref<LispyPair>]`
+        // (matching iir-builtin-lowering's Phase 2 convention) instead
+        // of `call_builtin "make_nil" [any]`.
         let i = main_instrs("nil");
-        assert_eq!(i[0].op, "call_builtin");
-        assert_eq!(i[0].srcs[0], Operand::Var("make_nil".into()));
+        assert_eq!(i[0].op, "const");
+        assert_eq!(i[0].srcs[0], Operand::Int(0));
+        assert_eq!(i[0].type_hint, "ref<LispyPair>");
     }
 
     #[test]
