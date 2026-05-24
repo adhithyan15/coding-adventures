@@ -426,10 +426,31 @@ impl PlanBuilder {
             );
         }
         if let Some(color) = self.stroke_color(rect.stroke.as_deref(), opacity) {
-            self.warn_stroke_dash(rect.stroke_dash.as_deref());
             let w = rect.stroke_width.unwrap_or(1.0).max(0.0);
             if w > 0.0 {
-                self.add_rect_stroke(rect.x, rect.y, rect.width, rect.height, w, transform, color);
+                if let Some(dash) = normalized_dash_pattern(rect.stroke_dash.as_deref()) {
+                    self.add_dashed_rect_stroke(
+                        rect.x,
+                        rect.y,
+                        rect.width,
+                        rect.height,
+                        w,
+                        &dash,
+                        rect.stroke_dash_offset.unwrap_or(0.0) as f32,
+                        transform,
+                        color,
+                    );
+                } else {
+                    self.add_rect_stroke(
+                        rect.x,
+                        rect.y,
+                        rect.width,
+                        rect.height,
+                        w,
+                        transform,
+                        color,
+                    );
+                }
             }
         }
     }
@@ -901,6 +922,43 @@ impl PlanBuilder {
         self.add_rect_mesh(x, y + height - w, width, w, transform, brush, "rect.stroke");
         self.add_rect_mesh(x, y, w, height, transform, brush, "rect.stroke");
         self.add_rect_mesh(x + width - w, y, w, height, transform, brush, "rect.stroke");
+    }
+
+    fn add_dashed_rect_stroke(
+        &mut self,
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        stroke_width: f64,
+        dash: &[f32],
+        dash_offset: f32,
+        transform: Transform2D,
+        color: GpuColor,
+    ) {
+        if width <= 0.0 || height <= 0.0 {
+            return;
+        }
+        let (mut dash_index, mut dash_offset) = dash_start(dash, dash_offset);
+        let sides = [
+            (point(x, y), point(x + width, y)),
+            (point(x + width, y), point(x + width, y + height)),
+            (point(x + width, y + height), point(x, y + height)),
+            (point(x, y + height), point(x, y)),
+        ];
+        for (p0, p1) in sides {
+            self.add_dashed_line_segment(
+                p0,
+                p1,
+                stroke_width as f32,
+                dash,
+                &mut dash_index,
+                &mut dash_offset,
+                transform,
+                color,
+                "rect.stroke.dash",
+            );
+        }
     }
 
     fn add_rect_mesh(
@@ -1599,6 +1657,42 @@ mod tests {
         assert_eq!(plan.meshes[0].vertices.len(), 4);
         assert_eq!(plan.meshes[0].indices, vec![0, 1, 2, 0, 2, 3]);
         assert_eq!(plan.commands, vec![GpuCommand::DrawMesh { mesh_id: 0 }]);
+    }
+
+    #[test]
+    fn lowers_dashed_rect_stroke_around_perimeter() {
+        let mut scene = PaintScene::new(24.0, 16.0);
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 2.0,
+            y: 2.0,
+            width: 8.0,
+            height: 4.0,
+            fill: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(2.0),
+            corner_radius: None,
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(plan.meshes.len(), 3);
+        assert!(plan
+            .meshes
+            .iter()
+            .all(|mesh| mesh.label == "rect.stroke.dash"));
+        assert_eq!(plan.meshes[0].vertices[0].position.x, 2.0);
+        assert_eq!(plan.meshes[0].vertices[1].position.x, 6.0);
+        assert_eq!(plan.meshes[1].vertices[0].position.y, 2.0);
+        assert_eq!(plan.meshes[1].vertices[1].position.y, 6.0);
+        assert_eq!(plan.meshes[2].vertices[0].position.x, 6.0);
+        assert_eq!(plan.meshes[2].vertices[1].position.x, 2.0);
+        assert!(!plan
+            .diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.feature == "stroke_dash"));
     }
 
     #[test]
