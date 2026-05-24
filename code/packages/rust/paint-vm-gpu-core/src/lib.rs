@@ -549,28 +549,63 @@ impl PlanBuilder {
             }
         }
         if let Some(color) = self.stroke_color(path.stroke.as_deref(), opacity) {
-            self.warn_stroke_dash(path.stroke_dash.as_deref());
             let stroke_width = path.stroke_width.unwrap_or(1.0).max(1.0) as f32;
+            let dash = normalized_dash_pattern(path.stroke_dash.as_deref());
             for contour in &contours {
+                let mut dash_cursor = dash
+                    .as_deref()
+                    .map(|dash| dash_start(dash, path.stroke_dash_offset.unwrap_or(0.0) as f32));
                 for segment in contour.points.windows(2) {
-                    self.add_line_quad(
-                        segment[0],
-                        segment[1],
-                        stroke_width,
-                        transform,
-                        color,
-                        "path.stroke",
-                    );
+                    if let Some((dash, (dash_index, dash_offset))) =
+                        dash.as_deref().zip(dash_cursor.as_mut())
+                    {
+                        self.add_dashed_line_segment(
+                            segment[0],
+                            segment[1],
+                            stroke_width,
+                            dash,
+                            dash_index,
+                            dash_offset,
+                            transform,
+                            color,
+                            "path.stroke.dash",
+                        );
+                    } else {
+                        self.add_line_quad(
+                            segment[0],
+                            segment[1],
+                            stroke_width,
+                            transform,
+                            color,
+                            "path.stroke",
+                        );
+                    }
                 }
                 if contour.closed && contour.points.len() > 2 {
-                    self.add_line_quad(
-                        *contour.points.last().unwrap(),
-                        contour.points[0],
-                        stroke_width,
-                        transform,
-                        color,
-                        "path.stroke",
-                    );
+                    if let Some((dash, (dash_index, dash_offset))) =
+                        dash.as_deref().zip(dash_cursor.as_mut())
+                    {
+                        self.add_dashed_line_segment(
+                            *contour.points.last().unwrap(),
+                            contour.points[0],
+                            stroke_width,
+                            dash,
+                            dash_index,
+                            dash_offset,
+                            transform,
+                            color,
+                            "path.stroke.dash",
+                        );
+                    } else {
+                        self.add_line_quad(
+                            *contour.points.last().unwrap(),
+                            contour.points[0],
+                            stroke_width,
+                            transform,
+                            color,
+                            "path.stroke",
+                        );
+                    }
                 }
             }
         }
@@ -913,12 +948,14 @@ impl PlanBuilder {
             self.add_line_quad(p0, p1, width, transform, color, label);
             return;
         };
+        let (mut dash_index, mut dash_offset) = dash_start(&pattern, dash_offset);
         self.add_dashed_line_quads(
             p0,
             p1,
             width,
             &pattern,
-            dash_offset,
+            &mut dash_index,
+            &mut dash_offset,
             transform,
             color,
             "line.dash",
@@ -931,7 +968,33 @@ impl PlanBuilder {
         p1: GpuPoint,
         width: f32,
         dash: &[f32],
-        dash_offset: f32,
+        dash_index: &mut usize,
+        dash_offset: &mut f32,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        self.add_dashed_line_segment(
+            p0,
+            p1,
+            width,
+            dash,
+            dash_index,
+            dash_offset,
+            transform,
+            color,
+            label,
+        );
+    }
+
+    fn add_dashed_line_segment(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        width: f32,
+        dash: &[f32],
+        dash_index: &mut usize,
+        dash_offset: &mut f32,
         transform: Transform2D,
         color: GpuColor,
         label: &'static str,
@@ -943,21 +1006,13 @@ impl PlanBuilder {
             return;
         }
 
-        let cycle = dash.iter().sum::<f32>();
-        let mut index = 0usize;
-        let mut offset = dash_offset.rem_euclid(cycle);
-        while offset >= dash[index] {
-            offset -= dash[index];
-            index = (index + 1) % dash.len();
-        }
-
         let ux = dx / len;
         let uy = dy / len;
         let mut distance = 0.0f32;
         while distance < len {
-            let remaining_dash = dash[index] - offset;
+            let remaining_dash = dash[*dash_index] - *dash_offset;
             let run = remaining_dash.min(len - distance);
-            if index % 2 == 0 && run > f32::EPSILON {
+            if *dash_index % 2 == 0 && run > f32::EPSILON {
                 let start = GpuPoint {
                     x: p0.x + ux * distance,
                     y: p0.y + uy * distance,
@@ -969,8 +1024,12 @@ impl PlanBuilder {
                 self.add_line_quad(start, end, width, transform, color, label);
             }
             distance += run;
-            index = (index + 1) % dash.len();
-            offset = 0.0;
+            if run < remaining_dash {
+                *dash_offset += run;
+            } else {
+                *dash_index = (*dash_index + 1) % dash.len();
+                *dash_offset = 0.0;
+            }
         }
     }
 
@@ -1208,6 +1267,17 @@ fn normalized_dash_pattern(dash: Option<&[f64]>) -> Option<Vec<f32>> {
         pattern.extend(repeated);
     }
     Some(pattern)
+}
+
+fn dash_start(dash: &[f32], dash_offset: f32) -> (usize, f32) {
+    let cycle = dash.iter().sum::<f32>();
+    let mut index = 0usize;
+    let mut offset = dash_offset.rem_euclid(cycle);
+    while offset >= dash[index] {
+        offset -= dash[index];
+        index = (index + 1) % dash.len();
+    }
+    (index, offset)
 }
 
 fn build_gradient_ramp(stops: &[GradientStop], opacity: f32) -> Vec<u8> {
@@ -1743,6 +1813,47 @@ mod tests {
             },
         );
         assert_eq!(plan.meshes.len(), 4);
+    }
+
+    #[test]
+    fn lowers_dashed_path_stroke_across_segments() {
+        let mut scene = PaintScene::new(24.0, 12.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 0.0, y: 6.0 },
+                PathCommand::LineTo { x: 10.0, y: 6.0 },
+                PathCommand::LineTo { x: 20.0, y: 6.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(2.0),
+            stroke_cap: None,
+            stroke_join: None,
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(plan.meshes.len(), 4);
+        assert!(plan
+            .meshes
+            .iter()
+            .all(|mesh| mesh.label == "path.stroke.dash"));
+        assert_eq!(plan.meshes[0].vertices[0].position.x, 0.0);
+        assert_eq!(plan.meshes[0].vertices[1].position.x, 4.0);
+        assert_eq!(plan.meshes[1].vertices[0].position.x, 8.0);
+        assert_eq!(plan.meshes[1].vertices[1].position.x, 10.0);
+        assert_eq!(plan.meshes[2].vertices[0].position.x, 10.0);
+        assert_eq!(plan.meshes[2].vertices[1].position.x, 12.0);
+        assert_eq!(plan.meshes[3].vertices[0].position.x, 16.0);
+        assert_eq!(plan.meshes[3].vertices[1].position.x, 20.0);
+        assert!(!plan
+            .diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.feature == "stroke_dash"));
     }
 
     #[test]

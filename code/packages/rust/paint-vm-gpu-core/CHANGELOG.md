@@ -16,3 +16,5 @@
   accept image, linear-gradient, and radial-gradient texture plans.
 - Added dashed `PaintLine` lowering to segment meshes instead of degrading line
   dashes to solid strokes.
+- Added dashed `PaintPath` stroke lowering that carries dash state across
+  flattened path segments.
