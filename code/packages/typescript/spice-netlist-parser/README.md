@@ -22,7 +22,8 @@ netlist.analyses;
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and `H`
 elements, `.model <name> D(...)` diode cards with `IS` and `VT` parameters,
 `.model <name> NPN(...)` / `.model <name> PNP(...)` BJT cards with `IS`,
-`BF` / `BETA_F`, and `VT` parameters, `.model <name> NMOS(...)` /
+`BF` / `BETA_F`, `VT`, `CJE`, `CJC`, `TF`, and `TR` parameters,
+`.model <name> NMOS(...)` /
 `.model <name> PMOS(...)` MOSFET cards with Level-1 `VT0` / `VTO`, `KP`,
 `LAMBDA`, `GAMMA`, `PHI`, `W`, `L`, `IS`, `N_SUB` / `NSUB`, and `T_NOM` /
 `TNOM` parameters, capacitor `IC=<voltage>` and inductor `IC=<current>`

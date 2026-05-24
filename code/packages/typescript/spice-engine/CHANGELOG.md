@@ -15,6 +15,9 @@
   `baseCollectorCapacitance`, contributing small-signal AC susceptance.
 - Add BJT transit-time support through `forwardTransitTime`, contributing
   forward-bias diffusion capacitance to small-signal AC admittance.
+- Add BJT reverse transit-time support through `reverseTransitTime`,
+  contributing base-collector diffusion capacitance to small-signal AC
+  admittance.
 - Add pseudo-transient DC continuation as a final bounded convergence aid after
   Newton, Gmin stepping, and source stepping; successful fallback results
   report `convergenceAid: "pseudo_transient"`.

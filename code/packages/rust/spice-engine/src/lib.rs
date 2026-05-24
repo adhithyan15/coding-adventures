@@ -325,6 +325,7 @@ fn clone_subckt_element(
             element.base_emitter_capacitance,
             element.base_collector_capacitance,
             element.forward_transit_time,
+            element.reverse_transit_time,
         )),
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
             format!("{instance_name}.{}", element.name),
@@ -1247,6 +1248,7 @@ pub struct Bjt {
     pub base_emitter_capacitance: f64,
     pub base_collector_capacitance: f64,
     pub forward_transit_time: f64,
+    pub reverse_transit_time: f64,
 }
 
 impl Bjt {
@@ -1268,6 +1270,7 @@ impl Bjt {
             0.0,
             0.0,
             0.0,
+            0.0,
         )
     }
 
@@ -1283,6 +1286,7 @@ impl Bjt {
         base_emitter_capacitance: f64,
         base_collector_capacitance: f64,
         forward_transit_time: f64,
+        reverse_transit_time: f64,
     ) -> Self {
         Self {
             name: name.into(),
@@ -1296,6 +1300,7 @@ impl Bjt {
             base_emitter_capacitance,
             base_collector_capacitance,
             forward_transit_time,
+            reverse_transit_time,
         }
     }
 }
@@ -5461,23 +5466,34 @@ fn stamp_ac_bjt_small_signal(
     let collector = node_index(node_indices, &bjt.collector);
     let base = node_index(node_indices, &bjt.base);
     let emitter = node_index(node_indices, &bjt.emitter);
+    let collector_voltage = vector_voltage(operating_point, collector);
     let base_voltage = vector_voltage(operating_point, base);
     let emitter_voltage = vector_voltage(operating_point, emitter);
     let junction_voltage = match bjt.polarity {
         BjtPolarity::Npn => base_voltage - emitter_voltage,
         BjtPolarity::Pnp => emitter_voltage - base_voltage,
     };
+    let reverse_junction_voltage = match bjt.polarity {
+        BjtPolarity::Npn => base_voltage - collector_voltage,
+        BjtPolarity::Pnp => collector_voltage - base_voltage,
+    };
     let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+    let reverse_exponent = (reverse_junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
     let gm = Complex::new(
         bjt.saturation_current / bjt.thermal_voltage * exponent.exp(),
         0.0,
     );
+    let reverse_gm = bjt.saturation_current / bjt.thermal_voltage * reverse_exponent.exp();
     let diffusion_capacitance = bjt.forward_transit_time * gm.real;
+    let reverse_diffusion_capacitance = bjt.reverse_transit_time * reverse_gm;
     let gpi = Complex::new(
         gm.real / bjt.forward_beta,
         omega * (bjt.base_emitter_capacitance + diffusion_capacitance),
     );
-    let ybc = Complex::new(0.0, omega * bjt.base_collector_capacitance);
+    let ybc = Complex::new(
+        0.0,
+        omega * (bjt.base_collector_capacitance + reverse_diffusion_capacitance),
+    );
     match bjt.polarity {
         BjtPolarity::Npn => {
             stamp_complex_conductance(matrix, base, emitter, gpi);
@@ -5922,6 +5938,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "forward transit time must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.reverse_transit_time.is_finite() || bjt.reverse_transit_time < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "reverse transit time must be finite and non-negative".to_string(),
         });
     }
     Ok(())

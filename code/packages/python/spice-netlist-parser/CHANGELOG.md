@@ -13,6 +13,8 @@
   CJC=<c>)` and pass them into Python `BJT` elements.
 - Parse BJT model-card forward transit time with
   `.model ... NPN|PNP(... TF=<time>)`.
+- Parse BJT model-card reverse transit time with
+  `.model ... NPN|PNP(... TR=<time>)`.
 - Parse and validate transient integration methods from
   `.tran ... method=<euler|trap|gear2>`, and expose fallback routing from
   `.options method=<...>`.

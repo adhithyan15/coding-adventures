@@ -517,6 +517,9 @@ class BJT:
     Tf:
         Forward transit time in seconds; contributes diffusion capacitance in
         small-signal AC analysis.
+    Tr:
+        Reverse transit time in seconds; contributes base-collector diffusion
+        capacitance in small-signal AC analysis.
     """
 
     name: str
@@ -530,6 +533,7 @@ class BJT:
     Cje: float = 0.0        # base-emitter junction capacitance (F)
     Cjc: float = 0.0        # base-collector junction capacitance (F)
     Tf: float = 0.0         # forward transit time (s)
+    Tr: float = 0.0         # reverse transit time (s)
 
 
 # ---------------------------------------------------------------------------

@@ -20,7 +20,8 @@ assert_eq!(parsed.tran_cards().len(), 1);
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and
 `H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`
 parameters, `.model <name> NPN|PNP(...)` BJT cards with `IS`, `BF` /
-`BETA_F`, and `VT` parameters, `.model <name> NMOS|PMOS(...)` Level-1 MOSFET
+`BETA_F`, `VT`, `CJE`, `CJC`, `TF`, and `TR` parameters,
+`.model <name> NMOS|PMOS(...)` Level-1 MOSFET
 cards with common SPICE aliases (`VT0` / `VTO`, `KP`, `LAMBDA`, `GAMMA`, `PHI`,
 `W`, `L`, `IS`, `N_SUB` / `NSUB`, and `T_NOM` / `TNOM`), SPICE engineering
 suffixes, capacitor `IC=<voltage>` and inductor `IC=<current>` initial

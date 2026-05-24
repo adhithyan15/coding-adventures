@@ -23,6 +23,9 @@
 - **BJT transit-time models** — `BJT.Tf` now contributes forward-bias
   diffusion capacitance to small-signal AC admittance.
 
+- **BJT reverse transit-time models** — `BJT.Tr` now contributes
+  base-collector diffusion capacitance to small-signal AC admittance.
+
 - **Pseudo-transient DC continuation** — `dc_op` now has a final bounded
   artificial backward-Euler continuation aid after Newton, Gmin stepping, and
   source stepping; successful fallback results report
