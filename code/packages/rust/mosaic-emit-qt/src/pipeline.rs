@@ -1447,6 +1447,53 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
     writeln!(out, "{pad}ColumnLayout {{").unwrap();
     writeln!(out, "{inner_pad}spacing: 0").unwrap();
 
+    // UI31 §3.2 RTL contract. QML's `LayoutMirroring` attached
+    // property is the canonical RTL knob: `enabled: true` flips
+    // column order (so the first child appears on the right), and
+    // `childrenInherit: true` propagates the flip down the
+    // ColumnLayout's `RowLayout` rows so cell order matches.
+    //
+    // Three accepted shapes (mirrors the React/HTML/Webcomp/Flutter
+    // backends shipped in #4143, #4156, #4162, #4166):
+    //
+    // | Source                 | Emits                                                      |
+    // |------------------------|------------------------------------------------------------|
+    // | `dir: rtl`             | `LayoutMirroring.enabled: true` + `.childrenInherit: true` |
+    // | `dir: ltr`             | `LayoutMirroring.enabled: false`                           |
+    // | `dir: auto`            | (nothing — inherit from ancestor; Qt has no auto)          |
+    // | `dir: slot: layoutDir` | `LayoutMirroring.enabled: layoutDir` (slot must be bool)   |
+    // | unknown keyword        | (nothing — drops silently per allow-list security gate)    |
+    //
+    // The allow-list (`ltr` / `rtl` / `auto`) is the security gate:
+    // an attacker-controlled keyword cannot break out of the QML
+    // attribute position because it never reaches the format string.
+    // Slot refs run through `is_safe_identifier` so the binding
+    // identifier stays syntactically clean QML.
+    if let Some(slot) = find_slot_ref_prop(node, "dir") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            writeln!(out, "{inner_pad}LayoutMirroring.enabled: {camel}").unwrap();
+            writeln!(out, "{inner_pad}LayoutMirroring.childrenInherit: true").unwrap();
+        }
+    } else if let Some(kw) = find_keyword_prop(node, "dir") {
+        match kw {
+            "rtl" => {
+                writeln!(out, "{inner_pad}LayoutMirroring.enabled: true").unwrap();
+                writeln!(out, "{inner_pad}LayoutMirroring.childrenInherit: true").unwrap();
+            }
+            "ltr" => {
+                writeln!(out, "{inner_pad}LayoutMirroring.enabled: false").unwrap();
+            }
+            // `auto` is the spec-mandated "let the host decide"
+            // keyword. QML has no `auto` enum — the right behaviour
+            // is to NOT emit the attached property so any ancestor's
+            // `LayoutMirroring` (typically the Window root's) flows
+            // through unchanged.
+            "auto" => {}
+            _ => {}
+        }
+    }
+
     // Track whether we've already emitted the head→body divider. The
     // divider sits between head and the first non-head section (body or
     // foot); we also emit one before `HostTableFoot` so foot is visually
@@ -3303,6 +3350,184 @@ mod tests {
             result.output.contains("RowLayout {"),
             "missing body RowLayout when part_name present:\n{}",
             result.output
+        );
+    }
+
+    // ================================================================
+    // UI31 — HostTable a11y gate + RTL contract (Qt backend)
+    //
+    // Mirrors the React (#4143), HTML (#4156), WebComponent (#4162),
+    // and Flutter (#4166) precedents:
+    //
+    // - **A11y gate**: the Qt lowering must continue to emit the
+    //   semantic ColumnLayout-of-RowLayout shape (which screen
+    //   readers + Qt's Accessibility framework see as a structured
+    //   table), never collapse to a `Rectangle` of `Text` mess.
+    // - **RTL gate**: when `dir:` is authored, the ColumnLayout
+    //   carries `LayoutMirroring.enabled: ...` so column ordering
+    //   flips for RTL locales. Allow-list is `ltr|rtl|auto`; unknown
+    //   keywords drop silently.
+    // ================================================================
+
+    /// Helper: build a `HostTable` LayoutDef carrying a `dir:` prop.
+    fn host_table_with_dir(value: LayoutPropValue) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "dir".to_string(),
+                    value,
+                }],
+                children: vec![section("HostTableBody", vec![row_of(vec!["x"])])],
+            },
+        }
+    }
+
+    /// UI31 §3.1 a11y gate — `HostTable` MUST continue to lower to
+    /// the structural `ColumnLayout` + `RowLayout` shape that
+    /// preserves the semantic table structure for Qt's accessibility
+    /// framework. A regression to a flat `Rectangle` mess would
+    /// break screen-reader navigation.
+    #[test]
+    fn ui31_a11y_host_table_uses_structural_columnlayout_of_rowlayouts() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table(vec![section("HostTableBody", vec![row_of(vec!["a"])])]);
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains("ColumnLayout {"),
+            "HostTable must lower to ColumnLayout, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("RowLayout {"),
+            "HostTable body must include RowLayout rows, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI31 §3.2 RTL contract — `dir: rtl` keyword emits
+    /// `LayoutMirroring.enabled: true` plus `childrenInherit: true`
+    /// so the flip propagates into the body's `RowLayout` rows.
+    #[test]
+    fn ui31_rtl_host_table_dir_rtl_keyword_enables_layout_mirroring() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table_with_dir(LayoutPropValue::Keyword("rtl".to_string()));
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains("LayoutMirroring.enabled: true"),
+            "expected LayoutMirroring.enabled: true, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("LayoutMirroring.childrenInherit: true"),
+            "expected LayoutMirroring.childrenInherit: true, got:\n{}",
+            r.output
+        );
+    }
+
+    /// `dir: ltr` keyword emits the explicit-disable form. Symmetry
+    /// with the `rtl` test; the explicit `false` is the right thing
+    /// for an author who wants to *override* an ambient RTL
+    /// ancestor — without this, `LayoutMirroring` would still
+    /// inherit from a parent that set it.
+    #[test]
+    fn ui31_rtl_host_table_dir_ltr_keyword_explicitly_disables_mirroring() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table_with_dir(LayoutPropValue::Keyword("ltr".to_string()));
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains("LayoutMirroring.enabled: false"),
+            "expected LayoutMirroring.enabled: false, got:\n{}",
+            r.output
+        );
+    }
+
+    /// `dir: auto` keyword is the spec-mandated "let the host
+    /// decide". QML has no auto enum; the right behaviour is to NOT
+    /// emit the attached property so any ancestor's `LayoutMirroring`
+    /// flows through unchanged.
+    #[test]
+    fn ui31_rtl_host_table_dir_auto_keyword_does_not_emit_attached_property() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table_with_dir(LayoutPropValue::Keyword("auto".to_string()));
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            !r.output.contains("LayoutMirroring"),
+            "auto must NOT emit LayoutMirroring, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("ColumnLayout {"),
+            "bare ColumnLayout should still render, got:\n{}",
+            r.output
+        );
+    }
+
+    /// `dir: slot: layout-direction` interpolates the bound slot
+    /// (camel-cased to `layoutDirection`) into the
+    /// `LayoutMirroring.enabled:` binding. The slot is expected to
+    /// evaluate to a `bool`. Slot name goes through
+    /// `is_safe_identifier` so it can't smuggle malicious QML.
+    #[test]
+    fn ui31_rtl_host_table_dir_slot_ref_interpolates_camel_case_identifier() {
+        let m = component(
+            "X",
+            vec![slot("layout-direction", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = host_table_with_dir(LayoutPropValue::SlotRef("layout-direction".to_string()));
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains("LayoutMirroring.enabled: layoutDirection"),
+            "expected LayoutMirroring.enabled: layoutDirection, got:\n{}",
+            r.output
+        );
+    }
+
+    /// Unknown `dir:` keywords (anything outside the `ltr|rtl|auto`
+    /// allow-list) MUST drop silently — this is the security gate
+    /// against attribute-value breakout. An attacker-controlled
+    /// keyword cannot inject QML because it never reaches the format
+    /// string. Test payload includes a `; pwn()` to nail down the
+    /// security claim.
+    #[test]
+    fn ui31_rtl_host_table_unknown_dir_keyword_drops_silently() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table_with_dir(LayoutPropValue::Keyword(
+            "true; Component.onCompleted: pwn()".to_string(),
+        ));
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            !r.output.contains("pwn()"),
+            "unknown keyword payload must not appear, got:\n{}",
+            r.output
+        );
+        assert!(
+            !r.output.contains("LayoutMirroring"),
+            "unknown keyword must NOT emit LayoutMirroring, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("ColumnLayout {"),
+            "bare ColumnLayout should still render, got:\n{}",
+            r.output
+        );
+    }
+
+    /// Regression guard — `HostTable` with no `dir:` prop emits no
+    /// `LayoutMirroring` line. A future refactor that always-emits
+    /// would break authors who rely on ambient inheritance.
+    #[test]
+    fn ui31_rtl_host_table_without_dir_prop_emits_no_layout_mirroring() {
+        let m = component("X", vec![], vec![]);
+        let l = host_table(vec![section("HostTableBody", vec![row_of(vec!["x"])])]);
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            !r.output.contains("LayoutMirroring"),
+            "no LayoutMirroring expected when dir absent, got:\n{}",
+            r.output
         );
     }
 

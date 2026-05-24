@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.13.0] - 2026-05-23
+
+### Added (Phase 6l — method receiver chains `foo.bar.baz`, `foo.bar(args)`, `foo(1).bar`)
+
+Grammar additions in `code/grammars/ruby.grammar`:
+- `dot_call = "." ( NAME | KEYWORD ) [ LPAREN [ expression { COMMA expression } ] RPAREN ] ;` — one step of a receiver chain.
+- `factor`'s atom alternation is wrapped in `( … ) { dot_call }` so chains apply anywhere an expression goes.
+- `method_call` grew a trailing `{ dot_call }` so statement-level `foo(1).bar` works without a parser-position trick.
+- `method_call` was promoted to the **first** atom alternative inside `factor`.  Without this, `foo(1).bar` in expression position (e.g. RHS of an assignment) leaves `(1).bar` unconsumed because the bare-NAME branch only matches `foo`.
+
+### Tests (+5 new, total 59)
+- `test_parse_single_dot_call` — `foo.bar` produces one `dot_call` subnode.
+- `test_parse_chained_dot_calls` — `foo.bar.baz` produces two `dot_call`s.
+- `test_parse_method_call_with_dot_chain` — `foo(1).bar` has a `method_call` head and one `dot_call` tail.
+- `test_parse_dot_call_with_args` — `foo.bar(1, 2)` has two `expression` direct children under the `dot_call`.
+- `test_parse_chain_inside_assignment_rhs` — `x = a.b.c` parses two `dot_call`s in the RHS.
+
+Out of scope for this chunk (will get their own phases):
+- Setter calls `foo.bar = 1` (assignment LHS stays as bare NAME).
+- Bracket access `arr[0]`.
+
 ## [0.12.0] - 2026-05-22
 
 ### Added (Phase 6k — unary minus `-5`, `-x`, `-(1+2)`)

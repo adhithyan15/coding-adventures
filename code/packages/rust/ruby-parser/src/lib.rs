@@ -862,5 +862,79 @@ mod tests {
         }
         assert!(has_plus(&ast));
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6l — method receiver chains `foo.bar.baz`, `foo.bar(args)`
+    // -----------------------------------------------------------------------
+    //
+    // The `factor` rule now wraps its atom alternation with `{ dot_call }`;
+    // `method_call` likewise grew a `{ dot_call }` tail.  These tests pin
+    // that one or more `dot_call` subnodes appear in the parsed tree for
+    // each of the canonical chain shapes.
+
+    fn count_descendants(ast: &GrammarASTNode, rule: &str) -> usize {
+        let mut n = 0;
+        if ast.rule_name == rule {
+            n += 1;
+        }
+        for c in &ast.children {
+            if let ASTNodeOrToken::Node(sub) = c {
+                n += count_descendants(sub, rule);
+            }
+        }
+        n
+    }
+
+    #[test]
+    fn test_parse_single_dot_call() {
+        // `foo.bar` — one dot_call.  Lives inside a `factor` because
+        // it's an expression-position chain (no head call).
+        let ast = parse_ruby("foo.bar");
+        let dot_calls = count_descendants(&ast, "dot_call");
+        assert_eq!(dot_calls, 1, "expected exactly 1 dot_call, got {dot_calls}");
+    }
+
+    #[test]
+    fn test_parse_chained_dot_calls() {
+        // `foo.bar.baz` — two dot_calls in sequence under the same
+        // factor.  Left-to-right chain: `(foo.bar).baz`.
+        let ast = parse_ruby("foo.bar.baz");
+        let dot_calls = count_descendants(&ast, "dot_call");
+        assert_eq!(dot_calls, 2, "expected exactly 2 dot_calls, got {dot_calls}");
+    }
+
+    #[test]
+    fn test_parse_method_call_with_dot_chain() {
+        // `foo(1).bar` — head is a method_call, tail is one dot_call
+        // appended to it.
+        let ast = parse_ruby("foo(1).bar");
+        let dot_calls = count_descendants(&ast, "dot_call");
+        assert_eq!(dot_calls, 1, "expected exactly 1 dot_call, got {dot_calls}");
+        // And the method_call rule fired (head call).
+        assert!(find_descendant(&ast, "method_call").is_some());
+    }
+
+    #[test]
+    fn test_parse_dot_call_with_args() {
+        // `foo.bar(1, 2)` — dot_call's optional arg list is populated.
+        let ast = parse_ruby("foo.bar(1, 2)");
+        let dot = find_descendant(&ast, "dot_call").expect("dot_call expected");
+        // Count `expression` direct children of the dot_call.
+        let arg_count = dot
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression"))
+            .count();
+        assert_eq!(arg_count, 2, "expected 2 dot_call args, got {arg_count}");
+    }
+
+    #[test]
+    fn test_parse_chain_inside_assignment_rhs() {
+        // `x = a.b.c` — chain in expression position parses inside
+        // the RHS of an assignment.
+        let ast = parse_ruby("x = a.b.c");
+        let dot_calls = count_descendants(&ast, "dot_call");
+        assert_eq!(dot_calls, 2, "expected 2 dot_calls, got {dot_calls}");
+    }
 }
 
