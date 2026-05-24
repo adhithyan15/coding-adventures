@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   action, and state-projection coverage over typed CLIP v2 snapshots.
 - Hue event-stream summaries for compact retry-hint, record, resource-item, and
   resource-type coverage over parsed Server-Sent Events batches.
+- `HueClient::get_grouped_light_state_updates` for room/zone aggregate-light
+  state reads through the facade.
 
 ## [0.1.0] - 2026-05-06
 
