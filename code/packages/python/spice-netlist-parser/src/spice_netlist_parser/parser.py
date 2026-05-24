@@ -148,6 +148,26 @@ class FourAnalysis:
     probes: tuple[OutputProbe, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class DistortionAnalysis:
+    """A `.disto mode points start stop <V(node)|I(source)>...` card."""
+
+    mode: str
+    points: int
+    start_hz: float
+    stop_hz: float
+    probes: tuple[OutputProbe, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class PoleZeroAnalysis:
+    """A `.pz V(output_node) input_source [pole|zero|pz]` card."""
+
+    output_node: str
+    input_source: str
+    kind: Literal["pole", "zero", "pz"] = "pz"
+
+
 type OptionValue = float | str | bool
 type TransientMethod = Literal["euler", "trap", "gear2"]
 
@@ -172,6 +192,8 @@ type Analysis = (
     | PrintAnalysis
     | PlotAnalysis
     | FourAnalysis
+    | DistortionAnalysis
+    | PoleZeroAnalysis
     | OptionsAnalysis
 )
 
@@ -251,6 +273,20 @@ class ParsedNetlist:
     def four_cards(self) -> list[FourAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, FourAnalysis)]
 
+    def distortion_cards(self) -> list[DistortionAnalysis]:
+        return [
+            analysis
+            for analysis in self.analyses
+            if isinstance(analysis, DistortionAnalysis)
+        ]
+
+    def pole_zero_cards(self) -> list[PoleZeroAnalysis]:
+        return [
+            analysis
+            for analysis in self.analyses
+            if isinstance(analysis, PoleZeroAnalysis)
+        ]
+
     def options_cards(self) -> list[OptionsAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, OptionsAnalysis)]
 
@@ -264,6 +300,60 @@ class ParsedNetlist:
             if isinstance(value, str):
                 return _parse_transient_method(value, ".options method")
         return None
+
+    def dc_op_kwargs(self) -> dict[str, object]:
+        """Return selected `.options` values as :func:`spice_engine.dc_op` kwargs."""
+
+        values = _merged_options(self.options_cards())
+        kwargs: dict[str, object] = {}
+        tol = _option_number(values, ("reltol", "tol"))
+        if tol is not None:
+            kwargs["tol"] = tol
+        max_iterations = _option_int(values, ("itl1", "maxiter", "maxiters", "max_iterations"))
+        if max_iterations is not None:
+            kwargs["max_iterations"] = max_iterations
+        gmin = _option_number(values, ("gmin",))
+        if gmin is not None:
+            kwargs["pseudo_transient_shunt_conductance"] = gmin
+        pseudo_steps = _option_int(values, ("srcsteps", "pseudo_transient_steps"))
+        if pseudo_steps is not None:
+            kwargs["pseudo_transient_steps"] = pseudo_steps
+        pseudo_iterations = _option_int(values, ("itl6", "pseudo_transient_max_iterations"))
+        if pseudo_iterations is not None:
+            kwargs["pseudo_transient_max_iterations"] = pseudo_iterations
+        return kwargs
+
+    def transient_kwargs(
+        self,
+        tran: TranAnalysis | None = None,
+        *,
+        adaptive: bool = False,
+    ) -> dict[str, object]:
+        """Return selected `.options` values as :func:`spice_engine.transient` kwargs."""
+
+        values = _merged_options(self.options_cards())
+        kwargs: dict[str, object] = {}
+        method = self.transient_method(tran)
+        if method is not None:
+            kwargs["method"] = method
+        tol = _option_number(values, ("reltol", "tol"))
+        if tol is not None:
+            kwargs["tol"] = tol
+        tol_lte = _option_number(values, ("trtol", "lte", "tol_lte"))
+        if tol_lte is not None:
+            kwargs["tol_lte"] = tol_lte
+        min_step = _option_number(values, ("minstep", "tmin", "min_step"))
+        if min_step is not None:
+            kwargs["min_step"] = min_step
+        max_step = _option_number(values, ("maxstep", "tmax", "max_step"))
+        if max_step is not None:
+            kwargs["max_step"] = max_step
+        max_iterations = _option_int(values, ("itl4", "maxiter", "maxiters", "max_iterations"))
+        if max_iterations is not None:
+            kwargs["max_iterations"] = max_iterations
+        if adaptive:
+            kwargs["adaptive"] = True
+        return kwargs
 
 
 _VALUE_RE = re.compile(
@@ -282,6 +372,34 @@ _SUFFIXES = {
     "p": 1.0e-12,
     "f": 1.0e-15,
 }
+
+
+def _merged_options(options_cards: list[OptionsAnalysis]) -> dict[str, OptionValue]:
+    values: dict[str, OptionValue] = {}
+    for options in options_cards:
+        values.update(options.values)
+    return values
+
+
+def _option_number(
+    values: dict[str, OptionValue],
+    keys: tuple[str, ...],
+) -> float | None:
+    for key in keys:
+        value = values.get(key)
+        if isinstance(value, bool):
+            continue
+        if isinstance(value, (float, int)):
+            return float(value)
+    return None
+
+
+def _option_int(
+    values: dict[str, OptionValue],
+    keys: tuple[str, ...],
+) -> int | None:
+    value = _option_number(values, keys)
+    return None if value is None else int(value)
 
 
 def parse_netlist(text: str) -> ParsedNetlist:
@@ -887,6 +1005,28 @@ def _parse_directive(fields: list[str]) -> Analysis:
         return FourAnalysis(
             frequency_hz=parse_value(fields[1]),
             probes=tuple(_parse_output_probe(token, ".four") for token in fields[2:]),
+        )
+    if directive == ".disto":
+        _require_min_fields(fields, 6, ".disto")
+        return DistortionAnalysis(
+            mode=fields[1].lower(),
+            points=int(parse_value(fields[2])),
+            start_hz=parse_value(fields[3]),
+            stop_hz=parse_value(fields[4]),
+            probes=tuple(_parse_output_probe(token, ".disto") for token in fields[5:]),
+        )
+    if directive == ".pz":
+        _require_min_fields(fields, 3, ".pz")
+        _require_max_fields(fields, 4, ".pz")
+        kind = fields[3].lower() if len(fields) >= 4 else "pz"
+        if kind not in ("pole", "zero", "pz"):
+            raise NetlistParseError(
+                f".pz kind must be 'pole', 'zero', or 'pz', got {fields[3]!r}"
+            )
+        return PoleZeroAnalysis(
+            output_node=_parse_voltage_probe(fields[1], ".pz"),
+            input_source=fields[2],
+            kind=kind,
         )
     if directive == ".options":
         _require_min_fields(fields, 2, ".options")

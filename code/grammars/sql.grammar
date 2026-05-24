@@ -136,7 +136,22 @@ order_clause      = "ORDER" "BY" order_item { "," order_item } ;
 # (case-insensitive).
 order_item        = expr [ "COLLATE" NAME ] [ "ASC" | "DESC" ]
                     [ "NULLS" NAME ] ;
-limit_clause      = "LIMIT" NUMBER [ "OFFSET" NUMBER ] ;
+limit_clause      = "LIMIT" signed_number
+                    [ "OFFSET" signed_number
+                    | "," signed_number ] ;
+# ``signed_number`` is an optional ``-`` prefix followed by a NUMBER
+# token.  SQLite documents a *negative* LIMIT as "no limit"
+# (unbounded), useful for ``LIMIT -1 OFFSET N`` to mean "skip N rows
+# and return the rest".  The lexer emits the sign as a separate
+# MINUS token, so the grammar reads it explicitly here.
+#
+# The trailing ``, signed_number`` alternative is SQLite's
+# MySQL-compatible shorthand: ``LIMIT m, n`` means ``LIMIT n OFFSET
+# m`` — the FIRST number is the offset and the SECOND is the count
+# (note the reversed argument order vs the ``OFFSET`` form).  This
+# syntax exists for compatibility with MySQL queries and is the only
+# place in the language where the count/offset ordering swaps.
+signed_number     = [ "-" ] NUMBER ;
 
 # ── INSERT / UPDATE / DELETE ─────────────────────────────────────────────────
 #

@@ -1010,26 +1010,79 @@ def _order_item(node: ASTNode, state: _PlaceholderCounter) -> SortKey:
     )
 
 
+def _signed_number(node: ASTNode) -> int:
+    """Resolve a ``signed_number = [ "-" ] NUMBER`` node to a Python int.
+
+    NUMBER tokens carry the raw source text; hex literals (``0x1F``)
+    reach us as the original ``0x1F`` string, so we route through
+    ``_parse_number`` which handles both decimal and hex spellings.
+    Floats in LIMIT/OFFSET are rejected by SQLite at runtime, but the
+    parser lets them through; we coerce to int and let the engine
+    raise the same error sqlite3 would.
+
+    SQLite documents a negative count as "no limit" — the meaning of
+    the sign is preserved here and the caller (``_limit_clause``)
+    translates a negative count to ``Limit.count=None`` (unbounded).
+    """
+    negative = False
+    raw: str | None = None
+    for c in node.children:
+        if isinstance(c, Token):
+            t = _token_type(c)
+            if t == "MINUS":
+                negative = True
+            elif t == "NUMBER":
+                raw = c.value
+    if raw is None:
+        raise ProgrammingError("signed_number missing NUMBER token")
+    value = int(_parse_number(raw))
+    return -value if negative else value
+
+
 def _limit_clause(node: ASTNode | None) -> Limit | None:
     if node is None:
         return None
-    # limit_clause = "LIMIT" NUMBER [ "OFFSET" NUMBER ]
-    # NUMBER tokens carry the raw source text; hex literals (``0x1F``)
-    # reach us as the original ``0x1F`` string, so we route through
-    # ``_parse_number`` which handles both decimal and hex spellings.
-    # (Floats in LIMIT/OFFSET are rejected by SQLite at runtime, but the
-    # parser allows them through; we coerce to int and let the engine
-    # raise the same error sqlite3 would.)
-    numbers: list[int] = []
-    has_offset_keyword = False
-    for c in node.children:
-        if isinstance(c, Token):
-            if _token_type(c) == "NUMBER":
-                numbers.append(int(_parse_number(c.value)))
-            elif _token_type(c) == "KEYWORD" and c.value.upper() == "OFFSET":
-                has_offset_keyword = True
-    count = numbers[0] if numbers else None
-    offset = numbers[1] if has_offset_keyword and len(numbers) > 1 else None
+    # limit_clause = "LIMIT" signed_number
+    #                [ "OFFSET" signed_number | "," signed_number ]
+    #
+    # Two trailing forms:
+    #   * ``OFFSET N``  — count first, offset second (SQL standard)
+    #   * ``, N``       — offset first, count second (MySQL-compatible)
+    # We detect the comma form by the presence of a COMMA token and
+    # swap the argument interpretation accordingly.
+    signed_nums = [
+        _signed_number(c)
+        for c in node.children
+        if isinstance(c, ASTNode) and c.rule_name == "signed_number"
+    ]
+    has_comma = any(
+        isinstance(c, Token) and _token_type(c) == "COMMA" for c in node.children
+    )
+
+    if not signed_nums:
+        return None
+
+    if has_comma and len(signed_nums) == 2:
+        # MySQL form: ``LIMIT offset, count``.  Swap so ``count`` and
+        # ``offset`` carry their SQL-standard meaning downstream.
+        offset_val, count_val = signed_nums[0], signed_nums[1]
+    else:
+        count_val = signed_nums[0]
+        offset_val = signed_nums[1] if len(signed_nums) > 1 else None
+
+    # SQLite: a negative count means "no limit" (unbounded).  Map that
+    # to ``Limit.count=None`` which the planner/codegen already treat
+    # as "do not emit LimitResult".
+    count: int | None = None if count_val < 0 else count_val
+    # Negative offsets are silently treated as zero in SQLite — match
+    # that behaviour rather than passing the negative value through.
+    offset: int | None
+    if offset_val is None:
+        offset = None
+    elif offset_val < 0:
+        offset = 0
+    else:
+        offset = offset_val
     return Limit(count=count, offset=offset)
 
 
@@ -1493,6 +1546,7 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
     autoincrement = False
     unique = False
     check_expression = None
+    check_expr_text: str = ""
     foreign_key: tuple[str, str | None] | None = None
     col_default = NO_DEFAULT   # "no DEFAULT clause" sentinel
     collation: str | None = None  # COLLATE clause on the column def
@@ -1529,6 +1583,10 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
             expr_node = _maybe_child(c, "expr")
             if expr_node is not None:
                 check_expression = _expr(expr_node, _state)
+                # Capture the source-ish text of the CHECK predicate so
+                # the VM can surface it in constraint-violation errors —
+                # matches SQLite's ``CHECK constraint failed: a > 0``.
+                check_expr_text = _render_expr_text(expr_node)
         elif kw_seq[0:1] == ("REFERENCES",):
             # Collect the NAME tokens: first is ref_table, second (if present) is ref_col.
             ref_names = [
@@ -1580,6 +1638,7 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
         unique=unique,
         default=col_default,
         check_expr=check_expression,
+        check_expr_text=check_expr_text,
         foreign_key=foreign_key,
         collation=collation,
     )
@@ -3041,6 +3100,64 @@ def _apply_cte_col_aliases(
 
 def _has_keyword_child(node: ASTNode, kw: str) -> bool:
     return any(_is_keyword(c, kw) for c in node.children)
+
+
+def _render_expr_text(node: ASTNode) -> str:
+    """Best-effort: render an ``expr`` AST node back to SQL source text.
+
+    Used by CHECK-constraint error messages so mini-sqlite's
+    ``ConstraintViolation`` quotes the original predicate
+    (``CHECK constraint failed: a > 0``) instead of the older
+    ``<table>.<col>`` form that SQLite never emits.
+
+    The renderer walks all leaf tokens depth-first, joins them with
+    single spaces, then suppresses spaces around punctuation that
+    would otherwise look odd: no space after ``(``, no space before
+    ``)``, no space before ``,``.  STRING tokens have already had
+    their surrounding single-quotes stripped by the lexer, so we
+    re-quote them (and double any embedded ``'``) to round-trip the
+    literal.
+
+    The output is normalised whitespace, not byte-identical to the
+    original source — but it matches SQLite's ``CHECK constraint
+    failed: …`` text for the common comparison / AND / OR / function
+    patterns that account for nearly all real CHECK constraints.
+    """
+    tokens: list[Token] = []
+
+    def _collect(n: object) -> None:
+        if isinstance(n, Token):
+            t = _token_type(n)
+            if t not in ("WHITESPACE", "COMMENT", "EOF"):
+                tokens.append(n)
+        elif isinstance(n, ASTNode):
+            for c in n.children:
+                _collect(c)
+
+    _collect(node)
+
+    parts: list[str] = []
+    prev_kind: str | None = None
+    for tok in tokens:
+        kind = _token_type(tok)
+        val = tok.value
+        if kind == "STRING":
+            # Lexer stripped the surrounding single-quotes; restore them
+            # and re-escape any internal apostrophes by doubling.
+            val = "'" + val.replace("'", "''") + "'"
+        # Decide whether a separator space is needed before this token.
+        if parts:
+            prev = parts[-1]
+            need_space = True
+            # No space before ``)`` or ``,``.
+            if val == ")" or val == "," or prev == "(" or val == "(" and prev_kind == "NAME":
+                need_space = False
+            if need_space:
+                parts.append(" ")
+        parts.append(val)
+        prev_kind = kind
+
+    return "".join(parts).strip()
 
 
 def _has_keyword_sequence(node: ASTNode, kws: tuple[str, ...]) -> bool:

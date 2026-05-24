@@ -351,6 +351,14 @@ def _cast_fn(x: SqlValue, target_type: SqlValue) -> SqlValue:
                  "clob"):
             if isinstance(x, bytes):
                 return x.hex()
+            # SQLite has no native boolean type — TRUE / FALSE round-trip
+            # as integers 1 / 0.  ``CAST(TRUE AS TEXT)`` must therefore
+            # yield ``'1'``, not Python's ``'True'``.  Check ``bool``
+            # before the generic ``str`` path because ``bool`` is a
+            # subclass of ``int`` and would otherwise be caught by it
+            # under the existing INTEGER affinity path.
+            if isinstance(x, bool):
+                return str(int(x))
             return str(x)
         if t in ("blob", "none"):
             if isinstance(x, bytes):

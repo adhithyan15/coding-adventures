@@ -1,13 +1,16 @@
 use spice_engine::{
-    estimate_period, pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
+    dc_op, estimate_period, format_dc_table, format_transient_table, fourier,
+    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
     pss_with_tolerance, transient, transient_adaptive, transient_with_method,
     AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
-    CurrentSource, Element, ExpWaveform, Inductor, MutualInductor, PssNewtonCandidateResult,
-    PssNewtonIterationResult, PssNewtonSolveResult, PssNewtonUpdateResult,
-    PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform, PwlWaveform, Resistor,
-    SinWaveform, SpiceError, TransientMethod, TransmissionLine, VoltageSource, Waveform,
+    CurrentSource, DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform,
+    Inductor, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
+    PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
+    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransmissionLine,
+    VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -860,6 +863,109 @@ fn transient_voltage_source_uses_sin_waveform() {
 
     assert_close(points[0].voltage("in").unwrap(), 2.0);
     assert_close(points[1].voltage("in").unwrap(), 0.0);
+}
+
+#[test]
+fn fourier_extracts_transient_sinusoid_components() {
+    let freq = 1_000.0;
+    let amp = 2.0;
+    let offset = 0.25;
+    let period = 1.0 / freq;
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(offset, amp, freq)),
+    )));
+
+    let points = transient(&circuit, period / 64.0, 2.0 * period).unwrap();
+    let analysis = fourier(&points, freq, &["V(in)"], 5).unwrap();
+    let probe = &analysis.probes[0];
+    let fundamental = &probe.harmonics[0];
+
+    assert!((analysis.start_time - period).abs() < 1.0e-12);
+    assert!((probe.dc - offset).abs() < 2.0e-3);
+    assert_close(fundamental.frequency_hz, freq);
+    assert!((fundamental.magnitude - amp).abs() < 2.0e-3);
+    assert!((fundamental.sine - amp).abs() < 2.0e-3);
+    assert!(fundamental.cosine.abs() < 2.0e-3);
+    assert!(probe.total_harmonic_distortion < 2.0e-3);
+}
+
+#[test]
+fn pole_zero_result_shape_supports_simple_rc_pole_fixture() {
+    let resistance = 1_000.0;
+    let capacitance = 1.0e-6;
+    let pole_rad_per_second = -1.0 / (resistance * capacitance);
+    let result = PoleZeroResult {
+        input_source: "Vin".to_string(),
+        output_node: "out".to_string(),
+        entries: vec![PoleZeroEntry {
+            kind: PoleZeroEntryKind::Pole,
+            real: pole_rad_per_second,
+            imaginary: 0.0,
+            frequency_hz: pole_rad_per_second.abs() / (2.0 * std::f64::consts::PI),
+            damping: 1.0,
+        }],
+    };
+
+    assert_eq!(result.entries[0].kind, PoleZeroEntryKind::Pole);
+    assert_close(
+        result.entries[0].frequency_hz,
+        1.0 / (2.0 * std::f64::consts::PI * resistance * capacitance),
+    );
+}
+
+#[test]
+fn distortion_result_shape_supports_nonlinear_device_smoke_fixture() {
+    let result = DistortionResult {
+        input_source: "Vin".to_string(),
+        output_probe: "V(out)".to_string(),
+        points: vec![DistortionPoint {
+            frequency_hz: 1.0e3,
+            fundamental_magnitude: 1.0,
+            harmonics: vec![DistortionHarmonic {
+                harmonic: 2,
+                frequency_hz: 2.0e3,
+                magnitude: 0.025,
+                phase_degrees: -12.0,
+            }],
+            total_harmonic_distortion: 0.025,
+        }],
+    };
+
+    assert_eq!(result.points[0].harmonics[0].harmonic, 2);
+    assert_close(result.points[0].total_harmonic_distortion, 0.025);
+}
+
+#[test]
+fn text_output_tables_are_stable_for_dc_and_transient_results() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "mid", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R2", "mid", "0", 1_000.0)));
+    let dc_result = dc_op(&circuit).unwrap();
+
+    assert_eq!(
+        format_dc_table(&dc_result, &[]).unwrap(),
+        "Index\tV(mid)\tV(vin)\tI(V1)\n0\t5.000000e+00\t1.000000e+01\t-5.000000e-03\n"
+    );
+    assert_eq!(
+        format_dc_table(&dc_result, &["V(vin, mid)", "I(V1)"]).unwrap(),
+        "Index\tV(vin, mid)\tI(V1)\n0\t5.000000e+00\t-5.000000e-03\n"
+    );
+
+    let points = transient(&circuit, 1.0e-3, 2.0e-3).unwrap();
+    assert_eq!(
+        format_transient_table(&points, &["V(vin)", "V(mid)", "I(V1)"]).unwrap(),
+        "Index\tTime\tV(vin)\tV(mid)\tI(V1)\n0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+    );
 }
 
 #[test]

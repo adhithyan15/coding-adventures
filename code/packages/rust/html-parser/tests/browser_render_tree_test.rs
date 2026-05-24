@@ -29,6 +29,16 @@ struct ExpectedRenderNode {
     display: String,
     role: String,
     name: Option<String>,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    classes: Vec<String>,
+    #[serde(default)]
+    title: Option<String>,
+    #[serde(default)]
+    lang: Option<String>,
+    #[serde(default)]
+    dir: Option<String>,
     text: Option<String>,
     href: Option<String>,
     #[serde(default)]
@@ -37,6 +47,16 @@ struct ExpectedRenderNode {
     #[serde(default)]
     resolved_src: Option<String>,
     alt: Option<String>,
+    #[serde(default)]
+    resource_kind: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    media: Option<String>,
     control_type: Option<String>,
     #[serde(default)]
     value: Option<String>,
@@ -48,6 +68,38 @@ struct ExpectedRenderNode {
     selected: bool,
     #[serde(default)]
     options: Vec<String>,
+    #[serde(default)]
+    table_section_kind: Option<String>,
+    #[serde(default)]
+    colspan: Option<String>,
+    #[serde(default)]
+    rowspan: Option<String>,
+    #[serde(default)]
+    span: Option<String>,
+    #[serde(default)]
+    scope: Option<String>,
+    #[serde(default)]
+    headers: Vec<String>,
+    #[serde(default)]
+    abbr: Option<String>,
+    #[serde(default)]
+    text_flow: Option<String>,
+    #[serde(default)]
+    list_kind: Option<String>,
+    #[serde(default)]
+    list_start: Option<String>,
+    #[serde(default)]
+    list_marker_type: Option<String>,
+    #[serde(default)]
+    list_reversed: bool,
+    #[serde(default)]
+    list_item_value: Option<String>,
+    #[serde(default)]
+    quote_cite: Option<String>,
+    #[serde(default)]
+    resolved_quote_cite: Option<String>,
+    #[serde(default)]
+    break_kind: Option<String>,
     children: Vec<ExpectedRenderNode>,
 }
 
@@ -91,18 +143,44 @@ impl ExpectedRenderNode {
             display: self.display,
             role: self.role,
             name: self.name,
+            id: self.id,
+            classes: self.classes,
+            title: self.title,
+            lang: self.lang,
+            dir: self.dir,
             text: self.text,
             href: self.href,
             resolved_href: self.resolved_href,
             src: self.src,
             resolved_src: self.resolved_src,
             alt: self.alt,
+            resource_kind: self.resource_kind,
+            width: self.width,
+            height: self.height,
+            type_hint: self.type_hint,
+            media: self.media,
             control_type: self.control_type,
             value: self.value,
             disabled: self.disabled,
             checked: self.checked,
             selected: self.selected,
             options: self.options,
+            table_section_kind: self.table_section_kind,
+            colspan: self.colspan,
+            rowspan: self.rowspan,
+            span: self.span,
+            scope: self.scope,
+            headers: self.headers,
+            abbr: self.abbr,
+            text_flow: self.text_flow,
+            list_kind: self.list_kind,
+            list_start: self.list_start,
+            list_marker_type: self.list_marker_type,
+            list_reversed: self.list_reversed,
+            list_item_value: self.list_item_value,
+            quote_cite: self.quote_cite,
+            resolved_quote_cite: self.resolved_quote_cite,
+            break_kind: self.break_kind,
             children: self
                 .children
                 .into_iter()

@@ -650,6 +650,63 @@ export interface TransientPoint {
   branchCurrent(sourceName: string): number | undefined;
 }
 
+export interface FourierHarmonic {
+  readonly harmonic: number;
+  readonly frequencyHz: number;
+  readonly cosine: number;
+  readonly sine: number;
+  readonly magnitude: number;
+  readonly phaseDegrees: number;
+}
+
+export interface FourierProbeResult {
+  readonly probe: string;
+  readonly dc: number;
+  readonly harmonics: readonly FourierHarmonic[];
+  readonly totalHarmonicDistortion: number;
+}
+
+export interface FourierResult {
+  readonly fundamentalFrequencyHz: number;
+  readonly startTime: number;
+  readonly endTime: number;
+  readonly probes: readonly FourierProbeResult[];
+}
+
+export interface DistortionHarmonic {
+  readonly harmonic: number;
+  readonly frequencyHz: number;
+  readonly magnitude: number;
+  readonly phaseDegrees: number;
+}
+
+export interface DistortionPoint {
+  readonly frequencyHz: number;
+  readonly fundamentalMagnitude: number;
+  readonly harmonics: readonly DistortionHarmonic[];
+  readonly totalHarmonicDistortion: number;
+}
+
+export interface DistortionResult {
+  readonly inputSource: string;
+  readonly outputProbe: string;
+  readonly points: readonly DistortionPoint[];
+}
+
+export interface PoleZeroEntry {
+  readonly kind: "pole" | "zero";
+  readonly real: number;
+  readonly imaginary: number;
+  readonly frequencyHz: number;
+  readonly damping: number;
+}
+
+export interface PoleZeroResult {
+  readonly inputSource: string;
+  readonly outputNode: string;
+  readonly entries: readonly PoleZeroEntry[];
+}
+
 export interface AdaptiveTransientOptions {
   readonly method?: TransientMethod;
   readonly tolerance?: number;
@@ -1405,6 +1462,136 @@ export function complexPhase(value: Complex): number {
   return Math.atan2(value.imag, value.real);
 }
 
+export function formatDcTable(
+  result: DcResult,
+  probes?: readonly string[],
+): string {
+  const selectedProbes = probes ?? defaultOutputProbes(
+    result.nodeVoltages,
+    result.branchCurrents,
+  );
+  const values = selectedProbes.map((probe) =>
+    formatTableNumber(
+      tableProbeValue(
+        result.nodeVoltages,
+        result.branchCurrents,
+        probe,
+        "formatDcTable",
+      ),
+    ),
+  );
+  return [
+    ["Index", ...selectedProbes].join("\t"),
+    ["0", ...values].join("\t"),
+    "",
+  ].join("\n");
+}
+
+export function formatTransientTable(
+  points: readonly TransientPoint[],
+  probes?: readonly string[],
+): string {
+  const selectedProbes = probes ?? defaultTransientOutputProbes(points);
+  const rows = [["Index", "Time", ...selectedProbes].join("\t")];
+  points.forEach((point, index) => {
+    const values = selectedProbes.map((probe) =>
+      formatTableNumber(
+        tableProbeValue(
+          point.nodeVoltages,
+          point.branchCurrents,
+          probe,
+          "formatTransientTable",
+        ),
+      ),
+    );
+    rows.push([String(index), formatTableNumber(point.time), ...values].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+function defaultOutputProbes(
+  nodeVoltages: ReadonlyMap<string, number>,
+  branchCurrents: ReadonlyMap<string, number>,
+): string[] {
+  return [
+    ...Array.from(nodeVoltages.keys()).sort().map((name) => `V(${name})`),
+    ...Array.from(branchCurrents.keys()).sort(),
+  ];
+}
+
+function defaultTransientOutputProbes(points: readonly TransientPoint[]): string[] {
+  const nodeNames = new Set<string>();
+  const branchNames = new Set<string>();
+  for (const point of points) {
+    for (const name of point.nodeVoltages.keys()) {
+      nodeNames.add(name);
+    }
+    for (const name of point.branchCurrents.keys()) {
+      branchNames.add(name);
+    }
+  }
+  return [
+    ...Array.from(nodeNames).sort().map((name) => `V(${name})`),
+    ...Array.from(branchNames).sort(),
+  ];
+}
+
+function formatTableNumber(value: number): string {
+  const [mantissa, exponentText] = value.toExponential(6).split("e");
+  const exponent = Number.parseInt(exponentText, 10);
+  const sign = exponent < 0 ? "-" : "+";
+  const magnitude = Math.abs(exponent).toString().padStart(2, "0");
+  return `${mantissa}e${sign}${magnitude}`;
+}
+
+function tableProbeValue(
+  nodeVoltages: ReadonlyMap<string, number>,
+  branchCurrents: ReadonlyMap<string, number>,
+  probe: string,
+  context: string,
+): number {
+  const text = probe.trim();
+  const lower = text.toLowerCase();
+  if (lower.startsWith("v(") && text.endsWith(")")) {
+    const args = text.slice(2, -1).split(",").map((arg) => arg.trim());
+    if (args.length === 1) {
+      return tableVoltage(nodeVoltages, args[0], context);
+    }
+    if (args.length === 2) {
+      return tableVoltage(nodeVoltages, args[0], context) -
+        tableVoltage(nodeVoltages, args[1], context);
+    }
+  }
+  if (lower.startsWith("i(") && text.endsWith(")")) {
+    const key = `I(${text.slice(2, -1).trim()})`;
+    const value = branchCurrents.get(key);
+    if (value === undefined) {
+      throw invalidElement(context, `missing branch current probe ${probe}`);
+    }
+    return value;
+  }
+  if (text.length > 0) {
+    return tableVoltage(nodeVoltages, text, context);
+  }
+  throw invalidElement(context, "empty probe");
+}
+
+function tableVoltage(
+  nodeVoltages: ReadonlyMap<string, number>,
+  node: string,
+  context: string,
+): number {
+  if (isGround(node)) {
+    return 0.0;
+  }
+  const value = nodeVoltages.get(node);
+  if (value === undefined) {
+    throw invalidElement(context, `missing node voltage ${node}`);
+  }
+  return value;
+}
+
 export function dcOp(
   circuit: Circuit,
   options: DcOpOptions = {},
@@ -1975,6 +2162,166 @@ export function transient(
     );
   }
   return points;
+}
+
+export function fourier(
+  points: readonly TransientPoint[],
+  fundamentalFrequencyHz: number,
+  probes: readonly string[],
+  harmonics = 9,
+  startTime?: number,
+): FourierResult {
+  if (!Number.isFinite(fundamentalFrequencyHz) || fundamentalFrequencyHz <= 0.0) {
+    throw invalidElement("fourier", "fundamental frequency must be finite and positive");
+  }
+  if (!Number.isInteger(harmonics) || harmonics < 1) {
+    throw invalidElement("fourier", "harmonics must be a positive integer");
+  }
+  if (probes.length === 0) {
+    throw invalidElement("fourier", "at least one probe is required");
+  }
+  if (points.length < 2) {
+    throw invalidElement("fourier", "at least two transient points are required");
+  }
+  const sortedPoints = [...points].sort((left, right) => left.time - right.time);
+  const period = 1.0 / fundamentalFrequencyHz;
+  const endTime = sortedPoints[sortedPoints.length - 1].time;
+  const windowStart = startTime ?? endTime - period;
+  if (!Number.isFinite(windowStart) || windowStart < sortedPoints[0].time) {
+    throw invalidElement("fourier", "transient output does not contain a full analysis window");
+  }
+  if (windowStart >= endTime) {
+    throw invalidElement("fourier", "analysis window must have positive duration");
+  }
+
+  return {
+    fundamentalFrequencyHz,
+    startTime: windowStart,
+    endTime,
+    probes: probes.map((probe) =>
+      fourierProbe(sortedPoints, probe, fundamentalFrequencyHz, harmonics, windowStart, endTime),
+    ),
+  };
+}
+
+function fourierProbe(
+  points: readonly TransientPoint[],
+  probe: string,
+  fundamentalFrequencyHz: number,
+  harmonics: number,
+  startTime: number,
+  endTime: number,
+): FourierProbeResult {
+  const samples: [number, number][] = [
+    [startTime, interpolateProbe(points, probe, startTime)],
+  ];
+  for (const point of points) {
+    if (startTime < point.time && point.time < endTime) {
+      samples.push([point.time, probeValue(point, probe)]);
+    }
+  }
+  samples.push([endTime, interpolateProbe(points, probe, endTime)]);
+  samples.sort((left, right) => left[0] - right[0]);
+
+  const duration = endTime - startTime;
+  const dc = integrateSamples(samples, () => 1.0) / duration;
+  const omega = 2.0 * Math.PI * fundamentalFrequencyHz;
+  const components: FourierHarmonic[] = [];
+  for (let harmonic = 1; harmonic <= harmonics; harmonic += 1) {
+    const cosine =
+      (2.0 / duration) *
+      integrateSamples(samples, (time) => Math.cos(harmonic * omega * time));
+    const sine =
+      (2.0 / duration) *
+      integrateSamples(samples, (time) => Math.sin(harmonic * omega * time));
+    components.push({
+      harmonic,
+      frequencyHz: harmonic * fundamentalFrequencyHz,
+      cosine,
+      sine,
+      magnitude: Math.hypot(cosine, sine),
+      phaseDegrees: (Math.atan2(cosine, sine) * 180.0) / Math.PI,
+    });
+  }
+  const fundamental = components[0].magnitude;
+  const distortion = Math.hypot(...components.slice(1).map((component) => component.magnitude));
+  const totalHarmonicDistortion =
+    fundamental === 0.0 ? (distortion > 0.0 ? Number.POSITIVE_INFINITY : 0.0) : distortion / fundamental;
+  return { probe, dc, harmonics: components, totalHarmonicDistortion };
+}
+
+function integrateSamples(
+  samples: readonly (readonly [number, number])[],
+  weight: (time: number) => number,
+): number {
+  let total = 0.0;
+  for (let index = 1; index < samples.length; index += 1) {
+    const [leftTime, leftValue] = samples[index - 1];
+    const [rightTime, rightValue] = samples[index];
+    total +=
+      0.5 *
+      (rightTime - leftTime) *
+      (leftValue * weight(leftTime) + rightValue * weight(rightTime));
+  }
+  return total;
+}
+
+function interpolateProbe(
+  points: readonly TransientPoint[],
+  probe: string,
+  time: number,
+): number {
+  for (const point of points) {
+    if (Math.abs(point.time - time) <= 1.0e-15) {
+      return probeValue(point, probe);
+    }
+  }
+  for (let index = 1; index < points.length; index += 1) {
+    const left = points[index - 1];
+    const right = points[index];
+    if (left.time <= time && time <= right.time) {
+      const span = right.time - left.time;
+      if (span <= 0.0) {
+        return probeValue(left, probe);
+      }
+      const alpha = (time - left.time) / span;
+      return (1.0 - alpha) * probeValue(left, probe) + alpha * probeValue(right, probe);
+    }
+  }
+  throw invalidElement("fourier", "analysis window is outside transient output");
+}
+
+function probeValue(point: TransientPoint, probe: string): number {
+  const text = probe.trim();
+  const lower = text.toLowerCase();
+  if (lower.startsWith("v(") && text.endsWith(")")) {
+    const args = text.slice(2, -1).split(",").map((arg) => arg.trim());
+    if (args.length === 1) {
+      return pointVoltage(point, args[0]);
+    }
+    if (args.length === 2) {
+      return pointVoltage(point, args[0]) - pointVoltage(point, args[1]);
+    }
+  }
+  if (lower.startsWith("i(") && text.endsWith(")")) {
+    const value = point.branchCurrent(text.slice(2, -1).trim());
+    if (value === undefined) {
+      throw invalidElement("fourier", `missing branch current probe ${probe}`);
+    }
+    return value;
+  }
+  if (text.length > 0) {
+    return pointVoltage(point, text);
+  }
+  throw invalidElement("fourier", "empty probe");
+}
+
+function pointVoltage(point: TransientPoint, node: string): number {
+  const value = point.voltage(node);
+  if (value === undefined) {
+    throw invalidElement("fourier", `missing node voltage ${node}`);
+  }
+  return value;
 }
 
 export function transientAdaptive(

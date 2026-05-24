@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   Circuit,
+  type DistortionResult,
   ExpWaveform,
+  type PoleZeroResult,
   PulseWaveform,
   PwlWaveform,
   SinWaveform,
@@ -12,7 +14,11 @@ import {
   ccvs,
   currentSource,
   currentSourceWithWaveform,
+  dcOp,
   estimatePeriod,
+  formatDcTable,
+  formatTransientTable,
+  fourier,
   inductor,
   inductorWithInitialCurrent,
   mutualInductor,
@@ -710,6 +716,110 @@ describe("transient", () => {
 
     expectClose(points[0].voltage("in"), 2.0);
     expectClose(points[1].voltage("in"), 0.0);
+  });
+
+  it("extracts Fourier components from a transient sinusoid", () => {
+    const freq = 1_000.0;
+    const amp = 2.0;
+    const offset = 0.25;
+    const period = 1.0 / freq;
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(offset, amp, freq),
+      ),
+    );
+
+    const points = transient(circuit, period / 64.0, 2.0 * period);
+    const analysis = fourier(points, freq, ["V(in)"], 5);
+    const probe = analysis.probes[0];
+    const fundamental = probe.harmonics[0];
+
+    expect(analysis.startTime).toBeCloseTo(period, 12);
+    expect(probe.dc).toBeCloseTo(offset, 3);
+    expect(fundamental.frequencyHz).toBeCloseTo(freq, 9);
+    expect(fundamental.magnitude).toBeCloseTo(amp, 2);
+    expect(fundamental.sine).toBeCloseTo(amp, 2);
+    expect(Math.abs(fundamental.cosine)).toBeLessThan(2.0e-3);
+    expect(probe.totalHarmonicDistortion).toBeLessThan(2.0e-3);
+  });
+
+  it("models pole-zero result shapes for a simple RC pole fixture", () => {
+    const resistance = 1_000.0;
+    const capacitance = 1.0e-6;
+    const poleRadPerSecond = -1.0 / (resistance * capacitance);
+    const result: PoleZeroResult = {
+      inputSource: "Vin",
+      outputNode: "out",
+      entries: [
+        {
+          kind: "pole",
+          real: poleRadPerSecond,
+          imaginary: 0.0,
+          frequencyHz: Math.abs(poleRadPerSecond) / (2.0 * Math.PI),
+          damping: 1.0,
+        },
+      ],
+    };
+
+    expect(result.entries[0].kind).toBe("pole");
+    expect(result.entries[0].frequencyHz).toBeCloseTo(
+      1.0 / (2.0 * Math.PI * resistance * capacitance),
+      9,
+    );
+  });
+
+  it("models distortion result shapes for a nonlinear-device smoke fixture", () => {
+    const result: DistortionResult = {
+      inputSource: "Vin",
+      outputProbe: "V(out)",
+      points: [
+        {
+          frequencyHz: 1.0e3,
+          fundamentalMagnitude: 1.0,
+          harmonics: [
+            {
+              harmonic: 2,
+              frequencyHz: 2.0e3,
+              magnitude: 0.025,
+              phaseDegrees: -12.0,
+            },
+          ],
+          totalHarmonicDistortion: 0.025,
+        },
+      ],
+    };
+
+    expect(result.points[0].harmonics[0].harmonic).toBe(2);
+    expect(result.points[0].totalHarmonicDistortion).toBeCloseTo(0.025, 9);
+  });
+
+  it("formats stable text output tables for DC and transient results", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 10.0));
+    circuit.add(resistor("R1", "vin", "mid", 1_000.0));
+    circuit.add(resistor("R2", "mid", "0", 1_000.0));
+    const dcResult = dcOp(circuit);
+
+    expect(formatDcTable(dcResult)).toBe(
+      "Index\tV(mid)\tV(vin)\tI(V1)\n" +
+        "0\t5.000000e+00\t1.000000e+01\t-5.000000e-03\n",
+    );
+    expect(formatDcTable(dcResult, ["V(vin, mid)", "I(V1)"])).toBe(
+      "Index\tV(vin, mid)\tI(V1)\n" +
+        "0\t5.000000e+00\t-5.000000e-03\n",
+    );
+
+    const points = transient(circuit, 1.0e-3, 2.0e-3);
+    expect(formatTransientTable(points, ["V(vin)", "V(mid)", "I(V1)"])).toBe(
+      "Index\tTime\tV(vin)\tV(mid)\tI(V1)\n" +
+        "0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
+        "1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n",
+    );
   });
 
   it("updates CCCS output from transient branch current", () => {

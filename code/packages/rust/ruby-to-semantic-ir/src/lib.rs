@@ -1022,4 +1022,277 @@ mod tests {
             result
         );
     }
+
+    // -----------------------------------------------------------------
+    // Phase 6l — method receiver chains lowering
+    // -----------------------------------------------------------------
+    //
+    // SIR encoding: `foo.bar(args)` becomes
+    //   BuiltinCall("__method__", [receiver, StrLit("bar"), ...args])
+    // Receiver-first arg layout is the contract — backends can rely on it.
+    // BuiltinCall (not DirectCall) is used because validator only
+    // checks DirectCall.fn_name against the module's function table.
+
+    #[test]
+    fn dot_chain_lowers_to_method_builtincall() {
+        let m = lower("foo = 1\nx = foo.bar\n");
+        let b = main_body(&m);
+        // Second stmt = `x = foo.bar`
+        match &b.stmts[1] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert_eq!(name, "x");
+                match value {
+                    Expr::BuiltinCall { name, args, .. } => {
+                        assert_eq!(name, "__method__");
+                        assert_eq!(args.len(), 2, "receiver + method-name");
+                        assert!(matches!(
+                            &args[0],
+                            Expr::VarRef { name, .. } if name == "foo"
+                        ));
+                        assert!(matches!(
+                            &args[1],
+                            Expr::StrLit { value, .. } if value == "bar"
+                        ));
+                    }
+                    other => panic!("expected BuiltinCall(__method__, …), got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn dot_chain_two_steps_nests_outer_recv() {
+        // `foo.bar.baz` → outer is `.baz` with receiver = inner `.bar`.
+        let m = lower("foo = 1\ny = foo.bar.baz\n");
+        let b = main_body(&m);
+        let value = match &b.stmts[1] {
+            Stmt::LetBinding { value, .. } => value,
+            other => panic!("expected LetBinding, got {:?}", other),
+        };
+        match value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__method__");
+                // Outer = `.baz`; args[0] is the inner `foo.bar` BuiltinCall.
+                assert!(matches!(
+                    &args[1],
+                    Expr::StrLit { value, .. } if value == "baz"
+                ));
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner_name, args: inner_args, .. } => {
+                        assert_eq!(inner_name, "__method__");
+                        assert!(matches!(
+                            &inner_args[0],
+                            Expr::VarRef { name, .. } if name == "foo"
+                        ));
+                        assert!(matches!(
+                            &inner_args[1],
+                            Expr::StrLit { value, .. } if value == "bar"
+                        ));
+                    }
+                    other => panic!("expected inner BuiltinCall, got {:?}", other),
+                }
+            }
+            other => panic!("expected BuiltinCall(__method__, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn dot_call_with_args_includes_them_after_method_name() {
+        // `obj.add(1, 2)` → BuiltinCall("__method__", [obj, "add", 1, 2])
+        let m = lower("obj = 1\nr = obj.add(1, 2)\n");
+        let b = main_body(&m);
+        let value = match &b.stmts[1] {
+            Stmt::LetBinding { value, .. } => value,
+            other => panic!("expected LetBinding, got {:?}", other),
+        };
+        match value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__method__");
+                assert_eq!(args.len(), 4, "receiver + method + 2 args");
+                assert!(matches!(
+                    &args[0],
+                    Expr::VarRef { name, .. } if name == "obj"
+                ));
+                assert!(matches!(
+                    &args[1],
+                    Expr::StrLit { value, .. } if value == "add"
+                ));
+                assert!(matches!(&args[2], Expr::IntLit { value: 1, .. }));
+                assert!(matches!(&args[3], Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected BuiltinCall(__method__, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn dot_chain_on_method_call_head() {
+        // `puts(1).then_something` — head is a method_call (puts is a
+        // known builtin → BuiltinCall("puts")), tail is one dot_call.
+        // We use puts so the head call lowers as a recognised builtin
+        // and the validator doesn't trip on an undeclared function.
+        let m = lower("z = puts(1).then_something\n");
+        let b = main_body(&m);
+        let value = match &b.stmts[0] {
+            Stmt::LetBinding { value, .. } => value,
+            other => panic!("expected LetBinding, got {:?}", other),
+        };
+        match value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__method__");
+                // Receiver is the inner `puts(1)` BuiltinCall.
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner_name, args: inner_args, .. } => {
+                        assert_eq!(inner_name, "puts");
+                        assert_eq!(inner_args.len(), 1);
+                        assert!(matches!(&inner_args[0], Expr::IntLit { value: 1, .. }));
+                    }
+                    other => panic!("expected inner BuiltinCall(puts, …), got {:?}", other),
+                }
+                assert!(matches!(
+                    &args[1],
+                    Expr::StrLit { value, .. } if value == "then_something"
+                ));
+            }
+            other => panic!("expected outer BuiltinCall(__method__, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn dot_chain_module_passes_sir_validator() {
+        // Receiver `a` lives as a function parameter so the validator's
+        // var-ref resolution succeeds; the chain itself uses BuiltinCall
+        // so the unknown-fn check doesn't apply.  Strings feature is
+        // auto-added by the lowerer when any dot_call fires.
+        //
+        // Why a function param (not `a = 1\nx = a.b...`)?  The validator
+        // groups consecutive LetBindings into one parallel-let block —
+        // RHS expressions can't see names bound by sibling LetBindings.
+        // Function params don't have that constraint.
+        let m = lower("def chain(a)\n  a.b.c(42)\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected dot-chain output: {:?}",
+            result
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 6m — logical operators lowering
+    // -----------------------------------------------------------------
+    //
+    // SIR encoding:
+    //   `a || b`  → BuiltinCall("or",  [a, b])
+    //   `a && b`  → BuiltinCall("and", [a, b])
+    //   `!x` / `not x` → BuiltinCall("not", [x])
+    // Both symbol (`||`/`&&`/`!`) and keyword (`or`/`and`/`not`)
+    // forms collapse to the same builtin in v0.
+
+    // NOTE on def-body logical operators: the v0 parser framework
+    // mis-handles bare `a || b` (or `&&`, etc.) as the tail
+    // expression of a def body — `method_call_no_paren("def", ...)`
+    // shadows `def_statement` because the alternation doesn't
+    // back-track cleanly when the first operand is a NAME.  Wrapping
+    // the expression in parens forces the LPAREN-expression-RPAREN
+    // path through `factor`, which the framework parses cleanly.
+    // We use the parens-wrapped form throughout these tests.  See
+    // lessons.md (Ruby parser alternation ambiguity).
+
+    #[test]
+    fn logical_or_symbol_lowers_to_or_builtin() {
+        let m = lower("def myor(a, b)\n  (a || b)\nend\n");
+        let names: Vec<&str> = m.functions.iter().map(|f| f.name.as_str()).collect();
+        let f = m
+            .functions
+            .iter()
+            .find(|f| f.name == "myor")
+            .unwrap_or_else(|| panic!("expected myor function; got functions {:?}", names));
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "or");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "a"));
+                assert!(matches!(&args[1], Expr::VarRef { name, .. } if name == "b"));
+            }
+            other => panic!("expected BuiltinCall(or, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn logical_and_symbol_lowers_to_and_builtin() {
+        let m = lower("def myand(a, b)\n  (a && b)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "myand").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "and");
+                assert_eq!(args.len(), 2);
+            }
+            other => panic!("expected BuiltinCall(and, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn logical_keyword_form_lowers_same_as_symbol() {
+        // `a or b` (keyword) should produce the same builtin as `a || b`.
+        let m = lower("def myor2(a, b)\n  (a or b)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "myor2").unwrap();
+        assert!(
+            matches!(&f.body.value, Expr::BuiltinCall { name, .. } if name == "or")
+        );
+    }
+
+    #[test]
+    fn logical_not_symbol_lowers_to_not_builtin() {
+        let m = lower("def mynot(x)\n  (!x)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "mynot").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "not");
+                assert_eq!(args.len(), 1);
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "x"));
+            }
+            other => panic!("expected BuiltinCall(not, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn logical_chain_and_then_or_nests_correctly() {
+        // `a && b || c` parses as `(a && b) || c` — precedence test.
+        // SIR: BuiltinCall("or", [BuiltinCall("and", [a, b]), c])
+        let m = lower("def chain(a, b, c)\n  (a && b || c)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "chain").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "or" => {
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[1], Expr::VarRef { name, .. } if name == "c"));
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner_name, args: inner_args, .. }
+                        if inner_name == "and" =>
+                    {
+                        assert_eq!(inner_args.len(), 2);
+                        assert!(matches!(&inner_args[0], Expr::VarRef { name, .. } if name == "a"));
+                        assert!(matches!(&inner_args[1], Expr::VarRef { name, .. } if name == "b"));
+                    }
+                    other => panic!("expected inner BuiltinCall(and, …), got {:?}", other),
+                }
+            }
+            other => panic!("expected outer BuiltinCall(or, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn logical_module_passes_sir_validator() {
+        let m = lower(concat!(
+            "def chain(a, b, c)\n",
+            "  (a && b || !c)\n",
+            "end\n",
+        ));
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected logical-op output: {:?}",
+            result
+        );
+    }
 }

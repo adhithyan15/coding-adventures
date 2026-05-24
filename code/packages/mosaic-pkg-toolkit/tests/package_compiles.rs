@@ -35,9 +35,10 @@ use std::path::PathBuf;
 /// Alphabetical order matches the manifest's `[components].exports`
 /// list. Reorder both together if it ever changes.
 const COMPONENTS: &[&str] = &[
-    "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
-    "Checkbox", "Field", "Input", "ListGroup", "Modal", "Nav",
-    "NumberInput", "Radio", "Spinner", "Toast", "Tooltip",
+    "Accordion", "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
+    "Checkbox", "DropdownMenu", "Field", "Input", "InputGroup",
+    "ListGroup", "Modal", "Nav", "Navbar", "NumberInput", "Pagination",
+    "Radio", "Select", "Spinner", "Tabs", "Toast", "Tooltip",
 ];
 
 /// Themes shipped per component. Both must compile.
@@ -82,8 +83,8 @@ fn manifest_declares_expected_exports() {
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
     assert_eq!(
-        version, "0.4.0",
-        "[package].version must be 0.4.0 for the UI29-4 HostLink + Tooltip + NumberInput release"
+        version, "0.11.0",
+        "[package].version must be 0.11.0 for the Select release"
     );
 
     let exports = value
@@ -366,4 +367,103 @@ fn breadcrumb_interface_matches_spec() {
     assert_eq!(slot_names, vec!["crumbs"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Pagination — « prev | 1 2 3 | next » row of HostLink chips. Three
+/// emits: onPrev, onNext (no payload), onPageSelect(index).
+#[test]
+fn pagination_interface_matches_spec() {
+    let mil_src = read_source("Pagination.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(
+        slot_names,
+        vec!["pages", "prev-label", "next-label", "active-index"]
+    );
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onPrev", "onNext", "onPageSelect"]);
+}
+
+/// InputGroup — text input flanked by optional prefix/suffix addons.
+/// No emits beyond the inner field's onChange/onCommit.
+#[test]
+fn input_group_interface_matches_spec() {
+    let mil_src = read_source("InputGroup.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(
+        slot_names,
+        vec!["prefix", "suffix", "value", "placeholder", "disabled"]
+    );
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onChange", "onCommit"]);
+}
+
+/// Accordion — expand/collapse stack. Parallel headers + bodies
+/// lists, host-owned open-index, onToggle(index) emit.
+#[test]
+fn accordion_interface_matches_spec() {
+    let mil_src = read_source("Accordion.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["headers", "bodies", "open-index"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onToggle"]);
+}
+
+/// Tabs — horizontal tab bar + body panel. Host owns active-index
+/// and supplies the matching active-body each tick.
+#[test]
+fn tabs_interface_matches_spec() {
+    let mil_src = read_source("Tabs.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["headers", "active-body", "active-index"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// DropdownMenu — toggle button + revealed item list. Two emits:
+/// onToggle (no payload) and onSelect(index).
+#[test]
+fn dropdown_menu_interface_matches_spec() {
+    let mil_src = read_source("DropdownMenu.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["label", "items", "open"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onToggle", "onSelect"]);
+}
+
+/// Navbar — brand on the left, HostLink row after.
+#[test]
+fn navbar_interface_matches_spec() {
+    let mil_src = read_source("Navbar.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["brand", "items", "active-index"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Select — toggle button + revealed option list. onChange's payload
+/// is the option text (not its index, unlike DropdownMenu).
+#[test]
+fn select_interface_matches_spec() {
+    let mil_src = read_source("Select.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(
+        slot_names,
+        vec!["value", "options", "placeholder", "open", "disabled"]
+    );
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onToggle", "onChange"]);
 }

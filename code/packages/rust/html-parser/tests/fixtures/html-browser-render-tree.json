@@ -6,13 +6,15 @@
     {
       "id": "flow-inline-and-replaced",
       "description": "Headings and paragraphs become block layout inputs while base-resolved text, links, images, and line breaks keep inline display categories.",
-      "input": "<base href=\"https://example.test/pages/current.html\"><body><h1>Example</h1><p>Hello <a href=next.html>Next</a><img src=../assets/logo.gif alt=Logo><br>Tail</p>",
+      "input": "<base href=\"https://example.test/pages/current.html\"><body><h1 id=page-title class=hero>Example</h1><p id=intro class=\"lede print\" title=\"Intro paragraph\">Hello <a href=next.html class=next lang=en>Next</a><img src=../assets/logo.gif alt=Logo><br>Tail</p>",
       "expected": {
         "children": [
           {
             "display": "block",
             "role": "heading",
             "name": "h1",
+            "id": "page-title",
+            "classes": ["hero"],
             "text": "Example",
             "href": null,
             "src": null,
@@ -24,8 +26,11 @@
           },
           {
             "display": "block",
-            "role": "block",
+            "role": "paragraph",
             "name": "p",
+            "id": "intro",
+            "classes": ["lede", "print"],
+            "title": "Intro paragraph",
             "text": null,
             "href": null,
             "src": null,
@@ -37,6 +42,8 @@
                 "display": "inline",
                 "role": "link",
                 "name": "a",
+                "classes": ["next"],
+                "lang": "en",
                 "text": "Next",
                 "href": "next.html",
                 "resolved_href": "https://example.test/pages/next.html",
@@ -47,8 +54,8 @@
                   { "display": "inline-text", "role": "text", "name": null, "text": "Next", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
                 ]
               },
-              { "display": "inline-replaced", "role": "image", "name": "img", "text": null, "href": null, "src": "../assets/logo.gif", "resolved_src": "https://example.test/assets/logo.gif", "alt": "Logo", "control_type": null, "children": [] },
-              { "display": "line-break", "role": "line_break", "name": "br", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "display": "inline-replaced", "role": "image", "name": "img", "text": null, "href": null, "src": "../assets/logo.gif", "resolved_src": "https://example.test/assets/logo.gif", "alt": "Logo", "resource_kind": "image", "control_type": null, "children": [] },
+              { "display": "line-break", "role": "line_break", "name": "br", "text": null, "href": null, "src": null, "alt": null, "break_kind": "line", "control_type": null, "children": [] },
               { "display": "inline-text", "role": "text", "name": null, "text": "Tail", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
             ]
           }
@@ -133,6 +140,7 @@
                 "display": "table-row-group",
                 "role": "table_section",
                 "name": "tbody",
+                "table_section_kind": "tbody",
                 "text": null,
                 "href": null,
                 "src": null,
@@ -157,6 +165,209 @@
               }
             ]
           }
+        ]
+      }
+    },
+    {
+      "id": "table-layout-display-metadata",
+      "description": "Table column hints, row groups, cell spans, and header metadata survive render-tree input projection.",
+      "input": "<body><table><caption>Prices</caption><colgroup><col span=2 width=80><col width=120><thead><tr><th id=item scope=col abbr=Item>Name<th id=price scope=col>Price<tbody><tr><th scope=row headers=item>Basic<td colspan=2 headers=\"item price\">$1</table>",
+      "expected": {
+        "children": [
+          {
+            "display": "table",
+            "role": "table",
+            "name": "table",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              {
+                "display": "table-caption",
+                "role": "table_caption",
+                "name": "caption",
+                "text": "Prices",
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  { "display": "inline-text", "role": "text", "name": null, "text": "Prices", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+                ]
+              },
+              {
+                "display": "table-column-group",
+                "role": "table_column_group",
+                "name": "colgroup",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  { "display": "table-column", "role": "table_column", "name": "col", "text": null, "href": null, "src": null, "alt": null, "width": "80", "span": "2", "control_type": null, "children": [] },
+                  { "display": "table-column", "role": "table_column", "name": "col", "text": null, "href": null, "src": null, "alt": null, "width": "120", "control_type": null, "children": [] }
+                ]
+              },
+              {
+                "display": "table-row-group",
+                "role": "table_section",
+                "name": "thead",
+                "table_section_kind": "thead",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  {
+                    "display": "table-row",
+                    "role": "table_row",
+                    "name": "tr",
+                    "text": null,
+                    "href": null,
+                    "src": null,
+                    "alt": null,
+                    "control_type": null,
+                    "children": [
+                      { "display": "table-cell", "role": "table_cell", "name": "th", "id": "item", "text": null, "href": null, "src": null, "alt": null, "scope": "col", "abbr": "Item", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Name", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                      { "display": "table-cell", "role": "table_cell", "name": "th", "id": "price", "text": null, "href": null, "src": null, "alt": null, "scope": "col", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Price", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                    ]
+                  }
+                ]
+              },
+              {
+                "display": "table-row-group",
+                "role": "table_section",
+                "name": "tbody",
+                "table_section_kind": "tbody",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  {
+                    "display": "table-row",
+                    "role": "table_row",
+                    "name": "tr",
+                    "text": null,
+                    "href": null,
+                    "src": null,
+                    "alt": null,
+                    "control_type": null,
+                    "children": [
+                      { "display": "table-cell", "role": "table_cell", "name": "th", "text": null, "href": null, "src": null, "alt": null, "scope": "row", "headers": ["item"], "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Basic", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                      { "display": "table-cell", "role": "table_cell", "name": "td", "text": null, "href": null, "src": null, "alt": null, "colspan": "2", "headers": ["item", "price"], "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "$1", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "text-flow-list-quote-display-metadata",
+      "description": "Paragraphs, preformatted text, lists, quotes, and break elements survive render-tree input projection.",
+      "input": "<base href=\"https://example.test/docs/page.html\"><body><p>Intro<br>line<wbr>word</p><hr><ol start=3 reversed type=A><li value=7>Seven<li>Eight</ol><pre>  keep\nspace</pre><blockquote cite=notes/ref.html><p>Quote <q cite=#part>part</q></p></blockquote>",
+      "expected": {
+        "children": [
+          {
+            "display": "block",
+            "role": "paragraph",
+            "name": "p",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              { "display": "inline-text", "role": "text", "name": null, "text": "Intro", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "display": "line-break", "role": "line_break", "name": "br", "text": null, "href": null, "src": null, "alt": null, "break_kind": "line", "control_type": null, "children": [] },
+              { "display": "inline-text", "role": "text", "name": null, "text": "line", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "display": "line-break", "role": "line_break", "name": "wbr", "text": null, "href": null, "src": null, "alt": null, "break_kind": "word", "control_type": null, "children": [] },
+              { "display": "inline-text", "role": "text", "name": null, "text": "word", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+            ]
+          },
+          { "display": "block", "role": "separator", "name": "hr", "text": null, "href": null, "src": null, "alt": null, "break_kind": "thematic", "control_type": null, "children": [] },
+          {
+            "display": "block",
+            "role": "list",
+            "name": "ol",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "list_kind": "ordered",
+            "list_start": "3",
+            "list_marker_type": "A",
+            "type_hint": "A",
+            "list_reversed": true,
+            "control_type": null,
+            "children": [
+              { "display": "list-item", "role": "list_item", "name": "li", "text": null, "href": null, "src": null, "alt": null, "list_item_value": "7", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Seven", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+              { "display": "list-item", "role": "list_item", "name": "li", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Eight", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+            ]
+          },
+          {
+            "display": "block",
+            "role": "preformatted",
+            "name": "pre",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "text_flow": "preformatted",
+            "control_type": null,
+            "children": [
+              { "display": "inline-text", "role": "text", "name": null, "text": "  keep\nspace", "href": null, "src": null, "alt": null, "text_flow": "preformatted", "control_type": null, "children": [] }
+            ]
+          },
+          {
+            "display": "block",
+            "role": "quote_block",
+            "name": "blockquote",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "quote_cite": "notes/ref.html",
+            "resolved_quote_cite": "https://example.test/docs/notes/ref.html",
+            "control_type": null,
+            "children": [
+              {
+                "display": "block",
+                "role": "paragraph",
+                "name": "p",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  { "display": "inline-text", "role": "text", "name": null, "text": "Quote", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+                  { "display": "inline", "role": "quote", "name": "q", "text": null, "href": null, "src": null, "alt": null, "quote_cite": "#part", "resolved_quote_cite": "https://example.test/docs/page.html#part", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "part", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "embedded-resource-display",
+      "description": "Embedded resource content nodes become inline replaced render inputs with preserved fetch and layout metadata.",
+      "input": "<base href=\"https://example.test/media/index.html\"><body><iframe src=frame.html width=320 height=200 title=Frame></iframe><object data=movie.swf type=\"application/x-shockwave-flash\" width=400 height=300></object><video src=movie.mp4 width=640 height=360 controls></video><embed src=legacy.mov type=\"video/quicktime\" width=160 height=120>",
+      "expected": {
+        "children": [
+          { "display": "inline-replaced", "role": "frame", "name": "iframe", "title": "Frame", "text": null, "href": null, "src": "frame.html", "resolved_src": "https://example.test/media/frame.html", "alt": null, "resource_kind": "frame", "width": "320", "height": "200", "control_type": null, "children": [] },
+          { "display": "inline-replaced", "role": "object", "name": "object", "text": null, "href": null, "src": "movie.swf", "resolved_src": "https://example.test/media/movie.swf", "alt": null, "resource_kind": "object", "width": "400", "height": "300", "type_hint": "application/x-shockwave-flash", "control_type": null, "children": [] },
+          { "display": "inline-replaced", "role": "media", "name": "video", "text": null, "href": null, "src": "movie.mp4", "resolved_src": "https://example.test/media/movie.mp4", "alt": null, "resource_kind": "video", "width": "640", "height": "360", "control_type": null, "children": [] },
+          { "display": "inline-replaced", "role": "embed", "name": "embed", "text": null, "href": null, "src": "legacy.mov", "resolved_src": "https://example.test/media/legacy.mov", "alt": null, "resource_kind": "embed", "width": "160", "height": "120", "type_hint": "video/quicktime", "control_type": null, "children": [] }
         ]
       }
     }

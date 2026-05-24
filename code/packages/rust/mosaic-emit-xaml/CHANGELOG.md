@@ -1,5 +1,35 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — UI31-K-xaml — `HostTable` RTL contract
+
+The WinUI `HostTable` lowering (which produces a structural `<Grid>`
+with `<Grid.RowDefinitions>` per section) now honours the UI31 §3.2
+RTL contract via WinUI's `FrameworkElement.FlowDirection`:
+
+- `dir: rtl` → `FlowDirection="RightToLeft"` on the `<Grid>`; flips
+  column ordering of all descendant rows automatically.
+- `dir: ltr` → `FlowDirection="LeftToRight"` — explicit-LTR for
+  tables that should stay LTR inside an ambient-RTL `Page` (e.g.
+  number-heavy spreadsheets).
+- `dir: auto` → no attribute (spec semantic "let the host decide" =
+  WinUI default of inheriting from the `Page`'s `FlowDirection`,
+  typically set from `CultureInfo`).
+- `dir: slot: layout-direction` → `FlowDirection="{x:Bind LayoutDirection}"`.
+  The slot must evaluate to a `FlowDirection`; the slot name passes
+  through `kebab_to_pascal_case` + `is_safe_identifier` so it can't
+  smuggle malicious XAML through the binding path.
+- Unknown keywords drop silently — the allow-list is the security
+  gate. Test #6 feeds the literal payload `"RightToLeft\" Tag=\"pwn\""`
+  (specifically shaped to break out of the attribute-value quoting)
+  and asserts `Tag="pwn"` never reaches the output.
+
+7 new tests cover the a11y gate (structural `<Grid>` with
+`<Grid.RowDefinitions>` preserved — not a flat `<StackPanel>` mess),
+the three allow-listed keywords (incl. the no-emit `auto` case),
+the slot-ref binding through `{x:Bind PascalCase}`, the silent-drop
+with attribute-injection payload, and a no-`dir` regression guard.
+Total tests: 141 (was 134).
+
 ## [Unreleased] — UI29-4 `HostLink` + `HostTooltip` + `HostNumberInput` (U29-4-K-xaml)
 
 Three new UI29-4 kernel primitives lower to native WinUI 3 widgets:

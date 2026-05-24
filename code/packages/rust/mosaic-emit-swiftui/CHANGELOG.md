@@ -4,6 +4,41 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — UI31-K-swiftui — `HostTable` RTL contract
+
+The SwiftUI `HostTable` lowering (which produces a structural
+`VStack(alignment: .leading, spacing: 0)` of `HStack` rows) now
+honours the UI31 §3.2 RTL contract via SwiftUI's `Environment`
+key-path knob `\.layoutDirection`:
+
+- `dir: rtl` → `.environment(\.layoutDirection, .rightToLeft)`
+  modifier attached to the VStack; flips horizontal layout
+  direction for the whole table.
+- `dir: ltr` → `.environment(\.layoutDirection, .leftToRight)` —
+  explicit-LTR, useful for tables that should stay LTR inside an
+  RTL window (e.g. data-heavy spreadsheets).
+- `dir: auto` → no modifier; the spec-mandated "let the host
+  decide" semantic is the SwiftUI default — the ambient
+  `Environment(\.layoutDirection)` flows through from the system
+  locale → app → ancestor view cascade.
+- `dir: slot: layout-direction` →
+  `.environment(\.layoutDirection, layoutDirection)`, where the
+  slot must evaluate to a `LayoutDirection`. The slot name passes
+  through `is_safe_swift_identifier` so it can't smuggle malicious
+  Swift through the modifier's expression position.
+- Unknown keywords drop silently — the allow-list is the security
+  gate. Test #6 feeds the literal payload
+  `".rightToLeft).onAppear { pwn() }"` (specifically shaped to
+  break out of the modifier-call argument list) and asserts `pwn()`
+  never reaches the output.
+
+7 new tests cover the a11y gate (VStack + HStack structure
+preserved — not a flat ZStack or Group), the three allow-listed
+keywords (incl. the SwiftUI-unique no-emit for `auto` and the
+explicit `.leftToRight` for cross-locale tables), the slot-ref
+binding, the silent-drop with an injection-shaped payload, and a
+no-`dir` regression guard. Total tests: 71 (was 64).
+
 ### Added — UI29-4 `HostLink` + `HostTooltip` + `HostNumberInput` (U29-4-K-swiftui)
 
 Three new UI29-4 kernel primitives lower to native SwiftUI views:

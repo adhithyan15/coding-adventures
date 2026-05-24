@@ -1,5 +1,35 @@
 # Changelog
 
+## 1.57.0 — 2026-05-24
+
+### Fixed
+
+- ``CAST(<bool> AS TEXT)`` now yields ``'1'`` / ``'0'`` instead of
+  Python's ``'True'`` / ``'False'``.  SQLite has no native boolean
+  type — TRUE and FALSE are aliases for the integers 1 and 0 — so
+  the textual rendering of a cast boolean must match the integer
+  string.  The previous implementation called ``str(x)`` directly,
+  which leaked Python's ``bool`` repr into SQL output.
+
+  Fix in ``_cast_fn``: the TEXT-affinity branch now special-cases
+  ``isinstance(x, bool)`` before the generic ``str`` path
+  (mirroring the existing INTEGER-affinity bool handling) and
+  returns ``str(int(x))``.
+
+## 1.56.0 — 2026-05-24
+
+### Changed
+
+- CHECK constraint violations now render as
+  ``CHECK constraint failed: <expr_text>`` (matching SQLite) instead
+  of ``CHECK constraint failed: <table>.<col>``.  The
+  ``check_registry`` value shape grew from ``(col_name, instrs)`` to
+  ``(col_name, expr_text, instrs)`` so the VM can quote the original
+  predicate source.  The handler still accepts the legacy 2-tuple
+  shape for backward compatibility with externally built fixtures
+  (a fallback path emits the older ``<table>.<col>`` form when
+  ``expr_text`` is empty).
+
 ## 1.55.0 — 2026-05-23
 
 ### Added

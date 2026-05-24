@@ -25,6 +25,18 @@ struct ExpectedBrowserDocument {
     title: Option<String>,
     base_href: Option<String>,
     base_target: Option<String>,
+    #[serde(default)]
+    document_lang: Option<String>,
+    #[serde(default)]
+    document_dir: Option<String>,
+    #[serde(default)]
+    body_id: Option<String>,
+    #[serde(default)]
+    body_classes: Vec<String>,
+    #[serde(default)]
+    body_lang: Option<String>,
+    #[serde(default)]
+    body_dir: Option<String>,
     body_text: String,
     metas: Vec<ExpectedMeta>,
     resources: Vec<ExpectedResource>,
@@ -54,6 +66,10 @@ struct ExpectedResource {
     type_hint: Option<String>,
     media: Option<String>,
     title: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
     async_script: bool,
     defer_script: bool,
 }
@@ -116,6 +132,10 @@ struct ExpectedFormControl {
 struct ExpectedTable {
     caption: Option<String>,
     row_count: usize,
+    #[serde(default)]
+    column_count: usize,
+    #[serde(default)]
+    column_hint_count: usize,
     cell_count: usize,
     header_cell_count: usize,
 }
@@ -148,6 +168,12 @@ impl ExpectedBrowserDocument {
             title: self.title,
             base_href: self.base_href,
             base_target: self.base_target,
+            document_lang: self.document_lang,
+            document_dir: self.document_dir,
+            body_id: self.body_id,
+            body_classes: self.body_classes,
+            body_lang: self.body_lang,
+            body_dir: self.body_dir,
             body_text: self.body_text,
             metas: self
                 .metas
@@ -215,6 +241,8 @@ impl ExpectedResource {
             type_hint: self.type_hint,
             media: self.media,
             title: self.title,
+            width: self.width,
+            height: self.height,
             async_script: self.async_script,
             defer_script: self.defer_script,
         }
@@ -302,6 +330,8 @@ impl ExpectedTable {
         BrowserTable {
             caption: self.caption,
             row_count: self.row_count,
+            column_count: self.column_count,
+            column_hint_count: self.column_hint_count,
             cell_count: self.cell_count,
             header_cell_count: self.header_cell_count,
         }

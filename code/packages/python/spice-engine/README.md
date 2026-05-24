@@ -4,7 +4,8 @@ SPICE-compatible analog circuit simulator. Modified Nodal Analysis (MNA) with
 Newton-Raphson DC, trapezoidal transient, AC small-signal sweep, DC transfer
 function (`.TF`), DC parameter sweep (`.DC`), sensitivity analysis (`.SENS`),
 Monte Carlo (`.MC`), noise analysis (`.NOISE`), and all four SPICE controlled
-sources (VCVS / VCCS / CCCS / CCVS).
+sources (VCVS / VCCS / CCCS / CCVS).  Transient outputs can also be
+post-processed with SPICE-style Fourier (`.FOUR`) measurements.
 
 See [`code/specs/spice-engine.md`](../../../specs/spice-engine.md).
 
@@ -54,6 +55,8 @@ print(result.converged)            # True
 | `sens_dc` | `.SENS` | DC sensitivity analysis |
 | `mc_dc` | `.MC` | Monte Carlo DC analysis |
 | `noise_ac` | `.NOISE` | Small-signal noise PSD (adjoint method) |
+| `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
+| `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
 
 ## Controlled source examples
 

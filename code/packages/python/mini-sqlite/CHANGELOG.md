@@ -1,5 +1,120 @@
 # Changelog
 
+## [2.12.0] - 2026-05-24
+
+### Fixed
+
+- ``CAST(TRUE AS TEXT)`` / ``CAST(FALSE AS TEXT)`` (and the
+  ``VARCHAR`` / ``CHAR`` / ``NVARCHAR`` aliases) now return ``'1'``
+  / ``'0'`` instead of Python's ``'True'`` / ``'False'``.  Matches
+  SQLite — see the sql-vm 1.57 entry for the scalar-function-level
+  fix.
+
+  Common idioms that the bug used to corrupt::
+
+      SELECT 'is_active=' || CAST(is_active AS TEXT) FROM users;
+      WHERE CAST(flag AS TEXT) = '1'
+
+  Now both sides agree with sqlite3.
+
+## [2.11.0] - 2026-05-24
+
+### Changed
+
+- PRIMARY KEY uniqueness violations now surface as ``UNIQUE
+  constraint failed: <table>.<col>`` (matching SQLite) instead of
+  ``PRIMARY KEY constraint failed: …``.  PRIMARY KEY implies UNIQUE
+  in SQL, so SQLite never emits a dedicated "PRIMARY KEY constraint
+  failed" message; mini-sqlite now follows the same convention.
+
+  Covers all three uniqueness paths:
+
+  * Named-column PRIMARY KEY (``a INT PRIMARY KEY``).
+  * INTEGER PRIMARY KEY (rowid alias) — both InMemoryBackend and
+    storage-sqlite paths.
+  * UPDATE that creates a duplicate PK (regression — pinned by a
+    test).
+
+  See the matching entries in sql-backend 0.22 and storage-sqlite
+  0.19 for the layered fix.
+
+## [2.10.0] - 2026-05-24
+
+### Changed
+
+- CHECK constraint violation messages now match SQLite::
+
+      CHECK constraint failed: a > 0
+
+  Previously emitted ``CHECK constraint failed: <table>.<col>`` —
+  which doesn't tell the user *why* the check rejected the row and
+  broke tests that pin error strings against the sqlite3 oracle.
+
+  Implementation: the adapter captures the source text of each
+  CHECK predicate by walking the parsed expression's leaf tokens
+  (joined with single spaces, with no-space-around rules for parens
+  / commas / function-call parens).  The text rides on a new
+  ``ColumnDef.check_expr_text`` field through the planner → IR →
+  VM pipeline.  See the matching entries in sql-backend 0.21,
+  sql-codegen 1.41, and sql-vm 1.56.
+
+  Covered: ``a > 0``, ``a >= 0 AND a <= 100``, ``a = 1 OR a = 2``,
+  ``name <> 'bad'``, ``LENGTH(name) > 0``, ``ABS(a) < 10``, ``a IN
+  (1, 2, 3)`` — exact-string match against the sqlite3 oracle for
+  all forms.
+
+## [2.9.0] - 2026-05-23
+
+### Added
+
+- ``PRAGMA writable_schema`` is now recognised as a read/write
+  boolean PRAGMA with the SQLite-compatible default of ``0`` (off).
+  Reads return the current integer (0 or 1); writes accept any of
+  ``1``/``0``/``ON``/``OFF``/``TRUE``/``FALSE``/``YES``/``NO`` and
+  the value persists for the lifetime of the connection.  It is also
+  now advertised in ``PRAGMA pragma_list``.
+
+  Mini-sqlite synthesises ``sqlite_master`` on every read (no backing
+  table), so honouring writes through the catalog is a much larger
+  change.  This PR fills only the read/write round-trip surface so
+  defensive callers (ORMs, migration tools, database-repair flows)
+  that toggle the PRAGMA before deciding whether to attempt a fix
+  see the expected value instead of an empty result or a "unknown
+  PRAGMA" error.
+
+  Previously: ``PRAGMA writable_schema`` returned ``[]`` instead of
+  the documented ``[(0,)]`` and writes were silently dropped.
+
+## [2.8.0] - 2026-05-23
+
+### Added
+
+- ``LIMIT`` clause now supports SQLite's two non-standard extensions:
+
+  * **Negative count** means "no limit" (unbounded).  ``SELECT v FROM
+    t LIMIT -1`` returns all rows; ``LIMIT -1 OFFSET 10`` returns
+    everything from row 11 onwards — the canonical "skip N, take
+    rest" idiom.
+
+  * **MySQL-compatible ``LIMIT m, n``** is now accepted as a synonym
+    for ``LIMIT n OFFSET m``.  Note the reversed argument order: the
+    FIRST number is the offset, the SECOND is the count.  This is the
+    only place in SQL where the order swaps.
+
+  * **Negative offset** is treated as zero (matches SQLite).  ``LIMIT
+    5 OFFSET -3`` returns the first five rows with no skip.
+
+  Previously all three raised ``Parse error … Expected NUMBER, got
+  '-'`` or ``Unexpected token: ','`` because the grammar only
+  accepted ``LIMIT NUMBER [ OFFSET NUMBER ]``.
+
+  Implementation: new grammar rule ``signed_number = [ "-" ] NUMBER``
+  used in both ``LIMIT`` slots, plus a comma-form alternative in the
+  trailing position.  The adapter detects the comma form by the
+  presence of a COMMA token and swaps the argument interpretation.
+  Negative counts map to ``Limit.count=None`` so the planner / codegen
+  paths that already understand "no limit" don't need any changes.
+
 ## [2.7.0] - 2026-05-23
 
 ### Added

@@ -252,6 +252,19 @@ Status:
   implemented across Python, TypeScript, and Rust.
 - `.four <frequency> <V(node)|I(source)>...` parser/control-card records are
   implemented across Python, TypeScript, and Rust.
+- Fourier post-processing over transient output is implemented across Python,
+  TypeScript, and Rust, including DC, harmonic sine/cosine coefficients,
+  magnitudes, phases, and THD for `V(node)` and `I(source)` probes.
+- Stable text-output helpers for DC operating points and transient samples are
+  implemented across Python, TypeScript, and Rust, with snapshot tests covering
+  node-voltage and branch-current ordering.
+- Selected `.options` keys are wired into engine-call helpers across Python,
+  TypeScript, and Rust, covering DC solver tolerances/iteration limits and
+  transient method/adaptive-step options.
+- `.disto` and `.pz` parser/control-card records plus first distortion and
+  pole-zero result shapes are implemented across Python, TypeScript, and Rust,
+  with smoke fixtures for nonlinear-device distortion output and a simple RC
+  pole result.
 
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 

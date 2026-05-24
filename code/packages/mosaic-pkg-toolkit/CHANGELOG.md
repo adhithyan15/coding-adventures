@@ -1,5 +1,179 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — v0.11 — Select
+
+### Added
+
+**`Select`** — Bootstrap's `<select class="form-select">` distilled
+to a toolkit component. Same toggle-button + revealed-options
+pattern as DropdownMenu, but `onChange` carries the selected
+option's *text* (not its index).
+
+Composition: `Column[select] { HostButton[select-toggle], If(open)
+Column[select-options] { For options HostButton[select-option] } }`.
+
+Slots: `value`, `options: list<text>`, `placeholder`, `open`,
+`disabled`. Emits: `onToggle`, `onChange(value: text)`.
+
+### v0.11 note
+
+The toggle's label is always `value`. When `value` is empty, the
+host should pass the placeholder text in via `value` to display
+the "Choose…" hint. Branching on value-truthiness inside the .mll
+would collide on the `select-toggle` part name (moslayout compiler
+rejects duplicate parts in If/Else branches); pushing the choice
+to the host is the cleanest workaround for v0.11. When a native
+`HostSelect` kernel primitive ships, Select can re-implement on
+top of it without changing its public .mil interface.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 23 (was 22): one more interface
+test (`select_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
+## [Unreleased] — v0.10 — Navbar
+
+### Added
+
+**`Navbar`** — Bootstrap's top-of-page brand + nav-link row.
+Composition: `Row[navbar] { Text[navbar-brand], For items
+HostLink[navbar-link] }`. Slots: `brand`, `items: list<text>`,
+`active-index`. Emit: `onSelect(index: number)`.
+
+Like Nav and Breadcrumb (v0.4), each link wraps the UI29-4
+`HostLink` primitive — platform-native `role="link"` semantics +
+Tab/Enter keyboard activation come from the kernel.
+
+The brand is non-clickable in v0.10; an `onBrandClick` emit can be
+added in a follow-up if hosts ask for it.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 22 (was 21): one more interface
+test (`navbar_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
+## [Unreleased] — v0.9 — DropdownMenu
+
+### Added
+
+**`DropdownMenu`** — Bootstrap's toggle-button-with-revealed-menu
+pattern. Composition: `Column[dropdown] { HostButton[dropdown-toggle],
+If(open) Column[dropdown-menu] { For items HostButton[dropdown-item] } }`.
+Slots: `label`, `items: list<text>`, `open`. Emits: `onToggle`,
+`onSelect(index: number)`. Host owns the `open` state.
+
+v0.9 renders the menu inline beneath the toggle (it takes vertical
+space and pushes downstream content down). Bootstrap's absolutely-
+positioned overlay needs a mosstyle z-index/position story that
+the kernel doesn't yet expose; a future PR can add that.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 21 (was 20): one more interface
+test (`dropdown_menu_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
+## [Unreleased] — v0.8 — Tabs
+
+### Added
+
+**`Tabs`** — Bootstrap's horizontal tab bar + single body panel.
+Composition: `Column[tabs] { Row[tabs-bar] { For headers
+HostButton[tabs-tab] }, Text[tabs-panel] (content: active-body) }`.
+Slots: `headers: list<text>`, `active-body`, `active-index`. Emit:
+`onSelect(index: number)`.
+
+Host owns the active-index → active-body mapping. Simpler than
+Accordion's parallel-bodies workaround since only one body renders
+at a time.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 20 (was 19): one more interface
+test (`tabs_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
+## [Unreleased] — v0.7 — Accordion
+
+### Added
+
+**`Accordion`** — Bootstrap's vertical expand/collapse panel stack.
+Composition: `Column[accordion] { For headers Column[accordion-item]
+{ HostButton[accordion-header], Text[accordion-body] } }`.
+
+Slots: `headers: list<text>`, `bodies: list<text>` (parallel array
+to headers), `open-index: number` (-1 = all closed). Emit:
+`onToggle(index: number)`.
+
+### Known limitation
+
+v0.7 ships with always-visible bodies because UI29's `If(when:)`
+only supports truthiness, not the `i == open-index` comparison a
+proper Accordion needs. The host simulates close by clearing the
+body string for closed panels (empty body + `.msl` zero padding-on-
+empty looks closed-enough).
+
+The `.mil` surface (`open-index`, `onToggle`) is forward-compatible
+— once kernel expression comparison lands, the `.mll`'s
+`Text[accordion-body]` will be wrapped in `If(when: i ==
+open-index)`. Hosts that adopt v0.7 today won't need to change
+their glue code.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 19 (was 18): one more interface
+test (`accordion_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
+## [Unreleased] — v0.6 — InputGroup
+
+### Added
+
+**`InputGroup`** — Bootstrap's "input with addons" pattern.
+A single-line text input flanked by optional left and/or right
+addon text (`$` before an amount, `.00` after, `@username`).
+Composition: `Row[input-group] { If(prefix) Text[input-group-prefix],
+HostInput[input-group-field], If(suffix) Text[input-group-suffix] }`.
+Both addons are If-guarded on slot truthiness so an empty string
+collapses the branch.
+
+Slots: `prefix`, `suffix`, `value`, `placeholder`, `disabled`.
+Emits: `onChange(value: text)`, `onCommit`.
+
+Button-addons (e.g. a search-icon button on the right) need UI29-2
+children pass-through; for now both addons are plain text.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 18 (was 17): one more interface
+test (`input_group_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
+## [Unreleased] — v0.5 — Pagination
+
+### Added
+
+**`Pagination`** — Bootstrap's page-navigation row: `« prev | 1 2 3
+| next »`. Composition: `Row[pagination] { HostLink[pagination-prev],
+For (each: pages, as: page) { HostLink[pagination-page] (label: page,
+onActivate: onPageSelect) }, HostLink[pagination-next] }`. Slots:
+`pages: list<text>`, `prev-label`, `next-label`, `active-index`.
+Emits: `onPrev`, `onNext`, `onPageSelect(index: number)`.
+
+Like Nav and Breadcrumb (v0.4), every chip wraps the UI29-4
+`HostLink` kernel primitive. Bootstrap's real-world DOM uses `<a>`
+tags for the same elements — `role="link"` semantics + Tab/Enter
+keyboard activation come from the kernel for free. `href: "#"` +
+`external: false` mirror the Nav/Breadcrumb conventions.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 17 (was 16): one more interface
+test (`pagination_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
 ## [0.4.0] — UI29-4 — HostLink wires Breadcrumb + Nav; Tooltip + NumberInput added
 
 UI29-4 added three new kernel primitives (`HostLink`, `HostTooltip`,

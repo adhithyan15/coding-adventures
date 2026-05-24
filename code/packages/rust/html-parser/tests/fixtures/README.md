@@ -14,7 +14,9 @@ browser-facing extraction. It verifies that broad HTML documents produce stable
 title, base URL/target, metadata, resource, anchor, body text, heading, link,
 image, form, and table facts that a browser pipeline can consume before layout
 and Paint VM rendering. The fixture also pins resolved URL metadata derived
-from `base` hrefs while preserving raw authored link and resource attributes.
+from `base` hrefs while preserving raw authored link and resource attributes,
+and document/body identity and language metadata such as `lang`, `dir`, body
+`id`, and tokenized body classes.
 
 `html-browser-content-tree.json` is a checked parser acceptance corpus for the
 browser-facing content-tree projection. It verifies that broad HTML body
@@ -22,7 +24,16 @@ content can be filtered into renderable structural nodes such as headings,
 blocks, inline runs, links, images, form controls, lists, and tables while
 skipping parser shell, head metadata, comments, scripts, styles, and templates.
 Where a document base is present, link and replaced-resource nodes also expose
-resolved URL fields for downstream navigation and fetch planning.
+resolved URL fields for downstream navigation and fetch planning. Renderable
+nodes may also pin `id`, tokenized `class`, `title`, `lang`, and `dir`
+metadata for selector matching and UI policy. Embedded and replaced resources
+such as frames, objects, embeds, and media elements also carry resource kind,
+resolved source, type hints, media attributes, and authored dimensions. Table
+nodes preserve row-group identity, column groups/columns, column and cell spans,
+header associations, scopes, and abbreviated header labels for layout and
+accessibility code. Text-flow cases also pin paragraph/preformatted roles,
+preserved preformatted text runs, list numbering metadata, quote citations, and
+line/word/thematic break kinds.
 
 `html-browser-render-tree.json` is a checked parser acceptance corpus for the
 browser-facing render-tree input projection. It verifies that the content tree
@@ -30,7 +41,14 @@ is converted into stable default display categories such as block, inline,
 inline-replaced, list-item, and table display nodes for early layout work. The
 browser-facing fixture set also pins control metadata such as value,
 disabled/checked/selected state, select option labels, textarea values, and
-resolved URL metadata for link and replaced nodes.
+resolved URL metadata for link and replaced nodes, plus render-node identity
+metadata that layout and styling code can carry forward. Replaced resource
+nodes are pinned as inline-replaced render inputs with their fetch and
+dimension metadata intact. Table render inputs also keep column hints, row-group
+identity, spans, scopes, and header metadata intact while mapping to stable table
+display categories. Text-flow render inputs preserve list markers, quote
+citations, preformatted whitespace policy, and break kinds while mapping to
+stable display categories.
 
 Validate the checked-in smoke fixture's case boundaries and metadata with:
 

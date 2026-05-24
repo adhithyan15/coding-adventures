@@ -1,0 +1,30 @@
+// DropdownMenu.light.msl — default light-theme styling.
+
+style DropdownMenu {
+  part dropdown {
+    padding : 0 ;
+  }
+  part dropdown-toggle {
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#ced4da" ;
+    font-size     : 14 ;
+    border-radius : 4 ;
+  }
+  part dropdown-menu {
+    padding      : 4 ;
+    background   : "#ffffff" ;
+    border-width : 1 ;
+    border-color : "#dee2e6" ;
+  }
+  part dropdown-item {
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 0 ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+}

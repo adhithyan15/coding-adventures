@@ -367,6 +367,11 @@ impl RubyLexer {
         // later era-gated passes operate on the already-fused
         // stream.
         self.fuse_range_ops();
+        // Phase 4k — float literals (`1.5`, `1e10`, `1.5e-3`, etc.)
+        // are pre-1.0 Ruby; no era gating.  Runs after range fusion
+        // so `1..5` (which the range pass converts to `Int ".." Int`)
+        // doesn't get mistaken for a float.
+        self.fuse_float_literals();
         if era_at_least(&self.era, "1.9.1") {
             self.fuse_lambda_arrow();
         }
@@ -382,6 +387,214 @@ impl RubyLexer {
         if era_at_least(&self.era, "2.7") {
             self.mark_numbered_block_params();
         }
+    }
+
+    /// Phase 4k — fuse float-literal token sequences emitted by the
+    /// 1.8-baseline state machine into a single `Number` token.
+    ///
+    /// The state-machine TOML emits the simple shapes:
+    /// - integer body (`1`, `1_000`) → `Int("1")` / `Int("1_000")`
+    /// - bare `.` between numbers → `Dot`
+    /// - bare identifier starting with `e` or `E` → `Name("e10")` etc.
+    /// - `+` / `-` between tokens → `Plus` / `Minus`
+    ///
+    /// Float literals show up in the stream as one of these patterns
+    /// (no whitespace between the constituent tokens — same trick
+    /// `fuse_numeric_suffixes` uses):
+    ///
+    /// | Source       | Pre-fusion tokens                   |
+    /// |--------------|-------------------------------------|
+    /// | `1.5`        | Int "1", Dot, Int "5"               |
+    /// | `1e10`       | Int "1", Name "e10"                 |
+    /// | `1e+10`      | Int "1", Name "e", Plus, Int "10"   |
+    /// | `1.5e10`     | Int "1", Dot, Int "5", Name "e10"   |
+    /// | `1.5e-3`     | Int "1", Dot, Int "5", Name "e",    |
+    /// |              |   Minus, Int "3"                    |
+    ///
+    /// Float literals have been in Ruby since 1.0, so this pass is
+    /// **unconditional** (no era gate).
+    ///
+    /// Why not handle this in the TOML directly?  The state machine
+    /// would need lookahead to decide between `1.5` (one float
+    /// token) and `1.method` (Int + Dot + Name).  Lookahead in our
+    /// state machine is awkward — we'd have to peek/unpeek `.` and
+    /// re-emit if it turns out to be a method call.  The post-pass
+    /// approach is uniform with how `..` / `...` / `->` / `&.` / `2r`
+    /// / `_1` already work and avoids that complexity.
+    fn fuse_float_literals(&mut self) {
+        // Step 1: `Int Dot Int` (no whitespace between any of the
+        // three) fuses to a single `Number("X.Y")` token.
+        let mut i = 0;
+        while i + 2 < self.tokens.len() {
+            let merge = {
+                let a = &self.tokens[i];
+                let b = &self.tokens[i + 1];
+                let c = &self.tokens[i + 2];
+                let a_is_int = a.type_ == TokenType::Number
+                    && self.is_integer_lexeme(&a.value);
+                let b_is_dot = b.type_ == TokenType::Dot;
+                let c_is_int = c.type_ == TokenType::Number
+                    && self.is_integer_lexeme(&c.value);
+                let same_line = a.line == b.line && b.line == c.line;
+                let no_ws_b = !self
+                    .whitespace_before_token
+                    .get(i + 1)
+                    .copied()
+                    .unwrap_or(false);
+                let no_ws_c = !self
+                    .whitespace_before_token
+                    .get(i + 2)
+                    .copied()
+                    .unwrap_or(false);
+                a_is_int && b_is_dot && c_is_int && same_line && no_ws_b && no_ws_c
+            };
+            if merge {
+                let span_line = self.tokens[i].line;
+                let span_col = self.tokens[i].column;
+                let new_value = format!(
+                    "{}.{}",
+                    self.tokens[i].value,
+                    self.tokens[i + 2].value
+                );
+                self.tokens.remove(i + 2);
+                self.whitespace_before_token.remove(i + 2);
+                self.tokens.remove(i + 1);
+                self.whitespace_before_token.remove(i + 1);
+                self.tokens[i] = Token {
+                    type_: TokenType::Number,
+                    value: new_value,
+                    line: span_line,
+                    column: span_col,
+                    type_name: None,
+                    flags: None,
+                };
+                // Don't advance i — the scientific-notation suffix
+                // (if any) may follow.
+            } else {
+                i += 1;
+            }
+        }
+        // Step 2: `Number Name(e<digits>)` (or `Int Name(e<digits>)`)
+        // fuses the trailing scientific notation when the name's
+        // lexeme is exactly `[eE]<digit_or_underscore>+`.  No sign
+        // case (handled in step 3).
+        let mut i = 0;
+        while i + 1 < self.tokens.len() {
+            let merge = {
+                let a = &self.tokens[i];
+                let b = &self.tokens[i + 1];
+                let a_is_num = a.type_ == TokenType::Number;
+                let b_is_unsigned_exp = b.type_ == TokenType::Name
+                    && is_unsigned_exponent_lexeme(&b.value);
+                let same_line = a.line == b.line;
+                let no_ws = !self
+                    .whitespace_before_token
+                    .get(i + 1)
+                    .copied()
+                    .unwrap_or(false);
+                a_is_num && b_is_unsigned_exp && same_line && no_ws
+            };
+            if merge {
+                let span_line = self.tokens[i].line;
+                let span_col = self.tokens[i].column;
+                let new_value = format!(
+                    "{}{}",
+                    self.tokens[i].value,
+                    self.tokens[i + 1].value
+                );
+                self.tokens.remove(i + 1);
+                self.whitespace_before_token.remove(i + 1);
+                self.tokens[i] = Token {
+                    type_: TokenType::Number,
+                    value: new_value,
+                    line: span_line,
+                    column: span_col,
+                    type_name: None,
+                    flags: None,
+                };
+                // Don't advance — the signed-exponent step below
+                // might still match (unlikely but harmless).
+            } else {
+                i += 1;
+            }
+        }
+        // Step 3: `Number Name("e"|"E") (Plus|Minus) Int` fuses the
+        // trailing signed exponent.  Four tokens collapse to one.
+        let mut i = 0;
+        while i + 3 < self.tokens.len() {
+            let merge = {
+                let a = &self.tokens[i];
+                let b = &self.tokens[i + 1];
+                let c = &self.tokens[i + 2];
+                let d = &self.tokens[i + 3];
+                let a_is_num = a.type_ == TokenType::Number;
+                let b_is_e = b.type_ == TokenType::Name
+                    && (b.value == "e" || b.value == "E");
+                let c_is_sign = (c.type_ == TokenType::Plus && c.value == "+")
+                    || (c.type_ == TokenType::Minus && c.value == "-");
+                let d_is_int = d.type_ == TokenType::Number
+                    && self.is_integer_lexeme(&d.value);
+                let same_line =
+                    a.line == b.line && b.line == c.line && c.line == d.line;
+                let no_ws_b = !self
+                    .whitespace_before_token
+                    .get(i + 1)
+                    .copied()
+                    .unwrap_or(false);
+                let no_ws_c = !self
+                    .whitespace_before_token
+                    .get(i + 2)
+                    .copied()
+                    .unwrap_or(false);
+                let no_ws_d = !self
+                    .whitespace_before_token
+                    .get(i + 3)
+                    .copied()
+                    .unwrap_or(false);
+                a_is_num
+                    && b_is_e
+                    && c_is_sign
+                    && d_is_int
+                    && same_line
+                    && no_ws_b
+                    && no_ws_c
+                    && no_ws_d
+            };
+            if merge {
+                let span_line = self.tokens[i].line;
+                let span_col = self.tokens[i].column;
+                let new_value = format!(
+                    "{}{}{}{}",
+                    self.tokens[i].value,
+                    self.tokens[i + 1].value,
+                    self.tokens[i + 2].value,
+                    self.tokens[i + 3].value
+                );
+                for _ in 0..3 {
+                    self.tokens.remove(i + 1);
+                    self.whitespace_before_token.remove(i + 1);
+                }
+                self.tokens[i] = Token {
+                    type_: TokenType::Number,
+                    value: new_value,
+                    line: span_line,
+                    column: span_col,
+                    type_name: None,
+                    flags: None,
+                };
+            } else {
+                i += 1;
+            }
+        }
+    }
+
+    /// Phase 4k helper — true iff `s` is a pure integer-shaped lexeme
+    /// (digits and underscore separators only, no dot or exponent).
+    /// Used to discriminate already-fused float Numbers from the
+    /// integer Numbers that float-fusion is allowed to consume.
+    fn is_integer_lexeme(&self, s: &str) -> bool {
+        !s.is_empty()
+            && s.chars().all(|c| c.is_ascii_digit() || c == '_')
     }
 
     /// 2.1: fold a `Number` token followed (with no whitespace) by
@@ -1157,6 +1370,32 @@ pub const ENDLESS_RANGE_FLAG: u32 = 1 << 1;
 fn is_numbered_block_param(s: &str) -> bool {
     let bytes = s.as_bytes();
     bytes.len() == 2 && bytes[0] == b'_' && (b'1'..=b'9').contains(&bytes[1])
+}
+
+/// Phase 4k — true iff `s` looks like an exponent suffix that the
+/// lexer's ident-body absorbed: starts with `e` or `E`, followed by
+/// one or more digits (or underscore separators).  No sign character
+/// — signed exponents (`e+10`) lex as three separate tokens and are
+/// folded by the signed-exponent step of `fuse_float_literals`.
+fn is_unsigned_exponent_lexeme(s: &str) -> bool {
+    let bytes = s.as_bytes();
+    if bytes.len() < 2 {
+        return false;
+    }
+    if bytes[0] != b'e' && bytes[0] != b'E' {
+        return false;
+    }
+    let mut saw_digit = false;
+    for &c in &bytes[1..] {
+        if c.is_ascii_digit() {
+            saw_digit = true;
+        } else if c == b'_' {
+            // separators OK, but must have at least one digit too
+        } else {
+            return false;
+        }
+    }
+    saw_digit
 }
 
 fn is_heredoc_tag(s: &str) -> bool {
@@ -2668,5 +2907,280 @@ mod tests {
         assert!(!is_heredoc_tag("2tag"));
         assert!(!is_heredoc_tag("with space"));
         assert!(!is_heredoc_tag("dash-tag"));
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 4i / 4j — instance vars `@x`, class vars `@@x`, globals `$x`.
+    // -----------------------------------------------------------------
+    //
+    // All three sigil-prefixed lexemes have existed since Ruby 1.0;
+    // they emit as `TokenType::Name` carrying the *full lexeme*
+    // (sigils included).  Downstream code (parser / SIR lowerer)
+    // dispatches by the leading character.  These tests are NOT era-
+    // gated — they should produce the same shape across every era.
+
+    #[test]
+    fn lexes_instance_variable() {
+        let toks = tokenize_ruby("@count");
+        let names: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(names, vec!["@count"]);
+    }
+
+    #[test]
+    fn lexes_class_variable() {
+        let toks = tokenize_ruby("@@all");
+        let names: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(names, vec!["@@all"]);
+    }
+
+    #[test]
+    fn lexes_global_variable() {
+        let toks = tokenize_ruby("$LOAD_PATH");
+        let names: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(names, vec!["$LOAD_PATH"]);
+    }
+
+    #[test]
+    fn ivar_with_digits_and_underscore() {
+        // `@foo_bar2` — ident-body rules permit digits/underscore
+        // after the first ident-starter.
+        let toks = tokenize_ruby("@foo_bar2");
+        let names: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(names, vec!["@foo_bar2"]);
+    }
+
+    #[test]
+    fn sigil_vars_in_assignment_context() {
+        // `@x = 1` → three tokens: Name(@x), Equals, Number(1).
+        let toks = tokenize_ruby("@x = 1");
+        let kinds: Vec<(TokenType, &str)> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof && t.type_ != TokenType::Newline)
+            .map(|t| (t.type_, t.value.as_str()))
+            .collect();
+        assert_eq!(
+            kinds,
+            vec![
+                (TokenType::Name, "@x"),
+                (TokenType::Equals, "="),
+                (TokenType::Number, "1"),
+            ]
+        );
+    }
+
+    #[test]
+    fn invalid_ivar_falls_back_to_op_with_diagnostic() {
+        // `@1` (digit after `@`) is not a valid ivar in Ruby.  We
+        // record a diagnostic and emit `@` as a bare Op token so the
+        // parser still gets a clean stream.
+        let (toks, diags) = tokenize_ruby_diag("@1");
+        assert!(diags.iter().any(|d| d.code == "invalid_ivar"));
+        // First non-Eof token should be the bare `@` Op.
+        let first = toks
+            .iter()
+            .find(|t| t.type_ != TokenType::Eof && t.type_ != TokenType::Newline)
+            .expect("expected at least one non-Eof token");
+        assert_eq!(first.value, "@");
+    }
+
+    #[test]
+    fn invalid_gvar_falls_back_to_op_with_diagnostic() {
+        // `$ ` (dollar followed by space) — v0 doesn't recognise the
+        // punctuation globals, so this records `invalid_gvar` and
+        // emits `$` as a bare Op.
+        let (toks, diags) = tokenize_ruby_diag("$ x");
+        assert!(diags.iter().any(|d| d.code == "invalid_gvar"));
+        let first = toks
+            .iter()
+            .find(|t| t.type_ != TokenType::Eof && t.type_ != TokenType::Newline)
+            .expect("expected at least one non-Eof token");
+        assert_eq!(first.value, "$");
+    }
+
+    #[test]
+    fn sigil_vars_unchanged_across_all_eras() {
+        // Sigil vars have been in Ruby since 1.0, so every era from
+        // 1.8 forward should produce the identical token shape.
+        let src = "@a + @@b + $c";
+        let baseline_names: Vec<String> = tokenize_ruby_for_version(src, "1.8")
+            .unwrap()
+            .into_iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value)
+            .collect();
+        assert_eq!(baseline_names, vec!["@a", "@@b", "$c"]);
+        for v in machine::ERA_VERSIONS {
+            let names: Vec<String> = tokenize_ruby_for_version(src, v)
+                .unwrap()
+                .into_iter()
+                .filter(|t| t.type_ == TokenType::Name)
+                .map(|t| t.value)
+                .collect();
+            assert_eq!(
+                names, baseline_names,
+                "sigil-var lexing diverged in era {v}"
+            );
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 4k — float literals (`1.5`, `1e10`, `1.5e-3`, …)
+    // -----------------------------------------------------------------
+    //
+    // Floats have been in Ruby since 1.0 (no era gate).  The state
+    // machine emits the simple shape (Int, Dot, Int, …), and the
+    // `fuse_float_literals` post-pass collapses sequences into one
+    // `Number` token.  These tests pin the canonical fusions.
+
+    fn numbers(src: &str) -> Vec<String> {
+        tokenize_ruby(src)
+            .into_iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value)
+            .collect()
+    }
+
+    #[test]
+    fn lexes_simple_float() {
+        // `1.5` → one Number token, value "1.5".
+        assert_eq!(numbers("1.5"), vec!["1.5"]);
+    }
+
+    #[test]
+    fn lexes_float_in_assignment() {
+        // `x = 1.5` — token stream is Name, Equals, Number("1.5"), …
+        let toks = tokenize_ruby("x = 1.5");
+        let interesting: Vec<(TokenType, &str)> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof && t.type_ != TokenType::Newline)
+            .map(|t| (t.type_, t.value.as_str()))
+            .collect();
+        assert_eq!(
+            interesting,
+            vec![
+                (TokenType::Name, "x"),
+                (TokenType::Equals, "="),
+                (TokenType::Number, "1.5"),
+            ]
+        );
+    }
+
+    #[test]
+    fn lexes_float_with_unsigned_exponent() {
+        // `1e10` — one Number, "1e10".
+        assert_eq!(numbers("1e10"), vec!["1e10"]);
+        // `2E5` — capital E also OK.
+        assert_eq!(numbers("2E5"), vec!["2E5"]);
+        // `1.5e10` — combined dot + exponent.
+        assert_eq!(numbers("1.5e10"), vec!["1.5e10"]);
+    }
+
+    #[test]
+    fn lexes_float_with_signed_exponent() {
+        // `1.5e-3` — four-token fusion: Number, Name("e"), Minus, Int.
+        assert_eq!(numbers("1.5e-3"), vec!["1.5e-3"]);
+        // `1e+10` — same path with leading bare int (no dot).
+        assert_eq!(numbers("1e+10"), vec!["1e+10"]);
+    }
+
+    #[test]
+    fn float_does_not_swallow_range_operator() {
+        // `1..5` is a range, not `1.` then `.5`.  The range pass runs
+        // first and fuses the two dots into `Name("..")`, so float
+        // fusion never sees an `Int Dot Int` shape here.
+        let toks = tokenize_ruby("1..5");
+        let nums: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(nums, vec!["1", "5"]);
+        let has_dotdot = toks
+            .iter()
+            .any(|t| t.type_ == TokenType::Name && t.value == "..");
+        assert!(has_dotdot, "expected `..` Name token, got {toks:?}");
+    }
+
+    #[test]
+    fn float_does_not_swallow_method_call() {
+        // `1.method` — `1.` is an Int followed by a Dot; `method` is
+        // a NAME.  Since `method` starts with `m` (not a digit), the
+        // Int Dot Int fusion shouldn't fire.
+        let toks = tokenize_ruby("1.method");
+        let nums: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(nums, vec!["1"]);
+        let names: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(names, vec!["method"]);
+    }
+
+    #[test]
+    fn float_requires_no_whitespace() {
+        // `1 . 5` with spaces — three separate tokens, NOT a float.
+        let toks = tokenize_ruby("1 . 5");
+        let nums: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(nums, vec!["1", "5"]);
+    }
+
+    #[test]
+    fn float_lexes_uniformly_across_all_eras() {
+        // Floats have been in Ruby since 1.0; lexing must be era-
+        // invariant.  Pin the same Number stream across every era.
+        let src = "x = 1.5 + 2e10";
+        let baseline: Vec<String> = tokenize_ruby_for_version(src, "1.8")
+            .unwrap()
+            .into_iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value)
+            .collect();
+        assert_eq!(baseline, vec!["1.5", "2e10"]);
+        for v in machine::ERA_VERSIONS {
+            let nums: Vec<String> = tokenize_ruby_for_version(src, v)
+                .unwrap()
+                .into_iter()
+                .filter(|t| t.type_ == TokenType::Number)
+                .map(|t| t.value)
+                .collect();
+            assert_eq!(nums, baseline, "float lexing diverged in era {v}");
+        }
+    }
+
+    #[test]
+    fn is_unsigned_exponent_lexeme_smoke() {
+        assert!(is_unsigned_exponent_lexeme("e10"));
+        assert!(is_unsigned_exponent_lexeme("E5"));
+        assert!(is_unsigned_exponent_lexeme("e1_000"));
+        assert!(!is_unsigned_exponent_lexeme("e"));        // no digits
+        assert!(!is_unsigned_exponent_lexeme("e+10"));     // signed → 3 tokens
+        assert!(!is_unsigned_exponent_lexeme("foo"));      // doesn't start with e/E
+        assert!(!is_unsigned_exponent_lexeme(""));         // empty
+        assert!(!is_unsigned_exponent_lexeme("ex"));       // non-digit body
     }
 }

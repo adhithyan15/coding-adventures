@@ -1,4 +1,12 @@
-import { acSweep, dcOp, mcDc, noiseAc, sensDc, tf } from "@coding-adventures/spice-engine";
+import {
+  acSweep,
+  dcOp,
+  mcDc,
+  noiseAc,
+  sensDc,
+  tf,
+  transientAdaptive,
+} from "@coding-adventures/spice-engine";
 import { describe, expect, it } from "vitest";
 import {
   NetlistParseError,
@@ -147,6 +155,41 @@ Tdelay in 0 out 0 Z0=50 TD=1n
     expect(parsed.optionsCards()).toEqual([card]);
   });
 
+  it("builds engine call options from .options cards", () => {
+    const parsed = parseNetlist(`
+V1 vin 0 DC 10
+R1 vin mid 1k
+R2 mid 0 1k
+.options reltol=1u itl1=7 gmin=1p method=gear2 trtol=2m minstep=1n maxstep=5n
+.op
+.tran 1n 2n
+`);
+    const tran = parsed.tranCards()[0];
+
+    expect(parsed.dcOpOptions()).toEqual({
+      tolerance: 1.0e-6,
+      maxIterations: 7,
+      pseudoTransientConductance: 1.0e-12,
+    });
+    const result = dcOp(parsed.circuit, parsed.dcOpOptions());
+    expect(result.voltage("mid")).toBeCloseTo(5.0, 9);
+
+    expect(parsed.adaptiveTransientOptions(tran)).toEqual({
+      method: "gear2",
+      tolerance: 2.0e-3,
+      minStep: 1.0e-9,
+      maxStep: 5.0e-9,
+    });
+    const transient = transientAdaptive(
+      parsed.circuit,
+      tran.timeStep,
+      tran.stopTime,
+      parsed.adaptiveTransientOptions(tran),
+    );
+    expect(transient.converged).toBe(true);
+    expect(transient.method).toBe("gear2");
+  });
+
   it("parses .temp analysis cards", () => {
     const parsed = parseNetlist(".temp 27 75 -40");
     const card = { kind: "temp", temperaturesCelsius: [27, 75, -40] };
@@ -213,6 +256,45 @@ Tdelay in 0 out 0 Z0=50 TD=1n
     expect(() => parseNetlist(".four 1k P(out)")).toThrow(
       /\.four probe must be V\(node\) or I\(source\)/,
     );
+  });
+
+  it("parses .disto and .pz analysis cards", () => {
+    const parsed = parseNetlist(`
+.disto dec 5 1k 1meg V(out) I(Vin)
+.pz V(out) Vin pole
+`);
+    const distoCard = {
+      kind: "disto",
+      mode: "dec",
+      points: 5,
+      startHz: 1000,
+      stopHz: 1.0e6,
+      probes: [
+        { kind: "voltage", target: "out" },
+        { kind: "current", target: "Vin" },
+      ],
+    };
+    const pzCard = {
+      kind: "pz",
+      outputNode: "out",
+      inputSource: "Vin",
+      poleZeroKind: "pole",
+    };
+
+    expect(parsed.analyses).toEqual([distoCard, pzCard]);
+    expect(parsed.distortionCards()).toEqual([distoCard]);
+    expect(parsed.poleZeroCards()).toEqual([pzCard]);
+  });
+
+  it("rejects .disto and .pz cards with invalid shapes", () => {
+    expect(() => parseNetlist(".disto dec 5 1k 1meg")).toThrow(
+      /\.disto expects at least 6 fields/,
+    );
+    expect(() => parseNetlist(".disto dec 5 1k 1meg P(out)")).toThrow(
+      /\.disto probe must be V\(node\) or I\(source\)/,
+    );
+    expect(() => parseNetlist(".pz out Vin")).toThrow(/\.pz output must be a voltage probe/);
+    expect(() => parseNetlist(".pz V(out) Vin residue")).toThrow(/\.pz kind must be/);
   });
 
   it("parses transient methods from .tran cards", () => {

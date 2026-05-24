@@ -187,9 +187,17 @@ The crate keeps the boundary narrow:
   drain-result health dashboard labels, ranks, readiness, and label-integrity
   flags for host queues
 - supervisor drain run summaries flatten preflight-plan and drain-result health
+  action component flags and counts for per-side scheduler filters
+- supervisor drain run summaries flatten preflight-plan and drain-result health
   route, priority, and readiness booleans for per-side queue filters
 - supervisor drain run summaries expose combined plan/drain health-dashboard
   surfaces, routes, ranks, readiness, and triage flags for one-key host queues
+- supervisor drain run summaries flatten combined health-dashboard action
+  component flags and counts for one-key scheduler filters
+- supervisor drain run summaries expose stable combined health-dashboard action
+  lanes and labels for host dashboard grouping
+- supervisor drain run summaries expose stable combined health-dashboard queue
+  keys for grouping action lane, route, priority, and readiness in one host key
 - supervisor drain run summaries flatten combined health-dashboard route,
   priority, and readiness booleans for host queue filters
 - supervisor drain reports and summaries expose stable, parseable scheduler action

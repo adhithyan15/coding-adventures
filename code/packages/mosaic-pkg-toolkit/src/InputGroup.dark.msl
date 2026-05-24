@@ -1,0 +1,31 @@
+// InputGroup.dark.msl — dark-theme styling.
+
+style InputGroup {
+  part input-group {
+    padding : 0 ;
+  }
+  part input-group-prefix {
+    padding       : 8 ;
+    background    : "#374151" ;
+    color         : "#d1d5db" ;
+    border-width  : 1 ;
+    border-color  : "#4b5563" ;
+    font-size     : 14 ;
+  }
+  part input-group-field {
+    padding       : 8 ;
+    background    : "#1f2937" ;
+    color         : "#f3f4f6" ;
+    border-width  : 1 ;
+    border-color  : "#4b5563" ;
+    font-size     : 14 ;
+  }
+  part input-group-suffix {
+    padding       : 8 ;
+    background    : "#374151" ;
+    color         : "#d1d5db" ;
+    border-width  : 1 ;
+    border-color  : "#4b5563" ;
+    font-size     : 14 ;
+  }
+}

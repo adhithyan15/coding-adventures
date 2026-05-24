@@ -100,7 +100,13 @@ from spice_engine import (
     DcSweepPoint,
     DcSweepResult,
     Diode,
+    DistortionHarmonic,
+    DistortionPoint,
+    DistortionResult,
     ExpWaveform,
+    FourierHarmonic,
+    FourierProbeResult,
+    FourierResult,
     Inductor,
     JFET,
     Mosfet,
@@ -117,6 +123,8 @@ from spice_engine import (
     PssResult,
     PssResidualJacobianResult,
     PssResidualResult,
+    PoleZeroEntry,
+    PoleZeroResult,
     PulseWaveform,
     PwlWaveform,
     Resistor,
@@ -129,6 +137,7 @@ from spice_engine import (
     TfResult,
     TransmissionLine,
     VoltageSource,
+    TransientPoint,
     XInstance,
     ac_sweep,
     ac_sweep_corners,
@@ -137,6 +146,9 @@ from spice_engine import (
     dc_sweep,
     dc_sweep_corners,
     estimate_period,
+    format_dc_table,
+    format_transient_table,
+    fourier,
     mc_dc,
     noise_ac,
     pss,
@@ -5492,6 +5504,116 @@ def test_sin_waveform_transient_sinusoid() -> None:
         assert abs(v_out - expected) < 0.05, (
             f"t={pt.time:.3f}: V(out)={v_out:.4f} expected ~{expected:.4f}"
         )
+
+
+def test_fourier_extracts_transient_sinusoid_components() -> None:
+    freq = 1_000.0
+    amp = 2.0
+    offset = 0.25
+    period = 1.0 / freq
+    c = Circuit([
+        VoltageSource(
+            "Vs",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=offset, amplitude=amp, frequency=freq),
+        ),
+    ])
+    result = transient(c, t_stop=2.0 * period, t_step=period / 64.0)
+    analysis = fourier(result, freq, ["V(in)"], harmonics=5)
+
+    assert isinstance(analysis, FourierResult)
+    assert isinstance(analysis.probes[0], FourierProbeResult)
+    assert isinstance(analysis.probes[0].harmonics[0], FourierHarmonic)
+    assert analysis.start_time == pytest.approx(period)
+    probe = analysis.probes[0]
+    fundamental = probe.harmonics[0]
+    assert probe.dc == pytest.approx(offset, abs=2.0e-3)
+    assert fundamental.frequency == pytest.approx(freq)
+    assert fundamental.magnitude == pytest.approx(amp, rel=2.0e-3)
+    assert fundamental.sine == pytest.approx(amp, rel=2.0e-3)
+    assert abs(fundamental.cosine) < 2.0e-3
+    assert probe.total_harmonic_distortion < 2.0e-3
+
+
+def test_pole_zero_result_shape_supports_simple_rc_pole_fixture() -> None:
+    resistance = 1_000.0
+    capacitance = 1.0e-6
+    pole_rad_per_second = -1.0 / (resistance * capacitance)
+    result = PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
+            PoleZeroEntry(
+                kind="pole",
+                real=pole_rad_per_second,
+                imaginary=0.0,
+                frequency=abs(pole_rad_per_second) / (2.0 * math.pi),
+                damping=1.0,
+            )
+        ],
+    )
+
+    assert isinstance(result, PoleZeroResult)
+    assert result.entries[0].kind == "pole"
+    assert result.entries[0].frequency == pytest.approx(
+        1.0 / (2.0 * math.pi * resistance * capacitance)
+    )
+
+
+def test_distortion_result_shape_supports_nonlinear_device_smoke_fixture() -> None:
+    result = DistortionResult(
+        input_source="Vin",
+        output_probe="V(out)",
+        points=[
+            DistortionPoint(
+                frequency=1.0e3,
+                fundamental_magnitude=1.0,
+                harmonics=[
+                    DistortionHarmonic(
+                        harmonic=2,
+                        frequency=2.0e3,
+                        magnitude=0.025,
+                        phase_degrees=-12.0,
+                    )
+                ],
+                total_harmonic_distortion=0.025,
+            )
+        ],
+    )
+
+    assert isinstance(result, DistortionResult)
+    assert result.points[0].harmonics[0].harmonic == 2
+    assert result.points[0].total_harmonic_distortion == pytest.approx(0.025)
+
+
+def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:
+    circuit = Circuit([
+        VoltageSource("V1", "vin", "0", 10.0),
+        Resistor("R1", "vin", "mid", 1_000.0),
+        Resistor("R2", "mid", "0", 1_000.0),
+    ])
+    dc_result = dc_op(circuit)
+
+    assert format_dc_table(dc_result) == (
+        "Index\tV(mid)\tV(vin)\tI(V1)\n"
+        "0\t5.000000e+00\t1.000000e+01\t-5.000000e-03\n"
+    )
+    assert format_dc_table(dc_result, ["V(vin, mid)", "I(V1)"]) == (
+        "Index\tV(vin, mid)\tI(V1)\n"
+        "0\t5.000000e+00\t-5.000000e-03\n"
+    )
+
+    transient_points = [
+        TransientPoint(0.0, {"in": 0.0, "out": 0.0}, {"I(V1)": 0.0}),
+        TransientPoint(1.0e-3, {"in": 1.0, "out": 0.5}, {"I(V1)": -5.0e-4}),
+    ]
+    assert format_transient_table(transient_points) == (
+        "Index\tTime\tV(in)\tV(out)\tI(V1)\n"
+        "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\t1.000000e-03\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    )
 
 
 # ---- PulseWaveform unit tests -----------------------------------------------

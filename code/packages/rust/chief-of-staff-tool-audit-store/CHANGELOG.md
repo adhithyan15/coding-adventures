@@ -142,12 +142,20 @@ All notable changes to this package will be documented in this file.
   investigation, and triage readiness helpers for host dashboards.
 - Aggregate preflight-plan and drain-result health dashboard fields on
   supervisor drain run summaries.
+- Flattened preflight-plan and drain-result health action component flags and
+  counts for per-side supervisor drain run scheduler filters.
 - Flattened preflight-plan and drain-result health route, priority, and
   readiness booleans for per-side supervisor drain run queue filters.
 - Health dashboard label-integrity flags for aggregate supervisor plan/drain
   host queues.
 - Combined supervisor plan/drain health-dashboard surfaces, route labels,
   priority ranks, readiness labels, and triage flags for one-key host queues.
+- Flattened combined health-dashboard action component flags and counts for
+  supervisor drain run summary scheduler filters.
+- Stable combined health-dashboard action lanes and labels for supervisor drain
+  run summary dashboard grouping.
+- Stable combined health-dashboard queue keys for grouping action lane, route,
+  priority, and readiness in one supervisor drain run summary host key.
 - Flattened combined health-dashboard route, priority, and readiness booleans
   for supervisor drain run summary host queue filters.
 - Aggregate health-label integrity helpers for inventory, write, replay,

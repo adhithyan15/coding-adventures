@@ -2,6 +2,99 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.16.0] - 2026-05-24
+
+### Added (Phase 4k — float literals `1.5`, `1e10`, `1.5e-3`)
+
+Float literals have been in Ruby since 1.0 but were never lexed by the v0 state machine.  Implemented via a **post-pass fusion** (same pattern as Phase 4b's `->` arrow, Phase 4c's `&.`, Phase 4f's numeric suffixes, etc.) — keeps the state machine TOML simple and avoids the lookahead-then-unpeek dance that would be needed in the engine itself.
+
+#### Supported lexeme shapes
+
+| Source       | Pre-fusion tokens                   | Post-fusion Number    |
+|--------------|-------------------------------------|-----------------------|
+| `1.5`        | Int "1", Dot, Int "5"               | "1.5"                 |
+| `1e10`       | Int "1", Name "e10"                 | "1e10"                |
+| `1E5`        | Int "1", Name "E5"                  | "1E5"                 |
+| `1.5e10`     | Int, Dot, Int, Name "e10"           | "1.5e10"              |
+| `1.5e-3`     | Int, Dot, Int, Name "e", Minus, Int | "1.5e-3"              |
+| `1e+10`      | Int, Name "e", Plus, Int            | "1e+10"               |
+| `1_000.5`    | Int "1_000", Dot, Int "5"           | "1_000.5"             |
+
+#### What this is **not** doing
+
+- **Method calls**: `1.method` stays as `Int "1"`, `Dot`, `Name "method"` (the fusion only fires when the dot is flanked by integer-shaped tokens).
+- **Range operator**: `1..5` stays a range — `fuse_range_ops` runs before `fuse_float_literals` and consumes the two dots into `Name ".."` before float fusion sees the stream.
+- **Whitespace-separated**: `1 . 5` is three separate tokens — every fusion step checks `whitespace_before_token` and same-line.
+- **Sign-only exponent**: signed exponents (`1e+10`) need three additional tokens (Name "e", Plus/Minus, Int) — handled by the third fusion step.
+
+#### Why a post-pass, not a TOML state?
+
+The state machine would need lookahead to decide between `1.5` (one float token) and `1.method` (Int + Dot + Name).  Our TOML doesn't support multi-char lookahead cleanly — we'd have to consume the `.` and then somehow re-emit a Dot if the next char isn't a digit.  The post-pass approach is uniform with how `..` / `...` / `->` / `&.` / `2r` / `_1` already work and stays cleanly testable.
+
+### Helpers added
+- `fuse_float_literals` — three-step fusion: (1) `Int Dot Int`, (2) `Number Name(e<digits>)`, (3) `Number Name(e) (+|-) Int`.
+- `is_integer_lexeme` — true iff the lexeme is just digits and `_`.
+- `is_unsigned_exponent_lexeme` (module-scope) — true iff the lexeme is `[eE]<digit_or_underscore>+`.
+
+### Tests (+9 new, total 133)
+- `lexes_simple_float` — `1.5` → Number "1.5".
+- `lexes_float_in_assignment` — `x = 1.5` produces the full expected token stream.
+- `lexes_float_with_unsigned_exponent` — `1e10`, `2E5`, `1.5e10`.
+- `lexes_float_with_signed_exponent` — `1.5e-3`, `1e+10`.
+- `float_does_not_swallow_range_operator` — `1..5` stays a range.
+- `float_does_not_swallow_method_call` — `1.method` stays `Int Dot Name`.
+- `float_requires_no_whitespace` — `1 . 5` is three tokens.
+- `float_lexes_uniformly_across_all_eras` — pins float-Number stream across every era in `ERA_VERSIONS`.
+- `is_unsigned_exponent_lexeme_smoke` — direct helper test.
+
+## [0.15.0] - 2026-05-23
+
+### Added (Phase 4i / 4j — instance vars `@x`, class vars `@@x`, globals `$x`)
+
+Three sigil-prefixed variable shapes that have existed since Ruby 1.0 but were never lexed by the v0 state machine:
+
+- **Instance variables**: `@count`, `@_private`, `@foo_bar2`
+- **Class variables**: `@@all`, `@@cache_key`
+- **Global variables (regular form)**: `$LOAD_PATH`, `$stderr`, `$x`
+
+All three emit as `TokenType::Name` with the **full lexeme including the sigil** preserved in `value` (e.g. `@count`, `@@all`, `$LOAD_PATH`).  The parser and SIR lowerer dispatch by inspecting the leading character — the same trick the lexer already uses for `::` (encoded as `TokenType::Colon` with value `::`).
+
+#### TOML changes (`ruby-1.8.lexer.states.toml`)
+
+New states:
+- `after_at` — peek state after `@`; decides ivar vs cvar by checking for a second `@`.  Invalid follower (e.g. `@1`) records `invalid_ivar` and falls back to emitting `@` as a bare Op.
+- `ivar_body` — slurps `[a-zA-Z0-9_]*` after `@<starter>`.
+- `cvar_body` — slurps `[a-zA-Z0-9_]*` after `@@`.
+- `after_dollar` — peek state after `$`; requires an ident-starter first char.  Invalid follower records `invalid_gvar` and emits `$` as a bare Op.
+- `dollar_body` — slurps `[a-zA-Z0-9_]*` after `$<starter>`.
+
+New alphabet entries: `@`, `$`.
+
+New `data → ...` dispatcher transitions: `@` → `after_at`, `$` → `after_dollar`.
+
+#### Scope notes
+
+v0 deliberately does NOT handle Ruby's punctuation globals:
+- `$~` (last match), `$&` (matched string), `$_` (last read line)
+- `$0`..`$9` (regex capture groups)
+- `$$`, `$?`, `$!`, etc.
+
+These will land in a follow-up phase that splits `after_dollar` into per-char arms.  The v0 fallback (emit `$` as Op + diagnostic) keeps the token stream clean for the parser.
+
+#### No era gating
+
+All three sigils have been in Ruby since the beginning, so the lexing is era-invariant.  The `sigil_vars_unchanged_across_all_eras` test pins this across all 15 `ERA_VERSIONS`.
+
+### Tests (+8 new, total 124)
+- `lexes_instance_variable` — `@count` → one `Name` token with value `@count`.
+- `lexes_class_variable` — `@@all` → one `Name` token with value `@@all`.
+- `lexes_global_variable` — `$LOAD_PATH` → one `Name` token with value `$LOAD_PATH`.
+- `ivar_with_digits_and_underscore` — `@foo_bar2` is one ivar (digits/underscore allowed after first ident-starter).
+- `sigil_vars_in_assignment_context` — `@x = 1` lexes as `Name(@x) Equals Number(1)`.
+- `invalid_ivar_falls_back_to_op_with_diagnostic` — `@1` records `invalid_ivar` and emits `@` as Op.
+- `invalid_gvar_falls_back_to_op_with_diagnostic` — `$ x` records `invalid_gvar` and emits `$` as Op.
+- `sigil_vars_unchanged_across_all_eras` — `@a + @@b + $c` produces the identical Name-value stream across every era.
+
 ## [0.14.0] - 2026-05-22
 
 ### Added (Phase 4h — 1.9.1 hash shorthand `{a: 1}` — confirmation pass)

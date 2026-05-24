@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt;
 
 const PIVOT_EPSILON: f64 = 1.0e-12;
@@ -1951,6 +1951,274 @@ impl TransientPoint {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct FourierHarmonic {
+    pub harmonic: usize,
+    pub frequency_hz: f64,
+    pub cosine: f64,
+    pub sine: f64,
+    pub magnitude: f64,
+    pub phase_degrees: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct FourierProbeResult {
+    pub probe: String,
+    pub dc: f64,
+    pub harmonics: Vec<FourierHarmonic>,
+    pub total_harmonic_distortion: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct FourierResult {
+    pub fundamental_frequency_hz: f64,
+    pub start_time: f64,
+    pub end_time: f64,
+    pub probes: Vec<FourierProbeResult>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DistortionHarmonic {
+    pub harmonic: usize,
+    pub frequency_hz: f64,
+    pub magnitude: f64,
+    pub phase_degrees: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DistortionPoint {
+    pub frequency_hz: f64,
+    pub fundamental_magnitude: f64,
+    pub harmonics: Vec<DistortionHarmonic>,
+    pub total_harmonic_distortion: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DistortionResult {
+    pub input_source: String,
+    pub output_probe: String,
+    pub points: Vec<DistortionPoint>,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum PoleZeroEntryKind {
+    Pole,
+    Zero,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct PoleZeroEntry {
+    pub kind: PoleZeroEntryKind,
+    pub real: f64,
+    pub imaginary: f64,
+    pub frequency_hz: f64,
+    pub damping: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct PoleZeroResult {
+    pub input_source: String,
+    pub output_node: String,
+    pub entries: Vec<PoleZeroEntry>,
+}
+
+pub fn fourier(
+    points: &[TransientPoint],
+    fundamental_frequency_hz: f64,
+    probes: &[&str],
+    harmonics: usize,
+) -> Result<FourierResult, SpiceError> {
+    fourier_with_start_time(points, fundamental_frequency_hz, probes, harmonics, None)
+}
+
+pub fn fourier_with_start_time(
+    points: &[TransientPoint],
+    fundamental_frequency_hz: f64,
+    probes: &[&str],
+    harmonics: usize,
+    start_time: Option<f64>,
+) -> Result<FourierResult, SpiceError> {
+    if !fundamental_frequency_hz.is_finite() || fundamental_frequency_hz <= 0.0 {
+        return Err(fourier_error(
+            "fundamental frequency must be finite and positive",
+        ));
+    }
+    if harmonics < 1 {
+        return Err(fourier_error("harmonics must be positive"));
+    }
+    if probes.is_empty() {
+        return Err(fourier_error("at least one probe is required"));
+    }
+    if points.len() < 2 {
+        return Err(fourier_error("at least two transient points are required"));
+    }
+
+    let mut sorted_points = points.to_vec();
+    sorted_points.sort_by(|left, right| left.time.total_cmp(&right.time));
+    let period = 1.0 / fundamental_frequency_hz;
+    let end_time = sorted_points[sorted_points.len() - 1].time;
+    let window_start = start_time.unwrap_or(end_time - period);
+    if !window_start.is_finite() || window_start < sorted_points[0].time {
+        return Err(fourier_error(
+            "transient output does not contain a full analysis window",
+        ));
+    }
+    if window_start >= end_time {
+        return Err(fourier_error("analysis window must have positive duration"));
+    }
+
+    let mut probe_results = Vec::new();
+    for probe in probes {
+        probe_results.push(fourier_probe(
+            &sorted_points,
+            probe,
+            fundamental_frequency_hz,
+            harmonics,
+            window_start,
+            end_time,
+        )?);
+    }
+    Ok(FourierResult {
+        fundamental_frequency_hz,
+        start_time: window_start,
+        end_time,
+        probes: probe_results,
+    })
+}
+
+fn fourier_probe(
+    points: &[TransientPoint],
+    probe: &str,
+    fundamental_frequency_hz: f64,
+    harmonics: usize,
+    start_time: f64,
+    end_time: f64,
+) -> Result<FourierProbeResult, SpiceError> {
+    let mut samples = vec![(start_time, interpolate_probe(points, probe, start_time)?)];
+    for point in points {
+        if start_time < point.time && point.time < end_time {
+            samples.push((point.time, probe_value(point, probe)?));
+        }
+    }
+    samples.push((end_time, interpolate_probe(points, probe, end_time)?));
+    samples.sort_by(|left, right| left.0.total_cmp(&right.0));
+
+    let duration = end_time - start_time;
+    let dc = integrate_samples(&samples, |_| 1.0) / duration;
+    let omega = 2.0 * std::f64::consts::PI * fundamental_frequency_hz;
+    let mut components = Vec::new();
+    for harmonic in 1..=harmonics {
+        let n = harmonic as f64;
+        let cosine = 2.0 / duration * integrate_samples(&samples, |time| (n * omega * time).cos());
+        let sine = 2.0 / duration * integrate_samples(&samples, |time| (n * omega * time).sin());
+        let magnitude = cosine.hypot(sine);
+        components.push(FourierHarmonic {
+            harmonic,
+            frequency_hz: n * fundamental_frequency_hz,
+            cosine,
+            sine,
+            magnitude,
+            phase_degrees: cosine.atan2(sine).to_degrees(),
+        });
+    }
+    let fundamental = components[0].magnitude;
+    let distortion = components[1..]
+        .iter()
+        .map(|component| component.magnitude * component.magnitude)
+        .sum::<f64>()
+        .sqrt();
+    let total_harmonic_distortion = if fundamental == 0.0 {
+        if distortion > 0.0 {
+            f64::INFINITY
+        } else {
+            0.0
+        }
+    } else {
+        distortion / fundamental
+    };
+    Ok(FourierProbeResult {
+        probe: probe.to_string(),
+        dc,
+        harmonics: components,
+        total_harmonic_distortion,
+    })
+}
+
+fn integrate_samples(samples: &[(f64, f64)], weight: impl Fn(f64) -> f64) -> f64 {
+    samples
+        .windows(2)
+        .map(|window| {
+            let (left_time, left_value) = window[0];
+            let (right_time, right_value) = window[1];
+            0.5 * (right_time - left_time)
+                * (left_value * weight(left_time) + right_value * weight(right_time))
+        })
+        .sum()
+}
+
+fn interpolate_probe(points: &[TransientPoint], probe: &str, time: f64) -> Result<f64, SpiceError> {
+    for point in points {
+        if (point.time - time).abs() <= 1.0e-15 {
+            return probe_value(point, probe);
+        }
+    }
+    for window in points.windows(2) {
+        let left = &window[0];
+        let right = &window[1];
+        if left.time <= time && time <= right.time {
+            let span = right.time - left.time;
+            if span <= 0.0 {
+                return probe_value(left, probe);
+            }
+            let alpha = (time - left.time) / span;
+            return Ok(
+                (1.0 - alpha) * probe_value(left, probe)? + alpha * probe_value(right, probe)?
+            );
+        }
+    }
+    Err(fourier_error("analysis window is outside transient output"))
+}
+
+fn probe_value(point: &TransientPoint, probe: &str) -> Result<f64, SpiceError> {
+    let text = probe.trim();
+    let lower = text.to_ascii_lowercase();
+    if lower.starts_with("v(") && text.ends_with(')') {
+        let args: Vec<&str> = text[2..text.len() - 1]
+            .split(',')
+            .map(|arg| arg.trim())
+            .collect();
+        if args.len() == 1 {
+            return point_voltage(point, args[0]);
+        }
+        if args.len() == 2 {
+            return Ok(point_voltage(point, args[0])? - point_voltage(point, args[1])?);
+        }
+    }
+    if lower.starts_with("i(") && text.ends_with(')') {
+        let source_name = text[2..text.len() - 1].trim();
+        return point
+            .branch_current(source_name)
+            .ok_or_else(|| fourier_error(&format!("missing branch current probe {probe}")));
+    }
+    if !text.is_empty() {
+        return point_voltage(point, text);
+    }
+    Err(fourier_error("empty probe"))
+}
+
+fn point_voltage(point: &TransientPoint, node: &str) -> Result<f64, SpiceError> {
+    point
+        .voltage(node)
+        .ok_or_else(|| fourier_error(&format!("missing node voltage {node}")))
+}
+
+fn fourier_error(reason: &str) -> SpiceError {
+    SpiceError::InvalidElement {
+        name: "fourier".to_string(),
+        reason: reason.to_string(),
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct PssResidualEntry {
     pub kind: String,
     pub name: String,
@@ -2057,6 +2325,153 @@ impl DcResult {
             format!("I({source_name})")
         };
         self.branch_currents.get(&key).copied()
+    }
+}
+
+pub fn format_dc_table(result: &DcResult, probes: &[&str]) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        default_output_probes(&result.node_voltages, &result.branch_currents)
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let values: Result<Vec<String>, SpiceError> = selected_probes
+        .iter()
+        .map(|probe| {
+            table_probe_value(
+                &result.node_voltages,
+                &result.branch_currents,
+                probe,
+                "format_dc_table",
+            )
+            .map(format_table_number)
+        })
+        .collect();
+    Ok(format!(
+        "Index\t{}\n0\t{}\n",
+        selected_probes.join("\t"),
+        values?.join("\t")
+    ))
+}
+
+pub fn format_transient_table(
+    points: &[TransientPoint],
+    probes: &[&str],
+) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        default_transient_output_probes(points)
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let mut rows = vec![format!("Index\tTime\t{}", selected_probes.join("\t"))];
+    for (index, point) in points.iter().enumerate() {
+        let values: Result<Vec<String>, SpiceError> = selected_probes
+            .iter()
+            .map(|probe| {
+                table_probe_value(
+                    &point.node_voltages,
+                    &point.branch_currents,
+                    probe,
+                    "format_transient_table",
+                )
+                .map(format_table_number)
+            })
+            .collect();
+        rows.push(format!(
+            "{index}\t{}\t{}",
+            format_table_number(point.time),
+            values?.join("\t")
+        ));
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+fn default_output_probes(
+    node_voltages: &BTreeMap<String, f64>,
+    branch_currents: &BTreeMap<String, f64>,
+) -> Vec<String> {
+    node_voltages
+        .keys()
+        .map(|name| format!("V({name})"))
+        .chain(branch_currents.keys().cloned())
+        .collect()
+}
+
+fn default_transient_output_probes(points: &[TransientPoint]) -> Vec<String> {
+    let mut node_names = BTreeSet::new();
+    let mut branch_names = BTreeSet::new();
+    for point in points {
+        node_names.extend(point.node_voltages.keys().cloned());
+        branch_names.extend(point.branch_currents.keys().cloned());
+    }
+    node_names
+        .iter()
+        .map(|name| format!("V({name})"))
+        .chain(branch_names)
+        .collect()
+}
+
+fn format_table_number(value: f64) -> String {
+    let raw = format!("{value:.6e}");
+    if let Some((mantissa, exponent_text)) = raw.split_once('e') {
+        let exponent = exponent_text.parse::<i32>().unwrap_or(0);
+        return format!("{mantissa}e{exponent:+03}");
+    }
+    raw
+}
+
+fn table_probe_value(
+    node_voltages: &BTreeMap<String, f64>,
+    branch_currents: &BTreeMap<String, f64>,
+    probe: &str,
+    context: &str,
+) -> Result<f64, SpiceError> {
+    let text = probe.trim();
+    let lower = text.to_ascii_lowercase();
+    if lower.starts_with("v(") && text.ends_with(')') {
+        let args: Vec<&str> = text[2..text.len() - 1]
+            .split(',')
+            .map(|arg| arg.trim())
+            .collect();
+        if args.len() == 1 {
+            return table_voltage(node_voltages, args[0], context);
+        }
+        if args.len() == 2 {
+            return Ok(table_voltage(node_voltages, args[0], context)?
+                - table_voltage(node_voltages, args[1], context)?);
+        }
+    }
+    if lower.starts_with("i(") && text.ends_with(')') {
+        let key = format!("I({})", text[2..text.len() - 1].trim());
+        return branch_currents
+            .get(&key)
+            .copied()
+            .ok_or_else(|| table_error(context, &format!("missing branch current probe {probe}")));
+    }
+    if !text.is_empty() {
+        return table_voltage(node_voltages, text, context);
+    }
+    Err(table_error(context, "empty probe"))
+}
+
+fn table_voltage(
+    node_voltages: &BTreeMap<String, f64>,
+    node: &str,
+    context: &str,
+) -> Result<f64, SpiceError> {
+    if is_ground(node) {
+        return Ok(0.0);
+    }
+    node_voltages
+        .get(node)
+        .copied()
+        .ok_or_else(|| table_error(context, &format!("missing node voltage {node}")))
+}
+
+fn table_error(context: &str, reason: &str) -> SpiceError {
+    SpiceError::InvalidElement {
+        name: context.to_string(),
+        reason: reason.to_string(),
     }
 }
 

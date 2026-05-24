@@ -281,11 +281,17 @@ class _VmState:
     # Handle returned by backend.begin_transaction(); None when no explicit
     # transaction is active.
     transaction_handle: TransactionHandle | None = None
-    # Per-table CHECK constraint registry: table → [(col_name, instrs)].
-    # Populated at CreateTable time; consulted before every INSERT/UPDATE.
-    check_registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] = field(
-        default_factory=dict
-    )
+    # Per-table CHECK constraint registry:
+    #   table → [(col_name, expr_text, instrs)]
+    # ``col_name`` identifies the column for the legacy fallback error;
+    # ``expr_text`` is the original predicate source so the error
+    # message can mirror SQLite (``CHECK constraint failed: a > 0``);
+    # ``instrs`` is the compiled bytecode.  The handler also accepts
+    # the older 2-tuple shape ``(col_name, instrs)`` for external test
+    # fixtures that haven't been migrated.
+    check_registry: dict[
+        str, list[tuple[str, str, tuple[Instruction, ...]]]
+    ] = field(default_factory=dict)
     # FOREIGN KEY registries — both populated at CreateTable time.
     # fk_child: child_table → [(child_col, parent_table, parent_col_or_None)]
     # fk_parent: parent_table → [(child_table, child_col, parent_col_or_None)]
@@ -388,7 +394,9 @@ def execute(
     program: Program,
     backend: Backend,
     *,
-    check_registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] | None = None,
+    check_registry: dict[
+        str, list[tuple[str, str, tuple[Instruction, ...]]]
+    ] | None = None,
     fk_child: dict[str, list[tuple[str, str, str | None]]] | None = None,
     fk_parent: dict[str, list[tuple[str, str, str | None]]] | None = None,
     fk_enabled: bool = True,
@@ -2598,8 +2606,17 @@ def _do_create_table(ins: CreateTable, st: _VmState) -> None:
         )
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
-    # Register CHECK constraints.
-    checks = [(c.name, c.check_instrs) for c in ins.columns if c.check_instrs]
+    # Register CHECK constraints.  Each entry is
+    # ``(col_name, expr_text, instrs)``: ``col_name`` identifies the
+    # column for the legacy fallback error form, ``expr_text`` carries
+    # the original predicate source for the SQLite-compatible
+    # ``CHECK constraint failed: <expr_text>`` message, and ``instrs``
+    # is the compiled bytecode that yields the predicate's truth value.
+    checks = [
+        (c.name, getattr(c, "check_expr_text", "") or "", c.check_instrs)
+        for c in ins.columns
+        if c.check_instrs
+    ]
     if checks:
         st.check_registry[ins.table] = checks
     # Register FOREIGN KEY constraints — both child (forward) and parent (reverse).
@@ -2621,23 +2638,40 @@ def _check_constraints(table: str, row: dict[str, SqlValue], st: _VmState) -> No
     synthetic cursor so ``LoadColumn`` can resolve column names.  NULL
     result is treated as passing (standard SQL behaviour).  ``False`` raises
     :class:`ConstraintViolation`.
+
+    The error message format follows SQLite — ``CHECK constraint failed:
+    <expr_text>`` — so users see the predicate that rejected the row
+    instead of a column reference.  We fall back to the legacy
+    ``<table>.<col>`` form when ``expr_text`` is empty (older IR
+    constructions, or expressions the adapter couldn't reconstruct).
     """
     constraints = st.check_registry.get(table)
     if not constraints:
         return
     st.current_row[CHECK_CURSOR_ID] = row
     try:
-        for col_name, instrs in constraints:
+        for entry in constraints:
+            # Support both the new 3-tuple (col_name, expr_text, instrs)
+            # and the legacy 2-tuple (col_name, instrs) so externally
+            # built check_registries (e.g. test fixtures) keep working.
+            if len(entry) == 3:
+                col_name, expr_text, instrs = entry
+            else:  # pragma: no cover — backward-compat for legacy callers
+                col_name, instrs = entry
+                expr_text = ""
             depth_before = len(st.stack)
             for instr in instrs:
                 _dispatch(instr, st)
             result = st.pop()
             assert len(st.stack) == depth_before, "CHECK expr left extra values on stack"
             if result is False:
+                # Prefer the predicate text (matches SQLite).  Fall back
+                # to the older table.col form when text is unavailable.
+                detail = expr_text if expr_text else f"{table}.{col_name}"
                 raise ConstraintViolation(
                     table=table,
                     column=col_name,
-                    message=f"CHECK constraint failed: {table}.{col_name}",
+                    message=f"CHECK constraint failed: {detail}",
                 )
     finally:
         st.current_row.pop(CHECK_CURSOR_ID, None)

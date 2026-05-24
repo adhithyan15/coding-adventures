@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Route selected `.options` keys into engine-call helpers:
+  `dc_op_options()` for DC Newton options and `adaptive_transient_options()`
+  for adaptive transient options.
 - Parse SPICE `.four <frequency> <V(node)|I(source)>...` Fourier-analysis
   cards.
 - Parse SPICE `.print <analysis> <V(node)|I(source)>...` and

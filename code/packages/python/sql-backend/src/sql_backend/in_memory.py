@@ -1470,6 +1470,12 @@ class InMemoryBackend(Backend):
         NULL never conflicts with anything — SQL semantics. A UNIQUE column
         may contain many NULLs. ``ignore_index`` is the row being updated,
         which must not conflict with itself.
+
+        Error wording matches SQLite: both explicit ``UNIQUE`` and the
+        implicit uniqueness of a ``PRIMARY KEY`` column surface as
+        ``UNIQUE constraint failed: <table>.<col>``.  Earlier versions of
+        mini-sqlite emitted ``PRIMARY KEY constraint failed: …`` for the
+        PK case, which sqlite3 never produces.
         """
         for col in t.columns:
             if not col.effective_unique():
@@ -1481,9 +1487,8 @@ class InMemoryBackend(Backend):
                 if i == ignore_index:
                     continue
                 if existing.get(col.name) == new_val:
-                    label: Final[str] = "PRIMARY KEY" if col.primary_key else "UNIQUE"
                     raise ConstraintViolation(
                         table=table,
                         column=col.name,
-                        message=f"{label} constraint failed: {table}.{col.name}",
+                        message=f"UNIQUE constraint failed: {table}.{col.name}",
                     )

@@ -1,10 +1,10 @@
 use std::{collections::HashMap, fmt};
 
 use spice_engine::{
-    Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element, ExpWaveform,
-    Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor,
-    PulseWaveform, PwlWaveform, Resistor, SinWaveform, TransientMethod, TransmissionLine, Vccs,
-    Vcvs, VoltageSource, Waveform,
+    AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource,
+    DcOpOptions, Diode, Element, ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet,
+    MosfetLevel1Params, MosfetType, MutualInductor, PulseWaveform, PwlWaveform, Resistor,
+    SinWaveform, TransientMethod, TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -112,6 +112,29 @@ pub struct FourAnalysis {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct DistortionAnalysis {
+    pub mode: String,
+    pub points: usize,
+    pub start_hz: f64,
+    pub stop_hz: f64,
+    pub probes: Vec<OutputProbe>,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum PoleZeroKind {
+    Pole,
+    Zero,
+    PoleZero,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PoleZeroAnalysis {
+    pub output_node: String,
+    pub input_source: String,
+    pub kind: PoleZeroKind,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum OptionValue {
     Number(f64),
     Text(String),
@@ -137,6 +160,8 @@ pub enum Analysis {
     Print(PrintAnalysis),
     Plot(PlotAnalysis),
     Four(FourAnalysis),
+    Distortion(DistortionAnalysis),
+    PoleZero(PoleZeroAnalysis),
     Options(OptionsAnalysis),
 }
 
@@ -286,6 +311,26 @@ impl ParsedNetlist {
             .collect()
     }
 
+    pub fn distortion_cards(&self) -> Vec<&DistortionAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Distortion(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn pole_zero_cards(&self) -> Vec<&PoleZeroAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::PoleZero(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
     pub fn transient_method(
         &self,
         tran: Option<&TranAnalysis>,
@@ -300,6 +345,95 @@ impl ParsedNetlist {
         }
         Ok(None)
     }
+
+    pub fn dc_op_options(&self) -> Result<DcOpOptions, NetlistParseError> {
+        let values = self.merged_options();
+        let mut options = DcOpOptions::default();
+        if let Some(tolerance) = option_number(&values, &["reltol", "tol"])? {
+            options.tolerance = tolerance;
+        }
+        if let Some(max_iterations) =
+            option_usize(&values, &["itl1", "maxiter", "maxiters", "maxiterations"])?
+        {
+            options.max_iterations = max_iterations;
+        }
+        if let Some(gmin) = option_number(&values, &["gmin"])? {
+            options.pseudo_transient_conductance = gmin;
+        }
+        if let Some(pseudo_steps) = option_usize(&values, &["srcsteps", "pseudotransientsteps"])? {
+            options.pseudo_transient_steps = pseudo_steps;
+        }
+        if let Some(pseudo_iterations) =
+            option_usize(&values, &["itl6", "pseudotransientmaxiterations"])?
+        {
+            options.pseudo_transient_max_iterations = pseudo_iterations;
+        }
+        Ok(options)
+    }
+
+    pub fn adaptive_transient_options(
+        &self,
+        tran: Option<&TranAnalysis>,
+    ) -> Result<AdaptiveTransientOptions, NetlistParseError> {
+        let values = self.merged_options();
+        let mut options = AdaptiveTransientOptions::default();
+        if let Some(method) = self.transient_method(tran)? {
+            options.method = method;
+        }
+        if let Some(tolerance) = option_number(&values, &["trtol", "lte", "tollte"])? {
+            options.tolerance = tolerance;
+        }
+        if let Some(min_step) = option_number(&values, &["minstep", "tmin"])? {
+            options.min_step = Some(min_step);
+        }
+        if let Some(max_step) = option_number(&values, &["maxstep", "tmax"])? {
+            options.max_step = Some(max_step);
+        }
+        Ok(options)
+    }
+
+    fn merged_options(&self) -> HashMap<String, OptionValue> {
+        let mut values = HashMap::new();
+        for options in self.options_cards() {
+            values.extend(options.values.clone());
+        }
+        values
+    }
+}
+
+fn option_number(
+    values: &HashMap<String, OptionValue>,
+    keys: &[&str],
+) -> Result<Option<f64>, NetlistParseError> {
+    for key in keys {
+        if let Some(value) = values.get(*key) {
+            return match value {
+                OptionValue::Number(value) => Ok(Some(*value)),
+                OptionValue::Text(value) => Err(NetlistParseError::new(format!(
+                    ".options {key:?} must be numeric, got {value:?}"
+                ))),
+                OptionValue::Flag(_) => Err(NetlistParseError::new(format!(
+                    ".options {key:?} requires a numeric value"
+                ))),
+            };
+        }
+    }
+    Ok(None)
+}
+
+fn option_usize(
+    values: &HashMap<String, OptionValue>,
+    keys: &[&str],
+) -> Result<Option<usize>, NetlistParseError> {
+    let Some(value) = option_number(values, keys)? else {
+        return Ok(None);
+    };
+    if !value.is_finite() || value < 0.0 {
+        return Err(NetlistParseError::new(
+            ".options iteration counts must be finite and non-negative",
+        ));
+    }
+    Ok(Some(value.trunc() as usize))
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1444,6 +1578,30 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
                 probes: parse_output_probes(&fields[2..], ".four")?,
             }))
         }
+        ".disto" => {
+            require_min_fields(fields, 6, ".disto")?;
+            Ok(Analysis::Distortion(DistortionAnalysis {
+                mode: fields[1].to_ascii_lowercase(),
+                points: parse_value(&fields[2])? as usize,
+                start_hz: parse_value(&fields[3])?,
+                stop_hz: parse_value(&fields[4])?,
+                probes: parse_output_probes(&fields[5..], ".disto")?,
+            }))
+        }
+        ".pz" => {
+            require_min_fields(fields, 3, ".pz")?;
+            require_max_fields(fields, 4, ".pz")?;
+            let kind = if let Some(raw_kind) = fields.get(3) {
+                parse_pole_zero_kind(raw_kind)?
+            } else {
+                PoleZeroKind::PoleZero
+            };
+            Ok(Analysis::PoleZero(PoleZeroAnalysis {
+                output_node: parse_voltage_probe(&fields[1], ".pz")?,
+                input_source: fields[2].clone(),
+                kind,
+            }))
+        }
         ".options" => {
             require_min_fields(fields, 2, ".options")?;
             Ok(Analysis::Options(OptionsAnalysis {
@@ -1453,6 +1611,17 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
         _ => Err(NetlistParseError::new(format!(
             "unsupported directive {:?}",
             fields[0]
+        ))),
+    }
+}
+
+fn parse_pole_zero_kind(raw_kind: &str) -> Result<PoleZeroKind, NetlistParseError> {
+    match raw_kind.to_ascii_lowercase().as_str() {
+        "pole" => Ok(PoleZeroKind::Pole),
+        "zero" => Ok(PoleZeroKind::Zero),
+        "pz" => Ok(PoleZeroKind::PoleZero),
+        _ => Err(NetlistParseError::new(format!(
+            ".pz kind must be \"pole\", \"zero\", or \"pz\", got {raw_kind:?}"
         ))),
     }
 }

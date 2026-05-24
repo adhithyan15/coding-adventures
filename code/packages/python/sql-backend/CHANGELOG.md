@@ -5,6 +5,34 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.22.0] - 2026-05-24
+
+### Changed
+
+- ``InMemoryBackend._check_unique`` now emits
+  ``UNIQUE constraint failed: <table>.<col>`` for PRIMARY KEY
+  uniqueness violations.  Previously emitted ``PRIMARY KEY
+  constraint failed: …`` for the PK case, which sqlite3 never
+  produces (PRIMARY KEY implies UNIQUE; SQLite reports both with
+  the unified UNIQUE wording).
+- ``ConstraintViolation`` docstring updated to reflect the unified
+  wording and the addition of ``CHECK constraint failed:`` from
+  sql-backend 0.21.
+
+## [0.21.0] - 2026-05-24
+
+### Added
+
+- ``ColumnDef.check_expr_text: str`` — source-text rendering of the
+  CHECK predicate, populated by the adapter and consumed by the VM
+  so ``ConstraintViolation`` messages read
+  ``CHECK constraint failed: <expr_text>`` (matches SQLite) instead
+  of the older ``CHECK constraint failed: <table>.<col>``.  Defaults
+  to ``""`` for back-compat with externally constructed ColumnDefs;
+  the VM falls back to the older ``table.col`` form when the field
+  is empty.  Non-comparing/non-hashing so existing equality
+  semantics are unchanged.
+
 ## [0.20.0] - 2026-05-23
 
 ### Changed

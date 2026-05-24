@@ -818,6 +818,12 @@ pub struct BrowserDocument {
     pub title: Option<String>,
     pub base_href: Option<String>,
     pub base_target: Option<String>,
+    pub document_lang: Option<String>,
+    pub document_dir: Option<String>,
+    pub body_id: Option<String>,
+    pub body_classes: Vec<String>,
+    pub body_lang: Option<String>,
+    pub body_dir: Option<String>,
     pub body_text: String,
     pub metas: Vec<BrowserMeta>,
     pub resources: Vec<BrowserResource>,
@@ -847,6 +853,8 @@ pub struct BrowserResource {
     pub type_hint: Option<String>,
     pub media: Option<String>,
     pub title: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
     pub async_script: bool,
     pub defer_script: bool,
 }
@@ -867,18 +875,44 @@ pub struct BrowserContentTree {
 pub struct BrowserContentNode {
     pub role: String,
     pub name: Option<String>,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub title: Option<String>,
+    pub lang: Option<String>,
+    pub dir: Option<String>,
     pub text: Option<String>,
     pub href: Option<String>,
     pub resolved_href: Option<String>,
     pub src: Option<String>,
     pub resolved_src: Option<String>,
     pub alt: Option<String>,
+    pub resource_kind: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
     pub control_type: Option<String>,
     pub value: Option<String>,
     pub disabled: bool,
     pub checked: bool,
     pub selected: bool,
     pub options: Vec<String>,
+    pub table_section_kind: Option<String>,
+    pub colspan: Option<String>,
+    pub rowspan: Option<String>,
+    pub span: Option<String>,
+    pub scope: Option<String>,
+    pub headers: Vec<String>,
+    pub abbr: Option<String>,
+    pub text_flow: Option<String>,
+    pub list_kind: Option<String>,
+    pub list_start: Option<String>,
+    pub list_marker_type: Option<String>,
+    pub list_reversed: bool,
+    pub list_item_value: Option<String>,
+    pub quote_cite: Option<String>,
+    pub resolved_quote_cite: Option<String>,
+    pub break_kind: Option<String>,
     pub children: Vec<BrowserContentNode>,
 }
 
@@ -892,18 +926,44 @@ pub struct BrowserRenderNode {
     pub display: String,
     pub role: String,
     pub name: Option<String>,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub title: Option<String>,
+    pub lang: Option<String>,
+    pub dir: Option<String>,
     pub text: Option<String>,
     pub href: Option<String>,
     pub resolved_href: Option<String>,
     pub src: Option<String>,
     pub resolved_src: Option<String>,
     pub alt: Option<String>,
+    pub resource_kind: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
     pub control_type: Option<String>,
     pub value: Option<String>,
     pub disabled: bool,
     pub checked: bool,
     pub selected: bool,
     pub options: Vec<String>,
+    pub table_section_kind: Option<String>,
+    pub colspan: Option<String>,
+    pub rowspan: Option<String>,
+    pub span: Option<String>,
+    pub scope: Option<String>,
+    pub headers: Vec<String>,
+    pub abbr: Option<String>,
+    pub text_flow: Option<String>,
+    pub list_kind: Option<String>,
+    pub list_start: Option<String>,
+    pub list_marker_type: Option<String>,
+    pub list_reversed: bool,
+    pub list_item_value: Option<String>,
+    pub quote_cite: Option<String>,
+    pub resolved_quote_cite: Option<String>,
+    pub break_kind: Option<String>,
     pub children: Vec<BrowserRenderNode>,
 }
 
@@ -958,12 +1018,15 @@ pub struct BrowserFormControl {
 pub struct BrowserTable {
     pub caption: Option<String>,
     pub row_count: usize,
+    pub column_count: usize,
+    pub column_hint_count: usize,
     pub cell_count: usize,
     pub header_cell_count: usize,
 }
 
 impl BrowserDocument {
     pub fn from_document(document: &Document) -> Self {
+        let html = find_first_element_in_nodes(&document.children, "html");
         let head = find_first_element_in_nodes(&document.children, "head");
         let body = find_first_element_in_nodes(&document.children, "body");
         let body_children = body
@@ -981,6 +1044,25 @@ impl BrowserDocument {
             base_target: head
                 .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
                 .and_then(|element| element.attribute("target"))
+                .map(ToOwned::to_owned),
+            document_lang: html
+                .and_then(|element| element.attribute("lang"))
+                .map(ToOwned::to_owned),
+            document_dir: html
+                .and_then(|element| element.attribute("dir"))
+                .map(ToOwned::to_owned),
+            body_id: body
+                .and_then(|element| element.attribute("id"))
+                .map(ToOwned::to_owned),
+            body_classes: body
+                .and_then(|element| element.attribute("class"))
+                .map(split_html_classes)
+                .unwrap_or_default(),
+            body_lang: body
+                .and_then(|element| element.attribute("lang"))
+                .map(ToOwned::to_owned),
+            body_dir: body
+                .and_then(|element| element.attribute("dir"))
                 .map(ToOwned::to_owned),
             body_text: visible_text_for_nodes(body_children),
             ..Self::default()
@@ -1040,18 +1122,44 @@ impl BrowserRenderNode {
             display: browser_render_display(&content_node.role).to_string(),
             role: content_node.role.clone(),
             name: content_node.name.clone(),
+            id: content_node.id.clone(),
+            classes: content_node.classes.clone(),
+            title: content_node.title.clone(),
+            lang: content_node.lang.clone(),
+            dir: content_node.dir.clone(),
             text: content_node.text.clone(),
             href: content_node.href.clone(),
             resolved_href: content_node.resolved_href.clone(),
             src: content_node.src.clone(),
             resolved_src: content_node.resolved_src.clone(),
             alt: content_node.alt.clone(),
+            resource_kind: content_node.resource_kind.clone(),
+            width: content_node.width.clone(),
+            height: content_node.height.clone(),
+            type_hint: content_node.type_hint.clone(),
+            media: content_node.media.clone(),
             control_type: content_node.control_type.clone(),
             value: content_node.value.clone(),
             disabled: content_node.disabled,
             checked: content_node.checked,
             selected: content_node.selected,
             options: content_node.options.clone(),
+            table_section_kind: content_node.table_section_kind.clone(),
+            colspan: content_node.colspan.clone(),
+            rowspan: content_node.rowspan.clone(),
+            span: content_node.span.clone(),
+            scope: content_node.scope.clone(),
+            headers: content_node.headers.clone(),
+            abbr: content_node.abbr.clone(),
+            text_flow: content_node.text_flow.clone(),
+            list_kind: content_node.list_kind.clone(),
+            list_start: content_node.list_start.clone(),
+            list_marker_type: content_node.list_marker_type.clone(),
+            list_reversed: content_node.list_reversed,
+            list_item_value: content_node.list_item_value.clone(),
+            quote_cite: content_node.quote_cite.clone(),
+            resolved_quote_cite: content_node.resolved_quote_cite.clone(),
+            break_kind: content_node.break_kind.clone(),
             children: content_node
                 .children
                 .iter()
@@ -8011,11 +8119,11 @@ fn collect_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
             "table" => summary.tables.push(BrowserTable {
                 caption: find_first_element_in_nodes(&element.children, "caption")
                     .map(element_text),
-                row_count: count_elements_named(&element.children, "tr"),
-                cell_count: count_elements_matching(&element.children, |element| {
-                    matches!(element.name.as_str(), "td" | "th")
-                }),
-                header_cell_count: count_elements_named(&element.children, "th"),
+                row_count: browser_table_rows(element).len(),
+                column_count: browser_table_column_count(element),
+                column_hint_count: browser_table_column_hint_count(element),
+                cell_count: browser_table_cell_count(element),
+                header_cell_count: browser_table_header_cell_count(element),
             }),
             name if heading_level(name).is_some() => summary.headings.push(BrowserHeading {
                 level: heading_level(name).expect("heading level was checked above"),
@@ -8052,6 +8160,8 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                         type_hint: element.attribute("type").map(ToOwned::to_owned),
                         media: element.attribute("media").map(ToOwned::to_owned),
                         title: element.attribute("title").map(ToOwned::to_owned),
+                        width: None,
+                        height: None,
                         async_script: false,
                         defer_script: false,
                     });
@@ -8067,6 +8177,8 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                         type_hint: element.attribute("type").map(ToOwned::to_owned),
                         media: None,
                         title: None,
+                        width: None,
+                        height: None,
                         async_script: element.attribute("async").is_some(),
                         defer_script: element.attribute("defer").is_some(),
                     });
@@ -8106,6 +8218,8 @@ fn collect_body_resource(element: &Element, summary: &mut BrowserDocument) {
         type_hint: element.attribute("type").map(ToOwned::to_owned),
         media: element.attribute("media").map(ToOwned::to_owned),
         title: element.attribute("title").map(ToOwned::to_owned),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
         async_script: element.name == "script" && element.attribute("async").is_some(),
         defer_script: element.name == "script" && element.attribute("defer").is_some(),
     });
@@ -8302,32 +8416,77 @@ fn collect_browser_content_nodes(
     output: &mut Vec<BrowserContentNode>,
     base_href: Option<&str>,
 ) {
+    collect_browser_content_nodes_with_mode(nodes, output, base_href, false);
+}
+
+fn collect_browser_content_nodes_with_mode(
+    nodes: &[Node],
+    output: &mut Vec<BrowserContentNode>,
+    base_href: Option<&str>,
+    preserve_whitespace: bool,
+) {
     for node in nodes {
         match node {
             Node::Text(value) => {
-                let text = collapse_html_whitespace(&value.data);
+                let text = if preserve_whitespace {
+                    value.data.clone()
+                } else {
+                    collapse_html_whitespace(&value.data)
+                };
                 if !text.is_empty() {
                     output.push(BrowserContentNode {
                         role: "text".to_string(),
                         name: None,
+                        id: None,
+                        classes: Vec::new(),
+                        title: None,
+                        lang: None,
+                        dir: None,
                         text: Some(text),
                         href: None,
                         resolved_href: None,
                         src: None,
                         resolved_src: None,
                         alt: None,
+                        resource_kind: None,
+                        width: None,
+                        height: None,
+                        type_hint: None,
+                        media: None,
                         control_type: None,
                         value: None,
                         disabled: false,
                         checked: false,
                         selected: false,
                         options: Vec::new(),
+                        table_section_kind: None,
+                        colspan: None,
+                        rowspan: None,
+                        span: None,
+                        scope: None,
+                        headers: Vec::new(),
+                        abbr: None,
+                        text_flow: if preserve_whitespace {
+                            Some("preformatted".to_string())
+                        } else {
+                            None
+                        },
+                        list_kind: None,
+                        list_start: None,
+                        list_marker_type: None,
+                        list_reversed: false,
+                        list_item_value: None,
+                        quote_cite: None,
+                        resolved_quote_cite: None,
+                        break_kind: None,
                         children: Vec::new(),
                     });
                 }
             }
             Node::Element(element) => {
-                if let Some(content_node) = browser_content_node_for_element(element, base_href) {
+                if let Some(content_node) =
+                    browser_content_node_for_element(element, base_href, preserve_whitespace)
+                {
                     output.push(content_node);
                 }
             }
@@ -8339,6 +8498,7 @@ fn collect_browser_content_nodes(
 fn browser_content_node_for_element(
     element: &Element,
     base_href: Option<&str>,
+    preserve_whitespace: bool,
 ) -> Option<BrowserContentNode> {
     if is_browser_invisible_element(&element.name) {
         return None;
@@ -8347,7 +8507,12 @@ fn browser_content_node_for_element(
     let role = browser_content_role(&element.name)?;
     let mut children = Vec::new();
     if should_collect_browser_content_children(&element.name) {
-        collect_browser_content_nodes(&element.children, &mut children, base_href);
+        collect_browser_content_nodes_with_mode(
+            &element.children,
+            &mut children,
+            base_href,
+            preserve_whitespace || browser_preserves_text_whitespace(&element.name),
+        );
     }
 
     let text = browser_content_text(element, role);
@@ -8357,10 +8522,19 @@ fn browser_content_node_for_element(
 
     let href = element.attribute("href").map(ToOwned::to_owned);
     let src = browser_content_src(element);
+    let quote_cite = browser_quote_cite(element);
 
     Some(BrowserContentNode {
         role: role.to_string(),
         name: Some(element.name.clone()),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        lang: element.attribute("lang").map(ToOwned::to_owned),
+        dir: element.attribute("dir").map(ToOwned::to_owned),
         text,
         resolved_href: href
             .as_deref()
@@ -8371,12 +8545,38 @@ fn browser_content_node_for_element(
             .and_then(|src| resolve_browser_url(src, base_href)),
         src,
         alt: element.attribute("alt").map(ToOwned::to_owned),
+        resource_kind: browser_content_resource_kind(element),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
         control_type: browser_content_control_type(element),
         value: browser_content_value(element),
         disabled: element.attribute("disabled").is_some(),
         checked: element.attribute("checked").is_some(),
         selected: element.attribute("selected").is_some(),
         options: browser_content_options(element),
+        table_section_kind: browser_table_section_kind(element),
+        colspan: element.attribute("colspan").map(ToOwned::to_owned),
+        rowspan: element.attribute("rowspan").map(ToOwned::to_owned),
+        span: element.attribute("span").map(ToOwned::to_owned),
+        scope: element.attribute("scope").map(ToOwned::to_owned),
+        headers: element
+            .attribute("headers")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        abbr: element.attribute("abbr").map(ToOwned::to_owned),
+        text_flow: browser_text_flow(element, preserve_whitespace),
+        list_kind: browser_list_kind(element),
+        list_start: browser_list_start(element),
+        list_marker_type: browser_list_marker_type(element),
+        list_reversed: element.name == "ol" && element.attribute("reversed").is_some(),
+        list_item_value: browser_list_item_value(element),
+        resolved_quote_cite: quote_cite
+            .as_deref()
+            .and_then(|cite| resolve_browser_url(cite, base_href)),
+        quote_cite,
+        break_kind: browser_break_kind(element),
         children,
     })
 }
@@ -8388,7 +8588,17 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         }
         "a" => Some("link"),
         "img" => Some("image"),
+        "iframe" | "frame" => Some("frame"),
+        "embed" => Some("embed"),
+        "object" => Some("object"),
+        "audio" | "video" => Some("media"),
+        "canvas" => Some("canvas"),
         "br" | "wbr" => Some("line_break"),
+        "hr" => Some("separator"),
+        "blockquote" => Some("quote_block"),
+        "q" => Some("quote"),
+        "p" => Some("paragraph"),
+        "pre" | "plaintext" | "xmp" | "listing" => Some("preformatted"),
         "form" => Some("form"),
         "fieldset" => Some("form_group"),
         "label" => Some("label"),
@@ -8400,6 +8610,8 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "li" | "dt" | "dd" => Some("list_item"),
         "table" => Some("table"),
         "caption" => Some("table_caption"),
+        "colgroup" => Some("table_column_group"),
+        "col" => Some("table_column"),
         "tbody" | "thead" | "tfoot" => Some("table_section"),
         "tr" => Some("table_row"),
         "td" | "th" => Some("table_cell"),
@@ -8416,6 +8628,10 @@ fn should_collect_browser_content_children(name: &str) -> bool {
             | "base"
             | "br"
             | "button"
+            | "col"
+            | "embed"
+            | "frame"
+            | "iframe"
             | "img"
             | "input"
             | "link"
@@ -8447,6 +8663,93 @@ fn browser_content_src(element: &Element) -> Option<String> {
         "object" => element.attribute("data").map(ToOwned::to_owned),
         _ => element.attribute("src").map(ToOwned::to_owned),
     }
+}
+
+fn browser_content_resource_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "img" => Some("image".to_string()),
+        "iframe" | "frame" => Some("frame".to_string()),
+        "embed" => Some("embed".to_string()),
+        "object" => Some("object".to_string()),
+        "audio" | "video" => Some(element.name.clone()),
+        "canvas" => Some("canvas".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_table_section_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "thead" | "tbody" | "tfoot" => Some(element.name.clone()),
+        _ => None,
+    }
+}
+
+fn browser_preserves_text_whitespace(name: &str) -> bool {
+    matches!(name, "pre" | "plaintext" | "xmp" | "listing")
+}
+
+fn browser_text_flow(element: &Element, inherited_preserve_whitespace: bool) -> Option<String> {
+    if browser_preserves_text_whitespace(&element.name) || inherited_preserve_whitespace {
+        Some("preformatted".to_string())
+    } else {
+        None
+    }
+}
+
+fn browser_list_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "ul" => Some("unordered".to_string()),
+        "ol" => Some("ordered".to_string()),
+        "menu" => Some("menu".to_string()),
+        "dir" => Some("directory".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_list_start(element: &Element) -> Option<String> {
+    if element.name == "ol" {
+        element.attribute("start").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_list_marker_type(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "ol" | "ul" | "li" => element.attribute("type").map(ToOwned::to_owned),
+        _ => None,
+    }
+}
+
+fn browser_list_item_value(element: &Element) -> Option<String> {
+    if element.name == "li" {
+        element.attribute("value").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_quote_cite(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "blockquote" | "q" => element.attribute("cite").map(ToOwned::to_owned),
+        _ => None,
+    }
+}
+
+fn browser_break_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "br" => Some("line".to_string()),
+        "wbr" => Some("word".to_string()),
+        "hr" => Some("thematic".to_string()),
+        _ => None,
+    }
+}
+
+fn split_html_classes(value: &str) -> Vec<String> {
+    value
+        .split_ascii_whitespace()
+        .map(ToOwned::to_owned)
+        .collect()
 }
 
 fn browser_content_control_type(element: &Element) -> Option<String> {
@@ -8585,13 +8888,18 @@ fn browser_render_display(role: &str) -> &'static str {
     match role {
         "text" => "inline-text",
         "inline" | "link" => "inline",
-        "image" | "control" => "inline-replaced",
+        "canvas" | "embed" | "frame" | "image" | "media" | "object" | "control" => {
+            "inline-replaced"
+        }
         "line_break" => "line-break",
-        "heading" | "block" | "form" | "form_group" | "legend" | "list" => "block",
-        "label" | "option" | "option_group" => "inline",
+        "paragraph" | "preformatted" | "heading" | "block" | "form" | "form_group" | "legend"
+        | "list" | "quote_block" | "separator" => "block",
+        "label" | "option" | "option_group" | "quote" => "inline",
         "list_item" => "list-item",
         "table" => "table",
         "table_caption" => "table-caption",
+        "table_column_group" => "table-column-group",
+        "table_column" => "table-column",
         "table_section" => "table-row-group",
         "table_row" => "table-row",
         "table_cell" => "table-cell",
@@ -8743,22 +9051,118 @@ fn find_first_element_in_nodes<'a>(nodes: &'a [Node], name: &str) -> Option<&'a 
     None
 }
 
-fn count_elements_named(nodes: &[Node], name: &str) -> usize {
-    count_elements_matching(nodes, |element| element.name == name)
+fn browser_table_rows(table: &Element) -> Vec<&Element> {
+    let mut rows = Vec::new();
+    collect_browser_table_rows(&table.children, &mut rows);
+    rows
 }
 
-fn count_elements_matching(nodes: &[Node], predicate: impl Fn(&Element) -> bool + Copy) -> usize {
-    let mut count = 0;
+fn collect_browser_table_rows<'a>(nodes: &'a [Node], rows: &mut Vec<&'a Element>) {
     for node in nodes {
         let Node::Element(element) = node else {
             continue;
         };
-        if predicate(element) {
-            count += 1;
+        if element.name == "tr" {
+            rows.push(element);
+        } else if element.name != "table" {
+            collect_browser_table_rows(&element.children, rows);
         }
-        count += count_elements_matching(&element.children, predicate);
     }
+}
+
+fn browser_table_column_count(table: &Element) -> usize {
+    browser_table_rows(table)
+        .into_iter()
+        .map(browser_table_row_column_count)
+        .max()
+        .unwrap_or(0)
+}
+
+fn browser_table_row_column_count(row: &Element) -> usize {
+    row.children
+        .iter()
+        .filter_map(|node| match node {
+            Node::Element(element) if matches!(element.name.as_str(), "td" | "th") => {
+                Some(html_positive_integer_attribute(element, "colspan"))
+            }
+            _ => None,
+        })
+        .sum()
+}
+
+fn browser_table_cell_count(table: &Element) -> usize {
+    browser_table_rows(table)
+        .into_iter()
+        .map(|row| {
+            row.children
+                .iter()
+                .filter(|node| {
+                    matches!(
+                        node,
+                        Node::Element(element) if matches!(element.name.as_str(), "td" | "th")
+                    )
+                })
+                .count()
+        })
+        .sum()
+}
+
+fn browser_table_header_cell_count(table: &Element) -> usize {
+    browser_table_rows(table)
+        .into_iter()
+        .map(|row| {
+            row.children
+                .iter()
+                .filter(|node| matches!(node, Node::Element(element) if element.name == "th"))
+                .count()
+        })
+        .sum()
+}
+
+fn browser_table_column_hint_count(table: &Element) -> usize {
+    let mut count = 0;
+    collect_browser_table_column_hints(&table.children, &mut count);
     count
+}
+
+fn collect_browser_table_column_hints(nodes: &[Node], count: &mut usize) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        match element.name.as_str() {
+            "colgroup" => {
+                let column_spans = element
+                    .children
+                    .iter()
+                    .filter_map(|child| match child {
+                        Node::Element(child_element) if child_element.name == "col" => {
+                            Some(html_positive_integer_attribute(child_element, "span"))
+                        }
+                        _ => None,
+                    })
+                    .sum::<usize>();
+                if column_spans == 0 {
+                    *count += html_positive_integer_attribute(element, "span");
+                } else {
+                    *count += column_spans;
+                }
+            }
+            "col" => {
+                *count += html_positive_integer_attribute(element, "span");
+            }
+            "table" => {}
+            _ => collect_browser_table_column_hints(&element.children, count),
+        }
+    }
+}
+
+fn html_positive_integer_attribute(element: &Element, name: &str) -> usize {
+    element
+        .attribute(name)
+        .and_then(|value| value.parse::<usize>().ok())
+        .filter(|value| *value > 0)
+        .unwrap_or(1)
 }
 
 fn heading_level(name: &str) -> Option<u8> {
@@ -8851,6 +9255,164 @@ mod tests {
         assert_eq!(
             resolve_browser_url("relative.html", Some("/local/base/")),
             None
+        );
+    }
+
+    #[test]
+    fn browser_identity_metadata_tracks_language_direction_and_classes() {
+        let document = parse_html(
+            "<html lang=en dir=ltr><body id=main class=\"page legacy\" lang=en-US>\
+             <p id=intro class=\"lede print\" title=\"Intro\" dir=auto>Hello</p>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.document_lang.as_deref(), Some("en"));
+        assert_eq!(summary.document_dir.as_deref(), Some("ltr"));
+        assert_eq!(summary.body_id.as_deref(), Some("main"));
+        assert_eq!(summary.body_classes, vec!["page", "legacy"]);
+        assert_eq!(summary.body_lang.as_deref(), Some("en-US"));
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let paragraph = &content_tree.children[0];
+        assert_eq!(paragraph.id.as_deref(), Some("intro"));
+        assert_eq!(paragraph.classes, vec!["lede", "print"]);
+        assert_eq!(paragraph.title.as_deref(), Some("Intro"));
+        assert_eq!(paragraph.dir.as_deref(), Some("auto"));
+    }
+
+    #[test]
+    fn browser_embedded_resource_metadata_tracks_fetch_and_layout_fields() {
+        let document = parse_html(
+            "<base href=\"https://example.test/media/index.html\">\
+             <iframe src=frame.html width=320 height=200 title=Frame></iframe>\
+             <object data=movie.swf type=\"application/x-shockwave-flash\" width=400 height=300></object>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.resources[0].kind, "frame");
+        assert_eq!(
+            summary.resources[0].resolved_url.as_deref(),
+            Some("https://example.test/media/frame.html")
+        );
+        assert_eq!(summary.resources[0].width.as_deref(), Some("320"));
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        assert_eq!(content_tree.children[0].role, "frame");
+        assert_eq!(
+            content_tree.children[0].resource_kind.as_deref(),
+            Some("frame")
+        );
+        assert_eq!(content_tree.children[1].role, "object");
+        assert_eq!(
+            content_tree.children[1].type_hint.as_deref(),
+            Some("application/x-shockwave-flash")
+        );
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "inline-replaced");
+        assert_eq!(render_tree.children[1].display, "inline-replaced");
+    }
+
+    #[test]
+    fn browser_table_metadata_tracks_columns_spans_and_headers() {
+        let document = parse_html(
+            "<table><caption>Prices</caption>\
+             <colgroup><col span=2 width=80><col width=120>\
+             <thead><tr><th id=item scope=col abbr=Item>Name<th id=price scope=col>Price\
+             <tbody><tr><th scope=row headers=item>Basic\
+             <td colspan=2 headers=\"item price\">$1</table>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.tables[0].caption.as_deref(), Some("Prices"));
+        assert_eq!(summary.tables[0].row_count, 2);
+        assert_eq!(summary.tables[0].column_count, 3);
+        assert_eq!(summary.tables[0].column_hint_count, 3);
+        assert_eq!(summary.tables[0].header_cell_count, 3);
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let table = &content_tree.children[0];
+        assert_eq!(table.children[1].role, "table_column_group");
+        assert_eq!(table.children[1].children[0].span.as_deref(), Some("2"));
+        assert_eq!(
+            table.children[2].table_section_kind.as_deref(),
+            Some("thead")
+        );
+        let body_cell = &table.children[3].children[0].children[1];
+        assert_eq!(body_cell.colspan.as_deref(), Some("2"));
+        assert_eq!(
+            body_cell.headers,
+            vec!["item".to_string(), "price".to_string()]
+        );
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(
+            render_tree.children[0].children[1].display,
+            "table-column-group"
+        );
+        assert_eq!(
+            render_tree.children[0].children[3].children[0].children[1]
+                .colspan
+                .as_deref(),
+            Some("2")
+        );
+    }
+
+    #[test]
+    fn browser_text_flow_metadata_tracks_lists_quotes_and_breaks() {
+        let document = parse_html(
+            "<base href=\"https://example.test/docs/page.html\">\
+             <p>Intro<br>line<wbr>word</p><hr>\
+             <ol start=3 reversed type=A><li value=7>Seven<li>Eight</ol>\
+             <pre>  keep\nspace</pre>\
+             <blockquote cite=notes/ref.html><p>Quote <q cite=#part>part</q></p></blockquote>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let paragraph = &content_tree.children[0];
+        assert_eq!(paragraph.role, "paragraph");
+        assert_eq!(paragraph.children[1].break_kind.as_deref(), Some("line"));
+        assert_eq!(paragraph.children[3].break_kind.as_deref(), Some("word"));
+
+        let separator = &content_tree.children[1];
+        assert_eq!(separator.role, "separator");
+        assert_eq!(separator.break_kind.as_deref(), Some("thematic"));
+
+        let list = &content_tree.children[2];
+        assert_eq!(list.list_kind.as_deref(), Some("ordered"));
+        assert_eq!(list.list_start.as_deref(), Some("3"));
+        assert_eq!(list.list_marker_type.as_deref(), Some("A"));
+        assert!(list.list_reversed);
+        assert_eq!(list.children[0].list_item_value.as_deref(), Some("7"));
+
+        let pre = &content_tree.children[3];
+        assert_eq!(pre.role, "preformatted");
+        assert_eq!(pre.text_flow.as_deref(), Some("preformatted"));
+        assert_eq!(pre.children[0].text.as_deref(), Some("  keep\nspace"));
+
+        let quote = &content_tree.children[4];
+        assert_eq!(quote.role, "quote_block");
+        assert_eq!(quote.quote_cite.as_deref(), Some("notes/ref.html"));
+        assert_eq!(
+            quote.resolved_quote_cite.as_deref(),
+            Some("https://example.test/docs/notes/ref.html")
+        );
+        let inline_quote = &quote.children[0].children[1];
+        assert_eq!(inline_quote.role, "quote");
+        assert_eq!(inline_quote.quote_cite.as_deref(), Some("#part"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "block");
+        assert_eq!(render_tree.children[0].children[1].display, "line-break");
+        assert_eq!(render_tree.children[1].display, "block");
+        assert_eq!(render_tree.children[2].children[0].display, "list-item");
+        assert_eq!(
+            render_tree.children[4].children[0].children[1].display,
+            "inline"
         );
     }
 

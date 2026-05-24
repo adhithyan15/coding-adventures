@@ -229,6 +229,9 @@ def check_browser_readiness_case(
     require_optional_nullable_string(case_path, expected, "title", errors)
     require_optional_nullable_string(case_path, expected, "base_href", errors)
     require_optional_nullable_string(case_path, expected, "base_target", errors)
+    for field in ("document_lang", "document_dir", "body_id", "body_lang", "body_dir"):
+        require_optional_nullable_string(case_path, expected, field, errors)
+    require_optional_string_list(case_path, expected, "body_classes", errors)
     require_string(f"{case_path}.expected", expected, "body_text", errors)
     require_object_list(f"{case_path}.expected", expected, "metas", errors)
     require_object_list(f"{case_path}.expected", expected, "resources", errors)
@@ -257,7 +260,7 @@ def check_browser_expected_lists(
         resource_path = f"{case_path}.expected.resources[{index}]"
         require_string(resource_path, resource, "kind", errors)
         require_string(resource_path, resource, "url", errors)
-        for field in ("resolved_url", "rel", "type_hint", "media", "title"):
+        for field in ("resolved_url", "rel", "type_hint", "media", "title", "width", "height"):
             require_optional_nullable_string(resource_path, resource, field, errors)
         require_boolean(resource_path, resource, "async_script", errors)
         require_boolean(resource_path, resource, "defer_script", errors)
@@ -305,7 +308,13 @@ def check_browser_expected_lists(
     for index, table in enumerate(object_list_items(expected, "tables")):
         table_path = f"{case_path}.expected.tables[{index}]"
         require_optional_nullable_string(table_path, table, "caption", errors)
-        for field in ("row_count", "cell_count", "header_cell_count"):
+        for field in (
+            "row_count",
+            "column_count",
+            "column_hint_count",
+            "cell_count",
+            "header_cell_count",
+        ):
             require_integer(table_path, table, field, errors)
 
 
@@ -344,17 +353,42 @@ def check_browser_content_node(
     require_string(node_path, node, "role", errors)
     for field in (
         "name",
+        "id",
+        "title",
+        "lang",
+        "dir",
         "text",
         "href",
         "resolved_href",
         "src",
         "resolved_src",
         "alt",
+        "resource_kind",
+        "width",
+        "height",
+        "type_hint",
+        "media",
         "control_type",
         "value",
+        "table_section_kind",
+        "colspan",
+        "rowspan",
+        "span",
+        "scope",
+        "abbr",
+        "text_flow",
+        "list_kind",
+        "list_start",
+        "list_marker_type",
+        "list_item_value",
+        "quote_cite",
+        "resolved_quote_cite",
+        "break_kind",
     ):
         require_optional_nullable_string(node_path, node, field, errors)
-    for field in ("disabled", "checked", "selected"):
+    require_optional_string_list(node_path, node, "classes", errors)
+    require_optional_string_list(node_path, node, "headers", errors)
+    for field in ("disabled", "checked", "selected", "list_reversed"):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)
     require_object_list(node_path, node, "children", errors)
@@ -402,17 +436,42 @@ def check_browser_render_node(
     require_string(node_path, node, "role", errors)
     for field in (
         "name",
+        "id",
+        "title",
+        "lang",
+        "dir",
         "text",
         "href",
         "resolved_href",
         "src",
         "resolved_src",
         "alt",
+        "resource_kind",
+        "width",
+        "height",
+        "type_hint",
+        "media",
         "control_type",
         "value",
+        "table_section_kind",
+        "colspan",
+        "rowspan",
+        "span",
+        "scope",
+        "abbr",
+        "text_flow",
+        "list_kind",
+        "list_start",
+        "list_marker_type",
+        "list_item_value",
+        "quote_cite",
+        "resolved_quote_cite",
+        "break_kind",
     ):
         require_optional_nullable_string(node_path, node, field, errors)
-    for field in ("disabled", "checked", "selected"):
+    require_optional_string_list(node_path, node, "classes", errors)
+    require_optional_string_list(node_path, node, "headers", errors)
+    for field in ("disabled", "checked", "selected", "list_reversed"):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)
     require_object_list(node_path, node, "children", errors)

@@ -17,7 +17,7 @@
         ],
         "resources": [
           { "kind": "stylesheet", "url": "style.css", "resolved_url": "https://example.test/docs/style.css", "rel": "stylesheet", "type_hint": null, "media": "screen", "title": "default", "async_script": false, "defer_script": false },
-          { "kind": "image", "url": "logo.gif", "resolved_url": "https://example.test/docs/logo.gif", "rel": null, "type_hint": null, "media": null, "title": null, "async_script": false, "defer_script": false }
+          { "kind": "image", "url": "logo.gif", "resolved_url": "https://example.test/docs/logo.gif", "rel": null, "type_hint": null, "media": null, "title": null, "width": "88", "height": "31", "async_script": false, "defer_script": false }
         ],
         "anchors": [
           { "id": "index", "name": null, "text": "Example Directory" }
@@ -38,11 +38,17 @@
     {
       "id": "catalog-form-table-page",
       "description": "Form controls, select options, textarea text, button text, and table summaries.",
-      "input": "<html><head><title>Search</title><meta http-equiv=refresh content=\"30; url=/next\"></head><body><h2>Catalog</h2><form action=\"/search\" method=POST enctype=\"multipart/form-data\" target=results><input name=q value=\"rust html\"><input type=hidden name=page value=1><input type=checkbox name=in_stock value=yes checked><input type=text name=disabled value=no disabled><select name=section><option value=books>Books<option value=manuals selected>Manuals</select><textarea name=notes>Line one\nLine two</textarea><button name=go>Search</button></form><table><caption>Results</caption><tr><th>Name<th>Kind<tr><td>Mosaic<td>Browser</table>",
+      "input": "<html lang=en dir=ltr><head><title>Search</title><meta http-equiv=refresh content=\"30; url=/next\"></head><body id=catalog class=\"browser page\" lang=en-US dir=ltr><h2>Catalog</h2><form action=\"/search\" method=POST enctype=\"multipart/form-data\" target=results><input name=q value=\"rust html\"><input type=hidden name=page value=1><input type=checkbox name=in_stock value=yes checked><input type=text name=disabled value=no disabled><select name=section><option value=books>Books<option value=manuals selected>Manuals</select><textarea name=notes>Line one\nLine two</textarea><button name=go>Search</button></form><table><caption>Results</caption><tr><th>Name<th>Kind<tr><td>Mosaic<td>Browser</table>",
       "expected": {
         "title": "Search",
         "base_href": null,
         "base_target": null,
+        "document_lang": "en",
+        "document_dir": "ltr",
+        "body_id": "catalog",
+        "body_classes": ["browser", "page"],
+        "body_lang": "en-US",
+        "body_dir": "ltr",
         "body_text": "Catalog Books Manuals Line one Line two Search Results Name Kind Mosaic Browser",
         "metas": [
           { "name": null, "http_equiv": "refresh", "property": null, "charset": null, "content": "30; url=/next" }
@@ -73,7 +79,7 @@
           }
         ],
         "tables": [
-          { "caption": "Results", "row_count": 2, "cell_count": 4, "header_cell_count": 2 }
+          { "caption": "Results", "row_count": 2, "column_count": 2, "column_hint_count": 0, "cell_count": 4, "header_cell_count": 2 }
         ]
       }
     },
@@ -100,6 +106,73 @@
           { "href": null, "resolved_href": null, "name": "top", "target": null, "rel": null, "title": null, "text": "" },
           { "href": "#top", "resolved_href": null, "name": null, "target": null, "rel": null, "title": null, "text": "Back" }
         ],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "embedded-resource-page",
+      "description": "Body resource inventory preserves embedded frame, object, video, and embed metadata for fetch and layout planning.",
+      "input": "<base href=\"https://example.test/media/index.html\"><body><iframe src=frame.html width=320 height=200 title=Frame></iframe><object data=movie.swf type=\"application/x-shockwave-flash\" width=400 height=300></object><video src=movie.mp4 width=640 height=360 controls></video><embed src=legacy.mov type=\"video/quicktime\" width=160 height=120>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/media/index.html",
+        "base_target": null,
+        "body_text": "",
+        "metas": [],
+        "resources": [
+          { "kind": "frame", "url": "frame.html", "resolved_url": "https://example.test/media/frame.html", "rel": null, "type_hint": null, "media": null, "title": "Frame", "width": "320", "height": "200", "async_script": false, "defer_script": false },
+          { "kind": "object", "url": "movie.swf", "resolved_url": "https://example.test/media/movie.swf", "rel": null, "type_hint": "application/x-shockwave-flash", "media": null, "title": null, "width": "400", "height": "300", "async_script": false, "defer_script": false },
+          { "kind": "video", "url": "movie.mp4", "resolved_url": "https://example.test/media/movie.mp4", "rel": null, "type_hint": null, "media": null, "title": null, "width": "640", "height": "360", "async_script": false, "defer_script": false },
+          { "kind": "embed", "url": "legacy.mov", "resolved_url": "https://example.test/media/legacy.mov", "rel": null, "type_hint": "video/quicktime", "media": null, "title": null, "width": "160", "height": "120", "async_script": false, "defer_script": false }
+        ],
+        "anchors": [],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "table-layout-metadata-page",
+      "description": "Table summaries expose effective row, column, column hint, cell, and header counts for early layout planning.",
+      "input": "<body><table><caption>Prices</caption><colgroup><col span=2 width=80><col width=120><thead><tr><th id=item scope=col abbr=Item>Name<th id=price scope=col>Price<tbody><tr><th scope=row headers=item>Basic<td colspan=2 headers=\"item price\">$1</table>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Prices Name Price Basic $1",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "item", "name": null, "text": "Name" },
+          { "id": "price", "name": null, "text": "Price" }
+        ],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "forms": [],
+        "tables": [
+          { "caption": "Prices", "row_count": 2, "column_count": 3, "column_hint_count": 3, "cell_count": 4, "header_cell_count": 3 }
+        ]
+      }
+    },
+    {
+      "id": "text-flow-list-quote-page",
+      "description": "Browser document facts keep the visible prose around lists, preformatted blocks, quotes, and break elements stable.",
+      "input": "<base href=\"https://example.test/docs/page.html\"><body><p>Intro<br>line<wbr>word</p><hr><ol start=3 reversed type=A><li value=7>Seven<li>Eight</ol><pre>  keep\nspace</pre><blockquote cite=notes/ref.html><p>Quote <q cite=#part>part</q></p></blockquote>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/docs/page.html",
+        "base_target": null,
+        "body_text": "Intro line word Seven Eight keep space Quote part",
+        "metas": [],
+        "resources": [],
+        "anchors": [],
+        "headings": [],
+        "links": [],
         "images": [],
         "forms": [],
         "tables": []

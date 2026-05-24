@@ -2,6 +2,69 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.14.0] - 2026-05-24
+
+### Added (Phase 6m — logical operators lowering)
+
+SIR encoding:
+- `a || b`, `a or b`  →  `BuiltinCall("or",  [a, b])`
+- `a && b`, `a and b` →  `BuiltinCall("and", [a, b])`
+- `!x`, `not x`       →  `BuiltinCall("not", [x])`
+- `!!x`               →  `BuiltinCall("not", [BuiltinCall("not", [x])])`
+
+Both symbol form (`||`/`&&`/`!`) and keyword form (`or`/`and`/`not`) collapse to the same builtin name — v0 simplification.  All effects default to `PURE`.
+
+### Lowerer changes
+- `lower_expression` gained dispatch arms for `logical_or`, `logical_and`, `logical_not`, and `comparison` (renamed from the old `expression` arm).  The `expression` arm itself is now a pass-through to the inner `logical_or` node.
+- New helpers `lower_logical_chain(node, op_lexemes, builtin_name)` and `lower_logical_not(node)`.
+- `lower_logical_chain` matches operators by lexeme (covers both `||`/`&&` Name-classified tokens and `or`/`and` Keyword tokens uniformly).
+
+### Tests (+6 new, total 70)
+- `logical_or_symbol_lowers_to_or_builtin`
+- `logical_and_symbol_lowers_to_and_builtin`
+- `logical_keyword_form_lowers_same_as_symbol`
+- `logical_not_symbol_lowers_to_not_builtin`
+- `logical_chain_and_then_or_nests_correctly` — `a && b || c` parses & lowers as `(a && b) || c`.
+- `logical_module_passes_sir_validator`
+
+All six use the parens workaround (`(a || b)` instead of bare `a || b`) inside def bodies to dodge the `method_call_no_paren` ambiguity (logged in lessons.md, parser CHANGELOG).
+
+## [0.13.0] - 2026-05-23
+
+### Added (Phase 6l — method receiver chains lowering)
+
+Each `.method[(...)]` step in a receiver chain lowers to:
+
+```
+BuiltinCall {
+  name: "__method__",
+  args: [receiver, StrLit(method_name), ...actual_args],
+  effects: PURE,
+}
+```
+
+The receiver stays as a first-class expression so arbitrary nesting works (`a.b.c.d`).  The method name lives as a `StrLit` so backends can dispatch by string.  This avoids growing the shared `semantic-ir::Expr` enum.
+
+**Why BuiltinCall and not DirectCall?**  The validator checks `DirectCall.fn_name` against the module's function table; our synthetic `__method__` envelope is intentionally not a declared function — it's a wire-format tag for backends.  BuiltinCall has no such resolution check.
+
+**Effect set**: defaults to `PURE`.  Receiver-dispatched calls are type-erased at this layer; a later receiver-type analysis pass can widen as needed.
+
+**Feature side-effect**: any dot_call fires `Feature::Strings` (because of the synthesised StrLit).  This is auto-added to the manifest in `lower_program`'s feature-collection pass.
+
+### Lowerer changes
+- New helpers: `apply_dot_chain(atom, factor_node)`, `fold_one_dot_call(receiver, dot_node)`, `head_call_expression_children`.
+- `lower_factor` split into `lower_factor` (atom extraction + dot-chain application) and `lower_factor_atom` (the pre-6l atom logic).
+- `lower_method_call` collects head-call args via `head_call_expression_children` so args inside `dot_call` subtrees don't leak into the head call.
+- `lower_expression` gains a dispatch arm for `method_call` (which can now appear in expression position because it's the first atom alternative in `factor`).
+- `Feature::Strings` added to the manifest-population loop in `lower_program`.
+
+### Tests (+5 new, total 64)
+- `dot_chain_lowers_to_method_builtincall` — `foo.bar` produces `BuiltinCall("__method__", [VarRef(foo), StrLit("bar")])`.
+- `dot_chain_two_steps_nests_outer_recv` — `foo.bar.baz` nests as `__method__(__method__(foo, "bar"), "baz")`.
+- `dot_call_with_args_includes_them_after_method_name` — `obj.add(1, 2)` → `__method__(obj, "add", 1, 2)`.
+- `dot_chain_on_method_call_head` — `puts(1).then_something` keeps the head BuiltinCall("puts") and wraps it in `__method__(_, "then_something")`.
+- `dot_chain_module_passes_sir_validator` — full module with a chain inside a function body validates clean.
+
 ## [0.12.0] - 2026-05-22
 
 ### Added (Phase 6k — unary minus lowering)
