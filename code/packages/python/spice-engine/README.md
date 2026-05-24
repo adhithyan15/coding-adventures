@@ -56,6 +56,7 @@ print(result.converged)            # True
 | `mc_dc` | `.MC` | Monte Carlo DC analysis |
 | `noise_ac` | `.NOISE` | Small-signal noise PSD (adjoint method) |
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
+| `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
 
 ## Controlled source examples
 

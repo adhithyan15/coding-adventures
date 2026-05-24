@@ -255,6 +255,9 @@ Status:
 - Fourier post-processing over transient output is implemented across Python,
   TypeScript, and Rust, including DC, harmonic sine/cosine coefficients,
   magnitudes, phases, and THD for `V(node)` and `I(source)` probes.
+- Stable text-output helpers for DC operating points and transient samples are
+  implemented across Python, TypeScript, and Rust, with snapshot tests covering
+  node-voltage and branch-current ordering.
 
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 

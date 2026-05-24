@@ -374,6 +374,127 @@ class FourierResult:
     probes: list[FourierProbeResult]
 
 
+def format_dc_table(result: DcResult, probes: list[str] | None = None) -> str:
+    """Format a DC operating point as a stable SPICE-style text table."""
+    selected_probes = probes or _default_output_probes(
+        result.node_voltages,
+        result.branch_currents,
+    )
+    row = [
+        _format_table_number(
+            _table_probe_value(
+                result.node_voltages,
+                result.branch_currents,
+                probe,
+                "format_dc_table",
+            )
+        )
+        for probe in selected_probes
+    ]
+    return "\n".join(
+        [
+            "\t".join(["Index", *selected_probes]),
+            "\t".join(["0", *row]),
+            "",
+        ]
+    )
+
+
+def format_transient_table(
+    transient_result: TransientResult | list[TransientPoint],
+    probes: list[str] | None = None,
+) -> str:
+    """Format transient samples as a stable SPICE-style text table."""
+    points = (
+        transient_result.points
+        if isinstance(transient_result, TransientResult)
+        else transient_result
+    )
+    selected_probes = probes or _default_transient_output_probes(points)
+    rows = ["\t".join(["Index", "Time", *selected_probes])]
+    for index, point in enumerate(points):
+        values = [
+            _format_table_number(
+                _table_probe_value(
+                    point.node_voltages,
+                    point.branch_currents,
+                    probe,
+                    "format_transient_table",
+                )
+            )
+            for probe in selected_probes
+        ]
+        rows.append("\t".join([str(index), _format_table_number(point.time), *values]))
+    rows.append("")
+    return "\n".join(rows)
+
+
+def _default_output_probes(
+    node_voltages: dict[str, float],
+    branch_currents: dict[str, float],
+) -> list[str]:
+    return [
+        *(f"V({name})" for name in sorted(node_voltages)),
+        *sorted(branch_currents),
+    ]
+
+
+def _default_transient_output_probes(points: list[TransientPoint]) -> list[str]:
+    node_names: set[str] = set()
+    branch_names: set[str] = set()
+    for point in points:
+        node_names.update(point.node_voltages)
+        branch_names.update(point.branch_currents)
+    return [
+        *(f"V({name})" for name in sorted(node_names)),
+        *sorted(branch_names),
+    ]
+
+
+def _format_table_number(value: float) -> str:
+    return f"{value:.6e}"
+
+
+def _table_probe_value(
+    node_voltages: dict[str, float],
+    branch_currents: dict[str, float],
+    probe: str,
+    context: str,
+) -> float:
+    text = probe.strip()
+    lower = text.lower()
+    if lower.startswith("v(") and text.endswith(")"):
+        args = [arg.strip() for arg in text[2:-1].split(",")]
+        if len(args) == 1:
+            return _table_voltage(node_voltages, args[0], context)
+        if len(args) == 2:
+            return _table_voltage(node_voltages, args[0], context) - _table_voltage(
+                node_voltages,
+                args[1],
+                context,
+            )
+    if lower.startswith("i(") and text.endswith(")"):
+        key = f"I({text[2:-1].strip()})"
+        if key in branch_currents:
+            return branch_currents[key]
+        raise ValueError(f"{context}: missing branch current probe {probe!r}")
+    if text:
+        return _table_voltage(node_voltages, text, context)
+    raise ValueError(f"{context}: empty probe")
+
+
+def _table_voltage(
+    node_voltages: dict[str, float],
+    node: str,
+    context: str,
+) -> float:
+    if node.lower() in {"0", "gnd"}:
+        return 0.0
+    if node in node_voltages:
+        return node_voltages[node]
+    raise ValueError(f"{context}: missing node voltage {node!r}")
+
+
 def fourier(
     transient_result: TransientResult | list[TransientPoint],
     fundamental_frequency: float,
