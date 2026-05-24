@@ -61,6 +61,8 @@ import statistics
 from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 
+from mosfet_models import MOSFET, Level1Model, Level1Params
+
 from spice_engine.elements import (
     AcSource,
     BSource,
@@ -180,6 +182,38 @@ def bjt_at_temperature(
     )
 
 
+def mosfet_at_temperature(
+    mosfet: Mosfet,
+    temperature_kelvin: float,
+    *,
+    nominal_temperature_kelvin: float = 300.15,
+) -> Mosfet:
+    """Return a Level-1 MOSFET adjusted from its nominal model temperature."""
+
+    if not math.isfinite(temperature_kelvin) or temperature_kelvin <= 0.0:
+        raise ValueError("temperature_kelvin must be finite and positive")
+    if not math.isfinite(nominal_temperature_kelvin) or nominal_temperature_kelvin <= 0.0:
+        raise ValueError("nominal_temperature_kelvin must be finite and positive")
+    model = mosfet.model
+    if not isinstance(model, MOSFET) or not isinstance(model.model, Level1Model):
+        raise ValueError(f"{mosfet.name}: only Level-1 MOSFET temperature scaling is supported")
+    params = model.model.params
+    if not isinstance(params, Level1Params):
+        raise ValueError(f"{mosfet.name}: only Level-1 MOSFET parameters are supported")
+    ratio = temperature_kelvin / nominal_temperature_kelvin
+    threshold_shift = -2.0e-3 * (temperature_kelvin - nominal_temperature_kelvin)
+    adjusted_params = replace(
+        params,
+        VT0=params.VT0 + threshold_shift,
+        KP=params.KP * ratio**-1.5,
+        T_NOM=temperature_kelvin,
+    )
+    return replace(
+        mosfet,
+        model=MOSFET(model.type, Level1Model(adjusted_params)),
+    )
+
+
 def circuit_at_temperature(
     circuit: Circuit,
     temperature_kelvin: float,
@@ -203,6 +237,12 @@ def circuit_at_temperature(
                 temperature_kelvin,
                 nominal_temperature_kelvin=nominal_temperature_kelvin,
                 energy_gap_ev=energy_gap_ev,
+            )
+        if isinstance(element, Mosfet):
+            return mosfet_at_temperature(
+                element,
+                temperature_kelvin,
+                nominal_temperature_kelvin=nominal_temperature_kelvin,
             )
         return element
 

@@ -13,6 +13,11 @@
   `circuit_at_temperature()` adjust BJT thermal voltage and saturation current
   for an operating temperature using the same silicon energy-gap foothold.
 
+- **MOSFET temperature scaling helpers** — `mosfet_at_temperature()` and
+  `circuit_at_temperature()` adjust Level-1 MOSFET threshold voltage,
+  transconductance parameter, and nominal temperature for an operating
+  temperature.
+
 - **Classic text output tables** — `format_dc_table()` and
   `format_transient_table()` now emit stable tab-separated node-voltage and
   branch-current tables for `.OP` / `.TRAN` style snapshots.

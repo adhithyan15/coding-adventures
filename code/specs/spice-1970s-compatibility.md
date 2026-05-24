@@ -232,6 +232,11 @@ Status:
   CGBO=<capacitance> CBS=<capacitance> CBD=<capacitance>)` parsing and
   small-signal AC capacitance stamping are implemented across Python,
   TypeScript, and Rust.
+- MOS Level-1 operating-temperature helpers are implemented across Python,
+  TypeScript, and Rust. They shift threshold voltage, scale the
+  transconductance parameter, and update nominal model temperature before an
+  analysis, with common-source fixtures proving hotter silicon pulls the drain
+  lower.
 
 ### Phase 7 - Classic Text Output and Control Cards
 

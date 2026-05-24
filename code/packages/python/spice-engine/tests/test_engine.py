@@ -804,6 +804,44 @@ def test_bjt_temperature_scaling_reduces_emitter_follower_forward_drop():
     assert hot_result.node_voltages["out"] > nominal_result.node_voltages["out"]
 
 
+def test_mosfet_temperature_scaling_changes_common_source_bias():
+    """Hotter Level-1 NMOS lowers VT0 enough to pull the drain node down."""
+    nominal = Circuit()
+    nominal.add(VoltageSource("Vdd", "vdd", "0", 1.8))
+    nominal.add(VoltageSource("Vgate", "gate", "0", 1.1))
+    nominal.add(Resistor("Rload", "vdd", "out", 1000.0))
+    nominal.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(
+                VT0=0.65,
+                KP=200.0e-6,
+                LAMBDA=0.02,
+                W=2.0e-6,
+                L=180.0e-9,
+            )),
+        ),
+    ))
+
+    cold = circuit_at_temperature(nominal, 275.0)
+    hot = circuit_at_temperature(nominal, 350.0)
+
+    nominal_result = dc_op(nominal)
+    cold_result = dc_op(cold)
+    hot_result = dc_op(hot)
+
+    assert cold_result.converged
+    assert nominal_result.converged
+    assert hot_result.converged
+    assert cold_result.node_voltages["out"] > nominal_result.node_voltages["out"]
+    assert hot_result.node_voltages["out"] < nominal_result.node_voltages["out"]
+
+
 # ---- DC: Capacitor (open in DC) ----
 
 

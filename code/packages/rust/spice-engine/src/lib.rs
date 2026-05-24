@@ -1246,6 +1246,32 @@ pub fn bjt_at_temperature(
     Ok(adjusted)
 }
 
+pub fn mosfet_at_temperature(
+    mosfet: &Mosfet,
+    temperature_kelvin: f64,
+    nominal_temperature_kelvin: f64,
+) -> Result<Mosfet, SpiceError> {
+    if !temperature_kelvin.is_finite() || temperature_kelvin <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "temperature must be finite and positive".to_string(),
+        });
+    }
+    if !nominal_temperature_kelvin.is_finite() || nominal_temperature_kelvin <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "nominal temperature must be finite and positive".to_string(),
+        });
+    }
+    let ratio = temperature_kelvin / nominal_temperature_kelvin;
+    let threshold_shift = -2.0e-3 * (temperature_kelvin - nominal_temperature_kelvin);
+    let mut adjusted = mosfet.clone();
+    adjusted.params.vt0 += threshold_shift;
+    adjusted.params.kp *= ratio.powf(-1.5);
+    adjusted.params.t_nom = temperature_kelvin;
+    Ok(adjusted)
+}
+
 pub fn circuit_at_temperature(
     circuit: &Circuit,
     temperature_kelvin: f64,
@@ -1269,6 +1295,11 @@ pub fn circuit_at_temperature(
                 temperature_kelvin,
                 nominal_temperature_kelvin,
                 energy_gap_electron_volts,
+            )?),
+            Element::Mosfet(mosfet) => Element::Mosfet(mosfet_at_temperature(
+                mosfet,
+                temperature_kelvin,
+                nominal_temperature_kelvin,
             )?),
             _ => element.clone(),
         });
