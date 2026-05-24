@@ -19,7 +19,10 @@ and document/body identity and language metadata such as `lang`, `dir`, body
 `id`, and tokenized body classes. Form cases also pin labels, derived
 accessible names, owner references, placeholder/autocomplete hints, and
 required/readonly/multiple control state. Media cases pin audio/video playback
-flags and preload/poster metadata.
+flags and preload/poster metadata. Script/style cases pin module/classic script
+kind, async/defer/nomodule flags, inline script/style text, and loading-policy
+hints such as integrity, crossorigin, referrer policy, fetch priority,
+blocking, disabled state, and alternate stylesheets.
 
 `html-browser-content-tree.json` is a checked parser acceptance corpus for the
 browser-facing content-tree projection. It verifies that broad HTML body

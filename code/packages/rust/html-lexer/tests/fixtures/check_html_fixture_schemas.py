@@ -235,6 +235,8 @@ def check_browser_readiness_case(
     require_string(f"{case_path}.expected", expected, "body_text", errors)
     require_object_list(f"{case_path}.expected", expected, "metas", errors)
     require_object_list(f"{case_path}.expected", expected, "resources", errors)
+    require_optional_object_list(f"{case_path}.expected", expected, "scripts", errors)
+    require_optional_object_list(f"{case_path}.expected", expected, "stylesheets", errors)
     require_object_list(f"{case_path}.expected", expected, "anchors", errors)
     require_object_list(f"{case_path}.expected", expected, "headings", errors)
     require_object_list(f"{case_path}.expected", expected, "links", errors)
@@ -265,6 +267,45 @@ def check_browser_expected_lists(
             require_optional_nullable_string(resource_path, resource, field, errors)
         require_boolean(resource_path, resource, "async_script", errors)
         require_boolean(resource_path, resource, "defer_script", errors)
+
+    for index, script in enumerate(object_list_items(expected, "scripts")):
+        script_path = f"{case_path}.expected.scripts[{index}]"
+        require_string(script_path, script, "script_kind", errors)
+        for field in (
+            "src",
+            "resolved_src",
+            "type_hint",
+            "integrity",
+            "crossorigin",
+            "referrerpolicy",
+            "fetchpriority",
+            "blocking",
+            "text",
+        ):
+            require_optional_nullable_string(script_path, script, field, errors)
+        for field in ("async_script", "defer_script", "nomodule"):
+            require_optional_boolean(script_path, script, field, errors)
+
+    for index, stylesheet in enumerate(object_list_items(expected, "stylesheets")):
+        stylesheet_path = f"{case_path}.expected.stylesheets[{index}]"
+        require_string(stylesheet_path, stylesheet, "source", errors)
+        for field in (
+            "href",
+            "resolved_href",
+            "rel",
+            "type_hint",
+            "media",
+            "title",
+            "integrity",
+            "crossorigin",
+            "referrerpolicy",
+            "fetchpriority",
+            "blocking",
+            "text",
+        ):
+            require_optional_nullable_string(stylesheet_path, stylesheet, field, errors)
+        for field in ("disabled", "alternate"):
+            require_optional_boolean(stylesheet_path, stylesheet, field, errors)
 
     for index, anchor in enumerate(object_list_items(expected, "anchors")):
         anchor_path = f"{case_path}.expected.anchors[{index}]"

@@ -211,6 +211,10 @@ documented in this file.
 - Browser-facing document, content-tree, and render-tree projections now carry
   media playback metadata for `audio` and `video`, including playback flags,
   and preload/poster fields.
+- Browser-facing document summaries now carry script and stylesheet loading
+  metadata, including script kind, async/defer/nomodule flags, inline
+  script/style text, integrity/crossorigin/referrer-policy hints, fetch
+  priority, blocking, alternate stylesheets, and disabled stylesheet state.
 - Browser-facing table summaries and tree projections now carry table layout and
   accessibility metadata, including effective column counts, column hints,
   row-group identity, column and cell spans, header associations, scopes, and
