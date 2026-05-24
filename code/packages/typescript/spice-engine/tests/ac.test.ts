@@ -15,6 +15,7 @@ import {
   diode,
   inductor,
   jfet,
+  mosfet,
   mutualInductor,
   resistor,
   sParameters,
@@ -294,6 +295,28 @@ describe("acSweep", () => {
     expectClose(out!.real, -4.0);
     expectClose(out!.imag, 0.0);
     expectClose(complexAbs(points[0].voltage("vdd")!), 0.0);
+  });
+
+  it("uses MOSFET overlap capacitance in AC analysis", () => {
+    function gateAmplitude(CGSO: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "gate", 1_000.0));
+      circuit.add(resistor("Rdrain", "drain", "0", 1_000.0));
+      circuit.add(mosfet("M1", "drain", "gate", "0", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        CGSO,
+      }));
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("gate")!);
+    }
+
+    const withoutCapacitance = gateAmplitude(0.0);
+    const withCapacitance = gateAmplitude(1.0e-6);
+
+    expect(withoutCapacitance).toBeGreaterThan(0.9);
+    expect(withCapacitance).toBeLessThan(withoutCapacitance / 100.0);
   });
 
   it("uses BJT base-emitter capacitance in AC analysis", () => {

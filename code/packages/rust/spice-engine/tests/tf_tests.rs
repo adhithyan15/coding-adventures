@@ -224,6 +224,7 @@ fn tf_mosfet_common_source_uses_gate_bias_for_small_signal_gain() {
             saturation_current: 1.0e-15,
             n_sub: 1.0,
             t_nom: 300.15,
+            ..MosfetLevel1Params::default()
         },
     )));
 

@@ -3939,6 +3939,11 @@ def _stamp_ac(
         gm_m: float = r.gm
         gds_m: float = r.gds
         _stamp_g_c(G, node_to_idx, el.drain, el.source, gds_m + 0j)
+        _stamp_g_c(G, node_to_idx, el.gate, el.source, 1j * omega * r.Cgs)
+        _stamp_g_c(G, node_to_idx, el.gate, el.drain, 1j * omega * r.Cgd)
+        _stamp_g_c(G, node_to_idx, el.gate, el.body, 1j * omega * r.Cgb)
+        _stamp_g_c(G, node_to_idx, el.body, el.source, 1j * omega * r.Cbs)
+        _stamp_g_c(G, node_to_idx, el.body, el.drain, 1j * omega * r.Cbd)
         if not _is_ground(el.drain):
             d = node_to_idx[el.drain]
             if not _is_ground(el.gate):

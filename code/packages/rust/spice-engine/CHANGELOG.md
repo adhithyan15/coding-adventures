@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add MOS Level-1 capacitance support through `CGSO`, `CGDO`, `CGBO`, `CBS`,
+  and `CBD`, contributing small-signal AC susceptance.
 - Add diode emission coefficient support through `emission_coefficient`,
   scaling the effective thermal voltage in DC and small-signal diode
   conductance.

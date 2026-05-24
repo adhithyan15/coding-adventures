@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Parse MOS Level-1 capacitance parameters with `.model ... NMOS|PMOS(... CGSO=<c>
+  CGDO=<c> CGBO=<c> CBS=<c> CBD=<c>)`.
 - Parse diode model-card emission coefficients with `.model ... D(... N=<n>)`
   and pass them into Rust `Diode` elements.
 - Parse diode model-card reverse-breakdown parameters with

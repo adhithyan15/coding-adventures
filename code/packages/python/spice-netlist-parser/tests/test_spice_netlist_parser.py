@@ -597,7 +597,7 @@ Jp drain gate source pslow
 def test_parse_mosfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
-.model nfast NMOS(VT0=0.45 KP=200u LAMBDA=0.02)
+.model nfast NMOS(VT0=0.45 KP=200u LAMBDA=0.02 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p)
 Vdd vdd 0 DC 1.8
 Vgate gate 0 DC 1.8
 Rload vdd out 1k
@@ -611,6 +611,7 @@ M1 out gate 0 0 nfast W=2u L=180n
     assert parsed.models["nfast"].params["VT0"] == 0.45
     assert isclose(parsed.models["nfast"].params["KP"], 200.0e-6)
     assert parsed.models["nfast"].params["LAMBDA"] == 0.02
+    assert isclose(parsed.models["nfast"].params["CGSO"], 3.0e-12)
     mosfet = parsed.circuit.elements[3]
     assert isinstance(mosfet, Mosfet)
     assert mosfet.drain == "out"
@@ -621,6 +622,11 @@ M1 out gate 0 0 nfast W=2u L=180n
     assert isinstance(mosfet.model.model, Level1Model)
     assert mosfet.model.model.params.VT0 == 0.45
     assert isclose(mosfet.model.model.params.KP, 200.0e-6)
+    assert isclose(mosfet.model.model.params.CGSO, 3.0e-12)
+    assert isclose(mosfet.model.model.params.CGDO, 4.0e-12)
+    assert isclose(mosfet.model.model.params.CGBO, 5.0e-12)
+    assert isclose(mosfet.model.model.params.CBS, 6.0e-12)
+    assert isclose(mosfet.model.model.params.CBD, 7.0e-12)
     assert isclose(mosfet.model.model.params.W, 2.0e-6)
     assert isclose(mosfet.model.model.params.L, 180.0e-9)
 

@@ -219,6 +219,10 @@ Status:
 - BJT `.model ... NPN|PNP(... TR=<time>)` parsing and reverse/base-collector
   diffusion capacitance are implemented in AC analysis across Python,
   TypeScript, and Rust.
+- MOS Level-1 `.model ... NMOS|PMOS(... CGSO=<capacitance> CGDO=<capacitance>
+  CGBO=<capacitance> CBS=<capacitance> CBD=<capacitance>)` parsing and
+  small-signal AC capacitance stamping are implemented across Python,
+  TypeScript, and Rust.
 
 ### Phase 7 - Classic Text Output and Control Cards
 

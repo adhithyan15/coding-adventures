@@ -4,6 +4,9 @@
 
 ### Added
 
+- **MOS Level-1 capacitance models** — `CGSO`, `CGDO`, `CGBO`, `CBS`, and
+  `CBD` now contribute MOSFET small-signal AC susceptance.
+
 - **Diode emission coefficient models** — `Diode.N` now scales the effective
   thermal voltage in DC and small-signal diode conductance calculations.
 

@@ -600,6 +600,11 @@ fn apply_mosfet_param(params: &mut MosfetLevel1Params, name: &str, value: f64) {
         "IS" => params.saturation_current = value,
         "N_SUB" | "NSUB" | "N" => params.n_sub = value,
         "T_NOM" | "TNOM" => params.t_nom = value,
+        "CGSO" => params.gate_source_overlap_capacitance = value,
+        "CGDO" => params.gate_drain_overlap_capacitance = value,
+        "CGBO" => params.gate_bulk_overlap_capacitance = value,
+        "CBS" => params.source_bulk_capacitance = value,
+        "CBD" => params.drain_bulk_capacitance = value,
         _ => {}
     }
 }

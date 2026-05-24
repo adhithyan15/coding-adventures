@@ -1323,6 +1323,11 @@ pub struct MosfetLevel1Params {
     pub saturation_current: f64,
     pub n_sub: f64,
     pub t_nom: f64,
+    pub gate_source_overlap_capacitance: f64,
+    pub gate_drain_overlap_capacitance: f64,
+    pub gate_bulk_overlap_capacitance: f64,
+    pub source_bulk_capacitance: f64,
+    pub drain_bulk_capacitance: f64,
 }
 
 impl Default for MosfetLevel1Params {
@@ -1338,6 +1343,11 @@ impl Default for MosfetLevel1Params {
             saturation_current: 1.0e-15,
             n_sub: 1.4,
             t_nom: 300.15,
+            gate_source_overlap_capacitance: 0.0,
+            gate_drain_overlap_capacitance: 0.0,
+            gate_bulk_overlap_capacitance: 0.0,
+            source_bulk_capacitance: 0.0,
+            drain_bulk_capacitance: 0.0,
         }
     }
 }
@@ -4726,9 +4736,13 @@ fn build_ac_matrix(
             Element::Bjt(bjt) => {
                 stamp_ac_bjt_small_signal(bjt, node_indices, &mut matrix, operating_point, omega)?
             }
-            Element::Mosfet(mosfet) => {
-                stamp_ac_mosfet_small_signal(mosfet, node_indices, &mut matrix, operating_point)?
-            }
+            Element::Mosfet(mosfet) => stamp_ac_mosfet_small_signal(
+                mosfet,
+                node_indices,
+                &mut matrix,
+                operating_point,
+                omega,
+            )?,
             Element::Vccs(source) => stamp_ac_vccs(source, node_indices, &mut matrix)?,
             Element::Vcvs(source) => stamp_ac_vcvs(
                 source,
@@ -5515,6 +5529,11 @@ struct MosfetDcResult {
     gm: f64,
     gds: f64,
     gmb: f64,
+    cgs: f64,
+    cgd: f64,
+    cgb: f64,
+    cbs: f64,
+    cbd: f64,
 }
 
 struct JfetDcResult {
@@ -5645,6 +5664,11 @@ fn evaluate_mosfet_level1(mosfet: &Mosfet, vgs: f64, vds: f64, vbs: f64) -> Mosf
                 gm: result.gm,
                 gds: result.gds,
                 gmb: result.gmb,
+                cgs: result.cgs,
+                cgd: result.cgd,
+                cgb: result.cgb,
+                cbs: result.cbs,
+                cbd: result.cbd,
             }
         }
         MosfetType::Nmos => evaluate_nmos_level1(&mosfet.params, vgs, vds, vbs),
@@ -5658,6 +5682,10 @@ fn evaluate_nmos_level1(
     vbs: f64,
 ) -> MosfetDcResult {
     let beta = params.kp * (params.w / params.l);
+    let cgs_overlap = params.gate_source_overlap_capacitance * params.w;
+    let cgd_overlap = params.gate_drain_overlap_capacitance * params.w;
+    let cgb_overlap = params.gate_bulk_overlap_capacitance * params.l;
+    let cgs_intrinsic = (2.0 / 3.0) * params.w * params.l * params.kp;
     let threshold = if params.phi - vbs >= 0.0 {
         params.vt0 + params.gamma * ((params.phi - vbs).sqrt() - params.phi.sqrt())
     } else {
@@ -5670,6 +5698,11 @@ fn evaluate_nmos_level1(
             gm: 0.0,
             gds: 0.0,
             gmb: 0.0,
+            cgs: cgs_overlap + cgs_intrinsic,
+            cgd: cgd_overlap,
+            cgb: cgb_overlap,
+            cbs: params.source_bulk_capacitance,
+            cbd: params.drain_bulk_capacitance,
         };
     }
 
@@ -5687,6 +5720,11 @@ fn evaluate_nmos_level1(
             gm,
             gds: beta * (overdrive - vds) * modulation + beta * channel * params.lambda,
             gmb: gm * body_factor,
+            cgs: cgs_overlap + cgs_intrinsic / 2.0,
+            cgd: cgd_overlap,
+            cgb: cgb_overlap,
+            cbs: params.source_bulk_capacitance,
+            cbd: params.drain_bulk_capacitance,
         };
     }
 
@@ -5697,6 +5735,11 @@ fn evaluate_nmos_level1(
         gm,
         gds: 0.5 * beta * overdrive * overdrive * params.lambda,
         gmb: gm * body_factor,
+        cgs: cgs_overlap + (2.0 / 3.0) * cgs_intrinsic,
+        cgd: cgd_overlap,
+        cgb: cgb_overlap,
+        cbs: params.source_bulk_capacitance,
+        cbd: params.drain_bulk_capacitance,
     }
 }
 
@@ -5757,6 +5800,7 @@ fn stamp_ac_mosfet_small_signal(
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<Complex>],
     operating_point: &[f64],
+    omega: f64,
 ) -> Result<(), SpiceError> {
     validate_mosfet(mosfet)?;
     let drain = node_index(node_indices, &mosfet.drain);
@@ -5772,6 +5816,11 @@ fn stamp_ac_mosfet_small_signal(
     let vbs = body_voltage - source_voltage;
     let result = evaluate_mosfet_level1(mosfet, vgs, vds, vbs);
     stamp_complex_conductance(matrix, drain, source, Complex::new(result.gds, 0.0));
+    stamp_complex_conductance(matrix, gate, source, Complex::new(0.0, omega * result.cgs));
+    stamp_complex_conductance(matrix, gate, drain, Complex::new(0.0, omega * result.cgd));
+    stamp_complex_conductance(matrix, gate, body, Complex::new(0.0, omega * result.cgb));
+    stamp_complex_conductance(matrix, body, source, Complex::new(0.0, omega * result.cbs));
+    stamp_complex_conductance(matrix, body, drain, Complex::new(0.0, omega * result.cbd));
     stamp_complex_transconductance(
         matrix,
         drain,
@@ -5984,6 +6033,11 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("IS", params.saturation_current),
         ("N_SUB", params.n_sub),
         ("T_NOM", params.t_nom),
+        ("CGSO", params.gate_source_overlap_capacitance),
+        ("CGDO", params.gate_drain_overlap_capacitance),
+        ("CGBO", params.gate_bulk_overlap_capacitance),
+        ("CBS", params.source_bulk_capacitance),
+        ("CBD", params.drain_bulk_capacitance),
     ] {
         if !value.is_finite() {
             return Err(SpiceError::InvalidElement {
@@ -6014,6 +6068,17 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET IS, N_SUB, and T_NOM must be positive".to_string(),
+        });
+    }
+    if params.gate_source_overlap_capacitance < 0.0
+        || params.gate_drain_overlap_capacitance < 0.0
+        || params.gate_bulk_overlap_capacitance < 0.0
+        || params.source_bulk_capacitance < 0.0
+        || params.drain_bulk_capacitance < 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET capacitances must be non-negative".to_string(),
         });
     }
     Ok(())

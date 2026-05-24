@@ -424,6 +424,11 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "IS",
     "N_SUB",
     "T_NOM",
+    "CGSO",
+    "CGDO",
+    "CGBO",
+    "CBS",
+    "CBD",
   ].includes(name);
 }
 
