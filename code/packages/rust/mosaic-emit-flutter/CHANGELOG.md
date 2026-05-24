@@ -3,6 +3,39 @@
 All notable changes to `mosaic-emit-flutter` will be documented in
 this file.
 
+## [Unreleased]
+
+### Added
+
+- **UI31-K-flutter** — RTL contract for `HostTable`. The lowering
+  now wraps the emitted `DataTable` in `Directionality(textDirection:
+  ..., child: ...)` when the layout author writes `dir:`:
+  - `dir: rtl` → `Directionality(textDirection: TextDirection.rtl, child: DataTable(...))`
+  - `dir: ltr` → `Directionality(textDirection: TextDirection.ltr, child: DataTable(...))`
+  - `dir: auto` → no wrapper (Flutter has no `TextDirection.auto`
+    enum; the ambient `Directionality` from `MaterialApp` flows
+    through, which is the correct semantic for "let the host decide")
+  - `dir: slot: layout-direction` → `Directionality(textDirection:
+    layoutDirection, child: DataTable(...))`. The slot is expected to
+    evaluate to a `TextDirection` Dart value; the slot name passes
+    through `is_safe_dart_identifier` so it can't smuggle bad source
+    into the format string.
+  - Unknown keywords drop silently — the allow-list is the security
+    gate against attacker-controlled keywords sneaking `, child:
+    pwn(),` style payloads into the generated source. The bare
+    `DataTable` still renders so the rest of the layout is intact.
+  - 7 new tests cover the a11y gate (must lower to native
+    `DataTable`, not a `Container`/`Row` substitute), the three
+    allow-listed keywords (including the `auto` no-wrap case which
+    is uniquely Flutter), the slot-ref interpolation, the silent-
+    drop on an injection-style unknown keyword, and a bare-table
+    regression guard. Total tests: 37 (was 30).
+  - Full sub-tag (`HostTableHead` / `HostTableBody` / `HostTableFoot`
+    / `HostTableColGroup`) walk is still a follow-up — the
+    `DataTable` body remains a `columns: const [], rows: const []`
+    placeholder, matching the existing UI29 §2.1 stub. The RTL
+    contract is independent of the sub-tag walk and can ship now.
+
 ## [0.2.0] - 2026-05-23 — UI29-4 host primitives
 
 ### Added
