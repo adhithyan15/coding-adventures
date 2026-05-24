@@ -46,6 +46,16 @@ struct ExpectedContentNode {
     #[serde(default)]
     resolved_src: Option<String>,
     alt: Option<String>,
+    #[serde(default)]
+    resource_kind: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    media: Option<String>,
     control_type: Option<String>,
     #[serde(default)]
     value: Option<String>,
@@ -110,6 +120,11 @@ impl ExpectedContentNode {
             src: self.src,
             resolved_src: self.resolved_src,
             alt: self.alt,
+            resource_kind: self.resource_kind,
+            width: self.width,
+            height: self.height,
+            type_hint: self.type_hint,
+            media: self.media,
             control_type: self.control_type,
             value: self.value,
             disabled: self.disabled,

@@ -150,6 +150,8 @@ All notable changes to this package will be documented in this file.
   host queues.
 - Combined supervisor plan/drain health-dashboard surfaces, route labels,
   priority ranks, readiness labels, and triage flags for one-key host queues.
+- Flattened combined health-dashboard action component flags and counts for
+  supervisor drain run summary scheduler filters.
 - Flattened combined health-dashboard route, priority, and readiness booleans
   for supervisor drain run summary host queue filters.
 - Aggregate health-label integrity helpers for inventory, write, replay,

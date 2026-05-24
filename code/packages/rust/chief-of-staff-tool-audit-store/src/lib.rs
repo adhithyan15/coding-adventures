@@ -2580,6 +2580,69 @@ impl ToolAuditSupervisorDrainRunReport {
         self.health_dashboard_surface().has_multiple_actions()
     }
 
+    /// Return whether aggregate health needs any host action.
+    pub fn health_dashboard_requires_action(&self) -> bool {
+        self.plan_health_requires_action() || self.drain_health_requires_action()
+    }
+
+    /// Return whether aggregate health intentionally leaves the host idle.
+    pub fn health_dashboard_is_no_action(&self) -> bool {
+        !self.health_dashboard_requires_action()
+    }
+
+    /// Return whether aggregate health should drain a checkpoint page.
+    pub fn health_dashboard_action_should_drain_page(&self) -> bool {
+        self.plan_health_action_should_drain_page() || self.drain_health_action_should_drain_page()
+    }
+
+    /// Return whether aggregate health routes follow-up pressure.
+    pub fn health_dashboard_action_routes_follow_up(&self) -> bool {
+        self.plan_health_action_routes_follow_up() || self.drain_health_action_routes_follow_up()
+    }
+
+    /// Return whether aggregate health asks for another drain pass.
+    pub fn health_dashboard_action_requests_continuation(&self) -> bool {
+        self.plan_health_action_requests_continuation()
+            || self.drain_health_action_requests_continuation()
+    }
+
+    /// Return whether aggregate health asks for storage investigation.
+    pub fn health_dashboard_action_requires_storage_investigation(&self) -> bool {
+        self.plan_health_action_requires_storage_investigation()
+            || self.drain_health_action_requires_storage_investigation()
+    }
+
+    /// Return whether aggregate health asks for count-integrity investigation.
+    pub fn health_dashboard_action_requires_count_integrity_investigation(&self) -> bool {
+        self.plan_health_action_requires_count_integrity_investigation()
+            || self.drain_health_action_requires_count_integrity_investigation()
+    }
+
+    /// Return whether aggregate health asks for any investigation.
+    pub fn health_dashboard_action_requires_investigation(&self) -> bool {
+        self.health_dashboard_action_requires_storage_investigation()
+            || self.health_dashboard_action_requires_count_integrity_investigation()
+    }
+
+    /// Return how many distinct aggregate health action components are active.
+    pub fn health_dashboard_action_component_count(&self) -> usize {
+        [
+            self.health_dashboard_action_should_drain_page(),
+            self.health_dashboard_action_routes_follow_up(),
+            self.health_dashboard_action_requests_continuation(),
+            self.health_dashboard_action_requires_storage_investigation(),
+            self.health_dashboard_action_requires_count_integrity_investigation(),
+        ]
+        .into_iter()
+        .filter(|is_active| *is_active)
+        .count()
+    }
+
+    /// Return whether aggregate health combines multiple action components.
+    pub fn health_dashboard_has_multiple_action_components(&self) -> bool {
+        self.health_dashboard_action_component_count() > 1
+    }
+
     /// Return the aggregate health-dashboard route.
     pub fn health_dashboard_route(&self) -> ToolAuditHealthRoute {
         match self.health_dashboard_surface() {
@@ -3601,6 +3664,23 @@ impl ToolAuditSupervisorDrainRunReport {
             health_dashboard_has_drain_action: self.health_dashboard_has_drain_action(),
             health_dashboard_action_count: self.health_dashboard_action_count(),
             health_dashboard_has_multiple_actions: self.health_dashboard_has_multiple_actions(),
+            health_dashboard_requires_action: self.health_dashboard_requires_action(),
+            health_dashboard_is_no_action: self.health_dashboard_is_no_action(),
+            health_dashboard_action_should_drain_page: self
+                .health_dashboard_action_should_drain_page(),
+            health_dashboard_action_routes_follow_up: self
+                .health_dashboard_action_routes_follow_up(),
+            health_dashboard_action_requests_continuation: self
+                .health_dashboard_action_requests_continuation(),
+            health_dashboard_action_requires_storage_investigation: self
+                .health_dashboard_action_requires_storage_investigation(),
+            health_dashboard_action_requires_count_integrity_investigation: self
+                .health_dashboard_action_requires_count_integrity_investigation(),
+            health_dashboard_action_requires_investigation: self
+                .health_dashboard_action_requires_investigation(),
+            health_dashboard_action_component_count: self.health_dashboard_action_component_count(),
+            health_dashboard_has_multiple_action_components: self
+                .health_dashboard_has_multiple_action_components(),
             health_dashboard_route: self.health_dashboard_route(),
             health_dashboard_route_label: self.health_dashboard_route_label(),
             health_dashboard_route_label_matches_route: self
@@ -4495,6 +4575,26 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub health_dashboard_action_count: usize,
     /// Whether multiple aggregate health surfaces need action.
     pub health_dashboard_has_multiple_actions: bool,
+    /// Whether aggregate health needs any host action.
+    pub health_dashboard_requires_action: bool,
+    /// Whether aggregate health intentionally leaves the host idle.
+    pub health_dashboard_is_no_action: bool,
+    /// Whether aggregate health should drain a checkpoint page.
+    pub health_dashboard_action_should_drain_page: bool,
+    /// Whether aggregate health routes follow-up pressure.
+    pub health_dashboard_action_routes_follow_up: bool,
+    /// Whether aggregate health asks for another drain pass.
+    pub health_dashboard_action_requests_continuation: bool,
+    /// Whether aggregate health asks for storage investigation.
+    pub health_dashboard_action_requires_storage_investigation: bool,
+    /// Whether aggregate health asks for count-integrity investigation.
+    pub health_dashboard_action_requires_count_integrity_investigation: bool,
+    /// Whether aggregate health asks for any investigation.
+    pub health_dashboard_action_requires_investigation: bool,
+    /// Number of distinct aggregate health action components.
+    pub health_dashboard_action_component_count: usize,
+    /// Whether aggregate health combines multiple action components.
+    pub health_dashboard_has_multiple_action_components: bool,
     /// Aggregate health-dashboard route.
     pub health_dashboard_route: ToolAuditHealthRoute,
     /// Stable aggregate health-dashboard route label.
@@ -5502,6 +5602,56 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether multiple aggregate health surfaces need action.
     pub fn health_dashboard_has_multiple_actions(&self) -> bool {
         self.health_dashboard_has_multiple_actions
+    }
+
+    /// Return whether aggregate health needs any host action.
+    pub fn health_dashboard_requires_action(&self) -> bool {
+        self.health_dashboard_requires_action
+    }
+
+    /// Return whether aggregate health intentionally leaves the host idle.
+    pub fn health_dashboard_is_no_action(&self) -> bool {
+        self.health_dashboard_is_no_action
+    }
+
+    /// Return whether aggregate health should drain a checkpoint page.
+    pub fn health_dashboard_action_should_drain_page(&self) -> bool {
+        self.health_dashboard_action_should_drain_page
+    }
+
+    /// Return whether aggregate health routes follow-up pressure.
+    pub fn health_dashboard_action_routes_follow_up(&self) -> bool {
+        self.health_dashboard_action_routes_follow_up
+    }
+
+    /// Return whether aggregate health asks for another drain pass.
+    pub fn health_dashboard_action_requests_continuation(&self) -> bool {
+        self.health_dashboard_action_requests_continuation
+    }
+
+    /// Return whether aggregate health asks for storage investigation.
+    pub fn health_dashboard_action_requires_storage_investigation(&self) -> bool {
+        self.health_dashboard_action_requires_storage_investigation
+    }
+
+    /// Return whether aggregate health asks for count-integrity investigation.
+    pub fn health_dashboard_action_requires_count_integrity_investigation(&self) -> bool {
+        self.health_dashboard_action_requires_count_integrity_investigation
+    }
+
+    /// Return whether aggregate health asks for any investigation.
+    pub fn health_dashboard_action_requires_investigation(&self) -> bool {
+        self.health_dashboard_action_requires_investigation
+    }
+
+    /// Return how many distinct aggregate health action components are active.
+    pub fn health_dashboard_action_component_count(&self) -> usize {
+        self.health_dashboard_action_component_count
+    }
+
+    /// Return whether aggregate health combines multiple action components.
+    pub fn health_dashboard_has_multiple_action_components(&self) -> bool {
+        self.health_dashboard_has_multiple_action_components
     }
 
     /// Return the aggregate health-dashboard route.
@@ -17450,6 +17600,16 @@ mod tests {
         assert!(!idle_summary.health_dashboard_has_drain_action());
         assert_eq!(idle_summary.health_dashboard_action_count(), 0);
         assert!(!idle_summary.health_dashboard_has_multiple_actions());
+        assert!(!idle_summary.health_dashboard_requires_action());
+        assert!(idle_summary.health_dashboard_is_no_action());
+        assert!(!idle_summary.health_dashboard_action_should_drain_page());
+        assert!(!idle_summary.health_dashboard_action_routes_follow_up());
+        assert!(!idle_summary.health_dashboard_action_requests_continuation());
+        assert!(!idle_summary.health_dashboard_action_requires_storage_investigation());
+        assert!(!idle_summary.health_dashboard_action_requires_count_integrity_investigation());
+        assert!(!idle_summary.health_dashboard_action_requires_investigation());
+        assert_eq!(idle_summary.health_dashboard_action_component_count(), 0);
+        assert!(!idle_summary.health_dashboard_has_multiple_action_components());
         assert_eq!(
             idle_summary.health_dashboard_route(),
             ToolAuditHealthRoute::NoRoute
@@ -17591,6 +17751,16 @@ mod tests {
         assert!(!clean_summary.drain_health_action_requires_count_integrity_investigation());
         assert!(!clean_summary.drain_health_action_requires_investigation());
         assert!(!clean_summary.drain_health_action_has_multiple_actions());
+        assert!(clean_summary.health_dashboard_requires_action());
+        assert!(!clean_summary.health_dashboard_is_no_action());
+        assert!(clean_summary.health_dashboard_action_should_drain_page());
+        assert!(!clean_summary.health_dashboard_action_routes_follow_up());
+        assert!(!clean_summary.health_dashboard_action_requests_continuation());
+        assert!(!clean_summary.health_dashboard_action_requires_storage_investigation());
+        assert!(!clean_summary.health_dashboard_action_requires_count_integrity_investigation());
+        assert!(!clean_summary.health_dashboard_action_requires_investigation());
+        assert_eq!(clean_summary.health_dashboard_action_component_count(), 1);
+        assert!(!clean_summary.health_dashboard_has_multiple_action_components());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -17774,6 +17944,21 @@ mod tests {
         assert!(continuation_summary.health_dashboard_has_drain_action());
         assert_eq!(continuation_summary.health_dashboard_action_count(), 2);
         assert!(continuation_summary.health_dashboard_has_multiple_actions());
+        assert!(continuation_summary.health_dashboard_requires_action());
+        assert!(!continuation_summary.health_dashboard_is_no_action());
+        assert!(continuation_summary.health_dashboard_action_should_drain_page());
+        assert!(!continuation_summary.health_dashboard_action_routes_follow_up());
+        assert!(continuation_summary.health_dashboard_action_requests_continuation());
+        assert!(!continuation_summary.health_dashboard_action_requires_storage_investigation());
+        assert!(
+            !continuation_summary.health_dashboard_action_requires_count_integrity_investigation()
+        );
+        assert!(!continuation_summary.health_dashboard_action_requires_investigation());
+        assert_eq!(
+            continuation_summary.health_dashboard_action_component_count(),
+            2
+        );
+        assert!(continuation_summary.health_dashboard_has_multiple_action_components());
         assert_eq!(
             continuation_summary.health_dashboard_route(),
             ToolAuditHealthRoute::Triage
@@ -17891,6 +18076,18 @@ mod tests {
             follow_up_summary.health_dashboard_surface(),
             ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction
         );
+        assert!(follow_up_summary.health_dashboard_requires_action());
+        assert!(follow_up_summary.health_dashboard_action_should_drain_page());
+        assert!(follow_up_summary.health_dashboard_action_routes_follow_up());
+        assert!(!follow_up_summary.health_dashboard_action_requests_continuation());
+        assert!(!follow_up_summary.health_dashboard_action_requires_storage_investigation());
+        assert!(!follow_up_summary.health_dashboard_action_requires_count_integrity_investigation());
+        assert!(!follow_up_summary.health_dashboard_action_requires_investigation());
+        assert_eq!(
+            follow_up_summary.health_dashboard_action_component_count(),
+            2
+        );
+        assert!(follow_up_summary.health_dashboard_has_multiple_action_components());
         assert_eq!(
             follow_up_summary.health_dashboard_route(),
             ToolAuditHealthRoute::Triage
@@ -17926,6 +18123,25 @@ mod tests {
         assert!(!follow_up_summary.has_health_dashboard_digest_label_integrity_drift());
         assert!(follow_up_summary.health_dashboard_labels_match());
         assert!(!follow_up_summary.has_health_dashboard_label_integrity_drift());
+
+        let mut count_integrity_report = clean_report;
+        count_integrity_report.plan.planned_records += 1;
+        count_integrity_report.drain.drained_records += 1;
+        let count_integrity_summary = count_integrity_report.summary();
+
+        assert!(count_integrity_summary.health_dashboard_requires_action());
+        assert!(!count_integrity_summary.health_dashboard_action_should_drain_page());
+        assert!(!count_integrity_summary.health_dashboard_action_routes_follow_up());
+        assert!(!count_integrity_summary.health_dashboard_action_requests_continuation());
+        assert!(!count_integrity_summary.health_dashboard_action_requires_storage_investigation());
+        assert!(count_integrity_summary
+            .health_dashboard_action_requires_count_integrity_investigation());
+        assert!(count_integrity_summary.health_dashboard_action_requires_investigation());
+        assert_eq!(
+            count_integrity_summary.health_dashboard_action_component_count(),
+            1
+        );
+        assert!(!count_integrity_summary.health_dashboard_has_multiple_action_components());
     }
 
     #[test]
