@@ -895,6 +895,13 @@ pub struct BrowserResource {
     pub referrerpolicy: Option<String>,
     pub fetchpriority: Option<String>,
     pub blocking: Option<String>,
+    pub browsing_context_name: Option<String>,
+    pub loading: Option<String>,
+    pub sandbox: Vec<String>,
+    pub allow: Option<String>,
+    pub allowfullscreen: bool,
+    pub srcdoc: Option<String>,
+    pub credentialless: bool,
     pub imagesrcset: Option<String>,
     pub resolved_imagesrcset: Option<String>,
     pub imagesizes: Option<String>,
@@ -979,6 +986,14 @@ pub struct BrowserContentNode {
     pub loop_media: bool,
     pub muted: bool,
     pub playsinline: bool,
+    pub browsing_context_name: Option<String>,
+    pub loading: Option<String>,
+    pub sandbox: Vec<String>,
+    pub allow: Option<String>,
+    pub allowfullscreen: bool,
+    pub referrerpolicy: Option<String>,
+    pub srcdoc: Option<String>,
+    pub credentialless: bool,
     pub control_type: Option<String>,
     pub form_owner: Option<String>,
     pub label_for: Option<String>,
@@ -1067,6 +1082,14 @@ pub struct BrowserRenderNode {
     pub loop_media: bool,
     pub muted: bool,
     pub playsinline: bool,
+    pub browsing_context_name: Option<String>,
+    pub loading: Option<String>,
+    pub sandbox: Vec<String>,
+    pub allow: Option<String>,
+    pub allowfullscreen: bool,
+    pub referrerpolicy: Option<String>,
+    pub srcdoc: Option<String>,
+    pub credentialless: bool,
     pub control_type: Option<String>,
     pub form_owner: Option<String>,
     pub label_for: Option<String>,
@@ -1349,6 +1372,14 @@ impl BrowserRenderNode {
             loop_media: content_node.loop_media,
             muted: content_node.muted,
             playsinline: content_node.playsinline,
+            browsing_context_name: content_node.browsing_context_name.clone(),
+            loading: content_node.loading.clone(),
+            sandbox: content_node.sandbox.clone(),
+            allow: content_node.allow.clone(),
+            allowfullscreen: content_node.allowfullscreen,
+            referrerpolicy: content_node.referrerpolicy.clone(),
+            srcdoc: content_node.srcdoc.clone(),
+            credentialless: content_node.credentialless,
             control_type: content_node.control_type.clone(),
             form_owner: content_node.form_owner.clone(),
             label_for: content_node.label_for.clone(),
@@ -8452,6 +8483,13 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
                         fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
                         blocking: element.attribute("blocking").map(ToOwned::to_owned),
+                        browsing_context_name: None,
+                        loading: None,
+                        sandbox: Vec::new(),
+                        allow: None,
+                        allowfullscreen: false,
+                        srcdoc: None,
+                        credentialless: false,
                         imagesrcset: None,
                         resolved_imagesrcset: None,
                         imagesizes: None,
@@ -8643,6 +8681,13 @@ fn collect_body_resource(element: &Element, summary: &mut BrowserDocument) {
         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
         fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
         blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        browsing_context_name: browser_browsing_context_name(element),
+        loading: browser_browsing_context_loading(element),
+        sandbox: browser_browsing_context_sandbox(element),
+        allow: browser_browsing_context_allow(element),
+        allowfullscreen: browser_browsing_context_allowfullscreen(element),
+        srcdoc: browser_browsing_context_srcdoc(element),
+        credentialless: browser_browsing_context_credentialless(element),
         imagesrcset: None,
         resolved_imagesrcset: None,
         imagesizes: None,
@@ -8869,6 +8914,13 @@ fn browser_link_resource(
         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
         fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
         blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        browsing_context_name: None,
+        loading: None,
+        sandbox: Vec::new(),
+        allow: None,
+        allowfullscreen: false,
+        srcdoc: None,
+        credentialless: false,
         resolved_imagesrcset: imagesrcset
             .as_deref()
             .map(|srcset| resolve_browser_srcset(srcset, base_href)),
@@ -8937,6 +8989,14 @@ fn collect_browser_content_nodes_with_mode(
                         loop_media: false,
                         muted: false,
                         playsinline: false,
+                        browsing_context_name: None,
+                        loading: None,
+                        sandbox: Vec::new(),
+                        allow: None,
+                        allowfullscreen: false,
+                        referrerpolicy: None,
+                        srcdoc: None,
+                        credentialless: false,
                         control_type: None,
                         form_owner: None,
                         label_for: None,
@@ -9092,6 +9152,14 @@ fn browser_content_node_for_element(
         loop_media: browser_media_loop(element),
         muted: browser_media_muted(element),
         playsinline: browser_media_playsinline(element),
+        browsing_context_name: browser_browsing_context_name(element),
+        loading: browser_browsing_context_loading(element),
+        sandbox: browser_browsing_context_sandbox(element),
+        allow: browser_browsing_context_allow(element),
+        allowfullscreen: browser_browsing_context_allowfullscreen(element),
+        referrerpolicy: browser_browsing_context_referrerpolicy(element),
+        srcdoc: browser_browsing_context_srcdoc(element),
+        credentialless: browser_browsing_context_credentialless(element),
         control_type: browser_content_control_type(element),
         form_owner: browser_form_owner(element),
         label_for: browser_label_for(element),
@@ -9253,6 +9321,69 @@ fn browser_content_resource_kind(element: &Element) -> Option<String> {
         "canvas" => Some("canvas".to_string()),
         _ => None,
     }
+}
+
+fn is_browser_browsing_context_element(element: &Element) -> bool {
+    matches!(element.name.as_str(), "iframe" | "frame")
+}
+
+fn browser_browsing_context_name(element: &Element) -> Option<String> {
+    if is_browser_browsing_context_element(element) {
+        element.attribute("name").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_browsing_context_loading(element: &Element) -> Option<String> {
+    if is_browser_browsing_context_element(element) {
+        element.attribute("loading").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_browsing_context_sandbox(element: &Element) -> Vec<String> {
+    if is_browser_browsing_context_element(element) {
+        element
+            .attribute("sandbox")
+            .map(split_html_classes)
+            .unwrap_or_default()
+    } else {
+        Vec::new()
+    }
+}
+
+fn browser_browsing_context_allow(element: &Element) -> Option<String> {
+    if is_browser_browsing_context_element(element) {
+        element.attribute("allow").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_browsing_context_allowfullscreen(element: &Element) -> bool {
+    is_browser_browsing_context_element(element) && element.attribute("allowfullscreen").is_some()
+}
+
+fn browser_browsing_context_referrerpolicy(element: &Element) -> Option<String> {
+    if is_browser_browsing_context_element(element) {
+        element.attribute("referrerpolicy").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_browsing_context_srcdoc(element: &Element) -> Option<String> {
+    if element.name == "iframe" {
+        element.attribute("srcdoc").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_browsing_context_credentialless(element: &Element) -> bool {
+    is_browser_browsing_context_element(element) && element.attribute("credentialless").is_some()
 }
 
 fn browser_image_element(
@@ -10445,7 +10576,11 @@ mod tests {
     fn browser_embedded_resource_metadata_tracks_fetch_and_layout_fields() {
         let document = parse_html(
             "<base href=\"https://example.test/media/index.html\">\
-             <iframe src=frame.html width=320 height=200 title=Frame></iframe>\
+             <iframe src=frame.html name=preview loading=lazy \
+                 sandbox=\"allow-scripts allow-same-origin\" \
+                 allow=\"fullscreen; geolocation\" allowfullscreen \
+                 referrerpolicy=no-referrer srcdoc=\"<p>Fallback</p>\" \
+                 credentialless width=320 height=200 title=Frame></iframe>\
              <object data=movie.swf type=\"application/x-shockwave-flash\" width=400 height=300></object>",
         )
         .unwrap();
@@ -10457,6 +10592,29 @@ mod tests {
             Some("https://example.test/media/frame.html")
         );
         assert_eq!(summary.resources[0].width.as_deref(), Some("320"));
+        assert_eq!(
+            summary.resources[0].browsing_context_name.as_deref(),
+            Some("preview")
+        );
+        assert_eq!(summary.resources[0].loading.as_deref(), Some("lazy"));
+        assert_eq!(
+            summary.resources[0].sandbox,
+            vec!["allow-scripts", "allow-same-origin"]
+        );
+        assert_eq!(
+            summary.resources[0].allow.as_deref(),
+            Some("fullscreen; geolocation")
+        );
+        assert!(summary.resources[0].allowfullscreen);
+        assert_eq!(
+            summary.resources[0].referrerpolicy.as_deref(),
+            Some("no-referrer")
+        );
+        assert_eq!(
+            summary.resources[0].srcdoc.as_deref(),
+            Some("<p>Fallback</p>")
+        );
+        assert!(summary.resources[0].credentialless);
 
         let content_tree = BrowserContentTree::from_document(&document);
         assert_eq!(content_tree.children[0].role, "frame");
@@ -10464,14 +10622,47 @@ mod tests {
             content_tree.children[0].resource_kind.as_deref(),
             Some("frame")
         );
+        assert_eq!(
+            content_tree.children[0].browsing_context_name.as_deref(),
+            Some("preview")
+        );
+        assert_eq!(content_tree.children[0].loading.as_deref(), Some("lazy"));
+        assert_eq!(
+            content_tree.children[0].sandbox,
+            vec!["allow-scripts", "allow-same-origin"]
+        );
+        assert_eq!(
+            content_tree.children[0].allow.as_deref(),
+            Some("fullscreen; geolocation")
+        );
+        assert!(content_tree.children[0].allowfullscreen);
+        assert_eq!(
+            content_tree.children[0].referrerpolicy.as_deref(),
+            Some("no-referrer")
+        );
+        assert_eq!(
+            content_tree.children[0].srcdoc.as_deref(),
+            Some("<p>Fallback</p>")
+        );
+        assert!(content_tree.children[0].credentialless);
         assert_eq!(content_tree.children[1].role, "object");
         assert_eq!(
             content_tree.children[1].type_hint.as_deref(),
             Some("application/x-shockwave-flash")
         );
+        assert!(content_tree.children[1].browsing_context_name.is_none());
 
         let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
         assert_eq!(render_tree.children[0].display, "inline-replaced");
+        assert_eq!(
+            render_tree.children[0].browsing_context_name.as_deref(),
+            Some("preview")
+        );
+        assert_eq!(
+            render_tree.children[0].sandbox,
+            vec!["allow-scripts", "allow-same-origin"]
+        );
+        assert!(render_tree.children[0].allowfullscreen);
         assert_eq!(render_tree.children[1].display, "inline-replaced");
     }
 

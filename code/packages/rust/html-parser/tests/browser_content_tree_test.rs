@@ -74,6 +74,22 @@ struct ExpectedContentNode {
     muted: bool,
     #[serde(default)]
     playsinline: bool,
+    #[serde(default)]
+    browsing_context_name: Option<String>,
+    #[serde(default)]
+    loading: Option<String>,
+    #[serde(default)]
+    sandbox: Vec<String>,
+    #[serde(default)]
+    allow: Option<String>,
+    #[serde(default)]
+    allowfullscreen: bool,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    srcdoc: Option<String>,
+    #[serde(default)]
+    credentialless: bool,
     control_type: Option<String>,
     #[serde(default)]
     form_owner: Option<String>,
@@ -240,6 +256,14 @@ impl ExpectedContentNode {
             loop_media: self.loop_media,
             muted: self.muted,
             playsinline: self.playsinline,
+            browsing_context_name: self.browsing_context_name,
+            loading: self.loading,
+            sandbox: self.sandbox,
+            allow: self.allow,
+            allowfullscreen: self.allowfullscreen,
+            referrerpolicy: self.referrerpolicy,
+            srcdoc: self.srcdoc,
+            credentialless: self.credentialless,
             control_type: self.control_type,
             form_owner: self.form_owner,
             label_for: self.label_for,

@@ -140,6 +140,20 @@ struct ExpectedResource {
     #[serde(default)]
     blocking: Option<String>,
     #[serde(default)]
+    browsing_context_name: Option<String>,
+    #[serde(default)]
+    loading: Option<String>,
+    #[serde(default)]
+    sandbox: Vec<String>,
+    #[serde(default)]
+    allow: Option<String>,
+    #[serde(default)]
+    allowfullscreen: bool,
+    #[serde(default)]
+    srcdoc: Option<String>,
+    #[serde(default)]
+    credentialless: bool,
+    #[serde(default)]
     imagesrcset: Option<String>,
     #[serde(default)]
     resolved_imagesrcset: Option<String>,
@@ -525,6 +539,13 @@ impl ExpectedResource {
             referrerpolicy: self.referrerpolicy,
             fetchpriority: self.fetchpriority,
             blocking: self.blocking,
+            browsing_context_name: self.browsing_context_name,
+            loading: self.loading,
+            sandbox: self.sandbox,
+            allow: self.allow,
+            allowfullscreen: self.allowfullscreen,
+            srcdoc: self.srcdoc,
+            credentialless: self.credentialless,
             imagesrcset: self.imagesrcset,
             resolved_imagesrcset: self.resolved_imagesrcset,
             imagesizes: self.imagesizes,

@@ -643,11 +643,11 @@
     },
     {
       "id": "embedded-resource-nodes",
-      "description": "Embedded resources become explicit content nodes with resolved sources and layout/fetch metadata.",
-      "input": "<base href=\"https://example.test/media/index.html\"><body><iframe src=frame.html width=320 height=200 title=Frame></iframe><object data=movie.swf type=\"application/x-shockwave-flash\" width=400 height=300></object><video src=movie.mp4 width=640 height=360 controls></video><embed src=legacy.mov type=\"video/quicktime\" width=160 height=120>",
+      "description": "Embedded resources become explicit content nodes with resolved sources and layout/fetch policy metadata.",
+      "input": "<base href=\"https://example.test/media/index.html\"><body><iframe src=frame.html name=preview loading=lazy sandbox=\"allow-scripts allow-same-origin\" allow=\"fullscreen; geolocation\" allowfullscreen referrerpolicy=no-referrer srcdoc=\"<p>Fallback</p>\" credentialless width=320 height=200 title=Frame></iframe><object data=movie.swf type=\"application/x-shockwave-flash\" width=400 height=300></object><video src=movie.mp4 width=640 height=360 controls></video><embed src=legacy.mov type=\"video/quicktime\" width=160 height=120>",
       "expected": {
         "children": [
-          { "role": "frame", "name": "iframe", "title": "Frame", "text": null, "href": null, "src": "frame.html", "resolved_src": "https://example.test/media/frame.html", "alt": null, "resource_kind": "frame", "width": "320", "height": "200", "control_type": null, "children": [] },
+          { "role": "frame", "name": "iframe", "title": "Frame", "text": null, "href": null, "src": "frame.html", "resolved_src": "https://example.test/media/frame.html", "alt": null, "resource_kind": "frame", "width": "320", "height": "200", "browsing_context_name": "preview", "loading": "lazy", "sandbox": ["allow-scripts", "allow-same-origin"], "allow": "fullscreen; geolocation", "allowfullscreen": true, "referrerpolicy": "no-referrer", "srcdoc": "<p>Fallback</p>", "credentialless": true, "control_type": null, "children": [] },
           { "role": "object", "name": "object", "text": null, "href": null, "src": "movie.swf", "resolved_src": "https://example.test/media/movie.swf", "alt": null, "resource_kind": "object", "width": "400", "height": "300", "type_hint": "application/x-shockwave-flash", "control_type": null, "children": [] },
           { "role": "media", "name": "video", "text": null, "href": null, "src": "movie.mp4", "resolved_src": "https://example.test/media/movie.mp4", "alt": null, "resource_kind": "video", "width": "640", "height": "360", "controls": true, "control_type": null, "children": [] },
           { "role": "embed", "name": "embed", "text": null, "href": null, "src": "legacy.mov", "resolved_src": "https://example.test/media/legacy.mov", "alt": null, "resource_kind": "embed", "width": "160", "height": "120", "type_hint": "video/quicktime", "control_type": null, "children": [] }

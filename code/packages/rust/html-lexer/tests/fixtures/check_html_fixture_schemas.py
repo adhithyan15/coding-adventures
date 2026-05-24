@@ -322,11 +322,18 @@ def check_browser_expected_lists(
             "referrerpolicy",
             "fetchpriority",
             "blocking",
+            "browsing_context_name",
+            "loading",
+            "allow",
+            "srcdoc",
             "imagesrcset",
             "resolved_imagesrcset",
             "imagesizes",
         ):
             require_optional_nullable_string(resource_path, resource, field, errors)
+        require_optional_string_list(resource_path, resource, "sandbox", errors)
+        require_optional_boolean(resource_path, resource, "allowfullscreen", errors)
+        require_optional_boolean(resource_path, resource, "credentialless", errors)
         require_boolean(resource_path, resource, "async_script", errors)
         require_boolean(resource_path, resource, "defer_script", errors)
 
@@ -525,6 +532,11 @@ def check_browser_content_node(
         "poster",
         "resolved_poster",
         "preload",
+        "browsing_context_name",
+        "loading",
+        "allow",
+        "referrerpolicy",
+        "srcdoc",
         "control_type",
         "form_owner",
         "label_for",
@@ -563,6 +575,7 @@ def check_browser_content_node(
     require_optional_string_list(node_path, node, "classes", errors)
     require_optional_string_list(node_path, node, "headers", errors)
     require_optional_string_list(node_path, node, "labels", errors)
+    require_optional_string_list(node_path, node, "sandbox", errors)
     require_optional_string_list(node_path, node, "aria_labelledby", errors)
     require_optional_string_list(node_path, node, "aria_describedby", errors)
     require_optional_string_list(node_path, node, "aria_controls", errors)
@@ -578,6 +591,8 @@ def check_browser_content_node(
         "loop_media",
         "muted",
         "playsinline",
+        "allowfullscreen",
+        "credentialless",
         "list_reversed",
         "aria_hidden",
         "hidden",
@@ -650,6 +665,11 @@ def check_browser_render_node(
         "poster",
         "resolved_poster",
         "preload",
+        "browsing_context_name",
+        "loading",
+        "allow",
+        "referrerpolicy",
+        "srcdoc",
         "control_type",
         "form_owner",
         "label_for",
@@ -688,6 +708,7 @@ def check_browser_render_node(
     require_optional_string_list(node_path, node, "classes", errors)
     require_optional_string_list(node_path, node, "headers", errors)
     require_optional_string_list(node_path, node, "labels", errors)
+    require_optional_string_list(node_path, node, "sandbox", errors)
     require_optional_string_list(node_path, node, "aria_labelledby", errors)
     require_optional_string_list(node_path, node, "aria_describedby", errors)
     require_optional_string_list(node_path, node, "aria_controls", errors)
@@ -703,6 +724,8 @@ def check_browser_render_node(
         "loop_media",
         "muted",
         "playsinline",
+        "allowfullscreen",
+        "credentialless",
         "list_reversed",
         "aria_hidden",
         "hidden",
