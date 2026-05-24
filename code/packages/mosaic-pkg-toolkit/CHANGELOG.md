@@ -1,5 +1,28 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — v0.5 — Pagination
+
+### Added
+
+**`Pagination`** — Bootstrap's page-navigation row: `« prev | 1 2 3
+| next »`. Composition: `Row[pagination] { HostLink[pagination-prev],
+For (each: pages, as: page) { HostLink[pagination-page] (label: page,
+onActivate: onPageSelect) }, HostLink[pagination-next] }`. Slots:
+`pages: list<text>`, `prev-label`, `next-label`, `active-index`.
+Emits: `onPrev`, `onNext`, `onPageSelect(index: number)`.
+
+Like Nav and Breadcrumb (v0.4), every chip wraps the UI29-4
+`HostLink` kernel primitive. Bootstrap's real-world DOM uses `<a>`
+tags for the same elements — `role="link"` semantics + Tab/Enter
+keyboard activation come from the kernel for free. `href: "#"` +
+`external: false` mirror the Nav/Breadcrumb conventions.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 17 (was 16): one more interface
+test (`pagination_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
 ## [0.4.0] — UI29-4 — HostLink wires Breadcrumb + Nav; Tooltip + NumberInput added
 
 UI29-4 added three new kernel primitives (`HostLink`, `HostTooltip`,

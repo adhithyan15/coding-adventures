@@ -15,7 +15,7 @@
 
 [package]
 name        = "mosaic-pkg-toolkit"
-version     = "0.4.0"
+version     = "0.5.0"
 description = "Bootstrap-shaped Mosaic UI component library — ready-made components composed purely from UI29 kernel primitives"
 license     = "MIT OR Apache-2.0"
 
@@ -27,12 +27,13 @@ license     = "MIT OR Apache-2.0"
 # v0.1 PR-5: Field (label + HostInput + help/error).
 # v0.2 PR-6: Tier-2 batch 1 — Nav, ButtonGroup, Breadcrumb.
 # v0.4 UI29-4: Tooltip, NumberInput (new) + Breadcrumb/Nav rewrites.
+# v0.5: Pagination (HostLink-based, matching Nav/Breadcrumb).
 # Remaining Tier-1 (Card, Container) blocked on UI29-2 children
 # pass-through spec; ship when that lands.
 exports = [
   "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
   "Checkbox", "Field", "Input", "ListGroup", "Modal", "Nav",
-  "NumberInput", "Radio", "Spinner", "Toast", "Tooltip",
+  "NumberInput", "Pagination", "Radio", "Spinner", "Toast", "Tooltip",
 ]
 
 [dependencies]
