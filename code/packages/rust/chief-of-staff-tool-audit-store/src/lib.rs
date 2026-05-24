@@ -700,6 +700,8 @@ impl ToolAuditCheckpointReplaySummary {
             && self.checkpoint_replay_outcome_label_matches_outcome()
             && self.health_action_label_matches_action()
             && self.health_route_label_matches_route()
+            && self.health_priority_label_matches_priority()
+            && self.health_readiness_label_matches_readiness()
     }
 
     /// Return whether any checkpoint replay health label drifted from its classifier.
@@ -771,6 +773,78 @@ impl ToolAuditCheckpointReplaySummary {
     /// Return whether this checkpoint replay routes health investigation work.
     pub fn health_routes_to_investigation(&self) -> bool {
         self.health_route().is_investigation()
+    }
+
+    /// Classify dashboard priority for this checkpoint replay health.
+    pub fn health_priority(&self) -> ToolAuditHealthPriority {
+        self.health_action().priority()
+    }
+
+    /// Return the stable health-priority label for host logs.
+    pub fn health_priority_label(&self) -> &'static str {
+        self.health_priority().as_str()
+    }
+
+    /// Return whether the health-priority label parses back to its typed priority.
+    pub fn health_priority_label_matches_priority(&self) -> bool {
+        ToolAuditHealthPriority::from_label(self.health_priority_label())
+            == Some(self.health_priority())
+    }
+
+    /// Return the sortable health-priority rank.
+    pub fn health_priority_rank(&self) -> u8 {
+        self.health_priority().rank()
+    }
+
+    /// Return whether this checkpoint replay health has investigation priority.
+    pub fn health_has_investigation_priority(&self) -> bool {
+        self.health_priority().requires_investigation()
+    }
+
+    /// Return whether this checkpoint replay health priority requires triage.
+    pub fn health_priority_requires_triage(&self) -> bool {
+        self.health_priority().requires_triage()
+    }
+
+    /// Classify queue readiness for this checkpoint replay health.
+    pub fn health_readiness(&self) -> ToolAuditHealthReadiness {
+        self.health_action().readiness()
+    }
+
+    /// Return the stable health-readiness label for host logs.
+    pub fn health_readiness_label(&self) -> &'static str {
+        self.health_readiness().as_str()
+    }
+
+    /// Return whether the health-readiness label parses back to its typed readiness.
+    pub fn health_readiness_label_matches_readiness(&self) -> bool {
+        ToolAuditHealthReadiness::from_label(self.health_readiness_label())
+            == Some(self.health_readiness())
+    }
+
+    /// Return whether this checkpoint replay health should appear in an action queue.
+    pub fn health_is_actionable(&self) -> bool {
+        self.health_readiness().is_actionable()
+    }
+
+    /// Return whether this checkpoint replay health can be routed automatically.
+    pub fn health_is_auto_routable(&self) -> bool {
+        self.health_readiness().is_auto_routable()
+    }
+
+    /// Return whether this checkpoint replay health needs manual review.
+    pub fn health_readiness_requires_manual_review(&self) -> bool {
+        self.health_readiness().requires_manual_review()
+    }
+
+    /// Return whether this checkpoint replay health needs investigation.
+    pub fn health_readiness_requires_investigation(&self) -> bool {
+        self.health_readiness().requires_investigation()
+    }
+
+    /// Return whether this checkpoint replay health needs triage.
+    pub fn health_readiness_requires_triage(&self) -> bool {
+        self.health_readiness().requires_triage()
     }
 
     /// Return whether any replayed row needs follow-up.
@@ -898,6 +972,8 @@ impl ToolAuditSupervisorCheckpointStatus {
             && self.checkpoint_page_outcome_label_matches_outcome()
             && self.health_action_label_matches_action()
             && self.health_route_label_matches_route()
+            && self.health_priority_label_matches_priority()
+            && self.health_readiness_label_matches_readiness()
     }
 
     /// Return whether any checkpoint status health label drifted from its classifier.
@@ -994,6 +1070,78 @@ impl ToolAuditSupervisorCheckpointStatus {
     /// Return whether this checkpoint page routes health investigation work.
     pub fn health_routes_to_investigation(&self) -> bool {
         self.health_route().is_investigation()
+    }
+
+    /// Classify dashboard priority for this checkpoint page health.
+    pub fn health_priority(&self) -> ToolAuditHealthPriority {
+        self.health_action().priority()
+    }
+
+    /// Return the stable health-priority label for host logs.
+    pub fn health_priority_label(&self) -> &'static str {
+        self.health_priority().as_str()
+    }
+
+    /// Return whether the health-priority label parses back to its typed priority.
+    pub fn health_priority_label_matches_priority(&self) -> bool {
+        ToolAuditHealthPriority::from_label(self.health_priority_label())
+            == Some(self.health_priority())
+    }
+
+    /// Return the sortable health-priority rank.
+    pub fn health_priority_rank(&self) -> u8 {
+        self.health_priority().rank()
+    }
+
+    /// Return whether this checkpoint page health has investigation priority.
+    pub fn health_has_investigation_priority(&self) -> bool {
+        self.health_priority().requires_investigation()
+    }
+
+    /// Return whether this checkpoint page health priority requires triage.
+    pub fn health_priority_requires_triage(&self) -> bool {
+        self.health_priority().requires_triage()
+    }
+
+    /// Classify queue readiness for this checkpoint page health.
+    pub fn health_readiness(&self) -> ToolAuditHealthReadiness {
+        self.health_action().readiness()
+    }
+
+    /// Return the stable health-readiness label for host logs.
+    pub fn health_readiness_label(&self) -> &'static str {
+        self.health_readiness().as_str()
+    }
+
+    /// Return whether the health-readiness label parses back to its typed readiness.
+    pub fn health_readiness_label_matches_readiness(&self) -> bool {
+        ToolAuditHealthReadiness::from_label(self.health_readiness_label())
+            == Some(self.health_readiness())
+    }
+
+    /// Return whether this checkpoint page health should appear in an action queue.
+    pub fn health_is_actionable(&self) -> bool {
+        self.health_readiness().is_actionable()
+    }
+
+    /// Return whether this checkpoint page health can be routed automatically.
+    pub fn health_is_auto_routable(&self) -> bool {
+        self.health_readiness().is_auto_routable()
+    }
+
+    /// Return whether this checkpoint page health needs manual review.
+    pub fn health_readiness_requires_manual_review(&self) -> bool {
+        self.health_readiness().requires_manual_review()
+    }
+
+    /// Return whether this checkpoint page health needs investigation.
+    pub fn health_readiness_requires_investigation(&self) -> bool {
+        self.health_readiness().requires_investigation()
+    }
+
+    /// Return whether this checkpoint page health needs triage.
+    pub fn health_readiness_requires_triage(&self) -> bool {
+        self.health_readiness().requires_triage()
     }
 
     /// Return whether the next drain page would advance the durable checkpoint.
@@ -1117,6 +1265,8 @@ impl ToolAuditSupervisorDrainPlanPage {
             && self.checkpoint_page_outcome_label_matches_outcome()
             && self.health_action_label_matches_action()
             && self.health_route_label_matches_route()
+            && self.health_priority_label_matches_priority()
+            && self.health_readiness_label_matches_readiness()
     }
 
     /// Return whether any planned page health label drifted from its classifier.
@@ -1213,6 +1363,78 @@ impl ToolAuditSupervisorDrainPlanPage {
     /// Return whether this planned page routes health investigation work.
     pub fn health_routes_to_investigation(&self) -> bool {
         self.health_route().is_investigation()
+    }
+
+    /// Classify dashboard priority for this planned page health.
+    pub fn health_priority(&self) -> ToolAuditHealthPriority {
+        self.health_action().priority()
+    }
+
+    /// Return the stable health-priority label for host preflight logs.
+    pub fn health_priority_label(&self) -> &'static str {
+        self.health_priority().as_str()
+    }
+
+    /// Return whether the health-priority label parses back to its typed priority.
+    pub fn health_priority_label_matches_priority(&self) -> bool {
+        ToolAuditHealthPriority::from_label(self.health_priority_label())
+            == Some(self.health_priority())
+    }
+
+    /// Return the sortable health-priority rank.
+    pub fn health_priority_rank(&self) -> u8 {
+        self.health_priority().rank()
+    }
+
+    /// Return whether this planned page health has investigation priority.
+    pub fn health_has_investigation_priority(&self) -> bool {
+        self.health_priority().requires_investigation()
+    }
+
+    /// Return whether this planned page health priority requires triage.
+    pub fn health_priority_requires_triage(&self) -> bool {
+        self.health_priority().requires_triage()
+    }
+
+    /// Classify queue readiness for this planned page health.
+    pub fn health_readiness(&self) -> ToolAuditHealthReadiness {
+        self.health_action().readiness()
+    }
+
+    /// Return the stable health-readiness label for host preflight logs.
+    pub fn health_readiness_label(&self) -> &'static str {
+        self.health_readiness().as_str()
+    }
+
+    /// Return whether the health-readiness label parses back to its typed readiness.
+    pub fn health_readiness_label_matches_readiness(&self) -> bool {
+        ToolAuditHealthReadiness::from_label(self.health_readiness_label())
+            == Some(self.health_readiness())
+    }
+
+    /// Return whether this planned page health should appear in an action queue.
+    pub fn health_is_actionable(&self) -> bool {
+        self.health_readiness().is_actionable()
+    }
+
+    /// Return whether this planned page health can be routed automatically.
+    pub fn health_is_auto_routable(&self) -> bool {
+        self.health_readiness().is_auto_routable()
+    }
+
+    /// Return whether this planned page health needs manual review.
+    pub fn health_readiness_requires_manual_review(&self) -> bool {
+        self.health_readiness().requires_manual_review()
+    }
+
+    /// Return whether this planned page health needs investigation.
+    pub fn health_readiness_requires_investigation(&self) -> bool {
+        self.health_readiness().requires_investigation()
+    }
+
+    /// Return whether this planned page health needs triage.
+    pub fn health_readiness_requires_triage(&self) -> bool {
+        self.health_readiness().requires_triage()
     }
 
     /// Return whether the matching drain tick would advance the durable checkpoint.
@@ -5755,6 +5977,8 @@ impl ToolAuditBatchWriteSummary {
             && self.write_outcome_label_matches_outcome()
             && self.health_action_label_matches_action()
             && self.health_route_label_matches_route()
+            && self.health_priority_label_matches_priority()
+            && self.health_readiness_label_matches_readiness()
     }
 
     /// Return whether any batch-write health label drifted from its classifier.
@@ -5838,6 +6062,78 @@ impl ToolAuditBatchWriteSummary {
         self.health_route().is_investigation()
     }
 
+    /// Classify dashboard priority for this batch-write health.
+    pub fn health_priority(&self) -> ToolAuditHealthPriority {
+        self.health_action().priority()
+    }
+
+    /// Return the stable health-priority label for host logs.
+    pub fn health_priority_label(&self) -> &'static str {
+        self.health_priority().as_str()
+    }
+
+    /// Return whether the health-priority label parses back to its typed priority.
+    pub fn health_priority_label_matches_priority(&self) -> bool {
+        ToolAuditHealthPriority::from_label(self.health_priority_label())
+            == Some(self.health_priority())
+    }
+
+    /// Return the sortable health-priority rank.
+    pub fn health_priority_rank(&self) -> u8 {
+        self.health_priority().rank()
+    }
+
+    /// Return whether this batch-write health has investigation priority.
+    pub fn health_has_investigation_priority(&self) -> bool {
+        self.health_priority().requires_investigation()
+    }
+
+    /// Return whether this batch-write health priority requires triage.
+    pub fn health_priority_requires_triage(&self) -> bool {
+        self.health_priority().requires_triage()
+    }
+
+    /// Classify queue readiness for this batch-write health.
+    pub fn health_readiness(&self) -> ToolAuditHealthReadiness {
+        self.health_action().readiness()
+    }
+
+    /// Return the stable health-readiness label for host logs.
+    pub fn health_readiness_label(&self) -> &'static str {
+        self.health_readiness().as_str()
+    }
+
+    /// Return whether the health-readiness label parses back to its typed readiness.
+    pub fn health_readiness_label_matches_readiness(&self) -> bool {
+        ToolAuditHealthReadiness::from_label(self.health_readiness_label())
+            == Some(self.health_readiness())
+    }
+
+    /// Return whether this batch-write health should appear in an action queue.
+    pub fn health_is_actionable(&self) -> bool {
+        self.health_readiness().is_actionable()
+    }
+
+    /// Return whether this batch-write health can be routed automatically.
+    pub fn health_is_auto_routable(&self) -> bool {
+        self.health_readiness().is_auto_routable()
+    }
+
+    /// Return whether this batch-write health needs manual review.
+    pub fn health_readiness_requires_manual_review(&self) -> bool {
+        self.health_readiness().requires_manual_review()
+    }
+
+    /// Return whether this batch-write health needs investigation.
+    pub fn health_readiness_requires_investigation(&self) -> bool {
+        self.health_readiness().requires_investigation()
+    }
+
+    /// Return whether this batch-write health needs triage.
+    pub fn health_readiness_requires_triage(&self) -> bool {
+        self.health_readiness().requires_triage()
+    }
+
     /// Return whether every attempted row was persisted.
     pub fn completed_without_failures(&self) -> bool {
         self.attempted_records == self.stored_records && self.failed_records == 0
@@ -5901,6 +6197,8 @@ impl ToolAuditReplaySummary {
             && self.replay_outcome_label_matches_outcome()
             && self.health_action_label_matches_action()
             && self.health_route_label_matches_route()
+            && self.health_priority_label_matches_priority()
+            && self.health_readiness_label_matches_readiness()
     }
 
     /// Return whether any replay health label drifted from its classifier.
@@ -5956,6 +6254,78 @@ impl ToolAuditReplaySummary {
     /// Return whether this replay routes health follow-up.
     pub fn health_routes_to_follow_up(&self) -> bool {
         self.health_route().is_follow_up()
+    }
+
+    /// Classify dashboard priority for this replay health.
+    pub fn health_priority(&self) -> ToolAuditHealthPriority {
+        self.health_action().priority()
+    }
+
+    /// Return the stable health-priority label for host logs.
+    pub fn health_priority_label(&self) -> &'static str {
+        self.health_priority().as_str()
+    }
+
+    /// Return whether the health-priority label parses back to its typed priority.
+    pub fn health_priority_label_matches_priority(&self) -> bool {
+        ToolAuditHealthPriority::from_label(self.health_priority_label())
+            == Some(self.health_priority())
+    }
+
+    /// Return the sortable health-priority rank.
+    pub fn health_priority_rank(&self) -> u8 {
+        self.health_priority().rank()
+    }
+
+    /// Return whether this replay health has investigation priority.
+    pub fn health_has_investigation_priority(&self) -> bool {
+        self.health_priority().requires_investigation()
+    }
+
+    /// Return whether this replay health priority requires triage.
+    pub fn health_priority_requires_triage(&self) -> bool {
+        self.health_priority().requires_triage()
+    }
+
+    /// Classify queue readiness for this replay health.
+    pub fn health_readiness(&self) -> ToolAuditHealthReadiness {
+        self.health_action().readiness()
+    }
+
+    /// Return the stable health-readiness label for host logs.
+    pub fn health_readiness_label(&self) -> &'static str {
+        self.health_readiness().as_str()
+    }
+
+    /// Return whether the health-readiness label parses back to its typed readiness.
+    pub fn health_readiness_label_matches_readiness(&self) -> bool {
+        ToolAuditHealthReadiness::from_label(self.health_readiness_label())
+            == Some(self.health_readiness())
+    }
+
+    /// Return whether this replay health should appear in an action queue.
+    pub fn health_is_actionable(&self) -> bool {
+        self.health_readiness().is_actionable()
+    }
+
+    /// Return whether this replay health can be routed automatically.
+    pub fn health_is_auto_routable(&self) -> bool {
+        self.health_readiness().is_auto_routable()
+    }
+
+    /// Return whether this replay health needs manual review.
+    pub fn health_readiness_requires_manual_review(&self) -> bool {
+        self.health_readiness().requires_manual_review()
+    }
+
+    /// Return whether this replay health needs investigation.
+    pub fn health_readiness_requires_investigation(&self) -> bool {
+        self.health_readiness().requires_investigation()
+    }
+
+    /// Return whether this replay health needs triage.
+    pub fn health_readiness_requires_triage(&self) -> bool {
+        self.health_readiness().requires_triage()
     }
 
     /// Return whether any replayed row needs follow-up.
@@ -6102,6 +6472,26 @@ impl ToolAuditHealthAction {
     pub fn route_label(self) -> &'static str {
         self.route().as_str()
     }
+
+    /// Return the dashboard priority for this health action.
+    pub fn priority(self) -> ToolAuditHealthPriority {
+        ToolAuditHealthPriority::from_action(self)
+    }
+
+    /// Return the stable priority label for this health action.
+    pub fn priority_label(self) -> &'static str {
+        self.priority().as_str()
+    }
+
+    /// Return the queue readiness for this health action.
+    pub fn readiness(self) -> ToolAuditHealthReadiness {
+        ToolAuditHealthReadiness::from_action(self)
+    }
+
+    /// Return the stable readiness label for this health action.
+    pub fn readiness_label(self) -> &'static str {
+        self.readiness().as_str()
+    }
 }
 
 impl Display for ToolAuditHealthAction {
@@ -6216,6 +6606,224 @@ impl ToolAuditHealthRoute {
 }
 
 impl Display for ToolAuditHealthRoute {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable dashboard priority for lower-level audit health actions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditHealthPriority {
+    /// The health surface is settled and needs no host action.
+    Settled,
+    /// Routine drain or follow-up action is needed.
+    RoutineAction,
+    /// Storage failure investigation is needed.
+    StorageInvestigation,
+    /// Count-integrity investigation is needed.
+    CountIntegrityInvestigation,
+    /// Multiple action surfaces need triage before routing.
+    Triage,
+}
+
+impl ToolAuditHealthPriority {
+    /// Classify dashboard priority from a health action.
+    pub fn from_action(action: ToolAuditHealthAction) -> Self {
+        if action.is_no_action() {
+            return Self::Settled;
+        }
+        if action.has_multiple_actions() {
+            return Self::Triage;
+        }
+        if action.requires_storage_investigation() {
+            return Self::StorageInvestigation;
+        }
+        if action.requires_count_integrity_investigation() {
+            return Self::CountIntegrityInvestigation;
+        }
+        Self::RoutineAction
+    }
+
+    /// Return a stable snake_case label for logs and dashboard sorting.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Settled => "settled",
+            Self::RoutineAction => "routine_action",
+            Self::StorageInvestigation => "storage_investigation",
+            Self::CountIntegrityInvestigation => "count_integrity_investigation",
+            Self::Triage => "triage",
+        }
+    }
+
+    /// Parse a stable snake_case health-priority label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "settled" => Some(Self::Settled),
+            "routine_action" => Some(Self::RoutineAction),
+            "storage_investigation" => Some(Self::StorageInvestigation),
+            "count_integrity_investigation" => Some(Self::CountIntegrityInvestigation),
+            "triage" => Some(Self::Triage),
+            _ => None,
+        }
+    }
+
+    /// Return a stable ascending priority rank for dashboards.
+    pub fn rank(self) -> u8 {
+        match self {
+            Self::Settled => 0,
+            Self::RoutineAction => 10,
+            Self::StorageInvestigation => 60,
+            Self::CountIntegrityInvestigation => 80,
+            Self::Triage => 90,
+        }
+    }
+
+    /// Return whether this is settled priority.
+    pub fn is_settled(self) -> bool {
+        matches!(self, Self::Settled)
+    }
+
+    /// Return whether this is routine-action priority.
+    pub fn is_routine_action(self) -> bool {
+        matches!(self, Self::RoutineAction)
+    }
+
+    /// Return whether this is storage-investigation priority.
+    pub fn is_storage_investigation(self) -> bool {
+        matches!(self, Self::StorageInvestigation)
+    }
+
+    /// Return whether this is count-integrity-investigation priority.
+    pub fn is_count_integrity_investigation(self) -> bool {
+        matches!(self, Self::CountIntegrityInvestigation)
+    }
+
+    /// Return whether this priority needs investigation.
+    pub fn requires_investigation(self) -> bool {
+        matches!(
+            self,
+            Self::StorageInvestigation | Self::CountIntegrityInvestigation
+        )
+    }
+
+    /// Return whether this priority needs triage.
+    pub fn requires_triage(self) -> bool {
+        matches!(self, Self::Triage)
+    }
+}
+
+impl Display for ToolAuditHealthPriority {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable queue readiness classification for lower-level audit health actions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditHealthReadiness {
+    /// The health surface is settled and does not need a queue entry.
+    Settled,
+    /// Routine drain or follow-up work can be routed directly.
+    RoutineReady,
+    /// Storage failure investigation is ready for an investigator queue.
+    StorageInvestigationReady,
+    /// Count-integrity investigation is ready for an investigator queue.
+    CountIntegrityInvestigationReady,
+    /// Multiple active action surfaces need human triage before routing.
+    TriageRequired,
+}
+
+impl ToolAuditHealthReadiness {
+    /// Classify queue readiness from a health action.
+    pub fn from_action(action: ToolAuditHealthAction) -> Self {
+        if action.is_no_action() {
+            return Self::Settled;
+        }
+        if action.has_multiple_actions() {
+            return Self::TriageRequired;
+        }
+        if action.requires_storage_investigation() {
+            return Self::StorageInvestigationReady;
+        }
+        if action.requires_count_integrity_investigation() {
+            return Self::CountIntegrityInvestigationReady;
+        }
+        Self::RoutineReady
+    }
+
+    /// Return a stable snake_case label for host queues and routing logs.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Settled => "settled",
+            Self::RoutineReady => "routine_ready",
+            Self::StorageInvestigationReady => "storage_investigation_ready",
+            Self::CountIntegrityInvestigationReady => "count_integrity_investigation_ready",
+            Self::TriageRequired => "triage_required",
+        }
+    }
+
+    /// Parse a stable snake_case health-readiness label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "settled" => Some(Self::Settled),
+            "routine_ready" => Some(Self::RoutineReady),
+            "storage_investigation_ready" => Some(Self::StorageInvestigationReady),
+            "count_integrity_investigation_ready" => Some(Self::CountIntegrityInvestigationReady),
+            "triage_required" => Some(Self::TriageRequired),
+            _ => None,
+        }
+    }
+
+    /// Return whether the health surface is settled and needs no queue entry.
+    pub fn is_settled(self) -> bool {
+        matches!(self, Self::Settled)
+    }
+
+    /// Return whether this readiness should appear in a host action queue.
+    pub fn is_actionable(self) -> bool {
+        !self.is_settled()
+    }
+
+    /// Return whether this readiness can be routed without manual review.
+    pub fn is_auto_routable(self) -> bool {
+        matches!(self, Self::RoutineReady)
+    }
+
+    /// Return whether this readiness requires manual host review before routing.
+    pub fn requires_manual_review(self) -> bool {
+        matches!(
+            self,
+            Self::StorageInvestigationReady
+                | Self::CountIntegrityInvestigationReady
+                | Self::TriageRequired
+        )
+    }
+
+    /// Return whether this readiness is already routed to an investigation queue.
+    pub fn requires_investigation(self) -> bool {
+        matches!(
+            self,
+            Self::StorageInvestigationReady | Self::CountIntegrityInvestigationReady
+        )
+    }
+
+    /// Return whether this readiness is routed to storage investigation.
+    pub fn requires_storage_investigation(self) -> bool {
+        matches!(self, Self::StorageInvestigationReady)
+    }
+
+    /// Return whether this readiness is routed to count-integrity investigation.
+    pub fn requires_count_integrity_investigation(self) -> bool {
+        matches!(self, Self::CountIntegrityInvestigationReady)
+    }
+
+    /// Return whether multiple active health surfaces require triage.
+    pub fn requires_triage(self) -> bool {
+        matches!(self, Self::TriageRequired)
+    }
+}
+
+impl Display for ToolAuditHealthReadiness {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -6344,6 +6952,26 @@ impl ToolAuditBatchWriteOutcome {
     pub fn health_route_label(self) -> &'static str {
         self.health_route().as_str()
     }
+
+    /// Return the dashboard priority for this write outcome.
+    pub fn health_priority(self) -> ToolAuditHealthPriority {
+        self.health_action().priority()
+    }
+
+    /// Return the stable health-priority label for this write outcome.
+    pub fn health_priority_label(self) -> &'static str {
+        self.health_priority().as_str()
+    }
+
+    /// Return the queue readiness for this write outcome.
+    pub fn health_readiness(self) -> ToolAuditHealthReadiness {
+        self.health_action().readiness()
+    }
+
+    /// Return the stable health-readiness label for this write outcome.
+    pub fn health_readiness_label(self) -> &'static str {
+        self.health_readiness().as_str()
+    }
 }
 
 impl Display for ToolAuditBatchWriteOutcome {
@@ -6435,6 +7063,26 @@ impl ToolAuditReplayOutcome {
     /// Return the stable health-route label for this replay outcome.
     pub fn health_route_label(self) -> &'static str {
         self.health_route().as_str()
+    }
+
+    /// Return the dashboard priority for this replay outcome.
+    pub fn health_priority(self) -> ToolAuditHealthPriority {
+        self.health_action().priority()
+    }
+
+    /// Return the stable health-priority label for this replay outcome.
+    pub fn health_priority_label(self) -> &'static str {
+        self.health_priority().as_str()
+    }
+
+    /// Return the queue readiness for this replay outcome.
+    pub fn health_readiness(self) -> ToolAuditHealthReadiness {
+        self.health_action().readiness()
+    }
+
+    /// Return the stable health-readiness label for this replay outcome.
+    pub fn health_readiness_label(self) -> &'static str {
+        self.health_readiness().as_str()
     }
 }
 
@@ -6545,6 +7193,26 @@ impl ToolAuditCheckpointReplayOutcome {
     /// Return the stable health-route label for this checkpoint replay.
     pub fn health_route_label(self) -> &'static str {
         self.health_route().as_str()
+    }
+
+    /// Return the dashboard priority for this checkpoint replay.
+    pub fn health_priority(self) -> ToolAuditHealthPriority {
+        self.health_action().priority()
+    }
+
+    /// Return the stable health-priority label for this checkpoint replay.
+    pub fn health_priority_label(self) -> &'static str {
+        self.health_priority().as_str()
+    }
+
+    /// Return the queue readiness for this checkpoint replay.
+    pub fn health_readiness(self) -> ToolAuditHealthReadiness {
+        self.health_action().readiness()
+    }
+
+    /// Return the stable health-readiness label for this checkpoint replay.
+    pub fn health_readiness_label(self) -> &'static str {
+        self.health_readiness().as_str()
     }
 }
 
@@ -6709,6 +7377,26 @@ impl ToolAuditCheckpointPageOutcome {
     /// Return the stable health-route label for this checkpoint page.
     pub fn health_route_label(self) -> &'static str {
         self.health_route().as_str()
+    }
+
+    /// Return the dashboard priority for this checkpoint page.
+    pub fn health_priority(self) -> ToolAuditHealthPriority {
+        self.health_action().priority()
+    }
+
+    /// Return the stable health-priority label for this checkpoint page.
+    pub fn health_priority_label(self) -> &'static str {
+        self.health_priority().as_str()
+    }
+
+    /// Return the queue readiness for this checkpoint page.
+    pub fn health_readiness(self) -> ToolAuditHealthReadiness {
+        self.health_action().readiness()
+    }
+
+    /// Return the stable health-readiness label for this checkpoint page.
+    pub fn health_readiness_label(self) -> &'static str {
+        self.health_readiness().as_str()
     }
 }
 
@@ -6930,6 +7618,8 @@ impl ToolAuditStoreInventorySummary {
         self.follow_up_label_matches_kind()
             && self.health_action_label_matches_action()
             && self.health_route_label_matches_route()
+            && self.health_priority_label_matches_priority()
+            && self.health_readiness_label_matches_readiness()
     }
 
     /// Return whether any inventory health label drifted from its classifier.
@@ -6985,6 +7675,78 @@ impl ToolAuditStoreInventorySummary {
     /// Return whether this inventory routes health follow-up.
     pub fn health_routes_to_follow_up(&self) -> bool {
         self.health_route().is_follow_up()
+    }
+
+    /// Classify dashboard priority for this inventory health.
+    pub fn health_priority(&self) -> ToolAuditHealthPriority {
+        self.health_action().priority()
+    }
+
+    /// Return the stable health-priority label for host logs.
+    pub fn health_priority_label(&self) -> &'static str {
+        self.health_priority().as_str()
+    }
+
+    /// Return whether the health-priority label parses back to its typed priority.
+    pub fn health_priority_label_matches_priority(&self) -> bool {
+        ToolAuditHealthPriority::from_label(self.health_priority_label())
+            == Some(self.health_priority())
+    }
+
+    /// Return the sortable health-priority rank.
+    pub fn health_priority_rank(&self) -> u8 {
+        self.health_priority().rank()
+    }
+
+    /// Return whether this inventory health has investigation priority.
+    pub fn health_has_investigation_priority(&self) -> bool {
+        self.health_priority().requires_investigation()
+    }
+
+    /// Return whether this inventory health priority requires triage.
+    pub fn health_priority_requires_triage(&self) -> bool {
+        self.health_priority().requires_triage()
+    }
+
+    /// Classify queue readiness for this inventory health.
+    pub fn health_readiness(&self) -> ToolAuditHealthReadiness {
+        self.health_action().readiness()
+    }
+
+    /// Return the stable health-readiness label for host logs.
+    pub fn health_readiness_label(&self) -> &'static str {
+        self.health_readiness().as_str()
+    }
+
+    /// Return whether the health-readiness label parses back to its typed readiness.
+    pub fn health_readiness_label_matches_readiness(&self) -> bool {
+        ToolAuditHealthReadiness::from_label(self.health_readiness_label())
+            == Some(self.health_readiness())
+    }
+
+    /// Return whether this inventory health should appear in an action queue.
+    pub fn health_is_actionable(&self) -> bool {
+        self.health_readiness().is_actionable()
+    }
+
+    /// Return whether this inventory health can be routed automatically.
+    pub fn health_is_auto_routable(&self) -> bool {
+        self.health_readiness().is_auto_routable()
+    }
+
+    /// Return whether this inventory health needs manual review.
+    pub fn health_readiness_requires_manual_review(&self) -> bool {
+        self.health_readiness().requires_manual_review()
+    }
+
+    /// Return whether this inventory health needs investigation.
+    pub fn health_readiness_requires_investigation(&self) -> bool {
+        self.health_readiness().requires_investigation()
+    }
+
+    /// Return whether this inventory health needs triage.
+    pub fn health_readiness_requires_triage(&self) -> bool {
+        self.health_readiness().requires_triage()
     }
 
     /// Return whether multiple follow-up surfaces are active.
@@ -7133,6 +7895,26 @@ impl ToolAuditInventoryFollowUpKind {
     /// Return the stable health-route label for this follow-up kind.
     pub fn health_route_label(self) -> &'static str {
         self.health_route().as_str()
+    }
+
+    /// Return the dashboard priority for this follow-up kind.
+    pub fn health_priority(self) -> ToolAuditHealthPriority {
+        self.health_action().priority()
+    }
+
+    /// Return the stable health-priority label for this follow-up kind.
+    pub fn health_priority_label(self) -> &'static str {
+        self.health_priority().as_str()
+    }
+
+    /// Return the queue readiness for this follow-up kind.
+    pub fn health_readiness(self) -> ToolAuditHealthReadiness {
+        self.health_action().readiness()
+    }
+
+    /// Return the stable health-readiness label for this follow-up kind.
+    pub fn health_readiness_label(self) -> &'static str {
+        self.health_readiness().as_str()
     }
 }
 
@@ -14003,6 +14785,292 @@ mod tests {
             ToolAuditHealthRoute::Triage
         );
         assert!(continuation_page.health_routes_to_triage());
+    }
+
+    #[test]
+    fn audit_health_priority_and_readiness_labels_are_stable() {
+        assert_eq!(ToolAuditHealthPriority::Settled.as_str(), "settled");
+        assert_eq!(
+            ToolAuditHealthPriority::from_label("routine_action"),
+            Some(ToolAuditHealthPriority::RoutineAction)
+        );
+        assert_eq!(
+            ToolAuditHealthPriority::from_label("storage_investigation"),
+            Some(ToolAuditHealthPriority::StorageInvestigation)
+        );
+        assert_eq!(
+            ToolAuditHealthPriority::from_label("count_integrity_investigation"),
+            Some(ToolAuditHealthPriority::CountIntegrityInvestigation)
+        );
+        assert_eq!(
+            ToolAuditHealthPriority::from_label("triage"),
+            Some(ToolAuditHealthPriority::Triage)
+        );
+        assert_eq!(ToolAuditHealthPriority::from_label("later_maybe"), None);
+        assert_eq!(ToolAuditHealthPriority::Settled.rank(), 0);
+        assert_eq!(ToolAuditHealthPriority::RoutineAction.rank(), 10);
+        assert_eq!(ToolAuditHealthPriority::StorageInvestigation.rank(), 60);
+        assert_eq!(
+            ToolAuditHealthPriority::CountIntegrityInvestigation.rank(),
+            80
+        );
+        assert_eq!(ToolAuditHealthPriority::Triage.rank(), 90);
+        assert!(ToolAuditHealthPriority::Settled.is_settled());
+        assert!(ToolAuditHealthPriority::RoutineAction.is_routine_action());
+        assert!(ToolAuditHealthPriority::StorageInvestigation.is_storage_investigation());
+        assert!(
+            ToolAuditHealthPriority::CountIntegrityInvestigation.is_count_integrity_investigation()
+        );
+        assert!(ToolAuditHealthPriority::StorageInvestigation.requires_investigation());
+        assert!(ToolAuditHealthPriority::Triage.requires_triage());
+        assert!(!ToolAuditHealthPriority::Triage.requires_investigation());
+
+        assert_eq!(ToolAuditHealthReadiness::Settled.as_str(), "settled");
+        assert_eq!(
+            ToolAuditHealthReadiness::from_label("routine_ready"),
+            Some(ToolAuditHealthReadiness::RoutineReady)
+        );
+        assert_eq!(
+            ToolAuditHealthReadiness::from_label("storage_investigation_ready"),
+            Some(ToolAuditHealthReadiness::StorageInvestigationReady)
+        );
+        assert_eq!(
+            ToolAuditHealthReadiness::from_label("count_integrity_investigation_ready"),
+            Some(ToolAuditHealthReadiness::CountIntegrityInvestigationReady)
+        );
+        assert_eq!(
+            ToolAuditHealthReadiness::from_label("triage_required"),
+            Some(ToolAuditHealthReadiness::TriageRequired)
+        );
+        assert_eq!(ToolAuditHealthReadiness::from_label("readyish"), None);
+        assert!(ToolAuditHealthReadiness::Settled.is_settled());
+        assert!(!ToolAuditHealthReadiness::Settled.is_actionable());
+        assert!(ToolAuditHealthReadiness::RoutineReady.is_actionable());
+        assert!(ToolAuditHealthReadiness::RoutineReady.is_auto_routable());
+        assert!(ToolAuditHealthReadiness::StorageInvestigationReady.requires_manual_review());
+        assert!(
+            ToolAuditHealthReadiness::StorageInvestigationReady.requires_storage_investigation()
+        );
+        assert!(ToolAuditHealthReadiness::CountIntegrityInvestigationReady
+            .requires_count_integrity_investigation());
+        assert!(ToolAuditHealthReadiness::CountIntegrityInvestigationReady.requires_investigation());
+        assert!(ToolAuditHealthReadiness::TriageRequired.requires_triage());
+        assert!(!ToolAuditHealthReadiness::TriageRequired.requires_investigation());
+
+        assert_eq!(
+            ToolAuditHealthAction::NoAction.priority(),
+            ToolAuditHealthPriority::Settled
+        );
+        assert_eq!(
+            ToolAuditHealthAction::RouteFollowUp.priority_label(),
+            "routine_action"
+        );
+        assert_eq!(
+            ToolAuditHealthAction::DrainPage.readiness(),
+            ToolAuditHealthReadiness::RoutineReady
+        );
+        assert_eq!(
+            ToolAuditHealthAction::InvestigateStorageFailures.priority(),
+            ToolAuditHealthPriority::StorageInvestigation
+        );
+        assert_eq!(
+            ToolAuditHealthAction::InvestigateCountIntegrity.readiness_label(),
+            "count_integrity_investigation_ready"
+        );
+        assert_eq!(
+            ToolAuditHealthAction::DrainPageAndRouteFollowUp.priority(),
+            ToolAuditHealthPriority::Triage
+        );
+        assert_eq!(
+            ToolAuditHealthAction::DrainPageRouteFollowUpAndScheduleContinuation.readiness(),
+            ToolAuditHealthReadiness::TriageRequired
+        );
+
+        assert_eq!(
+            ToolAuditInventoryFollowUpKind::NoFollowUp.health_priority(),
+            ToolAuditHealthPriority::Settled
+        );
+        assert_eq!(
+            ToolAuditInventoryFollowUpKind::FailedRecords.health_readiness_label(),
+            "routine_ready"
+        );
+        assert_eq!(
+            ToolAuditBatchWriteOutcome::StorageFailures.health_priority_label(),
+            "storage_investigation"
+        );
+        assert_eq!(
+            ToolAuditBatchWriteOutcome::CountIntegrityDrift.health_readiness(),
+            ToolAuditHealthReadiness::CountIntegrityInvestigationReady
+        );
+        assert_eq!(
+            ToolAuditReplayOutcome::ReplayedWithFollowUp.health_priority(),
+            ToolAuditHealthPriority::RoutineAction
+        );
+        assert_eq!(
+            ToolAuditCheckpointReplayOutcome::CountIntegrityDrift.health_readiness_label(),
+            "count_integrity_investigation_ready"
+        );
+        assert_eq!(
+            ToolAuditCheckpointPageOutcome::PendingWithFollowUp.health_priority(),
+            ToolAuditHealthPriority::Triage
+        );
+        assert_eq!(
+            ToolAuditCheckpointPageOutcome::PendingClean.health_readiness(),
+            ToolAuditHealthReadiness::RoutineReady
+        );
+
+        let clean_inventory =
+            ToolAuditStoreInventorySummary::from_records(&[sample_record("call_clean")]);
+        assert_eq!(
+            clean_inventory.health_priority(),
+            ToolAuditHealthPriority::Settled
+        );
+        assert_eq!(clean_inventory.health_priority_label(), "settled");
+        assert!(clean_inventory.health_priority_label_matches_priority());
+        assert_eq!(clean_inventory.health_priority_rank(), 0);
+        assert_eq!(
+            clean_inventory.health_readiness(),
+            ToolAuditHealthReadiness::Settled
+        );
+        assert_eq!(clean_inventory.health_readiness_label(), "settled");
+        assert!(clean_inventory.health_readiness_label_matches_readiness());
+        assert!(!clean_inventory.health_is_actionable());
+
+        let follow_up_inventory =
+            ToolAuditStoreInventorySummary::from_records(&[failed_record("call_failed")]);
+        assert_eq!(
+            follow_up_inventory.health_priority(),
+            ToolAuditHealthPriority::RoutineAction
+        );
+        assert_eq!(follow_up_inventory.health_priority_rank(), 10);
+        assert_eq!(
+            follow_up_inventory.health_readiness(),
+            ToolAuditHealthReadiness::RoutineReady
+        );
+        assert!(follow_up_inventory.health_is_actionable());
+        assert!(follow_up_inventory.health_is_auto_routable());
+
+        let write_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let clean_write = write_store.record_audit_batch(vec![sample_record("write_clean")]);
+        assert_eq!(
+            clean_write.health_priority(),
+            ToolAuditHealthPriority::Settled
+        );
+        assert!(clean_write.health_priority_label_matches_priority());
+        assert!(clean_write.health_readiness_label_matches_readiness());
+
+        let failure_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let storage_failure = failure_store.record_audit_batch(vec![
+            sample_record("write_dupe"),
+            sample_record("write_dupe"),
+        ]);
+        assert_eq!(
+            storage_failure.health_priority(),
+            ToolAuditHealthPriority::StorageInvestigation
+        );
+        assert_eq!(
+            storage_failure.health_priority_label(),
+            "storage_investigation"
+        );
+        assert_eq!(storage_failure.health_priority_rank(), 60);
+        assert!(storage_failure.health_has_investigation_priority());
+        assert_eq!(
+            storage_failure.health_readiness(),
+            ToolAuditHealthReadiness::StorageInvestigationReady
+        );
+        assert!(storage_failure.health_readiness_requires_manual_review());
+        assert!(storage_failure.health_readiness_requires_investigation());
+        assert!(!storage_failure.health_readiness_requires_triage());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let replay_summary = write_store
+            .replay_audits(&ToolAuditRecordQuery::new(), &mut sink)
+            .unwrap();
+        assert_eq!(
+            replay_summary.health_priority(),
+            ToolAuditHealthPriority::Settled
+        );
+        assert!(replay_summary.health_priority_label_matches_priority());
+        assert!(replay_summary.health_readiness_label_matches_readiness());
+
+        let checkpoint_replay = ToolAuditCheckpointReplaySummary {
+            checkpoint_name: "supervisor".to_string(),
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(120, "call_clean"),
+            stored_checkpoint: None,
+            replayed_records: 1,
+            inventory: clean_inventory,
+        };
+        assert_eq!(
+            checkpoint_replay.health_priority(),
+            ToolAuditHealthPriority::Settled
+        );
+        assert!(checkpoint_replay.health_priority_label_matches_priority());
+        assert!(checkpoint_replay.health_readiness_label_matches_readiness());
+
+        let mut stale_replay = checkpoint_replay.clone();
+        stale_replay.replayed_records = 2;
+        assert_eq!(
+            stale_replay.health_priority(),
+            ToolAuditHealthPriority::CountIntegrityInvestigation
+        );
+        assert_eq!(
+            stale_replay.health_readiness(),
+            ToolAuditHealthReadiness::CountIntegrityInvestigationReady
+        );
+        assert_eq!(stale_replay.health_priority_rank(), 80);
+        assert!(stale_replay.health_has_investigation_priority());
+        assert!(stale_replay.health_readiness_requires_manual_review());
+        assert!(stale_replay.health_readiness_requires_investigation());
+
+        let checkpoint_status = ToolAuditSupervisorCheckpointStatus {
+            checkpoint_name: "supervisor".to_string(),
+            max_records: 10,
+            stored_checkpoint: None,
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(151, "call_failed"),
+            pending_records: 1,
+            inventory: follow_up_inventory,
+            reached_end_of_log: false,
+        };
+        assert_eq!(
+            checkpoint_status.health_priority(),
+            ToolAuditHealthPriority::Triage
+        );
+        assert_eq!(checkpoint_status.health_priority_label(), "triage");
+        assert!(checkpoint_status.health_priority_requires_triage());
+        assert_eq!(
+            checkpoint_status.health_readiness(),
+            ToolAuditHealthReadiness::TriageRequired
+        );
+        assert_eq!(
+            checkpoint_status.health_readiness_label(),
+            "triage_required"
+        );
+        assert!(checkpoint_status.health_readiness_requires_manual_review());
+        assert!(checkpoint_status.health_readiness_requires_triage());
+        assert!(!checkpoint_status.health_readiness_requires_investigation());
+
+        let planned_page = ToolAuditSupervisorDrainPlanPage {
+            max_records: 10,
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(120, "call_clean"),
+            pending_records: 1,
+            inventory: clean_inventory,
+            reached_end_of_log: true,
+        };
+        assert_eq!(
+            planned_page.health_priority(),
+            ToolAuditHealthPriority::RoutineAction
+        );
+        assert_eq!(planned_page.health_priority_rank(), 10);
+        assert_eq!(
+            planned_page.health_readiness(),
+            ToolAuditHealthReadiness::RoutineReady
+        );
+        assert!(planned_page.health_is_actionable());
+        assert!(planned_page.health_is_auto_routable());
+        assert!(planned_page.health_readiness_label_matches_readiness());
     }
 
     #[test]

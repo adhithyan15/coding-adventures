@@ -136,6 +136,10 @@ All notable changes to this package will be documented in this file.
   replay, and checkpoint page health classifications.
 - Stable route labels for inventory, write, replay, checkpoint replay, and
   checkpoint page health classifications.
+- Stable priority and readiness labels for inventory, write, replay, checkpoint
+  replay, checkpoint status, and planned page health classifications.
+- Sortable lower-level health priority ranks plus manual-review,
+  investigation, and triage readiness helpers for host dashboards.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
