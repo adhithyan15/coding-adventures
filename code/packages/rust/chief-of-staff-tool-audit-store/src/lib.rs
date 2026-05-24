@@ -694,6 +694,17 @@ impl ToolAuditCheckpointReplaySummary {
             == Some(self.checkpoint_replay_outcome())
     }
 
+    /// Return whether all checkpoint replay health labels match their typed values.
+    pub fn health_labels_match(&self) -> bool {
+        self.inventory_follow_up_label_matches_kind()
+            && self.checkpoint_replay_outcome_label_matches_outcome()
+    }
+
+    /// Return whether any checkpoint replay health label drifted from its classifier.
+    pub fn has_health_label_integrity_drift(&self) -> bool {
+        !self.health_labels_match()
+    }
+
     /// Return whether any replayed row needs follow-up.
     pub fn requires_follow_up(&self) -> bool {
         self.inventory.requires_follow_up()
@@ -813,6 +824,17 @@ impl ToolAuditSupervisorCheckpointStatus {
             == Some(self.checkpoint_page_outcome())
     }
 
+    /// Return whether all checkpoint status health labels match their typed values.
+    pub fn health_labels_match(&self) -> bool {
+        self.inventory_follow_up_label_matches_kind()
+            && self.checkpoint_page_outcome_label_matches_outcome()
+    }
+
+    /// Return whether any checkpoint status health label drifted from its classifier.
+    pub fn has_health_label_integrity_drift(&self) -> bool {
+        !self.health_labels_match()
+    }
+
     /// Return whether the next drain page would advance the durable checkpoint.
     pub fn would_advance_checkpoint(&self) -> bool {
         self.has_pending_records()
@@ -926,6 +948,17 @@ impl ToolAuditSupervisorDrainPlanPage {
     pub fn checkpoint_page_outcome_label_matches_outcome(&self) -> bool {
         ToolAuditCheckpointPageOutcome::from_label(self.checkpoint_page_outcome_label())
             == Some(self.checkpoint_page_outcome())
+    }
+
+    /// Return whether all planned page health labels match their typed values.
+    pub fn health_labels_match(&self) -> bool {
+        self.inventory_follow_up_label_matches_kind()
+            && self.checkpoint_page_outcome_label_matches_outcome()
+    }
+
+    /// Return whether any planned page health label drifted from its classifier.
+    pub fn has_health_label_integrity_drift(&self) -> bool {
+        !self.health_labels_match()
     }
 
     /// Return whether the matching drain tick would advance the durable checkpoint.
@@ -5462,6 +5495,16 @@ impl ToolAuditBatchWriteSummary {
             == Some(self.write_outcome())
     }
 
+    /// Return whether all batch-write health labels match their typed values.
+    pub fn health_labels_match(&self) -> bool {
+        self.inventory_follow_up_label_matches_kind() && self.write_outcome_label_matches_outcome()
+    }
+
+    /// Return whether any batch-write health label drifted from its classifier.
+    pub fn has_health_label_integrity_drift(&self) -> bool {
+        !self.health_labels_match()
+    }
+
     /// Return whether every attempted row was persisted.
     pub fn completed_without_failures(&self) -> bool {
         self.attempted_records == self.stored_records && self.failed_records == 0
@@ -5517,6 +5560,16 @@ impl ToolAuditReplaySummary {
     pub fn replay_outcome_label_matches_outcome(&self) -> bool {
         ToolAuditReplayOutcome::from_label(self.replay_outcome_label())
             == Some(self.replay_outcome())
+    }
+
+    /// Return whether all replay health labels match their typed values.
+    pub fn health_labels_match(&self) -> bool {
+        self.inventory_follow_up_label_matches_kind() && self.replay_outcome_label_matches_outcome()
+    }
+
+    /// Return whether any replay health label drifted from its classifier.
+    pub fn has_health_label_integrity_drift(&self) -> bool {
+        !self.health_labels_match()
     }
 
     /// Return whether any replayed row needs follow-up.
@@ -6126,6 +6179,16 @@ impl ToolAuditStoreInventorySummary {
     pub fn follow_up_label_matches_kind(&self) -> bool {
         ToolAuditInventoryFollowUpKind::from_label(self.follow_up_label())
             == Some(self.follow_up_kind())
+    }
+
+    /// Return whether all inventory health labels match their typed values.
+    pub fn health_labels_match(&self) -> bool {
+        self.follow_up_label_matches_kind()
+    }
+
+    /// Return whether any inventory health label drifted from its classifier.
+    pub fn has_health_label_integrity_drift(&self) -> bool {
+        !self.health_labels_match()
     }
 
     /// Return whether multiple follow-up surfaces are active.
@@ -12676,6 +12739,61 @@ mod tests {
         assert!(ToolAuditCheckpointPageOutcome::CountIntegrityDrift.is_count_integrity_drift());
         assert!(ToolAuditCheckpointPageOutcome::CountIntegrityDrift
             .requires_count_integrity_investigation());
+    }
+
+    #[test]
+    fn audit_health_label_integrity_helpers_are_stable() {
+        let clean_inventory =
+            ToolAuditStoreInventorySummary::from_records(&[sample_record("call_clean")]);
+        assert!(clean_inventory.health_labels_match());
+        assert!(!clean_inventory.has_health_label_integrity_drift());
+
+        let write_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let write_summary = write_store.record_audit_batch(vec![sample_record("write_clean")]);
+        assert!(write_summary.health_labels_match());
+        assert!(!write_summary.has_health_label_integrity_drift());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let replay_summary = write_store
+            .replay_audits(&ToolAuditRecordQuery::new(), &mut sink)
+            .unwrap();
+        assert!(replay_summary.health_labels_match());
+        assert!(!replay_summary.has_health_label_integrity_drift());
+
+        let checkpoint_replay = ToolAuditCheckpointReplaySummary {
+            checkpoint_name: "supervisor".to_string(),
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(120, "call_clean"),
+            stored_checkpoint: None,
+            replayed_records: 1,
+            inventory: clean_inventory,
+        };
+        assert!(checkpoint_replay.health_labels_match());
+        assert!(!checkpoint_replay.has_health_label_integrity_drift());
+
+        let checkpoint_status = ToolAuditSupervisorCheckpointStatus {
+            checkpoint_name: "supervisor".to_string(),
+            max_records: 10,
+            stored_checkpoint: None,
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(120, "call_clean"),
+            pending_records: 1,
+            inventory: clean_inventory,
+            reached_end_of_log: true,
+        };
+        assert!(checkpoint_status.health_labels_match());
+        assert!(!checkpoint_status.has_health_label_integrity_drift());
+
+        let planned_page = ToolAuditSupervisorDrainPlanPage {
+            max_records: 10,
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(120, "call_clean"),
+            pending_records: 1,
+            inventory: clean_inventory,
+            reached_end_of_log: false,
+        };
+        assert!(planned_page.health_labels_match());
+        assert!(!planned_page.has_health_label_integrity_drift());
     }
 
     #[test]
