@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.11.0] - 2026-05-24
+
+### Changed
+
+- PRIMARY KEY uniqueness violations now surface as ``UNIQUE
+  constraint failed: <table>.<col>`` (matching SQLite) instead of
+  ``PRIMARY KEY constraint failed: …``.  PRIMARY KEY implies UNIQUE
+  in SQL, so SQLite never emits a dedicated "PRIMARY KEY constraint
+  failed" message; mini-sqlite now follows the same convention.
+
+  Covers all three uniqueness paths:
+
+  * Named-column PRIMARY KEY (``a INT PRIMARY KEY``).
+  * INTEGER PRIMARY KEY (rowid alias) — both InMemoryBackend and
+    storage-sqlite paths.
+  * UPDATE that creates a duplicate PK (regression — pinned by a
+    test).
+
+  See the matching entries in sql-backend 0.22 and storage-sqlite
+  0.19 for the layered fix.
+
 ## [2.10.0] - 2026-05-24
 
 ### Changed
