@@ -367,6 +367,13 @@ impl RubyLexer {
         // later era-gated passes operate on the already-fused
         // stream.
         self.fuse_range_ops();
+        // Phase 4l — radix-prefixed integers (`0x1F`, `0b1010`,
+        // `0o17`, `0d10`) are pre-1.0 Ruby; no era gating.  Runs
+        // BEFORE float fusion — they share the `Int "0"` left flank,
+        // but radix prefixes start with a *letter* (x/b/o/d) and
+        // float dot doesn't, so the two passes are non-overlapping.
+        // Ordering is documentation-only.
+        self.fuse_radix_integers();
         // Phase 4k — float literals (`1.5`, `1e10`, `1.5e-3`, etc.)
         // are pre-1.0 Ruby; no era gating.  Runs after range fusion
         // so `1..5` (which the range pass converts to `Int ".." Int`)
@@ -386,6 +393,79 @@ impl RubyLexer {
         }
         if era_at_least(&self.era, "2.7") {
             self.mark_numbered_block_params();
+        }
+    }
+
+    /// Phase 4l — fuse radix-prefixed integer literals emitted by the
+    /// 1.8-baseline state machine into a single `Number` token.
+    ///
+    /// Ruby's explicit-radix integer prefixes:
+    /// | Prefix      | Base | Example      | Example digits     |
+    /// |-------------|------|--------------|--------------------|
+    /// | `0x` / `0X` | 16   | `0xDEAD_BEEF`| `0-9a-fA-F_`       |
+    /// | `0b` / `0B` |  2   | `0b1010_1100`| `0-1_`             |
+    /// | `0o` / `0O` |  8   | `0o755`      | `0-7_`             |
+    /// | `0d` / `0D` | 10   | `0d42`       | `0-9_`             |
+    ///
+    /// The state machine emits these as two tokens:
+    ///   - `Int("0")` from the int_body sub-machine.
+    ///   - `Name("xDEAD_BEEF")` from the ident_body sub-machine
+    ///     (which starts on the `x` letter and slurps alphanumerics
+    ///     and underscores).
+    ///
+    /// This post-pass detects the `Int("0") Name(prefix+digits)`
+    /// pattern (with no whitespace and on the same line) and fuses
+    /// into a single `Number("0xDEAD_BEEF")` token.  Same mechanism
+    /// as `fuse_numeric_suffixes` (2.1 `2r`/`3i`) and
+    /// `fuse_float_literals` (1.0 `1.5`/`1e10`).
+    ///
+    /// **What this is NOT doing:**
+    /// - Old-style C-flavoured octal `017`: that's already a single
+    ///   `Int("017")` token from int_body — interpretation is up to
+    ///   downstream (the parser / SIR lowerer can decide whether a
+    ///   leading-zero integer is octal or decimal-with-padding).
+    /// - Validation of digit alphabets vs base: `0x9z` would NOT
+    ///   fuse because `9z` isn't a valid hex body (z isn't in the
+    ///   allowed alphabet).  Diagnostics for invalid digits are out
+    ///   of scope for v0 — the post-pass simply doesn't fire and
+    ///   the parser ends up with `Int(0)` + `Name("x9z")` which it
+    ///   will reject as a syntax error.
+    fn fuse_radix_integers(&mut self) {
+        let mut i = 0;
+        while i + 1 < self.tokens.len() {
+            let merge = {
+                let a = &self.tokens[i];
+                let b = &self.tokens[i + 1];
+                let a_is_zero = a.type_ == TokenType::Number && a.value == "0";
+                let b_is_radix_body = b.type_ == TokenType::Name
+                    && is_radix_integer_body(&b.value);
+                let same_line = a.line == b.line;
+                let no_ws = !self
+                    .whitespace_before_token
+                    .get(i + 1)
+                    .copied()
+                    .unwrap_or(false);
+                a_is_zero && b_is_radix_body && same_line && no_ws
+            };
+            if merge {
+                let span_line = self.tokens[i].line;
+                let span_col = self.tokens[i].column;
+                let new_value = format!(
+                    "0{}",
+                    self.tokens[i + 1].value
+                );
+                self.tokens.remove(i + 1);
+                self.whitespace_before_token.remove(i + 1);
+                self.tokens[i] = Token {
+                    type_: TokenType::Number,
+                    value: new_value,
+                    line: span_line,
+                    column: span_col,
+                    type_name: None,
+                    flags: None,
+                };
+            }
+            i += 1;
         }
     }
 
@@ -1370,6 +1450,74 @@ pub const ENDLESS_RANGE_FLAG: u32 = 1 << 1;
 fn is_numbered_block_param(s: &str) -> bool {
     let bytes = s.as_bytes();
     bytes.len() == 2 && bytes[0] == b'_' && (b'1'..=b'9').contains(&bytes[1])
+}
+
+/// Phase 4l — true iff `s` is the *body* of a radix-prefixed integer
+/// (the part that ends up as a Name token after the lexer splits
+/// `0xDEAD` into `Int("0")` + `Name("xDEAD")`).
+///
+/// Recognised shapes (the first char is the radix prefix letter,
+/// the rest must be digits in that radix or underscore separators
+/// — with at least one digit overall):
+/// - `x`/`X` + hex digits (`[0-9a-fA-F_]+`, at least one digit)
+/// - `b`/`B` + binary digits (`[01_]+`, at least one digit)
+/// - `o`/`O` + octal digits (`[0-7_]+`, at least one digit)
+/// - `d`/`D` + decimal digits (`[0-9_]+`, at least one digit)
+fn is_radix_integer_body(s: &str) -> bool {
+    let mut chars = s.chars();
+    let prefix = match chars.next() {
+        Some(c) => c,
+        None => return false,
+    };
+    let mut saw_digit = false;
+    match prefix {
+        'x' | 'X' => {
+            for c in chars {
+                if c.is_ascii_hexdigit() {
+                    saw_digit = true;
+                } else if c == '_' {
+                    // separators OK
+                } else {
+                    return false;
+                }
+            }
+        }
+        'b' | 'B' => {
+            for c in chars {
+                if c == '0' || c == '1' {
+                    saw_digit = true;
+                } else if c == '_' {
+                    // separators OK
+                } else {
+                    return false;
+                }
+            }
+        }
+        'o' | 'O' => {
+            for c in chars {
+                if ('0'..='7').contains(&c) {
+                    saw_digit = true;
+                } else if c == '_' {
+                    // separators OK
+                } else {
+                    return false;
+                }
+            }
+        }
+        'd' | 'D' => {
+            for c in chars {
+                if c.is_ascii_digit() {
+                    saw_digit = true;
+                } else if c == '_' {
+                    // separators OK
+                } else {
+                    return false;
+                }
+            }
+        }
+        _ => return false,
+    }
+    saw_digit
 }
 
 /// Phase 4k — true iff `s` looks like an exponent suffix that the
@@ -3182,5 +3330,127 @@ mod tests {
         assert!(!is_unsigned_exponent_lexeme("foo"));      // doesn't start with e/E
         assert!(!is_unsigned_exponent_lexeme(""));         // empty
         assert!(!is_unsigned_exponent_lexeme("ex"));       // non-digit body
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 4l — radix-prefixed integers (`0x1F`, `0b1010`, `0o17`, `0d10`)
+    // -----------------------------------------------------------------
+    //
+    // Pre-1.0 Ruby (no era gate).  Fuse `Int("0") Name("xDEAD")` into
+    // one `Number("0xDEAD")` token.
+
+    #[test]
+    fn lexes_hex_integer() {
+        assert_eq!(numbers("0x1F"), vec!["0x1F"]);
+        assert_eq!(numbers("0xDEAD_BEEF"), vec!["0xDEAD_BEEF"]);
+        assert_eq!(numbers("0Xff"), vec!["0Xff"]);  // capital X
+    }
+
+    #[test]
+    fn lexes_binary_integer() {
+        assert_eq!(numbers("0b1010"), vec!["0b1010"]);
+        assert_eq!(numbers("0B1010_1100"), vec!["0B1010_1100"]);
+    }
+
+    #[test]
+    fn lexes_octal_integer() {
+        assert_eq!(numbers("0o755"), vec!["0o755"]);
+        assert_eq!(numbers("0O17"), vec!["0O17"]);
+    }
+
+    #[test]
+    fn lexes_decimal_explicit_radix() {
+        // `0d42` — explicit decimal prefix.
+        assert_eq!(numbers("0d42"), vec!["0d42"]);
+        assert_eq!(numbers("0D100_000"), vec!["0D100_000"]);
+    }
+
+    #[test]
+    fn invalid_hex_does_not_fuse() {
+        // `0xZZ` — Z isn't a hex digit, so the fusion shouldn't fire.
+        // Token stream stays as Int(0), Name("xZZ").
+        let toks = tokenize_ruby("0xZZ");
+        let nums: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(nums, vec!["0"]);
+        let names: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert!(names.contains(&"xZZ"));
+    }
+
+    #[test]
+    fn radix_integer_requires_no_whitespace() {
+        // `0 x1F` (with space) — separate tokens, NO fusion.
+        let toks = tokenize_ruby("0 x1F");
+        let nums: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(nums, vec!["0"]);
+    }
+
+    #[test]
+    fn radix_does_not_swallow_method_call() {
+        // `0.method` is Int, Dot, Name — not a radix integer.
+        let toks = tokenize_ruby("0.method");
+        let nums: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(nums, vec!["0"]);
+        let has_dot = toks.iter().any(|t| t.type_ == TokenType::Dot);
+        assert!(has_dot);
+    }
+
+    #[test]
+    fn radix_integers_lex_uniformly_across_all_eras() {
+        // Radix prefixes are pre-1.0 — era-invariant.
+        let src = "x = 0x1F + 0b1010 + 0o17 + 0d42";
+        let baseline: Vec<String> = tokenize_ruby_for_version(src, "1.8")
+            .unwrap()
+            .into_iter()
+            .filter(|t| t.type_ == TokenType::Number)
+            .map(|t| t.value)
+            .collect();
+        assert_eq!(baseline, vec!["0x1F", "0b1010", "0o17", "0d42"]);
+        for v in machine::ERA_VERSIONS {
+            let nums: Vec<String> = tokenize_ruby_for_version(src, v)
+                .unwrap()
+                .into_iter()
+                .filter(|t| t.type_ == TokenType::Number)
+                .map(|t| t.value)
+                .collect();
+            assert_eq!(nums, baseline, "radix-int lexing diverged in era {v}");
+        }
+    }
+
+    #[test]
+    fn is_radix_integer_body_smoke() {
+        assert!(is_radix_integer_body("x1F"));
+        assert!(is_radix_integer_body("XDEAD"));
+        assert!(is_radix_integer_body("xDEAD_BEEF"));
+        assert!(is_radix_integer_body("b1010"));
+        assert!(is_radix_integer_body("B10_10"));
+        assert!(is_radix_integer_body("o755"));
+        assert!(is_radix_integer_body("O17"));
+        assert!(is_radix_integer_body("d42"));
+        assert!(is_radix_integer_body("D100"));
+        // Negative cases
+        assert!(!is_radix_integer_body(""));      // empty
+        assert!(!is_radix_integer_body("x"));     // no digits
+        assert!(!is_radix_integer_body("x___"));  // only separators, no digit
+        assert!(!is_radix_integer_body("b2"));    // 2 isn't binary
+        assert!(!is_radix_integer_body("o9"));    // 9 isn't octal
+        assert!(!is_radix_integer_body("xZZ"));   // Z isn't hex
+        assert!(!is_radix_integer_body("foo"));   // wrong prefix letter
+        assert!(!is_radix_integer_body("e10"));   // e is exponent, not radix
     }
 }
