@@ -154,6 +154,8 @@ All notable changes to this package will be documented in this file.
   supervisor drain run summary scheduler filters.
 - Stable combined health-dashboard action lanes and labels for supervisor drain
   run summary dashboard grouping.
+- Stable combined health-dashboard queue keys for grouping action lane, route,
+  priority, and readiness in one supervisor drain run summary host key.
 - Flattened combined health-dashboard route, priority, and readiness booleans
   for supervisor drain run summary host queue filters.
 - Aggregate health-label integrity helpers for inventory, write, replay,

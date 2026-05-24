@@ -196,6 +196,8 @@ The crate keeps the boundary narrow:
   component flags and counts for one-key scheduler filters
 - supervisor drain run summaries expose stable combined health-dashboard action
   lanes and labels for host dashboard grouping
+- supervisor drain run summaries expose stable combined health-dashboard queue
+  keys for grouping action lane, route, priority, and readiness in one host key
 - supervisor drain run summaries flatten combined health-dashboard route,
   priority, and readiness booleans for host queue filters
 - supervisor drain reports and summaries expose stable, parseable scheduler action
