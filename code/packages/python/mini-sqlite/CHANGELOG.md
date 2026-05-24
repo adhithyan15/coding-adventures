@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.15.0] - 2026-05-24
+
+### Fixed
+
+- ``CAST(<blob> AS TEXT)`` now UTF-8-decodes the BLOB bytes rather
+  than hex-encoding them — matches SQLite.  So ``CAST(x'48656c6c6f'
+  AS TEXT)`` returns ``'Hello'`` (was ``'48656c6c6f'``) and
+  ``CAST(CAST(42 AS BLOB) AS TEXT)`` round-trips to ``'42'`` (was
+  ``'3432'``).  Together with the 2.14.0 fix to ``CAST(<numeric> AS
+  BLOB)``, this restores SQLite's documented round-trip identity::
+
+      CAST(CAST(n AS BLOB) AS TEXT) == CAST(n AS TEXT)
+
+  Lifts the "Known limitation" noted in 2.14.0.  Invalid UTF-8
+  bytes are mapped to U+FFFD via ``errors="replace"`` so the cast
+  is total (mini's SQL-engine layer stays lenient; sqlite3's Python
+  binding raises at fetch time via ``text_factory`` instead — a
+  binding-layer divergence, not an engine-layer one).  See sql-vm
+  1.59.0 for the scalar-function-level fix.
+
 ## [2.14.0] - 2026-05-24
 
 ### Fixed
@@ -11,15 +31,6 @@
   produce 8-byte big-endian binary blobs that didn't survive
   round-tripping through SQLite's text-first conversion rules.
   See sql-vm 1.58.0 for the scalar-function-level fix.
-
-### Known limitation
-
-- ``CAST(<blob> AS TEXT)`` still hex-encodes the BLOB bytes rather
-  than UTF-8-decoding them.  So ``CAST(CAST(42 AS BLOB) AS TEXT)``
-  returns ``'3432'`` (hex of ``b'42'``) instead of SQLite's
-  ``'42'``.  Pinned by a regression test
-  (``TestKnownLimitationBlobToText``) so a future BLOB→TEXT fix is
-  reminded to update both directions and lift the test together.
 
 ## [2.13.0] - 2026-05-24
 

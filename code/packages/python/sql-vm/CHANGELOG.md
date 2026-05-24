@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.59.0 — 2026-05-24
+
+### Fixed
+
+- ``CAST(<blob> AS TEXT)`` now UTF-8-decodes the BLOB bytes instead
+  of hex-encoding them, matching SQLite::
+
+      CAST(x'48656c6c6f' AS TEXT)  ⟶  'Hello'   (was '48656c6c6f')
+      CAST(x'31' AS TEXT)          ⟶  '1'       (was '31')
+      CAST(x'3432' AS TEXT)        ⟶  '42'      (was '3432')
+
+  Together with the 1.58.0 fix to ``CAST(<numeric> AS BLOB)``, this
+  restores SQLite's documented round-trip identity::
+
+      CAST(CAST(n AS BLOB) AS TEXT) == CAST(n AS TEXT)
+
+  Fix in ``_cast_fn``'s TEXT-affinity branch: the ``bytes`` arm now
+  calls ``x.decode("utf-8", errors="replace")`` instead of
+  ``x.hex()``.  Invalid UTF-8 bytes are mapped to U+FFFD rather
+  than raising — matches SQLite's "decode lazily, never error
+  mid-query" stance and keeps the cast total.
+
 ## 1.58.0 — 2026-05-24
 
 ### Fixed
