@@ -1,10 +1,10 @@
 use std::{collections::HashMap, fmt};
 
 use spice_engine::{
-    Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource, Diode, Element, ExpWaveform,
-    Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor,
-    PulseWaveform, PwlWaveform, Resistor, SinWaveform, TransientMethod, TransmissionLine, Vccs,
-    Vcvs, VoltageSource, Waveform,
+    AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource,
+    DcOpOptions, Diode, Element, ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet,
+    MosfetLevel1Params, MosfetType, MutualInductor, PulseWaveform, PwlWaveform, Resistor,
+    SinWaveform, TransientMethod, TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -300,6 +300,95 @@ impl ParsedNetlist {
         }
         Ok(None)
     }
+
+    pub fn dc_op_options(&self) -> Result<DcOpOptions, NetlistParseError> {
+        let values = self.merged_options();
+        let mut options = DcOpOptions::default();
+        if let Some(tolerance) = option_number(&values, &["reltol", "tol"])? {
+            options.tolerance = tolerance;
+        }
+        if let Some(max_iterations) =
+            option_usize(&values, &["itl1", "maxiter", "maxiters", "maxiterations"])?
+        {
+            options.max_iterations = max_iterations;
+        }
+        if let Some(gmin) = option_number(&values, &["gmin"])? {
+            options.pseudo_transient_conductance = gmin;
+        }
+        if let Some(pseudo_steps) = option_usize(&values, &["srcsteps", "pseudotransientsteps"])? {
+            options.pseudo_transient_steps = pseudo_steps;
+        }
+        if let Some(pseudo_iterations) =
+            option_usize(&values, &["itl6", "pseudotransientmaxiterations"])?
+        {
+            options.pseudo_transient_max_iterations = pseudo_iterations;
+        }
+        Ok(options)
+    }
+
+    pub fn adaptive_transient_options(
+        &self,
+        tran: Option<&TranAnalysis>,
+    ) -> Result<AdaptiveTransientOptions, NetlistParseError> {
+        let values = self.merged_options();
+        let mut options = AdaptiveTransientOptions::default();
+        if let Some(method) = self.transient_method(tran)? {
+            options.method = method;
+        }
+        if let Some(tolerance) = option_number(&values, &["trtol", "lte", "tollte"])? {
+            options.tolerance = tolerance;
+        }
+        if let Some(min_step) = option_number(&values, &["minstep", "tmin"])? {
+            options.min_step = Some(min_step);
+        }
+        if let Some(max_step) = option_number(&values, &["maxstep", "tmax"])? {
+            options.max_step = Some(max_step);
+        }
+        Ok(options)
+    }
+
+    fn merged_options(&self) -> HashMap<String, OptionValue> {
+        let mut values = HashMap::new();
+        for options in self.options_cards() {
+            values.extend(options.values.clone());
+        }
+        values
+    }
+}
+
+fn option_number(
+    values: &HashMap<String, OptionValue>,
+    keys: &[&str],
+) -> Result<Option<f64>, NetlistParseError> {
+    for key in keys {
+        if let Some(value) = values.get(*key) {
+            return match value {
+                OptionValue::Number(value) => Ok(Some(*value)),
+                OptionValue::Text(value) => Err(NetlistParseError::new(format!(
+                    ".options {key:?} must be numeric, got {value:?}"
+                ))),
+                OptionValue::Flag(_) => Err(NetlistParseError::new(format!(
+                    ".options {key:?} requires a numeric value"
+                ))),
+            };
+        }
+    }
+    Ok(None)
+}
+
+fn option_usize(
+    values: &HashMap<String, OptionValue>,
+    keys: &[&str],
+) -> Result<Option<usize>, NetlistParseError> {
+    let Some(value) = option_number(values, keys)? else {
+        return Ok(None);
+    };
+    if !value.is_finite() || value < 0.0 {
+        return Err(NetlistParseError::new(
+            ".options iteration counts must be finite and non-negative",
+        ));
+    }
+    Ok(Some(value.trunc() as usize))
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

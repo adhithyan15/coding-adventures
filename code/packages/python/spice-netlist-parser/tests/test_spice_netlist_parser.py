@@ -25,6 +25,7 @@ from spice_engine import (
     noise_ac,
     sens_dc,
     tf,
+    transient,
 )
 
 from spice_netlist_parser import (
@@ -196,6 +197,46 @@ def test_parse_options_analysis_card() -> None:
         )
     ]
     assert parsed.options_cards() == parsed.analyses
+
+
+def test_options_cards_build_engine_call_kwargs() -> None:
+    parsed = parse_netlist(
+        """
+V1 vin 0 DC 10
+R1 vin mid 1k
+R2 mid 0 1k
+.options reltol=1u itl1=7 gmin=1p method=gear2 trtol=2m minstep=1n maxstep=5n itl4=9
+.op
+.tran 1n 2n
+"""
+    )
+    tran = parsed.tran_cards()[0]
+
+    assert parsed.dc_op_kwargs() == {
+        "tol": 1.0e-6,
+        "max_iterations": 7,
+        "pseudo_transient_shunt_conductance": 1.0e-12,
+    }
+    result = dc_op(parsed.circuit, **parsed.dc_op_kwargs())
+    assert isclose(result.node_voltages["mid"], 5.0, abs_tol=1.0e-9)
+
+    assert parsed.transient_kwargs(tran, adaptive=True) == {
+        "method": "gear2",
+        "tol": 1.0e-6,
+        "tol_lte": 2.0e-3,
+        "min_step": 1.0e-9,
+        "max_step": 5.0e-9,
+        "max_iterations": 9,
+        "adaptive": True,
+    }
+    transient_result = transient(
+        parsed.circuit,
+        t_stop=tran.t_stop,
+        t_step=tran.t_step,
+        **parsed.transient_kwargs(tran, adaptive=True),
+    )
+    assert transient_result.converged
+    assert transient_result.method == "gear2"
 
 
 def test_parse_temp_analysis_card() -> None:

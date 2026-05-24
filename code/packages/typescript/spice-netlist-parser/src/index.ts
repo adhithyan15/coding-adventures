@@ -24,6 +24,8 @@ import {
   voltageSource,
   voltageSourceWithAc,
   voltageSourceWithWaveform,
+  type AdaptiveTransientOptions,
+  type DcOpOptions,
   type Element,
   type JfetPolarity,
   type MosfetLevel1Params,
@@ -223,6 +225,96 @@ export class ParsedNetlist {
     }
     return undefined;
   }
+
+  dcOpOptions(): DcOpOptions {
+    const values = this.mergedOptions();
+    const options: {
+      maxIterations?: number;
+      tolerance?: number;
+      pseudoTransientConductance?: number;
+      pseudoTransientSteps?: number;
+      pseudoTransientMaxIterations?: number;
+    } = {};
+    const tolerance = optionNumber(values, ["reltol", "tol"]);
+    if (tolerance !== undefined) {
+      options.tolerance = tolerance;
+    }
+    const maxIterations = optionInteger(values, ["itl1", "maxiter", "maxiters", "maxiterations"]);
+    if (maxIterations !== undefined) {
+      options.maxIterations = maxIterations;
+    }
+    const gmin = optionNumber(values, ["gmin"]);
+    if (gmin !== undefined) {
+      options.pseudoTransientConductance = gmin;
+    }
+    const pseudoSteps = optionInteger(values, ["srcsteps", "pseudotransientsteps"]);
+    if (pseudoSteps !== undefined) {
+      options.pseudoTransientSteps = pseudoSteps;
+    }
+    const pseudoIterations = optionInteger(values, ["itl6", "pseudotransientmaxiterations"]);
+    if (pseudoIterations !== undefined) {
+      options.pseudoTransientMaxIterations = pseudoIterations;
+    }
+    return options;
+  }
+
+  adaptiveTransientOptions(tran?: TranAnalysis): AdaptiveTransientOptions {
+    const values = this.mergedOptions();
+    const options: {
+      method?: TransientMethod;
+      tolerance?: number;
+      minStep?: number;
+      maxStep?: number;
+    } = {};
+    const method = this.transientMethod(tran);
+    if (method !== undefined) {
+      options.method = method;
+    }
+    const tolerance = optionNumber(values, ["trtol", "lte", "tollte"]);
+    if (tolerance !== undefined) {
+      options.tolerance = tolerance;
+    }
+    const minStep = optionNumber(values, ["minstep", "tmin"]);
+    if (minStep !== undefined) {
+      options.minStep = minStep;
+    }
+    const maxStep = optionNumber(values, ["maxstep", "tmax"]);
+    if (maxStep !== undefined) {
+      options.maxStep = maxStep;
+    }
+    return options;
+  }
+
+  private mergedOptions(): Map<string, OptionValue> {
+    const values = new Map<string, OptionValue>();
+    for (const options of this.optionsCards()) {
+      for (const [key, value] of options.values) {
+        values.set(key, value);
+      }
+    }
+    return values;
+  }
+}
+
+function optionNumber(
+  values: ReadonlyMap<string, OptionValue>,
+  keys: readonly string[],
+): number | undefined {
+  for (const key of keys) {
+    const value = values.get(key);
+    if (typeof value === "number") {
+      return value;
+    }
+  }
+  return undefined;
+}
+
+function optionInteger(
+  values: ReadonlyMap<string, OptionValue>,
+  keys: readonly string[],
+): number | undefined {
+  const value = optionNumber(values, keys);
+  return value === undefined ? undefined : Math.trunc(value);
 }
 
 interface Statement {

@@ -33,3 +33,5 @@ expansion, and `.op`, `.tran`, `.dc`, `.ac`, `.tf`, `.sens`, `.mc`, `.noise`,
 Transient cards can carry `method=euler|trap|gear2`; when omitted,
 `parsed.transient_method(None)?` falls back to `.options method=<...>` if
 present.
+Selected `.options` keys can also be turned into engine-call options with
+`parsed.dc_op_options()?` and `parsed.adaptive_transient_options(None)?`.

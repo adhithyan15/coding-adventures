@@ -1,4 +1,12 @@
-import { acSweep, dcOp, mcDc, noiseAc, sensDc, tf } from "@coding-adventures/spice-engine";
+import {
+  acSweep,
+  dcOp,
+  mcDc,
+  noiseAc,
+  sensDc,
+  tf,
+  transientAdaptive,
+} from "@coding-adventures/spice-engine";
 import { describe, expect, it } from "vitest";
 import {
   NetlistParseError,
@@ -145,6 +153,41 @@ Tdelay in 0 out 0 Z0=50 TD=1n
     };
     expect(parsed.analyses).toEqual([card]);
     expect(parsed.optionsCards()).toEqual([card]);
+  });
+
+  it("builds engine call options from .options cards", () => {
+    const parsed = parseNetlist(`
+V1 vin 0 DC 10
+R1 vin mid 1k
+R2 mid 0 1k
+.options reltol=1u itl1=7 gmin=1p method=gear2 trtol=2m minstep=1n maxstep=5n
+.op
+.tran 1n 2n
+`);
+    const tran = parsed.tranCards()[0];
+
+    expect(parsed.dcOpOptions()).toEqual({
+      tolerance: 1.0e-6,
+      maxIterations: 7,
+      pseudoTransientConductance: 1.0e-12,
+    });
+    const result = dcOp(parsed.circuit, parsed.dcOpOptions());
+    expect(result.voltage("mid")).toBeCloseTo(5.0, 9);
+
+    expect(parsed.adaptiveTransientOptions(tran)).toEqual({
+      method: "gear2",
+      tolerance: 2.0e-3,
+      minStep: 1.0e-9,
+      maxStep: 5.0e-9,
+    });
+    const transient = transientAdaptive(
+      parsed.circuit,
+      tran.timeStep,
+      tran.stopTime,
+      parsed.adaptiveTransientOptions(tran),
+    );
+    expect(transient.converged).toBe(true);
+    expect(transient.method).toBe("gear2");
   });
 
   it("parses .temp analysis cards", () => {
