@@ -818,6 +818,12 @@ pub struct BrowserDocument {
     pub title: Option<String>,
     pub base_href: Option<String>,
     pub base_target: Option<String>,
+    pub document_lang: Option<String>,
+    pub document_dir: Option<String>,
+    pub body_id: Option<String>,
+    pub body_classes: Vec<String>,
+    pub body_lang: Option<String>,
+    pub body_dir: Option<String>,
     pub body_text: String,
     pub metas: Vec<BrowserMeta>,
     pub resources: Vec<BrowserResource>,
@@ -867,6 +873,11 @@ pub struct BrowserContentTree {
 pub struct BrowserContentNode {
     pub role: String,
     pub name: Option<String>,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub title: Option<String>,
+    pub lang: Option<String>,
+    pub dir: Option<String>,
     pub text: Option<String>,
     pub href: Option<String>,
     pub resolved_href: Option<String>,
@@ -892,6 +903,11 @@ pub struct BrowserRenderNode {
     pub display: String,
     pub role: String,
     pub name: Option<String>,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub title: Option<String>,
+    pub lang: Option<String>,
+    pub dir: Option<String>,
     pub text: Option<String>,
     pub href: Option<String>,
     pub resolved_href: Option<String>,
@@ -964,6 +980,7 @@ pub struct BrowserTable {
 
 impl BrowserDocument {
     pub fn from_document(document: &Document) -> Self {
+        let html = find_first_element_in_nodes(&document.children, "html");
         let head = find_first_element_in_nodes(&document.children, "head");
         let body = find_first_element_in_nodes(&document.children, "body");
         let body_children = body
@@ -981,6 +998,25 @@ impl BrowserDocument {
             base_target: head
                 .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
                 .and_then(|element| element.attribute("target"))
+                .map(ToOwned::to_owned),
+            document_lang: html
+                .and_then(|element| element.attribute("lang"))
+                .map(ToOwned::to_owned),
+            document_dir: html
+                .and_then(|element| element.attribute("dir"))
+                .map(ToOwned::to_owned),
+            body_id: body
+                .and_then(|element| element.attribute("id"))
+                .map(ToOwned::to_owned),
+            body_classes: body
+                .and_then(|element| element.attribute("class"))
+                .map(split_html_classes)
+                .unwrap_or_default(),
+            body_lang: body
+                .and_then(|element| element.attribute("lang"))
+                .map(ToOwned::to_owned),
+            body_dir: body
+                .and_then(|element| element.attribute("dir"))
                 .map(ToOwned::to_owned),
             body_text: visible_text_for_nodes(body_children),
             ..Self::default()
@@ -1040,6 +1076,11 @@ impl BrowserRenderNode {
             display: browser_render_display(&content_node.role).to_string(),
             role: content_node.role.clone(),
             name: content_node.name.clone(),
+            id: content_node.id.clone(),
+            classes: content_node.classes.clone(),
+            title: content_node.title.clone(),
+            lang: content_node.lang.clone(),
+            dir: content_node.dir.clone(),
             text: content_node.text.clone(),
             href: content_node.href.clone(),
             resolved_href: content_node.resolved_href.clone(),
@@ -8310,6 +8351,11 @@ fn collect_browser_content_nodes(
                     output.push(BrowserContentNode {
                         role: "text".to_string(),
                         name: None,
+                        id: None,
+                        classes: Vec::new(),
+                        title: None,
+                        lang: None,
+                        dir: None,
                         text: Some(text),
                         href: None,
                         resolved_href: None,
@@ -8361,6 +8407,14 @@ fn browser_content_node_for_element(
     Some(BrowserContentNode {
         role: role.to_string(),
         name: Some(element.name.clone()),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        lang: element.attribute("lang").map(ToOwned::to_owned),
+        dir: element.attribute("dir").map(ToOwned::to_owned),
         text,
         resolved_href: href
             .as_deref()
@@ -8447,6 +8501,13 @@ fn browser_content_src(element: &Element) -> Option<String> {
         "object" => element.attribute("data").map(ToOwned::to_owned),
         _ => element.attribute("src").map(ToOwned::to_owned),
     }
+}
+
+fn split_html_classes(value: &str) -> Vec<String> {
+    value
+        .split_ascii_whitespace()
+        .map(ToOwned::to_owned)
+        .collect()
 }
 
 fn browser_content_control_type(element: &Element) -> Option<String> {
@@ -8852,6 +8913,29 @@ mod tests {
             resolve_browser_url("relative.html", Some("/local/base/")),
             None
         );
+    }
+
+    #[test]
+    fn browser_identity_metadata_tracks_language_direction_and_classes() {
+        let document = parse_html(
+            "<html lang=en dir=ltr><body id=main class=\"page legacy\" lang=en-US>\
+             <p id=intro class=\"lede print\" title=\"Intro\" dir=auto>Hello</p>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.document_lang.as_deref(), Some("en"));
+        assert_eq!(summary.document_dir.as_deref(), Some("ltr"));
+        assert_eq!(summary.body_id.as_deref(), Some("main"));
+        assert_eq!(summary.body_classes, vec!["page", "legacy"]);
+        assert_eq!(summary.body_lang.as_deref(), Some("en-US"));
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let paragraph = &content_tree.children[0];
+        assert_eq!(paragraph.id.as_deref(), Some("intro"));
+        assert_eq!(paragraph.classes, vec!["lede", "print"]);
+        assert_eq!(paragraph.title.as_deref(), Some("Intro"));
+        assert_eq!(paragraph.dir.as_deref(), Some("auto"));
     }
 
     #[test]

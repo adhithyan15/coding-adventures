@@ -1010,26 +1010,79 @@ def _order_item(node: ASTNode, state: _PlaceholderCounter) -> SortKey:
     )
 
 
+def _signed_number(node: ASTNode) -> int:
+    """Resolve a ``signed_number = [ "-" ] NUMBER`` node to a Python int.
+
+    NUMBER tokens carry the raw source text; hex literals (``0x1F``)
+    reach us as the original ``0x1F`` string, so we route through
+    ``_parse_number`` which handles both decimal and hex spellings.
+    Floats in LIMIT/OFFSET are rejected by SQLite at runtime, but the
+    parser lets them through; we coerce to int and let the engine
+    raise the same error sqlite3 would.
+
+    SQLite documents a negative count as "no limit" — the meaning of
+    the sign is preserved here and the caller (``_limit_clause``)
+    translates a negative count to ``Limit.count=None`` (unbounded).
+    """
+    negative = False
+    raw: str | None = None
+    for c in node.children:
+        if isinstance(c, Token):
+            t = _token_type(c)
+            if t == "MINUS":
+                negative = True
+            elif t == "NUMBER":
+                raw = c.value
+    if raw is None:
+        raise ProgrammingError("signed_number missing NUMBER token")
+    value = int(_parse_number(raw))
+    return -value if negative else value
+
+
 def _limit_clause(node: ASTNode | None) -> Limit | None:
     if node is None:
         return None
-    # limit_clause = "LIMIT" NUMBER [ "OFFSET" NUMBER ]
-    # NUMBER tokens carry the raw source text; hex literals (``0x1F``)
-    # reach us as the original ``0x1F`` string, so we route through
-    # ``_parse_number`` which handles both decimal and hex spellings.
-    # (Floats in LIMIT/OFFSET are rejected by SQLite at runtime, but the
-    # parser allows them through; we coerce to int and let the engine
-    # raise the same error sqlite3 would.)
-    numbers: list[int] = []
-    has_offset_keyword = False
-    for c in node.children:
-        if isinstance(c, Token):
-            if _token_type(c) == "NUMBER":
-                numbers.append(int(_parse_number(c.value)))
-            elif _token_type(c) == "KEYWORD" and c.value.upper() == "OFFSET":
-                has_offset_keyword = True
-    count = numbers[0] if numbers else None
-    offset = numbers[1] if has_offset_keyword and len(numbers) > 1 else None
+    # limit_clause = "LIMIT" signed_number
+    #                [ "OFFSET" signed_number | "," signed_number ]
+    #
+    # Two trailing forms:
+    #   * ``OFFSET N``  — count first, offset second (SQL standard)
+    #   * ``, N``       — offset first, count second (MySQL-compatible)
+    # We detect the comma form by the presence of a COMMA token and
+    # swap the argument interpretation accordingly.
+    signed_nums = [
+        _signed_number(c)
+        for c in node.children
+        if isinstance(c, ASTNode) and c.rule_name == "signed_number"
+    ]
+    has_comma = any(
+        isinstance(c, Token) and _token_type(c) == "COMMA" for c in node.children
+    )
+
+    if not signed_nums:
+        return None
+
+    if has_comma and len(signed_nums) == 2:
+        # MySQL form: ``LIMIT offset, count``.  Swap so ``count`` and
+        # ``offset`` carry their SQL-standard meaning downstream.
+        offset_val, count_val = signed_nums[0], signed_nums[1]
+    else:
+        count_val = signed_nums[0]
+        offset_val = signed_nums[1] if len(signed_nums) > 1 else None
+
+    # SQLite: a negative count means "no limit" (unbounded).  Map that
+    # to ``Limit.count=None`` which the planner/codegen already treat
+    # as "do not emit LimitResult".
+    count: int | None = None if count_val < 0 else count_val
+    # Negative offsets are silently treated as zero in SQLite — match
+    # that behaviour rather than passing the negative value through.
+    offset: int | None
+    if offset_val is None:
+        offset = None
+    elif offset_val < 0:
+        offset = 0
+    else:
+        offset = offset_val
     return Limit(count=count, offset=offset)
 
 

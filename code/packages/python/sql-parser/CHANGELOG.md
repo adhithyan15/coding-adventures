@@ -2,6 +2,22 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.43.0] - 2026-05-23
+
+### Changed
+
+- ``limit_clause`` now accepts SQLite's signed counts and
+  MySQL-compatible comma syntax::
+
+      limit_clause  = "LIMIT" signed_number
+                      [ "OFFSET" signed_number | "," signed_number ] ;
+      signed_number = [ "-" ] NUMBER ;
+
+  ``LIMIT -1`` (no limit), ``LIMIT 5 OFFSET -2`` (negative offset
+  treated as zero), and ``LIMIT m, n`` (≡ ``LIMIT n OFFSET m``)
+  now parse cleanly.  Regenerated ``_grammar.py`` cache via
+  ``grammar-tools``.
+
 ## [0.42.0] - 2026-05-23
 
 ### Changed
