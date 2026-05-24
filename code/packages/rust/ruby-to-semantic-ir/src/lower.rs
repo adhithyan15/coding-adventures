@@ -109,6 +109,10 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         Feature::Maps,
         Feature::Symbols,
         Feature::Closures,
+        // Phase 6l — method-call chains synthesise a `StrLit` for the
+        // method name when packing into the `__method__` envelope.
+        // StrLit usage triggers the `Strings` feature.
+        Feature::Strings,
     ] {
         if lw.features_used.contains(&f) {
             manifest.add(f);
@@ -876,39 +880,73 @@ impl Lowerer {
     // -------------------------------------------------------------------
 
     fn lower_method_call(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
-        // Shape: (NAME | KEYWORD) LPAREN [expression (COMMA expression)*] RPAREN
+        // Shape: (NAME | KEYWORD) LPAREN [expression (COMMA expression)*]
+        //          RPAREN { dot_call }
+        //
+        // Phase 6l: trailing `dot_call` repetitions chain method calls
+        // onto the result.  Args before the first dot_call belong to
+        // the head call; args inside each dot_call belong to that step.
+        // We collect only the direct `expression` children (which are
+        // the head call's args) here, then fold dot_calls via
+        // `apply_dot_chain`.
         let (callee, _callee_span) = self.expect_first_name_token(node)?;
-        // Collect argument expressions: every `expression`-rule child of
-        // this node.
-        let args: Vec<Expr> = node
-            .children
-            .iter()
-            .filter_map(|c| match c {
-                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
-                _ => None,
-            })
+        // Collect argument expressions belonging to the head call —
+        // these are `expression` nodes that come BEFORE any dot_call
+        // (the dot_call subtree owns its own `expression` children).
+        let args: Vec<Expr> = self
+            .head_call_expression_children(node)
+            .into_iter()
             .map(|n| self.lower_expression(n))
             .collect::<Result<Vec<_>, _>>()?;
 
         let span = self.span_of(node);
-        if let Some(effects) = ruby_builtin_effects(&callee) {
-            Ok(Expr::BuiltinCall {
+        let head: Expr = if let Some(effects) = ruby_builtin_effects(&callee) {
+            Expr::BuiltinCall {
                 name: callee,
                 args,
                 effects,
                 span,
-            })
+            }
         } else {
             // Unrecognised name — fall back to DirectCall.  SIR
             // backends that can't resolve the name will surface a
             // diagnostic; this keeps the lowering total (no panics).
-            Ok(Expr::DirectCall {
+            Expr::DirectCall {
                 fn_name: callee,
                 args,
                 effects: EffectSet::PURE,
                 span,
-            })
+            }
+        };
+        // Phase 6l — apply trailing `.method[(...)]` chain steps, if any.
+        self.apply_dot_chain(head, node)
+    }
+
+    /// Phase 6l helper — return the `expression` Node children of
+    /// `method_call` that belong to the *head* call (i.e. those that
+    /// come before any `dot_call` child).  Without this guard, args
+    /// nested inside `dot_call` subtrees would leak into the head call.
+    ///
+    /// Because `find_node_child` etc. walk only direct children (not
+    /// the full subtree), filtering by parent identity is sufficient —
+    /// we just stop collecting `expression` nodes as soon as a
+    /// `dot_call` node appears in the sibling list.
+    fn head_call_expression_children<'a>(
+        &self,
+        node: &'a GrammarASTNode,
+    ) -> Vec<&'a GrammarASTNode> {
+        let mut out = Vec::new();
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                if n.rule_name == "dot_call" {
+                    break;
+                }
+                if n.rule_name == "expression" {
+                    out.push(n);
+                }
+            }
         }
+        out
     }
 
     // -------------------------------------------------------------------
@@ -1165,6 +1203,11 @@ impl Lowerer {
             "array_literal" => self.lower_array_literal(node),
             "hash_literal" => self.lower_hash_literal(node),
             "symbol_literal" => self.lower_symbol_literal(node),
+            // Phase 6l — `method_call` may now appear in expression
+            // position because it's the first atom alternative inside
+            // `factor`.  Reuse the statement-level lowerer; it handles
+            // the trailing `{ dot_call }` chain transparently.
+            "method_call" => self.lower_method_call(node),
             // The parser sometimes wraps a bare token into an "expression_stmt"
             // when reached as the RHS of an assignment.  Recurse into it.
             "expression_stmt" => {
@@ -1434,7 +1477,24 @@ impl Lowerer {
     }
 
     fn lower_factor(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
-        // factor ::= NUMBER | STRING | NAME | KEYWORD | LPAREN expression RPAREN
+        // factor ::= ( atom ) { dot_call }
+        //
+        // Phase 6l — method receiver chains.  The atom is followed by
+        // zero or more `dot_call` Node children (`.method[(args)]`).
+        // We extract the atom first, then wrap it once per dot_call.
+        //
+        // Atom alternatives: NUMBER | STRING | NAME | KEYWORD |
+        //   symbol_literal | array_literal | hash_literal |
+        //   LPAREN expression RPAREN | unary_minus
+        let atom = self.lower_factor_atom(node)?;
+        self.apply_dot_chain(atom, node)
+    }
+
+    /// Extract the atom expression from a `factor` node, ignoring
+    /// trailing `dot_call` Node children.  This is the pre-Phase-6l
+    /// lowering logic, refactored into its own helper so that
+    /// `lower_factor` can apply the dot-chain postfix on top.
+    fn lower_factor_atom(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         for child in &node.children {
             match child {
                 ASTNodeOrToken::Token(tok) => {
@@ -1500,6 +1560,11 @@ impl Lowerer {
                     }
                 }
                 ASTNodeOrToken::Node(sub) => {
+                    // Skip dot_call children — those are postfix-applied
+                    // by `apply_dot_chain` after the atom is extracted.
+                    if sub.rule_name == "dot_call" {
+                        continue;
+                    }
                     return self.lower_expression(sub);
                 }
             }
@@ -1508,6 +1573,92 @@ impl Lowerer {
             message: "factor node had no recognisable leaf".to_string(),
             line: node.start_line.unwrap_or(0),
             column: node.start_column.unwrap_or(0),
+        })
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 6l — dot-call chain postfix
+    // -------------------------------------------------------------------
+
+    /// Walk every `dot_call` Node child of `node` (in source order) and
+    /// fold each one into a method-call expression with the running
+    /// `recv` as receiver.  `foo.bar.baz` becomes:
+    ///
+    /// ```text
+    /// __method__(recv = foo, "bar")    →  inner
+    /// __method__(recv = inner, "baz")  →  outer
+    /// ```
+    ///
+    /// The chosen SIR encoding is `Expr::BuiltinCall { name:
+    /// "__method__", args: [receiver, StrLit(method_name), ...args] }`.
+    /// This keeps the receiver as a first-class expression (preserving
+    /// arbitrary nesting), the method name as data (so backends can
+    /// dispatch by string), and avoids growing the shared SIR Expr enum.
+    ///
+    /// BuiltinCall (not DirectCall) is chosen because the validator
+    /// checks DirectCall.fn_name against the module's function table,
+    /// and our synthetic `__method__` envelope intentionally isn't a
+    /// declared function — it's a wire-format tag for backends.
+    ///
+    /// Effects default to PURE — receiver-dispatched calls are
+    /// type-erased at this layer; a later receiver-type analysis pass
+    /// can widen as needed.  Callers wrapping I/O-flavored chains
+    /// (e.g. `STDOUT.puts(...)`) can post-process.
+    fn apply_dot_chain(
+        &mut self,
+        atom: Expr,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        let mut recv = atom;
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(sub) = child {
+                if sub.rule_name == "dot_call" {
+                    recv = self.fold_one_dot_call(recv, sub)?;
+                }
+            }
+        }
+        Ok(recv)
+    }
+
+    /// Lower a single `dot_call` step.  Grammar shape:
+    ///     dot_call = "." ( NAME | KEYWORD ) [ LPAREN [ expression
+    ///                  { COMMA expression } ] RPAREN ] ;
+    fn fold_one_dot_call(
+        &mut self,
+        receiver: Expr,
+        dot_node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        // First Name/Keyword token under dot_node is the method name.
+        let (method_name, name_span) = self.expect_first_name_token(dot_node)?;
+        // Optional argument expressions (the inner LPAREN…RPAREN).
+        let args: Vec<Expr> = dot_node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .map(|n| self.lower_expression(n))
+            .collect::<Result<Vec<_>, _>>()?;
+
+        let span = self.span_of(dot_node);
+        // Pack as BuiltinCall("__method__", [receiver, StrLit(method),
+        // ...args]) — see apply_dot_chain doc for rationale.
+        // The synthetic StrLit triggers the Strings feature, which the
+        // post-pass adds to the manifest unconditionally.
+        self.features_used.insert(Feature::Strings);
+        let mut full_args = Vec::with_capacity(args.len() + 2);
+        full_args.push(receiver);
+        full_args.push(Expr::StrLit {
+            value: method_name,
+            span: name_span,
+        });
+        full_args.extend(args);
+        Ok(Expr::BuiltinCall {
+            name: "__method__".to_string(),
+            args: full_args,
+            effects: EffectSet::PURE,
+            span,
         })
     }
 
