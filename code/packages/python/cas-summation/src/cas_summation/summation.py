@@ -780,6 +780,21 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
             # for any ``m`` since ``Exp / Pow(b>1, …)`` grows faster
             # than any polynomial, hence faster than any half-degree.
             return True
+    # Phase 57: ``Mul(bounded..., Log(diverging), Sqrt(positive-poly))``
+    # numerator pattern.  Combines sub-polynomial Log growth with half-
+    # polynomial Sqrt growth.  Effective ``log(k) · k^{deg(P)/2}`` is
+    # strictly dominated by ``k^{deg(P)/2 + ε}`` for any ``ε > 0``.
+    # Vanishes when ``2·den_deg > deg(P)`` (polynomial) or non-polynomial
+    # diverging denominator.  Requires both Log and Sqrt — one-only
+    # patterns fall through to Phase 55 / Phase 56.
+    bls_sqrt_deg = _bounded_log_sqrt_inner_deg(num, k)
+    if bls_sqrt_deg is not None:
+        den_deg_bls = _polynomial_degree_in_k(den, k)
+        if den_deg_bls is not None:
+            if 2 * den_deg_bls > bls_sqrt_deg:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -1140,6 +1155,50 @@ def _bounded_times_sqrt_inner_deg(node: IRNode, k: IRSymbol) -> int | None:
         if _is_bounded_in_k(arg, k):
             continue
         # Neither Sqrt(positive-poly) nor bounded → unrecognised.
+        return None
+    return sqrt_inner_deg
+
+
+def _bounded_log_sqrt_inner_deg(node: IRNode, k: IRSymbol) -> int | None:
+    """Return the ``Sqrt`` inner polynomial degree (×2) when ``node`` is a
+    ``Mul`` with exactly one ``Log(diverging)`` factor, exactly one
+    ``Sqrt(positive-leading polynomial)`` factor, and any number of
+    bounded factors; ``None`` otherwise.
+
+    Phase 57 — Combines the sub-polynomial growth of ``Log`` with the
+    half-polynomial growth of ``Sqrt(P)``.  Effective growth
+    ``log(k)·k^{deg(P)/2}`` is strictly dominated by ``k^{deg(P)/2+ε}``
+    for any ``ε > 0`` since ``log(k) = o(k^ε)``.  Caller compares
+    ``2·den_deg > deg(P)``.
+
+    Requires **both** Log and Sqrt — patterns with only one fall
+    through to Phase 55 (bounded × Log) or Phase 56 (bounded × Sqrt).
+    Two-of-either is refused (conservative, would need combined
+    growth-rate logic).
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    log_count = 0
+    sqrt_inner_deg: int | None = None
+    for arg in node.args:
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 1:
+                # Two or more Log factors — refuse.
+                return None
+            continue
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if sqrt_inner_deg is not None:
+                # Two Sqrt factors — refuse.
+                return None
+            sqrt_inner_deg = deg_x2
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        # Unrecognised factor.
+        return None
+    if log_count != 1 or sqrt_inner_deg is None:
         return None
     return sqrt_inner_deg
 

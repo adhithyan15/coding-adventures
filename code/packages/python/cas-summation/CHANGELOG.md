@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.5.0 — 2026-05-23
+
+**Phase 57 — Bounded × Log(diverging) × Sqrt(positive-poly) numerator
+(Python).**
+
+Closes the mixed sub-polynomial gap deferred in Phase 55 and Phase 56.
+Numerator combines Log (sub-polynomial), Sqrt (half-polynomial), and
+optional bounded factors.  Effective growth ``log(k)·k^{deg(P)/2}``
+strictly dominated by ``k^{deg(P)/2+ε}`` for any ``ε > 0``.
+
+### Added
+
+- **``_bounded_log_sqrt_inner_deg``** — requires exactly one Log AND
+  exactly one Sqrt; one-only patterns fall through to Phase 55 / 56.
+  Two-of-either refused.
+
+### Tests
+
+7 new ``TestEvaluateSumPhase57BoundedLogSqrtNumerator`` cases.
+Full suite: **133 passed** (was 126; +7).
+
 ## 1.4.0 — 2026-05-23
 
 **Phase 56 — Bounded × Sqrt(diverging) numerator pattern (Python).**
