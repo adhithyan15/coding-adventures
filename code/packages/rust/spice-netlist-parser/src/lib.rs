@@ -83,6 +83,11 @@ pub struct NoiseAnalysis {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct TempAnalysis {
+    pub temperatures_celsius: Vec<f64>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum OptionValue {
     Number(f64),
     Text(String),
@@ -104,6 +109,7 @@ pub enum Analysis {
     Sens(SensAnalysis),
     Mc(McAnalysis),
     Noise(NoiseAnalysis),
+    Temp(TempAnalysis),
     Options(OptionsAnalysis),
 }
 
@@ -208,6 +214,16 @@ impl ParsedNetlist {
             .iter()
             .filter_map(|analysis| match analysis {
                 Analysis::Options(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn temp_cards(&self) -> Vec<&TempAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Temp(card) => Some(card),
                 _ => None,
             })
             .collect()
@@ -1338,6 +1354,16 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
                 input_source: fields[2].clone(),
                 frequencies_hz,
                 temperature,
+            }))
+        }
+        ".temp" => {
+            require_min_fields(fields, 2, ".temp")?;
+            let temperatures_celsius = fields[1..]
+                .iter()
+                .map(|field| parse_value(field))
+                .collect::<Result<Vec<_>, _>>()?;
+            Ok(Analysis::Temp(TempAnalysis {
+                temperatures_celsius,
             }))
         }
         ".options" => {

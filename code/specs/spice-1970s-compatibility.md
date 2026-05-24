@@ -243,6 +243,11 @@ Acceptance:
 - Fourier fixture for a sinusoidal transient output.
 - Text-output snapshot tests with stable ordering.
 
+Status:
+
+- `.temp <celsius> [celsius ...]` parser/control-card records are implemented
+  across Python, TypeScript, and Rust.
+
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 
 Complete the lower-frequency SPICE2 analysis surface after the core device and

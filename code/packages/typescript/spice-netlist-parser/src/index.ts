@@ -93,6 +93,11 @@ export interface NoiseAnalysis {
   readonly temperature: number;
 }
 
+export interface TempAnalysis {
+  readonly kind: "temp";
+  readonly temperaturesCelsius: readonly number[];
+}
+
 export type OptionValue = number | string | boolean;
 
 export interface OptionsAnalysis {
@@ -109,6 +114,7 @@ export type Analysis =
   | SensAnalysis
   | McAnalysis
   | NoiseAnalysis
+  | TempAnalysis
   | OptionsAnalysis;
 
 export interface ModelCard {
@@ -161,6 +167,10 @@ export class ParsedNetlist {
 
   optionsCards(): OptionsAnalysis[] {
     return this.analyses.filter((analysis): analysis is OptionsAnalysis => analysis.kind === "options");
+  }
+
+  tempCards(): TempAnalysis[] {
+    return this.analyses.filter((analysis): analysis is TempAnalysis => analysis.kind === "temp");
   }
 
   transientMethod(tran?: TranAnalysis): TransientMethod | undefined {
@@ -1074,6 +1084,13 @@ function parseDirective(fields: readonly string[]): Analysis {
       inputSource: fields[2],
       frequenciesHz,
       temperature,
+    };
+  }
+  if (directive === ".temp") {
+    requireMinFields(fields, 2, ".temp");
+    return {
+      kind: "temp",
+      temperaturesCelsius: fields.slice(1).map(parseValue),
     };
   }
   if (directive === ".options") {

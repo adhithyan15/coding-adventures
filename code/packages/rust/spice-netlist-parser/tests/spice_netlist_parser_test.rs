@@ -4,7 +4,7 @@ use spice_engine::{
 };
 use spice_netlist_parser::{
     parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, McAnalysis, NetlistParseError,
-    NoiseAnalysis, OpAnalysis, OptionValue, SensAnalysis, TfAnalysis, TranAnalysis,
+    NoiseAnalysis, OpAnalysis, OptionValue, SensAnalysis, TempAnalysis, TfAnalysis, TranAnalysis,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -225,6 +225,32 @@ fn parses_options_analysis_cards() {
     );
     assert_eq!(card.values.get("noopiter"), Some(&OptionValue::Flag(true)));
     assert!(matches!(parsed.analyses.as_slice(), [Analysis::Options(_)]));
+}
+
+#[test]
+fn parses_temp_analysis_cards() {
+    let parsed = parse_netlist(".temp 27 75 -40").unwrap();
+
+    assert_eq!(
+        parsed.analyses,
+        vec![Analysis::Temp(TempAnalysis {
+            temperatures_celsius: vec![27.0, 75.0, -40.0],
+        })]
+    );
+    let cards = parsed.temp_cards();
+    let [card] = cards.as_slice() else {
+        panic!("expected one temp card");
+    };
+    assert_eq!(card.temperatures_celsius, vec![27.0, 75.0, -40.0]);
+}
+
+#[test]
+fn rejects_temp_cards_without_temperatures() {
+    let error = parse_netlist(".temp").unwrap_err();
+
+    assert!(error
+        .to_string()
+        .contains(".temp expects at least 2 fields"));
 }
 
 #[test]

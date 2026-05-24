@@ -147,6 +147,18 @@ Tdelay in 0 out 0 Z0=50 TD=1n
     expect(parsed.optionsCards()).toEqual([card]);
   });
 
+  it("parses .temp analysis cards", () => {
+    const parsed = parseNetlist(".temp 27 75 -40");
+    const card = { kind: "temp", temperaturesCelsius: [27, 75, -40] };
+
+    expect(parsed.analyses).toEqual([card]);
+    expect(parsed.tempCards()).toEqual([card]);
+  });
+
+  it("rejects .temp cards without temperatures", () => {
+    expect(() => parseNetlist(".temp")).toThrow(/\.temp expects at least 2 fields/);
+  });
+
   it("parses transient methods from .tran cards", () => {
     const parsed = parseNetlist(".tran 1n 20n method=gear2");
 
