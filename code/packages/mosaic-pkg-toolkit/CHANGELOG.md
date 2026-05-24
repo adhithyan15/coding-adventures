@@ -1,5 +1,29 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — v0.6 — InputGroup
+
+### Added
+
+**`InputGroup`** — Bootstrap's "input with addons" pattern.
+A single-line text input flanked by optional left and/or right
+addon text (`$` before an amount, `.00` after, `@username`).
+Composition: `Row[input-group] { If(prefix) Text[input-group-prefix],
+HostInput[input-group-field], If(suffix) Text[input-group-suffix] }`.
+Both addons are If-guarded on slot truthiness so an empty string
+collapses the branch.
+
+Slots: `prefix`, `suffix`, `value`, `placeholder`, `disabled`.
+Emits: `onChange(value: text)`, `onCommit`.
+
+Button-addons (e.g. a search-icon button on the right) need UI29-2
+children pass-through; for now both addons are plain text.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 18 (was 17): one more interface
+test (`input_group_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
 ## [Unreleased] — v0.5 — Pagination
 
 ### Added

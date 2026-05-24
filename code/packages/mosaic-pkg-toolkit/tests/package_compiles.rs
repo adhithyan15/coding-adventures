@@ -36,8 +36,9 @@ use std::path::PathBuf;
 /// list. Reorder both together if it ever changes.
 const COMPONENTS: &[&str] = &[
     "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
-    "Checkbox", "Field", "Input", "ListGroup", "Modal", "Nav",
-    "NumberInput", "Pagination", "Radio", "Spinner", "Toast", "Tooltip",
+    "Checkbox", "Field", "Input", "InputGroup", "ListGroup", "Modal",
+    "Nav", "NumberInput", "Pagination", "Radio", "Spinner", "Toast",
+    "Tooltip",
 ];
 
 /// Themes shipped per component. Both must compile.
@@ -82,8 +83,8 @@ fn manifest_declares_expected_exports() {
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
     assert_eq!(
-        version, "0.5.0",
-        "[package].version must be 0.5.0 for the Pagination release"
+        version, "0.6.0",
+        "[package].version must be 0.6.0 for the InputGroup release"
     );
 
     let exports = value
@@ -382,4 +383,20 @@ fn pagination_interface_matches_spec() {
     );
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onPrev", "onNext", "onPageSelect"]);
+}
+
+/// InputGroup — text input flanked by optional prefix/suffix addons.
+/// No emits beyond the inner field's onChange/onCommit.
+#[test]
+fn input_group_interface_matches_spec() {
+    let mil_src = read_source("InputGroup.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(
+        slot_names,
+        vec!["prefix", "suffix", "value", "placeholder", "disabled"]
+    );
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onChange", "onCommit"]);
 }
