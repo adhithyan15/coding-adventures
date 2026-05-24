@@ -2643,6 +2643,60 @@ impl ToolAuditSupervisorDrainRunReport {
         self.health_dashboard_action_component_count() > 1
     }
 
+    /// Return the aggregate health-dashboard action lane.
+    pub fn health_dashboard_action_lane(
+        &self,
+    ) -> ToolAuditSupervisorDrainHealthDashboardActionLane {
+        ToolAuditSupervisorDrainHealthDashboardActionLane::from_action_flags(
+            self.health_dashboard_action_should_drain_page(),
+            self.health_dashboard_action_routes_follow_up(),
+            self.health_dashboard_action_requests_continuation(),
+            self.health_dashboard_action_requires_investigation(),
+        )
+    }
+
+    /// Return the stable aggregate health-dashboard action lane label.
+    pub fn health_dashboard_action_lane_label(&self) -> &'static str {
+        self.health_dashboard_action_lane().as_str()
+    }
+
+    /// Return whether the aggregate health-dashboard action lane label matches its type.
+    pub fn health_dashboard_action_lane_label_matches_lane(&self) -> bool {
+        ToolAuditSupervisorDrainHealthDashboardActionLane::from_label(
+            self.health_dashboard_action_lane_label(),
+        ) == Some(self.health_dashboard_action_lane())
+    }
+
+    /// Return whether aggregate health-dashboard action is idle.
+    pub fn health_dashboard_action_lane_is_no_action(&self) -> bool {
+        self.health_dashboard_action_lane().is_no_action()
+    }
+
+    /// Return whether aggregate health-dashboard action is only drain work.
+    pub fn health_dashboard_action_lane_is_drain(&self) -> bool {
+        self.health_dashboard_action_lane().is_drain()
+    }
+
+    /// Return whether aggregate health-dashboard action is only follow-up routing.
+    pub fn health_dashboard_action_lane_is_follow_up(&self) -> bool {
+        self.health_dashboard_action_lane().is_follow_up()
+    }
+
+    /// Return whether aggregate health-dashboard action is only continuation.
+    pub fn health_dashboard_action_lane_is_continuation(&self) -> bool {
+        self.health_dashboard_action_lane().is_continuation()
+    }
+
+    /// Return whether aggregate health-dashboard action is only investigation.
+    pub fn health_dashboard_action_lane_is_investigation(&self) -> bool {
+        self.health_dashboard_action_lane().is_investigation()
+    }
+
+    /// Return whether aggregate health-dashboard action spans multiple lanes.
+    pub fn health_dashboard_action_lane_is_mixed(&self) -> bool {
+        self.health_dashboard_action_lane().is_mixed()
+    }
+
     /// Return the aggregate health-dashboard route.
     pub fn health_dashboard_route(&self) -> ToolAuditHealthRoute {
         match self.health_dashboard_surface() {
@@ -2840,6 +2894,7 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return whether aggregate health-dashboard digest labels match typed values.
     pub fn health_dashboard_digest_labels_match(&self) -> bool {
         self.health_dashboard_surface_label_matches_surface()
+            && self.health_dashboard_action_lane_label_matches_lane()
             && self.health_dashboard_route_label_matches_route()
             && self.health_dashboard_priority_label_matches_priority()
             && self.health_dashboard_readiness_label_matches_readiness()
@@ -3681,6 +3736,20 @@ impl ToolAuditSupervisorDrainRunReport {
             health_dashboard_action_component_count: self.health_dashboard_action_component_count(),
             health_dashboard_has_multiple_action_components: self
                 .health_dashboard_has_multiple_action_components(),
+            health_dashboard_action_lane: self.health_dashboard_action_lane(),
+            health_dashboard_action_lane_label: self.health_dashboard_action_lane_label(),
+            health_dashboard_action_lane_label_matches_lane: self
+                .health_dashboard_action_lane_label_matches_lane(),
+            health_dashboard_action_lane_is_no_action: self
+                .health_dashboard_action_lane_is_no_action(),
+            health_dashboard_action_lane_is_drain: self.health_dashboard_action_lane_is_drain(),
+            health_dashboard_action_lane_is_follow_up: self
+                .health_dashboard_action_lane_is_follow_up(),
+            health_dashboard_action_lane_is_continuation: self
+                .health_dashboard_action_lane_is_continuation(),
+            health_dashboard_action_lane_is_investigation: self
+                .health_dashboard_action_lane_is_investigation(),
+            health_dashboard_action_lane_is_mixed: self.health_dashboard_action_lane_is_mixed(),
             health_dashboard_route: self.health_dashboard_route(),
             health_dashboard_route_label: self.health_dashboard_route_label(),
             health_dashboard_route_label_matches_route: self
@@ -4595,6 +4664,24 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub health_dashboard_action_component_count: usize,
     /// Whether aggregate health combines multiple action components.
     pub health_dashboard_has_multiple_action_components: bool,
+    /// Aggregate health-dashboard action lane.
+    pub health_dashboard_action_lane: ToolAuditSupervisorDrainHealthDashboardActionLane,
+    /// Stable aggregate health-dashboard action lane label.
+    pub health_dashboard_action_lane_label: &'static str,
+    /// Whether the aggregate action lane label parses back to the typed lane.
+    pub health_dashboard_action_lane_label_matches_lane: bool,
+    /// Whether aggregate health-dashboard action is idle.
+    pub health_dashboard_action_lane_is_no_action: bool,
+    /// Whether aggregate health-dashboard action is only drain work.
+    pub health_dashboard_action_lane_is_drain: bool,
+    /// Whether aggregate health-dashboard action is only follow-up routing.
+    pub health_dashboard_action_lane_is_follow_up: bool,
+    /// Whether aggregate health-dashboard action is only continuation.
+    pub health_dashboard_action_lane_is_continuation: bool,
+    /// Whether aggregate health-dashboard action is only investigation.
+    pub health_dashboard_action_lane_is_investigation: bool,
+    /// Whether aggregate health-dashboard action spans multiple lanes.
+    pub health_dashboard_action_lane_is_mixed: bool,
     /// Aggregate health-dashboard route.
     pub health_dashboard_route: ToolAuditHealthRoute,
     /// Stable aggregate health-dashboard route label.
@@ -5652,6 +5739,53 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether aggregate health combines multiple action components.
     pub fn health_dashboard_has_multiple_action_components(&self) -> bool {
         self.health_dashboard_has_multiple_action_components
+    }
+
+    /// Return the aggregate health-dashboard action lane.
+    pub fn health_dashboard_action_lane(
+        &self,
+    ) -> ToolAuditSupervisorDrainHealthDashboardActionLane {
+        self.health_dashboard_action_lane
+    }
+
+    /// Return the stable aggregate health-dashboard action lane label.
+    pub fn health_dashboard_action_lane_label(&self) -> &'static str {
+        self.health_dashboard_action_lane_label
+    }
+
+    /// Return whether the aggregate action lane label matches its typed lane.
+    pub fn health_dashboard_action_lane_label_matches_lane(&self) -> bool {
+        self.health_dashboard_action_lane_label_matches_lane
+    }
+
+    /// Return whether aggregate health-dashboard action is idle.
+    pub fn health_dashboard_action_lane_is_no_action(&self) -> bool {
+        self.health_dashboard_action_lane_is_no_action
+    }
+
+    /// Return whether aggregate health-dashboard action is only drain work.
+    pub fn health_dashboard_action_lane_is_drain(&self) -> bool {
+        self.health_dashboard_action_lane_is_drain
+    }
+
+    /// Return whether aggregate health-dashboard action is only follow-up routing.
+    pub fn health_dashboard_action_lane_is_follow_up(&self) -> bool {
+        self.health_dashboard_action_lane_is_follow_up
+    }
+
+    /// Return whether aggregate health-dashboard action is only continuation.
+    pub fn health_dashboard_action_lane_is_continuation(&self) -> bool {
+        self.health_dashboard_action_lane_is_continuation
+    }
+
+    /// Return whether aggregate health-dashboard action is only investigation.
+    pub fn health_dashboard_action_lane_is_investigation(&self) -> bool {
+        self.health_dashboard_action_lane_is_investigation
+    }
+
+    /// Return whether aggregate health-dashboard action spans multiple lanes.
+    pub fn health_dashboard_action_lane_is_mixed(&self) -> bool {
+        self.health_dashboard_action_lane_is_mixed
     }
 
     /// Return the aggregate health-dashboard route.
@@ -6755,6 +6889,112 @@ impl ToolAuditSupervisorDrainHealthDashboardSurface {
 }
 
 impl Display for ToolAuditSupervisorDrainHealthDashboardSurface {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable aggregate action lane for supervisor drain health dashboards.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHealthDashboardActionLane {
+    /// No aggregate health action is needed.
+    NoAction,
+    /// The only aggregate health action is draining checkpoint pages.
+    Drain,
+    /// The only aggregate health action is routing follow-up pressure.
+    FollowUp,
+    /// The only aggregate health action is scheduling continuation.
+    Continuation,
+    /// The only aggregate health action is investigation.
+    Investigation,
+    /// Multiple aggregate health action lanes are active.
+    Mixed,
+}
+
+impl ToolAuditSupervisorDrainHealthDashboardActionLane {
+    /// Classify the aggregate health-dashboard action lane from component flags.
+    pub fn from_action_flags(
+        should_drain_page: bool,
+        routes_follow_up: bool,
+        requests_continuation: bool,
+        requires_investigation: bool,
+    ) -> Self {
+        match [
+            should_drain_page,
+            routes_follow_up,
+            requests_continuation,
+            requires_investigation,
+        ]
+        .into_iter()
+        .filter(|is_active| *is_active)
+        .count()
+        {
+            0 => Self::NoAction,
+            1 if should_drain_page => Self::Drain,
+            1 if routes_follow_up => Self::FollowUp,
+            1 if requests_continuation => Self::Continuation,
+            1 if requires_investigation => Self::Investigation,
+            _ => Self::Mixed,
+        }
+    }
+
+    /// Return a stable snake_case label for logs and dashboard grouping.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoAction => "no_action",
+            Self::Drain => "drain",
+            Self::FollowUp => "follow_up",
+            Self::Continuation => "continuation",
+            Self::Investigation => "investigation",
+            Self::Mixed => "mixed",
+        }
+    }
+
+    /// Parse a stable snake_case health-dashboard action lane label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_action" => Some(Self::NoAction),
+            "drain" => Some(Self::Drain),
+            "follow_up" => Some(Self::FollowUp),
+            "continuation" => Some(Self::Continuation),
+            "investigation" => Some(Self::Investigation),
+            "mixed" => Some(Self::Mixed),
+            _ => None,
+        }
+    }
+
+    /// Return whether no aggregate health action is needed.
+    pub fn is_no_action(self) -> bool {
+        matches!(self, Self::NoAction)
+    }
+
+    /// Return whether this is the drain action lane.
+    pub fn is_drain(self) -> bool {
+        matches!(self, Self::Drain)
+    }
+
+    /// Return whether this is the follow-up action lane.
+    pub fn is_follow_up(self) -> bool {
+        matches!(self, Self::FollowUp)
+    }
+
+    /// Return whether this is the continuation action lane.
+    pub fn is_continuation(self) -> bool {
+        matches!(self, Self::Continuation)
+    }
+
+    /// Return whether this is the investigation action lane.
+    pub fn is_investigation(self) -> bool {
+        matches!(self, Self::Investigation)
+    }
+
+    /// Return whether multiple aggregate health action lanes are active.
+    pub fn is_mixed(self) -> bool {
+        matches!(self, Self::Mixed)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHealthDashboardActionLane {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -17426,6 +17666,153 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_health_dashboard_action_lanes_are_stable() {
+        let cases = [
+            (
+                false,
+                false,
+                false,
+                false,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::NoAction,
+                "no_action",
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                true,
+                false,
+                false,
+                false,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::Drain,
+                "drain",
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                false,
+                true,
+                false,
+                false,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::FollowUp,
+                "follow_up",
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+            ),
+            (
+                false,
+                false,
+                true,
+                false,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::Continuation,
+                "continuation",
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+            ),
+            (
+                false,
+                false,
+                false,
+                true,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::Investigation,
+                "investigation",
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+            ),
+            (
+                true,
+                true,
+                false,
+                false,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::Mixed,
+                "mixed",
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+            ),
+            (
+                true,
+                false,
+                true,
+                true,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::Mixed,
+                "mixed",
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+            ),
+        ];
+
+        for (
+            should_drain,
+            routes_follow_up,
+            requests_continuation,
+            requires_investigation,
+            lane,
+            label,
+            is_no_action,
+            is_drain,
+            is_follow_up,
+            is_continuation,
+            is_investigation,
+            is_mixed,
+        ) in cases
+        {
+            assert_eq!(
+                ToolAuditSupervisorDrainHealthDashboardActionLane::from_action_flags(
+                    should_drain,
+                    routes_follow_up,
+                    requests_continuation,
+                    requires_investigation,
+                ),
+                lane
+            );
+            assert_eq!(lane.as_str(), label);
+            assert_eq!(lane.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHealthDashboardActionLane::from_label(label),
+                Some(lane)
+            );
+            assert_eq!(lane.is_no_action(), is_no_action);
+            assert_eq!(lane.is_drain(), is_drain);
+            assert_eq!(lane.is_follow_up(), is_follow_up);
+            assert_eq!(lane.is_continuation(), is_continuation);
+            assert_eq!(lane.is_investigation(), is_investigation);
+            assert_eq!(lane.is_mixed(), is_mixed);
+        }
+
+        assert_eq!(
+            ToolAuditSupervisorDrainHealthDashboardActionLane::from_label("parking_lot"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_report_summary_flattens_health_dashboard_fields() {
         let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         let mut idle_sink = InMemoryToolAuditSink::new();
@@ -17611,6 +17998,21 @@ mod tests {
         assert_eq!(idle_summary.health_dashboard_action_component_count(), 0);
         assert!(!idle_summary.health_dashboard_has_multiple_action_components());
         assert_eq!(
+            idle_summary.health_dashboard_action_lane(),
+            ToolAuditSupervisorDrainHealthDashboardActionLane::NoAction
+        );
+        assert_eq!(
+            idle_summary.health_dashboard_action_lane_label(),
+            "no_action"
+        );
+        assert!(idle_summary.health_dashboard_action_lane_label_matches_lane());
+        assert!(idle_summary.health_dashboard_action_lane_is_no_action());
+        assert!(!idle_summary.health_dashboard_action_lane_is_drain());
+        assert!(!idle_summary.health_dashboard_action_lane_is_follow_up());
+        assert!(!idle_summary.health_dashboard_action_lane_is_continuation());
+        assert!(!idle_summary.health_dashboard_action_lane_is_investigation());
+        assert!(!idle_summary.health_dashboard_action_lane_is_mixed());
+        assert_eq!(
             idle_summary.health_dashboard_route(),
             ToolAuditHealthRoute::NoRoute
         );
@@ -17761,6 +18163,18 @@ mod tests {
         assert!(!clean_summary.health_dashboard_action_requires_investigation());
         assert_eq!(clean_summary.health_dashboard_action_component_count(), 1);
         assert!(!clean_summary.health_dashboard_has_multiple_action_components());
+        assert_eq!(
+            clean_summary.health_dashboard_action_lane(),
+            ToolAuditSupervisorDrainHealthDashboardActionLane::Drain
+        );
+        assert_eq!(clean_summary.health_dashboard_action_lane_label(), "drain");
+        assert!(clean_summary.health_dashboard_action_lane_label_matches_lane());
+        assert!(!clean_summary.health_dashboard_action_lane_is_no_action());
+        assert!(clean_summary.health_dashboard_action_lane_is_drain());
+        assert!(!clean_summary.health_dashboard_action_lane_is_follow_up());
+        assert!(!clean_summary.health_dashboard_action_lane_is_continuation());
+        assert!(!clean_summary.health_dashboard_action_lane_is_investigation());
+        assert!(!clean_summary.health_dashboard_action_lane_is_mixed());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -17960,6 +18374,21 @@ mod tests {
         );
         assert!(continuation_summary.health_dashboard_has_multiple_action_components());
         assert_eq!(
+            continuation_summary.health_dashboard_action_lane(),
+            ToolAuditSupervisorDrainHealthDashboardActionLane::Mixed
+        );
+        assert_eq!(
+            continuation_summary.health_dashboard_action_lane_label(),
+            "mixed"
+        );
+        assert!(continuation_summary.health_dashboard_action_lane_label_matches_lane());
+        assert!(!continuation_summary.health_dashboard_action_lane_is_no_action());
+        assert!(!continuation_summary.health_dashboard_action_lane_is_drain());
+        assert!(!continuation_summary.health_dashboard_action_lane_is_follow_up());
+        assert!(!continuation_summary.health_dashboard_action_lane_is_continuation());
+        assert!(!continuation_summary.health_dashboard_action_lane_is_investigation());
+        assert!(continuation_summary.health_dashboard_action_lane_is_mixed());
+        assert_eq!(
             continuation_summary.health_dashboard_route(),
             ToolAuditHealthRoute::Triage
         );
@@ -18089,6 +18518,16 @@ mod tests {
         );
         assert!(follow_up_summary.health_dashboard_has_multiple_action_components());
         assert_eq!(
+            follow_up_summary.health_dashboard_action_lane(),
+            ToolAuditSupervisorDrainHealthDashboardActionLane::Mixed
+        );
+        assert_eq!(
+            follow_up_summary.health_dashboard_action_lane_label(),
+            "mixed"
+        );
+        assert!(follow_up_summary.health_dashboard_action_lane_label_matches_lane());
+        assert!(follow_up_summary.health_dashboard_action_lane_is_mixed());
+        assert_eq!(
             follow_up_summary.health_dashboard_route(),
             ToolAuditHealthRoute::Triage
         );
@@ -18142,6 +18581,17 @@ mod tests {
             1
         );
         assert!(!count_integrity_summary.health_dashboard_has_multiple_action_components());
+        assert_eq!(
+            count_integrity_summary.health_dashboard_action_lane(),
+            ToolAuditSupervisorDrainHealthDashboardActionLane::Investigation
+        );
+        assert_eq!(
+            count_integrity_summary.health_dashboard_action_lane_label(),
+            "investigation"
+        );
+        assert!(count_integrity_summary.health_dashboard_action_lane_label_matches_lane());
+        assert!(count_integrity_summary.health_dashboard_action_lane_is_investigation());
+        assert!(!count_integrity_summary.health_dashboard_action_lane_is_mixed());
     }
 
     #[test]
