@@ -5,6 +5,20 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.21.0] - 2026-05-24
+
+### Added
+
+- ``ColumnDef.check_expr_text: str`` — source-text rendering of the
+  CHECK predicate, populated by the adapter and consumed by the VM
+  so ``ConstraintViolation`` messages read
+  ``CHECK constraint failed: <expr_text>`` (matches SQLite) instead
+  of the older ``CHECK constraint failed: <table>.<col>``.  Defaults
+  to ``""`` for back-compat with externally constructed ColumnDefs;
+  the VM falls back to the older ``table.col`` form when the field
+  is empty.  Non-comparing/non-hashing so existing equality
+  semantics are unchanged.
+
 ## [0.20.0] - 2026-05-23
 
 ### Changed

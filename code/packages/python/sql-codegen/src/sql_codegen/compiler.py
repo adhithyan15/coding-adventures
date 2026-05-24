@@ -1907,6 +1907,12 @@ def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
         unique=c.unique,
         default=ir_default,
         check_instrs=check_instrs,
+        # ``check_expr_text`` is the original CHECK predicate source so
+        # the VM's ConstraintViolation message can quote it verbatim
+        # (matches SQLite: ``CHECK constraint failed: a > 0``).  Falls
+        # back to "" — the VM treats that as "use the older table.col
+        # form" — when the adapter couldn't reconstruct text.
+        check_expr_text=getattr(c, "check_expr_text", ""),
         foreign_key=fk,
         collation=c.collation,
     )
