@@ -21,6 +21,8 @@ The initial slices implement:
 - Backward-Euler, trapezoidal, Gear-2, and adaptive transient analysis for
   linear RC/RL circuits.
 - Time-varying transient source waveforms: PWL, SIN, PULSE, and EXP.
+- Fourier post-processing for transient output, including DC, harmonic
+  magnitude/phase, and THD results.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,
 independent current sources, independent voltage sources, voltage-controlled

@@ -13,6 +13,7 @@ import {
   currentSource,
   currentSourceWithWaveform,
   estimatePeriod,
+  fourier,
   inductor,
   inductorWithInitialCurrent,
   mutualInductor,
@@ -710,6 +711,36 @@ describe("transient", () => {
 
     expectClose(points[0].voltage("in"), 2.0);
     expectClose(points[1].voltage("in"), 0.0);
+  });
+
+  it("extracts Fourier components from a transient sinusoid", () => {
+    const freq = 1_000.0;
+    const amp = 2.0;
+    const offset = 0.25;
+    const period = 1.0 / freq;
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(offset, amp, freq),
+      ),
+    );
+
+    const points = transient(circuit, period / 64.0, 2.0 * period);
+    const analysis = fourier(points, freq, ["V(in)"], 5);
+    const probe = analysis.probes[0];
+    const fundamental = probe.harmonics[0];
+
+    expect(analysis.startTime).toBeCloseTo(period, 12);
+    expect(probe.dc).toBeCloseTo(offset, 3);
+    expect(fundamental.frequencyHz).toBeCloseTo(freq, 9);
+    expect(fundamental.magnitude).toBeCloseTo(amp, 2);
+    expect(fundamental.sine).toBeCloseTo(amp, 2);
+    expect(Math.abs(fundamental.cosine)).toBeLessThan(2.0e-3);
+    expect(probe.totalHarmonicDistortion).toBeLessThan(2.0e-3);
   });
 
   it("updates CCCS output from transient branch current", () => {
