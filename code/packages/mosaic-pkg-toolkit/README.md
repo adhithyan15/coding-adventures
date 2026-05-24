@@ -65,6 +65,9 @@ for the architecture, component catalog, and phasing plan.
   the active-index → active-body mapping. Slots: `headers:
   list<text>`, `active-body`, `active-index`. Emit:
   `onSelect(index: number)`.
+- **`DropdownMenu`** — toggle button + revealed item list. Host
+  owns the open flag. Slots: `label`, `items: list<text>`, `open`.
+  Emits: `onToggle`, `onSelect(index: number)`.
 
 Every component ships `.light.msl` and `.dark.msl` themes.
 

@@ -1,5 +1,26 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — v0.9 — DropdownMenu
+
+### Added
+
+**`DropdownMenu`** — Bootstrap's toggle-button-with-revealed-menu
+pattern. Composition: `Column[dropdown] { HostButton[dropdown-toggle],
+If(open) Column[dropdown-menu] { For items HostButton[dropdown-item] } }`.
+Slots: `label`, `items: list<text>`, `open`. Emits: `onToggle`,
+`onSelect(index: number)`. Host owns the `open` state.
+
+v0.9 renders the menu inline beneath the toggle (it takes vertical
+space and pushes downstream content down). Bootstrap's absolutely-
+positioned overlay needs a mosstyle z-index/position story that
+the kernel doesn't yet expose; a future PR can add that.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 21 (was 20): one more interface
+test (`dropdown_menu_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
 ## [Unreleased] — v0.8 — Tabs
 
 ### Added
