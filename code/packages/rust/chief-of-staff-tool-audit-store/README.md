@@ -221,6 +221,9 @@ The crate keeps the boundary narrow:
 - supervisor drain reports and summaries expose aggregate host-run queue digest
   label-integrity flags so host logs can verify queue keys, routes, lanes,
   priorities, readiness, and grouping labels together
+- supervisor drain reports and summaries expose host-run attention component
+  flags and counts for health-dashboard, scheduler, host-investigation, and
+  run-integrity work
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation

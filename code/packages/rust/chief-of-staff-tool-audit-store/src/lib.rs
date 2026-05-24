@@ -3129,6 +3129,59 @@ impl ToolAuditSupervisorDrainRunReport {
         self.host_attention_kind().has_multiple_attention()
     }
 
+    /// Return whether the aggregate health dashboard needs host-run attention.
+    pub fn host_run_attention_requires_health_dashboard_action(&self) -> bool {
+        self.health_dashboard_requires_action()
+    }
+
+    /// Return whether scheduler work contributes to host-run attention.
+    pub fn host_run_attention_requires_scheduler_action(&self) -> bool {
+        self.requires_scheduler_action()
+    }
+
+    /// Return whether run-divergence investigation contributes to host-run attention.
+    pub fn host_run_attention_requires_host_investigation(&self) -> bool {
+        self.requires_host_investigation()
+    }
+
+    /// Return whether host-log integrity investigation contributes to host-run attention.
+    pub fn host_run_attention_requires_run_integrity_investigation(&self) -> bool {
+        self.requires_run_integrity_investigation()
+    }
+
+    /// Return how many top-level host-run attention components are active.
+    pub fn host_run_attention_component_count(&self) -> usize {
+        [
+            self.host_run_attention_requires_health_dashboard_action(),
+            self.host_run_attention_requires_scheduler_action(),
+            self.host_run_attention_requires_host_investigation(),
+            self.host_run_attention_requires_run_integrity_investigation(),
+        ]
+        .into_iter()
+        .filter(|is_active| *is_active)
+        .count()
+    }
+
+    /// Return whether exactly one top-level host-run attention component is active.
+    pub fn host_run_attention_has_single_component(&self) -> bool {
+        self.host_run_attention_component_count() == 1
+    }
+
+    /// Return whether multiple top-level host-run attention components are active.
+    pub fn host_run_attention_has_multiple_components(&self) -> bool {
+        self.host_run_attention_component_count() > 1
+    }
+
+    /// Return whether any top-level host-run attention component is active.
+    pub fn host_run_attention_requires_action(&self) -> bool {
+        self.host_run_attention_component_count() > 0
+    }
+
+    /// Return whether the host run has no active attention components.
+    pub fn host_run_attention_is_settled(&self) -> bool {
+        self.host_run_attention_component_count() == 0
+    }
+
     /// Return whether this run is terminal and needs no host attention.
     pub fn is_terminal_ready(&self) -> bool {
         self.terminal_readiness_kind().is_terminal_ready()
@@ -4640,6 +4693,20 @@ impl ToolAuditSupervisorDrainRunReport {
             host_attention_includes_run_integrity_investigation: self
                 .host_attention_includes_run_integrity_investigation(),
             has_multiple_host_attention: self.has_multiple_host_attention(),
+            host_run_attention_requires_health_dashboard_action: self
+                .host_run_attention_requires_health_dashboard_action(),
+            host_run_attention_requires_scheduler_action: self
+                .host_run_attention_requires_scheduler_action(),
+            host_run_attention_requires_host_investigation: self
+                .host_run_attention_requires_host_investigation(),
+            host_run_attention_requires_run_integrity_investigation: self
+                .host_run_attention_requires_run_integrity_investigation(),
+            host_run_attention_component_count: self.host_run_attention_component_count(),
+            host_run_attention_has_single_component: self.host_run_attention_has_single_component(),
+            host_run_attention_has_multiple_components: self
+                .host_run_attention_has_multiple_components(),
+            host_run_attention_requires_action: self.host_run_attention_requires_action(),
+            host_run_attention_is_settled: self.host_run_attention_is_settled(),
             is_terminal_ready: self.is_terminal_ready(),
             terminal_readiness_kind: self.terminal_readiness_kind(),
             terminal_readiness_label: self.terminal_readiness_label(),
@@ -5841,6 +5908,24 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_attention_includes_run_integrity_investigation: bool,
     /// Whether more than one host-attention surface is active.
     pub has_multiple_host_attention: bool,
+    /// Whether aggregate health-dashboard work contributes to host-run attention.
+    pub host_run_attention_requires_health_dashboard_action: bool,
+    /// Whether scheduler work contributes to host-run attention.
+    pub host_run_attention_requires_scheduler_action: bool,
+    /// Whether run-divergence investigation contributes to host-run attention.
+    pub host_run_attention_requires_host_investigation: bool,
+    /// Whether host-log integrity investigation contributes to host-run attention.
+    pub host_run_attention_requires_run_integrity_investigation: bool,
+    /// Number of top-level host-run attention components.
+    pub host_run_attention_component_count: usize,
+    /// Whether exactly one top-level host-run attention component is active.
+    pub host_run_attention_has_single_component: bool,
+    /// Whether multiple top-level host-run attention components are active.
+    pub host_run_attention_has_multiple_components: bool,
+    /// Whether any top-level host-run attention component is active.
+    pub host_run_attention_requires_action: bool,
+    /// Whether no top-level host-run attention components are active.
+    pub host_run_attention_is_settled: bool,
     /// Whether this run is terminal and needs no host attention.
     pub is_terminal_ready: bool,
     /// Stable classification of terminal readiness or pending host work.
@@ -7566,6 +7651,51 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether more than one host-attention surface is active.
     pub fn has_multiple_host_attention(&self) -> bool {
         self.has_multiple_host_attention
+    }
+
+    /// Return whether aggregate health-dashboard work contributes to host-run attention.
+    pub fn host_run_attention_requires_health_dashboard_action(&self) -> bool {
+        self.host_run_attention_requires_health_dashboard_action
+    }
+
+    /// Return whether scheduler work contributes to host-run attention.
+    pub fn host_run_attention_requires_scheduler_action(&self) -> bool {
+        self.host_run_attention_requires_scheduler_action
+    }
+
+    /// Return whether run-divergence investigation contributes to host-run attention.
+    pub fn host_run_attention_requires_host_investigation(&self) -> bool {
+        self.host_run_attention_requires_host_investigation
+    }
+
+    /// Return whether host-log integrity investigation contributes to host-run attention.
+    pub fn host_run_attention_requires_run_integrity_investigation(&self) -> bool {
+        self.host_run_attention_requires_run_integrity_investigation
+    }
+
+    /// Return how many top-level host-run attention components are active.
+    pub fn host_run_attention_component_count(&self) -> usize {
+        self.host_run_attention_component_count
+    }
+
+    /// Return whether exactly one top-level host-run attention component is active.
+    pub fn host_run_attention_has_single_component(&self) -> bool {
+        self.host_run_attention_has_single_component
+    }
+
+    /// Return whether multiple top-level host-run attention components are active.
+    pub fn host_run_attention_has_multiple_components(&self) -> bool {
+        self.host_run_attention_has_multiple_components
+    }
+
+    /// Return whether any top-level host-run attention component is active.
+    pub fn host_run_attention_requires_action(&self) -> bool {
+        self.host_run_attention_requires_action
+    }
+
+    /// Return whether no top-level host-run attention components are active.
+    pub fn host_run_attention_is_settled(&self) -> bool {
+        self.host_run_attention_is_settled
     }
 
     /// Return whether this run is terminal and needs no host attention.
@@ -18187,6 +18317,15 @@ mod tests {
         assert!(!idle_report.host_attention_includes_host_investigation());
         assert!(!idle_report.host_attention_includes_run_integrity_investigation());
         assert!(!idle_report.has_multiple_host_attention());
+        assert!(!idle_report.host_run_attention_requires_health_dashboard_action());
+        assert!(!idle_report.host_run_attention_requires_scheduler_action());
+        assert!(!idle_report.host_run_attention_requires_host_investigation());
+        assert!(!idle_report.host_run_attention_requires_run_integrity_investigation());
+        assert_eq!(idle_report.host_run_attention_component_count(), 0);
+        assert!(!idle_report.host_run_attention_has_single_component());
+        assert!(!idle_report.host_run_attention_has_multiple_components());
+        assert!(!idle_report.host_run_attention_requires_action());
+        assert!(idle_report.host_run_attention_is_settled());
         assert!(!idle_summary.requires_host_attention);
         assert!(!idle_summary.requires_host_attention());
         assert!(idle_summary.is_no_host_attention);
@@ -18201,6 +18340,24 @@ mod tests {
         assert!(!idle_summary.host_attention_includes_host_investigation());
         assert!(!idle_summary.host_attention_includes_run_integrity_investigation());
         assert!(!idle_summary.has_multiple_host_attention());
+        assert!(!idle_summary.host_run_attention_requires_health_dashboard_action);
+        assert!(!idle_summary.host_run_attention_requires_health_dashboard_action());
+        assert!(!idle_summary.host_run_attention_requires_scheduler_action);
+        assert!(!idle_summary.host_run_attention_requires_scheduler_action());
+        assert!(!idle_summary.host_run_attention_requires_host_investigation);
+        assert!(!idle_summary.host_run_attention_requires_host_investigation());
+        assert!(!idle_summary.host_run_attention_requires_run_integrity_investigation);
+        assert!(!idle_summary.host_run_attention_requires_run_integrity_investigation());
+        assert_eq!(idle_summary.host_run_attention_component_count, 0);
+        assert_eq!(idle_summary.host_run_attention_component_count(), 0);
+        assert!(!idle_summary.host_run_attention_has_single_component);
+        assert!(!idle_summary.host_run_attention_has_single_component());
+        assert!(!idle_summary.host_run_attention_has_multiple_components);
+        assert!(!idle_summary.host_run_attention_has_multiple_components());
+        assert!(!idle_summary.host_run_attention_requires_action);
+        assert!(!idle_summary.host_run_attention_requires_action());
+        assert!(idle_summary.host_run_attention_is_settled);
+        assert!(idle_summary.host_run_attention_is_settled());
 
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(store
@@ -18229,6 +18386,15 @@ mod tests {
         assert!(!report.host_attention_includes_host_investigation());
         assert!(!report.host_attention_includes_run_integrity_investigation());
         assert!(!report.has_multiple_host_attention());
+        assert!(report.host_run_attention_requires_health_dashboard_action());
+        assert!(report.host_run_attention_requires_scheduler_action());
+        assert!(!report.host_run_attention_requires_host_investigation());
+        assert!(!report.host_run_attention_requires_run_integrity_investigation());
+        assert_eq!(report.host_run_attention_component_count(), 2);
+        assert!(!report.host_run_attention_has_single_component());
+        assert!(report.host_run_attention_has_multiple_components());
+        assert!(report.host_run_attention_requires_action());
+        assert!(!report.host_run_attention_is_settled());
         assert!(summary.requires_host_attention);
         assert!(!summary.is_no_host_attention);
         assert_eq!(
@@ -18241,6 +18407,24 @@ mod tests {
         assert!(!summary.host_attention_includes_host_investigation());
         assert!(!summary.host_attention_includes_run_integrity_investigation());
         assert!(!summary.has_multiple_host_attention());
+        assert!(summary.host_run_attention_requires_health_dashboard_action);
+        assert!(summary.host_run_attention_requires_health_dashboard_action());
+        assert!(summary.host_run_attention_requires_scheduler_action);
+        assert!(summary.host_run_attention_requires_scheduler_action());
+        assert!(!summary.host_run_attention_requires_host_investigation);
+        assert!(!summary.host_run_attention_requires_host_investigation());
+        assert!(!summary.host_run_attention_requires_run_integrity_investigation);
+        assert!(!summary.host_run_attention_requires_run_integrity_investigation());
+        assert_eq!(summary.host_run_attention_component_count, 2);
+        assert_eq!(summary.host_run_attention_component_count(), 2);
+        assert!(!summary.host_run_attention_has_single_component);
+        assert!(!summary.host_run_attention_has_single_component());
+        assert!(summary.host_run_attention_has_multiple_components);
+        assert!(summary.host_run_attention_has_multiple_components());
+        assert!(summary.host_run_attention_requires_action);
+        assert!(summary.host_run_attention_requires_action());
+        assert!(!summary.host_run_attention_is_settled);
+        assert!(!summary.host_run_attention_is_settled());
 
         let mut integrity_report = report.clone();
         integrity_report.drain.ticks[0].replay.next_checkpoint =
@@ -18261,6 +18445,15 @@ mod tests {
         assert!(!integrity_report.host_attention_includes_host_investigation());
         assert!(integrity_report.host_attention_includes_run_integrity_investigation());
         assert!(integrity_report.has_multiple_host_attention());
+        assert!(integrity_report.host_run_attention_requires_health_dashboard_action());
+        assert!(integrity_report.host_run_attention_requires_scheduler_action());
+        assert!(!integrity_report.host_run_attention_requires_host_investigation());
+        assert!(integrity_report.host_run_attention_requires_run_integrity_investigation());
+        assert_eq!(integrity_report.host_run_attention_component_count(), 3);
+        assert!(!integrity_report.host_run_attention_has_single_component());
+        assert!(integrity_report.host_run_attention_has_multiple_components());
+        assert!(integrity_report.host_run_attention_requires_action());
+        assert!(!integrity_report.host_run_attention_is_settled());
         assert_eq!(
             integrity_summary.host_attention_kind(),
             ToolAuditSupervisorDrainHostAttentionKind::SchedulerActionAndRunIntegrityInvestigation
@@ -18269,6 +18462,15 @@ mod tests {
         assert!(!integrity_summary.host_attention_includes_host_investigation());
         assert!(integrity_summary.host_attention_includes_run_integrity_investigation());
         assert!(integrity_summary.has_multiple_host_attention());
+        assert!(integrity_summary.host_run_attention_requires_health_dashboard_action());
+        assert!(integrity_summary.host_run_attention_requires_scheduler_action());
+        assert!(!integrity_summary.host_run_attention_requires_host_investigation());
+        assert!(integrity_summary.host_run_attention_requires_run_integrity_investigation());
+        assert_eq!(integrity_summary.host_run_attention_component_count(), 3);
+        assert!(!integrity_summary.host_run_attention_has_single_component());
+        assert!(integrity_summary.host_run_attention_has_multiple_components());
+        assert!(integrity_summary.host_run_attention_requires_action());
+        assert!(!integrity_summary.host_run_attention_is_settled());
 
         let mut stale_investigation_summary = idle_summary.clone();
         stale_investigation_summary.requires_host_investigation = true;
