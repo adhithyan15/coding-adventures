@@ -225,6 +225,7 @@
             "alt": null,
             "control_type": null,
             "accessible_name": "Search form",
+            "aria_label": "Search form",
             "autocomplete": "on",
             "children": [
               { "role": "label", "name": "label", "text": "Query", "href": null, "src": null, "alt": null, "control_type": null, "label_for": "q", "children": [{ "role": "text", "name": null, "text": "Query", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
@@ -274,10 +275,59 @@
                   { "role": "option", "name": "option", "text": "Manuals", "href": null, "src": null, "alt": null, "control_type": null, "value": "Manuals", "children": [{ "role": "text", "name": null, "text": "Manuals", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
                 ]
               },
-              { "role": "control", "name": "button", "id": "go", "text": "Go", "href": null, "src": null, "alt": null, "type_hint": "submit", "control_type": "submit", "accessible_name": "Run search", "children": [] }
+              { "role": "control", "name": "button", "id": "go", "text": "Go", "href": null, "src": null, "alt": null, "type_hint": "submit", "control_type": "submit", "accessible_name": "Run search", "aria_label": "Run search", "children": [] }
             ]
           },
           { "role": "control", "name": "input", "id": "external", "text": null, "href": null, "src": null, "alt": null, "control_type": "text", "form_owner": "search", "accessible_name": "Outside", "placeholder": "Outside", "value": null, "children": [] }
+        ]
+      }
+    },
+    {
+      "id": "aria-interaction-metadata",
+      "description": "Authored ARIA roles, labelled-by naming, state attributes, hidden/inert flags, and explicit focus metadata survive content-tree extraction.",
+      "input": "<body><main id=app aria-label=\"App shell\"><button id=menu aria-expanded=false aria-controls=panel tabindex=0>Menu</button><section id=panel role=region aria-labelledby=panel-title aria-describedby=panel-help inert><h2 id=panel-title>Settings</h2><p id=panel-help>Choose options</p><div role=button tabindex=-1 aria-pressed=mixed aria-current=page contenteditable=true draggable=true popover=manual>Inline action</div></section><p hidden>Hidden copy</p><span aria-hidden=true>Decorative</span></main>",
+      "expected": {
+        "children": [
+          {
+            "role": "main",
+            "name": "main",
+            "id": "app",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "section_kind": "main",
+            "landmark_kind": "main",
+            "control_type": null,
+            "accessible_name": "App shell",
+            "aria_label": "App shell",
+            "children": [
+              { "role": "control", "name": "button", "id": "menu", "text": "Menu", "href": null, "src": null, "alt": null, "control_type": "submit", "accessible_name": "Menu", "aria_controls": ["panel"], "aria_expanded": "false", "tabindex": "0", "focusable": true, "children": [] },
+              {
+                "role": "section",
+                "name": "section",
+                "id": "panel",
+                "authored_role": "region",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "section_kind": "section",
+                "control_type": null,
+                "accessible_name": "Settings",
+                "aria_labelledby": ["panel-title"],
+                "aria_describedby": ["panel-help"],
+                "inert": true,
+                "children": [
+                  { "role": "heading", "name": "h2", "id": "panel-title", "heading_level": 2, "text": "Settings", "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Settings", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                  { "role": "paragraph", "name": "p", "id": "panel-help", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Choose options", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                  { "role": "block", "name": "div", "authored_role": "button", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "aria_current": "page", "aria_pressed": "mixed", "tabindex": "-1", "focusable": false, "contenteditable": "true", "draggable": "true", "popover": "manual", "children": [{ "role": "text", "name": null, "text": "Inline action", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                ]
+              },
+              { "role": "paragraph", "name": "p", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "hidden": true, "children": [{ "role": "text", "name": null, "text": "Hidden copy", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+              { "role": "inline", "name": "span", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "aria_hidden": true, "children": [{ "role": "text", "name": null, "text": "Decorative", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+            ]
+          }
         ]
       }
     },
@@ -550,6 +600,7 @@
                     "alt": null,
                     "section_kind": "section",
                     "accessible_name": "Chapter",
+                    "aria_label": "Chapter",
                     "control_type": null,
                     "children": [
                       { "role": "heading", "name": "h3", "heading_level": 3, "text": "Chapter", "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Chapter", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }

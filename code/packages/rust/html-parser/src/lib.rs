@@ -922,6 +922,7 @@ pub struct BrowserContentTree {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserContentNode {
     pub role: String,
+    pub authored_role: Option<String>,
     pub name: Option<String>,
     pub id: Option<String>,
     pub classes: Vec<String>,
@@ -952,6 +953,22 @@ pub struct BrowserContentNode {
     pub label_for: Option<String>,
     pub labels: Vec<String>,
     pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_current: Option<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_pressed: Option<String>,
+    pub aria_selected: Option<String>,
+    pub aria_hidden: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub tabindex: Option<String>,
+    pub focusable: Option<bool>,
+    pub contenteditable: Option<String>,
+    pub draggable: Option<String>,
+    pub popover: Option<String>,
     pub placeholder: Option<String>,
     pub autocomplete: Option<String>,
     pub value: Option<String>,
@@ -993,6 +1010,7 @@ pub struct BrowserRenderTree {
 pub struct BrowserRenderNode {
     pub display: String,
     pub role: String,
+    pub authored_role: Option<String>,
     pub name: Option<String>,
     pub id: Option<String>,
     pub classes: Vec<String>,
@@ -1023,6 +1041,22 @@ pub struct BrowserRenderNode {
     pub label_for: Option<String>,
     pub labels: Vec<String>,
     pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_current: Option<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_pressed: Option<String>,
+    pub aria_selected: Option<String>,
+    pub aria_hidden: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub tabindex: Option<String>,
+    pub focusable: Option<bool>,
+    pub contenteditable: Option<String>,
+    pub draggable: Option<String>,
+    pub popover: Option<String>,
     pub placeholder: Option<String>,
     pub autocomplete: Option<String>,
     pub value: Option<String>,
@@ -1231,7 +1265,8 @@ impl BrowserContentTree {
     fn from_nodes_with_base(nodes: &[Node], base_href: Option<&str>) -> Self {
         let mut children = Vec::new();
         let labels = collect_label_texts_by_control_id(nodes);
-        collect_browser_content_nodes(nodes, &mut children, base_href, &labels);
+        let id_texts = collect_element_texts_by_id(nodes);
+        collect_browser_content_nodes(nodes, &mut children, base_href, &labels, &id_texts);
         Self { children }
     }
 }
@@ -1257,6 +1292,7 @@ impl BrowserRenderNode {
         Self {
             display: browser_render_display(&content_node.role).to_string(),
             role: content_node.role.clone(),
+            authored_role: content_node.authored_role.clone(),
             name: content_node.name.clone(),
             id: content_node.id.clone(),
             classes: content_node.classes.clone(),
@@ -1287,6 +1323,22 @@ impl BrowserRenderNode {
             label_for: content_node.label_for.clone(),
             labels: content_node.labels.clone(),
             accessible_name: content_node.accessible_name.clone(),
+            aria_label: content_node.aria_label.clone(),
+            aria_labelledby: content_node.aria_labelledby.clone(),
+            aria_describedby: content_node.aria_describedby.clone(),
+            aria_controls: content_node.aria_controls.clone(),
+            aria_current: content_node.aria_current.clone(),
+            aria_expanded: content_node.aria_expanded.clone(),
+            aria_pressed: content_node.aria_pressed.clone(),
+            aria_selected: content_node.aria_selected.clone(),
+            aria_hidden: content_node.aria_hidden,
+            hidden: content_node.hidden,
+            inert: content_node.inert,
+            tabindex: content_node.tabindex.clone(),
+            focusable: content_node.focusable,
+            contenteditable: content_node.contenteditable.clone(),
+            draggable: content_node.draggable.clone(),
+            popover: content_node.popover.clone(),
             placeholder: content_node.placeholder.clone(),
             autocomplete: content_node.autocomplete.clone(),
             value: content_node.value.clone(),
@@ -8667,8 +8719,11 @@ fn collect_browser_content_nodes(
     output: &mut Vec<BrowserContentNode>,
     base_href: Option<&str>,
     labels: &[(String, String)],
+    id_texts: &[(String, String)],
 ) {
-    collect_browser_content_nodes_with_mode(nodes, output, base_href, labels, None, false);
+    collect_browser_content_nodes_with_mode(
+        nodes, output, base_href, labels, id_texts, None, false,
+    );
 }
 
 fn collect_browser_content_nodes_with_mode(
@@ -8676,6 +8731,7 @@ fn collect_browser_content_nodes_with_mode(
     output: &mut Vec<BrowserContentNode>,
     base_href: Option<&str>,
     labels: &[(String, String)],
+    id_texts: &[(String, String)],
     current_label_text: Option<&str>,
     preserve_whitespace: bool,
 ) {
@@ -8690,6 +8746,7 @@ fn collect_browser_content_nodes_with_mode(
                 if !text.is_empty() {
                     output.push(BrowserContentNode {
                         role: "text".to_string(),
+                        authored_role: None,
                         name: None,
                         id: None,
                         classes: Vec::new(),
@@ -8720,6 +8777,22 @@ fn collect_browser_content_nodes_with_mode(
                         label_for: None,
                         labels: Vec::new(),
                         accessible_name: None,
+                        aria_label: None,
+                        aria_labelledby: Vec::new(),
+                        aria_describedby: Vec::new(),
+                        aria_controls: Vec::new(),
+                        aria_current: None,
+                        aria_expanded: None,
+                        aria_pressed: None,
+                        aria_selected: None,
+                        aria_hidden: false,
+                        hidden: false,
+                        inert: false,
+                        tabindex: None,
+                        focusable: None,
+                        contenteditable: None,
+                        draggable: None,
+                        popover: None,
                         placeholder: None,
                         autocomplete: None,
                         value: None,
@@ -8762,6 +8835,7 @@ fn collect_browser_content_nodes_with_mode(
                     element,
                     base_href,
                     labels,
+                    id_texts,
                     current_label_text,
                     preserve_whitespace,
                 ) {
@@ -8777,6 +8851,7 @@ fn browser_content_node_for_element(
     element: &Element,
     base_href: Option<&str>,
     labels: &[(String, String)],
+    id_texts: &[(String, String)],
     current_label_text: Option<&str>,
     preserve_whitespace: bool,
 ) -> Option<BrowserContentNode> {
@@ -8796,6 +8871,7 @@ fn browser_content_node_for_element(
             &mut children,
             base_href,
             labels,
+            id_texts,
             child_label_text,
             preserve_whitespace || browser_preserves_text_whitespace(&element.name),
         );
@@ -8811,10 +8887,12 @@ fn browser_content_node_for_element(
     let poster = browser_media_poster(element);
     let quote_cite = browser_quote_cite(element);
     let control_labels = browser_control_labels(element, labels, current_label_text);
-    let accessible_name = browser_accessible_name(element, role, &control_labels);
+    let aria_label = browser_aria_label(element);
+    let accessible_name = browser_accessible_name(element, role, &control_labels, id_texts);
 
     Some(BrowserContentNode {
         role: role.to_string(),
+        authored_role: browser_authored_role(element),
         name: Some(element.name.clone()),
         id: element.attribute("id").map(ToOwned::to_owned),
         classes: element
@@ -8854,6 +8932,22 @@ fn browser_content_node_for_element(
         label_for: browser_label_for(element),
         labels: control_labels,
         accessible_name,
+        aria_label,
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        aria_controls: browser_aria_idrefs(element, "aria-controls"),
+        aria_current: browser_aria_state(element, "aria-current"),
+        aria_expanded: browser_aria_state(element, "aria-expanded"),
+        aria_pressed: browser_aria_state(element, "aria-pressed"),
+        aria_selected: browser_aria_state(element, "aria-selected"),
+        aria_hidden: browser_aria_hidden(element),
+        hidden: browser_hidden(element),
+        inert: browser_inert(element),
+        tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
+        focusable: browser_focusable(element),
+        contenteditable: element.attribute("contenteditable").map(ToOwned::to_owned),
+        draggable: element.attribute("draggable").map(ToOwned::to_owned),
+        popover: element.attribute("popover").map(ToOwned::to_owned),
         placeholder: browser_placeholder(element),
         autocomplete: browser_autocomplete(element),
         value: browser_content_value(element),
@@ -9341,6 +9435,27 @@ fn collect_label_texts_by_control_id_into(nodes: &[Node], labels: &mut Vec<(Stri
     }
 }
 
+fn collect_element_texts_by_id(nodes: &[Node]) -> Vec<(String, String)> {
+    let mut id_texts = Vec::new();
+    collect_element_texts_by_id_into(nodes, &mut id_texts);
+    id_texts
+}
+
+fn collect_element_texts_by_id_into(nodes: &[Node], id_texts: &mut Vec<(String, String)>) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if let Some(id) = element.attribute("id") {
+            let text = visible_text_for_nodes(&element.children);
+            if !text.is_empty() {
+                id_texts.push((id.to_string(), text));
+            }
+        }
+        collect_element_texts_by_id_into(&element.children, id_texts);
+    }
+}
+
 fn is_browser_form_control_element(name: &str) -> bool {
     matches!(name, "button" | "input" | "select" | "textarea")
 }
@@ -9374,16 +9489,106 @@ fn push_unique_string(values: &mut Vec<String>, value: String) {
     }
 }
 
+fn browser_authored_role(element: &Element) -> Option<String> {
+    element
+        .attribute("role")
+        .map(collapse_html_whitespace)
+        .filter(|role| !role.is_empty())
+}
+
+fn browser_aria_label(element: &Element) -> Option<String> {
+    element
+        .attribute("aria-label")
+        .map(collapse_html_whitespace)
+        .filter(|label| !label.is_empty())
+}
+
+fn browser_aria_idrefs(element: &Element, name: &str) -> Vec<String> {
+    element
+        .attribute(name)
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_aria_state(element: &Element, name: &str) -> Option<String> {
+    element
+        .attribute(name)
+        .map(collapse_html_whitespace)
+        .filter(|state| !state.is_empty())
+}
+
+fn browser_aria_hidden(element: &Element) -> bool {
+    element
+        .attribute("aria-hidden")
+        .map(|value| value.eq_ignore_ascii_case("true"))
+        .unwrap_or(false)
+}
+
+fn browser_hidden(element: &Element) -> bool {
+    element.attribute("hidden").is_some()
+}
+
+fn browser_inert(element: &Element) -> bool {
+    element.attribute("inert").is_some()
+}
+
+fn browser_focusable(element: &Element) -> Option<bool> {
+    let tabindex = element.attribute("tabindex");
+    let contenteditable = element.attribute("contenteditable");
+    if tabindex.is_none() && contenteditable.is_none() {
+        return None;
+    }
+
+    if element.attribute("disabled").is_some()
+        || browser_hidden(element)
+        || browser_inert(element)
+        || browser_aria_hidden(element)
+    {
+        return Some(false);
+    }
+
+    if let Some(tabindex) = tabindex {
+        return Some(
+            tabindex
+                .trim()
+                .parse::<i32>()
+                .map(|value| value >= 0)
+                .unwrap_or(true),
+        );
+    }
+
+    Some(
+        contenteditable
+            .map(|value| {
+                value.is_empty()
+                    || value.eq_ignore_ascii_case("true")
+                    || value.eq_ignore_ascii_case("plaintext-only")
+            })
+            .unwrap_or(false),
+    )
+}
+
 fn browser_accessible_name(
     element: &Element,
     role: &str,
     control_labels: &[String],
+    id_texts: &[(String, String)],
 ) -> Option<String> {
-    if let Some(aria_label) = element.attribute("aria-label") {
-        let aria_label = collapse_html_whitespace(aria_label);
-        if !aria_label.is_empty() {
-            return Some(aria_label);
+    let labelledby = browser_aria_idrefs(element, "aria-labelledby");
+    if !labelledby.is_empty() {
+        let mut parts = Vec::new();
+        for id in labelledby {
+            if let Some((_, text)) = id_texts.iter().find(|(candidate, _)| candidate == &id) {
+                push_unique_string(&mut parts, collapse_html_whitespace(text));
+            }
         }
+        if !parts.is_empty() {
+            return Some(parts.join(" "));
+        }
+    }
+
+    if let Some(aria_label) = browser_aria_label(element) {
+        return Some(aria_label);
     }
 
     if !control_labels.is_empty() {
@@ -9678,7 +9883,7 @@ fn browser_form_control(
         control_type,
         name: element.attribute("name").map(ToOwned::to_owned),
         form_owner: browser_form_owner(element),
-        accessible_name: browser_accessible_name(element, "control", &control_labels),
+        accessible_name: browser_accessible_name(element, "control", &control_labels, &[]),
         labels: control_labels,
         placeholder: browser_placeholder(element),
         autocomplete: browser_autocomplete(element),
@@ -10310,6 +10515,63 @@ mod tests {
                 .as_deref(),
             Some("Query")
         );
+    }
+
+    #[test]
+    fn browser_aria_interaction_metadata_tracks_roles_states_and_focus() {
+        let document = parse_html(
+            "<body><main id=app aria-label=\"App shell\">\
+             <button id=menu aria-expanded=false aria-controls=panel tabindex=0>Menu</button>\
+             <section id=panel role=region aria-labelledby=panel-title aria-describedby=panel-help inert>\
+               <h2 id=panel-title>Settings</h2><p id=panel-help>Choose options</p>\
+               <div role=button tabindex=-1 aria-pressed=mixed aria-current=page contenteditable=true draggable=true popover=manual>Inline action</div>\
+             </section>\
+             <p hidden>Hidden copy</p><span aria-hidden=true>Decorative</span></main>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let main = &content_tree.children[0];
+        assert_eq!(main.role, "main");
+        assert_eq!(main.accessible_name.as_deref(), Some("App shell"));
+        assert_eq!(main.aria_label.as_deref(), Some("App shell"));
+
+        let menu = &main.children[0];
+        assert_eq!(menu.role, "control");
+        assert_eq!(menu.accessible_name.as_deref(), Some("Menu"));
+        assert_eq!(menu.aria_expanded.as_deref(), Some("false"));
+        assert_eq!(menu.aria_controls, vec!["panel"]);
+        assert_eq!(menu.tabindex.as_deref(), Some("0"));
+        assert_eq!(menu.focusable, Some(true));
+
+        let panel = &main.children[1];
+        assert_eq!(panel.role, "section");
+        assert_eq!(panel.authored_role.as_deref(), Some("region"));
+        assert_eq!(panel.aria_labelledby, vec!["panel-title"]);
+        assert_eq!(panel.aria_describedby, vec!["panel-help"]);
+        assert_eq!(panel.accessible_name.as_deref(), Some("Settings"));
+        assert!(panel.inert);
+
+        let action = &panel.children[2];
+        assert_eq!(action.role, "block");
+        assert_eq!(action.authored_role.as_deref(), Some("button"));
+        assert_eq!(action.aria_pressed.as_deref(), Some("mixed"));
+        assert_eq!(action.aria_current.as_deref(), Some("page"));
+        assert_eq!(action.tabindex.as_deref(), Some("-1"));
+        assert_eq!(action.focusable, Some(false));
+        assert_eq!(action.contenteditable.as_deref(), Some("true"));
+        assert_eq!(action.draggable.as_deref(), Some("true"));
+        assert_eq!(action.popover.as_deref(), Some("manual"));
+
+        assert!(main.children[2].hidden);
+        assert!(main.children[3].aria_hidden);
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        let render_panel = &render_tree.children[0].children[1];
+        assert_eq!(render_panel.authored_role.as_deref(), Some("region"));
+        assert_eq!(render_panel.accessible_name.as_deref(), Some("Settings"));
+        assert!(render_panel.inert);
+        assert_eq!(render_tree.children[0].children[0].focusable, Some(true));
     }
 
     #[test]

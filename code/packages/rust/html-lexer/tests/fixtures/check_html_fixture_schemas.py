@@ -460,6 +460,7 @@ def check_browser_content_node(
 ) -> None:
     require_string(node_path, node, "role", errors)
     for field in (
+        "authored_role",
         "name",
         "id",
         "title",
@@ -483,6 +484,15 @@ def check_browser_content_node(
         "form_owner",
         "label_for",
         "accessible_name",
+        "aria_label",
+        "aria_current",
+        "aria_expanded",
+        "aria_pressed",
+        "aria_selected",
+        "tabindex",
+        "contenteditable",
+        "draggable",
+        "popover",
         "placeholder",
         "autocomplete",
         "value",
@@ -508,6 +518,9 @@ def check_browser_content_node(
     require_optional_string_list(node_path, node, "classes", errors)
     require_optional_string_list(node_path, node, "headers", errors)
     require_optional_string_list(node_path, node, "labels", errors)
+    require_optional_string_list(node_path, node, "aria_labelledby", errors)
+    require_optional_string_list(node_path, node, "aria_describedby", errors)
+    require_optional_string_list(node_path, node, "aria_controls", errors)
     for field in (
         "disabled",
         "required",
@@ -521,6 +534,10 @@ def check_browser_content_node(
         "muted",
         "playsinline",
         "list_reversed",
+        "aria_hidden",
+        "hidden",
+        "inert",
+        "focusable",
     ):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)
@@ -568,6 +585,7 @@ def check_browser_render_node(
     require_string(node_path, node, "display", errors)
     require_string(node_path, node, "role", errors)
     for field in (
+        "authored_role",
         "name",
         "id",
         "title",
@@ -591,6 +609,15 @@ def check_browser_render_node(
         "form_owner",
         "label_for",
         "accessible_name",
+        "aria_label",
+        "aria_current",
+        "aria_expanded",
+        "aria_pressed",
+        "aria_selected",
+        "tabindex",
+        "contenteditable",
+        "draggable",
+        "popover",
         "placeholder",
         "autocomplete",
         "value",
@@ -616,6 +643,9 @@ def check_browser_render_node(
     require_optional_string_list(node_path, node, "classes", errors)
     require_optional_string_list(node_path, node, "headers", errors)
     require_optional_string_list(node_path, node, "labels", errors)
+    require_optional_string_list(node_path, node, "aria_labelledby", errors)
+    require_optional_string_list(node_path, node, "aria_describedby", errors)
+    require_optional_string_list(node_path, node, "aria_controls", errors)
     for field in (
         "disabled",
         "required",
@@ -629,6 +659,10 @@ def check_browser_render_node(
         "muted",
         "playsinline",
         "list_reversed",
+        "aria_hidden",
+        "hidden",
+        "inert",
+        "focusable",
     ):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)
