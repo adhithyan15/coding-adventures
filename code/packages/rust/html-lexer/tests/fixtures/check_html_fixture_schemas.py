@@ -260,7 +260,7 @@ def check_browser_expected_lists(
         resource_path = f"{case_path}.expected.resources[{index}]"
         require_string(resource_path, resource, "kind", errors)
         require_string(resource_path, resource, "url", errors)
-        for field in ("resolved_url", "rel", "type_hint", "media", "title"):
+        for field in ("resolved_url", "rel", "type_hint", "media", "title", "width", "height"):
             require_optional_nullable_string(resource_path, resource, field, errors)
         require_boolean(resource_path, resource, "async_script", errors)
         require_boolean(resource_path, resource, "defer_script", errors)
@@ -357,6 +357,11 @@ def check_browser_content_node(
         "src",
         "resolved_src",
         "alt",
+        "resource_kind",
+        "width",
+        "height",
+        "type_hint",
+        "media",
         "control_type",
         "value",
     ):
@@ -420,6 +425,11 @@ def check_browser_render_node(
         "src",
         "resolved_src",
         "alt",
+        "resource_kind",
+        "width",
+        "height",
+        "type_hint",
+        "media",
         "control_type",
         "value",
     ):
