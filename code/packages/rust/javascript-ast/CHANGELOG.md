@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.2.0] - 2026-05-24
+
+### Added (CLOC09 Phase 1 — full ESTree-compat node taxonomy)
+- 25 new node variants across three module files (`statement.rs`, `expression.rs`, `declaration.rs`) implementing CLOC09 Phase 1:
+  - **Statements (10)**: `ExpressionStatement`, `BlockStatement`, `IfStatement`, `WhileStatement`, `ForStatement` (with `ForInit` enum), `ReturnStatement`, `BreakStatement`, `ContinueStatement`, `EmptyStatement`, and a `Statement::Declaration(Declaration)` untagged wrap arm (matches ESTree's flatter wire shape where declarations appear as statements).
+  - **Expressions (14)**: `Identifier`, `NumericLiteral`, `StringLiteral`, `BooleanLiteral`, `NullLiteral`, `BinaryExpression` (+ `BinaryOperator` enum), `LogicalExpression` (+ `LogicalOperator`), `UnaryExpression` (+ `UnaryOperator`), `AssignmentExpression` (+ `AssignmentOperator` + `AssignmentTarget`), `ConditionalExpression`, `CallExpression`, `MemberExpression`, `ArrayExpression`, `ObjectExpression` (+ `Property` + `PropertyKind` + `PropertyKey`).
+  - **Declarations (2)**: `VariableDeclaration` (+ `VarKind`, `VariableDeclarator`, `BindingTarget`), `FunctionDeclaration` (+ `FunctionParam`).
+- `Program` extended with `body: Vec<ProgramItem>` where `ProgramItem` is an untagged union of `Statement | Declaration`. Defaults to empty so existing callers don't churn.
+- `ProgramItem::with_body(...)` builder helper.
+- `Program::new_untraced(version, source_type)` constructor for the tracing-disabled mode per the CLOC09 amendment.
+- Full ESTree wire format compatibility: `#[serde(tag = "type")]` on each node enum, `#[serde(rename_all = "camelCase")]` on every struct, operator enums serialize to ESTree-canonical strings (`"+"`, `"==="`, `"&&"`, `"typeof"`, etc.), `VarKind` and `PropertyKind` serialize lowercase (`"var"`/`"let"`/`"const"`, `"init"`/`"get"`/`"set"`).
+- Per-node `cv` field is `Option<CvId>` with `#[serde(skip_serializing_if = "Option::is_none", default)]` per the CLOC09 amendment — untraced ASTs match ESTree's wire format byte-for-byte (no `cv` key in output).
+- `is_async` field on `FunctionDeclaration` serializes as JSON `"async"` to match ESTree (Rust's `async` is a reserved keyword).
+- 50 tests covering: per-variant round-trip in both traced and untraced modes, JSON shape pinning each variant's `"type"` tag matches ESTree-spec name, every operator value round-trips with the canonical source-text spelling, `is_async` ↔ `"async"` JSON rename, declaration untagged-wrap collapses to inner type tag, optional fields are omitted from JSON when `None`, traced + untraced `Program` round-trip end-to-end.
+
+### Changed
+- `Program.cv: CvId` → `Program.cv: Option<CvId>` per CLOC09 amendment. `Program::new(cv, version, source_type)` keeps its existing signature but wraps the cv in `Some` internally, so all 11+ downstream call sites (every pass crate, the emitter, the typechecker) keep working without changes.
+- `Program::new` body defaults to empty `Vec` — additive change.
+- `Eq` derive removed from `Program` (NumericLiteral.value is `f64` which has no `Eq`); `PartialEq` is preserved.
+- Cargo.toml gains `serde` (with `derive`) as a dependency and `serde_json` as a dev-dependency for round-trip tests.
+- `closure-pass-pipeline`: the CV contribution loop and the FixedPoint diagnostic emission both gracefully handle `Program.cv == None` (skip the contribute calls; use empty-string cv on the diagnostic; tracked as Phase 1.x followup to migrate `Diagnostic.cv` to `Option<String>`).
+- `closure-typechecker::check`: gracefully handles `Program.cv == None` by skipping the root-node judgment.
+
+### Notes
+- `MemberExpression.property` is `Box<Expression>` directly (the earlier `MemberProperty` enum was removed because untagged-enum disambiguation on identical JSON shapes is fundamentally ambiguous). When `computed: false`, the parser is required to emit an `Identifier` as the property; tools that walk the tree can assert this if they care. Matches ESTree's wire format precisely.
+- A deprecated `MemberProperty = Box<Expression>` type alias is kept as a stub for the brief window between spec write-up and implementation.
+- Phase 2 will add `BigIntLiteral`, `RegExpLiteral`, `TemplateLiteral`, control-flow gaps (`SwitchStatement`, `TryStatement`, etc.), `SequenceExpression`, `UpdateExpression`, `NewExpression`, `SpreadElement`, `ThisExpression`, `SuperExpression`.
+- Phase 3 adds patterns (destructuring), arrow functions, classes.
+- Phase 4 adds modules.
+- Phase 5 adds async / generators / nullish / optional chaining / `&&=` `||=` `??=`.
+
 ## [0.1.0] - 2026-05-21
 
 ### Added

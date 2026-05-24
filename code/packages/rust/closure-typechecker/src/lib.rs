@@ -121,7 +121,13 @@ impl DiagnosticGroup {
 /// against the sidecar.
 pub fn check(program: &Program, sidecar: &Sidecar, cv: &mut CVLog) -> CheckResult {
     let mut result = CheckResult::new();
-    judge_node(&program.cv, sidecar, &mut result, cv);
+    // The Program's cv field is optional (CLOC09 amendment). If the
+    // caller constructed the Program with tracing disabled, there's no
+    // CV id to look up in the sidecar and therefore no judgment to
+    // make on the program root — skip silently.
+    if let Some(ref node_cv) = program.cv {
+        judge_node(node_cv, sidecar, &mut result, cv);
+    }
     result
 }
 
