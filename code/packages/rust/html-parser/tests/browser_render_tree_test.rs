@@ -28,6 +28,8 @@ struct ExpectedRenderTree {
 struct ExpectedRenderNode {
     display: String,
     role: String,
+    #[serde(default)]
+    authored_role: Option<String>,
     name: Option<String>,
     #[serde(default)]
     id: Option<String>,
@@ -82,6 +84,38 @@ struct ExpectedRenderNode {
     labels: Vec<String>,
     #[serde(default)]
     accessible_name: Option<String>,
+    #[serde(default)]
+    aria_label: Option<String>,
+    #[serde(default)]
+    aria_labelledby: Vec<String>,
+    #[serde(default)]
+    aria_describedby: Vec<String>,
+    #[serde(default)]
+    aria_controls: Vec<String>,
+    #[serde(default)]
+    aria_current: Option<String>,
+    #[serde(default)]
+    aria_expanded: Option<String>,
+    #[serde(default)]
+    aria_pressed: Option<String>,
+    #[serde(default)]
+    aria_selected: Option<String>,
+    #[serde(default)]
+    aria_hidden: bool,
+    #[serde(default)]
+    hidden: bool,
+    #[serde(default)]
+    inert: bool,
+    #[serde(default)]
+    tabindex: Option<String>,
+    #[serde(default)]
+    focusable: Option<bool>,
+    #[serde(default)]
+    contenteditable: Option<String>,
+    #[serde(default)]
+    draggable: Option<String>,
+    #[serde(default)]
+    popover: Option<String>,
     #[serde(default)]
     placeholder: Option<String>,
     #[serde(default)]
@@ -182,6 +216,7 @@ impl ExpectedRenderNode {
         BrowserRenderNode {
             display: self.display,
             role: self.role,
+            authored_role: self.authored_role,
             name: self.name,
             id: self.id,
             classes: self.classes,
@@ -212,6 +247,22 @@ impl ExpectedRenderNode {
             label_for: self.label_for,
             labels: self.labels,
             accessible_name: self.accessible_name,
+            aria_label: self.aria_label,
+            aria_labelledby: self.aria_labelledby,
+            aria_describedby: self.aria_describedby,
+            aria_controls: self.aria_controls,
+            aria_current: self.aria_current,
+            aria_expanded: self.aria_expanded,
+            aria_pressed: self.aria_pressed,
+            aria_selected: self.aria_selected,
+            aria_hidden: self.aria_hidden,
+            hidden: self.hidden,
+            inert: self.inert,
+            tabindex: self.tabindex,
+            focusable: self.focusable,
+            contenteditable: self.contenteditable,
+            draggable: self.draggable,
+            popover: self.popover,
             placeholder: self.placeholder,
             autocomplete: self.autocomplete,
             value: self.value,
