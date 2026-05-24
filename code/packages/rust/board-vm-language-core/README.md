@@ -193,6 +193,10 @@ transport retention policy.
 transport snapshot records with Rust-owned snapshot names, labels, queue-depth
 metadata, and messages, so frontends can display point-in-time transport state
 without rebuilding archive retention policy.
+`input_callback_transport_checkpoint_summary` preserves those snapshots as
+stable transport checkpoint records with Rust-owned checkpoint names, labels,
+queue-depth metadata, and messages, so adapters can resume or compare callback
+transport state without rebuilding snapshot policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
