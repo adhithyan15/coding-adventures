@@ -29,6 +29,7 @@ import {
   pssNewtonIteration,
   pssNewtonSolve,
   pssNewtonUpdate,
+  poleZeroRcHighpass,
   poleZeroRcLowpass,
   pssResidualJacobian,
   pssResidual,
@@ -788,6 +789,36 @@ describe("transient", () => {
       inputSource: "Vin",
       outputNode: "out",
       entries: [
+        {
+          kind: "pole",
+          real: -1.0e3,
+          imaginary: 0.0,
+          frequencyHz: 1.0e3 / (2.0 * Math.PI),
+          damping: 1.0,
+        },
+      ],
+    });
+  });
+
+  it("computes the zero and pole for a simple RC high-pass fixture", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(capacitor("C1", "in", "out", 1.0e-6));
+    circuit.add(resistor("R1", "out", "0", 1_000.0));
+
+    const result = poleZeroRcHighpass(circuit, "Vin", "out");
+
+    expect(result).toEqual({
+      inputSource: "Vin",
+      outputNode: "out",
+      entries: [
+        {
+          kind: "zero",
+          real: 0.0,
+          imaginary: 0.0,
+          frequencyHz: 0.0,
+          damping: 1.0,
+        },
         {
           kind: "pole",
           real: -1.0e3,

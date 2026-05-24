@@ -1,12 +1,13 @@
 use spice_engine::{
     dc_op, distortion_from_fourier, distortion_from_transient, estimate_period, format_dc_table,
-    format_transient_table, fourier, pole_zero_rc_lowpass, pss_newton_candidate_with_tolerance,
-    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
-    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
-    pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
-    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
-    Ccvs, Circuit, CurrentSource, DistortionHarmonic, DistortionPoint, DistortionResult, Element,
-    ExpWaveform, Inductor, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
+    format_transient_table, fourier, pole_zero_rc_highpass, pole_zero_rc_lowpass,
+    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
+    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
+    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
+    pss_with_tolerance, transient, transient_adaptive, transient_with_method,
+    AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
+    CurrentSource, DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform,
+    Inductor, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
     PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
     PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
     PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
@@ -941,6 +942,44 @@ fn pole_zero_rc_lowpass_returns_simple_rc_pole() {
                 frequency_hz: 1.0e3 / (2.0 * std::f64::consts::PI),
                 damping: 1.0,
             }],
+        }
+    );
+}
+
+#[test]
+fn pole_zero_rc_highpass_returns_origin_zero_and_simple_rc_pole() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new(
+        "C1", "in", "out", 1.0e-6,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "out", "0", 1_000.0)));
+
+    let result = pole_zero_rc_highpass(&circuit, "Vin", "out").unwrap();
+
+    assert_eq!(
+        result,
+        PoleZeroResult {
+            input_source: "Vin".to_string(),
+            output_node: "out".to_string(),
+            entries: vec![
+                PoleZeroEntry {
+                    kind: PoleZeroEntryKind::Zero,
+                    real: 0.0,
+                    imaginary: 0.0,
+                    frequency_hz: 0.0,
+                    damping: 1.0,
+                },
+                PoleZeroEntry {
+                    kind: PoleZeroEntryKind::Pole,
+                    real: -1.0e3,
+                    imaginary: 0.0,
+                    frequency_hz: 1.0e3 / (2.0 * std::f64::consts::PI),
+                    damping: 1.0,
+                },
+            ],
         }
     );
 }

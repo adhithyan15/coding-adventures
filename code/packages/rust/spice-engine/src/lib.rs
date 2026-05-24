@@ -2235,6 +2235,91 @@ pub fn pole_zero_rc_lowpass(
     })
 }
 
+pub fn pole_zero_rc_highpass(
+    circuit: &Circuit,
+    input_source: &str,
+    output_node: &str,
+) -> Result<PoleZeroResult, SpiceError> {
+    let source = circuit
+        .elements()
+        .iter()
+        .find_map(|element| match element {
+            Element::VoltageSource(source) if source.name == input_source => Some(source),
+            _ => None,
+        })
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: input_source.to_string(),
+            reason: "pole_zero_rc_highpass: missing input source".to_string(),
+        })?;
+    if !is_ground(&source.negative) {
+        return Err(SpiceError::InvalidElement {
+            name: input_source.to_string(),
+            reason: "pole_zero_rc_highpass: input source negative terminal must be ground"
+                .to_string(),
+        });
+    }
+
+    let capacitor = circuit.elements().iter().find_map(|element| match element {
+        Element::Capacitor(capacitor)
+            if (capacitor.n1 == source.positive && capacitor.n2 == output_node)
+                || (capacitor.n2 == source.positive && capacitor.n1 == output_node) =>
+        {
+            Some(capacitor)
+        }
+        _ => None,
+    });
+    let resistor = circuit.elements().iter().find_map(|element| match element {
+        Element::Resistor(resistor)
+            if (resistor.n1 == output_node || resistor.n2 == output_node)
+                && (is_ground(&resistor.n1) || is_ground(&resistor.n2)) =>
+        {
+            Some(resistor)
+        }
+        _ => None,
+    });
+    let (Some(capacitor), Some(resistor)) = (capacitor, resistor) else {
+        return Err(SpiceError::InvalidElement {
+            name: output_node.to_string(),
+            reason: "pole_zero_rc_highpass: expected one capacitor from input to output and one grounded output resistor"
+                .to_string(),
+        });
+    };
+    if !resistor.resistance_ohms.is_finite() || resistor.resistance_ohms <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: resistor.name.clone(),
+            reason: "pole_zero_rc_highpass: resistance must be finite and positive".to_string(),
+        });
+    }
+    if !capacitor.capacitance_farads.is_finite() || capacitor.capacitance_farads <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: capacitor.name.clone(),
+            reason: "pole_zero_rc_highpass: capacitance must be finite and positive".to_string(),
+        });
+    }
+
+    let real = -1.0 / (resistor.resistance_ohms * capacitor.capacitance_farads);
+    Ok(PoleZeroResult {
+        input_source: input_source.to_string(),
+        output_node: output_node.to_string(),
+        entries: vec![
+            PoleZeroEntry {
+                kind: PoleZeroEntryKind::Zero,
+                real: 0.0,
+                imaginary: 0.0,
+                frequency_hz: 0.0,
+                damping: 1.0,
+            },
+            PoleZeroEntry {
+                kind: PoleZeroEntryKind::Pole,
+                real,
+                imaginary: 0.0,
+                frequency_hz: real.abs() / TWO_PI,
+                damping: 1.0,
+            },
+        ],
+    })
+}
+
 pub fn distortion_from_fourier(
     result: &FourierResult,
     input_source: &str,

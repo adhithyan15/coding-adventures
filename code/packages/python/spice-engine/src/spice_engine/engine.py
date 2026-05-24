@@ -621,6 +621,82 @@ def pole_zero_rc_lowpass(
     )
 
 
+def pole_zero_rc_highpass(
+    circuit: Circuit,
+    input_source: str,
+    output_node: str,
+) -> PoleZeroResult:
+    """Return the zero-at-origin and one-pole result for an RC high-pass fixture."""
+
+    source = next(
+        (
+            element
+            for element in circuit.elements
+            if isinstance(element, VoltageSource) and element.name == input_source
+        ),
+        None,
+    )
+    if source is None:
+        raise ValueError(f"pole_zero_rc_highpass: missing input source {input_source!r}")
+    if not _is_ground(source.n_minus):
+        raise ValueError("pole_zero_rc_highpass: input source negative terminal must be ground")
+
+    capacitor = next(
+        (
+            element
+            for element in circuit.elements
+            if isinstance(element, Capacitor)
+            and {
+                element.n_plus,
+                element.n_minus,
+            }
+            == {source.n_plus, output_node}
+        ),
+        None,
+    )
+    resistor = next(
+        (
+            element
+            for element in circuit.elements
+            if isinstance(element, Resistor)
+            and output_node in {element.n_plus, element.n_minus}
+            and (_is_ground(element.n_plus) or _is_ground(element.n_minus))
+        ),
+        None,
+    )
+    if capacitor is None or resistor is None:
+        raise ValueError(
+            "pole_zero_rc_highpass: expected one capacitor from input to output "
+            "and one grounded output resistor"
+        )
+    if not math.isfinite(resistor.resistance) or resistor.resistance <= 0.0:
+        raise ValueError("pole_zero_rc_highpass: resistance must be finite and positive")
+    if not math.isfinite(capacitor.capacitance) or capacitor.capacitance <= 0.0:
+        raise ValueError("pole_zero_rc_highpass: capacitance must be finite and positive")
+
+    real = -1.0 / (resistor.resistance * capacitor.capacitance)
+    return PoleZeroResult(
+        input_source=input_source,
+        output_node=output_node,
+        entries=[
+            PoleZeroEntry(
+                kind="zero",
+                real=0.0,
+                imaginary=0.0,
+                frequency=0.0,
+                damping=1.0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=real,
+                imaginary=0.0,
+                frequency=abs(real) / (2.0 * math.pi),
+                damping=1.0,
+            ),
+        ],
+    )
+
+
 def distortion_from_fourier(
     result: FourierResult,
     input_source: str,
