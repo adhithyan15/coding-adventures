@@ -2102,7 +2102,7 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             return UnaryExpr(op=UnaryOp.NOT, operand=glob_call)
         return glob_call
 
-    # IS NULL / IS NOT NULL / IS DISTINCT FROM / IS NOT DISTINCT FROM.
+    # IS NULL / IS NOT NULL / IS [NOT] DISTINCT FROM / IS [NOT] <expr>.
     if _has_keyword_child(node, "IS"):
         if _has_keyword_child(node, "DISTINCT"):
             # "IS [NOT] DISTINCT FROM collated"
@@ -2114,9 +2114,25 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             if _has_keyword_child(node, "NOT"):
                 return BinaryExpr(op=BinaryOp.IS_NOT_DISTINCT_FROM, left=left, right=right)
             return BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, left=left, right=right)
+        # ``IS NULL`` / ``IS NOT NULL`` — detect by the presence of NULL in
+        # the keyword tail.  The bare-RHS form (``IS <expr>``) has exactly
+        # two ``collated`` children; the NULL form has only one.
+        if len(collateds) == 1:
+            if _has_keyword_child(node, "NOT"):
+                return IsNotNull(operand=left)
+            return IsNull(operand=left)
+        # ``x IS y`` / ``x IS NOT y`` for arbitrary RHS — SQLite's NULL-safe
+        # equality.  ``IS`` ≡ ``IS NOT DISTINCT FROM`` and ``IS NOT`` ≡
+        # ``IS DISTINCT FROM``.  Routed through the existing IS_[NOT_]DISTINCT_FROM
+        # planner/codegen/VM paths so no downstream changes are needed.
+        right, right_coll = _collated(collateds[1], state)
+        coll = left_coll if left_coll is not None else right_coll
+        if coll is not None:
+            left = _collation_transform(left, coll)
+            right = _collation_transform(right, coll)
         if _has_keyword_child(node, "NOT"):
-            return IsNotNull(operand=left)
-        return IsNull(operand=left)
+            return BinaryExpr(op=BinaryOp.IS_DISTINCT_FROM, left=left, right=right)
+        return BinaryExpr(op=BinaryOp.IS_NOT_DISTINCT_FROM, left=left, right=right)
 
     return left
 

@@ -1,5 +1,33 @@
 # Changelog
 
+## [2.7.0] - 2026-05-23
+
+### Added
+
+- SQLite's NULL-safe equality operators ``x IS y`` and ``x IS NOT y``
+  (general RHS form, beyond the existing ``IS NULL`` /
+  ``IS NOT NULL`` / ``IS DISTINCT FROM …`` shapes) are now supported.
+  ``IS`` is equivalent to ``IS NOT DISTINCT FROM`` (true iff both
+  sides are equal *or* both are NULL); ``IS NOT`` is the negation.
+
+  Examples that previously raised ``Parse error … Expected "NULL" or
+  "NOT" or "DISTINCT", got '1'``::
+
+      SELECT 1 IS 1                ⟶  1
+      SELECT NULL IS NULL          ⟶  1
+      SELECT NULL IS 1             ⟶  0
+      SELECT 'a' IS 'a'            ⟶  1
+      SELECT 1 IS NOT 2            ⟶  1
+      WHERE a IS b                 (NULL-safe column comparison)
+
+  Implementation: two new grammar alternatives — ``"IS" collated``
+  and ``"IS" "NOT" collated`` — at the end of the IS family (PEG
+  order: the more specific ``NULL`` / ``DISTINCT`` forms still get
+  the first shot at matching).  The adapter detects the bare-RHS
+  form by the count of ``collated`` children (one child = ``IS
+  NULL`` shape; two = ``IS <expr>`` shape) and routes through the
+  existing ``IS_[NOT_]DISTINCT_FROM`` planner/codegen/VM paths.
+
 ## [2.6.0] - 2026-05-23
 
 ### Added
