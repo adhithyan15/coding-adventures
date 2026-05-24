@@ -205,6 +205,10 @@ boundaries without rebuilding checkpoint policy.
 transport cursor records with Rust-owned cursor names, labels, queue-depth
 metadata, and messages, so frontends can resume marked transport views without
 rebuilding marker policy.
+`input_callback_transport_bookmark_summary` saves those cursors as stable
+transport bookmark records with Rust-owned bookmark names, labels, queue-depth
+metadata, and messages, so frontends can restore callback transport positions
+without rebuilding cursor policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
