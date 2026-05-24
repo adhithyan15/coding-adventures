@@ -2211,6 +2211,35 @@ fn emit_host_table_jsx(
         format!(" style={{{{ {part_style_str} }}}}")
     };
 
+    // UI31 — `dir` slot for right-to-left layout. Lowers to a
+    // `dir={dir}` attribute on the root `<table>`. The browser handles
+    // column flip / scrollbar side / focus-ring side from there. When
+    // the slot is unset the table inherits direction from the enclosing
+    // `<html dir=…>` or nearest `dir`-bearing ancestor — no per-table
+    // override needed for the common LTR case.
+    //
+    // Spec: `code/specs/UI31-host-table.md` §3.2 "RTL — respect the
+    // host's layout direction". A11y note: dir on a real `<table>` is
+    // a first-class accessibility signal — screen readers announce
+    // "left-to-right" / "right-to-left" navigation mode automatically.
+    // This is exactly the non-negotiable contract the spec locks down.
+    let dir_attr = if let Some(slot) = find_slot_ref_prop(node, "dir") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        format!(" dir={{{camel}}}")
+    } else if let Some(kw) = find_keyword_prop(node, "dir") {
+        // Restrict to the standard HTML `dir` value space — anything
+        // else would be a no-op in the browser anyway and risks
+        // attribute-injection via unknown values.
+        if matches!(kw, "ltr" | "rtl" | "auto") {
+            format!(" dir=\"{kw}\"")
+        } else {
+            String::new()
+        }
+    } else {
+        String::new()
+    };
+
     // Locate each section by tag. Per spec, each section appears at most
     // once. If an author writes two `HostTableBody {}` blocks we take the
     // first and silently drop the rest — defensive rather than fatal so a
@@ -2233,10 +2262,10 @@ fn emit_host_table_jsx(
     // Empty table — no sections present. Emit a single-line
     // `<table></table>` (still respecting any part-style attribute).
     if colgroup.is_none() && thead.is_none() && tbody.is_none() && tfoot.is_none() {
-        return Ok(format!("{pad}<table{style_attr}></table>\n"));
+        return Ok(format!("{pad}<table{style_attr}{dir_attr}></table>\n"));
     }
 
-    let mut out = format!("{pad}<table{style_attr}>\n");
+    let mut out = format!("{pad}<table{style_attr}{dir_attr}>\n");
 
     if let Some(cg) = colgroup {
         out.push_str(&emit_host_table_colgroup_jsx(cg, indent + 2, part_styles)?);
@@ -8421,6 +8450,220 @@ mod tests {
         assert!(
             out.contains("{/* HostTableHead is only valid inside HostTable */}"),
             "expected JSX comment for orphan HostTableHead, got:\n{out}"
+        );
+    }
+
+    // =====================================================================
+    // UI31 gates — a11y (native <table> semantics) + RTL (`dir` slot)
+    // =====================================================================
+    //
+    // UI31 spec §3.1 + §3.2 lock down two non-negotiable contracts for
+    // HostTable: (1) the emitter MUST produce real `<table>` markup, not
+    // `<div role="grid">` div-soup, and (2) it MUST honour a `dir` slot
+    // so RTL locales flip column order via the browser's native handling.
+    // The tests below are the grep-asserts that block the merge whenever
+    // the emitter regresses either contract.
+
+    /// UI31 a11y gate — a HostTable with head + body MUST produce real
+    /// `<table>`, `<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>` elements.
+    /// NEVER `<div role="grid">` div-soup. Screen readers, keyboard
+    /// table-navigation, ARIA `rowindex`/`colindex` and the entire
+    /// table-mode AT integration depend on these element names.
+    #[test]
+    fn host_table_emits_native_semantic_table_elements_not_div_soup() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    LayoutNode {
+                        tag: "HostTableHead".to_string(),
+                        part_name: None,
+                        props: Vec::new(),
+                        children: vec![LayoutNode {
+                            tag: "Row".to_string(),
+                            part_name: None,
+                            props: Vec::new(),
+                            children: vec![LayoutNode {
+                                tag: "Text".to_string(),
+                                part_name: None,
+                                props: vec![LayoutProp {
+                                    name: "content".to_string(),
+                                    value: LayoutPropValue::String("Name".to_string()),
+                                }],
+                                children: Vec::new(),
+                            }],
+                        }],
+                    },
+                    LayoutNode {
+                        tag: "HostTableBody".to_string(),
+                        part_name: None,
+                        props: Vec::new(),
+                        children: vec![LayoutNode {
+                            tag: "Row".to_string(),
+                            part_name: None,
+                            props: Vec::new(),
+                            children: vec![LayoutNode {
+                                tag: "Text".to_string(),
+                                part_name: None,
+                                props: vec![LayoutProp {
+                                    name: "content".to_string(),
+                                    value: LayoutPropValue::String("Adhithya".to_string()),
+                                }],
+                                children: Vec::new(),
+                            }],
+                        }],
+                    },
+                ],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+
+        // Each native element MUST appear in the output. This is the
+        // non-negotiable contract from UI31 §3.1.
+        for tag in &["<table", "<thead", "<tbody", "<tr", "<th", "<td"] {
+            assert!(
+                out.contains(tag),
+                "UI31 a11y gate: expected {tag}> in generated JSX, got:\n{out}"
+            );
+        }
+
+        // Negative check — div-soup MUST NOT appear. If a future change
+        // regresses to `<div role="grid">` this test fires.
+        assert!(
+            !out.contains("role=\"grid\""),
+            "UI31 a11y gate: HostTable must NOT emit `role=\"grid\"` div-soup, got:\n{out}"
+        );
+    }
+
+    /// UI31 RTL gate — a HostTable with `dir: rtl` keyword MUST emit
+    /// `dir="rtl"` on the `<table>` element so the browser flips column
+    /// order, scrollbar side, focus-ring side, etc. natively.
+    #[test]
+    fn host_table_with_dir_rtl_keyword_emits_dir_attr_on_table() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "dir".to_string(),
+                    value: LayoutPropValue::Keyword("rtl".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("<table dir=\"rtl\""),
+            "UI31 RTL gate: expected `<table dir=\"rtl\"` in JSX, got:\n{out}"
+        );
+    }
+
+    /// UI31 RTL gate — `dir: ltr` keyword emits `dir="ltr"` explicitly.
+    /// Authors who set ltr explicitly (e.g. an LTR-only widget inside an
+    /// RTL document) should get the override they asked for.
+    #[test]
+    fn host_table_with_dir_ltr_keyword_emits_explicit_attr() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "dir".to_string(),
+                    value: LayoutPropValue::Keyword("ltr".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("<table dir=\"ltr\""));
+    }
+
+    /// UI31 RTL gate — a slot-ref `dir` lowers to a JSX expression
+    /// `dir={dirSlot}` so the host can drive direction from runtime
+    /// state (e.g. user locale switcher).
+    #[test]
+    fn host_table_with_dir_slot_ref_emits_jsx_expression() {
+        let m = component(
+            "X",
+            vec![slot("table-dir", SlotType::Text, true)],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "dir".to_string(),
+                    value: LayoutPropValue::SlotRef("table-dir".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("<table dir={tableDir}"),
+            "expected `<table dir={{tableDir}}` for slot-ref dir, got:\n{out}"
+        );
+    }
+
+    /// Defence in depth — an `auto` keyword is also a legal HTML `dir`
+    /// value (lets the browser pick direction based on content); confirm
+    /// the emitter passes it through.
+    #[test]
+    fn host_table_with_dir_auto_keyword_passes_through() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "dir".to_string(),
+                    value: LayoutPropValue::Keyword("auto".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("<table dir=\"auto\""));
+    }
+
+    /// Security regression — an unknown `dir` keyword (e.g. attempting
+    /// attribute injection via `rtl\" onload=\"evil()`) is silently dropped
+    /// rather than passed through verbatim. The kw allow-list in the
+    /// emitter restricts to `ltr`/`rtl`/`auto`; anything else produces
+    /// no `dir` attribute (and the browser falls back to inheritance).
+    #[test]
+    fn host_table_with_unknown_dir_keyword_drops_the_attr() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "dir".to_string(),
+                    // Sneaky: not a real HTML dir value. The grammar
+                    // layer already restricts keyword chars, but the
+                    // emitter's allow-list is the second line of defence.
+                    value: LayoutPropValue::Keyword("ttb".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            !out.contains("dir="),
+            "UI31 RTL gate: unknown dir keyword must NOT emit a dir attr, got:\n{out}"
         );
     }
 
