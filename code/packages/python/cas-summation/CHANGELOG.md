@@ -1,5 +1,67 @@
 # Changelog
 
+## 1.4.0 — 2026-05-23
+
+**Phase 56 — Bounded × Sqrt(diverging) numerator pattern (Python).**
+
+Extends ``_g_vanishes_at_infinity`` with a new branch for
+``Div(Mul(bounded, Sqrt(P(k))), den)`` shapes.  The bounded part is
+uniformly bounded by some constant ``C``; the sqrt part grows like
+``k^{deg(P)/2}``.  The whole numerator therefore has effective
+polynomial degree ``deg(P)/2``, expressed here as ``deg(P)`` (the ×2
+trick used elsewhere) so the comparison ``2 × den_deg > deg(P)``
+stays exact in integer arithmetic.
+
+This is the bounded-times-sqrt analogue of Phase 55 (bounded × log).
+The two phases close the analogous gap between Phase 52 (bounded ×
+polynomial, deg-aware) and the sub-polynomial growth families (log
+and sqrt).
+
+Bumps 1.3.0 → 1.4.0.
+
+### Added
+
+- **``_bounded_times_sqrt_inner_deg(node, k)``** — Phase 56 helper.
+  Returns the ``Sqrt`` inner polynomial degree (×2 to stay exact)
+  when ``node`` is a ``Mul`` with exactly one
+  ``Sqrt(positive-leading polynomial)`` factor and all remaining
+  factors bounded in ``k``.  Returns ``None`` for:
+
+  - non-``Mul`` shapes
+  - ``Mul`` with no ``Sqrt`` factor
+  - ``Mul`` with two or more ``Sqrt`` factors (conservative — would
+    need a combined growth-rate calculation; users can pre-simplify
+    ``sqrt(k)·sqrt(k) = k``)
+  - ``Mul`` with a non-bounded non-``Sqrt`` factor (e.g. bare ``k``)
+  - ``Sqrt`` of a negative-leading polynomial (not real-valued)
+
+- **Phase 56 branch in ``_g_vanishes_at_infinity``** — inserted
+  after Phase 55 and before the Phase 42 polynomial widening.  Two
+  sub-cases by denominator shape:
+
+  1. Polynomial denominator (``_polynomial_degree_in_k`` returns
+     ``int``): require ``2 × den_deg > sqrt_inner_deg``.
+  2. Non-polynomial diverging denominator (Exp / Pow / Log×poly):
+     dominates any sub-polynomial sqrt growth automatically.
+
+- **6 new tests** in ``TestEvaluateSumPhase56BoundedTimesSqrtNumerator``
+  (``test_summation.py``):
+  - ``test_sin_times_sqrt_k_over_k_squared_closes`` — 1/2 < 2
+  - ``test_cos_times_sqrt_k_cubed_over_k_squared_closes`` — 3/2 < 2 (tight margin)
+  - ``test_two_bounded_factors_times_sqrt_closes`` — sin·cos·sqrt(k)/k²
+  - ``test_bounded_times_sqrt_over_exponential_closes`` — sin·sqrt(k³)/2^k
+  - ``test_sin_times_sqrt_k_cubed_over_k_refused`` — 3/2 > 1 (no vanish)
+  - ``test_two_sqrt_factors_refused`` — conservative: two-sqrt patterns refused
+
+Total: **132 tests** (was 126; +6 net new), no regressions.
+
+### Still deferred
+
+- Two-sqrt patterns (``sin(k)·sqrt(k)·sqrt(k+1)``) — would need
+  combined growth-rate logic.
+- Log + Sqrt combinations (``sin(k)·log(k)·sqrt(k)/k³``) — analogous
+  to Phase 55/56 but with both sub-polynomial factors.
+
 ## 1.3.0 — 2026-05-23
 
 **Phase 55 — Bounded×Log(diverging) numerator pattern (Python).**

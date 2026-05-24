@@ -38,11 +38,17 @@
     {
       "id": "catalog-form-table-page",
       "description": "Form controls, select options, textarea text, button text, and table summaries.",
-      "input": "<html><head><title>Search</title><meta http-equiv=refresh content=\"30; url=/next\"></head><body><h2>Catalog</h2><form action=\"/search\" method=POST enctype=\"multipart/form-data\" target=results><input name=q value=\"rust html\"><input type=hidden name=page value=1><input type=checkbox name=in_stock value=yes checked><input type=text name=disabled value=no disabled><select name=section><option value=books>Books<option value=manuals selected>Manuals</select><textarea name=notes>Line one\nLine two</textarea><button name=go>Search</button></form><table><caption>Results</caption><tr><th>Name<th>Kind<tr><td>Mosaic<td>Browser</table>",
+      "input": "<html lang=en dir=ltr><head><title>Search</title><meta http-equiv=refresh content=\"30; url=/next\"></head><body id=catalog class=\"browser page\" lang=en-US dir=ltr><h2>Catalog</h2><form action=\"/search\" method=POST enctype=\"multipart/form-data\" target=results><input name=q value=\"rust html\"><input type=hidden name=page value=1><input type=checkbox name=in_stock value=yes checked><input type=text name=disabled value=no disabled><select name=section><option value=books>Books<option value=manuals selected>Manuals</select><textarea name=notes>Line one\nLine two</textarea><button name=go>Search</button></form><table><caption>Results</caption><tr><th>Name<th>Kind<tr><td>Mosaic<td>Browser</table>",
       "expected": {
         "title": "Search",
         "base_href": null,
         "base_target": null,
+        "document_lang": "en",
+        "document_dir": "ltr",
+        "body_id": "catalog",
+        "body_classes": ["browser", "page"],
+        "body_lang": "en-US",
+        "body_dir": "ltr",
         "body_text": "Catalog Books Manuals Line one Line two Search Results Name Kind Mosaic Browser",
         "metas": [
           { "name": null, "http_equiv": "refresh", "property": null, "charset": null, "content": "30; url=/next" }

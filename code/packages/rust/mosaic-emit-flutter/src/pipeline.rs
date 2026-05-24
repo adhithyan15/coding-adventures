@@ -865,15 +865,71 @@ fn emit_host_dialog(
 /// `HostTable` → `DataTable`. v1 emits a minimal `DataTable(columns:
 /// [], rows: [])` placeholder; full sub-tag (`HostTableHead`/`Body`/
 /// `Foot`) walk is a follow-up.
+///
+/// UI31 §3.2 RTL contract — when authored with a `dir:` prop, the
+/// `DataTable` is wrapped in `Directionality(textDirection: ...,
+/// child: ...)`. Flutter's directionality is enum-typed
+/// (`TextDirection.ltr` / `TextDirection.rtl`) and *cannot* be a
+/// dynamic string, so the lowering has three shapes:
+///
+/// | Source                 | Emits                                                              |
+/// |------------------------|--------------------------------------------------------------------|
+/// | `dir: ltr`             | `Directionality(textDirection: TextDirection.ltr, child: …)`       |
+/// | `dir: rtl`             | `Directionality(textDirection: TextDirection.rtl, child: …)`       |
+/// | `dir: auto`            | (no wrap — Flutter has no auto; inherit ambient `Directionality`)  |
+/// | `dir: slot: layoutDir` | `Directionality(textDirection: layoutDir, child: …)` — slot is a   |
+/// |                        | Dart expression that must evaluate to `TextDirection`              |
+/// | unknown keyword        | (no wrap — drops silently per the allow-list security gate)        |
+///
+/// The allow-list (`ltr` / `rtl` / `auto`) is the security gate: an
+/// attacker-controlled keyword can't sneak a `child: pwn()` payload
+/// into the generated source because it never reaches the format
+/// string. Slot refs go through `is_safe_dart_identifier` so they
+/// can't either.
 fn emit_host_table(
-    _node: &LayoutNode,
+    node: &LayoutNode,
     indent: usize,
     _part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    Ok(format!(
-        "{pad}DataTable(columns: const [], rows: const []) /* TODO: HostTable sub-tags */\n"
-    ))
+    let table_body =
+        "DataTable(columns: const [], rows: const []) /* TODO: HostTable sub-tags */";
+
+    // Resolve the directionality expression. `None` means: do not
+    // wrap (either no `dir` prop, or `dir: auto`, or unknown keyword).
+    let dir_expr: Option<String> = if let Some(slot) = find_slot_ref_prop(node, "dir") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_dart_identifier(&camel) {
+            Some(camel)
+        } else {
+            None
+        }
+    } else if let Some(kw) = find_keyword_prop(node, "dir") {
+        match kw {
+            "ltr" => Some("TextDirection.ltr".to_string()),
+            "rtl" => Some("TextDirection.rtl".to_string()),
+            // `auto` is the spec-mandated keyword for "let the host
+            // decide". Flutter has no enum value for it — the right
+            // behaviour is to NOT wrap so the ambient Directionality
+            // (from `MaterialApp` / explicit ancestors) flows through.
+            "auto" => None,
+            _ => None,
+        }
+    } else {
+        None
+    };
+
+    if let Some(dir) = dir_expr {
+        let inner = " ".repeat(indent + 2);
+        return Ok(format!(
+            "{pad}Directionality(\n\
+             {inner}textDirection: {dir},\n\
+             {inner}child: {table_body},\n\
+             {pad})\n"
+        ));
+    }
+
+    Ok(format!("{pad}{table_body}\n"))
 }
 
 // =====================================================================
@@ -2409,6 +2465,213 @@ mod tests {
         assert!(
             r.output.contains("padding: const EdgeInsets.all(8)"),
             "expected EdgeInsets.all(8), got:\n{}",
+            r.output
+        );
+    }
+
+    // ================================================================
+    // UI31 — HostTable a11y gate + RTL contract (Flutter backend)
+    //
+    // Mirrors the React (#4143) and HTML (#4156) + WebComponent
+    // (#4162) precedents:
+    //
+    // - **A11y gate**: the lowering must produce Flutter's native
+    //   `DataTable` widget (not a hand-rolled `Container`/`Row` mess
+    //   that loses screen-reader semantics). The grep test is the
+    //   gate.
+    // - **RTL gate**: when `dir:` is authored, the `DataTable` is
+    //   wrapped in `Directionality(textDirection: ..., child: ...)`.
+    //   Allow-list is `ltr|rtl|auto`; unknown keywords drop silently
+    //   so an attacker-controlled keyword can't break out of the
+    //   format string.
+    // ================================================================
+
+    /// UI31 §3.1 a11y gate — `HostTable` MUST lower to Flutter's
+    /// native `DataTable`, never to a `Container` / `Row` mess. The
+    /// `DataTable` widget is what gives the cells proper semantic
+    /// labels for accessibility tooling (TalkBack on Android,
+    /// VoiceOver on iOS).
+    #[test]
+    fn ui31_a11y_host_table_uses_native_datatable_widget() {
+        let m = component("T", vec![], vec![]);
+        let l = layout("T", node("HostTable"));
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        assert!(
+            r.output.contains("DataTable("),
+            "HostTable must lower to DataTable(...), got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI31 §3.2 RTL contract — `dir: rtl` wraps the `DataTable` in
+    /// `Directionality(textDirection: TextDirection.rtl, child: ...)`.
+    /// Flutter's `Directionality` is the canonical RTL knob; column
+    /// ordering inside `DataTable` flips when the ambient text
+    /// direction is RTL.
+    #[test]
+    fn ui31_rtl_host_table_dir_rtl_keyword_wraps_in_directionality() {
+        let m = component("T", vec![], vec![]);
+        let table = node_with(
+            "HostTable",
+            vec![LayoutProp {
+                name: "dir".into(),
+                value: LayoutPropValue::Keyword("rtl".into()),
+            }],
+            vec![],
+        );
+        let l = layout("T", table);
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        assert!(
+            r.output.contains("Directionality("),
+            "expected Directionality(...) wrapper, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("textDirection: TextDirection.rtl"),
+            "expected textDirection: TextDirection.rtl, got:\n{}",
+            r.output
+        );
+    }
+
+    /// `dir: ltr` wraps with `TextDirection.ltr`. Symmetry with the
+    /// `rtl` test; this exists to lock the keyword→enum mapping so
+    /// a future refactor can't accidentally invert the polarity.
+    #[test]
+    fn ui31_rtl_host_table_dir_ltr_keyword_wraps_with_ltr_text_direction() {
+        let m = component("T", vec![], vec![]);
+        let table = node_with(
+            "HostTable",
+            vec![LayoutProp {
+                name: "dir".into(),
+                value: LayoutPropValue::Keyword("ltr".into()),
+            }],
+            vec![],
+        );
+        let l = layout("T", table);
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        assert!(
+            r.output.contains("textDirection: TextDirection.ltr"),
+            "expected textDirection: TextDirection.ltr, got:\n{}",
+            r.output
+        );
+    }
+
+    /// `dir: auto` is the spec-mandated "let the host decide"
+    /// keyword. Flutter has no `TextDirection.auto` enum value —
+    /// the right behaviour is to NOT wrap so the ambient
+    /// `Directionality` (typically supplied by `MaterialApp`) flows
+    /// through unchanged. A wrap with an invented enum value would
+    /// not compile.
+    #[test]
+    fn ui31_rtl_host_table_dir_auto_keyword_does_not_wrap() {
+        let m = component("T", vec![], vec![]);
+        let table = node_with(
+            "HostTable",
+            vec![LayoutProp {
+                name: "dir".into(),
+                value: LayoutPropValue::Keyword("auto".into()),
+            }],
+            vec![],
+        );
+        let l = layout("T", table);
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        assert!(
+            !r.output.contains("Directionality("),
+            "auto must NOT emit a Directionality wrapper, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("DataTable("),
+            "bare DataTable should still render, got:\n{}",
+            r.output
+        );
+    }
+
+    /// `dir: slot: layout-direction` interpolates the bound slot
+    /// (camel-cased to `layoutDirection`) into the `textDirection:`
+    /// position. The slot is expected to be a Dart expression that
+    /// evaluates to a `TextDirection`; this is the contract the host
+    /// must honour. Slot name goes through `is_safe_dart_identifier`
+    /// so it can't smuggle malicious characters into the source.
+    #[test]
+    fn ui31_rtl_host_table_dir_slot_ref_interpolates_camel_case_identifier() {
+        let m = component(
+            "T",
+            vec![slot("layout-direction", SlotType::Text, true)],
+            vec![],
+        );
+        let table = node_with(
+            "HostTable",
+            vec![LayoutProp {
+                name: "dir".into(),
+                value: LayoutPropValue::SlotRef("layout-direction".into()),
+            }],
+            vec![],
+        );
+        let l = layout("T", table);
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        assert!(
+            r.output.contains("textDirection: layoutDirection"),
+            "expected textDirection: layoutDirection, got:\n{}",
+            r.output
+        );
+    }
+
+    /// Unknown `dir:` keywords (anything outside the `ltr|rtl|auto`
+    /// allow-list) MUST drop silently. This is the security gate: an
+    /// attacker-controlled keyword can't sneak `child: pwn(),` style
+    /// payloads into the generated Dart source because it never
+    /// reaches the format string. The bare `DataTable` still renders.
+    #[test]
+    fn ui31_rtl_host_table_unknown_dir_keyword_drops_silently() {
+        let m = component("T", vec![], vec![]);
+        let table = node_with(
+            "HostTable",
+            vec![LayoutProp {
+                name: "dir".into(),
+                value: LayoutPropValue::Keyword(
+                    "rtl, child: pwn()".into(),
+                ),
+            }],
+            vec![],
+        );
+        let l = layout("T", table);
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        assert!(
+            !r.output.contains("pwn()"),
+            "unknown keyword payload must not appear, got:\n{}",
+            r.output
+        );
+        assert!(
+            !r.output.contains("Directionality("),
+            "unknown keyword must NOT wrap, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("DataTable("),
+            "bare DataTable should still render, got:\n{}",
+            r.output
+        );
+    }
+
+    /// Regression guard — `HostTable` with no `dir:` prop emits the
+    /// bare `DataTable` without a `Directionality` wrapper. A future
+    /// refactor that always-wraps would break authors who rely on
+    /// inheriting from an ancestor `Directionality` (typically
+    /// supplied by `MaterialApp`).
+    #[test]
+    fn ui31_rtl_host_table_without_dir_prop_does_not_wrap() {
+        let m = component("T", vec![], vec![]);
+        let l = layout("T", node("HostTable"));
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        assert!(
+            !r.output.contains("Directionality("),
+            "no Directionality wrapper expected when dir is absent, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("DataTable("),
+            "bare DataTable should render, got:\n{}",
             r.output
         );
     }

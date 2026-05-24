@@ -2669,4 +2669,134 @@ mod tests {
         assert!(!is_heredoc_tag("with space"));
         assert!(!is_heredoc_tag("dash-tag"));
     }
+
+    // -----------------------------------------------------------------
+    // Phase 4i / 4j — instance vars `@x`, class vars `@@x`, globals `$x`.
+    // -----------------------------------------------------------------
+    //
+    // All three sigil-prefixed lexemes have existed since Ruby 1.0;
+    // they emit as `TokenType::Name` carrying the *full lexeme*
+    // (sigils included).  Downstream code (parser / SIR lowerer)
+    // dispatches by the leading character.  These tests are NOT era-
+    // gated — they should produce the same shape across every era.
+
+    #[test]
+    fn lexes_instance_variable() {
+        let toks = tokenize_ruby("@count");
+        let names: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(names, vec!["@count"]);
+    }
+
+    #[test]
+    fn lexes_class_variable() {
+        let toks = tokenize_ruby("@@all");
+        let names: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(names, vec!["@@all"]);
+    }
+
+    #[test]
+    fn lexes_global_variable() {
+        let toks = tokenize_ruby("$LOAD_PATH");
+        let names: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(names, vec!["$LOAD_PATH"]);
+    }
+
+    #[test]
+    fn ivar_with_digits_and_underscore() {
+        // `@foo_bar2` — ident-body rules permit digits/underscore
+        // after the first ident-starter.
+        let toks = tokenize_ruby("@foo_bar2");
+        let names: Vec<&str> = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(names, vec!["@foo_bar2"]);
+    }
+
+    #[test]
+    fn sigil_vars_in_assignment_context() {
+        // `@x = 1` → three tokens: Name(@x), Equals, Number(1).
+        let toks = tokenize_ruby("@x = 1");
+        let kinds: Vec<(TokenType, &str)> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof && t.type_ != TokenType::Newline)
+            .map(|t| (t.type_, t.value.as_str()))
+            .collect();
+        assert_eq!(
+            kinds,
+            vec![
+                (TokenType::Name, "@x"),
+                (TokenType::Equals, "="),
+                (TokenType::Number, "1"),
+            ]
+        );
+    }
+
+    #[test]
+    fn invalid_ivar_falls_back_to_op_with_diagnostic() {
+        // `@1` (digit after `@`) is not a valid ivar in Ruby.  We
+        // record a diagnostic and emit `@` as a bare Op token so the
+        // parser still gets a clean stream.
+        let (toks, diags) = tokenize_ruby_diag("@1");
+        assert!(diags.iter().any(|d| d.code == "invalid_ivar"));
+        // First non-Eof token should be the bare `@` Op.
+        let first = toks
+            .iter()
+            .find(|t| t.type_ != TokenType::Eof && t.type_ != TokenType::Newline)
+            .expect("expected at least one non-Eof token");
+        assert_eq!(first.value, "@");
+    }
+
+    #[test]
+    fn invalid_gvar_falls_back_to_op_with_diagnostic() {
+        // `$ ` (dollar followed by space) — v0 doesn't recognise the
+        // punctuation globals, so this records `invalid_gvar` and
+        // emits `$` as a bare Op.
+        let (toks, diags) = tokenize_ruby_diag("$ x");
+        assert!(diags.iter().any(|d| d.code == "invalid_gvar"));
+        let first = toks
+            .iter()
+            .find(|t| t.type_ != TokenType::Eof && t.type_ != TokenType::Newline)
+            .expect("expected at least one non-Eof token");
+        assert_eq!(first.value, "$");
+    }
+
+    #[test]
+    fn sigil_vars_unchanged_across_all_eras() {
+        // Sigil vars have been in Ruby since 1.0, so every era from
+        // 1.8 forward should produce the identical token shape.
+        let src = "@a + @@b + $c";
+        let baseline_names: Vec<String> = tokenize_ruby_for_version(src, "1.8")
+            .unwrap()
+            .into_iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value)
+            .collect();
+        assert_eq!(baseline_names, vec!["@a", "@@b", "$c"]);
+        for v in machine::ERA_VERSIONS {
+            let names: Vec<String> = tokenize_ruby_for_version(src, v)
+                .unwrap()
+                .into_iter()
+                .filter(|t| t.type_ == TokenType::Name)
+                .map(|t| t.value)
+                .collect();
+            assert_eq!(
+                names, baseline_names,
+                "sigil-var lexing diverged in era {v}"
+            );
+        }
+    }
 }

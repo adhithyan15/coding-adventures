@@ -759,6 +759,27 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     # Any strictly diverging denominator therefore dominates.
     if _is_bounded_times_log_in_k(num, k) and _h_diverges_at_infinity(den, k):
         return True
+    # Phase 56: ``Mul(bounded, Sqrt(diverging))`` numerator pattern.
+    # The bounded part is uniformly bounded; ``Sqrt(P(k))`` grows like
+    # ``k^{deg(P)/2}``.  The whole numerator therefore has effective
+    # growth ``k^{deg(P)/2}``, and the quotient vanishes when the
+    # denominator grows strictly faster.  Stays exact via the ×2 integer
+    # trick already used in Phase 51 / 53: returns
+    # ``sqrt_inner_deg = deg(P)`` (= 2 × half-degree); compare to
+    # ``2 × den_poly_degree``.  When the denominator is non-polynomial
+    # but diverging (Exp / Pow / Log×poly / Mul of these), it dominates
+    # any sub-polynomial sqrt growth automatically.
+    sqrt_inner_deg = _bounded_times_sqrt_inner_deg(num, k)
+    if sqrt_inner_deg is not None:
+        den_deg_bs = _polynomial_degree_in_k(den, k)
+        if den_deg_bs is not None:
+            if 2 * den_deg_bs > sqrt_inner_deg:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            # Non-polynomial diverging denominator dominates ``k^{m/2}``
+            # for any ``m`` since ``Exp / Pow(b>1, …)`` grows faster
+            # than any polynomial, hence faster than any half-degree.
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -1066,6 +1087,61 @@ def _is_bounded_times_log_in_k(node: IRNode, k: IRSymbol) -> bool:
         # Factor is neither Log(diverging) nor bounded — unrecognised.
         return False
     return log_count == 1
+
+
+def _bounded_times_sqrt_inner_deg(node: IRNode, k: IRSymbol) -> int | None:
+    """Return the ``Sqrt`` inner polynomial degree (×2) when ``node`` is a
+    ``Mul`` with exactly one ``Sqrt(positive-leading polynomial)`` factor
+    and all remaining factors bounded in ``k``; ``None`` otherwise.
+
+    Phase 56 — bounded × sqrt analogue of Phase 55's bounded × log.
+    Mirrors :func:`_is_bounded_times_log_in_k` but returns the sqrt
+    inner-degree (× 2 to stay exact) so the caller can compare growth
+    rates without floats.
+
+    The bounded part is uniformly bounded by some constant ``C``; the
+    sqrt part grows like ``k^{deg(P)/2}``.  Therefore the numerator's
+    effective polynomial degree is ``deg(P)/2``, expressed here as
+    ``deg(P)`` to be compared against ``2 × den_polynomial_degree``.
+
+    +---------------------------------------+------------------+
+    | Input                                 | Return           |
+    +=======================================+==================+
+    | ``Mul(Sin(k), Sqrt(k))``              | ``1`` (deg P=1)  |
+    | ``Mul(Cos(k), Sqrt(k³))``             | ``3``            |
+    | ``Mul(Sin(k), Cos(k), Sqrt(k+1))``    | ``1``            |
+    | ``Mul(k, Sqrt(k))``                   | ``None`` (k not bounded) |
+    | ``Mul(Sin(k), Sqrt(k), Sqrt(k))``     | ``None`` (two sqrt)      |
+    | ``Sqrt(k)`` (plain, not Mul)          | ``None`` (→ Phase 51)    |
+    | ``Mul(Sin(k), Sqrt(-k))``             | ``None`` (negative poly) |
+    +---------------------------------------+------------------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - If it is ``Sqrt(positive-leading polynomial)`` → record its
+           ``×2`` degree; refuse if a second sqrt appears.
+         - If it is ``bounded_in_k`` → accept.
+         - Otherwise → return ``None`` (unrecognised factor).
+      3. Require exactly one sqrt factor; zero → ``None``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_inner_deg: int | None = None
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if sqrt_inner_deg is not None:
+                # Two Sqrt factors — refuse (would need a different
+                # growth-rate calculation we haven't justified yet).
+                return None
+            sqrt_inner_deg = deg_x2
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        # Neither Sqrt(positive-poly) nor bounded → unrecognised.
+        return None
+    return sqrt_inner_deg
 
 
 def _try_power_of_k(
