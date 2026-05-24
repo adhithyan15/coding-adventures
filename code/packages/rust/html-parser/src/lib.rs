@@ -853,11 +853,20 @@ pub struct BrowserResource {
     pub url: String,
     pub resolved_url: Option<String>,
     pub rel: Option<String>,
+    pub as_hint: Option<String>,
     pub type_hint: Option<String>,
     pub media: Option<String>,
     pub title: Option<String>,
     pub width: Option<String>,
     pub height: Option<String>,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking: Option<String>,
+    pub imagesrcset: Option<String>,
+    pub resolved_imagesrcset: Option<String>,
+    pub imagesizes: Option<String>,
     pub async_script: bool,
     pub defer_script: bool,
 }
@@ -8330,19 +8339,11 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
             }),
             "link" => {
                 if let Some(href) = element.attribute("href") {
-                    summary.resources.push(BrowserResource {
-                        kind: link_resource_kind(element.attribute("rel")),
-                        url: href.to_string(),
-                        resolved_url: resolve_browser_url(href, summary.base_href.as_deref()),
-                        rel: element.attribute("rel").map(ToOwned::to_owned),
-                        type_hint: element.attribute("type").map(ToOwned::to_owned),
-                        media: element.attribute("media").map(ToOwned::to_owned),
-                        title: element.attribute("title").map(ToOwned::to_owned),
-                        width: None,
-                        height: None,
-                        async_script: false,
-                        defer_script: false,
-                    });
+                    summary.resources.push(browser_link_resource(
+                        element,
+                        href,
+                        summary.base_href.as_deref(),
+                    ));
                     if browser_link_is_stylesheet(element) {
                         summary
                             .stylesheets
@@ -8357,11 +8358,20 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                         url: src.to_string(),
                         resolved_url: resolve_browser_url(src, summary.base_href.as_deref()),
                         rel: None,
+                        as_hint: None,
                         type_hint: element.attribute("type").map(ToOwned::to_owned),
                         media: None,
                         title: None,
                         width: None,
                         height: None,
+                        integrity: element.attribute("integrity").map(ToOwned::to_owned),
+                        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+                        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+                        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+                        blocking: element.attribute("blocking").map(ToOwned::to_owned),
+                        imagesrcset: None,
+                        resolved_imagesrcset: None,
+                        imagesizes: None,
                         async_script: element.attribute("async").is_some(),
                         defer_script: element.attribute("defer").is_some(),
                     });
@@ -8405,11 +8415,20 @@ fn collect_body_resource(element: &Element, summary: &mut BrowserDocument) {
         resolved_url: resolve_browser_url(&url, summary.base_href.as_deref()),
         url,
         rel: None,
+        as_hint: None,
         type_hint: element.attribute("type").map(ToOwned::to_owned),
         media: element.attribute("media").map(ToOwned::to_owned),
         title: element.attribute("title").map(ToOwned::to_owned),
         width: element.attribute("width").map(ToOwned::to_owned),
         height: element.attribute("height").map(ToOwned::to_owned),
+        integrity: element.attribute("integrity").map(ToOwned::to_owned),
+        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        imagesrcset: None,
+        resolved_imagesrcset: None,
+        imagesizes: None,
         async_script: element.name == "script" && element.attribute("async").is_some(),
         defer_script: element.name == "script" && element.attribute("defer").is_some(),
     });
@@ -8598,12 +8617,49 @@ fn link_resource_kind(rel: Option<&str>) -> String {
             "icon" | "shortcut" => return "icon".to_string(),
             "preload" => return "preload".to_string(),
             "modulepreload" => return "modulepreload".to_string(),
+            "prefetch" => return "prefetch".to_string(),
+            "preconnect" => return "preconnect".to_string(),
+            "dns-prefetch" => return "dns-prefetch".to_string(),
+            "prerender" => return "prerender".to_string(),
             "manifest" => return "manifest".to_string(),
+            "canonical" => return "canonical".to_string(),
             "alternate" => return "alternate".to_string(),
             _ => {}
         }
     }
     "link".to_string()
+}
+
+fn browser_link_resource(
+    element: &Element,
+    href: &str,
+    base_href: Option<&str>,
+) -> BrowserResource {
+    let imagesrcset = element.attribute("imagesrcset").map(ToOwned::to_owned);
+    BrowserResource {
+        kind: link_resource_kind(element.attribute("rel")),
+        url: href.to_string(),
+        resolved_url: resolve_browser_url(href, base_href),
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        as_hint: element.attribute("as").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        width: None,
+        height: None,
+        integrity: element.attribute("integrity").map(ToOwned::to_owned),
+        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        resolved_imagesrcset: imagesrcset
+            .as_deref()
+            .map(|srcset| resolve_browser_srcset(srcset, base_href)),
+        imagesrcset,
+        imagesizes: element.attribute("imagesizes").map(ToOwned::to_owned),
+        async_script: false,
+        defer_script: false,
+    }
 }
 
 fn collect_browser_content_nodes(
@@ -10337,6 +10393,72 @@ mod tests {
             Some("https://example.test/app/late.js")
         );
         assert!(late_script.defer_script);
+    }
+
+    #[test]
+    fn browser_link_resource_metadata_tracks_fetch_hints_and_responsive_preloads() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/index.html\">\
+             <link rel=preconnect href=\"https://cdn.example.test\" crossorigin>\
+             <link rel=preload href=\"fonts/site.woff2\" as=font type=font/woff2 crossorigin=anonymous integrity=sha384-font fetchpriority=high>\
+             <link rel=modulepreload href=\"scripts/app.mjs\" integrity=sha384-module referrerpolicy=no-referrer blocking=render>\
+             <link rel=preload href=\"hero.jpg\" as=image imagesrcset=\"hero-small.jpg 480w, hero-large.jpg 960w\" imagesizes=\"50vw\" fetchpriority=high>\
+             <link rel=prefetch href=\"next.html\" as=document>\
+             <link rel=manifest href=\"site.webmanifest\" crossorigin=use-credentials>\
+             <link rel=canonical href=\"https://example.test/app/\">\
+             <link rel=\"shortcut icon\" href=\"favicon.ico\" sizes=any type=image/x-icon>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.resources.len(), 8);
+        let preconnect = &summary.resources[0];
+        assert_eq!(preconnect.kind, "preconnect");
+        assert_eq!(
+            preconnect.resolved_url.as_deref(),
+            Some("https://cdn.example.test")
+        );
+        assert_eq!(preconnect.crossorigin.as_deref(), Some(""));
+
+        let font = &summary.resources[1];
+        assert_eq!(font.kind, "preload");
+        assert_eq!(font.as_hint.as_deref(), Some("font"));
+        assert_eq!(font.type_hint.as_deref(), Some("font/woff2"));
+        assert_eq!(
+            font.resolved_url.as_deref(),
+            Some("https://example.test/app/fonts/site.woff2")
+        );
+        assert_eq!(font.integrity.as_deref(), Some("sha384-font"));
+        assert_eq!(font.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(font.fetchpriority.as_deref(), Some("high"));
+
+        let module = &summary.resources[2];
+        assert_eq!(module.kind, "modulepreload");
+        assert_eq!(module.integrity.as_deref(), Some("sha384-module"));
+        assert_eq!(module.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(module.blocking.as_deref(), Some("render"));
+
+        let image = &summary.resources[3];
+        assert_eq!(image.as_hint.as_deref(), Some("image"));
+        assert_eq!(
+            image.resolved_imagesrcset.as_deref(),
+            Some("https://example.test/app/hero-small.jpg 480w, https://example.test/app/hero-large.jpg 960w")
+        );
+        assert_eq!(image.imagesizes.as_deref(), Some("50vw"));
+
+        assert_eq!(summary.resources[4].kind, "prefetch");
+        assert_eq!(summary.resources[4].as_hint.as_deref(), Some("document"));
+        assert_eq!(summary.resources[5].kind, "manifest");
+        assert_eq!(
+            summary.resources[5].crossorigin.as_deref(),
+            Some("use-credentials")
+        );
+        assert_eq!(summary.resources[6].kind, "canonical");
+        assert_eq!(summary.resources[7].kind, "icon");
+        assert_eq!(
+            summary.resources[7].type_hint.as_deref(),
+            Some("image/x-icon")
+        );
     }
 
     #[test]

@@ -70,6 +70,8 @@ struct ExpectedResource {
     url: String,
     resolved_url: Option<String>,
     rel: Option<String>,
+    #[serde(default)]
+    as_hint: Option<String>,
     type_hint: Option<String>,
     media: Option<String>,
     title: Option<String>,
@@ -77,6 +79,22 @@ struct ExpectedResource {
     width: Option<String>,
     #[serde(default)]
     height: Option<String>,
+    #[serde(default)]
+    integrity: Option<String>,
+    #[serde(default)]
+    crossorigin: Option<String>,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    blocking: Option<String>,
+    #[serde(default)]
+    imagesrcset: Option<String>,
+    #[serde(default)]
+    resolved_imagesrcset: Option<String>,
+    #[serde(default)]
+    imagesizes: Option<String>,
     async_script: bool,
     defer_script: bool,
 }
@@ -402,11 +420,20 @@ impl ExpectedResource {
             url: self.url,
             resolved_url: self.resolved_url,
             rel: self.rel,
+            as_hint: self.as_hint,
             type_hint: self.type_hint,
             media: self.media,
             title: self.title,
             width: self.width,
             height: self.height,
+            integrity: self.integrity,
+            crossorigin: self.crossorigin,
+            referrerpolicy: self.referrerpolicy,
+            fetchpriority: self.fetchpriority,
+            blocking: self.blocking,
+            imagesrcset: self.imagesrcset,
+            resolved_imagesrcset: self.resolved_imagesrcset,
+            imagesizes: self.imagesizes,
             async_script: self.async_script,
             defer_script: self.defer_script,
         }

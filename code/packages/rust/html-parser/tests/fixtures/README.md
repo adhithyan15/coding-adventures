@@ -25,7 +25,9 @@ hints such as integrity, crossorigin, referrer policy, fetch priority,
 blocking, disabled state, and alternate stylesheets. Responsive image cases pin
 `srcset`/`sizes`, resolved candidate URLs, `picture/source` media/type hints,
 lazy loading, decoding, fetch priority, CORS/referrer policy, usemap, and
-server-side image-map state.
+server-side image-map state. Link resource cases pin relation-derived resource
+kinds, `as` hints, integrity/CORS/referrer policy, fetch priority, blocking,
+and responsive image preload hints.
 
 `html-browser-content-tree.json` is a checked parser acceptance corpus for the
 browser-facing content-tree projection. It verifies that broad HTML body

@@ -263,7 +263,24 @@ def check_browser_expected_lists(
         resource_path = f"{case_path}.expected.resources[{index}]"
         require_string(resource_path, resource, "kind", errors)
         require_string(resource_path, resource, "url", errors)
-        for field in ("resolved_url", "rel", "type_hint", "media", "title", "width", "height"):
+        for field in (
+            "resolved_url",
+            "rel",
+            "as_hint",
+            "type_hint",
+            "media",
+            "title",
+            "width",
+            "height",
+            "integrity",
+            "crossorigin",
+            "referrerpolicy",
+            "fetchpriority",
+            "blocking",
+            "imagesrcset",
+            "resolved_imagesrcset",
+            "imagesizes",
+        ):
             require_optional_nullable_string(resource_path, resource, field, errors)
         require_boolean(resource_path, resource, "async_script", errors)
         require_boolean(resource_path, resource, "defer_script", errors)

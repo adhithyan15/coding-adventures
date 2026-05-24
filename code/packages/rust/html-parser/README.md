@@ -75,6 +75,10 @@ The current parser surface includes:
 - browser-facing URL resolution metadata for links, loadable resources, images,
   and form actions using the document `base` href when available, while keeping
   raw authored URLs available to browser policy code
+- browser-facing link/resource scheduling metadata for preconnect, preload,
+  modulepreload, prefetch, manifest, canonical, and icon links, including
+  `as`, integrity, CORS/referrer policy, fetch priority, blocking, and
+  responsive image preload hints
 - browser-facing responsive image metadata for `img` and `picture/source`
   combinations, including raw/resolved `srcset`, `sizes`, source media/type
   hints, lazy loading, decoding, fetch priority, CORS/referrer policy, usemap,

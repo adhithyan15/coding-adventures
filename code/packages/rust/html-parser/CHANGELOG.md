@@ -200,6 +200,10 @@ documented in this file.
   resolved URL metadata for links, resources, images, and form actions using
   the document `base` href when available, while preserving raw authored
   attributes for downstream policy decisions.
+- Browser-facing resource summaries now carry link/resource scheduling
+  metadata for preconnect, preload, modulepreload, prefetch, manifest,
+  canonical, and icon links, including `as`, integrity, CORS/referrer policy,
+  fetch priority, blocking, and responsive image preload hints.
 - Browser-facing document, content-tree, and render-tree projections now carry
   identity and language metadata, including document/body `lang` and `dir`,
   body `id`/classes, and node-level `id`, tokenized `class`, `title`, `lang`,
