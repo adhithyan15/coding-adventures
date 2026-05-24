@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.5.0 — 2026-05-23
+
+**Phase 57 — Bounded × Log × Sqrt combination (Rust port).**
+
+Ports Python ``cas-summation`` 1.5.0 (PR #4215).  Combines Log
+(sub-polynomial) and Sqrt (half-polynomial) growth.
+
+### Added
+
+- **`bounded_log_sqrt_inner_deg(node, k) -> Option<i64>`** — returns
+  ``deg(P)`` (×2 half-degree) for ``Mul`` with exactly one Log AND
+  exactly one Sqrt(positive-poly), plus any bounded factors.
+  Returns ``None`` for one-only patterns or two-of-either.
+
+### Changed
+
+- ``g_vanishes_at_infinity`` adds Phase 57 branch after Phase 56,
+  comparing ``2 * den_deg > deg(P)`` for polynomial denominators or
+  short-circuiting on non-polynomial divergence.
+
+### Tests
+
+4 new ``phase57_*`` cases.  Full suite: **73 passed** (was 69; +4).
+
 ## 1.4.0 — 2026-05-23
 
 **Phase 56 — Bounded × Sqrt(diverging) numerator pattern (Rust port).**

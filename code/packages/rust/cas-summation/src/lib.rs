@@ -1206,6 +1206,58 @@ fn bounded_times_sqrt_inner_deg(node: &IRNode, k: &IRNode) -> Option<i64> {
     sqrt_inner_deg
 }
 
+/// Phase 57 (Rust port): Return the ``Sqrt`` inner polynomial degree
+/// (×2) when ``node`` is a ``Mul`` with exactly one
+/// ``Log(diverging)`` factor, exactly one
+/// ``Sqrt(positive-leading polynomial)`` factor, and any number of
+/// bounded factors; ``None`` otherwise.
+///
+/// Combines sub-polynomial Log growth with half-polynomial Sqrt
+/// growth.  Effective growth ``log(k) · k^{deg(P)/2}`` is strictly
+/// dominated by ``k^{deg(P)/2 + ε}`` for any ``ε > 0``.  Caller
+/// compares ``2 * den_deg > deg(P)`` (i.e. ``den_deg > deg(P)/2``).
+///
+/// Requires **both** Log and Sqrt; one-only patterns are handled by
+/// Phase 55 (bounded × Log) or Phase 56 (bounded × Sqrt).
+fn bounded_log_sqrt_inner_deg(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return None,
+    };
+    if !head_is(&apply_node.head, MUL) {
+        return None;
+    }
+    let mut log_count = 0usize;
+    let mut sqrt_inner_deg: Option<i64> = None;
+    for arg in &apply_node.args {
+        if is_log_of_diverging_in_k(arg, k) {
+            log_count += 1;
+            if log_count > 1 {
+                // Two or more Log factors — refuse.
+                return None;
+            }
+            continue;
+        }
+        if let Some(deg) = sqrt_effective_half_degree_x2(arg, k) {
+            if sqrt_inner_deg.is_some() {
+                // Two Sqrt factors — refuse.
+                return None;
+            }
+            sqrt_inner_deg = Some(deg);
+            continue;
+        }
+        if is_bounded_in_k(arg, k) {
+            continue;
+        }
+        // Unrecognised factor.
+        return None;
+    }
+    if log_count != 1 {
+        return None;
+    }
+    sqrt_inner_deg
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -1290,6 +1342,21 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     if let Some(sqrt_inner_deg) = bounded_times_sqrt_inner_deg(num, k) {
         if let Some(den_deg_bs) = polynomial_degree_in_k(den, k) {
             if 2 * den_deg_bs > sqrt_inner_deg {
+                return true;
+            }
+        } else if h_diverges_at_infinity(den, k) {
+            return true;
+        }
+    }
+    // Phase 57: Mul(bounded..., Log(diverging), Sqrt(positive-poly))
+    // numerator — combines sub-polynomial Log with half-polynomial
+    // Sqrt.  Effective growth ``log(k)·k^{deg(P)/2}`` strictly
+    // dominated by ``k^{deg(P)/2 + ε}``.  Closes when
+    // ``2 * den_deg > deg(P)`` (polynomial) or denominator is
+    // non-polynomial diverging.  Requires both Log and Sqrt.
+    if let Some(sqrt_inner_deg) = bounded_log_sqrt_inner_deg(num, k) {
+        if let Some(den_deg_bls) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_bls > sqrt_inner_deg {
                 return true;
             }
         } else if h_diverges_at_infinity(den, k) {

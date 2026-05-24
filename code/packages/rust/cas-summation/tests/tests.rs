@@ -1406,3 +1406,86 @@ fn phase56_sin_times_sqrt_k_cubed_over_k_refused() {
     // 3/2 > 1 → does not vanish.
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ---------------------------------------------------------------------------
+// Phase 57 (Rust port): bounded × Log(diverging) × Sqrt(positive-poly).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase57_sin_log_sqrt_over_k_squared_closes() {
+    let k = sym("k");
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let num_k = apply(sym(MUL), vec![sin_k, log_k, sqrt_k]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![sin_kp1, log_kp1, sqrt_kp1]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase57_log_sqrt_only_over_k_squared_closes() {
+    let k = sym("k");
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let num_k = apply(sym(MUL), vec![log_k, sqrt_k]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1, sqrt_kp1]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase57_sin_log_sqrt_k_cubed_over_exponential_closes() {
+    let k = sym("k");
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let sqrt_k3 = apply(sym("Sqrt"), vec![apply(sym(POW), vec![k.clone(), int(3)])]);
+    let num_k = apply(sym(MUL), vec![sin_k, log_k, sqrt_k3]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let sqrt_kp1_3 = apply(sym("Sqrt"), vec![apply(sym(POW), vec![kp1.clone(), int(3)])]);
+    let num_kp1 = apply(sym(MUL), vec![sin_kp1, log_kp1, sqrt_kp1_3]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![int(2), k.clone()])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![int(2), kp1])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase57_sin_log_sqrt_k_cubed_over_k_refused() {
+    let k = sym("k");
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let sqrt_k3 = apply(sym("Sqrt"), vec![apply(sym(POW), vec![k.clone(), int(3)])]);
+    let num_k = apply(sym(MUL), vec![sin_k, log_k, sqrt_k3]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let sqrt_kp1_3 = apply(sym("Sqrt"), vec![apply(sym(POW), vec![kp1.clone(), int(3)])]);
+    let num_kp1 = apply(sym(MUL), vec![sin_kp1, log_kp1, sqrt_kp1_3]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, k.clone()]),
+        apply(sym(DIV), vec![num_kp1, kp1]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    // 3/2 > 1 → does not vanish.
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}

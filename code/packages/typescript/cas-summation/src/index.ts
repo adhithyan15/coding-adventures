@@ -912,6 +912,62 @@ function boundedTimesSqrtHalfDegree(node: IRNode, k: IRNode): number | undefined
   return sqrtHalfDeg;
 }
 
+/**
+ * Phase 57 (TypeScript port): Return the ``Sqrt`` inner half-degree
+ * when ``node`` is a ``Mul`` with exactly one ``Log(diverging)`` factor,
+ * exactly one ``Sqrt(positive-leading polynomial)`` factor, and any
+ * number of bounded factors; ``undefined`` otherwise.
+ *
+ * Combines the sub-polynomial growth of ``Log`` with the half-
+ * polynomial growth of ``Sqrt``.  Effective growth is
+ * ``log(k) · k^{deg(P)/2}``, strictly dominated by
+ * ``k^{deg(P)/2 + ε}`` for any ``ε > 0``.  Caller compares
+ * ``denDeg > halfDeg``.
+ *
+ * Requires **both** Log and Sqrt — patterns with only one fall
+ * through to Phase 55 (bounded × Log) or Phase 56 (bounded × Sqrt).
+ *
+ * Algorithm:
+ *   1. Require ``node = Mul(...)``.
+ *   2. For each factor:
+ *      - ``Log(diverging)`` → record (refuse a second).
+ *      - ``Sqrt(positive-poly)`` → record half-deg (refuse a second).
+ *      - ``bounded`` → accept.
+ *      - otherwise → return undefined.
+ *   3. Require exactly one Log AND exactly one Sqrt.
+ */
+function boundedLogSqrtHalfDegree(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logCount = 0;
+  let sqrtHalfDeg: number | undefined;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 1) {
+        // Two or more Log factors — refuse.
+        return undefined;
+      }
+      continue;
+    }
+    const sqrtDeg = sqrtEffectiveHalfDegree(arg, k);
+    if (sqrtDeg !== undefined) {
+      if (sqrtHalfDeg !== undefined) {
+        // Two Sqrt factors — refuse.
+        return undefined;
+      }
+      sqrtHalfDeg = sqrtDeg;
+      continue;
+    }
+    if (isBoundedInK(arg, k)) {
+      continue;
+    }
+    // Unrecognised factor.
+    return undefined;
+  }
+  if (logCount !== 1 || sqrtHalfDeg === undefined) return undefined;
+  return sqrtHalfDeg;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -991,6 +1047,24 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegBs = polynomialDegreeInK(den, k);
     if (denDegBs !== undefined) {
       if (denDegBs > sqrtBoundedHalfDeg) {
+        return true;
+      }
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 57: Mul(bounded..., Log(diverging), Sqrt(positive-poly))
+  // numerator pattern — combines sub-polynomial Log growth with
+  // half-polynomial Sqrt growth.  Effective growth log(k)·k^{deg(P)/2}
+  // is strictly dominated by k^{deg(P)/2 + ε} for any ε > 0.  Vanishes
+  // when denDeg > halfDeg (polynomial) or denominator is non-polynomial
+  // diverging.  Requires both Log and Sqrt (Phase 55 / Phase 56 handle
+  // the one-only cases).
+  const bls_halfDeg = boundedLogSqrtHalfDegree(num, k);
+  if (bls_halfDeg !== undefined) {
+    const denDegBls = polynomialDegreeInK(den, k);
+    if (denDegBls !== undefined) {
+      if (denDegBls > bls_halfDeg) {
         return true;
       }
     } else if (hDivergesAtInfinity(den, k)) {

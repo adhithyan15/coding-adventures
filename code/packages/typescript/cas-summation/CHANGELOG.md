@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.5.0 — 2026-05-23
+
+**Phase 57 — Bounded × Log × Sqrt combination (TypeScript port).**
+
+Ports Python ``cas-summation`` 1.5.0 (PR #4215).  Combines Log
+(sub-polynomial) and Sqrt (half-polynomial) growth.  Effective
+growth ``log(k)·k^{deg(P)/2}`` is strictly dominated by
+``k^{deg(P)/2 + ε}`` for any ``ε > 0``.
+
+### Added
+
+- **`boundedLogSqrtHalfDegree(node, k)`** — returns ``deg(P)/2`` for
+  ``Mul`` with exactly one ``Log(diverging)`` factor, exactly one
+  ``Sqrt(positive-poly)`` factor, and any number of bounded factors.
+  Returns ``undefined`` for one-only patterns (Phase 55 / Phase 56
+  handle those) or two-of-either (conservative).
+
+### Changed
+
+- ``gVanishesAtInfinity`` adds Phase 57 branch after Phase 56.
+
+### Tests
+
+4 new ``summation: Phase 57 bounded × Log × Sqrt numerator`` cases.
+Full suite: **73 passed** (was 69; +4).
+
 ## 1.4.0 — 2026-05-23
 
 **Phase 56 — Bounded × Sqrt(diverging) numerator pattern (TypeScript port).**
