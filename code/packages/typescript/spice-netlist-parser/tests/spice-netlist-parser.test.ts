@@ -258,6 +258,45 @@ R2 mid 0 1k
     );
   });
 
+  it("parses .disto and .pz analysis cards", () => {
+    const parsed = parseNetlist(`
+.disto dec 5 1k 1meg V(out) I(Vin)
+.pz V(out) Vin pole
+`);
+    const distoCard = {
+      kind: "disto",
+      mode: "dec",
+      points: 5,
+      startHz: 1000,
+      stopHz: 1.0e6,
+      probes: [
+        { kind: "voltage", target: "out" },
+        { kind: "current", target: "Vin" },
+      ],
+    };
+    const pzCard = {
+      kind: "pz",
+      outputNode: "out",
+      inputSource: "Vin",
+      poleZeroKind: "pole",
+    };
+
+    expect(parsed.analyses).toEqual([distoCard, pzCard]);
+    expect(parsed.distortionCards()).toEqual([distoCard]);
+    expect(parsed.poleZeroCards()).toEqual([pzCard]);
+  });
+
+  it("rejects .disto and .pz cards with invalid shapes", () => {
+    expect(() => parseNetlist(".disto dec 5 1k 1meg")).toThrow(
+      /\.disto expects at least 6 fields/,
+    );
+    expect(() => parseNetlist(".disto dec 5 1k 1meg P(out)")).toThrow(
+      /\.disto probe must be V\(node\) or I\(source\)/,
+    );
+    expect(() => parseNetlist(".pz out Vin")).toThrow(/\.pz output must be a voltage probe/);
+    expect(() => parseNetlist(".pz V(out) Vin residue")).toThrow(/\.pz kind must be/);
+  });
+
   it("parses transient methods from .tran cards", () => {
     const parsed = parseNetlist(".tran 1n 20n method=gear2");
 

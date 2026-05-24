@@ -5,10 +5,12 @@ use spice_engine::{
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
     pss_with_tolerance, transient, transient_adaptive, transient_with_method,
     AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
-    CurrentSource, Element, ExpWaveform, Inductor, MutualInductor, PssNewtonCandidateResult,
-    PssNewtonIterationResult, PssNewtonSolveResult, PssNewtonUpdateResult,
-    PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform, PwlWaveform, Resistor,
-    SinWaveform, SpiceError, TransientMethod, TransmissionLine, VoltageSource, Waveform,
+    CurrentSource, DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform,
+    Inductor, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
+    PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
+    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransmissionLine,
+    VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -890,6 +892,52 @@ fn fourier_extracts_transient_sinusoid_components() {
     assert!((fundamental.sine - amp).abs() < 2.0e-3);
     assert!(fundamental.cosine.abs() < 2.0e-3);
     assert!(probe.total_harmonic_distortion < 2.0e-3);
+}
+
+#[test]
+fn pole_zero_result_shape_supports_simple_rc_pole_fixture() {
+    let resistance = 1_000.0;
+    let capacitance = 1.0e-6;
+    let pole_rad_per_second = -1.0 / (resistance * capacitance);
+    let result = PoleZeroResult {
+        input_source: "Vin".to_string(),
+        output_node: "out".to_string(),
+        entries: vec![PoleZeroEntry {
+            kind: PoleZeroEntryKind::Pole,
+            real: pole_rad_per_second,
+            imaginary: 0.0,
+            frequency_hz: pole_rad_per_second.abs() / (2.0 * std::f64::consts::PI),
+            damping: 1.0,
+        }],
+    };
+
+    assert_eq!(result.entries[0].kind, PoleZeroEntryKind::Pole);
+    assert_close(
+        result.entries[0].frequency_hz,
+        1.0 / (2.0 * std::f64::consts::PI * resistance * capacitance),
+    );
+}
+
+#[test]
+fn distortion_result_shape_supports_nonlinear_device_smoke_fixture() {
+    let result = DistortionResult {
+        input_source: "Vin".to_string(),
+        output_probe: "V(out)".to_string(),
+        points: vec![DistortionPoint {
+            frequency_hz: 1.0e3,
+            fundamental_magnitude: 1.0,
+            harmonics: vec![DistortionHarmonic {
+                harmonic: 2,
+                frequency_hz: 2.0e3,
+                magnitude: 0.025,
+                phase_degrees: -12.0,
+            }],
+            total_harmonic_distortion: 0.025,
+        }],
+    };
+
+    assert_eq!(result.points[0].harmonics[0].harmonic, 2);
+    assert_close(result.points[0].total_harmonic_distortion, 0.025);
 }
 
 #[test]

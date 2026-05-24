@@ -261,6 +261,10 @@ Status:
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.
+- `.disto` and `.pz` parser/control-card records plus first distortion and
+  pole-zero result shapes are implemented across Python, TypeScript, and Rust,
+  with smoke fixtures for nonlinear-device distortion output and a simple RC
+  pole result.
 
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 

@@ -112,6 +112,29 @@ pub struct FourAnalysis {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct DistortionAnalysis {
+    pub mode: String,
+    pub points: usize,
+    pub start_hz: f64,
+    pub stop_hz: f64,
+    pub probes: Vec<OutputProbe>,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum PoleZeroKind {
+    Pole,
+    Zero,
+    PoleZero,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PoleZeroAnalysis {
+    pub output_node: String,
+    pub input_source: String,
+    pub kind: PoleZeroKind,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum OptionValue {
     Number(f64),
     Text(String),
@@ -137,6 +160,8 @@ pub enum Analysis {
     Print(PrintAnalysis),
     Plot(PlotAnalysis),
     Four(FourAnalysis),
+    Distortion(DistortionAnalysis),
+    PoleZero(PoleZeroAnalysis),
     Options(OptionsAnalysis),
 }
 
@@ -281,6 +306,26 @@ impl ParsedNetlist {
             .iter()
             .filter_map(|analysis| match analysis {
                 Analysis::Four(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn distortion_cards(&self) -> Vec<&DistortionAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Distortion(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn pole_zero_cards(&self) -> Vec<&PoleZeroAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::PoleZero(card) => Some(card),
                 _ => None,
             })
             .collect()
@@ -1533,6 +1578,30 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
                 probes: parse_output_probes(&fields[2..], ".four")?,
             }))
         }
+        ".disto" => {
+            require_min_fields(fields, 6, ".disto")?;
+            Ok(Analysis::Distortion(DistortionAnalysis {
+                mode: fields[1].to_ascii_lowercase(),
+                points: parse_value(&fields[2])? as usize,
+                start_hz: parse_value(&fields[3])?,
+                stop_hz: parse_value(&fields[4])?,
+                probes: parse_output_probes(&fields[5..], ".disto")?,
+            }))
+        }
+        ".pz" => {
+            require_min_fields(fields, 3, ".pz")?;
+            require_max_fields(fields, 4, ".pz")?;
+            let kind = if let Some(raw_kind) = fields.get(3) {
+                parse_pole_zero_kind(raw_kind)?
+            } else {
+                PoleZeroKind::PoleZero
+            };
+            Ok(Analysis::PoleZero(PoleZeroAnalysis {
+                output_node: parse_voltage_probe(&fields[1], ".pz")?,
+                input_source: fields[2].clone(),
+                kind,
+            }))
+        }
         ".options" => {
             require_min_fields(fields, 2, ".options")?;
             Ok(Analysis::Options(OptionsAnalysis {
@@ -1542,6 +1611,17 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
         _ => Err(NetlistParseError::new(format!(
             "unsupported directive {:?}",
             fields[0]
+        ))),
+    }
+}
+
+fn parse_pole_zero_kind(raw_kind: &str) -> Result<PoleZeroKind, NetlistParseError> {
+    match raw_kind.to_ascii_lowercase().as_str() {
+        "pole" => Ok(PoleZeroKind::Pole),
+        "zero" => Ok(PoleZeroKind::Zero),
+        "pz" => Ok(PoleZeroKind::PoleZero),
+        _ => Err(NetlistParseError::new(format!(
+            ".pz kind must be \"pole\", \"zero\", or \"pz\", got {raw_kind:?}"
         ))),
     }
 }

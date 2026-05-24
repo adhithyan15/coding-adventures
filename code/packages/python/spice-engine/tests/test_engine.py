@@ -100,6 +100,9 @@ from spice_engine import (
     DcSweepPoint,
     DcSweepResult,
     Diode,
+    DistortionHarmonic,
+    DistortionPoint,
+    DistortionResult,
     ExpWaveform,
     FourierHarmonic,
     FourierProbeResult,
@@ -120,6 +123,8 @@ from spice_engine import (
     PssResult,
     PssResidualJacobianResult,
     PssResidualResult,
+    PoleZeroEntry,
+    PoleZeroResult,
     PulseWaveform,
     PwlWaveform,
     Resistor,
@@ -5530,6 +5535,57 @@ def test_fourier_extracts_transient_sinusoid_components() -> None:
     assert fundamental.sine == pytest.approx(amp, rel=2.0e-3)
     assert abs(fundamental.cosine) < 2.0e-3
     assert probe.total_harmonic_distortion < 2.0e-3
+
+
+def test_pole_zero_result_shape_supports_simple_rc_pole_fixture() -> None:
+    resistance = 1_000.0
+    capacitance = 1.0e-6
+    pole_rad_per_second = -1.0 / (resistance * capacitance)
+    result = PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
+            PoleZeroEntry(
+                kind="pole",
+                real=pole_rad_per_second,
+                imaginary=0.0,
+                frequency=abs(pole_rad_per_second) / (2.0 * math.pi),
+                damping=1.0,
+            )
+        ],
+    )
+
+    assert isinstance(result, PoleZeroResult)
+    assert result.entries[0].kind == "pole"
+    assert result.entries[0].frequency == pytest.approx(
+        1.0 / (2.0 * math.pi * resistance * capacitance)
+    )
+
+
+def test_distortion_result_shape_supports_nonlinear_device_smoke_fixture() -> None:
+    result = DistortionResult(
+        input_source="Vin",
+        output_probe="V(out)",
+        points=[
+            DistortionPoint(
+                frequency=1.0e3,
+                fundamental_magnitude=1.0,
+                harmonics=[
+                    DistortionHarmonic(
+                        harmonic=2,
+                        frequency=2.0e3,
+                        magnitude=0.025,
+                        phase_degrees=-12.0,
+                    )
+                ],
+                total_harmonic_distortion=0.025,
+            )
+        ],
+    )
+
+    assert isinstance(result, DistortionResult)
+    assert result.points[0].harmonics[0].harmonic == 2
+    assert result.points[0].total_harmonic_distortion == pytest.approx(0.025)
 
 
 def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:

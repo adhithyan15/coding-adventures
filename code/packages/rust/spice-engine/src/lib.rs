@@ -1976,6 +1976,51 @@ pub struct FourierResult {
     pub probes: Vec<FourierProbeResult>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DistortionHarmonic {
+    pub harmonic: usize,
+    pub frequency_hz: f64,
+    pub magnitude: f64,
+    pub phase_degrees: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DistortionPoint {
+    pub frequency_hz: f64,
+    pub fundamental_magnitude: f64,
+    pub harmonics: Vec<DistortionHarmonic>,
+    pub total_harmonic_distortion: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DistortionResult {
+    pub input_source: String,
+    pub output_probe: String,
+    pub points: Vec<DistortionPoint>,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum PoleZeroEntryKind {
+    Pole,
+    Zero,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct PoleZeroEntry {
+    pub kind: PoleZeroEntryKind,
+    pub real: f64,
+    pub imaginary: f64,
+    pub frequency_hz: f64,
+    pub damping: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct PoleZeroResult {
+    pub input_source: String,
+    pub output_node: String,
+    pub entries: Vec<PoleZeroEntry>,
+}
+
 pub fn fourier(
     points: &[TransientPoint],
     fundamental_frequency_hz: f64,
