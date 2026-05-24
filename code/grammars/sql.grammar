@@ -353,7 +353,16 @@ comparison        = collated [ cmp_op collated
                   | "IS" "NULL"
                   | "IS" "NOT" "NULL"
                   | "IS" "DISTINCT" "FROM" collated
-                  | "IS" "NOT" "DISTINCT" "FROM" collated ] ;
+                  | "IS" "NOT" "DISTINCT" "FROM" collated
+                  | "IS" "NOT" collated
+                  | "IS" collated ] ;
+# The last two alternatives implement SQLite's NULL-safe equality
+# operator.  ``x IS y`` is equivalent to ``x IS NOT DISTINCT FROM y``
+# (NULLs compare equal to each other, never to anything else); ``x IS
+# NOT y`` is the negation.  Order matters in this PEG grammar: the
+# more specific ``IS NULL`` / ``IS NOT NULL`` / ``IS [NOT] DISTINCT
+# FROM`` alternatives must precede the general ``IS [NOT] collated``
+# forms so they get the first shot at matching their keyword tails.
 
 # in_expr: a subquery takes priority (starts with SELECT); otherwise a
 # comma-separated value list is used.

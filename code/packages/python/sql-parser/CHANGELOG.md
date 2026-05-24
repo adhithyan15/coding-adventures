@@ -6,6 +6,23 @@ All notable changes to the SQL parser package will be documented in this file.
 
 ### Changed
 
+- ``comparison`` rule now accepts SQLite's general NULL-safe equality
+  forms ``"IS" collated`` and ``"IS" "NOT" collated`` (in addition
+  to the existing ``"IS" "NULL"`` / ``"IS" "NOT" "NULL"`` /
+  ``"IS" [NOT] "DISTINCT" "FROM" collated`` alternatives).  The new
+  forms are listed *after* the specific NULL / DISTINCT shapes so
+  the PEG parser still matches those first.  Regenerated
+  ``_grammar.py`` cache via ``grammar-tools``.
+
+- Unary ``+`` prefix accepted as a no-op identity in the ``unary``
+  rule (see mini-sqlite CHANGELOG 2.6.0 for the end-to-end change).
+  This was inadvertently omitted from the previous bump; pinning the
+  version here so the parser ships with the matching grammar.
+
+## [0.41.0] - 2026-05-23
+
+### Changed
+
 - ``unary`` rule now accepts ``+`` alongside ``-`` and ``~``::
 
       unary = ( "-" | "~" | "+" ) unary | primary ;
