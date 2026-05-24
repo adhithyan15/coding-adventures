@@ -70,6 +70,10 @@ for the architecture, component catalog, and phasing plan.
   Emits: `onToggle`, `onSelect(index: number)`.
 - **`Navbar`** — top-of-page brand + HostLink row. Slots: `brand`,
   `items: list<text>`, `active-index`. Emit: `onSelect(index)`.
+- **`Select`** — dropdown selector. Same toggle + If(open) pattern
+  as DropdownMenu, but onChange carries the selected option *text*.
+  Slots: `value`, `options: list<text>`, `placeholder`, `open`,
+  `disabled`. Emits: `onToggle`, `onChange(value: text)`.
 
 Every component ships `.light.msl` and `.dark.msl` themes.
 

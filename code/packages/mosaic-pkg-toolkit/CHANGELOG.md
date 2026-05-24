@@ -1,5 +1,37 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — v0.11 — Select
+
+### Added
+
+**`Select`** — Bootstrap's `<select class="form-select">` distilled
+to a toolkit component. Same toggle-button + revealed-options
+pattern as DropdownMenu, but `onChange` carries the selected
+option's *text* (not its index).
+
+Composition: `Column[select] { HostButton[select-toggle], If(open)
+Column[select-options] { For options HostButton[select-option] } }`.
+
+Slots: `value`, `options: list<text>`, `placeholder`, `open`,
+`disabled`. Emits: `onToggle`, `onChange(value: text)`.
+
+### v0.11 note
+
+The toggle's label is always `value`. When `value` is empty, the
+host should pass the placeholder text in via `value` to display
+the "Choose…" hint. Branching on value-truthiness inside the .mll
+would collide on the `select-toggle` part name (moslayout compiler
+rejects duplicate parts in If/Else branches); pushing the choice
+to the host is the cleanest workaround for v0.11. When a native
+`HostSelect` kernel primitive ships, Select can re-implement on
+top of it without changing its public .mil interface.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 23 (was 22): one more interface
+test (`select_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
 ## [Unreleased] — v0.10 — Navbar
 
 ### Added
