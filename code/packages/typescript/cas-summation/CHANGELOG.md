@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.4.0 — 2026-05-23
+
+**Phase 56 — Bounded × Sqrt(diverging) numerator pattern (TypeScript port).**
+
+Ports Python ``cas-summation`` 1.4.0 (PR #4167).  Bounded × sqrt
+analogue of Phase 55's bounded × log.  Effective growth degree is
+``deg(P)/2``; quotient vanishes when ``denDeg > deg(P)/2``
+(polynomial) or denominator is non-polynomial diverging.
+
+### Added
+
+- **`boundedTimesSqrtHalfDegree(node, k)`** — returns ``deg(P)/2``
+  (half-degree) for ``Mul`` of exactly one ``Sqrt(positive-poly)``
+  factor and rest bounded.  Returns ``undefined`` for the no-Sqrt
+  case, two-Sqrt case (conservative), or unrecognised factors.
+
+### Changed
+
+- ``gVanishesAtInfinity`` adds Phase 56 branch after Phase 55, with
+  two denominator sub-cases (polynomial ``denDeg > halfDeg`` OR
+  non-polynomial diverging dominates).
+
+### Tests
+
+3 new ``summation: Phase 56 bounded × sqrt numerator`` cases.
+Full suite: **69 passed** (was 66; +3).
+
 ## 1.3.0 — 2026-05-23
 
 **Phase 55 — Bounded×Log(diverging) numerator pattern (TypeScript port).**
