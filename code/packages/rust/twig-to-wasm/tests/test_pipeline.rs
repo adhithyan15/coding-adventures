@@ -250,27 +250,31 @@ fn unbalanced_parens_produce_compile_error() {
 // cannot handle.
 // ---------------------------------------------------------------------------
 
-// Test 3.1 — empty program emits make_nil which WASM cannot handle
+// Test 3.1 — empty program now compiles cleanly (Path A increment 6a)
+//
+// Before increment 6a, empty programs emitted `call_builtin make_nil` which
+// the WASM validator rejected.  After 6a, `twig-ir-compiler` emits a typed
+// `const 0 [ref<LispyPair>]` for the implicit nil return — and the WASM
+// backend accepts typed const for `ref<*>` types via the Phase 2 heap-
+// lowering convention.  This test flipped from a WasmError expectation
+// to an Ok expectation.
 #[test]
-fn empty_program_is_wasm_error() {
-    // An empty Twig program compiles to: `call_builtin make_nil` + `ret`.
-    // `make_nil` survives builtin-lowering (not in the arithmetic table),
-    // so the WASM validator sees a `call_builtin` instruction and rejects it.
-    let err = compile_err("");
-    assert!(
-        matches!(err, TwigToWasmError::WasmError(_)),
-        "empty program should produce WasmError (call_builtin make_nil); got: {err}"
-    );
+fn empty_program_compiles() {
+    let bytes = compile_ok("");
+    assert!(bytes.starts_with(b"\x00asm"),
+        "empty program should produce a valid WASM module header");
+    assert!(bytes.len() > 8, "WASM module must contain at least a header + minimal sections");
 }
 
-// Test 3.2 — nil literal produces call_builtin which WASM cannot lower
+// Test 3.2 — nil literal now compiles cleanly (Path A increment 6a)
+//
+// Same flip as empty_program_compiles: `nil` now lowers to
+// `const 0 [ref<LispyPair>]`, accepted by every backend.
 #[test]
-fn nil_literal_is_wasm_error() {
-    let err = compile_err("nil");
-    assert!(
-        matches!(err, TwigToWasmError::WasmError(_)),
-        "nil literal should produce WasmError; got: {err}"
-    );
+fn nil_literal_compiles() {
+    let bytes = compile_ok("nil");
+    assert!(bytes.starts_with(b"\x00asm"),
+        "nil literal should produce a valid WASM module header");
 }
 
 // Test 3.3 — boolean constant: either compiles or is a WASM error, never panics
