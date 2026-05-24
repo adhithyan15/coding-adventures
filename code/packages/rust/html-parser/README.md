@@ -71,6 +71,9 @@ The current parser surface includes:
 - browser-facing URL resolution metadata for links, loadable resources, images,
   and form actions using the document `base` href when available, while keeping
   raw authored URLs available to browser policy code
+- browser-facing identity and language metadata for document/body fields plus
+  renderable content nodes, including `id`, tokenized `class`, `title`, `lang`,
+  and `dir` values for selector matching, UI policy, and early layout
 
 The checked-in html5lib tree-construction smoke corpus now covers every case in
 the currently audited upstream `html5lib-tests/tree-construction/*.dat` sources

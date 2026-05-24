@@ -25,6 +25,18 @@ struct ExpectedBrowserDocument {
     title: Option<String>,
     base_href: Option<String>,
     base_target: Option<String>,
+    #[serde(default)]
+    document_lang: Option<String>,
+    #[serde(default)]
+    document_dir: Option<String>,
+    #[serde(default)]
+    body_id: Option<String>,
+    #[serde(default)]
+    body_classes: Vec<String>,
+    #[serde(default)]
+    body_lang: Option<String>,
+    #[serde(default)]
+    body_dir: Option<String>,
     body_text: String,
     metas: Vec<ExpectedMeta>,
     resources: Vec<ExpectedResource>,
@@ -148,6 +160,12 @@ impl ExpectedBrowserDocument {
             title: self.title,
             base_href: self.base_href,
             base_target: self.base_target,
+            document_lang: self.document_lang,
+            document_dir: self.document_dir,
+            body_id: self.body_id,
+            body_classes: self.body_classes,
+            body_lang: self.body_lang,
+            body_dir: self.body_dir,
             body_text: self.body_text,
             metas: self
                 .metas

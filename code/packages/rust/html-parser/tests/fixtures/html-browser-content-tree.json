@@ -6,12 +6,17 @@
     {
       "id": "classic-document-flow",
       "description": "Head metadata is skipped while headings, paragraphs, base-resolved links, images, line breaks, and lists stay renderable.",
-      "input": "<!doctype html><title>Example</title><base href=\"https://example.test/docs/\"><link rel=stylesheet href=style.css><h1 id=top>Example Directory</h1><p>Welcome to <a href=intro.html>Venture HTML</a>.<br><img src=logo.gif alt=Logo><ul><li>One<li>Two",
+      "input": "<!doctype html><title>Example</title><base href=\"https://example.test/docs/\"><link rel=stylesheet href=style.css><h1 id=top class=\"headline primary\" title=\"Directory\" lang=en dir=ltr>Example Directory</h1><p class=lede>Welcome to <a id=intro-link class=nav href=intro.html title=\"Read intro\">Venture HTML</a>.<br><img src=logo.gif alt=Logo><ul><li>One<li>Two",
       "expected": {
         "children": [
           {
             "role": "heading",
             "name": "h1",
+            "id": "top",
+            "classes": ["headline", "primary"],
+            "title": "Directory",
+            "lang": "en",
+            "dir": "ltr",
             "text": "Example Directory",
             "href": null,
             "src": null,
@@ -24,6 +29,7 @@
           {
             "role": "block",
             "name": "p",
+            "classes": ["lede"],
             "text": null,
             "href": null,
             "src": null,
@@ -34,6 +40,9 @@
               {
                 "role": "link",
                 "name": "a",
+                "id": "intro-link",
+                "classes": ["nav"],
+                "title": "Read intro",
                 "text": "Venture HTML",
                 "href": "intro.html",
                 "resolved_href": "https://example.test/docs/intro.html",
