@@ -26,6 +26,10 @@
   harmonic sine/cosine coefficients, magnitudes, phases, and THD from
   transient samples for `V(node)` and `I(source)` probes.
 
+- **Transient distortion helper** — `distortion_from_transient()` now runs the
+  Fourier extraction path and returns the Phase-8 distortion result shape
+  directly from transient samples.
+
 - **MOS Level-1 capacitance models** — `CGSO`, `CGDO`, `CGBO`, `CBS`, and
   `CBD` now contribute MOSFET small-signal AC susceptance.
 

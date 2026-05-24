@@ -23,6 +23,7 @@ The initial slices implement:
 - Time-varying transient source waveforms: PWL, SIN, PULSE, and EXP.
 - Fourier post-processing for transient output, including DC, harmonic
   magnitude/phase, and THD results.
+- Transient-to-distortion projection through the Fourier extraction path.
 - Stable text output tables for selected node voltages and branch currents.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,

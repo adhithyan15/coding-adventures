@@ -802,6 +802,21 @@ export function distortionFromFourier(
   };
 }
 
+export function distortionFromTransient(
+  points: readonly TransientPoint[],
+  fundamentalFrequencyHz: number,
+  inputSource: string,
+  outputProbe: string,
+  harmonics = 9,
+  startTime?: number,
+): DistortionResult {
+  return distortionFromFourier(
+    fourier(points, fundamentalFrequencyHz, [outputProbe], harmonics, startTime),
+    inputSource,
+    outputProbe,
+  );
+}
+
 export interface AdaptiveTransientOptions {
   readonly method?: TransientMethod;
   readonly tolerance?: number;

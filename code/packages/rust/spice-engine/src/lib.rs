@@ -2276,6 +2276,41 @@ pub fn distortion_from_fourier(
     })
 }
 
+pub fn distortion_from_transient(
+    points: &[TransientPoint],
+    fundamental_frequency_hz: f64,
+    input_source: &str,
+    output_probe: &str,
+    harmonics: usize,
+) -> Result<DistortionResult, SpiceError> {
+    distortion_from_transient_with_start_time(
+        points,
+        fundamental_frequency_hz,
+        input_source,
+        output_probe,
+        harmonics,
+        None,
+    )
+}
+
+pub fn distortion_from_transient_with_start_time(
+    points: &[TransientPoint],
+    fundamental_frequency_hz: f64,
+    input_source: &str,
+    output_probe: &str,
+    harmonics: usize,
+    start_time: Option<f64>,
+) -> Result<DistortionResult, SpiceError> {
+    let fourier_result = fourier_with_start_time(
+        points,
+        fundamental_frequency_hz,
+        &[output_probe],
+        harmonics,
+        start_time,
+    )?;
+    distortion_from_fourier(&fourier_result, input_source, output_probe)
+}
+
 pub fn fourier(
     points: &[TransientPoint],
     fundamental_frequency_hz: f64,

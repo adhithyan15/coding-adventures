@@ -1,6 +1,6 @@
 use spice_engine::{
-    dc_op, distortion_from_fourier, estimate_period, format_dc_table, format_transient_table,
-    fourier, pole_zero_rc_lowpass, pss_newton_candidate_with_tolerance,
+    dc_op, distortion_from_fourier, distortion_from_transient, estimate_period, format_dc_table,
+    format_transient_table, fourier, pole_zero_rc_lowpass, pss_newton_candidate_with_tolerance,
     pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
     pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
     pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
@@ -9,8 +9,8 @@ use spice_engine::{
     ExpWaveform, Inductor, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
     PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
     PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransmissionLine,
-    VoltageSource, Waveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
+    TransmissionLine, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -1018,6 +1018,35 @@ fn distortion_from_fourier_projects_probe_harmonics() {
             }],
         }
     );
+}
+
+#[test]
+fn distortion_from_transient_extracts_harmonic_content() {
+    let freq = 1.0e3;
+    let period = 1.0 / freq;
+    let points = (0..=128)
+        .map(|index| {
+            let time = index as f64 * period / 64.0;
+            let value = (2.0 * std::f64::consts::PI * freq * time).sin()
+                + 0.1 * (4.0 * std::f64::consts::PI * freq * time).sin();
+            TransientPoint {
+                time,
+                node_voltages: std::collections::BTreeMap::from([("out".to_string(), value)]),
+                branch_currents: std::collections::BTreeMap::new(),
+            }
+        })
+        .collect::<Vec<_>>();
+
+    let result = distortion_from_transient(&points, freq, "Vin", "V(out)", 3).unwrap();
+
+    assert_eq!(result.input_source, "Vin");
+    assert_eq!(result.output_probe, "V(out)");
+    let point = &result.points[0];
+    assert_close(point.frequency_hz, freq);
+    assert!((point.fundamental_magnitude - 1.0).abs() < 2.0e-3);
+    assert_eq!(point.harmonics[0].harmonic, 2);
+    assert!((point.harmonics[0].magnitude - 0.1).abs() < 2.0e-3);
+    assert!((point.total_harmonic_distortion - 0.1).abs() < 2.0e-3);
 }
 
 #[test]

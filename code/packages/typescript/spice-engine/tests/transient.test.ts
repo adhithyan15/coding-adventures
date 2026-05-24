@@ -16,6 +16,7 @@ import {
   currentSourceWithWaveform,
   dcOp,
   distortionFromFourier,
+  distortionFromTransient,
   estimatePeriod,
   formatDcTable,
   formatTransientTable,
@@ -878,6 +879,36 @@ describe("transient", () => {
         },
       ],
     });
+  });
+
+  it("extracts distortion harmonic content from transient samples", () => {
+    const freq = 1.0e3;
+    const period = 1.0 / freq;
+    const points = Array.from({ length: 129 }, (_, index) => {
+      const time = (index * period) / 64.0;
+      const value = Math.sin(2.0 * Math.PI * freq * time) + 0.1 * Math.sin(4.0 * Math.PI * freq * time);
+      return {
+        time,
+        nodeVoltages: new Map([["out", value]]),
+        branchCurrents: new Map<string, number>(),
+        voltage(node: string): number | undefined {
+          return node === "0" || node.toLowerCase() === "gnd" ? 0.0 : this.nodeVoltages.get(node);
+        },
+        branchCurrent(sourceName: string): number | undefined {
+          return this.branchCurrents.get(sourceName.startsWith("I(") ? sourceName : `I(${sourceName})`);
+        },
+      };
+    });
+
+    const result = distortionFromTransient(points, freq, "Vin", "V(out)", 3);
+
+    expect(result.inputSource).toBe("Vin");
+    expect(result.outputProbe).toBe("V(out)");
+    expect(result.points[0].frequencyHz).toBeCloseTo(freq, 9);
+    expect(result.points[0].fundamentalMagnitude).toBeCloseTo(1.0, 3);
+    expect(result.points[0].harmonics[0].harmonic).toBe(2);
+    expect(result.points[0].harmonics[0].magnitude).toBeCloseTo(0.1, 3);
+    expect(result.points[0].totalHarmonicDistortion).toBeCloseTo(0.1, 3);
   });
 
   it("formats stable text output tables for DC and transient results", () => {

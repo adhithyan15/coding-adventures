@@ -5,7 +5,8 @@ Newton-Raphson DC, trapezoidal transient, AC small-signal sweep, DC transfer
 function (`.TF`), DC parameter sweep (`.DC`), sensitivity analysis (`.SENS`),
 Monte Carlo (`.MC`), noise analysis (`.NOISE`), and all four SPICE controlled
 sources (VCVS / VCCS / CCCS / CCVS).  Transient outputs can also be
-post-processed with SPICE-style Fourier (`.FOUR`) measurements.
+post-processed with SPICE-style Fourier (`.FOUR`) measurements and projected
+into a distortion result shape.
 
 See [`code/specs/spice-engine.md`](../../../specs/spice-engine.md).
 

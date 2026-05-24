@@ -659,6 +659,30 @@ def distortion_from_fourier(
     )
 
 
+def distortion_from_transient(
+    transient_result: TransientResult | list[TransientPoint],
+    fundamental_frequency: float,
+    input_source: str,
+    output_probe: str,
+    *,
+    harmonics: int = 9,
+    start_time: float | None = None,
+) -> DistortionResult:
+    """Compute the Phase-8 distortion shape directly from transient samples."""
+
+    return distortion_from_fourier(
+        fourier(
+            transient_result,
+            fundamental_frequency,
+            [output_probe],
+            harmonics=harmonics,
+            start_time=start_time,
+        ),
+        input_source=input_source,
+        output_probe=output_probe,
+    )
+
+
 def format_dc_table(result: DcResult, probes: list[str] | None = None) -> str:
     """Format a DC operating point as a stable SPICE-style text table."""
     selected_probes = probes or _default_output_probes(
