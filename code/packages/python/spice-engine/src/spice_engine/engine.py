@@ -261,7 +261,7 @@ def _clone_subckt_element(element: object, instance_name: str, node_map: dict[st
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -1917,6 +1917,7 @@ def _stamp_bjt(
     to collector in the conventional direction.  Swapping C↔E and negating
     the control voltage (Ve - Vb vs Vb - Ve) yields the correct KCL stamps.
     """
+    _validate_bjt(el)
     # --- Resolve node voltages at the current Newton iterate -----------------
     Vb = 0.0 if _is_ground(el.base) else x[node_to_idx[el.base]]
     Ve = 0.0 if _is_ground(el.emitter) else x[node_to_idx[el.emitter]]
@@ -1987,6 +1988,21 @@ def _stamp_bjt(
             b[node_to_idx[el.emitter]] -= Ieq_coll
         if not _is_ground(el.collector):
             b[node_to_idx[el.collector]] += Ieq_coll
+
+
+def _validate_bjt(el: BJT) -> None:
+    if el.polarity not in {"NPN", "PNP"}:
+        raise ValueError(f"{el.name}: BJT polarity must be NPN or PNP")
+    if not math.isfinite(el.Is) or el.Is <= 0.0:
+        raise ValueError(f"{el.name}: BJT saturation current must be finite and positive")
+    if not math.isfinite(el.beta_f) or el.beta_f <= 0.0:
+        raise ValueError(f"{el.name}: BJT forward beta must be finite and positive")
+    if not math.isfinite(el.Vt) or el.Vt <= 0.0:
+        raise ValueError(f"{el.name}: BJT thermal voltage must be finite and positive")
+    if not math.isfinite(el.Cje) or el.Cje < 0.0:
+        raise ValueError(f"{el.name}: BJT base-emitter capacitance must be finite and non-negative")
+    if not math.isfinite(el.Cjc) or el.Cjc < 0.0:
+        raise ValueError(f"{el.name}: BJT base-collector capacitance must be finite and non-negative")
 
 
 # ---------------------------------------------------------------------------
@@ -3936,6 +3952,7 @@ def _stamp_ac(
         # Small-signal model: g_π (junction conductance) + gm (transconductance
         # VCCS).  Mirror the DC _stamp_bjt stamps but in the complex domain and
         # without the Norton offsets (which are DC bias terms, zero in AC).
+        _validate_bjt(el)
         Vb_dc = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
         Ve_dc = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
         Vjunc = (
@@ -3945,9 +3962,12 @@ def _stamp_ac(
         exp_t = math.exp(Vjunc / el.Vt)
         gm_b: float = (el.Is / el.Vt) * exp_t
         g_pi: float = gm_b / el.beta_f
+        y_be = g_pi + 1j * omega * el.Cje
+        y_bc = 1j * omega * el.Cjc
 
         if el.polarity == "NPN":
-            _stamp_g_c(G, node_to_idx, el.base, el.emitter, g_pi + 0j)
+            _stamp_g_c(G, node_to_idx, el.base, el.emitter, y_be)
+            _stamp_g_c(G, node_to_idx, el.base, el.collector, y_bc)
             if not _is_ground(el.collector):
                 c_i = node_to_idx[el.collector]
                 if not _is_ground(el.base):
@@ -3961,7 +3981,8 @@ def _stamp_ac(
                 if not _is_ground(el.emitter):
                     G[e_i][node_to_idx[el.emitter]] += gm_b + 0j
         else:  # PNP
-            _stamp_g_c(G, node_to_idx, el.emitter, el.base, g_pi + 0j)
+            _stamp_g_c(G, node_to_idx, el.emitter, el.base, y_be)
+            _stamp_g_c(G, node_to_idx, el.base, el.collector, y_bc)
             if not _is_ground(el.emitter):
                 e_i = node_to_idx[el.emitter]
                 if not _is_ground(el.emitter):
@@ -5332,6 +5353,8 @@ def sens_dc(
                     Is=el.Is + delta_is,
                     beta_f=el.beta_f,
                     Vt=el.Vt,
+                    Cje=el.Cje,
+                    Cjc=el.Cjc,
                 ),
             )
             delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
@@ -5344,6 +5367,8 @@ def sens_dc(
                     Is=el.Is,
                     beta_f=el.beta_f + delta_beta,
                     Vt=el.Vt,
+                    Cje=el.Cje,
+                    Cjc=el.Cjc,
                 ),
             )
 
@@ -5550,6 +5575,8 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Is=_draw(el.Is),
             beta_f=_draw(el.beta_f),
             Vt=el.Vt,
+            Cje=el.Cje,
+            Cjc=el.Cjc,
         )
 
     # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.

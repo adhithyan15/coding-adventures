@@ -689,7 +689,7 @@ Rload out 0 1k
 fn parses_bjt_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model fast NPN(IS=1e-13 BF=120 VT=26m)
+.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p)
 Vcc vcc 0 DC 5
 Vbase base 0 DC 0.7
 Q1 vcc base out fast
@@ -705,6 +705,8 @@ Rload out 0 1k
     assert_close(*model.params.get("IS").unwrap(), 1.0e-13);
     assert_close(*model.params.get("BF").unwrap(), 120.0);
     assert_close(*model.params.get("VT").unwrap(), 26.0e-3);
+    assert_close(*model.params.get("CJE").unwrap(), 2.0e-12);
+    assert_close(*model.params.get("CJC").unwrap(), 3.0e-12);
 
     let Element::Bjt(bjt) = &parsed.circuit.elements()[2] else {
         panic!("expected BJT");
@@ -717,6 +719,8 @@ Rload out 0 1k
     assert_close(bjt.saturation_current, 1.0e-13);
     assert_close(bjt.forward_beta, 120.0);
     assert_close(bjt.thermal_voltage, 26.0e-3);
+    assert_close(bjt.base_emitter_capacitance, 2.0e-12);
+    assert_close(bjt.base_collector_capacitance, 3.0e-12);
 
     let result = dc_op(&parsed.circuit).unwrap();
     let out = result.voltage("out").unwrap();

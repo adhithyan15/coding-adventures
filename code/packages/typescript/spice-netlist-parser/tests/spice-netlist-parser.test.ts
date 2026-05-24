@@ -462,7 +462,7 @@ Rload out 0 1k
 
   it("parses BJT models into operating-point circuits", () => {
     const parsed = parseNetlist(`
-.model fast NPN(IS=1e-14 BF=120 VT=25m)
+.model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p)
 Vcc vcc 0 DC 5
 Vb base 0 DC 0.7
 Rc vcc col 100
@@ -477,6 +477,8 @@ Q1 col base 0 fast
         ["IS", 1.0e-14],
         ["BF", 120.0],
         ["VT", 25.0e-3],
+        ["CJE", 2.0e-12],
+        ["CJC", 3.0e-12],
       ]),
     });
     expect(parsed.circuit.elements()[3]).toMatchObject({
@@ -489,6 +491,8 @@ Q1 col base 0 fast
       saturationCurrent: 1.0e-14,
       forwardBeta: 120.0,
       thermalVoltage: 25.0e-3,
+      baseEmitterCapacitance: 2.0e-12,
+      baseCollectorCapacitance: 3.0e-12,
     });
 
     const result = dcOp(parsed.circuit);

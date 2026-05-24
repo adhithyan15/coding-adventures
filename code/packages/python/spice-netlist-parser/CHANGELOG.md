@@ -9,6 +9,8 @@
 - Parse diode model-card junction capacitance with
   `.model ... D(... CJO=<c>)` / `.model ... D(... CJ0=<c>)`.
 - Parse diode model-card transit time with `.model ... D(... TT=<time>)`.
+- Parse BJT model-card capacitances with `.model ... NPN|PNP(... CJE=<c>
+  CJC=<c>)` and pass them into Python `BJT` elements.
 - Parse and validate transient integration methods from
   `.tran ... method=<euler|trap|gear2>`, and expose fallback routing from
   `.options method=<...>`.

@@ -345,6 +345,8 @@ fn ac_bjt_applies_zero_bias_common_emitter_gain() {
         25.85e-6,
         100.0,
         0.02585,
+        0.0,
+        0.0,
     )));
     circuit.add(Element::Resistor(Resistor::new(
         "Rload", "out", "0", 1_000.0,
@@ -379,6 +381,8 @@ fn ac_bjt_uses_explicit_ac_source_and_dc_bias_operating_point() {
         25.85e-6,
         100.0,
         thermal_voltage,
+        0.0,
+        0.0,
     )));
     circuit.add(Element::Resistor(Resistor::new(
         "Rload", "out", "0", 1_000.0,
@@ -390,6 +394,43 @@ fn ac_bjt_uses_explicit_ac_source_and_dc_bias_operating_point() {
     let out = points[0].voltage("out").unwrap();
     assert_close(out.real, -2.0);
     assert_close(out.imag, 0.0);
+}
+
+#[test]
+fn ac_bjt_uses_base_emitter_capacitance() {
+    fn base_amplitude(base_emitter_capacitance: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new("Rc", "col", "0", 1_000.0)));
+        circuit.add(Element::Bjt(Bjt::with_model(
+            "Q1",
+            "col",
+            "base",
+            "0",
+            BjtPolarity::Npn,
+            1.0e-14,
+            100.0,
+            0.02585,
+            base_emitter_capacitance,
+            0.0,
+        )));
+
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("base")
+            .unwrap()
+            .abs()
+    }
+
+    let without_capacitance = base_amplitude(0.0);
+    let with_capacitance = base_amplitude(1.0e-6);
+
+    assert!(without_capacitance > 0.9);
+    assert!(with_capacitance < without_capacitance / 100.0);
 }
 
 #[test]

@@ -178,6 +178,8 @@ fn tf_bjt_common_emitter_reports_small_signal_gain() {
         25.85e-6,
         100.0,
         thermal_voltage,
+        0.0,
+        0.0,
     )));
     circuit.add(Element::Resistor(Resistor::new(
         "Rload", "out", "0", 1_000.0,

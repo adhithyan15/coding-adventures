@@ -358,6 +358,8 @@ fn dc_bjt_solves_npn_emitter_follower_operating_point() {
         1.0e-13,
         120.0,
         0.026,
+        0.0,
+        0.0,
     )));
     circuit.add(Element::Resistor(Resistor::new(
         "Rload", "out", "0", 1_000.0,
@@ -390,6 +392,8 @@ fn dc_bjt_solves_pnp_pullup_operating_point() {
         1.0e-13,
         100.0,
         0.026,
+        0.0,
+        0.0,
     )));
     circuit.add(Element::Resistor(Resistor::new(
         "Rload", "out", "0", 1_000.0,

@@ -436,6 +436,8 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Is=model.params.get("IS", 1e-14),
             beta_f=model.params.get("BETA_F", model.params.get("BF", 100.0)),
             Vt=model.params.get("VT", 0.02585),
+            Cje=model.params.get("CJE", model.params.get("CBE", 0.0)),
+            Cjc=model.params.get("CJC", model.params.get("CBC", 0.0)),
         )
     if prefix == "J":
         _require_fields(fields, 5, "JFET")
