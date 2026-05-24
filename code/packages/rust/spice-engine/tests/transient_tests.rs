@@ -1,14 +1,14 @@
 use spice_engine::{
-    estimate_period, fourier, pss_newton_candidate_with_tolerance,
-    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
-    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
-    pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
-    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
-    Ccvs, Circuit, CurrentSource, Element, ExpWaveform, Inductor, MutualInductor,
-    PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
-    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransmissionLine,
-    VoltageSource, Waveform,
+    dc_op, estimate_period, format_dc_table, format_transient_table, fourier,
+    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
+    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
+    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
+    pss_with_tolerance, transient, transient_adaptive, transient_with_method,
+    AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
+    CurrentSource, Element, ExpWaveform, Inductor, MutualInductor, PssNewtonCandidateResult,
+    PssNewtonIterationResult, PssNewtonSolveResult, PssNewtonUpdateResult,
+    PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform, PwlWaveform, Resistor,
+    SinWaveform, SpiceError, TransientMethod, TransmissionLine, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -890,6 +890,34 @@ fn fourier_extracts_transient_sinusoid_components() {
     assert!((fundamental.sine - amp).abs() < 2.0e-3);
     assert!(fundamental.cosine.abs() < 2.0e-3);
     assert!(probe.total_harmonic_distortion < 2.0e-3);
+}
+
+#[test]
+fn text_output_tables_are_stable_for_dc_and_transient_results() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "mid", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R2", "mid", "0", 1_000.0)));
+    let dc_result = dc_op(&circuit).unwrap();
+
+    assert_eq!(
+        format_dc_table(&dc_result, &[]).unwrap(),
+        "Index\tV(mid)\tV(vin)\tI(V1)\n0\t5.000000e+00\t1.000000e+01\t-5.000000e-03\n"
+    );
+    assert_eq!(
+        format_dc_table(&dc_result, &["V(vin, mid)", "I(V1)"]).unwrap(),
+        "Index\tV(vin, mid)\tI(V1)\n0\t5.000000e+00\t-5.000000e-03\n"
+    );
+
+    let points = transient(&circuit, 1.0e-3, 2.0e-3).unwrap();
+    assert_eq!(
+        format_transient_table(&points, &["V(vin)", "V(mid)", "I(V1)"]).unwrap(),
+        "Index\tTime\tV(vin)\tV(mid)\tI(V1)\n0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+    );
 }
 
 #[test]
