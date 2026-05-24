@@ -210,6 +210,8 @@ The crate keeps the boundary narrow:
 - supervisor drain run summaries expose host-run queue rollups that combine
   health-dashboard and host-decision action surfaces, priority ranks,
   readiness flags, and queue-key integrity checks for host logs
+- supervisor drain reports and summaries expose stable composite host-run queue
+  keys that combine health-dashboard and host-decision keys for host logs
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
