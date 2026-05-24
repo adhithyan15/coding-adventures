@@ -58,7 +58,6 @@ import json as _json
 import math
 import os
 import re
-import struct
 from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 
@@ -365,10 +364,20 @@ def _cast_fn(x: SqlValue, target_type: SqlValue) -> SqlValue:
                 return x
             if isinstance(x, str):
                 return x.encode("utf-8")
+            # SQLite's numeric→BLOB cast goes through the TEXT
+            # representation first: ``CAST(1 AS BLOB)`` yields
+            # ``b'1'`` (one byte) — the UTF-8 encoding of the
+            # integer's decimal string — not an 8-byte big-endian
+            # packed int.  The same applies to floats (``b'1.5'``)
+            # and booleans (``CAST(TRUE AS BLOB)`` → ``b'1'``).
+            # Check ``bool`` before ``int`` because Python's
+            # ``bool`` is a subclass of ``int``.
+            if isinstance(x, bool):
+                return str(int(x)).encode("utf-8")
             if isinstance(x, int):
-                return struct.pack(">q", x)
+                return str(x).encode("utf-8")
             if isinstance(x, float):
-                return struct.pack(">d", x)
+                return str(x).encode("utf-8")
             return bytes(x)  # type: ignore[call-overload]
         if t in ("boolean", "bool"):
             return bool(x)

@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.14.0] - 2026-05-24
+
+### Fixed
+
+- ``CAST(<numeric> AS BLOB)`` now matches SQLite — the BLOB is the
+  UTF-8 encoding of the numeric's text form (``CAST(1 AS BLOB)``
+  → ``b'1'``, not ``b'\x00\x00\x00\x00\x00\x00\x00\x01'``).
+  Previously the integer and float paths used ``struct.pack`` to
+  produce 8-byte big-endian binary blobs that didn't survive
+  round-tripping through SQLite's text-first conversion rules.
+  See sql-vm 1.58.0 for the scalar-function-level fix.
+
+### Known limitation
+
+- ``CAST(<blob> AS TEXT)`` still hex-encodes the BLOB bytes rather
+  than UTF-8-decoding them.  So ``CAST(CAST(42 AS BLOB) AS TEXT)``
+  returns ``'3432'`` (hex of ``b'42'``) instead of SQLite's
+  ``'42'``.  Pinned by a regression test
+  (``TestKnownLimitationBlobToText``) so a future BLOB→TEXT fix is
+  reminded to update both directions and lift the test together.
+
 ## [2.13.0] - 2026-05-24
 
 ### Added
