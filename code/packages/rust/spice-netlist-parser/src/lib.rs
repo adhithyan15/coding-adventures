@@ -87,6 +87,24 @@ pub struct TempAnalysis {
     pub temperatures_celsius: Vec<f64>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum OutputProbe {
+    Voltage { node: String },
+    Current { source_name: String },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PrintAnalysis {
+    pub analysis: String,
+    pub probes: Vec<OutputProbe>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PlotAnalysis {
+    pub analysis: String,
+    pub probes: Vec<OutputProbe>,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum OptionValue {
     Number(f64),
@@ -110,6 +128,8 @@ pub enum Analysis {
     Mc(McAnalysis),
     Noise(NoiseAnalysis),
     Temp(TempAnalysis),
+    Print(PrintAnalysis),
+    Plot(PlotAnalysis),
     Options(OptionsAnalysis),
 }
 
@@ -224,6 +244,26 @@ impl ParsedNetlist {
             .iter()
             .filter_map(|analysis| match analysis {
                 Analysis::Temp(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn print_cards(&self) -> Vec<&PrintAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Print(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn plot_cards(&self) -> Vec<&PlotAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Plot(card) => Some(card),
                 _ => None,
             })
             .collect()
@@ -1366,6 +1406,20 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
                 temperatures_celsius,
             }))
         }
+        ".print" => {
+            require_min_fields(fields, 3, ".print")?;
+            Ok(Analysis::Print(PrintAnalysis {
+                analysis: fields[1].to_ascii_lowercase(),
+                probes: parse_output_probes(&fields[2..], ".print")?,
+            }))
+        }
+        ".plot" => {
+            require_min_fields(fields, 3, ".plot")?;
+            Ok(Analysis::Plot(PlotAnalysis {
+                analysis: fields[1].to_ascii_lowercase(),
+                probes: parse_output_probes(&fields[2..], ".plot")?,
+            }))
+        }
         ".options" => {
             require_min_fields(fields, 2, ".options")?;
             Ok(Analysis::Options(OptionsAnalysis {
@@ -1483,6 +1537,52 @@ fn parse_voltage_probe(token: &str, directive: &str) -> Result<String, NetlistPa
         )));
     }
     Ok(node.to_string())
+}
+
+fn parse_output_probes(
+    tokens: &[String],
+    directive: &str,
+) -> Result<Vec<OutputProbe>, NetlistParseError> {
+    tokens
+        .iter()
+        .map(|token| parse_output_probe(token, directive))
+        .collect()
+}
+
+fn parse_output_probe(token: &str, directive: &str) -> Result<OutputProbe, NetlistParseError> {
+    let lower = token.to_ascii_lowercase();
+    let (kind, prefix_len) = if lower.starts_with("v(") {
+        ("voltage", 2)
+    } else if lower.starts_with("i(") {
+        ("current", 2)
+    } else {
+        return Err(output_probe_error(token, directive));
+    };
+    if !token.ends_with(')') {
+        return Err(output_probe_error(token, directive));
+    }
+    let target = &token[prefix_len..token.len() - 1];
+    if target.is_empty()
+        || target.contains('(')
+        || target.contains(')')
+        || target.chars().any(char::is_whitespace)
+    {
+        return Err(output_probe_error(token, directive));
+    }
+    match kind {
+        "voltage" => Ok(OutputProbe::Voltage {
+            node: target.to_string(),
+        }),
+        _ => Ok(OutputProbe::Current {
+            source_name: target.to_string(),
+        }),
+    }
+}
+
+fn output_probe_error(token: &str, directive: &str) -> NetlistParseError {
+    NetlistParseError::new(format!(
+        "{directive} probe must be V(node) or I(source), got {token:?}"
+    ))
 }
 
 fn split_fields(line: &str) -> Result<Vec<String>, NetlistParseError> {

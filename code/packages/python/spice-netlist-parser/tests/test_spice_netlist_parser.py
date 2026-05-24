@@ -36,6 +36,9 @@ from spice_netlist_parser import (
     NoiseAnalysis,
     OpAnalysis,
     OptionsAnalysis,
+    OutputProbe,
+    PlotAnalysis,
+    PrintAnalysis,
     SensAnalysis,
     TempAnalysis,
     TfAnalysis,
@@ -204,6 +207,41 @@ def test_parse_temp_analysis_card() -> None:
 def test_temp_card_rejects_missing_temperatures() -> None:
     with pytest.raises(NetlistParseError, match=r"\.temp expects at least 2 fields"):
         parse_netlist(".temp")
+
+
+def test_parse_print_and_plot_output_cards() -> None:
+    parsed = parse_netlist(
+        """
+.print TRAN V(out) I(Vin)
+.plot ac V(in) V(out)
+"""
+    )
+
+    assert parsed.analyses == [
+        PrintAnalysis(
+            "tran",
+            (
+                OutputProbe("voltage", "out"),
+                OutputProbe("current", "Vin"),
+            ),
+        ),
+        PlotAnalysis(
+            "ac",
+            (
+                OutputProbe("voltage", "in"),
+                OutputProbe("voltage", "out"),
+            ),
+        ),
+    ]
+    assert parsed.print_cards() == [parsed.analyses[0]]
+    assert parsed.plot_cards() == [parsed.analyses[1]]
+
+
+def test_output_cards_reject_missing_or_unknown_probes() -> None:
+    with pytest.raises(NetlistParseError, match=r"\.print expects at least 3 fields"):
+        parse_netlist(".print tran")
+    with pytest.raises(NetlistParseError, match=r"\.plot probe must be V\(node\) or I\(source\)"):
+        parse_netlist(".plot tran P(out)")
 
 
 def test_parse_transient_method_from_tran_card() -> None:

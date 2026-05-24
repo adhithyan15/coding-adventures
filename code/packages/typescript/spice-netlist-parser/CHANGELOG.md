@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Parse SPICE `.print <analysis> <V(node)|I(source)>...` and
+  `.plot <analysis> <V(node)|I(source)>...` output cards.
 - Parse SPICE `.temp <celsius> [celsius ...]` operating-temperature cards.
 - Parse MOS Level-1 capacitance parameters with `.model ... NMOS|PMOS(... CGSO=<c>
   CGDO=<c> CGBO=<c> CBS=<c> CBD=<c>)`.

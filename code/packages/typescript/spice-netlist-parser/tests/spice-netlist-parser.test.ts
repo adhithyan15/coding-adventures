@@ -159,6 +159,40 @@ Tdelay in 0 out 0 Z0=50 TD=1n
     expect(() => parseNetlist(".temp")).toThrow(/\.temp expects at least 2 fields/);
   });
 
+  it("parses .print and .plot output cards", () => {
+    const parsed = parseNetlist(`
+.print TRAN V(out) I(Vin)
+.plot ac V(in) V(out)
+`);
+
+    const printCard = {
+      kind: "print",
+      analysis: "tran",
+      probes: [
+        { kind: "voltage", target: "out" },
+        { kind: "current", target: "Vin" },
+      ],
+    };
+    const plotCard = {
+      kind: "plot",
+      analysis: "ac",
+      probes: [
+        { kind: "voltage", target: "in" },
+        { kind: "voltage", target: "out" },
+      ],
+    };
+    expect(parsed.analyses).toEqual([printCard, plotCard]);
+    expect(parsed.printCards()).toEqual([printCard]);
+    expect(parsed.plotCards()).toEqual([plotCard]);
+  });
+
+  it("rejects output cards with missing or unknown probes", () => {
+    expect(() => parseNetlist(".print tran")).toThrow(/\.print expects at least 3 fields/);
+    expect(() => parseNetlist(".plot tran P(out)")).toThrow(
+      /\.plot probe must be V\(node\) or I\(source\)/,
+    );
+  });
+
   it("parses transient methods from .tran cards", () => {
     const parsed = parseNetlist(".tran 1n 20n method=gear2");
 

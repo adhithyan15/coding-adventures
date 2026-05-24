@@ -4,7 +4,8 @@ use spice_engine::{
 };
 use spice_netlist_parser::{
     parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, McAnalysis, NetlistParseError,
-    NoiseAnalysis, OpAnalysis, OptionValue, SensAnalysis, TempAnalysis, TfAnalysis, TranAnalysis,
+    NoiseAnalysis, OpAnalysis, OptionValue, OutputProbe, PlotAnalysis, PrintAnalysis, SensAnalysis,
+    TempAnalysis, TfAnalysis, TranAnalysis,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -251,6 +252,60 @@ fn rejects_temp_cards_without_temperatures() {
     assert!(error
         .to_string()
         .contains(".temp expects at least 2 fields"));
+}
+
+#[test]
+fn parses_print_and_plot_output_cards() {
+    let parsed = parse_netlist(
+        r#"
+.print TRAN V(out) I(Vin)
+.plot ac V(in) V(out)
+"#,
+    )
+    .unwrap();
+
+    assert_eq!(
+        parsed.analyses,
+        vec![
+            Analysis::Print(PrintAnalysis {
+                analysis: "tran".to_string(),
+                probes: vec![
+                    OutputProbe::Voltage {
+                        node: "out".to_string()
+                    },
+                    OutputProbe::Current {
+                        source_name: "Vin".to_string()
+                    },
+                ],
+            }),
+            Analysis::Plot(PlotAnalysis {
+                analysis: "ac".to_string(),
+                probes: vec![
+                    OutputProbe::Voltage {
+                        node: "in".to_string()
+                    },
+                    OutputProbe::Voltage {
+                        node: "out".to_string()
+                    },
+                ],
+            }),
+        ]
+    );
+    assert!(matches!(parsed.print_cards().as_slice(), [_]));
+    assert!(matches!(parsed.plot_cards().as_slice(), [_]));
+}
+
+#[test]
+fn rejects_output_cards_with_missing_or_unknown_probes() {
+    let missing_error = parse_netlist(".print tran").unwrap_err();
+    assert!(missing_error
+        .to_string()
+        .contains(".print expects at least 3 fields"));
+
+    let probe_error = parse_netlist(".plot tran P(out)").unwrap_err();
+    assert!(probe_error
+        .to_string()
+        .contains(".plot probe must be V(node) or I(source)"));
 }
 
 #[test]
