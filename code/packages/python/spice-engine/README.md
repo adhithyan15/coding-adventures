@@ -58,6 +58,10 @@ print(result.converged)            # True
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
 
+`diode_at_temperature()` and `circuit_at_temperature()` provide the first
+operating-temperature foothold for diode models by scaling thermal voltage and
+saturation current before running an analysis.
+
 ## Controlled source examples
 
 ### VCVS — unity-gain buffer

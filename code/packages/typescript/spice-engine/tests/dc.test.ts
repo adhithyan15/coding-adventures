@@ -6,6 +6,7 @@ import {
   bSourceCurrent,
   bSourceVoltage,
   bjt,
+  circuitAtTemperature,
   cccs,
   ccvs,
   currentSource,
@@ -267,6 +268,39 @@ describe("dcOp", () => {
       Math.abs(leakageResult.branchCurrent("V1")!) * 1.0e6,
     );
     expect(Math.abs(breakdownResult.branchCurrent("V1")!)).toBeCloseTo(1.0e-6, 9);
+  });
+
+  it("uses diode temperature scaling in fixed-current forward voltage", () => {
+    const nominal = new Circuit();
+    nominal.add(voltageSource("V1", "vcc", "0", 5.0));
+    nominal.add(resistor("Rbias", "vcc", "a", 4_300.0));
+    nominal.add(diode("D1", "a", "0", 1.0e-15, 0.02585));
+
+    const cold = circuitAtTemperature(nominal, 275.0);
+    const hot = circuitAtTemperature(nominal, 350.0);
+
+    const nominalResult = dcOp(nominal);
+    const coldResult = dcOp(cold);
+    const hotResult = dcOp(hot);
+
+    expect(coldResult.voltage("a")).toBeGreaterThan(nominalResult.voltage("a")!);
+    expect(hotResult.voltage("a")).toBeLessThan(nominalResult.voltage("a")!);
+  });
+
+  it("preserves subcircuits when applying temperature helpers", () => {
+    const nominal = new Circuit();
+    nominal.defineSubcircuit(
+      subcircuitDefinition("atten2", ["in", "out"], [
+        resistor("Rtop", "in", "out", 1_000.0),
+        resistor("Rbot", "out", "0", 1_000.0),
+      ]),
+    );
+
+    const adjusted = circuitAtTemperature(nominal, 350.0);
+    adjusted.add(voltageSource("V1", "vin", "0", 10.0));
+    adjusted.add(xInstance("X1", ["vin", "vout"], "atten2"));
+
+    expectClose(dcOp(adjusted).voltage("vout"), 5.0);
   });
 
   it("solves an NPN BJT operating point", () => {

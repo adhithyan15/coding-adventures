@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Diode temperature scaling helpers** — `diode_at_temperature()` and
+  `circuit_at_temperature()` adjust diode thermal voltage and saturation
+  current for an operating temperature using a SPICE-style silicon energy-gap
+  foothold.
+
 - **Classic text output tables** — `format_dc_table()` and
   `format_transient_table()` now emit stable tab-separated node-voltage and
   branch-current tables for `.OP` / `.TRAN` style snapshots.

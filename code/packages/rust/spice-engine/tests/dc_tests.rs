@@ -1,9 +1,9 @@
 use spice_engine::{
-    dc_corners, dc_op, dc_op_with_options, dc_sweep, dc_sweep_corners, BSource, Bjt, BjtPolarity,
-    Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, DcConvergenceAid, DcOpOptions,
-    Diode, Element, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, Resistor,
-    SinWaveform, SpiceError, SubcircuitDefinition, SubcircuitElement, Vccs, Vcvs, VoltageSource,
-    Waveform, XInstance,
+    circuit_at_temperature, dc_corners, dc_op, dc_op_with_options, dc_sweep, dc_sweep_corners,
+    BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource,
+    DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity, Mosfet,
+    MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError, SubcircuitDefinition,
+    SubcircuitElement, Vccs, Vcvs, VoltageSource, Waveform, XInstance,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -338,6 +338,30 @@ fn dc_diode_breakdown_voltage_increases_reverse_bias_current() {
             > leakage_result.branch_current("V1").unwrap().abs() * 1.0e6
     );
     assert!((breakdown_result.branch_current("V1").unwrap().abs() - 1.0e-6).abs() < 1.0e-9);
+}
+
+#[test]
+fn dc_diode_temperature_scaling_reduces_fixed_current_forward_drop() {
+    let mut nominal = Circuit::new();
+    nominal.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vcc", "0", 5.0,
+    )));
+    nominal.add(Element::Resistor(Resistor::new(
+        "Rbias", "vcc", "a", 4_300.0,
+    )));
+    nominal.add(Element::Diode(Diode::with_model(
+        "D1", "a", "0", 1.0e-15, 0.02585,
+    )));
+
+    let cold = circuit_at_temperature(&nominal, 275.0, 300.15, 1.11).unwrap();
+    let hot = circuit_at_temperature(&nominal, 350.0, 300.15, 1.11).unwrap();
+
+    let nominal_result = dc_op(&nominal).unwrap();
+    let cold_result = dc_op(&cold).unwrap();
+    let hot_result = dc_op(&hot).unwrap();
+
+    assert!(cold_result.voltage("a").unwrap() > nominal_result.voltage("a").unwrap());
+    assert!(hot_result.voltage("a").unwrap() < nominal_result.voltage("a").unwrap());
 }
 
 #[test]

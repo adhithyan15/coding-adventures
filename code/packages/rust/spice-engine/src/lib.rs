@@ -5,6 +5,7 @@ const PIVOT_EPSILON: f64 = 1.0e-12;
 const SPARSE_SOLVER_THRESHOLD: usize = 30;
 const TWO_PI: f64 = std::f64::consts::PI * 2.0;
 const BOLTZMANN: f64 = 1.380_649e-23;
+const ELECTRON_CHARGE: f64 = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1168,6 +1169,71 @@ impl Diode {
             transit_time,
         }
     }
+}
+
+pub fn diode_at_temperature(
+    diode: &Diode,
+    temperature_kelvin: f64,
+    nominal_temperature_kelvin: f64,
+    energy_gap_electron_volts: f64,
+) -> Result<Diode, SpiceError> {
+    if !temperature_kelvin.is_finite() || temperature_kelvin <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "temperature must be finite and positive".to_string(),
+        });
+    }
+    if !nominal_temperature_kelvin.is_finite() || nominal_temperature_kelvin <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "nominal temperature must be finite and positive".to_string(),
+        });
+    }
+    if !energy_gap_electron_volts.is_finite() || energy_gap_electron_volts <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "energy gap must be finite and positive".to_string(),
+        });
+    }
+    if !diode.emission_coefficient.is_finite() || diode.emission_coefficient <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "emission coefficient must be finite and positive".to_string(),
+        });
+    }
+    let ratio = temperature_kelvin / nominal_temperature_kelvin;
+    let exponent = energy_gap_electron_volts * ELECTRON_CHARGE
+        / (diode.emission_coefficient * BOLTZMANN)
+        * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin);
+    let saturation_scale = ratio.powi(3) * exponent.clamp(-100.0, 100.0).exp();
+    let mut adjusted = diode.clone();
+    adjusted.saturation_current *= saturation_scale;
+    adjusted.thermal_voltage *= ratio;
+    Ok(adjusted)
+}
+
+pub fn circuit_at_temperature(
+    circuit: &Circuit,
+    temperature_kelvin: f64,
+    nominal_temperature_kelvin: f64,
+    energy_gap_electron_volts: f64,
+) -> Result<Circuit, SpiceError> {
+    let mut adjusted = Circuit {
+        elements: Vec::new(),
+        subcircuits: circuit.subcircuits.clone(),
+    };
+    for element in circuit.elements() {
+        adjusted.add(match element {
+            Element::Diode(diode) => Element::Diode(diode_at_temperature(
+                diode,
+                temperature_kelvin,
+                nominal_temperature_kelvin,
+                energy_gap_electron_volts,
+            )?),
+            _ => element.clone(),
+        });
+    }
+    Ok(adjusted)
 }
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
