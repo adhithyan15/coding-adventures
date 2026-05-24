@@ -2703,10 +2703,36 @@ def _case_expr(node: ASTNode, state: _PlaceholderCounter) -> CaseExpr:
     return CaseExpr(whens=tuple(whens), else_=else_expr)
 
 
-def _column_ref_to_expr(node: ASTNode) -> Column:
+_CURRENT_TIME_KEYWORDS: dict[str, str] = {
+    "CURRENT_DATE": "date",
+    "CURRENT_TIME": "time",
+    "CURRENT_TIMESTAMP": "datetime",
+}
+
+
+def _column_ref_to_expr(node: ASTNode) -> Expr:
     # column_ref = NAME [ "." NAME ]
     names = [c for c in node.children if isinstance(c, Token) and _token_type(c) == "NAME"]
     if len(names) == 1:
+        # ``CURRENT_DATE``, ``CURRENT_TIME``, ``CURRENT_TIMESTAMP`` are SQL
+        # *expressions* (no parentheses), not column references, yet the
+        # lexer tokenises them as plain NAME tokens because the SQL token
+        # grammar doesn't list them as keywords.  Intercept the bare-name
+        # case here and rewrite to the equivalent scalar-function call —
+        # ``date('now')`` / ``time('now')`` / ``datetime('now')`` — which
+        # the sql-vm backend already implements.
+        #
+        # Matching is case-insensitive (SQLite accepts ``current_date``,
+        # ``Current_Date``, …).  Once rewritten, the planner / codegen /
+        # VM see a perfectly normal ``FunctionCall`` and don't need to
+        # know anything special about these keywords.
+        upper = names[0].value.upper()
+        fn = _CURRENT_TIME_KEYWORDS.get(upper)
+        if fn is not None:
+            return FunctionCall(
+                name=fn,
+                args=(FuncArg(value=Literal(value="now")),),
+            )
         return Column(table=None, col=names[0].value)
     return Column(table=names[0].value, col=names[1].value)
 

@@ -1,5 +1,40 @@
 # Changelog
 
+## [2.5.0] - 2026-05-23
+
+### Added
+
+- ``CURRENT_DATE``, ``CURRENT_TIME``, and ``CURRENT_TIMESTAMP`` SQL
+  keyword expressions are now supported, matching SQLite::
+
+      CURRENT_DATE      ⟶  'YYYY-MM-DD'             (10 chars)
+      CURRENT_TIME      ⟶  'HH:MM:SS'               (8  chars)
+      CURRENT_TIMESTAMP ⟶  'YYYY-MM-DD HH:MM:SS'    (19 chars)
+
+  Previously these raised ``OperationalError: unknown column:
+  'CURRENT_TIMESTAMP'`` because the SQL token grammar doesn't list
+  them as keywords — the lexer emits them as bare NAME tokens, and
+  the planner couldn't resolve any matching column.
+
+  Implementation: the adapter's ``_column_ref_to_expr`` intercepts
+  single-name column refs whose value (case-insensitive) matches
+  ``CURRENT_DATE`` / ``CURRENT_TIME`` / ``CURRENT_TIMESTAMP`` and
+  rewrites them to the equivalent scalar-function call
+  (``date('now')`` / ``time('now')`` / ``datetime('now')``) — both
+  paths already implemented in the VM.
+
+### Known limitation
+
+- A column literally named ``CURRENT_DATE`` (or ``CURRENT_TIME`` /
+  ``CURRENT_TIMESTAMP``) is shadowed by the keyword even when
+  referenced via the double-quoted form (e.g.
+  ``SELECT "CURRENT_DATE" FROM t``).  SQLite distinguishes the two
+  cases because it preserves the "was quoted" flag through tokenization;
+  mini-sqlite's lexer post-processing strips quotes from quoted
+  identifiers and loses that distinction.  Workaround: don't name
+  columns after SQL keyword expressions.  Tracked for follow-up if
+  it ever bites a real user.
+
 ## [2.4.0] - 2026-05-23
 
 ### Added
