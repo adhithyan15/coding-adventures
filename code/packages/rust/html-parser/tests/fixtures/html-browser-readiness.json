@@ -173,6 +173,64 @@
         "headings": [],
         "links": [],
         "images": [],
+        "media": [
+          {
+            "kind": "video",
+            "src": "movie.mp4",
+            "resolved_src": "https://example.test/media/movie.mp4",
+            "width": "640",
+            "height": "360",
+            "controls": true
+          }
+        ],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "media-playback-poster-page",
+      "description": "Media summaries expose playback state and poster resolution metadata.",
+      "input": "<base href=\"https://example.test/watch/index.html\"><body><video id=hero src=movie.mp4 poster=poster.jpg controls autoplay loop muted playsinline preload=metadata width=640 height=360></video><audio src=theme.ogg controls preload=none></audio>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/watch/index.html",
+        "base_target": null,
+        "body_text": "",
+        "metas": [],
+        "resources": [
+          { "kind": "video", "url": "movie.mp4", "resolved_url": "https://example.test/watch/movie.mp4", "rel": null, "type_hint": null, "media": null, "title": null, "width": "640", "height": "360", "async_script": false, "defer_script": false },
+          { "kind": "audio", "url": "theme.ogg", "resolved_url": "https://example.test/watch/theme.ogg", "rel": null, "type_hint": null, "media": null, "title": null, "width": null, "height": null, "async_script": false, "defer_script": false }
+        ],
+        "anchors": [
+          { "id": "hero", "name": null, "text": "" }
+        ],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "media": [
+          {
+            "kind": "video",
+            "src": "movie.mp4",
+            "resolved_src": "https://example.test/watch/movie.mp4",
+            "poster": "poster.jpg",
+            "resolved_poster": "https://example.test/watch/poster.jpg",
+            "width": "640",
+            "height": "360",
+            "controls": true,
+            "autoplay": true,
+            "loop_media": true,
+            "muted": true,
+            "playsinline": true,
+            "preload": "metadata"
+          },
+          {
+            "kind": "audio",
+            "src": "theme.ogg",
+            "resolved_src": "https://example.test/watch/theme.ogg",
+            "controls": true,
+            "preload": "none"
+          }
+        ],
         "forms": [],
         "tables": []
       }

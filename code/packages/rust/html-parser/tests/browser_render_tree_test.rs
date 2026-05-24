@@ -57,6 +57,22 @@ struct ExpectedRenderNode {
     type_hint: Option<String>,
     #[serde(default)]
     media: Option<String>,
+    #[serde(default)]
+    poster: Option<String>,
+    #[serde(default)]
+    resolved_poster: Option<String>,
+    #[serde(default)]
+    preload: Option<String>,
+    #[serde(default)]
+    controls: bool,
+    #[serde(default)]
+    autoplay: bool,
+    #[serde(default)]
+    loop_media: bool,
+    #[serde(default)]
+    muted: bool,
+    #[serde(default)]
+    playsinline: bool,
     control_type: Option<String>,
     #[serde(default)]
     form_owner: Option<String>,
@@ -183,6 +199,14 @@ impl ExpectedRenderNode {
             height: self.height,
             type_hint: self.type_hint,
             media: self.media,
+            poster: self.poster,
+            resolved_poster: self.resolved_poster,
+            preload: self.preload,
+            controls: self.controls,
+            autoplay: self.autoplay,
+            loop_media: self.loop_media,
+            muted: self.muted,
+            playsinline: self.playsinline,
             control_type: self.control_type,
             form_owner: self.form_owner,
             label_for: self.label_for,
