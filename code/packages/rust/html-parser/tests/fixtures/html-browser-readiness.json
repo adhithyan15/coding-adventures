@@ -97,7 +97,7 @@
         "body_text": "",
         "metas": [],
         "resources": [
-          { "kind": "image", "url": "hero.jpg", "resolved_url": "https://example.test/gallery/hero.jpg", "rel": null, "type_hint": null, "media": null, "title": null, "width": "640", "height": "360", "async_script": false, "defer_script": false }
+          { "kind": "image", "url": "hero.jpg", "resolved_url": "https://example.test/gallery/hero.jpg", "rel": null, "type_hint": null, "media": null, "title": null, "width": "640", "height": "360", "crossorigin": "anonymous", "referrerpolicy": "no-referrer", "fetchpriority": "high", "async_script": false, "defer_script": false }
         ],
         "anchors": [],
         "headings": [],
@@ -168,6 +168,34 @@
             ]
           }
         ],
+        "tables": []
+      }
+    },
+    {
+      "id": "link-resource-metadata-page",
+      "description": "Browser document resource summaries expose link relation kinds, fetch hints, policy attributes, and responsive image preload metadata.",
+      "input": "<base href=\"https://example.test/app/index.html\"><link rel=preconnect href=\"https://cdn.example.test\" crossorigin><link rel=preload href=\"fonts/site.woff2\" as=font type=font/woff2 crossorigin=anonymous integrity=sha384-font fetchpriority=high><link rel=modulepreload href=\"scripts/app.mjs\" integrity=sha384-module referrerpolicy=no-referrer blocking=render><link rel=preload href=\"hero.jpg\" as=image imagesrcset=\"hero-small.jpg 480w, hero-large.jpg 960w\" imagesizes=\"50vw\" fetchpriority=high><link rel=prefetch href=\"next.html\" as=document><link rel=manifest href=\"site.webmanifest\" crossorigin=use-credentials><link rel=canonical href=\"https://example.test/app/\"><link rel=\"shortcut icon\" href=\"favicon.ico\" sizes=any type=image/x-icon>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/app/index.html",
+        "base_target": null,
+        "body_text": "",
+        "metas": [],
+        "resources": [
+          { "kind": "preconnect", "url": "https://cdn.example.test", "resolved_url": "https://cdn.example.test", "rel": "preconnect", "crossorigin": "", "async_script": false, "defer_script": false },
+          { "kind": "preload", "url": "fonts/site.woff2", "resolved_url": "https://example.test/app/fonts/site.woff2", "rel": "preload", "as_hint": "font", "type_hint": "font/woff2", "integrity": "sha384-font", "crossorigin": "anonymous", "fetchpriority": "high", "async_script": false, "defer_script": false },
+          { "kind": "modulepreload", "url": "scripts/app.mjs", "resolved_url": "https://example.test/app/scripts/app.mjs", "rel": "modulepreload", "integrity": "sha384-module", "referrerpolicy": "no-referrer", "blocking": "render", "async_script": false, "defer_script": false },
+          { "kind": "preload", "url": "hero.jpg", "resolved_url": "https://example.test/app/hero.jpg", "rel": "preload", "as_hint": "image", "fetchpriority": "high", "imagesrcset": "hero-small.jpg 480w, hero-large.jpg 960w", "resolved_imagesrcset": "https://example.test/app/hero-small.jpg 480w, https://example.test/app/hero-large.jpg 960w", "imagesizes": "50vw", "async_script": false, "defer_script": false },
+          { "kind": "prefetch", "url": "next.html", "resolved_url": "https://example.test/app/next.html", "rel": "prefetch", "as_hint": "document", "async_script": false, "defer_script": false },
+          { "kind": "manifest", "url": "site.webmanifest", "resolved_url": "https://example.test/app/site.webmanifest", "rel": "manifest", "crossorigin": "use-credentials", "async_script": false, "defer_script": false },
+          { "kind": "canonical", "url": "https://example.test/app/", "resolved_url": "https://example.test/app/", "rel": "canonical", "async_script": false, "defer_script": false },
+          { "kind": "icon", "url": "favicon.ico", "resolved_url": "https://example.test/app/favicon.ico", "rel": "shortcut icon", "type_hint": "image/x-icon", "async_script": false, "defer_script": false }
+        ],
+        "anchors": [],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "forms": [],
         "tables": []
       }
     },
@@ -298,9 +326,9 @@
         "body_text": "",
         "metas": [],
         "resources": [
-          { "kind": "stylesheet", "url": "app.css", "resolved_url": "https://example.test/app/app.css", "rel": "stylesheet preload", "type_hint": null, "media": "screen", "title": "main", "async_script": false, "defer_script": false },
+          { "kind": "stylesheet", "url": "app.css", "resolved_url": "https://example.test/app/app.css", "rel": "stylesheet preload", "type_hint": null, "media": "screen", "title": "main", "integrity": "sha256-css", "crossorigin": "anonymous", "referrerpolicy": "no-referrer", "fetchpriority": "high", "blocking": "render", "async_script": false, "defer_script": false },
           { "kind": "stylesheet", "url": "print.css", "resolved_url": "https://example.test/app/print.css", "rel": "alternate stylesheet", "type_hint": null, "media": null, "title": "print", "async_script": false, "defer_script": false },
-          { "kind": "script", "url": "app.js", "resolved_url": "https://example.test/app/app.js", "rel": null, "type_hint": "module", "media": null, "title": null, "async_script": true, "defer_script": false },
+          { "kind": "script", "url": "app.js", "resolved_url": "https://example.test/app/app.js", "rel": null, "type_hint": "module", "media": null, "title": null, "integrity": "sha384-js", "crossorigin": "use-credentials", "referrerpolicy": "origin", "fetchpriority": "low", "blocking": "render", "async_script": true, "defer_script": false },
           { "kind": "script", "url": "late.js", "resolved_url": "https://example.test/app/late.js", "rel": null, "type_hint": null, "media": null, "title": null, "async_script": false, "defer_script": true }
         ],
         "scripts": [
