@@ -16,18 +16,21 @@ image, form, and table facts that a browser pipeline can consume before layout
 and Paint VM rendering. The fixture also pins resolved URL metadata derived
 from `base` hrefs while preserving raw authored link and resource attributes,
 and document/body identity and language metadata such as `lang`, `dir`, body
-`id`, and tokenized body classes. Form cases also pin labels, derived
-accessible names, owner references, placeholder/autocomplete hints, and
-required/readonly/multiple control state. Media cases pin audio/video playback
-flags and preload/poster metadata. Script/style cases pin module/classic script
-kind, async/defer/nomodule flags, inline script/style text, and loading-policy
-hints such as integrity, crossorigin, referrer policy, fetch priority,
-blocking, disabled state, and alternate stylesheets. Responsive image cases pin
-`srcset`/`sizes`, resolved candidate URLs, `picture/source` media/type hints,
-lazy loading, decoding, fetch priority, CORS/referrer policy, usemap, and
-server-side image-map state. Link resource cases pin relation-derived resource
-kinds, `as` hints, integrity/CORS/referrer policy, fetch priority, blocking,
-and responsive image preload hints.
+`id`, and tokenized body classes. Document metadata cases pin charset,
+viewport, description, application name, referrer/robots/color-scheme policy,
+theme colors, refresh URL resolution, and canonical/manifest URLs. Form cases
+also pin labels, derived accessible names, owner references,
+placeholder/autocomplete hints, and required/readonly/multiple control state.
+Media cases pin audio/video playback flags and preload/poster metadata.
+Script/style cases pin module/classic script kind, async/defer/nomodule flags,
+inline script/style text, and loading-policy hints such as integrity,
+crossorigin, referrer policy, fetch priority, blocking, disabled state, and
+alternate stylesheets. Responsive image cases pin `srcset`/`sizes`, resolved
+candidate URLs, `picture/source` media/type hints, lazy loading, decoding, fetch
+priority, CORS/referrer policy, usemap, and server-side image-map state. Link
+resource cases pin relation-derived resource kinds, `as` hints,
+integrity/CORS/referrer policy, fetch priority, blocking, and responsive image
+preload hints.
 
 `html-browser-content-tree.json` is a checked parser acceptance corpus for the
 browser-facing content-tree projection. It verifies that broad HTML body
