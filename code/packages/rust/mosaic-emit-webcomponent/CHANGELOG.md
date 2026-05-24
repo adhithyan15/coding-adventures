@@ -6,6 +6,33 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- **UI31-K-webcomp** — RTL contract for `HostTable`. The shadow-DOM
+  `<table>` now carries a native HTML `dir` attribute when the
+  layout author writes `dir: ltr|rtl|auto` or `dir: slot: foo`:
+  - Allow-listed keyword form (`dir: rtl` / `dir: ltr` / `dir: auto`)
+    emits a literal `<table dir="rtl">`. Unknown keywords drop
+    silently — the allow-list is the security gate that prevents an
+    attacker-controlled keyword from breaking out of the attribute
+    quotes (`rtl" onerror="..."` becomes a no-op rather than an
+    injection).
+  - Slot-ref form (`dir: slot: layout-direction`) emits
+    `<table dir="${layoutDirection}">`, interpolated through the
+    shadow-DOM render template literal. Slot names round-trip
+    through `to_camel_case_first_lower` so `layout-direction`
+    lands as `layoutDirection`.
+  - The `dir` attribute is scoped to the root `<table>` only.
+    Sub-tags (`<thead>` / `<tbody>` / `<tfoot>` / `<colgroup>`)
+    inherit directionality via HTML's normal cascade, so giving
+    them their own `dir` attribute would just be redundant churn
+    in the markup.
+  - 7 new tests cover the a11y gate (the lowering must be a real
+    `<table>`, never `<div role="grid">` div-soup), the three
+    allow-listed keywords, the slot-ref interpolation, the
+    silent-drop on unknown keywords (with an injection-style payload
+    in the bad input to nail down the security claim), the root-
+    only scoping, and a bare-table regression guard. Total tests:
+    83 (was 76).
+
 - **U29-4-K-webcomp** — `HostLink` + `HostTooltip` + `HostNumberInput`
   kernel primitives (UI29-4) lower to shadow-DOM-rendered HTML
   elements with inline handlers reaching the Custom Element via

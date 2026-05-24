@@ -554,6 +554,19 @@ fn emit_html_tree(
         open_with_attrs = insert_attrs_before_close(&open_with_attrs, &event_attrs);
     }
 
+    // UI31 RTL contract: only the root `<table>` carries the `dir`
+    // attribute. Cells, rows, and section tags inherit per HTML's
+    // normal directionality cascade. Allow-listing `ltr|rtl|auto` for
+    // keyword values prevents an attacker-controlled keyword from
+    // breaking out of the attribute quotes; unknown keywords drop
+    // silently so the rest of the table still renders.
+    if node.tag == "HostTable" {
+        let dir_attrs = build_host_table_dir_attribute(node);
+        if !dir_attrs.is_empty() {
+            open_with_attrs = insert_attrs_before_close(&open_with_attrs, &dir_attrs);
+        }
+    }
+
     if self_closing {
         return Ok(open_with_attrs);
     }
@@ -1693,6 +1706,48 @@ fn build_event_attributes(node: &LayoutNode) -> String {
     } else {
         format!(" {}", attrs.join(" "))
     }
+}
+
+/// Build the `dir="…"` attribute for a `HostTable` node.
+///
+/// UI31 §3.2 — RTL contract. Every `HostTable` lowering must respect
+/// the host's layout direction. For the WebComponent backend this is
+/// the same native `dir` attribute the HTML backend emits (the
+/// shadow-DOM `<table>` is a real DOM `<table>`, so directionality
+/// cascades exactly as it does in light DOM).
+///
+/// Three accepted shapes:
+///
+/// | Source                | Emits                       | Why |
+/// |-----------------------|-----------------------------|-----|
+/// | `dir: ltr`            | ` dir="ltr"`                | static literal, allow-listed |
+/// | `dir: rtl`            | ` dir="rtl"`                | static literal, allow-listed |
+/// | `dir: auto`           | ` dir="auto"`               | static literal, allow-listed |
+/// | `dir: slot: layoutDir`| ` dir="${layoutDir}"`       | template-literal interpolation |
+/// | any other keyword     | (nothing)                   | unknown keyword drops silently |
+///
+/// The allow-list (`ltr`/`rtl`/`auto`) is the security gate: it
+/// prevents an author from sneaking `" onerror="…"` style payloads
+/// through what is otherwise an attribute-value position. Slot refs
+/// run through `is_safe_identifier` to keep the template-literal
+/// interpolation `${camelCase}` clean.
+///
+/// Returns `""` when no `dir` prop is present so the caller can splice
+/// the result in unconditionally.
+fn build_host_table_dir_attribute(node: &LayoutNode) -> String {
+    if let Some(slot) = find_slot_ref(node, "dir") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            return format!(r#" dir="${{{camel}}}""#);
+        }
+        return String::new();
+    }
+    if let Some(kw) = find_keyword(node, "dir") {
+        if matches!(kw, "ltr" | "rtl" | "auto") {
+            return format!(r#" dir="{kw}""#);
+        }
+    }
+    String::new()
 }
 
 /// Map a moslayout prop name like `onClick` to a DOM event-handler
@@ -2945,6 +3000,211 @@ mod tests {
         assert!(
             r.output.contains(expected),
             "HostTable did not assemble correctly.\nWanted substring:\n{expected}\nGot:\n{}",
+            r.output
+        );
+    }
+
+    // -------- UI31: HostTable a11y gate + RTL contract --------
+
+    /// UI31 §3.1 a11y gate: the HostTable lowering MUST produce the
+    /// native `<table>` element (and the matching `<thead>` /
+    /// `<tbody>` / `<tfoot>` / `<colgroup>` family). It must NOT emit
+    /// `<div role="grid">` div-soup, which is what every previous
+    /// hand-written table-from-scratch attempt in this repo (and the
+    /// six VisiCalc demos that motivated UI31) defaulted to.
+    ///
+    /// This is a deliberately paranoid grep test — the entire point of
+    /// UI31 is to guarantee real table semantics, so the gate goes
+    /// straight at the markup string.
+    #[test]
+    fn ui31_a11y_host_table_uses_native_table_element_not_div_grid() {
+        let m = component("T", vec![], vec![]);
+        let table = container(
+            "HostTable",
+            vec![container("HostTableBody", vec![text_leaf("Cell")])],
+        );
+        let l = root_layout("T", table);
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        assert!(
+            r.output.contains("<table"),
+            "HostTable must emit a real <table>, got:\n{}",
+            r.output
+        );
+        assert!(
+            !r.output.contains(r#"role="grid""#),
+            "HostTable must not emit div-soup with role=\"grid\", got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI31 §3.2 RTL contract — keyword form. `dir: rtl` flips the
+    /// shadow-DOM `<table>` to right-to-left layout via the native
+    /// `dir` attribute. (Cells inherit per HTML's normal cascade, so
+    /// only the root `<table>` carries the knob.)
+    #[test]
+    fn ui31_rtl_host_table_dir_rtl_keyword_emits_attribute() {
+        let m = component("T", vec![], vec![]);
+        let table = LayoutNode {
+            tag: "HostTable".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "dir".to_string(),
+                value: LayoutPropValue::Keyword("rtl".to_string()),
+            }],
+            children: vec![container("HostTableBody", vec![text_leaf("X")])],
+        };
+        let l = root_layout("T", table);
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        assert!(
+            r.output.contains(r#"<table dir="rtl">"#),
+            "Expected <table dir=\"rtl\">, got:\n{}",
+            r.output
+        );
+    }
+
+    /// `dir: ltr` and `dir: auto` are the other two allow-listed
+    /// keywords. Auto delegates to the host's bidi algorithm, which is
+    /// the right default for tables whose contents mix scripts.
+    #[test]
+    fn ui31_rtl_host_table_dir_ltr_and_auto_keywords_emit_attribute() {
+        for kw in ["ltr", "auto"] {
+            let m = component("T", vec![], vec![]);
+            let table = LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "dir".to_string(),
+                    value: LayoutPropValue::Keyword(kw.to_string()),
+                }],
+                children: vec![container("HostTableBody", vec![text_leaf("X")])],
+            };
+            let l = root_layout("T", table);
+            let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+            let expected = format!(r#"<table dir="{kw}">"#);
+            assert!(
+                r.output.contains(&expected),
+                "Expected {expected:?}, got:\n{}",
+                r.output
+            );
+        }
+    }
+
+    /// `dir: slot: layout-direction` interpolates the bound slot into
+    /// the `<table>`'s `dir` attribute via the shadow-DOM template
+    /// literal — slot names round-trip through `to_camel_case_first_lower`
+    /// so the source `layout-direction` lands as `${layoutDirection}`.
+    #[test]
+    fn ui31_rtl_host_table_dir_slot_ref_emits_template_interpolation() {
+        let m = component(
+            "T",
+            vec![slot("layout-direction", SlotType::Text, true)],
+            vec![],
+        );
+        let table = LayoutNode {
+            tag: "HostTable".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "dir".to_string(),
+                value: LayoutPropValue::SlotRef("layout-direction".to_string()),
+            }],
+            children: vec![container("HostTableBody", vec![text_leaf("X")])],
+        };
+        let l = root_layout("T", table);
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        assert!(
+            r.output.contains(r#"<table dir="${layoutDirection}">"#),
+            "Expected <table dir=\"${{layoutDirection}}\">, got:\n{}",
+            r.output
+        );
+    }
+
+    /// Unknown `dir:` keywords (anything outside the `ltr|rtl|auto`
+    /// allow-list) MUST drop silently — they must not be interpolated
+    /// into the attribute value, because that's an injection vector
+    /// (an attacker-controlled keyword could include `"` and break
+    /// out of the attribute quotes). The rest of the table still
+    /// renders normally; only the `dir` attribute is omitted.
+    #[test]
+    fn ui31_rtl_host_table_unknown_dir_keyword_drops_silently() {
+        let m = component("T", vec![], vec![]);
+        let table = LayoutNode {
+            tag: "HostTable".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "dir".to_string(),
+                value: LayoutPropValue::Keyword(
+                    r#"rtl" onerror="alert(1)"#.to_string(),
+                ),
+            }],
+            children: vec![container("HostTableBody", vec![text_leaf("X")])],
+        };
+        let l = root_layout("T", table);
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        assert!(
+            !r.output.contains("onerror"),
+            "Unknown dir keyword must not appear in output, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("<table>"),
+            "Bare <table> should still render when dir is dropped, got:\n{}",
+            r.output
+        );
+    }
+
+    /// The `dir` attribute is scoped to the root `<table>` ONLY. Sub-
+    /// tags (`<thead>` / `<tbody>` / `<tfoot>` / `<colgroup>`) do NOT
+    /// take a `dir` attribute, even if a `dir` prop were authored on
+    /// them — HTML's normal directionality cascade does the right
+    /// thing without per-section attributes, and adding them would be
+    /// redundant churn in the markup.
+    #[test]
+    fn ui31_rtl_dir_attribute_is_scoped_to_root_table_only() {
+        let m = component("T", vec![], vec![]);
+        let head = LayoutNode {
+            tag: "HostTableHead".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "dir".to_string(),
+                value: LayoutPropValue::Keyword("rtl".to_string()),
+            }],
+            children: vec![text_leaf("Hdr")],
+        };
+        let table = container("HostTable", vec![head]);
+        let l = root_layout("T", table);
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        assert!(
+            !r.output.contains(r#"<thead dir="rtl""#),
+            "<thead> must not carry dir=\"rtl\", got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("<thead>"),
+            "<thead> should still render plain, got:\n{}",
+            r.output
+        );
+    }
+
+    /// Sanity check on the helper: HostTable with no `dir` prop emits
+    /// a bare `<table>` with no attribute drift. (Regression guard
+    /// against a future refactor that always splices something.)
+    #[test]
+    fn ui31_rtl_host_table_without_dir_prop_emits_bare_table() {
+        let m = component("T", vec![], vec![]);
+        let table = container(
+            "HostTable",
+            vec![container("HostTableBody", vec![text_leaf("X")])],
+        );
+        let l = root_layout("T", table);
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        assert!(
+            r.output.contains("<table>"),
+            "Expected bare <table>, got:\n{}",
+            r.output
+        );
+        assert!(
+            !r.output.contains("<table dir="),
+            "Did not expect any dir attribute on bare table, got:\n{}",
             r.output
         );
     }
