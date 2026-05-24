@@ -67,6 +67,20 @@ struct ExpectedContentNode {
     selected: bool,
     #[serde(default)]
     options: Vec<String>,
+    #[serde(default)]
+    table_section_kind: Option<String>,
+    #[serde(default)]
+    colspan: Option<String>,
+    #[serde(default)]
+    rowspan: Option<String>,
+    #[serde(default)]
+    span: Option<String>,
+    #[serde(default)]
+    scope: Option<String>,
+    #[serde(default)]
+    headers: Vec<String>,
+    #[serde(default)]
+    abbr: Option<String>,
     children: Vec<ExpectedContentNode>,
 }
 
@@ -131,6 +145,13 @@ impl ExpectedContentNode {
             checked: self.checked,
             selected: self.selected,
             options: self.options,
+            table_section_kind: self.table_section_kind,
+            colspan: self.colspan,
+            rowspan: self.rowspan,
+            span: self.span,
+            scope: self.scope,
+            headers: self.headers,
+            abbr: self.abbr,
             children: self
                 .children
                 .into_iter()

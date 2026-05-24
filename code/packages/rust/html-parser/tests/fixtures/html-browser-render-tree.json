@@ -140,6 +140,7 @@
                 "display": "table-row-group",
                 "role": "table_section",
                 "name": "tbody",
+                "table_section_kind": "tbody",
                 "text": null,
                 "href": null,
                 "src": null,
@@ -158,6 +159,108 @@
                     "children": [
                       { "display": "table-cell", "role": "table_cell", "name": "td", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "A", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
                       { "display": "table-cell", "role": "table_cell", "name": "td", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "B", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "table-layout-display-metadata",
+      "description": "Table column hints, row groups, cell spans, and header metadata survive render-tree input projection.",
+      "input": "<body><table><caption>Prices</caption><colgroup><col span=2 width=80><col width=120><thead><tr><th id=item scope=col abbr=Item>Name<th id=price scope=col>Price<tbody><tr><th scope=row headers=item>Basic<td colspan=2 headers=\"item price\">$1</table>",
+      "expected": {
+        "children": [
+          {
+            "display": "table",
+            "role": "table",
+            "name": "table",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              {
+                "display": "table-caption",
+                "role": "table_caption",
+                "name": "caption",
+                "text": "Prices",
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  { "display": "inline-text", "role": "text", "name": null, "text": "Prices", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+                ]
+              },
+              {
+                "display": "table-column-group",
+                "role": "table_column_group",
+                "name": "colgroup",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  { "display": "table-column", "role": "table_column", "name": "col", "text": null, "href": null, "src": null, "alt": null, "width": "80", "span": "2", "control_type": null, "children": [] },
+                  { "display": "table-column", "role": "table_column", "name": "col", "text": null, "href": null, "src": null, "alt": null, "width": "120", "control_type": null, "children": [] }
+                ]
+              },
+              {
+                "display": "table-row-group",
+                "role": "table_section",
+                "name": "thead",
+                "table_section_kind": "thead",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  {
+                    "display": "table-row",
+                    "role": "table_row",
+                    "name": "tr",
+                    "text": null,
+                    "href": null,
+                    "src": null,
+                    "alt": null,
+                    "control_type": null,
+                    "children": [
+                      { "display": "table-cell", "role": "table_cell", "name": "th", "id": "item", "text": null, "href": null, "src": null, "alt": null, "scope": "col", "abbr": "Item", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Name", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                      { "display": "table-cell", "role": "table_cell", "name": "th", "id": "price", "text": null, "href": null, "src": null, "alt": null, "scope": "col", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Price", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                    ]
+                  }
+                ]
+              },
+              {
+                "display": "table-row-group",
+                "role": "table_section",
+                "name": "tbody",
+                "table_section_kind": "tbody",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  {
+                    "display": "table-row",
+                    "role": "table_row",
+                    "name": "tr",
+                    "text": null,
+                    "href": null,
+                    "src": null,
+                    "alt": null,
+                    "control_type": null,
+                    "children": [
+                      { "display": "table-cell", "role": "table_cell", "name": "th", "text": null, "href": null, "src": null, "alt": null, "scope": "row", "headers": ["item"], "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Basic", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                      { "display": "table-cell", "role": "table_cell", "name": "td", "text": null, "href": null, "src": null, "alt": null, "colspan": "2", "headers": ["item", "price"], "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "$1", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
                     ]
                   }
                 ]

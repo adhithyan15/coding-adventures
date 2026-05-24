@@ -897,6 +897,13 @@ pub struct BrowserContentNode {
     pub checked: bool,
     pub selected: bool,
     pub options: Vec<String>,
+    pub table_section_kind: Option<String>,
+    pub colspan: Option<String>,
+    pub rowspan: Option<String>,
+    pub span: Option<String>,
+    pub scope: Option<String>,
+    pub headers: Vec<String>,
+    pub abbr: Option<String>,
     pub children: Vec<BrowserContentNode>,
 }
 
@@ -932,6 +939,13 @@ pub struct BrowserRenderNode {
     pub checked: bool,
     pub selected: bool,
     pub options: Vec<String>,
+    pub table_section_kind: Option<String>,
+    pub colspan: Option<String>,
+    pub rowspan: Option<String>,
+    pub span: Option<String>,
+    pub scope: Option<String>,
+    pub headers: Vec<String>,
+    pub abbr: Option<String>,
     pub children: Vec<BrowserRenderNode>,
 }
 
@@ -986,6 +1000,8 @@ pub struct BrowserFormControl {
 pub struct BrowserTable {
     pub caption: Option<String>,
     pub row_count: usize,
+    pub column_count: usize,
+    pub column_hint_count: usize,
     pub cell_count: usize,
     pub header_cell_count: usize,
 }
@@ -1110,6 +1126,13 @@ impl BrowserRenderNode {
             checked: content_node.checked,
             selected: content_node.selected,
             options: content_node.options.clone(),
+            table_section_kind: content_node.table_section_kind.clone(),
+            colspan: content_node.colspan.clone(),
+            rowspan: content_node.rowspan.clone(),
+            span: content_node.span.clone(),
+            scope: content_node.scope.clone(),
+            headers: content_node.headers.clone(),
+            abbr: content_node.abbr.clone(),
             children: content_node
                 .children
                 .iter()
@@ -8069,11 +8092,11 @@ fn collect_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
             "table" => summary.tables.push(BrowserTable {
                 caption: find_first_element_in_nodes(&element.children, "caption")
                     .map(element_text),
-                row_count: count_elements_named(&element.children, "tr"),
-                cell_count: count_elements_matching(&element.children, |element| {
-                    matches!(element.name.as_str(), "td" | "th")
-                }),
-                header_cell_count: count_elements_named(&element.children, "th"),
+                row_count: browser_table_rows(element).len(),
+                column_count: browser_table_column_count(element),
+                column_hint_count: browser_table_column_hint_count(element),
+                cell_count: browser_table_cell_count(element),
+                header_cell_count: browser_table_header_cell_count(element),
             }),
             name if heading_level(name).is_some() => summary.headings.push(BrowserHeading {
                 level: heading_level(name).expect("heading level was checked above"),
@@ -8396,6 +8419,13 @@ fn collect_browser_content_nodes(
                         checked: false,
                         selected: false,
                         options: Vec::new(),
+                        table_section_kind: None,
+                        colspan: None,
+                        rowspan: None,
+                        span: None,
+                        scope: None,
+                        headers: Vec::new(),
+                        abbr: None,
                         children: Vec::new(),
                     });
                 }
@@ -8464,6 +8494,16 @@ fn browser_content_node_for_element(
         checked: element.attribute("checked").is_some(),
         selected: element.attribute("selected").is_some(),
         options: browser_content_options(element),
+        table_section_kind: browser_table_section_kind(element),
+        colspan: element.attribute("colspan").map(ToOwned::to_owned),
+        rowspan: element.attribute("rowspan").map(ToOwned::to_owned),
+        span: element.attribute("span").map(ToOwned::to_owned),
+        scope: element.attribute("scope").map(ToOwned::to_owned),
+        headers: element
+            .attribute("headers")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        abbr: element.attribute("abbr").map(ToOwned::to_owned),
         children,
     })
 }
@@ -8492,6 +8532,8 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "li" | "dt" | "dd" => Some("list_item"),
         "table" => Some("table"),
         "caption" => Some("table_caption"),
+        "colgroup" => Some("table_column_group"),
+        "col" => Some("table_column"),
         "tbody" | "thead" | "tfoot" => Some("table_section"),
         "tr" => Some("table_row"),
         "td" | "th" => Some("table_cell"),
@@ -8508,6 +8550,7 @@ fn should_collect_browser_content_children(name: &str) -> bool {
             | "base"
             | "br"
             | "button"
+            | "col"
             | "embed"
             | "frame"
             | "iframe"
@@ -8552,6 +8595,13 @@ fn browser_content_resource_kind(element: &Element) -> Option<String> {
         "object" => Some("object".to_string()),
         "audio" | "video" => Some(element.name.clone()),
         "canvas" => Some("canvas".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_table_section_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "thead" | "tbody" | "tfoot" => Some(element.name.clone()),
         _ => None,
     }
 }
@@ -8708,6 +8758,8 @@ fn browser_render_display(role: &str) -> &'static str {
         "list_item" => "list-item",
         "table" => "table",
         "table_caption" => "table-caption",
+        "table_column_group" => "table-column-group",
+        "table_column" => "table-column",
         "table_section" => "table-row-group",
         "table_row" => "table-row",
         "table_cell" => "table-cell",
@@ -8859,22 +8911,118 @@ fn find_first_element_in_nodes<'a>(nodes: &'a [Node], name: &str) -> Option<&'a 
     None
 }
 
-fn count_elements_named(nodes: &[Node], name: &str) -> usize {
-    count_elements_matching(nodes, |element| element.name == name)
+fn browser_table_rows(table: &Element) -> Vec<&Element> {
+    let mut rows = Vec::new();
+    collect_browser_table_rows(&table.children, &mut rows);
+    rows
 }
 
-fn count_elements_matching(nodes: &[Node], predicate: impl Fn(&Element) -> bool + Copy) -> usize {
-    let mut count = 0;
+fn collect_browser_table_rows<'a>(nodes: &'a [Node], rows: &mut Vec<&'a Element>) {
     for node in nodes {
         let Node::Element(element) = node else {
             continue;
         };
-        if predicate(element) {
-            count += 1;
+        if element.name == "tr" {
+            rows.push(element);
+        } else if element.name != "table" {
+            collect_browser_table_rows(&element.children, rows);
         }
-        count += count_elements_matching(&element.children, predicate);
     }
+}
+
+fn browser_table_column_count(table: &Element) -> usize {
+    browser_table_rows(table)
+        .into_iter()
+        .map(browser_table_row_column_count)
+        .max()
+        .unwrap_or(0)
+}
+
+fn browser_table_row_column_count(row: &Element) -> usize {
+    row.children
+        .iter()
+        .filter_map(|node| match node {
+            Node::Element(element) if matches!(element.name.as_str(), "td" | "th") => {
+                Some(html_positive_integer_attribute(element, "colspan"))
+            }
+            _ => None,
+        })
+        .sum()
+}
+
+fn browser_table_cell_count(table: &Element) -> usize {
+    browser_table_rows(table)
+        .into_iter()
+        .map(|row| {
+            row.children
+                .iter()
+                .filter(|node| {
+                    matches!(
+                        node,
+                        Node::Element(element) if matches!(element.name.as_str(), "td" | "th")
+                    )
+                })
+                .count()
+        })
+        .sum()
+}
+
+fn browser_table_header_cell_count(table: &Element) -> usize {
+    browser_table_rows(table)
+        .into_iter()
+        .map(|row| {
+            row.children
+                .iter()
+                .filter(|node| matches!(node, Node::Element(element) if element.name == "th"))
+                .count()
+        })
+        .sum()
+}
+
+fn browser_table_column_hint_count(table: &Element) -> usize {
+    let mut count = 0;
+    collect_browser_table_column_hints(&table.children, &mut count);
     count
+}
+
+fn collect_browser_table_column_hints(nodes: &[Node], count: &mut usize) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        match element.name.as_str() {
+            "colgroup" => {
+                let column_spans = element
+                    .children
+                    .iter()
+                    .filter_map(|child| match child {
+                        Node::Element(child_element) if child_element.name == "col" => {
+                            Some(html_positive_integer_attribute(child_element, "span"))
+                        }
+                        _ => None,
+                    })
+                    .sum::<usize>();
+                if column_spans == 0 {
+                    *count += html_positive_integer_attribute(element, "span");
+                } else {
+                    *count += column_spans;
+                }
+            }
+            "col" => {
+                *count += html_positive_integer_attribute(element, "span");
+            }
+            "table" => {}
+            _ => collect_browser_table_column_hints(&element.children, count),
+        }
+    }
+}
+
+fn html_positive_integer_attribute(element: &Element, name: &str) -> usize {
+    element
+        .attribute(name)
+        .and_then(|value| value.parse::<usize>().ok())
+        .filter(|value| *value > 0)
+        .unwrap_or(1)
 }
 
 fn heading_level(name: &str) -> Option<u8> {
@@ -9025,6 +9173,49 @@ mod tests {
         let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
         assert_eq!(render_tree.children[0].display, "inline-replaced");
         assert_eq!(render_tree.children[1].display, "inline-replaced");
+    }
+
+    #[test]
+    fn browser_table_metadata_tracks_columns_spans_and_headers() {
+        let document = parse_html(
+            "<table><caption>Prices</caption>\
+             <colgroup><col span=2 width=80><col width=120>\
+             <thead><tr><th id=item scope=col abbr=Item>Name<th id=price scope=col>Price\
+             <tbody><tr><th scope=row headers=item>Basic\
+             <td colspan=2 headers=\"item price\">$1</table>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.tables[0].caption.as_deref(), Some("Prices"));
+        assert_eq!(summary.tables[0].row_count, 2);
+        assert_eq!(summary.tables[0].column_count, 3);
+        assert_eq!(summary.tables[0].column_hint_count, 3);
+        assert_eq!(summary.tables[0].header_cell_count, 3);
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let table = &content_tree.children[0];
+        assert_eq!(table.children[1].role, "table_column_group");
+        assert_eq!(table.children[1].children[0].span.as_deref(), Some("2"));
+        assert_eq!(
+            table.children[2].table_section_kind.as_deref(),
+            Some("thead")
+        );
+        let body_cell = &table.children[3].children[0].children[1];
+        assert_eq!(body_cell.colspan.as_deref(), Some("2"));
+        assert_eq!(
+            body_cell.headers,
+            vec!["item".to_string(), "price".to_string()]
+        );
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].children[1].display, "table-column-group");
+        assert_eq!(
+            render_tree.children[0].children[3].children[0].children[1]
+                .colspan
+                .as_deref(),
+            Some("2")
+        );
     }
 
     #[test]
