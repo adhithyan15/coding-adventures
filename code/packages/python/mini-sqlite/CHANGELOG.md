@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.9.0] - 2026-05-23
+
+### Added
+
+- ``PRAGMA writable_schema`` is now recognised as a read/write
+  boolean PRAGMA with the SQLite-compatible default of ``0`` (off).
+  Reads return the current integer (0 or 1); writes accept any of
+  ``1``/``0``/``ON``/``OFF``/``TRUE``/``FALSE``/``YES``/``NO`` and
+  the value persists for the lifetime of the connection.  It is also
+  now advertised in ``PRAGMA pragma_list``.
+
+  Mini-sqlite synthesises ``sqlite_master`` on every read (no backing
+  table), so honouring writes through the catalog is a much larger
+  change.  This PR fills only the read/write round-trip surface so
+  defensive callers (ORMs, migration tools, database-repair flows)
+  that toggle the PRAGMA before deciding whether to attempt a fix
+  see the expected value instead of an empty result or a "unknown
+  PRAGMA" error.
+
+  Previously: ``PRAGMA writable_schema`` returned ``[]`` instead of
+  the documented ``[(0,)]`` and writes were silently dropped.
+
 ## [2.8.0] - 2026-05-23
 
 ### Added

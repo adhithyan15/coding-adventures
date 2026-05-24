@@ -820,6 +820,13 @@ _PRAGMA_DEFAULTS: dict[str, tuple[object, str]] = {
     "wal_autocheckpoint": (1000,           "integer"),  # pages between autocheckpoints
     "journal_size_limit": (-1,             "integer"),  # bytes; -1 = no limit
     "threads":          (0,                "integer"),  # worker threads in sort/index
+    # writable_schema — when ON, SQLite allows direct UPDATE/INSERT/DELETE
+    # against sqlite_master, which lets you rename/repair the schema.
+    # Mini-sqlite synthesises sqlite_master on-the-fly and does not honour
+    # writes to it, but we still round-trip the PRAGMA's value so ORMs and
+    # migration tools that toggle it during repair flows don't trip on
+    # unrecognised PRAGMA.
+    "writable_schema":  (0,                "integer"),  # bool; off by default
 }
 
 # Per-connection PRAGMA state.  Keyed by the backend object's id() so each
@@ -1253,6 +1260,12 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
         "reverse_unordered_selects",  # planner hint, no scrambling implemented
         "cell_size_check",            # btree integrity flag, no btree in mini
         "fullfsync",                  # fsync mode, no disk I/O in mini
+        # ``writable_schema`` round-trips but mini-sqlite ignores it on the
+        # write side — the schema catalog is synthesised at query time, not
+        # stored in a writable sqlite_master table.  Tools that read this
+        # PRAGMA defensively (e.g. to skip a repair flow) still see the
+        # expected value.
+        "writable_schema",
     }
     _INT_PRAGMAS = {
         "temp_store",

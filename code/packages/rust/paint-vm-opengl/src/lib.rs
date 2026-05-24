@@ -87,8 +87,8 @@ fn reject_unsupported_plan(plan: &GpuPaintPlan) -> Result<(), PaintRenderError> 
 mod tests {
     use super::*;
     use paint_instructions::{
-        GradientKind, GradientStop, PaintBase, PaintGradient, PaintInstruction, PaintRect,
-        PaintText,
+        GradientKind, GradientStop, ImageSrc, PaintBase, PaintGradient, PaintImage,
+        PaintInstruction, PaintRect, PaintText, PixelContainer,
     };
     use paint_vm_gpu_core::GpuTextureKind;
     use paint_vm_runtime::PaintBackendTier;
@@ -211,6 +211,31 @@ mod tests {
         assert_eq!(plan.images.len(), 2);
         assert_eq!(plan.images[0].kind, GpuTextureKind::LinearGradient);
         assert_eq!(plan.images[1].kind, GpuTextureKind::RadialGradient);
+        assert!(unsupported_plan_features(profile(), &plan).is_empty());
+    }
+
+    #[test]
+    fn plans_pixel_images_with_shared_gpu_core() {
+        let mut pixels = PixelContainer::new(2, 1);
+        pixels.set_pixel(0, 0, 255, 0, 0, 255);
+        pixels.set_pixel(1, 0, 0, 0, 255, 255);
+        let mut scene = PaintScene::new(20.0, 10.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 2.0,
+            y: 3.0,
+            width: 16.0,
+            height: 4.0,
+            src: ImageSrc::Pixels(pixels),
+            opacity: Some(0.5),
+        }));
+
+        let plan = plan(&scene).unwrap();
+
+        assert_eq!(plan.images.len(), 1);
+        assert_eq!(plan.images[0].kind, GpuTextureKind::Image);
+        assert_eq!(plan.meshes[0].texture_id, Some(0));
+        assert_eq!(plan.meshes[0].vertices[0].color.a, 0.5);
         assert!(unsupported_plan_features(profile(), &plan).is_empty());
     }
 

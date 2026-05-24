@@ -192,6 +192,8 @@ The crate keeps the boundary narrow:
   route, priority, and readiness booleans for per-side queue filters
 - supervisor drain run summaries expose combined plan/drain health-dashboard
   surfaces, routes, ranks, readiness, and triage flags for one-key host queues
+- supervisor drain run summaries flatten combined health-dashboard action
+  component flags and counts for one-key scheduler filters
 - supervisor drain run summaries flatten combined health-dashboard route,
   priority, and readiness booleans for host queue filters
 - supervisor drain reports and summaries expose stable, parseable scheduler action

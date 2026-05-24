@@ -26,7 +26,9 @@ skipping parser shell, head metadata, comments, scripts, styles, and templates.
 Where a document base is present, link and replaced-resource nodes also expose
 resolved URL fields for downstream navigation and fetch planning. Renderable
 nodes may also pin `id`, tokenized `class`, `title`, `lang`, and `dir`
-metadata for selector matching and UI policy.
+metadata for selector matching and UI policy. Embedded and replaced resources
+such as frames, objects, embeds, and media elements also carry resource kind,
+resolved source, type hints, media attributes, and authored dimensions.
 
 `html-browser-render-tree.json` is a checked parser acceptance corpus for the
 browser-facing render-tree input projection. It verifies that the content tree
@@ -35,7 +37,9 @@ inline-replaced, list-item, and table display nodes for early layout work. The
 browser-facing fixture set also pins control metadata such as value,
 disabled/checked/selected state, select option labels, textarea values, and
 resolved URL metadata for link and replaced nodes, plus render-node identity
-metadata that layout and styling code can carry forward.
+metadata that layout and styling code can carry forward. Replaced resource
+nodes are pinned as inline-replaced render inputs with their fetch and
+dimension metadata intact.
 
 Validate the checked-in smoke fixture's case boundaries and metadata with:
 
