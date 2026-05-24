@@ -2,6 +2,47 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.18.0] - 2026-05-24
+
+### Added (Phase 4m — backtick command literals `` `cmd args` ``)
+
+Ruby has had `` `cmd args` `` command-execution literals since 1.0 — they spawn a shell, execute the body, and yield the standard-output as a string.  The lexer was the missing piece: until this chunk the leading backtick was an unrecognised character.
+
+Implementation lives entirely in the state machine — no post-pass needed.
+
+#### Token shape
+
+- **`` `cmd args` ``** → `TokenType::String` with value `` `cmd args` `` (literally, with the backticks re-wrapped).
+- Parser-side distinguishes backtick literals from plain strings by inspecting the lexeme's leading character — same sentinel-by-prefix trick used by percent literals (`%w[…]`) and heredocs (`<<TAG\n…TAG`).
+
+#### State-machine additions
+
+- Alphabet: `` ` `` (backtick).
+- New token kind: `Backtick` (mapped to `TokenType::String` in the emit handler).
+- New states: `backtick_body`, `backtick_escape`.
+- `data` → `backtick_body` on `` ` ``.
+- Inside `backtick_body`:
+  - `` ` `` → `data` (`emit(Backtick)`).
+  - `\\` → `backtick_escape`.
+  - `\n` is allowed (multi-line bodies, matching `string_d_body`).
+  - EOF → `parse_error(unterminated_backtick)`.
+  - Anything else → append.
+- `backtick_escape` handles the same five escapes as `string_d_escape` (`n`, `t`, `r`, `\\`, plus `` ` `` instead of `"` since `` ` `` is the close char) and falls through to `append_text(current)` otherwise.
+
+#### Out of scope (deferred to follow-up)
+
+- `#{}` interpolation inside `` `…` ``.  Real Ruby allows it; v0 treats `#` as a literal character inside the body.  The parser-side phase 7a (backtick parsing) can layer interpolation later.
+- Backtick as a *method name* (`def \`(cmd); …; end`).  Outside scope for v0 — that needs special lex-state feedback.
+
+### Tests (+7 new, total 149)
+- `backtick_simple_command_lexes_as_string_with_backticks`
+- `backtick_empty_body_lexes_to_two_backticks`
+- `backtick_escape_sequences_resolved_in_body`
+- `backtick_multiline_command_keeps_newlines`
+- `backtick_lexing_is_era_invariant` — every era ≥ 1.8 produces the same token shape (backticks are pre-1.0, hence era-invariant).
+- `backtick_does_not_swallow_following_tokens`
+- `backtick_unterminated_reports_diagnostic` — exercises the `parse_error(unterminated_backtick)` action.
+
 ## [0.17.0] - 2026-05-24
 
 ### Added (Phase 4l — radix-prefixed integers `0x1F`, `0b1010`, `0o17`, `0d42`)
