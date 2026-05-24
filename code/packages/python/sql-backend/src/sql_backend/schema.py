@@ -100,6 +100,15 @@ class ColumnDef:
     autoincrement: bool = False
     default: ColumnDefault = field(default=NO_DEFAULT)
     check_expr: object = field(default=None, compare=False, hash=False)
+    # Source text of the CHECK expression — used in error messages.
+    # SQLite renders ``CHECK constraint failed: <expr_text>``; we
+    # round-trip the parsed expression back to text so our error
+    # matches.  Empty string means "no check or no text available";
+    # in that case the VM falls back to the older ``<table>.<col>``
+    # form.  Stored alongside ``check_expr`` rather than on a
+    # parallel struct so the two travel together through the
+    # planner → IR → VM pipeline.
+    check_expr_text: str = ""
     # (ref_table, ref_col_or_None) — None ref_col means "reference the PK".
     # Typed as object to avoid circular import with planner types.
     foreign_key: object = field(default=None, compare=False, hash=False)

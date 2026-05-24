@@ -854,6 +854,11 @@ class ColumnDef:
     unique: bool = False
     default: object = NO_COLUMN_DEFAULT
     check_instrs: tuple[Instruction, ...] = ()
+    # Source text of the CHECK expression — passed through to the VM so
+    # constraint-violation error messages can quote the original
+    # predicate (matching SQLite: ``CHECK constraint failed: a > 0``).
+    # Empty string means "fall back to the older ``<table>.<col>`` form".
+    check_expr_text: str = ""
     # (ref_table, ref_col_or_None) where None means "reference the parent PK".
     foreign_key: tuple[str, str | None] | None = None
     # ``COLLATE name`` from the CREATE TABLE source.  Passed through to the

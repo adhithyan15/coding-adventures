@@ -152,6 +152,8 @@ All notable changes to this package will be documented in this file.
   priority ranks, readiness labels, and triage flags for one-key host queues.
 - Flattened combined health-dashboard action component flags and counts for
   supervisor drain run summary scheduler filters.
+- Stable combined health-dashboard action lanes and labels for supervisor drain
+  run summary dashboard grouping.
 - Flattened combined health-dashboard route, priority, and readiness booleans
   for supervisor drain run summary host queue filters.
 - Aggregate health-label integrity helpers for inventory, write, replay,
