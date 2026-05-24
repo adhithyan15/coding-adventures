@@ -36,6 +36,7 @@ class HtmlFixtureFormatRegistryTest(unittest.TestCase):
                 "parser-audit",
                 "parser-browser-content-tree",
                 "parser-browser-readiness",
+                "parser-browser-render-tree",
             },
         )
 

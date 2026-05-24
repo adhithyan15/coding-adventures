@@ -63,6 +63,8 @@ The current parser surface includes:
   attributes, form controls, and table summaries
 - browser-facing content tree extraction that filters parser-only shell and
   invisible nodes into a CSS-independent body structure for early rendering
+- browser-facing render tree input extraction that maps renderable content
+  nodes into stable default display categories for early layout
 
 The checked-in html5lib tree-construction smoke corpus now covers every case in
 the currently audited upstream `html5lib-tests/tree-construction/*.dat` sources
@@ -324,8 +326,8 @@ audit report and pinned-count checks into the same local guard.
 ```rust
 use coding_adventures_html_lexer::HtmlScriptingMode;
 use coding_adventures_html_parser::{
-    parse_browser_content_tree, parse_browser_document, parse_html, parse_html_fragment,
-    parse_html_with_options, HtmlInitialTokenizerContext, HtmlParseOptions,
+    parse_browser_content_tree, parse_browser_document, parse_browser_render_tree, parse_html,
+    parse_html_fragment, parse_html_with_options, HtmlInitialTokenizerContext, HtmlParseOptions,
 };
 use dom_core::Node;
 
@@ -341,6 +343,10 @@ assert!(browser_document.resources.is_empty());
 let content_tree = parse_browser_content_tree("<h1>Example</h1><p>Hello <b>there</b>").unwrap();
 assert_eq!(content_tree.children[0].role, "heading");
 assert_eq!(content_tree.children[1].role, "block");
+
+let render_tree = parse_browser_render_tree("<p>Hello <img src=logo.gif alt=Logo>").unwrap();
+assert_eq!(render_tree.children[0].display, "block");
+assert_eq!(render_tree.children[0].children[1].display, "inline-replaced");
 
 match &document.children[0] {
     Node::Element(element) => assert_eq!(element.name, "html"),

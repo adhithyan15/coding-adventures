@@ -184,6 +184,8 @@ documented in this file.
   consumers.
 - Browser-facing content tree extraction now projects parsed body content into
   CSS-independent structural nodes for early browser rendering pipelines.
+- Browser-facing render tree input extraction now maps parsed body structure
+  into stable default display categories for early layout pipelines.
 - Void end tags such as `</img>`, `</input>`, and `</hr>` are now ignored with a
   parser diagnostic, while self-closing syntax on void start tags remains
   acknowledged.
