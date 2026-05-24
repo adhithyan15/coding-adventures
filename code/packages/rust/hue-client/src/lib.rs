@@ -651,6 +651,13 @@ impl<T: HueTransport> HueClient<T> {
         parse_light_state_updates_from_envelope(&envelope)
     }
 
+    pub fn get_grouped_light_state_updates(
+        &mut self,
+    ) -> Result<Vec<HueGroupedLightStateUpdate>, HueClientError> {
+        let envelope = self.get_collection(HueResourceType::GroupedLight)?;
+        parse_grouped_light_state_updates_from_envelope(&envelope)
+    }
+
     pub fn get_motion_state_updates(
         &mut self,
     ) -> Result<Vec<HueMotionStateUpdate>, HueClientError> {
@@ -2097,6 +2104,29 @@ mod tests {
         assert_eq!(grouped_lights.len(), 1);
         assert_eq!(grouped_lights[0].id.as_str(), "grouped-light-1");
         assert_eq!(grouped_lights[0].owner.resource_type, HueResourceType::Room);
+        assert_eq!(transport.requests.len(), 1);
+        assert_eq!(
+            transport.requests[0].path,
+            "/clip/v2/resource/grouped_light"
+        );
+    }
+
+    #[test]
+    fn client_reads_grouped_light_state_updates_through_injected_transport() {
+        let transport = RecordingTransport::with_response(
+            r#"{"data":[{"id":"grouped-light-1","type":"grouped_light","metadata":{"name":"Kitchen"},"owner":{"rid":"room-1","rtype":"room"},"on":{"on":true},"dimming":{"brightness":84}}],"errors":[]}"#,
+        );
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let updates = client.get_grouped_light_state_updates().unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(updates.len(), 1);
+        assert_eq!(updates[0].id.as_str(), "grouped-light-1");
+        assert_eq!(updates[0].name.as_deref(), Some("Kitchen"));
+        assert_eq!(updates[0].on, Some(true));
+        assert_eq!(updates[0].brightness, Some(84));
+        assert_eq!(updates[0].state_deltas().len(), 2);
         assert_eq!(transport.requests.len(), 1);
         assert_eq!(
             transport.requests[0].path,
