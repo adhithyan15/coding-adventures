@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.15.0] - 2026-05-24
+
+### Added (Phase 6n — range expressions `..` and `...`)
+
+New grammar layer inserted between `expression` and `logical_or`:
+
+```
+expression = range ;
+range      = logical_or [ ( "..." | ".." ) logical_or ] ;
+```
+
+`expression` is now a transparent wrapper over `range`.  When no `..`/`...` token follows the first `logical_or`, the `range` rule passes through the single operand unchanged — so existing parses for non-range expressions continue to produce the same shape (modulo an extra `range` node in the AST).
+
+**Precedence**: range sits OUTER over `logical_or` because Ruby's `..`/`...` bind *looser* than `||`.  So `a || b .. c || d` parses as `(a || b) .. (c || d)`.  (Test that exercises this with explicit parens — see Test notes below.)
+
+**Non-chainable**: the optional (zero-or-one) repetition is intentional; `1..5..10` is a parse error in Ruby and our grammar matches that by not allowing chaining.
+
+**Token typing**: the lexer's `fuse_range_ops` (Phase 4e) pre-fuses two consecutive `.` tokens into a single `Name`-typed token with value `..` (three → `...`).  The grammar matches these by literal *value* (`"..."`, `".."`), the same trick used for `"=>"`, `"<="`, `"&&"`, etc.
+
+**Endless / beginless ranges**: out of scope for this phase.  The lexer already flags `..`/`...` followed by a closer (era ≥ 2.6), but the parser-side support — `(1..)`, `arr[2..]`, `(..5)` — gets its own phase.
+
+### Tests (+6 new, total 71)
+- `test_parse_inclusive_range` — `1..5` produces a `range` node carrying a `..` token and two `logical_or` operands.
+- `test_parse_exclusive_range` — `1...5` carries `...`.
+- `test_parse_range_in_assignment_rhs` — `x = 1..10` nests the range in an assignment.
+- `test_parse_range_with_arithmetic_endpoints` — `1 + 2 .. 10 - 3` proves range binds looser than `+`/`-`.
+- `test_parse_range_inside_array_literal` — `[1..5]` works as an array element.
+- `test_parse_range_with_paren_logical_operands` — `(a || b)..(c || d)` proves operands can be full logical chains.
+
+Note: a precedence test for the unparenthesised form (`a || b .. c || d`) was attempted but hit the v0 `method_call_no_paren` framework ambiguity (lessons.md).  The arithmetic-endpoints and paren-operand tests cover the precedence ladder around range without tripping that issue.
+
 ## [0.14.0] - 2026-05-24
 
 ### Added (Phase 6m — logical operators `&&`, `||`, `and`, `or`, `not`, `!`)

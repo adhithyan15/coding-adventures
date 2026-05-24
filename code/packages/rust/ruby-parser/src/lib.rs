@@ -1026,5 +1026,122 @@ mod tests {
         assert!(find_descendant(&ast, "logical_or").is_some(),
             "expected logical_or inside def body");
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6n — range expressions `..` and `...`
+    // -----------------------------------------------------------------------
+    //
+    // The lexer pre-fuses two/three consecutive `.` tokens into a single
+    // `Name`-typed token whose value is `..` or `...`.  The grammar matches
+    // those tokens by literal *value* (same as `"=>"`, `"<="`, `"&&"`).
+    //
+    // A bare expression (no range op) still produces a `range` rule node
+    // in the AST — the rule is the new expression entry point — but with
+    // exactly one inner `logical_or` child and no `..`/`...` token.
+
+    #[test]
+    fn test_parse_inclusive_range() {
+        // `1..5` — a `range` node with two `logical_or` operand children
+        // and a `..` token between them.
+        let ast = parse_ruby("1..5");
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        assert!(
+            tree_has_token_value(r, ".."),
+            "expected `..` token inside the range node"
+        );
+        // Two logical_or operands flank the `..`.
+        let operand_count = r
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "logical_or"))
+            .count();
+        assert_eq!(operand_count, 2, "expected 2 logical_or operands");
+    }
+
+    #[test]
+    fn test_parse_exclusive_range() {
+        // `1...5` — same shape as inclusive but `...` token.
+        let ast = parse_ruby("1...5");
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        assert!(
+            tree_has_token_value(r, "..."),
+            "expected `...` token inside the range node"
+        );
+    }
+
+    #[test]
+    fn test_parse_range_in_assignment_rhs() {
+        // `x = 1..10` — range expression nests inside an assignment.
+        let ast = parse_ruby("x = 1..10");
+        // The assignment rule still fires.
+        assert!(find_descendant(&ast, "assignment").is_some());
+        // And there's a range node somewhere below.
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        assert!(tree_has_token_value(r, ".."));
+    }
+
+    #[test]
+    fn test_parse_range_with_arithmetic_endpoints() {
+        // `1 + 2 .. 10 - 3` — both endpoints are arithmetic.  Range binds
+        // looser than `+`/`-`, so this parses as `(1 + 2) .. (10 - 3)`.
+        // Each operand subtree under the range node has its own `sum` node
+        // with `+`/`-` tokens inside.
+        let ast = parse_ruby("1 + 2 .. 10 - 3");
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        // The range carries exactly one `..` token and the two arithmetic
+        // operator tokens (`+`, `-`) live inside its operand subtrees.
+        fn count_value(node: &GrammarASTNode, val: &str) -> usize {
+            let mut n = 0;
+            for c in &node.children {
+                match c {
+                    ASTNodeOrToken::Token(t) if t.value == val => n += 1,
+                    ASTNodeOrToken::Node(sub) => n += count_value(sub, val),
+                    _ => {}
+                }
+            }
+            n
+        }
+        assert_eq!(count_value(r, ".."), 1, "expected exactly one `..` token");
+        assert_eq!(count_value(r, "+"), 1, "expected `+` inside the range");
+        assert_eq!(count_value(r, "-"), 1, "expected `-` inside the range");
+    }
+
+    #[test]
+    fn test_parse_range_inside_array_literal() {
+        // `[1..5]` — range expression as an array element.
+        let ast = parse_ruby("[1..5]");
+        let arr = find_descendant(&ast, "array_literal").expect("expected array_literal");
+        // Range nested inside the array.
+        assert!(
+            find_descendant(arr, "range").is_some(),
+            "expected range inside array_literal"
+        );
+        assert!(tree_has_token_value(arr, ".."));
+    }
+
+    #[test]
+    fn test_parse_range_with_paren_logical_operands() {
+        // `(a || b)..(c || d)` — explicit parens make precedence
+        // unambiguous and dodge the `method_call_no_paren` framework
+        // ambiguity (see lessons.md, "logical operators inside def body").
+        //
+        // The range carries `..` and each operand subtree contains its
+        // own `||`.
+        let ast = parse_ruby("(a || b)..(c || d)");
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        fn count_value(node: &GrammarASTNode, val: &str) -> usize {
+            let mut n = 0;
+            for c in &node.children {
+                match c {
+                    ASTNodeOrToken::Token(t) if t.value == val => n += 1,
+                    ASTNodeOrToken::Node(sub) => n += count_value(sub, val),
+                    _ => {}
+                }
+            }
+            n
+        }
+        assert_eq!(count_value(r, ".."), 1);
+        assert_eq!(count_value(r, "||"), 2, "expected `||` in both operand subtrees");
+    }
 }
 

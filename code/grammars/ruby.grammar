@@ -120,7 +120,30 @@ expression_stmt = expression ;
 #
 # Left-associativity: `a || b || c` folds as `(a || b) || c`,
 # matching `+`/`-` and Ruby's actual semantics.
-expression   = logical_or ;
+# Phase 6n — range expressions `a..b` (inclusive) and `a...b` (exclusive).
+#
+# Precedence: range is OUTER over `logical_or` because Ruby's `..`/`...`
+# bind *looser* than `||`.  So `a || b .. c || d` parses as
+# `(a || b) .. (c || d)` — exactly what you'd expect.
+#
+# Shape: `range = logical_or [ ( "..." | ".." ) logical_or ]`.  The
+# zero-or-one repetition means a bare `logical_or` passes through
+# transparently (no range), while a single range op binds exactly two
+# operands.  Range is NOT chainable in Ruby — `1..5..10` is a parse
+# error — so the optional rather than zero-or-more form is correct.
+#
+# Note on token typing: the lexer's `fuse_range_ops` fuses two `.`
+# tokens into a single `Name`-typed token with value `..` (and three
+# into `...`).  Era ≥ 2.6 sets an `endless` flag on `..`/`...` tokens
+# followed by a closer — but for v0 we treat both ends as required.
+# Endless ranges (`(1..)`, `arr[2..]`) and beginless ranges (`(..5)`)
+# are deferred to a follow-up phase.
+#
+# Operator alternation lists `"..."` before `".."` defensively, but
+# the lexer already pre-fuses the two forms into distinct tokens so
+# the order is not actually significant.
+expression   = range ;
+range        = logical_or [ ( "..." | ".." ) logical_or ] ;
 logical_or   = logical_and { ( "||" | "or" ) logical_and } ;
 logical_and  = logical_not { ( "&&" | "and" ) logical_not } ;
 # `logical_not` uses `{ }` (zero-or-more) instead of right-recursive

@@ -2,6 +2,30 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.15.0] - 2026-05-24
+
+### Added (Phase 6n — range expressions lowering)
+
+SIR encoding:
+- `a..b`  →  `BuiltinCall("range", [a, b, BoolLit(false)])` ; inclusive end
+- `a...b` →  `BuiltinCall("range", [a, b, BoolLit(true)])`  ; exclusive end
+
+A single builtin name (`range`) handles both forms; the third argument carries the inclusive/exclusive flag so downstream emitters can pattern-match once and read the flag.  Effects default to `PURE` — constructing a range observes nothing.
+
+### Lowerer changes
+- `lower_expression` gained a `"range"` dispatch arm.
+- New helper `lower_range(node)` filters operand `logical_or` sub-nodes from the `..`/`...` operator token, then either passes through (1 operand, no op) or emits the three-arg `BuiltinCall`.
+
+### Tests (+4 new, total 74)
+- `inclusive_range_lowers_to_range_builtin_with_false_flag` — `1..5` → flag = false.
+- `exclusive_range_lowers_to_range_builtin_with_true_flag` — `1...5` → flag = true.
+- `range_with_variable_operands_uses_var_refs` — `(a..b)` over function params (parens dodge the lessons.md ambiguity).
+- `range_module_passes_sir_validator` — end-to-end smoke test through the validator.
+
+### Out of scope (deferred to follow-up phase)
+- Endless ranges `(1..)`, `arr[2..]` (lexer 4e already flags these; parser support TBD).
+- Beginless ranges `(..5)`.
+
 ## [0.14.0] - 2026-05-24
 
 ### Added (Phase 6m — logical operators lowering)
