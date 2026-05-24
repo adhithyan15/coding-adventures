@@ -1325,6 +1325,62 @@ fn emit_host_table(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     }
 
     writeln!(out, "{pad}}}").unwrap();
+
+    // UI31 §3.2 RTL contract. SwiftUI's canonical layout-direction
+    // knob is `.environment(\.layoutDirection, .rightToLeft)` (or
+    // `.leftToRight`) attached as a modifier on the VStack. When
+    // unset, the value inherits from the ambient `Environment` (the
+    // system locale → window → ancestor view chain), which is the
+    // correct default and matches what `dir: auto` should produce.
+    //
+    // | Source                 | Emits                                                              |
+    // |------------------------|--------------------------------------------------------------------|
+    // | `dir: rtl`             | `.environment(\.layoutDirection, .rightToLeft)`                    |
+    // | `dir: ltr`             | `.environment(\.layoutDirection, .leftToRight)`                    |
+    // | `dir: auto`            | (nothing — inherit ambient; matches "let the host decide")         |
+    // | `dir: slot: layoutDir` | `.environment(\.layoutDirection, layoutDir)` — slot is a Swift     |
+    // |                        | expression that must evaluate to `LayoutDirection`                 |
+    // | unknown keyword        | (nothing — drops silently per allow-list security gate)            |
+    //
+    // The allow-list (`ltr` / `rtl` / `auto`) is the security gate:
+    // an attacker-controlled keyword cannot break out of the Swift
+    // expression position because it never reaches the format string.
+    // Slot refs run through `is_safe_swift_identifier` so they can't
+    // either.
+    if let Some(slot) = find_slot_ref_prop(node, "dir") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_swift_identifier(&camel) {
+            writeln!(
+                out,
+                "{pad}.environment(\\.layoutDirection, {camel})"
+            )
+            .unwrap();
+        }
+    } else if let Some(kw) = find_keyword_prop(node, "dir") {
+        match kw {
+            "rtl" => {
+                writeln!(
+                    out,
+                    "{pad}.environment(\\.layoutDirection, .rightToLeft)"
+                )
+                .unwrap();
+            }
+            "ltr" => {
+                writeln!(
+                    out,
+                    "{pad}.environment(\\.layoutDirection, .leftToRight)"
+                )
+                .unwrap();
+            }
+            // `auto` — let the ambient Environment value flow through.
+            // SwiftUI has no `.automatic` enum case for layoutDirection;
+            // the spec-mandated semantic for `auto` is "let the host
+            // decide", which is exactly what the SwiftUI default does.
+            "auto" => {}
+            _ => {}
+        }
+    }
+
     Ok(out)
 }
 
@@ -3090,6 +3146,237 @@ mod tests {
         assert!(
             part_pos < vstack_pos,
             "expected // part comment to precede VStack, got:\n{out}"
+        );
+    }
+
+    // =================================================================
+    // UI31 — HostTable a11y gate + RTL contract (SwiftUI backend)
+    //
+    // Mirrors the React (#4143), HTML (#4156), WebComponent (#4162),
+    // Flutter (#4166), and Qt (#4185) precedents:
+    //
+    // - **A11y gate**: the SwiftUI lowering must continue to emit
+    //   the structural VStack-of-HStack rows that VoiceOver and
+    //   Switch Control walk as a coherent table. A flat ZStack
+    //   would break that.
+    // - **RTL gate**: when `dir:` is authored, the VStack carries
+    //   `.environment(\.layoutDirection, .rightToLeft)` (or the
+    //   matching `.leftToRight` / slot binding). Allow-list is
+    //   `ltr|rtl|auto`; unknown keywords drop silently.
+    // =================================================================
+
+    /// Helper: build a `HostTable` with one `HostTableBody` row and a
+    /// `dir:` prop set to the given value. Used as the fixture for
+    /// the UI31 RTL tests.
+    fn host_table_with_dir(value: LayoutPropValue) -> LayoutDef {
+        let table_node = LayoutNode {
+            tag: "HostTable".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "dir".to_string(),
+                value,
+            }],
+            children: vec![table_section("HostTableBody", vec![vec!["x"]])],
+        };
+        layout_with("T", container_node("Box", vec![table_node]))
+    }
+
+    /// UI31 §3.1 a11y gate — `HostTable` MUST continue to lower to
+    /// the structural `VStack(alignment: .leading, spacing: 0)` of
+    /// `HStack` rows. A regression to a flat `ZStack` or `Group`
+    /// would break VoiceOver's table-row traversal.
+    #[test]
+    fn ui31_a11y_host_table_uses_structural_vstack() {
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![table_section("HostTableBody", vec![vec!["a"]])],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("VStack(alignment: .leading, spacing: 0)"),
+            "HostTable must lower to VStack, got:\n{out}"
+        );
+        assert!(
+            out.contains("HStack"),
+            "HostTable body must include HStack rows, got:\n{out}"
+        );
+    }
+
+    /// UI31 §3.2 RTL contract — `dir: rtl` keyword attaches
+    /// `.environment(\.layoutDirection, .rightToLeft)` as a modifier
+    /// on the VStack. SwiftUI's `Environment(\.layoutDirection)` is
+    /// the canonical RTL knob; every horizontally-laid SwiftUI
+    /// container respects it.
+    #[test]
+    fn ui31_rtl_host_table_dir_rtl_keyword_emits_environment_modifier() {
+        let layout = host_table_with_dir(LayoutPropValue::Keyword("rtl".to_string()));
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".environment(\\.layoutDirection, .rightToLeft)"),
+            "expected .environment(\\.layoutDirection, .rightToLeft), got:\n{out}"
+        );
+    }
+
+    /// `dir: ltr` keyword emits the explicit-leftToRight form.
+    /// Symmetry with the rtl test; explicit `.leftToRight` is the
+    /// right thing when an author needs to override an ambient RTL
+    /// ancestor (e.g. a HostTable inside a RTL window where they
+    /// want this particular table to stay LTR — useful for data
+    /// like number-heavy spreadsheets).
+    #[test]
+    fn ui31_rtl_host_table_dir_ltr_keyword_emits_left_to_right() {
+        let layout = host_table_with_dir(LayoutPropValue::Keyword("ltr".to_string()));
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".environment(\\.layoutDirection, .leftToRight)"),
+            "expected .environment(\\.layoutDirection, .leftToRight), got:\n{out}"
+        );
+    }
+
+    /// `dir: auto` keyword is the spec-mandated "let the host
+    /// decide". SwiftUI has no `.automatic` enum case for
+    /// layoutDirection; the right behaviour is to NOT emit the
+    /// modifier so the ambient `Environment(\.layoutDirection)`
+    /// flows through unchanged. This matches the system locale → app
+    /// → ancestor view cascade that SwiftUI uses by default.
+    #[test]
+    fn ui31_rtl_host_table_dir_auto_keyword_does_not_emit_modifier() {
+        let layout = host_table_with_dir(LayoutPropValue::Keyword("auto".to_string()));
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            !out.contains(".environment(\\.layoutDirection"),
+            "auto must NOT emit a layoutDirection modifier, got:\n{out}"
+        );
+        assert!(
+            out.contains("VStack(alignment: .leading, spacing: 0)"),
+            "bare VStack should still render, got:\n{out}"
+        );
+    }
+
+    /// `dir: slot: layout-direction` interpolates the bound slot
+    /// (camel-cased to `layoutDirection`) into the modifier. The
+    /// slot is expected to evaluate to a `LayoutDirection`; this is
+    /// the contract the host must honour. Slot name goes through
+    /// `is_safe_swift_identifier` so it can't smuggle malicious
+    /// Swift through the modifier's expression position.
+    #[test]
+    fn ui31_rtl_host_table_dir_slot_ref_interpolates_camel_case_identifier() {
+        let table_node = LayoutNode {
+            tag: "HostTable".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "dir".to_string(),
+                value: LayoutPropValue::SlotRef("layout-direction".to_string()),
+            }],
+            children: vec![table_section("HostTableBody", vec![vec!["x"]])],
+        };
+        let layout = layout_with("T", container_node("Box", vec![table_node]));
+        let out = from_pipeline(
+            &component(
+                "T",
+                vec![slot("layout-direction", SlotType::Text, true)],
+                vec![],
+            ),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".environment(\\.layoutDirection, layoutDirection)"),
+            "expected .environment(\\.layoutDirection, layoutDirection), got:\n{out}"
+        );
+    }
+
+    /// Unknown `dir:` keywords (anything outside the `ltr|rtl|auto`
+    /// allow-list) MUST drop silently. This is the security gate:
+    /// an attacker-controlled keyword cannot inject Swift code
+    /// because it never reaches the format string. Test payload
+    /// `".rightToLeft).onAppear { pwn() }"` is specifically shaped
+    /// to break out of the modifier-call argument list if naively
+    /// interpolated.
+    #[test]
+    fn ui31_rtl_host_table_unknown_dir_keyword_drops_silently() {
+        let layout = host_table_with_dir(LayoutPropValue::Keyword(
+            ".rightToLeft).onAppear { pwn() }".to_string(),
+        ));
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            !out.contains("pwn()"),
+            "unknown keyword payload must not appear, got:\n{out}"
+        );
+        assert!(
+            !out.contains(".environment(\\.layoutDirection"),
+            "unknown keyword must NOT emit a modifier, got:\n{out}"
+        );
+        assert!(
+            out.contains("VStack(alignment: .leading, spacing: 0)"),
+            "bare VStack should still render, got:\n{out}"
+        );
+    }
+
+    /// Regression guard — `HostTable` with no `dir:` prop emits no
+    /// `.environment(\.layoutDirection ...)` line. A future
+    /// refactor that always-emits would break authors who rely on
+    /// the ambient Environment value.
+    #[test]
+    fn ui31_rtl_host_table_without_dir_prop_emits_no_modifier() {
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![table_section("HostTableBody", vec![vec!["x"]])],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            !out.contains(".environment(\\.layoutDirection"),
+            "no layoutDirection modifier expected when dir absent, got:\n{out}"
         );
     }
 
