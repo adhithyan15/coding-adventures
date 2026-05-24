@@ -38,7 +38,7 @@ const COMPONENTS: &[&str] = &[
     "Accordion", "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
     "Checkbox", "DropdownMenu", "Field", "Input", "InputGroup",
     "ListGroup", "Modal", "Nav", "Navbar", "NumberInput", "Pagination",
-    "Radio", "Spinner", "Tabs", "Toast", "Tooltip",
+    "Radio", "Select", "Spinner", "Tabs", "Toast", "Tooltip",
 ];
 
 /// Themes shipped per component. Both must compile.
@@ -83,8 +83,8 @@ fn manifest_declares_expected_exports() {
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
     assert_eq!(
-        version, "0.10.0",
-        "[package].version must be 0.10.0 for the Navbar release"
+        version, "0.11.0",
+        "[package].version must be 0.11.0 for the Select release"
     );
 
     let exports = value
@@ -450,4 +450,20 @@ fn navbar_interface_matches_spec() {
     assert_eq!(slot_names, vec!["brand", "items", "active-index"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Select — toggle button + revealed option list. onChange's payload
+/// is the option text (not its index, unlike DropdownMenu).
+#[test]
+fn select_interface_matches_spec() {
+    let mil_src = read_source("Select.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(
+        slot_names,
+        vec!["value", "options", "placeholder", "open", "disabled"]
+    );
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onToggle", "onChange"]);
 }
