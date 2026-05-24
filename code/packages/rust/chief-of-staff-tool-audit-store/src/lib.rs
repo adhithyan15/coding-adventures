@@ -2112,6 +2112,57 @@ impl ToolAuditSupervisorDrainRunReport {
         self.plan.health_action_label_matches_action()
     }
 
+    /// Return whether preflight health needs any host action.
+    pub fn plan_health_requires_action(&self) -> bool {
+        self.plan_health_action().requires_action()
+    }
+
+    /// Return whether preflight health intentionally leaves the host idle.
+    pub fn plan_health_is_no_action(&self) -> bool {
+        self.plan_health_action().is_no_action()
+    }
+
+    /// Return how many preflight health action surfaces are active.
+    pub fn plan_health_action_count(&self) -> usize {
+        self.plan_health_action().action_count()
+    }
+
+    /// Return whether preflight health should drain a checkpoint page.
+    pub fn plan_health_action_should_drain_page(&self) -> bool {
+        self.plan_health_action().should_drain_page()
+    }
+
+    /// Return whether preflight health routes follow-up pressure.
+    pub fn plan_health_action_routes_follow_up(&self) -> bool {
+        self.plan_health_action().routes_follow_up()
+    }
+
+    /// Return whether preflight health asks for another drain pass.
+    pub fn plan_health_action_requests_continuation(&self) -> bool {
+        self.plan_health_action().requests_continuation()
+    }
+
+    /// Return whether preflight health asks for storage investigation.
+    pub fn plan_health_action_requires_storage_investigation(&self) -> bool {
+        self.plan_health_action().requires_storage_investigation()
+    }
+
+    /// Return whether preflight health asks for count-integrity investigation.
+    pub fn plan_health_action_requires_count_integrity_investigation(&self) -> bool {
+        self.plan_health_action()
+            .requires_count_integrity_investigation()
+    }
+
+    /// Return whether preflight health asks for any investigation.
+    pub fn plan_health_action_requires_investigation(&self) -> bool {
+        self.plan_health_action().requires_investigation()
+    }
+
+    /// Return whether preflight health combines multiple action surfaces.
+    pub fn plan_health_action_has_multiple_actions(&self) -> bool {
+        self.plan_health_action().has_multiple_actions()
+    }
+
     /// Return the aggregate health route for the preflight plan.
     pub fn plan_health_route(&self) -> ToolAuditHealthRoute {
         self.plan.health_route()
@@ -2278,6 +2329,57 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return whether the drain health-action label matches its typed action.
     pub fn drain_health_action_label_matches_action(&self) -> bool {
         self.drain.health_action_label_matches_action()
+    }
+
+    /// Return whether drain health needs any host action.
+    pub fn drain_health_requires_action(&self) -> bool {
+        self.drain_health_action().requires_action()
+    }
+
+    /// Return whether drain health intentionally leaves the host idle.
+    pub fn drain_health_is_no_action(&self) -> bool {
+        self.drain_health_action().is_no_action()
+    }
+
+    /// Return how many drain health action surfaces are active.
+    pub fn drain_health_action_count(&self) -> usize {
+        self.drain_health_action().action_count()
+    }
+
+    /// Return whether drain health should drain a checkpoint page.
+    pub fn drain_health_action_should_drain_page(&self) -> bool {
+        self.drain_health_action().should_drain_page()
+    }
+
+    /// Return whether drain health routes follow-up pressure.
+    pub fn drain_health_action_routes_follow_up(&self) -> bool {
+        self.drain_health_action().routes_follow_up()
+    }
+
+    /// Return whether drain health asks for another drain pass.
+    pub fn drain_health_action_requests_continuation(&self) -> bool {
+        self.drain_health_action().requests_continuation()
+    }
+
+    /// Return whether drain health asks for storage investigation.
+    pub fn drain_health_action_requires_storage_investigation(&self) -> bool {
+        self.drain_health_action().requires_storage_investigation()
+    }
+
+    /// Return whether drain health asks for count-integrity investigation.
+    pub fn drain_health_action_requires_count_integrity_investigation(&self) -> bool {
+        self.drain_health_action()
+            .requires_count_integrity_investigation()
+    }
+
+    /// Return whether drain health asks for any investigation.
+    pub fn drain_health_action_requires_investigation(&self) -> bool {
+        self.drain_health_action().requires_investigation()
+    }
+
+    /// Return whether drain health combines multiple action surfaces.
+    pub fn drain_health_action_has_multiple_actions(&self) -> bool {
+        self.drain_health_action().has_multiple_actions()
     }
 
     /// Return the aggregate health route for the drain result.
@@ -3377,6 +3479,20 @@ impl ToolAuditSupervisorDrainRunReport {
             plan_health_action: self.plan_health_action(),
             plan_health_action_label: self.plan_health_action_label(),
             plan_health_action_label_matches_action: self.plan_health_action_label_matches_action(),
+            plan_health_requires_action: self.plan_health_requires_action(),
+            plan_health_is_no_action: self.plan_health_is_no_action(),
+            plan_health_action_count: self.plan_health_action_count(),
+            plan_health_action_should_drain_page: self.plan_health_action_should_drain_page(),
+            plan_health_action_routes_follow_up: self.plan_health_action_routes_follow_up(),
+            plan_health_action_requests_continuation: self
+                .plan_health_action_requests_continuation(),
+            plan_health_action_requires_storage_investigation: self
+                .plan_health_action_requires_storage_investigation(),
+            plan_health_action_requires_count_integrity_investigation: self
+                .plan_health_action_requires_count_integrity_investigation(),
+            plan_health_action_requires_investigation: self
+                .plan_health_action_requires_investigation(),
+            plan_health_action_has_multiple_actions: self.plan_health_action_has_multiple_actions(),
             plan_health_route: self.plan_health_route(),
             plan_health_route_label: self.plan_health_route_label(),
             plan_health_route_label_matches_route: self.plan_health_route_label_matches_route(),
@@ -3421,6 +3537,21 @@ impl ToolAuditSupervisorDrainRunReport {
             drain_health_action_label: self.drain_health_action_label(),
             drain_health_action_label_matches_action: self
                 .drain_health_action_label_matches_action(),
+            drain_health_requires_action: self.drain_health_requires_action(),
+            drain_health_is_no_action: self.drain_health_is_no_action(),
+            drain_health_action_count: self.drain_health_action_count(),
+            drain_health_action_should_drain_page: self.drain_health_action_should_drain_page(),
+            drain_health_action_routes_follow_up: self.drain_health_action_routes_follow_up(),
+            drain_health_action_requests_continuation: self
+                .drain_health_action_requests_continuation(),
+            drain_health_action_requires_storage_investigation: self
+                .drain_health_action_requires_storage_investigation(),
+            drain_health_action_requires_count_integrity_investigation: self
+                .drain_health_action_requires_count_integrity_investigation(),
+            drain_health_action_requires_investigation: self
+                .drain_health_action_requires_investigation(),
+            drain_health_action_has_multiple_actions: self
+                .drain_health_action_has_multiple_actions(),
             drain_health_route: self.drain_health_route(),
             drain_health_route_label: self.drain_health_route_label(),
             drain_health_route_label_matches_route: self.drain_health_route_label_matches_route(),
@@ -4182,6 +4313,26 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub plan_health_action_label: &'static str,
     /// Whether the preflight health-action label parses back to the typed action.
     pub plan_health_action_label_matches_action: bool,
+    /// Whether preflight health needs any host action.
+    pub plan_health_requires_action: bool,
+    /// Whether preflight health intentionally leaves the host idle.
+    pub plan_health_is_no_action: bool,
+    /// Number of active preflight health action surfaces.
+    pub plan_health_action_count: usize,
+    /// Whether preflight health should drain a checkpoint page.
+    pub plan_health_action_should_drain_page: bool,
+    /// Whether preflight health routes follow-up pressure.
+    pub plan_health_action_routes_follow_up: bool,
+    /// Whether preflight health asks for another drain pass.
+    pub plan_health_action_requests_continuation: bool,
+    /// Whether preflight health asks for storage investigation.
+    pub plan_health_action_requires_storage_investigation: bool,
+    /// Whether preflight health asks for count-integrity investigation.
+    pub plan_health_action_requires_count_integrity_investigation: bool,
+    /// Whether preflight health asks for any investigation.
+    pub plan_health_action_requires_investigation: bool,
+    /// Whether preflight health combines multiple action surfaces.
+    pub plan_health_action_has_multiple_actions: bool,
     /// Aggregate health route for the preflight plan.
     pub plan_health_route: ToolAuditHealthRoute,
     /// Stable preflight health-route label.
@@ -4248,6 +4399,26 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub drain_health_action_label: &'static str,
     /// Whether the drain health-action label parses back to the typed action.
     pub drain_health_action_label_matches_action: bool,
+    /// Whether drain health needs any host action.
+    pub drain_health_requires_action: bool,
+    /// Whether drain health intentionally leaves the host idle.
+    pub drain_health_is_no_action: bool,
+    /// Number of active drain health action surfaces.
+    pub drain_health_action_count: usize,
+    /// Whether drain health should drain a checkpoint page.
+    pub drain_health_action_should_drain_page: bool,
+    /// Whether drain health routes follow-up pressure.
+    pub drain_health_action_routes_follow_up: bool,
+    /// Whether drain health asks for another drain pass.
+    pub drain_health_action_requests_continuation: bool,
+    /// Whether drain health asks for storage investigation.
+    pub drain_health_action_requires_storage_investigation: bool,
+    /// Whether drain health asks for count-integrity investigation.
+    pub drain_health_action_requires_count_integrity_investigation: bool,
+    /// Whether drain health asks for any investigation.
+    pub drain_health_action_requires_investigation: bool,
+    /// Whether drain health combines multiple action surfaces.
+    pub drain_health_action_has_multiple_actions: bool,
     /// Aggregate health route for the drain result.
     pub drain_health_route: ToolAuditHealthRoute,
     /// Stable drain health-route label.
@@ -4878,6 +5049,56 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.plan_health_action_label_matches_action
     }
 
+    /// Return whether preflight health needs any host action.
+    pub fn plan_health_requires_action(&self) -> bool {
+        self.plan_health_requires_action
+    }
+
+    /// Return whether preflight health intentionally leaves the host idle.
+    pub fn plan_health_is_no_action(&self) -> bool {
+        self.plan_health_is_no_action
+    }
+
+    /// Return how many preflight health action surfaces are active.
+    pub fn plan_health_action_count(&self) -> usize {
+        self.plan_health_action_count
+    }
+
+    /// Return whether preflight health should drain a checkpoint page.
+    pub fn plan_health_action_should_drain_page(&self) -> bool {
+        self.plan_health_action_should_drain_page
+    }
+
+    /// Return whether preflight health routes follow-up pressure.
+    pub fn plan_health_action_routes_follow_up(&self) -> bool {
+        self.plan_health_action_routes_follow_up
+    }
+
+    /// Return whether preflight health asks for another drain pass.
+    pub fn plan_health_action_requests_continuation(&self) -> bool {
+        self.plan_health_action_requests_continuation
+    }
+
+    /// Return whether preflight health asks for storage investigation.
+    pub fn plan_health_action_requires_storage_investigation(&self) -> bool {
+        self.plan_health_action_requires_storage_investigation
+    }
+
+    /// Return whether preflight health asks for count-integrity investigation.
+    pub fn plan_health_action_requires_count_integrity_investigation(&self) -> bool {
+        self.plan_health_action_requires_count_integrity_investigation
+    }
+
+    /// Return whether preflight health asks for any investigation.
+    pub fn plan_health_action_requires_investigation(&self) -> bool {
+        self.plan_health_action_requires_investigation
+    }
+
+    /// Return whether preflight health combines multiple action surfaces.
+    pub fn plan_health_action_has_multiple_actions(&self) -> bool {
+        self.plan_health_action_has_multiple_actions
+    }
+
     /// Return the aggregate health route for the preflight plan.
     pub fn plan_health_route(&self) -> ToolAuditHealthRoute {
         self.plan_health_route
@@ -5041,6 +5262,56 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the drain health-action label matches its typed action.
     pub fn drain_health_action_label_matches_action(&self) -> bool {
         self.drain_health_action_label_matches_action
+    }
+
+    /// Return whether drain health needs any host action.
+    pub fn drain_health_requires_action(&self) -> bool {
+        self.drain_health_requires_action
+    }
+
+    /// Return whether drain health intentionally leaves the host idle.
+    pub fn drain_health_is_no_action(&self) -> bool {
+        self.drain_health_is_no_action
+    }
+
+    /// Return how many drain health action surfaces are active.
+    pub fn drain_health_action_count(&self) -> usize {
+        self.drain_health_action_count
+    }
+
+    /// Return whether drain health should drain a checkpoint page.
+    pub fn drain_health_action_should_drain_page(&self) -> bool {
+        self.drain_health_action_should_drain_page
+    }
+
+    /// Return whether drain health routes follow-up pressure.
+    pub fn drain_health_action_routes_follow_up(&self) -> bool {
+        self.drain_health_action_routes_follow_up
+    }
+
+    /// Return whether drain health asks for another drain pass.
+    pub fn drain_health_action_requests_continuation(&self) -> bool {
+        self.drain_health_action_requests_continuation
+    }
+
+    /// Return whether drain health asks for storage investigation.
+    pub fn drain_health_action_requires_storage_investigation(&self) -> bool {
+        self.drain_health_action_requires_storage_investigation
+    }
+
+    /// Return whether drain health asks for count-integrity investigation.
+    pub fn drain_health_action_requires_count_integrity_investigation(&self) -> bool {
+        self.drain_health_action_requires_count_integrity_investigation
+    }
+
+    /// Return whether drain health asks for any investigation.
+    pub fn drain_health_action_requires_investigation(&self) -> bool {
+        self.drain_health_action_requires_investigation
+    }
+
+    /// Return whether drain health combines multiple action surfaces.
+    pub fn drain_health_action_has_multiple_actions(&self) -> bool {
+        self.drain_health_action_has_multiple_actions
     }
 
     /// Return the aggregate health route for the drain result.
@@ -17037,6 +17308,16 @@ mod tests {
         );
         assert_eq!(idle_summary.plan_health_action_label(), "no_action");
         assert!(idle_summary.plan_health_action_label_matches_action());
+        assert!(!idle_summary.plan_health_requires_action());
+        assert!(idle_summary.plan_health_is_no_action());
+        assert_eq!(idle_summary.plan_health_action_count(), 0);
+        assert!(!idle_summary.plan_health_action_should_drain_page());
+        assert!(!idle_summary.plan_health_action_routes_follow_up());
+        assert!(!idle_summary.plan_health_action_requests_continuation());
+        assert!(!idle_summary.plan_health_action_requires_storage_investigation());
+        assert!(!idle_summary.plan_health_action_requires_count_integrity_investigation());
+        assert!(!idle_summary.plan_health_action_requires_investigation());
+        assert!(!idle_summary.plan_health_action_has_multiple_actions());
         assert_eq!(
             idle_summary.plan_health_route(),
             ToolAuditHealthRoute::NoRoute
@@ -17082,6 +17363,16 @@ mod tests {
         );
         assert_eq!(idle_summary.drain_health_action_label(), "no_action");
         assert!(idle_summary.drain_health_action_label_matches_action());
+        assert!(!idle_summary.drain_health_requires_action());
+        assert!(idle_summary.drain_health_is_no_action());
+        assert_eq!(idle_summary.drain_health_action_count(), 0);
+        assert!(!idle_summary.drain_health_action_should_drain_page());
+        assert!(!idle_summary.drain_health_action_routes_follow_up());
+        assert!(!idle_summary.drain_health_action_requests_continuation());
+        assert!(!idle_summary.drain_health_action_requires_storage_investigation());
+        assert!(!idle_summary.drain_health_action_requires_count_integrity_investigation());
+        assert!(!idle_summary.drain_health_action_requires_investigation());
+        assert!(!idle_summary.drain_health_action_has_multiple_actions());
         assert_eq!(
             idle_summary.drain_health_route(),
             ToolAuditHealthRoute::NoRoute
@@ -17230,6 +17521,16 @@ mod tests {
         assert!(clean_report.drain_health_is_auto_routable());
         assert!(!clean_report.plan_health_readiness_requires_manual_review());
         assert!(!clean_report.drain_health_readiness_requires_manual_review());
+        assert!(clean_summary.plan_health_requires_action());
+        assert!(!clean_summary.plan_health_is_no_action());
+        assert_eq!(clean_summary.plan_health_action_count(), 1);
+        assert!(clean_summary.plan_health_action_should_drain_page());
+        assert!(!clean_summary.plan_health_action_routes_follow_up());
+        assert!(!clean_summary.plan_health_action_requests_continuation());
+        assert!(!clean_summary.plan_health_action_requires_storage_investigation());
+        assert!(!clean_summary.plan_health_action_requires_count_integrity_investigation());
+        assert!(!clean_summary.plan_health_action_requires_investigation());
+        assert!(!clean_summary.plan_health_action_has_multiple_actions());
         assert_eq!(
             clean_summary.plan_health_route(),
             ToolAuditHealthRoute::Drain
@@ -17280,6 +17581,16 @@ mod tests {
         assert!(!clean_summary.drain_health_readiness_requires_manual_review());
         assert!(!clean_summary.drain_health_readiness_requires_investigation());
         assert!(!clean_summary.drain_health_readiness_requires_triage());
+        assert!(clean_summary.drain_health_requires_action());
+        assert!(!clean_summary.drain_health_is_no_action());
+        assert_eq!(clean_summary.drain_health_action_count(), 1);
+        assert!(clean_summary.drain_health_action_should_drain_page());
+        assert!(!clean_summary.drain_health_action_routes_follow_up());
+        assert!(!clean_summary.drain_health_action_requests_continuation());
+        assert!(!clean_summary.drain_health_action_requires_storage_investigation());
+        assert!(!clean_summary.drain_health_action_requires_count_integrity_investigation());
+        assert!(!clean_summary.drain_health_action_requires_investigation());
+        assert!(!clean_summary.drain_health_action_has_multiple_actions());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -17319,6 +17630,16 @@ mod tests {
             continuation_summary.plan_health_action_label(),
             "drain_page_and_schedule_continuation"
         );
+        assert!(continuation_summary.plan_health_requires_action());
+        assert!(!continuation_summary.plan_health_is_no_action());
+        assert_eq!(continuation_summary.plan_health_action_count(), 2);
+        assert!(continuation_summary.plan_health_action_should_drain_page());
+        assert!(!continuation_summary.plan_health_action_routes_follow_up());
+        assert!(continuation_summary.plan_health_action_requests_continuation());
+        assert!(!continuation_summary.plan_health_action_requires_storage_investigation());
+        assert!(!continuation_summary.plan_health_action_requires_count_integrity_investigation());
+        assert!(!continuation_summary.plan_health_action_requires_investigation());
+        assert!(continuation_summary.plan_health_action_has_multiple_actions());
         assert_eq!(
             continuation_summary.plan_health_route(),
             ToolAuditHealthRoute::Triage
@@ -17363,6 +17684,16 @@ mod tests {
             continuation_summary.drain_health_action(),
             ToolAuditHealthAction::DrainPageAndScheduleContinuation
         );
+        assert!(continuation_summary.drain_health_requires_action());
+        assert!(!continuation_summary.drain_health_is_no_action());
+        assert_eq!(continuation_summary.drain_health_action_count(), 2);
+        assert!(continuation_summary.drain_health_action_should_drain_page());
+        assert!(!continuation_summary.drain_health_action_routes_follow_up());
+        assert!(continuation_summary.drain_health_action_requests_continuation());
+        assert!(!continuation_summary.drain_health_action_requires_storage_investigation());
+        assert!(!continuation_summary.drain_health_action_requires_count_integrity_investigation());
+        assert!(!continuation_summary.drain_health_action_requires_investigation());
+        assert!(continuation_summary.drain_health_action_has_multiple_actions());
         assert_eq!(
             continuation_summary.drain_health_route(),
             ToolAuditHealthRoute::Triage
@@ -17518,6 +17849,24 @@ mod tests {
         );
         assert_eq!(follow_up_summary.plan_health_route_label(), "triage");
         assert_eq!(follow_up_summary.drain_health_route_label(), "triage");
+        assert!(follow_up_summary.plan_health_requires_action());
+        assert_eq!(follow_up_summary.plan_health_action_count(), 2);
+        assert!(follow_up_summary.plan_health_action_should_drain_page());
+        assert!(follow_up_summary.plan_health_action_routes_follow_up());
+        assert!(!follow_up_summary.plan_health_action_requests_continuation());
+        assert!(!follow_up_summary.plan_health_action_requires_storage_investigation());
+        assert!(!follow_up_summary.plan_health_action_requires_count_integrity_investigation());
+        assert!(!follow_up_summary.plan_health_action_requires_investigation());
+        assert!(follow_up_summary.plan_health_action_has_multiple_actions());
+        assert!(follow_up_summary.drain_health_requires_action());
+        assert_eq!(follow_up_summary.drain_health_action_count(), 2);
+        assert!(follow_up_summary.drain_health_action_should_drain_page());
+        assert!(follow_up_summary.drain_health_action_routes_follow_up());
+        assert!(!follow_up_summary.drain_health_action_requests_continuation());
+        assert!(!follow_up_summary.drain_health_action_requires_storage_investigation());
+        assert!(!follow_up_summary.drain_health_action_requires_count_integrity_investigation());
+        assert!(!follow_up_summary.drain_health_action_requires_investigation());
+        assert!(follow_up_summary.drain_health_action_has_multiple_actions());
         assert!(follow_up_summary.plan_health_has_route());
         assert!(follow_up_summary.plan_health_routes_to_triage());
         assert!(!follow_up_summary.plan_health_routes_to_drain());
