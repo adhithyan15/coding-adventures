@@ -1,5 +1,87 @@
 # Changelog
 
+## 1.5.0 — 2026-05-23
+
+**Phase 57 — Bounded × Log(diverging) × Sqrt(positive-poly) numerator
+(Python).**
+
+Closes the long-deferred mixed sub-polynomial gap noted in Phase 55
+and Phase 56 CHANGELOGs.  Recognises ``Div(Mul(bounded..., Log(h),
+Sqrt(P)), den)`` shapes where the numerator combines:
+
+- ``Log(h(k))`` — sub-polynomial growth (``o(k^ε)`` for any ``ε > 0``)
+- ``Sqrt(P(k))`` — half-polynomial growth (``k^{deg(P)/2}``)
+- bounded factors — uniformly ``≤ C``
+
+The effective growth rate is therefore ``log(k) · k^{deg(P)/2}``,
+strictly dominated by ``k^{deg(P)/2 + ε}`` for any positive ``ε`` —
+which means a denominator with ``den_deg > deg(P)/2`` (i.e.
+``2·den_deg > deg(P)``) wins, and the quotient vanishes.  Non-
+polynomial diverging denominators (Exp / Pow / Log×poly) dominate
+automatically.
+
+This complements:
+- Phase 55 (bounded × Log) — when no Sqrt factor present
+- Phase 56 (bounded × Sqrt — when ports land) — when no Log factor
+
+> Note: stacks on PR #4167 (Phase 56 Python) and PR #4171
+> (Phase 56 TS+Rust port).  Phase 57 builds on the existing
+> Phase 55 helpers in main; the implementation is independent of
+> Phase 56's helper since Phase 57 requires **both** Log and Sqrt
+> (Phase 56's "Sqrt without Log" case is distinct).
+
+Bumps cas-summation 1.3.0 → 1.5.0 (skipping 1.4.0 reserved for PR
+#4167, in flight).
+
+### Added
+
+- **``_bounded_log_sqrt_inner_deg(node, k) -> int | None``** —
+  Phase 57 helper.  Returns ``deg(P)`` (×2 half-degree, matching the
+  Phase 51 / 53 / 56 idiom) when ``node`` is a ``Mul`` with:
+
+    1. exactly one ``Log(diverging)`` factor (refuse if two+)
+    2. exactly one ``Sqrt(positive-leading polynomial)`` factor
+       (refuse if two+ or negative-leading inner)
+    3. any number of bounded factors (zero is OK)
+    4. no other factors (any unrecognised factor → ``None``)
+
+  Returns ``None`` when the Log XOR Sqrt requirement isn't met, so
+  Phase 55 (bounded × Log only) and the future Phase 56 (bounded ×
+  Sqrt only) handle those cases.
+
+### Changed
+
+- ``_g_vanishes_at_infinity`` adds a Phase 57 branch between
+  Phase 55 (bounded × Log) and the Phase 42 polynomial widening.
+  Same dispatch shape as Phase 51 / 53 / 56: compare ``2 × den_deg``
+  to ``sqrt_inner_deg`` for polynomial denominators, or short-circuit
+  on non-polynomial divergence.
+
+### Added — tests
+
+`tests/test_summation.py::TestEvaluateSumPhase57BoundedLogSqrtNumerator`
+— 7 new cases:
+
+- ``test_sin_log_sqrt_over_k_squared_closes`` — 1/2 < 2.
+- ``test_log_sqrt_only_over_k_squared_closes`` — bounded factors
+  not required.
+- ``test_cos_log_sqrt_k_cubed_over_k_squared_closes`` — 3/2 < 2
+  (tight margin).
+- ``test_bounded_log_sqrt_over_exponential_closes`` — exponential
+  denominator dominates sub-polynomial growth.
+- ``test_sin_log_sqrt_k_cubed_over_k_refused`` — 3/2 > 1: no vanish.
+- ``test_two_log_factors_refused`` — conservative.
+- ``test_no_sqrt_falls_through`` — Phase 55 picks up the slack
+  (``sin·log/k²`` still closes via the existing bounded × Log branch).
+
+Total: **133 tests** (was 126; +7 net new), no regressions.
+
+### Still deferred
+
+- Two-Log or two-Sqrt patterns (would need combined growth-rate
+  logic across multiple factors of the same family).
+- Cross-language port to TypeScript / Rust.
+
 ## 1.3.0 — 2026-05-23
 
 **Phase 55 — Bounded×Log(diverging) numerator pattern (Python).**
