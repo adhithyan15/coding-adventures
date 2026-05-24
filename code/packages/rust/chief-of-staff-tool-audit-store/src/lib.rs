@@ -698,11 +698,43 @@ impl ToolAuditCheckpointReplaySummary {
     pub fn health_labels_match(&self) -> bool {
         self.inventory_follow_up_label_matches_kind()
             && self.checkpoint_replay_outcome_label_matches_outcome()
+            && self.health_action_label_matches_action()
     }
 
     /// Return whether any checkpoint replay health label drifted from its classifier.
     pub fn has_health_label_integrity_drift(&self) -> bool {
         !self.health_labels_match()
+    }
+
+    /// Return the recommended host action for this checkpoint replay health.
+    pub fn health_action(&self) -> ToolAuditHealthAction {
+        self.checkpoint_replay_outcome().health_action()
+    }
+
+    /// Return the stable health-action label for host logs.
+    pub fn health_action_label(&self) -> &'static str {
+        self.health_action().as_str()
+    }
+
+    /// Return whether the health-action label parses back to its typed action.
+    pub fn health_action_label_matches_action(&self) -> bool {
+        ToolAuditHealthAction::from_label(self.health_action_label()) == Some(self.health_action())
+    }
+
+    /// Return whether this checkpoint replay needs any host health action.
+    pub fn requires_health_action(&self) -> bool {
+        self.health_action().requires_action()
+    }
+
+    /// Return whether this checkpoint replay routes follow-up pressure.
+    pub fn health_action_routes_follow_up(&self) -> bool {
+        self.health_action().routes_follow_up()
+    }
+
+    /// Return whether this checkpoint replay needs count-integrity investigation.
+    pub fn health_action_requires_count_integrity_investigation(&self) -> bool {
+        self.health_action()
+            .requires_count_integrity_investigation()
     }
 
     /// Return whether any replayed row needs follow-up.
@@ -828,11 +860,58 @@ impl ToolAuditSupervisorCheckpointStatus {
     pub fn health_labels_match(&self) -> bool {
         self.inventory_follow_up_label_matches_kind()
             && self.checkpoint_page_outcome_label_matches_outcome()
+            && self.health_action_label_matches_action()
     }
 
     /// Return whether any checkpoint status health label drifted from its classifier.
     pub fn has_health_label_integrity_drift(&self) -> bool {
         !self.health_labels_match()
+    }
+
+    /// Return the recommended host action for this checkpoint page health.
+    pub fn health_action(&self) -> ToolAuditHealthAction {
+        self.checkpoint_page_outcome().health_action()
+    }
+
+    /// Return the stable health-action label for host logs.
+    pub fn health_action_label(&self) -> &'static str {
+        self.health_action().as_str()
+    }
+
+    /// Return whether the health-action label parses back to its typed action.
+    pub fn health_action_label_matches_action(&self) -> bool {
+        ToolAuditHealthAction::from_label(self.health_action_label()) == Some(self.health_action())
+    }
+
+    /// Return whether this checkpoint page needs any host health action.
+    pub fn requires_health_action(&self) -> bool {
+        self.health_action().requires_action()
+    }
+
+    /// Return whether this checkpoint page action should drain rows.
+    pub fn health_action_should_drain_page(&self) -> bool {
+        self.health_action().should_drain_page()
+    }
+
+    /// Return whether this checkpoint page action routes follow-up pressure.
+    pub fn health_action_routes_follow_up(&self) -> bool {
+        self.health_action().routes_follow_up()
+    }
+
+    /// Return whether this checkpoint page action requests continuation.
+    pub fn health_action_requests_continuation(&self) -> bool {
+        self.health_action().requests_continuation()
+    }
+
+    /// Return whether this checkpoint page needs count-integrity investigation.
+    pub fn health_action_requires_count_integrity_investigation(&self) -> bool {
+        self.health_action()
+            .requires_count_integrity_investigation()
+    }
+
+    /// Return whether this checkpoint page action has multiple active surfaces.
+    pub fn health_action_has_multiple_actions(&self) -> bool {
+        self.health_action().has_multiple_actions()
     }
 
     /// Return whether the next drain page would advance the durable checkpoint.
@@ -954,11 +1033,58 @@ impl ToolAuditSupervisorDrainPlanPage {
     pub fn health_labels_match(&self) -> bool {
         self.inventory_follow_up_label_matches_kind()
             && self.checkpoint_page_outcome_label_matches_outcome()
+            && self.health_action_label_matches_action()
     }
 
     /// Return whether any planned page health label drifted from its classifier.
     pub fn has_health_label_integrity_drift(&self) -> bool {
         !self.health_labels_match()
+    }
+
+    /// Return the recommended host action for this planned page health.
+    pub fn health_action(&self) -> ToolAuditHealthAction {
+        self.checkpoint_page_outcome().health_action()
+    }
+
+    /// Return the stable health-action label for host preflight logs.
+    pub fn health_action_label(&self) -> &'static str {
+        self.health_action().as_str()
+    }
+
+    /// Return whether the health-action label parses back to its typed action.
+    pub fn health_action_label_matches_action(&self) -> bool {
+        ToolAuditHealthAction::from_label(self.health_action_label()) == Some(self.health_action())
+    }
+
+    /// Return whether this planned page needs any host health action.
+    pub fn requires_health_action(&self) -> bool {
+        self.health_action().requires_action()
+    }
+
+    /// Return whether this planned page action should drain rows.
+    pub fn health_action_should_drain_page(&self) -> bool {
+        self.health_action().should_drain_page()
+    }
+
+    /// Return whether this planned page action routes follow-up pressure.
+    pub fn health_action_routes_follow_up(&self) -> bool {
+        self.health_action().routes_follow_up()
+    }
+
+    /// Return whether this planned page action requests continuation.
+    pub fn health_action_requests_continuation(&self) -> bool {
+        self.health_action().requests_continuation()
+    }
+
+    /// Return whether this planned page needs count-integrity investigation.
+    pub fn health_action_requires_count_integrity_investigation(&self) -> bool {
+        self.health_action()
+            .requires_count_integrity_investigation()
+    }
+
+    /// Return whether this planned page action has multiple active surfaces.
+    pub fn health_action_has_multiple_actions(&self) -> bool {
+        self.health_action().has_multiple_actions()
     }
 
     /// Return whether the matching drain tick would advance the durable checkpoint.
@@ -5497,12 +5623,50 @@ impl ToolAuditBatchWriteSummary {
 
     /// Return whether all batch-write health labels match their typed values.
     pub fn health_labels_match(&self) -> bool {
-        self.inventory_follow_up_label_matches_kind() && self.write_outcome_label_matches_outcome()
+        self.inventory_follow_up_label_matches_kind()
+            && self.write_outcome_label_matches_outcome()
+            && self.health_action_label_matches_action()
     }
 
     /// Return whether any batch-write health label drifted from its classifier.
     pub fn has_health_label_integrity_drift(&self) -> bool {
         !self.health_labels_match()
+    }
+
+    /// Return the recommended host action for this batch-write health.
+    pub fn health_action(&self) -> ToolAuditHealthAction {
+        self.write_outcome().health_action()
+    }
+
+    /// Return the stable health-action label for host logs.
+    pub fn health_action_label(&self) -> &'static str {
+        self.health_action().as_str()
+    }
+
+    /// Return whether the health-action label parses back to its typed action.
+    pub fn health_action_label_matches_action(&self) -> bool {
+        ToolAuditHealthAction::from_label(self.health_action_label()) == Some(self.health_action())
+    }
+
+    /// Return whether this batch write needs any host health action.
+    pub fn requires_health_action(&self) -> bool {
+        self.health_action().requires_action()
+    }
+
+    /// Return whether this batch write routes follow-up pressure.
+    pub fn health_action_routes_follow_up(&self) -> bool {
+        self.health_action().routes_follow_up()
+    }
+
+    /// Return whether this batch write needs storage failure investigation.
+    pub fn health_action_requires_storage_investigation(&self) -> bool {
+        self.health_action().requires_storage_investigation()
+    }
+
+    /// Return whether this batch write needs count-integrity investigation.
+    pub fn health_action_requires_count_integrity_investigation(&self) -> bool {
+        self.health_action()
+            .requires_count_integrity_investigation()
     }
 
     /// Return whether every attempted row was persisted.
@@ -5564,7 +5728,9 @@ impl ToolAuditReplaySummary {
 
     /// Return whether all replay health labels match their typed values.
     pub fn health_labels_match(&self) -> bool {
-        self.inventory_follow_up_label_matches_kind() && self.replay_outcome_label_matches_outcome()
+        self.inventory_follow_up_label_matches_kind()
+            && self.replay_outcome_label_matches_outcome()
+            && self.health_action_label_matches_action()
     }
 
     /// Return whether any replay health label drifted from its classifier.
@@ -5572,9 +5738,170 @@ impl ToolAuditReplaySummary {
         !self.health_labels_match()
     }
 
+    /// Return the recommended host action for this replay health.
+    pub fn health_action(&self) -> ToolAuditHealthAction {
+        self.replay_outcome().health_action()
+    }
+
+    /// Return the stable health-action label for host logs.
+    pub fn health_action_label(&self) -> &'static str {
+        self.health_action().as_str()
+    }
+
+    /// Return whether the health-action label parses back to its typed action.
+    pub fn health_action_label_matches_action(&self) -> bool {
+        ToolAuditHealthAction::from_label(self.health_action_label()) == Some(self.health_action())
+    }
+
+    /// Return whether this replay needs any host health action.
+    pub fn requires_health_action(&self) -> bool {
+        self.health_action().requires_action()
+    }
+
+    /// Return whether this replay routes follow-up pressure.
+    pub fn health_action_routes_follow_up(&self) -> bool {
+        self.health_action().routes_follow_up()
+    }
+
     /// Return whether any replayed row needs follow-up.
     pub fn requires_follow_up(&self) -> bool {
         self.inventory.requires_follow_up()
+    }
+}
+
+/// Host action recommended by lower-level audit health classifications.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditHealthAction {
+    /// The health summary is settled and needs no host action.
+    NoAction,
+    /// Drain a waiting checkpoint page.
+    DrainPage,
+    /// Drain a waiting page and route its follow-up pressure.
+    DrainPageAndRouteFollowUp,
+    /// Drain a waiting page and schedule another pass afterward.
+    DrainPageAndScheduleContinuation,
+    /// Drain a waiting page, route follow-up pressure, and schedule another pass.
+    DrainPageRouteFollowUpAndScheduleContinuation,
+    /// Route follow-up pressure to the host.
+    RouteFollowUp,
+    /// Investigate one or more audit row storage failures.
+    InvestigateStorageFailures,
+    /// Investigate a flattened count-integrity mismatch.
+    InvestigateCountIntegrity,
+}
+
+impl ToolAuditHealthAction {
+    /// Return a stable snake_case label for host logs and dashboards.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoAction => "no_action",
+            Self::DrainPage => "drain_page",
+            Self::DrainPageAndRouteFollowUp => "drain_page_and_route_follow_up",
+            Self::DrainPageAndScheduleContinuation => "drain_page_and_schedule_continuation",
+            Self::DrainPageRouteFollowUpAndScheduleContinuation => {
+                "drain_page_route_follow_up_and_schedule_continuation"
+            }
+            Self::RouteFollowUp => "route_follow_up",
+            Self::InvestigateStorageFailures => "investigate_storage_failures",
+            Self::InvestigateCountIntegrity => "investigate_count_integrity",
+        }
+    }
+
+    /// Parse a stable snake_case health-action label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_action" => Some(Self::NoAction),
+            "drain_page" => Some(Self::DrainPage),
+            "drain_page_and_route_follow_up" => Some(Self::DrainPageAndRouteFollowUp),
+            "drain_page_and_schedule_continuation" => Some(Self::DrainPageAndScheduleContinuation),
+            "drain_page_route_follow_up_and_schedule_continuation" => {
+                Some(Self::DrainPageRouteFollowUpAndScheduleContinuation)
+            }
+            "route_follow_up" => Some(Self::RouteFollowUp),
+            "investigate_storage_failures" => Some(Self::InvestigateStorageFailures),
+            "investigate_count_integrity" => Some(Self::InvestigateCountIntegrity),
+            _ => None,
+        }
+    }
+
+    /// Return whether the host needs to take an explicit action.
+    pub fn requires_action(self) -> bool {
+        !matches!(self, Self::NoAction)
+    }
+
+    /// Return whether this action intentionally leaves the host idle.
+    pub fn is_no_action(self) -> bool {
+        matches!(self, Self::NoAction)
+    }
+
+    /// Return whether this action should drain a checkpoint page.
+    pub fn should_drain_page(self) -> bool {
+        matches!(
+            self,
+            Self::DrainPage
+                | Self::DrainPageAndRouteFollowUp
+                | Self::DrainPageAndScheduleContinuation
+                | Self::DrainPageRouteFollowUpAndScheduleContinuation
+        )
+    }
+
+    /// Return whether this action routes follow-up pressure to the host.
+    pub fn routes_follow_up(self) -> bool {
+        matches!(
+            self,
+            Self::RouteFollowUp
+                | Self::DrainPageAndRouteFollowUp
+                | Self::DrainPageRouteFollowUpAndScheduleContinuation
+        )
+    }
+
+    /// Return whether this action asks the host to schedule another pass.
+    pub fn requests_continuation(self) -> bool {
+        matches!(
+            self,
+            Self::DrainPageAndScheduleContinuation
+                | Self::DrainPageRouteFollowUpAndScheduleContinuation
+        )
+    }
+
+    /// Return whether this action asks the host to investigate storage failures.
+    pub fn requires_storage_investigation(self) -> bool {
+        matches!(self, Self::InvestigateStorageFailures)
+    }
+
+    /// Return whether this action asks the host to investigate count integrity.
+    pub fn requires_count_integrity_investigation(self) -> bool {
+        matches!(self, Self::InvestigateCountIntegrity)
+    }
+
+    /// Return whether this action asks the host to investigate an audit-health issue.
+    pub fn requires_investigation(self) -> bool {
+        self.requires_storage_investigation() || self.requires_count_integrity_investigation()
+    }
+
+    /// Return the number of concrete host action surfaces represented.
+    pub fn action_count(self) -> usize {
+        [
+            self.should_drain_page(),
+            self.routes_follow_up(),
+            self.requests_continuation(),
+            self.requires_storage_investigation(),
+            self.requires_count_integrity_investigation(),
+        ]
+        .into_iter()
+        .filter(|is_active| *is_active)
+        .count()
+    }
+
+    /// Return whether this action combines multiple host action surfaces.
+    pub fn has_multiple_actions(self) -> bool {
+        self.action_count() > 1
+    }
+}
+
+impl Display for ToolAuditHealthAction {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
     }
 }
 
@@ -5676,6 +6003,21 @@ impl ToolAuditBatchWriteOutcome {
     pub fn requires_count_integrity_investigation(self) -> bool {
         matches!(self, Self::CountIntegrityDrift)
     }
+
+    /// Return the recommended host health action for this write outcome.
+    pub fn health_action(self) -> ToolAuditHealthAction {
+        match self {
+            Self::Empty | Self::CompletedClean => ToolAuditHealthAction::NoAction,
+            Self::CompletedWithFollowUp => ToolAuditHealthAction::RouteFollowUp,
+            Self::StorageFailures => ToolAuditHealthAction::InvestigateStorageFailures,
+            Self::CountIntegrityDrift => ToolAuditHealthAction::InvestigateCountIntegrity,
+        }
+    }
+
+    /// Return the stable health-action label for this write outcome.
+    pub fn health_action_label(self) -> &'static str {
+        self.health_action().as_str()
+    }
 }
 
 impl Display for ToolAuditBatchWriteOutcome {
@@ -5744,6 +6086,19 @@ impl ToolAuditReplayOutcome {
     /// Return whether this replay needs host follow-up.
     pub fn requires_follow_up(self) -> bool {
         matches!(self, Self::ReplayedWithFollowUp)
+    }
+
+    /// Return the recommended host health action for this replay outcome.
+    pub fn health_action(self) -> ToolAuditHealthAction {
+        match self {
+            Self::Empty | Self::ReplayedClean => ToolAuditHealthAction::NoAction,
+            Self::ReplayedWithFollowUp => ToolAuditHealthAction::RouteFollowUp,
+        }
+    }
+
+    /// Return the stable health-action label for this replay outcome.
+    pub fn health_action_label(self) -> &'static str {
+        self.health_action().as_str()
     }
 }
 
@@ -5830,6 +6185,20 @@ impl ToolAuditCheckpointReplayOutcome {
     /// Return whether this replay needs flattened count integrity investigation.
     pub fn requires_count_integrity_investigation(self) -> bool {
         matches!(self, Self::CountIntegrityDrift)
+    }
+
+    /// Return the recommended host health action for this checkpoint replay.
+    pub fn health_action(self) -> ToolAuditHealthAction {
+        match self {
+            Self::Empty | Self::ReplayedClean => ToolAuditHealthAction::NoAction,
+            Self::ReplayedWithFollowUp => ToolAuditHealthAction::RouteFollowUp,
+            Self::CountIntegrityDrift => ToolAuditHealthAction::InvestigateCountIntegrity,
+        }
+    }
+
+    /// Return the stable health-action label for this checkpoint replay.
+    pub fn health_action_label(self) -> &'static str {
+        self.health_action().as_str()
     }
 }
 
@@ -5965,6 +6334,25 @@ impl ToolAuditCheckpointPageOutcome {
     /// Return whether this page needs flattened count integrity investigation.
     pub fn requires_count_integrity_investigation(self) -> bool {
         matches!(self, Self::CountIntegrityDrift)
+    }
+
+    /// Return the recommended host health action for this checkpoint page.
+    pub fn health_action(self) -> ToolAuditHealthAction {
+        match self {
+            Self::Idle => ToolAuditHealthAction::NoAction,
+            Self::PendingClean => ToolAuditHealthAction::DrainPage,
+            Self::PendingWithFollowUp => ToolAuditHealthAction::DrainPageAndRouteFollowUp,
+            Self::PendingContinuation => ToolAuditHealthAction::DrainPageAndScheduleContinuation,
+            Self::PendingContinuationWithFollowUp => {
+                ToolAuditHealthAction::DrainPageRouteFollowUpAndScheduleContinuation
+            }
+            Self::CountIntegrityDrift => ToolAuditHealthAction::InvestigateCountIntegrity,
+        }
+    }
+
+    /// Return the stable health-action label for this checkpoint page.
+    pub fn health_action_label(self) -> &'static str {
+        self.health_action().as_str()
     }
 }
 
@@ -6183,12 +6571,37 @@ impl ToolAuditStoreInventorySummary {
 
     /// Return whether all inventory health labels match their typed values.
     pub fn health_labels_match(&self) -> bool {
-        self.follow_up_label_matches_kind()
+        self.follow_up_label_matches_kind() && self.health_action_label_matches_action()
     }
 
     /// Return whether any inventory health label drifted from its classifier.
     pub fn has_health_label_integrity_drift(&self) -> bool {
         !self.health_labels_match()
+    }
+
+    /// Return the recommended host action for this inventory health.
+    pub fn health_action(&self) -> ToolAuditHealthAction {
+        self.follow_up_kind().health_action()
+    }
+
+    /// Return the stable health-action label for host logs.
+    pub fn health_action_label(&self) -> &'static str {
+        self.health_action().as_str()
+    }
+
+    /// Return whether the health-action label parses back to its typed action.
+    pub fn health_action_label_matches_action(&self) -> bool {
+        ToolAuditHealthAction::from_label(self.health_action_label()) == Some(self.health_action())
+    }
+
+    /// Return whether this inventory needs any host health action.
+    pub fn requires_health_action(&self) -> bool {
+        self.health_action().requires_action()
+    }
+
+    /// Return whether this inventory routes follow-up pressure.
+    pub fn health_action_routes_follow_up(&self) -> bool {
+        self.health_action().routes_follow_up()
     }
 
     /// Return whether multiple follow-up surfaces are active.
@@ -6310,6 +6723,23 @@ impl ToolAuditInventoryFollowUpKind {
     /// Return whether multiple follow-up surfaces are active.
     pub fn has_multiple_follow_up_surfaces(self) -> bool {
         matches!(self, Self::MultipleFollowUp)
+    }
+
+    /// Return the recommended host health action for this follow-up kind.
+    pub fn health_action(self) -> ToolAuditHealthAction {
+        match self {
+            Self::NoFollowUp => ToolAuditHealthAction::NoAction,
+            Self::ActiveRecords
+            | Self::FailedRecords
+            | Self::ApprovalPressure
+            | Self::ResultErrors
+            | Self::MultipleFollowUp => ToolAuditHealthAction::RouteFollowUp,
+        }
+    }
+
+    /// Return the stable health-action label for this follow-up kind.
+    pub fn health_action_label(self) -> &'static str {
+        self.health_action().as_str()
     }
 }
 
@@ -12739,6 +13169,223 @@ mod tests {
         assert!(ToolAuditCheckpointPageOutcome::CountIntegrityDrift.is_count_integrity_drift());
         assert!(ToolAuditCheckpointPageOutcome::CountIntegrityDrift
             .requires_count_integrity_investigation());
+    }
+
+    #[test]
+    fn audit_health_action_labels_are_stable() {
+        assert_eq!(ToolAuditHealthAction::NoAction.as_str(), "no_action");
+        assert_eq!(
+            ToolAuditHealthAction::from_label("drain_page_and_route_follow_up"),
+            Some(ToolAuditHealthAction::DrainPageAndRouteFollowUp)
+        );
+        assert_eq!(
+            ToolAuditHealthAction::from_label(
+                "drain_page_route_follow_up_and_schedule_continuation"
+            ),
+            Some(ToolAuditHealthAction::DrainPageRouteFollowUpAndScheduleContinuation)
+        );
+        assert_eq!(
+            ToolAuditHealthAction::from_label("investigate_storage_failures"),
+            Some(ToolAuditHealthAction::InvestigateStorageFailures)
+        );
+        assert_eq!(
+            ToolAuditHealthAction::from_label("investigate_count_integrity"),
+            Some(ToolAuditHealthAction::InvestigateCountIntegrity)
+        );
+        assert_eq!(ToolAuditHealthAction::from_label("wander_elsewhere"), None);
+
+        assert!(ToolAuditHealthAction::NoAction.is_no_action());
+        assert!(!ToolAuditHealthAction::NoAction.requires_action());
+        assert_eq!(ToolAuditHealthAction::NoAction.action_count(), 0);
+        assert!(ToolAuditHealthAction::DrainPage.should_drain_page());
+        assert_eq!(ToolAuditHealthAction::DrainPage.action_count(), 1);
+        assert!(ToolAuditHealthAction::RouteFollowUp.routes_follow_up());
+        assert!(ToolAuditHealthAction::InvestigateStorageFailures.requires_storage_investigation());
+        assert!(ToolAuditHealthAction::InvestigateStorageFailures.requires_investigation());
+        assert!(ToolAuditHealthAction::InvestigateCountIntegrity
+            .requires_count_integrity_investigation());
+        assert!(ToolAuditHealthAction::InvestigateCountIntegrity.requires_investigation());
+        assert!(
+            ToolAuditHealthAction::DrainPageRouteFollowUpAndScheduleContinuation
+                .should_drain_page()
+        );
+        assert!(
+            ToolAuditHealthAction::DrainPageRouteFollowUpAndScheduleContinuation.routes_follow_up()
+        );
+        assert!(
+            ToolAuditHealthAction::DrainPageRouteFollowUpAndScheduleContinuation
+                .requests_continuation()
+        );
+        assert_eq!(
+            ToolAuditHealthAction::DrainPageRouteFollowUpAndScheduleContinuation.action_count(),
+            3
+        );
+        assert!(
+            ToolAuditHealthAction::DrainPageRouteFollowUpAndScheduleContinuation
+                .has_multiple_actions()
+        );
+
+        assert_eq!(
+            ToolAuditInventoryFollowUpKind::NoFollowUp.health_action(),
+            ToolAuditHealthAction::NoAction
+        );
+        assert_eq!(
+            ToolAuditInventoryFollowUpKind::FailedRecords.health_action_label(),
+            "route_follow_up"
+        );
+        assert_eq!(
+            ToolAuditBatchWriteOutcome::CompletedClean.health_action(),
+            ToolAuditHealthAction::NoAction
+        );
+        assert_eq!(
+            ToolAuditBatchWriteOutcome::CompletedWithFollowUp.health_action(),
+            ToolAuditHealthAction::RouteFollowUp
+        );
+        assert_eq!(
+            ToolAuditBatchWriteOutcome::StorageFailures.health_action(),
+            ToolAuditHealthAction::InvestigateStorageFailures
+        );
+        assert_eq!(
+            ToolAuditBatchWriteOutcome::CountIntegrityDrift.health_action_label(),
+            "investigate_count_integrity"
+        );
+        assert_eq!(
+            ToolAuditReplayOutcome::ReplayedWithFollowUp.health_action(),
+            ToolAuditHealthAction::RouteFollowUp
+        );
+        assert_eq!(
+            ToolAuditCheckpointReplayOutcome::CountIntegrityDrift.health_action(),
+            ToolAuditHealthAction::InvestigateCountIntegrity
+        );
+        assert_eq!(
+            ToolAuditCheckpointPageOutcome::PendingClean.health_action(),
+            ToolAuditHealthAction::DrainPage
+        );
+        assert_eq!(
+            ToolAuditCheckpointPageOutcome::PendingWithFollowUp.health_action(),
+            ToolAuditHealthAction::DrainPageAndRouteFollowUp
+        );
+        assert_eq!(
+            ToolAuditCheckpointPageOutcome::PendingContinuation.health_action(),
+            ToolAuditHealthAction::DrainPageAndScheduleContinuation
+        );
+        assert_eq!(
+            ToolAuditCheckpointPageOutcome::PendingContinuationWithFollowUp.health_action(),
+            ToolAuditHealthAction::DrainPageRouteFollowUpAndScheduleContinuation
+        );
+
+        let clean_inventory =
+            ToolAuditStoreInventorySummary::from_records(&[sample_record("call_clean")]);
+        assert_eq!(
+            clean_inventory.health_action(),
+            ToolAuditHealthAction::NoAction
+        );
+        assert_eq!(clean_inventory.health_action_label(), "no_action");
+        assert!(clean_inventory.health_action_label_matches_action());
+        assert!(!clean_inventory.requires_health_action());
+
+        let follow_up_inventory =
+            ToolAuditStoreInventorySummary::from_records(&[failed_record("call_failed")]);
+        assert_eq!(
+            follow_up_inventory.health_action(),
+            ToolAuditHealthAction::RouteFollowUp
+        );
+        assert_eq!(follow_up_inventory.health_action_label(), "route_follow_up");
+        assert!(follow_up_inventory.health_action_routes_follow_up());
+
+        let write_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let clean_write = write_store.record_audit_batch(vec![sample_record("write_clean")]);
+        assert_eq!(clean_write.health_action(), ToolAuditHealthAction::NoAction);
+        assert!(clean_write.health_action_label_matches_action());
+        assert!(!clean_write.requires_health_action());
+
+        let failure_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let storage_failure = failure_store.record_audit_batch(vec![
+            sample_record("write_dupe"),
+            sample_record("write_dupe"),
+        ]);
+        assert_eq!(
+            storage_failure.health_action(),
+            ToolAuditHealthAction::InvestigateStorageFailures
+        );
+        assert_eq!(
+            storage_failure.health_action_label(),
+            "investigate_storage_failures"
+        );
+        assert!(storage_failure.health_action_requires_storage_investigation());
+        assert!(storage_failure.requires_health_action());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let replay_summary = write_store
+            .replay_audits(&ToolAuditRecordQuery::new(), &mut sink)
+            .unwrap();
+        assert_eq!(
+            replay_summary.health_action(),
+            ToolAuditHealthAction::NoAction
+        );
+        assert!(replay_summary.health_action_label_matches_action());
+
+        let checkpoint_replay = ToolAuditCheckpointReplaySummary {
+            checkpoint_name: "supervisor".to_string(),
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(120, "call_clean"),
+            stored_checkpoint: None,
+            replayed_records: 1,
+            inventory: clean_inventory,
+        };
+        assert_eq!(
+            checkpoint_replay.health_action(),
+            ToolAuditHealthAction::NoAction
+        );
+        assert!(checkpoint_replay.health_action_label_matches_action());
+
+        let mut stale_replay = checkpoint_replay.clone();
+        stale_replay.replayed_records = 2;
+        assert_eq!(
+            stale_replay.health_action(),
+            ToolAuditHealthAction::InvestigateCountIntegrity
+        );
+        assert!(stale_replay.health_action_requires_count_integrity_investigation());
+
+        let checkpoint_status = ToolAuditSupervisorCheckpointStatus {
+            checkpoint_name: "supervisor".to_string(),
+            max_records: 10,
+            stored_checkpoint: None,
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(151, "call_failed"),
+            pending_records: 1,
+            inventory: follow_up_inventory,
+            reached_end_of_log: false,
+        };
+        assert_eq!(
+            checkpoint_status.health_action(),
+            ToolAuditHealthAction::DrainPageRouteFollowUpAndScheduleContinuation
+        );
+        assert_eq!(
+            checkpoint_status.health_action_label(),
+            "drain_page_route_follow_up_and_schedule_continuation"
+        );
+        assert!(checkpoint_status.health_action_should_drain_page());
+        assert!(checkpoint_status.health_action_routes_follow_up());
+        assert!(checkpoint_status.health_action_requests_continuation());
+        assert!(checkpoint_status.health_action_has_multiple_actions());
+        assert!(checkpoint_status.health_action_label_matches_action());
+
+        let planned_page = ToolAuditSupervisorDrainPlanPage {
+            max_records: 10,
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(120, "call_clean"),
+            pending_records: 1,
+            inventory: clean_inventory,
+            reached_end_of_log: false,
+        };
+        assert_eq!(
+            planned_page.health_action(),
+            ToolAuditHealthAction::DrainPageAndScheduleContinuation
+        );
+        assert!(planned_page.health_action_should_drain_page());
+        assert!(planned_page.health_action_requests_continuation());
+        assert!(planned_page.health_action_label_matches_action());
     }
 
     #[test]

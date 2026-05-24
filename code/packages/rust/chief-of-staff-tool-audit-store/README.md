@@ -24,6 +24,8 @@ The crate keeps the boundary narrow:
 - inventory, write, replay, checkpoint replay, and checkpoint page health
   classifications expose typed component helpers for payload-free host
   branching
+- inventory, write, replay, checkpoint replay, and checkpoint page health
+  classifications expose stable recommended action labels for host routing
 - inventory, write, replay, checkpoint replay, and checkpoint page summaries
   expose aggregate health-label integrity helpers for host-log validation
 - supervisors can read deterministic checkpoint pages to resume audit replay
