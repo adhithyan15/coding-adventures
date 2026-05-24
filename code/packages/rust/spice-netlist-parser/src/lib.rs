@@ -80,6 +80,7 @@ pub struct NoiseAnalysis {
     pub input_source: String,
     pub frequencies_hz: Vec<f64>,
     pub temperature: f64,
+    pub temperature_is_explicit: bool,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -390,6 +391,41 @@ impl ParsedNetlist {
             options.max_step = Some(max_step);
         }
         Ok(options)
+    }
+
+    pub fn operating_temperature_kelvin(
+        &self,
+        temperature_index: usize,
+        default_temperature_kelvin: f64,
+    ) -> Result<f64, NetlistParseError> {
+        let temperatures_celsius = self
+            .temp_cards()
+            .into_iter()
+            .flat_map(|card| card.temperatures_celsius.iter().copied())
+            .collect::<Vec<_>>();
+        if temperatures_celsius.is_empty() {
+            return Ok(default_temperature_kelvin);
+        }
+        let Some(temperature_celsius) = temperatures_celsius.get(temperature_index) else {
+            return Err(NetlistParseError::new(format!(
+                "temperature index {temperature_index} exceeds .temp entries"
+            )));
+        };
+        Ok(temperature_celsius + 273.15)
+    }
+
+    pub fn noise_temperature_kelvin(
+        &self,
+        noise: Option<&NoiseAnalysis>,
+        temperature_index: usize,
+        default_temperature_kelvin: f64,
+    ) -> Result<f64, NetlistParseError> {
+        if let Some(noise) = noise {
+            if noise.temperature_is_explicit {
+                return Ok(noise.temperature);
+            }
+        }
+        self.operating_temperature_kelvin(temperature_index, default_temperature_kelvin)
     }
 
     fn merged_options(&self) -> HashMap<String, OptionValue> {
@@ -1520,6 +1556,7 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
             require_min_fields(fields, 3, ".noise")?;
             let mut frequencies_hz = Vec::new();
             let mut temperature = 300.0;
+            let mut temperature_is_explicit = false;
             let mut tail_index = 3;
             while tail_index < fields.len() {
                 let token = &fields[tail_index];
@@ -1531,9 +1568,11 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
                         ));
                     }
                     temperature = parse_value(&fields[tail_index + 1])?;
+                    temperature_is_explicit = true;
                     tail_index += 2;
                 } else if let Some(value) = lower_token.strip_prefix("temp=") {
                     temperature = parse_value(value)?;
+                    temperature_is_explicit = true;
                     tail_index += 1;
                 } else {
                     frequencies_hz.push(parse_value(token)?);
@@ -1545,6 +1584,7 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
                 input_source: fields[2].clone(),
                 frequencies_hz,
                 temperature,
+                temperature_is_explicit,
             }))
         }
         ".temp" => {

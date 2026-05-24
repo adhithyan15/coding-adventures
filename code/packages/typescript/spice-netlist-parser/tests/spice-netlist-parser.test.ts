@@ -196,6 +196,17 @@ R2 mid 0 1k
 
     expect(parsed.analyses).toEqual([card]);
     expect(parsed.tempCards()).toEqual([card]);
+    expect(parsed.operatingTemperatureKelvin()).toBeCloseTo(300.15, 12);
+    expect(parsed.operatingTemperatureKelvin(1)).toBeCloseTo(348.15, 12);
+  });
+
+  it("defaults operating temperature without .temp cards", () => {
+    const parsed = parseNetlist("R1 in out 1k");
+
+    expect(parsed.operatingTemperatureKelvin(0, 301.0)).toBe(301.0);
+    expect(() => parseNetlist(".temp 27").operatingTemperatureKelvin(3)).toThrow(
+      /temperature index 3 exceeds \.temp entries/,
+    );
   });
 
   it("rejects .temp cards without temperatures", () => {
@@ -468,6 +479,7 @@ R1 in out 1k
 
   it("parses .noise AC noise analysis cards", () => {
     const parsed = parseNetlist(`
+.temp 75
 Vin in 0 DC 1
 Rtop in out 1k
 Rbot out 0 1k
@@ -476,26 +488,46 @@ Rbot out 0 1k
 
     expect(parsed.analyses).toEqual([
       {
+        kind: "temp",
+        temperaturesCelsius: [75.0],
+      },
+      {
         kind: "noise",
         outputNode: "out",
         inputSource: "Vin",
         frequenciesHz: [1000.0],
         temperature: 300.0,
+        temperatureIsExplicit: true,
       },
     ]);
-    expect(parsed.noiseCards()).toEqual(parsed.analyses);
+    expect(parsed.noiseCards()).toEqual([parsed.analyses[1]]);
     const [card] = parsed.noiseCards();
+    expect(parsed.noiseTemperatureKelvin(card)).toBe(300.0);
     const result = noiseAc(
       parsed.circuit,
       card.outputNode,
       card.inputSource,
       card.frequenciesHz,
-      card.temperature,
+      parsed.noiseTemperatureKelvin(card),
     );
     expect(result.outputNode).toBe("out");
     expect(result.inputSource).toBe("Vin");
     expect(result.points).toHaveLength(1);
     expect(result.points[0].outputPsd).toBeGreaterThan(0.0);
+  });
+
+  it("uses .temp for noise analysis when .noise omits temp", () => {
+    const parsed = parseNetlist(`
+.temp 50
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin 1k
+`);
+    const [card] = parsed.noiseCards();
+
+    expect(card.temperatureIsExplicit).toBeUndefined();
+    expect(parsed.noiseTemperatureKelvin(card)).toBeCloseTo(323.15, 12);
   });
 
   it("rejects .noise cards without a voltage output probe", () => {

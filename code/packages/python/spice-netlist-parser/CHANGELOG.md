@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Resolve `.temp` cards into Kelvin engine-call temperatures and let explicit
+  `.noise temp=<kelvin>` overrides win over deck-level operating temperatures.
 - Route selected `.options` keys into engine-call helpers:
   `dc_op_kwargs()` for DC Newton options and `transient_kwargs()` for
   transient method/adaptive-step options.

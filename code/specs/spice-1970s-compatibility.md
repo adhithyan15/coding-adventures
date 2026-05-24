@@ -262,6 +262,9 @@ Status:
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.
+- Deck-level `.temp` cards are resolved into Kelvin helper temperatures across
+  Python, TypeScript, and Rust, and explicit `.noise temp=<kelvin>` values take
+  precedence for noise-engine calls.
 - `.disto` and `.pz` parser/control-card records plus first distortion and
   pole-zero result shapes are implemented across Python, TypeScript, and Rust,
   with smoke fixtures for nonlinear-device distortion output and a simple RC

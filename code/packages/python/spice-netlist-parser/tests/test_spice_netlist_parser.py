@@ -246,6 +246,16 @@ def test_parse_temp_analysis_card() -> None:
 
     assert parsed.analyses == [TempAnalysis((27.0, 75.0, -40.0))]
     assert parsed.temp_cards() == parsed.analyses
+    assert isclose(parsed.operating_temperature_kelvin(), 300.15, abs_tol=1e-12)
+    assert isclose(parsed.operating_temperature_kelvin(1), 348.15, abs_tol=1e-12)
+
+
+def test_operating_temperature_defaults_without_temp_cards() -> None:
+    parsed = parse_netlist("R1 in out 1k")
+
+    assert parsed.operating_temperature_kelvin(default=301.0) == 301.0
+    with pytest.raises(NetlistParseError, match=r"temperature index 3 exceeds \.temp entries"):
+        parse_netlist(".temp 27").operating_temperature_kelvin(3)
 
 
 def test_temp_card_rejects_missing_temperatures() -> None:
@@ -499,6 +509,7 @@ R1 in out 1k
 def test_parse_noise_analysis_card_and_run_noise_ac() -> None:
     parsed = parse_netlist(
         """
+.temp 75
 Vin in 0 DC 1
 Rtop in out 1k
 Rbot out 0 1k
@@ -507,26 +518,45 @@ Rbot out 0 1k
     )
 
     assert parsed.analyses == [
+        TempAnalysis((75.0,)),
         NoiseAnalysis(
             output_node="out",
             input_source="Vin",
             freqs=(1000.0,),
             temperature=300.0,
+            temperature_is_explicit=True,
         )
     ]
-    assert parsed.noise_cards() == parsed.analyses
+    assert parsed.noise_cards() == [parsed.analyses[1]]
     card = parsed.noise_cards()[0]
+    assert parsed.noise_temperature_kelvin(card) == 300.0
     result = noise_ac(
         parsed.circuit,
         card.output_node,
         card.input_source,
         freqs=list(card.freqs),
-        temperature=card.temperature,
+        temperature=parsed.noise_temperature_kelvin(card),
     )
     assert result.output_node == "out"
     assert result.input_source == "Vin"
     assert len(result.points) == 1
     assert result.points[0].output_psd > 0.0
+
+
+def test_noise_analysis_uses_temp_card_when_noise_temp_is_omitted() -> None:
+    parsed = parse_netlist(
+        """
+.temp 50
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin 1k
+"""
+    )
+    card = parsed.noise_cards()[0]
+
+    assert not card.temperature_is_explicit
+    assert isclose(parsed.noise_temperature_kelvin(card), 323.15, abs_tol=1e-12)
 
 
 def test_noise_analysis_card_rejects_non_voltage_output_probe() -> None:

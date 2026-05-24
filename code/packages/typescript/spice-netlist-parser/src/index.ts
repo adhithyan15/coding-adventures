@@ -93,6 +93,7 @@ export interface NoiseAnalysis {
   readonly inputSource: string;
   readonly frequenciesHz: readonly number[];
   readonly temperature: number;
+  readonly temperatureIsExplicit?: boolean;
 }
 
 export interface TempAnalysis {
@@ -311,6 +312,35 @@ export class ParsedNetlist {
       options.maxStep = maxStep;
     }
     return options;
+  }
+
+  operatingTemperatureKelvin(
+    temperatureIndex = 0,
+    defaultTemperatureKelvin = 300.0,
+  ): number {
+    if (!Number.isInteger(temperatureIndex) || temperatureIndex < 0) {
+      throw new NetlistParseError("temperature index must be non-negative");
+    }
+    const temperaturesCelsius = this.tempCards().flatMap((card) => card.temperaturesCelsius);
+    if (temperaturesCelsius.length === 0) {
+      return defaultTemperatureKelvin;
+    }
+    const temperature = temperaturesCelsius[temperatureIndex];
+    if (temperature === undefined) {
+      throw new NetlistParseError(`temperature index ${temperatureIndex} exceeds .temp entries`);
+    }
+    return temperature + 273.15;
+  }
+
+  noiseTemperatureKelvin(
+    noise?: NoiseAnalysis,
+    temperatureIndex = 0,
+    defaultTemperatureKelvin = 300.0,
+  ): number {
+    if (noise?.temperatureIsExplicit === true) {
+      return noise.temperature;
+    }
+    return this.operatingTemperatureKelvin(temperatureIndex, defaultTemperatureKelvin);
   }
 
   private mergedOptions(): Map<string, OptionValue> {
@@ -1218,6 +1248,7 @@ function parseDirective(fields: readonly string[]): Analysis {
     requireMinFields(fields, 3, ".noise");
     const frequenciesHz: number[] = [];
     let temperature = 300.0;
+    let temperatureIsExplicit = false;
     let tailIndex = 3;
     while (tailIndex < fields.length) {
       const token = fields[tailIndex];
@@ -1227,9 +1258,11 @@ function parseDirective(fields: readonly string[]): Analysis {
           throw new NetlistParseError(".noise temp requires a temperature value");
         }
         temperature = parseValue(fields[tailIndex + 1]);
+        temperatureIsExplicit = true;
         tailIndex += 2;
       } else if (lowerToken.startsWith("temp=")) {
         temperature = parseValue(token.split("=", 2)[1]);
+        temperatureIsExplicit = true;
         tailIndex += 1;
       } else {
         frequenciesHz.push(parseValue(token));
@@ -1242,6 +1275,7 @@ function parseDirective(fields: readonly string[]): Analysis {
       inputSource: fields[2],
       frequenciesHz,
       temperature,
+      ...(temperatureIsExplicit ? { temperatureIsExplicit: true } : {}),
     };
   }
   if (directive === ".temp") {

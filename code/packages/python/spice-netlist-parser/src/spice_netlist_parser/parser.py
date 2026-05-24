@@ -107,6 +107,7 @@ class NoiseAnalysis:
     input_source: str
     freqs: tuple[float, ...] = ()
     temperature: float = 300.0
+    temperature_is_explicit: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -354,6 +355,46 @@ class ParsedNetlist:
         if adaptive:
             kwargs["adaptive"] = True
         return kwargs
+
+    def operating_temperature_kelvin(
+        self,
+        temperature_index: int = 0,
+        *,
+        default: float = 300.0,
+    ) -> float:
+        """Return the selected `.temp` operating temperature in Kelvin."""
+
+        if temperature_index < 0:
+            raise NetlistParseError("temperature index must be non-negative")
+        temperatures = [
+            celsius
+            for card in self.temp_cards()
+            for celsius in card.temperatures_celsius
+        ]
+        if not temperatures:
+            return default
+        try:
+            return temperatures[temperature_index] + 273.15
+        except IndexError as exc:
+            raise NetlistParseError(
+                f"temperature index {temperature_index} exceeds .temp entries"
+            ) from exc
+
+    def noise_temperature_kelvin(
+        self,
+        noise: NoiseAnalysis | None = None,
+        *,
+        temperature_index: int = 0,
+        default: float = 300.0,
+    ) -> float:
+        """Return the temperature to pass to `spice_engine.noise_ac`."""
+
+        if noise is not None and noise.temperature_is_explicit:
+            return noise.temperature
+        return self.operating_temperature_kelvin(
+            temperature_index=temperature_index,
+            default=default,
+        )
 
 
 _VALUE_RE = re.compile(
@@ -961,6 +1002,7 @@ def _parse_directive(fields: list[str]) -> Analysis:
         _require_min_fields(fields, 3, ".noise")
         freqs: list[float] = []
         temperature = 300.0
+        temperature_is_explicit = False
         tail_index = 3
         while tail_index < len(fields):
             token = fields[tail_index]
@@ -969,10 +1011,12 @@ def _parse_directive(fields: list[str]) -> Analysis:
                 if tail_index + 1 >= len(fields):
                     raise NetlistParseError(".noise temp requires a temperature value")
                 temperature = parse_value(fields[tail_index + 1])
+                temperature_is_explicit = True
                 tail_index += 2
                 continue
             if lower_token.startswith("temp="):
                 temperature = parse_value(token.split("=", 1)[1])
+                temperature_is_explicit = True
                 tail_index += 1
                 continue
             freqs.append(parse_value(token))
@@ -982,6 +1026,7 @@ def _parse_directive(fields: list[str]) -> Analysis:
             input_source=fields[2],
             freqs=tuple(freqs),
             temperature=temperature,
+            temperature_is_explicit=temperature_is_explicit,
         )
     if directive == ".temp":
         _require_min_fields(fields, 2, ".temp")
