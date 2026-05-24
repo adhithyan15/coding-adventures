@@ -252,15 +252,28 @@ impl PassPipeline {
             // contribution.source per the CLOC06 review checklist.
             // We tag-append against the new program root's CV since
             // that's the durable handle.
-            for c in &output.contributions {
-                let _ = cv.contribute(&current.cv, &c.source, &c.tag, c.meta.clone());
+            //
+            // CLOC09 made Program.cv optional. When tracing is
+            // disabled (cv == None), there's no CV id to attach
+            // contributions to — passes shouldn't be emitting them
+            // in that mode anyway, but we skip silently here for
+            // safety.
+            if let Some(ref prog_cv) = current.cv {
+                for c in &output.contributions {
+                    let _ = cv.contribute(prog_cv, &c.source, &c.tag, c.meta.clone());
+                }
             }
 
             // If this pass requested FixedPoint, v1 notes the
             // limitation as a diagnostic and runs only once.
             if pass.iteration_policy() == IterationPolicy::FixedPoint {
+                // Diagnostic.cv is still plain String (closure-typechecker
+                // hasn't migrated to Option<CvId> yet — tracked as a
+                // Phase 1.x follow-up). For untraced programs we emit
+                // an empty cv to keep the diagnostic shape stable —
+                // tooling that filters on diagnostic.cv just sees "".
                 diagnostics.push(Diagnostic {
-                    cv: current.cv.clone(),
+                    cv: current.cv.clone().unwrap_or_default(),
                     severity: coding_adventures_closure_typechecker::Severity::Note,
                     group: coding_adventures_closure_typechecker::DiagnosticGroup::new(
                         "pipeline.fixed-point-not-yet-iterated",
@@ -447,7 +460,7 @@ mod tests {
         let out = pipeline
             .run(program(), &Sidecar::new(), &mut cv)
             .expect("empty pipeline runs cleanly");
-        assert_eq!(out.program.cv, "prog.1");
+        assert_eq!(out.program.cv.as_deref(), Some("prog.1"));
         assert!(out.execution_order.is_empty());
         assert!(out.stats.is_empty());
     }
