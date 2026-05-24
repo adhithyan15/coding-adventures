@@ -12,7 +12,10 @@ import {
   ccvs,
   currentSource,
   currentSourceWithWaveform,
+  dcOp,
   estimatePeriod,
+  formatDcTable,
+  formatTransientTable,
   fourier,
   inductor,
   inductorWithInitialCurrent,
@@ -741,6 +744,30 @@ describe("transient", () => {
     expect(fundamental.sine).toBeCloseTo(amp, 2);
     expect(Math.abs(fundamental.cosine)).toBeLessThan(2.0e-3);
     expect(probe.totalHarmonicDistortion).toBeLessThan(2.0e-3);
+  });
+
+  it("formats stable text output tables for DC and transient results", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 10.0));
+    circuit.add(resistor("R1", "vin", "mid", 1_000.0));
+    circuit.add(resistor("R2", "mid", "0", 1_000.0));
+    const dcResult = dcOp(circuit);
+
+    expect(formatDcTable(dcResult)).toBe(
+      "Index\tV(mid)\tV(vin)\tI(V1)\n" +
+        "0\t5.000000e+00\t1.000000e+01\t-5.000000e-03\n",
+    );
+    expect(formatDcTable(dcResult, ["V(vin, mid)", "I(V1)"])).toBe(
+      "Index\tV(vin, mid)\tI(V1)\n" +
+        "0\t5.000000e+00\t-5.000000e-03\n",
+    );
+
+    const points = transient(circuit, 1.0e-3, 2.0e-3);
+    expect(formatTransientTable(points, ["V(vin)", "V(mid)", "I(V1)"])).toBe(
+      "Index\tTime\tV(vin)\tV(mid)\tI(V1)\n" +
+        "0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
+        "1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n",
+    );
   });
 
   it("updates CCCS output from transient branch current", () => {

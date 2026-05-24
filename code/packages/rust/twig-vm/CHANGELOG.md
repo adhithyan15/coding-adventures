@@ -1,5 +1,32 @@
 # Changelog — twig-vm
 
+## [0.20.0] — 2026-05-23 (Dispatch: typed `const … [ref<LispyPair>]` → NIL)
+
+### Added — `exec_const` produces `LispyValue::NIL` for the nil-ref shape
+
+Companion change to twig-ir-compiler 0.20.0's increment 6a, which
+now emits `const 0 [ref<LispyPair>]` instead of `call_builtin
+"make_nil"`.  Without a matching dispatch update, `exec_const`
+would produce `LispyValue::int(0)` — which HOF builtins like `map`
+/ `filter` / `fold-*` reject with `"list tail 0 is not a cons cell"`.
+
+The new arm at the top of `exec_const` recognises the
+`(type_hint == "ref<LispyPair>", srcs[0] == Int(0))` shape and
+writes `LispyValue::NIL` to the destination register.  All other
+shapes (plain `Int`, `Bool`, `Var`, `Str`) flow through the
+existing code unchanged.
+
+This is the symmetric companion to the 0.19.0 dispatch wrappers
+that synthesised `call_builtin "+"` from typed `add` (and the
+other arithmetic / comparison / mov opcodes).
+
+### Tests
+
+All 179 twig-vm lib tests pass.  The 4 previously-failing HOF
+tests (`map_empty_list`, `filter_empty_input`, `fold_left_empty`,
+`fold_right_cons_identity`) now pass because the nil sentinel is
+restored.
+
 ## [0.19.0] — 2026-05-22 (Dispatch: typed CIR mnemonics — path A regression fix)
 
 ### Added — Dispatch handlers for typed CIR mnemonics

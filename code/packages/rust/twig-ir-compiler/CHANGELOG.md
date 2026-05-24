@@ -1,5 +1,71 @@
 # Changelog — twig-ir-compiler
 
+## [0.20.0] — 2026-05-23 (Path A increment 6a — typed `make_nil`)
+
+### Added — `nil` literal emits `const 0 [ref<LispyPair>]`
+
+Increment 6a of the Twig → IIR-to-* end-to-end story.  Replaces
+every `call_builtin "make_nil" [any]` emission site with a typed
+`const 0 [ref<LispyPair>]`, matching the Phase 2 heap-lowering
+convention used by the IIR-to-{wasm,jvm,clr,beam} backends.
+
+Nil is encoded as the null `LispyPair` reference — represented as
+`0` — which is exactly how `iir-builtin-lowering/src/heap.rs:288`
+produces it from the legacy `call_builtin "make_nil"` form.  Every
+backend already accepts the typed const for `ref<*>` types.
+
+#### Sites converted (5 total)
+
+| Site                                | Function                       | Where                                |
+|-------------------------------------|--------------------------------|--------------------------------------|
+| Empty program return-nil            | `compile_program`              | Implicit `nil` when no final expr    |
+| `nil` literal                       | `compile_expr_inner`           | `Expr::NilLit` match arm             |
+| `match` fallthrough init            | `compile_match`                | Initial `result` register value      |
+| Record constructor cons-chain tail  | `compile_record_constructor`   | Fold-right base for record fields    |
+| Union variant cons-chain tail       | `compile_record_constructor`   | Fold-right base for variant fields   |
+
+#### What this unlocks
+
+- `nil` literal flows through every backend (new test
+  `twig_nil_literal_accepted_by_every_backend`).
+- Empty Twig program flows through every backend (new test
+  `twig_empty_program_accepted_by_every_backend`).
+- `match` programs whose arms all have known types now have a
+  typed fallthrough register, removing the last untyped `mov`
+  source in `compile_match`.
+
+#### twig-vm dispatch wrapper (companion change)
+
+twig-vm's `exec_const` now special-cases `const … [ref<LispyPair>]`
+with `Operand::Int(0)` to produce `LispyValue::NIL` (instead of the
+plain `LispyValue::int(0)` it would otherwise emit).  Without this,
+HOF builtins like `map` / `filter` / `fold-*` would see `Int(0)`
+where they expect the NIL sentinel and bail out with
+`"list tail 0 is not a cons cell"`.
+
+This is the symmetric companion to the increment 2 dispatch wrapper
+that synthesised `call_builtin "+"` from typed `add`.
+
+#### What's not in this PR
+
+Still pending for increment 6:
+
+- `cons` → typed `alloc` + `field_store` (increment 6b, 3 sites)
+- `car` / `cdr` → typed `field_load` (increment 6c, 8 sites)
+
+After 6b and 6c, no list-handling op in twig-ir-compiler emits an
+untyped `call_builtin`, and Twig programs that build / traverse
+lists flow end-to-end through every backend.
+
+#### Tests
+
+- 2 new backend acceptance tests (`nil`, empty program).
+- Lib test `nil_literal_emits_make_nil_builtin` renamed to
+  `nil_literal_emits_typed_const_ref_lispy_pair` and updated.
+- Lib test `empty_program_returns_nil` renamed to
+  `empty_program_returns_typed_nil_const` and updated.
+- All 73 lib + 12 backend e2e + 179 twig-vm tests pass.
+
 ## [0.19.0] — 2026-05-22 (Path A — typed `match` arm merges)
 
 ### Added — Typed `mov` for the 7 remaining `compile_match` sites

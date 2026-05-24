@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Classic text output tables** — `format_dc_table()` and
+  `format_transient_table()` now emit stable tab-separated node-voltage and
+  branch-current tables for `.OP` / `.TRAN` style snapshots.
+
 - **Fourier transient analysis** — `fourier()` now computes SPICE-style DC,
   harmonic sine/cosine coefficients, magnitudes, phases, and THD from
   transient samples for `V(node)` and `I(source)` probes.

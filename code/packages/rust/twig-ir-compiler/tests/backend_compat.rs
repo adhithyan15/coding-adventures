@@ -279,6 +279,70 @@ fn twig_typed_match_wildcard_accepted_by_every_backend() {
     // is deferred to the next increment.
 }
 
+/// Path-A increment 6a: `nil` literal and the implicit "empty
+/// program returns nil" path now emit `const 0 [ref<LispyPair>]`
+/// instead of `call_builtin "make_nil"`.  Every IIR-to-* backend
+/// accepts the typed const (Phase 2 heap-lowering convention), so
+/// these two minimal shapes flow through every backend.
+#[test]
+fn twig_nil_literal_accepted_by_every_backend() {
+    let m = compile_source("nil", "compat").expect("Twig must compile");
+
+    // The nil literal must emit `const 0 [ref<LispyPair>]`, not the
+    // legacy `call_builtin "make_nil"`.
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert!(
+        main.instructions.iter().any(|i|
+            i.op == "const" && i.type_hint == "ref<LispyPair>"
+                && i.srcs[0] == Operand::Int(0)
+        ),
+        "increment 6a: `nil` must emit `const 0 [ref<LispyPair>]`; \
+         got: {:?}", main.instructions,
+    );
+    assert!(
+        !main.instructions.iter().any(|i|
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(s) if s == "make_nil")
+        ),
+        "increment 6a: legacy `call_builtin \"make_nil\"` must be gone; \
+         got: {:?}", main.instructions,
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm",  iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        ("clr",  iir_to_cil_bytecode::validate::validate_iir_for_clr(&m)),
+        ("beam", iir_to_beam::validate::validate_for_beam(&m)),
+    ] {
+        assert!(errs.is_empty(),
+            "[{name}] validator should accept Twig `nil` after path-A \
+             increment 6a; got {} error(s): {errs:?}",
+            errs.len());
+    }
+}
+
+/// Path-A increment 6a: the empty-program shape — no expressions, so
+/// the compiler synthesises an implicit nil return — also flows
+/// through every backend.
+#[test]
+fn twig_empty_program_accepted_by_every_backend() {
+    let m = compile_source("", "compat").expect("Twig must compile");
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "ref<LispyPair>",
+        "empty program's main should return ref<LispyPair> (the nil tail)");
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm",  iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        ("clr",  iir_to_cil_bytecode::validate::validate_iir_for_clr(&m)),
+        ("beam", iir_to_beam::validate::validate_for_beam(&m)),
+    ] {
+        assert!(errs.is_empty(),
+            "[{name}] validator should accept empty Twig program; \
+             got {} error(s): {errs:?}", errs.len());
+    }
+}
+
 /// Pin the *current* boundary: arithmetic where at least one operand
 /// has a dynamic type (comes from a `call_builtin` like `car`) still
 /// emits `call_builtin "+"` and gets rejected by every backend.  When

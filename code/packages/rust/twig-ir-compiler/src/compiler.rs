@@ -539,18 +539,28 @@ impl Compiler {
             ), SourceLoc::SYNTHETIC);
         } else {
             // No final value-producing expression → return nil.
+            //
+            // Path A increment 6a: emit `const 0 [ref<LispyPair>]`
+            // instead of `call_builtin "make_nil" [any]`.  This matches
+            // the Phase 2 heap-lowering convention already used by the
+            // IIR-to-{wasm,jvm,clr,beam} backends — nil is the null
+            // LispyPair reference (represented as 0).  The typed `const`
+            // is accepted by every backend, so programs whose only
+            // return path is the implicit nil now flow through every
+            // backend without going through the `call_builtin` fallback.
             let nil_var = main_ctx.fresh_var("nil");
             main_ctx.emit(IIRInstr::new(
-                "call_builtin",
+                "const",
                 Some(nil_var.clone()),
-                vec![Operand::Var("make_nil".into())],
-                "any",
+                vec![Operand::Int(0)],
+                "ref<LispyPair>",
             ), SourceLoc::SYNTHETIC);
+            main_ctx.record_type(&nil_var, "ref<LispyPair>");
             main_ctx.emit(IIRInstr::new(
                 "ret",
                 None,
                 vec![Operand::Var(nil_var)],
-                "any",
+                "ref<LispyPair>",
             ), SourceLoc::SYNTHETIC);
         }
 
@@ -841,13 +851,18 @@ impl Compiler {
             }
 
             Expr::NilLit(NilLit { .. }) => {
+                // Path A increment 6a: emit `const 0 [ref<LispyPair>]`
+                // instead of `call_builtin "make_nil" [any]`.  Every
+                // IIR-to-* backend accepts the typed const, and twig-vm
+                // dispatches it as a nil `LispyPair` reference.
                 let v = ctx.fresh_var("nil");
                 ctx.emit(IIRInstr::new(
-                    "call_builtin",
+                    "const",
                     Some(v.clone()),
-                    vec![Operand::Var("make_nil".into())],
-                    "any",
+                    vec![Operand::Int(0)],
+                    "ref<LispyPair>",
                 ), loc);
+                ctx.record_type(&v, "ref<LispyPair>");
                 Ok(v)
             }
 
@@ -1439,13 +1454,19 @@ impl Compiler {
         // Result register — each arm writes its value here.
         let result = ctx.fresh_var("match_result");
         // Initialise to nil (fallthrough value).
+        //
+        // Path A increment 6a: emit typed `const 0 [ref<LispyPair>]`
+        // instead of `call_builtin "make_nil" [any]`.  emit_move then
+        // propagates the `ref<LispyPair>` type onto `result`, so the
+        // match expression's fallthrough is also typed.
         let nil_init = ctx.fresh_var("nil");
         ctx.emit(IIRInstr::new(
-            "call_builtin",
+            "const",
             Some(nil_init.clone()),
-            vec![Operand::Var("make_nil".into())],
-            "any",
+            vec![Operand::Int(0)],
+            "ref<LispyPair>",
         ), loc);
+        ctx.record_type(&nil_init, "ref<LispyPair>");
         ctx.emit_move(&result, &nil_init, loc);
 
         // Generate labels for the chain.
@@ -1684,13 +1705,20 @@ impl Compiler {
             }
 
             // Start from the nil end and fold right.
+            //
+            // Path A increment 6a: typed `const 0 [ref<LispyPair>]`
+            // initial tail.  The subsequent `cons` cells (still
+            // emitted as `call_builtin "cons"`) consume `tail` as a
+            // `ref<LispyPair>` srcs operand — increment 6b will
+            // convert the cons emission too.
             let nil_r = ctx.fresh_var("nil");
             ctx.emit(IIRInstr::new(
-                "call_builtin",
+                "const",
                 Some(nil_r.clone()),
-                vec![Operand::Var("make_nil".into())],
-                "any",
+                vec![Operand::Int(0)],
+                "ref<LispyPair>",
             ), loc);
+            ctx.record_type(&nil_r, "ref<LispyPair>");
 
             let mut tail = nil_r;
             for field_name in params.iter().rev() {
@@ -1818,13 +1846,17 @@ impl Compiler {
                 }
 
                 // Start from nil, fold right over fields.
+                //
+                // Path A increment 6a: typed `const 0 [ref<LispyPair>]`
+                // initial tail for the variant's cons chain.
                 let nil_r = ctx.fresh_var("nil");
                 ctx.emit(IIRInstr::new(
-                    "call_builtin",
+                    "const",
                     Some(nil_r.clone()),
-                    vec![Operand::Var("make_nil".into())],
-                    "any",
+                    vec![Operand::Int(0)],
+                    "ref<LispyPair>",
                 ), loc);
+                ctx.record_type(&nil_r, "ref<LispyPair>");
 
                 let mut tail = nil_r;
                 for field_name in params.iter().rev() {
