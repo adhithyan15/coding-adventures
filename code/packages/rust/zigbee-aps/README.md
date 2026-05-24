@@ -14,11 +14,12 @@ boundary:
 - binding table records for device and group destinations
 - body-free frame and binding-table summaries for read-side supervision
 - binding summary counts for source endpoint shape and cluster coverage
+- APS command identifiers and payload preservation for key-management commands
 - APS counters
 - payload preservation
 
-It does not yet implement APS commands, fragmentation, security, ZDO discovery,
-or ZCL command semantics.
+It does not yet implement typed APS command bodies, fragmentation, security, ZDO
+discovery, or ZCL command semantics.
 
 ## Dependencies
 
