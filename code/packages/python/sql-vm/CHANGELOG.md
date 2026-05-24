@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.58.0 — 2026-05-24
+
+### Fixed
+
+- ``CAST(<numeric> AS BLOB)`` now yields the UTF-8 encoding of the
+  numeric's textual representation, matching SQLite::
+
+      CAST(1 AS BLOB)     ⟶  b'1'
+      CAST(42 AS BLOB)    ⟶  b'42'
+      CAST(-7 AS BLOB)    ⟶  b'-7'
+      CAST(1.5 AS BLOB)   ⟶  b'1.5'
+      CAST(TRUE AS BLOB)  ⟶  b'1'
+
+  Previously these used ``struct.pack(">q", x)`` for integers (and
+  ``">d"`` for floats), producing 8-byte big-endian binary blobs
+  that don't match SQLite's wire format and broke round-trip
+  ``CAST(n AS BLOB)`` patterns that callers use for type-erased
+  serialization.
+
+  Fix in ``_cast_fn``'s BLOB-affinity branch: special-case ``bool``,
+  ``int``, and ``float`` to encode via ``str(value).encode("utf-8")``.
+  ``bool`` is checked before ``int`` because Python's ``bool`` is a
+  subclass of ``int`` — without the explicit check, ``True`` would
+  be encoded as ``b'True'`` (wrong) instead of ``b'1'`` (right).
+  ``struct`` import removed (no longer used).
+
 ## 1.57.0 — 2026-05-24
 
 ### Fixed
