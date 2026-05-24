@@ -68,6 +68,9 @@ The current parser surface includes:
 - browser-facing form control metadata for input values, disabled/checked/
   selected state, select options, and textarea values across document,
   content-tree, and render-tree projections
+- browser-facing URL resolution metadata for links, loadable resources, images,
+  and form actions using the document `base` href when available, while keeping
+  raw authored URLs available to browser policy code
 
 The checked-in html5lib tree-construction smoke corpus now covers every case in
 the currently audited upstream `html5lib-tests/tree-construction/*.dat` sources

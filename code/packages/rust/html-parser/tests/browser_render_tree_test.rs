@@ -31,7 +31,11 @@ struct ExpectedRenderNode {
     name: Option<String>,
     text: Option<String>,
     href: Option<String>,
+    #[serde(default)]
+    resolved_href: Option<String>,
     src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
     alt: Option<String>,
     control_type: Option<String>,
     #[serde(default)]
@@ -89,7 +93,9 @@ impl ExpectedRenderNode {
             name: self.name,
             text: self.text,
             href: self.href,
+            resolved_href: self.resolved_href,
             src: self.src,
+            resolved_src: self.resolved_src,
             alt: self.alt,
             control_type: self.control_type,
             value: self.value,

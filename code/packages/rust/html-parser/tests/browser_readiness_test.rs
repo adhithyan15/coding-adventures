@@ -49,6 +49,7 @@ struct ExpectedMeta {
 struct ExpectedResource {
     kind: String,
     url: String,
+    resolved_url: Option<String>,
     rel: Option<String>,
     type_hint: Option<String>,
     media: Option<String>,
@@ -73,6 +74,7 @@ struct ExpectedHeading {
 #[derive(Debug, Deserialize)]
 struct ExpectedLink {
     href: Option<String>,
+    resolved_href: Option<String>,
     name: Option<String>,
     target: Option<String>,
     rel: Option<String>,
@@ -83,6 +85,7 @@ struct ExpectedLink {
 #[derive(Debug, Deserialize)]
 struct ExpectedImage {
     src: Option<String>,
+    resolved_src: Option<String>,
     alt: Option<String>,
     width: Option<String>,
     height: Option<String>,
@@ -91,6 +94,7 @@ struct ExpectedImage {
 #[derive(Debug, Deserialize)]
 struct ExpectedForm {
     action: Option<String>,
+    resolved_action: Option<String>,
     method: String,
     enctype: Option<String>,
     target: Option<String>,
@@ -206,6 +210,7 @@ impl ExpectedResource {
         BrowserResource {
             kind: self.kind,
             url: self.url,
+            resolved_url: self.resolved_url,
             rel: self.rel,
             type_hint: self.type_hint,
             media: self.media,
@@ -239,6 +244,7 @@ impl ExpectedLink {
     fn into_browser_link(self) -> BrowserLink {
         BrowserLink {
             href: self.href,
+            resolved_href: self.resolved_href,
             name: self.name,
             target: self.target,
             rel: self.rel,
@@ -252,6 +258,7 @@ impl ExpectedImage {
     fn into_browser_image(self) -> BrowserImage {
         BrowserImage {
             src: self.src,
+            resolved_src: self.resolved_src,
             alt: self.alt,
             width: self.width,
             height: self.height,
@@ -263,6 +270,7 @@ impl ExpectedForm {
     fn into_browser_form(self) -> BrowserForm {
         BrowserForm {
             action: self.action,
+            resolved_action: self.resolved_action,
             method: self.method,
             enctype: self.enctype,
             target: self.target,

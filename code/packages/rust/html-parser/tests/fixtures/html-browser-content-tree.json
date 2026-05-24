@@ -5,8 +5,8 @@
   "cases": [
     {
       "id": "classic-document-flow",
-      "description": "Head metadata is skipped while headings, paragraphs, links, images, line breaks, and lists stay renderable.",
-      "input": "<!doctype html><title>Example</title><link rel=stylesheet href=style.css><h1 id=top>Example Directory</h1><p>Welcome to <a href=intro.html>Venture HTML</a>.<br><img src=logo.gif alt=Logo><ul><li>One<li>Two",
+      "description": "Head metadata is skipped while headings, paragraphs, base-resolved links, images, line breaks, and lists stay renderable.",
+      "input": "<!doctype html><title>Example</title><base href=\"https://example.test/docs/\"><link rel=stylesheet href=style.css><h1 id=top>Example Directory</h1><p>Welcome to <a href=intro.html>Venture HTML</a>.<br><img src=logo.gif alt=Logo><ul><li>One<li>Two",
       "expected": {
         "children": [
           {
@@ -36,6 +36,7 @@
                 "name": "a",
                 "text": "Venture HTML",
                 "href": "intro.html",
+                "resolved_href": "https://example.test/docs/intro.html",
                 "src": null,
                 "alt": null,
                 "control_type": null,
@@ -45,7 +46,7 @@
               },
               { "role": "text", "name": null, "text": ".", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
               { "role": "line_break", "name": "br", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
-              { "role": "image", "name": "img", "text": null, "href": null, "src": "logo.gif", "alt": "Logo", "control_type": null, "children": [] }
+              { "role": "image", "name": "img", "text": null, "href": null, "src": "logo.gif", "resolved_src": "https://example.test/docs/logo.gif", "alt": "Logo", "control_type": null, "children": [] }
             ]
           },
           {

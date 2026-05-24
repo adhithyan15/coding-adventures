@@ -189,6 +189,10 @@ documented in this file.
 - Browser-facing document, content-tree, and render-tree projections now carry
   richer form control metadata including values, checked/selected state,
   disabled state, select options, and textarea values.
+- Browser-facing document, content-tree, and render-tree projections now carry
+  resolved URL metadata for links, resources, images, and form actions using
+  the document `base` href when available, while preserving raw authored
+  attributes for downstream policy decisions.
 - Void end tags such as `</img>`, `</input>`, and `</hr>` are now ignored with a
   parser diagnostic, while self-closing syntax on void start tags remains
   acknowledged.

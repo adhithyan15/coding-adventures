@@ -5,8 +5,8 @@
   "cases": [
     {
       "id": "flow-inline-and-replaced",
-      "description": "Headings and paragraphs become block layout inputs while text, links, images, and line breaks keep inline display categories.",
-      "input": "<body><h1>Example</h1><p>Hello <a href=next.html>Next</a><img src=logo.gif alt=Logo><br>Tail</p>",
+      "description": "Headings and paragraphs become block layout inputs while base-resolved text, links, images, and line breaks keep inline display categories.",
+      "input": "<base href=\"https://example.test/pages/current.html\"><body><h1>Example</h1><p>Hello <a href=next.html>Next</a><img src=../assets/logo.gif alt=Logo><br>Tail</p>",
       "expected": {
         "children": [
           {
@@ -39,6 +39,7 @@
                 "name": "a",
                 "text": "Next",
                 "href": "next.html",
+                "resolved_href": "https://example.test/pages/next.html",
                 "src": null,
                 "alt": null,
                 "control_type": null,
@@ -46,7 +47,7 @@
                   { "display": "inline-text", "role": "text", "name": null, "text": "Next", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
                 ]
               },
-              { "display": "inline-replaced", "role": "image", "name": "img", "text": null, "href": null, "src": "logo.gif", "alt": "Logo", "control_type": null, "children": [] },
+              { "display": "inline-replaced", "role": "image", "name": "img", "text": null, "href": null, "src": "../assets/logo.gif", "resolved_src": "https://example.test/assets/logo.gif", "alt": "Logo", "control_type": null, "children": [] },
               { "display": "line-break", "role": "line_break", "name": "br", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
               { "display": "inline-text", "role": "text", "name": null, "text": "Tail", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
             ]
