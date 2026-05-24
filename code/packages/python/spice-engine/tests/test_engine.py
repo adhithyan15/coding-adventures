@@ -145,6 +145,7 @@ from spice_engine import (
     dc_op,
     dc_sweep,
     dc_sweep_corners,
+    distortion_from_fourier,
     estimate_period,
     format_dc_table,
     format_transient_table,
@@ -156,6 +157,7 @@ from spice_engine import (
     pss_newton_iteration,
     pss_newton_solve,
     pss_newton_update,
+    pole_zero_rc_lowpass,
     pss_residual_jacobian,
     pss_residual,
     sens_dc,
@@ -5562,6 +5564,30 @@ def test_pole_zero_result_shape_supports_simple_rc_pole_fixture() -> None:
     )
 
 
+def test_pole_zero_rc_lowpass_returns_simple_rc_pole() -> None:
+    circuit = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("R1", "in", "out", 1_000.0),
+        Capacitor("C1", "out", "0", 1.0e-6),
+    ])
+
+    result = pole_zero_rc_lowpass(circuit, input_source="Vin", output_node="out")
+
+    assert result == PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
+            PoleZeroEntry(
+                kind="pole",
+                real=-1.0e3,
+                imaginary=0.0,
+                frequency=1.0e3 / (2.0 * math.pi),
+                damping=1.0,
+            )
+        ],
+    )
+
+
 def test_distortion_result_shape_supports_nonlinear_device_smoke_fixture() -> None:
     result = DistortionResult(
         input_source="Vin",
@@ -5586,6 +5612,40 @@ def test_distortion_result_shape_supports_nonlinear_device_smoke_fixture() -> No
     assert isinstance(result, DistortionResult)
     assert result.points[0].harmonics[0].harmonic == 2
     assert result.points[0].total_harmonic_distortion == pytest.approx(0.025)
+
+
+def test_distortion_from_fourier_projects_probe_harmonics() -> None:
+    fourier_result = FourierResult(
+        fundamental_frequency=1.0e3,
+        start_time=0.0,
+        end_time=1.0e-3,
+        probes=[
+            FourierProbeResult(
+                probe="V(out)",
+                dc=0.0,
+                harmonics=[
+                    FourierHarmonic(1, 1.0e3, 0.0, 1.0, 1.0, 0.0),
+                    FourierHarmonic(2, 2.0e3, 0.0, 0.025, 0.025, -12.0),
+                ],
+                total_harmonic_distortion=0.025,
+            )
+        ],
+    )
+
+    result = distortion_from_fourier(fourier_result, input_source="Vin", output_probe="V(out)")
+
+    assert result == DistortionResult(
+        input_source="Vin",
+        output_probe="V(out)",
+        points=[
+            DistortionPoint(
+                frequency=1.0e3,
+                fundamental_magnitude=1.0,
+                harmonics=[DistortionHarmonic(2, 2.0e3, 0.025, -12.0)],
+                total_harmonic_distortion=0.025,
+            )
+        ],
+    )
 
 
 def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:

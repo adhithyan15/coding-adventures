@@ -413,6 +413,113 @@ class PoleZeroResult:
     entries: list[PoleZeroEntry]
 
 
+def pole_zero_rc_lowpass(
+    circuit: Circuit,
+    input_source: str,
+    output_node: str,
+) -> PoleZeroResult:
+    """Return the one-pole result for a conservative RC low-pass fixture."""
+
+    source = next(
+        (
+            element
+            for element in circuit.elements
+            if isinstance(element, VoltageSource) and element.name == input_source
+        ),
+        None,
+    )
+    if source is None:
+        raise ValueError(f"pole_zero_rc_lowpass: missing input source {input_source!r}")
+    if not _is_ground(source.n_minus):
+        raise ValueError("pole_zero_rc_lowpass: input source negative terminal must be ground")
+
+    resistor = next(
+        (
+            element
+            for element in circuit.elements
+            if isinstance(element, Resistor)
+            and {
+                element.n_plus,
+                element.n_minus,
+            }
+            == {source.n_plus, output_node}
+        ),
+        None,
+    )
+    capacitor = next(
+        (
+            element
+            for element in circuit.elements
+            if isinstance(element, Capacitor)
+            and output_node in {element.n_plus, element.n_minus}
+            and (_is_ground(element.n_plus) or _is_ground(element.n_minus))
+        ),
+        None,
+    )
+    if resistor is None or capacitor is None:
+        raise ValueError(
+            "pole_zero_rc_lowpass: expected one resistor from input to output "
+            "and one grounded output capacitor"
+        )
+    if not math.isfinite(resistor.resistance) or resistor.resistance <= 0.0:
+        raise ValueError("pole_zero_rc_lowpass: resistance must be finite and positive")
+    if not math.isfinite(capacitor.capacitance) or capacitor.capacitance <= 0.0:
+        raise ValueError("pole_zero_rc_lowpass: capacitance must be finite and positive")
+
+    real = -1.0 / (resistor.resistance * capacitor.capacitance)
+    return PoleZeroResult(
+        input_source=input_source,
+        output_node=output_node,
+        entries=[
+            PoleZeroEntry(
+                kind="pole",
+                real=real,
+                imaginary=0.0,
+                frequency=abs(real) / (2.0 * math.pi),
+                damping=1.0,
+            )
+        ],
+    )
+
+
+def distortion_from_fourier(
+    result: FourierResult,
+    input_source: str,
+    output_probe: str,
+) -> DistortionResult:
+    """Project a Fourier probe result into the Phase-8 distortion shape."""
+
+    probe_result = next(
+        (probe for probe in result.probes if probe.probe == output_probe),
+        None,
+    )
+    if probe_result is None:
+        raise ValueError(f"distortion_from_fourier: missing probe {output_probe!r}")
+    if not probe_result.harmonics:
+        raise ValueError("distortion_from_fourier: Fourier result has no harmonics")
+    fundamental = probe_result.harmonics[0]
+    return DistortionResult(
+        input_source=input_source,
+        output_probe=output_probe,
+        points=[
+            DistortionPoint(
+                frequency=fundamental.frequency,
+                fundamental_magnitude=fundamental.magnitude,
+                harmonics=[
+                    DistortionHarmonic(
+                        harmonic=harmonic.harmonic,
+                        frequency=harmonic.frequency,
+                        magnitude=harmonic.magnitude,
+                        phase_degrees=harmonic.phase_degrees,
+                    )
+                    for harmonic in probe_result.harmonics[1:]
+                ],
+                total_harmonic_distortion=probe_result.total_harmonic_distortion,
+            )
+        ],
+    )
+
+
 def format_dc_table(result: DcResult, probes: list[str] | None = None) -> str:
     """Format a DC operating point as a stable SPICE-style text table."""
     selected_probes = probes or _default_output_probes(

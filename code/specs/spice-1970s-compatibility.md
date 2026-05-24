@@ -265,6 +265,9 @@ Status:
   pole-zero result shapes are implemented across Python, TypeScript, and Rust,
   with smoke fixtures for nonlinear-device distortion output and a simple RC
   pole result.
+- A constrained Phase 8 executable foothold is implemented across Python,
+  TypeScript, and Rust: a simple grounded RC low-pass pole-zero helper and a
+  Fourier-to-distortion projection helper.
 
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 

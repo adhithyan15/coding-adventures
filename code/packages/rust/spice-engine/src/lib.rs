@@ -2021,6 +2021,123 @@ pub struct PoleZeroResult {
     pub entries: Vec<PoleZeroEntry>,
 }
 
+pub fn pole_zero_rc_lowpass(
+    circuit: &Circuit,
+    input_source: &str,
+    output_node: &str,
+) -> Result<PoleZeroResult, SpiceError> {
+    let source = circuit
+        .elements()
+        .iter()
+        .find_map(|element| match element {
+            Element::VoltageSource(source) if source.name == input_source => Some(source),
+            _ => None,
+        })
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: input_source.to_string(),
+            reason: "pole_zero_rc_lowpass: missing input source".to_string(),
+        })?;
+    if !is_ground(&source.negative) {
+        return Err(SpiceError::InvalidElement {
+            name: input_source.to_string(),
+            reason: "pole_zero_rc_lowpass: input source negative terminal must be ground"
+                .to_string(),
+        });
+    }
+
+    let resistor = circuit.elements().iter().find_map(|element| match element {
+        Element::Resistor(resistor)
+            if (resistor.n1 == source.positive && resistor.n2 == output_node)
+                || (resistor.n2 == source.positive && resistor.n1 == output_node) =>
+        {
+            Some(resistor)
+        }
+        _ => None,
+    });
+    let capacitor = circuit.elements().iter().find_map(|element| match element {
+        Element::Capacitor(capacitor)
+            if (capacitor.n1 == output_node || capacitor.n2 == output_node)
+                && (is_ground(&capacitor.n1) || is_ground(&capacitor.n2)) =>
+        {
+            Some(capacitor)
+        }
+        _ => None,
+    });
+    let (Some(resistor), Some(capacitor)) = (resistor, capacitor) else {
+        return Err(SpiceError::InvalidElement {
+            name: output_node.to_string(),
+            reason: "pole_zero_rc_lowpass: expected one resistor from input to output and one grounded output capacitor"
+                .to_string(),
+        });
+    };
+    if !resistor.resistance_ohms.is_finite() || resistor.resistance_ohms <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: resistor.name.clone(),
+            reason: "pole_zero_rc_lowpass: resistance must be finite and positive".to_string(),
+        });
+    }
+    if !capacitor.capacitance_farads.is_finite() || capacitor.capacitance_farads <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: capacitor.name.clone(),
+            reason: "pole_zero_rc_lowpass: capacitance must be finite and positive".to_string(),
+        });
+    }
+
+    let real = -1.0 / (resistor.resistance_ohms * capacitor.capacitance_farads);
+    Ok(PoleZeroResult {
+        input_source: input_source.to_string(),
+        output_node: output_node.to_string(),
+        entries: vec![PoleZeroEntry {
+            kind: PoleZeroEntryKind::Pole,
+            real,
+            imaginary: 0.0,
+            frequency_hz: real.abs() / TWO_PI,
+            damping: 1.0,
+        }],
+    })
+}
+
+pub fn distortion_from_fourier(
+    result: &FourierResult,
+    input_source: &str,
+    output_probe: &str,
+) -> Result<DistortionResult, SpiceError> {
+    let probe = result
+        .probes
+        .iter()
+        .find(|probe| probe.probe == output_probe)
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: output_probe.to_string(),
+            reason: "distortion_from_fourier: missing probe".to_string(),
+        })?;
+    let Some(fundamental) = probe.harmonics.first() else {
+        return Err(SpiceError::InvalidElement {
+            name: output_probe.to_string(),
+            reason: "distortion_from_fourier: Fourier result has no harmonics".to_string(),
+        });
+    };
+    Ok(DistortionResult {
+        input_source: input_source.to_string(),
+        output_probe: output_probe.to_string(),
+        points: vec![DistortionPoint {
+            frequency_hz: fundamental.frequency_hz,
+            fundamental_magnitude: fundamental.magnitude,
+            harmonics: probe
+                .harmonics
+                .iter()
+                .skip(1)
+                .map(|harmonic| DistortionHarmonic {
+                    harmonic: harmonic.harmonic,
+                    frequency_hz: harmonic.frequency_hz,
+                    magnitude: harmonic.magnitude,
+                    phase_degrees: harmonic.phase_degrees,
+                })
+                .collect(),
+            total_harmonic_distortion: probe.total_harmonic_distortion,
+        }],
+    })
+}
+
 pub fn fourier(
     points: &[TransientPoint],
     fundamental_frequency_hz: f64,
