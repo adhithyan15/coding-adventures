@@ -1,7 +1,7 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserDocument, BrowserForm, BrowserFormControl,
     BrowserHeading, BrowserImage, BrowserLink, BrowserMedia, BrowserMeta, BrowserResource,
-    BrowserTable,
+    BrowserScript, BrowserStylesheet, BrowserTable,
 };
 use serde::Deserialize;
 
@@ -41,6 +41,10 @@ struct ExpectedBrowserDocument {
     body_text: String,
     metas: Vec<ExpectedMeta>,
     resources: Vec<ExpectedResource>,
+    #[serde(default)]
+    scripts: Vec<ExpectedScript>,
+    #[serde(default)]
+    stylesheets: Vec<ExpectedStylesheet>,
     anchors: Vec<ExpectedAnchor>,
     headings: Vec<ExpectedHeading>,
     links: Vec<ExpectedLink>,
@@ -75,6 +79,66 @@ struct ExpectedResource {
     height: Option<String>,
     async_script: bool,
     defer_script: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedScript {
+    script_kind: String,
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    type_hint: Option<String>,
+    #[serde(default)]
+    async_script: bool,
+    #[serde(default)]
+    defer_script: bool,
+    #[serde(default)]
+    nomodule: bool,
+    #[serde(default)]
+    integrity: Option<String>,
+    #[serde(default)]
+    crossorigin: Option<String>,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    blocking: Option<String>,
+    #[serde(default)]
+    text: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedStylesheet {
+    source: String,
+    #[serde(default)]
+    href: Option<String>,
+    #[serde(default)]
+    resolved_href: Option<String>,
+    #[serde(default)]
+    rel: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    media: Option<String>,
+    #[serde(default)]
+    title: Option<String>,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    alternate: bool,
+    #[serde(default)]
+    integrity: Option<String>,
+    #[serde(default)]
+    crossorigin: Option<String>,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    blocking: Option<String>,
+    #[serde(default)]
+    text: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -234,6 +298,16 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedResource::into_browser_resource)
                 .collect(),
+            scripts: self
+                .scripts
+                .into_iter()
+                .map(ExpectedScript::into_browser_script)
+                .collect(),
+            stylesheets: self
+                .stylesheets
+                .into_iter()
+                .map(ExpectedStylesheet::into_browser_stylesheet)
+                .collect(),
             anchors: self
                 .anchors
                 .into_iter()
@@ -299,6 +373,48 @@ impl ExpectedResource {
             height: self.height,
             async_script: self.async_script,
             defer_script: self.defer_script,
+        }
+    }
+}
+
+impl ExpectedScript {
+    fn into_browser_script(self) -> BrowserScript {
+        BrowserScript {
+            script_kind: self.script_kind,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            type_hint: self.type_hint,
+            async_script: self.async_script,
+            defer_script: self.defer_script,
+            nomodule: self.nomodule,
+            integrity: self.integrity,
+            crossorigin: self.crossorigin,
+            referrerpolicy: self.referrerpolicy,
+            fetchpriority: self.fetchpriority,
+            blocking: self.blocking,
+            text: self.text,
+        }
+    }
+}
+
+impl ExpectedStylesheet {
+    fn into_browser_stylesheet(self) -> BrowserStylesheet {
+        BrowserStylesheet {
+            source: self.source,
+            href: self.href,
+            resolved_href: self.resolved_href,
+            rel: self.rel,
+            type_hint: self.type_hint,
+            media: self.media,
+            title: self.title,
+            disabled: self.disabled,
+            alternate: self.alternate,
+            integrity: self.integrity,
+            crossorigin: self.crossorigin,
+            referrerpolicy: self.referrerpolicy,
+            fetchpriority: self.fetchpriority,
+            blocking: self.blocking,
+            text: self.text,
         }
     }
 }

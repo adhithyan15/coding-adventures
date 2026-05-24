@@ -83,6 +83,10 @@ The current parser surface includes:
   URLs, resource kind, type hints, media attributes, and authored dimensions
 - browser-facing media playback metadata for `audio` and `video`, including
   playback flags and preload/poster fields
+- browser-facing script and stylesheet loading metadata, including
+  module/classic script kind, async/defer/nomodule flags, inline script/style
+  text, integrity/crossorigin/referrer-policy hints, fetch priority, blocking,
+  alternate stylesheet, and disabled stylesheet state
 - browser-facing table layout and accessibility metadata, including effective
   column counts, column hints, row-group identity, column spans, cell spans,
   header associations, scopes, and abbreviated header labels

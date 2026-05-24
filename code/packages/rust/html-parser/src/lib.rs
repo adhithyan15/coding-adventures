@@ -827,6 +827,8 @@ pub struct BrowserDocument {
     pub body_text: String,
     pub metas: Vec<BrowserMeta>,
     pub resources: Vec<BrowserResource>,
+    pub scripts: Vec<BrowserScript>,
+    pub stylesheets: Vec<BrowserStylesheet>,
     pub anchors: Vec<BrowserAnchor>,
     pub headings: Vec<BrowserHeading>,
     pub links: Vec<BrowserLink>,
@@ -858,6 +860,42 @@ pub struct BrowserResource {
     pub height: Option<String>,
     pub async_script: bool,
     pub defer_script: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScript {
+    pub script_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub async_script: bool,
+    pub defer_script: bool,
+    pub nomodule: bool,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking: Option<String>,
+    pub text: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserStylesheet {
+    pub source: String,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub rel: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub title: Option<String>,
+    pub disabled: bool,
+    pub alternate: bool,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking: Option<String>,
+    pub text: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -8199,6 +8237,13 @@ fn collect_browser_facts(
             "audio" | "video" => summary
                 .media
                 .push(browser_media_element(element, summary.base_href.as_deref())),
+            "script" => summary.scripts.push(browser_script_element(
+                element,
+                summary.base_href.as_deref(),
+            )),
+            "style" => summary
+                .stylesheets
+                .push(browser_style_element(element, summary.base_href.as_deref())),
             "form" => summary.forms.push(BrowserForm {
                 action: element.attribute("action").map(ToOwned::to_owned),
                 resolved_action: element
@@ -8261,6 +8306,11 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                         async_script: false,
                         defer_script: false,
                     });
+                    if browser_link_is_stylesheet(element) {
+                        summary
+                            .stylesheets
+                            .push(browser_style_element(element, summary.base_href.as_deref()));
+                    }
                 }
             }
             "script" => {
@@ -8279,7 +8329,14 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                         defer_script: element.attribute("defer").is_some(),
                     });
                 }
+                summary.scripts.push(browser_script_element(
+                    element,
+                    summary.base_href.as_deref(),
+                ));
             }
+            "style" => summary
+                .stylesheets
+                .push(browser_style_element(element, summary.base_href.as_deref())),
             _ => {}
         }
 
@@ -8492,10 +8549,15 @@ fn link_resource_kind(rel: Option<&str>) -> String {
     let Some(rel) = rel else {
         return "link".to_string();
     };
-    let rel_tokens = rel.split_ascii_whitespace().map(str::to_ascii_lowercase);
+    let rel_tokens: Vec<String> = rel
+        .split_ascii_whitespace()
+        .map(str::to_ascii_lowercase)
+        .collect();
+    if rel_tokens.iter().any(|token| token == "stylesheet") {
+        return "stylesheet".to_string();
+    }
     for token in rel_tokens {
         match token.as_str() {
-            "stylesheet" => return "stylesheet".to_string(),
             "icon" | "shortcut" => return "icon".to_string(),
             "preload" => return "preload".to_string(),
             "modulepreload" => return "modulepreload".to_string(),
@@ -8838,6 +8900,104 @@ fn browser_content_resource_kind(element: &Element) -> Option<String> {
         "audio" | "video" => Some(element.name.clone()),
         "canvas" => Some("canvas".to_string()),
         _ => None,
+    }
+}
+
+fn browser_script_element(element: &Element, base_href: Option<&str>) -> BrowserScript {
+    let src = element.attribute("src").map(ToOwned::to_owned);
+    BrowserScript {
+        script_kind: browser_script_kind(element),
+        resolved_src: src
+            .as_deref()
+            .and_then(|src| resolve_browser_url(src, base_href)),
+        src,
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        async_script: element.attribute("async").is_some(),
+        defer_script: element.attribute("defer").is_some(),
+        nomodule: element.attribute("nomodule").is_some(),
+        integrity: element.attribute("integrity").map(ToOwned::to_owned),
+        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        text: element_text_if_non_empty(element),
+    }
+}
+
+fn browser_script_kind(element: &Element) -> String {
+    let Some(type_hint) = element.attribute("type") else {
+        return "classic".to_string();
+    };
+    let normalized_type = type_hint.trim().to_ascii_lowercase();
+    let type_essence = normalized_type
+        .split_once(';')
+        .map(|(essence, _)| essence.trim())
+        .unwrap_or(normalized_type.as_str());
+    match type_essence {
+        ""
+        | "text/javascript"
+        | "application/javascript"
+        | "text/ecmascript"
+        | "application/ecmascript"
+        | "module" => {
+            if type_essence == "module" {
+                "module".to_string()
+            } else {
+                "classic".to_string()
+            }
+        }
+        "importmap" => "importmap".to_string(),
+        "speculationrules" => "speculationrules".to_string(),
+        _ => "data".to_string(),
+    }
+}
+
+fn browser_style_element(element: &Element, base_href: Option<&str>) -> BrowserStylesheet {
+    let href = element.attribute("href").map(ToOwned::to_owned);
+    BrowserStylesheet {
+        source: element.name.clone(),
+        resolved_href: href
+            .as_deref()
+            .and_then(|href| resolve_browser_url(href, base_href)),
+        href,
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        disabled: element.attribute("disabled").is_some(),
+        alternate: browser_rel_contains(element, "alternate"),
+        integrity: element.attribute("integrity").map(ToOwned::to_owned),
+        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        text: if element.name == "style" {
+            element_text_if_non_empty(element)
+        } else {
+            None
+        },
+    }
+}
+
+fn browser_link_is_stylesheet(element: &Element) -> bool {
+    element.name == "link" && browser_rel_contains(element, "stylesheet")
+}
+
+fn browser_rel_contains(element: &Element, token: &str) -> bool {
+    element
+        .attribute("rel")
+        .map(split_html_classes)
+        .unwrap_or_default()
+        .iter()
+        .any(|candidate| candidate.eq_ignore_ascii_case(token))
+}
+
+fn element_text_if_non_empty(element: &Element) -> Option<String> {
+    let text = element_text(element);
+    if text.is_empty() {
+        None
+    } else {
+        Some(text)
     }
 }
 
@@ -9940,6 +10100,89 @@ mod tests {
                 .as_deref(),
             Some("Query")
         );
+    }
+
+    #[test]
+    fn browser_script_style_metadata_tracks_loading_and_inline_text() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/index.html\">\
+             <link rel=\"stylesheet preload\" href=app.css media=screen title=main integrity=sha256-css crossorigin=anonymous referrerpolicy=no-referrer fetchpriority=high blocking=render>\
+             <link rel=\"alternate stylesheet\" href=print.css title=print disabled>\
+             <style media=print title=print>body { color: black; }</style>\
+             <script type=module src=app.js async integrity=sha384-js crossorigin=use-credentials referrerpolicy=origin fetchpriority=low blocking=render></script>\
+             <script type=\"text/javascript; charset=utf-8\">classicMime();</script>\
+             <script nomodule defer>legacy();</script>\
+             <body><script src=late.js defer></script>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.stylesheets.len(), 3);
+        let main_style = &summary.stylesheets[0];
+        assert_eq!(main_style.source, "link");
+        assert_eq!(
+            main_style.resolved_href.as_deref(),
+            Some("https://example.test/app/app.css")
+        );
+        assert_eq!(main_style.rel.as_deref(), Some("stylesheet preload"));
+        assert_eq!(main_style.media.as_deref(), Some("screen"));
+        assert_eq!(main_style.integrity.as_deref(), Some("sha256-css"));
+        assert_eq!(main_style.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(main_style.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(main_style.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(main_style.blocking.as_deref(), Some("render"));
+        assert!(!main_style.alternate);
+
+        let alternate_style = &summary.stylesheets[1];
+        assert!(alternate_style.alternate);
+        assert!(alternate_style.disabled);
+        assert_eq!(
+            alternate_style.resolved_href.as_deref(),
+            Some("https://example.test/app/print.css")
+        );
+
+        let inline_style = &summary.stylesheets[2];
+        assert_eq!(inline_style.source, "style");
+        assert_eq!(inline_style.media.as_deref(), Some("print"));
+        assert_eq!(inline_style.text.as_deref(), Some("body { color: black; }"));
+
+        assert_eq!(summary.scripts.len(), 4);
+        let module_script = &summary.scripts[0];
+        assert_eq!(module_script.script_kind, "module");
+        assert_eq!(
+            module_script.resolved_src.as_deref(),
+            Some("https://example.test/app/app.js")
+        );
+        assert!(module_script.async_script);
+        assert_eq!(module_script.integrity.as_deref(), Some("sha384-js"));
+        assert_eq!(
+            module_script.crossorigin.as_deref(),
+            Some("use-credentials")
+        );
+        assert_eq!(module_script.referrerpolicy.as_deref(), Some("origin"));
+        assert_eq!(module_script.fetchpriority.as_deref(), Some("low"));
+        assert_eq!(module_script.blocking.as_deref(), Some("render"));
+
+        let classic_mime_script = &summary.scripts[1];
+        assert_eq!(classic_mime_script.script_kind, "classic");
+        assert_eq!(
+            classic_mime_script.type_hint.as_deref(),
+            Some("text/javascript; charset=utf-8")
+        );
+        assert_eq!(classic_mime_script.text.as_deref(), Some("classicMime();"));
+
+        let legacy_script = &summary.scripts[2];
+        assert_eq!(legacy_script.script_kind, "classic");
+        assert!(legacy_script.nomodule);
+        assert!(legacy_script.defer_script);
+        assert_eq!(legacy_script.text.as_deref(), Some("legacy();"));
+
+        let late_script = &summary.scripts[3];
+        assert_eq!(
+            late_script.resolved_src.as_deref(),
+            Some("https://example.test/app/late.js")
+        );
+        assert!(late_script.defer_script);
     }
 
     #[test]

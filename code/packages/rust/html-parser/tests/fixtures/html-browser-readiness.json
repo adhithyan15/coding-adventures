@@ -19,6 +19,9 @@
           { "kind": "stylesheet", "url": "style.css", "resolved_url": "https://example.test/docs/style.css", "rel": "stylesheet", "type_hint": null, "media": "screen", "title": "default", "async_script": false, "defer_script": false },
           { "kind": "image", "url": "logo.gif", "resolved_url": "https://example.test/docs/logo.gif", "rel": null, "type_hint": null, "media": null, "title": null, "width": "88", "height": "31", "async_script": false, "defer_script": false }
         ],
+        "stylesheets": [
+          { "source": "link", "href": "style.css", "resolved_href": "https://example.test/docs/style.css", "rel": "stylesheet", "media": "screen", "title": "default" }
+        ],
         "anchors": [
           { "id": "index", "name": null, "text": "Example Directory" }
         ],
@@ -138,6 +141,12 @@
         "resources": [
           { "kind": "script", "url": "app.js", "resolved_url": null, "rel": null, "type_hint": null, "media": null, "title": null, "async_script": true, "defer_script": true }
         ],
+        "scripts": [
+          { "script_kind": "classic", "src": "app.js", "resolved_src": null, "type_hint": null, "async_script": true, "defer_script": true, "text": "document.write(\"x\")" }
+        ],
+        "stylesheets": [
+          { "source": "style", "text": "p{color:red}" }
+        ],
         "anchors": [
           { "id": null, "name": "top", "text": "" }
         ],
@@ -231,6 +240,40 @@
             "preload": "none"
           }
         ],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "script-style-loading-page",
+      "description": "Browser document summaries expose stylesheet and script loading metadata for early fetch, execution, and style planning.",
+      "input": "<base href=\"https://example.test/app/index.html\"><link rel=\"stylesheet preload\" href=app.css media=screen title=main integrity=sha256-css crossorigin=anonymous referrerpolicy=no-referrer fetchpriority=high blocking=render><link rel=\"alternate stylesheet\" href=print.css title=print disabled><style media=print title=print>body { color: black; }</style><script type=module src=app.js async integrity=sha384-js crossorigin=use-credentials referrerpolicy=origin fetchpriority=low blocking=render></script><script nomodule defer>legacy();</script><body><script src=late.js defer></script>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/app/index.html",
+        "base_target": null,
+        "body_text": "",
+        "metas": [],
+        "resources": [
+          { "kind": "stylesheet", "url": "app.css", "resolved_url": "https://example.test/app/app.css", "rel": "stylesheet preload", "type_hint": null, "media": "screen", "title": "main", "async_script": false, "defer_script": false },
+          { "kind": "stylesheet", "url": "print.css", "resolved_url": "https://example.test/app/print.css", "rel": "alternate stylesheet", "type_hint": null, "media": null, "title": "print", "async_script": false, "defer_script": false },
+          { "kind": "script", "url": "app.js", "resolved_url": "https://example.test/app/app.js", "rel": null, "type_hint": "module", "media": null, "title": null, "async_script": true, "defer_script": false },
+          { "kind": "script", "url": "late.js", "resolved_url": "https://example.test/app/late.js", "rel": null, "type_hint": null, "media": null, "title": null, "async_script": false, "defer_script": true }
+        ],
+        "scripts": [
+          { "script_kind": "module", "src": "app.js", "resolved_src": "https://example.test/app/app.js", "type_hint": "module", "async_script": true, "integrity": "sha384-js", "crossorigin": "use-credentials", "referrerpolicy": "origin", "fetchpriority": "low", "blocking": "render" },
+          { "script_kind": "classic", "src": null, "resolved_src": null, "type_hint": null, "defer_script": true, "nomodule": true, "text": "legacy();" },
+          { "script_kind": "classic", "src": "late.js", "resolved_src": "https://example.test/app/late.js", "type_hint": null, "defer_script": true }
+        ],
+        "stylesheets": [
+          { "source": "link", "href": "app.css", "resolved_href": "https://example.test/app/app.css", "rel": "stylesheet preload", "media": "screen", "title": "main", "integrity": "sha256-css", "crossorigin": "anonymous", "referrerpolicy": "no-referrer", "fetchpriority": "high", "blocking": "render" },
+          { "source": "link", "href": "print.css", "resolved_href": "https://example.test/app/print.css", "rel": "alternate stylesheet", "title": "print", "disabled": true, "alternate": true },
+          { "source": "style", "media": "print", "title": "print", "text": "body { color: black; }" }
+        ],
+        "anchors": [],
+        "headings": [],
+        "links": [],
+        "images": [],
         "forms": [],
         "tables": []
       }
