@@ -2216,18 +2216,29 @@ def _multiplicative(node: ASTNode, state: _PlaceholderCounter) -> Expr:
 
 
 def _unary(node: ASTNode, state: _PlaceholderCounter) -> Expr:
-    # unary = ( "-" | "~" ) unary | primary
+    # unary = ( "-" | "~" | "+" ) unary | primary
     #
-    # SQLite supports two unary prefix operators at the same precedence level:
+    # SQLite supports three unary prefix operators at the same precedence level:
     #   -x   arithmetic negation
     #   ~x   bitwise NOT (coerces x to a 64-bit signed integer, then flips
     #        every bit — equivalent to ``-(x + 1)`` for integers).
+    #   +x   no-op identity — SQLite documents it as a valid prefix that
+    #        evaluates to its operand unchanged.  Useful for symmetry
+    #        when writing signed numeric literals (``+5`` ≡ ``5``) and
+    #        for normalising user-supplied expressions in tools.
     if any(_is_token(c, type_="MINUS") for c in node.children):
         inner = _child_node(node, "unary")
         return UnaryExpr(op=UnaryOp.NEG, operand=_unary(inner, state))
     if any(_is_token(c, type_="BIT_NOT_OP") for c in node.children):
         inner = _child_node(node, "unary")
         return UnaryExpr(op=UnaryOp.BIT_NOT, operand=_unary(inner, state))
+    if any(_is_token(c, type_="PLUS") for c in node.children):
+        # No-op: just return the inner expression unchanged.  We don't
+        # introduce a UnaryOp.POS because the operand is bit-for-bit
+        # identical — wrapping it would only add a useless layer for
+        # the planner / codegen to peel.
+        inner = _child_node(node, "unary")
+        return _unary(inner, state)
     return _primary(_child_node(node, "primary"), state)
 
 

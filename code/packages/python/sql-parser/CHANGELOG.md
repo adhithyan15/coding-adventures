@@ -2,6 +2,17 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.42.0] - 2026-05-23
+
+### Changed
+
+- ``unary`` rule now accepts ``+`` alongside ``-`` and ``~``::
+
+      unary = ( "-" | "~" | "+" ) unary | primary ;
+
+  SQLite documents ``+`` as a valid no-op unary prefix.  Regenerated
+  ``_grammar.py`` cache via ``grammar-tools``.
+
 ## [0.41.0] - 2026-05-23
 
 ### Changed
