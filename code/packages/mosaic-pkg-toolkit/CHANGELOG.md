@@ -1,5 +1,37 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — v0.7 — Accordion
+
+### Added
+
+**`Accordion`** — Bootstrap's vertical expand/collapse panel stack.
+Composition: `Column[accordion] { For headers Column[accordion-item]
+{ HostButton[accordion-header], Text[accordion-body] } }`.
+
+Slots: `headers: list<text>`, `bodies: list<text>` (parallel array
+to headers), `open-index: number` (-1 = all closed). Emit:
+`onToggle(index: number)`.
+
+### Known limitation
+
+v0.7 ships with always-visible bodies because UI29's `If(when:)`
+only supports truthiness, not the `i == open-index` comparison a
+proper Accordion needs. The host simulates close by clearing the
+body string for closed panels (empty body + `.msl` zero padding-on-
+empty looks closed-enough).
+
+The `.mil` surface (`open-index`, `onToggle`) is forward-compatible
+— once kernel expression comparison lands, the `.mll`'s
+`Text[accordion-body]` will be wrapped in `If(when: i ==
+open-index)`. Hosts that adopt v0.7 today won't need to change
+their glue code.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 19 (was 18): one more interface
+test (`accordion_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
 ## [Unreleased] — v0.6 — InputGroup
 
 ### Added

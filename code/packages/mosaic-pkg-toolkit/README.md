@@ -56,6 +56,11 @@ for the architecture, component catalog, and phasing plan.
   `.00`, `@username`). Slots: `prefix`, `suffix`, `value`,
   `placeholder`, `disabled`. Emits: `onChange(value: text)`,
   `onCommit`.
+- **`Accordion`** — vertical expand/collapse panel stack. Slots:
+  `headers: list<text>`, `bodies: list<text>`, `open-index`. Emit:
+  `onToggle(index: number)`. See CHANGELOG for the v0.7 always-
+  visible-body limitation (kernel `If` doesn't yet support
+  comparison).
 
 Every component ships `.light.msl` and `.dark.msl` themes.
 
