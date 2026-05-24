@@ -171,6 +171,8 @@ All notable changes to this package will be documented in this file.
   host-decision keys in supervisor drain run reports and summaries.
 - Aggregate host-run queue routes, readiness labels, and label-integrity flags
   for supervisor drain run report and summary grouping.
+- Aggregate host-run action lanes, component flags, counts, and label-integrity
+  flags for supervisor drain run report and summary grouping.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host

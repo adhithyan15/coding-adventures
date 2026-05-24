@@ -214,6 +214,8 @@ The crate keeps the boundary narrow:
   keys that combine health-dashboard and host-decision keys for host logs
 - supervisor drain reports and summaries expose aggregate host-run queue routes,
   readiness labels, and label-integrity flags for host log grouping
+- supervisor drain reports and summaries expose aggregate host-run action lanes,
+  component flags, counts, and label-integrity flags for host queue grouping
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
