@@ -1198,6 +1198,10 @@ impl Lowerer {
             // `BuiltinCall("or", [lhs, rhs])`.  Operator forms `||`
             // (symbol) and `or` (keyword) lower identically — see the
             // grammar comment for the v0 simplification.
+            // Phase 6n — range expressions `a..b` (inclusive) and
+            // `a...b` (exclusive).  Either a bare `logical_or` pass-through
+            // or a `BuiltinCall("range", [start, end, BoolLit(exclusive)])`.
+            "range" => self.lower_range(node),
             "logical_or" => self.lower_logical_chain(node, &["||", "or"], "or"),
             // Phase 6m — logical-AND chain: same pattern as logical_or.
             "logical_and" => self.lower_logical_chain(node, &["&&", "and"], "and"),
@@ -1461,6 +1465,82 @@ impl Lowerer {
             };
         }
         Ok(expr)
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 6n — range expressions `..` / `...`
+    // -------------------------------------------------------------------
+
+    /// Lower a `range` node.  Grammar shape:
+    ///
+    ///   range = logical_or [ ( "..." | ".." ) logical_or ]
+    ///
+    /// Two cases:
+    ///   - One operand child, no `..`/`...` token → pass through (the
+    ///     range rule is just a transparent wrapper in this case).
+    ///   - Two operand children with a `..` or `...` token between them
+    ///     → emit `BuiltinCall("range", [start, end, BoolLit(exclusive)])`.
+    ///     The third argument carries the inclusive/exclusive flag so a
+    ///     single builtin handles both forms without name multiplication.
+    ///     `..` → exclusive=false; `...` → exclusive=true.
+    ///
+    /// Range is pure: building a range doesn't observe or mutate any
+    /// state.  (Iterating over one *would* run code, but that's a
+    /// separate call.)
+    fn lower_range(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
+        // Collect operand sub-nodes (each a `logical_or`).
+        let operands: Vec<&GrammarASTNode> = node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) => Some(n),
+                _ => None,
+            })
+            .collect();
+
+        // Find the `..` or `...` operator token (if present).
+        let op_tok = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.value == ".." || t.value == "..." => Some(t),
+            _ => None,
+        });
+
+        match (operands.len(), op_tok) {
+            // Bare logical_or pass-through — no range operator.
+            (1, None) => self.lower_expression(operands[0]),
+            // Two operands separated by `..` or `...`.
+            (2, Some(tok)) => {
+                let start = self.lower_expression(operands[0])?;
+                let end = self.lower_expression(operands[1])?;
+                let exclusive = tok.value == "...";
+                let op_span = self.span_of_token(tok);
+                Ok(Expr::BuiltinCall {
+                    name: "range".to_string(),
+                    args: vec![
+                        start,
+                        end,
+                        // The third arg is a flag — `true` means
+                        // exclusive (`...`), `false` means inclusive
+                        // (`..`).  Carrying it as data keeps the
+                        // builtin's signature uniform.
+                        Expr::BoolLit { value: exclusive, span: op_span.clone() },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: op_span,
+                })
+            }
+            // Shouldn't happen given the grammar shape — but be
+            // defensive: a missing operator with two operands or a
+            // present operator with the wrong operand count points
+            // at a grammar regeneration gone awry.
+            (n, _) => Err(RubyLowerError {
+                message: format!(
+                    "range node had {n} operand(s) and op={:?} — expected (1, None) or (2, Some(..|...))",
+                    op_tok.map(|t| t.value.clone()),
+                ),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            }),
+        }
     }
 
     /// Lower a `factor` node — the leaves of the expression tree.

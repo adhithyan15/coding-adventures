@@ -1295,4 +1295,91 @@ mod tests {
             result
         );
     }
+
+    // -----------------------------------------------------------------
+    // Phase 6n — range expressions lowering
+    // -----------------------------------------------------------------
+    //
+    // SIR encoding:
+    //   `a..b`  → BuiltinCall("range", [a, b, BoolLit(false)])  ; inclusive
+    //   `a...b` → BuiltinCall("range", [a, b, BoolLit(true)])   ; exclusive
+    //
+    // The third arg is the exclusive-end flag — keeping the builtin's
+    // name uniform across both forms means downstream emitters can
+    // pattern-match on `range` once and read the flag.
+
+    #[test]
+    fn inclusive_range_lowers_to_range_builtin_with_false_flag() {
+        // `def r() 1..5 end` — RHS of the def body is a range literal.
+        let m = lower("def r\n  1..5\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "range");
+                assert_eq!(args.len(), 3, "expected [start, end, exclusive_flag]");
+                assert!(matches!(&args[0], Expr::IntLit { value: 1, .. }));
+                assert!(matches!(&args[1], Expr::IntLit { value: 5, .. }));
+                assert!(
+                    matches!(&args[2], Expr::BoolLit { value: false, .. }),
+                    "inclusive `..` should set the exclusive flag to false; got {:?}",
+                    &args[2]
+                );
+            }
+            other => panic!("expected BuiltinCall(range, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn exclusive_range_lowers_to_range_builtin_with_true_flag() {
+        // `def r() 1...5 end` — exclusive form sets flag to true.
+        let m = lower("def r\n  1...5\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "range");
+                assert_eq!(args.len(), 3);
+                assert!(
+                    matches!(&args[2], Expr::BoolLit { value: true, .. }),
+                    "exclusive `...` should set the flag to true; got {:?}",
+                    &args[2]
+                );
+            }
+            other => panic!("expected BuiltinCall(range, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn range_with_variable_operands_uses_var_refs() {
+        // `def r(a, b) (a..b) end` — range over function params.  Params
+        // are in scope so the VarRef survives validation.  Parens wrap
+        // the range so the bare-NAME-led body doesn't trigger the
+        // `method_call_no_paren` framework ambiguity (lessons.md).
+        let m = lower("def r(a, b)\n  (a..b)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "range" => {
+                assert_eq!(args.len(), 3);
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "a"));
+                assert!(matches!(&args[1], Expr::VarRef { name, .. } if name == "b"));
+            }
+            other => panic!("expected BuiltinCall(range, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn range_module_passes_sir_validator() {
+        // End-to-end smoke check: a range expression survives validation.
+        // Parens for the same reason as above.
+        let m = lower(concat!(
+            "def r(a, b)\n",
+            "  (a..b)\n",
+            "end\n",
+        ));
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected range output: {:?}",
+            result
+        );
+    }
 }
