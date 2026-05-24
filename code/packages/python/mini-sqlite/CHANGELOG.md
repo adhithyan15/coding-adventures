@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.1.0] - 2026-05-23
+
+### Fixed
+
+- ``INSERT(v) VALUES (...) RETURNING *`` on a table with an
+  auto-assigned INTEGER PRIMARY KEY column now returns the
+  assigned id instead of ``NULL``.  Was the documented "known
+  limitation" of 2.0.  Backend ``insert()`` reflects auto-
+  assigned values back to the caller's dict, so the VM's
+  ``LoadLastInsertedColumn`` path sees the post-assign state.
+- DEFAULT column values are similarly reflected — ``INSERT INTO
+  t(id) VALUES (1) RETURNING *`` on ``v TEXT DEFAULT 'hi'``
+  surfaces ``'hi'`` rather than ``NULL``.
+
 ## [2.0.0] - 2026-05-23
 
 ### Added
