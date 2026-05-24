@@ -33,7 +33,9 @@ nodes preserve row-group identity, column groups/columns, column and cell spans,
 header associations, scopes, and abbreviated header labels for layout and
 accessibility code. Text-flow cases also pin paragraph/preformatted roles,
 preserved preformatted text runs, list numbering metadata, quote citations, and
-line/word/thematic break kinds.
+line/word/thematic break kinds. Document-outline cases pin heading levels,
+sectioning roles, and landmark-like regions such as `main`, `nav`, `aside`,
+`header`, and `footer`.
 
 `html-browser-render-tree.json` is a checked parser acceptance corpus for the
 browser-facing render-tree input projection. It verifies that the content tree
@@ -48,7 +50,9 @@ dimension metadata intact. Table render inputs also keep column hints, row-group
 identity, spans, scopes, and header metadata intact while mapping to stable table
 display categories. Text-flow render inputs preserve list markers, quote
 citations, preformatted whitespace policy, and break kinds while mapping to
-stable display categories.
+stable display categories. Document-outline render inputs keep heading levels
+and section/landmark metadata while mapping those structural regions to block
+display categories.
 
 Validate the checked-in smoke fixture's case boundaries and metadata with:
 

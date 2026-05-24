@@ -160,6 +160,35 @@
       }
     },
     {
+      "id": "document-outline-landmark-page",
+      "description": "Browser document summaries keep heading order across sectioning and landmark elements.",
+      "input": "<body><header><h1>Site</h1></header><nav><h2>Nav</h2><a href=/home>Home</a></nav><main><article id=post><h2>Post</h2><section aria-label=Chapter><h3>Chapter</h3></section></article><aside><h2>Related</h2></aside></main><footer>Fine print</footer>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Site Nav Home Post Chapter Related Fine print",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "post", "name": null, "text": "Post Chapter" }
+        ],
+        "headings": [
+          { "level": 1, "text": "Site" },
+          { "level": 2, "text": "Nav" },
+          { "level": 2, "text": "Post" },
+          { "level": 3, "text": "Chapter" },
+          { "level": 2, "text": "Related" }
+        ],
+        "links": [
+          { "href": "/home", "resolved_href": null, "name": null, "target": null, "rel": null, "title": null, "text": "Home" }
+        ],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "text-flow-list-quote-page",
       "description": "Browser document facts keep the visible prose around lists, preformatted blocks, quotes, and break elements stable.",
       "input": "<base href=\"https://example.test/docs/page.html\"><body><p>Intro<br>line<wbr>word</p><hr><ol start=3 reversed type=A><li value=7>Seven<li>Eight</ol><pre>  keep\nspace</pre><blockquote cite=notes/ref.html><p>Quote <q cite=#part>part</q></p></blockquote>",

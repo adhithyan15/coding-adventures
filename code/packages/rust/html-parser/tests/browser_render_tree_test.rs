@@ -100,6 +100,12 @@ struct ExpectedRenderNode {
     resolved_quote_cite: Option<String>,
     #[serde(default)]
     break_kind: Option<String>,
+    #[serde(default)]
+    heading_level: Option<u8>,
+    #[serde(default)]
+    section_kind: Option<String>,
+    #[serde(default)]
+    landmark_kind: Option<String>,
     children: Vec<ExpectedRenderNode>,
 }
 
@@ -181,6 +187,9 @@ impl ExpectedRenderNode {
             quote_cite: self.quote_cite,
             resolved_quote_cite: self.resolved_quote_cite,
             break_kind: self.break_kind,
+            heading_level: self.heading_level,
+            section_kind: self.section_kind,
+            landmark_kind: self.landmark_kind,
             children: self
                 .children
                 .into_iter()
