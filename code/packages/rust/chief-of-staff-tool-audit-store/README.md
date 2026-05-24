@@ -198,6 +198,8 @@ The crate keeps the boundary narrow:
   lanes and labels for host dashboard grouping
 - supervisor drain run summaries expose stable combined health-dashboard queue
   keys for grouping action lane, route, priority, and readiness in one host key
+- supervisor drain run summaries flatten combined health-dashboard queue-key
+  integrity flags so host logs can verify each key component against the digest
 - supervisor drain run summaries flatten combined health-dashboard route,
   priority, and readiness booleans for host queue filters
 - supervisor drain reports and summaries expose stable, parseable scheduler action
