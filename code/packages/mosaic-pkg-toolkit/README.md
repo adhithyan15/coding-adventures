@@ -51,6 +51,11 @@ for the architecture, component catalog, and phasing plan.
   (same convention as Nav/Breadcrumb). Slots: `pages: list<text>`,
   `prev-label`, `next-label`, `active-index`. Emits: `onPrev`,
   `onNext`, `onPageSelect(index: number)`.
+- **`InputGroup`** — Bootstrap's input-with-addons pattern. Text
+  input flanked by optional prefix and/or suffix text (e.g. `$`,
+  `.00`, `@username`). Slots: `prefix`, `suffix`, `value`,
+  `placeholder`, `disabled`. Emits: `onChange(value: text)`,
+  `onCommit`.
 
 Every component ships `.light.msl` and `.dark.msl` themes.
 
