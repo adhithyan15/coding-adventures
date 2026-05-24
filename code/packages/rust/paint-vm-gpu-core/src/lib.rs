@@ -204,6 +204,29 @@ impl GpuBackendProfile {
             accepts_degraded_solid_gradients: true,
         }
     }
+
+    pub const fn tier1_textured(
+        id: &'static str,
+        family: GpuApiFamily,
+        render_path: GpuRenderPath,
+        shader_model: &'static str,
+        readback: GpuReadbackStrategy,
+    ) -> Self {
+        Self {
+            id,
+            family,
+            render_path,
+            shader_model,
+            readback,
+            supports_indexed_meshes: true,
+            supports_scissor_clips: true,
+            supports_texture_sampling: true,
+            supports_linear_gradients: true,
+            supports_radial_gradients: true,
+            supports_glyph_atlas: false,
+            accepts_degraded_solid_gradients: true,
+        }
+    }
 }
 
 impl Default for GpuPlanOptions {
@@ -1789,6 +1812,118 @@ mod tests {
         let unsupported = unsupported_plan_features(profile, &plan);
 
         assert_eq!(unsupported, vec!["gradient.radial"]);
+    }
+
+    #[test]
+    fn tier1_textured_profile_accepts_images_and_gradient_textures() {
+        let mut pixels = PixelContainer::new(1, 1);
+        pixels.set_pixel(0, 0, 12, 34, 56, 255);
+        let mut scene = PaintScene::new(24.0, 12.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("linear".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 12.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#ff0000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#0000ff".to_string(),
+                    },
+                ],
+            }));
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("radial".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Radial {
+                    cx: 18.0,
+                    cy: 6.0,
+                    r: 6.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#ffffff".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#000000".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 8.0,
+            height: 12.0,
+            fill: Some("url(#linear)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 8.0,
+            y: 0.0,
+            width: 8.0,
+            height: 12.0,
+            fill: Some("url(#radial)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 16.0,
+            y: 0.0,
+            width: 8.0,
+            height: 12.0,
+            src: ImageSrc::Pixels(pixels),
+            opacity: None,
+        }));
+        let profile = GpuBackendProfile::tier1_textured(
+            "paint-vm-test-gpu",
+            GpuApiFamily::Wgpu,
+            GpuRenderPath::GraphicsPipeline,
+            "test-shader",
+            GpuReadbackStrategy::TextureCopyToBuffer,
+        );
+
+        let plan = plan_scene(&scene);
+        let unsupported = unsupported_plan_features(profile, &plan);
+
+        assert_eq!(
+            plan.images
+                .iter()
+                .map(|image| image.kind)
+                .collect::<Vec<_>>(),
+            vec![
+                GpuTextureKind::LinearGradient,
+                GpuTextureKind::RadialGradient,
+                GpuTextureKind::Image
+            ]
+        );
+        assert!(unsupported.is_empty());
     }
 
     #[test]
