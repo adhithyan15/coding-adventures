@@ -1,5 +1,68 @@
 # Changelog — twig-ir-compiler
 
+## [0.21.0] — 2026-05-24 (Path A increment 6b — typed `cons`)
+
+### Added — `cons` cells emit `alloc` + `field_store` triples
+
+Increment 6b of the Twig → IIR-to-* end-to-end story.  Replaces every
+`call_builtin "cons" head tail [any]` emission site with the typed
+three-instruction triple:
+
+```
+alloc cell [ref<LispyPair>]
+field_store cell, 0, head [void]   -- car
+field_store cell, 1, tail [void]   -- cdr
+```
+
+matching the Phase 2 heap-lowering convention used by every IIR-to-*
+backend and the iir-builtin-lowering pass.  Record and union
+constructors — which build cons chains internally — now emit IR that
+every backend accepts.
+
+#### Sites converted (3 total)
+
+| Site                                | Function context             |
+|-------------------------------------|------------------------------|
+| Record constructor cons-chain       | `compile_record_constructor` (record) |
+| Union variant cons-chain            | `compile_record_constructor` (union variant) |
+| Union variant tag prepend           | `compile_record_constructor` (variant tag head) |
+
+#### Companion changes
+
+- **twig-vm 0.21.0**: new `exec_alloc` and `exec_field_store` dispatch
+  arms that allocate a fresh `(NIL,NIL)` cons cell and mutate fields
+  in place via `lispy_runtime::heap::set_field_unchecked`.
+- **lispy-runtime 0.5.0**: new `unsafe fn set_field_unchecked(pair,
+  index, value)` that mutates `car` or `cdr` of a live ConsCell.  The
+  function re-validates the class id internally so misuse on
+  non-cons heap values surfaces as Err rather than memory corruption.
+- **iir-to-wasm validator**: now accepts `field_store [void]` (the
+  canonical Phase 2 form) in addition to `field_store [ref<*>]`.  CLR,
+  JVM, BEAM already accepted the void form.
+
+#### What this unlocks
+
+- Twig record constructors (e.g. `(record Point (x : int) (y : int))`)
+  now emit backend-valid IR (new test
+  `twig_record_constructor_emits_typed_alloc_and_field_store`).
+- Full-module backend acceptance for record / union programs is still
+  bottlenecked on `car`/`cdr` accessors — that's increment 6c.
+
+#### What's not in this PR
+
+- `car` / `cdr` → typed `field_load [ref<any>]` (increment 6c, 8 sites)
+- `pair?` predicate (later)
+
+After 6c, no list-handling op in twig-ir-compiler emits an untyped
+`call_builtin`, and Twig programs that build / traverse lists flow
+end-to-end through every backend.
+
+#### Tests
+
+- 1 new backend acceptance test
+  (`twig_record_constructor_emits_typed_alloc_and_field_store`).
+- All 73 lib + 13 backend e2e + 179 twig-vm tests pass.
+
 ## [0.20.0] — 2026-05-23 (Path A increment 6a — typed `make_nil`)
 
 ### Added — `nil` literal emits `const 0 [ref<LispyPair>]`

@@ -1,5 +1,51 @@
 # Changelog — twig-vm
 
+## [0.21.0] — 2026-05-24 (Dispatch: typed `alloc` + `field_store` for cons cells)
+
+### Added — `exec_alloc` and `exec_field_store` for cons cells
+
+Companion change to twig-ir-compiler 0.21.0's increment 6b.  The
+compiler now emits `(cons head tail)` as a three-instruction triple:
+
+```
+alloc cell [ref<LispyPair>]
+field_store cell, 0, head [void]
+field_store cell, 1, tail [void]
+```
+
+twig-vm executes this triple natively:
+
+- **`exec_alloc`** with `type_hint == "ref<LispyPair>"` allocates a
+  fresh cons cell `(NIL, NIL)` via `lispy_runtime::heap::alloc_cons`
+  and stores the tagged heap value in `dest`.  Other type_hints
+  surface as `MalformedInstruction` (future record types extend the
+  match).
+
+- **`exec_field_store`** expects `srcs = [Var(pair), Int(idx), value]`
+  with `idx ∈ {0, 1}`.  It resolves the pair register, resolves the
+  value operand (via the same `Operand → LispyValue` bridge that
+  `exec_call_builtin` uses), and writes via the new
+  `lispy_runtime::heap::set_field_unchecked` mutator.
+
+### Why mutation?
+
+The IIR-to-{wasm,jvm,clr,beam} backends emit pair construction as
+"allocate, then set the fields" (struct.set / aastore / stelem.ref /
+put_list).  twig-vm matches that semantics to keep IR shape uniform
+across runtime and AOT paths.
+
+In PR 2's `Box::leak` model every allocated ConsCell lives forever.
+`set_field_unchecked` re-validates the class id so misuse on
+non-cons heap values is detected as `MalformedInstruction` rather
+than memory corruption.  twig-vm's single-threaded dispatch loop
+means there are no concurrent writers.
+
+### Tests
+
+All 179 twig-vm lib tests pass.  The new dispatch arms are exercised
+indirectly by every test that constructs a list at runtime
+(via `(cons …)` or record / union constructors).
+
 ## [0.20.0] — 2026-05-23 (Dispatch: typed `const … [ref<LispyPair>]` → NIL)
 
 ### Added — `exec_const` produces `LispyValue::NIL` for the nil-ref shape

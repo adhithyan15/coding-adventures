@@ -3,6 +3,25 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.5.0] — 2026-05-24 (Validator accepts `field_store [void]`)
+
+### Changed — `validate_for_wasm` now accepts `field_store [void]`
+
+Companion to Twig path-A increment 6b.  The Phase 2 heap-lowering
+convention is `field_store cell, idx, value [void]` (the store has no
+result, so its type_hint is `"void"`).  iir-builtin-lowering emits
+this form, and BEAM, JVM, CLR validators all accept it.  WASM
+previously required `type_hint == "ref<LispyPair>"` for `field_store`,
+which was inconsistent.
+
+This release widens WASM's `field_store` rule: `"void"` is accepted
+canonically; `"ref<LispyPair>"` continues to work for forward
+compatibility with frontends that propagate the object type onto the
+store.
+
+No lowering changes — `lower.rs` already produces `struct.set` from
+both shapes.
+
 ## [0.4.0] — 2026-05-22 (Brainfuck — linear memory + I/O imports)
 
 ### Added — Brainfuck `load_mem` / `store_mem` / `call_builtin` lowering

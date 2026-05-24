@@ -343,6 +343,63 @@ fn twig_empty_program_accepted_by_every_backend() {
     }
 }
 
+/// Path-A increment 6b: `cons` cells are now lowered to typed
+/// `alloc` + `field_store` triples (matching the Phase 2 heap-lowering
+/// convention).  Record/union constructors — which build cons chains
+/// internally — now emit `alloc [ref<LispyPair>]` + two
+/// `field_store [ref<LispyPair>]` per field instead of
+/// `call_builtin "cons"`.
+///
+/// This test asserts the IR shape on the constructor function.  The
+/// full-module backend validation is deferred to increment 6c, when
+/// the matching `car`/`cdr` accessor functions also become typed.
+#[test]
+fn twig_record_constructor_emits_typed_alloc_and_field_store() {
+    let m = compile_source(
+        "(record Point (x : int) (y : int))",
+        "compat",
+    ).expect("Twig must compile");
+
+    let point_fn = m.functions.iter().find(|f| f.name == "Point")
+        .expect("Point constructor must be emitted");
+
+    // The constructor must emit at least one typed `alloc` and at least
+    // one typed `field_store`, and zero `call_builtin "cons"`.
+    assert!(point_fn.instructions.iter().any(|i|
+        i.op == "alloc" && i.type_hint == "ref<LispyPair>"),
+        "Point constructor must emit typed `alloc [ref<LispyPair>]`; \
+         got: {:?}", point_fn.instructions);
+    assert!(point_fn.instructions.iter().any(|i|
+        i.op == "field_store" && i.type_hint == "void"),
+        "Point constructor must emit typed `field_store [void]` (matching \
+         iir-builtin-lowering's Phase 2 convention); \
+         got: {:?}", point_fn.instructions);
+    assert!(
+        !point_fn.instructions.iter().any(|i|
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(s) if s == "cons")
+        ),
+        "increment 6b: legacy `call_builtin \"cons\"` must be gone from \
+         the Point constructor; got: {:?}", point_fn.instructions,
+    );
+
+    // The constructor in isolation must satisfy every backend's IR
+    // validator.  We build a single-function module and validate that.
+    let mut constructor_only = m.clone();
+    constructor_only.functions.retain(|f| f.name == "Point");
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&constructor_only)),
+        ("jvm",  iir_to_jvm_class_file::validate::validate_for_jvm(&constructor_only)),
+        ("clr",  iir_to_cil_bytecode::validate::validate_iir_for_clr(&constructor_only)),
+        ("beam", iir_to_beam::validate::validate_for_beam(&constructor_only)),
+    ] {
+        assert!(errs.is_empty(),
+            "[{name}] validator should accept the Point constructor \
+             after path-A increment 6b; got {} error(s): {errs:?}",
+            errs.len());
+    }
+}
+
 /// Pin the *current* boundary: arithmetic where at least one operand
 /// has a dynamic type (comes from a `call_builtin` like `car`) still
 /// emits `call_builtin "+"` and gets rejected by every backend.  When

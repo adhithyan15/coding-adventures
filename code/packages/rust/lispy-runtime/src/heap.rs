@@ -312,6 +312,65 @@ pub fn alloc_cons(car: LispyValue, cdr: LispyValue) -> LispyValue {
     unsafe { LispyValue::from_heap(ptr) }
 }
 
+/// Mutate one field (`car` or `cdr`) of a live `ConsCell`.
+///
+/// This is the runtime companion for the Path A increment 6b
+/// `alloc [ref<LispyPair>]` + `field_store [void]` lowering: each cons
+/// cell is allocated with NIL placeholders and then mutated into shape
+/// via two `field_store` instructions.  The same shape is what the
+/// IIR-to-{wasm,jvm,clr,beam} backends already emit when they lower a
+/// `call_builtin "cons"` instruction.
+///
+/// # Field indices
+///
+/// - `0` → `car`
+/// - `1` → `cdr`
+///
+/// Any other index returns `Err(...)`.
+///
+/// # Safety
+///
+/// `pair`'s heap-tag bits must mean it genuinely points at a live
+/// `ConsCell` produced by [`alloc_cons`].  In PR 2's `Box::leak` model
+/// every value returned by `alloc_cons` satisfies this permanently.
+/// Once a real GC lands, callers must hold the value inside the
+/// GC-tracked root set for the duration of the write.
+///
+/// Mutation is non-atomic; concurrent writers race.  twig-vm runs a
+/// single dispatch thread per VM, so the race window is empty there.
+/// External users must serialise their own writes.
+///
+/// The function is `unsafe` because dereferencing a non-`alloc_cons`
+/// heap value with a `ConsCell` cast reads garbage memory and writes
+/// over arbitrary bytes — a write-anywhere primitive in the wrong
+/// hands.  Callers MUST validate the value points at a cons before
+/// calling: the `class_or_kind == CLASS_CONS` check in [`is_cons`] is
+/// the right gate.
+pub unsafe fn set_field_unchecked(
+    pair: LispyValue,
+    index: usize,
+    new_value: LispyValue,
+) -> Result<(), &'static str> {
+    let header_ptr: *const ObjectHeader =
+        pair.as_heap_ptr().ok_or("set_field_unchecked: pair is not a heap value")?;
+    // SAFETY: caller asserts the pair points at a live ConsCell (see
+    // function-level safety note).  We re-validate the class id before
+    // taking the *mut cast so misuse on, e.g., a Closure or LangString
+    // surfaces as an error rather than memory corruption.
+    unsafe {
+        if (*header_ptr).class_or_kind != CLASS_CONS {
+            return Err("set_field_unchecked: value is not a cons cell");
+        }
+        let cell = header_ptr as *mut ConsCell;
+        match index {
+            0 => (*cell).car = new_value,
+            1 => (*cell).cdr = new_value,
+            _ => return Err("set_field_unchecked: index must be 0 (car) or 1 (cdr)"),
+        }
+    }
+    Ok(())
+}
+
 /// Allocate a [`Closure`] and return a tagged [`LispyValue`].
 ///
 /// Same PR 2 vs. future-PR contract as [`alloc_cons`].

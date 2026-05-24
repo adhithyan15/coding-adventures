@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-wasm"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
-description = "IIR → WASM backend — lowers IIRModule to WasmModule (now with Brainfuck linear-memory + I/O imports)"
+description = "IIR → WASM backend — lowers IIRModule to WasmModule (now with Brainfuck linear-memory + I/O imports).  Path A increment 6b: validator accepts `field_store [void]` (canonical Phase 2 form) in addition to `field_store [ref<*>]`."
 
 [lib]
 name = "iir_to_wasm"
