@@ -15,6 +15,7 @@ import {
   currentSource,
   currentSourceWithWaveform,
   dcOp,
+  distortionFromFourier,
   estimatePeriod,
   formatDcTable,
   formatTransientTable,
@@ -27,6 +28,7 @@ import {
   pssNewtonIteration,
   pssNewtonSolve,
   pssNewtonUpdate,
+  poleZeroRcLowpass,
   pssResidualJacobian,
   pssResidual,
   resistor,
@@ -773,6 +775,29 @@ describe("transient", () => {
     );
   });
 
+  it("computes the pole for a simple RC low-pass fixture", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+    circuit.add(capacitor("C1", "out", "0", 1.0e-6));
+
+    const result = poleZeroRcLowpass(circuit, "Vin", "out");
+
+    expect(result).toEqual({
+      inputSource: "Vin",
+      outputNode: "out",
+      entries: [
+        {
+          kind: "pole",
+          real: -1.0e3,
+          imaginary: 0.0,
+          frequencyHz: 1.0e3 / (2.0 * Math.PI),
+          damping: 1.0,
+        },
+      ],
+    });
+  });
+
   it("models distortion result shapes for a nonlinear-device smoke fixture", () => {
     const result: DistortionResult = {
       inputSource: "Vin",
@@ -796,6 +821,63 @@ describe("transient", () => {
 
     expect(result.points[0].harmonics[0].harmonic).toBe(2);
     expect(result.points[0].totalHarmonicDistortion).toBeCloseTo(0.025, 9);
+  });
+
+  it("projects Fourier probe harmonics into the distortion result shape", () => {
+    const result = distortionFromFourier(
+      {
+        fundamentalFrequencyHz: 1.0e3,
+        startTime: 0.0,
+        endTime: 1.0e-3,
+        probes: [
+          {
+            probe: "V(out)",
+            dc: 0.0,
+            harmonics: [
+              {
+                harmonic: 1,
+                frequencyHz: 1.0e3,
+                cosine: 0.0,
+                sine: 1.0,
+                magnitude: 1.0,
+                phaseDegrees: 0.0,
+              },
+              {
+                harmonic: 2,
+                frequencyHz: 2.0e3,
+                cosine: 0.0,
+                sine: 0.025,
+                magnitude: 0.025,
+                phaseDegrees: -12.0,
+              },
+            ],
+            totalHarmonicDistortion: 0.025,
+          },
+        ],
+      },
+      "Vin",
+      "V(out)",
+    );
+
+    expect(result).toEqual({
+      inputSource: "Vin",
+      outputProbe: "V(out)",
+      points: [
+        {
+          frequencyHz: 1.0e3,
+          fundamentalMagnitude: 1.0,
+          harmonics: [
+            {
+              harmonic: 2,
+              frequencyHz: 2.0e3,
+              magnitude: 0.025,
+              phaseDegrees: -12.0,
+            },
+          ],
+          totalHarmonicDistortion: 0.025,
+        },
+      ],
+    });
   });
 
   it("formats stable text output tables for DC and transient results", () => {

@@ -1,12 +1,12 @@
 use spice_engine::{
-    dc_op, estimate_period, format_dc_table, format_transient_table, fourier,
-    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
-    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
-    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, transient, transient_adaptive, transient_with_method,
-    AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
-    CurrentSource, DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform,
-    Inductor, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
+    dc_op, distortion_from_fourier, estimate_period, format_dc_table, format_transient_table,
+    fourier, pole_zero_rc_lowpass, pss_newton_candidate_with_tolerance,
+    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
+    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
+    pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
+    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
+    Ccvs, Circuit, CurrentSource, DistortionHarmonic, DistortionPoint, DistortionResult, Element,
+    ExpWaveform, Inductor, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
     PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
     PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
     PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransmissionLine,
@@ -919,6 +919,33 @@ fn pole_zero_result_shape_supports_simple_rc_pole_fixture() {
 }
 
 #[test]
+fn pole_zero_rc_lowpass_returns_simple_rc_pole() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "out", 1_000.0)));
+    circuit.add(Element::Capacitor(Capacitor::new("C1", "out", "0", 1.0e-6)));
+
+    let result = pole_zero_rc_lowpass(&circuit, "Vin", "out").unwrap();
+
+    assert_eq!(
+        result,
+        PoleZeroResult {
+            input_source: "Vin".to_string(),
+            output_node: "out".to_string(),
+            entries: vec![PoleZeroEntry {
+                kind: PoleZeroEntryKind::Pole,
+                real: -1.0e3,
+                imaginary: 0.0,
+                frequency_hz: 1.0e3 / (2.0 * std::f64::consts::PI),
+                damping: 1.0,
+            }],
+        }
+    );
+}
+
+#[test]
 fn distortion_result_shape_supports_nonlinear_device_smoke_fixture() {
     let result = DistortionResult {
         input_source: "Vin".to_string(),
@@ -938,6 +965,59 @@ fn distortion_result_shape_supports_nonlinear_device_smoke_fixture() {
 
     assert_eq!(result.points[0].harmonics[0].harmonic, 2);
     assert_close(result.points[0].total_harmonic_distortion, 0.025);
+}
+
+#[test]
+fn distortion_from_fourier_projects_probe_harmonics() {
+    let fourier_result = spice_engine::FourierResult {
+        fundamental_frequency_hz: 1.0e3,
+        start_time: 0.0,
+        end_time: 1.0e-3,
+        probes: vec![spice_engine::FourierProbeResult {
+            probe: "V(out)".to_string(),
+            dc: 0.0,
+            harmonics: vec![
+                spice_engine::FourierHarmonic {
+                    harmonic: 1,
+                    frequency_hz: 1.0e3,
+                    cosine: 0.0,
+                    sine: 1.0,
+                    magnitude: 1.0,
+                    phase_degrees: 0.0,
+                },
+                spice_engine::FourierHarmonic {
+                    harmonic: 2,
+                    frequency_hz: 2.0e3,
+                    cosine: 0.0,
+                    sine: 0.025,
+                    magnitude: 0.025,
+                    phase_degrees: -12.0,
+                },
+            ],
+            total_harmonic_distortion: 0.025,
+        }],
+    };
+
+    let result = distortion_from_fourier(&fourier_result, "Vin", "V(out)").unwrap();
+
+    assert_eq!(
+        result,
+        DistortionResult {
+            input_source: "Vin".to_string(),
+            output_probe: "V(out)".to_string(),
+            points: vec![DistortionPoint {
+                frequency_hz: 1.0e3,
+                fundamental_magnitude: 1.0,
+                harmonics: vec![DistortionHarmonic {
+                    harmonic: 2,
+                    frequency_hz: 2.0e3,
+                    magnitude: 0.025,
+                    phase_degrees: -12.0,
+                }],
+                total_harmonic_distortion: 0.025,
+            }],
+        }
+    );
 }
 
 #[test]

@@ -707,6 +707,99 @@ export interface PoleZeroResult {
   readonly entries: readonly PoleZeroEntry[];
 }
 
+export function poleZeroRcLowpass(
+  circuit: Circuit,
+  inputSource: string,
+  outputNode: string,
+): PoleZeroResult {
+  const source = circuit
+    .elements()
+    .find((element): element is VoltageSource => element.kind === "voltage-source" && element.name === inputSource);
+  if (source === undefined) {
+    throw new SpiceError(`poleZeroRcLowpass: missing input source ${JSON.stringify(inputSource)}`, "INVALID_ELEMENT", inputSource);
+  }
+  if (!isGround(source.negative)) {
+    throw new SpiceError("poleZeroRcLowpass: input source negative terminal must be ground", "INVALID_ELEMENT", inputSource);
+  }
+
+  const resistor = circuit
+    .elements()
+    .find(
+      (element): element is Resistor =>
+        element.kind === "resistor" &&
+        ((element.n1 === source.positive && element.n2 === outputNode) ||
+          (element.n2 === source.positive && element.n1 === outputNode)),
+    );
+  const capacitor = circuit
+    .elements()
+    .find(
+      (element): element is Capacitor =>
+        element.kind === "capacitor" &&
+        (element.n1 === outputNode || element.n2 === outputNode) &&
+        (isGround(element.n1) || isGround(element.n2)),
+    );
+  if (resistor === undefined || capacitor === undefined) {
+    throw new SpiceError(
+      "poleZeroRcLowpass: expected one resistor from input to output and one grounded output capacitor",
+      "INVALID_ELEMENT",
+      outputNode,
+    );
+  }
+  if (!Number.isFinite(resistor.resistanceOhms) || resistor.resistanceOhms <= 0.0) {
+    throw new SpiceError("poleZeroRcLowpass: resistance must be finite and positive", "INVALID_ELEMENT", resistor.name);
+  }
+  if (!Number.isFinite(capacitor.capacitanceFarads) || capacitor.capacitanceFarads <= 0.0) {
+    throw new SpiceError("poleZeroRcLowpass: capacitance must be finite and positive", "INVALID_ELEMENT", capacitor.name);
+  }
+
+  const real = -1.0 / (resistor.resistanceOhms * capacitor.capacitanceFarads);
+  return {
+    inputSource,
+    outputNode,
+    entries: [
+      {
+        kind: "pole",
+        real,
+        imaginary: 0.0,
+        frequencyHz: Math.abs(real) / TWO_PI,
+        damping: 1.0,
+      },
+    ],
+  };
+}
+
+export function distortionFromFourier(
+  result: FourierResult,
+  inputSource: string,
+  outputProbe: string,
+): DistortionResult {
+  const probe = result.probes.find((candidate) => candidate.probe === outputProbe);
+  if (probe === undefined) {
+    throw new SpiceError(`distortionFromFourier: missing probe ${JSON.stringify(outputProbe)}`, "INVALID_ELEMENT", outputProbe);
+  }
+  const fundamental = probe.harmonics[0];
+  if (fundamental === undefined) {
+    throw new SpiceError("distortionFromFourier: Fourier result has no harmonics", "INVALID_ELEMENT", outputProbe);
+  }
+  return {
+    inputSource,
+    outputProbe,
+    points: [
+      {
+        frequencyHz: fundamental.frequencyHz,
+        fundamentalMagnitude: fundamental.magnitude,
+        harmonics: probe.harmonics.slice(1).map((harmonic) => ({
+          harmonic: harmonic.harmonic,
+          frequencyHz: harmonic.frequencyHz,
+          magnitude: harmonic.magnitude,
+          phaseDegrees: harmonic.phaseDegrees,
+        })),
+        totalHarmonicDistortion: probe.totalHarmonicDistortion,
+      },
+    ],
+  };
+}
+
 export interface AdaptiveTransientOptions {
   readonly method?: TransientMethod;
   readonly tolerance?: number;
