@@ -14,3 +14,5 @@
   that support sampled gradient textures.
 - Added a shared Tier 1 textured backend profile for GPU/compute backends that
   accept image, linear-gradient, and radial-gradient texture plans.
+- Added dashed `PaintLine` lowering to segment meshes instead of degrading line
+  dashes to solid strokes.

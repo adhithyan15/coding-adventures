@@ -435,15 +435,16 @@ impl PlanBuilder {
     }
 
     fn plan_line(&mut self, line: &PaintLine, transform: Transform2D, opacity: f32) {
-        self.warn_stroke_dash(line.stroke_dash.as_deref());
         let color = parse_color_with_opacity(&line.stroke, opacity);
         if color.a == 0.0 {
             return;
         }
-        self.add_line_quad(
+        self.add_stroked_line(
             point(line.x1, line.y1),
             point(line.x2, line.y2),
             line.stroke_width.unwrap_or(1.0).max(1.0) as f32,
+            line.stroke_dash.as_deref(),
+            line.stroke_dash_offset.unwrap_or(0.0) as f32,
             transform,
             color,
             "line",
@@ -897,6 +898,82 @@ impl PlanBuilder {
         );
     }
 
+    fn add_stroked_line(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        width: f32,
+        dash: Option<&[f64]>,
+        dash_offset: f32,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        let Some(pattern) = normalized_dash_pattern(dash) else {
+            self.add_line_quad(p0, p1, width, transform, color, label);
+            return;
+        };
+        self.add_dashed_line_quads(
+            p0,
+            p1,
+            width,
+            &pattern,
+            dash_offset,
+            transform,
+            color,
+            "line.dash",
+        );
+    }
+
+    fn add_dashed_line_quads(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        width: f32,
+        dash: &[f32],
+        dash_offset: f32,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        let dx = p1.x - p0.x;
+        let dy = p1.y - p0.y;
+        let len = (dx * dx + dy * dy).sqrt();
+        if len <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+
+        let cycle = dash.iter().sum::<f32>();
+        let mut index = 0usize;
+        let mut offset = dash_offset.rem_euclid(cycle);
+        while offset >= dash[index] {
+            offset -= dash[index];
+            index = (index + 1) % dash.len();
+        }
+
+        let ux = dx / len;
+        let uy = dy / len;
+        let mut distance = 0.0f32;
+        while distance < len {
+            let remaining_dash = dash[index] - offset;
+            let run = remaining_dash.min(len - distance);
+            if index % 2 == 0 && run > f32::EPSILON {
+                let start = GpuPoint {
+                    x: p0.x + ux * distance,
+                    y: p0.y + uy * distance,
+                };
+                let end = GpuPoint {
+                    x: p0.x + ux * (distance + run),
+                    y: p0.y + uy * (distance + run),
+                };
+                self.add_line_quad(start, end, width, transform, color, label);
+            }
+            distance += run;
+            index = (index + 1) % dash.len();
+            offset = 0.0;
+        }
+    }
+
     fn add_line_quad(
         &mut self,
         p0: GpuPoint,
@@ -1112,6 +1189,25 @@ fn gradient_ref(value: &str) -> Option<&str> {
         .trim()
         .strip_prefix("url(#")
         .and_then(|value| value.strip_suffix(')'))
+}
+
+fn normalized_dash_pattern(dash: Option<&[f64]>) -> Option<Vec<f32>> {
+    let dash = dash?;
+    let mut pattern = dash
+        .iter()
+        .filter_map(|value| {
+            let value = *value as f32;
+            (value.is_finite() && value > f32::EPSILON).then_some(value)
+        })
+        .collect::<Vec<_>>();
+    if pattern.is_empty() {
+        return None;
+    }
+    if pattern.len() % 2 == 1 {
+        let repeated = pattern.clone();
+        pattern.extend(repeated);
+    }
+    Some(pattern)
 }
 
 fn build_gradient_ramp(stops: &[GradientStop], opacity: f32) -> Vec<u8> {
@@ -1496,6 +1592,66 @@ mod tests {
         let plan = plan_scene(&scene);
         assert_eq!(plan.meshes[0].vertices.len(), 4);
         assert_eq!(plan.meshes[0].label, "line");
+    }
+
+    #[test]
+    fn lowers_dashed_line_to_segment_meshes() {
+        let mut scene = PaintScene::new(24.0, 8.0);
+        scene.instructions.push(PaintInstruction::Line(PaintLine {
+            base: PaintBase::default(),
+            x1: 0.0,
+            y1: 4.0,
+            x2: 20.0,
+            y2: 4.0,
+            stroke: "#000000".to_string(),
+            stroke_width: Some(2.0),
+            stroke_cap: None,
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(plan.meshes.len(), 3);
+        assert!(plan
+            .meshes
+            .iter()
+            .all(|mesh| mesh.label == "line.dash" && mesh.vertices.len() == 4));
+        assert_eq!(plan.meshes[0].vertices[0].position.x, 0.0);
+        assert_eq!(plan.meshes[0].vertices[1].position.x, 4.0);
+        assert_eq!(plan.meshes[1].vertices[0].position.x, 8.0);
+        assert_eq!(plan.meshes[1].vertices[1].position.x, 12.0);
+        assert!(!plan
+            .diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.feature == "stroke_dash"));
+    }
+
+    #[test]
+    fn lowers_dashed_line_with_offset() {
+        let mut scene = PaintScene::new(24.0, 8.0);
+        scene.instructions.push(PaintInstruction::Line(PaintLine {
+            base: PaintBase::default(),
+            x1: 0.0,
+            y1: 4.0,
+            x2: 20.0,
+            y2: 4.0,
+            stroke: "#000000".to_string(),
+            stroke_width: Some(2.0),
+            stroke_cap: None,
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: Some(2.0),
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(plan.meshes.len(), 3);
+        assert_eq!(plan.meshes[0].vertices[0].position.x, 0.0);
+        assert_eq!(plan.meshes[0].vertices[1].position.x, 2.0);
+        assert_eq!(plan.meshes[1].vertices[0].position.x, 6.0);
+        assert_eq!(plan.meshes[1].vertices[1].position.x, 10.0);
+        assert_eq!(plan.meshes[2].vertices[0].position.x, 14.0);
+        assert_eq!(plan.meshes[2].vertices[1].position.x, 18.0);
     }
 
     #[test]
