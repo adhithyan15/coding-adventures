@@ -132,6 +132,10 @@ struct ExpectedFormControl {
 struct ExpectedTable {
     caption: Option<String>,
     row_count: usize,
+    #[serde(default)]
+    column_count: usize,
+    #[serde(default)]
+    column_hint_count: usize,
     cell_count: usize,
     header_cell_count: usize,
 }
@@ -326,6 +330,8 @@ impl ExpectedTable {
         BrowserTable {
             caption: self.caption,
             row_count: self.row_count,
+            column_count: self.column_count,
+            column_hint_count: self.column_hint_count,
             cell_count: self.cell_count,
             header_cell_count: self.header_cell_count,
         }

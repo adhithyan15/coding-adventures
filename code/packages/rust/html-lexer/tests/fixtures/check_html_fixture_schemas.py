@@ -308,7 +308,13 @@ def check_browser_expected_lists(
     for index, table in enumerate(object_list_items(expected, "tables")):
         table_path = f"{case_path}.expected.tables[{index}]"
         require_optional_nullable_string(table_path, table, "caption", errors)
-        for field in ("row_count", "cell_count", "header_cell_count"):
+        for field in (
+            "row_count",
+            "column_count",
+            "column_hint_count",
+            "cell_count",
+            "header_cell_count",
+        ):
             require_integer(table_path, table, field, errors)
 
 
@@ -364,9 +370,16 @@ def check_browser_content_node(
         "media",
         "control_type",
         "value",
+        "table_section_kind",
+        "colspan",
+        "rowspan",
+        "span",
+        "scope",
+        "abbr",
     ):
         require_optional_nullable_string(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "classes", errors)
+    require_optional_string_list(node_path, node, "headers", errors)
     for field in ("disabled", "checked", "selected"):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)
@@ -432,9 +445,16 @@ def check_browser_render_node(
         "media",
         "control_type",
         "value",
+        "table_section_kind",
+        "colspan",
+        "rowspan",
+        "span",
+        "scope",
+        "abbr",
     ):
         require_optional_nullable_string(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "classes", errors)
+    require_optional_string_list(node_path, node, "headers", errors)
     for field in ("disabled", "checked", "selected"):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)

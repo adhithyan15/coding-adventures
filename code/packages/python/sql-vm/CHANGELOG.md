@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.56.0 — 2026-05-24
+
+### Changed
+
+- CHECK constraint violations now render as
+  ``CHECK constraint failed: <expr_text>`` (matching SQLite) instead
+  of ``CHECK constraint failed: <table>.<col>``.  The
+  ``check_registry`` value shape grew from ``(col_name, instrs)`` to
+  ``(col_name, expr_text, instrs)`` so the VM can quote the original
+  predicate source.  The handler still accepts the legacy 2-tuple
+  shape for backward compatibility with externally built fixtures
+  (a fallback path emits the older ``<table>.<col>`` form when
+  ``expr_text`` is empty).
+
 ## 1.55.0 — 2026-05-23
 
 ### Added

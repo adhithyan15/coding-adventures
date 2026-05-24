@@ -79,7 +79,7 @@
           }
         ],
         "tables": [
-          { "caption": "Results", "row_count": 2, "cell_count": 4, "header_cell_count": 2 }
+          { "caption": "Results", "row_count": 2, "column_count": 2, "column_hint_count": 0, "cell_count": 4, "header_cell_count": 2 }
         ]
       }
     },
@@ -133,6 +133,30 @@
         "images": [],
         "forms": [],
         "tables": []
+      }
+    },
+    {
+      "id": "table-layout-metadata-page",
+      "description": "Table summaries expose effective row, column, column hint, cell, and header counts for early layout planning.",
+      "input": "<body><table><caption>Prices</caption><colgroup><col span=2 width=80><col width=120><thead><tr><th id=item scope=col abbr=Item>Name<th id=price scope=col>Price<tbody><tr><th scope=row headers=item>Basic<td colspan=2 headers=\"item price\">$1</table>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Prices Name Price Basic $1",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "item", "name": null, "text": "Name" },
+          { "id": "price", "name": null, "text": "Price" }
+        ],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "forms": [],
+        "tables": [
+          { "caption": "Prices", "row_count": 2, "column_count": 3, "column_hint_count": 3, "cell_count": 4, "header_cell_count": 3 }
+        ]
       }
     }
   ]
