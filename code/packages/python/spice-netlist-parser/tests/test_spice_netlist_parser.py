@@ -494,7 +494,7 @@ Rload out 0 1k
 def test_parse_bjt_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
-.model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p)
+.model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p TF=4n)
 Vcc vcc 0 DC 5
 Vb base 0 DC 0.7
 Rc vcc col 100
@@ -507,7 +507,7 @@ Q1 col base 0 fast
         "fast": ModelCard(
             "fast",
             "NPN",
-            {"IS": 1.0e-14, "BF": 120.0, "VT": 25.0e-3, "CJE": 2.0e-12, "CJC": 3.0e-12},
+            {"IS": 1.0e-14, "BF": 120.0, "VT": 25.0e-3, "CJE": 2.0e-12, "CJC": 3.0e-12, "TF": 4.0e-9},
         )
     }
     bjt = parsed.circuit.elements[3]
@@ -521,6 +521,7 @@ Q1 col base 0 fast
     assert bjt.Vt == 25.0e-3
     assert bjt.Cje == 2.0e-12
     assert bjt.Cjc == 3.0e-12
+    assert bjt.Tf == 4.0e-9
 
     result = dc_op(parsed.circuit)
     assert result.converged

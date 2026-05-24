@@ -785,6 +785,7 @@ fn parse_element(
                     .get("CJC")
                     .or_else(|| model.params.get("CBC"))
                     .unwrap_or(&0.0),
+                *model.params.get("TF").unwrap_or(&0.0),
             )))
         }
         'J' => {
