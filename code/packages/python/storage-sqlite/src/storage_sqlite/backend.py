@@ -1100,13 +1100,17 @@ class SqliteFileBackend(Backend):
         try:
             tree.insert(rowid, payload)
         except DuplicateRowidError:
-            # The IPK column value already exists → PRIMARY KEY violation.
+            # The IPK column value already exists.  SQLite reports this
+            # as a UNIQUE constraint violation (PRIMARY KEY implies
+            # UNIQUE; the error wording is unified) — older mini-sqlite
+            # said ``PRIMARY KEY constraint failed: …`` which sqlite3
+            # never emits.
             pk_cols = [c for c in columns if _is_ipk(c)]
             if pk_cols:
                 raise ConstraintViolation(
                     table=table,
                     column=pk_cols[0].name,
-                    message=f"PRIMARY KEY constraint failed: {table}.{pk_cols[0].name}",
+                    message=f"UNIQUE constraint failed: {table}.{pk_cols[0].name}",
                 ) from None
             raise  # Should not happen for non-IPK tables; propagate as-is.
 
