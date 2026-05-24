@@ -179,6 +179,8 @@ All notable changes to this package will be documented in this file.
   routes, lanes, priorities, readiness, and grouping labels together.
 - Host-run attention component flags and counts for health-dashboard,
   scheduler, host-investigation, and run-integrity work.
+- Stable aggregate host-run attention labels and label-integrity flags for
+  supervisor drain run reports and summaries.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host

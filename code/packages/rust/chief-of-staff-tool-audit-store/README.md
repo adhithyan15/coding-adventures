@@ -224,6 +224,8 @@ The crate keeps the boundary narrow:
 - supervisor drain reports and summaries expose host-run attention component
   flags and counts for health-dashboard, scheduler, host-investigation, and
   run-integrity work
+- supervisor drain reports and summaries expose stable aggregate host-run
+  attention labels and label-integrity flags for grouping top-level host work
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
