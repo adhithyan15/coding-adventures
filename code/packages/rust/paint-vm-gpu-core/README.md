@@ -22,7 +22,7 @@ backend interprets the PaintScene geometry.
 
 | Paint instruction | GPU plan lowering |
 |-------------------|-------------------|
-| `PaintRect` | Filled mesh, simple stroked edge meshes |
+| `PaintRect` | Filled mesh; solid and dashed stroked edge meshes |
 | `PaintLine` | Stroke quad, with dash patterns split into segment meshes |
 | `PaintEllipse` | Filled fan and stroked ring tessellation |
 | `PaintPath` | Flattened line/quad/cubic contours; simple fan fill; solid and dashed stroked segments |
@@ -37,5 +37,5 @@ backend interprets the PaintScene geometry.
 ## Next Steps
 
 - Replace simple fan path filling with a robust tessellator.
-- Add stroke joins, caps, and dashed stroke expansion for closed shapes.
+- Add stroke joins, caps, and dashed stroke expansion for ellipses.
 - Add glyph atlas planning once text shaping/font metrics are finalized.

@@ -18,3 +18,4 @@
   dashes to solid strokes.
 - Added dashed `PaintPath` stroke lowering that carries dash state across
   flattened path segments.
+- Added dashed `PaintRect` stroke lowering around the rectangle perimeter.
