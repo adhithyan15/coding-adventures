@@ -2,6 +2,48 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.17.0] - 2026-05-24
+
+### Added (Phase 4l — radix-prefixed integers `0x1F`, `0b1010`, `0o17`, `0d42`)
+
+Ruby's four explicit-radix integer prefixes have been in the language since 1.0 but were never lexed by the v0 state machine.  Implemented as a post-pass fusion (same pattern as Phase 4k float fusion, Phase 4f numeric suffixes, etc.) — the state machine emits `Int("0")` + `Name("xDEAD")` and the post-pass fuses them.
+
+#### Supported shapes
+
+| Source        | Base | Result          |
+|---------------|------|-----------------|
+| `0x1F`        | 16   | `Number "0x1F"` |
+| `0xDEAD_BEEF` | 16   | `Number "0xDEAD_BEEF"` |
+| `0Xff`        | 16   | `Number "0Xff"` |
+| `0b1010`      |  2   | `Number "0b1010"` |
+| `0B1010_1100` |  2   | `Number "0B1010_1100"` |
+| `0o755`       |  8   | `Number "0o755"` |
+| `0O17`        |  8   | `Number "0O17"` |
+| `0d42`        | 10   | `Number "0d42"` |
+| `0D100_000`   | 10   | `Number "0D100_000"` |
+
+#### What this is **not** doing
+
+- **Old-style C-flavoured octal (`017`)**: already a single `Int("017")` from int_body — interpretation as octal vs decimal-with-padding is a parser/SIR-lowerer concern.
+- **Invalid digits**: `0xZZ` does NOT fuse — `Z` isn't a hex digit, so the post-pass declines and the parser later rejects the bad shape.  No diagnostic emitted at the lexer layer (out of scope for v0).
+- **Whitespace breaks fusion**: `0 x1F` is two tokens (`Int "0"`, `Name "x1F"`) — checks `whitespace_before_token`.
+- **Method calls**: `0.method` stays `Int Dot Name` — radix fusion only matches `Int(0) Name(<radix>...)` adjacency.
+
+### Helpers added
+- `fuse_radix_integers` — single-step fusion pass.
+- `is_radix_integer_body(&str)` (module-scope) — validates that a `Name` lexeme matches one of the four radix-body shapes (prefix letter + at least one valid digit + optional `_` separators).
+
+### Tests (+9 new, total 142)
+- `lexes_hex_integer` (`0x1F`, `0xDEAD_BEEF`, `0Xff`)
+- `lexes_binary_integer` (`0b1010`, `0B1010_1100`)
+- `lexes_octal_integer` (`0o755`, `0O17`)
+- `lexes_decimal_explicit_radix` (`0d42`, `0D100_000`)
+- `invalid_hex_does_not_fuse` (`0xZZ` stays as two tokens)
+- `radix_integer_requires_no_whitespace` (`0 x1F` stays as two tokens)
+- `radix_does_not_swallow_method_call` (`0.method` stays `Int Dot Name`)
+- `radix_integers_lex_uniformly_across_all_eras` (pin across all 15 `ERA_VERSIONS`)
+- `is_radix_integer_body_smoke` (direct helper test)
+
 ## [0.16.0] - 2026-05-24
 
 ### Added (Phase 4k — float literals `1.5`, `1e10`, `1.5e-3`)
