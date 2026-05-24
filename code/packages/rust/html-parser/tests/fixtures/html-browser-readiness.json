@@ -158,6 +158,25 @@
           { "caption": "Prices", "row_count": 2, "column_count": 3, "column_hint_count": 3, "cell_count": 4, "header_cell_count": 3 }
         ]
       }
+    },
+    {
+      "id": "text-flow-list-quote-page",
+      "description": "Browser document facts keep the visible prose around lists, preformatted blocks, quotes, and break elements stable.",
+      "input": "<base href=\"https://example.test/docs/page.html\"><body><p>Intro<br>line<wbr>word</p><hr><ol start=3 reversed type=A><li value=7>Seven<li>Eight</ol><pre>  keep\nspace</pre><blockquote cite=notes/ref.html><p>Quote <q cite=#part>part</q></p></blockquote>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/docs/page.html",
+        "base_target": null,
+        "body_text": "Intro line word Seven Eight keep space Quote part",
+        "metas": [],
+        "resources": [],
+        "anchors": [],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
     }
   ]
 }

@@ -80,6 +80,9 @@ The current parser surface includes:
 - browser-facing table layout and accessibility metadata, including effective
   column counts, column hints, row-group identity, column spans, cell spans,
   header associations, scopes, and abbreviated header labels
+- browser-facing text-flow metadata for paragraphs, preformatted text, ordered
+  and unordered lists, list item values, block/inline quote citations, and
+  line/word/thematic break elements
 
 The checked-in html5lib tree-construction smoke corpus now covers every case in
 the currently audited upstream `html5lib-tests/tree-construction/*.dat` sources

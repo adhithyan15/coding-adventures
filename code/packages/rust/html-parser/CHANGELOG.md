@@ -205,6 +205,10 @@ documented in this file.
   accessibility metadata, including effective column counts, column hints,
   row-group identity, column and cell spans, header associations, scopes, and
   abbreviated header labels.
+- Browser-facing content-tree and render-tree projections now carry text-flow
+  metadata for paragraphs, preformatted text, ordered and unordered lists, list
+  item values, block and inline quote citations, and line/word/thematic break
+  elements.
 - Void end tags such as `</img>`, `</input>`, and `</hr>` are now ignored with a
   parser diagnostic, while self-closing syntax on void start tags remains
   acknowledged.
