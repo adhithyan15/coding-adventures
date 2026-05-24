@@ -5,6 +5,18 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.20.0] - 2026-05-23
+
+### Changed
+
+- ``InMemoryBackend.insert`` now mutates the caller's input row
+  dict in place to reflect auto-assigned (INTEGER PRIMARY KEY) and
+  default-applied column values.  The hidden ``_ROWID_KEY`` stamp
+  is excluded — the caller's dict represents user-visible columns
+  only.  Required so the VM's ``LoadLastInsertedColumn`` path for
+  ``INSERT … RETURNING`` observes the auto-assigned id instead of
+  the NULL the caller originally passed in.
+
 ## [0.19.0] - 2026-05-23
 
 ### Added

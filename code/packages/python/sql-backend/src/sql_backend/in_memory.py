@@ -791,6 +791,17 @@ class InMemoryBackend(Backend):
             full_row[_ROWID_KEY] = t._next_rowid
             t._next_rowid += 1
         t.rows.append(full_row)
+        # Reflect any auto-assigned / default values back into the caller's
+        # input dict so downstream consumers (e.g. the VM's
+        # ``LoadLastInsertedColumn`` path for ``INSERT … RETURNING``)
+        # observe the IPK auto-assign rather than the original NULL.
+        # The hidden ``_ROWID_KEY`` stamp is excluded — the caller's
+        # dict represents user-visible columns only.
+        for k, v in full_row.items():
+            if k == _ROWID_KEY:
+                continue
+            if k not in row or row.get(k) is None:
+                row[k] = v
 
     def _autoassign_ipk(self, t: _Table, row: Row) -> None:
         """Fill in the INTEGER PRIMARY KEY column with the next rowid.
