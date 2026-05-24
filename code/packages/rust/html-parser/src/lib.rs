@@ -641,6 +641,16 @@ pub fn extract_browser_content_tree(document: &Document) -> BrowserContentTree {
     BrowserContentTree::from_document(document)
 }
 
+/// Parse a complete HTML string and extract a browser-facing render-tree input.
+pub fn parse_browser_render_tree(source: &str) -> Result<BrowserRenderTree, ParseError> {
+    parse_html(source).map(|document| extract_browser_render_tree(&document))
+}
+
+/// Extract a browser-facing render-tree input from a parsed DOM document.
+pub fn extract_browser_render_tree(document: &Document) -> BrowserRenderTree {
+    BrowserRenderTree::from_document(document)
+}
+
 /// Parse a complete HTML string into a DOM document plus lexer/parser diagnostics.
 pub fn parse_html_with_diagnostics(source: &str) -> Result<ParseOutput, ParseError> {
     parse_html_with_diagnostics_and_options(source, HtmlParseOptions::default())
@@ -864,6 +874,24 @@ pub struct BrowserContentNode {
     pub children: Vec<BrowserContentNode>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct BrowserRenderTree {
+    pub children: Vec<BrowserRenderNode>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserRenderNode {
+    pub display: String,
+    pub role: String,
+    pub name: Option<String>,
+    pub text: Option<String>,
+    pub href: Option<String>,
+    pub src: Option<String>,
+    pub alt: Option<String>,
+    pub control_type: Option<String>,
+    pub children: Vec<BrowserRenderNode>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserHeading {
     pub level: u8,
@@ -961,6 +989,42 @@ impl BrowserContentTree {
         let mut children = Vec::new();
         collect_browser_content_nodes(nodes, &mut children);
         Self { children }
+    }
+}
+
+impl BrowserRenderTree {
+    pub fn from_document(document: &Document) -> Self {
+        Self::from_content_tree(&BrowserContentTree::from_document(document))
+    }
+
+    pub fn from_content_tree(content_tree: &BrowserContentTree) -> Self {
+        Self {
+            children: content_tree
+                .children
+                .iter()
+                .map(BrowserRenderNode::from_content_node)
+                .collect(),
+        }
+    }
+}
+
+impl BrowserRenderNode {
+    pub fn from_content_node(content_node: &BrowserContentNode) -> Self {
+        Self {
+            display: browser_render_display(&content_node.role).to_string(),
+            role: content_node.role.clone(),
+            name: content_node.name.clone(),
+            text: content_node.text.clone(),
+            href: content_node.href.clone(),
+            src: content_node.src.clone(),
+            alt: content_node.alt.clone(),
+            control_type: content_node.control_type.clone(),
+            children: content_node
+                .children
+                .iter()
+                .map(Self::from_content_node)
+                .collect(),
+        }
     }
 }
 
@@ -8218,6 +8282,23 @@ fn is_browser_block_element(name: &str) -> bool {
             | "summary"
             | "xmp"
     )
+}
+
+fn browser_render_display(role: &str) -> &'static str {
+    match role {
+        "text" => "inline-text",
+        "inline" | "link" => "inline",
+        "image" | "control" => "inline-replaced",
+        "line_break" => "line-break",
+        "heading" | "block" | "form" | "list" => "block",
+        "list_item" => "list-item",
+        "table" => "table",
+        "table_caption" => "table-caption",
+        "table_section" => "table-row-group",
+        "table_row" => "table-row",
+        "table_cell" => "table-cell",
+        _ => "inline",
+    }
 }
 
 fn collect_form_controls(nodes: &[Node]) -> Vec<BrowserFormControl> {

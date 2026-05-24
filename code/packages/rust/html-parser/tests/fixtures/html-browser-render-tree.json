@@ -1,0 +1,119 @@
+{
+  "format": "venture-html-browser-render-tree/v1",
+  "suite": "browser-render-tree",
+  "description": "Browser-facing parser acceptance cases for default display categories over renderable body content.",
+  "cases": [
+    {
+      "id": "flow-inline-and-replaced",
+      "description": "Headings and paragraphs become block layout inputs while text, links, images, and line breaks keep inline display categories.",
+      "input": "<body><h1>Example</h1><p>Hello <a href=next.html>Next</a><img src=logo.gif alt=Logo><br>Tail</p>",
+      "expected": {
+        "children": [
+          {
+            "display": "block",
+            "role": "heading",
+            "name": "h1",
+            "text": "Example",
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              { "display": "inline-text", "role": "text", "name": null, "text": "Example", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+            ]
+          },
+          {
+            "display": "block",
+            "role": "block",
+            "name": "p",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              { "display": "inline-text", "role": "text", "name": null, "text": "Hello", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              {
+                "display": "inline",
+                "role": "link",
+                "name": "a",
+                "text": "Next",
+                "href": "next.html",
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  { "display": "inline-text", "role": "text", "name": null, "text": "Next", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+                ]
+              },
+              { "display": "inline-replaced", "role": "image", "name": "img", "text": null, "href": null, "src": "logo.gif", "alt": "Logo", "control_type": null, "children": [] },
+              { "display": "line-break", "role": "line_break", "name": "br", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "display": "inline-text", "role": "text", "name": null, "text": "Tail", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "form-and-table-display",
+      "description": "Form controls become inline replaced boxes, and parser-implied table sections become table row group inputs.",
+      "input": "<body><form><input value=query><button>Go</button></form><table><tr><td>A<td>B</table>",
+      "expected": {
+        "children": [
+          {
+            "display": "block",
+            "role": "form",
+            "name": "form",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              { "display": "inline-replaced", "role": "control", "name": "input", "text": "query", "href": null, "src": null, "alt": null, "control_type": "text", "children": [] },
+              { "display": "inline-replaced", "role": "control", "name": "button", "text": "Go", "href": null, "src": null, "alt": null, "control_type": "submit", "children": [] }
+            ]
+          },
+          {
+            "display": "table",
+            "role": "table",
+            "name": "table",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              {
+                "display": "table-row-group",
+                "role": "table_section",
+                "name": "tbody",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  {
+                    "display": "table-row",
+                    "role": "table_row",
+                    "name": "tr",
+                    "text": null,
+                    "href": null,
+                    "src": null,
+                    "alt": null,
+                    "control_type": null,
+                    "children": [
+                      { "display": "table-cell", "role": "table_cell", "name": "td", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "A", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                      { "display": "table-cell", "role": "table_cell", "name": "td", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "B", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

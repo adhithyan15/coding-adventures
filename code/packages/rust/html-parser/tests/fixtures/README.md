@@ -21,6 +21,11 @@ content can be filtered into renderable structural nodes such as headings,
 blocks, inline runs, links, images, form controls, lists, and tables while
 skipping parser shell, head metadata, comments, scripts, styles, and templates.
 
+`html-browser-render-tree.json` is a checked parser acceptance corpus for the
+browser-facing render-tree input projection. It verifies that the content tree
+is converted into stable default display categories such as block, inline,
+inline-replaced, list-item, and table display nodes for early layout work.
+
 Validate the checked-in smoke fixture's case boundaries and metadata with:
 
 ```bash
