@@ -197,6 +197,10 @@ documented in this file.
   identity and language metadata, including document/body `lang` and `dir`,
   body `id`/classes, and node-level `id`, tokenized `class`, `title`, `lang`,
   and `dir` values for selector matching and browser UI policy.
+- Browser-facing document, content-tree, and render-tree projections now carry
+  embedded resource metadata for frames, objects, embeds, media, and images,
+  including resolved source URLs, resource kind, type hints, media attributes,
+  and authored dimensions for fetch and layout planning.
 - Void end tags such as `</img>`, `</input>`, and `</hr>` are now ignored with a
   parser diagnostic, while self-closing syntax on void start tags remains
   acknowledged.

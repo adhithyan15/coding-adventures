@@ -74,6 +74,9 @@ The current parser surface includes:
 - browser-facing identity and language metadata for document/body fields plus
   renderable content nodes, including `id`, tokenized `class`, `title`, `lang`,
   and `dir` values for selector matching, UI policy, and early layout
+- browser-facing embedded resource metadata for replaced content such as
+  `iframe`, `object`, `embed`, `audio`, and `video`, including resolved source
+  URLs, resource kind, type hints, media attributes, and authored dimensions
 
 The checked-in html5lib tree-construction smoke corpus now covers every case in
 the currently audited upstream `html5lib-tests/tree-construction/*.dat` sources
