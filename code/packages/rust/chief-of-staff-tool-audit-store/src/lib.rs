@@ -699,6 +699,7 @@ impl ToolAuditCheckpointReplaySummary {
         self.inventory_follow_up_label_matches_kind()
             && self.checkpoint_replay_outcome_label_matches_outcome()
             && self.health_action_label_matches_action()
+            && self.health_route_label_matches_route()
     }
 
     /// Return whether any checkpoint replay health label drifted from its classifier.
@@ -735,6 +736,41 @@ impl ToolAuditCheckpointReplaySummary {
     pub fn health_action_requires_count_integrity_investigation(&self) -> bool {
         self.health_action()
             .requires_count_integrity_investigation()
+    }
+
+    /// Return the host route for this checkpoint replay health.
+    pub fn health_route(&self) -> ToolAuditHealthRoute {
+        self.health_action().route()
+    }
+
+    /// Return the stable health-route label for host logs.
+    pub fn health_route_label(&self) -> &'static str {
+        self.health_route().as_str()
+    }
+
+    /// Return whether the health-route label parses back to its typed route.
+    pub fn health_route_label_matches_route(&self) -> bool {
+        ToolAuditHealthRoute::from_label(self.health_route_label()) == Some(self.health_route())
+    }
+
+    /// Return whether this checkpoint replay has a concrete health route.
+    pub fn health_has_route(&self) -> bool {
+        self.health_route().has_route()
+    }
+
+    /// Return whether this checkpoint replay routes health follow-up.
+    pub fn health_routes_to_follow_up(&self) -> bool {
+        self.health_route().is_follow_up()
+    }
+
+    /// Return whether this checkpoint replay routes to count-integrity investigation.
+    pub fn health_routes_to_count_integrity_investigation(&self) -> bool {
+        self.health_route().is_count_integrity_investigation()
+    }
+
+    /// Return whether this checkpoint replay routes health investigation work.
+    pub fn health_routes_to_investigation(&self) -> bool {
+        self.health_route().is_investigation()
     }
 
     /// Return whether any replayed row needs follow-up.
@@ -861,6 +897,7 @@ impl ToolAuditSupervisorCheckpointStatus {
         self.inventory_follow_up_label_matches_kind()
             && self.checkpoint_page_outcome_label_matches_outcome()
             && self.health_action_label_matches_action()
+            && self.health_route_label_matches_route()
     }
 
     /// Return whether any checkpoint status health label drifted from its classifier.
@@ -912,6 +949,51 @@ impl ToolAuditSupervisorCheckpointStatus {
     /// Return whether this checkpoint page action has multiple active surfaces.
     pub fn health_action_has_multiple_actions(&self) -> bool {
         self.health_action().has_multiple_actions()
+    }
+
+    /// Return the host route for this checkpoint page health.
+    pub fn health_route(&self) -> ToolAuditHealthRoute {
+        self.health_action().route()
+    }
+
+    /// Return the stable health-route label for host logs.
+    pub fn health_route_label(&self) -> &'static str {
+        self.health_route().as_str()
+    }
+
+    /// Return whether the health-route label parses back to its typed route.
+    pub fn health_route_label_matches_route(&self) -> bool {
+        ToolAuditHealthRoute::from_label(self.health_route_label()) == Some(self.health_route())
+    }
+
+    /// Return whether this checkpoint page has a concrete health route.
+    pub fn health_has_route(&self) -> bool {
+        self.health_route().has_route()
+    }
+
+    /// Return whether this checkpoint page routes to the drain queue.
+    pub fn health_routes_to_drain(&self) -> bool {
+        self.health_route().is_drain()
+    }
+
+    /// Return whether this checkpoint page routes health follow-up.
+    pub fn health_routes_to_follow_up(&self) -> bool {
+        self.health_route().is_follow_up()
+    }
+
+    /// Return whether this checkpoint page routes to count-integrity investigation.
+    pub fn health_routes_to_count_integrity_investigation(&self) -> bool {
+        self.health_route().is_count_integrity_investigation()
+    }
+
+    /// Return whether this checkpoint page routes to triage.
+    pub fn health_routes_to_triage(&self) -> bool {
+        self.health_route().is_triage()
+    }
+
+    /// Return whether this checkpoint page routes health investigation work.
+    pub fn health_routes_to_investigation(&self) -> bool {
+        self.health_route().is_investigation()
     }
 
     /// Return whether the next drain page would advance the durable checkpoint.
@@ -1034,6 +1116,7 @@ impl ToolAuditSupervisorDrainPlanPage {
         self.inventory_follow_up_label_matches_kind()
             && self.checkpoint_page_outcome_label_matches_outcome()
             && self.health_action_label_matches_action()
+            && self.health_route_label_matches_route()
     }
 
     /// Return whether any planned page health label drifted from its classifier.
@@ -1085,6 +1168,51 @@ impl ToolAuditSupervisorDrainPlanPage {
     /// Return whether this planned page action has multiple active surfaces.
     pub fn health_action_has_multiple_actions(&self) -> bool {
         self.health_action().has_multiple_actions()
+    }
+
+    /// Return the host route for this planned page health.
+    pub fn health_route(&self) -> ToolAuditHealthRoute {
+        self.health_action().route()
+    }
+
+    /// Return the stable health-route label for host preflight logs.
+    pub fn health_route_label(&self) -> &'static str {
+        self.health_route().as_str()
+    }
+
+    /// Return whether the health-route label parses back to its typed route.
+    pub fn health_route_label_matches_route(&self) -> bool {
+        ToolAuditHealthRoute::from_label(self.health_route_label()) == Some(self.health_route())
+    }
+
+    /// Return whether this planned page has a concrete health route.
+    pub fn health_has_route(&self) -> bool {
+        self.health_route().has_route()
+    }
+
+    /// Return whether this planned page routes to the drain queue.
+    pub fn health_routes_to_drain(&self) -> bool {
+        self.health_route().is_drain()
+    }
+
+    /// Return whether this planned page routes health follow-up.
+    pub fn health_routes_to_follow_up(&self) -> bool {
+        self.health_route().is_follow_up()
+    }
+
+    /// Return whether this planned page routes to count-integrity investigation.
+    pub fn health_routes_to_count_integrity_investigation(&self) -> bool {
+        self.health_route().is_count_integrity_investigation()
+    }
+
+    /// Return whether this planned page routes to triage.
+    pub fn health_routes_to_triage(&self) -> bool {
+        self.health_route().is_triage()
+    }
+
+    /// Return whether this planned page routes health investigation work.
+    pub fn health_routes_to_investigation(&self) -> bool {
+        self.health_route().is_investigation()
     }
 
     /// Return whether the matching drain tick would advance the durable checkpoint.
@@ -5626,6 +5754,7 @@ impl ToolAuditBatchWriteSummary {
         self.inventory_follow_up_label_matches_kind()
             && self.write_outcome_label_matches_outcome()
             && self.health_action_label_matches_action()
+            && self.health_route_label_matches_route()
     }
 
     /// Return whether any batch-write health label drifted from its classifier.
@@ -5667,6 +5796,46 @@ impl ToolAuditBatchWriteSummary {
     pub fn health_action_requires_count_integrity_investigation(&self) -> bool {
         self.health_action()
             .requires_count_integrity_investigation()
+    }
+
+    /// Return the host route for this batch-write health.
+    pub fn health_route(&self) -> ToolAuditHealthRoute {
+        self.health_action().route()
+    }
+
+    /// Return the stable health-route label for host logs.
+    pub fn health_route_label(&self) -> &'static str {
+        self.health_route().as_str()
+    }
+
+    /// Return whether the health-route label parses back to its typed route.
+    pub fn health_route_label_matches_route(&self) -> bool {
+        ToolAuditHealthRoute::from_label(self.health_route_label()) == Some(self.health_route())
+    }
+
+    /// Return whether this batch write has a concrete health route.
+    pub fn health_has_route(&self) -> bool {
+        self.health_route().has_route()
+    }
+
+    /// Return whether this batch write routes health follow-up.
+    pub fn health_routes_to_follow_up(&self) -> bool {
+        self.health_route().is_follow_up()
+    }
+
+    /// Return whether this batch write routes to storage investigation.
+    pub fn health_routes_to_storage_investigation(&self) -> bool {
+        self.health_route().is_storage_investigation()
+    }
+
+    /// Return whether this batch write routes to count-integrity investigation.
+    pub fn health_routes_to_count_integrity_investigation(&self) -> bool {
+        self.health_route().is_count_integrity_investigation()
+    }
+
+    /// Return whether this batch write routes health investigation work.
+    pub fn health_routes_to_investigation(&self) -> bool {
+        self.health_route().is_investigation()
     }
 
     /// Return whether every attempted row was persisted.
@@ -5731,6 +5900,7 @@ impl ToolAuditReplaySummary {
         self.inventory_follow_up_label_matches_kind()
             && self.replay_outcome_label_matches_outcome()
             && self.health_action_label_matches_action()
+            && self.health_route_label_matches_route()
     }
 
     /// Return whether any replay health label drifted from its classifier.
@@ -5761,6 +5931,31 @@ impl ToolAuditReplaySummary {
     /// Return whether this replay routes follow-up pressure.
     pub fn health_action_routes_follow_up(&self) -> bool {
         self.health_action().routes_follow_up()
+    }
+
+    /// Return the host route for this replay health.
+    pub fn health_route(&self) -> ToolAuditHealthRoute {
+        self.health_action().route()
+    }
+
+    /// Return the stable health-route label for host logs.
+    pub fn health_route_label(&self) -> &'static str {
+        self.health_route().as_str()
+    }
+
+    /// Return whether the health-route label parses back to its typed route.
+    pub fn health_route_label_matches_route(&self) -> bool {
+        ToolAuditHealthRoute::from_label(self.health_route_label()) == Some(self.health_route())
+    }
+
+    /// Return whether this replay has a concrete health route.
+    pub fn health_has_route(&self) -> bool {
+        self.health_route().has_route()
+    }
+
+    /// Return whether this replay routes health follow-up.
+    pub fn health_routes_to_follow_up(&self) -> bool {
+        self.health_route().is_follow_up()
     }
 
     /// Return whether any replayed row needs follow-up.
@@ -5897,9 +6092,130 @@ impl ToolAuditHealthAction {
     pub fn has_multiple_actions(self) -> bool {
         self.action_count() > 1
     }
+
+    /// Return the host queue route for this health action.
+    pub fn route(self) -> ToolAuditHealthRoute {
+        ToolAuditHealthRoute::from_action(self)
+    }
+
+    /// Return the stable route label for this health action.
+    pub fn route_label(self) -> &'static str {
+        self.route().as_str()
+    }
 }
 
 impl Display for ToolAuditHealthAction {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Host route target derived from lower-level audit health actions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditHealthRoute {
+    /// No host queue should receive this health summary.
+    NoRoute,
+    /// Waiting checkpoint pages should enter the drain queue.
+    Drain,
+    /// Follow-up pressure should enter the follow-up queue.
+    FollowUp,
+    /// Storage failures should enter the storage-investigation queue.
+    StorageInvestigation,
+    /// Count mismatches should enter the count-integrity investigation queue.
+    CountIntegrityInvestigation,
+    /// Multiple active action surfaces should enter the triage queue.
+    Triage,
+}
+
+impl ToolAuditHealthRoute {
+    /// Classify a health action into a stable host route.
+    pub fn from_action(action: ToolAuditHealthAction) -> Self {
+        if action.is_no_action() {
+            return Self::NoRoute;
+        }
+        if action.has_multiple_actions() {
+            return Self::Triage;
+        }
+        if action.should_drain_page() {
+            return Self::Drain;
+        }
+        if action.routes_follow_up() {
+            return Self::FollowUp;
+        }
+        if action.requires_storage_investigation() {
+            return Self::StorageInvestigation;
+        }
+        if action.requires_count_integrity_investigation() {
+            return Self::CountIntegrityInvestigation;
+        }
+        Self::NoRoute
+    }
+
+    /// Return a stable snake_case label for host queues.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoRoute => "no_route",
+            Self::Drain => "drain",
+            Self::FollowUp => "follow_up",
+            Self::StorageInvestigation => "storage_investigation",
+            Self::CountIntegrityInvestigation => "count_integrity_investigation",
+            Self::Triage => "triage",
+        }
+    }
+
+    /// Parse a stable snake_case health-route label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_route" => Some(Self::NoRoute),
+            "drain" => Some(Self::Drain),
+            "follow_up" => Some(Self::FollowUp),
+            "storage_investigation" => Some(Self::StorageInvestigation),
+            "count_integrity_investigation" => Some(Self::CountIntegrityInvestigation),
+            "triage" => Some(Self::Triage),
+            _ => None,
+        }
+    }
+
+    /// Return whether this route points at a concrete host queue.
+    pub fn has_route(self) -> bool {
+        !matches!(self, Self::NoRoute)
+    }
+
+    /// Return whether this route points at the drain queue.
+    pub fn is_drain(self) -> bool {
+        matches!(self, Self::Drain)
+    }
+
+    /// Return whether this route points at the follow-up queue.
+    pub fn is_follow_up(self) -> bool {
+        matches!(self, Self::FollowUp)
+    }
+
+    /// Return whether this route points at the storage-investigation queue.
+    pub fn is_storage_investigation(self) -> bool {
+        matches!(self, Self::StorageInvestigation)
+    }
+
+    /// Return whether this route points at the count-integrity investigation queue.
+    pub fn is_count_integrity_investigation(self) -> bool {
+        matches!(self, Self::CountIntegrityInvestigation)
+    }
+
+    /// Return whether this route points at the triage queue.
+    pub fn is_triage(self) -> bool {
+        matches!(self, Self::Triage)
+    }
+
+    /// Return whether this route points at an investigation queue.
+    pub fn is_investigation(self) -> bool {
+        matches!(
+            self,
+            Self::StorageInvestigation | Self::CountIntegrityInvestigation
+        )
+    }
+}
+
+impl Display for ToolAuditHealthRoute {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -6018,6 +6334,16 @@ impl ToolAuditBatchWriteOutcome {
     pub fn health_action_label(self) -> &'static str {
         self.health_action().as_str()
     }
+
+    /// Return the host route for this write outcome.
+    pub fn health_route(self) -> ToolAuditHealthRoute {
+        self.health_action().route()
+    }
+
+    /// Return the stable health-route label for this write outcome.
+    pub fn health_route_label(self) -> &'static str {
+        self.health_route().as_str()
+    }
 }
 
 impl Display for ToolAuditBatchWriteOutcome {
@@ -6099,6 +6425,16 @@ impl ToolAuditReplayOutcome {
     /// Return the stable health-action label for this replay outcome.
     pub fn health_action_label(self) -> &'static str {
         self.health_action().as_str()
+    }
+
+    /// Return the host route for this replay outcome.
+    pub fn health_route(self) -> ToolAuditHealthRoute {
+        self.health_action().route()
+    }
+
+    /// Return the stable health-route label for this replay outcome.
+    pub fn health_route_label(self) -> &'static str {
+        self.health_route().as_str()
     }
 }
 
@@ -6199,6 +6535,16 @@ impl ToolAuditCheckpointReplayOutcome {
     /// Return the stable health-action label for this checkpoint replay.
     pub fn health_action_label(self) -> &'static str {
         self.health_action().as_str()
+    }
+
+    /// Return the host route for this checkpoint replay.
+    pub fn health_route(self) -> ToolAuditHealthRoute {
+        self.health_action().route()
+    }
+
+    /// Return the stable health-route label for this checkpoint replay.
+    pub fn health_route_label(self) -> &'static str {
+        self.health_route().as_str()
     }
 }
 
@@ -6353,6 +6699,16 @@ impl ToolAuditCheckpointPageOutcome {
     /// Return the stable health-action label for this checkpoint page.
     pub fn health_action_label(self) -> &'static str {
         self.health_action().as_str()
+    }
+
+    /// Return the host route for this checkpoint page.
+    pub fn health_route(self) -> ToolAuditHealthRoute {
+        self.health_action().route()
+    }
+
+    /// Return the stable health-route label for this checkpoint page.
+    pub fn health_route_label(self) -> &'static str {
+        self.health_route().as_str()
     }
 }
 
@@ -6571,7 +6927,9 @@ impl ToolAuditStoreInventorySummary {
 
     /// Return whether all inventory health labels match their typed values.
     pub fn health_labels_match(&self) -> bool {
-        self.follow_up_label_matches_kind() && self.health_action_label_matches_action()
+        self.follow_up_label_matches_kind()
+            && self.health_action_label_matches_action()
+            && self.health_route_label_matches_route()
     }
 
     /// Return whether any inventory health label drifted from its classifier.
@@ -6602,6 +6960,31 @@ impl ToolAuditStoreInventorySummary {
     /// Return whether this inventory routes follow-up pressure.
     pub fn health_action_routes_follow_up(&self) -> bool {
         self.health_action().routes_follow_up()
+    }
+
+    /// Return the host route for this inventory health.
+    pub fn health_route(&self) -> ToolAuditHealthRoute {
+        self.health_action().route()
+    }
+
+    /// Return the stable health-route label for host logs.
+    pub fn health_route_label(&self) -> &'static str {
+        self.health_route().as_str()
+    }
+
+    /// Return whether the health-route label parses back to its typed route.
+    pub fn health_route_label_matches_route(&self) -> bool {
+        ToolAuditHealthRoute::from_label(self.health_route_label()) == Some(self.health_route())
+    }
+
+    /// Return whether this inventory has a concrete health route.
+    pub fn health_has_route(&self) -> bool {
+        self.health_route().has_route()
+    }
+
+    /// Return whether this inventory routes health follow-up.
+    pub fn health_routes_to_follow_up(&self) -> bool {
+        self.health_route().is_follow_up()
     }
 
     /// Return whether multiple follow-up surfaces are active.
@@ -6740,6 +7123,16 @@ impl ToolAuditInventoryFollowUpKind {
     /// Return the stable health-action label for this follow-up kind.
     pub fn health_action_label(self) -> &'static str {
         self.health_action().as_str()
+    }
+
+    /// Return the host route for this follow-up kind.
+    pub fn health_route(self) -> ToolAuditHealthRoute {
+        self.health_action().route()
+    }
+
+    /// Return the stable health-route label for this follow-up kind.
+    pub fn health_route_label(self) -> &'static str {
+        self.health_route().as_str()
     }
 }
 
@@ -13386,6 +13779,230 @@ mod tests {
         assert!(planned_page.health_action_should_drain_page());
         assert!(planned_page.health_action_requests_continuation());
         assert!(planned_page.health_action_label_matches_action());
+    }
+
+    #[test]
+    fn audit_health_route_labels_are_stable() {
+        assert_eq!(ToolAuditHealthRoute::NoRoute.as_str(), "no_route");
+        assert_eq!(
+            ToolAuditHealthRoute::from_label("drain"),
+            Some(ToolAuditHealthRoute::Drain)
+        );
+        assert_eq!(
+            ToolAuditHealthRoute::from_label("follow_up"),
+            Some(ToolAuditHealthRoute::FollowUp)
+        );
+        assert_eq!(
+            ToolAuditHealthRoute::from_label("storage_investigation"),
+            Some(ToolAuditHealthRoute::StorageInvestigation)
+        );
+        assert_eq!(
+            ToolAuditHealthRoute::from_label("count_integrity_investigation"),
+            Some(ToolAuditHealthRoute::CountIntegrityInvestigation)
+        );
+        assert_eq!(
+            ToolAuditHealthRoute::from_label("triage"),
+            Some(ToolAuditHealthRoute::Triage)
+        );
+        assert_eq!(ToolAuditHealthRoute::from_label("somewhere_else"), None);
+
+        assert!(!ToolAuditHealthRoute::NoRoute.has_route());
+        assert!(ToolAuditHealthRoute::Drain.has_route());
+        assert!(ToolAuditHealthRoute::Drain.is_drain());
+        assert!(ToolAuditHealthRoute::FollowUp.is_follow_up());
+        assert!(ToolAuditHealthRoute::StorageInvestigation.is_storage_investigation());
+        assert!(ToolAuditHealthRoute::StorageInvestigation.is_investigation());
+        assert!(
+            ToolAuditHealthRoute::CountIntegrityInvestigation.is_count_integrity_investigation()
+        );
+        assert!(ToolAuditHealthRoute::CountIntegrityInvestigation.is_investigation());
+        assert!(ToolAuditHealthRoute::Triage.is_triage());
+        assert!(!ToolAuditHealthRoute::Triage.is_investigation());
+
+        assert_eq!(
+            ToolAuditHealthAction::NoAction.route(),
+            ToolAuditHealthRoute::NoRoute
+        );
+        assert_eq!(
+            ToolAuditHealthAction::DrainPage.route(),
+            ToolAuditHealthRoute::Drain
+        );
+        assert_eq!(
+            ToolAuditHealthAction::RouteFollowUp.route(),
+            ToolAuditHealthRoute::FollowUp
+        );
+        assert_eq!(
+            ToolAuditHealthAction::InvestigateStorageFailures.route(),
+            ToolAuditHealthRoute::StorageInvestigation
+        );
+        assert_eq!(
+            ToolAuditHealthAction::InvestigateCountIntegrity.route_label(),
+            "count_integrity_investigation"
+        );
+        assert_eq!(
+            ToolAuditHealthAction::DrainPageAndRouteFollowUp.route(),
+            ToolAuditHealthRoute::Triage
+        );
+        assert_eq!(
+            ToolAuditHealthAction::DrainPageAndScheduleContinuation.route(),
+            ToolAuditHealthRoute::Triage
+        );
+        assert_eq!(
+            ToolAuditHealthAction::DrainPageRouteFollowUpAndScheduleContinuation.route(),
+            ToolAuditHealthRoute::Triage
+        );
+
+        assert_eq!(
+            ToolAuditInventoryFollowUpKind::NoFollowUp.health_route(),
+            ToolAuditHealthRoute::NoRoute
+        );
+        assert_eq!(
+            ToolAuditInventoryFollowUpKind::ApprovalPressure.health_route_label(),
+            "follow_up"
+        );
+        assert_eq!(
+            ToolAuditBatchWriteOutcome::StorageFailures.health_route(),
+            ToolAuditHealthRoute::StorageInvestigation
+        );
+        assert_eq!(
+            ToolAuditBatchWriteOutcome::CountIntegrityDrift.health_route_label(),
+            "count_integrity_investigation"
+        );
+        assert_eq!(
+            ToolAuditReplayOutcome::ReplayedWithFollowUp.health_route(),
+            ToolAuditHealthRoute::FollowUp
+        );
+        assert_eq!(
+            ToolAuditCheckpointReplayOutcome::CountIntegrityDrift.health_route(),
+            ToolAuditHealthRoute::CountIntegrityInvestigation
+        );
+        assert_eq!(
+            ToolAuditCheckpointPageOutcome::PendingClean.health_route(),
+            ToolAuditHealthRoute::Drain
+        );
+        assert_eq!(
+            ToolAuditCheckpointPageOutcome::PendingWithFollowUp.health_route(),
+            ToolAuditHealthRoute::Triage
+        );
+        assert_eq!(
+            ToolAuditCheckpointPageOutcome::PendingContinuation.health_route_label(),
+            "triage"
+        );
+
+        let clean_inventory =
+            ToolAuditStoreInventorySummary::from_records(&[sample_record("call_clean")]);
+        assert_eq!(
+            clean_inventory.health_route(),
+            ToolAuditHealthRoute::NoRoute
+        );
+        assert_eq!(clean_inventory.health_route_label(), "no_route");
+        assert!(clean_inventory.health_route_label_matches_route());
+        assert!(!clean_inventory.health_has_route());
+
+        let follow_up_inventory =
+            ToolAuditStoreInventorySummary::from_records(&[failed_record("call_failed")]);
+        assert_eq!(
+            follow_up_inventory.health_route(),
+            ToolAuditHealthRoute::FollowUp
+        );
+        assert_eq!(follow_up_inventory.health_route_label(), "follow_up");
+        assert!(follow_up_inventory.health_has_route());
+        assert!(follow_up_inventory.health_routes_to_follow_up());
+
+        let write_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let clean_write = write_store.record_audit_batch(vec![sample_record("write_clean")]);
+        assert_eq!(clean_write.health_route(), ToolAuditHealthRoute::NoRoute);
+        assert!(clean_write.health_route_label_matches_route());
+        assert!(!clean_write.health_has_route());
+
+        let failure_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let storage_failure = failure_store.record_audit_batch(vec![
+            sample_record("write_dupe"),
+            sample_record("write_dupe"),
+        ]);
+        assert_eq!(
+            storage_failure.health_route(),
+            ToolAuditHealthRoute::StorageInvestigation
+        );
+        assert_eq!(
+            storage_failure.health_route_label(),
+            "storage_investigation"
+        );
+        assert!(storage_failure.health_routes_to_storage_investigation());
+        assert!(storage_failure.health_routes_to_investigation());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let replay_summary = write_store
+            .replay_audits(&ToolAuditRecordQuery::new(), &mut sink)
+            .unwrap();
+        assert_eq!(replay_summary.health_route(), ToolAuditHealthRoute::NoRoute);
+        assert!(replay_summary.health_route_label_matches_route());
+
+        let checkpoint_replay = ToolAuditCheckpointReplaySummary {
+            checkpoint_name: "supervisor".to_string(),
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(120, "call_clean"),
+            stored_checkpoint: None,
+            replayed_records: 1,
+            inventory: clean_inventory,
+        };
+        assert_eq!(
+            checkpoint_replay.health_route(),
+            ToolAuditHealthRoute::NoRoute
+        );
+        assert!(checkpoint_replay.health_route_label_matches_route());
+
+        let mut stale_replay = checkpoint_replay.clone();
+        stale_replay.replayed_records = 2;
+        assert_eq!(
+            stale_replay.health_route(),
+            ToolAuditHealthRoute::CountIntegrityInvestigation
+        );
+        assert!(stale_replay.health_routes_to_count_integrity_investigation());
+        assert!(stale_replay.health_routes_to_investigation());
+
+        let checkpoint_status = ToolAuditSupervisorCheckpointStatus {
+            checkpoint_name: "supervisor".to_string(),
+            max_records: 10,
+            stored_checkpoint: None,
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(151, "call_failed"),
+            pending_records: 1,
+            inventory: follow_up_inventory,
+            reached_end_of_log: false,
+        };
+        assert_eq!(
+            checkpoint_status.health_route(),
+            ToolAuditHealthRoute::Triage
+        );
+        assert_eq!(checkpoint_status.health_route_label(), "triage");
+        assert!(checkpoint_status.health_has_route());
+        assert!(checkpoint_status.health_routes_to_triage());
+        assert!(!checkpoint_status.health_routes_to_investigation());
+        assert!(checkpoint_status.health_route_label_matches_route());
+
+        let planned_page = ToolAuditSupervisorDrainPlanPage {
+            max_records: 10,
+            starting_checkpoint: ToolAuditReadCheckpoint::beginning(),
+            next_checkpoint: ToolAuditReadCheckpoint::new(120, "call_clean"),
+            pending_records: 1,
+            inventory: clean_inventory,
+            reached_end_of_log: true,
+        };
+        assert_eq!(planned_page.health_route(), ToolAuditHealthRoute::Drain);
+        assert_eq!(planned_page.health_route_label(), "drain");
+        assert!(planned_page.health_routes_to_drain());
+        assert!(planned_page.health_route_label_matches_route());
+
+        let continuation_page = ToolAuditSupervisorDrainPlanPage {
+            reached_end_of_log: false,
+            ..planned_page
+        };
+        assert_eq!(
+            continuation_page.health_route(),
+            ToolAuditHealthRoute::Triage
+        );
+        assert!(continuation_page.health_routes_to_triage());
     }
 
     #[test]
