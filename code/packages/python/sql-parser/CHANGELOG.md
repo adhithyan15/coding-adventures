@@ -2,6 +2,19 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.40.0] - 2026-05-23
+
+### Changed
+
+- ``returning_clause`` now accepts ``*`` via a new ``returning_item``
+  alternative::
+
+      returning_clause = "RETURNING" returning_item { "," returning_item } ;
+      returning_item   = "*" | expr ;
+
+  Required for SQLite's ``RETURNING *`` shorthand.  Regenerated
+  ``_grammar.py``.
+
 ## [0.39.0] - 2026-05-23
 
 ### Added

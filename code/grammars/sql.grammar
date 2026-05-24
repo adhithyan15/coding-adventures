@@ -197,7 +197,11 @@ assignment        = NAME "=" expr ;
 
 delete_stmt       = "DELETE" "FROM" NAME [ where_clause ] [ returning_clause ] ;
 
-returning_clause  = "RETURNING" expr { "," expr } ;
+returning_clause  = "RETURNING" returning_item { "," returning_item } ;
+# RETURNING accepts ``*`` (shorthand for every column of the target
+# table, in declaration order) as well as ordinary expressions —
+# matches SQLite's RETURNING grammar.
+returning_item    = "*" | expr ;
 
 # ── CREATE TABLE / DROP TABLE ─────────────────────────────────────────────────
 

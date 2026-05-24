@@ -1590,6 +1590,34 @@ def _resolve_upsert_expr(expr: Expr, table_cols: list[str], schema: SchemaProvid
             return expr
 
 
+def _expand_returning_wildcards(
+    returning: tuple[Expr, ...],
+    table: str,
+    cols: list[str],
+) -> tuple[Expr, ...]:
+    """Expand any ``RETURNING *`` Wildcards into one column ref per table column.
+
+    SQLite's ``RETURNING *`` short-hand emits every column of the
+    target table in declaration order.  The adapter encodes ``*`` as
+    a :class:`Wildcard` sentinel; the codegen can't handle Wildcards
+    in expression position, so we expand them here at planning time
+    — same approach SELECT * uses.  Non-Wildcard items pass through
+    unchanged so a mixed list like ``RETURNING id, *`` is also
+    supported (matches SQLite, though uncommon in practice).
+    """
+    out: list[Expr] = []
+    for item in returning:
+        if isinstance(item, Wildcard):
+            # ``Column`` is the unresolved (qualified-but-not-yet-typed)
+            # column reference; ``_resolve`` will turn it into the
+            # backend-bound form moments after this expansion runs.
+            for col_name in cols:
+                out.append(Column(table=table, col=col_name))
+        else:
+            out.append(item)
+    return tuple(out)
+
+
 def _plan_insert(stmt: InsertValuesStmt, schema: SchemaProvider) -> P.LogicalPlan:
     # Validate the target table and, if a column list is given, each column.
     table_cols = schema.columns(stmt.table)
@@ -1600,8 +1628,11 @@ def _plan_insert(stmt: InsertValuesStmt, schema: SchemaProvider) -> P.LogicalPla
     # Resolve RETURNING exprs against the table's column scope so that bare
     # column references like ``id`` become ``Column(table=stmt.table, col='id')``.
     returning_scope: Scope = {stmt.table: table_cols}
+    expanded_returning = _expand_returning_wildcards(
+        stmt.returning, stmt.table, table_cols
+    )
     resolved_returning = tuple(
-        _resolve(r, returning_scope, schema) for r in stmt.returning
+        _resolve(r, returning_scope, schema) for r in expanded_returning
     )
     upsert = _resolve_upsert(stmt.upsert_clause, table_cols, schema)
     return P.Insert(
@@ -1629,7 +1660,8 @@ def _plan_update(stmt: UpdateStmt, schema: SchemaProvider) -> P.LogicalPlan:
         predicate = _propagate_column_collation(predicate, schema)
     if predicate is not None and contains_aggregate(predicate):
         raise InvalidAggregate(message="aggregate function not allowed in UPDATE WHERE clause")
-    resolved_returning = tuple(_resolve(r, scope, schema) for r in stmt.returning)
+    expanded_returning = _expand_returning_wildcards(stmt.returning, stmt.table, cols)
+    resolved_returning = tuple(_resolve(r, scope, schema) for r in expanded_returning)
     return P.Update(
         table=stmt.table,
         assignments=resolved_assignments,
@@ -1646,7 +1678,8 @@ def _plan_delete(stmt: DeleteStmt, schema: SchemaProvider) -> P.LogicalPlan:
         predicate = _propagate_column_collation(predicate, schema)
     if predicate is not None and contains_aggregate(predicate):
         raise InvalidAggregate(message="aggregate function not allowed in DELETE WHERE clause")
-    resolved_returning = tuple(_resolve(r, scope, schema) for r in stmt.returning)
+    expanded_returning = _expand_returning_wildcards(stmt.returning, stmt.table, cols)
+    resolved_returning = tuple(_resolve(r, scope, schema) for r in expanded_returning)
     return P.Delete(table=stmt.table, predicate=predicate, returning=resolved_returning)
 
 

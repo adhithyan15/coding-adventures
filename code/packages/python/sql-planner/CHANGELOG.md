@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.43.0] - 2026-05-23
+
+### Added
+
+- ``_expand_returning_wildcards()`` helper used by the INSERT,
+  UPDATE, and DELETE planners.  Walks the RETURNING list and
+  replaces every :class:`Wildcard` entry with one
+  ``Column(table, col)`` per table column in declaration order.
+  Required because the codegen rejects Wildcards in expression
+  position; expansion must happen before resolution.
+
 ## [0.42.0] - 2026-05-23
 
 ### Added
