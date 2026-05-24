@@ -197,6 +197,10 @@ without rebuilding archive retention policy.
 stable transport checkpoint records with Rust-owned checkpoint names, labels,
 queue-depth metadata, and messages, so adapters can resume or compare callback
 transport state without rebuilding snapshot policy.
+`input_callback_transport_marker_summary` tags those checkpoints as stable
+transport marker records with Rust-owned marker names, labels, queue-depth
+metadata, and messages, so frontends can correlate handoff and adapter-event
+boundaries without rebuilding checkpoint policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
