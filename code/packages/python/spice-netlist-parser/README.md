@@ -20,7 +20,8 @@ netlist.analyses
 
 This parser slice supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`,
 `F`, and `H` elements, `.model` cards for Shockley diode parameters (`IS`,
-`VT`), BJT parameters (`NPN`/`PNP`, `IS`, `BF`/`BETA_F`, `VT`), and Level-1
+`VT`), BJT parameters (`NPN`/`PNP`, `IS`, `BF`/`BETA_F`, `VT`, `CJE`, `CJC`,
+`TF`, `TR`), and Level-1
 MOSFET parameters (`NMOS`/`PMOS`, `VT0`/`VTO`, `KP`, `LAMBDA`, `GAMMA`, `PHI`,
 `W`, `L`, `IS`, `N_SUB`/`NSUB`, `T_NOM`/`TNOM`), capacitor `IC=<voltage>`
 and inductor `IC=<current>` initial conditions, SPICE engineering suffixes,

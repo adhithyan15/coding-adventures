@@ -261,7 +261,7 @@ def _clone_subckt_element(element: object, instance_name: str, node_map: dict[st
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -2005,6 +2005,8 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(f"{el.name}: BJT base-collector capacitance must be finite and non-negative")
     if not math.isfinite(el.Tf) or el.Tf < 0.0:
         raise ValueError(f"{el.name}: BJT forward transit time must be finite and non-negative")
+    if not math.isfinite(el.Tr) or el.Tr < 0.0:
+        raise ValueError(f"{el.name}: BJT reverse transit time must be finite and non-negative")
 
 
 # ---------------------------------------------------------------------------
@@ -3955,18 +3957,26 @@ def _stamp_ac(
         # VCCS).  Mirror the DC _stamp_bjt stamps but in the complex domain and
         # without the Norton offsets (which are DC bias terms, zero in AC).
         _validate_bjt(el)
+        Vc_dc = 0.0 if _is_ground(el.collector) else dc_x[node_to_idx[el.collector]]
         Vb_dc = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
         Ve_dc = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
         Vjunc = (
             min(Vb_dc - Ve_dc, 0.7) if el.polarity == "NPN"
             else min(Ve_dc - Vb_dc, 0.7)
         )
+        Vreverse = (
+            min(Vb_dc - Vc_dc, 0.7) if el.polarity == "NPN"
+            else min(Vc_dc - Vb_dc, 0.7)
+        )
         exp_t = math.exp(Vjunc / el.Vt)
+        exp_reverse = math.exp(Vreverse / el.Vt)
         gm_b: float = (el.Is / el.Vt) * exp_t
+        gm_reverse: float = (el.Is / el.Vt) * exp_reverse
         g_pi: float = gm_b / el.beta_f
         diffusion_capacitance = el.Tf * gm_b
+        reverse_diffusion_capacitance = el.Tr * gm_reverse
         y_be = g_pi + 1j * omega * (el.Cje + diffusion_capacitance)
-        y_bc = 1j * omega * el.Cjc
+        y_bc = 1j * omega * (el.Cjc + reverse_diffusion_capacitance)
 
         if el.polarity == "NPN":
             _stamp_g_c(G, node_to_idx, el.base, el.emitter, y_be)
@@ -5359,6 +5369,7 @@ def sens_dc(
                     Cje=el.Cje,
                     Cjc=el.Cjc,
                     Tf=el.Tf,
+                    Tr=el.Tr,
                 ),
             )
             delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
@@ -5374,6 +5385,7 @@ def sens_dc(
                     Cje=el.Cje,
                     Cjc=el.Cjc,
                     Tf=el.Tf,
+                    Tr=el.Tr,
                 ),
             )
 
@@ -5583,6 +5595,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Cje=el.Cje,
             Cjc=el.Cjc,
             Tf=el.Tf,
+            Tr=el.Tr,
         )
 
     # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.

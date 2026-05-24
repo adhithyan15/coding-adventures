@@ -216,6 +216,9 @@ Status:
 - BJT `.model ... NPN|PNP(... TF=<time>)` parsing and forward-bias diffusion
   capacitance are implemented in AC analysis across Python, TypeScript, and
   Rust.
+- BJT `.model ... NPN|PNP(... TR=<time>)` parsing and reverse/base-collector
+  diffusion capacitance are implemented in AC analysis across Python,
+  TypeScript, and Rust.
 
 ### Phase 7 - Classic Text Output and Control Cards
 

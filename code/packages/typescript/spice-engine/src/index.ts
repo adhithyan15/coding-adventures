@@ -395,6 +395,7 @@ export interface Bjt {
   readonly baseEmitterCapacitance: number;
   readonly baseCollectorCapacitance: number;
   readonly forwardTransitTime: number;
+  readonly reverseTransitTime: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -957,7 +958,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -1258,6 +1259,7 @@ export function bjt(
   baseEmitterCapacitance = 0.0,
   baseCollectorCapacitance = 0.0,
   forwardTransitTime = 0.0,
+  reverseTransitTime = 0.0,
 ): Bjt {
   return {
     kind: "bjt",
@@ -1272,6 +1274,7 @@ export function bjt(
     baseEmitterCapacitance,
     baseCollectorCapacitance,
     forwardTransitTime,
+    reverseTransitTime,
   };
 }
 
@@ -4899,6 +4902,9 @@ function validateBjt(element: Bjt): void {
   if (!Number.isFinite(element.forwardTransitTime) || element.forwardTransitTime < 0.0) {
     throw invalidElement(element.name, "forward transit time must be finite and non-negative");
   }
+  if (!Number.isFinite(element.reverseTransitTime) || element.reverseTransitTime < 0.0) {
+    throw invalidElement(element.name, "reverse transit time must be finite and non-negative");
+  }
 }
 
 function validateMosfet(element: Mosfet): void {
@@ -6526,11 +6532,15 @@ function stampAcBjtSmallSignal(
   const transconductance = element.saturationCurrent / element.thermalVoltage;
   const junctionConductance = transconductance / element.forwardBeta;
   const diffusionCapacitance = element.forwardTransitTime * transconductance;
+  const reverseDiffusionCapacitance = element.reverseTransitTime * transconductance;
   const baseEmitterAdmittance = complex(
     junctionConductance,
     omega * (element.baseEmitterCapacitance + diffusionCapacitance),
   );
-  const baseCollectorAdmittance = complex(0.0, omega * element.baseCollectorCapacitance);
+  const baseCollectorAdmittance = complex(
+    0.0,
+    omega * (element.baseCollectorCapacitance + reverseDiffusionCapacitance),
+  );
   if (element.polarity === "NPN") {
     stampComplexConductance(
       matrix,

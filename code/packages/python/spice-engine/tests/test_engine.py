@@ -2184,6 +2184,24 @@ def test_ac_bjt_transit_time_adds_diffusion_capacitance():
     assert with_transit_time < without_transit_time / 100.0
 
 
+def test_ac_bjt_reverse_transit_time_adds_collector_diffusion_capacitance():
+    """BJT Tr contributes gm-scaled base-collector diffusion capacitance."""
+    def base_amplitude(tr: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        c.add(Resistor("Rin", "in", "base", 1000.0))
+        c.add(Resistor("Rc", "col", "0", 1.0))
+        c.add(BJT("Q1", collector="col", base="base", emitter="0", Is=25.85e-6, Tr=tr))
+        result = ac_sweep(c, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["base"])
+
+    without_transit_time = base_amplitude(0.0)
+    with_transit_time = base_amplitude(1.0e-2)
+
+    assert without_transit_time > 0.9
+    assert with_transit_time < without_transit_time / 100.0
+
+
 # ============================================================================
 # 22. AC sweep — current source injection
 # ============================================================================
