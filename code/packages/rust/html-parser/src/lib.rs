@@ -853,6 +853,8 @@ pub struct BrowserResource {
     pub type_hint: Option<String>,
     pub media: Option<String>,
     pub title: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
     pub async_script: bool,
     pub defer_script: bool,
 }
@@ -884,6 +886,11 @@ pub struct BrowserContentNode {
     pub src: Option<String>,
     pub resolved_src: Option<String>,
     pub alt: Option<String>,
+    pub resource_kind: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
     pub control_type: Option<String>,
     pub value: Option<String>,
     pub disabled: bool,
@@ -914,6 +921,11 @@ pub struct BrowserRenderNode {
     pub src: Option<String>,
     pub resolved_src: Option<String>,
     pub alt: Option<String>,
+    pub resource_kind: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
     pub control_type: Option<String>,
     pub value: Option<String>,
     pub disabled: bool,
@@ -1087,6 +1099,11 @@ impl BrowserRenderNode {
             src: content_node.src.clone(),
             resolved_src: content_node.resolved_src.clone(),
             alt: content_node.alt.clone(),
+            resource_kind: content_node.resource_kind.clone(),
+            width: content_node.width.clone(),
+            height: content_node.height.clone(),
+            type_hint: content_node.type_hint.clone(),
+            media: content_node.media.clone(),
             control_type: content_node.control_type.clone(),
             value: content_node.value.clone(),
             disabled: content_node.disabled,
@@ -8093,6 +8110,8 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                         type_hint: element.attribute("type").map(ToOwned::to_owned),
                         media: element.attribute("media").map(ToOwned::to_owned),
                         title: element.attribute("title").map(ToOwned::to_owned),
+                        width: None,
+                        height: None,
                         async_script: false,
                         defer_script: false,
                     });
@@ -8108,6 +8127,8 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                         type_hint: element.attribute("type").map(ToOwned::to_owned),
                         media: None,
                         title: None,
+                        width: None,
+                        height: None,
                         async_script: element.attribute("async").is_some(),
                         defer_script: element.attribute("defer").is_some(),
                     });
@@ -8147,6 +8168,8 @@ fn collect_body_resource(element: &Element, summary: &mut BrowserDocument) {
         type_hint: element.attribute("type").map(ToOwned::to_owned),
         media: element.attribute("media").map(ToOwned::to_owned),
         title: element.attribute("title").map(ToOwned::to_owned),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
         async_script: element.name == "script" && element.attribute("async").is_some(),
         defer_script: element.name == "script" && element.attribute("defer").is_some(),
     });
@@ -8362,6 +8385,11 @@ fn collect_browser_content_nodes(
                         src: None,
                         resolved_src: None,
                         alt: None,
+                        resource_kind: None,
+                        width: None,
+                        height: None,
+                        type_hint: None,
+                        media: None,
                         control_type: None,
                         value: None,
                         disabled: false,
@@ -8425,6 +8453,11 @@ fn browser_content_node_for_element(
             .and_then(|src| resolve_browser_url(src, base_href)),
         src,
         alt: element.attribute("alt").map(ToOwned::to_owned),
+        resource_kind: browser_content_resource_kind(element),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
         control_type: browser_content_control_type(element),
         value: browser_content_value(element),
         disabled: element.attribute("disabled").is_some(),
@@ -8442,6 +8475,11 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         }
         "a" => Some("link"),
         "img" => Some("image"),
+        "iframe" | "frame" => Some("frame"),
+        "embed" => Some("embed"),
+        "object" => Some("object"),
+        "audio" | "video" => Some("media"),
+        "canvas" => Some("canvas"),
         "br" | "wbr" => Some("line_break"),
         "form" => Some("form"),
         "fieldset" => Some("form_group"),
@@ -8470,6 +8508,9 @@ fn should_collect_browser_content_children(name: &str) -> bool {
             | "base"
             | "br"
             | "button"
+            | "embed"
+            | "frame"
+            | "iframe"
             | "img"
             | "input"
             | "link"
@@ -8500,6 +8541,18 @@ fn browser_content_src(element: &Element) -> Option<String> {
     match element.name.as_str() {
         "object" => element.attribute("data").map(ToOwned::to_owned),
         _ => element.attribute("src").map(ToOwned::to_owned),
+    }
+}
+
+fn browser_content_resource_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "img" => Some("image".to_string()),
+        "iframe" | "frame" => Some("frame".to_string()),
+        "embed" => Some("embed".to_string()),
+        "object" => Some("object".to_string()),
+        "audio" | "video" => Some(element.name.clone()),
+        "canvas" => Some("canvas".to_string()),
+        _ => None,
     }
 }
 
@@ -8646,7 +8699,9 @@ fn browser_render_display(role: &str) -> &'static str {
     match role {
         "text" => "inline-text",
         "inline" | "link" => "inline",
-        "image" | "control" => "inline-replaced",
+        "canvas" | "embed" | "frame" | "image" | "media" | "object" | "control" => {
+            "inline-replaced"
+        }
         "line_break" => "line-break",
         "heading" | "block" | "form" | "form_group" | "legend" | "list" => "block",
         "label" | "option" | "option_group" => "inline",
@@ -8936,6 +8991,40 @@ mod tests {
         assert_eq!(paragraph.classes, vec!["lede", "print"]);
         assert_eq!(paragraph.title.as_deref(), Some("Intro"));
         assert_eq!(paragraph.dir.as_deref(), Some("auto"));
+    }
+
+    #[test]
+    fn browser_embedded_resource_metadata_tracks_fetch_and_layout_fields() {
+        let document = parse_html(
+            "<base href=\"https://example.test/media/index.html\">\
+             <iframe src=frame.html width=320 height=200 title=Frame></iframe>\
+             <object data=movie.swf type=\"application/x-shockwave-flash\" width=400 height=300></object>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.resources[0].kind, "frame");
+        assert_eq!(
+            summary.resources[0].resolved_url.as_deref(),
+            Some("https://example.test/media/frame.html")
+        );
+        assert_eq!(summary.resources[0].width.as_deref(), Some("320"));
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        assert_eq!(content_tree.children[0].role, "frame");
+        assert_eq!(
+            content_tree.children[0].resource_kind.as_deref(),
+            Some("frame")
+        );
+        assert_eq!(content_tree.children[1].role, "object");
+        assert_eq!(
+            content_tree.children[1].type_hint.as_deref(),
+            Some("application/x-shockwave-flash")
+        );
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "inline-replaced");
+        assert_eq!(render_tree.children[1].display, "inline-replaced");
     }
 
     #[test]

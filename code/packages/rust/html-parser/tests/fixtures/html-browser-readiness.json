@@ -17,7 +17,7 @@
         ],
         "resources": [
           { "kind": "stylesheet", "url": "style.css", "resolved_url": "https://example.test/docs/style.css", "rel": "stylesheet", "type_hint": null, "media": "screen", "title": "default", "async_script": false, "defer_script": false },
-          { "kind": "image", "url": "logo.gif", "resolved_url": "https://example.test/docs/logo.gif", "rel": null, "type_hint": null, "media": null, "title": null, "async_script": false, "defer_script": false }
+          { "kind": "image", "url": "logo.gif", "resolved_url": "https://example.test/docs/logo.gif", "rel": null, "type_hint": null, "media": null, "title": null, "width": "88", "height": "31", "async_script": false, "defer_script": false }
         ],
         "anchors": [
           { "id": "index", "name": null, "text": "Example Directory" }
@@ -106,6 +106,30 @@
           { "href": null, "resolved_href": null, "name": "top", "target": null, "rel": null, "title": null, "text": "" },
           { "href": "#top", "resolved_href": null, "name": null, "target": null, "rel": null, "title": null, "text": "Back" }
         ],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "embedded-resource-page",
+      "description": "Body resource inventory preserves embedded frame, object, video, and embed metadata for fetch and layout planning.",
+      "input": "<base href=\"https://example.test/media/index.html\"><body><iframe src=frame.html width=320 height=200 title=Frame></iframe><object data=movie.swf type=\"application/x-shockwave-flash\" width=400 height=300></object><video src=movie.mp4 width=640 height=360 controls></video><embed src=legacy.mov type=\"video/quicktime\" width=160 height=120>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/media/index.html",
+        "base_target": null,
+        "body_text": "",
+        "metas": [],
+        "resources": [
+          { "kind": "frame", "url": "frame.html", "resolved_url": "https://example.test/media/frame.html", "rel": null, "type_hint": null, "media": null, "title": "Frame", "width": "320", "height": "200", "async_script": false, "defer_script": false },
+          { "kind": "object", "url": "movie.swf", "resolved_url": "https://example.test/media/movie.swf", "rel": null, "type_hint": "application/x-shockwave-flash", "media": null, "title": null, "width": "400", "height": "300", "async_script": false, "defer_script": false },
+          { "kind": "video", "url": "movie.mp4", "resolved_url": "https://example.test/media/movie.mp4", "rel": null, "type_hint": null, "media": null, "title": null, "width": "640", "height": "360", "async_script": false, "defer_script": false },
+          { "kind": "embed", "url": "legacy.mov", "resolved_url": "https://example.test/media/legacy.mov", "rel": null, "type_hint": "video/quicktime", "media": null, "title": null, "width": "160", "height": "120", "async_script": false, "defer_script": false }
+        ],
+        "anchors": [],
+        "headings": [],
+        "links": [],
         "images": [],
         "forms": [],
         "tables": []

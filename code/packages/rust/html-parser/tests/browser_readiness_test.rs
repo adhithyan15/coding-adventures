@@ -66,6 +66,10 @@ struct ExpectedResource {
     type_hint: Option<String>,
     media: Option<String>,
     title: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
     async_script: bool,
     defer_script: bool,
 }
@@ -233,6 +237,8 @@ impl ExpectedResource {
             type_hint: self.type_hint,
             media: self.media,
             title: self.title,
+            width: self.width,
+            height: self.height,
             async_script: self.async_script,
             defer_script: self.defer_script,
         }
