@@ -31,3 +31,5 @@ expansion, and `.op`, `.tran`, `.dc`, `.ac`, `.tf`, `.sens`, `.mc`, `.noise`,
 `.temp`, `.print`, `.plot`, `.four`, and `.options` analysis cards. Transient
 cards can carry `method=euler|trap|gear2`; when omitted,
 `netlist.transient_method()` falls back to `.options method=<...>` if present.
+Selected `.options` keys can also be turned into engine-call arguments with
+`netlist.dc_op_kwargs()` and `netlist.transient_kwargs()`.

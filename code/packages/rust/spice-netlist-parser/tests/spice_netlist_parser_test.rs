@@ -1,6 +1,6 @@
 use spice_engine::{
-    ac_sweep, dc_op, mc_dc, noise_ac, sens_dc, tf, BjtPolarity, Element, JfetPolarity,
-    McDistribution, McOptions, MosfetType, TransientMethod,
+    ac_sweep, dc_op, dc_op_with_options, mc_dc, noise_ac, sens_dc, tf, transient_adaptive,
+    BjtPolarity, Element, JfetPolarity, McDistribution, McOptions, MosfetType, TransientMethod,
 };
 use spice_netlist_parser::{
     parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, FourAnalysis, McAnalysis,
@@ -226,6 +226,44 @@ fn parses_options_analysis_cards() {
     );
     assert_eq!(card.values.get("noopiter"), Some(&OptionValue::Flag(true)));
     assert!(matches!(parsed.analyses.as_slice(), [Analysis::Options(_)]));
+}
+
+#[test]
+fn options_cards_build_engine_call_options() {
+    let parsed = parse_netlist(
+        r#"
+V1 vin 0 DC 10
+R1 vin mid 1k
+R2 mid 0 1k
+.options reltol=1u itl1=7 gmin=1p method=gear2 trtol=2m minstep=1n maxstep=5n
+.op
+.tran 1n 2n
+"#,
+    )
+    .unwrap();
+    let tran = parsed.tran_cards()[0];
+
+    let dc_options = parsed.dc_op_options().unwrap();
+    assert_eq!(dc_options.max_iterations, 7);
+    assert_close(dc_options.tolerance, 1.0e-6);
+    assert_close(dc_options.pseudo_transient_conductance, 1.0e-12);
+    let result = dc_op_with_options(&parsed.circuit, dc_options).unwrap();
+    assert_close(result.voltage("mid").unwrap(), 5.0);
+
+    let transient_options = parsed.adaptive_transient_options(Some(tran)).unwrap();
+    assert_eq!(transient_options.method, TransientMethod::Gear2);
+    assert_close(transient_options.tolerance, 2.0e-3);
+    assert_close(transient_options.min_step.unwrap(), 1.0e-9);
+    assert_close(transient_options.max_step.unwrap(), 5.0e-9);
+    let transient = transient_adaptive(
+        &parsed.circuit,
+        tran.time_step,
+        tran.stop_time,
+        transient_options,
+    )
+    .unwrap();
+    assert!(transient.converged);
+    assert_eq!(transient.method, TransientMethod::Gear2);
 }
 
 #[test]

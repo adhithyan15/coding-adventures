@@ -35,3 +35,5 @@ SPICE engineering suffixes, PWL/PULSE/SIN/EXP source forms, comments, `.end`,
 analysis cards. Transient cards can carry `method=euler|trap|gear2`; when
 omitted, `netlist.transientMethod()` falls back to `.options method=<...>` if
 present.
+Selected `.options` keys can also be turned into engine-call options with
+`netlist.dcOpOptions()` and `netlist.adaptiveTransientOptions()`.

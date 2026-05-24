@@ -258,6 +258,9 @@ Status:
 - Stable text-output helpers for DC operating points and transient samples are
   implemented across Python, TypeScript, and Rust, with snapshot tests covering
   node-voltage and branch-current ordering.
+- Selected `.options` keys are wired into engine-call helpers across Python,
+  TypeScript, and Rust, covering DC solver tolerances/iteration limits and
+  transient method/adaptive-step options.
 
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 
