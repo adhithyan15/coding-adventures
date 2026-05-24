@@ -68,6 +68,10 @@ The current parser surface includes:
 - browser-facing form control metadata for input values, disabled/checked/
   selected state, select options, and textarea values across document,
   content-tree, and render-tree projections
+- browser-facing form accessibility metadata for explicit and implicit labels,
+  derived accessible names, form-owner references, placeholder/autocomplete
+  hints, and required/readonly/multiple control state across document,
+  content-tree, and render-tree projections
 - browser-facing URL resolution metadata for links, loadable resources, images,
   and form actions using the document `base` href when available, while keeping
   raw authored URLs available to browser policy code
