@@ -1,7 +1,8 @@
 use coding_adventures_html_parser::{
-    parse_browser_document, BrowserAnchor, BrowserDocument, BrowserForm, BrowserFormControl,
-    BrowserHeading, BrowserImage, BrowserImageSource, BrowserLink, BrowserMedia, BrowserMeta,
-    BrowserResource, BrowserScript, BrowserStylesheet, BrowserTable,
+    parse_browser_document, BrowserAnchor, BrowserDocument, BrowserDocumentMetadata, BrowserForm,
+    BrowserFormControl, BrowserHeading, BrowserImage, BrowserImageSource, BrowserLink,
+    BrowserMedia, BrowserMeta, BrowserRefresh, BrowserResource, BrowserScript, BrowserStylesheet,
+    BrowserTable, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -26,6 +27,8 @@ struct ExpectedBrowserDocument {
     title: Option<String>,
     base_href: Option<String>,
     base_target: Option<String>,
+    #[serde(default)]
+    metadata: ExpectedDocumentMetadata,
     #[serde(default)]
     document_lang: Option<String>,
     #[serde(default)]
@@ -53,6 +56,53 @@ struct ExpectedBrowserDocument {
     media: Vec<ExpectedMedia>,
     forms: Vec<ExpectedForm>,
     tables: Vec<ExpectedTable>,
+}
+
+#[derive(Debug, Default, Deserialize)]
+struct ExpectedDocumentMetadata {
+    #[serde(default)]
+    charset: Option<String>,
+    #[serde(default)]
+    viewport: Option<String>,
+    #[serde(default)]
+    description: Option<String>,
+    #[serde(default)]
+    application_name: Option<String>,
+    #[serde(default)]
+    referrer_policy: Option<String>,
+    #[serde(default)]
+    robots: Option<String>,
+    #[serde(default)]
+    color_scheme: Option<String>,
+    #[serde(default)]
+    theme_colors: Vec<ExpectedThemeColor>,
+    #[serde(default)]
+    refresh: Option<ExpectedRefresh>,
+    #[serde(default)]
+    canonical_url: Option<String>,
+    #[serde(default)]
+    resolved_canonical_url: Option<String>,
+    #[serde(default)]
+    manifest_url: Option<String>,
+    #[serde(default)]
+    resolved_manifest_url: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedThemeColor {
+    color: String,
+    #[serde(default)]
+    media: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedRefresh {
+    #[serde(default)]
+    delay: Option<String>,
+    #[serde(default)]
+    url: Option<String>,
+    #[serde(default)]
+    resolved_url: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -335,6 +385,7 @@ impl ExpectedBrowserDocument {
             title: self.title,
             base_href: self.base_href,
             base_target: self.base_target,
+            metadata: self.metadata.into_browser_document_metadata(),
             document_lang: self.document_lang,
             document_dir: self.document_dir,
             body_id: self.body_id,
@@ -397,6 +448,49 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedTable::into_browser_table)
                 .collect(),
+        }
+    }
+}
+
+impl ExpectedDocumentMetadata {
+    fn into_browser_document_metadata(self) -> BrowserDocumentMetadata {
+        BrowserDocumentMetadata {
+            charset: self.charset,
+            viewport: self.viewport,
+            description: self.description,
+            application_name: self.application_name,
+            referrer_policy: self.referrer_policy,
+            robots: self.robots,
+            color_scheme: self.color_scheme,
+            theme_colors: self
+                .theme_colors
+                .into_iter()
+                .map(ExpectedThemeColor::into_browser_theme_color)
+                .collect(),
+            refresh: self.refresh.map(ExpectedRefresh::into_browser_refresh),
+            canonical_url: self.canonical_url,
+            resolved_canonical_url: self.resolved_canonical_url,
+            manifest_url: self.manifest_url,
+            resolved_manifest_url: self.resolved_manifest_url,
+        }
+    }
+}
+
+impl ExpectedThemeColor {
+    fn into_browser_theme_color(self) -> BrowserThemeColor {
+        BrowserThemeColor {
+            color: self.color,
+            media: self.media,
+        }
+    }
+}
+
+impl ExpectedRefresh {
+    fn into_browser_refresh(self) -> BrowserRefresh {
+        BrowserRefresh {
+            delay: self.delay,
+            url: self.url,
+            resolved_url: self.resolved_url,
         }
     }
 }

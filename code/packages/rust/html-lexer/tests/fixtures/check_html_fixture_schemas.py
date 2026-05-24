@@ -229,6 +229,7 @@ def check_browser_readiness_case(
     require_optional_nullable_string(case_path, expected, "title", errors)
     require_optional_nullable_string(case_path, expected, "base_href", errors)
     require_optional_nullable_string(case_path, expected, "base_target", errors)
+    check_browser_document_metadata(case_path, expected, errors)
     for field in ("document_lang", "document_dir", "body_id", "body_lang", "body_dir"):
         require_optional_nullable_string(case_path, expected, field, errors)
     require_optional_string_list(case_path, expected, "body_classes", errors)
@@ -247,6 +248,50 @@ def check_browser_readiness_case(
     check_browser_expected_lists(case_path, expected, errors)
 
     return errors
+
+
+def check_browser_document_metadata(
+    case_path: str,
+    expected: dict[str, Any],
+    errors: list[str],
+) -> None:
+    metadata = expected.get("metadata")
+    if metadata is None:
+        return
+    metadata_path = f"{case_path}.expected.metadata"
+    if not isinstance(metadata, dict):
+        errors.append(f"{metadata_path} must be an object")
+        return
+
+    for field in (
+        "charset",
+        "viewport",
+        "description",
+        "application_name",
+        "referrer_policy",
+        "robots",
+        "color_scheme",
+        "canonical_url",
+        "resolved_canonical_url",
+        "manifest_url",
+        "resolved_manifest_url",
+    ):
+        require_optional_nullable_string(metadata_path, metadata, field, errors)
+
+    require_optional_object_list(metadata_path, metadata, "theme_colors", errors)
+    for index, theme_color in enumerate(object_list_items(metadata, "theme_colors")):
+        theme_color_path = f"{metadata_path}.theme_colors[{index}]"
+        require_string(theme_color_path, theme_color, "color", errors)
+        require_optional_nullable_string(theme_color_path, theme_color, "media", errors)
+
+    refresh = metadata.get("refresh")
+    if refresh is not None:
+        refresh_path = f"{metadata_path}.refresh"
+        if not isinstance(refresh, dict):
+            errors.append(f"{refresh_path} must be an object")
+        else:
+            for field in ("delay", "url", "resolved_url"):
+                require_optional_nullable_string(refresh_path, refresh, field, errors)
 
 
 def check_browser_expected_lists(

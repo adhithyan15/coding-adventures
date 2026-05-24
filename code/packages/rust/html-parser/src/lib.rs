@@ -818,6 +818,7 @@ pub struct BrowserDocument {
     pub title: Option<String>,
     pub base_href: Option<String>,
     pub base_target: Option<String>,
+    pub metadata: BrowserDocumentMetadata,
     pub document_lang: Option<String>,
     pub document_dir: Option<String>,
     pub body_id: Option<String>,
@@ -836,6 +837,36 @@ pub struct BrowserDocument {
     pub media: Vec<BrowserMedia>,
     pub forms: Vec<BrowserForm>,
     pub tables: Vec<BrowserTable>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct BrowserDocumentMetadata {
+    pub charset: Option<String>,
+    pub viewport: Option<String>,
+    pub description: Option<String>,
+    pub application_name: Option<String>,
+    pub referrer_policy: Option<String>,
+    pub robots: Option<String>,
+    pub color_scheme: Option<String>,
+    pub theme_colors: Vec<BrowserThemeColor>,
+    pub refresh: Option<BrowserRefresh>,
+    pub canonical_url: Option<String>,
+    pub resolved_canonical_url: Option<String>,
+    pub manifest_url: Option<String>,
+    pub resolved_manifest_url: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserThemeColor {
+    pub color: String,
+    pub media: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserRefresh {
+    pub delay: Option<String>,
+    pub url: Option<String>,
+    pub resolved_url: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -8439,8 +8470,142 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
             _ => {}
         }
 
+        collect_document_metadata(element, summary);
         collect_head_browser_facts(&element.children, summary);
     }
+}
+
+fn collect_document_metadata(element: &Element, summary: &mut BrowserDocument) {
+    match element.name.as_str() {
+        "meta" => collect_meta_document_metadata(element, summary),
+        "link" => collect_link_document_metadata(element, summary),
+        _ => {}
+    }
+}
+
+fn collect_meta_document_metadata(element: &Element, summary: &mut BrowserDocument) {
+    if summary.metadata.charset.is_none() {
+        summary.metadata.charset = browser_meta_charset(element);
+    }
+
+    if let Some(content) = element.attribute("content") {
+        if browser_meta_name_is(element, "viewport") && summary.metadata.viewport.is_none() {
+            summary.metadata.viewport = Some(content.to_string());
+        }
+        if browser_meta_name_is(element, "description") && summary.metadata.description.is_none() {
+            summary.metadata.description = Some(content.to_string());
+        }
+        if browser_meta_name_is(element, "application-name")
+            && summary.metadata.application_name.is_none()
+        {
+            summary.metadata.application_name = Some(content.to_string());
+        }
+        if browser_meta_name_is(element, "referrer") && summary.metadata.referrer_policy.is_none() {
+            summary.metadata.referrer_policy = Some(content.to_string());
+        }
+        if browser_meta_name_is(element, "robots") && summary.metadata.robots.is_none() {
+            summary.metadata.robots = Some(content.to_string());
+        }
+        if browser_meta_name_is(element, "color-scheme") && summary.metadata.color_scheme.is_none()
+        {
+            summary.metadata.color_scheme = Some(content.to_string());
+        }
+        if browser_meta_name_is(element, "theme-color") {
+            summary.metadata.theme_colors.push(BrowserThemeColor {
+                color: content.to_string(),
+                media: element.attribute("media").map(ToOwned::to_owned),
+            });
+        }
+        if browser_meta_http_equiv_is(element, "refresh") && summary.metadata.refresh.is_none() {
+            summary.metadata.refresh = Some(browser_refresh_metadata(
+                content,
+                summary.base_href.as_deref(),
+            ));
+        }
+    }
+}
+
+fn collect_link_document_metadata(element: &Element, summary: &mut BrowserDocument) {
+    if let Some(href) = element.attribute("href") {
+        if browser_rel_contains(element, "canonical") && summary.metadata.canonical_url.is_none() {
+            summary.metadata.canonical_url = Some(href.to_string());
+            summary.metadata.resolved_canonical_url =
+                resolve_browser_url(href, summary.base_href.as_deref());
+        }
+        if browser_rel_contains(element, "manifest") && summary.metadata.manifest_url.is_none() {
+            summary.metadata.manifest_url = Some(href.to_string());
+            summary.metadata.resolved_manifest_url =
+                resolve_browser_url(href, summary.base_href.as_deref());
+        }
+    }
+}
+
+fn browser_meta_name_is(element: &Element, expected: &str) -> bool {
+    element
+        .attribute("name")
+        .is_some_and(|name| name.eq_ignore_ascii_case(expected))
+}
+
+fn browser_meta_http_equiv_is(element: &Element, expected: &str) -> bool {
+    element
+        .attribute("http-equiv")
+        .is_some_and(|name| name.eq_ignore_ascii_case(expected))
+}
+
+fn browser_meta_charset(element: &Element) -> Option<String> {
+    if let Some(charset) = element.attribute("charset") {
+        return Some(charset.to_string());
+    }
+    if !browser_meta_http_equiv_is(element, "content-type") {
+        return None;
+    }
+    element.attribute("content").and_then(extract_meta_charset)
+}
+
+fn extract_meta_charset(content: &str) -> Option<String> {
+    content
+        .split(';')
+        .map(str::trim)
+        .find_map(|part| {
+            let (name, value) = part.split_once('=')?;
+            name.trim().eq_ignore_ascii_case("charset").then_some(value)
+        })
+        .map(trim_browser_metadata_token)
+        .filter(|charset| !charset.is_empty())
+}
+
+fn browser_refresh_metadata(content: &str, base_href: Option<&str>) -> BrowserRefresh {
+    let mut parts = content.split(';');
+    let delay = parts
+        .next()
+        .map(str::trim)
+        .filter(|part| !part.is_empty())
+        .map(ToOwned::to_owned);
+    let url = parts.find_map(browser_refresh_url);
+    let resolved_url = url
+        .as_deref()
+        .and_then(|url| resolve_browser_url(url, base_href));
+    BrowserRefresh {
+        delay,
+        url,
+        resolved_url,
+    }
+}
+
+fn browser_refresh_url(part: &str) -> Option<String> {
+    let (name, value) = part.split_once('=')?;
+    if !name.trim().eq_ignore_ascii_case("url") {
+        return None;
+    }
+    let url = trim_browser_metadata_token(value);
+    (!url.is_empty()).then_some(url)
+}
+
+fn trim_browser_metadata_token(value: &str) -> String {
+    value
+        .trim()
+        .trim_matches(|character| character == '"' || character == '\'')
+        .to_string()
 }
 
 fn collect_anchor_target(element: &Element, summary: &mut BrowserDocument) {
@@ -10186,6 +10351,70 @@ mod tests {
         assert_eq!(
             resolve_browser_url("relative.html", Some("/local/base/")),
             None
+        );
+    }
+
+    #[test]
+    fn browser_document_metadata_tracks_head_policy_hints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/page.html\">\
+             <meta http-equiv=content-type content=\"text/html; charset=windows-1252\">\
+             <meta charset=utf-8>\
+             <meta name=viewport content=\"width=device-width, initial-scale=1\">\
+             <meta name=description content=\"HTML parser workbench\">\
+             <meta name=application-name content=Venture>\
+             <meta name=referrer content=no-referrer>\
+             <meta name=robots content=\"index,follow\">\
+             <meta name=color-scheme content=\"light dark\">\
+             <meta name=theme-color content=\"#ffffff\" media=\"(prefers-color-scheme: light)\">\
+             <meta name=theme-color content=\"#111111\" media=\"(prefers-color-scheme: dark)\">\
+             <meta http-equiv=refresh content=\"5; url=next.html\">\
+             <link rel=canonical href=\"https://example.test/app/\">\
+             <link rel=manifest href=\"site.webmanifest\">",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.metadata.charset.as_deref(), Some("windows-1252"));
+        assert_eq!(
+            summary.metadata.viewport.as_deref(),
+            Some("width=device-width, initial-scale=1")
+        );
+        assert_eq!(
+            summary.metadata.description.as_deref(),
+            Some("HTML parser workbench")
+        );
+        assert_eq!(
+            summary.metadata.application_name.as_deref(),
+            Some("Venture")
+        );
+        assert_eq!(
+            summary.metadata.referrer_policy.as_deref(),
+            Some("no-referrer")
+        );
+        assert_eq!(summary.metadata.robots.as_deref(), Some("index,follow"));
+        assert_eq!(summary.metadata.color_scheme.as_deref(), Some("light dark"));
+        assert_eq!(summary.metadata.theme_colors.len(), 2);
+        assert_eq!(summary.metadata.theme_colors[0].color, "#ffffff");
+        assert_eq!(
+            summary.metadata.theme_colors[0].media.as_deref(),
+            Some("(prefers-color-scheme: light)")
+        );
+        assert_eq!(
+            summary.metadata.refresh,
+            Some(BrowserRefresh {
+                delay: Some("5".to_string()),
+                url: Some("next.html".to_string()),
+                resolved_url: Some("https://example.test/app/next.html".to_string()),
+            })
+        );
+        assert_eq!(
+            summary.metadata.resolved_canonical_url.as_deref(),
+            Some("https://example.test/app/")
+        );
+        assert_eq!(
+            summary.metadata.resolved_manifest_url.as_deref(),
+            Some("https://example.test/app/site.webmanifest")
         );
     }
 
