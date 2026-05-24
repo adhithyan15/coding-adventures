@@ -1021,18 +1021,30 @@ def _returning_exprs(
 ) -> tuple[Expr, ...]:
     """Parse a returning_clause child of a DML statement node.
 
-    ``returning_clause = 'RETURNING' expr { ',' expr }``
+    Grammar (mini-sqlite 2.0+)::
 
-    Returns an empty tuple when no returning_clause child is present.
+        returning_clause = "RETURNING" returning_item { "," returning_item } ;
+        returning_item   = "*" | expr ;
+
+    The bare-``*`` form yields a :class:`Wildcard` sentinel; the
+    planner expands it to every column of the target table at
+    resolution time (same handling SELECT * uses).  Returns an empty
+    tuple when no returning_clause child is present.
     """
     ret_node = _maybe_child(node, "returning_clause")
     if ret_node is None:
         return ()
-    return tuple(
-        _expr(c, state)
-        for c in ret_node.children
-        if isinstance(c, ASTNode) and c.rule_name == "expr"
-    )
+    items: list[Expr] = []
+    for c in ret_node.children:
+        if isinstance(c, ASTNode) and c.rule_name == "returning_item":
+            # ``*`` → Wildcard; ``expr`` → parsed expression.
+            if any(_is_token(t, type_="STAR") for t in c.children):
+                items.append(Wildcard())
+            else:
+                expr_node = _maybe_child(c, "expr")
+                if expr_node is not None:
+                    items.append(_expr(expr_node, state))
+    return tuple(items)
 
 
 def _conflict_action(node: ASTNode) -> str | None:

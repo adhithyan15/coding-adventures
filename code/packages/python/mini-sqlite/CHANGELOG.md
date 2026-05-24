@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.0.0] - 2026-05-23
+
+### Added
+
+- ``RETURNING *`` shorthand is now supported on INSERT, UPDATE, and
+  DELETE — expands to one column per table column in declaration
+  order (matches SQLite).  Mixed forms like ``RETURNING id, *`` are
+  also accepted.
+
+  Implementation: parser accepts ``returning_item = "*" | expr``;
+  adapter emits :class:`Wildcard` sentinel; planner's
+  ``_expand_returning_wildcards()`` expands to ``Column(table, col)``
+  references at resolution time.
+
+### Known limitation
+
+- ``INSERT INTO t(v) VALUES (...) RETURNING *`` reports the
+  auto-assigned INTEGER PRIMARY KEY column as NULL when the user
+  omitted the id.  Pre-existing bug in INSERT RETURNING that's
+  independent of the ``*`` shorthand — explicit-id INSERTs and
+  UPDATE/DELETE RETURNING work correctly.  Filed for follow-up.
+
 ## [1.99.0] - 2026-05-23
 
 ### Added
