@@ -2,6 +2,20 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.41.0] - 2026-05-23
+
+### Changed
+
+- ``insert_body`` now accepts the ``DEFAULT VALUES`` shorthand::
+
+      insert_body = "VALUES" row_value { "," row_value }
+                  | "DEFAULT" "VALUES"
+                  | query_stmt ;
+
+  Required for SQLite's ``INSERT INTO t DEFAULT VALUES`` form, which
+  inserts a single row of column defaults.  Regenerated
+  ``_grammar.py`` cache via ``grammar-tools``.
+
 ## [0.40.0] - 2026-05-23
 
 ### Changed

@@ -188,7 +188,13 @@ replace_stmt      = "REPLACE" "INTO" NAME
                     [ "(" NAME { "," NAME } ")" ]
                     insert_body
                     [ returning_clause ] ;
-insert_body       = "VALUES" row_value { "," row_value } | query_stmt ;
+insert_body       = "VALUES" row_value { "," row_value }
+                  | "DEFAULT" "VALUES"
+                  | query_stmt ;
+# ``DEFAULT VALUES`` (SQLite-only): insert a single row consisting
+# entirely of column defaults.  Equivalent to omitting every column
+# value — useful when the table has an INTEGER PRIMARY KEY plus all
+# other columns have DEFAULT clauses (or are NULLable).
 row_value         = "(" expr { "," expr } ")" ;
 
 update_stmt       = "UPDATE" NAME "SET" assignment { "," assignment }

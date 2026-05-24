@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.2.0] - 2026-05-23
+
+### Added
+
+- ``INSERT INTO t DEFAULT VALUES`` is now supported.  Inserts a single
+  row consisting entirely of column defaults — equivalent to
+  ``INSERT INTO t () VALUES ()``.  Useful for tables where every column
+  either has a DEFAULT clause, is NULLable, or is an auto-assigned
+  INTEGER PRIMARY KEY.  Matches SQLite semantics: NOT NULL columns
+  without a DEFAULT still raise IntegrityError, RETURNING works as
+  expected, and sequential ``DEFAULT VALUES`` inserts increment the
+  IPK rowid.
+
+  Implementation: grammar adds ``"DEFAULT" "VALUES"`` as an alternative
+  in ``insert_body``; adapter detects the keyword and emits
+  ``InsertValuesStmt(rows=((),), columns=())``, which the existing
+  ``_apply_defaults`` / ``_autoassign_ipk`` paths in the backend
+  already handle correctly for empty-tuple row inputs.
+
 ## [2.1.0] - 2026-05-23
 
 ### Fixed
