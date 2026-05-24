@@ -37,3 +37,7 @@ omitted, `netlist.transientMethod()` falls back to `.options method=<...>` if
 present.
 Selected `.options` keys can also be turned into engine-call options with
 `netlist.dcOpOptions()` and `netlist.adaptiveTransientOptions()`.
+Deck-level `.temp` cards can be resolved into Kelvin with
+`netlist.operatingTemperatureKelvin()`, and
+`netlist.noiseTemperatureKelvin(noiseCard)` applies the SPICE precedence where
+an explicit `.noise temp=<kelvin>` overrides the deck operating temperature.

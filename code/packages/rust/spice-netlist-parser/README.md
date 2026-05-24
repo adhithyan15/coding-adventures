@@ -35,3 +35,8 @@ Transient cards can carry `method=euler|trap|gear2`; when omitted,
 present.
 Selected `.options` keys can also be turned into engine-call options with
 `parsed.dc_op_options()?` and `parsed.adaptive_transient_options(None)?`.
+Deck-level `.temp` cards can be resolved into Kelvin with
+`parsed.operating_temperature_kelvin(0, 300.0)?`, and
+`parsed.noise_temperature_kelvin(Some(noise_card), 0, 300.0)?` applies the
+SPICE precedence where an explicit `.noise temp=<kelvin>` overrides the deck
+operating temperature.

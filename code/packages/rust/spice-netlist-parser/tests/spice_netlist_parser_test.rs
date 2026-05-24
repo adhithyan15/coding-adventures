@@ -282,6 +282,31 @@ fn parses_temp_analysis_cards() {
         panic!("expected one temp card");
     };
     assert_eq!(card.temperatures_celsius, vec![27.0, 75.0, -40.0]);
+    assert_close(
+        parsed.operating_temperature_kelvin(0, 300.0).unwrap(),
+        300.15,
+    );
+    assert_close(
+        parsed.operating_temperature_kelvin(1, 300.0).unwrap(),
+        348.15,
+    );
+}
+
+#[test]
+fn defaults_operating_temperature_without_temp_cards() {
+    let parsed = parse_netlist("R1 in out 1k").unwrap();
+
+    assert_close(
+        parsed.operating_temperature_kelvin(0, 301.0).unwrap(),
+        301.0,
+    );
+    let error = parse_netlist(".temp 27")
+        .unwrap()
+        .operating_temperature_kelvin(3, 300.0)
+        .unwrap_err();
+    assert!(error
+        .to_string()
+        .contains("temperature index 3 exceeds .temp entries"));
 }
 
 #[test]
@@ -695,6 +720,7 @@ R1 in out 1k
 fn parses_noise_ac_analysis_cards() {
     let parsed = parse_netlist(
         r#"
+.temp 75
 Vin in 0 DC 1
 Rtop in out 1k
 Rbot out 0 1k
@@ -705,33 +731,70 @@ Rbot out 0 1k
 
     assert_eq!(
         parsed.analyses,
-        vec![Analysis::Noise(NoiseAnalysis {
-            output_node: "out".to_string(),
-            input_source: "Vin".to_string(),
-            frequencies_hz: vec![1000.0],
-            temperature: 300.0,
-        })]
+        vec![
+            Analysis::Temp(TempAnalysis {
+                temperatures_celsius: vec![75.0],
+            }),
+            Analysis::Noise(NoiseAnalysis {
+                output_node: "out".to_string(),
+                input_source: "Vin".to_string(),
+                frequencies_hz: vec![1000.0],
+                temperature: 300.0,
+                temperature_is_explicit: true,
+            })
+        ]
     );
     assert_eq!(
         parsed.noise_cards(),
-        vec![match &parsed.analyses[0] {
+        vec![match &parsed.analyses[1] {
             Analysis::Noise(card) => card,
             _ => panic!("expected noise card"),
         }]
     );
     let card = parsed.noise_cards()[0];
+    assert_close(
+        parsed
+            .noise_temperature_kelvin(Some(card), 0, 300.0)
+            .unwrap(),
+        300.0,
+    );
     let result = noise_ac(
         &parsed.circuit,
         &card.output_node,
         &card.input_source,
         &card.frequencies_hz,
-        card.temperature,
+        parsed
+            .noise_temperature_kelvin(Some(card), 0, 300.0)
+            .unwrap(),
     )
     .unwrap();
     assert_eq!(result.output_node, "out");
     assert_eq!(result.input_source, "Vin");
     assert_eq!(result.points.len(), 1);
     assert!(result.points[0].output_psd > 0.0);
+}
+
+#[test]
+fn noise_analysis_uses_temp_card_when_noise_temp_is_omitted() {
+    let parsed = parse_netlist(
+        r#"
+.temp 50
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin 1k
+"#,
+    )
+    .unwrap();
+    let card = parsed.noise_cards()[0];
+
+    assert!(!card.temperature_is_explicit);
+    assert_close(
+        parsed
+            .noise_temperature_kelvin(Some(card), 0, 300.0)
+            .unwrap(),
+        323.15,
+    );
 }
 
 #[test]

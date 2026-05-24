@@ -33,3 +33,8 @@ cards can carry `method=euler|trap|gear2`; when omitted,
 `netlist.transient_method()` falls back to `.options method=<...>` if present.
 Selected `.options` keys can also be turned into engine-call arguments with
 `netlist.dc_op_kwargs()` and `netlist.transient_kwargs()`.
+Deck-level `.temp` cards can be resolved into Kelvin with
+`netlist.operating_temperature_kelvin()`, and
+`netlist.noise_temperature_kelvin(noise_card)` applies the SPICE precedence
+where an explicit `.noise temp=<kelvin>` overrides the deck operating
+temperature.
