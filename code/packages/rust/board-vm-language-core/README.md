@@ -238,6 +238,10 @@ stable transport diagnostic records with Rust-owned diagnostic names, labels,
 queue-depth metadata, terminal/retry flags, and messages, so frontends can
 surface callback transport completion state without rebuilding completion
 policy.
+`input_callback_transport_health_summary` tracks those diagnostics as stable
+transport health records with Rust-owned health names, labels, queue-depth
+metadata, terminal/retry flags, and messages, so frontends can present callback
+transport health without rebuilding diagnostic policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
