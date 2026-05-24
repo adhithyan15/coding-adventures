@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - `ApsFrameSummary` for payload-free APS routing, delivery, profile, and
   cluster read models.
+- `ApsCommandFrame`, `ApsCommandId`, and `ApsCommandSummary` for APS command
+  identifiers, key-management classification, and command payload preservation.
 - `BindingTableSummary` for counting group/device bindings, cluster families,
   unique APS binding endpoints, source endpoint shapes, and cluster coverage.
 

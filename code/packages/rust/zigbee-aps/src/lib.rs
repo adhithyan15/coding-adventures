@@ -16,6 +16,7 @@ const GROUP_ADDRESS_LEN: usize = 2;
 const CLUSTER_ID_LEN: usize = 2;
 const PROFILE_ID_LEN: usize = 2;
 const COUNTER_LEN: usize = 1;
+const APS_COMMAND_ID_LEN: usize = 1;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Endpoint(pub u8);
@@ -246,6 +247,97 @@ impl ApsFrameSummary {
 
     pub fn requires_ack(self) -> bool {
         self.ack_request
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct ApsCommandId(pub u8);
+
+impl ApsCommandId {
+    pub const TRANSPORT_KEY: Self = Self(0x05);
+    pub const UPDATE_DEVICE: Self = Self(0x06);
+    pub const REMOVE_DEVICE: Self = Self(0x07);
+    pub const REQUEST_KEY: Self = Self(0x08);
+    pub const SWITCH_KEY: Self = Self(0x09);
+
+    pub fn is_key_management(self) -> bool {
+        matches!(
+            self,
+            Self::TRANSPORT_KEY
+                | Self::UPDATE_DEVICE
+                | Self::REMOVE_DEVICE
+                | Self::REQUEST_KEY
+                | Self::SWITCH_KEY
+        )
+    }
+
+    pub fn name(self) -> Option<&'static str> {
+        match self {
+            Self::TRANSPORT_KEY => Some("transport-key"),
+            Self::UPDATE_DEVICE => Some("update-device"),
+            Self::REMOVE_DEVICE => Some("remove-device"),
+            Self::REQUEST_KEY => Some("request-key"),
+            Self::SWITCH_KEY => Some("switch-key"),
+            _ => None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ApsCommandFrame {
+    pub command_id: ApsCommandId,
+    pub payload: Vec<u8>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ApsCommandSummary {
+    pub command_id: ApsCommandId,
+    pub command_name: Option<&'static str>,
+    pub payload_len: usize,
+    pub key_management: bool,
+}
+
+impl ApsCommandFrame {
+    pub fn new(command_id: ApsCommandId, payload: Vec<u8>) -> Self {
+        Self {
+            command_id,
+            payload,
+        }
+    }
+
+    pub fn parse(bytes: &[u8]) -> Result<Self, ApsError> {
+        let mut cursor = Cursor::new(bytes);
+        let command_id = ApsCommandId(cursor.read_u8()?);
+        Ok(Self {
+            command_id,
+            payload: cursor.remaining_bytes().to_vec(),
+        })
+    }
+
+    pub fn encode(&self) -> Vec<u8> {
+        let mut out = Vec::with_capacity(APS_COMMAND_ID_LEN + self.payload.len());
+        out.push(self.command_id.0);
+        out.extend_from_slice(&self.payload);
+        out
+    }
+
+    pub fn summary(&self) -> ApsCommandSummary {
+        ApsCommandSummary {
+            command_id: self.command_id,
+            command_name: self.command_id.name(),
+            payload_len: self.payload.len(),
+            key_management: self.command_id.is_key_management(),
+        }
+    }
+}
+
+impl ApsCommandSummary {
+    pub fn is_known(self) -> bool {
+        self.command_name.is_some()
+    }
+
+    pub fn is_key_management(self) -> bool {
+        self.key_management
     }
 }
 
@@ -824,6 +916,45 @@ mod tests {
         );
 
         assert_eq!(ApsFrame::parse(&frame.encode().unwrap()).unwrap(), frame);
+    }
+
+    #[test]
+    fn aps_command_frame_round_trips_key_management_payloads() {
+        let frame = ApsCommandFrame::new(ApsCommandId::TRANSPORT_KEY, vec![0xaa, 0xbb, 0xcc]);
+
+        let parsed = ApsCommandFrame::parse(&frame.encode()).unwrap();
+        let summary = parsed.summary();
+
+        assert_eq!(parsed, frame);
+        assert_eq!(summary.command_id, ApsCommandId::TRANSPORT_KEY);
+        assert_eq!(summary.command_name, Some("transport-key"));
+        assert_eq!(summary.payload_len, 3);
+        assert!(summary.is_known());
+        assert!(summary.is_key_management());
+    }
+
+    #[test]
+    fn aps_command_frame_preserves_unknown_command_payloads() {
+        let parsed = ApsCommandFrame::parse(&[0xfe, 0x01, 0x02]).unwrap();
+        let summary = parsed.summary();
+
+        assert_eq!(parsed.command_id, ApsCommandId(0xfe));
+        assert_eq!(parsed.payload, vec![0x01, 0x02]);
+        assert_eq!(parsed.encode(), vec![0xfe, 0x01, 0x02]);
+        assert_eq!(summary.command_name, None);
+        assert!(!summary.is_known());
+        assert!(!summary.is_key_management());
+    }
+
+    #[test]
+    fn aps_command_frame_rejects_empty_payloads() {
+        assert_eq!(
+            ApsCommandFrame::parse(&[]),
+            Err(ApsError::Truncated {
+                needed: 1,
+                remaining: 0
+            })
+        );
     }
 
     #[test]
