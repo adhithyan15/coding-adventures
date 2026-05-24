@@ -217,6 +217,10 @@ without rebuilding bookmark policy.
 transport logic records with Rust-owned logic names, labels, queue-depth
 metadata, and messages, so frontends can follow callback transport decisions
 without rebuilding reference policy.
+`input_callback_transport_decision_summary` chooses those logic records as
+stable transport decision records with Rust-owned decision names, labels,
+queue-depth metadata, and messages, so frontends can present callback transport
+choices without rebuilding logic policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends

@@ -28,6 +28,16 @@ struct ExpectedContentTree {
 struct ExpectedContentNode {
     role: String,
     name: Option<String>,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    classes: Vec<String>,
+    #[serde(default)]
+    title: Option<String>,
+    #[serde(default)]
+    lang: Option<String>,
+    #[serde(default)]
+    dir: Option<String>,
     text: Option<String>,
     href: Option<String>,
     #[serde(default)]
@@ -89,6 +99,11 @@ impl ExpectedContentNode {
         BrowserContentNode {
             role: self.role,
             name: self.name,
+            id: self.id,
+            classes: self.classes,
+            title: self.title,
+            lang: self.lang,
+            dir: self.dir,
             text: self.text,
             href: self.href,
             resolved_href: self.resolved_href,

@@ -6,13 +6,15 @@
     {
       "id": "flow-inline-and-replaced",
       "description": "Headings and paragraphs become block layout inputs while base-resolved text, links, images, and line breaks keep inline display categories.",
-      "input": "<base href=\"https://example.test/pages/current.html\"><body><h1>Example</h1><p>Hello <a href=next.html>Next</a><img src=../assets/logo.gif alt=Logo><br>Tail</p>",
+      "input": "<base href=\"https://example.test/pages/current.html\"><body><h1 id=page-title class=hero>Example</h1><p id=intro class=\"lede print\" title=\"Intro paragraph\">Hello <a href=next.html class=next lang=en>Next</a><img src=../assets/logo.gif alt=Logo><br>Tail</p>",
       "expected": {
         "children": [
           {
             "display": "block",
             "role": "heading",
             "name": "h1",
+            "id": "page-title",
+            "classes": ["hero"],
             "text": "Example",
             "href": null,
             "src": null,
@@ -26,6 +28,9 @@
             "display": "block",
             "role": "block",
             "name": "p",
+            "id": "intro",
+            "classes": ["lede", "print"],
+            "title": "Intro paragraph",
             "text": null,
             "href": null,
             "src": null,
@@ -37,6 +42,8 @@
                 "display": "inline",
                 "role": "link",
                 "name": "a",
+                "classes": ["next"],
+                "lang": "en",
                 "text": "Next",
                 "href": "next.html",
                 "resolved_href": "https://example.test/pages/next.html",

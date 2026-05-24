@@ -2,6 +2,54 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.15.0] - 2026-05-23
+
+### Added (Phase 4i / 4j — instance vars `@x`, class vars `@@x`, globals `$x`)
+
+Three sigil-prefixed variable shapes that have existed since Ruby 1.0 but were never lexed by the v0 state machine:
+
+- **Instance variables**: `@count`, `@_private`, `@foo_bar2`
+- **Class variables**: `@@all`, `@@cache_key`
+- **Global variables (regular form)**: `$LOAD_PATH`, `$stderr`, `$x`
+
+All three emit as `TokenType::Name` with the **full lexeme including the sigil** preserved in `value` (e.g. `@count`, `@@all`, `$LOAD_PATH`).  The parser and SIR lowerer dispatch by inspecting the leading character — the same trick the lexer already uses for `::` (encoded as `TokenType::Colon` with value `::`).
+
+#### TOML changes (`ruby-1.8.lexer.states.toml`)
+
+New states:
+- `after_at` — peek state after `@`; decides ivar vs cvar by checking for a second `@`.  Invalid follower (e.g. `@1`) records `invalid_ivar` and falls back to emitting `@` as a bare Op.
+- `ivar_body` — slurps `[a-zA-Z0-9_]*` after `@<starter>`.
+- `cvar_body` — slurps `[a-zA-Z0-9_]*` after `@@`.
+- `after_dollar` — peek state after `$`; requires an ident-starter first char.  Invalid follower records `invalid_gvar` and emits `$` as a bare Op.
+- `dollar_body` — slurps `[a-zA-Z0-9_]*` after `$<starter>`.
+
+New alphabet entries: `@`, `$`.
+
+New `data → ...` dispatcher transitions: `@` → `after_at`, `$` → `after_dollar`.
+
+#### Scope notes
+
+v0 deliberately does NOT handle Ruby's punctuation globals:
+- `$~` (last match), `$&` (matched string), `$_` (last read line)
+- `$0`..`$9` (regex capture groups)
+- `$$`, `$?`, `$!`, etc.
+
+These will land in a follow-up phase that splits `after_dollar` into per-char arms.  The v0 fallback (emit `$` as Op + diagnostic) keeps the token stream clean for the parser.
+
+#### No era gating
+
+All three sigils have been in Ruby since the beginning, so the lexing is era-invariant.  The `sigil_vars_unchanged_across_all_eras` test pins this across all 15 `ERA_VERSIONS`.
+
+### Tests (+8 new, total 124)
+- `lexes_instance_variable` — `@count` → one `Name` token with value `@count`.
+- `lexes_class_variable` — `@@all` → one `Name` token with value `@@all`.
+- `lexes_global_variable` — `$LOAD_PATH` → one `Name` token with value `$LOAD_PATH`.
+- `ivar_with_digits_and_underscore` — `@foo_bar2` is one ivar (digits/underscore allowed after first ident-starter).
+- `sigil_vars_in_assignment_context` — `@x = 1` lexes as `Name(@x) Equals Number(1)`.
+- `invalid_ivar_falls_back_to_op_with_diagnostic` — `@1` records `invalid_ivar` and emits `@` as Op.
+- `invalid_gvar_falls_back_to_op_with_diagnostic` — `$ x` records `invalid_gvar` and emits `$` as Op.
+- `sigil_vars_unchanged_across_all_eras` — `@a + @@b + $c` produces the identical Name-value stream across every era.
+
 ## [0.14.0] - 2026-05-22
 
 ### Added (Phase 4h — 1.9.1 hash shorthand `{a: 1}` — confirmation pass)

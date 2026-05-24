@@ -193,6 +193,10 @@ documented in this file.
   resolved URL metadata for links, resources, images, and form actions using
   the document `base` href when available, while preserving raw authored
   attributes for downstream policy decisions.
+- Browser-facing document, content-tree, and render-tree projections now carry
+  identity and language metadata, including document/body `lang` and `dir`,
+  body `id`/classes, and node-level `id`, tokenized `class`, `title`, `lang`,
+  and `dir` values for selector matching and browser UI policy.
 - Void end tags such as `</img>`, `</input>`, and `</hr>` are now ignored with a
   parser diagnostic, while self-closing syntax on void start tags remains
   acknowledged.
