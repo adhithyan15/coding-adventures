@@ -1067,3 +1067,61 @@ describe("summation: Phase 55 Bounded×Log(diverging) numerator", () => {
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 56 (TS port): bounded × Sqrt(diverging) numerator.
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 56 bounded × sqrt numerator", () => {
+  it("∑ [sin(k)·sqrt(k)/k² − ...] closes (1/2 < 2)", () => {
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const sqrtK = app(sym("Sqrt"), [k]);
+    const numK = app(MUL, [sinK, sqrtK]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const sqrtKp1 = app(sym("Sqrt"), [kp1]);
+    const numKp1 = app(MUL, [sinKp1, sqrtKp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [sin(k)·sqrt(k³)/2^k − ...] closes (sqrt < exp)", () => {
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const sqrtK3 = app(sym("Sqrt"), [app(POW, [k, int(3)])]);
+    const numK = app(MUL, [sinK, sqrtK3]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const sqrtKp1_3 = app(sym("Sqrt"), [app(POW, [kp1, int(3)])]);
+    const numKp1 = app(MUL, [sinKp1, sqrtKp1_3]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [int(2), k])]),
+      app(DIV, [numKp1, app(POW, [int(2), kp1])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: sin(k)·sqrt(k³)/k stays unevaluated (3/2 > 1)", () => {
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const sqrtK3 = app(sym("Sqrt"), [app(POW, [k, int(3)])]);
+    const numK = app(MUL, [sinK, sqrtK3]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const sqrtKp1_3 = app(sym("Sqrt"), [app(POW, [kp1, int(3)])]);
+    const numKp1 = app(MUL, [sinKp1, sqrtKp1_3]);
+    const f = app(SUB, [
+      app(DIV, [numK, k]),
+      app(DIV, [numKp1, kp1]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // 3/2 > 1 → does not vanish.
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});

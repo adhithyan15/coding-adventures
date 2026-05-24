@@ -1,13 +1,14 @@
 use spice_engine::{
-    estimate_period, pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
-    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
-    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, transient, transient_adaptive, transient_with_method,
-    AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
-    CurrentSource, Element, ExpWaveform, Inductor, MutualInductor, PssNewtonCandidateResult,
-    PssNewtonIterationResult, PssNewtonSolveResult, PssNewtonUpdateResult,
-    PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform, PwlWaveform, Resistor,
-    SinWaveform, SpiceError, TransientMethod, TransmissionLine, VoltageSource, Waveform,
+    estimate_period, fourier, pss_newton_candidate_with_tolerance,
+    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
+    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
+    pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
+    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
+    Ccvs, Circuit, CurrentSource, Element, ExpWaveform, Inductor, MutualInductor,
+    PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
+    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransmissionLine,
+    VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -860,6 +861,35 @@ fn transient_voltage_source_uses_sin_waveform() {
 
     assert_close(points[0].voltage("in").unwrap(), 2.0);
     assert_close(points[1].voltage("in").unwrap(), 0.0);
+}
+
+#[test]
+fn fourier_extracts_transient_sinusoid_components() {
+    let freq = 1_000.0;
+    let amp = 2.0;
+    let offset = 0.25;
+    let period = 1.0 / freq;
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(offset, amp, freq)),
+    )));
+
+    let points = transient(&circuit, period / 64.0, 2.0 * period).unwrap();
+    let analysis = fourier(&points, freq, &["V(in)"], 5).unwrap();
+    let probe = &analysis.probes[0];
+    let fundamental = &probe.harmonics[0];
+
+    assert!((analysis.start_time - period).abs() < 1.0e-12);
+    assert!((probe.dc - offset).abs() < 2.0e-3);
+    assert_close(fundamental.frequency_hz, freq);
+    assert!((fundamental.magnitude - amp).abs() < 2.0e-3);
+    assert!((fundamental.sine - amp).abs() < 2.0e-3);
+    assert!(fundamental.cosine.abs() < 2.0e-3);
+    assert!(probe.total_harmonic_distortion < 2.0e-3);
 }
 
 #[test]
