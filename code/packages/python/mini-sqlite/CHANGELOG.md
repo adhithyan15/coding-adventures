@@ -1,5 +1,34 @@
 # Changelog
 
+## [2.13.0] - 2026-05-24
+
+### Added
+
+- ``PRAGMA read_uncommitted`` and ``PRAGMA query_only`` are now
+  recognised as accept-and-store boolean PRAGMAs (default ``0``).
+  Reads return the current integer; writes accept
+  ``1``/``0``/``ON``/``OFF``/``TRUE``/``FALSE``/``YES``/``NO`` and
+  the value persists for the lifetime of the connection.  Both are
+  also advertised in ``PRAGMA pragma_list``.
+
+  Previously both returned ``[]`` (vs sqlite3's documented
+  ``[(0,)]`` default) and silently dropped writes — defensive callers
+  in ORMs and migration tools that probe these PRAGMAs to decide
+  whether to issue an explicit reset would trip on the missing
+  default.
+
+### Scope limits
+
+- ``read_uncommitted`` controls SQLite's shared-cache isolation
+  level.  Mini-sqlite has no shared cache, so the PRAGMA's value
+  has no semantic effect — it just round-trips per connection.
+- ``query_only = 1`` should reject writes in SQLite ("attempt to
+  write a readonly database").  Mini-sqlite does NOT yet enforce
+  the read-only gate — INSERT/UPDATE/DELETE still execute even
+  when ``query_only = 1``.  Enforcement is a deferred increment,
+  pinned by an explicit regression test that documents the current
+  divergence.
+
 ## [2.12.0] - 2026-05-24
 
 ### Fixed

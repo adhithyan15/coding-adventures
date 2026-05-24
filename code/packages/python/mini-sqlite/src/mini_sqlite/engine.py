@@ -827,6 +827,18 @@ _PRAGMA_DEFAULTS: dict[str, tuple[object, str]] = {
     # migration tools that toggle it during repair flows don't trip on
     # unrecognised PRAGMA.
     "writable_schema":  (0,                "integer"),  # bool; off by default
+    # read_uncommitted — selects whether SQLite uses the "READ UNCOMMITTED"
+    # isolation level (shared-cache mode only).  Mini-sqlite has no
+    # shared cache so the flag has no semantic effect, but ORMs probe
+    # it defensively before deciding whether to issue an explicit
+    # ``PRAGMA read_uncommitted = 0`` for a clean baseline.
+    "read_uncommitted": (0,                "integer"),  # bool; off by default
+    # query_only — when ON, SQLite rejects writes ("attempt to write a
+    # readonly database").  Mini-sqlite doesn't enforce the read-only
+    # semantics yet — the PRAGMA value just round-trips per connection,
+    # so callers that read it back to confirm settings see the value
+    # they wrote.  Enforcement is a future increment.
+    "query_only":       (0,                "integer"),  # bool; off by default
 }
 
 # Per-connection PRAGMA state.  Keyed by the backend object's id() so each
@@ -1266,6 +1278,15 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
         # PRAGMA defensively (e.g. to skip a repair flow) still see the
         # expected value.
         "writable_schema",
+        # ``read_uncommitted`` controls SQLite's shared-cache isolation
+        # level.  Mini-sqlite has no shared cache, so this is purely a
+        # round-tripped value with no semantic effect.
+        "read_uncommitted",
+        # ``query_only`` is meant to reject writes when ON.  Mini-sqlite
+        # round-trips the value but does NOT yet enforce the read-only
+        # gate — INSERT/UPDATE/DELETE will still execute even when
+        # ``query_only = 1``.  Enforcement is a future increment.
+        "query_only",
     }
     _INT_PRAGMAS = {
         "temp_store",
