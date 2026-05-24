@@ -34,5 +34,8 @@ qt_add_qml_module(visicalc_qt_app
     VERSION 1.0
     QML_FILES
         main.qml
+        # qmldir is in qml/ (tracked); FormulaBar.qml in build/
+        # (auto-generated, gitignored). Both bundled into qrc.
+        qml/qmldir
         build/FormulaBar.qml
 )
