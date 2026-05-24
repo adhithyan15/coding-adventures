@@ -123,6 +123,22 @@ export interface FourAnalysis {
   readonly probes: readonly OutputProbe[];
 }
 
+export interface DistortionAnalysis {
+  readonly kind: "disto";
+  readonly mode: string;
+  readonly points: number;
+  readonly startHz: number;
+  readonly stopHz: number;
+  readonly probes: readonly OutputProbe[];
+}
+
+export interface PoleZeroAnalysis {
+  readonly kind: "pz";
+  readonly outputNode: string;
+  readonly inputSource: string;
+  readonly poleZeroKind: "pole" | "zero" | "pz";
+}
+
 export type OptionValue = number | string | boolean;
 
 export interface OptionsAnalysis {
@@ -143,6 +159,8 @@ export type Analysis =
   | PrintAnalysis
   | PlotAnalysis
   | FourAnalysis
+  | DistortionAnalysis
+  | PoleZeroAnalysis
   | OptionsAnalysis;
 
 export interface ModelCard {
@@ -211,6 +229,16 @@ export class ParsedNetlist {
 
   fourCards(): FourAnalysis[] {
     return this.analyses.filter((analysis): analysis is FourAnalysis => analysis.kind === "four");
+  }
+
+  distortionCards(): DistortionAnalysis[] {
+    return this.analyses.filter(
+      (analysis): analysis is DistortionAnalysis => analysis.kind === "disto",
+    );
+  }
+
+  poleZeroCards(): PoleZeroAnalysis[] {
+    return this.analyses.filter((analysis): analysis is PoleZeroAnalysis => analysis.kind === "pz");
   }
 
   transientMethod(tran?: TranAnalysis): TransientMethod | undefined {
@@ -1245,6 +1273,33 @@ function parseDirective(fields: readonly string[]): Analysis {
       kind: "four",
       frequencyHz: parseValue(fields[1]),
       probes: fields.slice(2).map((token) => parseOutputProbe(token, ".four")),
+    };
+  }
+  if (directive === ".disto") {
+    requireMinFields(fields, 6, ".disto");
+    return {
+      kind: "disto",
+      mode: fields[1].toLowerCase(),
+      points: Math.trunc(parseValue(fields[2])),
+      startHz: parseValue(fields[3]),
+      stopHz: parseValue(fields[4]),
+      probes: fields.slice(5).map((token) => parseOutputProbe(token, ".disto")),
+    };
+  }
+  if (directive === ".pz") {
+    requireMinFields(fields, 3, ".pz");
+    requireMaxFields(fields, 4, ".pz");
+    const poleZeroKind = fields.length >= 4 ? fields[3].toLowerCase() : "pz";
+    if (poleZeroKind !== "pole" && poleZeroKind !== "zero" && poleZeroKind !== "pz") {
+      throw new NetlistParseError(
+        `.pz kind must be "pole", "zero", or "pz", got ${JSON.stringify(fields[3])}`,
+      );
+    }
+    return {
+      kind: "pz",
+      outputNode: parseVoltageProbe(fields[1], ".pz"),
+      inputSource: fields[2],
+      poleZeroKind,
     };
   }
   if (directive === ".options") {

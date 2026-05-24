@@ -31,6 +31,7 @@ from spice_engine import (
 from spice_netlist_parser import (
     AcAnalysis,
     DcAnalysis,
+    DistortionAnalysis,
     FourAnalysis,
     McAnalysis,
     ModelCard,
@@ -39,6 +40,7 @@ from spice_netlist_parser import (
     OpAnalysis,
     OptionsAnalysis,
     OutputProbe,
+    PoleZeroAnalysis,
     PlotAnalysis,
     PrintAnalysis,
     SensAnalysis,
@@ -306,6 +308,42 @@ def test_four_card_rejects_missing_or_unknown_probes() -> None:
         parse_netlist(".four 1k")
     with pytest.raises(NetlistParseError, match=r"\.four probe must be V\(node\) or I\(source\)"):
         parse_netlist(".four 1k P(out)")
+
+
+def test_parse_distortion_and_pole_zero_analysis_cards() -> None:
+    parsed = parse_netlist(
+        """
+.disto dec 5 1k 1meg V(out) I(Vin)
+.pz V(out) Vin pole
+"""
+    )
+
+    assert parsed.analyses == [
+        DistortionAnalysis(
+            "dec",
+            5,
+            1.0e3,
+            1.0e6,
+            (
+                OutputProbe("voltage", "out"),
+                OutputProbe("current", "Vin"),
+            ),
+        ),
+        PoleZeroAnalysis("out", "Vin", "pole"),
+    ]
+    assert parsed.distortion_cards() == [parsed.analyses[0]]
+    assert parsed.pole_zero_cards() == [parsed.analyses[1]]
+
+
+def test_distortion_and_pole_zero_cards_reject_invalid_shapes() -> None:
+    with pytest.raises(NetlistParseError, match=r"\.disto expects at least 6 fields"):
+        parse_netlist(".disto dec 5 1k 1meg")
+    with pytest.raises(NetlistParseError, match=r"\.disto probe must be V\(node\) or I\(source\)"):
+        parse_netlist(".disto dec 5 1k 1meg P(out)")
+    with pytest.raises(NetlistParseError, match=r"\.pz output must be a voltage probe"):
+        parse_netlist(".pz out Vin")
+    with pytest.raises(NetlistParseError, match=r"\.pz kind must be"):
+        parse_netlist(".pz V(out) Vin residue")
 
 
 def test_parse_transient_method_from_tran_card() -> None:

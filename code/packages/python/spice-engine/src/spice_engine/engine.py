@@ -374,6 +374,45 @@ class FourierResult:
     probes: list[FourierProbeResult]
 
 
+@dataclass(frozen=True)
+class DistortionHarmonic:
+    harmonic: int
+    frequency: float
+    magnitude: float
+    phase_degrees: float
+
+
+@dataclass(frozen=True)
+class DistortionPoint:
+    frequency: float
+    fundamental_magnitude: float
+    harmonics: list[DistortionHarmonic]
+    total_harmonic_distortion: float
+
+
+@dataclass(frozen=True)
+class DistortionResult:
+    input_source: str
+    output_probe: str
+    points: list[DistortionPoint]
+
+
+@dataclass(frozen=True)
+class PoleZeroEntry:
+    kind: str
+    real: float
+    imaginary: float
+    frequency: float
+    damping: float
+
+
+@dataclass(frozen=True)
+class PoleZeroResult:
+    input_source: str
+    output_node: str
+    entries: list[PoleZeroEntry]
+
+
 def format_dc_table(result: DcResult, probes: list[str] | None = None) -> str:
     """Format a DC operating point as a stable SPICE-style text table."""
     selected_probes = probes or _default_output_probes(

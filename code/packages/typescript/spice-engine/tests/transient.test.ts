@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   Circuit,
+  type DistortionResult,
   ExpWaveform,
+  type PoleZeroResult,
   PulseWaveform,
   PwlWaveform,
   SinWaveform,
@@ -744,6 +746,56 @@ describe("transient", () => {
     expect(fundamental.sine).toBeCloseTo(amp, 2);
     expect(Math.abs(fundamental.cosine)).toBeLessThan(2.0e-3);
     expect(probe.totalHarmonicDistortion).toBeLessThan(2.0e-3);
+  });
+
+  it("models pole-zero result shapes for a simple RC pole fixture", () => {
+    const resistance = 1_000.0;
+    const capacitance = 1.0e-6;
+    const poleRadPerSecond = -1.0 / (resistance * capacitance);
+    const result: PoleZeroResult = {
+      inputSource: "Vin",
+      outputNode: "out",
+      entries: [
+        {
+          kind: "pole",
+          real: poleRadPerSecond,
+          imaginary: 0.0,
+          frequencyHz: Math.abs(poleRadPerSecond) / (2.0 * Math.PI),
+          damping: 1.0,
+        },
+      ],
+    };
+
+    expect(result.entries[0].kind).toBe("pole");
+    expect(result.entries[0].frequencyHz).toBeCloseTo(
+      1.0 / (2.0 * Math.PI * resistance * capacitance),
+      9,
+    );
+  });
+
+  it("models distortion result shapes for a nonlinear-device smoke fixture", () => {
+    const result: DistortionResult = {
+      inputSource: "Vin",
+      outputProbe: "V(out)",
+      points: [
+        {
+          frequencyHz: 1.0e3,
+          fundamentalMagnitude: 1.0,
+          harmonics: [
+            {
+              harmonic: 2,
+              frequencyHz: 2.0e3,
+              magnitude: 0.025,
+              phaseDegrees: -12.0,
+            },
+          ],
+          totalHarmonicDistortion: 0.025,
+        },
+      ],
+    };
+
+    expect(result.points[0].harmonics[0].harmonic).toBe(2);
+    expect(result.points[0].totalHarmonicDistortion).toBeCloseTo(0.025, 9);
   });
 
   it("formats stable text output tables for DC and transient results", () => {

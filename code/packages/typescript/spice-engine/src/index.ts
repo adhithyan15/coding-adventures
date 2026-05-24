@@ -673,6 +673,40 @@ export interface FourierResult {
   readonly probes: readonly FourierProbeResult[];
 }
 
+export interface DistortionHarmonic {
+  readonly harmonic: number;
+  readonly frequencyHz: number;
+  readonly magnitude: number;
+  readonly phaseDegrees: number;
+}
+
+export interface DistortionPoint {
+  readonly frequencyHz: number;
+  readonly fundamentalMagnitude: number;
+  readonly harmonics: readonly DistortionHarmonic[];
+  readonly totalHarmonicDistortion: number;
+}
+
+export interface DistortionResult {
+  readonly inputSource: string;
+  readonly outputProbe: string;
+  readonly points: readonly DistortionPoint[];
+}
+
+export interface PoleZeroEntry {
+  readonly kind: "pole" | "zero";
+  readonly real: number;
+  readonly imaginary: number;
+  readonly frequencyHz: number;
+  readonly damping: number;
+}
+
+export interface PoleZeroResult {
+  readonly inputSource: string;
+  readonly outputNode: string;
+  readonly entries: readonly PoleZeroEntry[];
+}
+
 export interface AdaptiveTransientOptions {
   readonly method?: TransientMethod;
   readonly tolerance?: number;

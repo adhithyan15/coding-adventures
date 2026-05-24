@@ -3,9 +3,10 @@ use spice_engine::{
     BjtPolarity, Element, JfetPolarity, McDistribution, McOptions, MosfetType, TransientMethod,
 };
 use spice_netlist_parser::{
-    parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, FourAnalysis, McAnalysis,
-    NetlistParseError, NoiseAnalysis, OpAnalysis, OptionValue, OutputProbe, PlotAnalysis,
-    PrintAnalysis, SensAnalysis, TempAnalysis, TfAnalysis, TranAnalysis,
+    parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, DistortionAnalysis, FourAnalysis,
+    McAnalysis, NetlistParseError, NoiseAnalysis, OpAnalysis, OptionValue, OutputProbe,
+    PlotAnalysis, PoleZeroAnalysis, PoleZeroKind, PrintAnalysis, SensAnalysis, TempAnalysis,
+    TfAnalysis, TranAnalysis,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -378,6 +379,65 @@ fn rejects_four_cards_with_missing_or_unknown_probes() {
     assert!(probe_error
         .to_string()
         .contains(".four probe must be V(node) or I(source)"));
+}
+
+#[test]
+fn parses_distortion_and_pole_zero_analysis_cards() {
+    let parsed = parse_netlist(
+        r#"
+.disto dec 5 1k 1meg V(out) I(Vin)
+.pz V(out) Vin pole
+"#,
+    )
+    .unwrap();
+
+    assert_eq!(
+        parsed.analyses,
+        vec![
+            Analysis::Distortion(DistortionAnalysis {
+                mode: "dec".to_string(),
+                points: 5,
+                start_hz: 1.0e3,
+                stop_hz: 1.0e6,
+                probes: vec![
+                    OutputProbe::Voltage {
+                        node: "out".to_string()
+                    },
+                    OutputProbe::Current {
+                        source_name: "Vin".to_string()
+                    },
+                ],
+            }),
+            Analysis::PoleZero(PoleZeroAnalysis {
+                output_node: "out".to_string(),
+                input_source: "Vin".to_string(),
+                kind: PoleZeroKind::Pole,
+            }),
+        ]
+    );
+    assert!(matches!(parsed.distortion_cards().as_slice(), [_]));
+    assert!(matches!(parsed.pole_zero_cards().as_slice(), [_]));
+}
+
+#[test]
+fn rejects_distortion_and_pole_zero_cards_with_invalid_shapes() {
+    let missing_error = parse_netlist(".disto dec 5 1k 1meg").unwrap_err();
+    assert!(missing_error
+        .to_string()
+        .contains(".disto expects at least 6 fields"));
+
+    let probe_error = parse_netlist(".disto dec 5 1k 1meg P(out)").unwrap_err();
+    assert!(probe_error
+        .to_string()
+        .contains(".disto probe must be V(node) or I(source)"));
+
+    let output_error = parse_netlist(".pz out Vin").unwrap_err();
+    assert!(output_error
+        .to_string()
+        .contains(".pz output must be a voltage probe"));
+
+    let kind_error = parse_netlist(".pz V(out) Vin residue").unwrap_err();
+    assert!(kind_error.to_string().contains(".pz kind must be"));
 }
 
 #[test]

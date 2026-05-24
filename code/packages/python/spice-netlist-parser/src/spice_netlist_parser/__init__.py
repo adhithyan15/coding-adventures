@@ -3,6 +3,7 @@
 from spice_netlist_parser.parser import (
     AcAnalysis,
     DcAnalysis,
+    DistortionAnalysis,
     FourAnalysis,
     McAnalysis,
     ModelCard,
@@ -13,6 +14,7 @@ from spice_netlist_parser.parser import (
     OptionsAnalysis,
     OutputProbe,
     ParsedNetlist,
+    PoleZeroAnalysis,
     PlotAnalysis,
     PrintAnalysis,
     SensAnalysis,
@@ -29,6 +31,7 @@ __version__ = "0.1.6"
 __all__ = [
     "AcAnalysis",
     "DcAnalysis",
+    "DistortionAnalysis",
     "FourAnalysis",
     "McAnalysis",
     "ModelCard",
@@ -39,6 +42,7 @@ __all__ = [
     "OptionsAnalysis",
     "OutputProbe",
     "ParsedNetlist",
+    "PoleZeroAnalysis",
     "PlotAnalysis",
     "PrintAnalysis",
     "SensAnalysis",

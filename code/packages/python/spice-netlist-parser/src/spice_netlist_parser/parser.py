@@ -148,6 +148,26 @@ class FourAnalysis:
     probes: tuple[OutputProbe, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class DistortionAnalysis:
+    """A `.disto mode points start stop <V(node)|I(source)>...` card."""
+
+    mode: str
+    points: int
+    start_hz: float
+    stop_hz: float
+    probes: tuple[OutputProbe, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class PoleZeroAnalysis:
+    """A `.pz V(output_node) input_source [pole|zero|pz]` card."""
+
+    output_node: str
+    input_source: str
+    kind: Literal["pole", "zero", "pz"] = "pz"
+
+
 type OptionValue = float | str | bool
 type TransientMethod = Literal["euler", "trap", "gear2"]
 
@@ -172,6 +192,8 @@ type Analysis = (
     | PrintAnalysis
     | PlotAnalysis
     | FourAnalysis
+    | DistortionAnalysis
+    | PoleZeroAnalysis
     | OptionsAnalysis
 )
 
@@ -250,6 +272,20 @@ class ParsedNetlist:
 
     def four_cards(self) -> list[FourAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, FourAnalysis)]
+
+    def distortion_cards(self) -> list[DistortionAnalysis]:
+        return [
+            analysis
+            for analysis in self.analyses
+            if isinstance(analysis, DistortionAnalysis)
+        ]
+
+    def pole_zero_cards(self) -> list[PoleZeroAnalysis]:
+        return [
+            analysis
+            for analysis in self.analyses
+            if isinstance(analysis, PoleZeroAnalysis)
+        ]
 
     def options_cards(self) -> list[OptionsAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, OptionsAnalysis)]
@@ -969,6 +1005,28 @@ def _parse_directive(fields: list[str]) -> Analysis:
         return FourAnalysis(
             frequency_hz=parse_value(fields[1]),
             probes=tuple(_parse_output_probe(token, ".four") for token in fields[2:]),
+        )
+    if directive == ".disto":
+        _require_min_fields(fields, 6, ".disto")
+        return DistortionAnalysis(
+            mode=fields[1].lower(),
+            points=int(parse_value(fields[2])),
+            start_hz=parse_value(fields[3]),
+            stop_hz=parse_value(fields[4]),
+            probes=tuple(_parse_output_probe(token, ".disto") for token in fields[5:]),
+        )
+    if directive == ".pz":
+        _require_min_fields(fields, 3, ".pz")
+        _require_max_fields(fields, 4, ".pz")
+        kind = fields[3].lower() if len(fields) >= 4 else "pz"
+        if kind not in ("pole", "zero", "pz"):
+            raise NetlistParseError(
+                f".pz kind must be 'pole', 'zero', or 'pz', got {fields[3]!r}"
+            )
+        return PoleZeroAnalysis(
+            output_node=_parse_voltage_probe(fields[1], ".pz"),
+            input_source=fields[2],
+            kind=kind,
         )
     if directive == ".options":
         _require_min_fields(fields, 2, ".options")
