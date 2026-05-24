@@ -189,6 +189,10 @@ without rebuilding log routing policy.
 transport archive records with Rust-owned archive names, labels, queue-depth
 metadata, and messages, so adapters can keep archive views thin over shared
 transport retention policy.
+`input_callback_transport_snapshot_summary` captures those archives as stable
+transport snapshot records with Rust-owned snapshot names, labels, queue-depth
+metadata, and messages, so frontends can display point-in-time transport state
+without rebuilding archive retention policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
