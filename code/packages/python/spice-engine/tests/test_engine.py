@@ -772,6 +772,38 @@ def test_diode_temperature_scaling_reduces_fixed_current_forward_drop():
     assert hot_result.node_voltages["a"] < nominal_result.node_voltages["a"]
 
 
+def test_bjt_temperature_scaling_reduces_emitter_follower_forward_drop():
+    """Hotter silicon raises BJT Is enough to lift a fixed-base emitter node."""
+    nominal = Circuit()
+    nominal.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+    nominal.add(VoltageSource("Vbase", "base", "0", 0.72))
+    nominal.add(
+        BJT(
+            "Q1",
+            collector="vcc",
+            base="base",
+            emitter="out",
+            Is=1e-14,
+            beta_f=120.0,
+            Vt=0.02585,
+        )
+    )
+    nominal.add(Resistor("Rload", "out", "0", 1000.0))
+
+    cold = circuit_at_temperature(nominal, 275.0)
+    hot = circuit_at_temperature(nominal, 350.0)
+
+    nominal_result = dc_op(nominal)
+    cold_result = dc_op(cold)
+    hot_result = dc_op(hot)
+
+    assert cold_result.converged
+    assert nominal_result.converged
+    assert hot_result.converged
+    assert cold_result.node_voltages["out"] < nominal_result.node_voltages["out"]
+    assert hot_result.node_voltages["out"] > nominal_result.node_voltages["out"]
+
+
 # ---- DC: Capacitor (open in DC) ----
 
 

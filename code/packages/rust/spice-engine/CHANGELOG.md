@@ -5,6 +5,9 @@
 - Add `diode_at_temperature` and `circuit_at_temperature` helpers, which adjust
   diode thermal voltage and saturation current for an operating temperature
   using a SPICE-style silicon energy-gap foothold.
+- Add `bjt_at_temperature` and extend `circuit_at_temperature` to adjust BJT
+  thermal voltage and saturation current with the same silicon energy-gap
+  foothold.
 - Add `format_dc_table` and `format_transient_table` for stable tab-separated
   node-voltage and branch-current text output snapshots.
 - Add `fourier`, which computes SPICE-style DC, harmonic sine/cosine

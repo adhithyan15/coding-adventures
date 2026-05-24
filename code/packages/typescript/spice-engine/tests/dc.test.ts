@@ -287,6 +287,24 @@ describe("dcOp", () => {
     expect(hotResult.voltage("a")).toBeLessThan(nominalResult.voltage("a")!);
   });
 
+  it("uses BJT temperature scaling in fixed-base emitter voltage", () => {
+    const nominal = new Circuit();
+    nominal.add(voltageSource("Vcc", "vcc", "0", 5.0));
+    nominal.add(voltageSource("Vbase", "base", "0", 0.72));
+    nominal.add(bjt("Q1", "vcc", "base", "out", "NPN", 1.0e-14, 120.0, 0.02585));
+    nominal.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const cold = circuitAtTemperature(nominal, 275.0);
+    const hot = circuitAtTemperature(nominal, 350.0);
+
+    const nominalResult = dcOp(nominal);
+    const coldResult = dcOp(cold);
+    const hotResult = dcOp(hot);
+
+    expect(coldResult.voltage("out")).toBeLessThan(nominalResult.voltage("out")!);
+    expect(hotResult.voltage("out")).toBeGreaterThan(nominalResult.voltage("out")!);
+  });
+
   it("preserves subcircuits when applying temperature helpers", () => {
     const nominal = new Circuit();
     nominal.defineSubcircuit(

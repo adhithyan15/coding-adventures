@@ -215,6 +215,10 @@ Status:
   TypeScript, and Rust. They scale thermal voltage and saturation current with
   absolute temperature before an analysis, with fixed-current fixtures proving
   hotter silicon lowers forward voltage.
+- BJT operating-temperature helpers are implemented across Python, TypeScript,
+  and Rust. They scale thermal voltage and saturation current with absolute
+  temperature before an analysis, with fixed-base emitter-follower fixtures
+  proving hotter silicon lowers forward drop.
 - BJT `.model ... NPN|PNP(... CJE=<capacitance> CJC=<capacitance>)` parsing
   and base-emitter/base-collector AC capacitance stamping are implemented
   across Python, TypeScript, and Rust.
