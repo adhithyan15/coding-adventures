@@ -124,7 +124,7 @@
                 ]
               },
               { "display": "inline-replaced", "role": "control", "name": "textarea", "text": "Notes", "href": null, "src": null, "alt": null, "control_type": "textarea", "value": "Notes", "children": [] },
-              { "display": "inline-replaced", "role": "control", "name": "button", "text": "Go", "href": null, "src": null, "alt": null, "control_type": "submit", "children": [] }
+              { "display": "inline-replaced", "role": "control", "name": "button", "text": "Go", "href": null, "src": null, "alt": null, "control_type": "submit", "accessible_name": "Go", "children": [] }
             ]
           },
           {
@@ -166,6 +166,82 @@
               }
             ]
           }
+        ]
+      }
+    },
+    {
+      "id": "form-accessibility-display-metadata",
+      "description": "Form accessibility metadata survives the render-tree input projection while controls keep inline-replaced display categories.",
+      "input": "<body><form id=search aria-label=\"Search form\" autocomplete=on><label for=q>Query</label><input id=q name=q placeholder=\"Search terms\" required autocomplete=search><fieldset><legend>Options</legend><label>Fast<input id=fast type=checkbox name=fast checked></label></fieldset><select id=kind name=kind title=Kind multiple><option selected>Books<option>Manuals</select><button id=go type=submit aria-label=\"Run search\">Go</button></form><input id=external form=search name=outside placeholder=Outside>",
+      "expected": {
+        "children": [
+          {
+            "display": "block",
+            "role": "form",
+            "name": "form",
+            "id": "search",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "accessible_name": "Search form",
+            "autocomplete": "on",
+            "children": [
+              { "display": "inline", "role": "label", "name": "label", "text": "Query", "href": null, "src": null, "alt": null, "control_type": null, "label_for": "q", "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Query", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+              { "display": "inline-replaced", "role": "control", "name": "input", "id": "q", "text": null, "href": null, "src": null, "alt": null, "control_type": "text", "labels": ["Query"], "accessible_name": "Query", "placeholder": "Search terms", "autocomplete": "search", "required": true, "value": null, "children": [] },
+              {
+                "display": "block",
+                "role": "form_group",
+                "name": "fieldset",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "accessible_name": "Options",
+                "children": [
+                  { "display": "block", "role": "legend", "name": "legend", "text": "Options", "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Options", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                  {
+                    "display": "inline",
+                    "role": "label",
+                    "name": "label",
+                    "text": "Fast",
+                    "href": null,
+                    "src": null,
+                    "alt": null,
+                    "control_type": null,
+                    "children": [
+                      { "display": "inline-text", "role": "text", "name": null, "text": "Fast", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+                      { "display": "inline-replaced", "role": "control", "name": "input", "id": "fast", "text": null, "href": null, "src": null, "alt": null, "type_hint": "checkbox", "control_type": "checkbox", "labels": ["Fast"], "accessible_name": "Fast", "value": "on", "checked": true, "children": [] }
+                    ]
+                  }
+                ]
+              },
+              {
+                "display": "inline-replaced",
+                "role": "control",
+                "name": "select",
+                "id": "kind",
+                "title": "Kind",
+                "text": "Books Manuals",
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": "select",
+                "accessible_name": "Kind",
+                "value": "Books",
+                "multiple": true,
+                "options": ["Books", "Manuals"],
+                "children": [
+                  { "display": "inline", "role": "option", "name": "option", "text": "Books", "href": null, "src": null, "alt": null, "control_type": null, "value": "Books", "selected": true, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Books", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                  { "display": "inline", "role": "option", "name": "option", "text": "Manuals", "href": null, "src": null, "alt": null, "control_type": null, "value": "Manuals", "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Manuals", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                ]
+              },
+              { "display": "inline-replaced", "role": "control", "name": "button", "id": "go", "text": "Go", "href": null, "src": null, "alt": null, "type_hint": "submit", "control_type": "submit", "accessible_name": "Run search", "children": [] }
+            ]
+          },
+          { "display": "inline-replaced", "role": "control", "name": "input", "id": "external", "text": null, "href": null, "src": null, "alt": null, "control_type": "text", "form_owner": "search", "accessible_name": "Outside", "placeholder": "Outside", "value": null, "children": [] }
         ]
       }
     },
@@ -342,6 +418,7 @@
                     "src": null,
                     "alt": null,
                     "section_kind": "section",
+                    "accessible_name": "Chapter",
                     "control_type": null,
                     "children": [
                       { "display": "block", "role": "heading", "name": "h3", "heading_level": 3, "text": "Chapter", "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Chapter", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }

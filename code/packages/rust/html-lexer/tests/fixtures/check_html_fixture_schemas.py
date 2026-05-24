@@ -297,11 +297,23 @@ def check_browser_expected_lists(
         require_object_list(form_path, form, "controls", errors)
         for control_index, control in enumerate(object_list_items(form, "controls")):
             control_path = f"{form_path}.controls[{control_index}]"
+            require_optional_nullable_string(control_path, control, "id", errors)
             require_string(control_path, control, "control_type", errors)
             require_optional_nullable_string(control_path, control, "name", errors)
+            for field in (
+                "form_owner",
+                "accessible_name",
+                "placeholder",
+                "autocomplete",
+            ):
+                require_optional_nullable_string(control_path, control, field, errors)
+            require_optional_string_list(control_path, control, "labels", errors)
             require_optional_nullable_string(control_path, control, "value", errors)
             require_boolean(control_path, control, "disabled", errors)
+            require_optional_boolean(control_path, control, "required", errors)
+            require_optional_boolean(control_path, control, "readonly", errors)
             require_boolean(control_path, control, "checked", errors)
+            require_optional_boolean(control_path, control, "multiple", errors)
             require_string(control_path, control, "text", errors)
             require_string_list(control_path, control, "options", errors)
 
@@ -369,6 +381,11 @@ def check_browser_content_node(
         "type_hint",
         "media",
         "control_type",
+        "form_owner",
+        "label_for",
+        "accessible_name",
+        "placeholder",
+        "autocomplete",
         "value",
         "table_section_kind",
         "colspan",
@@ -391,7 +408,16 @@ def check_browser_content_node(
     require_optional_integer(node_path, node, "heading_level", errors)
     require_optional_string_list(node_path, node, "classes", errors)
     require_optional_string_list(node_path, node, "headers", errors)
-    for field in ("disabled", "checked", "selected", "list_reversed"):
+    require_optional_string_list(node_path, node, "labels", errors)
+    for field in (
+        "disabled",
+        "required",
+        "readonly",
+        "checked",
+        "selected",
+        "multiple",
+        "list_reversed",
+    ):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)
     require_object_list(node_path, node, "children", errors)
@@ -455,6 +481,11 @@ def check_browser_render_node(
         "type_hint",
         "media",
         "control_type",
+        "form_owner",
+        "label_for",
+        "accessible_name",
+        "placeholder",
+        "autocomplete",
         "value",
         "table_section_kind",
         "colspan",
@@ -477,7 +508,16 @@ def check_browser_render_node(
     require_optional_integer(node_path, node, "heading_level", errors)
     require_optional_string_list(node_path, node, "classes", errors)
     require_optional_string_list(node_path, node, "headers", errors)
-    for field in ("disabled", "checked", "selected", "list_reversed"):
+    require_optional_string_list(node_path, node, "labels", errors)
+    for field in (
+        "disabled",
+        "required",
+        "readonly",
+        "checked",
+        "selected",
+        "multiple",
+        "list_reversed",
+    ):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)
     require_object_list(node_path, node, "children", errors)

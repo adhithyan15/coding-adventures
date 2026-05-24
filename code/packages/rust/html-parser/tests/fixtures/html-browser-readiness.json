@@ -74,13 +74,55 @@
               { "control_type": "text", "name": "disabled", "value": "no", "disabled": true, "checked": false, "text": "", "options": [] },
               { "control_type": "select", "name": "section", "value": "manuals", "disabled": false, "checked": false, "text": "Books Manuals", "options": ["Books", "Manuals"] },
               { "control_type": "textarea", "name": "notes", "value": "Line one Line two", "disabled": false, "checked": false, "text": "Line one Line two", "options": [] },
-              { "control_type": "submit", "name": "go", "value": null, "disabled": false, "checked": false, "text": "Search", "options": [] }
+              { "control_type": "submit", "name": "go", "accessible_name": "Search", "value": null, "disabled": false, "checked": false, "text": "Search", "options": [] }
             ]
           }
         ],
         "tables": [
           { "caption": "Results", "row_count": 2, "column_count": 2, "column_hint_count": 0, "cell_count": 4, "header_cell_count": 2 }
         ]
+      }
+    },
+    {
+      "id": "form-accessibility-document-page",
+      "description": "Browser document form summaries include labels, accessible names, placeholders, autocomplete, and required/readonly/multiple control state.",
+      "input": "<body><form id=search aria-label=\"Search form\" autocomplete=on><label for=q>Query</label><input id=q name=q placeholder=\"Search terms\" required autocomplete=search><label>Notes<textarea id=notes name=notes placeholder=Details readonly>Keep me</textarea></label><fieldset><legend>Options</legend><label>Fast<input id=fast type=checkbox name=fast checked></label></fieldset><select id=kind name=kind title=Kind multiple><option selected>Books<option>Manuals</select><button id=go type=submit aria-label=\"Run search\">Go</button></form><input id=external form=search name=outside placeholder=Outside>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Query NotesKeep me Options Fast Books Manuals Go",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "search", "name": null, "text": "Query NotesKeep me Options Fast Books Manuals Go" },
+          { "id": "q", "name": null, "text": "" },
+          { "id": "notes", "name": null, "text": "Keep me" },
+          { "id": "fast", "name": null, "text": "" },
+          { "id": "kind", "name": null, "text": "Books Manuals" },
+          { "id": "go", "name": null, "text": "Go" },
+          { "id": "external", "name": null, "text": "" }
+        ],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "forms": [
+          {
+            "action": null,
+            "resolved_action": null,
+            "method": "get",
+            "enctype": null,
+            "target": null,
+            "controls": [
+              { "id": "q", "control_type": "text", "name": "q", "labels": ["Query"], "accessible_name": "Query", "placeholder": "Search terms", "autocomplete": "search", "value": null, "disabled": false, "required": true, "checked": false, "text": "", "options": [] },
+              { "id": "notes", "control_type": "textarea", "name": "notes", "labels": ["NotesKeep me"], "accessible_name": "NotesKeep me", "placeholder": "Details", "value": "Keep me", "disabled": false, "readonly": true, "checked": false, "text": "Keep me", "options": [] },
+              { "id": "fast", "control_type": "checkbox", "name": "fast", "labels": ["Fast"], "accessible_name": "Fast", "value": "on", "disabled": false, "checked": true, "text": "", "options": [] },
+              { "id": "kind", "control_type": "select", "name": "kind", "accessible_name": "Kind", "value": "Books", "disabled": false, "checked": false, "multiple": true, "text": "Books Manuals", "options": ["Books", "Manuals"] },
+              { "id": "go", "control_type": "submit", "name": null, "accessible_name": "Run search", "value": null, "disabled": false, "checked": false, "text": "Go", "options": [] }
+            ]
+          }
+        ],
+        "tables": []
       }
     },
     {

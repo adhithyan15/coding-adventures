@@ -193,6 +193,10 @@ documented in this file.
   richer form control metadata including values, checked/selected state,
   disabled state, select options, and textarea values.
 - Browser-facing document, content-tree, and render-tree projections now carry
+  form accessibility metadata including explicit and implicit labels, derived
+  accessible names, form-owner references, placeholder/autocomplete hints, and
+  required/readonly/multiple control state.
+- Browser-facing document, content-tree, and render-tree projections now carry
   resolved URL metadata for links, resources, images, and form actions using
   the document `base` href when available, while preserving raw authored
   attributes for downstream policy decisions.

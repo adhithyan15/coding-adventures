@@ -892,10 +892,19 @@ pub struct BrowserContentNode {
     pub type_hint: Option<String>,
     pub media: Option<String>,
     pub control_type: Option<String>,
+    pub form_owner: Option<String>,
+    pub label_for: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub placeholder: Option<String>,
+    pub autocomplete: Option<String>,
     pub value: Option<String>,
     pub disabled: bool,
+    pub required: bool,
+    pub readonly: bool,
     pub checked: bool,
     pub selected: bool,
+    pub multiple: bool,
     pub options: Vec<String>,
     pub table_section_kind: Option<String>,
     pub colspan: Option<String>,
@@ -946,10 +955,19 @@ pub struct BrowserRenderNode {
     pub type_hint: Option<String>,
     pub media: Option<String>,
     pub control_type: Option<String>,
+    pub form_owner: Option<String>,
+    pub label_for: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub placeholder: Option<String>,
+    pub autocomplete: Option<String>,
     pub value: Option<String>,
     pub disabled: bool,
+    pub required: bool,
+    pub readonly: bool,
     pub checked: bool,
     pub selected: bool,
+    pub multiple: bool,
     pub options: Vec<String>,
     pub table_section_kind: Option<String>,
     pub colspan: Option<String>,
@@ -1011,11 +1029,20 @@ pub struct BrowserForm {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserFormControl {
+    pub id: Option<String>,
     pub control_type: String,
     pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub placeholder: Option<String>,
+    pub autocomplete: Option<String>,
     pub value: Option<String>,
     pub disabled: bool,
+    pub required: bool,
+    pub readonly: bool,
     pub checked: bool,
+    pub multiple: bool,
     pub text: String,
     pub options: Vec<String>,
 }
@@ -1077,7 +1104,8 @@ impl BrowserDocument {
         if let Some(head) = head {
             collect_head_browser_facts(&head.children, &mut summary);
         }
-        collect_browser_facts(body_children, &mut summary);
+        let labels = collect_label_texts_by_control_id(body_children);
+        collect_browser_facts(body_children, &mut summary, &labels);
         summary
     }
 }
@@ -1101,7 +1129,8 @@ impl BrowserContentTree {
 
     fn from_nodes_with_base(nodes: &[Node], base_href: Option<&str>) -> Self {
         let mut children = Vec::new();
-        collect_browser_content_nodes(nodes, &mut children, base_href);
+        let labels = collect_label_texts_by_control_id(nodes);
+        collect_browser_content_nodes(nodes, &mut children, base_href, &labels);
         Self { children }
     }
 }
@@ -1145,10 +1174,19 @@ impl BrowserRenderNode {
             type_hint: content_node.type_hint.clone(),
             media: content_node.media.clone(),
             control_type: content_node.control_type.clone(),
+            form_owner: content_node.form_owner.clone(),
+            label_for: content_node.label_for.clone(),
+            labels: content_node.labels.clone(),
+            accessible_name: content_node.accessible_name.clone(),
+            placeholder: content_node.placeholder.clone(),
+            autocomplete: content_node.autocomplete.clone(),
             value: content_node.value.clone(),
             disabled: content_node.disabled,
+            required: content_node.required,
+            readonly: content_node.readonly,
             checked: content_node.checked,
             selected: content_node.selected,
+            multiple: content_node.multiple,
             options: content_node.options.clone(),
             table_section_kind: content_node.table_section_kind.clone(),
             colspan: content_node.colspan.clone(),
@@ -8082,7 +8120,11 @@ fn is_void_element(name: &str) -> bool {
     )
 }
 
-fn collect_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
+fn collect_browser_facts(
+    nodes: &[Node],
+    summary: &mut BrowserDocument,
+    labels: &[(String, String)],
+) {
     for node in nodes {
         let Node::Element(element) = node else {
             continue;
@@ -8123,7 +8165,7 @@ fn collect_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                     .unwrap_or_else(|| "get".to_string()),
                 enctype: element.attribute("enctype").map(ToOwned::to_owned),
                 target: element.attribute("target").map(ToOwned::to_owned),
-                controls: collect_form_controls(&element.children),
+                controls: collect_form_controls(&element.children, labels),
             }),
             "table" => summary.tables.push(BrowserTable {
                 caption: find_first_element_in_nodes(&element.children, "caption")
@@ -8141,7 +8183,7 @@ fn collect_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
             _ => {}
         }
 
-        collect_browser_facts(&element.children, summary);
+        collect_browser_facts(&element.children, summary, labels);
     }
 }
 
@@ -8424,14 +8466,17 @@ fn collect_browser_content_nodes(
     nodes: &[Node],
     output: &mut Vec<BrowserContentNode>,
     base_href: Option<&str>,
+    labels: &[(String, String)],
 ) {
-    collect_browser_content_nodes_with_mode(nodes, output, base_href, false);
+    collect_browser_content_nodes_with_mode(nodes, output, base_href, labels, None, false);
 }
 
 fn collect_browser_content_nodes_with_mode(
     nodes: &[Node],
     output: &mut Vec<BrowserContentNode>,
     base_href: Option<&str>,
+    labels: &[(String, String)],
+    current_label_text: Option<&str>,
     preserve_whitespace: bool,
 ) {
     for node in nodes {
@@ -8463,10 +8508,19 @@ fn collect_browser_content_nodes_with_mode(
                         type_hint: None,
                         media: None,
                         control_type: None,
+                        form_owner: None,
+                        label_for: None,
+                        labels: Vec::new(),
+                        accessible_name: None,
+                        placeholder: None,
+                        autocomplete: None,
                         value: None,
                         disabled: false,
+                        required: false,
+                        readonly: false,
                         checked: false,
                         selected: false,
+                        multiple: false,
                         options: Vec::new(),
                         table_section_kind: None,
                         colspan: None,
@@ -8496,9 +8550,13 @@ fn collect_browser_content_nodes_with_mode(
                 }
             }
             Node::Element(element) => {
-                if let Some(content_node) =
-                    browser_content_node_for_element(element, base_href, preserve_whitespace)
-                {
+                if let Some(content_node) = browser_content_node_for_element(
+                    element,
+                    base_href,
+                    labels,
+                    current_label_text,
+                    preserve_whitespace,
+                ) {
                     output.push(content_node);
                 }
             }
@@ -8510,6 +8568,8 @@ fn collect_browser_content_nodes_with_mode(
 fn browser_content_node_for_element(
     element: &Element,
     base_href: Option<&str>,
+    labels: &[(String, String)],
+    current_label_text: Option<&str>,
     preserve_whitespace: bool,
 ) -> Option<BrowserContentNode> {
     if is_browser_invisible_element(&element.name) {
@@ -8518,11 +8578,17 @@ fn browser_content_node_for_element(
 
     let role = browser_content_role(&element.name)?;
     let mut children = Vec::new();
+    let element_label_text = (element.name == "label")
+        .then(|| visible_text_for_nodes(&element.children))
+        .filter(|text| !text.is_empty());
+    let child_label_text = element_label_text.as_deref().or(current_label_text);
     if should_collect_browser_content_children(&element.name) {
         collect_browser_content_nodes_with_mode(
             &element.children,
             &mut children,
             base_href,
+            labels,
+            child_label_text,
             preserve_whitespace || browser_preserves_text_whitespace(&element.name),
         );
     }
@@ -8535,6 +8601,8 @@ fn browser_content_node_for_element(
     let href = element.attribute("href").map(ToOwned::to_owned);
     let src = browser_content_src(element);
     let quote_cite = browser_quote_cite(element);
+    let control_labels = browser_control_labels(element, labels, current_label_text);
+    let accessible_name = browser_accessible_name(element, role, &control_labels);
 
     Some(BrowserContentNode {
         role: role.to_string(),
@@ -8563,10 +8631,19 @@ fn browser_content_node_for_element(
         type_hint: element.attribute("type").map(ToOwned::to_owned),
         media: element.attribute("media").map(ToOwned::to_owned),
         control_type: browser_content_control_type(element),
+        form_owner: browser_form_owner(element),
+        label_for: browser_label_for(element),
+        labels: control_labels,
+        accessible_name,
+        placeholder: browser_placeholder(element),
+        autocomplete: browser_autocomplete(element),
         value: browser_content_value(element),
         disabled: element.attribute("disabled").is_some(),
+        required: browser_required(element),
+        readonly: browser_readonly(element),
         checked: element.attribute("checked").is_some(),
         selected: element.attribute("selected").is_some(),
+        multiple: browser_multiple(element),
         options: browser_content_options(element),
         table_section_kind: browser_table_section_kind(element),
         colspan: element.attribute("colspan").map(ToOwned::to_owned),
@@ -8793,6 +8870,153 @@ fn browser_landmark_kind(element: &Element) -> Option<String> {
     }
 }
 
+fn collect_label_texts_by_control_id(nodes: &[Node]) -> Vec<(String, String)> {
+    let mut labels = Vec::new();
+    collect_label_texts_by_control_id_into(nodes, &mut labels);
+    labels
+}
+
+fn collect_label_texts_by_control_id_into(nodes: &[Node], labels: &mut Vec<(String, String)>) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if element.name == "label" {
+            if let Some(for_id) = element.attribute("for") {
+                let text = visible_text_for_nodes(&element.children);
+                if !text.is_empty() {
+                    labels.push((for_id.to_string(), text));
+                }
+            }
+        }
+        collect_label_texts_by_control_id_into(&element.children, labels);
+    }
+}
+
+fn is_browser_form_control_element(name: &str) -> bool {
+    matches!(name, "button" | "input" | "select" | "textarea")
+}
+
+fn browser_control_labels(
+    element: &Element,
+    labels: &[(String, String)],
+    current_label_text: Option<&str>,
+) -> Vec<String> {
+    if !is_browser_form_control_element(&element.name) {
+        return Vec::new();
+    }
+
+    let mut result = Vec::new();
+    if let Some(text) = current_label_text.filter(|text| !text.is_empty()) {
+        push_unique_string(&mut result, text.to_string());
+    }
+    if let Some(id) = element.attribute("id") {
+        for (label_for, text) in labels {
+            if label_for == id {
+                push_unique_string(&mut result, text.clone());
+            }
+        }
+    }
+    result
+}
+
+fn push_unique_string(values: &mut Vec<String>, value: String) {
+    if !value.is_empty() && !values.iter().any(|existing| existing == &value) {
+        values.push(value);
+    }
+}
+
+fn browser_accessible_name(
+    element: &Element,
+    role: &str,
+    control_labels: &[String],
+) -> Option<String> {
+    if let Some(aria_label) = element.attribute("aria-label") {
+        let aria_label = collapse_html_whitespace(aria_label);
+        if !aria_label.is_empty() {
+            return Some(aria_label);
+        }
+    }
+
+    if !control_labels.is_empty() {
+        return Some(control_labels.join(" "));
+    }
+
+    let text = match role {
+        "control" if element.name == "button" => visible_text_for_nodes(&element.children),
+        "control" if element.name == "input" => element
+            .attribute("placeholder")
+            .or_else(|| element.attribute("title"))
+            .unwrap_or_default()
+            .to_string(),
+        "control" if element.name == "select" => {
+            element.attribute("title").unwrap_or_default().to_string()
+        }
+        "control" if element.name == "textarea" => element
+            .attribute("placeholder")
+            .or_else(|| element.attribute("title"))
+            .unwrap_or_default()
+            .to_string(),
+        "form_group" => find_first_element_in_nodes(&element.children, "legend")
+            .map(element_text)
+            .unwrap_or_default(),
+        _ => String::new(),
+    };
+    let text = collapse_html_whitespace(&text);
+    (!text.is_empty()).then_some(text)
+}
+
+fn browser_form_owner(element: &Element) -> Option<String> {
+    if matches!(
+        element.name.as_str(),
+        "button" | "fieldset" | "input" | "object" | "select" | "textarea"
+    ) {
+        element.attribute("form").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_label_for(element: &Element) -> Option<String> {
+    if element.name == "label" {
+        element.attribute("for").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_placeholder(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("placeholder").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_autocomplete(element: &Element) -> Option<String> {
+    if matches!(
+        element.name.as_str(),
+        "form" | "input" | "select" | "textarea"
+    ) {
+        element.attribute("autocomplete").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_required(element: &Element) -> bool {
+    matches!(element.name.as_str(), "input" | "select" | "textarea")
+        && element.attribute("required").is_some()
+}
+
+fn browser_readonly(element: &Element) -> bool {
+    matches!(element.name.as_str(), "input" | "textarea") && element.attribute("readonly").is_some()
+}
+
+fn browser_multiple(element: &Element) -> bool {
+    matches!(element.name.as_str(), "input" | "select") && element.attribute("multiple").is_some()
+}
+
 fn split_html_classes(value: &str) -> Vec<String> {
     value
         .split_ascii_whitespace()
@@ -8956,63 +9180,68 @@ fn browser_render_display(role: &str) -> &'static str {
     }
 }
 
-fn collect_form_controls(nodes: &[Node]) -> Vec<BrowserFormControl> {
+fn collect_form_controls(nodes: &[Node], labels: &[(String, String)]) -> Vec<BrowserFormControl> {
     let mut controls = Vec::new();
-    collect_form_controls_into(nodes, &mut controls);
+    collect_form_controls_into(nodes, &mut controls, labels, None);
     controls
 }
 
-fn collect_form_controls_into(nodes: &[Node], controls: &mut Vec<BrowserFormControl>) {
+fn collect_form_controls_into(
+    nodes: &[Node],
+    controls: &mut Vec<BrowserFormControl>,
+    labels: &[(String, String)],
+    current_label_text: Option<&str>,
+) {
     for node in nodes {
         let Node::Element(element) = node else {
             continue;
         };
 
+        let element_label_text = (element.name == "label")
+            .then(|| visible_text_for_nodes(&element.children))
+            .filter(|text| !text.is_empty());
+        let child_label_text = element_label_text.as_deref().or(current_label_text);
+
         match element.name.as_str() {
-            "input" => controls.push(BrowserFormControl {
-                control_type: element
-                    .attribute("type")
-                    .map(|input_type| input_type.to_ascii_lowercase())
-                    .unwrap_or_else(|| "text".to_string()),
-                name: element.attribute("name").map(ToOwned::to_owned),
-                value: browser_input_value(element),
-                disabled: element.attribute("disabled").is_some(),
-                checked: element.attribute("checked").is_some(),
-                text: String::new(),
-                options: Vec::new(),
-            }),
-            "button" => controls.push(BrowserFormControl {
-                control_type: element
-                    .attribute("type")
-                    .map(|button_type| button_type.to_ascii_lowercase())
-                    .unwrap_or_else(|| "submit".to_string()),
-                name: element.attribute("name").map(ToOwned::to_owned),
-                value: element.attribute("value").map(ToOwned::to_owned),
-                disabled: element.attribute("disabled").is_some(),
-                checked: false,
-                text: visible_text_for_nodes(&element.children),
-                options: Vec::new(),
-            }),
-            "select" => controls.push(BrowserFormControl {
-                control_type: "select".to_string(),
-                name: element.attribute("name").map(ToOwned::to_owned),
-                value: selected_option_value(&element.children),
-                disabled: element.attribute("disabled").is_some(),
-                checked: false,
-                text: visible_text_for_nodes(&element.children),
-                options: collect_select_options(&element.children),
-            }),
-            "textarea" => controls.push(BrowserFormControl {
-                control_type: "textarea".to_string(),
-                name: element.attribute("name").map(ToOwned::to_owned),
-                value: Some(element_text(element)),
-                disabled: element.attribute("disabled").is_some(),
-                checked: false,
-                text: element_text(element),
-                options: Vec::new(),
-            }),
-            _ => collect_form_controls_into(&element.children, controls),
+            "input" | "button" | "select" | "textarea" => {
+                controls.push(browser_form_control(element, labels, current_label_text));
+            }
+            _ => collect_form_controls_into(&element.children, controls, labels, child_label_text),
         }
+    }
+}
+
+fn browser_form_control(
+    element: &Element,
+    labels: &[(String, String)],
+    current_label_text: Option<&str>,
+) -> BrowserFormControl {
+    let control_type = browser_content_control_type(element)
+        .expect("browser_form_control is only called for form controls");
+    let control_labels = browser_control_labels(element, labels, current_label_text);
+    let text = match element.name.as_str() {
+        "button" | "select" => visible_text_for_nodes(&element.children),
+        "textarea" => element_text(element),
+        _ => String::new(),
+    };
+
+    BrowserFormControl {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        control_type,
+        name: element.attribute("name").map(ToOwned::to_owned),
+        form_owner: browser_form_owner(element),
+        accessible_name: browser_accessible_name(element, "control", &control_labels),
+        labels: control_labels,
+        placeholder: browser_placeholder(element),
+        autocomplete: browser_autocomplete(element),
+        value: browser_content_value(element),
+        disabled: element.attribute("disabled").is_some(),
+        required: browser_required(element),
+        readonly: browser_readonly(element),
+        checked: element.attribute("checked").is_some(),
+        multiple: browser_multiple(element),
+        text,
+        options: browser_content_options(element),
     }
 }
 
@@ -9515,6 +9744,75 @@ mod tests {
         assert_eq!(
             render_tree.children[2].children[0].children[1].children[0].heading_level,
             Some(3)
+        );
+    }
+
+    #[test]
+    fn browser_form_accessibility_metadata_tracks_labels_and_control_state() {
+        let document = parse_html(
+            "<body><form id=f aria-label=\"Search form\" autocomplete=on>\
+             <label for=q>Query</label>\
+             <input id=q name=q placeholder=\"Search terms\" required autocomplete=search>\
+             <label>Notes<textarea id=notes name=notes readonly>Keep me</textarea></label>\
+             <fieldset><legend>Options</legend><input id=fast type=checkbox name=fast checked></fieldset>\
+             <select id=kind name=kind title=Kind multiple><option selected>Books<option>Manuals</select>\
+             <button id=go type=submit aria-label=\"Run search\">Go</button></form>\
+             <input id=external form=f name=outside placeholder=Outside>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let controls = &summary.forms[0].controls;
+        assert_eq!(controls[0].id.as_deref(), Some("q"));
+        assert_eq!(controls[0].labels, vec!["Query"]);
+        assert_eq!(controls[0].accessible_name.as_deref(), Some("Query"));
+        assert_eq!(controls[0].placeholder.as_deref(), Some("Search terms"));
+        assert_eq!(controls[0].autocomplete.as_deref(), Some("search"));
+        assert!(controls[0].required);
+        assert!(controls[1].readonly);
+        assert_eq!(controls[1].labels, vec!["NotesKeep me"]);
+        assert_eq!(controls[2].control_type, "checkbox");
+        assert!(controls[2].checked);
+        assert!(controls[3].multiple);
+        assert_eq!(controls[3].accessible_name.as_deref(), Some("Kind"));
+        assert_eq!(controls[4].accessible_name.as_deref(), Some("Run search"));
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let form = &content_tree.children[0];
+        assert_eq!(form.role, "form");
+        assert_eq!(form.accessible_name.as_deref(), Some("Search form"));
+        assert_eq!(form.autocomplete.as_deref(), Some("on"));
+        let explicit_label = &form.children[0];
+        assert_eq!(explicit_label.role, "label");
+        assert_eq!(explicit_label.label_for.as_deref(), Some("q"));
+        let query = &form.children[1];
+        assert_eq!(query.labels, vec!["Query"]);
+        assert_eq!(query.accessible_name.as_deref(), Some("Query"));
+        assert!(query.required);
+        let notes = &form.children[2].children[1];
+        assert_eq!(notes.labels, vec!["NotesKeep me"]);
+        assert!(notes.readonly);
+        let fieldset = &form.children[3];
+        assert_eq!(fieldset.role, "form_group");
+        assert_eq!(fieldset.accessible_name.as_deref(), Some("Options"));
+        let select = &form.children[4];
+        assert!(select.multiple);
+        assert_eq!(select.accessible_name.as_deref(), Some("Kind"));
+        let external = &content_tree.children[1];
+        assert_eq!(external.form_owner.as_deref(), Some("f"));
+        assert_eq!(external.accessible_name.as_deref(), Some("Outside"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "block");
+        assert_eq!(
+            render_tree.children[0].children[1].display,
+            "inline-replaced"
+        );
+        assert_eq!(
+            render_tree.children[0].children[1]
+                .accessible_name
+                .as_deref(),
+            Some("Query")
         );
     }
 

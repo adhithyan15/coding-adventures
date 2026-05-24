@@ -59,13 +59,31 @@ struct ExpectedRenderNode {
     media: Option<String>,
     control_type: Option<String>,
     #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    label_for: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    placeholder: Option<String>,
+    #[serde(default)]
+    autocomplete: Option<String>,
+    #[serde(default)]
     value: Option<String>,
     #[serde(default)]
     disabled: bool,
     #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    readonly: bool,
+    #[serde(default)]
     checked: bool,
     #[serde(default)]
     selected: bool,
+    #[serde(default)]
+    multiple: bool,
     #[serde(default)]
     options: Vec<String>,
     #[serde(default)]
@@ -166,10 +184,19 @@ impl ExpectedRenderNode {
             type_hint: self.type_hint,
             media: self.media,
             control_type: self.control_type,
+            form_owner: self.form_owner,
+            label_for: self.label_for,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            placeholder: self.placeholder,
+            autocomplete: self.autocomplete,
             value: self.value,
             disabled: self.disabled,
+            required: self.required,
+            readonly: self.readonly,
             checked: self.checked,
             selected: self.selected,
+            multiple: self.multiple,
             options: self.options,
             table_section_kind: self.table_section_kind,
             colspan: self.colspan,

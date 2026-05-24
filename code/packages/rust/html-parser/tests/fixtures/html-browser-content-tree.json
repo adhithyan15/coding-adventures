@@ -142,7 +142,7 @@
                   { "role": "option", "name": "option", "text": "Manuals", "href": null, "src": null, "alt": null, "control_type": null, "value": "Manuals", "children": [{ "role": "text", "name": null, "text": "Manuals", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
                 ]
               },
-              { "role": "control", "name": "button", "text": "Search", "href": null, "src": null, "alt": null, "control_type": "submit", "children": [] }
+              { "role": "control", "name": "button", "text": "Search", "href": null, "src": null, "alt": null, "control_type": "submit", "accessible_name": "Search", "children": [] }
             ]
           },
           {
@@ -206,6 +206,78 @@
               }
             ]
           }
+        ]
+      }
+    },
+    {
+      "id": "form-accessibility-metadata",
+      "description": "Form controls carry explicit and implicit labels, accessible names, owner references, placeholders, autocomplete, and required/multiple state.",
+      "input": "<body><form id=search aria-label=\"Search form\" autocomplete=on><label for=q>Query</label><input id=q name=q placeholder=\"Search terms\" required autocomplete=search><fieldset><legend>Options</legend><label>Fast<input id=fast type=checkbox name=fast checked></label></fieldset><select id=kind name=kind title=Kind multiple><option selected>Books<option>Manuals</select><button id=go type=submit aria-label=\"Run search\">Go</button></form><input id=external form=search name=outside placeholder=Outside>",
+      "expected": {
+        "children": [
+          {
+            "role": "form",
+            "name": "form",
+            "id": "search",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "accessible_name": "Search form",
+            "autocomplete": "on",
+            "children": [
+              { "role": "label", "name": "label", "text": "Query", "href": null, "src": null, "alt": null, "control_type": null, "label_for": "q", "children": [{ "role": "text", "name": null, "text": "Query", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+              { "role": "control", "name": "input", "id": "q", "text": null, "href": null, "src": null, "alt": null, "control_type": "text", "labels": ["Query"], "accessible_name": "Query", "placeholder": "Search terms", "autocomplete": "search", "required": true, "value": null, "children": [] },
+              {
+                "role": "form_group",
+                "name": "fieldset",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "accessible_name": "Options",
+                "children": [
+                  { "role": "legend", "name": "legend", "text": "Options", "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Options", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                  {
+                    "role": "label",
+                    "name": "label",
+                    "text": "Fast",
+                    "href": null,
+                    "src": null,
+                    "alt": null,
+                    "control_type": null,
+                    "children": [
+                      { "role": "text", "name": null, "text": "Fast", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+                      { "role": "control", "name": "input", "id": "fast", "text": null, "href": null, "src": null, "alt": null, "type_hint": "checkbox", "control_type": "checkbox", "labels": ["Fast"], "accessible_name": "Fast", "value": "on", "checked": true, "children": [] }
+                    ]
+                  }
+                ]
+              },
+              {
+                "role": "control",
+                "name": "select",
+                "id": "kind",
+                "title": "Kind",
+                "text": "Books Manuals",
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": "select",
+                "accessible_name": "Kind",
+                "value": "Books",
+                "multiple": true,
+                "options": ["Books", "Manuals"],
+                "children": [
+                  { "role": "option", "name": "option", "text": "Books", "href": null, "src": null, "alt": null, "control_type": null, "value": "Books", "selected": true, "children": [{ "role": "text", "name": null, "text": "Books", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                  { "role": "option", "name": "option", "text": "Manuals", "href": null, "src": null, "alt": null, "control_type": null, "value": "Manuals", "children": [{ "role": "text", "name": null, "text": "Manuals", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                ]
+              },
+              { "role": "control", "name": "button", "id": "go", "text": "Go", "href": null, "src": null, "alt": null, "type_hint": "submit", "control_type": "submit", "accessible_name": "Run search", "children": [] }
+            ]
+          },
+          { "role": "control", "name": "input", "id": "external", "text": null, "href": null, "src": null, "alt": null, "control_type": "text", "form_owner": "search", "accessible_name": "Outside", "placeholder": "Outside", "value": null, "children": [] }
         ]
       }
     },
@@ -477,6 +549,7 @@
                     "src": null,
                     "alt": null,
                     "section_kind": "section",
+                    "accessible_name": "Chapter",
                     "control_type": null,
                     "children": [
                       { "role": "heading", "name": "h3", "heading_level": 3, "text": "Chapter", "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Chapter", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }

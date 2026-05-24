@@ -119,11 +119,29 @@ struct ExpectedForm {
 
 #[derive(Debug, Deserialize)]
 struct ExpectedFormControl {
+    #[serde(default)]
+    id: Option<String>,
     control_type: String,
     name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    placeholder: Option<String>,
+    #[serde(default)]
+    autocomplete: Option<String>,
     value: Option<String>,
     disabled: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    readonly: bool,
     checked: bool,
+    #[serde(default)]
+    multiple: bool,
     text: String,
     options: Vec<String>,
 }
@@ -314,11 +332,20 @@ impl ExpectedForm {
 impl ExpectedFormControl {
     fn into_browser_form_control(self) -> BrowserFormControl {
         BrowserFormControl {
+            id: self.id,
             control_type: self.control_type,
             name: self.name,
+            form_owner: self.form_owner,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            placeholder: self.placeholder,
+            autocomplete: self.autocomplete,
             value: self.value,
             disabled: self.disabled,
+            required: self.required,
+            readonly: self.readonly,
             checked: self.checked,
+            multiple: self.multiple,
             text: self.text,
             options: self.options,
         }

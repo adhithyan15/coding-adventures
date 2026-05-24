@@ -16,7 +16,9 @@ image, form, and table facts that a browser pipeline can consume before layout
 and Paint VM rendering. The fixture also pins resolved URL metadata derived
 from `base` hrefs while preserving raw authored link and resource attributes,
 and document/body identity and language metadata such as `lang`, `dir`, body
-`id`, and tokenized body classes.
+`id`, and tokenized body classes. Form cases also pin labels, derived
+accessible names, owner references, placeholder/autocomplete hints, and
+required/readonly/multiple control state.
 
 `html-browser-content-tree.json` is a checked parser acceptance corpus for the
 browser-facing content-tree projection. It verifies that broad HTML body
@@ -35,7 +37,9 @@ accessibility code. Text-flow cases also pin paragraph/preformatted roles,
 preserved preformatted text runs, list numbering metadata, quote citations, and
 line/word/thematic break kinds. Document-outline cases pin heading levels,
 sectioning roles, and landmark-like regions such as `main`, `nav`, `aside`,
-`header`, and `footer`.
+`header`, and `footer`. Form cases also preserve label associations, accessible
+names, owner references, and control-state hints for downstream accessibility
+and layout code.
 
 `html-browser-render-tree.json` is a checked parser acceptance corpus for the
 browser-facing render-tree input projection. It verifies that the content tree
@@ -52,7 +56,8 @@ display categories. Text-flow render inputs preserve list markers, quote
 citations, preformatted whitespace policy, and break kinds while mapping to
 stable display categories. Document-outline render inputs keep heading levels
 and section/landmark metadata while mapping those structural regions to block
-display categories.
+display categories. Form accessibility metadata is preserved while controls map
+to inline-replaced render inputs.
 
 Validate the checked-in smoke fixture's case boundaries and metadata with:
 
