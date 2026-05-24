@@ -218,6 +218,9 @@ The crate keeps the boundary narrow:
   component flags, counts, and label-integrity flags for host queue grouping
 - supervisor drain reports and summaries expose aggregate host-run queue
   priorities and compact route/lane/priority/readiness grouping keys
+- supervisor drain reports and summaries expose aggregate host-run queue digest
+  label-integrity flags so host logs can verify queue keys, routes, lanes,
+  priorities, readiness, and grouping labels together
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation

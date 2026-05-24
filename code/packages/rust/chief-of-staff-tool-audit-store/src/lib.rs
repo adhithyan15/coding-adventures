@@ -3931,6 +3931,21 @@ impl ToolAuditSupervisorDrainRunReport {
         !self.host_run_queue_route_readiness_labels_match()
     }
 
+    /// Return whether aggregate host-run queue digest labels match their typed values.
+    pub fn host_run_queue_digest_labels_match(&self) -> bool {
+        self.host_run_queue_key_label_matches_key()
+            && self.host_run_queue_route_label_matches_route()
+            && self.host_run_queue_action_lane_label_matches_lane()
+            && self.host_run_queue_readiness_label_matches_readiness()
+            && self.host_run_queue_priority_label_matches_priority()
+            && self.host_run_queue_group_key_label_matches_key()
+    }
+
+    /// Return whether any aggregate host-run queue digest label drifted.
+    pub fn has_host_run_queue_digest_label_integrity_drift(&self) -> bool {
+        !self.host_run_queue_digest_labels_match()
+    }
+
     /// Return the composite host-run queue-key priority rank.
     pub fn host_run_queue_key_priority_rank(&self) -> u8 {
         self.host_run_queue_key().priority_rank()
@@ -4095,6 +4110,20 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return whether any host-run queue-key component drifted.
     pub fn has_host_run_queue_key_integrity_drift(&self) -> bool {
         !self.host_run_queue_key_parts_match()
+    }
+
+    /// Return whether aggregate host-run queue labels and key parts are internally consistent.
+    pub fn host_run_queue_labels_match(&self) -> bool {
+        self.host_run_queue_key_labels_match()
+            && self.host_run_queue_key_parts_match()
+            && self.host_run_queue_key_parts_match_component_keys()
+            && self.host_run_queue_group_key_parts_match_queue()
+            && self.host_run_queue_digest_labels_match()
+    }
+
+    /// Return whether any aggregate host-run queue label or key component drifted.
+    pub fn has_host_run_queue_label_integrity_drift(&self) -> bool {
+        !self.host_run_queue_labels_match()
     }
 
     /// Return the reader or supervisor checkpoint name drained by this run.
@@ -4807,6 +4836,9 @@ impl ToolAuditSupervisorDrainRunReport {
                 .host_run_queue_route_readiness_labels_match(),
             has_host_run_queue_route_readiness_label_integrity_drift: self
                 .has_host_run_queue_route_readiness_label_integrity_drift(),
+            host_run_queue_digest_labels_match: self.host_run_queue_digest_labels_match(),
+            has_host_run_queue_digest_label_integrity_drift: self
+                .has_host_run_queue_digest_label_integrity_drift(),
             host_run_queue_key_priority_rank: self.host_run_queue_key_priority_rank(),
             host_run_queue_key_action_count: self.host_run_queue_key_action_count(),
             host_run_queue_key_has_multiple_actions: self.host_run_queue_key_has_multiple_actions(),
@@ -4845,6 +4877,9 @@ impl ToolAuditSupervisorDrainRunReport {
             host_run_queue_key_labels_match: self.host_run_queue_key_labels_match(),
             host_run_queue_key_parts_match: self.host_run_queue_key_parts_match(),
             has_host_run_queue_key_integrity_drift: self.has_host_run_queue_key_integrity_drift(),
+            host_run_queue_labels_match: self.host_run_queue_labels_match(),
+            has_host_run_queue_label_integrity_drift: self
+                .has_host_run_queue_label_integrity_drift(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -6086,6 +6121,10 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_queue_route_readiness_labels_match: bool,
     /// Whether any aggregate host-run queue route/readiness label drifted.
     pub has_host_run_queue_route_readiness_label_integrity_drift: bool,
+    /// Whether aggregate host-run queue digest labels parse back to typed values.
+    pub host_run_queue_digest_labels_match: bool,
+    /// Whether any aggregate host-run queue digest label drifted.
+    pub has_host_run_queue_digest_label_integrity_drift: bool,
     /// Sortable composite host-run queue-key priority rank.
     pub host_run_queue_key_priority_rank: u8,
     /// Number of composite host-run queue-key surfaces needing action.
@@ -6144,6 +6183,10 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_queue_key_parts_match: bool,
     /// Whether any host-run queue-key component drifted.
     pub has_host_run_queue_key_integrity_drift: bool,
+    /// Whether aggregate host-run queue labels and key parts are internally consistent.
+    pub host_run_queue_labels_match: bool,
+    /// Whether any aggregate host-run queue label or key component drifted.
+    pub has_host_run_queue_label_integrity_drift: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -8225,6 +8268,16 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.has_host_run_queue_route_readiness_label_integrity_drift
     }
 
+    /// Return whether aggregate host-run queue digest labels parse back to typed values.
+    pub fn host_run_queue_digest_labels_match(&self) -> bool {
+        self.host_run_queue_digest_labels_match
+    }
+
+    /// Return whether any aggregate host-run queue digest label drifted.
+    pub fn has_host_run_queue_digest_label_integrity_drift(&self) -> bool {
+        self.has_host_run_queue_digest_label_integrity_drift
+    }
+
     /// Return the sortable composite host-run queue-key priority rank.
     pub fn host_run_queue_key_priority_rank(&self) -> u8 {
         self.host_run_queue_key_priority_rank
@@ -8368,6 +8421,16 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether any host-run queue-key component drifted.
     pub fn has_host_run_queue_key_integrity_drift(&self) -> bool {
         self.has_host_run_queue_key_integrity_drift
+    }
+
+    /// Return whether aggregate host-run queue labels and key parts are internally consistent.
+    pub fn host_run_queue_labels_match(&self) -> bool {
+        self.host_run_queue_labels_match
+    }
+
+    /// Return whether any aggregate host-run queue label or key component drifted.
+    pub fn has_host_run_queue_label_integrity_drift(&self) -> bool {
+        self.has_host_run_queue_label_integrity_drift
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -19557,6 +19620,8 @@ mod tests {
         assert!(idle_report.host_run_queue_key_labels_match());
         assert!(idle_report.host_run_queue_key_parts_match());
         assert!(!idle_report.has_host_run_queue_key_integrity_drift());
+        assert!(idle_report.host_run_queue_labels_match());
+        assert!(!idle_report.has_host_run_queue_label_integrity_drift());
 
         assert!(!idle_summary.host_run_queue_has_health_dashboard_action);
         assert!(!idle_summary.host_run_queue_has_health_dashboard_action());
@@ -19588,6 +19653,10 @@ mod tests {
         assert!(idle_summary.host_run_queue_key_parts_match());
         assert!(!idle_summary.has_host_run_queue_key_integrity_drift);
         assert!(!idle_summary.has_host_run_queue_key_integrity_drift());
+        assert!(idle_summary.host_run_queue_labels_match);
+        assert!(idle_summary.host_run_queue_labels_match());
+        assert!(!idle_summary.has_host_run_queue_label_integrity_drift);
+        assert!(!idle_summary.has_host_run_queue_label_integrity_drift());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -19618,6 +19687,8 @@ mod tests {
         assert!(continuation_report.host_run_queue_key_labels_match());
         assert!(continuation_report.host_run_queue_key_parts_match());
         assert!(!continuation_report.has_host_run_queue_key_integrity_drift());
+        assert!(continuation_report.host_run_queue_labels_match());
+        assert!(!continuation_report.has_host_run_queue_label_integrity_drift());
 
         assert!(continuation_summary.host_run_queue_has_health_dashboard_action());
         assert!(continuation_summary.host_run_queue_has_host_decision_action());
@@ -19634,15 +19705,21 @@ mod tests {
         assert!(continuation_summary.host_run_queue_key_labels_match());
         assert!(continuation_summary.host_run_queue_key_parts_match());
         assert!(!continuation_summary.has_host_run_queue_key_integrity_drift());
+        assert!(continuation_summary.host_run_queue_labels_match());
+        assert!(!continuation_summary.has_host_run_queue_label_integrity_drift());
 
         let mut drift_summary = idle_summary;
         drift_summary.host_decision_queue_key_parts_match_decision = false;
         drift_summary.has_host_decision_queue_key_integrity_drift = true;
         drift_summary.host_run_queue_key_parts_match = false;
         drift_summary.has_host_run_queue_key_integrity_drift = true;
+        drift_summary.host_run_queue_labels_match = false;
+        drift_summary.has_host_run_queue_label_integrity_drift = true;
         assert!(drift_summary.host_run_queue_key_labels_match());
         assert!(!drift_summary.host_run_queue_key_parts_match());
         assert!(drift_summary.has_host_run_queue_key_integrity_drift());
+        assert!(!drift_summary.host_run_queue_labels_match());
+        assert!(drift_summary.has_host_run_queue_label_integrity_drift());
     }
 
     #[test]
@@ -19741,6 +19818,8 @@ mod tests {
         assert!(!idle_report.has_host_run_queue_group_key_integrity_drift());
         assert!(idle_report.host_run_queue_route_readiness_labels_match());
         assert!(!idle_report.has_host_run_queue_route_readiness_label_integrity_drift());
+        assert!(idle_report.host_run_queue_digest_labels_match());
+        assert!(!idle_report.has_host_run_queue_digest_label_integrity_drift());
         assert_eq!(idle_report.host_run_queue_key_priority_rank(), 0);
         assert_eq!(idle_report.host_run_queue_key_action_count(), 0);
         assert!(!idle_report.host_run_queue_key_has_multiple_actions());
@@ -19922,6 +20001,10 @@ mod tests {
         assert!(idle_summary.host_run_queue_route_readiness_labels_match());
         assert!(!idle_summary.has_host_run_queue_route_readiness_label_integrity_drift);
         assert!(!idle_summary.has_host_run_queue_route_readiness_label_integrity_drift());
+        assert!(idle_summary.host_run_queue_digest_labels_match);
+        assert!(idle_summary.host_run_queue_digest_labels_match());
+        assert!(!idle_summary.has_host_run_queue_digest_label_integrity_drift);
+        assert!(!idle_summary.has_host_run_queue_digest_label_integrity_drift());
         assert_eq!(idle_summary.host_run_queue_key_priority_rank, 0);
         assert_eq!(idle_summary.host_run_queue_key_priority_rank(), 0);
         assert_eq!(idle_summary.host_run_queue_key_action_count, 0);
@@ -20067,6 +20150,8 @@ mod tests {
         assert!(!continuation_summary.has_host_run_queue_group_key_integrity_drift());
         assert!(continuation_summary.host_run_queue_route_readiness_labels_match());
         assert!(!continuation_summary.has_host_run_queue_route_readiness_label_integrity_drift());
+        assert!(continuation_summary.host_run_queue_digest_labels_match());
+        assert!(!continuation_summary.has_host_run_queue_digest_label_integrity_drift());
         assert_eq!(continuation_summary.host_run_queue_key_priority_rank(), 90);
         assert_eq!(continuation_summary.host_run_queue_key_action_count(), 2);
         assert!(continuation_summary.host_run_queue_key_has_multiple_actions());
@@ -20091,18 +20176,30 @@ mod tests {
         drift_summary.host_run_queue_key_health_dashboard_matches_key = false;
         drift_summary.host_run_queue_key_parts_match_component_keys = false;
         drift_summary.has_host_run_queue_key_component_integrity_drift = true;
+        drift_summary.host_run_queue_labels_match = false;
+        drift_summary.has_host_run_queue_label_integrity_drift = true;
         assert!(drift_summary.host_run_queue_key_label_matches_key());
         assert!(!drift_summary.host_run_queue_key_health_dashboard_matches_key());
         assert!(drift_summary.host_run_queue_key_host_decision_matches_key());
         assert!(!drift_summary.host_run_queue_key_parts_match_component_keys());
         assert!(drift_summary.has_host_run_queue_key_component_integrity_drift());
+        assert!(!drift_summary.host_run_queue_labels_match());
+        assert!(drift_summary.has_host_run_queue_label_integrity_drift());
 
         let mut stale_action_lane_summary = continuation_summary.clone();
         stale_action_lane_summary.host_run_queue_action_lane_label = "continuation";
         stale_action_lane_summary.host_run_queue_action_lane_label_matches_lane = false;
         stale_action_lane_summary.has_host_run_queue_action_lane_label_integrity_drift = true;
+        stale_action_lane_summary.host_run_queue_digest_labels_match = false;
+        stale_action_lane_summary.has_host_run_queue_digest_label_integrity_drift = true;
+        stale_action_lane_summary.host_run_queue_labels_match = false;
+        stale_action_lane_summary.has_host_run_queue_label_integrity_drift = true;
         assert!(!stale_action_lane_summary.host_run_queue_action_lane_label_matches_lane());
         assert!(stale_action_lane_summary.has_host_run_queue_action_lane_label_integrity_drift());
+        assert!(!stale_action_lane_summary.host_run_queue_digest_labels_match());
+        assert!(stale_action_lane_summary.has_host_run_queue_digest_label_integrity_drift());
+        assert!(!stale_action_lane_summary.host_run_queue_labels_match());
+        assert!(stale_action_lane_summary.has_host_run_queue_label_integrity_drift());
 
         let mut stale_priority_summary = continuation_summary.clone();
         stale_priority_summary.host_run_queue_priority_label = "routine_action";
