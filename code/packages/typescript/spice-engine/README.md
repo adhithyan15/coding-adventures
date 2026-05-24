@@ -12,8 +12,8 @@ resistors, capacitors, inductors, diodes, BJTs, Level-1 MOSFETs, independent cur
 independent voltage sources, voltage-controlled current sources (VCCS),
 PWL/SIN/PULSE/EXP
 source waveforms for transient analysis, ground aliases, node voltages,
-voltage source branch currents, and backward-Euler reactive-element companion
-models.
+voltage source branch currents, Fourier post-processing for transient output,
+and backward-Euler reactive-element companion models.
 
 ```ts
 import {
