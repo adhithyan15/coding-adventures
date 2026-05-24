@@ -1177,4 +1177,122 @@ mod tests {
             result
         );
     }
+
+    // -----------------------------------------------------------------
+    // Phase 6m — logical operators lowering
+    // -----------------------------------------------------------------
+    //
+    // SIR encoding:
+    //   `a || b`  → BuiltinCall("or",  [a, b])
+    //   `a && b`  → BuiltinCall("and", [a, b])
+    //   `!x` / `not x` → BuiltinCall("not", [x])
+    // Both symbol (`||`/`&&`/`!`) and keyword (`or`/`and`/`not`)
+    // forms collapse to the same builtin in v0.
+
+    // NOTE on def-body logical operators: the v0 parser framework
+    // mis-handles bare `a || b` (or `&&`, etc.) as the tail
+    // expression of a def body — `method_call_no_paren("def", ...)`
+    // shadows `def_statement` because the alternation doesn't
+    // back-track cleanly when the first operand is a NAME.  Wrapping
+    // the expression in parens forces the LPAREN-expression-RPAREN
+    // path through `factor`, which the framework parses cleanly.
+    // We use the parens-wrapped form throughout these tests.  See
+    // lessons.md (Ruby parser alternation ambiguity).
+
+    #[test]
+    fn logical_or_symbol_lowers_to_or_builtin() {
+        let m = lower("def myor(a, b)\n  (a || b)\nend\n");
+        let names: Vec<&str> = m.functions.iter().map(|f| f.name.as_str()).collect();
+        let f = m
+            .functions
+            .iter()
+            .find(|f| f.name == "myor")
+            .unwrap_or_else(|| panic!("expected myor function; got functions {:?}", names));
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "or");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "a"));
+                assert!(matches!(&args[1], Expr::VarRef { name, .. } if name == "b"));
+            }
+            other => panic!("expected BuiltinCall(or, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn logical_and_symbol_lowers_to_and_builtin() {
+        let m = lower("def myand(a, b)\n  (a && b)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "myand").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "and");
+                assert_eq!(args.len(), 2);
+            }
+            other => panic!("expected BuiltinCall(and, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn logical_keyword_form_lowers_same_as_symbol() {
+        // `a or b` (keyword) should produce the same builtin as `a || b`.
+        let m = lower("def myor2(a, b)\n  (a or b)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "myor2").unwrap();
+        assert!(
+            matches!(&f.body.value, Expr::BuiltinCall { name, .. } if name == "or")
+        );
+    }
+
+    #[test]
+    fn logical_not_symbol_lowers_to_not_builtin() {
+        let m = lower("def mynot(x)\n  (!x)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "mynot").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "not");
+                assert_eq!(args.len(), 1);
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "x"));
+            }
+            other => panic!("expected BuiltinCall(not, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn logical_chain_and_then_or_nests_correctly() {
+        // `a && b || c` parses as `(a && b) || c` — precedence test.
+        // SIR: BuiltinCall("or", [BuiltinCall("and", [a, b]), c])
+        let m = lower("def chain(a, b, c)\n  (a && b || c)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "chain").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "or" => {
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[1], Expr::VarRef { name, .. } if name == "c"));
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner_name, args: inner_args, .. }
+                        if inner_name == "and" =>
+                    {
+                        assert_eq!(inner_args.len(), 2);
+                        assert!(matches!(&inner_args[0], Expr::VarRef { name, .. } if name == "a"));
+                        assert!(matches!(&inner_args[1], Expr::VarRef { name, .. } if name == "b"));
+                    }
+                    other => panic!("expected inner BuiltinCall(and, …), got {:?}", other),
+                }
+            }
+            other => panic!("expected outer BuiltinCall(or, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn logical_module_passes_sir_validator() {
+        let m = lower(concat!(
+            "def chain(a, b, c)\n",
+            "  (a && b || !c)\n",
+            "end\n",
+        ));
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected logical-op output: {:?}",
+            result
+        );
+    }
 }

@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.14.0] - 2026-05-24
+
+### Added (Phase 6m — logical operators `&&`, `||`, `and`, `or`, `not`, `!`)
+
+New grammar layer inserted above comparison:
+
+```
+expression   = logical_or ;
+logical_or   = logical_and { ( "||" | "or" ) logical_and } ;
+logical_and  = logical_not { ( "&&" | "and" ) logical_not } ;
+logical_not  = { ( "!" | "not" ) } comparison ;
+comparison   = sum { CMP_OP sum } ;    # was the old `expression` body
+```
+
+The pre-6m `expression` rule body (the comparison-operator chain) was moved into a new `comparison` rule.  Every previous reference to `expression` (assignment RHS, method args, if/unless cond, etc.) now automatically picks up the broader logical layer because they reference `expression`.
+
+**Precedence**: `||`/`or` < `&&`/`and` < `!`/`not` < comparison.  This matches the *symbol* form precedence.  v0 collapses keyword forms (`and`/`or`/`not`) onto the same precedence level (real Ruby gives them lower precedence than even assignment — uncommon in modern code; if any test program depends on the difference it'll be flagged in a follow-up).
+
+**Left-associativity**: `a || b || c` folds as `(a || b) || c`.
+
+**`logical_not` shape**: the rule uses `{ "!" | "not" }` (zero-or-more leading operators) instead of right-recursive alternation.  Equivalent semantics (`!!x` parses as two leading `!` then a comparison), more parser-friendly.
+
+### Parser-framework limitation discovered
+
+`method_call_no_paren = (NAME|KEYWORD) expression …` in the `statement` alternation can swallow a `def`'s body tail expression when the body is a bare logical/binary chain like `a || b`.  Wrapping the tail in parens (`(a || b)`) is the v0 workaround.  See lessons.md for the full diagnosis and follow-up plan.
+
+### Tests (+5 new, total 64)
+- `test_parse_logical_or_symbol_form`, `test_parse_logical_and_symbol_form`, `test_parse_logical_keyword_form`, `test_parse_logical_not_prefix`, `test_parse_logical_chain_and_then_or_precedence`.
+- 4 existing comparison tests (`test_parse_simple_comparison_has_sum_subnodes`, `test_parse_equality_in_assignment`, `test_parse_comparison_in_if_condition`, `test_parse_plus_has_lower_precedence_than_comparison`) updated to walk the new `comparison` subnode instead of the old `expression` body.
+- `test_parse_logical_or_inside_def_body` pins the parens workaround for the def-body issue.
+
 ## [0.13.0] - 2026-05-23
 
 ### Added (Phase 6l — method receiver chains `foo.bar.baz`, `foo.bar(args)`, `foo(1).bar`)

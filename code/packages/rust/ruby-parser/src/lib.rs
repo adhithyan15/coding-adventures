@@ -639,23 +639,19 @@ mod tests {
     #[test]
     fn test_parse_simple_comparison_has_sum_subnodes() {
         let ast = parse_ruby("5 < 10");
-        let expr_stmt = find_statement_inner(&ast, "expression_stmt")
-            .expect("expected expression_stmt");
-        let expr = expr_stmt
-            .children
-            .iter()
-            .find_map(|c| match c {
-                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
-                _ => None,
-            })
-            .expect("expected expression subnode");
-        let sum_count = expr
+        // Phase 6m moved the comparison op chain from `expression`
+        // down to the new `comparison` rule (the old expression body).
+        // Now `expression → logical_or → logical_and → logical_not →
+        // comparison → sum { CMP_OP sum }`.  Walk to the comparison.
+        let cmp = find_descendant(&ast, "comparison")
+            .expect("expected comparison subnode");
+        let sum_count = cmp
             .children
             .iter()
             .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "sum"))
             .count();
         assert_eq!(sum_count, 2);
-        let has_lt = expr
+        let has_lt = cmp
             .children
             .iter()
             .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "<"));
@@ -665,17 +661,11 @@ mod tests {
     #[test]
     fn test_parse_equality_in_assignment() {
         let ast = parse_ruby("flag = x == y");
-        let asg = find_statement_inner(&ast, "assignment")
-            .expect("expected assignment");
-        let expr = asg
-            .children
-            .iter()
-            .find_map(|c| match c {
-                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
-                _ => None,
-            })
-            .expect("expected expression");
-        let has_eq_eq = expr
+        // Phase 6m: `==` lives on the `comparison` node (was
+        // `expression`).
+        let cmp = find_descendant(&ast, "comparison")
+            .expect("expected comparison subnode");
+        let has_eq_eq = cmp
             .children
             .iter()
             .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "=="));
@@ -685,17 +675,11 @@ mod tests {
     #[test]
     fn test_parse_comparison_in_if_condition() {
         let ast = parse_ruby("if x < 10\n  y = 1\nend");
-        let ifn = find_statement_inner(&ast, "if_statement")
-            .expect("expected if_statement");
-        let cond = ifn
-            .children
-            .iter()
-            .find_map(|c| match c {
-                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
-                _ => None,
-            })
-            .expect("expected expression in if condition");
-        let has_lt = cond
+        // Phase 6m: comparison subnode now lives under the wrapping
+        // logical_* chain inside the condition's expression.
+        let cmp = find_descendant(&ast, "comparison")
+            .expect("expected comparison in if condition");
+        let has_lt = cmp
             .children
             .iter()
             .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "<"));
@@ -722,17 +706,10 @@ mod tests {
     #[test]
     fn test_parse_plus_has_lower_precedence_than_comparison() {
         let ast = parse_ruby("1 + 2 < 5");
-        let expr_stmt = find_statement_inner(&ast, "expression_stmt")
-            .expect("expected expression_stmt");
-        let expr = expr_stmt
-            .children
-            .iter()
-            .find_map(|c| match c {
-                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
-                _ => None,
-            })
-            .expect("expected expression");
-        let sums: Vec<&GrammarASTNode> = expr
+        // Phase 6m: comparison subnode wraps the two `sum`s.
+        let cmp = find_descendant(&ast, "comparison")
+            .expect("expected comparison subnode");
+        let sums: Vec<&GrammarASTNode> = cmp
             .children
             .iter()
             .filter_map(|c| match c {
@@ -935,6 +912,119 @@ mod tests {
         let ast = parse_ruby("x = a.b.c");
         let dot_calls = count_descendants(&ast, "dot_call");
         assert_eq!(dot_calls, 2, "expected 2 dot_calls, got {dot_calls}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase 6m — logical operators `&&`, `||`, `and`, `or`, `not`, `!`
+    // -----------------------------------------------------------------------
+
+    /// Recursive walker — true iff the tree somewhere contains a
+    /// token with the given value.  Used by the logical-operator
+    /// tests because the parser's repetition wrapping can sandwich
+    /// the operator token a level deeper than the named rule node.
+    fn tree_has_token_value(node: &GrammarASTNode, value: &str) -> bool {
+        for c in &node.children {
+            match c {
+                ASTNodeOrToken::Token(t) if t.value == value => return true,
+                ASTNodeOrToken::Node(sub) => {
+                    if tree_has_token_value(sub, value) {
+                        return true;
+                    }
+                }
+                _ => {}
+            }
+        }
+        false
+    }
+
+    #[test]
+    fn test_parse_logical_or_symbol_form() {
+        // `a || b` — the parse tree contains a `logical_or` node and a `||` token.
+        let ast = parse_ruby("a || b");
+        assert!(find_descendant(&ast, "logical_or").is_some(),
+            "expected logical_or rule node in tree");
+        assert!(tree_has_token_value(&ast, "||"), "expected `||` token in tree");
+    }
+
+    #[test]
+    fn test_parse_logical_and_symbol_form() {
+        let ast = parse_ruby("a && b");
+        assert!(find_descendant(&ast, "logical_and").is_some(),
+            "expected logical_and rule node in tree");
+        assert!(tree_has_token_value(&ast, "&&"), "expected `&&` token in tree");
+    }
+
+    #[test]
+    fn test_parse_logical_keyword_form() {
+        // `a or b` — keyword form lowers through logical_or too.
+        let ast = parse_ruby("a or b");
+        assert!(find_descendant(&ast, "logical_or").is_some(),
+            "expected logical_or rule node in tree");
+        assert!(tree_has_token_value(&ast, "or"), "expected `or` keyword token in tree");
+    }
+
+    #[test]
+    fn test_parse_logical_not_prefix() {
+        // `!x` and `not x` both produce a `logical_not` with a
+        // `!` or `not` leading token.
+        let ast = parse_ruby("!x");
+        let lnot = find_descendant(&ast, "logical_not").expect("expected logical_not");
+        let has_bang = lnot
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "!"));
+        assert!(has_bang, "expected `!` token under logical_not");
+    }
+
+    #[test]
+    fn test_parse_logical_chain_and_then_or_precedence() {
+        // `a && b || c` — `&&` binds tighter than `||`, so this
+        // parses as `(a && b) || c`.  In the AST, the top-level
+        // `logical_or` has a `logical_and` (containing `a && b`) and
+        // a trailing operand `c` separated by `||`.
+        let ast = parse_ruby("a && b || c");
+        // There should be exactly one `||` and one `&&` token.
+        fn count_value(node: &GrammarASTNode, val: &str) -> usize {
+            let mut n = 0;
+            for c in &node.children {
+                match c {
+                    ASTNodeOrToken::Token(t) if t.value == val => n += 1,
+                    ASTNodeOrToken::Node(sub) => n += count_value(sub, val),
+                    _ => {}
+                }
+            }
+            n
+        }
+        assert_eq!(count_value(&ast, "||"), 1);
+        assert_eq!(count_value(&ast, "&&"), 1);
+    }
+
+    #[test]
+    fn test_parse_logical_or_inside_def_body() {
+        // Sanity check that `||` inside a def body parses as a
+        // def_statement (and not as some misparse that swallows the
+        // `def`).
+        //
+        // KNOWN ISSUE: With the v0 statement-alternation framework,
+        // `def name(args)\n  a || b\nend` mis-parses as
+        // `method_call_no_paren("def", "name(args)")` and the def is
+        // lost.  Same mis-parse happens for `def name(args)\n  x + y
+        // \nend` only when the body's statement returns failure under
+        // some path the alternation framework doesn't back-track
+        // cleanly from.  See lessons.md for the workaround: wrap
+        // logical operators in parens when used as a def body's
+        // tail expression (`(a || b)`), or precede them with a
+        // statement that breaks the ambiguity (`return a || b`).
+        //
+        // Track in lessons.md as a parser-framework limitation to
+        // revisit in a follow-up phase.
+        let ast = parse_ruby("def myor(a, b)\n  (a || b)\nend\n");
+        assert!(
+            find_descendant(&ast, "def_statement").is_some(),
+            "expected def_statement to be present"
+        );
+        assert!(find_descendant(&ast, "logical_or").is_some(),
+            "expected logical_or inside def body");
     }
 }
 

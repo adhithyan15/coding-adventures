@@ -1177,11 +1177,37 @@ impl Lowerer {
         // Pass through wrapper rules transparently — the parser
         // sometimes nests `expression → sum → term → factor → expression`.
         match node.rule_name.as_str() {
-            // Phase 6i: `expression` is the comparison layer; `sum`
-            // is the new additive layer (matches the pre-6i
-            // `expression` rule).  Both lower as left-associative
-            // binary chains, just with different operator sets.
-            "expression" => self.lower_comparison_chain(node),
+            // Phase 6m: `expression` is now the top of the logical
+            // chain.  It contains exactly one child node — a
+            // `logical_or`.  Pass through transparently.
+            //
+            // The comparison-op chain that used to live directly under
+            // `expression` (pre-6m) has moved to the dedicated
+            // `comparison` rule (lowered the same way the old
+            // `expression` was — via `lower_comparison_chain`).
+            "expression" => {
+                let inner = self.first_node_child(node).ok_or_else(|| RubyLowerError {
+                    message: "expression had no inner rule".to_string(),
+                    line: node.start_line.unwrap_or(0),
+                    column: node.start_column.unwrap_or(0),
+                })?;
+                self.lower_expression(inner)
+            }
+            // Phase 6m — logical-OR chain: `a || b || c || …`.
+            // Folds left-associatively into nested
+            // `BuiltinCall("or", [lhs, rhs])`.  Operator forms `||`
+            // (symbol) and `or` (keyword) lower identically — see the
+            // grammar comment for the v0 simplification.
+            "logical_or" => self.lower_logical_chain(node, &["||", "or"], "or"),
+            // Phase 6m — logical-AND chain: same pattern as logical_or.
+            "logical_and" => self.lower_logical_chain(node, &["&&", "and"], "and"),
+            // Phase 6m — `logical_not`.  Two shapes:
+            //   - prefix `!` or `not` → BuiltinCall("not", [inner])
+            //   - bare passthrough to `comparison` (no leading op)
+            "logical_not" => self.lower_logical_not(node),
+            // Phase 6m — the comparison chain rule (renamed from the
+            // old `expression`).  Same lowering as before.
+            "comparison" => self.lower_comparison_chain(node),
             "sum" => self.lower_binary_chain(node, &["PLUS", "MINUS"]),
             "term" => self.lower_binary_chain(node, &["STAR", "SLASH"]),
             "factor" => self.lower_factor(node),
@@ -1342,6 +1368,99 @@ impl Lowerer {
             line: node.start_line.unwrap_or(0),
             column: node.start_column.unwrap_or(0),
         })
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 6m — logical operators `&&`, `||`, `and`, `or`, `!`, `not`
+    // -------------------------------------------------------------------
+
+    /// Lower a left-associative logical chain (`logical_or` /
+    /// `logical_and`).  `op_lexemes` is the set of accepted operator
+    /// lexemes (e.g. `["||", "or"]`).  `builtin_name` is the SIR
+    /// builtin name to emit (e.g. `"or"`).  Both the symbol form
+    /// (`||`) and keyword form (`or`) collapse to the same builtin —
+    /// see the grammar comment for why v0 doesn't distinguish them.
+    fn lower_logical_chain(
+        &mut self,
+        node: &GrammarASTNode,
+        op_lexemes: &[&str],
+        builtin_name: &str,
+    ) -> Result<Expr, RubyLowerError> {
+        let mut acc: Option<Expr> = None;
+        let mut pending_op_span: Option<Span> = None;
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(sub) => {
+                    let expr = self.lower_expression(sub)?;
+                    acc = Some(match (acc.take(), pending_op_span.take()) {
+                        (None, _) => expr,
+                        (Some(lhs), Some(op_span)) => Expr::BuiltinCall {
+                            name: builtin_name.to_string(),
+                            args: vec![lhs, expr],
+                            effects: EffectSet::PURE,
+                            span: op_span,
+                        },
+                        (Some(_), None) => {
+                            return Err(RubyLowerError {
+                                message: format!(
+                                    "logical chain had two consecutive operands without `{}`",
+                                    op_lexemes.join("/")
+                                ),
+                                line: sub.start_line.unwrap_or(0),
+                                column: sub.start_column.unwrap_or(0),
+                            });
+                        }
+                    });
+                }
+                ASTNodeOrToken::Token(tok) => {
+                    // Match operator by lexeme — `||`/`&&` lex as Name
+                    // tokens (catch-all in classify_op_token), `and`/`or`
+                    // lex as Keyword tokens.  Both reach us by value.
+                    if op_lexemes.iter().any(|l| *l == tok.value) {
+                        pending_op_span = Some(self.span_of_token(tok));
+                    }
+                }
+            }
+        }
+        acc.ok_or_else(|| RubyLowerError {
+            message: "logical chain had no operands".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })
+    }
+
+    /// Lower a `logical_not` node.  Shape: `{ "!" | "not" } comparison`.
+    /// Each leading `!` or `not` wraps the inner expression in another
+    /// `BuiltinCall("not", …)` layer — so `!!x` produces `not(not(x))`.
+    fn lower_logical_not(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        let not_count = node
+            .children
+            .iter()
+            .filter(|c| matches!(
+                c,
+                ASTNodeOrToken::Token(t) if t.value == "!" || t.value == "not"
+            ))
+            .count();
+        // The single Node child is the inner `comparison` expression.
+        let inner = self.first_node_child(node).ok_or_else(|| RubyLowerError {
+            message: "logical_not had no inner expression".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })?;
+        let mut expr = self.lower_expression(inner)?;
+        // Wrap once per leading `!` / `not` token.
+        for _ in 0..not_count {
+            expr = Expr::BuiltinCall {
+                name: "not".to_string(),
+                args: vec![expr],
+                effects: EffectSet::PURE,
+                span: self.span_of(node),
+            };
+        }
+        Ok(expr)
     }
 
     /// Lower a `factor` node — the leaves of the expression tree.
