@@ -2,6 +2,33 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.14.0] - 2026-05-24
+
+### Added (Phase 6m — logical operators lowering)
+
+SIR encoding:
+- `a || b`, `a or b`  →  `BuiltinCall("or",  [a, b])`
+- `a && b`, `a and b` →  `BuiltinCall("and", [a, b])`
+- `!x`, `not x`       →  `BuiltinCall("not", [x])`
+- `!!x`               →  `BuiltinCall("not", [BuiltinCall("not", [x])])`
+
+Both symbol form (`||`/`&&`/`!`) and keyword form (`or`/`and`/`not`) collapse to the same builtin name — v0 simplification.  All effects default to `PURE`.
+
+### Lowerer changes
+- `lower_expression` gained dispatch arms for `logical_or`, `logical_and`, `logical_not`, and `comparison` (renamed from the old `expression` arm).  The `expression` arm itself is now a pass-through to the inner `logical_or` node.
+- New helpers `lower_logical_chain(node, op_lexemes, builtin_name)` and `lower_logical_not(node)`.
+- `lower_logical_chain` matches operators by lexeme (covers both `||`/`&&` Name-classified tokens and `or`/`and` Keyword tokens uniformly).
+
+### Tests (+6 new, total 70)
+- `logical_or_symbol_lowers_to_or_builtin`
+- `logical_and_symbol_lowers_to_and_builtin`
+- `logical_keyword_form_lowers_same_as_symbol`
+- `logical_not_symbol_lowers_to_not_builtin`
+- `logical_chain_and_then_or_nests_correctly` — `a && b || c` parses & lowers as `(a && b) || c`.
+- `logical_module_passes_sir_validator`
+
+All six use the parens workaround (`(a || b)` instead of bare `a || b`) inside def bodies to dodge the `method_call_no_paren` ambiguity (logged in lessons.md, parser CHANGELOG).
+
 ## [0.13.0] - 2026-05-23
 
 ### Added (Phase 6l — method receiver chains lowering)
