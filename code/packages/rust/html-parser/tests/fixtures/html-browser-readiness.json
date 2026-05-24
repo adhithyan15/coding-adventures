@@ -87,6 +87,49 @@
       }
     },
     {
+      "id": "responsive-image-metadata-page",
+      "description": "Browser document image summaries expose responsive source selection metadata and loading hints.",
+      "input": "<base href=\"https://example.test/gallery/index.html\"><body><picture><source media=\"(min-width: 800px)\" type=image/avif srcset=\"hero-wide.avif 1x, hero-wide@2x.avif 2x\" sizes=\"80vw\"><source media=\"(min-width: 400px)\" type=image/webp srcset=\"hero.webp 640w, hero-large.webp 1280w\" sizes=\"100vw\"><img src=hero.jpg srcset=\"hero-small.jpg 480w, https://cdn.example.test/hero.jpg 960w\" sizes=\"(max-width: 600px) 100vw, 50vw\" alt=\"Hero\" width=640 height=360 loading=lazy decoding=async fetchpriority=high crossorigin=anonymous referrerpolicy=no-referrer usemap=#hero-map ismap></picture>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/gallery/index.html",
+        "base_target": null,
+        "body_text": "",
+        "metas": [],
+        "resources": [
+          { "kind": "image", "url": "hero.jpg", "resolved_url": "https://example.test/gallery/hero.jpg", "rel": null, "type_hint": null, "media": null, "title": null, "width": "640", "height": "360", "async_script": false, "defer_script": false }
+        ],
+        "anchors": [],
+        "headings": [],
+        "links": [],
+        "images": [
+          {
+            "src": "hero.jpg",
+            "resolved_src": "https://example.test/gallery/hero.jpg",
+            "alt": "Hero",
+            "width": "640",
+            "height": "360",
+            "srcset": "hero-small.jpg 480w, https://cdn.example.test/hero.jpg 960w",
+            "resolved_srcset": "https://example.test/gallery/hero-small.jpg 480w, https://cdn.example.test/hero.jpg 960w",
+            "sizes": "(max-width: 600px) 100vw, 50vw",
+            "loading": "lazy",
+            "decoding": "async",
+            "fetchpriority": "high",
+            "crossorigin": "anonymous",
+            "referrerpolicy": "no-referrer",
+            "usemap": "#hero-map",
+            "ismap": true,
+            "sources": [
+              { "srcset": "hero-wide.avif 1x, hero-wide@2x.avif 2x", "resolved_srcset": "https://example.test/gallery/hero-wide.avif 1x, https://example.test/gallery/hero-wide@2x.avif 2x", "sizes": "80vw", "media": "(min-width: 800px)", "type_hint": "image/avif" },
+              { "srcset": "hero.webp 640w, hero-large.webp 1280w", "resolved_srcset": "https://example.test/gallery/hero.webp 640w, https://example.test/gallery/hero-large.webp 1280w", "sizes": "100vw", "media": "(min-width: 400px)", "type_hint": "image/webp" }
+            ]
+          }
+        ],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "form-accessibility-document-page",
       "description": "Browser document form summaries include labels, accessible names, placeholders, autocomplete, and required/readonly/multiple control state.",
       "input": "<body><form id=search aria-label=\"Search form\" autocomplete=on><label for=q>Query</label><input id=q name=q placeholder=\"Search terms\" required autocomplete=search><label>Notes<textarea id=notes name=notes placeholder=Details readonly>Keep me</textarea></label><fieldset><legend>Options</legend><label>Fast<input id=fast type=checkbox name=fast checked></label></fieldset><select id=kind name=kind title=Kind multiple><option selected>Books<option>Manuals</select><button id=go type=submit aria-label=\"Run search\">Go</button></form><input id=external form=search name=outside placeholder=Outside>",

@@ -75,6 +75,10 @@ The current parser surface includes:
 - browser-facing URL resolution metadata for links, loadable resources, images,
   and form actions using the document `base` href when available, while keeping
   raw authored URLs available to browser policy code
+- browser-facing responsive image metadata for `img` and `picture/source`
+  combinations, including raw/resolved `srcset`, `sizes`, source media/type
+  hints, lazy loading, decoding, fetch priority, CORS/referrer policy, usemap,
+  and server-side image-map state
 - browser-facing identity and language metadata for document/body fields plus
   renderable content nodes, including `id`, tokenized `class`, `title`, `lang`,
   and `dir` values for selector matching, UI policy, and early layout

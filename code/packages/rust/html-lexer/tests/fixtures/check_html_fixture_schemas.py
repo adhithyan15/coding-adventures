@@ -326,8 +326,29 @@ def check_browser_expected_lists(
 
     for index, image in enumerate(object_list_items(expected, "images")):
         image_path = f"{case_path}.expected.images[{index}]"
-        for field in ("src", "resolved_src", "alt", "width", "height"):
+        for field in (
+            "src",
+            "resolved_src",
+            "alt",
+            "width",
+            "height",
+            "srcset",
+            "resolved_srcset",
+            "sizes",
+            "loading",
+            "decoding",
+            "fetchpriority",
+            "crossorigin",
+            "referrerpolicy",
+            "usemap",
+        ):
             require_optional_nullable_string(image_path, image, field, errors)
+        require_optional_boolean(image_path, image, "ismap", errors)
+        require_optional_object_list(image_path, image, "sources", errors)
+        for source_index, source in enumerate(object_list_items(image, "sources")):
+            source_path = f"{image_path}.sources[{source_index}]"
+            for field in ("srcset", "resolved_srcset", "sizes", "media", "type_hint"):
+                require_optional_nullable_string(source_path, source, field, errors)
 
     for index, media in enumerate(object_list_items(expected, "media")):
         media_path = f"{case_path}.expected.media[{index}]"
