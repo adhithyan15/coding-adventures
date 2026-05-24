@@ -369,14 +369,19 @@ cmp_op            = "=" | NOT_EQUALS | "<" | ">" | "<=" | ">=" ;
 #   bitwise:   & | << >>             ← new layer, between additive and cmp
 #   additive:  + - || -> ->>
 #   multiplicative: * / %
-#   unary:     - ~
+#   unary:     - ~ +
 #   primary
 #
 # (Reference: https://sqlite.org/lang_expr.html#operators )
 bitwise           = additive { ( "&" | "|" | "<<" | ">>" ) additive } ;
 additive          = multiplicative { ( "+" | "-" | "||" | JSON_ARROW | JSON_ARROW_TEXT ) multiplicative } ;
 multiplicative    = unary { ( STAR | "/" | "%" ) unary } ;
-unary             = ( "-" | "~" ) unary | primary ;
+# Unary prefix operators.  ``+`` is the no-op identity (``+5`` ≡ ``5``)
+# — matches SQLite, which documents it as "a valid no-op".  ``-`` is
+# arithmetic negation; ``~`` is bitwise NOT (coerces to int64).  All
+# three share the same precedence level so ``-+5`` parses as ``-(+5)``
+# and ``++5`` parses as ``+(+5)``.
+unary             = ( "-" | "~" | "+" ) unary | primary ;
 
 # primary: order matters for PEG backtracking.
 #   1. Simple literals

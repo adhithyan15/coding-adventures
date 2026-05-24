@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.6.0] - 2026-05-23
+
+### Added
+
+- Unary ``+`` prefix operator (e.g. ``SELECT +5``,
+  ``SELECT 1 + +2``, ``SELECT -+5``) is now accepted as the documented
+  SQLite no-op identity.  Previously raised
+  ``ProgrammingError: Parse error … Expected "-" or "~" or NUMBER …,
+  got '+'`` because the grammar's ``unary`` rule only listed ``-`` and
+  ``~`` as prefixes.
+
+  Implementation: one-character grammar change — ``unary = ( "-" | "~"
+  | "+" ) unary | primary`` — plus an adapter pass-through that
+  unwraps the ``+`` without emitting an IR node (the operand value is
+  unchanged, so adding a layer would just be work for the planner and
+  codegen to peel).  Regenerated sql-parser's ``_grammar.py`` cache.
+
+  All combinations work: ``+5.5``, ``+(-3)``, ``-+5``, ``++5``,
+  ``+~5``, ``+a`` in SELECT/WHERE/ORDER BY/CASE/function-argument
+  positions.
+
 ## [2.5.0] - 2026-05-23
 
 ### Added

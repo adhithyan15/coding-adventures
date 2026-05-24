@@ -1,6 +1,6 @@
 # AUTO-GENERATED FILE — DO NOT EDIT
 # ruff: noqa: E501, F401
-# Source: /Users/adhithya/Documents/coding-adventures/.claude/worktrees/nice-wing-09855c/code/grammars/sql.grammar
+# Source: code/grammars/sql.grammar
 # Regenerate with: grammar-tools compile-grammar <source.grammar>
 #
 # This file embeds a ParserGrammar as native Python data structures.
@@ -1380,13 +1380,14 @@ PARSER_GRAMMAR = ParserGrammar(
                         Alternation(choices=[
                             Literal(value='-'),
                             Literal(value='~'),
+                            Literal(value='+'),
                         ]),
                     ),
                     RuleReference(name='unary', is_token=False),
                 ]),
                 RuleReference(name='primary', is_token=False),
             ]),
-            line_number=379,
+            line_number=384,
         ),
         GrammarRule(
             name='primary',
@@ -1420,7 +1421,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value=')'),
                 ]),
             ]),
-            line_number=399,
+            line_number=404,
         ),
         GrammarRule(
             name='column_ref',
@@ -1434,7 +1435,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=409,
+            line_number=414,
         ),
         GrammarRule(
             name='function_call',
@@ -1464,7 +1465,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='filter_clause', is_token=False),
                 ),
             ]),
-            line_number=423,
+            line_number=428,
         ),
         GrammarRule(
             name='filter_clause',
@@ -1476,7 +1477,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='expr', is_token=False),
                 Literal(value=')'),
             ]),
-            line_number=427,
+            line_number=432,
         ),
         GrammarRule(
             name='cast_expr',
@@ -1489,7 +1490,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='NAME', is_token=True),
                 Literal(value=')'),
             ]),
-            line_number=433,
+            line_number=438,
         ),
         GrammarRule(
             name='window_func_call',
@@ -1511,7 +1512,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='window_spec', is_token=False),
                 Literal(value=')'),
             ]),
-            line_number=462,
+            line_number=467,
         ),
         GrammarRule(
             name='window_spec',
@@ -1527,7 +1528,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='frame_clause', is_token=False),
                 ),
             ]),
-            line_number=463,
+            line_number=468,
         ),
         GrammarRule(
             name='partition_clause',
@@ -1543,7 +1544,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=464,
+            line_number=469,
         ),
         GrammarRule(
             name='value_list',
@@ -1557,7 +1558,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=465,
+            line_number=470,
         ),
         GrammarRule(
             name='frame_clause',
@@ -1575,7 +1576,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='frame_bound', is_token=False),
                 ]),
             ]),
-            line_number=487,
+            line_number=492,
         ),
         GrammarRule(
             name='frame_unit',
@@ -1585,7 +1586,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='RANGE'),
                 Literal(value='GROUPS'),
             ]),
-            line_number=489,
+            line_number=494,
         ),
         GrammarRule(
             name='frame_bound',
@@ -1612,7 +1613,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value='FOLLOWING'),
                 ]),
             ]),
-            line_number=490,
+            line_number=495,
         ),
         GrammarRule(
             name='create_trigger_stmt',
@@ -1650,7 +1651,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 Literal(value='END'),
             ]),
-            line_number=516,
+            line_number=521,
         ),
         GrammarRule(
             name='trigger_body_stmt',
@@ -1662,7 +1663,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='delete_stmt', is_token=False),
                 RuleReference(name='query_stmt', is_token=False),
             ]),
-            line_number=521,
+            line_number=526,
         ),
         GrammarRule(
             name='drop_trigger_stmt',
@@ -1678,7 +1679,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='NAME', is_token=True),
             ]),
-            line_number=523,
+            line_number=528,
         ),
         GrammarRule(
             name='case_expr',
@@ -1700,13 +1701,13 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 Literal(value='END'),
             ]),
-            line_number=538,
+            line_number=543,
         ),
         GrammarRule(
             name='case_operand',
             body=
             RuleReference(name='expr', is_token=False),
-            line_number=539,
+            line_number=544,
         ),
         GrammarRule(
             name='case_when',
@@ -1717,7 +1718,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='THEN'),
                 RuleReference(name='expr', is_token=False),
             ]),
-            line_number=540,
+            line_number=545,
         ),
     ],
 )
