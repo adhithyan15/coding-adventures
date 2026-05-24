@@ -169,6 +169,8 @@ All notable changes to this package will be documented in this file.
   supervisor drain run summaries.
 - Stable composite host-run queue keys that combine health-dashboard and
   host-decision keys in supervisor drain run reports and summaries.
+- Aggregate host-run queue routes, readiness labels, and label-integrity flags
+  for supervisor drain run report and summary grouping.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
