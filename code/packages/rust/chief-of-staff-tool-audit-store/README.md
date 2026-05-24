@@ -188,6 +188,8 @@ The crate keeps the boundary narrow:
   flags for host queues
 - supervisor drain run summaries expose combined plan/drain health-dashboard
   surfaces, routes, ranks, readiness, and triage flags for one-key host queues
+- supervisor drain run summaries flatten combined health-dashboard route,
+  priority, and readiness booleans for host queue filters
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation

@@ -2329,6 +2329,42 @@ impl ToolAuditSupervisorDrainRunReport {
             == Some(self.health_dashboard_route())
     }
 
+    /// Return whether aggregate health has a concrete route.
+    pub fn health_dashboard_has_route(&self) -> bool {
+        self.health_dashboard_route().has_route()
+    }
+
+    /// Return whether aggregate health routes to the drain queue.
+    pub fn health_dashboard_routes_to_drain(&self) -> bool {
+        self.health_dashboard_route().is_drain()
+    }
+
+    /// Return whether aggregate health routes to the follow-up queue.
+    pub fn health_dashboard_routes_to_follow_up(&self) -> bool {
+        self.health_dashboard_route().is_follow_up()
+    }
+
+    /// Return whether aggregate health routes to the storage-investigation queue.
+    pub fn health_dashboard_routes_to_storage_investigation(&self) -> bool {
+        self.health_dashboard_route().is_storage_investigation()
+    }
+
+    /// Return whether aggregate health routes to the count-integrity queue.
+    pub fn health_dashboard_routes_to_count_integrity_investigation(&self) -> bool {
+        self.health_dashboard_route()
+            .is_count_integrity_investigation()
+    }
+
+    /// Return whether aggregate health routes to the triage queue.
+    pub fn health_dashboard_routes_to_triage(&self) -> bool {
+        self.health_dashboard_route().is_triage()
+    }
+
+    /// Return whether aggregate health routes to an investigation queue.
+    pub fn health_dashboard_routes_to_investigation(&self) -> bool {
+        self.health_dashboard_route().is_investigation()
+    }
+
     /// Return the aggregate health-dashboard priority.
     pub fn health_dashboard_priority(&self) -> ToolAuditHealthPriority {
         match self.health_dashboard_surface() {
@@ -2361,6 +2397,37 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return the sortable aggregate health-dashboard priority rank.
     pub fn health_dashboard_priority_rank(&self) -> u8 {
         self.health_dashboard_priority().rank()
+    }
+
+    /// Return whether aggregate health has settled priority.
+    pub fn health_dashboard_has_settled_priority(&self) -> bool {
+        self.health_dashboard_priority().is_settled()
+    }
+
+    /// Return whether aggregate health has routine-action priority.
+    pub fn health_dashboard_has_routine_priority(&self) -> bool {
+        self.health_dashboard_priority().is_routine_action()
+    }
+
+    /// Return whether aggregate health has storage-investigation priority.
+    pub fn health_dashboard_has_storage_investigation_priority(&self) -> bool {
+        self.health_dashboard_priority().is_storage_investigation()
+    }
+
+    /// Return whether aggregate health has count-integrity priority.
+    pub fn health_dashboard_has_count_integrity_investigation_priority(&self) -> bool {
+        self.health_dashboard_priority()
+            .is_count_integrity_investigation()
+    }
+
+    /// Return whether aggregate health priority is investigation-grade.
+    pub fn health_dashboard_has_investigation_priority(&self) -> bool {
+        self.health_dashboard_priority().requires_investigation()
+    }
+
+    /// Return whether aggregate health priority requires triage.
+    pub fn health_dashboard_priority_requires_triage(&self) -> bool {
+        self.health_dashboard_priority().requires_triage()
     }
 
     /// Return the aggregate health-dashboard readiness.
@@ -2410,6 +2477,18 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return whether aggregate health needs investigation.
     pub fn health_dashboard_readiness_requires_investigation(&self) -> bool {
         self.health_dashboard_readiness().requires_investigation()
+    }
+
+    /// Return whether aggregate health readiness routes to storage investigation.
+    pub fn health_dashboard_readiness_requires_storage_investigation(&self) -> bool {
+        self.health_dashboard_readiness()
+            .requires_storage_investigation()
+    }
+
+    /// Return whether aggregate health readiness routes to count-integrity investigation.
+    pub fn health_dashboard_readiness_requires_count_integrity_investigation(&self) -> bool {
+        self.health_dashboard_readiness()
+            .requires_count_integrity_investigation()
     }
 
     /// Return whether aggregate health needs triage.
@@ -3171,11 +3250,31 @@ impl ToolAuditSupervisorDrainRunReport {
             health_dashboard_route_label: self.health_dashboard_route_label(),
             health_dashboard_route_label_matches_route: self
                 .health_dashboard_route_label_matches_route(),
+            health_dashboard_has_route: self.health_dashboard_has_route(),
+            health_dashboard_routes_to_drain: self.health_dashboard_routes_to_drain(),
+            health_dashboard_routes_to_follow_up: self.health_dashboard_routes_to_follow_up(),
+            health_dashboard_routes_to_storage_investigation: self
+                .health_dashboard_routes_to_storage_investigation(),
+            health_dashboard_routes_to_count_integrity_investigation: self
+                .health_dashboard_routes_to_count_integrity_investigation(),
+            health_dashboard_routes_to_triage: self.health_dashboard_routes_to_triage(),
+            health_dashboard_routes_to_investigation: self
+                .health_dashboard_routes_to_investigation(),
             health_dashboard_priority: self.health_dashboard_priority(),
             health_dashboard_priority_label: self.health_dashboard_priority_label(),
             health_dashboard_priority_label_matches_priority: self
                 .health_dashboard_priority_label_matches_priority(),
             health_dashboard_priority_rank: self.health_dashboard_priority_rank(),
+            health_dashboard_has_settled_priority: self.health_dashboard_has_settled_priority(),
+            health_dashboard_has_routine_priority: self.health_dashboard_has_routine_priority(),
+            health_dashboard_has_storage_investigation_priority: self
+                .health_dashboard_has_storage_investigation_priority(),
+            health_dashboard_has_count_integrity_investigation_priority: self
+                .health_dashboard_has_count_integrity_investigation_priority(),
+            health_dashboard_has_investigation_priority: self
+                .health_dashboard_has_investigation_priority(),
+            health_dashboard_priority_requires_triage: self
+                .health_dashboard_priority_requires_triage(),
             health_dashboard_readiness: self.health_dashboard_readiness(),
             health_dashboard_readiness_label: self.health_dashboard_readiness_label(),
             health_dashboard_readiness_label_matches_readiness: self
@@ -3186,6 +3285,10 @@ impl ToolAuditSupervisorDrainRunReport {
                 .health_dashboard_readiness_requires_manual_review(),
             health_dashboard_readiness_requires_investigation: self
                 .health_dashboard_readiness_requires_investigation(),
+            health_dashboard_readiness_requires_storage_investigation: self
+                .health_dashboard_readiness_requires_storage_investigation(),
+            health_dashboard_readiness_requires_count_integrity_investigation: self
+                .health_dashboard_readiness_requires_count_integrity_investigation(),
             health_dashboard_readiness_requires_triage: self
                 .health_dashboard_readiness_requires_triage(),
             health_dashboard_digest_labels_match: self.health_dashboard_digest_labels_match(),
@@ -3935,6 +4038,20 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub health_dashboard_route_label: &'static str,
     /// Whether the aggregate route label parses back to the typed route.
     pub health_dashboard_route_label_matches_route: bool,
+    /// Whether aggregate health has a concrete route.
+    pub health_dashboard_has_route: bool,
+    /// Whether aggregate health routes to the drain queue.
+    pub health_dashboard_routes_to_drain: bool,
+    /// Whether aggregate health routes to the follow-up queue.
+    pub health_dashboard_routes_to_follow_up: bool,
+    /// Whether aggregate health routes to the storage-investigation queue.
+    pub health_dashboard_routes_to_storage_investigation: bool,
+    /// Whether aggregate health routes to the count-integrity queue.
+    pub health_dashboard_routes_to_count_integrity_investigation: bool,
+    /// Whether aggregate health routes to the triage queue.
+    pub health_dashboard_routes_to_triage: bool,
+    /// Whether aggregate health routes to an investigation queue.
+    pub health_dashboard_routes_to_investigation: bool,
     /// Aggregate health-dashboard priority.
     pub health_dashboard_priority: ToolAuditHealthPriority,
     /// Stable aggregate health-dashboard priority label.
@@ -3943,6 +4060,18 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub health_dashboard_priority_label_matches_priority: bool,
     /// Sortable aggregate health-dashboard priority rank.
     pub health_dashboard_priority_rank: u8,
+    /// Whether aggregate health has settled priority.
+    pub health_dashboard_has_settled_priority: bool,
+    /// Whether aggregate health has routine-action priority.
+    pub health_dashboard_has_routine_priority: bool,
+    /// Whether aggregate health has storage-investigation priority.
+    pub health_dashboard_has_storage_investigation_priority: bool,
+    /// Whether aggregate health has count-integrity priority.
+    pub health_dashboard_has_count_integrity_investigation_priority: bool,
+    /// Whether aggregate health priority is investigation-grade.
+    pub health_dashboard_has_investigation_priority: bool,
+    /// Whether aggregate health priority requires triage.
+    pub health_dashboard_priority_requires_triage: bool,
     /// Aggregate health-dashboard readiness.
     pub health_dashboard_readiness: ToolAuditHealthReadiness,
     /// Stable aggregate health-dashboard readiness label.
@@ -3957,6 +4086,10 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub health_dashboard_readiness_requires_manual_review: bool,
     /// Whether aggregate health needs investigation.
     pub health_dashboard_readiness_requires_investigation: bool,
+    /// Whether aggregate health readiness routes to storage investigation.
+    pub health_dashboard_readiness_requires_storage_investigation: bool,
+    /// Whether aggregate health readiness routes to count-integrity investigation.
+    pub health_dashboard_readiness_requires_count_integrity_investigation: bool,
     /// Whether aggregate health needs triage.
     pub health_dashboard_readiness_requires_triage: bool,
     /// Whether aggregate health-dashboard digest labels parse back to typed values.
@@ -4653,6 +4786,41 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.health_dashboard_route_label_matches_route
     }
 
+    /// Return whether aggregate health has a concrete route.
+    pub fn health_dashboard_has_route(&self) -> bool {
+        self.health_dashboard_has_route
+    }
+
+    /// Return whether aggregate health routes to the drain queue.
+    pub fn health_dashboard_routes_to_drain(&self) -> bool {
+        self.health_dashboard_routes_to_drain
+    }
+
+    /// Return whether aggregate health routes to the follow-up queue.
+    pub fn health_dashboard_routes_to_follow_up(&self) -> bool {
+        self.health_dashboard_routes_to_follow_up
+    }
+
+    /// Return whether aggregate health routes to the storage-investigation queue.
+    pub fn health_dashboard_routes_to_storage_investigation(&self) -> bool {
+        self.health_dashboard_routes_to_storage_investigation
+    }
+
+    /// Return whether aggregate health routes to the count-integrity queue.
+    pub fn health_dashboard_routes_to_count_integrity_investigation(&self) -> bool {
+        self.health_dashboard_routes_to_count_integrity_investigation
+    }
+
+    /// Return whether aggregate health routes to the triage queue.
+    pub fn health_dashboard_routes_to_triage(&self) -> bool {
+        self.health_dashboard_routes_to_triage
+    }
+
+    /// Return whether aggregate health routes to an investigation queue.
+    pub fn health_dashboard_routes_to_investigation(&self) -> bool {
+        self.health_dashboard_routes_to_investigation
+    }
+
     /// Return the aggregate health-dashboard priority.
     pub fn health_dashboard_priority(&self) -> ToolAuditHealthPriority {
         self.health_dashboard_priority
@@ -4671,6 +4839,36 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return the sortable aggregate health-dashboard priority rank.
     pub fn health_dashboard_priority_rank(&self) -> u8 {
         self.health_dashboard_priority_rank
+    }
+
+    /// Return whether aggregate health has settled priority.
+    pub fn health_dashboard_has_settled_priority(&self) -> bool {
+        self.health_dashboard_has_settled_priority
+    }
+
+    /// Return whether aggregate health has routine-action priority.
+    pub fn health_dashboard_has_routine_priority(&self) -> bool {
+        self.health_dashboard_has_routine_priority
+    }
+
+    /// Return whether aggregate health has storage-investigation priority.
+    pub fn health_dashboard_has_storage_investigation_priority(&self) -> bool {
+        self.health_dashboard_has_storage_investigation_priority
+    }
+
+    /// Return whether aggregate health has count-integrity priority.
+    pub fn health_dashboard_has_count_integrity_investigation_priority(&self) -> bool {
+        self.health_dashboard_has_count_integrity_investigation_priority
+    }
+
+    /// Return whether aggregate health priority is investigation-grade.
+    pub fn health_dashboard_has_investigation_priority(&self) -> bool {
+        self.health_dashboard_has_investigation_priority
+    }
+
+    /// Return whether aggregate health priority requires triage.
+    pub fn health_dashboard_priority_requires_triage(&self) -> bool {
+        self.health_dashboard_priority_requires_triage
     }
 
     /// Return the aggregate health-dashboard readiness.
@@ -4706,6 +4904,16 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether aggregate health needs investigation.
     pub fn health_dashboard_readiness_requires_investigation(&self) -> bool {
         self.health_dashboard_readiness_requires_investigation
+    }
+
+    /// Return whether aggregate health readiness routes to storage investigation.
+    pub fn health_dashboard_readiness_requires_storage_investigation(&self) -> bool {
+        self.health_dashboard_readiness_requires_storage_investigation
+    }
+
+    /// Return whether aggregate health readiness routes to count-integrity investigation.
+    pub fn health_dashboard_readiness_requires_count_integrity_investigation(&self) -> bool {
+        self.health_dashboard_readiness_requires_count_integrity_investigation
     }
 
     /// Return whether aggregate health needs triage.
@@ -16427,6 +16635,21 @@ mod tests {
             idle_report.health_dashboard_readiness(),
             ToolAuditHealthReadiness::Settled
         );
+        assert!(!idle_report.health_dashboard_has_route());
+        assert!(!idle_report.health_dashboard_routes_to_drain());
+        assert!(!idle_report.health_dashboard_routes_to_follow_up());
+        assert!(!idle_report.health_dashboard_routes_to_storage_investigation());
+        assert!(!idle_report.health_dashboard_routes_to_count_integrity_investigation());
+        assert!(!idle_report.health_dashboard_routes_to_triage());
+        assert!(!idle_report.health_dashboard_routes_to_investigation());
+        assert!(idle_report.health_dashboard_has_settled_priority());
+        assert!(!idle_report.health_dashboard_has_routine_priority());
+        assert!(!idle_report.health_dashboard_has_storage_investigation_priority());
+        assert!(!idle_report.health_dashboard_has_count_integrity_investigation_priority());
+        assert!(!idle_report.health_dashboard_has_investigation_priority());
+        assert!(!idle_report.health_dashboard_priority_requires_triage());
+        assert!(!idle_report.health_dashboard_readiness_requires_storage_investigation());
+        assert!(!idle_report.health_dashboard_readiness_requires_count_integrity_investigation());
         assert!(idle_report.health_dashboard_digest_labels_match());
         assert!(!idle_report.has_health_dashboard_digest_label_integrity_drift());
         assert_eq!(
@@ -16446,6 +16669,13 @@ mod tests {
         );
         assert_eq!(idle_summary.health_dashboard_route_label(), "no_route");
         assert!(idle_summary.health_dashboard_route_label_matches_route());
+        assert!(!idle_summary.health_dashboard_has_route());
+        assert!(!idle_summary.health_dashboard_routes_to_drain());
+        assert!(!idle_summary.health_dashboard_routes_to_follow_up());
+        assert!(!idle_summary.health_dashboard_routes_to_storage_investigation());
+        assert!(!idle_summary.health_dashboard_routes_to_count_integrity_investigation());
+        assert!(!idle_summary.health_dashboard_routes_to_triage());
+        assert!(!idle_summary.health_dashboard_routes_to_investigation());
         assert_eq!(
             idle_summary.health_dashboard_priority(),
             ToolAuditHealthPriority::Settled
@@ -16453,6 +16683,12 @@ mod tests {
         assert_eq!(idle_summary.health_dashboard_priority_label(), "settled");
         assert!(idle_summary.health_dashboard_priority_label_matches_priority());
         assert_eq!(idle_summary.health_dashboard_priority_rank(), 0);
+        assert!(idle_summary.health_dashboard_has_settled_priority());
+        assert!(!idle_summary.health_dashboard_has_routine_priority());
+        assert!(!idle_summary.health_dashboard_has_storage_investigation_priority());
+        assert!(!idle_summary.health_dashboard_has_count_integrity_investigation_priority());
+        assert!(!idle_summary.health_dashboard_has_investigation_priority());
+        assert!(!idle_summary.health_dashboard_priority_requires_triage());
         assert_eq!(
             idle_summary.health_dashboard_readiness(),
             ToolAuditHealthReadiness::Settled
@@ -16463,6 +16699,8 @@ mod tests {
         assert!(!idle_summary.health_dashboard_is_auto_routable());
         assert!(!idle_summary.health_dashboard_readiness_requires_manual_review());
         assert!(!idle_summary.health_dashboard_readiness_requires_investigation());
+        assert!(!idle_summary.health_dashboard_readiness_requires_storage_investigation());
+        assert!(!idle_summary.health_dashboard_readiness_requires_count_integrity_investigation());
         assert!(!idle_summary.health_dashboard_readiness_requires_triage());
         assert!(idle_summary.health_dashboard_digest_labels_match());
         assert!(!idle_summary.has_health_dashboard_digest_label_integrity_drift());
@@ -16560,6 +16798,22 @@ mod tests {
             continuation_report.health_dashboard_readiness(),
             ToolAuditHealthReadiness::TriageRequired
         );
+        assert!(continuation_report.health_dashboard_has_route());
+        assert!(!continuation_report.health_dashboard_routes_to_drain());
+        assert!(!continuation_report.health_dashboard_routes_to_follow_up());
+        assert!(!continuation_report.health_dashboard_routes_to_storage_investigation());
+        assert!(!continuation_report.health_dashboard_routes_to_count_integrity_investigation());
+        assert!(continuation_report.health_dashboard_routes_to_triage());
+        assert!(!continuation_report.health_dashboard_routes_to_investigation());
+        assert!(!continuation_report.health_dashboard_has_settled_priority());
+        assert!(!continuation_report.health_dashboard_has_routine_priority());
+        assert!(!continuation_report.health_dashboard_has_storage_investigation_priority());
+        assert!(!continuation_report.health_dashboard_has_count_integrity_investigation_priority());
+        assert!(!continuation_report.health_dashboard_has_investigation_priority());
+        assert!(continuation_report.health_dashboard_priority_requires_triage());
+        assert!(!continuation_report.health_dashboard_readiness_requires_storage_investigation());
+        assert!(!continuation_report
+            .health_dashboard_readiness_requires_count_integrity_investigation());
         assert!(continuation_report.health_dashboard_digest_labels_match());
         assert_eq!(
             continuation_summary.health_dashboard_surface(),
@@ -16581,11 +16835,24 @@ mod tests {
             continuation_summary.health_dashboard_route_label(),
             "triage"
         );
+        assert!(continuation_summary.health_dashboard_has_route());
+        assert!(!continuation_summary.health_dashboard_routes_to_drain());
+        assert!(!continuation_summary.health_dashboard_routes_to_follow_up());
+        assert!(!continuation_summary.health_dashboard_routes_to_storage_investigation());
+        assert!(!continuation_summary.health_dashboard_routes_to_count_integrity_investigation());
+        assert!(continuation_summary.health_dashboard_routes_to_triage());
+        assert!(!continuation_summary.health_dashboard_routes_to_investigation());
         assert_eq!(
             continuation_summary.health_dashboard_priority(),
             ToolAuditHealthPriority::Triage
         );
         assert_eq!(continuation_summary.health_dashboard_priority_rank(), 90);
+        assert!(!continuation_summary.health_dashboard_has_settled_priority());
+        assert!(!continuation_summary.health_dashboard_has_routine_priority());
+        assert!(!continuation_summary.health_dashboard_has_storage_investigation_priority());
+        assert!(!continuation_summary.health_dashboard_has_count_integrity_investigation_priority());
+        assert!(!continuation_summary.health_dashboard_has_investigation_priority());
+        assert!(continuation_summary.health_dashboard_priority_requires_triage());
         assert_eq!(
             continuation_summary.health_dashboard_readiness(),
             ToolAuditHealthReadiness::TriageRequired
@@ -16598,6 +16865,9 @@ mod tests {
         assert!(!continuation_summary.health_dashboard_is_auto_routable());
         assert!(continuation_summary.health_dashboard_readiness_requires_manual_review());
         assert!(!continuation_summary.health_dashboard_readiness_requires_investigation());
+        assert!(!continuation_summary.health_dashboard_readiness_requires_storage_investigation());
+        assert!(!continuation_summary
+            .health_dashboard_readiness_requires_count_integrity_investigation());
         assert!(continuation_summary.health_dashboard_readiness_requires_triage());
         assert!(continuation_summary.health_dashboard_digest_labels_match());
         assert!(!continuation_summary.has_health_dashboard_digest_label_integrity_drift());
@@ -16642,15 +16912,32 @@ mod tests {
             follow_up_summary.health_dashboard_route(),
             ToolAuditHealthRoute::Triage
         );
+        assert!(follow_up_summary.health_dashboard_has_route());
+        assert!(!follow_up_summary.health_dashboard_routes_to_drain());
+        assert!(!follow_up_summary.health_dashboard_routes_to_follow_up());
+        assert!(!follow_up_summary.health_dashboard_routes_to_storage_investigation());
+        assert!(!follow_up_summary.health_dashboard_routes_to_count_integrity_investigation());
+        assert!(follow_up_summary.health_dashboard_routes_to_triage());
+        assert!(!follow_up_summary.health_dashboard_routes_to_investigation());
         assert_eq!(
             follow_up_summary.health_dashboard_priority(),
             ToolAuditHealthPriority::Triage
         );
+        assert!(!follow_up_summary.health_dashboard_has_settled_priority());
+        assert!(!follow_up_summary.health_dashboard_has_routine_priority());
+        assert!(!follow_up_summary.health_dashboard_has_storage_investigation_priority());
+        assert!(!follow_up_summary.health_dashboard_has_count_integrity_investigation_priority());
+        assert!(!follow_up_summary.health_dashboard_has_investigation_priority());
+        assert!(follow_up_summary.health_dashboard_priority_requires_triage());
         assert_eq!(
             follow_up_summary.health_dashboard_readiness(),
             ToolAuditHealthReadiness::TriageRequired
         );
         assert!(follow_up_summary.health_dashboard_readiness_requires_manual_review());
+        assert!(!follow_up_summary.health_dashboard_readiness_requires_storage_investigation());
+        assert!(
+            !follow_up_summary.health_dashboard_readiness_requires_count_integrity_investigation()
+        );
         assert!(follow_up_summary.health_dashboard_readiness_requires_triage());
         assert!(follow_up_summary.health_dashboard_digest_labels_match());
         assert!(!follow_up_summary.has_health_dashboard_digest_label_integrity_drift());
