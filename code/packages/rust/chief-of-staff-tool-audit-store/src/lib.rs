@@ -2697,6 +2697,64 @@ impl ToolAuditSupervisorDrainRunReport {
         self.health_dashboard_action_lane().is_mixed()
     }
 
+    /// Return the aggregate health-dashboard queue key.
+    pub fn health_dashboard_queue_key(&self) -> ToolAuditSupervisorDrainHealthDashboardQueueKey {
+        ToolAuditSupervisorDrainHealthDashboardQueueKey::new(
+            self.health_dashboard_surface(),
+            self.health_dashboard_action_lane(),
+            self.health_dashboard_route(),
+            self.health_dashboard_priority(),
+            self.health_dashboard_readiness(),
+        )
+    }
+
+    /// Return the stable aggregate health-dashboard queue-key label.
+    pub fn health_dashboard_queue_key_label(&self) -> String {
+        self.health_dashboard_queue_key().label()
+    }
+
+    /// Return whether the aggregate health-dashboard queue-key label matches its type.
+    pub fn health_dashboard_queue_key_label_matches_key(&self) -> bool {
+        ToolAuditSupervisorDrainHealthDashboardQueueKey::from_label(
+            &self.health_dashboard_queue_key_label(),
+        ) == Some(self.health_dashboard_queue_key())
+    }
+
+    /// Return the sortable aggregate health-dashboard queue-key priority rank.
+    pub fn health_dashboard_queue_key_priority_rank(&self) -> u8 {
+        self.health_dashboard_queue_key().priority_rank()
+    }
+
+    /// Return whether the aggregate health-dashboard queue key is settled.
+    pub fn health_dashboard_queue_key_is_settled(&self) -> bool {
+        self.health_dashboard_queue_key().is_settled()
+    }
+
+    /// Return whether the aggregate health-dashboard queue key is actionable.
+    pub fn health_dashboard_queue_key_is_actionable(&self) -> bool {
+        self.health_dashboard_queue_key().is_actionable()
+    }
+
+    /// Return whether the aggregate health-dashboard queue key can be auto-routed.
+    pub fn health_dashboard_queue_key_is_auto_routable(&self) -> bool {
+        self.health_dashboard_queue_key().is_auto_routable()
+    }
+
+    /// Return whether the aggregate health-dashboard queue key needs manual review.
+    pub fn health_dashboard_queue_key_requires_manual_review(&self) -> bool {
+        self.health_dashboard_queue_key().requires_manual_review()
+    }
+
+    /// Return whether the aggregate health-dashboard queue key needs investigation.
+    pub fn health_dashboard_queue_key_requires_investigation(&self) -> bool {
+        self.health_dashboard_queue_key().requires_investigation()
+    }
+
+    /// Return whether the aggregate health-dashboard queue key needs triage.
+    pub fn health_dashboard_queue_key_requires_triage(&self) -> bool {
+        self.health_dashboard_queue_key().requires_triage()
+    }
+
     /// Return the aggregate health-dashboard route.
     pub fn health_dashboard_route(&self) -> ToolAuditHealthRoute {
         match self.health_dashboard_surface() {
@@ -2895,6 +2953,7 @@ impl ToolAuditSupervisorDrainRunReport {
     pub fn health_dashboard_digest_labels_match(&self) -> bool {
         self.health_dashboard_surface_label_matches_surface()
             && self.health_dashboard_action_lane_label_matches_lane()
+            && self.health_dashboard_queue_key_label_matches_key()
             && self.health_dashboard_route_label_matches_route()
             && self.health_dashboard_priority_label_matches_priority()
             && self.health_dashboard_readiness_label_matches_readiness()
@@ -3750,6 +3809,23 @@ impl ToolAuditSupervisorDrainRunReport {
             health_dashboard_action_lane_is_investigation: self
                 .health_dashboard_action_lane_is_investigation(),
             health_dashboard_action_lane_is_mixed: self.health_dashboard_action_lane_is_mixed(),
+            health_dashboard_queue_key: self.health_dashboard_queue_key(),
+            health_dashboard_queue_key_label: self.health_dashboard_queue_key_label(),
+            health_dashboard_queue_key_label_matches_key: self
+                .health_dashboard_queue_key_label_matches_key(),
+            health_dashboard_queue_key_priority_rank: self
+                .health_dashboard_queue_key_priority_rank(),
+            health_dashboard_queue_key_is_settled: self.health_dashboard_queue_key_is_settled(),
+            health_dashboard_queue_key_is_actionable: self
+                .health_dashboard_queue_key_is_actionable(),
+            health_dashboard_queue_key_is_auto_routable: self
+                .health_dashboard_queue_key_is_auto_routable(),
+            health_dashboard_queue_key_requires_manual_review: self
+                .health_dashboard_queue_key_requires_manual_review(),
+            health_dashboard_queue_key_requires_investigation: self
+                .health_dashboard_queue_key_requires_investigation(),
+            health_dashboard_queue_key_requires_triage: self
+                .health_dashboard_queue_key_requires_triage(),
             health_dashboard_route: self.health_dashboard_route(),
             health_dashboard_route_label: self.health_dashboard_route_label(),
             health_dashboard_route_label_matches_route: self
@@ -4682,6 +4758,26 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub health_dashboard_action_lane_is_investigation: bool,
     /// Whether aggregate health-dashboard action spans multiple lanes.
     pub health_dashboard_action_lane_is_mixed: bool,
+    /// Aggregate health-dashboard queue key.
+    pub health_dashboard_queue_key: ToolAuditSupervisorDrainHealthDashboardQueueKey,
+    /// Stable aggregate health-dashboard queue-key label.
+    pub health_dashboard_queue_key_label: String,
+    /// Whether the aggregate queue-key label parses back to the typed key.
+    pub health_dashboard_queue_key_label_matches_key: bool,
+    /// Sortable aggregate health-dashboard queue-key priority rank.
+    pub health_dashboard_queue_key_priority_rank: u8,
+    /// Whether the aggregate health-dashboard queue key is settled.
+    pub health_dashboard_queue_key_is_settled: bool,
+    /// Whether the aggregate health-dashboard queue key is actionable.
+    pub health_dashboard_queue_key_is_actionable: bool,
+    /// Whether the aggregate health-dashboard queue key can be auto-routed.
+    pub health_dashboard_queue_key_is_auto_routable: bool,
+    /// Whether the aggregate health-dashboard queue key needs manual review.
+    pub health_dashboard_queue_key_requires_manual_review: bool,
+    /// Whether the aggregate health-dashboard queue key needs investigation.
+    pub health_dashboard_queue_key_requires_investigation: bool,
+    /// Whether the aggregate health-dashboard queue key needs triage.
+    pub health_dashboard_queue_key_requires_triage: bool,
     /// Aggregate health-dashboard route.
     pub health_dashboard_route: ToolAuditHealthRoute,
     /// Stable aggregate health-dashboard route label.
@@ -5786,6 +5882,56 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether aggregate health-dashboard action spans multiple lanes.
     pub fn health_dashboard_action_lane_is_mixed(&self) -> bool {
         self.health_dashboard_action_lane_is_mixed
+    }
+
+    /// Return the aggregate health-dashboard queue key.
+    pub fn health_dashboard_queue_key(&self) -> ToolAuditSupervisorDrainHealthDashboardQueueKey {
+        self.health_dashboard_queue_key
+    }
+
+    /// Return the stable aggregate health-dashboard queue-key label.
+    pub fn health_dashboard_queue_key_label(&self) -> &str {
+        &self.health_dashboard_queue_key_label
+    }
+
+    /// Return whether the aggregate queue-key label matches its typed key.
+    pub fn health_dashboard_queue_key_label_matches_key(&self) -> bool {
+        self.health_dashboard_queue_key_label_matches_key
+    }
+
+    /// Return the sortable aggregate health-dashboard queue-key priority rank.
+    pub fn health_dashboard_queue_key_priority_rank(&self) -> u8 {
+        self.health_dashboard_queue_key_priority_rank
+    }
+
+    /// Return whether the aggregate health-dashboard queue key is settled.
+    pub fn health_dashboard_queue_key_is_settled(&self) -> bool {
+        self.health_dashboard_queue_key_is_settled
+    }
+
+    /// Return whether the aggregate health-dashboard queue key is actionable.
+    pub fn health_dashboard_queue_key_is_actionable(&self) -> bool {
+        self.health_dashboard_queue_key_is_actionable
+    }
+
+    /// Return whether the aggregate health-dashboard queue key can be auto-routed.
+    pub fn health_dashboard_queue_key_is_auto_routable(&self) -> bool {
+        self.health_dashboard_queue_key_is_auto_routable
+    }
+
+    /// Return whether the aggregate health-dashboard queue key needs manual review.
+    pub fn health_dashboard_queue_key_requires_manual_review(&self) -> bool {
+        self.health_dashboard_queue_key_requires_manual_review
+    }
+
+    /// Return whether the aggregate health-dashboard queue key needs investigation.
+    pub fn health_dashboard_queue_key_requires_investigation(&self) -> bool {
+        self.health_dashboard_queue_key_requires_investigation
+    }
+
+    /// Return whether the aggregate health-dashboard queue key needs triage.
+    pub fn health_dashboard_queue_key_requires_triage(&self) -> bool {
+        self.health_dashboard_queue_key_requires_triage
     }
 
     /// Return the aggregate health-dashboard route.
@@ -6997,6 +7143,137 @@ impl ToolAuditSupervisorDrainHealthDashboardActionLane {
 impl Display for ToolAuditSupervisorDrainHealthDashboardActionLane {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
+    }
+}
+
+/// Stable composite queue key for supervisor drain health dashboards.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainHealthDashboardQueueKey {
+    surface: ToolAuditSupervisorDrainHealthDashboardSurface,
+    action_lane: ToolAuditSupervisorDrainHealthDashboardActionLane,
+    route: ToolAuditHealthRoute,
+    priority: ToolAuditHealthPriority,
+    readiness: ToolAuditHealthReadiness,
+}
+
+impl ToolAuditSupervisorDrainHealthDashboardQueueKey {
+    /// Create a stable health-dashboard queue key from typed classifier values.
+    pub fn new(
+        surface: ToolAuditSupervisorDrainHealthDashboardSurface,
+        action_lane: ToolAuditSupervisorDrainHealthDashboardActionLane,
+        route: ToolAuditHealthRoute,
+        priority: ToolAuditHealthPriority,
+        readiness: ToolAuditHealthReadiness,
+    ) -> Self {
+        Self {
+            surface,
+            action_lane,
+            route,
+            priority,
+            readiness,
+        }
+    }
+
+    /// Parse a stable health-dashboard queue-key label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let mut parts = label.split(':');
+        let surface = ToolAuditSupervisorDrainHealthDashboardSurface::from_label(parts.next()?)?;
+        let action_lane =
+            ToolAuditSupervisorDrainHealthDashboardActionLane::from_label(parts.next()?)?;
+        let route = ToolAuditHealthRoute::from_label(parts.next()?)?;
+        let priority = ToolAuditHealthPriority::from_label(parts.next()?)?;
+        let readiness = ToolAuditHealthReadiness::from_label(parts.next()?)?;
+        if parts.next().is_some() {
+            return None;
+        }
+        Some(Self::new(surface, action_lane, route, priority, readiness))
+    }
+
+    /// Return the aggregate health-dashboard surface.
+    pub fn surface(self) -> ToolAuditSupervisorDrainHealthDashboardSurface {
+        self.surface
+    }
+
+    /// Return the aggregate health-dashboard action lane.
+    pub fn action_lane(self) -> ToolAuditSupervisorDrainHealthDashboardActionLane {
+        self.action_lane
+    }
+
+    /// Return the aggregate health-dashboard queue route.
+    pub fn route(self) -> ToolAuditHealthRoute {
+        self.route
+    }
+
+    /// Return the aggregate health-dashboard priority.
+    pub fn priority(self) -> ToolAuditHealthPriority {
+        self.priority
+    }
+
+    /// Return the aggregate health-dashboard readiness.
+    pub fn readiness(self) -> ToolAuditHealthReadiness {
+        self.readiness
+    }
+
+    /// Return a stable composite label for host queue grouping.
+    pub fn label(self) -> String {
+        format!(
+            "{}:{}:{}:{}:{}",
+            self.surface.as_str(),
+            self.action_lane.as_str(),
+            self.route.as_str(),
+            self.priority.as_str(),
+            self.readiness.as_str()
+        )
+    }
+
+    /// Return whether this queue-key label parses back to this typed key.
+    pub fn label_matches_key(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return the sortable priority rank for this queue key.
+    pub fn priority_rank(self) -> u8 {
+        self.priority.rank()
+    }
+
+    /// Return whether this queue key represents settled aggregate health.
+    pub fn is_settled(self) -> bool {
+        self.surface.is_settled()
+            && self.action_lane.is_no_action()
+            && !self.route.has_route()
+            && self.priority.is_settled()
+            && self.readiness.is_settled()
+    }
+
+    /// Return whether this queue key should appear in an action queue.
+    pub fn is_actionable(self) -> bool {
+        self.readiness.is_actionable()
+    }
+
+    /// Return whether this queue key can be routed without manual review.
+    pub fn is_auto_routable(self) -> bool {
+        self.readiness.is_auto_routable()
+    }
+
+    /// Return whether this queue key needs manual review.
+    pub fn requires_manual_review(self) -> bool {
+        self.readiness.requires_manual_review()
+    }
+
+    /// Return whether this queue key needs investigation.
+    pub fn requires_investigation(self) -> bool {
+        self.readiness.requires_investigation()
+    }
+
+    /// Return whether this queue key needs triage.
+    pub fn requires_triage(self) -> bool {
+        self.readiness.requires_triage()
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHealthDashboardQueueKey {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
     }
 }
 
@@ -17813,6 +18090,149 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_health_dashboard_queue_keys_are_stable() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainHealthDashboardSurface::Settled,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::NoAction,
+                ToolAuditHealthRoute::NoRoute,
+                ToolAuditHealthPriority::Settled,
+                ToolAuditHealthReadiness::Settled,
+                "settled:no_action:no_route:settled:settled",
+                0,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHealthDashboardSurface::DrainAction,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::Drain,
+                ToolAuditHealthRoute::Drain,
+                ToolAuditHealthPriority::RoutineAction,
+                ToolAuditHealthReadiness::RoutineReady,
+                "drain_action:drain:drain:routine_action:routine_ready",
+                10,
+                false,
+                true,
+                true,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHealthDashboardSurface::DrainAction,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::Investigation,
+                ToolAuditHealthRoute::StorageInvestigation,
+                ToolAuditHealthPriority::StorageInvestigation,
+                ToolAuditHealthReadiness::StorageInvestigationReady,
+                "drain_action:investigation:storage_investigation:storage_investigation:storage_investigation_ready",
+                60,
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHealthDashboardSurface::DrainAction,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::Investigation,
+                ToolAuditHealthRoute::CountIntegrityInvestigation,
+                ToolAuditHealthPriority::CountIntegrityInvestigation,
+                ToolAuditHealthReadiness::CountIntegrityInvestigationReady,
+                "drain_action:investigation:count_integrity_investigation:count_integrity_investigation:count_integrity_investigation_ready",
+                80,
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::Mixed,
+                ToolAuditHealthRoute::Triage,
+                ToolAuditHealthPriority::Triage,
+                ToolAuditHealthReadiness::TriageRequired,
+                "plan_and_drain_action:mixed:triage:triage:triage_required",
+                90,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+            ),
+        ];
+
+        for (
+            surface,
+            action_lane,
+            route,
+            priority,
+            readiness,
+            label,
+            priority_rank,
+            is_settled,
+            is_actionable,
+            is_auto_routable,
+            requires_manual_review,
+            requires_investigation,
+            requires_triage,
+        ) in cases
+        {
+            let key = ToolAuditSupervisorDrainHealthDashboardQueueKey::new(
+                surface,
+                action_lane,
+                route,
+                priority,
+                readiness,
+            );
+
+            assert_eq!(key.surface(), surface);
+            assert_eq!(key.action_lane(), action_lane);
+            assert_eq!(key.route(), route);
+            assert_eq!(key.priority(), priority);
+            assert_eq!(key.readiness(), readiness);
+            assert_eq!(key.label(), label);
+            assert_eq!(key.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHealthDashboardQueueKey::from_label(label),
+                Some(key)
+            );
+            assert!(key.label_matches_key());
+            assert_eq!(key.priority_rank(), priority_rank);
+            assert_eq!(key.is_settled(), is_settled);
+            assert_eq!(key.is_actionable(), is_actionable);
+            assert_eq!(key.is_auto_routable(), is_auto_routable);
+            assert_eq!(key.requires_manual_review(), requires_manual_review);
+            assert_eq!(key.requires_investigation(), requires_investigation);
+            assert_eq!(key.requires_triage(), requires_triage);
+        }
+
+        assert_eq!(
+            ToolAuditSupervisorDrainHealthDashboardQueueKey::from_label("settled:no_action"),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHealthDashboardQueueKey::from_label(
+                "settled:no_action:no_route:settled:settled:extra"
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHealthDashboardQueueKey::from_label(
+                "settled:unknown:no_route:settled:settled"
+            ),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_report_summary_flattens_health_dashboard_fields() {
         let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         let mut idle_sink = InMemoryToolAuditSink::new();
@@ -18013,6 +18433,28 @@ mod tests {
         assert!(!idle_summary.health_dashboard_action_lane_is_investigation());
         assert!(!idle_summary.health_dashboard_action_lane_is_mixed());
         assert_eq!(
+            idle_summary.health_dashboard_queue_key(),
+            ToolAuditSupervisorDrainHealthDashboardQueueKey::new(
+                ToolAuditSupervisorDrainHealthDashboardSurface::Settled,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::NoAction,
+                ToolAuditHealthRoute::NoRoute,
+                ToolAuditHealthPriority::Settled,
+                ToolAuditHealthReadiness::Settled,
+            )
+        );
+        assert_eq!(
+            idle_summary.health_dashboard_queue_key_label(),
+            "settled:no_action:no_route:settled:settled"
+        );
+        assert!(idle_summary.health_dashboard_queue_key_label_matches_key());
+        assert_eq!(idle_summary.health_dashboard_queue_key_priority_rank(), 0);
+        assert!(idle_summary.health_dashboard_queue_key_is_settled());
+        assert!(!idle_summary.health_dashboard_queue_key_is_actionable());
+        assert!(!idle_summary.health_dashboard_queue_key_is_auto_routable());
+        assert!(!idle_summary.health_dashboard_queue_key_requires_manual_review());
+        assert!(!idle_summary.health_dashboard_queue_key_requires_investigation());
+        assert!(!idle_summary.health_dashboard_queue_key_requires_triage());
+        assert_eq!(
             idle_summary.health_dashboard_route(),
             ToolAuditHealthRoute::NoRoute
         );
@@ -18175,6 +18617,28 @@ mod tests {
         assert!(!clean_summary.health_dashboard_action_lane_is_continuation());
         assert!(!clean_summary.health_dashboard_action_lane_is_investigation());
         assert!(!clean_summary.health_dashboard_action_lane_is_mixed());
+        assert_eq!(
+            clean_summary.health_dashboard_queue_key(),
+            ToolAuditSupervisorDrainHealthDashboardQueueKey::new(
+                ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::Drain,
+                ToolAuditHealthRoute::Triage,
+                ToolAuditHealthPriority::Triage,
+                ToolAuditHealthReadiness::TriageRequired,
+            )
+        );
+        assert_eq!(
+            clean_summary.health_dashboard_queue_key_label(),
+            "plan_and_drain_action:drain:triage:triage:triage_required"
+        );
+        assert!(clean_summary.health_dashboard_queue_key_label_matches_key());
+        assert_eq!(clean_summary.health_dashboard_queue_key_priority_rank(), 90);
+        assert!(!clean_summary.health_dashboard_queue_key_is_settled());
+        assert!(clean_summary.health_dashboard_queue_key_is_actionable());
+        assert!(!clean_summary.health_dashboard_queue_key_is_auto_routable());
+        assert!(clean_summary.health_dashboard_queue_key_requires_manual_review());
+        assert!(!clean_summary.health_dashboard_queue_key_requires_investigation());
+        assert!(clean_summary.health_dashboard_queue_key_requires_triage());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -18389,6 +18853,31 @@ mod tests {
         assert!(!continuation_summary.health_dashboard_action_lane_is_investigation());
         assert!(continuation_summary.health_dashboard_action_lane_is_mixed());
         assert_eq!(
+            continuation_summary.health_dashboard_queue_key(),
+            ToolAuditSupervisorDrainHealthDashboardQueueKey::new(
+                ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::Mixed,
+                ToolAuditHealthRoute::Triage,
+                ToolAuditHealthPriority::Triage,
+                ToolAuditHealthReadiness::TriageRequired,
+            )
+        );
+        assert_eq!(
+            continuation_summary.health_dashboard_queue_key_label(),
+            "plan_and_drain_action:mixed:triage:triage:triage_required"
+        );
+        assert!(continuation_summary.health_dashboard_queue_key_label_matches_key());
+        assert_eq!(
+            continuation_summary.health_dashboard_queue_key_priority_rank(),
+            90
+        );
+        assert!(!continuation_summary.health_dashboard_queue_key_is_settled());
+        assert!(continuation_summary.health_dashboard_queue_key_is_actionable());
+        assert!(!continuation_summary.health_dashboard_queue_key_is_auto_routable());
+        assert!(continuation_summary.health_dashboard_queue_key_requires_manual_review());
+        assert!(!continuation_summary.health_dashboard_queue_key_requires_investigation());
+        assert!(continuation_summary.health_dashboard_queue_key_requires_triage());
+        assert_eq!(
             continuation_summary.health_dashboard_route(),
             ToolAuditHealthRoute::Triage
         );
@@ -18528,6 +19017,30 @@ mod tests {
         assert!(follow_up_summary.health_dashboard_action_lane_label_matches_lane());
         assert!(follow_up_summary.health_dashboard_action_lane_is_mixed());
         assert_eq!(
+            follow_up_summary.health_dashboard_queue_key(),
+            ToolAuditSupervisorDrainHealthDashboardQueueKey::new(
+                ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::Mixed,
+                ToolAuditHealthRoute::Triage,
+                ToolAuditHealthPriority::Triage,
+                ToolAuditHealthReadiness::TriageRequired,
+            )
+        );
+        assert_eq!(
+            follow_up_summary.health_dashboard_queue_key_label(),
+            "plan_and_drain_action:mixed:triage:triage:triage_required"
+        );
+        assert!(follow_up_summary.health_dashboard_queue_key_label_matches_key());
+        assert_eq!(
+            follow_up_summary.health_dashboard_queue_key_priority_rank(),
+            90
+        );
+        assert!(follow_up_summary.health_dashboard_queue_key_is_actionable());
+        assert!(!follow_up_summary.health_dashboard_queue_key_is_auto_routable());
+        assert!(follow_up_summary.health_dashboard_queue_key_requires_manual_review());
+        assert!(!follow_up_summary.health_dashboard_queue_key_requires_investigation());
+        assert!(follow_up_summary.health_dashboard_queue_key_requires_triage());
+        assert_eq!(
             follow_up_summary.health_dashboard_route(),
             ToolAuditHealthRoute::Triage
         );
@@ -18592,6 +19105,30 @@ mod tests {
         assert!(count_integrity_summary.health_dashboard_action_lane_label_matches_lane());
         assert!(count_integrity_summary.health_dashboard_action_lane_is_investigation());
         assert!(!count_integrity_summary.health_dashboard_action_lane_is_mixed());
+        assert_eq!(
+            count_integrity_summary.health_dashboard_queue_key(),
+            ToolAuditSupervisorDrainHealthDashboardQueueKey::new(
+                ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction,
+                ToolAuditSupervisorDrainHealthDashboardActionLane::Investigation,
+                ToolAuditHealthRoute::Triage,
+                ToolAuditHealthPriority::Triage,
+                ToolAuditHealthReadiness::TriageRequired,
+            )
+        );
+        assert_eq!(
+            count_integrity_summary.health_dashboard_queue_key_label(),
+            "plan_and_drain_action:investigation:triage:triage:triage_required"
+        );
+        assert!(count_integrity_summary.health_dashboard_queue_key_label_matches_key());
+        assert_eq!(
+            count_integrity_summary.health_dashboard_queue_key_priority_rank(),
+            90
+        );
+        assert!(count_integrity_summary.health_dashboard_queue_key_is_actionable());
+        assert!(!count_integrity_summary.health_dashboard_queue_key_is_auto_routable());
+        assert!(count_integrity_summary.health_dashboard_queue_key_requires_manual_review());
+        assert!(!count_integrity_summary.health_dashboard_queue_key_requires_investigation());
+        assert!(count_integrity_summary.health_dashboard_queue_key_requires_triage());
     }
 
     #[test]
