@@ -113,6 +113,68 @@ class Circuit:
         self.elements.extend(_expand_xinstance(instance, self.subcircuits, ()))
 
 
+def diode_at_temperature(
+    diode: Diode,
+    temperature_kelvin: float,
+    *,
+    nominal_temperature_kelvin: float = 300.15,
+    energy_gap_ev: float = 1.11,
+) -> Diode:
+    """Return a diode adjusted from its nominal model temperature.
+
+    This SPICE-style foothold scales thermal voltage linearly with absolute
+    temperature and scales saturation current with a silicon energy-gap term.
+    """
+
+    if not math.isfinite(temperature_kelvin) or temperature_kelvin <= 0.0:
+        raise ValueError("temperature_kelvin must be finite and positive")
+    if not math.isfinite(nominal_temperature_kelvin) or nominal_temperature_kelvin <= 0.0:
+        raise ValueError("nominal_temperature_kelvin must be finite and positive")
+    if not math.isfinite(energy_gap_ev) or energy_gap_ev <= 0.0:
+        raise ValueError("energy_gap_ev must be finite and positive")
+    effective_n = diode.N
+    if not math.isfinite(effective_n) or effective_n <= 0.0:
+        raise ValueError(f"{diode.name}: diode emission coefficient must be finite and positive")
+    ratio = temperature_kelvin / nominal_temperature_kelvin
+    exponent = (
+        energy_gap_ev
+        * _ELECTRON_CHARGE
+        / (effective_n * _BOLTZMANN)
+        * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin)
+    )
+    saturation_scale = ratio**3 * math.exp(max(-100.0, min(100.0, exponent)))
+    return replace(
+        diode,
+        Is=diode.Is * saturation_scale,
+        Vt=diode.Vt * ratio,
+    )
+
+
+def circuit_at_temperature(
+    circuit: Circuit,
+    temperature_kelvin: float,
+    *,
+    nominal_temperature_kelvin: float = 300.15,
+    energy_gap_ev: float = 1.11,
+) -> Circuit:
+    """Return a circuit with diode models adjusted for an operating temperature."""
+
+    return Circuit(
+        elements=[
+            diode_at_temperature(
+                element,
+                temperature_kelvin,
+                nominal_temperature_kelvin=nominal_temperature_kelvin,
+                energy_gap_ev=energy_gap_ev,
+            )
+            if isinstance(element, Diode)
+            else element
+            for element in circuit.elements
+        ],
+        subcircuits=dict(circuit.subcircuits),
+    )
+
+
 def _is_integer_multiple(candidate: float, period: float, tolerance: float) -> bool:
     ratio = candidate / period
     nearest = round(ratio)

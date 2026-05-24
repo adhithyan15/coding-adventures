@@ -44,3 +44,7 @@ circuit.add(resistor("Rload", "in", "0", 1_000.0));
 const points = transient(circuit, 0.5e-9, 1.0e-9);
 const adaptive = transientAdaptive(circuit, 0.5e-9, 1.0e-9, { method: "gear2" });
 ```
+
+`diodeAtTemperature` and `circuitAtTemperature` provide the first
+operating-temperature foothold for diode models by scaling thermal voltage and
+saturation current before running an analysis.

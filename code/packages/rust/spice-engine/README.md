@@ -55,3 +55,7 @@ let result = transient_adaptive(
     },
 )?;
 ```
+
+`diode_at_temperature` and `circuit_at_temperature` provide the first
+operating-temperature foothold for diode models by scaling thermal voltage and
+saturation current before running an analysis.

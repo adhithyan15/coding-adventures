@@ -2,6 +2,7 @@ const PIVOT_EPSILON = 1.0e-12;
 const SPARSE_SOLVER_THRESHOLD = 30;
 const TWO_PI = Math.PI * 2.0;
 const BOLTZMANN = 1.380_649e-23;
+const ELECTRON_CHARGE = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA = 2.0 / 3.0;
 
 export type Element =
@@ -923,6 +924,10 @@ export class Circuit {
     return this._elements;
   }
 
+  subcircuits(): ReadonlyMap<string, SubcircuitDefinition> {
+    return this._subcircuits;
+  }
+
   defineSubcircuit(definition: SubcircuitDefinition): void {
     const key = definition.name.toLowerCase();
     if (this._subcircuits.has(key)) {
@@ -1378,6 +1383,63 @@ export function diode(
     junctionCapacitance,
     transitTime,
   };
+}
+
+export function diodeAtTemperature(
+  element: Diode,
+  temperatureKelvin: number,
+  nominalTemperatureKelvin = 300.15,
+  energyGapElectronVolts = 1.11,
+): Diode {
+  if (!Number.isFinite(temperatureKelvin) || temperatureKelvin <= 0.0) {
+    throw invalidElement(element.name, "temperature must be finite and positive");
+  }
+  if (!Number.isFinite(nominalTemperatureKelvin) || nominalTemperatureKelvin <= 0.0) {
+    throw invalidElement(element.name, "nominal temperature must be finite and positive");
+  }
+  if (!Number.isFinite(energyGapElectronVolts) || energyGapElectronVolts <= 0.0) {
+    throw invalidElement(element.name, "energy gap must be finite and positive");
+  }
+  if (!Number.isFinite(element.emissionCoefficient) || element.emissionCoefficient <= 0.0) {
+    throw invalidElement(element.name, "emission coefficient must be finite and positive");
+  }
+  const ratio = temperatureKelvin / nominalTemperatureKelvin;
+  const exponent =
+    (energyGapElectronVolts * ELECTRON_CHARGE) /
+    (element.emissionCoefficient * BOLTZMANN) *
+    (1.0 / nominalTemperatureKelvin - 1.0 / temperatureKelvin);
+  const saturationScale =
+    ratio ** 3 * Math.exp(Math.max(-100.0, Math.min(100.0, exponent)));
+  return {
+    ...element,
+    saturationCurrent: element.saturationCurrent * saturationScale,
+    thermalVoltage: element.thermalVoltage * ratio,
+  };
+}
+
+export function circuitAtTemperature(
+  circuit: Circuit,
+  temperatureKelvin: number,
+  nominalTemperatureKelvin = 300.15,
+  energyGapElectronVolts = 1.11,
+): Circuit {
+  const adjusted = new Circuit();
+  for (const definition of circuit.subcircuits().values()) {
+    adjusted.defineSubcircuit(definition);
+  }
+  for (const element of circuit.elements()) {
+    adjusted.add(
+      element.kind === "diode"
+        ? diodeAtTemperature(
+            element,
+            temperatureKelvin,
+            nominalTemperatureKelvin,
+            energyGapElectronVolts,
+          )
+        : element,
+    );
+  }
+  return adjusted;
 }
 
 export function jfet(

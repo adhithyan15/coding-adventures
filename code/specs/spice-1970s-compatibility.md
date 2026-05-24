@@ -211,6 +211,10 @@ Status:
 - Diode `.model ... D(... TT=<time>)` parsing and forward-bias diffusion
   capacitance are implemented in AC analysis across Python, TypeScript, and
   Rust.
+- Diode operating-temperature helpers are implemented across Python,
+  TypeScript, and Rust. They scale thermal voltage and saturation current with
+  absolute temperature before an analysis, with fixed-current fixtures proving
+  hotter silicon lowers forward voltage.
 - BJT `.model ... NPN|PNP(... CJE=<capacitance> CJC=<capacitance>)` parsing
   and base-emitter/base-collector AC capacitance stamping are implemented
   across Python, TypeScript, and Rust.

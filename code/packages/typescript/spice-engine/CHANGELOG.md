@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `diodeAtTemperature` and `circuitAtTemperature` helpers, which adjust
+  diode thermal voltage and saturation current for an operating temperature
+  using a SPICE-style silicon energy-gap foothold.
 - Add `formatDcTable` and `formatTransientTable` for stable tab-separated
   node-voltage and branch-current text output snapshots.
 - Add `fourier`, which computes SPICE-style DC, harmonic sine/cosine

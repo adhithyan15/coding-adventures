@@ -141,6 +141,7 @@ from spice_engine import (
     XInstance,
     ac_sweep,
     ac_sweep_corners,
+    circuit_at_temperature,
     dc_corners,
     dc_op,
     dc_sweep,
@@ -748,6 +749,27 @@ def test_diode_breakdown_voltage_increases_reverse_current():
     assert breakdown_result.converged
     assert abs(breakdown_result.branch_currents["I(V1)"]) > 1e6 * abs(leakage_result.branch_currents["I(V1)"])
     assert abs(breakdown_result.branch_currents["I(V1)"]) == pytest.approx(1e-6, rel=1e-3)
+
+
+def test_diode_temperature_scaling_reduces_fixed_current_forward_drop():
+    """Hotter silicon raises Is enough to lower fixed-current forward voltage."""
+    nominal = Circuit()
+    nominal.add(VoltageSource("V1", "vcc", "0", 5.0))
+    nominal.add(Resistor("Rbias", "vcc", "a", 4300.0))
+    nominal.add(Diode("D1", anode="a", cathode="0", Is=1e-15, Vt=0.02585))
+
+    cold = circuit_at_temperature(nominal, 275.0)
+    hot = circuit_at_temperature(nominal, 350.0)
+
+    nominal_result = dc_op(nominal)
+    cold_result = dc_op(cold)
+    hot_result = dc_op(hot)
+
+    assert cold_result.converged
+    assert nominal_result.converged
+    assert hot_result.converged
+    assert cold_result.node_voltages["a"] > nominal_result.node_voltages["a"]
+    assert hot_result.node_voltages["a"] < nominal_result.node_voltages["a"]
 
 
 # ---- DC: Capacitor (open in DC) ----
