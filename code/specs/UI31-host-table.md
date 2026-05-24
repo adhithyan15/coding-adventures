@@ -65,17 +65,29 @@ spirit of the §2.4 constraint.
 
 ---
 
-## 2. The six primitives
+## 2. The primitive family
+
+> **Amendment from L1's first draft (recorded here for the record):**
+> the React emitter shipped under UI29 §2.1 with HostTable structural
+> sub-tags already in place. The original L1 draft proposed
+> `HostTableHeader` / `HostTableHeaderCell` / `HostTableCell` /
+> `HostTableRow`; the SHIPPED names are `HostTableHead` /
+> `HostTableBody` / `HostTableFoot` / `HostTableColGroup` + `Row`
+> with cells as direct `Row` children. The shipped names match HTML
+> shorthand more cleanly (`<thead>` not `<table-header>`). This
+> section is rewritten to match what's already on disk.
 
 ```
-HostTable                ← root container
-├── HostTableHeader      ← <thead> equivalent
-│   └── HostTableRow
-│       └── HostTableHeaderCell
-└── HostTableBody        ← <tbody> equivalent
-    └── HostTableRow
-        ├── HostTableHeaderCell  (row-label cells)
-        └── HostTableCell        (data cells)
+HostTable                ← root container; lowers to native table widget
+├── HostTableColGroup    ← <colgroup> equivalent; carries width/style per col
+│   └── Col              ← one <col /> per column
+├── HostTableHead        ← <thead> equivalent
+│   └── Row              ← <tr> equivalent; cells get wrapped in <th> here
+│       └── (any node)   ← becomes a <th> cell wrapping the node's JSX
+├── HostTableBody        ← <tbody> equivalent
+│   └── Row              ← <tr>; cells get wrapped in <td> here
+│       └── (any node)   ← becomes a <td> cell
+└── HostTableFoot        ← <tfoot> equivalent; same Row+cell shape as Body
 ```
 
 The tree shape mirrors HTML's `<table>` exactly — author-side
@@ -84,57 +96,63 @@ On non-HTML backends the emitter walks the same tree but lowers
 each node to the native table-widget API (`SwiftUI.Table`'s
 `TableColumn`, WinUI `DataGrid`'s `DataGridColumn`, etc.).
 
+**Cell-tag is implicit, not author-controlled.** Whether a cell
+becomes `<th>` or `<td>` is decided by the parent section (`Head`
+→ `<th>`, `Body`/`Foot` → `<td>`). This avoids the
+`HostTableHeaderCell` vs `HostTableCell` distinction the first
+draft proposed — authors don't have to remember which to use,
+and the kernel can't accidentally produce a row of `<th>`s inside
+a `<tbody>`.
+
 ### 2.1 `HostTable`
 
-The root container. Carries slots shared by the whole table.
+The root container. Carries slots shared by the whole table. The
+existing UI29 §2.1 emitter recognises the part-style slot;
+the UI31 amendment adds `dir` (RTL) and reaffirms the
+selection/edit/sticky slots from the v1 spec which now lower via
+the same code path.
 
 | Prop              | Kind        | Required | Meaning                                                                 |
 |---|---|---|---|
-| `selected-row`    | slot/number | no       | Index of the currently-selected row (or -1 for none).                   |
-| `selected-col`    | slot/number | no       | Index of the currently-selected column (or -1 for none).                |
-| `edit-row`        | slot/number | no       | Index of the row currently being edited (or -1 for none).               |
-| `edit-col`        | slot/number | no       | Index of the column currently being edited (or -1 for none).            |
-| `sticky-header`   | keyword     | no       | `true` (default) / `false`. When true, header row pins on scroll.       |
-| `total-height`    | slot/number | no       | Pixel height of the scroll viewport. Required when sticky-header=true. |
-| `dir`             | slot/keyword| no       | `ltr` (default) / `rtl` / `auto`. Drives layout direction.              |
-| `onNavigate`      | emit        | no       | Fires when selection moves. Payload: `{row: number, col: number}`.      |
-| `onCellEdit`      | emit        | no       | Fires when an edit commits. Payload: `{row, col, value: text}`.         |
+| `dir`             | slot/keyword| no       | `ltr` (default) / `rtl` / `auto`. Lowers to the `dir` attribute on the root `<table>` so the browser flips column order. Inherits from `<html dir=…>` when unset. *(UI31-added.)* |
+| `selected-row`    | slot/number | no       | Currently-selected row index (or -1). Future-binding for grid-style table UI; not yet inlined into JSX in the React emitter — slot is recognised + plumbed via `aria-rowindex` for screen-reader cursor placement. |
+| `selected-col`    | slot/number | no       | Same for columns.                                                       |
+| `edit-row`        | slot/number | no       | Row index being edited (or -1). Same plumbing pattern as `selected-row`. |
+| `edit-col`        | slot/number | no       | Same for columns.                                                       |
+| `sticky-header`   | keyword     | no       | `true` / `false`. When true, the rendered `<thead>` gets `position: sticky; top: 0` so the header pins on scroll. Default `false`. *(Existing built-in `Grid` uses this same prop name; HostTable adopts it.)* |
+| `total-height`    | slot/number | no       | Pixel height of the scroll viewport. Used together with `sticky-header: true` to bound the scrolling region. |
+| `onNavigate`      | emit        | no       | Fires when selection moves. Payload: `{row: number, col: number}`. Reserved for the [L10] grid-style binding; not yet wired in the v1 HostTable emitter. |
+| `onCellEdit`      | emit        | no       | Fires when an edit commits. Same reservation as above.                  |
 
-### 2.2 `HostTableHeader` / `HostTableBody`
+### 2.2 Structural sub-tags
 
-Wrappers that map to `<thead>` / `<tbody>`. Both accept children
-that are `HostTableRow` nodes; the emitter rejects any other child
-type with a clear error.
+`HostTableColGroup`, `HostTableHead`, `HostTableBody`,
+`HostTableFoot` are pure structural wrappers — they have no own
+slots. Each lowers to its matching HTML element (`<colgroup>` /
+`<thead>` / `<tbody>` / `<tfoot>`). The emitter rejects them with
+a graceful `{/* X is only valid inside HostTable */}` comment if
+they appear outside a `HostTable` parent.
 
-No own slots — they're pure structural markers so the emitter knows
-which rows belong above the sticky-header fold and which scroll
-below.
+### 2.3 `Row` and cell children
 
-### 2.3 `HostTableRow`
+`Row` lowers to `<tr>`. Cells are NOT a dedicated primitive — each
+immediate child of a `Row` becomes a cell automatically:
 
-A single row. Children are `HostTableHeaderCell` and/or
-`HostTableCell` nodes.
+- Inside `HostTableHead`, the row's children get wrapped in `<th>`.
+- Inside `HostTableBody` / `HostTableFoot`, the row's children get
+  wrapped in `<td>`.
 
-| Prop              | Kind        | Required | Meaning                                                |
-|---|---|---|---|
-| `row-index`       | slot/number | no       | Author-supplied 0-based row index. The emitter passes it through to backend-specific row-index attributes (HTML's `aria-rowindex`, SwiftUI's `id`, etc.). When omitted, the emitter infers from sibling position. |
+The inner content of the cell is whatever the child primitive's
+own JSX would be — `Text` becomes `<span>{slot}</span>`, `HostButton`
+becomes a clickable button, a slot-ref becomes a plain text node,
+etc. This keeps composition open: an interactive cell (HostButton
+with onClick) costs no special emitter wiring.
 
-### 2.4 `HostTableHeaderCell` / `HostTableCell`
+### 2.4 `Col` (only inside `HostTableColGroup`)
 
-Individual cells.
-
-| Prop          | Kind        | Required | Meaning                                                         |
-|---|---|---|---|
-| `content`     | slot/string | no       | The cell's visible text. When omitted, children render in place. |
-| `col-index`   | slot/number | no       | Author-supplied 0-based column index. Same role as `row-index`.  |
-| `colspan`     | slot/number | no       | HTML `colspan` equivalent. Defaults to 1.                        |
-| `rowspan`     | slot/number | no       | HTML `rowspan` equivalent. Defaults to 1.                        |
-| `onClick`     | emit        | no       | Fires when the cell is clicked. Bubbles up to the table's `onNavigate`. |
-
-`HostTableHeaderCell` and `HostTableCell` are structurally
-identical at the prop level; the type distinction tells the emitter
-which native element to use (`<th>` vs `<td>`, `TableColumn` header
-vs body, etc.).
+Lowers to `<col />`. Carries an optional `width` keyword/number
+that flows through to the `<col style="width: Xpx" />` attribute,
+giving authors stable column widths regardless of cell content.
 
 ---
 
