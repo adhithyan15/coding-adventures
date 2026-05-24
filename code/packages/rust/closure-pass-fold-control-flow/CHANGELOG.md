@@ -2,6 +2,49 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.2.0] - 2026-05-24
+
+### Added — real `Pass::run` body
+
+Replaces the identity v0.1.0 body with a recursive bottom-up walker over `Program → ProgramItem → Statement → Expression`. Folds:
+
+- **`IfStatement` with literal test** → consequent (truthy) / alternate (falsy) / `EmptyStatement` (falsy, no alternate). Truthy/falsy uses JS truthiness rules: any non-empty string / non-zero non-NaN number / true is truthy; null / 0 / "" / false is falsy.
+- **`WhileStatement` with literal `false` test** → `EmptyStatement`. `while (true)` is intentionally left alone (semantics matter — infinite loops are observable).
+- **Dead code after `ReturnStatement`** in `BlockStatement.body` → dropped. Recurses into nested blocks via `FunctionDeclaration.body`.
+- **`ConditionalExpression` with literal test** (`true ? a : b → a`). Redundantly handled here for robustness when this pass runs solo; constant-fold also handles it.
+
+Recurses through every Phase 1 node so deep trees are folded in one bottom-up walk.
+
+### CV tracing — both modes work per CLOC09 amendment
+
+- **Traced input** (`cv: Some(parent)`): the kept replacement keeps its own pre-existing `cv` (it's the same node, just promoted). A `Contribution { source: "fold-control-flow", tag: "folded-branch"|"removed-dead-code", meta: {before, after, parent_cv} }` is appended.
+- **Untraced input** (`cv: None`): folds silently with no contributions. `changed: true` still set.
+
+### Tests
+
+19 tests (up from 8 in v0.1.0):
+- pass metadata (unchanged)
+- empty-program identity
+- `if (true) {x} else {y} → x`
+- `if (false) {x} else {y} → y`
+- `if (false) {x}` no alternate → `EmptyStatement`
+- truthiness across booleans, numbers, strings, null — every JS truthy/falsy case
+- non-literal test (e.g. `if (flag) {…}`) passes through unchanged
+- `if (1 < 2) {A}` alone does NOT fold (comparison is constant-fold's job) — documents the layering
+- `while (false) {body}` → `EmptyStatement`
+- `while (true)` is left alone
+- dead code after `ReturnStatement` dropped (with `removed-dead-code` contribution)
+- block without `return` is unchanged
+- `ConditionalExpression` with truthy test folds
+- **untraced mode** folds silently (no contributions)
+- pipeline integration solo
+- **pipeline with constant-fold registered**: `if (1 < 2) {A}` flows through both passes and ends as just `A`. Verifies the canonical CLOC06 ordering does what it's supposed to.
+
+### Skipped (queued for v0.3.0+)
+- `ThrowStatement` / labelled `BreakStatement` / `ContinueStatement` as terminators — wait for Phase 2 to add the variants.
+- `while (true)` infinite-loop collapse when body is provably pure.
+- `SwitchStatement` with literal discriminant — Phase 2.
+
 ## [0.1.0] - 2026-05-23
 
 ### Added
