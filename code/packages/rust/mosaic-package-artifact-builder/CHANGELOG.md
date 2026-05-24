@@ -3,6 +3,36 @@
 All notable changes to `mosaic-package-artifact-builder` will be documented
 in this file.
 
+## [Unreleased] — UI31-M Phase 3 multi-component HTML shell
+
+`build_package` for `Backend::Html` now writes a second index file
+alongside the existing bare `index.html`:
+
+- **`html/index-shell.html`** — a complete `<!DOCTYPE html>` document
+  that inlines every component's emitted `.html` fragment inside a
+  `<section data-component="X">` block. Opening it in a browser
+  shows the whole package laid out top-to-bottom; no demo-side
+  boilerplate required.
+
+This eats the shell that today's VC2-html demo hand-writes (the
+demo's `index.html` currently inlines a hand-written `<table>` for
+Grid because the Mosaic pipeline didn't produce a mountable HTML
+shell). With this change the demo's wrapper can be replaced by
+the auto-generated `index-shell.html`.
+
+Back-compat: the bare `index.html` (a comment-only manifest of
+components) is unchanged. Any tool already consuming it sees no
+diff. The new file is additive.
+
+Scope note: this PR ships only the HTML shell. The matching
+WebComponent shell (`webcomponent/index.html` that loads the
+existing `index.js` and instantiates `<mosaic-{name}>` per
+component) and the XAML `MainWindow.xaml` shell are queued for a
+follow-up PR — same pattern, different per-backend output shape.
+
+1 new test (`html_backend_writes_multi_component_index_shell_in_addition_to_bare_index`).
+Total tests: 33 (was 32).
+
 ## [Unreleased] — UI30 multi-layout variant enumeration (ML2)
 
 `build_package` now emits one artifact per (component, variant, backend)
