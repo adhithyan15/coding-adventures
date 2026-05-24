@@ -186,6 +186,9 @@ documented in this file.
   CSS-independent structural nodes for early browser rendering pipelines.
 - Browser-facing render tree input extraction now maps parsed body structure
   into stable default display categories for early layout pipelines.
+- Browser-facing document, content-tree, and render-tree projections now carry
+  richer form control metadata including values, checked/selected state,
+  disabled state, select options, and textarea values.
 - Void end tags such as `</img>`, `</input>`, and `</hr>` are now ignored with a
   parser diagnostic, while self-closing syntax on void start tags remains
   acknowledged.

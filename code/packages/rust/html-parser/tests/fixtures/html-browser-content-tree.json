@@ -113,8 +113,22 @@
             "alt": null,
             "control_type": null,
             "children": [
-              { "role": "control", "name": "input", "text": "html", "href": null, "src": null, "alt": null, "control_type": "text", "children": [] },
-              { "role": "control", "name": "select", "text": "Books Manuals", "href": null, "src": null, "alt": null, "control_type": "select", "children": [] },
+              { "role": "control", "name": "input", "text": "html", "href": null, "src": null, "alt": null, "control_type": "text", "value": "html", "children": [] },
+              {
+                "role": "control",
+                "name": "select",
+                "text": "Books Manuals",
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": "select",
+                "value": "Books",
+                "options": ["Books", "Manuals"],
+                "children": [
+                  { "role": "option", "name": "option", "text": "Books", "href": null, "src": null, "alt": null, "control_type": null, "value": "Books", "children": [{ "role": "text", "name": null, "text": "Books", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                  { "role": "option", "name": "option", "text": "Manuals", "href": null, "src": null, "alt": null, "control_type": null, "value": "Manuals", "children": [{ "role": "text", "name": null, "text": "Manuals", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                ]
+              },
               { "role": "control", "name": "button", "text": "Search", "href": null, "src": null, "alt": null, "control_type": "submit", "children": [] }
             ]
           },

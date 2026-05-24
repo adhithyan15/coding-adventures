@@ -83,6 +83,11 @@ class HtmlFixtureSchemasTest(unittest.TestCase):
                                     "src": None,
                                     "alt": None,
                                     "control_type": None,
+                                    "value": None,
+                                    "disabled": False,
+                                    "checked": False,
+                                    "selected": False,
+                                    "options": [],
                                     "children": [],
                                 }
                             ],
@@ -122,6 +127,11 @@ class HtmlFixtureSchemasTest(unittest.TestCase):
                                     "src": None,
                                     "alt": None,
                                     "control_type": None,
+                                    "value": None,
+                                    "disabled": False,
+                                    "checked": False,
+                                    "selected": False,
+                                    "options": [],
                                     "children": [],
                                 }
                             ],

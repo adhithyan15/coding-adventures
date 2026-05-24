@@ -33,6 +33,16 @@ struct ExpectedContentNode {
     src: Option<String>,
     alt: Option<String>,
     control_type: Option<String>,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    checked: bool,
+    #[serde(default)]
+    selected: bool,
+    #[serde(default)]
+    options: Vec<String>,
     children: Vec<ExpectedContentNode>,
 }
 
@@ -80,6 +90,11 @@ impl ExpectedContentNode {
             src: self.src,
             alt: self.alt,
             control_type: self.control_type,
+            value: self.value,
+            disabled: self.disabled,
+            checked: self.checked,
+            selected: self.selected,
+            options: self.options,
             children: self
                 .children
                 .into_iter()

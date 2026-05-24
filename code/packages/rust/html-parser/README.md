@@ -65,6 +65,9 @@ The current parser surface includes:
   invisible nodes into a CSS-independent body structure for early rendering
 - browser-facing render tree input extraction that maps renderable content
   nodes into stable default display categories for early layout
+- browser-facing form control metadata for input values, disabled/checked/
+  selected state, select options, and textarea values across document,
+  content-tree, and render-tree projections
 
 The checked-in html5lib tree-construction smoke corpus now covers every case in
 the currently audited upstream `html5lib-tests/tree-construction/*.dat` sources
@@ -347,6 +350,14 @@ assert_eq!(content_tree.children[1].role, "block");
 let render_tree = parse_browser_render_tree("<p>Hello <img src=logo.gif alt=Logo>").unwrap();
 assert_eq!(render_tree.children[0].display, "block");
 assert_eq!(render_tree.children[0].children[1].display, "inline-replaced");
+
+let form_tree = parse_browser_render_tree(
+    "<form><select><option value=one>One<option selected>Two</select></form>"
+).unwrap();
+let select = &form_tree.children[0].children[0];
+assert_eq!(select.control_type.as_deref(), Some("select"));
+assert_eq!(select.value.as_deref(), Some("Two"));
+assert_eq!(select.options, vec!["One".to_string(), "Two".to_string()]);
 
 match &document.children[0] {
     Node::Element(element) => assert_eq!(element.name, "html"),

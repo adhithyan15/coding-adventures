@@ -341,8 +341,11 @@ def check_browser_content_node(
     errors: list[str],
 ) -> None:
     require_string(node_path, node, "role", errors)
-    for field in ("name", "text", "href", "src", "alt", "control_type"):
+    for field in ("name", "text", "href", "src", "alt", "control_type", "value"):
         require_optional_nullable_string(node_path, node, field, errors)
+    for field in ("disabled", "checked", "selected"):
+        require_optional_boolean(node_path, node, field, errors)
+    require_optional_string_list(node_path, node, "options", errors)
     require_object_list(node_path, node, "children", errors)
     for child_index, child in enumerate(object_list_items(node, "children")):
         check_browser_content_node(
@@ -386,8 +389,11 @@ def check_browser_render_node(
 ) -> None:
     require_string(node_path, node, "display", errors)
     require_string(node_path, node, "role", errors)
-    for field in ("name", "text", "href", "src", "alt", "control_type"):
+    for field in ("name", "text", "href", "src", "alt", "control_type", "value"):
         require_optional_nullable_string(node_path, node, field, errors)
+    for field in ("disabled", "checked", "selected"):
+        require_optional_boolean(node_path, node, field, errors)
+    require_optional_string_list(node_path, node, "options", errors)
     require_object_list(node_path, node, "children", errors)
     for child_index, child in enumerate(object_list_items(node, "children")):
         check_browser_render_node(
@@ -491,6 +497,16 @@ def require_boolean(
         errors.append(f"{path}.{field} must be a boolean")
 
 
+def require_optional_boolean(
+    path: str,
+    data: dict[str, Any],
+    field: str,
+    errors: list[str],
+) -> None:
+    if field in data:
+        require_boolean(path, data, field, errors)
+
+
 def require_string_list(
     path: str,
     data: dict[str, Any],
@@ -500,6 +516,16 @@ def require_string_list(
     value = data.get(field)
     if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
         errors.append(f"{path}.{field} must be a list of strings")
+
+
+def require_optional_string_list(
+    path: str,
+    data: dict[str, Any],
+    field: str,
+    errors: list[str],
+) -> None:
+    if field in data:
+        require_string_list(path, data, field, errors)
 
 
 def require_object_list(
