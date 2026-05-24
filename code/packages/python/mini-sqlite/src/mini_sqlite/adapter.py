@@ -1546,6 +1546,7 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
     autoincrement = False
     unique = False
     check_expression = None
+    check_expr_text: str = ""
     foreign_key: tuple[str, str | None] | None = None
     col_default = NO_DEFAULT   # "no DEFAULT clause" sentinel
     collation: str | None = None  # COLLATE clause on the column def
@@ -1582,6 +1583,10 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
             expr_node = _maybe_child(c, "expr")
             if expr_node is not None:
                 check_expression = _expr(expr_node, _state)
+                # Capture the source-ish text of the CHECK predicate so
+                # the VM can surface it in constraint-violation errors —
+                # matches SQLite's ``CHECK constraint failed: a > 0``.
+                check_expr_text = _render_expr_text(expr_node)
         elif kw_seq[0:1] == ("REFERENCES",):
             # Collect the NAME tokens: first is ref_table, second (if present) is ref_col.
             ref_names = [
@@ -1633,6 +1638,7 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
         unique=unique,
         default=col_default,
         check_expr=check_expression,
+        check_expr_text=check_expr_text,
         foreign_key=foreign_key,
         collation=collation,
     )
@@ -3094,6 +3100,64 @@ def _apply_cte_col_aliases(
 
 def _has_keyword_child(node: ASTNode, kw: str) -> bool:
     return any(_is_keyword(c, kw) for c in node.children)
+
+
+def _render_expr_text(node: ASTNode) -> str:
+    """Best-effort: render an ``expr`` AST node back to SQL source text.
+
+    Used by CHECK-constraint error messages so mini-sqlite's
+    ``ConstraintViolation`` quotes the original predicate
+    (``CHECK constraint failed: a > 0``) instead of the older
+    ``<table>.<col>`` form that SQLite never emits.
+
+    The renderer walks all leaf tokens depth-first, joins them with
+    single spaces, then suppresses spaces around punctuation that
+    would otherwise look odd: no space after ``(``, no space before
+    ``)``, no space before ``,``.  STRING tokens have already had
+    their surrounding single-quotes stripped by the lexer, so we
+    re-quote them (and double any embedded ``'``) to round-trip the
+    literal.
+
+    The output is normalised whitespace, not byte-identical to the
+    original source — but it matches SQLite's ``CHECK constraint
+    failed: …`` text for the common comparison / AND / OR / function
+    patterns that account for nearly all real CHECK constraints.
+    """
+    tokens: list[Token] = []
+
+    def _collect(n: object) -> None:
+        if isinstance(n, Token):
+            t = _token_type(n)
+            if t not in ("WHITESPACE", "COMMENT", "EOF"):
+                tokens.append(n)
+        elif isinstance(n, ASTNode):
+            for c in n.children:
+                _collect(c)
+
+    _collect(node)
+
+    parts: list[str] = []
+    prev_kind: str | None = None
+    for tok in tokens:
+        kind = _token_type(tok)
+        val = tok.value
+        if kind == "STRING":
+            # Lexer stripped the surrounding single-quotes; restore them
+            # and re-escape any internal apostrophes by doubling.
+            val = "'" + val.replace("'", "''") + "'"
+        # Decide whether a separator space is needed before this token.
+        if parts:
+            prev = parts[-1]
+            need_space = True
+            # No space before ``)`` or ``,``.
+            if val == ")" or val == "," or prev == "(" or val == "(" and prev_kind == "NAME":
+                need_space = False
+            if need_space:
+                parts.append(" ")
+        parts.append(val)
+        prev_kind = kind
+
+    return "".join(parts).strip()
 
 
 def _has_keyword_sequence(node: ASTNode, kws: tuple[str, ...]) -> bool:

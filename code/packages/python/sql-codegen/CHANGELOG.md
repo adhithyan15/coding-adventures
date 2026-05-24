@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.41.0] - 2026-05-24
+
+### Added
+
+- ``ColumnDef.check_expr_text: str`` — passes the source text of a
+  CHECK predicate through the IR so the VM can quote it verbatim in
+  ``CHECK constraint failed: <expr_text>`` error messages (matches
+  SQLite).  ``_to_ir_col`` reads the field off the planner-level
+  ``ColumnDef`` (which the adapter populates).  Defaults to ``""``
+  for back-compat — the VM falls back to the older ``<table>.<col>``
+  form when the text is unavailable.
+
 ## [1.40.0] - 2026-05-23
 
 ### Fixed

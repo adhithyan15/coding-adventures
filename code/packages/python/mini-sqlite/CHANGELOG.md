@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.10.0] - 2026-05-24
+
+### Changed
+
+- CHECK constraint violation messages now match SQLite::
+
+      CHECK constraint failed: a > 0
+
+  Previously emitted ``CHECK constraint failed: <table>.<col>`` —
+  which doesn't tell the user *why* the check rejected the row and
+  broke tests that pin error strings against the sqlite3 oracle.
+
+  Implementation: the adapter captures the source text of each
+  CHECK predicate by walking the parsed expression's leaf tokens
+  (joined with single spaces, with no-space-around rules for parens
+  / commas / function-call parens).  The text rides on a new
+  ``ColumnDef.check_expr_text`` field through the planner → IR →
+  VM pipeline.  See the matching entries in sql-backend 0.21,
+  sql-codegen 1.41, and sql-vm 1.56.
+
+  Covered: ``a > 0``, ``a >= 0 AND a <= 100``, ``a = 1 OR a = 2``,
+  ``name <> 'bad'``, ``LENGTH(name) > 0``, ``ABS(a) < 10``, ``a IN
+  (1, 2, 3)`` — exact-string match against the sqlite3 oracle for
+  all forms.
+
 ## [2.9.0] - 2026-05-23
 
 ### Added
